@@ -1,9 +1,8 @@
-```MD
 # <input code>
 
 ```python
 # \file hypotez/src/scenario/executor.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -13,8 +12,7 @@
    :synopsis: Module for executing scenarios.
 
 This module contains functions for executing scenarios, loading them from files,
-and handling the process of extracting product information and inserting it
-into PrestaShop.
+and handling the process of extracting product information and inserting it into PrestaShop.
 """
 
 
@@ -65,131 +63,163 @@ def run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool:
     :raises TypeError: if scenario_files_list is not a list or a string.
     :return: True if all scenarios were executed successfully, False otherwise.
     """
-    # ... (rest of the function)
+    # ... (rest of the code)
 ```
 
 # <algorithm>
 
-**Шаг 1**: Функция `run_scenario_files` обрабатывает список сценариев (файлов).
+**Алгоритм работы модуля `executor.py`**
 
-* **Вход**: Объект поставщика (`s`) и список файлов сценариев (`scenario_files_list`).
-* **Обработка**: Если вход `scenario_files_list` представляет собой путь к одному файлу, преобразует его в список с одним элементом.  Если это не список, генерирует исключение `TypeError`.  Инициализирует словарь `_journal['scenario_files']` для хранения результатов выполнения каждого сценария. Цикл перебирает каждый файл в списке:
+1. **Инициализация:**
+    * Объявляется глобальная переменная `_journal` для хранения журнальных данных.
+    * Записывается текущая дата и время в `_journal`.
 
-    * Записывает имя файла в `_journal`.
-    * Вызывает функцию `run_scenario_file` для обработки файла.
-    * Обрабатывает результаты: если сценарий успешно выполнен, записывает сообщение об успехе в `_journal`. В противном случае, записывает сообщение об ошибке.
-    * Ловит и обрабатывает исключения во время выполнения сценария, сохраняя сообщение об ошибке.
-* **Вывод**: Возвращает `True`, если все сценарии успешно выполнены, иначе `False`.
+2. **`dump_journal`:**
+    * Сохраняет журнал в файл JSON.
+    * Принимает экземпляр поставщика (s) и словарь журнала.
+    * Формирует путь к файлу журнала, используя `Path` и информацию о поставщике.
 
-**Шаг 2**: Функция `run_scenario_file` загружает и выполняет сценарий из файла.
+3. **`run_scenario_files`:**
+    * Принимает экземпляр поставщика (s) и список путей к файлам сценариев.
+    * Если входной параметр `scenario_files_list` является единственным файлом, преобразует его в список.
+    * Если входной параметр `scenario_files_list` не является списком или путем, генерирует исключение `TypeError`.
+    * Инициализирует подсловарь в _journal['scenario_files'] для текущей задачи
+    * Обрабатывает каждый файл сценария:
+        * Запускает `run_scenario_file` для текущего файла.
+        * Сохраняет сообщение об успехе/ошибке в _journal.
+        * Обрабатывает возможные исключения, записывая их в журнал.
+    * Возвращает True, если все сценарии выполнены успешно, False иначе.
 
-* **Вход**: Объект поставщика (`s`) и путь к файлу сценария (`scenario_file`).
-* **Обработка**:  Загружает данные из файла (JSON).  Перебирает каждый сценарий из загруженных данных. Вызывает функцию `run_scenario` для каждого сценария.
-* **Вывод**: Возвращает `True`, если все сценарии внутри файла успешно выполнены, иначе `False`.
+4. **`run_scenario_file`:**
+    * Загружает сценарии из файла JSON.
+    * Обрабатывает каждый сценарий:
+        * Устанавливает текущий сценарий для поставщика (s).
+        * Запускает `run_scenario` для текущего сценария.
+        * Сохраняет сообщение об успехе/ошибке в _journal.
+    * Возвращает True, если все сценарии в файле успешно выполнены, False иначе.
 
-**Шаг 3**: Функция `run_scenario` выполняет сценарий.
+5. **`run_scenarios`:**
+    * Принимает экземпляр поставщика (s) и список/словарь сценариев.
+    * Если `scenarios` не указан, берет сценарии из `s.current_scenario`.
+    * Преобразует входные данные в список, если это не список.
+    * Для каждого сценария вызывает `run_scenario` и сохраняет результат в `res`.
+    * Обновляет journal, записывая результаты каждого сценария.
+    * Возвращает список результатов.
 
-* **Вход**: Объект поставщика (`s`), сценарий (`scenario`), имя сценария (`scenario_name`).
-* **Обработка**: Получает URL и другие параметры из сценария.  Выполняет навигацию к URL.  Запрашивает список товаров в категории. Если список пуст, выводит предупреждение.  Цикл перебирает каждый товар: переходит на страницу товара, извлекает данные, создает объект `Product`, вставляет данные в PrestaShop. Ловит и обрабатывает исключения.
-* **Вывод**: Возвращает список URL товаров, или `None` в случае ошибки.
+6. **`run_scenario`:**
+    * Принимает экземпляр поставщика (s), сценарий (словарь) и его имя.
+    * Выводит информацию о старте сценария.
+    * Устанавливает текущий сценарий для поставщика (s).
+    * Получает драйвер (d) от поставщика.
+    * Переходит на страницу сценария (URL).
+    * Получает список продуктов из категории.
+    * Если продуктов нет, выводит предупреждение.
+    * Для каждого продукта:
+        * Переходит на страницу продукта.
+        * Если переход на страницу не удался, регистрирует ошибку.
+        * Получает данные о продукте.
+        * Если данные о продукте не получены, регистрирует ошибку.
+        * Создает объект `Product` и вставляет данные продукта в PrestaShop.
+        * Обрабатывает возможные исключения при сохранении продукта.
+    * Возвращает список URL продуктов.
 
+7. **`insert_grabbed_data`:**
+   * Вставляет данные продукта в PrestaShop, используя `execute_PrestaShop_insert`.
+
+8. **`execute_PrestaShop_insert`:**
+   *  Вставляет данные продукта в PrestaShop.
+   * Использует класс `PrestaShop` для отправки данных на сервер PrestaShop.
+   * Возвращает True в случае успеха, False в случае ошибки.
+
+Данные передаются между функциями и классами в виде аргументов. Например, `run_scenario` получает `supplier` и `scenario` (словарь), а `insert_grabbed_data` получает `product_fields` (объект).
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    A[run_scenario_files] --> B{Is scenario_files_list a Path?};
-    B -- Yes --> C[scenario_files_list = [scenario_file]];
-    B -- No --> D{Is scenario_files_list a list?};
-    D -- Yes --> C;
-    D -- No --> E[Raise TypeError];
-    C --> F[Iterate over scenario_file];
-    F --> G[run_scenario_file];
-    G --> H{Scenario success?};
-    H -- Yes --> I[Success message in journal];
-    H -- No --> J[Error message in journal];
-    F --> K[Catch Exception];
-    K --> L[Critical error message in journal];
-    F --> M[Return True/False];
-    G --> M;
-    I --> M;
-    J --> M;
-    L --> M;
-
-    subgraph Run scenario_file
-        N[run_scenario_file] --> O{Load scenarios from json};
-        O --> P[Iterate over each scenario];
-        P --> Q[run_scenario];
-        Q --> R[Success message];
-        Q --> S[Error message];
-        R --> O;
-        S --> O;
+    A[run_scenario_files] --> B{scenario_file};
+    B --> C[run_scenario_file];
+    C --> D[run_scenario];
+    D --> E[get_list_products_in_category];
+    E --> F[grab_product_page];
+    F --> G[Product];
+    G --> H[insert_grabbed_data];
+    H --> I[execute_PrestaShop_insert];
+    I --> J[PrestaShop];
+    subgraph Supplier
+        s[Supplier] --> D;
+        s --> A;
+    end
+    subgraph related_modules
+        related[related_modules] --> E;
+        related --> F;
     end
 
-    subgraph Run scenario
-        T[run_scenario] --> U[Get URL, other params];
-        U --> V[Navigate to URL];
-        V --> W[Get product list];
-        W --> X{Is product list empty?};
-        X -- Yes --> Y[Warning message];
-        X -- No --> Z[Iterate over product URLs];
-        Z --> AA[Navigate to product page];
-        AA --> BB[Grab product fields];
-        BB --> CC[Create Product object];
-        CC --> DD[Insert data into PrestaShop];
-        DD --> EE{Insert success?};
-        EE -- Yes --> FF[Success message];
-        EE -- No --> GG[Error message];
-        AA --> GG;
-        Z --> GG;
-        V --> GG;
-        U --> GG;
-        T --> GG;
-        GG --> HH[Return product list/False];
+    subgraph Logger
+        log[logger] --> C;
+        log --> D;
+    end
 
+    subgraph Database
+        db[ProductCampaignsManager] --> H;
+    end
+
+    subgraph Utils
+        j[j_loads, j_dumps] --> C;
     end
 ```
 
-
 # <explanation>
 
-* **Импорты**: Модули `os`, `sys`, `requests`, `asyncio`, `time`, `tempfile`, `datetime`, `math`, `pathlib`, `typing`, `json` являются стандартными библиотеками Python. Модули `header`, `gs`, `printer`, `jjson`, `Product`, `ProductFields`, `translate_presta_fields_dict`, `PrestaShop`, `ProductCampaignsManager`, `logger`, `ProductFieldException` — это, вероятно, модули из проекта (предполагается `src` — директория проекта). Они содержат функции и классы для работы с поставщиками данных, выполнением сценариев, обработкой данных о продуктах, взаимодействием с PrestaShop и ведением логирования.
+**Импорты:**
 
-* **Классы**:
-    * `Product`: Класс для представления данных о продукте. Предполагается, что он содержит атрибуты (`fields`, `supplier_prefix`, и т.д.).
-    * `ProductFields`: Вероятно, класс для хранения полей продукта.  `presta_fields_dict`, `assist_fields_dict` указывают на то, что класс хранит данные в словарях, связанных с полями PrestaShop и вспомогательными полями.
-    * `PrestaShop`: Класс для взаимодействия с API PrestaShop.
-    * `ProductCampaignsManager`: Класс для управления кампаниями продуктов в базе данных (предполагается).
-    * `Supplier`:  (косвенно) - это предположительно класс, экземпляр которого (обозначенный в коде как `s`) передается в большинство функций.  Он содержит информацию о поставщике, включая путь к файлам сценариев и, вероятно, другие данные.  `s.driver` и `s.related_modules` указывают на то, что это класс, связанный с драйвером и модулями для работы с данными.
+Код импортирует необходимые библиотеки для работы:
+* `os`, `sys`, `requests`, `asyncio`, `time`, `tempfile`, `datetime`, `math`, `pathlib`, `typing`, `json`: стандартные библиотеки Python для работы с операционной системой, сетью, асинхронностью, временем, файлами, данными и т.д.
+* `header`: Вероятно, пользовательский модуль, содержащий вспомогательные функции.
+* `gs`: Модуль, предполагается, из проекта, отвечает за получение текущей даты и времени.
+* `pprint`: Функции для красивого вывода данных.
+* `j_loads`, `j_dumps`: Функции для работы с JSON, вероятно, из `utils.jjson`.
+* `Product`, `ProductFields`, `translate_presta_fields_dict`: классы и функции для работы с данными о продуктах.
+* `PrestaShop`: Класс для взаимодействия с API PrestaShop.
+* `ProductCampaignsManager`: Класс для работы с базой данных рекламных кампаний продуктов.
+* `logger`: Модуль для логирования.
+* `ProductFieldException`: Класс для обработки исключений при работе с полями продукта.
 
-* **Функции**:
-    * `dump_journal`: Сохраняет данные журнала в JSON-файл.
-    * `run_scenario_files`: Выполняет несколько сценариев из файлов.
-    * `run_scenario_file`: Загружает и выполняет сценарий из одного файла.
-    * `run_scenario`: Выполняет отдельный сценарий, включая получение данных с веб-страниц, извлечение информации о продукте и загрузку в PrestaShop.
-    * `insert_grabbed_data`: Вставляет собранные данные продукта в PrestaShop (должно быть перечислено в другом файле).
-    * `execute_PrestaShop_insert`:  Выполняет вставку продукта в Престашоп с использованием класса `PrestaShop`.
-    * `execute_PrestaShop_insert_async`:   Асинхронная версия `execute_PrestaShop_insert`.
 
-* **Переменные**: `_journal`, `s`, `scenario_files_list`, `scenario_file`, `scenario`, `presta_fields_dict` - это переменные, используемые в разных функциях для хранения данных и управления процессом выполнения сценариев.
+**Классы:**
 
-* **Возможные ошибки и улучшения**:
-    * **Обработка ошибок:**  Коды обработки ошибок (`try...except`) есть, но могли бы быть более конкретные проверки типов, чтобы избежать неловких случаев.
-    * **Использование асинхронности:** Использование `asyncio`  для  `execute_PrestaShop_insert` повысит производительность, особенно при одновременной обработке нескольких продуктов.
-    * **Модульность:** Функции для работы с Престашоп (`insert_grabbed_data`, `execute_PrestaShop_insert`) лучше вынести в отдельный модуль (`src.prestashop_operations`, например).
-    * **Документация**: Добавить более подробные комментарии и документацию к коду для лучшего понимания.
-    * **Проверка ввода**: В `run_scenarios` и  `run_scenario_files` следует лучше проверять входные данные (например, что `scenario_files_list` — это список или путь, а не что-то другое).
+* **`Product`:** Представляет данные о продукте.  В примере не показано полное определение, но по использованию `supplier_prefix`, `presta_fields_dict` предполагается, что содержит поля для хранения данных продукта и его связи с поставщиком.
+* **`ProductFields`:** Хранит поля продукта, необходимые для вставки в PrestaShop.  Включает `presta_fields_dict` и `assist_fields_dict`.
+* **`PrestaShop`:** Класс для взаимодействия с API PrestaShop.  Содержит метод `post_product_data` для отправки данных о продукте.
+* **`ProductCampaignsManager`:** Класс для работы с базой данных рекламных кампаний.
+
+**Функции:**
+
+* **`dump_journal`:** Сохраняет журнал выполнения в файл.
+* **`run_scenario_files`:** Выполняет сценарии из списка файлов.
+* **`run_scenario_file`:** Загружает и выполняет сценарии из одного файла.
+* **`run_scenarios`:** Выполняет сценарии из списка словарей.
+* **`run_scenario`:** Выполняет один сценарий, загрузка данных о продуктах, обработка их и отправка в PrestaShop.
+* **`insert_grabbed_data`:** Вставляет данные продукта в PrestaShop.
+* **`execute_PrestaShop_insert`:** Отправляет данные о продукте на сервер PrestaShop.
+* **`execute_PrestaShop_insert_async`:** Асинхронная версия `execute_PrestaShop_insert`.
+
+**Переменные:**
+
+`_journal`: словарь, хранящий журнал выполнения сценариев.
+`timestamp`: текущая дата и время выполнения.
+`scenario_files_list`: Список путей к файлам сценариев.
+`s`: Экземпляр поставщика (Supplier).
+`d`: Экземпляр драйвера (driver).
+
+
+**Возможные ошибки и улучшения:**
+
+* **Обработка ошибок:**  Код содержит обработку исключений (try...except), но она могла бы быть более детальной и исчерпывающей.  Например, добавленны проверки на корректность типов данных в функциях.
+* **Модульность:** Функция `insert_grabbed_data` следует вынести в отдельный файл (или класс).  Это сделает код более организованным и позволит повторно использовать эту логику в других частях проекта.
+* **Асинхронность:** Использование `asyncio` для `execute_PrestaShop_insert` уже хорошо. Но стоит продумать, как это взаимодействие с `PrestaShop` оптимально организовать.
 
 
 **Взаимосвязь с другими частями проекта:**
 
-Код взаимодействует с многими другими частями проекта через импорты, в частности:
-
-* `src.utils.printer`: для вывода информации.
-* `src.utils.jjson`: для работы с JSON-данными.
-* `src.product`: для работы с объектами `Product`.
-* `src.endpoints.prestashop`: для взаимодействия с API PrestaShop.
-* `src.db`: для взаимодействия с базой данных.
-* `src.logger`: для логирования.
-
-Предполагается, что есть отдельные файлы для реализации таких модулей, которые позволяют подключаться к различным источникам данных и сервисам.
+Код активно взаимодействует с другими модулями проекта, включая `gs` для получения времени, `src.utils.printer` для вывода, `src.utils.jjson` для работы с JSON, `src.product`, `src.endpoints.prestashop`, `src.db`, `src.logger`.  Взаимодействие происходит через вызовы функций и классов этих модулей.  По всей видимости, класс `Supplier` находится в другом модуле, но используется для получения данных о поставщике и управлении сценарием.  `s.related_modules` намекает на наличие модуля, отвечающего за сбор данных о продуктах.

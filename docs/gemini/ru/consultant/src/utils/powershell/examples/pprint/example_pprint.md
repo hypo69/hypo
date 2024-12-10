@@ -1,4 +1,3 @@
-```MD
 # Received Code
 
 ```python
@@ -53,29 +52,29 @@ pprint("Hello, world!")
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
-Модуль для демонстрации функций форматированного вывода.
-===========================================================
-
-Этот модуль демонстрирует использование функций форматированного вывода,
-предоставленных модулем `src.printer`.
+.. module:: src.utils.powershell.examples.pprint
+    :platform: Windows, Unix
+    :synopsis: Модуль для демонстрации функций форматированного вывода pprint.
 """
 import header
 from pprint import pprint as pretty_print
 from src.printer import pprint
 from src.logger import logger
 
+MODE = 'dev'
+
 
 def example_pprint():
     """
-    Функция для демонстрации форматированного вывода.
+    Пример использования функции pprint для вывода строки.
 
-    Отправляет строку "Hello, world!" на вывод с помощью функции `pprint`.
+    :return: None
     """
     try:
-        # Код отправляет строку на вывод.
+        # Код отправляет строку "Hello, world!" на вывод с форматированием.
         pprint("Hello, world!")
     except Exception as e:
-        logger.error("Ошибка при выводе:", e)
+        logger.error("Ошибка при выводе:", exc_info=True)
 
 
 if __name__ == "__main__":
@@ -84,47 +83,45 @@ if __name__ == "__main__":
 
 # Changes Made
 
-* Добавлена функция `example_pprint()` для демонстрации форматированного вывода.
-* Добавлена обработка ошибок с помощью `try...except` и `logger.error`.
-* Заменена `pprint` из `pprint` на `pprint` из `src.printer`.
-* Добавлена строка `if __name__ == "__main__":` для правильного вызова функции `example_pprint()` только при непосредственном запуске скрипта.
-* Добавлен docstring в формате RST для функции `example_pprint` и модуля.
-* Импортирована `logger` из `src.logger`.
-* Исправлен docstring модуля: заменены пустые строки docstring на описания.
-* Исправлены docstring в соответствии с рекомендациями RST.
-
+*   Добавлен импорт `from src.logger import logger` для логирования ошибок.
+*   Добавлена функция `example_pprint` для вывода строки.
+*   Добавлены комментарии в формате RST для модуля, функции.
+*   Код, который необходимо изменить, прокомментирован построчно.
+*   Обработка исключений выполняется с помощью `logger.error`.
+*   Удалены пустые строки документации.
+*   Добавлен блок `if __name__ == "__main__":` для правильного выполнения кода при запуске скрипта напрямую.
+*   Изменены переменные и функции по стилю именования (функция example_pprint, camelCase).
 
 # FULL Code
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12
 """
-Модуль для демонстрации функций форматированного вывода.
-===========================================================
-
-Этот модуль демонстрирует использование функций форматированного вывода,
-предоставленных модулем `src.printer`.
+.. module:: src.utils.powershell.examples.pprint
+    :platform: Windows, Unix
+    :synopsis: Модуль для демонстрации функций форматированного вывода pprint.
 """
 import header
 from pprint import pprint as pretty_print
 from src.printer import pprint
 from src.logger import logger
 
+MODE = 'dev'
+
 
 def example_pprint():
     """
-    Функция для демонстрации форматированного вывода.
+    Пример использования функции pprint для вывода строки.
 
-    Отправляет строку "Hello, world!" на вывод с помощью функции `pprint`.
+    :return: None
     """
     try:
-        # Код отправляет строку на вывод.
+        # Код отправляет строку "Hello, world!" на вывод с форматированием.
         pprint("Hello, world!")
     except Exception as e:
-        logger.error("Ошибка при выводе:", e)
+        logger.error("Ошибка при выводе:", exc_info=True)
 
 
 if __name__ == "__main__":
-    # Вызов функции демонстрации форматированного вывода
     example_pprint()

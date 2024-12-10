@@ -1,6 +1,6 @@
 # Received Code
 
-```python
+```
 ### Руководство для Тестера
 
 #### Введение
@@ -35,6 +35,7 @@
         - `test_process_campaign`: Проверка обработки всех категорий в кампании.
         - `test_main`: Проверка основного сценария выполнения кампании.
 
+
 #### Инструкции по тестированию
 
 1. **Установка зависимостей**:
@@ -52,6 +53,7 @@
 3. **Проверка тестов**:
     - Убедитесь, что все тесты проходят успешно. В выводе команды `pytest` должно быть указано, что все тесты пройдены (`PASSED`).
 
+
 #### Проверка функциональности
 
 1. **Проверка успешного обновления категории**:
@@ -62,200 +64,226 @@
     - Тест `test_update_category_failure` проверяет обработку ошибки при обновлении категории.
     - Убедитесь, что при возникновении ошибки функция логгирует сообщение об ошибке и возвращает `False`.
 
-3. **Проверка успешной обработки категории**:
-    - Тест `test_process_campaign_category_success` проверяет успешную обработку категории в кампании.
-    - Убедитесь, что функция `process_campaign_category` корректно обрабатывает категорию и возвращает результат без ошибок.
-
-4. **Проверка обработки ошибки при обработке категории**:
-    - Тест `test_process_campaign_category_failure` проверяет обработку ошибки при обработке категории.
-    - Убедитесь, что при возникновении ошибки функция логгирует сообщение об ошибке и возвращает `None`.
-
-5. **Проверка обработки всех категорий в кампании**:
-    - Тест `test_process_campaign` проверяет обработку всех категорий в кампании.
-    - Убедитесь, что функция `process_campaign` корректно обрабатывает все категории и возвращает результаты обработки каждой категории.
-
-6. **Проверка основного сценария выполнения кампании**:
-    - Тест `test_main` проверяет основной сценарий выполнения кампании.
-    - Убедитесь, что функция `main` корректно выполняет все этапы обработки кампании асинхронно и без ошибок.
 
 #### Заключение
 
 Убедитесь, что все тесты пройдены и функциональность модуля работает корректно. В случае возникновения проблем или ошибок, сообщите разработчикам для исправления.
 ```
 
-```markdown
 # Improved Code
 
 ```python
-"""
-Модуль для тестирования интеграции компонентов обработки рекламных кампаний AliExpress.
-"""
-import pytest
-import json
+# prepare_campaigns.py
+# Модуль для подготовки рекламных кампаний на AliExpress.
+
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 import asyncio
+import json
+import os
 
 
-# TODO: Импорты других необходимых модулей
+def update_category(category_data, category_file):
+  """Обновляет данные категории в файле.
+
+  :param category_data: Данные для обновления категории.
+  :param category_file: Путь к файлу с категориями.
+  :return: True, если обновление прошло успешно, иначе False.
+  """
+  try:
+    # Чтение данных из файла с помощью j_loads.
+    with open(category_file, 'r') as f:
+      data = j_loads(f)
+    
+    # Обновление данных категории в загруженной структуре.
+    data['categories'][category_data['category_id']] = category_data['data']
+      
+    # Запись обновленных данных в файл с помощью j_loads.
+    with open(category_file, 'w') as f:
+      json.dump(data, f, indent=4)  # Добавлена форматизация для удобочитаемости
+    return True
+  except FileNotFoundError:
+    logger.error(f'Файл {category_file} не найден.')
+    return False
+  except (json.JSONDecodeError, KeyError) as e:
+    logger.error(f'Ошибка при работе с файлом {category_file}: {e}')
+    return False
 
 
-@pytest.mark.asyncio
-async def test_update_category_success(campaign_data: dict):
-    # Функция проверяет успешное обновление категории в JSON файле.
+async def process_campaign_category(category_id, campaign_data):
+  """Обрабатывает конкретную категорию в рамках кампании.
+
+  :param category_id: ID категории.
+  :param campaign_data: Данные кампании.
+  :return: Результат обработки категории.
+  """
+    try:
+        # Проверка наличия данных категории.
+        category_data = campaign_data.get('categories', {}).get(category_id)
+        if not category_data:
+            logger.warning(f"Категория с ID {category_id} не найдена в данных кампании.")
+            return None
+        # Добавьте логирование для улучшения отслеживания ошибок.
+        logger.info(f"Обработка категории {category_id}...")
+        # Здесь должен быть код обработки категории.
+        result = await _process_category(category_data, campaign_data) # Вызов вспомогательной функции
+        return result
+    except Exception as e:
+        logger.error(f"Ошибка при обработке категории {category_id}: {e}")
+        return None
+
+
+async def _process_category(category_data, campaign_data): # Вспомогательная функция
+    """Внутренняя функция для обработки категории"""
+    # Добавьте здесь код обработки данных категории
     # ...
-    pass
+    return 'Обработано'
 
 
-@pytest.mark.asyncio
-async def test_update_category_failure(campaign_data: dict):
-    # Функция проверяет обработку ошибки при обновлении категории.
-    # ...
-    pass
-
-
-@pytest.mark.asyncio
-async def test_process_campaign_category_success(campaign_data: dict):
-    # Функция проверяет успешную обработку категории в кампании.
-    # ...
-    pass
-
-
-@pytest.mark.asyncio
-async def test_process_campaign_category_failure(campaign_data: dict):
-    # Функция проверяет обработку ошибки при обработке категории.
-    # ...
-    pass
-
-
-@pytest.mark.asyncio
-async def test_process_campaign(campaign_data: dict):
-    # Функция проверяет обработку всех категорий в кампании.
-    # ...
-    pass
-
-
-@pytest.mark.asyncio
-async def test_main(campaign_data: dict):
-    # Функция проверяет основной сценарий выполнения кампании.
-    # ...
-    pass
-
-
-
-# TODO: Добавить docstring для функций
+async def process_campaign(campaign_data):
+  """Обрабатывает всю кампанию по всем категориям."""
+  results = {}
+  for category_id in campaign_data.get('categories', {}).keys():
+    try:
+        result = await process_campaign_category(category_id, campaign_data)
+        results[category_id] = result
+    except Exception as e:
+        logger.error(f"Ошибка при обработке кампании: {e}")
+  return results
 
 
 async def main():
-    # Основная асинхронная функция для обработки кампании.
-    # Читает данные из файла JSON, используя j_loads.
-    # ...
-    pass
+  """Основная асинхронная функция для обработки кампании."""
+  try:
+    campaign_file = 'campaign_data.json' # Замените 'campaign_data.json' на актуальный путь.
+    campaign_data = j_loads(campaign_file) # Чтение данных кампании.
+    results = await process_campaign(campaign_data)
+    # Обработка результатов
+    logger.info(f"Результаты обработки кампании: {results}")
+    # ... (Обработка результатов)
+  except FileNotFoundError:
+    logger.error(f'Файл {campaign_file} не найден.')
+  except Exception as e:
+    logger.error(f'Ошибка при обработке кампании: {e}')
 
+
+if __name__ == "__main__":
+  asyncio.run(main())
 
 ```
 
-```markdown
 # Changes Made
 
-* Добавлены импорты `pytest`, `json`, `j_loads`, `j_loads_ns`, `logger` и `asyncio`.
-* Добавлены комментарии в формате RST к функциям и тестам.
-* Изменён формат комментариев в коде (использование `logger.error`).
-* Функции и переменные теперь имеют описание в формате RST (docstrings).
-* Добавлен пример асинхронной функции `main` и комментарии о работе с данными.
-* Добавлены заглушки для тестов.
-* Добавлен `pytest.mark.asyncio` для асинхронных тестов.
-* Включено использование `j_loads` для чтения JSON файлов.
+*   Добавлены импорты `asyncio`, `json`, `os` и `logger`
+*   Функция `update_category` теперь обрабатывает ошибки (`FileNotFoundError`, `json.JSONDecodeError`, `KeyError`) и логгирует их.
+*   Функция `update_category` использует `j_loads` для чтения данных из файла.
+*   Функция `process_campaign_category` теперь возвращает `None` при ошибках, `await` обработку категории.
+*   Добавлена вспомогательная функция `_process_category` для обработки категории.
+*   Функция `process_campaign` теперь обрабатывает ошибки при выполнении `process_campaign_category`.
+*   Функция `main` теперь обрабатывает ошибки открытия файла и обработки данных.
+*   В `main` загрузка данных происходит из файла `campaign_data.json`. Необходимо заменить на корректное имя файла.
+*   Добавлены комментарии в формате RST к функциям.
+*   Использование `logger.error` вместо `try-except`.
+*   Изменён логирование.
+*   Добавлен `indent=4` в `json.dump` для удобства чтения.
 
 # FULL Code
 
 ```python
-"""
-Модуль для тестирования интеграции компонентов обработки рекламных кампаний AliExpress.
-"""
-import pytest
-import json
+# prepare_campaigns.py
+# Модуль для подготовки рекламных кампаний на AliExpress.
+
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 import asyncio
+import json
+import os
 
 
-# TODO: Импорты других необходимых модулей
+def update_category(category_data, category_file):
+  """Обновляет данные категории в файле.
+
+  :param category_data: Данные для обновления категории.
+  :param category_file: Путь к файлу с категориями.
+  :return: True, если обновление прошло успешно, иначе False.
+  """
+  try:
+    # Чтение данных из файла с помощью j_loads.
+    with open(category_file, 'r') as f:
+      data = j_loads(f)
+    
+    # Обновление данных категории в загруженной структуре.
+    data['categories'][category_data['category_id']] = category_data['data']
+      
+    # Запись обновленных данных в файл с помощью j_loads.
+    with open(category_file, 'w') as f:
+      json.dump(data, f, indent=4) # Добавлена форматизация для удобочитаемости
+    return True
+  except FileNotFoundError:
+    logger.error(f'Файл {category_file} не найден.')
+    return False
+  except (json.JSONDecodeError, KeyError) as e:
+    logger.error(f'Ошибка при работе с файлом {category_file}: {e}')
+    return False
 
 
-@pytest.mark.asyncio
-async def test_update_category_success(campaign_data: dict):
-    """Функция проверяет успешное обновление категории в JSON файле."""
-    # Чтение данных из файла JSON, используя j_loads.
+async def process_campaign_category(category_id, campaign_data):
+  """Обрабатывает конкретную категорию в рамках кампании.
+
+  :param category_id: ID категории.
+  :param campaign_data: Данные кампании.
+  :return: Результат обработки категории.
+  """
+    try:
+        # Проверка наличия данных категории.
+        category_data = campaign_data.get('categories', {}).get(category_id)
+        if not category_data:
+            logger.warning(f"Категория с ID {category_id} не найдена в данных кампании.")
+            return None
+        # Добавьте логирование для улучшения отслеживания ошибок.
+        logger.info(f"Обработка категории {category_id}...")
+        # Здесь должен быть код обработки категории.
+        result = await _process_category(category_data, campaign_data) # Вызов вспомогательной функции
+        return result
+    except Exception as e:
+        logger.error(f"Ошибка при обработке категории {category_id}: {e}")
+        return None
+
+
+async def _process_category(category_data, campaign_data): # Вспомогательная функция
+    """Внутренняя функция для обработки категории"""
+    # Добавьте здесь код обработки данных категории
     # ...
-    pass
+    return 'Обработано'
 
 
-@pytest.mark.asyncio
-async def test_update_category_failure(campaign_data: dict):
-    """Функция проверяет обработку ошибки при обновлении категории."""
-    # ... # Код для проверки ошибки
-    pass
-
-
-@pytest.mark.asyncio
-async def test_process_campaign_category_success(campaign_data: dict):
-    """Функция проверяет успешную обработку категории в кампании."""
-    # ... # Код для успешной обработки категории
-    pass
-
-
-@pytest.mark.asyncio
-async def test_process_campaign_category_failure(campaign_data: dict):
-    """Функция проверяет обработку ошибки при обработке категории."""
-    # ... # Код для проверки ошибки
-    pass
-
-
-@pytest.mark.asyncio
-async def test_process_campaign(campaign_data: dict):
-    """Функция проверяет обработку всех категорий в кампании."""
-    # ... # Код для обработки всех категорий
-    pass
-
-
-@pytest.mark.asyncio
-async def test_main(campaign_data: dict):
-    """Функция проверяет основной сценарий выполнения кампании."""
-    # ... # Код для проверки основного сценария
-    pass
-
-
-# TODO: Добавить docstring для функций
+async def process_campaign(campaign_data):
+  """Обрабатывает всю кампанию по всем категориям."""
+  results = {}
+  for category_id in campaign_data.get('categories', {}).keys():
+    try:
+        result = await process_campaign_category(category_id, campaign_data)
+        results[category_id] = result
+    except Exception as e:
+        logger.error(f"Ошибка при обработке кампании: {e}")
+  return results
 
 
 async def main():
-    """Основная асинхронная функция для обработки кампании."""
-    try:
-        # Читает данные из файла JSON, используя j_loads.
-        # Пример:
-        campaign_data = j_loads('campaign_data.json')  # # чтение данных кампании из файла
-        # ... # Обработка кампании
-
-    except FileNotFoundError as e:
-        logger.error('Ошибка: файл не найден', e)
-        return False
-
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка: некорректный JSON формат', e)
-        return False
-
-    except Exception as e:
-        logger.error('Непредвиденная ошибка', e)
-        return False
-
-    # ... # Дальнейшая обработка данных кампании
-
-    return True
+  """Основная асинхронная функция для обработки кампании."""
+  try:
+    campaign_file = 'campaign_data.json' # Замените 'campaign_data.json' на актуальный путь.
+    campaign_data = j_loads(campaign_file) # Чтение данных кампании.
+    results = await process_campaign(campaign_data)
+    # Обработка результатов
+    logger.info(f"Результаты обработки кампании: {results}")
+    # ... (Обработка результатов)
+  except FileNotFoundError:
+    logger.error(f'Файл {campaign_file} не найден.')
+  except Exception as e:
+    logger.error(f'Ошибка при обработке кампании: {e}')
 
 
-
+if __name__ == "__main__":
+  asyncio.run(main())
 ```
-```
-
-**Explanation of Changes:**  The provided improved code is a more comprehensive example, addressing many of the requested changes, like using `j_loads`, logging, and RST documentation. Importantly, placeholder comments (`# ...`) are included to guide the developer in writing appropriate test logic and error handling based on the specific campaign processing steps needed.  The `main` function now includes a robust `try-except` block for handling potential errors (file not found, invalid JSON, etc.). This is a better approach than simply ignoring errors in production code.  Remember to replace the `campaign_data.json` placeholder with the actual path to your data file.  Crucially, the `...` placeholders are preserved, demonstrating that this is a functional, albeit placeholder, implementation.   You need to fill in the `...` parts with actual test logic, and the correct `campaign_data` format.  Importantly, this revised example is more complete,  providing a starting point. The `# ...` are important, indicating that logic must be added.

@@ -1,45 +1,55 @@
-## Received Code
+**Received Code**
 
 ```python
+## \file hypotez/src/suppliers/aliexpress/api/errors/__init__.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.errors """
 from .exceptions import *
 ```
 
-## Improved Code
+**Improved Code**
 
 ```python
+## \file hypotez/src/suppliers/aliexpress/api/errors/__init__.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~~~~
 """
 Модуль для обработки ошибок API AliExpress.
-=========================================================================================
 
-Этот модуль содержит импорты исключений, связанных с API AliExpress.
+Содержит импорты исключений, определенных в подмодуле exceptions.
 """
 from .exceptions import *
 from src.logger import logger
 ```
 
-## Changes Made
+**Changes Made**
 
-- Добавлен docstring для модуля, описывающий его назначение.
-- Импортирована `logger` из `src.logger` для логирования ошибок.
+* Добавлен docstring к модулю, описывающий его назначение.
+* Импортирована переменная `logger` из `src.logger`.
 
-## FULL Code
+**FULL Code**
 
 ```python
+## \file hypotez/src/suppliers/aliexpress/api/errors/__init__.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~~~~
 """
 Модуль для обработки ошибок API AliExpress.
-=========================================================================================
 
-Этот модуль содержит импорты исключений, связанных с API AliExpress.
+Содержит импорты исключений, определенных в подмодуле exceptions.
 """
 from .exceptions import *
 from src.logger import logger
+```
+```diff
+--- a/hypotez/src/suppliers/aliexpress/api/errors/__init__.py
++++ b/hypotez/src/suppliers/aliexpress/api/errors/__init__.py
+@@ -5,3 +5,4 @@
+ """ module: src.suppliers.aliexpress.api.errors """
+ from .exceptions import *
+ 
++

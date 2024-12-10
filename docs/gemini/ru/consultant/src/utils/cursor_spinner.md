@@ -70,8 +70,7 @@ if __name__ == "__main__":
 ```python
 import time
 import sys
-from src.logger import logger
-
+from src.logger import logger # Импортируем logger
 
 ## \file hypotez/src/utils/cursor_spinner.py
 # -*- coding: utf-8 -*-\
@@ -79,14 +78,21 @@ from src.logger import logger
 # ! venv/bin/python/python3.12
 
 """
-Модуль для отображения вращающегося курсора в консоли.
+.. module:: src.utils.cursor_spinner
+	:platform: Windows, Unix
+	:synopsis: Модуль для отображения курсора-спиннера в консоли.
+
 """
 
+MODE = 'dev'
+
+
 def spinning_cursor():
-    """Генератор для вращающегося курсора, циклически меняющего символы |, /, -, \\.
+    """
+    Генерирует последовательность символов для спиннера.
 
     Возвращает:
-        str: Следующий символ в последовательности курсора.
+        str: Следующий символ спиннера.
     """
     while True:
         for cursor in '|/-\\':
@@ -94,14 +100,13 @@ def spinning_cursor():
 
 
 def show_spinner(duration: float = 5.0, delay: float = 0.1):
-    """Отображает вращающийся курсор в консоли на заданный период времени.
+    """
+    Отображает спиннер в консоли на заданное время.
 
-    Аргументы:
-        duration (float): Длительность работы спиннера (в секундах). По умолчанию 5.0.
-        delay (float): Задержка между каждым вращением (в секундах). По умолчанию 0.1.
+    Args:
+        duration (float): Время работы спиннера в секундах. По умолчанию 5.0.
+        delay (float): Задержка между каждым символом спиннера в секундах. По умолчанию 0.1.
 
-    Возвращает:
-        None
     """
     spinner = spinning_cursor()
     end_time = time.time() + duration
@@ -113,36 +118,30 @@ def show_spinner(duration: float = 5.0, delay: float = 0.1):
             time.sleep(delay)
             sys.stdout.write('\b')
     except Exception as e:
-        logger.error("Ошибка во время отображения спиннера", e)
+        logger.error('Ошибка при работе спиннера', e)
 
 
 if __name__ == "__main__":
-    """Основная функция для демонстрации использования спиннера."""
     print("Спиннер на 5 секунд:")
     show_spinner(duration=5.0, delay=0.1)
     print("\nГотово!")
-
 ```
 
 # Changes Made
 
 *   Добавлен импорт `from src.logger import logger`.
-*   Все функции, методы и классы снабжены документацией в формате RST.
-*   Обработка исключений переделана с использованием `logger.error`.
-*   Изменены комментарии в соответствии с требованиями, исключены слова "получаем", "делаем" и т.п.
-*   Улучшена структура документации (docstrings).
-*   Добавлен комментарий к основному блоку кода в `if __name__ == "__main__":`.
-*   Внутри `show_spinner` добавлена обработка исключений с помощью `try...except`.
-*   Изменены обозначения переменных и функций (соответственно формату кода).
-*   Добавлена документация в формате reStructuredText (RST) для всех функций и модуля.
+*   Изменены docstrings функций и модуля на RST формат.
+*   Добавлен блок `try-except` с использованием `logger.error` для обработки потенциальных ошибок во время работы спиннера.
+*   Исправлены некоторые мелкие стилистические ошибки.
+*   Изменены комментарии и описания функций, чтобы устранить избыточное использование слов 'получаем', 'делаем'.
+
 
 # FULL Code
 
 ```python
 import time
 import sys
-from src.logger import logger
-
+from src.logger import logger # Импортируем logger
 
 ## \file hypotez/src/utils/cursor_spinner.py
 # -*- coding: utf-8 -*-\
@@ -150,14 +149,21 @@ from src.logger import logger
 # ! venv/bin/python/python3.12
 
 """
-Модуль для отображения вращающегося курсора в консоли.
+.. module:: src.utils.cursor_spinner
+	:platform: Windows, Unix
+	:synopsis: Модуль для отображения курсора-спиннера в консоли.
+
 """
 
+MODE = 'dev'
+
+
 def spinning_cursor():
-    """Генератор для вращающегося курсора, циклически меняющего символы |, /, -, \\.
+    """
+    Генерирует последовательность символов для спиннера.
 
     Возвращает:
-        str: Следующий символ в последовательности курсора.
+        str: Следующий символ спиннера.
     """
     while True:
         for cursor in '|/-\\':
@@ -165,14 +171,13 @@ def spinning_cursor():
 
 
 def show_spinner(duration: float = 5.0, delay: float = 0.1):
-    """Отображает вращающийся курсор в консоли на заданный период времени.
+    """
+    Отображает спиннер в консоли на заданное время.
 
-    Аргументы:
-        duration (float): Длительность работы спиннера (в секундах). По умолчанию 5.0.
-        delay (float): Задержка между каждым вращением (в секундах). По умолчанию 0.1.
+    Args:
+        duration (float): Время работы спиннера в секундах. По умолчанию 5.0.
+        delay (float): Задержка между каждым символом спиннера в секундах. По умолчанию 0.1.
 
-    Возвращает:
-        None
     """
     spinner = spinning_cursor()
     end_time = time.time() + duration
@@ -184,13 +189,11 @@ def show_spinner(duration: float = 5.0, delay: float = 0.1):
             time.sleep(delay)
             sys.stdout.write('\b')
     except Exception as e:
-        logger.error("Ошибка во время отображения спиннера", e)
+        logger.error('Ошибка при работе спиннера', e)
 
 
 if __name__ == "__main__":
-    """Основная функция для демонстрации использования спиннера."""
     print("Спиннер на 5 секунд:")
     show_spinner(duration=5.0, delay=0.1)
     print("\nГотово!")
-
 ```

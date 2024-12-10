@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -13,20 +13,6 @@
 
 """
 MODE = 'dev'
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
-    :TODO: В дальнейшем перенести в системную переменную
-
-"""
 
 
 import sys
@@ -65,14 +51,14 @@ from src import gs
 
 settings:dict = None
 try:
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
         settings = json.load(settings_file)
 except (FileNotFoundError, json.JSONDecodeError):
     ...
 
 doc_str:str = None
 try:
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
 except (FileNotFoundError, json.JSONDecodeError):
     ...
@@ -89,77 +75,49 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 # <algorithm>
 
-1. **`set_project_root()` function:**
-   - Takes a tuple of marker files as input.
-   - Starts from the directory of the current file (`__file__`).
-   - Iterates through parent directories until it finds a directory containing one of the marker files.
-   - If a root directory is found, it's added to `sys.path` for correct import resolution.
-   - Returns the root directory.
+**Шаг 1:**  `set_project_root()`:
+* Начинает поиск корневой директории проекта с текущей директории файла (`__file__`).
+* Перебирает родительские директории до тех пор, пока не найдет папку содержащую `marker_files`: `pyproject.toml`, `requirements.txt`, `.git`.
+* Если корневая директория найдена, она добавляется в `sys.path`.
+* Возвращает найденную корневую директорию.
 
-2. **Project root initialization:**
-   - Calls `set_project_root()` to get the root directory of the project.
+**Пример:** Если файл `header.py` находится в `hypotez/src/ai/dialogflow`, поиск будет проходить вверх по дереву:
+```
+hypotez/src/ai/dialogflow/header.py -> hypotez/src/ai/ -> hypotez/src/ -> hypotez/
+```
+При этом функция возвращает директорию `hypotez`.
 
-3. **Loading settings:**
-   - Tries to load settings from `gs.path.root / 'src' / 'settings.json'`.
-   - Handles `FileNotFoundError` and `json.JSONDecodeError` if the file doesn't exist or is not valid JSON.
-   
-4. **Loading documentation:**
-   - Tries to load documentation from `gs.path.root / 'src' / 'README.MD'`.
-   - Handles `FileNotFoundError` and `json.JSONDecodeError` if the file doesn't exist or is not valid text.
+**Шаг 2:**  Извлечение настроек из `settings.json` и `README.MD`:
+* Вызывается `gs.path.root` (предполагается, что `gs` предоставляет методы работы с путями).
+* Читает содержимое `settings.json` в переменную `settings` с использованием `json.load()`, обрабатывая исключения `FileNotFoundError` и `json.JSONDecodeError`.
+* Читает содержимое `README.MD` в переменную `doc_str`. Обрабатывает исключения `FileNotFoundError` и `json.JSONDecodeError`.
 
-5. **Initialization of project attributes:**
-   - Extracts project name, version, documentation, author, copyright, and coffee link from the settings file (or defaults if not found).
+**Шаг 3:**  Инициализация переменных `__project_name__`, `__version__`, `__doc__` и т.д.:
+*  Создает переменные, связанные с проектом, используя значения из `settings`, если они есть, в противном случае используя значения по умолчанию.
+
+**Шаг 4:**  Возвращает значения для последующего использования в других частях проекта.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[set_project_root(marker_files)] --> B{Find root};
-    B --> C[Iterate through parents];
-    C -- File exists --> D{root found};
-    D --> E[Add root to sys.path];
-    D --> F[Return root];
-    C -- File doesn't exist --> C;
-    C -- All parents iterated --> G[Return current dir];
-    B -- Root found --> E;
-
-    E --> H[Initialization of project attributes];
-    H --> I[Get settings];
-    I --> J[Load settings from settings.json];
-    J -- Success --> K[Extract project info];
-    J -- Failure --> L[Set defaults];
-    K --> H;
-
-    L --> H;
-    H --> M[Get documentation];
-    M --> N[Load README.MD];
-    N -- Success --> O[Extract documentation];
-    N -- Failure --> P[Set empty doc string];
-    O --> M;
-    P --> M;
-    H --> M;
-
-
-    subgraph "Project Initialization"
-        H --> Q;
-        Q --> R{__project_name__ = settings.get(...)};
-        R --> Q;
-        Q --> S{__version__ = settings.get(...)};
-        S --> Q;
-
-        Q --> T{__doc__ = doc_str if doc_str else ""};
-        T --> Q;
-
-        Q --> U{__author__ = settings.get(...)};
-        U --> Q;
-        Q --> V{__copyright__ = settings.get(...)};
-        V --> Q;
-        Q --> W{__cofee__ = settings.get(...)};
-        W --> Q;
-
-        Q --> X{Return project attributes};
-
+graph LR
+    A[header.py] --> B{set_project_root};
+    B --> C[__root__];
+    C --> D[gs.path.root];
+    D --> E{settings.json};
+    D --> F{README.MD};
+    E --> G[__project_name__, __version__, ...];
+    F --> H[__doc__];
+    subgraph "Import"
+    I[sys] --> A
+    J[json] --> A
+    K[packaging] --> A
+    L[Pathlib] --> A
+    M[src] --> A
+    end
+    subgraph "Other modules"
+    N[gs] --> D
     end
 ```
 
@@ -167,33 +125,40 @@ graph TD
 
 **Импорты:**
 
-- `sys`: Модуль, предоставляющий доступ к параметрам и функциям интерпретатора Python. Здесь он используется для добавления корневого пути проекта в `sys.path`, чтобы импорты работали корректно.
-- `json`: Модуль для работы с JSON-данными. Использован для загрузки настроек из `settings.json`.
-- `packaging.version`: Модуль для работы с версиями пакетов. Используется для работы с версиями.
-- `pathlib`: Модуль для работы с путями. Он используется для работы с файлами и директориями.
-- `gs`: Скорее всего, это подмодуль из собственной библиотеки проекта (src). Он содержит информацию о путях в проекте, а именно `gs.path.root`.
+* `sys`:  Для работы со системными переменными, в том числе добавления пути к модулям в `sys.path`.
+* `json`: Для работы с JSON-файлами, чтение и парсинг настроек проекта из `settings.json`.
+* `packaging.version`:  Для работы с версиями. (не используется напрямую, но импортируется в проекте).
+* `pathlib`: Для работы с путями к файлам.
+* `src.gs`: Предполагается, что это модуль, предоставляющий доступ к файловым путям проекта (возможно, для работы с файловой системой).
 
 **Классы:**
 
-Нет классов в данном коде.
+Нет классов.
 
 **Функции:**
 
-- `set_project_root(marker_files)`: Эта функция находит корневую директорию проекта, начиная с текущего файла и ища файлы-маркеры.  Аргумент `marker_files` содержит список файлов/папок, которые указывают на корень проекта. Функция возвращает объект `Path` с корневым путем или текущим каталогом, если корневой путь не найден.  Этот метод важен, чтобы избежать проблем с импортами при сложной структуре проекта.
+* `set_project_root(marker_files)`:  Ищет корень проекта, начиная от текущего файла, возвращает путь к корневой директории проекта.
+    * `marker_files`: Кортеж файлов или папок, которые указывают на расположение корня проекта.
+    * Возвращаемое значение: `Path` к корневой директории проекта.
+
 
 **Переменные:**
 
-- `__root__`: Хранит объект `Path` с путем к корневой директории проекта.
-- `settings`: Словарь, содержащий настройки проекта (загружается из `settings.json`).
-- `doc_str`: Строка, содержащая содержимое `README.MD` файла.
-- `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`: Переменные, содержащие информацию о проекте, получаемые из `settings`.  Используются для метаданных проекта.
+* `MODE`: Строковая переменная, вероятно, определяющая режим работы приложения.
+* `__root__`: `Path` к корневой директории проекта, используется для получения относительных путей к ресурсам.
+* `settings`: Словарь, содержащий настройки проекта, загруженные из `settings.json`.
+* `doc_str`: Строка, содержащая содержимое файла `README.MD`.
+* `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`:  Строки, хранящие информацию о проекте, полученную из файла `settings.json` или со значениями по умолчанию.
 
-**Возможные ошибки или области для улучшений:**
 
-- **Обработка ошибок:** Обработка ошибок (`try...except`) для чтения `settings.json` и `README.MD` хороша.  Можно добавить более подробные сообщения об ошибках для лучшей диагностики.
-- **Константы:**  Использование констант `MODE` может быть полезно в будущем, но в текущем виде его значение не используется.
-- **`gs` модуль:** Необходимо знать, что делает модуль `gs`.  Использование импорта `gs.path.root` предполагает, что `gs` определяет полезные классы/функции для работы с путями, но это не видно из данного фрагмента.
+**Возможные ошибки и улучшения:**
 
-**Взаимосвязи с другими частями проекта:**
+* **`gs.path.root`:**  Необходимо понимать, как `gs.path.root` определен. Без этой информации сложно оценить надежность кода. Важно убедиться, что он корректен и вычисляет правильный корень проекта.
+* **Обработка исключений:** Обработка `FileNotFoundError` и `json.JSONDecodeError` — это хороший подход, но стоит рассмотреть более подробную обработку и логирование ошибок для отладки.
+* **Переменные с подчеркиваниями:** Использование двойных подчеркиваний (`__`) для имен переменных (`__root__`) может указывать на то, что они предназначены для внутреннего использования в этом модуле.
+* **Зависимость от `gs`:** Необходимо понимать функциональность `gs` и убедиться, что она корректно взаимодействует с файловой системой.
 
-Код взаимодействует с файлами `settings.json` и `README.MD` в корневой директории проекта.  Связь с другими частями проекта неясна, без дополнительного контекста. Код импортирует модуль `gs`, что подразумевает его существование в пакете `src`.
+
+**Связь с другими частями проекта:**
+
+Функция `set_project_root` и использование `gs`  указывают на то, что данный файл (`header.py`) является частью более крупного проекта, который полагается на эти модули для управления путями к файлам и получением настроек. Файлы `settings.json` и `README.MD` являются необходимыми для работы кода и, вероятно, содержат важные данные о проекте.

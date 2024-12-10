@@ -1,3 +1,4 @@
+```MD
 # Received Code
 
 ```javascript
@@ -53,161 +54,182 @@ app.controller('MainController', function ($scope, $http) {
 # Improved Code
 
 ```javascript
-// Модуль для взаимодействия с OpenAI через Angular
-// ===================================================
+// Модуль для работы с UI ассистентом OpenAI
+// ============================================
+// Этот модуль содержит контроллер для работы с ассистентами OpenAI.
+// Он отвечает за загрузку списка ассистентов и отправку сообщений модели.
 
-/**
- * Модуль для взаимодействия с OpenAI через Angular.
- */
+// Инициализируем Angular приложение
 const app = angular.module('openaiApp', []);
 
-// Контроллер для обработки логики взаимодействия с OpenAI
+// Контроллер для обработки логики
 app.controller('MainController', function ($scope, $http, logger) {
     /**
      * Сообщение пользователя.
+     * Тип: Строка.
      */
     $scope.message = '';
-
     /**
      * Ответ модели.
+     * Тип: Строка.
      */
     $scope.response = '';
-
     /**
      * Список доступных ассистентов.
+     * Тип: Массив.
      */
     $scope.assistants = [];
-
     /**
      * Выбранный ассистент.
+     * Тип: Объект.
      */
     $scope.selectedAssistant = null;
 
-
     /**
-     * Функция загрузки списка доступных ассистентов.
-     *
-     * Запрашивает список ассистентов с сервера и обновляет список.
+     * Загрузка списка ассистентов с сервера.
      */
-    $scope.loadAssistants = async function() {
-        try {
-            const url = 'http://localhost:8000/assistants';
-            const response = await $http.get(url);
-            $scope.assistants = response.data;
-        } catch (error) {
-            logger.error('Ошибка загрузки списка ассистентов', error);
-        }
+    $scope.loadAssistants = function () {
+        const url = 'http://localhost:8000/assistants';
+        $http.get(url)
+            .then(function (response) {
+                $scope.assistants = response.data;
+            })
+            .catch(function (error) {
+                logger.error('Ошибка загрузки ассистентов:', error);
+            });
     };
 
-
-    /**
-     * Функция отправки сообщения модели.
-     *
-     * Отправляет сообщение модели OpenAI, получает ответ и обновляет поле `response`.
-     */
-    $scope.sendMessage = async function () {
-        try {
-            const url = 'http://localhost:8000/ask';
-            const data = {
-                message: $scope.message,
-                system_instruction: 'You are a helpful assistant.',
-                assistant_id: $scope.selectedAssistant?.id // Обработка null
-            };
-
-            const response = await $http.post(url, data);
-            $scope.response = response.data.response;
-        } catch (error) {
-            logger.error('Ошибка отправки сообщения модели', error);
-            $scope.response = 'Произошла ошибка. Попробуйте позже.';
-        }
-    };
-
-    // Инициализация
+    // Инициализация загрузки списка ассистентов
     $scope.loadAssistants();
+
+    /**
+     * Отправка сообщения модели.
+     *
+     * Проверяет выбор ассистента и отправляет запрос на сервер.
+     * Обрабатывает ошибки с помощью logger.
+     */
+    $scope.sendMessage = function () {
+        if (!$scope.selectedAssistant) {
+            logger.error('Не выбран ассистент!');
+            $scope.response = 'Выберите ассистента.';
+            return;
+        }
+
+        const url = 'http://localhost:8000/ask';
+        const data = {
+            message: $scope.message,
+            system_instruction: "You are a helpful assistant.",
+            assistant_id: $scope.selectedAssistant.id
+        };
+
+        $http.post(url, data)
+            .then(function (response) {
+                $scope.response = response.data.response;
+            })
+            .catch(function (error) {
+                logger.error('Ошибка при отправке сообщения:', error);
+                $scope.response = 'Произошла ошибка. Попробуйте позже.';
+            });
+    };
+
+    // Импорт логгера
+    // Подключаем logger из модуля src.logger
+    const { logger } = require('src.logger'); // # Добавляем импорт logger
 });
 ```
 
 # Changes Made
 
-*   Добавлен импорт `logger` из `src.logger`.
-*   Изменен способ обращения к свойствам объекта (использование `$scope.selectedAssistant?.id` вместо `$scope.selectedAssistant.id`).
-*   Функции `loadAssistants` и `sendMessage` переписаны для асинхронной работы и обработки ошибок с помощью `try-catch`.
-*   Добавлена документация в формате RST ко всем функциям и переменным.
-*   Переименована функция `loadAssistants` на `$scope.loadAssistants` для согласования с другими кодами.
-
+*   Добавлен импорт `logger` из модуля `src.logger`.
+*   Изменён метод `loadAssistants` на функцию `$scope.loadAssistants`.
+*   Добавлены комментарии в формате RST к функциям и переменным.
+*   Добавлены проверки на корректность выбора ассистента в методе `sendMessage`.
+*   Обработка ошибок с помощью `logger.error` вместо стандартных `try-except`.
+*   Использование конкретных формулировок в комментариях.
+*   Убран `alert` и излишние пробелы.
 
 # FULL Code
 
 ```javascript
-// Модуль для взаимодействия с OpenAI через Angular
-// ===================================================
-
-/**
- * Модуль для взаимодействия с OpenAI через Angular.
- */
+// Модуль для работы с UI ассистентом OpenAI
+// ============================================
+// Этот модуль содержит контроллер для работы с ассистентами OpenAI.
+// Он отвечает за загрузку списка ассистентов и отправку сообщений модели.
+//
+// ... (Остальные комментарии как в Improved Code)
 const app = angular.module('openaiApp', []);
 
-// Контроллер для обработки логики взаимодействия с OpenAI
+// Контроллер для обработки логики
 app.controller('MainController', function ($scope, $http, logger) {
     /**
      * Сообщение пользователя.
+     * Тип: Строка.
      */
     $scope.message = '';
-
     /**
      * Ответ модели.
+     * Тип: Строка.
      */
     $scope.response = '';
-
     /**
      * Список доступных ассистентов.
+     * Тип: Массив.
      */
     $scope.assistants = [];
-
     /**
      * Выбранный ассистент.
+     * Тип: Объект.
      */
     $scope.selectedAssistant = null;
 
-
     /**
-     * Функция загрузки списка доступных ассистентов.
-     *
-     * Запрашивает список ассистентов с сервера и обновляет список.
+     * Загрузка списка ассистентов с сервера.
      */
-    $scope.loadAssistants = async function() {
-        try {
-            const url = 'http://localhost:8000/assistants';
-            const response = await $http.get(url);
-            $scope.assistants = response.data;
-        } catch (error) {
-            logger.error('Ошибка загрузки списка ассистентов', error);
-        }
+    $scope.loadAssistants = function () {
+        const url = 'http://localhost:8000/assistants';
+        $http.get(url)
+            .then(function (response) {
+                $scope.assistants = response.data;
+            })
+            .catch(function (error) {
+                logger.error('Ошибка загрузки ассистентов:', error);
+            });
     };
 
-
-    /**
-     * Функция отправки сообщения модели.
-     *
-     * Отправляет сообщение модели OpenAI, получает ответ и обновляет поле `response`.
-     */
-    $scope.sendMessage = async function () {
-        try {
-            const url = 'http://localhost:8000/ask';
-            const data = {
-                message: $scope.message,
-                system_instruction: 'You are a helpful assistant.',
-                assistant_id: $scope.selectedAssistant?.id // Обработка null
-            };
-
-            const response = await $http.post(url, data);
-            $scope.response = response.data.response;
-        } catch (error) {
-            logger.error('Ошибка отправки сообщения модели', error);
-            $scope.response = 'Произошла ошибка. Попробуйте позже.';
-        }
-    };
-
-    // Инициализация
+    // Инициализация загрузки списка ассистентов
     $scope.loadAssistants();
+
+    /**
+     * Отправка сообщения модели.
+     *
+     * Проверяет выбор ассистента и отправляет запрос на сервер.
+     * Обрабатывает ошибки с помощью logger.
+     */
+    $scope.sendMessage = function () {
+        if (!$scope.selectedAssistant) {
+            logger.error('Не выбран ассистент!');
+            $scope.response = 'Выберите ассистента.';
+            return;
+        }
+
+        const url = 'http://localhost:8000/ask';
+        const data = {
+            message: $scope.message,
+            system_instruction: "You are a helpful assistant.",
+            assistant_id: $scope.selectedAssistant.id
+        };
+
+        $http.post(url, data)
+            .then(function (response) {
+                $scope.response = response.data.response;
+            })
+            .catch(function (error) {
+                logger.error('Ошибка при отправке сообщения:', error);
+                $scope.response = 'Произошла ошибка. Попробуйте позже.';
+            });
+    };
+
+    // Импорт логгера
+    // Подключаем logger из модуля src.logger
+    const { logger } = require('src.logger'); // # Добавляем импорт logger
 });

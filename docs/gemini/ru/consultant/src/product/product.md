@@ -67,10 +67,8 @@ class Product(ProductFields, PrestaShop):
 """
 .. module:: src.product
    :platform: Windows, Unix
-   :synopsis: Interaction between website, product, and PrestaShop.
-
-   This module defines the behavior of a product in the project.  It handles data retrieval
-   from the product page and interacts with the PrestaShop API.
+   :synopsis: Взаимодействие между веб-сайтом, продуктом и PrestaShop.
+   Определяет поведение продукта в проекте.
 """
 import header
 from src import gs
@@ -78,58 +76,55 @@ from src.endpoints.prestashop import PrestaShop
 from src.category import Category
 from src.product.product_fields import ProductFields
 from src.logger import logger
-from src.utils.jjson import j_loads  # Import necessary function
-
+from src.utils.jjson import j_loads  # Импорт для обработки JSON
 
 class Product(ProductFields, PrestaShop):
     """
-    Class for manipulating product data.
-    Fetches data from the product page and works with the PrestaShop API.
+    Класс для работы с продуктом.
+    Сначала код запрашивает данные с страницы продукта,
+    а затем работает с API PrestaShop.
     """
     def __init__(self, *args, **kwargs):
         """
-        Initializes a Product object.
+        Инициализирует объект Product.
 
-        :param args: Variable positional arguments.
-        :param kwargs: Keyword arguments.
+        :param args: Переменная длина аргументов.
+        :param kwargs: Произвольные ключевые аргументы.
         """
         super().__init__(*args, **kwargs)
-        # ... (rest of the __init__ method) #  Initialisation logic
+        #  Код инициализирует атрибуты, унаследованные от ProductFields и PrestaShop.
+        # ... (rest of the __init__ method)
 
 
     @staticmethod
     def get_parent_categories(id_category: int, dept: int = 0) -> list:
         """
-        Retrieves a list of parent categories for a given category ID.
+        Возвращает список родительских категорий для заданной категории.
+        Дублирует функцию get_parents() из класса Category.
 
-        :param id_category: The ID of the category.
+        :param id_category: ID категории.
         :type id_category: int
-        :param dept: The depth level of the category. Defaults to 0.
+        :param dept: Глубина категории.
         :type dept: int
-        :raises TypeError: If `id_category` is not an integer.
-        :raises ValueError: If `id_category` is not a valid integer.
-        :returns: A list of parent categories.
+        :raises TypeError: если id_category не является целым числом.
+        :returns: Список родительских категорий.
         :rtype: list
         """
         if not isinstance(id_category, int):
+            logger.error("Ошибка: id_category должно быть целым числом.")
             raise TypeError("id_category must be an integer")
-        # Проверка на валидность id_category
-        if not 1 <= id_category <= 100000: # Placeholder for a more accurate validation
-            raise ValueError("Invalid id_category")
         return Category.get_parents(id_category, dept)
+
 ```
 
 # Changes Made
 
-* Added missing import `j_loads` from `src.utils.jjson`.
-* Added type hints and docstrings to `get_parent_categories` function.
-* Improved docstrings (reStructuredText) for the `Product` class and `get_parent_categories` function.
-* Replaced `# ...` in `__init__` with a comment.
-* Added a more comprehensive docstring for the `Product` class using reStructuredText.
-* Replaced `get_parents` with `get_parent_categories`.
-* Added error handling using `logger.error` and more accurate validation.
-* Added validation for `id_category`.
-* Updated the docstrings to use more specific and precise language.
+*   Добавлен импорт `j_loads` из `src.utils.jjson`.
+*   Добавлен `logger.error` для обработки ошибки проверки типа `id_category`.
+*   Переписаны docstrings в формате reStructuredText (RST).
+*   Изменены docstrings на более точные и понятные описания, избегая слов 'получаем', 'делаем' и т.п.
+*   Добавлена  документация в RST формате для модуля.
+*   Исправлен стиль комментариев.
 
 
 # FULL Code
@@ -143,10 +138,8 @@ class Product(ProductFields, PrestaShop):
 """
 .. module:: src.product
    :platform: Windows, Unix
-   :synopsis: Interaction between website, product, and PrestaShop.
-
-   This module defines the behavior of a product in the project.  It handles data retrieval
-   from the product page and interacts with the PrestaShop API.
+   :synopsis: Взаимодействие между веб-сайтом, продуктом и PrestaShop.
+   Определяет поведение продукта в проекте.
 """
 import header
 from src import gs
@@ -154,42 +147,42 @@ from src.endpoints.prestashop import PrestaShop
 from src.category import Category
 from src.product.product_fields import ProductFields
 from src.logger import logger
-from src.utils.jjson import j_loads  # Import necessary function
+from src.utils.jjson import j_loads  # Импорт для обработки JSON
 
 
 class Product(ProductFields, PrestaShop):
     """
-    Class for manipulating product data.
-    Fetches data from the product page and works with the PrestaShop API.
+    Класс для работы с продуктом.
+    Сначала код запрашивает данные с страницы продукта,
+    а затем работает с API PrestaShop.
     """
     def __init__(self, *args, **kwargs):
         """
-        Initializes a Product object.
+        Инициализирует объект Product.
 
-        :param args: Variable positional arguments.
-        :param kwargs: Keyword arguments.
+        :param args: Переменная длина аргументов.
+        :param kwargs: Произвольные ключевые аргументы.
         """
         super().__init__(*args, **kwargs)
-        # ... (rest of the __init__ method) #  Initialisation logic
+        #  Код инициализирует атрибуты, унаследованные от ProductFields и PrestaShop.
+        # ... (rest of the __init__ method)
 
 
     @staticmethod
     def get_parent_categories(id_category: int, dept: int = 0) -> list:
         """
-        Retrieves a list of parent categories for a given category ID.
+        Возвращает список родительских категорий для заданной категории.
+        Дублирует функцию get_parents() из класса Category.
 
-        :param id_category: The ID of the category.
+        :param id_category: ID категории.
         :type id_category: int
-        :param dept: The depth level of the category. Defaults to 0.
+        :param dept: Глубина категории.
         :type dept: int
-        :raises TypeError: If `id_category` is not an integer.
-        :raises ValueError: If `id_category` is not a valid integer.
-        :returns: A list of parent categories.
+        :raises TypeError: если id_category не является целым числом.
+        :returns: Список родительских категорий.
         :rtype: list
         """
         if not isinstance(id_category, int):
+            logger.error("Ошибка: id_category должно быть целым числом.")
             raise TypeError("id_category must be an integer")
-        # Проверка на валидность id_category
-        if not 1 <= id_category <= 100000: # Placeholder for a more accurate validation
-            raise ValueError("Invalid id_category")
         return Category.get_parents(id_category, dept)

@@ -1,3 +1,4 @@
+```MD
 # Received Code
 
 ```javascript
@@ -51,21 +52,20 @@ function sendDataToServer(url) {
 
 ```javascript
 // background.js
-import { j_loads } from 'src.utils.jjson'; // Импорт функции для обработки JSON
-import { logger } from 'src.logger'; // Импорт функции для логирования
+import { logger } from 'src.logger';
+import { j_loads } from 'src.utils.jjson';
+
 
 /**
- * Модуль для обработки сообщений от контентных скриптов и отправки данных на сервер.
+ * Модуль обработки сообщений от контентных скриптов и отправки данных на сервер.
+ * =========================================================================================
  * 
- * Этот модуль слушает события `chrome.browserAction.onClicked` и
- * `chrome.runtime.onMessage`. При получении сообщения с действием
- * `'collectData'` отправляет URL страницы на сервер.
+ * Этот модуль обрабатывает сообщения от контентных скриптов с действием 'collectData',
+ * содержащие URL страницы, и отправляет собранные данные на сервер.
  */
-
-// Функция обработки клика по иконке расширения
 chrome.browserAction.onClicked.addListener(async (tab) => {
     try {
-        // Отправка сообщения контентному скрипту для сбора данных
+        // Отправка сообщения в активный контентный скрипт для сбора данных
         await chrome.tabs.sendMessage(tab.id, { action: 'collectData', url: tab.url });
     } catch (error) {
         logger.error('Ошибка отправки сообщения контентному скрипту:', error);
@@ -73,93 +73,102 @@ chrome.browserAction.onClicked.addListener(async (tab) => {
 });
 
 
-// Функция-обработчик сообщений
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message && message.action === 'collectData') {
-        // Обработка URL и отправка на сервер
-        sendDataToServer(message.url);
-        return true; // Необходимо вернуть true, чтобы сохранить коммуникацию
+/**
+ * Функция-обработчик сообщений, получаемых от других частей расширения.
+ * 
+ * Принимает сообщение с действием 'collectData' и URL,
+ * отправляет собранные данные на сервер.
+ * 
+ * :param message: Сообщение, содержащее данные.
+ * :param sender: Информация об отправителе сообщения.
+ * :param sendResponse: Функция для отправки ответа отправителю.
+ * :raises Exception: Если возникает ошибка при отправке данных.
+ */
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+    if (message.action === 'collectData') {
+        try {
+            // Обработка URL и отправка на сервер
+            const collectedData = await getDataFromStorage();
+            if (collectedData) {
+                await sendDataToAPI(message.url, collectedData);
+            } else {
+                logger.error('Собранные данные не найдены.');
+            }
+        } catch (error) {
+            logger.error('Ошибка при отправке данных на сервер:', error);
+        }
     }
-    return false;
+    // Важно вернуть true, чтобы разрешить асинхронную отправку ответа
+    return true;
 });
 
 
-
-/**
- * Отправляет URL страницы на сервер.
- * 
- * Функция извлекает сохраненные данные из хранилища и отправляет их на сервер.
- * 
- * :param url: URL страницы.
- */
-async function sendDataToServer(url) {
+async function getDataFromStorage() {
     try {
-        const serverUrl = 'http://127.0.0.1/hypotez.online/api/'; // Адрес сервера
-        // Чтение данных из хранилища chrome.storage.local
-        const storageData = await chrome.storage.local.get('collectedData');
-        const collectedData = storageData.collectedData;
-
-        // Проверка наличия данных
-        if (!collectedData) {
-            logger.error('Отсутствуют данные для отправки на сервер.');
-            return;
-        }
-
-        // Отправка данных на сервер с помощью fetch
-        const response = await fetch(serverUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(collectedData)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `Ошибка отправки данных на сервер: ${response.status} ${response.statusText}`;
-            logger.error(errorMessage);
-            throw new Error(errorMessage); // Перебрасываем ошибку для обработки
-        }
-
-        logger.info('Данные успешно отправлены на сервер.');
-
+        // Чтение собранных данных из хранилища
+        const storedData = await chrome.storage.local.get('collectedData');
+        return storedData.collectedData;
     } catch (error) {
-        logger.error('Ошибка при отправке данных на сервер:', error);
+        logger.error('Ошибка чтения данных из хранилища:', error);
+        return null;
     }
 }
+
+async function sendDataToAPI(url, data) {
+    const apiURL = 'http://127.0.0.1/hypotez.online/api/'; // Серверный адрес
+  try {
+    const response = await fetch(apiURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error(`Ошибка отправки данных на сервер: ${response.status} ${response.statusText}`);
+    }
+    logger.info('Данные успешно отправлены на сервер.');
+  } catch (error) {
+    logger.error('Ошибка отправки данных на сервер:', error);
+  }
+}
+
+
 ```
 
 # Changes Made
 
-* Добавлена строка импорта `import { j_loads } from 'src.utils.jjson';`.
-* Добавлена строка импорта `import { logger } from 'src.logger';`.
-* Функция `sendDataToServer` переписана для использования `async/await`.
-* Добавлена обработка ошибок с помощью `try...catch` и `logger.error`.
-* Изменен способ обработки ответа от сервера (`response.ok`).
-* Удалены ненужные `console.log` и `console.error`.
-* Добавлены комментарии в RST формате к функциям и блокам кода.
-* Улучшен стиль и структура кода.
-* Добавлено ключевое слово `return true;` в `chrome.runtime.onMessage.addListener`, чтобы функция не завершалась сразу.
-
+*   Импортированы необходимые модули `logger` и `j_loads` из `src.utils.jjson`.
+*   Добавлены обработчики ошибок с помощью `try...catch` и логирования в `logger`.
+*   Изменён формат отправки данных на сервер, добавлено асинхронное выполнение (`async/await`).
+*   Добавлена проверка успешности ответа от сервера (HTTP статус код).
+*   Функция `getDataFromStorage` теперь асинхронна.
+*   Функция `sendDataToAPI` теперь асинхронна и обрабатывает возможные ошибки.
+*   Комментарии переписаны в формате RST.
+*   Использование `logger.info` для сообщений об успехе.
+*   Замена `console.log` и `console.error` на `logger.info` и `logger.error`.
+*   Улучшены комментарии для повышения читабельности и описания логики.
+*   Обработка невалидных данных.
 
 # FULL Code
 
 ```javascript
 // background.js
-import { j_loads } from 'src.utils.jjson'; // Импорт функции для обработки JSON
-import { logger } from 'src.logger'; // Импорт функции для логирования
+import { logger } from 'src.logger';
+import { j_loads } from 'src.utils.jjson';
+
 
 /**
- * Модуль для обработки сообщений от контентных скриптов и отправки данных на сервер.
+ * Модуль обработки сообщений от контентных скриптов и отправки данных на сервер.
+ * =========================================================================================
  * 
- * Этот модуль слушает события `chrome.browserAction.onClicked` и
- * `chrome.runtime.onMessage`. При получении сообщения с действием
- * `'collectData'` отправляет URL страницы на сервер.
+ * Этот модуль обрабатывает сообщения от контентных скриптов с действием 'collectData',
+ * содержащие URL страницы, и отправляет собранные данные на сервер.
  */
-
-// Функция обработки клика по иконке расширения
 chrome.browserAction.onClicked.addListener(async (tab) => {
     try {
-        // Отправка сообщения контентному скрипту для сбора данных
+        // Отправка сообщения в активный контентный скрипт для сбора данных
         await chrome.tabs.sendMessage(tab.id, { action: 'collectData', url: tab.url });
     } catch (error) {
         logger.error('Ошибка отправки сообщения контентному скрипту:', error);
@@ -167,57 +176,63 @@ chrome.browserAction.onClicked.addListener(async (tab) => {
 });
 
 
-// Функция-обработчик сообщений
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message && message.action === 'collectData') {
-        // Обработка URL и отправка на сервер
-        sendDataToServer(message.url);
-        return true; // Необходимо вернуть true, чтобы сохранить коммуникацию
+/**
+ * Функция-обработчик сообщений, получаемых от других частей расширения.
+ * 
+ * Принимает сообщение с действием 'collectData' и URL,
+ * отправляет собранные данные на сервер.
+ * 
+ * :param message: Сообщение, содержащее данные.
+ * :param sender: Информация об отправителе сообщения.
+ * :param sendResponse: Функция для отправки ответа отправителю.
+ * :raises Exception: Если возникает ошибка при отправке данных.
+ */
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+    if (message.action === 'collectData') {
+        try {
+            // Обработка URL и отправка на сервер
+            const collectedData = await getDataFromStorage();
+            if (collectedData) {
+                await sendDataToAPI(message.url, collectedData);
+            } else {
+                logger.error('Собранные данные не найдены.');
+            }
+        } catch (error) {
+            logger.error('Ошибка при отправке данных на сервер:', error);
+        }
     }
-    return false;
+    // Важно вернуть true, чтобы разрешить асинхронную отправку ответа
+    return true;
 });
 
 
-
-/**
- * Отправляет URL страницы на сервер.
- * 
- * Функция извлекает сохраненные данные из хранилища и отправляет их на сервер.
- * 
- * :param url: URL страницы.
- */
-async function sendDataToServer(url) {
+async function getDataFromStorage() {
     try {
-        const serverUrl = 'http://127.0.0.1/hypotez.online/api/'; // Адрес сервера
-        // Чтение данных из хранилища chrome.storage.local
-        const storageData = await chrome.storage.local.get('collectedData');
-        const collectedData = storageData.collectedData;
-
-        // Проверка наличия данных
-        if (!collectedData) {
-            logger.error('Отсутствуют данные для отправки на сервер.');
-            return;
-        }
-
-        // Отправка данных на сервер с помощью fetch
-        const response = await fetch(serverUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(collectedData)
-        });
-
-        if (!response.ok) {
-            const errorMessage = `Ошибка отправки данных на сервер: ${response.status} ${response.statusText}`;
-            logger.error(errorMessage);
-            throw new Error(errorMessage); // Перебрасываем ошибку для обработки
-        }
-
-        logger.info('Данные успешно отправлены на сервер.');
-
+        // Чтение собранных данных из хранилища
+        const storedData = await chrome.storage.local.get('collectedData');
+        return storedData.collectedData;
     } catch (error) {
-        logger.error('Ошибка при отправке данных на сервер:', error);
+        logger.error('Ошибка чтения данных из хранилища:', error);
+        return null;
     }
 }
-```
+
+async function sendDataToAPI(url, data) {
+    const apiURL = 'http://127.0.0.1/hypotez.online/api/'; // Серверный адрес
+  try {
+    const response = await fetch(apiURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error(`Ошибка отправки данных на сервер: ${response.status} ${response.statusText}`);
+    }
+    logger.info('Данные успешно отправлены на сервер.');
+  } catch (error) {
+    logger.error('Ошибка отправки данных на сервер:', error);
+  }
+}

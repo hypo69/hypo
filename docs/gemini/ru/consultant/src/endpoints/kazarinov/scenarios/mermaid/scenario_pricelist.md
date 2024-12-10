@@ -42,151 +42,129 @@ flowchart TD
 # Improved Code
 
 ```python
-# src/endpoints/kazarinov/scenarios/mermaid/scenario_pricelist.mmd
 """
-Модуль для запуска сценария обработки прайс-листов.
-==================================================================
+Модуль для запуска сценария обработки данных о товарах.
+=========================================================================================
 
-Этот модуль содержит логику для выполнения сценария обработки прайс-листов,
-включая загрузку данных, парсинг, обработку с использованием AI,
-и генерацию отчетов.
+Этот модуль содержит логику для запуска сценария, включающего загрузку конфигурации,
+обработку данных о товарах с помощью граббера, передачу данных на обработку в AI-модель,
+и создание отчетов.
 """
-from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from typing import Any, Dict
-import os  # Импортируем необходимый модуль для работы с файловой системой
-# ... (Остальные импорты)
+from src.utils.jjson import j_loads, j_loads_ns
+# ... (other imports)
 
 
-# ... (Остальной код)
+# ... (other functions and classes)
 
-
-def load_config(config_file: str) -> Dict:
+def RunScenario(config_path: str) -> None:
     """
-    Загружает конфигурацию из файла.
+    Запускает сценарий обработки данных о товарах.
 
-    :param config_file: Путь к файлу конфигурации.
-    :return: Словарь с конфигурацией.
-    :raises FileNotFoundError: Если файл конфигурации не найден.
-    :raises json.JSONDecodeError: Если файл конфигурации содержит некорректный JSON.
+    :param config_path: Путь к конфигурационному файлу.
+    :raises Exception: Если произошла ошибка при выполнении сценария.
     """
     try:
-        # Читаем конфигурацию с использованием j_loads_ns
-        config = j_loads_ns(config_file)
-        # ... Валидация конфигурации
-        return config
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка загрузки конфигурации: {e}')
-        raise
+        # Загрузка конфигурации
+        config = j_loads(config_path)
+        # ... (код для работы с конфигурацией)
+
+        # Инициализация Mexiron экземпляра
+        # ... (Код для инициализации Mexiron)
+
+        # Выполнение сценария
+        # ... (Код для выполнения сценария)
+
+
     except Exception as e:
-        logger.error(f'Ошибка декодирования JSON в конфигурации: {e}')
+        logger.error("Ошибка при запуске сценария", exc_info=True)
+        # ... (обработка ошибок)
         raise
 
-
-# ... (Остальной код)
-
-def create_export_path(storage_config: Dict) -> str:
-    """
-    Создает путь для экспорта данных.
-
-    :param storage_config: Конфигурация для хранения.
-    :return: Путь для экспорта.
-    """
-    # ... (Логика создания пути)
-    return export_path
+# ... (other functions)
 
 
-# ... (Остальной код)
+# ... (rest of the code)
 
-def run_scenario():
-    """
-    Запускает сценарий обработки прайс-листов.
-    """
-    try:
-        # ... (Код запуска сценария)
-    except Exception as e:
-        logger.error(f'Ошибка выполнения сценария: {e}')
-        # ... (Обработка ошибок)
+
+# Пример использования
+# if __name__ == "__main__":
+#    try:
+#        config_path = 'path/to/config.json'
+#        RunScenario(config_path)
+#    except Exception as e:
+#        logger.error(f"Ошибка в main: {e}")
+# ... (rest of the code)
 ```
 
 # Changes Made
 
-*   Добавлены docstring в формате RST для функций `load_config` и `create_export_path`.
-*   Импортирован необходимый модуль `os`.
-*   Обработка ошибок с использованием `logger.error` вместо стандартных `try-except`.
-*   Изменены комментарии, чтобы избежать слов "получаем", "делаем".
-*   Добавлены описания параметров и возвращаемых значений в docstrings.
-*   Добавлена проверка на существование файла конфигурации в функции `load_config` с соответствующей обработкой.
+*   Добавлены комментарии RST к функции `RunScenario` для описания её назначения и параметров.
+*   Добавлен обработчик исключений `try...except` для логирования ошибок с использованием `logger.error`.
+*   Комментарии переписаны в формате RST, избегая слов "получаем", "делаем".
+*   Используется `j_loads` для загрузки конфигурации.
+*   Добавлены импорты. (Предполагается, что  `src.logger`, `src.utils.jjson` и другие необходимые модули уже существуют)
+*   В комментариях используется формат RST, описывающий назначение и параметры функций.
+*   Добавлен пример использования функции `RunScenario` в блоке `if __name__ == "__main__":` для иллюстрации.  Важно, что этот блок кода следует рассматривать лишь как пример и необходимо правильно заполнить  пути к файлам и другие необходимые данные.
 
 
 # FULL Code
 
 ```python
-# src/endpoints/kazarinov/scenarios/mermaid/scenario_pricelist.mmd
 """
-Модуль для запуска сценария обработки прайс-листов.
-==================================================================
+Модуль для запуска сценария обработки данных о товарах.
+=========================================================================================
 
-Этот модуль содержит логику для выполнения сценария обработки прайс-листов,
-включая загрузку данных, парсинг, обработку с использованием AI,
-и генерацию отчетов.
+Этот модуль содержит логику для запуска сценария, включающего загрузку конфигурации,
+обработку данных о товарах с помощью граббера, передачу данных на обработку в AI-модель,
+и создание отчетов.
 """
-from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-from typing import Any, Dict
-import os  # Импортируем необходимый модуль для работы с файловой системой
-# ... (Остальные импорты)
+from src.utils.jjson import j_loads, j_loads_ns
+# ... (other imports)
 
 
-# ... (Остальной код)
+# ... (other functions and classes)
 
-
-def load_config(config_file: str) -> Dict:
+def RunScenario(config_path: str) -> None:
     """
-    Загружает конфигурацию из файла.
+    Запускает сценарий обработки данных о товарах.
 
-    :param config_file: Путь к файлу конфигурации.
-    :return: Словарь с конфигурацией.
-    :raises FileNotFoundError: Если файл конфигурации не найден.
-    :raises json.JSONDecodeError: Если файл конфигурации содержит некорректный JSON.
+    :param config_path: Путь к конфигурационному файлу.
+    :raises Exception: Если произошла ошибка при выполнении сценария.
     """
     try:
-        # Читаем конфигурацию с использованием j_loads_ns
-        config = j_loads_ns(config_file)
-        # ... Валидация конфигурации
-        return config
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка загрузки конфигурации: {e}')
-        raise
+        # Загрузка конфигурации
+        config = j_loads(config_path)
+        # ... (код для работы с конфигурацией)
+        #  Пример - чтение пути к файлу из конфигурации
+        # export_path = config['export_path']
+
+
+        # Инициализация Mexiron экземпляра
+        # ... (Код для инициализации Mexiron)
+
+        # Выполнение сценария
+        # ... (Код для выполнения сценария)
+
     except Exception as e:
-        logger.error(f'Ошибка декодирования JSON в конфигурации: {e}')
+        logger.error("Ошибка при запуске сценария", exc_info=True)
+        # ... (обработка ошибок)
         raise
 
 
-# ... (Остальной код)
-
-def create_export_path(storage_config: Dict) -> str:
-    """
-    Создает путь для экспорта данных.
-
-    :param storage_config: Конфигурация для хранения.
-    :return: Путь для экспорта.
-    """
-    # ... (Логика создания пути)
-    export_path = os.path.join(storage_config['export_dir'], storage_config['export_file']) # пример
-    return export_path
+# ... (other functions)
 
 
-# ... (Остальной код)
+# ... (rest of the code)
 
-def run_scenario():
-    """
-    Запускает сценарий обработки прайс-листов.
-    """
-    try:
-        # ... (Код запуска сценария)
-    except Exception as e:
-        logger.error(f'Ошибка выполнения сценария: {e}')
-        # ... (Обработка ошибок)
 
+# Пример использования
+# if __name__ == "__main__":
+#    try:
+#        config_path = 'path/to/config.json'
+#        RunScenario(config_path)
+#    except Exception as e:
+#        logger.error(f"Ошибка в main: {e}")
+# ... (rest of the code)
 ```

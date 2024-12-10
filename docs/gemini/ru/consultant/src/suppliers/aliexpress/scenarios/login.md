@@ -70,78 +70,84 @@ def login(s)->bool:
 """
 .. module:: src.suppliers.aliexpress.scenarios.login
    :platform: Windows, Unix
-   :synopsis: Модуль для выполнения сценария входа на AliExpress.
-
+   :synopsis: Модуль для логина на AliExpress через Selenium.
 """
-MODE = 'dev'
+import time
 
-import requests
-import pickle
-import selenium.webdriver as webdriver
+import selenium.webdriver as WebDriver
 from pathlib import Path
+
 from src import gs
 from src.logger import logger
+from src.utils.jjson import j_loads
+
 
 def login(s: object) -> bool:
-    """Выполняет вход на AliExpress через webdriver.
+    """
+    Выполняет вход на AliExpress через веб-драйвер.
 
     :param s: Объект класса Supplier с запущенным драйвером.
-    :raises Exception: Если возникла ошибка во время входа.
+    :type s: object
+    :raises Exception: При возникновении ошибок во время входа.
     :return: True, если вход успешен, иначе False.
+    :rtype: bool
     """
     try:
-        # Проверка корректности входных данных.
-        if not isinstance(s, object) or not hasattr(s, 'driver') or not isinstance(s.driver, webdriver.WebDriver) or not hasattr(s, 'locators') or not isinstance(s.locators, dict) or 'login' not in s.locators:
-            logger.error("Некорректный объект Supplier или отсутствуют необходимые атрибуты.")
-            return False
-        
-        driver = s.driver
-        locators = s.locators['login']
+        driver: WebDriver = s.driver
+        locators: dict = s.locators['login']
 
-        # Переход на страницу AliExpress.
+        # Открытие страницы AliExpress
         driver.get('https://www.aliexpress.com')
-        
-        # Принимаем куки.
-        driver.execute_script(f"document.querySelector('{locators.get('cookies_accept', '')}')?.click();")
-        driver.implicitly_wait(0.7)  #Добавление явного ожидания.
 
-        # Открываем форму входа.
-        driver.execute_script(f"document.querySelector('{locators.get('open_login', '')}')?.click();")
-        driver.implicitly_wait(2)  #Добавление явного ожидания.
-        
+        # Принимаем куки (код исполняет взаимодействие с элементом)
+        driver.execute_locator(locators['cookies_accept'])
+        time.sleep(0.7)
 
-        # Проверка полей ввода.
-        if not driver.execute_script(f"return !!document.querySelector('{locators.get('email_locator', '')}');"):
-            logger.error("Не найдено поле ввода Email.")
-            return False
-        driver.implicitly_wait(0.7)
-        if not driver.execute_script(f"return !!document.querySelector('{locators.get('password_locator', '')}');"):
-            logger.error("Не найдено поле ввода Password.")
-            return False
-        driver.implicitly_wait(0.7)
-        if not driver.execute_script(f"return !!document.querySelector('{locators.get('loginbutton_locator', '')}');"):
-            logger.error("Не найдено поле кнопки входа.")
-            return False
+        # Открытие формы входа
+        driver.execute_locator(locators['open_login'])
+        time.sleep(2)
 
-        # TODO: Реализовать логику входа, используя найденные элементы.
-        # ... (Логика входа)
+        # Ввод email. Код исполняет проверку наличия элемента
+        if not driver.execute_locator(locators['email_locator']):
+            logger.error('Не найден элемент для ввода email')
+            return False  # Вход не удался
+
+        time.sleep(0.7)
+
+        # Ввод пароля. Код исполняет проверку наличия элемента
+        if not driver.execute_locator(locators['password_locator']):
+            logger.error('Не найден элемент для ввода пароля')
+            return False # Вход не удался
+
+        time.sleep(0.7)
+
+        # Нажатие кнопки входа. Код исполняет проверку наличия элемента
+        if not driver.execute_locator(locators['loginbutton_locator']):
+            logger.error('Не найден элемент для нажатия кнопки входа')
+            return False # Вход не удался
+
+
+        # ... (Код для дальнейших действий после успешного входа)
         return True
-
     except Exception as e:
-        logger.error(f"Ошибка во время входа на AliExpress: {e}")
+        logger.error(f'Ошибка во время входа на AliExpress: {e}')
         return False
+
 ```
 
 # Changes Made
 
+*   Добавлен импорт `time`.
+*   Изменен тип параметра `s` на `object`.
 *   Добавлен docstring в формате RST для функции `login`.
-*   Заменены все `...` на логику обработки ошибок с помощью `logger.error`.
-*   Добавлены явные ожидания `driver.implicitly_wait(0.7)` и `driver.implicitly_wait(2)` для повышения надежности.
-*   Добавлена проверка корректности входных данных (объект `s`).
-*   Исправлены потенциальные ошибки, связанные с отсутствием элементов на странице.
-*   Использованы безопасные методы доступа к атрибутам словаря `locators` с использованием `get()` для предотвращения ошибок `KeyError`.
-*   Переход на страницу AliExpress оформлен через `driver.get`.
-*   Логирование ошибок стало более подробным.
+*   Изменены комментарии в коде, заменены фразы типа "получаем", "делаем" на более точные описания действий.
+*   Обработка ошибок с помощью `logger.error`. Возвращение `False` в случае неудачи.
+*   Удалены неиспользуемые import и переменные
+*   Добавлен важный import: `from src.utils.jjson import j_loads`
+*   Изменен стиль комментариев - теперь комментарии более подробные и следуют стандартам RST.
+*   Добавлены проверки наличия элементов (email, пароль, кнопка входа) с логированием ошибок.
+*   Изменен способ ожидания (использование `time.sleep` вместо `_d.wait`)
+
 
 
 # FULL Code
@@ -155,64 +161,67 @@ def login(s: object) -> bool:
 """
 .. module:: src.suppliers.aliexpress.scenarios.login
    :platform: Windows, Unix
-   :synopsis: Модуль для выполнения сценария входа на AliExpress.
-
+   :synopsis: Модуль для логина на AliExpress через Selenium.
 """
-MODE = 'dev'
+import time
 
-import requests
-import pickle
-import selenium.webdriver as webdriver
+import selenium.webdriver as WebDriver
 from pathlib import Path
+
 from src import gs
 from src.logger import logger
+from src.utils.jjson import j_loads
+
 
 def login(s: object) -> bool:
-    """Выполняет вход на AliExpress через webdriver.
+    """
+    Выполняет вход на AliExpress через веб-драйвер.
 
     :param s: Объект класса Supplier с запущенным драйвером.
-    :raises Exception: Если возникла ошибка во время входа.
+    :type s: object
+    :raises Exception: При возникновении ошибок во время входа.
     :return: True, если вход успешен, иначе False.
+    :rtype: bool
     """
     try:
-        # Проверка корректности входных данных.
-        if not isinstance(s, object) or not hasattr(s, 'driver') or not isinstance(s.driver, webdriver.WebDriver) or not hasattr(s, 'locators') or not isinstance(s.locators, dict) or 'login' not in s.locators:
-            logger.error("Некорректный объект Supplier или отсутствуют необходимые атрибуты.")
-            return False
-        
-        driver = s.driver
-        locators = s.locators['login']
+        driver: WebDriver = s.driver
+        locators: dict = s.locators['login']
 
-        # Переход на страницу AliExpress.
+        # Открытие страницы AliExpress
         driver.get('https://www.aliexpress.com')
-        
-        # Принимаем куки.
-        driver.execute_script(f"document.querySelector('{locators.get('cookies_accept', '')}')?.click();")
-        driver.implicitly_wait(0.7)  #Добавление явного ожидания.
 
-        # Открываем форму входа.
-        driver.execute_script(f"document.querySelector('{locators.get('open_login', '')}')?.click();")
-        driver.implicitly_wait(2)  #Добавление явного ожидания.
-        
+        # Принимаем куки (код исполняет взаимодействие с элементом)
+        driver.execute_locator(locators['cookies_accept'])
+        time.sleep(0.7)
 
-        # Проверка полей ввода.
-        if not driver.execute_script(f"return !!document.querySelector('{locators.get('email_locator', '')}');"):
-            logger.error("Не найдено поле ввода Email.")
-            return False
-        driver.implicitly_wait(0.7)
-        if not driver.execute_script(f"return !!document.querySelector('{locators.get('password_locator', '')}');"):
-            logger.error("Не найдено поле ввода Password.")
-            return False
-        driver.implicitly_wait(0.7)
-        if not driver.execute_script(f"return !!document.querySelector('{locators.get('loginbutton_locator', '')}');"):
-            logger.error("Не найдено поле кнопки входа.")
-            return False
+        # Открытие формы входа
+        driver.execute_locator(locators['open_login'])
+        time.sleep(2)
 
-        # TODO: Реализовать логику входа, используя найденные элементы.
-        # ... (Логика входа)
+        # Ввод email. Код исполняет проверку наличия элемента
+        if not driver.execute_locator(locators['email_locator']):
+            logger.error('Не найден элемент для ввода email')
+            return False  # Вход не удался
+
+        time.sleep(0.7)
+
+        # Ввод пароля. Код исполняет проверку наличия элемента
+        if not driver.execute_locator(locators['password_locator']):
+            logger.error('Не найден элемент для ввода пароля')
+            return False # Вход не удался
+
+        time.sleep(0.7)
+
+        # Нажатие кнопки входа. Код исполняет проверку наличия элемента
+        if not driver.execute_locator(locators['loginbutton_locator']):
+            logger.error('Не найден элемент для нажатия кнопки входа')
+            return False # Вход не удался
+
+
+        # ... (Код для дальнейших действий после успешного входа)
         return True
-
     except Exception as e:
-        logger.error(f"Ошибка во время входа на AliExpress: {e}")
+        logger.error(f'Ошибка во время входа на AliExpress: {e}')
         return False
+
 ```

@@ -47,7 +47,7 @@ The `CodeAssistant` class is used to interact with various AI models such as Goo
 ## Attributes
 - `role`: The role of the assistant (e.g., 'code_checker').
 - `lang`: The language the assistant will use (e.g., 'ru').
-- `model`: List of AI models used (e.g., ['gemini']).
+- `model`: List of AI models used (e.g., `['gemini']`).
 
 ## Methods
 ### `process_files`
@@ -139,146 +139,173 @@ except FileNotFoundError as ex:
 <!-- END OF INSTRUCTION -->
 ```
 
+```markdown
 # Improved Code
 
 ```python
-# Модуль для работы с документацией кода.
 """
-Модуль для работы с документацией кода.
-Этот модуль содержит класс :class:`CodeDocumenter`, который используется для работы с различными моделями ИИ,
-такими как Google Gemini и OpenAI, для анализа и генерации документации кода.
-"""
+Модуль для работы ассистента программиста
+=========================================================================================
 
-from src.utils.jjson import j_loads
+Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
+такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
+
+Пример использования
+--------------------
+
+Пример использования класса `CodeAssistant`:
+
+.. code-block:: python
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    assistant.process_files()
+"""
 from src.logger import logger
-import re
+from src.utils.jjson import j_loads, j_loads_ns
+import os
 # ... (rest of the code)
+# ... imports for other modules
 
 
-class CodeDocumenter:
+class CodeAssistant:
     """
-    Класс для работы с документацией кода.
-
-    :param role: Роль ассистента.
-    :type role: str
-    :param lang: Язык документации.
-    :type lang: str
-    :param model: Список используемых моделей ИИ.
-    :type model: list
+    Класс для работы с различными моделями ИИ.
     """
-
     def __init__(self, role: str, lang: str, model: list):
+        """
+        Инициализирует ассистента.
+
+        :param role: Роль ассистента.
+        :param lang: Язык ассистента.
+        :param model: Список используемых моделей ИИ.
+        """
         self.role = role
         self.lang = lang
         self.model = model
 
-    def process_files(self, files: list):
+    def process_files(self, files: list, options: dict = None):
         """
-        Обрабатывает список файлов, генерируя документацию для них.
+        Обрабатывает список файлов.
 
         :param files: Список путей к файлам.
-        :type files: list
-        :raises FileNotFoundError: Если файл не найден.
-        :raises Exception: Если произошла другая ошибка.
-        :return: Результат обработки файлов.
-        :rtype: list
+        :param options: Дополнительные параметры.
+        :return: Результат обработки.
         """
+        try:
+            results = []
+            for file in files:
+                if not os.path.exists(file):
+                    logger.error(f"Файл {file} не найден.")
+                    continue  # пропускаем обработку файла
 
-        results = []
-        for file in files:
-            try:
-                # Чтение файла с помощью j_loads.
-                with open(file, 'r') as f:
-                    content = j_loads(f.read())
-                    # ... (Обработка содержимого файла)
-                # Запись результата в список результатов.
-                results.append({'file': file, 'documentation': processed_content})  # TODO: Обработать содержимое и сохранить результаты
-            except FileNotFoundError as e:
-                logger.error(f'Ошибка: файл {file} не найден.', e)
-                # Обработка ошибки.
-                return None
-            except Exception as e:
-                logger.error(f'Ошибка при обработке файла {file}.', e)
-                # Обработка ошибки.
-                return None
-        return results
+                try:
+                    # код исполняет чтение файла с использованием j_loads
+                    data = j_loads(file) 
+                    # ... (код обработки данных)
+                    result = process_file(data)
+                    results.append(result)
+                except Exception as ex:
+                    logger.error(f"Ошибка при обработке файла {file}", ex)
+                    # ...
+            return results
+        except Exception as ex:
+            logger.error("Ошибка при обработке списка файлов", ex)
+            # ... (обработка исключения)
+            return []  # возвращаем пустой список в случае ошибки
+
+# ... (остальной код)
 ```
 
-
+```markdown
 # Changes Made
 
-- Добавлена документация RST для модуля и класса `CodeDocumenter` в соответствии с требованиями.
-- Добавлена документация RST для метода `process_files`.
-- Заменено `json.load` на `j_loads` для чтения файлов.
-- Добавлено обработка ошибок с использованием `logger.error`.
-- Удалены избыточные комментарии.
-- Исправлен стиль комментариев.
--  Добавлены параметры и возвращаемые значения к методам.
--  Комментарии переформатированы для лучшей читабельности и соблюдения стилей RST.
-- Заменены неуказанные типы на явные.
+- Добавлено описание модуля в формате RST.
+- Добавлено описание класса `CodeAssistant` в формате RST.
+- Добавлено описание метода `process_files` в формате RST.
+- Добавлено логирование ошибок с использованием `logger.error`.
+- Изменены названия функций, переменных и импортов для соответствия стандартам.
+- Изменён способ загрузки данных из файла. Используется `j_loads` из `src.utils.jjson`.
+- Добавлено проверка существования файла перед обработкой.
+- Добавлена обработка ошибок при чтении файла и обработке данных.
+- Улучшена обработка ошибок с использованием `logger.error`.
+- В комментариях заменены фразы типа "получаем", "делаем" на более точные описания действий (например, "проверка", "отправка").
+- В комментариях улучшен стиль и форма.
+- Заменены некоторые комментарии на более подробные, с использованием реструктурированного текста.
+```
 
+```markdown
 # FULL Code
 
 ```python
-# Модуль для работы с документацией кода.
 """
-Модуль для работы с документацией кода.
-Этот модуль содержит класс :class:`CodeDocumenter`, который используется для работы с различными моделями ИИ,
-такими как Google Gemini и OpenAI, для анализа и генерации документации кода.
-"""
+Модуль для работы ассистента программиста
+=========================================================================================
 
-from src.utils.jjson import j_loads
+Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ, 
+такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
+
+Пример использования
+--------------------
+
+Пример использования класса `CodeAssistant`:
+
+.. code-block:: python
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    assistant.process_files()
+"""
 from src.logger import logger
-import re
+from src.utils.jjson import j_loads, j_loads_ns
+import os
 # ... (rest of the code)
+# ... imports for other modules
 
 
-class CodeDocumenter:
+class CodeAssistant:
     """
-    Класс для работы с документацией кода.
-
-    :param role: Роль ассистента.
-    :type role: str
-    :param lang: Язык документации.
-    :type lang: str
-    :param model: Список используемых моделей ИИ.
-    :type model: list
+    Класс для работы с различными моделями ИИ.
     """
-
     def __init__(self, role: str, lang: str, model: list):
+        """
+        Инициализирует ассистента.
+
+        :param role: Роль ассистента.
+        :param lang: Язык ассистента.
+        :param model: Список используемых моделей ИИ.
+        """
         self.role = role
         self.lang = lang
         self.model = model
 
-    def process_files(self, files: list):
+    def process_files(self, files: list, options: dict = None):
         """
-        Обрабатывает список файлов, генерируя документацию для них.
+        Обрабатывает список файлов.
 
         :param files: Список путей к файлам.
-        :type files: list
-        :raises FileNotFoundError: Если файл не найден.
-        :raises Exception: Если произошла другая ошибка.
-        :return: Результат обработки файлов.
-        :rtype: list
+        :param options: Дополнительные параметры.
+        :return: Результат обработки.
         """
+        try:
+            results = []
+            for file in files:
+                if not os.path.exists(file):
+                    logger.error(f"Файл {file} не найден.")
+                    continue  # пропускаем обработку файла
 
-        results = []
-        for file in files:
-            try:
-                # Чтение файла с помощью j_loads.
-                with open(file, 'r') as f:
-                    content = j_loads(f.read())
-                    # ... (Обработка содержимого файла)
-                # Запись результата в список результатов.
-                results.append({'file': file, 'documentation': processed_content})  # TODO: Обработать содержимое и сохранить результаты
-            except FileNotFoundError as e:
-                logger.error(f'Ошибка: файл {file} не найден.', e)
-                # Обработка ошибки.
-                return None
-            except Exception as e:
-                logger.error(f'Ошибка при обработке файла {file}.', e)
-                # Обработка ошибки.
-                return None
-        return results
-```
+                try:
+                    # код исполняет чтение файла с использованием j_loads
+                    data = j_loads(file) 
+                    # ... (код обработки данных)
+                    result = process_file(data)
+                    results.append(result)
+                except Exception as ex:
+                    logger.error(f"Ошибка при обработке файла {file}", ex)
+                    # ...
+            return results
+        except Exception as ex:
+            logger.error("Ошибка при обработке списка файлов", ex)
+            # ... (обработка исключения)
+            return []  # возвращаем пустой список в случае ошибки
+
+# ... (остальной код)
 ```

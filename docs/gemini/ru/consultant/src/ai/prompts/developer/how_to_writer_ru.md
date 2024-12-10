@@ -1,136 +1,116 @@
 # Received Code
 
 ```python
-# Код для обработки данных из файла
+# Этот код пытается загрузить данные из файла.
 import json
 
-def process_data(file_path):
-    """
-    Обрабатывает данные из файла.
-    """
+def load_data(file_path):
+    # Попытка загрузить данные из файла
     try:
-        # Чтение данных из файла
         with open(file_path, 'r') as f:
             data = json.load(f)
-        # ... (Далее код для обработки данных)
-        return data
+            return data
     except FileNotFoundError:
-        logger.error(f'Ошибка: Файл {file_path} не найден.')
+        # Если файла не существует
+        print(f"Файл {file_path} не найден.")
         return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: Некорректный JSON в файле {file_path}: {e}')
+    except json.JSONDecodeError:
+        # Если файл не является валидным JSON
+        print(f"Ошибка декодирования JSON в файле {file_path}.")
         return None
-
-
-# ... (Дополнительный код)
 ```
 
 # Improved Code
 
 ```python
 """
-Модуль для обработки данных из JSON-файлов.
+Модуль для загрузки данных из файла.
 =========================================================================================
 
-Этот модуль содержит функцию для загрузки и обработки данных из файлов в формате JSON.
+Этот модуль содержит функцию :func:`load_data`, которая загружает данные из файла JSON.
+
 """
-import json
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-
-def process_data(file_path):
+def load_data(file_path: str) -> dict | None:
     """
-    Загружает и обрабатывает данные из файла.
+    Загружает данные из файла JSON.
 
     :param file_path: Путь к файлу.
     :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл содержит некорректный JSON.
-    :return: Обработанные данные или None при ошибках.
-    :rtype: dict or None
+    :raises FileNotFoundError: Если файла не существует.
+    :raises json.JSONDecodeError: Если файл не является валидным JSON.
+    :return: Загруженные данные или None, если файл не найден или содержит ошибки.
+    :rtype: dict | None
     """
     try:
-        # Загрузка данных из файла с помощью j_loads для обработки ошибок
+        # Попытка загрузить данные из файла с использованием j_loads
         data = j_loads(file_path)
-
-        # Проверка, загрузились ли данные
-        if data is None:
-            logger.error(f'Ошибка загрузки данных из файла {file_path}.')
-            return None
-
-        # ... (Здесь будет код обработки данных)
         return data
     except FileNotFoundError as e:
-        logger.error(f'Ошибка: Файл {file_path} не найден: {e}')
+        # Если файла не существует, логируется ошибка и возвращается None
+        logger.error(f"Файл {file_path} не найден.", exc_info=True)
         return None
     except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: Некорректный JSON в файле {file_path}: {e}')
+        # Если файл содержит ошибки декодирования JSON, логируется ошибка и возвращается None
+        logger.error(f"Ошибка декодирования JSON в файле {file_path}.", exc_info=True)
         return None
-
-
-# Пример использования
-# data = process_data('data.json')
-# if data:
-#     # Обработка данных...
-#     print(data)
+    except Exception as e:
+        # Обработка других возможных ошибок, таких как ошибки ввода-вывода
+        logger.error(f"Произошла ошибка при загрузке данных из файла {file_path}.", exc_info=True)
+        return None
 ```
 
 # Changes Made
 
-*   Импортирован `j_loads` из `src.utils.jjson` для загрузки данных.
-*   Добавлен модульный docstring в формате RST.
-*   Добавлены docstring для функции `process_data` в формате RST, описывающие параметры, типы возвращаемых значений и возможные исключения.
-*   Обработка ошибок `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
-*   Проверка, загрузились ли данные. Возвращение `None` при ошибке.
-*   Заменён стандартный `json.load` на `j_loads`.
-*   Добавлены примеры использования.
-
+*   Заменён `json.load` на `j_loads` из `src.utils.jjson` для загрузки JSON данных.
+*   Добавлены аннотации типов для параметров и возвращаемого значения функции.
+*   Добавлена docstring в формате reStructuredText (RST) для функции.
+*   Вместо `print` используется `logger.error` для логирования ошибок.
+*   Обработка исключений теперь с помощью `logger.error`  и включением отладочной информации `exc_info=True`.
+*   Добавлен обработчик для других потенциальных ошибок, таких как ошибки ввода-вывода.
+*   Изменён стиль комментариев на RST.
+*   Добавлено описание модуля в начале файла.
 
 # FULL Code
 
 ```python
 """
-Модуль для обработки данных из JSON-файлов.
+Модуль для загрузки данных из файла.
 =========================================================================================
 
-Этот модуль содержит функцию для загрузки и обработки данных из файлов в формате JSON.
+Этот модуль содержит функцию :func:`load_data`, которая загружает данные из файла JSON.
+
 """
-import json
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-
-def process_data(file_path):
+def load_data(file_path: str) -> dict | None:
     """
-    Загружает и обрабатывает данные из файла.
+    Загружает данные из файла JSON.
 
     :param file_path: Путь к файлу.
     :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл содержит некорректный JSON.
-    :return: Обработанные данные или None при ошибках.
-    :rtype: dict or None
+    :raises FileNotFoundError: Если файла не существует.
+    :raises json.JSONDecodeError: Если файл не является валидным JSON.
+    :return: Загруженные данные или None, если файл не найден или содержит ошибки.
+    :rtype: dict | None
     """
     try:
-        # Загрузка данных из файла с помощью j_loads для обработки ошибок
+        # Попытка загрузить данные из файла с использованием j_loads
+        # Изменяем на j_loads из jjson
         data = j_loads(file_path)
-        # Проверка, загрузились ли данные
-        if data is None:
-            logger.error(f'Ошибка загрузки данных из файла {file_path}.')
-            return None
-        # ... (Здесь будет код обработки данных)
         return data
     except FileNotFoundError as e:
-        logger.error(f'Ошибка: Файл {file_path} не найден: {e}')
+        # Если файла не существует, логируется ошибка и возвращается None
+        logger.error(f"Файл {file_path} не найден.", exc_info=True)
         return None
     except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: Некорректный JSON в файле {file_path}: {e}')
+        # Если файл содержит ошибки декодирования JSON, логируется ошибка и возвращается None
+        logger.error(f"Ошибка декодирования JSON в файле {file_path}.", exc_info=True)
         return None
-
-
-# Пример использования
-# data = process_data('data.json')
-# if data:
-#     # Обработка данных...
-#     print(data)
+    except Exception as e:
+        # Обработка других возможных ошибок, таких как ошибки ввода-вывода
+        logger.error(f"Произошла ошибка при загрузке данных из файла {file_path}.", exc_info=True)
+        return None

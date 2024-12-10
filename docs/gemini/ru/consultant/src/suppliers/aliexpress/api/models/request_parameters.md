@@ -4,7 +4,7 @@
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class ProductType:
     ALL = 'ALL'
@@ -28,39 +28,34 @@ class LinkType:
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" Модуль для определения параметров запроса к API AliExpress.
-
-    Определяет константы для типов продуктов, способов сортировки
-    и типов ссылок.
-"""
-from src.logger import logger
+## ~~~~~~~~~~~~~~~
+""" Модуль для определения типов параметров запроса к API AliExpress. """
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
 class ProductType:
-    """ Типы продуктов на AliExpress. """
+    """ Тип продукта. """
     ALL = 'ALL'
     PLAZA = 'PLAZA'
     TMALL = 'TMALL'
 
 class SortBy:
-    """ Способы сортировки результатов поиска. """
+    """ Сортировка результатов. """
     SALE_PRICE_ASC = 'SALE_PRICE_ASC'
     SALE_PRICE_DESC = 'SALE_PRICE_DESC'
     LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'
     LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'
 
 class LinkType:
-    """ Типы ссылок. """
+    """ Тип ссылки. """
     NORMAL = 0
     HOTLINK = 2
 ```
 
 # Changes Made
 
-* Добавлена строка документации для модуля (`__doc__`).
-* Добавлена строка документации для каждого класса (`class ProductType`, `class SortBy`, `class LinkType`).
-* Импортирована библиотека `logger` из `src.logger`.
-* Заменены комментарии к классам на docstring в RST формате.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлена документация RST к классу `ProductType`, `SortBy`, `LinkType` и всему модулю.
+*   Комментарии из исходного кода сохранены.
 
 
 # FULL Code
@@ -69,28 +64,42 @@ class LinkType:
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-""" Модуль для определения параметров запроса к API AliExpress.
+## ~~~~~~~~~~~~~~~
+""" Модуль для определения типов параметров запроса к API AliExpress. """
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
-    Определяет константы для типов продуктов, способов сортировки
-    и типов ссылок.
-"""
-from src.logger import logger
+# class ProductType:
+#     """ Тип продукта. """
+#     ALL = 'ALL'
+#     PLAZA = 'PLAZA'
+#     TMALL = 'TMALL'
 
 class ProductType:
-    """ Типы продуктов на AliExpress. """
+    """ Тип продукта. """
     ALL = 'ALL'
     PLAZA = 'PLAZA'
     TMALL = 'TMALL'
 
+# class SortBy:
+#     """ Сортировка результатов. """
+#     SALE_PRICE_ASC = 'SALE_PRICE_ASC'
+#     SALE_PRICE_DESC = 'SALE_PRICE_DESC'
+#     LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'
+#     LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'
+
 class SortBy:
-    """ Способы сортировки результатов поиска. """
+    """ Сортировка результатов. """
     SALE_PRICE_ASC = 'SALE_PRICE_ASC'
     SALE_PRICE_DESC = 'SALE_PRICE_DESC'
     LAST_VOLUME_ASC = 'LAST_VOLUME_ASC'
     LAST_VOLUME_DESC = 'LAST_VOLUME_DESC'
 
+# class LinkType:
+#     """ Тип ссылки. """
+#     NORMAL = 0
+#     HOTLINK = 2
+
 class LinkType:
-    """ Типы ссылок. """
+    """ Тип ссылки. """
     NORMAL = 0
     HOTLINK = 2

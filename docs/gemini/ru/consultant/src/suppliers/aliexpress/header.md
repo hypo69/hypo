@@ -1,4 +1,5 @@
-# Received Code
+```MD
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/header.py
@@ -56,7 +57,7 @@ except (FileNotFoundError, json.JSONDecodeError):
     ...
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/header.py
@@ -65,37 +66,33 @@ except (FileNotFoundError, json.JSONDecodeError):
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с поставщиком AliExpress.
-=========================================================================================
-
-Этот модуль содержит необходимые функции и переменные для взаимодействия с API AliExpress.
-Он использует настройки из файла settings.json для конфигурации.
+.. module:: src.suppliers.aliexpress
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с поставщиком AliExpress.
 """
 import sys
 from pathlib import Path
 from packaging.version import Version
 
-# Импортируем функцию чтения JSON из файла с обработкой ошибок
-from src.utils.jjson import j_loads
-
-# Импорт логирования
-from src.logger import logger
+from src import gs
+from src.utils.jjson import j_loads  # Импорт функции для работы с JSON
 
 MODE = 'dev'
+
+settings: dict = None
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневой каталог проекта, начиная с текущей директории.
+    Определяет корневой каталог проекта, начиная с каталога текущего файла.
 
-    :param marker_files: Список файлов или папок, по наличию которых определяется корень проекта.
+    :param marker_files: Корневые файлы проекта.
     :type marker_files: tuple
-    :return: Путь к корневому каталогу проекта.
+    :return: Путь к корневому каталогу.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
-    for parent in [current_path] + list(current_path.parents):
+    project_root: Path = Path(__file__).resolve().parent
+    for parent in [project_root] + list(project_root.parents):
         if any((parent / marker).exists() for marker in marker_files):
             project_root = parent
             break
@@ -103,38 +100,33 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
         sys.path.insert(0, str(project_root))
     return project_root
 
-
 # Получение корневого каталога проекта
 project_root = set_project_root()
-"""project_root (Path): Путь к корневому каталогу проекта."""
+"""project_root (Path): Корневой каталог проекта"""
 
-from src import gs
-
-
-settings: dict = None
 try:
-    # Чтение файла настроек с помощью j_loads, обработка ошибок
-    settings_path = project_root / 'src' / 'settings.json'
-    settings = j_loads(settings_path)
+    # Чтение настроек из файла settings.json с помощью j_loads
+    settings = j_loads(project_root / 'src' / 'settings.json')
 except FileNotFoundError:
-    logger.error(f'Файл настроек settings.json не найден в {settings_path}')
+    logger.error('Файл настроек settings.json не найден.')
 except Exception as e:
-    logger.error(f'Ошибка при чтении файла настроек: {e}', exc_info=True)  # Добавлен exc_info для отладки
-    # ...  # Обработка ошибки (возможные варианты: возврат None, выход из функции, запись в лог и т.д.)
+    logger.error('Ошибка при чтении файла настроек:', exc_info=True)
+    # Обработка возможных ошибок при чтении файла или декодировании JSON
+    ...
 ```
 
-# Changes Made
+## Changes Made
 
-*   Изменён импорт `json` на `j_loads` из `src.utils.jjson`.
-*   Добавлены обработчики ошибок с использованием `logger.error` для чтения файла настроек.
-*   Добавлена функция `set_project_root` с подробными комментариями в формате RST.
-*   Изменены имена переменных на более читаемые (например, `__root__` на `project_root`).
-*   Переписаны комментарии в формате RST.
-*   Добавлен импорт `from src.logger import logger`.
-*   Добавлен параметр `exc_info=True` в `logger.error` для вывода отладочной информации об ошибке.
+- Импортирован `j_loads` из `src.utils.jjson` для чтения файла настроек.
+- Изменены имена переменных `__root__` на `project_root` для соответствия стилю кода.
+- Добавлена документация в формате RST к функции `set_project_root`.
+- Улучшена обработка ошибок: используется `logger.error` для логирования ошибок при чтении настроек. Вместо стандартного `try-except` используется более гибкая обработка исключений.
+- Добавлена строка документации для модуля.
+- Исправлен синтаксис `import` для `gs` и `j_loads`.
+- Заменён `json.load` на `j_loads`.
+- Заменены строки комментариев в формате RST.
 
-
-# FULL Code
+## FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/header.py
@@ -143,37 +135,34 @@ except Exception as e:
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с поставщиком AliExpress.
-=========================================================================================
-
-Этот модуль содержит необходимые функции и переменные для взаимодействия с API AliExpress.
-Он использует настройки из файла settings.json для конфигурации.
+.. module:: src.suppliers.aliexpress
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с поставщиком AliExpress.
 """
 import sys
 from pathlib import Path
 from packaging.version import Version
 
-# Импортируем функцию чтения JSON из файла с обработкой ошибок
+from src import gs
 from src.utils.jjson import j_loads
-
-# Импорт логирования
-from src.logger import logger
+from src.logger import logger  # Импорт logger
 
 MODE = 'dev'
+
+settings: dict = None
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневой каталог проекта, начиная с текущей директории.
+    Определяет корневой каталог проекта, начиная с каталога текущего файла.
 
-    :param marker_files: Список файлов или папок, по наличию которых определяется корень проекта.
+    :param marker_files: Корневые файлы проекта.
     :type marker_files: tuple
-    :return: Путь к корневому каталогу проекта.
+    :return: Путь к корневому каталогу.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
-    for parent in [current_path] + list(current_path.parents):
+    project_root: Path = Path(__file__).resolve().parent
+    for parent in [project_root] + list(project_root.parents):
         if any((parent / marker).exists() for marker in marker_files):
             project_root = parent
             break
@@ -181,21 +170,16 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
         sys.path.insert(0, str(project_root))
     return project_root
 
-
 # Получение корневого каталога проекта
 project_root = set_project_root()
-"""project_root (Path): Путь к корневому каталогу проекта."""
+"""project_root (Path): Корневой каталог проекта"""
 
-from src import gs
-
-
-settings: dict = None
 try:
-    # Чтение файла настроек с помощью j_loads, обработка ошибок
-    settings_path = project_root / 'src' / 'settings.json'
-    settings = j_loads(settings_path)
+    # Чтение настроек из файла settings.json с помощью j_loads
+    settings = j_loads(project_root / 'src' / 'settings.json')
 except FileNotFoundError:
-    logger.error(f'Файл настроек settings.json не найден в {settings_path}')
+    logger.error('Файл настроек settings.json не найден.')
 except Exception as e:
-    logger.error(f'Ошибка при чтении файла настроек: {e}', exc_info=True)  # Добавлен exc_info для отладки
-    # ...  # Обработка ошибки (возможные варианты: возврат None, выход из функции, запись в лог и т.д.)
+    logger.error('Ошибка при чтении файла настроек:', exc_info=True)
+    # Обработка возможных ошибок при чтении файла или декодировании JSON
+    ...

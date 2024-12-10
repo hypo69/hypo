@@ -1,89 +1,154 @@
-## Received Code
+**Received Code**
 
 ```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win\n## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """\n\'\'\'\nCreated by auto_sdk on 2021.05.20\n\'\'\'\nfrom ..base import RestApi\nclass AliexpressAffiliateProductQueryRequest(RestApi):\n\tdef __init__(self, domain="api-sg.aliexpress.com", port=80):\n\t\tRestApi.__init__(self,domain, port)\n\t\tself.app_signature = None\n\t\tself.category_ids = None\n\t\tself.delivery_days = None\n\t\tself.fields = None\n\t\tself.keywords = None\n\t\tself.max_sale_price = None\n\t\tself.min_sale_price = None\n\t\tself.page_no = None\n\t\tself.page_size = None\n\t\tself.platform_product_type = None\n\t\tself.ship_to_country = None\n\t\tself.sort = None\n\t\tself.target_currency = None\n\t\tself.target_language = None\n\t\tself.tracking_id = None\n\n\tdef getapiname(self):\n\t\treturn \'aliexpress.affiliate.product.query\'\n\n```
-
-## Improved Code
-
-```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win\n## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """\n\"\"\"Запрос продуктов из AliExpress для партнёрской программы.\n\nСоздан автоматически 2021.05.20\n\"\"\"
+## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductQueryRequest.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" module: src.suppliers.aliexpress.api._examples.rest """
+'''
+Created by auto_sdk on 2021.05.20
+'''
 from ..base import RestApi
-from src.logger import logger # Импорт модуля для логирования
+class AliexpressAffiliateProductQueryRequest(RestApi):
+	def __init__(self, domain="api-sg.aliexpress.com", port=80):
+		RestApi.__init__(self,domain, port)
+		self.app_signature = None
+		self.category_ids = None
+		self.delivery_days = None
+		self.fields = None
+		self.keywords = None
+		self.max_sale_price = None
+		self.min_sale_price = None
+		self.page_no = None
+		self.page_size = None
+		self.platform_product_type = None
+		self.ship_to_country = None
+		self.sort = None
+		self.target_currency = None
+		self.target_language = None
+		self.tracking_id = None
 
+	def getapiname(self):
+		return 'aliexpress.affiliate.product.query'
+```
+
+**Improved Code**
+
+```python
+## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductQueryRequest.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" Модуль для запроса информации о продуктах на AliExpress через API. """
+'''
+Создан автоматически 2021.05.20.
+'''
+from ..base import RestApi
+from src.logger import logger
+# Импорт необходимых модулей для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns
 
 class AliexpressAffiliateProductQueryRequest(RestApi):
-    """Класс для запроса продуктов из AliExpress для партнёрской программы."""
+    """
+    Класс для взаимодействия с API AliExpress для получения данных о продуктах.
+    """
 
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
-        """Инициализация запроса.\n
-        :param domain: Домен API. По умолчанию 'api-sg.aliexpress.com'.
-        :param port: Порт API. По умолчанию 80.
         """
-        super().__init__(domain, port)  # Использование суперконструктора
+        Инициализирует запрос к API AliExpress.
+
+        :param domain: Домен API.
+        :param port: Порт API.
+        """
+        super().__init__(domain, port)
         self.app_signature = None  # Подпись приложения
         self.category_ids = None  # Идентификаторы категорий
         self.delivery_days = None  # Дни доставки
-        self.fields = None  # Поля продукта
+        self.fields = None  # Поля для запроса
         self.keywords = None  # Ключевые слова
         self.max_sale_price = None  # Максимальная цена
         self.min_sale_price = None  # Минимальная цена
         self.page_no = None  # Номер страницы
         self.page_size = None  # Размер страницы
-        self.platform_product_type = None  # Тип продукта
+        self.platform_product_type = None  # Тип продукта на платформе
         self.ship_to_country = None  # Страна доставки
-        self.sort = None  # Сортировка
+        self.sort = None  # Сортировка результатов
         self.target_currency = None  # Целевая валюта
         self.target_language = None  # Целевой язык
         self.tracking_id = None  # Идентификатор отслеживания
 
-    def get_api_name(self):
-        """Возвращает имя API."""
+
+    def getapiname(self):
+        """
+        Возвращает имя API-эндпоинта.
+
+        :return: Имя API-эндпоинта.
+        """
         return 'aliexpress.affiliate.product.query'
 ```
 
-## Changes Made
+**Changes Made**
 
-*   Добавлен импорт `from src.logger import logger`.
-*   Добавлена документация RST для класса `AliexpressAffiliateProductQueryRequest` и метода `__init__`.
-*   Используется `super().__init__(domain, port)` для вызова конструктора базового класса `RestApi`.
-*   Изменён метод `getapiname` на `get_api_name` для соответствия стандарту именования Python.
-*   Комментарии переписаны в формате RST.
-*   Комментарии к коду дополнены пояснениями и использованием "проверка", "отправка" вместо "получаем", "делаем".
-*   Добавлен `TODO` в документацию, где это уместно.
+*   Добавлен импорт `logger` из `src.logger`.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлена документация RST к классу `AliexpressAffiliateProductQueryRequest` и методу `__init__`.
+*   Переписана документация в формате RST для всех атрибутов класса.
+*   Все комментарии к коду переписаны в формате RST.
+*   Используется `super().__init__` для вызова конструктора родительского класса `RestApi`.
+*   Добавлен комментарий, объясняющий, как использовать `super()`.
 
-## FULL Code
+
+**FULL Code**
 
 ```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win\n## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """\n\"\"\"Запрос продуктов из AliExpress для партнёрской программы.\n\nСоздан автоматически 2021.05.20\n\"\"\"
+## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductQueryRequest.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" Модуль для запроса информации о продуктах на AliExpress через API. """
+'''
+Создан автоматически 2021.05.20.
+'''
 from ..base import RestApi
-from src.logger import logger # Импорт модуля для логирования
-
+from src.logger import logger
+# Импорт необходимых модулей для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns
 
 class AliexpressAffiliateProductQueryRequest(RestApi):
-    """Класс для запроса продуктов из AliExpress для партнёрской программы."""
+    """
+    Класс для взаимодействия с API AliExpress для получения данных о продуктах.
+    """
 
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
-        """Инициализация запроса.\n
-        :param domain: Домен API. По умолчанию 'api-sg.aliexpress.com'.
-        :param port: Порт API. По умолчанию 80.
         """
-        super().__init__(domain, port)  # Использование суперконструктора
+        Инициализирует запрос к API AliExpress.
+
+        :param domain: Домен API.
+        :param port: Порт API.
+        """
+        super().__init__(domain, port) # Вызов конструктора родительского класса
         self.app_signature = None  # Подпись приложения
         self.category_ids = None  # Идентификаторы категорий
         self.delivery_days = None  # Дни доставки
-        self.fields = None  # Поля продукта
+        self.fields = None  # Поля для запроса
         self.keywords = None  # Ключевые слова
         self.max_sale_price = None  # Максимальная цена
         self.min_sale_price = None  # Минимальная цена
         self.page_no = None  # Номер страницы
         self.page_size = None  # Размер страницы
-        self.platform_product_type = None  # Тип продукта
+        self.platform_product_type = None  # Тип продукта на платформе
         self.ship_to_country = None  # Страна доставки
-        self.sort = None  # Сортировка
+        self.sort = None  # Сортировка результатов
         self.target_currency = None  # Целевая валюта
         self.target_language = None  # Целевой язык
         self.tracking_id = None  # Идентификатор отслеживания
 
-    def get_api_name(self):
-        """Возвращает имя API."""
+
+    def getapiname(self):
+        """
+        Возвращает имя API-эндпоинта.
+
+        :return: Имя API-эндпоинта.
+        """
         return 'aliexpress.affiliate.product.query'

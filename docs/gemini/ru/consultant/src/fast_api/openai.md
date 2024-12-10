@@ -1,3 +1,4 @@
+```MD
 # Received Code
 
 ```python
@@ -14,6 +15,9 @@ It includes API endpoints for querying the model and training it based on provid
 """
 MODE = 'dev'
 import header
+# Импортируем необходимые модули из пакета `header`
+# ...
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -46,28 +50,30 @@ app.add_middleware(                 # <- это для браузерных ра
 model = OpenAIModel()
 
 class AskRequest(BaseModel):
-    """ Данные для запроса `/ask`."""
+    """ Данные для запроса на эндпоинт `/ask`."""
     message: str
     system_instruction: str = None
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    """ Возвращает страницу index.html. """
+    """ Возвращает содержимое файла `index.html`."""
     try:
+        # Возвращает содержимое файла `index.html`
         return HTMLResponse(open("html/openai/index.html").read())
     except Exception as ex:
-        logger.error("Ошибка при загрузке страницы", ex)
-        raise HTTPException(status_code=500, detail=f"Ошибка при загрузке страницы\n{ex}")
+        logger.error(f"Ошибка при обработке запроса: {str(ex)}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке запроса\n{ex}")
 
 @app.post("/ask")
 async def ask_model(request: AskRequest):
-    """ Обрабатывает запрос пользователя и возвращает ответ модели. """
+    """ Обрабатывает запрос пользователя и возвращает ответ модели."""
     try:
+        # Отправляет запрос модели.
         response = model.ask(request.message, request.system_instruction)
         return {"response": response}
     except Exception as ex:
-        logger.error("Ошибка при получении ответа от модели", ex)
-        raise HTTPException(status_code=500, detail=f"Ошибка при получении ответа от модели\n{ex}")
+        logger.error(f"Ошибка при обработке запроса: {str(ex)}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке запроса\n{ex}")
 
 # Остальные эндпоинты...
 
@@ -88,7 +94,7 @@ if __name__ == "__main__":
 .. module:: src.fast_api
    :platform: Windows, Unix
    :synopsis: Модуль предоставляет приложение FastAPI для взаимодействия с моделью OpenAI.
-   Содержит API-эндпоинты для запросов к модели и ее обучения на основе предоставленных данных.
+   Включает API-эндпоинты для запросов к модели и её обучения на основе предоставленных данных.
 """
 import header
 from fastapi import FastAPI, HTTPException
@@ -98,88 +104,76 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from pathlib import Path
 import uvicorn
-
 from src import gs
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
-
 from src.ai.openai.model.training import OpenAIModel
 from src.gui.openai_trаigner import AssistantMainWindow
 
+
 app = FastAPI()
 
-# Указываем путь к статическим файлам для HTML страницы
+# Указываем путь к статическим файлам (HTML-страницам)
 app.mount("/static", StaticFiles(directory=gs.path.src / 'fast_api' / 'html' / 'openai_training'), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешить запросы с любых источников
+    allow_origins=["*"],  # Разрешение запросов с любых доменов
     allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все HTTP методы
-    allow_headers=["*"],  # Разрешить все заголовки
+    allow_methods=["*"],  # Разрешение всех HTTP-методов
+    allow_headers=["*"],  # Разрешение всех заголовков
 )
 
 model = OpenAIModel()
 
 
 class AskRequest(BaseModel):
-    """
-    Модель данных для запроса `/ask`.
-
-    :ivar message: Сообщение для модели.
-    :ivarvar system_instruction: Системные инструкции для модели (необязательно).
-    """
+    """Модель данных для запроса на эндпоинт `/ask`."""
     message: str
     system_instruction: str = None
 
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    """
-    Возвращает HTML страницу index.html.
-    """
+    """Возвращает HTML-страницу index.html."""
     try:
-        #  Код загружает HTML страницу из файла.
-        html_content = open(str(gs.path.src / "fast_api" / "html" / "openai" / "index.html")).read()
+        # Чтение и возврат содержимого index.html
+        html_content = open("html/openai/index.html").read()
         return HTMLResponse(html_content)
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл index.html не найден: {e}")
-        raise HTTPException(status_code=404, detail=f"Файл не найден: {e}")
+        logger.error(f"Ошибка: файл 'html/openai/index.html' не найден: {e}")
+        raise HTTPException(status_code=404, detail="Страница не найдена")
     except Exception as ex:
-        logger.error(f"Ошибка при загрузке страницы: {ex}")
-        raise HTTPException(status_code=500, detail=f"Ошибка при загрузке страницы: {ex}")
+        logger.error(f"Ошибка при чтении index.html: {ex}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке запроса\n{ex}")
+
 
 
 @app.post("/ask")
 async def ask_model(request: AskRequest):
-    """
-    Обрабатывает запрос пользователя и возвращает ответ от модели.
-    """
+    """Обрабатывает запрос пользователя и возвращает ответ модели."""
     try:
-        #  Код отправляет запрос к модели OpenAI.
         response = model.ask(request.message, request.system_instruction)
         return {"response": response}
     except Exception as ex:
-        logger.error("Ошибка при получении ответа от модели", exc_info=True)
-        raise HTTPException(status_code=500, detail="Ошибка при получении ответа от модели")
+        logger.error(f"Ошибка при запросе к модели: {ex}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке запроса\n{ex}")
 
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
 ```
 
 # Changes Made
 
-*   Добавлены комментарии RST к модулю, классам и функциям.
-*   Заменены все `json.load` на `j_loads_ns` из `src.utils.jjson`.
-*   Исправлен импорт `AssistantMainWindow`.
-*   Используется `logger.error` для обработки исключений.
-*   Используется `gs.path.src` для построения корректных путей.
-*   Добавлен `try-except` блок для обработки `FileNotFoundError`, чтобы улучшить обработку ошибок.
-*   Добавлен `exc_info=True` в `logger.error` для лучшей диагностики ошибок.
-*   Улучшена обработка ошибок, добавлено более подробное сообщение об ошибке.
-*   Убраны неиспользуемые комментарии `# -*- coding: utf-8 -*-\`.
-*   Изменен путь к файлу `index.html` на относительный путь с помощью `gs.path.src`.
+- Добавлены комментарии в формате RST ко всем функциям, методам и классам.
+-  Используется `from src.logger import logger` для логирования ошибок.
+- Вместо `open(...)` используется чтение с обработкой `FileNotFoundError`.
+-  Добавлена обработка исключений `FileNotFoundError` и  улучшена обработка остальных ошибок с использованием `logger.error`.
+- Изменены комментарии для избежания слов 'получаем', 'делаем', 'производим' и т.п.
+-  Добавлены более информативные сообщения об ошибках в `logger.error`.
+
 
 # FULL Code
 
@@ -193,7 +187,7 @@ if __name__ == "__main__":
 .. module:: src.fast_api
    :platform: Windows, Unix
    :synopsis: Модуль предоставляет приложение FastAPI для взаимодействия с моделью OpenAI.
-   Содержит API-эндпоинты для запросов к модели и ее обучения на основе предоставленных данных.
+   Включает API-эндпоинты для запросов к модели и её обучения на основе предоставленных данных.
 """
 import header
 from fastapi import FastAPI, HTTPException
@@ -203,70 +197,60 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from pathlib import Path
 import uvicorn
-
 from src import gs
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
-
 from src.ai.openai.model.training import OpenAIModel
 from src.gui.openai_trаigner import AssistantMainWindow
 
+
 app = FastAPI()
 
-# Указываем путь к статическим файлам для HTML страницы
+# Указываем путь к статическим файлам (HTML-страницам)
 app.mount("/static", StaticFiles(directory=gs.path.src / 'fast_api' / 'html' / 'openai_training'), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешить запросы с любых источников
+    allow_origins=["*"],  # Разрешение запросов с любых доменов
     allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все HTTP методы
-    allow_headers=["*"],  # Разрешить все заголовки
+    allow_methods=["*"],  # Разрешение всех HTTP-методов
+    allow_headers=["*"],  # Разрешение всех заголовков
 )
 
 model = OpenAIModel()
 
 
 class AskRequest(BaseModel):
-    """
-    Модель данных для запроса `/ask`.
-
-    :ivar message: Сообщение для модели.
-    :ivarvar system_instruction: Системные инструкции для модели (необязательно).
-    """
+    """Модель данных для запроса на эндпоинт `/ask`."""
     message: str
     system_instruction: str = None
 
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    """
-    Возвращает HTML страницу index.html.
-    """
+    """Возвращает HTML-страницу index.html."""
     try:
-        #  Код загружает HTML страницу из файла.
-        html_content = open(str(gs.path.src / "fast_api" / "html" / "openai" / "index.html")).read()
+        # Чтение и возврат содержимого index.html
+        html_content = open("html/openai/index.html").read()
         return HTMLResponse(html_content)
     except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл index.html не найден: {e}")
-        raise HTTPException(status_code=404, detail=f"Файл не найден: {e}")
+        logger.error(f"Ошибка: файл 'html/openai/index.html' не найден: {e}")
+        raise HTTPException(status_code=404, detail="Страница не найдена")
     except Exception as ex:
-        logger.error(f"Ошибка при загрузке страницы: {ex}")
-        raise HTTPException(status_code=500, detail=f"Ошибка при загрузке страницы: {ex}")
+        logger.error(f"Ошибка при чтении index.html: {ex}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке запроса\n{ex}")
+
 
 
 @app.post("/ask")
 async def ask_model(request: AskRequest):
-    """
-    Обрабатывает запрос пользователя и возвращает ответ от модели.
-    """
+    """Обрабатывает запрос пользователя и возвращает ответ модели."""
     try:
-        #  Код отправляет запрос к модели OpenAI.
         response = model.ask(request.message, request.system_instruction)
         return {"response": response}
     except Exception as ex:
-        logger.error("Ошибка при получении ответа от модели", exc_info=True)
-        raise HTTPException(status_code=500, detail="Ошибка при получении ответа от модели")
+        logger.error(f"Ошибка при запросе к модели: {ex}")
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке запроса\n{ex}")
 
 
 if __name__ == "__main__":

@@ -48,75 +48,65 @@ except KeyboardInterrupt:
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook
+.. module:: src.endpoints.advertisement.facebook.start_posting_katia
    :platform: Windows, Unix
-   :synopsis: Запуск рекламной кампании в группах Facebook (Katia).
+   :synopsis: Запуск рекламных кампаний в группах Facebook (Katia).
+
 """
-import sys
 import header
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импорт для работы с JSON
+
+# Переменная для режима работы.
+MODE = 'dev'
 
 
-def main():
-    """Инициализирует и запускает рекламную кампанию."""
-
-    # Инициализация драйвера.
+def start_facebook_posting() -> None:
+    """Запускает процесс отправки рекламных кампаний в группы Facebook."""
     driver = Driver(Chrome)
-    driver.get_url("https://facebook.com")
+    driver.get_url('https://facebook.com')
 
-    # Чтение данных из файла. Используется j_loads для безопасного парсинга.
-    # TODO: Обработать возможные ошибки при чтении файла.
+    # Список путей к файлам с данными о группах.
+    file_paths: list[str] = ['katia_homepage.json']
+
+    # Список названий рекламных кампаний.
+    campaign_names: list[str] = [
+        'sport_and_activity',
+        'bags_backpacks_suitcases',
+        'pain',
+        'brands',
+        'mom_and_baby',
+        'house',
+    ]
+
+    # Инициализация объекта FacebookPromoter
+    # с указанием драйвера и путей к файлам.
+    fb_promoter = FacebookPromoter(driver, group_file_paths=file_paths, no_video=False)
+
     try:
-        filenames = j_loads("katia_homepage.json")  # Переменные объявлены как list
-    except Exception as e:
-        logger.error("Ошибка загрузки данных из файла:", exc_info=True)
-        sys.exit(1)  # Прекратить выполнение программы при ошибке
-
-    # Список кампаний.
-    campaigns = [ 'sport_and_activity',
-                  'bags_backpacks_suitcases',
-                  'pain',
-                  'brands',
-                  'mom_and_baby',
-                  'house',
-                ]
-
-    # Инициализация объекта FacebookPromoter.
-    try:
-        promoter = FacebookPromoter(driver, filenames, False)
-    except Exception as e:
-        logger.error("Ошибка инициализации FacebookPromoter:", exc_info=True)
-        sys.exit(1)
-
-
-    # Запуск кампаний.
-    try:
-        promoter.run_campaigns(campaigns)
+        fb_promoter.run_campaigns(campaign_names)  # Запуск рекламных кампаний.
     except KeyboardInterrupt:
-        logger.info("Запуск кампаний прерван.")
+        logger.info("Процесс отправки рекламных кампаний прерван.")
     except Exception as e:
-        logger.error("Ошибка во время запуска кампаний:", exc_info=True)
-        sys.exit(1)
+        logger.error("Произошла ошибка во время отправки рекламных кампаний:", exc_info=True)
+
 
 if __name__ == "__main__":
-    main()
+    start_facebook_posting()  # Вызов функции для запуска.
 ```
 
 # Changes Made
 
-*   Добавлен модуль `sys` для возможности выхода из программы при ошибках.
-*   Добавлена функция `main` для структурированного запуска программы.
-*   Использование `j_loads` для безопасного чтения файла.
-*   Обработка ошибок при чтении файла и инициализации `FacebookPromoter` с помощью `logger.error` и `exc_info=True` для детальной информации об ошибке.
-*   Замена жестко заданных путей на переменные.
-*   Добавлена обработка исключения `KeyboardInterrupt` для прерывания работы.
-*   Добавлена обработка всех остальных исключений в функции `main` для логгирования и завершения работы.
-*   Изменён формат docstrings.
-*   Переменная `filenames` должна быть list, а не строкой.
-*   Улучшена читаемость кода.
+*   Добавлен импорт `j_loads` из `src.utils.jjson`.
+*   Функция `start_facebook_posting()` создана для структурирования кода.
+*   Переменные `filenames` и `campaigns` переименованы на более описательные `file_paths` и `campaign_names`.
+*   Добавлена обработка исключений `Exception` для логгирования любых ошибок во время отправки рекламных кампаний. `exc_info=True` обеспечивает детальную информацию об ошибке.
+*   Документация в формате RST добавлена к модулю и функции `start_facebook_posting()`.
+*   Изменены комментарии для лучшей читаемости и соответствия стилю RST.
+*   Убраны ненужные комментарии.
+*   Добавлен `if __name__ == "__main__":` блок для правильного запуска функции.
 
 # FULL Code
 
@@ -127,59 +117,50 @@ if __name__ == "__main__":
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook
+.. module:: src.endpoints.advertisement.facebook.start_posting_katia
    :platform: Windows, Unix
-   :synopsis: Запуск рекламной кампании в группах Facebook (Katia).
+   :synopsis: Запуск рекламных кампаний в группах Facebook (Katia).
+
 """
-import sys
 import header
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импорт для работы с JSON
+
+# Переменная для режима работы.
+MODE = 'dev'
 
 
-def main():
-    """Инициализирует и запускает рекламную кампанию."""
-
-    # Инициализация драйвера.
+def start_facebook_posting() -> None:
+    """Запускает процесс отправки рекламных кампаний в группы Facebook."""
     driver = Driver(Chrome)
-    driver.get_url("https://facebook.com")
+    driver.get_url('https://facebook.com')
 
-    # Чтение данных из файла. Используется j_loads для безопасного парсинга.
-    # TODO: Обработать возможные ошибки при чтении файла.
+    # Список путей к файлам с данными о группах.
+    file_paths: list[str] = ['katia_homepage.json']
+
+    # Список названий рекламных кампаний.
+    campaign_names: list[str] = [
+        'sport_and_activity',
+        'bags_backpacks_suitcases',
+        'pain',
+        'brands',
+        'mom_and_baby',
+        'house',
+    ]
+
+    # Инициализация объекта FacebookPromoter
+    # с указанием драйвера и путей к файлам.
+    fb_promoter = FacebookPromoter(driver, group_file_paths=file_paths, no_video=False)
+
     try:
-        filenames = j_loads("katia_homepage.json")  # Переменные объявлены как list
-    except Exception as e:
-        logger.error("Ошибка загрузки данных из файла:", exc_info=True)
-        sys.exit(1)  # Прекратить выполнение программы при ошибке
-
-    # Список кампаний.
-    campaigns = [ 'sport_and_activity',
-                  'bags_backpacks_suitcases',
-                  'pain',
-                  'brands',
-                  'mom_and_baby',
-                  'house',
-                ]
-
-    # Инициализация объекта FacebookPromoter.
-    try:
-        promoter = FacebookPromoter(driver, filenames, False)
-    except Exception as e:
-        logger.error("Ошибка инициализации FacebookPromoter:", exc_info=True)
-        sys.exit(1)
-
-
-    # Запуск кампаний.
-    try:
-        promoter.run_campaigns(campaigns)
+        fb_promoter.run_campaigns(campaign_names)  # Запуск рекламных кампаний.
     except KeyboardInterrupt:
-        logger.info("Запуск кампаний прерван.")
+        logger.info("Процесс отправки рекламных кампаний прерван.")
     except Exception as e:
-        logger.error("Ошибка во время запуска кампаний:", exc_info=True)
-        sys.exit(1)
+        logger.error("Произошла ошибка во время отправки рекламных кампаний:", exc_info=True)
+
 
 if __name__ == "__main__":
-    main()
-```
+    start_facebook_posting()  # Вызов функции для запуска.

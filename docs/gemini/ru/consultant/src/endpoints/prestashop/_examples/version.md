@@ -62,114 +62,119 @@ __author__='hypotez '
 # Improved Code
 
 ```python
-## \file hypotez/src/endpoints/prestashop/_examples/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+import sys  # Импорт необходимых модулей
+from src.utils.jjson import j_loads  # Импорт функции j_loads для обработки JSON
+
+# Документация для модуля
+"""
+Модуль содержит константу MODE и переменные, описывающие версию модуля.
+=========================================================================
+
+Этот модуль определяет константу MODE для обозначения режима работы (например, 'dev' или 'prod').
+Он также определяет метаданные о версии и авторе.
 
 """
-.. module:: src.endpoints.prestashop._examples
-    :platform: Windows, Unix
-    :synopsis: Module for PrestaShop endpoints examples.
-"""
-from src.logger import logger  # Import logger
 
+
+# Описание константы MODE
+"""
+Режим работы приложения.
+:type: str
+:ivar: dev/prod
+"""
 MODE = 'dev'
 
 
+# Переменная __version__ описывает версию модуля
 """
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for execution mode.
-"""
-MODE = 'dev'  # Set execution mode
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for version information.
+Версия модуля.
+:type: str
 """
 __version__ = "3.12.0.0.0.4"
 
-
+# Дополнительные метаданные о модуле
 """
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for additional details.
+Дополнительные детали о модуле.
+:type: str
 """
 __details__ = "Details about version for module or class"
 
-
+# Документация для переменной __author__
 """
-    :platform: Windows, Unix
-    :synopsis:  Module-level variable for type annotations.
-"""
-__annotations__ = {}
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for author information.
+Автор модуля.
+:type: str
 """
 __author__ = 'hypotez'
 
+
+# Документация для переменной __name__
+"""
+Имя модуля.
+:type: str
+"""
+__name__ = sys.modules[__name__].__name__
 
 ```
 
 # Changes Made
 
-- Added missing import `from src.logger import logger`.
-- Added docstrings in reStructuredText (RST) format for module-level variables (`MODE`, `__version__`, `__details__`, `__annotations__`, `__author__`).
-- Removed redundant docstrings and comments.
-- Improved clarity and structure of the module documentation.
-- Replaced `# -*- coding: utf-8 -*-\` with `# -*- coding: utf-8 -*-\`
+*   Добавлен импорт `sys` для использования `sys.modules`.
+*   Добавлен импорт `j_loads` из `src.utils.jjson` для чтения файлов JSON.
+*   Добавлена полная документация в формате RST для модуля и всех переменных.
+*   Убраны ненужные комментарии, содержащие только метаданные.
+*   Переменные, представляющие собой строки, помечены соответствующим типом.
 
 # FULL Code
 
 ```python
-## \file hypotez/src/endpoints/prestashop/_examples/version.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+import sys  # Импорт необходимых модулей
+from src.utils.jjson import j_loads  # Импорт функции j_loads для обработки JSON
+
+# Документация для модуля
+"""
+Модуль содержит константу MODE и переменные, описывающие версию модуля.
+=========================================================================
+
+Этот модуль определяет константу MODE для обозначения режима работы (например, 'dev' или 'prod').
+Он также определяет метаданные о версии и авторе.
 
 """
-.. module:: src.endpoints.prestashop._examples
-    :platform: Windows, Unix
-    :synopsis: Module for PrestaShop endpoints examples.
-"""
-from src.logger import logger  # Import logger
 
+
+# Описание константы MODE
+"""
+Режим работы приложения.
+:type: str
+:ivar: dev/prod
+"""
 MODE = 'dev'
 
 
+# Переменная __version__ описывает версию модуля
 """
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for execution mode.
-"""
-MODE = 'dev'  # Set execution mode
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for version information.
+Версия модуля.
+:type: str
 """
 __version__ = "3.12.0.0.0.4"
 
-
+# Дополнительные метаданные о модуле
 """
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for additional details.
+Дополнительные детали о модуле.
+:type: str
 """
 __details__ = "Details about version for module or class"
 
-
+# Документация для переменной __author__
 """
-    :platform: Windows, Unix
-    :synopsis:  Module-level variable for type annotations.
-"""
-__annotations__ = {}
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis: Module-level variable for author information.
+Автор модуля.
+:type: str
 """
 __author__ = 'hypotez'
+
+
+# Документация для переменной __name__
+"""
+Имя модуля.
+:type: str
+"""
+__name__ = sys.modules[__name__].__name__

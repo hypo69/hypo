@@ -1,6 +1,75 @@
-# Received Code
+## Received Code
 
 ```
+# ИНСТРУКЦИЯ
+```
+
+## Improved Code
+
+```rst
+Название модуля
+==============
+
+.. automodule:: module_name
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Функции
+--------
+
+.. autofunction:: module_name.function_name
+```
+
+## Changes Made
+
+Изменен формат документации на reStructuredText (RST).  Добавлены заголовки и примеры использования директив Sphinx для автоматической генерации документации.  Пример файла `index.rst` и структура документации для модулей, функций и методов.
+
+## FULL Code
+
+```python
+# Название модуля
+# ================
+#
+# Этот модуль содержит общие функции для обработки данных.
+#
+#
+# Функции
+# --------
+#
+
+def function_name(param: str, param1: str = None) -> dict | None:
+    """
+    Функция обработки данных.
+
+    :param param: Описание параметра param.
+    :param param1: Описание параметра param1. По умолчанию None.
+    :return: Словарь с результатами обработки или None при ошибке.
+    :raises ValueError: Возникает при неверном формате данных.
+    """
+    try:
+        # код исполняет проверку входных данных
+        if not param:
+            logger.error('Ошибка: параметр param не может быть пустым')
+            return None
+        # код исполняет обработку данных
+        processed_data = {'result': param}
+        if param1:
+            processed_data['additional'] = param1
+        return processed_data
+    except ValueError as ex:
+        logger.error(f'Ошибка обработки данных: {ex}')
+        return None
+
+# пример использования функции function_name
+# функция выполняет проверку, отправку и обработку данных
+# ...
+```
+```
+```
+
+
+```rst
 # ИНСТРУКЦИЯ
 Для каждого входного Python файла создайте документацию в формате `rst` для последующей компиляции с Sphinx. Документация должна соответствовать следующим требованиям:
 
@@ -44,38 +113,50 @@
 5. **Пример файла**:
    ```rst
    Название модуля
-   ===============\n
-
+   ==============
+   
    .. automodule:: module_name
        :members:
        :undoc-members:
        :show-inheritance:
-
+   
    Функции
    --------
-
+   
    .. autofunction:: module_name.function_name
    ```
 
-# Improved Code
-
-```
-# Нет входного кода для улучшения.  Этот ответ показывает, как нужно будет
-# форматировать результат для других входных кодов.
 ```
 
-# Changes Made
 
-```
-Нет изменений, так как нет входного кода. Этот шаблон предоставляет пример
-структуры для обработки входных Python файлов.
-```
+```python
+# пример файла module_name.py
+import logging
+from typing import Optional
 
-# FULL Code
+from src.utils.jjson import j_loads_ns  # import j_loads_ns, добавить импорт, если он нужен
 
-```
-# Нет входного кода, поэтому нет полного кода для вставки.  Этот ответ
-# предоставляет шаблон.
-```
-```
-```
+logger = logging.getLogger(__name__)
+
+def function_name(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
+    """
+    Функция обработки данных.
+
+    :param param: Описание параметра param.
+    :param param1: Описание параметра param1. По умолчанию None.
+    :return: Словарь с результатами обработки или None при ошибке.
+    :raises ValueError: Возникает при неверном формате данных.
+    """
+    try:
+        # Проверка входных данных
+        if not param:
+            logger.error('Ошибка: параметр param не может быть пустым')
+            return None
+        # Обработка данных
+        processed_data = {'result': param}
+        if param1:
+            processed_data['additional'] = param1
+        return processed_data
+    except ValueError as ex:
+        logger.error(f'Ошибка обработки данных: {ex}')
+        return None

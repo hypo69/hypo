@@ -20,6 +20,7 @@ MODE = 'dev'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
@@ -57,50 +58,64 @@ sys.path.append (__root__)
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.firefox._examples
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит примеры использования WebDriver для Firefox.
+Модуль для примера работы с Firefox webdriver.
+=========================================================================================
 
+Этот модуль содержит примеры использования Firefox webdriver для взаимодействия с веб-страницами.
 """
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads  # Импортируем j_loads для работы с JSON
+from src.utils.jjson import j_loads  # Импорт функции j_loads
 
 MODE = 'dev'
 
 
-def set_project_root_to_path():
-    """Устанавливает корень проекта в системный путь.
+"""
+Настройка пути к корню проекта.
+"""
+def set_project_root():
+    """Устанавливает путь к корню проекта в системный путь.
 
-    :raises RuntimeError: Если корень проекта не найден.
+    Возвращает:
+        str: Путь к корню проекта.
     """
     try:
-        project_root = Path(os.getcwd()).resolve().parent / 'hypotez' # Находим корень проекта
-        if not project_root.exists():
-            raise RuntimeError("Корень проекта 'hypotez' не найден.")
-        sys.path.append(str(project_root)) # Добавляем корень проекта в sys.path
+        root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
+        return root_path
     except Exception as e:
+        # Логирование ошибки
         from src.logger import logger
-        logger.error("Ошибка при установке корня проекта в системный путь:", exc_info=True)
-        raise
+        logger.error('Ошибка при установке пути к корню проекта', e)
+        return None
 
 
-# Вызываем функцию для установки корня проекта в системный путь.  Это необходимо для корректного импорта других модулей.
-set_project_root_to_path()
+def configure_sys_path():
+    """Настройка пути к корню проекта в sys.path."""
+    root_path = set_project_root()
+    if root_path:
+        sys.path.append(root_path)
+    else:
+        # Обработка ошибки, если root_path не был установлен
+        from src.logger import logger
+        logger.error('Не удалось установить путь к корню проекта.')
 
+
+# Вызов функции настройки пути
+configure_sys_path()
 
 ```
 
 # Changes Made
 
 *   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Функция `set_project_root_to_path` создана для установки корня проекта в `sys.path`.
-*   Добавлены строгие проверки на существование директории `hypotez` и обработка ошибок с помощью `logger.error`.
-*   Исправлена ошибка в определении `__root__`. Теперь она корректнее находит корень проекта.
-*   Добавлена документация RST для модуля и функции.
-*   Изменён стиль и структура комментариев,  используется `reStructuredText`.
-*   Комментарии переписаны, удалены лишние и не информативные комментарии.
+*   Функция `set_project_root` для установки пути к корню проекта, возвращающая путь или `None` при ошибке.
+*   Функция `configure_sys_path` для настройки пути в `sys.path` с обработкой ошибок.
+*   Добавлены комментарии RST в модуле для лучшей документации и объяснений.
+*   Используется `from src.logger import logger` для логирования.
+*   Вместо `sys.path.append (__root__)` используется функция для обработки ошибок.
+*   Комментарии переписаны в формате RST, избегая слов «получаем», «делаем», и т.д.
+*   Убраны ненужные или неинформативные комментарии.
 
 # FULL Code
 
@@ -111,35 +126,50 @@ set_project_root_to_path()
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.firefox._examples
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит примеры использования WebDriver для Firefox.
+Модуль для примера работы с Firefox webdriver.
+=========================================================================================
 
+Этот модуль содержит примеры использования Firefox webdriver для взаимодействия с веб-страницами.
 """
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads  # Импортируем j_loads для работы с JSON
-
+from src.utils.jjson import j_loads  # Импорт функции j_loads
 
 MODE = 'dev'
 
 
-def set_project_root_to_path():
-    """Устанавливает корень проекта в системный путь.
+"""
+Настройка пути к корню проекта.
+"""
+def set_project_root():
+    """Устанавливает путь к корню проекта в системный путь.
 
-    :raises RuntimeError: Если корень проекта не найден.
+    Возвращает:
+        str: Путь к корню проекта.
     """
     try:
-        project_root = Path(os.getcwd()).resolve().parent / 'hypotez' # Находим корень проекта
-        if not project_root.exists():
-            raise RuntimeError("Корень проекта 'hypotez' не найден.")
-        sys.path.append(str(project_root)) # Добавляем корень проекта в sys.path
+        root_path = os.getcwd()[:os.getcwd().rfind('hypotez') + 7]
+        return root_path
     except Exception as e:
+        # Логирование ошибки
         from src.logger import logger
-        logger.error("Ошибка при установке корня проекта в системный путь:", exc_info=True)
-        raise
+        logger.error('Ошибка при установке пути к корню проекта', e)
+        return None
 
 
-# Вызываем функцию для установки корня проекта в системный путь.  Это необходимо для корректного импорта других модулей.
-set_project_root_to_path()
+def configure_sys_path():
+    """Настройка пути к корню проекта в sys.path."""
+    root_path = set_project_root()
+    if root_path:
+        sys.path.append(root_path)
+    else:
+        # Обработка ошибки, если root_path не был установлен
+        from src.logger import logger
+        logger.error('Не удалось установить путь к корню проекта.')
+
+
+# Вызов функции настройки пути
+configure_sys_path()
+
+```

@@ -28,31 +28,25 @@ from .graber import Graber
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.visualdg
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком данных visualdg.
+Модуль для работы с поставщиком данных visualdg.
+=================================================
 
+Этот модуль предоставляет класс :class:`Graber` для извлечения данных из источника visualdg.
 """
-import json
-from src.utils.jjson import j_loads, j_loads_ns
+import json  # Добавляем импорт для json, т.к. предполагается использование в коде
 
 MODE = 'dev'
 
-from .graber import Graber  # Импортируем класс Graber
+from .graber import Graber
 
 
 ```
 
 **Changes Made**
 
-* Добавлено `import json` для корректного использования `j_loads`.
-* Добавлено `from src.utils.jjson import j_loads, j_loads_ns` для использования функций из `src.utils.jjson`.
-* Исправлено использование `.. module::` в RST документации.
-* Добавлено описание модуля в формате RST.
-* Добавлен импорт `from .graber import Graber`, так как он используется в коде.
-* Включено описание `MODE` в RST.
-* Отредактирована документация для соответствия требованиям RST.
-* Проведена дополнительная проверка соответствия кода стандартам RST.
+* Добавлена строка документации для модуля в формате RST.
+* Добавлен импорт `json` (предполагая использование `json.load` или аналогов).
+
 
 **FULL Code**
 
@@ -63,18 +57,15 @@ from .graber import Graber  # Импортируем класс Graber
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.visualdg
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с поставщиком данных visualdg.
+Модуль для работы с поставщиком данных visualdg.
+=================================================
 
+Этот модуль предоставляет класс :class:`Graber` для извлечения данных из источника visualdg.
 """
-import json
-from src.utils.jjson import j_loads, j_loads_ns # Импорт нужных функций для работы с JSON
+import json  # Добавляем импорт для json, т.к. предполагается использование в коде
 
-MODE = 'dev' # Переменная, определяющая режим работы
+MODE = 'dev'
 
-from .graber import Graber  # Импортируем класс Graber
-
-
+from .graber import Graber
 ```
 ```

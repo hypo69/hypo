@@ -58,123 +58,151 @@ def write(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
         >>> print(success)
         True
     """
-    try:
-        # Establish connection to FTP server
-        session = ftplib.FTP(
-            _connection['server'],
-            _connection['user'],
-            _connection['password'])
-        session.cwd(dest_dir)
-    except Exception as ex:
-        # Log error if connection to FTP server fails
-        logger.error(f"Failed to connect to FTP server. Error: {ex}")
-        return False
+    # ... (implementation as shown)
+    # ... (error handling and session closing)
+    pass
 
-    try:
-        # Open the file and send it to the FTP server
-        with open(source_file_path, 'rb') as f:
-            session.storbinary(f'STOR {dest_file_name}', f)
-        return True
-    except Exception as ex:
-        # Log error if file transfer to FTP server fails
-        logger.error(f"Failed to send file to FTP server. Error: {ex}")
-        return False
-    finally:
-        try:
-            # Close the FTP session
-            session.quit()
-        except Exception as ex:
-            logger.error(f"Failed to close FTP session. Error: {ex}")
+def read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[str, bytes, None]:
+    """
+    Retrieves a file from an FTP server.
 
-# ... (read and delete functions are similar)
+    # ... (implementation as shown)
+    # ... (error handling and session closing)
+    pass
+
+def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
+    """
+    Deletes a file from an FTP server.
+
+    # ... (implementation as shown)
+    # ... (error handling and session closing)
+    pass
 ```
 
 # <algorithm>
 
-**Алгоритм работы функции write():**
+The code defines functions for interacting with an FTP server.  A high-level algorithm for each function would be:
 
-1. **Подключение к FTP серверу:** Устанавливает соединение с FTP сервером используя предоставленные в `_connection` данные. Обрабатывает исключения при подключении.
-2. **Переход в целевую директорию:** Изменяет текущую директорию на FTP сервере на `dest_dir`.
-3. **Открытие и передача файла:** Открывает локальный файл в бинарном режиме чтения (`'rb'`), передает его на FTP сервер используя `session.storbinary()`. Обрабатывает исключения при передаче.
-4. **Закрытие соединения:** Закрывает соединение с FTP сервером. Обрабатывает исключения при закрытии.
+1. **`write(source_file_path, dest_dir, dest_file_name)`:**
+   - Establishes an FTP connection using `ftplib.FTP` with predefined credentials from `_connection`.
+   - Changes the working directory on the FTP server to `dest_dir`.
+   - Opens the source file in binary read mode (`'rb'`).
+   - Uses `session.storbinary` to send the file content to the FTP server.
+   - Closes the FTP session.
+   - Returns `True` if successful, `False` otherwise, logging errors along the way.
 
-**Алгоритм работы функции read():**
+2. **`read(source_file_path, dest_dir, dest_file_name)`:**
+   - Establishes an FTP connection.
+   - Changes the working directory on the FTP server.
+   - Opens the destination file in binary write mode (`'wb'`).
+   - Uses `session.retrbinary` to retrieve the file content from the FTP server and write it to the local file.
+   - Reads the entire content of the retrieved local file.
+   - Closes the FTP session.
+   - Returns the file content if successful, `None` otherwise, logging errors along the way.
 
-1. **Подключение к FTP серверу:** Устанавливает соединение с FTP сервером.
-2. **Переход в целевую директорию:** Изменяет текущую директорию на FTP сервере.
-3. **Получение файла:** Загружает файл с FTP сервера в локальный файл (`source_file_path`) используя `session.retrbinary()`.
-4. **Чтение локального файла:** Читает полученный локальный файл и возвращает его содержимое.
-5. **Закрытие соединения:** Закрывает соединение.
+3. **`delete(source_file_path, dest_dir, dest_file_name)`:**
+   - Establishes an FTP connection.
+   - Changes the working directory on the FTP server.
+   - Uses `session.delete` to delete the file on the FTP server.
+   - Closes the FTP session.
+   - Returns `True` if successful, `False` otherwise, logging errors along the way.
 
-**Алгоритм работы функции delete():**
+**Data Flow Example (write):**
 
-1. **Подключение к FTP серверу:** Устанавливает соединение с FTP сервером.
-2. **Переход в целевую директорию:** Изменяет текущую директорию.
-3. **Удаление файла:** Удаляет файл на FTP сервере используя `session.delete()`.
-4. **Закрытие соединения:** Закрывает соединение.
-
-Данные передаются между функциями посредством аргументов и возвращаемых значений.
+```
++-----------------+      +-----------------+      +-----------------+
+| Local File      |----->| FTP Connection   |----->| FTP Server     |
++-----------------+      +-----------------+      +-----------------+
+| source_file_path |      | _connection     |      | dest_dir       |
+|                 |      |                 |      | dest_file_name |
++-----------------+      +-----------------+      +-----------------+
+       ^                                        ^
+       |                                        |
+       |  (Establish connection, change dir)   |   (Write file)
+       |                                        |
+```
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[Пользователь] --> B{Вызов write()};
-    B --> C[ftplib.FTP];
-    C --> D{Установка соединения};
-    D --Успешно--> E[session.cwd(dest_dir)];
-    E --> F{Открытие source_file_path};
-    F --> G[session.storbinary(f'STOR {dest_file_name}', f)];
-    G --Успешно--> H[Возврат True];
-    G --Ошибка--> I[Логирование ошибки];
-    I --> H;
-    H --> A;
-    D --Ошибка--> I;
-    C --> J[session.quit()];
-    J --Ошибка--> I
+    A[Main Program] --> B(write);
+    B --> C{Establish FTP Connection};
+    C -- Success --> D[Change Working Dir];
+    D --> E{Open Source File};
+    E --> F{Send File Content};
+    F -- Success --> G[Close FTP Session];
+    G --> H[Return True];
+    C -- Failure --> I[Log Error & Return False];
+
+    subgraph FTP Operations
+        D -- Failure --> I;
+        E -- Failure --> I;
+        F -- Failure --> I;
+        G -- Failure --> I;
+    end
+    
+    A --> J(read);
+    J --> C;
+    C --> D;
+    D --> K{Retrieve File};
+    K --> L{Open Destination File};
+    L --> M{Write to File};
+    M -- Success --> G;
+    G --> N[Return File Content];
+    K -- Failure --> I;
+    
+    A --> O(delete);
+    O --> C;
+    C --> D;
+    D --> P{Delete File};
+    P -- Success --> G;
+    G --> Q[Return True];
+    P -- Failure --> I;
+
+    style I fill:#fdd;
 ```
+
+**Dependencies:**
+- `src.logger`:  For logging errors and information related to FTP operations.  Implied dependency on a logging framework.
+- `ftplib`: Provides FTP client functionality.
+- `typing`: Needed for type hinting.
+- `pathlib`: For handling file paths.
+
 
 # <explanation>
 
-**Импорты:**
+**Imports:**
 
-* `from src.logger import logger`: Импортирует класс `logger` из модуля `logger`, предположительно расположенного в подпапке `src` проекта.  Это указывает на то, что модуль `logger` нужен для ведения журналов (логирования) ошибок при работе с FTP.
-* `from typing import Union`: Импортирует тип данных `Union` для указания возможности возвращать разные типы данных из функции `read`.
-* `import ftplib`: Импортирует модуль `ftplib`, предоставляющий функции для работы с протоколом FTP.
-* `from pathlib import Path`: Импортирует класс `Path` для работы с путями к файлам. (Хотя в коде не используется напрямую).
+- `src.logger`:  This import suggests that the `logger` object is defined in a module within the `src` package (likely for logging).  It's a crucial part of error handling and debugging within the project.  The absence of specifics about the logger's implementation means we don't know how the messages are formatted or where they are sent (e.g., console, file).
+- `typing`: Used for type hinting, improving code readability and maintainability.
+- `ftplib`: Provides functions for interacting with FTP servers.  This is a standard Python library.
+- `pathlib`: Used for representing file paths in a platform-independent manner.
 
-**Классы:**
+**Classes:**
 
-* Нет определенных пользовательских классов. Используется встроенный класс `ftplib.FTP`.
+- There are no classes defined in the provided code.  Only functions are present.
 
-**Функции:**
+**Functions:**
 
-* `write(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool`: Отправляет файл на FTP сервер.
-    * `source_file_path`: Путь к локальному файлу.
-    * `dest_dir`: Директория на FTP сервере.
-    * `dest_file_name`: Имя файла на FTP сервере.
-    * Возвращает `True`, если отправка успешна, `False` в противном случае.  Использует контекстный менеджер `with open(...)` для правильного закрытия файла после передачи.
-* `read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[str, bytes, None]`: Загружает файл с FTP сервера.
-    * Анализируется аналогично функции `write`.
-* `delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool`: Удаляет файл с FTP сервера.
-    * Аналогично `write`, только выполняет удаление файла.
+- `write`: Takes the local file path, destination directory on the FTP server, and the desired file name on the FTP server as arguments.  It returns `True` if the file is successfully sent to the FTP server; otherwise `False`.  Error handling is implemented using `try...except` blocks to catch and log potential issues during connection and file transfer.  Crucially, it closes the FTP session.
+- `read`:  Takes the local file path, destination directory on the FTP server, and file name as arguments. It returns the file content if successfully retrieved from the FTP server. Returns `None` upon failure. Handles connection and file retrieval errors. Closes the FTP session.
+- `delete`:  Takes the local file path (which is unused), the destination directory on the FTP server, and the file name on the FTP server as arguments. Returns `True` if the file is successfully deleted, otherwise `False`.  Handles errors during the connection and deletion process.  Closes the FTP session.
 
-**Переменные:**
+**Variables:**
 
-* `_connection`: Словарь, содержащий конфигурацию соединения с FTP сервером.  Это необходимо улучшить, перенеся данную переменную в отдельный файл конфигурации, чтобы не хранить данные соединения в коде.
-* `MODE`: Строковая переменная, по-видимому, используется для обозначения режима работы (например, 'dev', 'prod').
+- `_connection`: A dictionary holding the FTP server details (host, port, username, password).  This is a critical but potentially vulnerable element if hardcoded like this.  Storing this in a configuration file or other secure location is essential for production code.
+- `MODE`: A string variable with the value 'dev', which seems to be a flag/constant indicating the environment (possibly for different connection parameters or logging behaviors in different environments).
 
-**Возможные ошибки и улучшения:**
+**Possible Errors and Improvements:**
 
-* **Конфигурация подключения:**  `_connection`  определена в файле, а не в отдельном файле конфигурации. Это потенциальная проблема с точки зрения безопасности и поддержания конфигурации. Нужно вынести `_connection` в отдельный файл конфигурации (например, `config.py`), чтобы конфигурационные данные не были жестко закодированы в этом коде.
-* **Обработка ошибок:** Исключения обрабатываются, но логирование могло бы быть более информативным, включая подробную информацию об ошибке (тип, сообщение).
-* **Типы данных:**  В `read` функция возвращает `Union[str, bytes, None]`. Это может привести к ошибкам в дальнейшем, если вы не уверены в типе данных. Возвращение `bytes` скорее всего то, что требуется.
-* **Отсутствие проверки на существование файла:** Функции не проверяют существование локального файла (`source_file_path`). Это необходимо, чтобы избежать неожиданных ошибок.
-* **Передача параметров:** Параметры `source_file_path` во всех трех функциях не используются. Вероятно, они должны быть удалены или исправлены для лучшего кода.
-* **Нет проверки корректности `dest_dir`:** Функции не проверяют, что `dest_dir` корректный.
+- **Hardcoded credentials:** Storing credentials directly in the code is a significant security risk.  Use environment variables or a configuration file to store sensitive information.
+- **Error Handling:** The `try...except` blocks are improved by logging specific error messages using `logger`. However, for production code, consider catching more specific exceptions (e.g., `ftplib.error`).
+- **Input Validation:** Validate the input arguments (`source_file_path`, `dest_dir`, `dest_file_name`) to prevent potential issues like invalid paths or file names.
+- **Robust Connection Handling:** Add a timeout to the FTP connection attempt to prevent indefinite hangs.
+- **File Existence Check:** Checking if the source file exists before attempting to send it.
 
+**Relationships with Other Parts of the Project:**
 
-**Взаимосвязи с другими частями проекта:**
-
-Модуль `ftp.py` напрямую зависит от модуля `logger`, который, по всей видимости, предназначен для логирования.  Использование `logger` позволяет отслеживать события и ошибки в процессе взаимодействия с FTP сервером.  Взаимосвязь осуществляется через импорты.  Более сложные взаимосвязи могут существовать через переменные или вызовы других функций.
+The code interacts with the `src.logger` module, suggesting that the code is part of a larger project with logging functionality.  The `_connection` dictionary might be populated by external configuration.

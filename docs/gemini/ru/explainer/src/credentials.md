@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/credentials.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -84,7 +84,7 @@ def singleton(cls):
 class ProgramSettings(BaseModel):
     """ 
     `ProgramSettings` - класс настроек программы.
-    
+
     Синглтон, хранящий основные параметры и настройки проекта.
     """
     
@@ -105,42 +105,7 @@ class ProgramSettings(BaseModel):
             email=None,
             password=None
         ),
-        presta=SimpleNamespace(
-            translations=SimpleNamespace(
-                server=None,
-                port=None,
-                database=None,
-                user=None,
-                password=None,
-            ),
-            client=[SimpleNamespace(
-                server=None,
-                port=None,
-                database=None,
-                user=None,
-                password=None,
-            )]
-        ),
-        openai=SimpleNamespace(
-            api_key=None, 
-            assistant_id=SimpleNamespace(), 
-            project_api=None
-        ),
-        gemini=SimpleNamespace(api_key=None),
-        rev_com=SimpleNamespace(client_api=None,
-                                user_api=None),
-        shutter_stock=SimpleNamespace(token=None),
-        discord=SimpleNamespace(
-            application_id=None, 
-            public_key=None, 
-            bot_token=None
-        ),
-        telegram=SimpleNamespace(
-            bot=SimpleNamespace()
-        ),
-        smtp=[],
-        facebook=[],
-        gapi={}
+        # ... (other credentials)
     ))
     MODE: str = Field(default='dev')
     path: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(
@@ -154,109 +119,120 @@ class ProgramSettings(BaseModel):
         google_drive = None,
         external_storage = None,
         tools = None,
-        dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
+        dev_null = 'nul' if sys.platform == 'win32' else '/dev/null'
     ))
 
-
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
-        if not self.config:
-            logger.error('Ошибка при загрузке настроек')
-            return
-        self.config.project_name = self.base_dir.name
-        self.path = SimpleNamespace(
-            root = Path(self.base_dir),
-            bin = Path(self.base_dir / 'bin'),
-            src = Path(self.base_dir) / 'src',
-            endpoints = Path(self.base_dir) / 'src' / 'endpoints',
-            secrets = Path(self.base_dir / 'secrets'),
-            toolbox = Path(self.base_dir / 'toolbox'),
-            log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')),
-            tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
-            data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')),
-            google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')),
-            external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ),
-        )
-        if check_latest_release(self.config.git_user, self.config.git):
-            ...
-        self.MODE = self.config.mode
-        # ... (rest of the code)
-
-# Global instance of ProgamSettings
-gs: ProgramSettings = ProgramSettings()
+        # ... (initialization logic)
+        self._load_credentials()
 ```
 
 # <algorithm>
 
-**(Блок-схема) - Невозможно отобразить с доступными средствами.  Пожалуйста, обратитесь к описанию.**
-
-Этот код реализует загрузку настроек и учетных данных из файла настроек и базы данных KeePass соответственно.
-
 **Шаг 1:** Инициализация `ProgramSettings`.
-**Шаг 2:** Определение корневой директории проекта.
-**Шаг 3:** Загрузка настроек из файла `config.json`.
-**Шаг 4:** Настройка путей к различным директориям проекта.
-**Шаг 5:** Проверка наличия обновлений.
-**Шаг 6:** Загрузка учетных данных из KeePass.
-    * Происходит циклический поиск групп и записей.
-    * Для каждой категории (например, Aliexpress, OpenAI) данные извлекаются из соответствующих записей в KeePass.
-    * Данные сохраняются в атрибуте `credentials` класса `ProgramSettings`.
+* Создается экземпляр класса `ProgramSettings`.
+* Вызывается метод `set_project_root()`, чтобы определить корневую директорию проекта.
+* Инициализируются атрибуты `config`, `credentials`, `path` с использованием `SimpleNamespace` или `dict`
+* Загружаются настройки из файла `config.json` в `self.config`.
+* Обновляется `self.path` с путем к различным каталогам проекта.
+* Выполняются проверки на доступность новой версии.
+
+
+**Шаг 2:** Загрузка учетных данных.
+* Вызывается метод `_load_credentials()`.
+* Этот метод обращается к базе данных KeePass (`credentials.kdbx`) с помощью `PyKeePass`.
+* Для каждого типа учетных данных (Aliexpress, OpenAI, etc) вызывается соответствующий метод `_load_*_credentials()`.
+
+
+**Шаг 3:** Загрузка учетных данных (подробный пример для Aliexpress).
+* Метод `_load_aliexpress_credentials()` ищет в базе KeePass группу "suppliers/aliexpress/api".
+* Извлекает значения `api_key`, `secret`, `tracking_id` и `password` из соответствующих полей записи KeePass.
+
+
+**Шаг 4:** Загрузка остальных учетных данных.
+* Аналогичные методы  `_load_*_credentials()` загружают данные для остальных типов учетных данных (OpenAI, Gemini, Telegram, Discord, etc).
+
+
+**Шаг 5:** Обработка ошибок.
+* В методах `_load_*_credentials()` используются блоки `try...except`, чтобы обрабатывать потенциальные исключения при взаимодействии с KeePass.
+* Вывод сообщений об ошибках в консоль.
+
+
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[credentials.py] --> B{Загрузка настроек};
-    B --> C[Настройка путей];
-    C --> D[Проверка обновлений];
-    D -- Успешно --> E[Загрузка учетных данных KeePass];
-    E -- Успешно --> F[Инициализация];
-    E -- Неудача --> G[Ошибка];
-    B --> H[Проверка файлов];
-    H -- Неудача --> G;
-    B -- Успешно --> F;
-
-    subgraph "Зависимости"
-        E --> I[pykeepass];
-        E --> J[pydantic];
-        E --> K[json];
+graph TD
+    subgraph Program Initialization
+        A[ProgramSettings()] --> B{set_project_root()};
+        B --> C[Load config.json];
+        C --> D{Update paths};
+        D --> E[Check for new release];
+        E --> F{Load credentials};
     end
+    subgraph Credential Loading
+        F --> G[_load_credentials()];
+        G --> H[_load_aliexpress_credentials()];
+        H --> I[Find Group "suppliers/aliexpress/api"];
+        I --> J[Extract API Key, Secret, etc];
+        J --> K[Store in credentials];
+    end
+    subgraph Error Handling
+        H -- Error --> L[Error Message];
+        G -- Error --> L[Error Message];
+        H -- Success --> K;
+        G -- Success --> K;
+    end
+    K --> M[Program initialization complete];
 ```
+
+**Описание зависимостей:**
+* **`pykeepass`:** Библиотека для взаимодействия с базой данных KeePass.
+* **`pydantic`:** Библиотека для работы с данными в формате JSON.
+* **`pathlib`:** Библиотека для работы с путями к файлам.
+* **`SimpleNamespace`:** Для создания именованных пространств имен.
+* **`typing`:** Для типов данных.
+* **`datetime`:** Для работы с датами и временем.
+* **`src.check_release`:** Вероятно, модуль для проверки обновлений.
+* **`src.logger`:** Модуль для ведения логов.
+* **`src.utils.file`:** Модуль для работы с файлами.
+* **`src.utils.jjson`:** Модуль для работы с JSON-данными (возможно, для более гибкого преобразования).
+* **`src.utils.printer`:** Модуль для форматированного вывода информации.
 
 # <explanation>
 
 **Импорты:**
-
-Код импортирует необходимые библиотеки для работы с файлами, настройками, KeePass, и логгированием. `src` указывает, что модули, такие как `check_release`, `logger`, и `utils`, находятся в подпапке `src` проекта.
-
+Код импортирует необходимые библиотеки для работы с файлами, логами, настройками, KeePass, временем.  Все импорты из `src` указывают на наличие модулей (например, `check_release`, `logger`, `utils`) внутри проекта.
 
 **Классы:**
+* **`ProgramSettings`:** Представляет собой класс настроек программы, используемый для хранения глобальных параметров и настроек.  Использует `pydantic.BaseModel` для валидации и сериализации данных. Важно, что `ProgramSettings` реализует паттерн Singleton (`@singleton`), гарантируя, что существует только один экземпляр этого класса на протяжении всей работы приложения.
 
-*   **`ProgramSettings`:**  Представляет собой класс настроек программы, реализованный как синглтон (с использованием декоратора `singleton`).  Хранит пути к файлам, основные настройки проекта и загруженные учетные данные.  Атрибуты (`host_name`, `base_dir`, `config`, `credentials`, `MODE`, `path`) содержат данные о программе и ее окружении, включая пути, а также учетные данные из KeePass.  Методы (`__init__`, `_load_credentials`, и методы, начинающиеся с `_load_`) отвечают за инициализацию, загрузку учетных данных.
+**Атрибуты:**
+* `host_name`: имя хоста.
+* `base_dir`: корневая директория проекта.
+* `config`: хранит конфигурационные параметры, загруженные из `config.json`.
+* `credentials`: хранит учетные данные. Использует `SimpleNamespace` для иерархической организации.
+* `MODE`: режим работы приложения ('dev', 'prod', etc).
+* `path`: содержит пути к важным директориям проекта (src, bin, log, data, secrets).  Используется с `SimpleNamespace` для удобного доступа.
+    * Директории, такие как `secrets`, предназначены для конфиденциальных данных и не должны попадать в контроль версий.
 
 
-**Функции:**
+**Методы:**
+* **`__init__`**:  Метод инициализации, загружающий данные из файла `config.json`, устанавливает пути к различным файлам/каталогам и загружает учетные данные из KeePass.
+* **`_load_credentials`**: Загружает все учетные данные из KeePass.
+* **`_load_*_credentials`**: методы для загрузки конкретных учетных данных из KeePass (например, `_load_aliexpress_credentials`). Они итерируют по записям в KeePass, чтобы найти соответствующие группы и вытащить данные.
+* **`_open_kp`**: Открывает базу данных KeePass.  В реализации есть важный момент - возможность повтора открытия базы в случае ошибки с заданным количеством попыток.
+* **`now`**: Метод, возвращающий текущую дату и время в определенном формате.
 
-*   **`set_project_root`:**  Находит корневую директорию проекта, идучи вверх от текущего файла, пока не найдет директории, содержащие заданные маркеры (файлы).  Добавляет корневую директорию в `sys.path`. Это необходимо для импорта модулей из поддиректорий проекта.
-
-
-**Переменные:**
-
-
-*   **`MODE`:**  Строковая переменная, хранящая режим работы программы.
-*   **`gs`:**  Глобальная переменная, содержащая экземпляр класса `ProgramSettings`.  Используется для доступа к настройкам в других частях приложения.
 
 
 **Возможные ошибки и улучшения:**
 
-*   **Обработка ошибок:** Код содержит обработку исключений (`try...except`) для предотвращения аварийной остановки при сбоях, например, при открытии файла или извлечении данных из KeePass. Однако сообщения об ошибках не очень информативны. Необходимо добавить более подробные сообщения об ошибках, чтобы облегчить отладку.
-*   **Учетные данные в открытом виде:** Файл пароля (`password.txt`) хранит пароль в открытом виде. Это критическая ошибка безопасности! Необходимо использовать шифрование для хранения пароля.
-*   **Защита от внесения изменений в `sys.path`:** Настоятельно рекомендуется избежать прямого изменения `sys.path`. Вместо этого стоит использовать правильные механизмы управления зависимостями.
-*   **Явное указание типов:**  Всегда рекомендуется явно указать типы данных в коде для повышения его читабельности и предотвращения ошибок.
-*   **Обработка пустых списков:** При извлечении значений из KeePass, нужно проверить, что соответствующий список не пустой, перед использованием `entries[0]`.
+* **Безопасность:** Пароль к KeePass хранится в открытом виде в файле `password.txt`. Это очень плохая практика.  Необходимо защитить пароль, например, с помощью шифрования. Возможно, стоит использовать более безопасные методы хранения паролей KeePass.
+* **Обработка ошибок:** Исключения `Exception` обрабатываются достаточно грубо. Стоит более конкретно обрабатывать типы исключений и выводить более информативные сообщения об ошибках.
+* **Валидация данных:** Не хватает валидации данных, загружаемых из `config.json` и из KeePass.  Поберегите приложение от неверных данных.
+* **Документация:**  Добавить docstrings к методам `_load_*_credentials()`, чтобы улучшить документацию.
 
+**Цепочка взаимосвязей:**
 
-**Взаимосвязи с другими частями проекта:**
-
-Код взаимодействует с модулями `check_release` (для проверки обновлений), `logger` (для логгирования), `utils.file` и `utils.jjson` (для работы с файлами), а также `src.logger.exceptions` (для обработки потенциальных исключений).  Функции `_load...` извлекают данные из базы KeePass, что указывает на зависимость от библиотеки `pykeepass`.   Также имеется зависимость от файлов конфигурации, таких как `config.json`.
+`credentials.py` зависит от других модулей в `src`, таких как `check_release`, `logger`, `utils`, которые предоставляют необходимые функции для работы с файлами, логами, проверкой версий и прочими вспомогательными задачами.  `ProgramSettings` использует `pykeepass` для доступа к хранилищу учетных данных.  `ProgramSettings` управляет путями к различным папкам проекта и взаимодействует с другими частями приложения, используя эти пути.

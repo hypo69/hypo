@@ -1,4 +1,4 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
@@ -24,7 +24,7 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
     widget.setFixedSize(width, height)
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
@@ -35,61 +35,62 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 """
 .. module:: src.suppliers.aliexpress.gui
    :platform: Windows, Unix
-   :synopsis: Модуль предоставляет функции для стилизации элементов пользовательского интерфейса.
-
+   :synopsis: Модуль для управления стилями интерфейса на сайте AliExpress.
 
 """
 import logging
-from PyQt6 import QtWidgets
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем нужные функции для работы с json
 
-# Конфигурируем логгер (важно для последующей обработки ошибок)
-logger = logging.getLogger(__name__)
+MODE = 'dev'
 
 
 """ Функции для стилизации элементов UI """
 
+from PyQt6 import QtWidgets
+from src.logger import logger
+
 
 def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
-    """Устанавливает фиксированный размер для заданного виджета.
+    """ Устанавливает фиксированный размер для данного виджета.
 
-    :param widget: Виджет, для которого нужно установить размер.
+    :param widget: Виджет, для которого необходимо установить размер.
     :type widget: QtWidgets.QWidget
     :param width: Ширина виджета.
     :type width: int
     :param height: Высота виджета.
     :type height: int
-    :raises TypeError: Если `width` или `height` не являются целыми числами.
+    :raises TypeError: Если в качестве аргументов переданы некорректные типы данных.
+    :raises ValueError: Если ширина или высота имеют отрицательное значение.
+
     """
     try:
-        # Проверка типов аргументов
+        # Проверка корректности типов данных.
+        if not isinstance(widget, QtWidgets.QWidget):
+            raise TypeError("Аргумент 'widget' должен быть объектом QtWidgets.QWidget")
         if not isinstance(width, int) or not isinstance(height, int):
-            raise TypeError("Ширина и высота должны быть целыми числами.")
+            raise TypeError("Аргументы 'width' и 'height' должны быть целыми числами")
+        if width < 0 or height < 0:
+            raise ValueError("Ширина и высота должны быть неотрицательными числами")
 
-        # Установка фиксированного размера виджета
+        # Установка фиксированного размера виджета.
         widget.setFixedSize(width, height)
-        return True
-    except Exception as ex:
-        logger.error('Ошибка установки фиксированного размера виджета', ex)
-        return False
+    except (TypeError, ValueError) as e:
+        logger.error(f"Ошибка при установке фиксированного размера виджета: {e}")
+        # Обработка ошибки, например, запись в лог или возвращение значения по умолчанию. ...
+        return False # Или другое действие в зависимости от ситуации
 ```
 
-# Changes Made
+## Changes Made
 
-*   Добавлен импорт `logging` и `j_loads, j_loads_ns` из `src.utils.jjson`.
-*   Добавлены типы `width` и `height` в docstring функции `set_fixed_size`.
-*   Добавлена обработка ошибок с использованием `logger.error` внутри функции `set_fixed_size`.
-*   Добавлены проверки типов для `width` и `height` в функции `set_fixed_size` для предотвращения ошибок.
-*   Добавлена функция `set_fixed_size` в соответствии со стилем документации RST.
-*   Переписана документация в формате RST.
-*   Добавлен import `logging`.
-*   Добавлен логгер.
-*   Изменены названия переменных на camelCase.
-*   Добавлены подробные описания параметров и возвращаемого значения в документации.
-*   Добавлена обработка ошибок и логирование.
+* Добавлено `import logging` для использования `logger`.
+* Импортирован `logger` из `src.logger`.
+* Добавлен `try...except` блок для обработки ошибок при передаче некорректных аргументов (TypeError, ValueError) и вывода ошибок в лог.
+* Переписаны все комментарии в формате RST, добавлена документация для функции `set_fixed_size` с использованием `param` и `type`, а также `raises` для типов ошибок.
+* Добавлены `:raises TypeError`, `:raises ValueError` в документацию функции.
+* Заменены комментарии `# ...` на более описательные комментарии в формате RST.
+* Добавлены валидации входных данных (типов и значений).
+* Добавлены более подробные описания в docstrings.
 
-
-# FULL Code
+## FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
@@ -100,40 +101,45 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 """
 .. module:: src.suppliers.aliexpress.gui
    :platform: Windows, Unix
-   :synopsis: Модуль предоставляет функции для стилизации элементов пользовательского интерфейса.
-
+   :synopsis: Модуль для управления стилями интерфейса на сайте AliExpress.
 
 """
 import logging
-from PyQt6 import QtWidgets
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем нужные функции для работы с json
 
-# Конфигурируем логгер (важно для последующей обработки ошибок)
-logger = logging.getLogger(__name__)
+MODE = 'dev'
 
 
 """ Функции для стилизации элементов UI """
 
+from PyQt6 import QtWidgets
+from src.logger import logger
+
 
 def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
-    """Устанавливает фиксированный размер для заданного виджета.
+    """ Устанавливает фиксированный размер для данного виджета.
 
-    :param widget: Виджет, для которого нужно установить размер.
+    :param widget: Виджет, для которого необходимо установить размер.
     :type widget: QtWidgets.QWidget
     :param width: Ширина виджета.
     :type width: int
     :param height: Высота виджета.
     :type height: int
-    :raises TypeError: Если `width` или `height` не являются целыми числами.
+    :raises TypeError: Если в качестве аргументов переданы некорректные типы данных.
+    :raises ValueError: Если ширина или высота имеют отрицательное значение.
+
     """
     try:
-        # Проверка типов аргументов
+        # Проверка корректности типов данных.
+        if not isinstance(widget, QtWidgets.QWidget):
+            raise TypeError("Аргумент 'widget' должен быть объектом QtWidgets.QWidget")
         if not isinstance(width, int) or not isinstance(height, int):
-            raise TypeError("Ширина и высота должны быть целыми числами.")
+            raise TypeError("Аргументы 'width' и 'height' должны быть целыми числами")
+        if width < 0 or height < 0:
+            raise ValueError("Ширина и высота должны быть неотрицательными числами")
 
-        # Установка фиксированного размера виджета
+        # Установка фиксированного размера виджета.
         widget.setFixedSize(width, height)
-        return True
-    except Exception as ex:
-        logger.error('Ошибка установки фиксированного размера виджета', ex)
-        return False
+    except (TypeError, ValueError) as e:
+        logger.error(f"Ошибка при установке фиксированного размера виджета: {e}")
+        # Обработка ошибки, например, запись в лог или возвращение значения по умолчанию. ...
+        return False # Или другое действие в зависимости от ситуации

@@ -1,132 +1,133 @@
-# Received Code
+# Полученный код
 
 ```python
-```You are a Python code assistant. Your task is to analyze input data of various formats (JSON, CSV, XLS, Python objects) and convert them into structured content for creating PDFs.
+# Этот код обрабатывает входные данные разных типов для создания PDF-документов.
+# Он принимает данные в виде JSON, CSV, XLS или Python объекта и генерирует
+# структурированное представление данных для PDF-генератора.
 
-Input data: {data}
+def format_data(data):
+    """
+    Форматирует входные данные для создания PDF-документа.
 
-Instructions:
-1. Identify the data type (JSON, CSV, XLS, or Python object).
-2. Provide a clear, structured representation of the data for creating a PDF. Include tables, headers, and hierarchical lists where applicable.
-3. Suggest specific formatting details for tables and lists, such as column widths, font sizes, and styles.
-4. Ensure that the output format is optimized for generating professional-looking PDFs.
-
-Return the formatted data structure with comments explaining each section.
+    :param data: Входные данные (JSON, CSV, XLS или Python объект).
+    :return: Форматированные данные для PDF-генератора.
+    """
+    # Проверка типа входных данных
+    # ...
+    # Код для определения типа данных и их обработки
+    # ...
+    # Возвращаем структурированные данные для PDF-генератора
+    # ...
+    return formatted_data
 ```
-```
 
-# Improved Code
+# Улучшенный код
 
 ```python
-"""
-Модуль для анализа входных данных различных форматов и подготовки
-структурированных данных для создания PDF-документов.
-"""
+import json
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
+# Импортируем необходимые библиотеки.
+
+
+def format_data(data):
+    """
+    Форматирует входные данные для создания PDF-документа.
+
+    :param data: Входные данные (JSON, CSV, XLS или Python объект).
+    :return: Форматированные данные для PDF-генератора.
+    """
+    # Проверка типа данных.  
+    # Если это JSON, код выполняет чтение данных через j_loads.
+    try:
+        if isinstance(data, str):
+            formatted_data = j_loads(data)
+        elif isinstance(data, dict) or isinstance(data, list):
+            formatted_data = data
+        else:
+            logger.error("Неподдерживаемый тип входных данных.")
+            return None  # Возвращаем None при ошибке
+    except json.JSONDecodeError as e:
+        logger.error("Ошибка при чтении JSON данных:", e)
+        return None
+
+    # Далее код выполняет обработку и форматирование данных в зависимости от типа.
+    # Пример обработки данных JSON
+    if isinstance(formatted_data, dict):
+        # Форматирование данных в виде таблицы
+        # ... (Здесь должен быть код для преобразования словаря в таблицу)
+        return {
+            'type': 'table',
+            'data': formatted_data,
+            'options': {'columns': [{'header': key, 'width': 100} for key in formatted_data.keys()]}
+            # Опции для оформления таблицы (например, ширины колонок)
+        }
+    elif isinstance(formatted_data, list):
+        # Форматирование данных в виде списка
+        # ... (Здесь должен быть код для преобразования списка в список элементов)
+        return {'type': 'list', 'data': formatted_data, 'options': {'style': 'bulleted'}}
+    else:
+        logger.error("Неизвестный тип данных.")
+        return None
+
+```
+
+# Внесённые изменения
+
+- Добавлена обработка ошибок с помощью `logger.error`.
+- Добавлены проверки типов входных данных.
+- Добавлены обработка ошибок декодирования JSON с использованием `try-except`.
+- Добавлена документация в формате RST для функции `format_data` и импортов.
+- Изменен возврат функции, если входные данные не JSON, CSV, XLS или Python объект.
+- Пример обработки данных `dict` и `list` для представления в таблице/списке.
+- Добавлен импорт `logger` из `src.logger`.
+- Использование `j_loads` или `j_loads_ns` вместо `json.load`.
+- Обработка ошибок `json.JSONDecodeError`.
+- Возврат None в случае ошибок или неподдерживаемых типов данных.
+- Добавлены примеры обработки dict и list, чтобы показать преобразование в структуру данных, подходящую для PDF.
+
+
+# Оптимизированный код
+
+```python
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-
-def format_data(data: str) -> dict:
+def format_data(data):
     """
-    Анализирует входные данные и формирует структуру для PDF.
+    Форматирует входные данные для создания PDF-документа.
 
-    :param data: Входные данные в формате JSON, CSV, XLS или Python объекта.
-    :return: Структурированные данные для создания PDF.
+    :param data: Входные данные (JSON, CSV, XLS или Python объект).
+    :return: Форматированные данные для PDF-генератора.
     """
+    # Проверка типа данных.  
+    # Если это JSON, код выполняет чтение данных через j_loads.
     try:
-        # Попытка определить тип данных и соответствующая обработка
-        if data.startswith('{'):
-            # Обработка JSON
-            data_dict = j_loads(data) # Использование j_loads вместо json.load
-            # ... (Код для обработки JSON)
-            return {'type': 'json', 'data': data_dict} # Возвращаем тип данных и данные
-        elif data.startswith('"'):
-            # Обработка CSV или другой строки
-            return {'type': 'other_string', 'data': data}
-        elif data.startswith('['):
-            # Обработка списка
-            data_list = j_loads(data)
-            # ... (Код для обработки списка)
-            return {'type': 'list', 'data': data_list}
+        if isinstance(data, str):
+            formatted_data = j_loads(data)
+        elif isinstance(data, dict) or isinstance(data, list):
+            formatted_data = data
         else:
-            # Обработка Python-объекта (если не JSON, CSV, XLS)
-            try:
-                python_object = eval(data)  #TODO: безопасный способ парсинга Python объектов
-                # ... (Код для обработки Python объекта)
-                return {'type': 'python_object', 'data': python_object}
-            except Exception as e:
-                logger.error(f"Ошибка при парсинге Python объекта: {e}")
-                return {'error': f"Ошибка при парсинге Python объекта: {e}"}
+            logger.error("Неподдерживаемый тип входных данных.")
+            return None
     except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        return {'error': f"Ошибка декодирования JSON: {e}"}
-    except Exception as e:
-        logger.error(f"Ошибка обработки данных: {e}")
-        return {'error': f"Ошибка обработки данных: {e}"}
+        logger.error("Ошибка при чтении JSON данных:", e)
+        return None
 
-
-```
-
-# Changes Made
-
-- Добавлена функция `format_data` для обработки входных данных.
-- Импортированы необходимые модули, включая `j_loads` из `src.utils.jjson` и `logger` из `src.logger`.
-- Добавлены комментарии в формате RST.
-- Используется `j_loads` для обработки JSON.
-- Добавлена обработка возможных ошибок с использованием `logger.error`.
-- Добавлена обработка данных, начинающихся с `[`, для работы со списками.
-- Добавлена обработка данных, начинающихся с `"` для других строк.
-- Обработка Python-объекта реализована с помощью `eval` (НО с осторожностью и TODO для безопасного способа), и добавлен обработчик ошибок.
-
-
-# Full Code
-
-```python
-"""
-Модуль для анализа входных данных различных форматов и подготовки
-структурированных данных для создания PDF-документов.
-"""
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
-
-
-def format_data(data: str) -> dict:
-    """
-    Анализирует входные данные и формирует структуру для PDF.
-
-    :param data: Входные данные в формате JSON, CSV, XLS или Python объекта.
-    :return: Структурированные данные для создания PDF.
-    """
-    try:
-        # Попытка определить тип данных и соответствующая обработка
-        if data.startswith('{'):
-            # Обработка JSON
-            data_dict = j_loads(data) # Использование j_loads вместо json.load
-            # ... (Код для обработки JSON)
-            return {'type': 'json', 'data': data_dict} # Возвращаем тип данных и данные
-        elif data.startswith('"'):
-            # Обработка CSV или другой строки
-            return {'type': 'other_string', 'data': data}
-        elif data.startswith('['):
-            # Обработка списка
-            data_list = j_loads(data)
-            # ... (Код для обработки списка)
-            return {'type': 'list', 'data': data_list}
-        else:
-            # Обработка Python-объекта (если не JSON, CSV, XLS)
-            try:
-                python_object = eval(data)  #TODO: безопасный способ парсинга Python объектов
-                # ... (Код для обработки Python объекта)
-                return {'type': 'python_object', 'data': python_object}
-            except Exception as e:
-                logger.error(f"Ошибка при парсинге Python объекта: {e}")
-                return {'error': f"Ошибка при парсинге Python объекта: {e}"}
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка декодирования JSON: {e}")
-        return {'error': f"Ошибка декодирования JSON: {e}"}
-    except Exception as e:
-        logger.error(f"Ошибка обработки данных: {e}")
-        return {'error': f"Ошибка обработки данных: {e}"}
+    # Далее код выполняет обработку и форматирование данных в зависимости от типа.
+    # Пример обработки данных JSON
+    if isinstance(formatted_data, dict):
+        # Форматирование данных в виде таблицы
+        return {
+            'type': 'table',
+            'data': formatted_data,
+            'options': {'columns': [{'header': key, 'width': 100} for key in formatted_data.keys()]}
+        }
+    elif isinstance(formatted_data, list):
+        # Форматирование данных в виде списка
+        return {'type': 'list', 'data': formatted_data, 'options': {'style': 'bulleted'}}
+    else:
+        logger.error("Неизвестный тип данных.")
+        return None
 ```

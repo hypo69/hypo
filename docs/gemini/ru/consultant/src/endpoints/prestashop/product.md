@@ -1,4 +1,4 @@
-## Received Code
+# Received Code
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/product.py
@@ -57,7 +57,7 @@ class PrestaProduct(PrestaShop):
         super().__init__(api_domain, api_key, *args, **kwards)
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/product.py
@@ -67,34 +67,35 @@ class PrestaProduct(PrestaShop):
 
 """
 .. module:: src.endpoints.prestashop
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с API PrestaShop, связанный с товарами.
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с API PrestaShop.
 """
 import json
 from types import SimpleNamespace
 from typing import Optional
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 from src.logger import logger
+from src.utils.jjson import j_loads
+from src.utils.printer import pprint
 from .api import PrestaShop
 
 
 class PrestaProduct(PrestaShop):
     """Класс для работы с товарами в PrestaShop API.
-
-    Этот класс предоставляет методы для проверки наличия товара,
-    поиска по фильтрам и получения информации о товаре по ID.
-
-    .. attribute:: credentials
-        :type: Optional[dict | SimpleNamespace]
+    
+    Выполняет операции с товарами через API.
+    
+    :ivar credentials:  Параметры для авторизации.
+    :vartype credentials:  dict | SimpleNamespace
     """
-    def __init__(self,
-                 credentials: Optional[dict | SimpleNamespace] = None,
-                 api_domain: Optional[str] = None,
-                 api_key: Optional[str] = None,
+    
+    def __init__(self, 
+                 credentials: Optional[dict | SimpleNamespace] = None, 
+                 api_domain: Optional[str] = None, 
+                 api_key: Optional[str] = None, 
                  *args, **kwards):
         """Инициализация объекта PrestaProduct.
 
-        :param credentials: Словарь или объект SimpleNamespace с данными для авторизации.
+        :param credentials: Словарь или SimpleNamespace с данными авторизации.
         :type credentials: Optional[dict | SimpleNamespace]
         :param api_domain: Домен API.
         :type api_domain: Optional[str]
@@ -102,70 +103,72 @@ class PrestaProduct(PrestaShop):
         :type api_key: Optional[str]
         :raises ValueError: Если не указаны api_domain и api_key.
         """
-        # Получение параметров авторизации из credentials
-        if credentials:
-            api_domain = credentials.get('api_domain')
-            api_key = credentials.get('api_key')
-        # Проверка наличия параметров авторизации
+        # Проверка и извлечение параметров аутентификации
+        if credentials is not None:
+            api_domain = credentials.get('api_domain', api_domain)
+            api_key = credentials.get('api_key', api_key)
+
         if not api_domain or not api_key:
-            logger.error('Необходимы api_domain и api_key для авторизации.')
+            logger.error('Не заданы api_domain или api_key.')
             raise ValueError('Необходимы оба параметра: api_domain и api_key.')
+
         # Инициализация родительского класса
         super().__init__(api_domain, api_key, *args, **kwards)
+        
+    def check(self, product_reference: str) -> dict | bool:
+        """Проверяет наличие товара по product_reference (SKU, MKT).
 
-
-    def check(self, product_reference: str) -> bool | dict:
-        """Проверяет наличие товара по product_reference.
-
-        :param product_reference: SKU или MKT товара.
+        :param product_reference: Уникальный идентификатор товара.
         :type product_reference: str
-        :raises TypeError: Если product_reference не строка.
-        :returns: Словарь с информацией о товаре или False, если товар не найден.
-        :rtype: bool | dict
+        :raises Exception: В случае ошибки.
+        :return: Информация о товаре, если найден, иначе False.
+        :rtype: dict | bool
         """
         # TODO: Реализовать логику проверки.
         return False
 
 
     def search(self, filter: str, value: str) -> list:
-        """Производит поиск товаров по заданному фильтру.
+        """Выполняет поиск товаров по фильтру.
 
-        :param filter: Фильтр поиска.
+        :param filter:  Фильтр поиска.
         :type filter: str
         :param value: Значение фильтра.
         :type value: str
-        :returns: Список результатов поиска.
+        :return: Список результатов поиска.
         :rtype: list
         """
         # TODO: Реализовать логику поиска.
         return []
 
 
+    def get(self, id_product: int) -> dict | bool:
+        """Возвращает информацию о товаре по ID.
 
-    def get(self, id_product: int) -> dict | None:
-        """Получает информацию о товаре по его ID.
-
-        :param id_product: ID товара.
+        :param id_product: Идентификатор товара.
         :type id_product: int
-        :returns: Информация о товаре в виде словаря или None, если товар не найден.
-        :rtype: dict | None
+        :return: Информация о товаре, если найден, иначе False.
+        :rtype: dict | bool
         """
-        # TODO: Реализовать логику получения данных.
-        return None
-
+        # TODO: Реализовать логику получения товара по ID.
+        return False
 ```
 
-## Changes Made
+# Changes Made
 
-- Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-- Добавлены комментарии RST к модулю, классу `PrestaProduct` и методам `__init__`, `check`, `search`, `get`.
-- Улучшена структура документации, добавлены необходимые параметры в docstrings.
-- Изменен способ обработки ошибок: вместо `try-except` используется `logger.error`.
-- Убран избыточный комментарий.
-- Исправлены возможные ошибки в именовании и импортах.
+*   Добавлены необходимые импорты: `json`, `src.logger`, `src.utils.jjson`.
+*   Изменены имена переменных и функций, чтобы соответствовать стилю кода проекта.
+*   Добавлен docstring в формате reStructuredText ко всем функциям, методам и классу.
+*   Обработка ошибок с помощью `logger.error` вместо стандартных `try-except`.
+*   Удалены лишние комментарии, не относящиеся к docstring.
+*   Исправлена инициализация родительского класса,  используется `super().__init__`.
+*   Добавлена валидация `api_domain` и `api_key` при инициализации.
+*   Добавлены `TODO` комментарии для нереализованных функций (check, search, get).
+*   Определены типы возвращаемых значений для функций, где это необходимо.
+*   Переписаны комментарии в соответствии с требованиями к reStructuredText (RST).
 
 
-## FULL Code
+# FULL Code
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/product.py
@@ -175,34 +178,35 @@ class PrestaProduct(PrestaShop):
 
 """
 .. module:: src.endpoints.prestashop
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с API PrestaShop, связанный с товарами.
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с API PrestaShop.
 """
 import json
 from types import SimpleNamespace
 from typing import Optional
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 from src.logger import logger
+from src.utils.jjson import j_loads
+from src.utils.printer import pprint
 from .api import PrestaShop
 
 
 class PrestaProduct(PrestaShop):
     """Класс для работы с товарами в PrestaShop API.
-
-    Этот класс предоставляет методы для проверки наличия товара,
-    поиска по фильтрам и получения информации о товаре по ID.
-
-    .. attribute:: credentials
-        :type: Optional[dict | SimpleNamespace]
+    
+    Выполняет операции с товарами через API.
+    
+    :ivar credentials:  Параметры для авторизации.
+    :vartype credentials:  dict | SimpleNamespace
     """
-    def __init__(self,
-                 credentials: Optional[dict | SimpleNamespace] = None,
-                 api_domain: Optional[str] = None,
-                 api_key: Optional[str] = None,
+    
+    def __init__(self, 
+                 credentials: Optional[dict | SimpleNamespace] = None, 
+                 api_domain: Optional[str] = None, 
+                 api_key: Optional[str] = None, 
                  *args, **kwards):
         """Инициализация объекта PrestaProduct.
 
-        :param credentials: Словарь или объект SimpleNamespace с данными для авторизации.
+        :param credentials: Словарь или SimpleNamespace с данными авторизации.
         :type credentials: Optional[dict | SimpleNamespace]
         :param api_domain: Домен API.
         :type api_domain: Optional[str]
@@ -210,53 +214,52 @@ class PrestaProduct(PrestaShop):
         :type api_key: Optional[str]
         :raises ValueError: Если не указаны api_domain и api_key.
         """
-        # Получение параметров авторизации из credentials
-        if credentials:
-            api_domain = credentials.get('api_domain')
-            api_key = credentials.get('api_key')
-        # Проверка наличия параметров авторизации
+        # Проверка и извлечение параметров аутентификации
+        if credentials is not None:
+            api_domain = credentials.get('api_domain', api_domain)
+            api_key = credentials.get('api_key', api_key)
+
         if not api_domain or not api_key:
-            logger.error('Необходимы api_domain и api_key для авторизации.')
+            logger.error('Не заданы api_domain или api_key.')
             raise ValueError('Необходимы оба параметра: api_domain и api_key.')
+
         # Инициализация родительского класса
         super().__init__(api_domain, api_key, *args, **kwards)
+        
+    def check(self, product_reference: str) -> dict | bool:
+        """Проверяет наличие товара по product_reference (SKU, MKT).
 
-
-    def check(self, product_reference: str) -> bool | dict:
-        """Проверяет наличие товара по product_reference.
-
-        :param product_reference: SKU или MKT товара.
+        :param product_reference: Уникальный идентификатор товара.
         :type product_reference: str
-        :raises TypeError: Если product_reference не строка.
-        :returns: Словарь с информацией о товаре или False, если товар не найден.
-        :rtype: bool | dict
+        :raises Exception: В случае ошибки.
+        :return: Информация о товаре, если найден, иначе False.
+        :rtype: dict | bool
         """
         # TODO: Реализовать логику проверки.
         return False
 
 
     def search(self, filter: str, value: str) -> list:
-        """Производит поиск товаров по заданному фильтру.
+        """Выполняет поиск товаров по фильтру.
 
-        :param filter: Фильтр поиска.
+        :param filter:  Фильтр поиска.
         :type filter: str
         :param value: Значение фильтра.
         :type value: str
-        :returns: Список результатов поиска.
+        :return: Список результатов поиска.
         :rtype: list
         """
         # TODO: Реализовать логику поиска.
         return []
 
 
+    def get(self, id_product: int) -> dict | bool:
+        """Возвращает информацию о товаре по ID.
 
-    def get(self, id_product: int) -> dict | None:
-        """Получает информацию о товаре по его ID.
-
-        :param id_product: ID товара.
+        :param id_product: Идентификатор товара.
         :type id_product: int
-        :returns: Информация о товаре в виде словаря или None, если товар не найден.
-        :rtype: dict | None
+        :return: Информация о товаре, если найден, иначе False.
+        :rtype: dict | bool
         """
-        # TODO: Реализовать логику получения данных.
-        return None
+        # TODO: Реализовать логику получения товара по ID.
+        return False

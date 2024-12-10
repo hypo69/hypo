@@ -1,10 +1,10 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 
 from ..tools.get_product_id import get_product_id
@@ -39,14 +39,14 @@ def get_product_ids(values):
     return product_ids
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
-""" Модуль для обработки аргументов API AliExpress. """
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с аргументами API AliExpress. """
 
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException
@@ -56,20 +56,21 @@ from src.logger import logger
 def get_list_as_string(value):
     """ Преобразует значение в строку, разделяя элементы списка запятыми.
 
-    :param value: Значение, которое может быть строкой или списком.
+    :param value: Значение для преобразования. Может быть строкой или списком.
+    :type value: str or list
     :raises InvalidArgumentException: Если значение не является строкой или списком.
-    :return: Строковое представление значения или None, если значение None.
+    :return: Строковое представление значения. Возвращает None, если входное значение None.
+    :rtype: str or None
     """
     if value is None:
-        return
+        return None  # Возвращаем None, если входное значение None
 
-    # Проверка типа данных.
     if isinstance(value, str):
         return value
     elif isinstance(value, list):
         return ','.join(value)
     else:
-        logger.error('Неподходящий тип данных для преобразования в строку. Ожидается строка или список, получено: %s', type(value))
+        logger.error('Некорректный тип аргумента для преобразования в строку: %s', type(value))
         raise InvalidArgumentException(f'Аргумент должен быть строкой или списком: {value}')
 
 
@@ -77,50 +78,48 @@ def get_product_ids(values):
     """ Получает список идентификаторов продуктов.
 
     :param values: Список или строка с идентификаторами продуктов, разделенными запятыми.
-    :raises InvalidArgumentException: Если значения не являются строкой или списком.
+    :type values: str or list
+    :raises InvalidArgumentException: Если входное значение не является строкой или списком.
     :return: Список идентификаторов продуктов.
+    :rtype: list
     """
-    # Обработка случая, когда входные данные - строка.
     if isinstance(values, str):
         values = values.split(',')
-    # Проверка типа данных.
     elif not isinstance(values, list):
-        logger.error('Неподходящий тип данных для аргумента product_ids. Ожидается строка или список, получено: %s', type(values))
+        logger.error('Некорректный тип аргумента product_ids: %s', type(values))
         raise InvalidArgumentException('Аргумент product_ids должен быть строкой или списком')
-
 
     product_ids = []
     for value in values:
-        # Обработка каждого значения.
         try:
             product_id = get_product_id(value)
             product_ids.append(product_id)
-        except Exception as e:  # Добавление обработки исключений.
+        except Exception as e:
             logger.error('Ошибка при получении идентификатора продукта: %s', e)
-            #  Возможная обработка ошибки (например, логгирование, пропуск значения)
-            ...
-
+            # Можно добавить логирование или обработку ошибки, например, пропускание некорректных значений
 
     return product_ids
 ```
 
-# Changes Made
+## Changes Made
 
-*   Добавлены docstrings в формате RST для функций `get_list_as_string` и `get_product_ids`.
-*   Добавлены проверки типов данных с логированием ошибок с помощью `logger.error` при несоответствии типа.
-*   Добавлена обработка исключений при вызове `get_product_id` для предотвращения падения программы.
-*   Исправлен стиль комментариев, заменены слова типа "получаем" и "делаем" на более конкретные.
-*   Изменены сообщения исключений для лучшей читаемости.
+*   Добавлен импорт `logger` из `src.logger`.
+*   Добавлены docstring в формате RST для функций `get_list_as_string` и `get_product_ids`.
+*   Изменены сообщения исключений на более информативные.
+*   Добавлена обработка ошибок с использованием `logger.error` для функций, чтобы не допустить остановки программы при ошибке получения идентификатора продукта.
+*   Изменен возврат `None` для `get_list_as_string` если входное значение `None`.
+*   Добавлены проверки типов аргументов с использованием `logger.error` для отслеживания и выявления ошибок.
+*   Комментарии изменены на формат RST.
 
 
-# FULL Code
+## FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/arguments.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\
-""" Модуль для обработки аргументов API AliExpress. """
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с аргументами API AliExpress. """
 
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException
@@ -130,20 +129,20 @@ from src.logger import logger
 def get_list_as_string(value):
     """ Преобразует значение в строку, разделяя элементы списка запятыми.
 
-    :param value: Значение, которое может быть строкой или списком.
+    :param value: Значение для преобразования. Может быть строкой или списком.
+    :type value: str or list
     :raises InvalidArgumentException: Если значение не является строкой или списком.
-    :return: Строковое представление значения или None, если значение None.
+    :return: Строковое представление значения. Возвращает None, если входное значение None.
+    :rtype: str or None
     """
     if value is None:
-        return
-
-    # Проверка типа данных.
+        return None  # Возвращаем None, если входное значение None
     if isinstance(value, str):
         return value
     elif isinstance(value, list):
         return ','.join(value)
     else:
-        logger.error('Неподходящий тип данных для преобразования в строку. Ожидается строка или список, получено: %s', type(value))
+        logger.error('Некорректный тип аргумента для преобразования в строку: %s', type(value))
         raise InvalidArgumentException(f'Аргумент должен быть строкой или списком: {value}')
 
 
@@ -151,29 +150,25 @@ def get_product_ids(values):
     """ Получает список идентификаторов продуктов.
 
     :param values: Список или строка с идентификаторами продуктов, разделенными запятыми.
-    :raises InvalidArgumentException: Если значения не являются строкой или списком.
+    :type values: str or list
+    :raises InvalidArgumentException: Если входное значение не является строкой или списком.
     :return: Список идентификаторов продуктов.
+    :rtype: list
     """
-    # Обработка случая, когда входные данные - строка.
     if isinstance(values, str):
         values = values.split(',')
-    # Проверка типа данных.
     elif not isinstance(values, list):
-        logger.error('Неподходящий тип данных для аргумента product_ids. Ожидается строка или список, получено: %s', type(values))
+        logger.error('Некорректный тип аргумента product_ids: %s', type(values))
         raise InvalidArgumentException('Аргумент product_ids должен быть строкой или списком')
-
 
     product_ids = []
     for value in values:
-        # Обработка каждого значения.
         try:
             product_id = get_product_id(value)
             product_ids.append(product_id)
-        except Exception as e:  # Добавление обработки исключений.
+        except Exception as e:
             logger.error('Ошибка при получении идентификатора продукта: %s', e)
-            #  Возможная обработка ошибки (например, логгирование, пропуск значения)
-            ...
-
+            # Можно добавить логирование или обработку ошибки, например, пропускание некорректных значений
 
     return product_ids
 ```

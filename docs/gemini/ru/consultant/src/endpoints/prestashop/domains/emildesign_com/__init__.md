@@ -59,56 +59,45 @@ MODE = 'dev'
     :synopsis: Модуль для работы с доменом emildesign.com.
 
 """
-import json
-from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
+import json  # импорт необходимой библиотеки
+from src.utils.jjson import j_loads  # импорт функции j_loads
+from src.logger import logger  # импорт логгера
+
 
 MODE = 'dev'
 
 
-def load_data(file_path):
-    """Загрузка данных из файла.
+def load_config():
+    """
+    Загрузка конфигурации из файла.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл содержит невалидный JSON.
-    :return: Данные из файла в формате словаря.
-    :rtype: dict
+    :raises FileNotFoundError: если файл конфигурации не найден.
+    :raises json.JSONDecodeError: если файл конфигурации содержит некорректный JSON.
+    :return: Словарь с конфигурацией.
     """
     try:
-        # код исполняет чтение файла с помощью j_loads
-        data = j_loads(file_path)
-        return data
+        # код исполняет загрузку конфигурации из файла
+        with open('config.json', 'r') as file:
+            config = j_loads(file.read())
+        return config
     except FileNotFoundError as e:
-        # код обрабатывает ошибку отсутствия файла
-        logger.error('Ошибка: файл не найден', e)
-        return None  # Возвращаем None при ошибке
+        logger.error('Ошибка: Файл конфигурации config.json не найден', e)
+        raise
     except json.JSONDecodeError as e:
-        # код обрабатывает ошибку декодирования JSON
-        logger.error('Ошибка: невалидный JSON в файле', e)
-        return None  # Возвращаем None при ошибке
-
-
-# Пример использования (можно перенести в отдельный файл для тестирования)
-# if __name__ == "__main__":
-#     import os
-#     file_path = os.path.join('path', 'to', 'your', 'file.json')
-#     data = load_data(file_path)
-#     if data:
-#         # Обработка загруженных данных
-#         print(data)
+        logger.error('Ошибка: Некорректный JSON в файле config.json', e)
+        raise
 ```
 
 # Changes Made
 
-*   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Добавлена функция `load_data` для загрузки данных из файла, обрабатывающая возможные исключения (FileNotFoundError, json.JSONDecodeError).
-*   Функция `load_data` возвращает `None` в случае ошибки, что позволяет избежать проблем с дальнейшей обработкой данных.
-*   Добавлены docstrings для функции `load_data` в формате RST.
-*   Комментарии к строкам заменены на docstrings в формате RST.
-*   Добавлен import `logger` из `src.logger`.
-*   Замена `json.load` на `j_loads`.
-*   Внесены исправления в docstrings для соблюдения стиля RST.
+* Добавлена строка импорта `from src.logger import logger`.
+* Добавлена функция `load_config` для загрузки конфигурации.
+* Функция `load_config` теперь использует `j_loads` для чтения JSON.
+* Добавлена обработка ошибок `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
+* Исправлены docstrings в соответствии с RST.
+* Убраны пустые строки и ненужные комментарии.
+* Удалены неиспользуемые переменные.
+* Добавлен код для импорта `json`.
 
 # FULL Code
 
@@ -124,43 +113,31 @@ def load_data(file_path):
     :synopsis: Модуль для работы с доменом emildesign.com.
 
 """
-import json
-from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
-from src.logger import logger  # Импорт модуля логирования
+import json  # импорт необходимой библиотеки
+from src.utils.jjson import j_loads  # импорт функции j_loads
+from src.logger import logger  # импорт логгера
 
 
 MODE = 'dev'
 
 
-def load_data(file_path):
-    """Загрузка данных из файла.
+def load_config():
+    """
+    Загрузка конфигурации из файла.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл содержит невалидный JSON.
-    :return: Данные из файла в формате словаря.
-    :rtype: dict
+    :raises FileNotFoundError: если файл конфигурации не найден.
+    :raises json.JSONDecodeError: если файл конфигурации содержит некорректный JSON.
+    :return: Словарь с конфигурацией.
     """
     try:
-        # код исполняет чтение файла с помощью j_loads
-        data = j_loads(file_path)
-        return data
+        # код исполняет загрузку конфигурации из файла
+        with open('config.json', 'r') as file:
+            config = j_loads(file.read())
+        return config
     except FileNotFoundError as e:
-        # код обрабатывает ошибку отсутствия файла
-        logger.error('Ошибка: файл не найден', e)
-        return None  # Возвращаем None при ошибке
+        logger.error('Ошибка: Файл конфигурации config.json не найден', e)
+        raise
     except json.JSONDecodeError as e:
-        # код обрабатывает ошибку декодирования JSON
-        logger.error('Ошибка: невалидный JSON в файле', e)
-        return None  # Возвращаем None при ошибке
-
-
-# Пример использования (можно перенести в отдельный файл для тестирования)
-# if __name__ == "__main__":
-#     import os
-#     file_path = os.path.join('path', 'to', 'your', 'file.json')
-#     data = load_data(file_path)
-#     if data:
-#         # Обработка загруженных данных
-#         print(data)
+        logger.error('Ошибка: Некорректный JSON в файле config.json', e)
+        raise
+```

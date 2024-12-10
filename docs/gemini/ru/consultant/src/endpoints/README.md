@@ -1,8 +1,13 @@
 # Received Code
 
-```python
-# [Русский](https://github.com/hypo69/hypo/endpoints/blob/master/README.RU.MD)
-### Data Consumer Endpoints Module
+```rst
+.. module: src.endpoints
+```
+[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
+
+[Русский](https://github.com/hypo69/hypo/blob/master/endpoints/readme.ru.md)
+
+Data Consumer Endpoints Module
 =========================================================================================
 
 The `endpoints` module provides an implementation of APIs for interacting with data consumers.
@@ -11,22 +16,7 @@ The `endpoints` module includes submodules for integration with various consumer
 ensuring seamless interaction with external services.
 
 ## Module Structure
-```mermaid
-flowchart LR
-    %% Node Style Definition
-    classDef unifiedWidth fill:#888,stroke:#333,stroke-width:2px,width:800px;
 
-    %% Main Diagram
-    src["src.endpoints"] --> prestashop[".prestashop: API for integration with PrestaShop system"]
-    src --> advertisement[".advertisement: API for working with advertisement platforms.  f.e. `Facebook`"]
-    src --> emil[".emil: API for Emil service"]
-    src --> hypo69[".hypo69: API for interacting with Hypo69 platform"]
-    src --> kazarinov[".kazarinov: API for Kazarinov service"]
-    src --> websites["Client frameworks `sergey.mymaster.co.il`,`emil-design.com`"]
-
-    %% Apply Style
-    %% class prestashop,advertisement,emil,hypo69,kazarinov,websites unifiedWidth;
-```
 
 ### Final Consumer Endpoints
 
@@ -43,6 +33,7 @@ Submodule for integrating with the client at https://emil-design.com (PrestaShop
 #### 4. **kazarinov**
 `https://sergey.mymaster.co.il`,`@hypo69_kazarinov_bot`
 Submodule for integrating with the Kazarinov data provider (pricelist creator, Facebook promotion).
+
 
 ## Module Descriptions
 
@@ -94,122 +85,142 @@ pip install -r requirements.txt
 Import the required module into your code:
 
 ```python
+# Исходный код без изменений
 from src.endpoints.prestashop import PrestashopAPI
 from src.endpoints.advertisement import AdvertisementAPI
 ```
 
 Then configure and use the methods depending on your use case.
-
-## Contribution
-
-If you want to contribute to the module, please follow these guidelines:
-
-1. Follow [PEP 8](https://peps.python.org/pep-0008/) for code style.
-2. Add tests for new features.
-3. Leave detailed comments for any changes.
-
-For questions and suggestions, contact the repository owner or leave comments in [Issues](#).
 ```
 
-```markdown
+
 # Improved Code
 
 ```python
-# [Русский](https://github.com/hypo69/hypo/endpoints/blob/master/README.RU.MD)
 """
-Модуль для работы с конечными точками API для потребителей данных.
-Каждая поддиректория представляет собой отдельный модуль,
-реализующий API для конкретной службы.
-Этот модуль включает подмодули для интеграции с различными системами потребителей,
-обеспечивая бесшовное взаимодействие с внешними сервисами.
+Модуль для работы с конечными точками API потребителей данных.
+=========================================================================================
+
+Этот модуль предоставляет реализацию API для взаимодействия с потребителями данных.
+Каждая подпапка представляет собой отдельный модуль, реализующий API для конкретной службы.
+Модуль endpoints включает подмодули для интеграции с различными системами потребителей,
+обеспечивая бесшовное взаимодействие с внешними службами.
 """
-# import ... # Не хватает импорта, необходимо добавить нужные импорты.
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт для работы с JSON
-from src.logger import logger # Импорт для логирования ошибок.
 
 
-class PrestashopAPI:
-    """
-    Класс для работы с API PrestaShop.
-
-    :ivar ...:  # Добавьте документацию к атрибутам.
-    """
-    # ... # Реализация метода
-    def get_products(self, params):
-        """
-        Получение списка продуктов.
-
-        :param params: Параметры для запроса.
-        :type params: dict
-        :return: Список продуктов.
-        :rtype: list
-        """
-        try:
-            # код исполняет запрос к API PrestaShop.
-            data = j_loads_ns(self._request_to_prestashop(params)) # Использование j_loads_ns для загрузки данных.
-            return data['products']  # Возвращение данных.
-        except Exception as e:
-            logger.error("Ошибка при получении списка продуктов", e)
-            return None
+# Добавлены импорты (при условии их отсутствия)
+# from src.utils.jjson import j_loads, j_loads_ns
 
 
-# ... (Остальной код)
+# from src.logger import logger  # Добавление импорта для логирования
+
+
+# TODO: Разработать классы для каждого из подмодулей (prestashop, advertisement, emil, hypo69, kazarinov).  
+#       Реализовать методы для взаимодействия с соответствующими API.
+#       Добавить обработку ошибок с помощью logger.error.
+
+# from src.endpoints.prestashop import PrestashopAPI  # Пример импорта, который нужно адаптировать
+# from src.endpoints.advertisement import AdvertisementAPI  # Пример импорта, который нужно адаптировать
+
 ```
 
-```markdown
+
 # Changes Made
 
-*   Добавлен импорт `j_loads`, `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлена строка документации RST для класса `PrestashopAPI` и функции `get_products`.
-*   Использование `j_loads_ns` для чтения JSON.
-*   Обработка ошибок с помощью `logger.error` вместо стандартных блоков `try-except`.
-*   Использование одинарных кавычек (`'`) в Python коде.
+- Added missing imports (`from src.logger import logger`, `from src.utils.jjson import j_loads, j_loads_ns`).
+- Added docstrings (RST format) to the module and placeholder docstrings for functions.
+- Added `TODO` items to mark areas for future implementation.
+- Replaced placeholders with basic docstring examples
+- Removed redundant information.
 
 
 # FULL Code
 
 ```python
-# [Русский](https://github.com/hypo69/hypo/endpoints/blob/master/README.RU.MD)
 """
-Модуль для работы с конечными точками API для потребителей данных.
-Каждая поддиректория представляет собой отдельный модуль,
-реализующий API для конкретной службы.
-Этот модуль включает подмодули для интеграции с различными системами потребителей,
-обеспечивая бесшовное взаимодействие с внешними сервисами.
+Модуль для работы с конечными точками API потребителей данных.
+=========================================================================================
+
+Этот модуль предоставляет реализацию API для взаимодействия с потребителями данных.
+Каждая подпапка представляет собой отдельный модуль, реализующий API для конкретной службы.
+Модуль endpoints включает подмодули для интеграции с различными системами потребителей,
+обеспечивая бесшовное взаимодействие с внешними службами.
 """
-# import ... # Не хватает импортов, необходимо добавить нужные импорты.
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт для работы с JSON
-from src.logger import logger # Импорт для логирования ошибок.
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для обработки JSON
+from src.logger import logger  # Импорт для логирования
 
 
+# TODO: Разработать классы для каждого из подмодулей (prestashop, advertisement, emil, hypo69, kazarinov).
+#       Реализовать методы для взаимодействия с соответствующими API.
+#       Добавить обработку ошибок с помощью logger.error.
+
+
+# Example class for PrestaShop API integration (replace with actual implementation)
 class PrestashopAPI:
-    """
-    Класс для работы с API PrestaShop.
+    def __init__(self, api_key):
+        """Инициализация объекта API для Престашоп.
 
-    :ivar ...:  # Добавьте документацию к атрибутам.
-    """
-    # ... # Реализация метода
-    def get_products(self, params):
+        :param api_key: Ключ API.
         """
-        Получение списка продуктов.
+        self.api_key = api_key
 
-        :param params: Параметры для запроса.
-        :type params: dict
+    def get_products(self, query):
+        """Получение списка продуктов.
+
+        :param query: Параметры запроса.
         :return: Список продуктов.
-        :rtype: list
         """
         try:
-            # код исполняет запрос к API PrestaShop.
-            data = j_loads_ns(self._request_to_prestashop(params)) # Использование j_loads_ns для загрузки данных.
-            return data['products']  # Возвращение данных.
+            # Проверка подключения и получения данных
+            response = j_loads(self._make_request(query))
+            return response  # Возвращает полученные данные
         except Exception as e:
-            logger.error("Ошибка при получении списка продуктов", e)
-            return None
+            logger.error("Ошибка при получении продуктов", e)
+            return None  # Возвращает None в случае ошибки
+
+    def _make_request(self, data):
+        """
+        Отправляет запрос на сервер Престашоп.
+
+        :param data: Данные для запроса.
+        :return: Ответ сервера.
+        """
+        # TODO: Реализовать отправку запроса
+        # пример, заменяйте на реальную реализацию
+        # import requests
+        # response = requests.post("YOUR_API_ENDPOINT", data=data)
+        return '{"products": [{"id": 1, "name": "Product 1"}, {"id": 2, "name": "Product 2"}]}' # Заглушка
 
 
-# ... (Остальной код)
+# Example class for Advertisement API (replace with actual implementation)
+class AdvertisementAPI:
+    def __init__(self, api_token):
+        self.api_token = api_token
+
+
+    def create_campaign(self, campaign_data):
+        """Создание рекламной кампании."""
+        try:
+          # Код отправляет запрос с данными о кампании
+          response = j_loads(self._make_request(campaign_data)) # Изменяем на реальный метод отправки запроса
+          return response # Возвращает полученный ответ
+        except Exception as e:
+            logger.error('Ошибка создания кампании', e)
+            return None # Возвращает None в случае ошибки
+
+    def _make_request(self, campaign_data):
+      # TODO: Реализовать отправку запроса
+      return '{"message": "Campaign created successfully"}' #Заглушка
+
+
+# Example Usage (replace with your actual code)
+# api_key = 'YOUR_API_KEY'
+# shop_api = PrestashopAPI(api_key)
+# products = shop_api.get_products({'query': 'some_query'})
+
+
+# api_token = 'YOUR_API_TOKEN'
+# advertisement_api = AdvertisementAPI(api_token)
+# campaign_response = advertisement_api.create_campaign({'name': 'Test Campaign'})
+
 ```
-```
-
-**Примечание:**  В представленном коде отсутствует фактическая реализация `_request_to_prestashop` и  `...` в `PrestashopAPI`.  Необходимо заполнить эти части, чтобы код стал полным и работоспособным.  Также,  необходимо добавить импорты, необходимые для работы класса и функций.  Указание на `...` в коде - это важный признак, что  необходимо доработать конкретные фрагменты.  Замените `...` на ваш код.  Этот шаблон  продемонстрирует  использование `j_loads_ns`, `logger.error` и  форматирование документации.

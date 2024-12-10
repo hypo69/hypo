@@ -1,10 +1,8 @@
 ```MD
-# Анализ кода модуля Category
-
-## <input code>
+# <input code>
 
 ```rst
-.. :module: src.category
+.. module: src.category
 ```
 # Модуль: Category
 
@@ -123,59 +121,95 @@ compare_and_print_missing_keys(current_dict=category_data, file_path='saved_cate
 - `src.utils.jjson.j_loads`
 - `src.utils.jjson.j_dumps`
 - `src.logger.logger`
-
-
-## <algorithm>
-
-(Блок-схема – не реализуема в текстовом формате)
-
-
-## <mermaid>
-
-```mermaid
-graph LR
-    subgraph Модуль Category
-        Category --> get_parents
-        Category --> crawl_categories_async
-        Category --> crawl_categories
-        Category --> _is_duplicate_url
-    end
-
-    get_parents --> PrestaCategory
-    crawl_categories_async --> Selenium
-    crawl_categories --> Selenium
-    _is_duplicate_url -.-> null
-
-    subgraph Зависимости
-        PrestaCategory --> src.endpoints.prestashop
-        Selenium --> requests, lxml, asyncio
-    end
-
-    compare_and_print_missing_keys --> null
-
-    PrestaShop --> requests
-    PrestaCategory -.-> null
-    j_loads --> src.utils.jjson
-    j_dumps --> src.utils.jjson
-    logger --> src.logger
 ```
 
-## <explanation>
+# <algorithm>
 
-**Импорты**: Модуль использует `requests` для запросов, `lxml` для работы с XML/HTML, `asyncio` для асинхронных операций, `selenium` для управления браузером (PrestaShop веб-скрейпинг), и другие модули из `src`, связанные с API Престашопа, обработкой данных и логированием.
+**Шаг 1:** Инициализация объекта `Category`. (Принимаются учетные данные API)
+**Шаг 2:** (get_parents) Поиск родительских категорий по ID.
+**Шаг 3:** (crawl_categories_async/crawl_categories) Рекурсивный обход страниц категорий, получая ссылки на дочерние категории.
+**Шаг 4:** (crawl_categories_async/crawl_categories) Сохранение данных в иерархический словарь `category`. (Проверка на дубликаты с помощью `_is_duplicate_url`)
+**Шаг 5:** Сохранение результата в `dump_file` в формате JSON.
+**Шаг 6:** (compare_and_print_missing_keys) Сравнение данных `category` со значениями из `saved_categories.json` и вывод отсутствующих ключей.
 
-**Классы**:
-* **`Category`**: Центральный класс для работы с категориями.  Наследует от `PrestaCategory` (вероятно, реализующего взаимодействие с API PrestaShop).  Содержит методы для получения родительских категорий, асинхронного и синхронного обхода категорий (`crawl_categories_async`, `crawl_categories`), проверки на дубликаты (`_is_duplicate_url`). `api_credentials` нужны для доступа к API PrestaShop.
+**Пример (crawl_categories):**
+- Вход: URL родительской категории, глубина рекурсии.
+- Выход: Иерархический словарь категорий, содержащий ID, название и URL каждой категории.
+- Перемещение данных:  Объект `driver` используется для парсинга страницы. Результаты из `driver` передаются в `crawl_categories_async` и рекурсивно в последующие вызовы.
 
-**Функции**:
-* **`compare_and_print_missing_keys`**: Сравнение текущих данных категорий с сохранёнными данными и вывод отсутствующих ключей. Это полезная функция для проверки полноты данных.
+# <mermaid>
 
-**Переменные**:  Примеры переменных в коде, таких как `url`, `depth`, `driver`, `locator` и т.д.,  являются аргументами методов и определяются в примере использования.
+```mermaid
+graph TD
+    A[Category] --> B(crawl_categories);
+    B --> C{Проверка на дубликаты};
+    C -- Да --> D[Сохранение в category];
+    C -- Нет --> E[Продолжение обхода];
+    D --> F[Сохранение в dump_file];
+    E --> B;
+    A --> G[get_parents];
+    G --> H[Получение родительских категорий];
+    H --> I[Возврат списка родительских категорий];
+    A --> J[crawl_categories_async];
+    J --> K[Асинхронный обход];
+    K --> F;
+    F --> L[compare_and_print_missing_keys];
+    L --> M[Сравнение и вывод];
 
-**Возможные ошибки/улучшения**:
-* Отсутствует обработка исключений (например, при ошибках сети или работе с Selenium).
-* Не указаны типы данных для переменных.
-*  Не описаны `PrestaShop` и `PrestaCategory`.
+    subgraph "Взаимодействие с другими модулями"
+        A --> N[PrestaShop];
+        A --> O[PrestaCategory];
+        A --> P[jjson];
+        A --> Q[logger];
+        N --> A;
+        O --> A;
+        P --> A;
+        Q --> A;
+    end
+```
+
+**Подключаемые зависимости:**
+- `PrestaShop`: модуль для взаимодействия с API PrestaShop.
+- `PrestaCategory`: класс для работы с категориями в PrestaShop.
+- `jjson`: модуль для работы с JSON (сериализация/десериализация).
+- `logger`: модуль для логирования.
+- `requests`: для HTTP-запросов.
+- `lxml`: для работы с XML.
+- `asyncio`: для асинхронного программирования.
+- `selenium`: для управления браузером и веб-скрейпинга.
 
 
-**Взаимосвязи с другими частями проекта**: Модуль `Category` тесно связан с `src.endpoints.prestashop`,  `src.utils.jjson`, `src.logger`,  и, конечно,  с API PrestaShop для получения данных.  Он используется для сбора и хранения данных о категориях товаров.  Сохранение в JSON-файлы говорит о том, что данные могут использоваться в других частях проекта для анализа или отображения.
+# <explanation>
+
+**Импорты:**
+- `src.endpoints.prestashop.PrestaShop`, `src.endpoints.prestashop.PrestaCategory`:  Связаны с API и моделью данных PrestaShop.  Обеспечивают взаимодействие с внешней системой управления магазином.
+- `src.utils.jjson.j_loads`, `src.utils.jjson.j_dumps`:  Утилиты для работы с JSON. Эти функции используются для сериализации и десериализации данных.
+- `src.logger.logger`:  Модуль для логирования, важная часть для отладки и мониторинга.
+- `requests`, `lxml`, `asyncio`, `selenium`: стандартные библиотеки для работы с сетью, веб-парсингом, асинхронным кодом и управлением браузером.  Они используются для выполнения HTTP-запросов, обработки XML-данных, асинхронного кода и работы с сайтом, соответственно.
+
+
+**Классы:**
+- `Category`: Центральный класс, отвечающий за взаимодействие с категориями. Наследует от `PrestaCategory`, что указывает на зависимость от модели данных PrestaShop.  Этот класс имеет методы для получения родительских категорий и рекурсивного обхода категорий, а также для асинхронной обработки.
+
+
+**Функции:**
+- `crawl_categories_async`: Асинхронный обход, получает данные и сохраняет в виде иерархического словаря.
+- `crawl_categories`: Синхронный вариант, аналогичный предыдущей функции.
+- `compare_and_print_missing_keys`: Сравнение словаря с файлом и вывод отсутствующих ключей.
+
+
+**Переменные:**
+- `api_credentials`: Учетные данные для доступа к API PrestaShop.
+- `driver`: Экземпляр WebDriver для управления Selenium.
+- `url`, `depth`, `locator`, `dump_file`, `default_category_id`: аргументы для управления процессом обхода и сохранения данных.
+
+**Возможные ошибки/улучшения:**
+- Отсутствие проверки валидности `api_credentials`.
+- Недостаточная обработка ошибок при парсинге и сохранении данных.
+- Отсутствие кэширования данных (повторяющиеся запросы к сайту).
+- Можно добавить обработку исключений (например, `NoSuchElementException` при поиске элементов на странице).
+- Лучше использовать try-except блоки для обработки потенциальных ошибок парсинга.
+
+
+**Цепочка взаимосвязей:**
+Код модуля `Category` напрямую зависит от `PrestaShop` и `PrestaCategory` для доступа к данным API. `Category` использует модуль `jjson` для работы с JSON-данными.  Для отображения результатов и записи в файл используется `logger`.  Для веб-скрейпинга используется `selenium`.  Все эти компоненты находятся в `src`-дереве проекта.

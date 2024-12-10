@@ -22,136 +22,114 @@ def parse_products(products):
 # Improved Code
 
 ```python
-"""
-Модуль для обработки данных о продуктах с AliExpress.
-=========================================================
+## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с продуктами на AliExpress. """
 
-Этот модуль содержит функции для парсинга данных о продуктах,
-полученных из API AliExpress.
-"""
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-from src.logger import logger  # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 
 def parse_product(product):
     """
-    Парсит данные одного продукта.
+    Обрабатывает информацию о продукте.
 
-    :param product: Объект с данными о продукте.
-    :type product: Объект
-    :raises TypeError: Если продукт не является объектом.
-    :return: Объект с обработанными данными о продукте.
-    :rtype: Объект
+    :param product: Объект с информацией о продукте.
+    :return: Объект с обработанной информацией о продукте.
     """
-    if not isinstance(product, object):
-        logger.error('Ошибка: Переданный объект не является объектом.')
-        raise TypeError('Переданный объект не является объектом.')
     try:
-        # Проверка и извлечение данных для small image urls.
+        # Извлекает значения изображений
         product.product_small_image_urls = product.product_small_image_urls.string
+        return product
     except AttributeError as e:
-        logger.error(f'Ошибка при извлечении product_small_image_urls: {e}')
-        # Обработка ошибки, например, возврат None или исключение
-        return None
-
-    return product
+        logger.error(f'Ошибка при обработке продукта: {e}')
+        return None  # Возвращаем None при ошибке
 
 
 def parse_products(products):
     """
-    Парсит список продуктов.
+    Обрабатывает список продуктов.
 
-    :param products: Список объектов с данными о продуктах.
-    :type products: list
-    :raises TypeError: Если продукты не являются списком.
-    :return: Список обработанных объектов с данными о продуктах.
-    :rtype: list
+    :param products: Список объектов с информацией о продуктах.
+    :return: Список обработанных объектов.
     """
-    if not isinstance(products, list):
-        logger.error('Ошибка: Переданный параметр не является списком.')
-        raise TypeError('Переданный параметр не является списком.')
-
     new_products = []
-    for product in products:
-        # Обработка каждого продукта и добавление в новый список.
-        processed_product = parse_product(product)
-        if processed_product:
-            new_products.append(processed_product)
-        else:
-            logger.warning(f'Продукт {product} не был обработан.')
-    return new_products
+    try:
+        # Обрабатывает каждый продукт в списке.
+        for product in products:
+            processed_product = parse_product(product)
+            if processed_product:
+                new_products.append(processed_product)
+            else:
+                logger.warning(f"Продукт не обработан")
+    except Exception as e:
+        logger.error(f'Ошибка при обработке списка продуктов: {e}')
+        return None  # Возвращаем None при ошибке
 
+    return new_products
 ```
 
 # Changes Made
 
-*   Добавлен импорт `j_loads`, `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлена документация RST для функций `parse_product` и `parse_products` в формате docstrings.
-*   Добавлена обработка ошибок с использованием `logger.error` для предотвращения аварийных остановок программы.
-*   Добавлены проверки типов входных данных и обработка исключений `AttributeError`.
-*   Добавлена логирование предупреждений (logger.warning), если какой-то из продуктов не удалось обработать.
-*   Добавлена валидация входных данных. Функции теперь проверяют тип входных данных и возвращают `None` или возбуждают `TypeError` в случае ошибки.
+*   Добавлены docstring в формате RST для функций `parse_product` и `parse_products`.
+*   Добавлен import `from src.logger import logger`.
+*   Добавлен блок `try-except` для обработки `AttributeError` в функции `parse_product` и логирования ошибок.
+*   В функции `parse_products` добавлен блок `try-except` для обработки возможных ошибок во время обработки списка.
+*   Изменён возврат из функций `parse_product` и `parse_products`, теперь они возвращают `None` в случае ошибки.
+*   В функции `parse_products` добавлен логгирование предупреждения `logger.warning` если обработка продукта не выполнилась успешно.
+*   Комментарии переписаны в формате RST.
+*   Добавлена строка документации для файла.
 
 
 # FULL Code
 
 ```python
-"""
-Модуль для обработки данных о продуктах с AliExpress.
-=========================================================
+## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с продуктами на AliExpress. """
 
-Этот модуль содержит функции для парсинга данных о продуктах,
-полученных из API AliExpress.
-"""
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-from src.logger import logger  # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 
 def parse_product(product):
     """
-    Парсит данные одного продукта.
+    Обрабатывает информацию о продукте.
 
-    :param product: Объект с данными о продукте.
-    :type product: Объект
-    :raises TypeError: Если продукт не является объектом.
-    :return: Объект с обработанными данными о продукте.
-    :rtype: Объект
+    :param product: Объект с информацией о продукте.
+    :return: Объект с обработанной информацией о продукте.
     """
-    if not isinstance(product, object):
-        logger.error('Ошибка: Переданный объект не является объектом.')
-        raise TypeError('Переданный объект не является объектом.')
     try:
-        # Проверка и извлечение данных для small image urls.
+        # Извлекает значения изображений
         product.product_small_image_urls = product.product_small_image_urls.string
+        return product
     except AttributeError as e:
-        logger.error(f'Ошибка при извлечении product_small_image_urls: {e}')
-        # Обработка ошибки, например, возврат None или исключение
-        return None
-
-    return product
+        logger.error(f'Ошибка при обработке продукта: {e}')
+        return None  # Возвращаем None при ошибке
 
 
 def parse_products(products):
     """
-    Парсит список продуктов.
+    Обрабатывает список продуктов.
 
-    :param products: Список объектов с данными о продуктах.
-    :type products: list
-    :raises TypeError: Если продукты не являются списком.
-    :return: Список обработанных объектов с данными о продуктах.
-    :rtype: list
+    :param products: Список объектов с информацией о продуктах.
+    :return: Список обработанных объектов.
     """
-    if not isinstance(products, list):
-        logger.error('Ошибка: Переданный параметр не является списком.')
-        raise TypeError('Переданный параметр не является списком.')
-
     new_products = []
-    for product in products:
-        # Обработка каждого продукта и добавление в новый список.
-        processed_product = parse_product(product)
-        if processed_product:
-            new_products.append(processed_product)
-        else:
-            logger.warning(f'Продукт {product} не был обработан.')
+    try:
+        # Обрабатывает каждый продукт в списке.
+        for product in products:
+            processed_product = parse_product(product)
+            if processed_product:
+                new_products.append(processed_product)
+            else:
+                logger.warning(f"Продукт не обработан")
+    except Exception as e:
+        logger.error(f'Ошибка при обработке списка продуктов: {e}')
+        return None  # Возвращаем None при ошибке
+
     return new_products

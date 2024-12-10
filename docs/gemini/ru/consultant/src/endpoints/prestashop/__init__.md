@@ -1,4 +1,4 @@
-**Received Code**
+# Received Code
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/__init__.py
@@ -25,7 +25,7 @@ from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/__init__.py
@@ -37,12 +37,9 @@ from .customer import PrestaCustomer
 Модуль для работы с API Престашоп.
 =========================================================================================
 
-Этот модуль предоставляет классы для взаимодействия с различными ресурсами API Престашоп,
-такими как продукты, поставщики, категории, склады, языки, магазины и т.д.
+Этот модуль предоставляет классы для работы с различными ресурсами API Престашоп, 
+такими как продукты, поставщики, категории, склады и т.д.
 """
-import json # импорт библиотеки json. В коде используется json.load, необходимо заменить на j_loads
-from src.utils.jjson import j_loads, j_loads_ns # импорт функций для работы с JSON
-
 MODE = 'dev'
 
 from .api import PrestaShop
@@ -54,26 +51,17 @@ from .language import PrestaLanguage
 from .shop import PrestaShopShop
 from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
-from src.logger import logger # импорт логирования
-
-# # Код ниже требует переработки. Обработка ошибок должна быть переписана на использование logger.error
-# try:
-#     data = json.load(file) # заменён на j_loads
-# except Exception as ex:
-#     logger.error("Ошибка при чтении файла: ", ex)
-#     ... # некорректный код. Выход из функции или обработка ошибки.
-#     return None
+from src.logger import logger  # Импорт логгера
 ```
 
-**Changes Made**
+# Changes Made
 
-* Добавлено описание модуля в формате RST.
-* Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-* Добавлена строка импорта `from src.logger import logger`.
-* Закомментирован старый блок `try-except`, который нуждается в переработке. Необходимо использовать `logger.error` для обработки ошибок.
-* Добавлена ссылка на импорт библиотеки json.
+* Добавлена строка документации RST для модуля `src.endpoints.prestashop`.
+* Добавлена строка `from src.logger import logger` для импорта логгера.
+* Документация переписана с использованием RST.
+* Убрано неиспользуемое `#!`
 
-**FULL Code**
+# FULL Code
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/__init__.py
@@ -85,12 +73,9 @@ from src.logger import logger # импорт логирования
 Модуль для работы с API Престашоп.
 =========================================================================================
 
-Этот модуль предоставляет классы для взаимодействия с различными ресурсами API Престашоп,
-такими как продукты, поставщики, категории, склады, языки, магазины и т.д.
+Этот модуль предоставляет классы для работы с различными ресурсами API Престашоп, 
+такими как продукты, поставщики, категории, склады и т.д.
 """
-import json # импорт библиотеки json. В коде используется json.load, необходимо заменить на j_loads
-from src.utils.jjson import j_loads, j_loads_ns # импорт функций для работы с JSON
-
 MODE = 'dev'
 
 from .api import PrestaShop
@@ -102,12 +87,4 @@ from .language import PrestaLanguage
 from .shop import PrestaShopShop
 from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
-from src.logger import logger # импорт логирования
-
-# # Код ниже требует переработки. Обработка ошибок должна быть переписана на использование logger.error
-# try:
-#     data = json.load(file) # заменён на j_loads
-# except Exception as ex:
-#     logger.error("Ошибка при чтении файла: ", ex)
-#     ... # некорректный код. Выход из функции или обработка ошибки.
-#     return None
+from src.logger import logger  # Импорт логгера

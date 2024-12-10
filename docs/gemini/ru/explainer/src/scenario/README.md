@@ -1,7 +1,4 @@
-```MD
-# Модуль `src.scenario`
-
-## <input code>
+# <input code>
 
 ```
 # Module `src.scenario`
@@ -33,108 +30,99 @@ The `src.scenario` module is designed to automate interactions with suppliers us
 
 ```mermaid
 graph TD
-    A[Supplier Instance] --> B{Scenario Files List}
-    B -- Valid List --> C[Run Scenario Files]
-    B -- Invalid List --> D[Error Handling]
-    C --> E{Iterate Through Each Scenario File}
-    E --> F[Run Scenario File]
-    F --> G{Load Scenarios}
-    G --> H[Iterate Through Each Scenario]
-    H --> I[Run Scenario]
-    I --> J[Navigate to URL]
-    J --> K[Get List of Products]
-    K --> L{Iterate Through Products}
-    L --> M[Navigate to Product Page]
-    M --> N[Grab Product Fields]
-    N --> O[Create Product Object]
-    O --> P[Insert Product into PrestaShop]
-    P -- Success --> Q[Success]
-    P -- Failure --> R[Error Handling]
-    Q --> S[Update Journal]
-    R --> S
-    S --> T[Return True/False]
+    A[Supplier Instance] --> B{Scenario Files List};
+    B -- Valid List --> C[Run Scenario Files];
+    B -- Invalid List --> D[Error Handling];
+    C --> E{Iterate Through Each Scenario File};
+    E --> F[Run Scenario File];
+    F --> G{Load Scenarios};
+    G --> H[Iterate Through Each Scenario];
+    H --> I[Run Scenario];
+    I --> J[Navigate to URL];
+    J --> K[Get List of Products];
+    K --> L{Iterate Through Products};
+    L --> M[Navigate to Product Page];
+    M --> N[Grab Product Fields];
+    N --> O[Create Product Object];
+    O --> P[Insert Product into PrestaShop];
+    P -- Success --> Q[Success];
+    P -- Failure --> R[Error Handling];
+    Q --> S[Update Journal];
+    R --> S;
+    S --> T[Return True/False];
 ```
-## <algorithm>
-
-The algorithm proceeds as follows:
-
-1. A list of scenario files is checked.
-2. Each valid file is processed.
-3. For each file, scenarios are loaded and processed sequentially.
-4. Each scenario involves fetching a list of products from a website.
-5. Each product is processed (navigating to product pages, extracting data, and creating a product object).
-6. The product objects are inserted into the PrestaShop database.
-7. The execution progress is logged in a journal.
-8. Errors (invalid files, website issues, database errors) are handled appropriately.
 
 
-## <mermaid>
+# <algorithm>
+
+The algorithm iterates through a list of scenario files, loading and processing each scenario within.  For each scenario, it navigates to a URL, extracts product data, creates product objects, and inserts them into the database.  The process is logged for tracking and error handling.
+
+**Example:**
+
+If `scenario_files_list` contains `["file1.json", "file2.json"]`, the script will execute `run_scenario_file` for each file.  `file1.json` might contain several scenarios, each directing the script to specific URLs and product categories to pull data for. The script would navigate to each URL, retrieve products, and insert them.
+
+# <mermaid>
 
 ```mermaid
 graph TD
-    subgraph "Main Execution"
-        A[Supplier Instance] --> B{Scenario Files List}
-        B -- Valid --> C[Run Scenario Files]
-        C --> D{Iterate Through Files}
-        D --> E[Run Scenario File]
-        E --> F{Load Scenarios}
-        F --> G{Iterate Through Scenarios}
-        G --> H[Run Scenario]
-        H --> I[Navigate to URL]
-        I --> J[Get Product List]
-        J --> K{Iterate Through Products}
-        K --> L[Navigate to Product Page]
-        L --> M[Grab Product Data]
-        M --> N[Create Product]
-        N --> O[Insert into PrestaShop]
-        O -- Success --> P[Update Journal]
-        O -- Error --> Q[Error Handling]
-        P --> R[Return True]
-        Q --> R
-        R --> S[End File Processing]
-        S --> T[End Scenario Processing]
-    end
-    subgraph "Error Handling"
-        B -- Invalid --> U[Error Handling]
-        U --> T
-        E -- Error --> U
-        H -- Error --> U
-    end
+    A[main] --> B(run_scenario_files);
+    B --> C{Validate scenario_files_list};
+    C -- Valid --> D[Iterate scenario_files_list];
+    C -- Invalid --> E[Error Handling];
+    D --> F(run_scenario_file);
+    F --> G{Load scenario_file};
+    G --> H[Iterate scenario];
+    H --> I(run_scenario);
+    I --> J(Navigate URL);
+    J --> K(Get product list);
+    K --> L{Iterate product list};
+    L --> M(Navigate product page);
+    M --> N(Grab fields);
+    N --> O(Create product object);
+    O --> P(Insert into DB);
+    P -- Success --> Q[Update Journal];
+    P -- Failure --> R[Error Handling];
+    Q --> S[Return True];
+    R --> S;
+    S --> T[End];
 ```
 
-**Dependencies:**
+# <explanation>
 
-* `requests`: For interacting with web servers.
-* `json`: For parsing JSON scenario files.
-* `logging`: For logging execution details.
-* `settings`: Likely for managing configuration.
-* `prestashop_api`: (implied) For interacting with PrestaShop database.
+This code describes a Python module (`src.scenario`) for automating data extraction and synchronization from supplier websites to a database (likely PrestaShop).
+
+**Imports:**
+This section is omitted from the provided code snippet, but the module would likely import `requests` (for web interaction), `json` (for parsing JSON files), `logging` (for logging), and potentially other libraries relevant for database interaction.  These imports are essential for the functionality. The lack of imports here suggests a possible problem (no actual code to analyze) or a truncated excerpt.
+
+**Classes:**
+There are no classes defined in the provided code snippet.  Any classes handling database interaction, product representation, or other structured data would be crucial for a full implementation.
+
+**Functions:**
+
+* **`run_scenario_files(s, scenario_files_list)`:** Takes a settings object (`s`) and a list of scenario file paths. It iterates through the files, running `run_scenario_file` for each.  This function acts as the entry point for processing a batch of scenarios.
+* **`run_scenario_file(s, scenario_file)`:** Processes a single scenario file. It loads the scenarios from the JSON file and calls `run_scenario` for each scenario.
+* **`run_scenario(s, scenario)`:**  The core function of the script: It retrieves product data from a specified URL, creates data objects, and saves them in the database (`s` is essential for database operations).
+* **`dump_journal(s, journal)`:**  Writes the execution log (`journal`) to a file.  Crucial for tracking progress and troubleshooting.  The `s` object likely contains paths or settings for the journal file.
+* **`main()`:**  The entry point of the program.  It initializes the necessary resources (probably the settings object `s`), runs the `run_scenario_files` function, and handles potential errors.
+
+**Variables:**
+
+* `s`: A settings object.  This is a critical object that encapsulates configuration information (database credentials, URLs, paths, etc.).  This object's properties and methods will control how the `scenario` module functions. The absence of its exact definition is a notable gap for a complete understanding.
+* `scenario_files_list`: A list of file paths.
+* `scenario_file`: A string representing a specific scenario file path.
+* `scenario`: A dictionary loaded from a JSON file, containing the scenario information for a single product set.
+* `journal`: A list of log entries used to track the process.
+
+**Possible Errors/Improvements:**
+
+* **Error Handling:** The code has error handling (`try...except` blocks not shown) but could be more robust.  Adding specific exception handling (e.g., `FileNotFoundError`, `JSONDecodeError`, `requests.exceptions.RequestException`) would enhance reliability.
+* **Logging:**  The current logging mechanism (in `dump_journal`) is very basic.  Better logging (using the `logging` module in Python) would provide more details and context for debugging. This is critical for a large, production-level solution.
+* **Settings Management:**  A clear definition and usage of the `settings` object (`s`) are missing.  It is crucial to encapsulate all configuration parameters.
+* **Data Validation:** Checking the structure and validity of data within the scenarios (`scenario`) before processing it would significantly reduce errors.
+
+**Interdependencies:**
+
+This scenario module likely depends on database connection libraries (e.g., for PrestaShop integration). It also depends on libraries for HTTP requests (`requests`).
 
 
-## <explanation>
-
-**Импорты:**
-The code likely imports necessary libraries like `requests` for interacting with websites, `json` for handling JSON data, and `logging` for recording events. The `settings` module is critical for configuring aspects of the application (like database connections, API keys).  `prestashop_api` is a presumed module specifically designed for interacting with the PrestaShop API or database. The specific code given is a conceptual overview, not a fully functioning example.
-
-**Классы:**
-The code doesn't define classes within the provided snippet.  Classes would likely handle the structure of the scenarios (e.g., a `Scenario` class to represent the data from JSON files), and objects relating to data structures for product handling or data access.
-
-**Функции:**
-* **`run_scenario_files`**: Takes a settings object (`s`) and a list of scenario file paths. It processes each file sequentially using `run_scenario_file`.
-* **`run_scenario_file`**: Loads a scenario file, parses it as JSON, and calls `run_scenario` for each scenario found.
-* **`run_scenario`**: Executes a single scenario. This is the core function responsible for fetching data, extracting information, creating product objects, and saving data to the database.  It directly interacts with the PrestaShop database (or other relevant API).
-* **`dump_journal`**: Records the execution logs for each scenario.
-* **`main`**: The entry point of the script. It configures any required settings and starts the scenario processing.
-
-**Переменные:**
-The provided example shows that `scenario_files_list` is a list of strings (file paths), and `scenario` is a dictionary representing a single scenario from a JSON file.
-
-**Возможные ошибки и улучшения:**
-
-* **Error Handling**: The code should include more comprehensive error handling. For example, if the website returns an error, the scenario should attempt a retry, or log the failure with a detailed explanation.
-* **Rate Limiting**: Be mindful of rate limits imposed by supplier websites. Implement delays or backoff strategies to prevent exceeding limits.
-* **Data Validation**: Validate data extracted from the website and ensure the PrestaShop insertion data conforms to database standards.
-
-
-**Взаимосвязь с другими частями проекта:**
-The `src.scenario` module depends on other parts of the application, including a configuration file for settings (`settings`), and presumably a `prestashop_api` module or similar database interaction code.
+This analysis assumes that a complete module would have more concrete implementation details (e.g., how it uses `requests` to interact with the website).

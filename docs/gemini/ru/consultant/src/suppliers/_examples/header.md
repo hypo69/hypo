@@ -46,7 +46,7 @@ from pathlib import Path
 
 dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+7]) ## <- Корневая директория проекта
 sys.path.append (str (dir_root) )  # Добавляю корневую директорию в sys.path
-dir_src = Path (dir_root, 'src')
+dir_src = Path (dir_root, 'src') 
 sys.path.append (str (dir_root) ) # Добавляю рабочую директорию в sys.path 
 
 
@@ -56,144 +56,133 @@ sys.path.append (str (dir_root) ) # Добавляю рабочую директ
 
 ```python
 ## \file hypotez/src/suppliers/_examples/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для примеров поставщиков данных.
+Модуль для работы с поставщиками данных.
 =========================================================================================
 
-Этот модуль предоставляет примеры кода для работы с поставщиками данных.
+Этот модуль предоставляет базовые настройки и пути для работы с поставщиками данных.
 
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from hypotez.src.suppliers._examples.header import *  # Импортируем все необходимые компоненты.
-    ... # Код, использующий примеры поставщиков данных
 """
 MODE = 'dev'
 
 """
-Константа, определяющая режим работы.
+Настройки режима работы модуля.
 """
 
 """
-Описание константы MODE.
-"""
-
-
-"""
-Описание константы MODE.
+Дополнительная документация (если необходимо).
 """
 
 
 """
-Описание константы MODE.
+Дополнительная документация.
 """
 """
-Описание константы MODE.
+Дополнительная документация.
+"""
+MODE = 'dev'
+
+"""
+Настройки режима работы модуля.
+"""
+
+"""
+.. module:: src.suppliers._examples
 """
 
 
 import os
 import sys
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
-# Определение корневой директории проекта.
-def get_root_dir():
-    """
-    Возвращает корневую директорию проекта.
+# Объявление переменной для корневой директории проекта.
+dir_root : Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])  # Извлечение корневой директории проекта
+# Добавление корневой директории в sys.path.
+sys.path.append(str(dir_root))
+# Создание объекта Path для директории src.
+dir_src = Path(dir_root, 'src')
+# Добавление директории src в sys.path.  # Необходимо для импорта модулей из src.
+sys.path.append(str(dir_src))
 
-    :return: Path к корневой директории.
-    """
-    return Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])
 
-dir_root = get_root_dir()
-sys.path.append(str(dir_root))  # Добавление корневой директории в sys.path
-dir_src = dir_root / 'src'
-sys.path.append(str(dir_src)) # Добавление директории src в sys.path. Избегаем дублирования.
+#TODO: Добавьте обработку ошибок для предотвращения ошибок при добавлении путей в sys.path.
+#TODO: Рассмотрите возможность использования абсолютных путей для более надежной работы с sys.path.
 
 
 ```
 
 # Changes Made
 
-*   Добавлен docstring в формате RST для модуля `header.py`.
-*   Добавлены docstrings в формате RST для функций `get_root_dir`.
-*   Изменён импорт `json.load` на `j_loads` из `src.utils.jjson`.
-*   Добавлен импорт `j_loads_ns` из `src.utils.jjson`.
-*   Исправлены пути для импорта, исключены дубликаты `sys.path.append(str(dir_root))`.
-*   Добавлены необходимые импорты `os`, `sys`, `pathlib`.
-*   Внедрена функция `get_root_dir` для получения корневой директории, что улучшает читаемость и позволяет избежать повторения кода.
-*   Изменён стиль именования переменной `dir_root` на snake_case.
-*   Изменены комментарии, удалены повторяющиеся и бессмысленные комментарии.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Изменены комментарии на формат RST.
+*   Добавлена документация к модулю, переменной `MODE` и коду добавления путей в `sys.path`.
+*   Добавлен комментарий, описывающий использование `sys.path.append`.
+*   Использован `dir_src` для добавления `src` в `sys.path`, так как `dir_root` не гарантирует доступность `src` напрямую.
+*   Добавлены placeholders `TODO` для дальнейшей обработки ошибок и использования абсолютных путей.
 
 
 # FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/_examples/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для примеров поставщиков данных.
+Модуль для работы с поставщиками данных.
 =========================================================================================
 
-Этот модуль предоставляет примеры кода для работы с поставщиками данных.
+Этот модуль предоставляет базовые настройки и пути для работы с поставщиками данных.
 
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from hypotez.src.suppliers._examples.header import *  # Импортируем все необходимые компоненты.
-    ... # Код, использующий примеры поставщиков данных
 """
 MODE = 'dev'
 
 """
-Константа, определяющая режим работы.
+Настройки режима работы модуля.
 """
 
 """
-Описание константы MODE.
-"""
-
-
-"""
-Описание константы MODE.
+Дополнительная документация (если необходимо).
 """
 
 
 """
-Описание константы MODE.
+Дополнительная документация.
 """
 """
-Описание константы MODE.
+Дополнительная документация.
+"""
+MODE = 'dev'
+
+"""
+Настройки режима работы модуля.
+"""
+
+"""
+.. module:: src.suppliers._examples
 """
 
 
 import os
 import sys
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
-# Определение корневой директории проекта.
-def get_root_dir():
-    """
-    Возвращает корневую директорию проекта.
+# Объявление переменной для корневой директории проекта.
+dir_root : Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])  # Извлечение корневой директории проекта
+# Добавление корневой директории в sys.path.
+sys.path.append(str(dir_root))
+# Создание объекта Path для директории src.
+dir_src = Path(dir_root, 'src')
+# Добавление директории src в sys.path.  # Необходимо для импорта модулей из src.
+sys.path.append(str(dir_src))
 
-    :return: Path к корневой директории.
-    """
-    return Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])
 
-dir_root = get_root_dir()
-sys.path.append(str(dir_root))  # Добавление корневой директории в sys.path
-dir_src = dir_root / 'src'
-sys.path.append(str(dir_src)) # Добавление директории src в sys.path. Избегаем дублирования.
+#TODO: Добавьте обработку ошибок для предотвращения ошибок при добавлении путей в sys.path.
+#TODO: Рассмотрите возможность использования абсолютных путей для более надежной работы с sys.path.

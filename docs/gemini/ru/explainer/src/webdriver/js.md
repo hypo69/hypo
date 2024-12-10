@@ -1,8 +1,9 @@
+```MD
 # <input code>
 
 ```python
 ## \file hypotez/src/webdriver/js.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -116,137 +117,128 @@ class JavaScript:
 
 # <algorithm>
 
-**Шаг 1: Инициализация**
+**Шаг 1: Инициализация ( __init__ )**
 
-```mermaid
-graph TD
-    A[JavaScript(driver)] --> B{driver};
-    B --> C[self.driver = driver];
-```
+* Вход: Экземпляр `WebDriver` (объект драйвера Selenium).
+* Выход: Объект `JavaScript` с сохранённым драйвером.
+* Действие: Принимает драйвер Selenium и сохраняет его в атрибуте `self.driver`.
+* Пример: `driver = webdriver.Chrome()`, `js_helper = JavaScript(driver)`
 
-*   Создается экземпляр класса `JavaScript`, принимая в качестве аргумента объект `WebDriver`.
-*   Атрибут `self.driver` инициализируется переданным объектом `WebDriver`.
+**Шаг 2: Сделать элемент видимым ( unhide_DOM_element )**
 
+* Вход: WebElement (элемент страницы).
+* Выход: `True` если выполнение прошло успешно, `False` иначе.
+* Действие: Выполняет JavaScript-код, который изменяет стили элемента `arguments[0]` (переданного элемента), делает его видимым и прокручивает в область видимости. Возвращает `True` при успехе и `False` при ошибке (выводя log ошибки).
+* Пример: `unhide_result = js_helper.unhide_DOM_element(my_element)`,  `my_element` - элемент из Selenium
 
-**Шаг 2: `unhide_DOM_element`**
+**Шаг 3: Получить состояние загрузки документа ( ready_state )**
 
-```mermaid
-graph TD
-    A[unhide_DOM_element(element)] --> B{element};
-    B --> C[script = JavaScript код];
-    C --> D[self.driver.execute_script(script, element)];
-    D --> E{try};
-    E -- success --> F[return True];
-    E -- exception --> G[logger.error, return False];
-```
-*   Вызывается метод `unhide_DOM_element` с элементом `WebElement`.
-*   Используется JavaScript-код для изменения свойств стиля элемента, делая его видимым.
-*   Используется метод `self.driver.execute_script` для выполнения JavaScript-кода на странице.
-*   Обработка исключений `try/except` для логгирования ошибок.
+* Вход: Нет.
+* Выход: Строка: 'loading' или 'complete'.
+* Действие: Выполняет JavaScript-код, возвращающий состояние загрузки документа. Возвращает полученное значение или пустую строку при ошибке.
+* Пример: `ready_state = js_helper.ready_state`
 
+**Шаг 4: Привести окно браузера в фокус ( window_focus )**
 
-**Шаг 3: `ready_state`**
+* Вход: Нет.
+* Выход: Нет.
+* Действие: Выполняет JavaScript-код `window.focus()`, чтобы сфокусировать окно браузера. Выводит логирование ошибки в случае возникновения исключения.
+* Пример: `js_helper.window_focus()`
 
-```mermaid
-graph TD
-    A[ready_state] --> B[self.driver.execute_script('return document.readyState;')];
-    B --> C{try};
-    C -- success --> D[return result];
-    C -- exception --> E[logger.error, return ''];
-```
+**Шаг 5: Получить URL прошлого запроса ( get_referrer )**
 
-*   Вызывается метод `ready_state`.
-*   Выполняется JavaScript-код для получения состояния загрузки документа.
-*   Обработка исключений `try/except` для логгирования ошибок.
+* Вход: Нет.
+* Выход: Строка (URL) или пустая строка.
+* Действие: Выполняет JavaScript-код `return document.referrer;` и возвращает полученный URL или пустую строку при ошибке.
+* Пример: `referrer = js_helper.get_referrer()`
 
-**Шаг 4: `window_focus`**
+**Шаг 6: Получить язык страницы ( get_page_lang )**
 
-```mermaid
-graph TD
-    A[window_focus] --> B[self.driver.execute_script('window.focus();')];
-    B --> C{try};
-    C -- success --> D[None];
-    C -- exception --> E[logger.error];
-```
-
-*   Вызывается метод `window_focus`.
-*   Выполняется JavaScript-код для установки фокуса на окно браузера.
-*   Обработка исключений `try/except` для логгирования ошибок.
-
-**Шаг 5: `get_referrer` & `get_page_lang`** (аналогичные шаги с `ready_state`)
+* Вход: Нет.
+* Выход: Строка (язык) или пустая строка.
+* Действие: Выполняет JavaScript-код `return document.documentElement.lang;` и возвращает полученный язык или пустую строку при ошибке.
+* Пример: `page_language = js_helper.get_page_lang()`
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    subgraph JavaScript Class
-        A[JavaScript(driver)] --> B(self.driver);
-        B --> C{unhide_DOM_element};
-        C --> D(execute_script);
-        D --> E[return True/False];
-        B --> F{ready_state};
-        F --> G(execute_script);
-        G --> H[return ready_state];
-        B --> I{window_focus};
-        I --> J(execute_script);
-        B --> K{get_referrer};
-        K --> L(execute_script);
-        L --> M[return referrer];
-        B --> N{get_page_lang};
-        N --> O(execute_script);
-        O --> P[return page_lang];
-    end
-    subgraph Dependencies
-        D -->|Selenium| WebDriver;
-        G -->|Selenium| WebDriver;
-        J -->|Selenium| WebDriver;
-        L -->|Selenium| WebDriver;
-        O -->|Selenium| WebDriver;
-        B -->|logger| logger;
+    A[JavaScript Class] --> B(init);
+    B --> C{WebDriver};
+    C --> D[unhide_DOM_element];
+    D --> E(execute_script);
+    E --> F[element];
+    F --> G(visible);
+    G --> D;
+    D --> H[return True/False];
+    C --> I[ready_state];
+    I --> J(execute_script);
+    J --> K[document.readyState];
+    K --> L(return loading/complete);
+    I --> M[return value];
+    C --> N[window_focus];
+    N --> O(execute_script);
+    O --> P[window.focus()];
+    N --> Q[return None];
+    C --> R[get_referrer];
+    R --> S(execute_script);
+    S --> T[document.referrer];
+    T --> U(return URL or '');
+    C --> V[get_page_lang];
+    V --> W(execute_script);
+    W --> X[documentElement.lang];
+    X --> Y(return lang or '');
+    subgraph Selenium
+        C -- WebDriver -> D
+        E -- script -> P
     end
 ```
 
-**Объяснение зависимостей:**
+**Объяснение диаграммы:**
 
-*   `JavaScript` напрямую зависит от `WebDriver` для выполнения JavaScript-кода на веб-странице.
-*   `JavaScript` использует класс `logger` для записи ошибок.
+* `JavaScript Class`: Класс, предоставляющий методы для взаимодействия с веб-страницей через JavaScript.
+* `WebDriver`: Объект Selenium WebDriver, через который выполняются JavaScript-команды.
+* `execute_script`: Метод Selenium, выполняющий JavaScript-код.
+* `element`: Передаваемый WebElement, на котором выполняется JavaScript.
+* `document.readyState`, `document.referrer`, `document.documentElement.lang`: JavaScript-объекты, возвращающие информацию о странице.
+
 
 # <explanation>
 
 **Импорты:**
 
-*   `header`: Вероятно, содержит общие импорты для проекта. Неясно, что именно он импортирует без доступа к файлу.
-*   `src.gs`: Импортируется из пакета `src`, вероятно, содержит вспомогательные функции или данные, связанные с генерацией или обработкой данных.
-*   `src.logger`: Импортируется из пакета `src`, содержит логгер для записи сообщений об ошибках и отслеживания процесса.
-*   `selenium.webdriver.remote.webdriver`: Обеспечивает возможность взаимодействия с веб-драйвером Selenium.
-*   `selenium.webdriver.remote.webelement`: Предоставляет возможность работать с элементами веб-страницы.
+* `header`: Вероятно, содержит общие настройки или импорты для проекта.  Неясно, какая функциональность в нем используется без дополнительного контекста.
+* `src.gs`:  Предполагаемо, модуль, содержащий глобальные настройки или функции, используемые в проекте.
+* `src.logger`: Модуль для логирования, позволяет отслеживать и регистрировать ошибки и другую информацию. Связь с остальной частью проекта – через логирование.
+* `selenium.webdriver.remote.webdriver`: Основной интерфейс для работы с Selenium WebDriver.
+* `selenium.webdriver.remote.webelement`:  Интерфейс для работы с WebElement - элементами на веб-странице.
 
 **Классы:**
 
-*   `JavaScript`:  Создает обёртку над Selenium WebDriver для работы с JavaScript-кодом на странице. Хранит ссылку на экземпляр `WebDriver`. Основные методы класса позволяют управлять видимостью элементов, получать информацию о состоянии загрузки, фокусе окна и т.д.
+* `JavaScript`:  Этот класс предоставляет методы для выполнения JavaScript-кода в браузере.  Он хранит ссылку на объект `WebDriver` (`self.driver`) для взаимодействия с браузором.  Класс имеет методы для конкретных JavaScript-задач, таких как `unhide_DOM_element`, `ready_state`, `window_focus`, `get_referrer`, `get_page_lang`.
 
 **Функции:**
 
-*   `unhide_DOM_element`: Делает элемент `WebElement` видимым, меняя свойства CSS.
-*   `ready_state`: Возвращает состояние загрузки текущей страницы.
-*   `window_focus`: Устанавливает фокус на окно браузера.
-*   `get_referrer`: Возвращает URL referrer текущей страницы.
-*   `get_page_lang`: Возвращает язык текущей страницы.
+* `__init__`: Конструктор класса `JavaScript`, инициализирующий атрибут `self.driver` для последующего выполнения JavaScript-кода.
+* `unhide_DOM_element`:  Делает элемент видимым на странице, изменяя его стили.  Обрабатывает возможные исключения во время выполнения JavaScript-кода и логирует ошибки.
+* `ready_state`: Получает состояние загрузки страницы ('loading' или 'complete'). Обрабатывает потенциальные ошибки.
+* `window_focus`: Ставит браузер в фокус. Обрабатывает исключения.
+* `get_referrer`: Возвращает URL предыдущего запроса. Обрабатывает исключения.
+* `get_page_lang`: Возвращает язык страницы. Обрабатывает исключения.
 
 **Переменные:**
 
-*   `MODE`: Символьная константа, скорее всего, определяет режим работы приложения (`dev`, `prod`, и т.д.).
+* `MODE`: Переменная, вероятно, задаёт режим работы (например, 'dev', 'prod').
 
 **Возможные ошибки и улучшения:**
 
-*   Отсутствие явного указания кодировки в `header.py`. Необходимо проверить, что в файле `header.py` есть `# -*- coding: utf-8 -*-.`
-*   В методах `unhide_DOM_element`, `ready_state`, `window_focus`, `get_referrer`, `get_page_lang` логирование ошибок происходит не оптимально. Лучше использовать более специфичные исключения (например, `NoSuchElementException`, `TimeoutException`).
-*   Отсутствие обработки ошибок, связанных с отсутствием элемента или страницы.
-*   Можно добавить к обработке исключений проверку на типы исключений (например, `InvalidSelectorException` или  `ElementNotVisibleException` в `unhide_DOM_element`).
-*   В `unhide_DOM_element`: слишком много повторений одного и того же JavaScript-кода. Можно его сократить, используя `arguments[0].style.transform = 'scale(1)';` и т.д.
+* **Обработка исключений:**  Код обрабатывает исключения, но можно добавить более подробные логирование, например, информацию о типе исключения и стеке вызовов.
+* **Типы данных:**  Можно использовать аннотации типов (typing) для большей ясности и предотвращения ошибок.
+* **Документация:** Документация к коду должна быть более подробной и описывать возможные варианты использования.
+* **Управление ресурсами:**  Если `driver` является внешним ресурсом (например, полученный от теста),  необходимо правильно его освобождать, чтобы не удерживать ресурсы браузера.
 
 
-**Цепочка взаимосвязей:**
+**Взаимосвязь с другими частями проекта:**
 
-Код в `hypotez/src/webdriver/js.py` используется для взаимодействия с веб-страницей с помощью Selenium WebDriver и Javascript. Он, скорее всего, взаимодействует с другими частями приложения `hypotez` для управления браузером и обработки полученных данных, используя класс `logger` и импортированный класс `gs`.
+Класс `JavaScript` напрямую взаимодействует с `WebDriver` и `WebElement` из Selenium для выполнения JavaScript-кода в браузере, а также с `logger` для логирования ошибок.  Это ключевая часть для расширения возможностей `WebDriver` в контексте проекта. `gs`,  `header` и другие модули `src` потенциально могут использовать `JavaScript` для взаимодействия с веб-страницей, но без дополнительных сведений о проекте, сложно определить точные взаимосвязи.

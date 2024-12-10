@@ -127,21 +127,55 @@ def function(param: str, param1: Optional[str | dict | str] = None) -> dict | No
 <!-- END OF INSTRUCTION -->
 ```
 
+
 # Улучшенный код
 
 ```html
-<!-- Нет предоставленного кода Python, поэтому нет улучшенного кода -->
+<!-- INSTRUCTION -->
+
+<p>For each input Python file, create documentation in <code>HTML</code> format for subsequent use. The documentation must meet the following requirements:</p>
+
+<ol>
+  <li>
+    <strong>Documentation Format</strong>:
+    <ul>
+      <li>Use the <code>HTML</code> standard.</li>
+      <li>Each file should begin with a header and a brief description of its contents.</li>
+      <li>For all classes and functions, use the following comment format:
+        <pre><code>python
+def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
+    """
+    Args:
+        param (str): Description of the `param` parameter.
+        param1 (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+
+    Returns:
+        dict | None: Description of the return value. Returns a dictionary or `None`.
+
+    Raises:
+        SomeError: Description of the situation in which the `SomeError` exception is raised.
+    """
+</code></pre>
+      </li>
+      <li>Use <code>ex</code> instead of <code>e</code> in exception handling blocks.</li>
+    </ul>
+  </li>
+  <!-- ... (rest of the HTML code is the same as the original) -->
+</ol>
 ```
 
-# Внесённые изменения
+# Изменения, внесённые в код
 
-- Нет внесённых изменений, так как нет исходного кода Python.
+Из-за отсутствия исходного Python-кода, я не могу предложить конкретные изменения.  Этот ответ показывает пример структуры ответа. Для реальной работы, необходимо предоставить исходный Python-код.
 
 
 # Оптимизированный код
 
 ```html
-<!-- Нет предоставленного кода Python, поэтому нет оптимизированного кода -->
+<!--INSTRUCTION-->
+
+(Полный оптимизированный HTML-код с документацией)
+
 ```
 
-**Объяснение:**  Вы не предоставили код Python для обработки.  Поэтому, я не могу предоставить улучшенный и оптимизированный код.  Пожалуйста, предоставьте код, чтобы я смог выполнить ваши инструкции.
+**Примечание:**  Вместо `(Полный оптимизированный HTML-код с документацией)` нужно вставить здесь фактический HTML-код, сгенерированный для предоставленного Python-кода.  Без исходного Python-кода, я не могу сгенерировать правильный результат.

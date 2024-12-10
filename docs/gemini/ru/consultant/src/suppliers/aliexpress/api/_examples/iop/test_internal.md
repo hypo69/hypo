@@ -61,184 +61,141 @@ print(str(round(time.time())) + '000')
 # Improved Code
 
 ```python
+import iop
+import time
+from src.logger import logger
+from src.utils.jjson import j_loads
+
+
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~~~
-""" Модуль для взаимодействия с API iop """
-"""   Описание файла.  Работа с API iop для получения данных о товарах.
-
- @section libs imports:
-  - iop
-  - time
-  - src.utils.jjson (TODO: добавить импорт)
-  - src.logger (TODO: добавить импорт)
-Author(s):
-  - Создано Davidka 09.11.2023.
-"""
-
-import iop
-import time
-from src.utils.jjson import j_loads  # Импорт функции j_loads
-from src.logger import logger  # Импорт функции логирования
-
-"""
-Класс для работы с API iop
-"""
-class IopClientWrapper:
-    def __init__(self, gateway_url: str, app_key: str, app_secret: str):
-        """
-        Инициализирует экземпляр IopClientWrapper.
-
-        :param gateway_url: URL шлюза.
-        :param app_key: Ключ приложения.
-        :param app_secret: Секрет приложения.
-        """
-        self.client = iop.IopClient(gateway_url, app_key, app_secret)
-        #TODO: Добавить логирование уровня client.log_level
-        
-
-    def execute_request(self, request: iop.IopRequest) -> iop.IopResponse:
-        """
-        Выполняет запрос к API iop.
-
-        :param request: Объект запроса iop.IopRequest.
-        :return: Объект ответа iop.IopResponse.
-        """
-        try:
-            response = self.client.execute(request)
-            return response
-        except Exception as e:
-            logger.error('Ошибка выполнения запроса к API iop:', e)
-            return None  # Или другой обработчик ошибок
+""" Модуль для тестирования взаимодействия с API IOP. """
+""" Этот модуль содержит пример запроса к API IOP для получения информации об элементе. """
 
 
-def main():
+def test_iop_api():
     """
-    Основная функция для выполнения запроса к API iop.
+    Выполняет запрос к API IOP для получения данных об элементе.
+
+    Возвращает:
+        str: Строковое представление ответа API.
+        None: Если произошла ошибка.
+
     """
-    gateway_url = 'https://api-pre.taobao.tw/rest'
-    app_key = '100240'
-    app_secret = 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
-    client = IopClientWrapper(gateway_url, app_key, app_secret)
-    
-    request = iop.IopRequest('/product/item/get', 'GET')
-    request.add_api_param('itemId', '157432005')
-    request.add_api_param('authDO', '{"sellerId":2000000016002}')  # Изменение кавычек
+    try:
+        # Установка параметров для подключения к API.
+        gateway_url = 'https://api-pre.taobao.tw/rest'
+        app_key = '100240'
+        app_secret = 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
+        client = iop.IopClient(gateway_url, app_key, app_secret)
 
-    response = client.execute_request(request)
+        # Создание объекта запроса.
+        request = iop.IopRequest('/product/item/get', 'GET')
 
-    if response:
-        print(response.type)
-        print(response.code)
-        print(response.message)
-        print(response.request_id)
-        print(response.body)
-    else:
-        logger.error("Ошибка: Ответ от API iop отсутствует.")
-    
-    print(str(round(time.time())) + '000')
+        # Добавление параметров запроса.
+        item_id = '157432005'
+        auth_data = '{"sellerId":2000000016002}'  # Исправлен формат JSON
+        request.add_api_param('itemId', item_id)
+        request.add_api_param('authDO', auth_data)
+
+        # Выполнение запроса и получение ответа.
+        response = client.execute(request)
+
+        # Проверка статуса ответа.  Логирование ошибок.
+        if response.type != 'nil':
+            logger.error(f"Ошибка при выполнении запроса: {response.message} ({response.type})")
+            return None
+
+        # Возврат ответа.
+        return response.body
+    except Exception as e:
+        logger.error('Ошибка при работе с API IOP:', e)
+        return None
 
 
 if __name__ == "__main__":
-    main()
+    response_body = test_iop_api()
+    if response_body:
+        print(response_body)
+    print(str(round(time.time())) + '000')
+
 ```
 
 # Changes Made
 
-*   Добавлен импорт `j_loads` из `src.utils.jjson`.
 *   Добавлен импорт `logger` из `src.logger`.
-*   Создан класс `IopClientWrapper` для улучшения структуры кода.
-*   Добавлены комментарии RST к функциям и классу.
-*   Изменены кавычки в строке `request.add_api_param('authDO', '{"sellerId":2000000016002}')`.
-*   Добавлена обработка ошибок с помощью `try-except` и `logger.error`.
-*   Функция `main` теперь управляет выполнением запроса.
-*   Добавлен обработчик для случая отсутствия ответа от API.
-*   Комментарии переписаны в соответствии с рестструктурированным текстом.
-
+*   Добавлен импорт `j_loads` из `src.utils.jjson`.
+*   Функция `test_iop_api` создана для encapsulating запроса.
+*   Изменён формат `authDO` на корректный JSON (убраны обратные слэши).
+*   Добавлена обработка ошибок с помощью `logger.error`.
+*   Добавлена функция `test_iop_api`, которая encapsulates логику запроса.
+*   Добавлена проверка типа ответа.
+*   Исправлены комментарии в формате RST.
+*   Убраны лишние комментарии.
+*   Добавлена функция `test_iop_api` и `if __name__ == "__main__":` для правильного исполнения кода.
 
 
 # FULL Code
 
 ```python
+import iop
+import time
+from src.logger import logger
+from src.utils.jjson import j_loads
+
+
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~~~
-""" Модуль для взаимодействия с API iop """
-"""   Описание файла.  Работа с API iop для получения данных о товарах.
-
- @section libs imports:
-  - iop
-  - time
-  - src.utils.jjson
-  - src.logger
-Author(s):
-  - Создано Davidka 09.11.2023.
-"""
-
-import iop
-import time
-from src.utils.jjson import j_loads  # Импорт функции j_loads
-from src.logger import logger  # Импорт функции логирования
-
-"""
-Класс для работы с API iop
-"""
-class IopClientWrapper:
-    def __init__(self, gateway_url: str, app_key: str, app_secret: str):
-        """
-        Инициализирует экземпляр IopClientWrapper.
-
-        :param gateway_url: URL шлюза.
-        :param app_key: Ключ приложения.
-        :param app_secret: Секрет приложения.
-        """
-        self.client = iop.IopClient(gateway_url, app_key, app_secret)
-        #TODO: Добавить логирование уровня client.log_level
-        
-
-    def execute_request(self, request: iop.IopRequest) -> iop.IopResponse:
-        """
-        Выполняет запрос к API iop.
-
-        :param request: Объект запроса iop.IopRequest.
-        :return: Объект ответа iop.IopResponse.
-        """
-        try:
-            response = self.client.execute(request)
-            return response
-        except Exception as e:
-            logger.error('Ошибка выполнения запроса к API iop:', e)
-            return None  # Или другой обработчик ошибок
+""" Модуль для тестирования взаимодействия с API IOP. """
+""" Этот модуль содержит пример запроса к API IOP для получения информации об элементе. """
 
 
-def main():
+def test_iop_api():
     """
-    Основная функция для выполнения запроса к API iop.
+    Выполняет запрос к API IOP для получения данных об элементе.
+
+    Возвращает:
+        str: Строковое представление ответа API.
+        None: Если произошла ошибка.
+
     """
-    gateway_url = 'https://api-pre.taobao.tw/rest'
-    app_key = '100240'
-    app_secret = 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
-    client = IopClientWrapper(gateway_url, app_key, app_secret)
-    
-    request = iop.IopRequest('/product/item/get', 'GET')
-    request.add_api_param('itemId', '157432005')
-    request.add_api_param('authDO', '{"sellerId":2000000016002}')  # Изменение кавычек
+    try:
+        # Установка параметров для подключения к API.
+        gateway_url = 'https://api-pre.taobao.tw/rest'
+        app_key = '100240'
+        app_secret = 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
+        client = iop.IopClient(gateway_url, app_key, app_secret)
 
-    response = client.execute_request(request)
+        # Создание объекта запроса.
+        request = iop.IopRequest('/product/item/get', 'GET')
 
-    if response:
-        print(response.type)
-        print(response.code)
-        print(response.message)
-        print(response.request_id)
-        print(response.body)
-    else:
-        logger.error("Ошибка: Ответ от API iop отсутствует.")
-    
-    print(str(round(time.time())) + '000')
+        # Добавление параметров запроса.
+        item_id = '157432005'
+        auth_data = '{"sellerId":2000000016002}'  # Исправлен формат JSON
+        request.add_api_param('itemId', item_id)
+        request.add_api_param('authDO', auth_data)
+
+        # Выполнение запроса и получение ответа.
+        response = client.execute(request)
+
+        # Проверка статуса ответа.  Логирование ошибок.
+        if response.type != 'nil':
+            logger.error(f"Ошибка при выполнении запроса: {response.message} ({response.type})")
+            return None
+
+        # Возврат ответа.
+        return response.body
+    except Exception as e:
+        logger.error('Ошибка при работе с API IOP:', e)
+        return None
 
 
 if __name__ == "__main__":
-    main()
+    response_body = test_iop_api()
+    if response_body:
+        print(response_body)
+    print(str(round(time.time())) + '000')

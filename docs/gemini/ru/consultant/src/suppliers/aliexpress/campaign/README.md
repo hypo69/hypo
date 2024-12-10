@@ -1,11 +1,12 @@
 # Received Code
 
 ```rst
-.. :module: src.suppliers.aliexpress.campaign
+.. module: src.suppliers.aliexpress.campaign
 ```
+
 ### `campaign`
 
-The `campaign` module is designed to manage the process of creating and publishing advertising campaigns on Facebook.  
+The `campaign` module is designed to manage the process of creating and publishing advertising campaigns on Facebook.
 It includes functionality for initializing campaign parameters (name, language, currency), creating directory structures, saving configurations for the new campaign, collecting and saving product data via `ali` or `html`, generating promotional materials, reviewing the campaign, and publishing it on Facebook.
 
 ```mermaid
@@ -46,53 +47,56 @@ flowchart TD
  - **Step 11**: End - The campaign creation process is complete.
 
 
- # Edit campaign
+# Edit campaign
 
 ```mermaid
 graph LR
-        A[User Input: campaign_name, language, currency] --> B{AliCampaignEditor.__init__};
-        B --> C[AliPromoCampaign.__init__];
-        C --> D[Initialization: AliCampaignEditor constructor];
-        D --> E[AliCampaignEditor];
+    A[User Input: campaign_name, language, currency] --> B{AliCampaignEditor.__init__};
+    B --> C[AliPromoCampaign.__init__];
+    C --> D[Initialization: AliCampaignEditor constructor];
+    D --> E[AliCampaignEditor];
         
-        E --> F[delete_product: Check for affiliate link];
-        F --> G[read_text_file sources.txt: Read product list];
-        G --> H[Iterate & check product_id: Loop through product list];
-        H -- Match --> I[remove & save: Remove product if match found];
-        H -- No Match --> J[rename product file: Rename product file if no match];
+    E --> F[delete_product: Check for affiliate link];
+    F --> G[read_text_file sources.txt: Read product list];
+    G --> H[Iterate & check product_id: Loop through product list];
+    H -- Match --> I[remove & save: Remove product if match found];
+    H -- No Match --> J[rename product file: Rename product file if no match];
         
-        E --> K[update_product: Update product details];
-        K --> L[Call dump_category_products_files: Update category with new product];
+    E --> K[update_product: Update product details];
+    K --> L[Call dump_category_products_files: Update category with new product];
         
-        E --> M[update_campaign: Update campaign properties like description];
-        M --> N[update campaign parameters];
+    E --> M[update_campaign: Update campaign properties like description];
+    M --> N[update campaign parameters];
         
-        E --> O[update_category: Update category in JSON file];
-        O --> P[j_loads JSON file: Read category data];
-        P --> Q[Update category: Update category data];
-        Q --> R[j_dumps JSON file: Write updated category to file];
+    E --> O[update_category: Update category in JSON file];
+    O --> P[j_loads JSON file: Read category data];
+    P --> Q[Update category: Update category data];
+    Q --> R[j_dumps JSON file: Write updated category to file];
         
-        E --> S[get_category: Retrieve category by name];
-        S --> T[Check if category exists];
-        T -- Found --> U[Return SimpleNamespace: Return category details];
-        T -- Not Found --> V[Log warning: Category not found in campaign];
+    E --> S[get_category: Retrieve category by name];
+    S --> T[Check if category exists];
+    T -- Found --> U[Return SimpleNamespace: Return category details];
+    T -- Not Found --> V[Log warning: Category not found in campaign];
         
-        E --> W[list_categories: List all categories in the campaign];
-        W --> X[Check category attribute: Ensure categories exist in campaign];
-        X -- Found --> Y[Return category list: List category names];
-        X -- Not Found --> Z[Log warning: No categories found in campaign];
+    E --> W[list_categories: List all categories in the campaign];
+    W --> X[Check category attribute: Ensure categories exist in campaign];
+    X -- Found --> Y[Return category list: List category names];
+    X -- Not Found --> Z[Log warning: No categories found in campaign];
         
-        E --> AA[get_category_products: Retrieve products for a category];
-        AA --> AB[Get category path: Build path for category products];
-        AB --> AC[Get JSON filenames: Retrieve all product JSON files];
-        AC --> AD[Read JSON files: Load product data];
-        AD --> AE[Create SimpleNamespace: Convert product data to objects];
-        AE --> AF[Return products: Return list of products];
-        AC -- No JSON files --> AG[Log error: No files found];
-        AG --> AH[Process category: Trigger category product preparation];
-        
-        E --> AI[Other methods];
+    E --> AA[get_category_products: Retrieve products for a category];
+    AA --> AB[Get category path: Build path for category products];
+    AB --> AC[Get JSON filenames: Retrieve all product JSON files];
+    AC --> AD[Read JSON files: Load product data];
+    AD --> AE[Create SimpleNamespace: Convert product data to objects];
+    AE --> AF[Return products: Return list of products];
+    AC -- No JSON files --> AG[Log error: No files found];
+    AG --> AH[Process category: Trigger category product preparation];
+
+    E --> AI[Other methods];
+
 ```
+
+# Prepare campaign
 
 ```mermaid
 flowchart TD
@@ -117,98 +121,91 @@ flowchart TD
     L --> M;
 ```
 ```
-```
 
 # Improved Code
 
 ```python
 """
-Модуль для управления рекламными кампаниями на Facebook.
-=========================================================================================
+Модуль для управления рекламными кампаниями на AliExpress.
+====================================================================
 
-Этот модуль предоставляет функции для создания, редактирования и публикации рекламных
-кампаний на Facebook. Включает инициализацию параметров кампании, создание
-директорий, сохранение настроек, сбор и сохранение данных о продуктах,
-генерацию рекламных материалов и публикацию на Facebook.
+Этот модуль содержит функции для инициализации, редактирования и обработки данных
+рекламных кампаний на AliExpress.  Поддерживаются операции по чтению и
+записи данных в формате JSON.
 """
-from typing import Any
-from src.utils.jjson import j_loads, j_loads_ns
-# импорт необходимых модулей
-from src.logger import logger
-import os
+import json  # Необходимо для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нужные функции для работы с JSON
+from src.logger import logger  # Импортируем logger для логирования
 
-# ... (Остальной код с исправлениями и комментариями)
+# ... (rest of your code)
 
-
-def example_function(param1: str, param2: int) -> str:
+# Example of a function with RST documentation and error handling
+def my_function(param1: str, param2: int) -> str:
     """
-    Примерная функция.
+    Выполняет примерную задачу.
 
     :param param1: Описание параметра 1.
     :param param2: Описание параметра 2.
     :return: Описание возвращаемого значения.
     """
-    # код исполняет проверку параметров
-    if not param1:
-        logger.error("Ошибка: параметр param1 не задан.")
-        return ""  # или raise ValueError(...)
-    # код исполняет дальнейшие вычисления с параметрами
-    result = param1 * param2
-    return str(result)
+    try:
+        # код исполняет обработку данных
+        result = param1 + str(param2)  # Пример обработки данных
+        return result
+    except Exception as ex:
+        logger.error('Ошибка в функции my_function', ex)
+        return None  # Или raise исключение, если это необходимо
 
-# ... (Остальной улучшенный код)
+
+# ... (rest of your code)
+
 ```
 
 # Changes Made
 
-- Добавлены комментарии RST к модулю и функциям.
-- Заменены все `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-- Вместо стандартных `try-except` блоков используется `logger.error` для обработки ошибок.
-- Изменены комментарии, удалены слова "получаем", "делаем" и т.п. в пользу более точных формулировок.
-- Добавлены типы данных (typing) к параметрам и возвращаемым значениям функций (где возможно).
-- Добавлены импорты, если они отсутствовали.
-
+- Добавлено описание модуля в формате RST.
+- Импортированы необходимые функции из `src.utils.jjson` для работы с JSON.
+- Импортирован `logger` из `src.logger` для логирования ошибок.
+- Добавлена функция `my_function` с примерами RST документации и обработки ошибок.
+- Изменены комментарии в коде, чтобы соответствовать требованиям по стилю.
 
 # FULL Code
 
 ```python
 """
-Модуль для управления рекламными кампаниями на Facebook.
-=========================================================================================
+Модуль для управления рекламными кампаниями на AliExpress.
+====================================================================
 
-Этот модуль предоставляет функции для создания, редактирования и публикации рекламных
-кампаний на Facebook. Включает инициализацию параметров кампании, создание
-директорий, сохранение настроек, сбор и сохранение данных о продуктах,
-генерацию рекламных материалов и публикацию на Facebook.
+Этот модуль содержит функции для инициализации, редактирования и обработки данных
+рекламных кампаний на AliExpress.  Поддерживаются операции по чтению и
+записи данных в формате JSON.
 """
-from typing import Any
-from src.utils.jjson import j_loads, j_loads_ns
-# импорт необходимых модулей
-from src.logger import logger
-import os
+import json  # Необходимо для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нужные функции для работы с JSON
+from src.logger import logger  # Импортируем logger для логирования
 
-# ... (Остальной код)
+# ... (rest of your code)
 
-
-def example_function(param1: str, param2: int) -> str:
+# Example of a function with RST documentation and error handling
+def my_function(param1: str, param2: int) -> str:
     """
-    Примерная функция.
+    Выполняет примерную задачу.
 
     :param param1: Описание параметра 1.
     :param param2: Описание параметра 2.
     :return: Описание возвращаемого значения.
     """
-    # код исполняет проверку параметров
-    if not param1:
-        logger.error("Ошибка: параметр param1 не задан.")
-        return ""  # или raise ValueError(...)
-    # код исполняет дальнейшие вычисления с параметрами
-    result = param1 * param2
-    return str(result)
-
-# ... (Остальной улучшенный код)
+    try:
+        # код исполняет обработку данных
+        result = param1 + str(param2)  # Пример обработки данных
+        return result
+    except Exception as ex:
+        logger.error('Ошибка в функции my_function', ex)
+        return None  # Или raise исключение, если это необходимо
 
 
+# ... (rest of your code with all changes applied)
 ```
 
-**ВАЖНО:**  `...` в исходном коде должны быть заменены на действительный код.  Также необходимо добавить все необходимые импорты, которые могли отсутствовать в предоставленном фрагменте.  Без доступа к полному исходному коду, невозможно полностью его улучшить и исправить.  Обратите внимание на использование `logger.error` для обработки ошибок вместо `try-except`.
+
+**Important:**  This is a *partial* improvement.  The full code provided was missing significant parts.  The `...` placeholders have been left in the example, representing the omitted content.  To complete the improvement, you need to provide the rest of the code from the original file.  The provided changes apply only to the included example fragments.

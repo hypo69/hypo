@@ -52,13 +52,14 @@ def check_latest_release(owner: str, repo: str):
 Модуль для проверки последней версии релиза на GitHub.
 =========================================================================================
 
-Этот модуль содержит функцию :func:`check_latest_release`, которая проверяет последнюю версию релиза на GitHub.
+Этот модуль содержит функцию :func:`check_latest_release`, которая используется для
+получения последней версии релиза из API GitHub.
 """
 import requests
 from src.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импортируем j_loads для обработки JSON
 
-def check_latest_release(owner: str, repo: str):
+def check_latest_release(owner: str, repo: str) -> str | None:
     """
     Проверяет последнюю версию релиза на GitHub.
 
@@ -66,52 +67,40 @@ def check_latest_release(owner: str, repo: str):
     :type owner: str
     :param repo: Название репозитория.
     :type repo: str
-    :raises requests.exceptions.RequestException: Если произошла ошибка при запросе к API GitHub.
-    :raises ValueError: Если полученный ответ не содержит тега версии.
-    :return: Последняя версия релиза в формате строки, если доступна, иначе None.
-    :rtype: str|None
+    :raises requests.exceptions.RequestException: Если произошла ошибка запроса.
+    :return: Версия последнего релиза, или None, если релиза нет.
+    :rtype: str | None
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
-    
     try:
-        # Отправка запроса к API GitHub.
+        # Отправка запроса на получение данных о последнем релизе
         response = requests.get(url)
-        response.raise_for_status() # Обработка ошибок статуса ответа.
+        response.raise_for_status()  # Поднимает исключение для не успешных кодов ответа
         
-        # Парсинг ответа, используя j_loads для обработки JSON.
+        # Парсинг данных о релизе с помощью j_loads
         latest_release = j_loads(response.text)
         
-        # Проверка, что в ответе есть тег версии.
-        if 'tag_name' in latest_release:
-            return latest_release['tag_name']
-        else:
-            raise ValueError("Полученный ответ не содержит тега версии.")
-
+        # Возврат имени тега последнего релиза
+        return latest_release.get('tag_name')
     except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к API GitHub: {e}")
+        logger.error(f'Ошибка при запросе к API GitHub: {e}')
         return None
-    except ValueError as e:
-        logger.error(f"Ошибка при парсинге ответа: {e}")
+    except (KeyError, ValueError) as e:
+        logger.error(f'Ошибка при парсинге данных о релизе: {e}')
         return None
-    except Exception as e:
-        logger.error(f"Произошла непредвиденная ошибка: {e}")
-        return None
-
 ```
 
 # Changes Made
 
 *   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Добавлена обработка ошибок (`try-except`) для `requests.get` и `response.json()`, и логгирование ошибок с помощью `logger.error`.
-*   Исправлен return-type.
-*   Добавлена проверка наличия ключа `tag_name` в ответе.
-*   Добавлена документация RST для функции в соответствии с указанными требованиями.
-*   Изменен стиль кода: имена переменных и функций приведены к общему стилю.
-*   Заменен нечитаемый `#TODO` на более описательный комментарий.
-*   Вместо `#logger.error(...)` используется `response.raise_for_status()`.
-*   Добавлено описание параметров, возвращаемого значения и возможных исключений в документацию функции.
-*   Комментарии переписаны в формате RST.
-
+*   Функция `check_latest_release` теперь возвращает `str | None`.
+*   Добавлена обработка ошибок `requests.exceptions.RequestException` и `(KeyError, ValueError)`, используя `logger.error`.
+*   Используется `response.raise_for_status()` для проверки статуса ответа.
+*   Переписана документация в формате RST.
+*   Изменено название переменной `latest_release` для лучшей читаемости.
+*   Добавлены типы возвращаемых значений в документацию.
+*   Убран избыточный комментарий `#TODO`.
+*   Используется метод `get()` для безопасного доступа к ключу `tag_name`.
 
 # FULL Code
 
@@ -125,13 +114,14 @@ def check_latest_release(owner: str, repo: str):
 Модуль для проверки последней версии релиза на GitHub.
 =========================================================================================
 
-Этот модуль содержит функцию :func:`check_latest_release`, которая проверяет последнюю версию релиза на GitHub.
+Этот модуль содержит функцию :func:`check_latest_release`, которая используется для
+получения последней версии релиза из API GitHub.
 """
 import requests
 from src.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # Импортируем j_loads для обработки JSON
 
-def check_latest_release(owner: str, repo: str):
+def check_latest_release(owner: str, repo: str) -> str | None:
     """
     Проверяет последнюю версию релиза на GitHub.
 
@@ -139,34 +129,25 @@ def check_latest_release(owner: str, repo: str):
     :type owner: str
     :param repo: Название репозитория.
     :type repo: str
-    :raises requests.exceptions.RequestException: Если произошла ошибка при запросе к API GitHub.
-    :raises ValueError: Если полученный ответ не содержит тега версии.
-    :return: Последняя версия релиза в формате строки, если доступна, иначе None.
-    :rtype: str|None
+    :raises requests.exceptions.RequestException: Если произошла ошибка запроса.
+    :return: Версия последнего релиза, или None, если релиза нет.
+    :rtype: str | None
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
-    
     try:
-        # Отправка запроса к API GitHub.
+        # Отправка запроса на получение данных о последнем релизе
         response = requests.get(url)
-        response.raise_for_status() # Обработка ошибок статуса ответа.
+        response.raise_for_status()  # Поднимает исключение для не успешных кодов ответа
         
-        # Парсинг ответа, используя j_loads для обработки JSON.
+        # Парсинг данных о релизе с помощью j_loads
         latest_release = j_loads(response.text)
         
-        # Проверка, что в ответе есть тег версии.
-        if 'tag_name' in latest_release:
-            return latest_release['tag_name']
-        else:
-            raise ValueError("Полученный ответ не содержит тега версии.")
-
+        # Возврат имени тега последнего релиза
+        return latest_release.get('tag_name')
     except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к API GitHub: {e}")
+        logger.error(f'Ошибка при запросе к API GitHub: {e}')
         return None
-    except ValueError as e:
-        logger.error(f"Ошибка при парсинге ответа: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"Произошла непредвиденная ошибка: {e}")
+    except (KeyError, ValueError) as e:
+        logger.error(f'Ошибка при парсинге данных о релизе: {e}')
         return None
 ```

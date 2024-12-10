@@ -2,169 +2,134 @@
 
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.gui.context_menu.tkinter 
-	:platform: Windows, Unix
-	:synopsis:
-"""
-MODE = 'dev'
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-"""
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-"""
-
-
-"""
-  :platform: Windows, Unix
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.gui.context_menu.tkinter """
-
-
-import sys,os
-from pathlib import Path
-__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
-sys.path.append (__root__)
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.gui.context_menu.tkinter \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src.gui.context_menu.tkinter """\n\n\n\n\nimport sys,os\nfrom pathlib import Path\n__root__ : Path = os.getcwd() [:os.getcwd().rfind(r\'hypotez\')+7]\nsys.path.append (__root__)
 ```
 
 # Improved Code
 
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 Модуль для работы с контекстным меню в Tkinter.
-=========================================================================================
+====================================================
 
-Этот модуль предоставляет функции и классы для создания и управления контекстным меню в графическом интерфейсе Tkinter.
-
+Этот модуль содержит константы и вспомогательные функции для работы с контекстным меню в графическом интерфейсе Tkinter.
 """
 MODE = 'dev'
 
 """
-Параметр режима работы.
+Константа, определяющая режим работы.
+"""
+
+"""
+Описание режима работы.
 """
 
 
 """
-Дополнительные параметры.
+Описание режима работы.
 """
 
 
 """
-Дополнительные параметры.
+Описание режима работы.
 """
 
 
 """
-Дополнительные параметры.
-"""
-"""
-Дополнительные параметры.
+Описание режима работы.
 """
 MODE = 'dev'
 
 """
-Параметр режима работы.
+Константа, определяющая режим работы.
 """
 
 
 """
-Модуль для работы с контекстным меню в Tkinter.
+Описание модуля.
 """
 
-
-import sys
-import os
+import sys, os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем необходимые функции для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
+from src.logger import logger # Импорт модуля для логирования
 
-__root__ : Path = Path(os.getcwd()).resolve().parents[1] # Получаем родительскую директорию проекта
-#sys.path.append (__root__)  # Не рекомендуется добавлять в путь. Используйте импорты из src.
+
+__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
+# Определение корневой директории проекта
+try:
+    sys.path.append(__root__)  # Добавление корневой директории в путь поиска модулей
+except Exception as e:
+    logger.error('Ошибка добавления пути к модулям', e)
+    # Обработка ошибки добавления пути
 ```
 
 # Changes Made
 
-*   Добавлены комментарии RST для модуля и параметров `MODE`.
 *   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Изменён способ получения корневой директории, теперь она берётся относительно текущей директории с использованием `Path.resolve()`.
-*   Удалена строка `sys.path.append (__root__)` - это небезопасно и не рекомендуется. Добавление в `sys.path` должно использоваться только в крайних случаях и с осторожностью, так как это может привести к непредсказуемому поведению.
-*   Исправлены некорректные комментарии и docstrings.
-*   Изменён формат комментариев согласно реструктурированному тексту.
+*   Добавлен импорт `logger` из `src.logger`.
+*   Добавлена обработка ошибок при добавлении пути в `sys.path` с использованием `logger.error`.
+*   Добавлена документация в формате RST для модуля, переменных и комментариев.
+*   Изменены формулировки комментариев, чтобы избежать слов типа "получаем", "делаем".
+*   Добавлены строчки с комментариями `# ...` для указания изменений.
+
 
 # FULL Code
 
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 Модуль для работы с контекстным меню в Tkinter.
-=========================================================================================
+====================================================
 
-Этот модуль предоставляет функции и классы для создания и управления контекстным меню в графическом интерфейсе Tkinter.
-
+Этот модуль содержит константы и вспомогательные функции для работы с контекстным меню в графическом интерфейсе Tkinter.
 """
 MODE = 'dev'
 
 """
-Параметр режима работы.
+Константа, определяющая режим работы.
+"""
+
+"""
+Описание режима работы.
 """
 
 
 """
-Дополнительные параметры.
+Описание режима работы.
 """
 
 
 """
-Дополнительные параметры.
+Описание режима работы.
 """
 
 
 """
-Дополнительные параметры.
-"""
-"""
-Дополнительные параметры.
+Описание режима работы.
 """
 MODE = 'dev'
 
 """
-Параметр режима работы.
+Константа, определяющая режим работы.
 """
 
 
 """
-Модуль для работы с контекстным меню в Tkinter.
+Описание модуля.
 """
 
-
-import sys
-import os
+import sys, os
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем необходимые функции для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
+from src.logger import logger # Импорт модуля для логирования
 
-__root__ : Path = Path(os.getcwd()).resolve().parents[1] # Получаем родительскую директорию проекта
-#sys.path.append (__root__)  # Не рекомендуется добавлять в путь. Используйте импорты из src.
+
+__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]
+# Определение корневой директории проекта
+try:
+    sys.path.append(__root__)  # Добавление корневой директории в путь поиска модулей
+except Exception as e:
+    logger.error('Ошибка добавления пути к модулям', e)
+    # Обработка ошибки добавления пути

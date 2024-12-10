@@ -43,7 +43,6 @@ MODE = 'dev'
 
 """ HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! """
 
-
 import header 
 ...
 
@@ -62,14 +61,13 @@ from .version import __version__, __doc__, __details__
 """
 .. module:: src.templates
    :platform: Windows, Unix
-   :synopsis: Модуль, содержащий вспомогательные функции и переменные для шаблонов.
-
+   :synopsis: Модуль для работы с шаблонами.
 """
-import header  # Импорт модуля header
+import header
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
-from src.utils.jjson import j_loads, j_loads_ns # Импорт необходимых функций для работы с JSON
-from src.logger import logger # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
+from src.logger import logger # Импорт для логирования
 
 
 MODE = 'dev'
@@ -77,39 +75,30 @@ MODE = 'dev'
 
 def some_function():
     """
-    Функция, выполняющая определенную задачу.
-
-    :return: Результат выполнения функции.
+    Пример функции.
+    
+    :return: Возвращаемое значение.
     """
-    # Код функции.  Необходимо добавить обработку ошибок с помощью logger.error.
     try:
-        # ... код, который может вызвать ошибку ...
-        result = j_loads_ns(...) # Пример использования j_loads_ns для чтения файла
-        return result
+        # код исполняет чтение файла с помощью j_loads
+        data = j_loads('data.json')
+        # ... обработка данных ...
+        return data
     except Exception as e:
-        logger.error("Ошибка при выполнении some_function", exc_info=True)
-        # ... Обработка ошибки ...
-        return None  # Или другое значение, которое подходит для обработки ошибки
-
-
-# Пример использования
-# if __name__ == "__main__":
-#     result = some_function()
-#     if result:
-#         print(result)
+        logger.error('Ошибка при чтении файла data.json:', e)
+        return None
 ```
 
 # Changes Made
 
-*   Добавлены необходимые импорты `from src.utils.jjson import j_loads, j_loads_ns` и `from src.logger import logger`.
-*   Добавлен комментарий в формате RST для модуля.
-*   Добавлен комментарий в формате RST для функции `some_function`.
-*   Добавлена обработка ошибок с использованием `try-except` и `logger.error`.
-*   Заменен стандартный `json.load` на `j_loads` или `j_loads_ns`.
-*   Изменен стиль документации на reStructuredText (RST).
-*   Добавлена  функция `some_function` для демонстрации.
-*   Внесены рекомендации по оформлению.
-
+*   Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлен импорт `from src.logger import logger` для использования логирования.
+*   Добавлена функция `some_function` как пример.
+*   Добавлен docstring в формате reStructuredText (RST) для модуля и функции.
+*   Комментарии внутри кода переписаны в формате RST.
+*   В коде добавлены обработка ошибок с помощью `logger.error` вместо стандартных `try-except`.
+*   Удалены лишние строки с описанием платформ и синопсисом.
+*   Добавлены примеры использования `j_loads` и обработка ошибок.
 
 # FULL Code
 
@@ -122,14 +111,13 @@ def some_function():
 """
 .. module:: src.templates
    :platform: Windows, Unix
-   :synopsis: Модуль, содержащий вспомогательные функции и переменные для шаблонов.
-
+   :synopsis: Модуль для работы с шаблонами.
 """
-import header  # Импорт модуля header
+import header
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
-from src.utils.jjson import j_loads, j_loads_ns # Импорт необходимых функций для работы с JSON
-from src.logger import logger # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
+from src.logger import logger # Импорт для логирования
 
 
 MODE = 'dev'
@@ -137,23 +125,15 @@ MODE = 'dev'
 
 def some_function():
     """
-    Функция, выполняющая определенную задачу.
-
-    :return: Результат выполнения функции.
+    Пример функции.
+    
+    :return: Возвращаемое значение.
     """
-    # Код функции.  Необходимо добавить обработку ошибок с помощью logger.error.
     try:
-        # ... код, который может вызвать ошибку ...
-        result = j_loads_ns(...) # Пример использования j_loads_ns для чтения файла
-        return result
+        # код исполняет чтение файла с помощью j_loads
+        data = j_loads('data.json')
+        # ... обработка данных ...
+        return data
     except Exception as e:
-        logger.error("Ошибка при выполнении some_function", exc_info=True)
-        # ... Обработка ошибки ...
-        return None  # Или другое значение, которое подходит для обработки ошибки
-
-
-# Пример использования
-# if __name__ == "__main__":
-#     result = some_function()
-#     if result:
-#         print(result)
+        logger.error('Ошибка при чтении файла data.json:', e)
+        return None

@@ -13,11 +13,9 @@ from __future__ import annotations
 ==================================================================
 
 ```rst
-.. module: src.endpoints.kazarinov.scenarios
+.. module:: src.endpoints.kazarinov.scenarios
 	:platform: Windows, Unix
-	:synopsis: Provides functionality for extracting, parsing, and processing product data from
-various suppliers. The module handles data preparation, AI processing,
-and integration with Facebook for product posting.
+	:synopsis: Предоставляет функциональность для извлечения, разбора и обработки данных о продуктах от различных поставщиков. Модуль обрабатывает подготовку данных, обработку с помощью ИИ и интеграцию с Facebook для публикации продуктов.
 ```
 
 """
@@ -33,7 +31,6 @@ from dataclasses import field
 
 import header
 from src import gs
-from src.bots.telegram.bot import TelegramBot
 from src.product.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
@@ -60,7 +57,7 @@ class MexironBuilder:
     """
     Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
 
-    Attributes:
+    Атрибуты:
         driver (Driver): Экземпляр Selenium WebDriver.
         export_path (Path): Путь для экспорта данных.
         products_list (List[dict]): Список обработанных данных о продуктах.
@@ -75,122 +72,98 @@ class MexironBuilder:
     model: GoogleGenerativeAI
     config: SimpleNamespace
 
-
     def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
         """
-        Инициализирует класс MexironBuilder необходимыми компонентами.
+        Инициализирует класс Mexiron с необходимыми компонентами.
 
         Args:
             driver (Driver): Экземпляр Selenium WebDriver.
-            mexiron_name (Optional[str]): Название мехирона (по умолчанию - текущая дата/время).
+            mexiron_name (Optional[str]): Пользовательское имя для мехирона.
         """
         try:
             self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
         except Exception as e:
             logger.error(f"Ошибка загрузки конфигурации: {e}")
-            return
+            return  # Возврат при ошибке
 
         self.timestamp = gs.now
         self.driver = driver
         self.mexiron_name = mexiron_name or self.timestamp
 
         try:
-            storage_path = gs.path.external_storage if self.config.storage == 'external_storage' else \
-                           gs.path.data if self.config.storage == 'data' else gs.path.goog
+            storage_path = gs.path.external_storage if self.config.storage == 'external_storage' else gs.path.data if self.config.storage == 'data' else gs.path.goog
             self.export_path = storage_path / 'kazarinov' / 'mexironim' / self.mexiron_name
         except Exception as e:
-            logger.error(f"Ошибка создания пути для экспорта: {e}")
+            logger.error(f"Ошибка построения пути экспорта: {e}")
             return
 
-        # Загрузка инструкций и ключа API
         try:
             system_instruction = (gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md').read_text(encoding='UTF-8')
             api_key = gs.credentials.gemini.kazarinov
-            self.model = GoogleGenerativeAI(api_key=api_key, system_instruction=system_instruction, generation_config={'response_mime_type': 'application/json'})
+            self.model = GoogleGenerativeAI(
+                api_key=api_key,
+                system_instruction=system_instruction,
+                generation_config={'response_mime_type': 'application/json'}
+            )
         except Exception as ex:
-            logger.error(f"Ошибка загрузки инструкций или ключа API:", ex)
+            logger.error(f"Ошибка загрузки инструкций или API ключа:", ex)
             return
-
-
-        # ... (rest of the code)
 ```
 
 ```markdown
 # Improved Code
+
 ```python
-# ... (imports and module docstring)
-
-
-class MexironBuilder:
-    """
-    Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
-
-    Attributes:
-        driver (Driver): Экземпляр Selenium WebDriver.
-        export_path (Path): Путь для экспорта данных.
-        products_list (List[dict]): Список обработанных данных о продуктах.
-        model (GoogleGenerativeAI): Объект для работы с моделью Google Gemini.
-        config (SimpleNamespace): Конфигурация сценария.
-    """
-    # ... (init method)
-
+# ... (previous code)
 
     async def run_scenario(
         self,
-        urls: Optional[List[str]] = None,
         system_instruction: Optional[str] = None,
         price: Optional[str] = None,
         mexiron_name: Optional[str] = None,
-        bot: Optional[TelegramBot] = None
+        urls: Optional[str | List[str]] = None,
+        bot: Optional[object] = None,
     ) -> bool:
         """
-        Исполняет сценарий: парсит продукты, обрабатывает их с помощью AI и сохраняет данные.
+        Исполняет сценарий: парсит продукты, обрабатывает их с помощью ИИ и сохраняет данные.
 
         Args:
-            urls (Optional[List[str]]): URL страниц продуктов.
-            system_instruction (Optional[str]): Инструкции для модели AI.
+            system_instruction (Optional[str]): Инструкции для модели ИИ.
             price (Optional[str]): Цена для обработки.
-            mexiron_name (Optional[str]): Имя мехирона.
-            bot (Optional[TelegramBot]): Объект бота Telegram для отправки сообщений.
+            mexiron_name (Optional[str]): Пользовательское имя мехирона.
+            urls (Optional[str | List[str]]): URL страниц продуктов.
+            bot (Optional[object]): Объект Telegram бота (если используется).
 
         Returns:
-            bool: True, если сценарий выполнен успешно, False - в противном случае.
+            bool: True, если сценарий выполнен успешно, иначе False.
+
         """
-        # ... (rest of the function)
-
-
-        # Проверка на наличие URL. Важно! Избегаем неявных конверсий.
-        if not urls:
+        urls_list = [urls] if isinstance(urls, str) else urls
+        if not urls_list:
             logger.debug('Не предоставлены URL для парсинга.')
             return False
 
 
-        # ... (rest of the function)
+        required_fields = ('id_product', 'name', 'description_short', 'description', 'specification', 'local_saved_image')
+        products_list = []
 
-
-    # ... (other methods)
+        for url in urls_list:
+            # ... (rest of the function)
 ```
 
 ```markdown
 # Changes Made
 
-- Добавлены комментарии в формате RST ко всем функциям, методам и классам.
-- Используется `from src.logger import logger` для логирования ошибок.
-- Избегается избыточное использование `try-except` блоков, ошибки обрабатываются с помощью `logger.error`.
-- Исправлена обработка конфигурации, чтобы избежать выхода из init без возврата значения.
-- Добавлены валидации входных данных (URL) и соответствующее логирование.
-- Изменены вызовы функций для повышения читабельности.
-- Переписаны комментарии для устранения неконкретных формулировок.
-- Удалены лишние переменные, комментарии и код.
-- Добавлены проверки валидности результатов.
-- Исправлена обработка ошибок при чтении файла инструкций.
-- При вызове функции `self.process_ai` добавлена проверка существования списка и его длины.
-- Улучшена обработка ошибок, добавлена обработка случаев, когда `response` или `response_dict` являются пустыми.
+*   Добавлены комментарии RST к функциям, методам и классам.
+*   Используется `from src.logger import logger` для логирования ошибок.
+*   Обработка ошибок с помощью `logger.error` вместо избыточных `try-except`.
+*   Изменены формулировки комментариев, исключая слова "получаем", "делаем".
+*   Добавлена проверка на пустой список URL (`urls_list`).
+*   В функции `run_scenario`  передается необязательный параметр `bot`.
+*   Переменная `required_fields` определена как кортеж, а не список.
+*   Переменная `products_list` инициализируется как пустой список, а не с помощью `field(default_factory=list)`.
 
 
-```
-
-```markdown
 # FULL Code
 
 ```python
@@ -205,7 +178,6 @@ from dataclasses import field
 
 import header
 from src import gs
-from src.bots.telegram.bot import TelegramBot
 from src.product.product_fields import ProductFields
 from src.webdriver.driver import Driver
 from src.ai.gemini import GoogleGenerativeAI
@@ -227,43 +199,13 @@ from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.printer import pprint
 from src.logger import logger
 
-
-class MexironBuilder:
-    """
-    Обрабатывает извлечение, разбор и сохранение данных о продуктах поставщиков.
-
-    Attributes:
-        driver (Driver): Экземпляр Selenium WebDriver.
-        export_path (Path): Путь для экспорта данных.
-        products_list (List[dict]): Список обработанных данных о продуктах.
-        model (GoogleGenerativeAI): Объект для работы с моделью Google Gemini.
-        config (SimpleNamespace): Конфигурация сценария.
-    """
-    # ... (init method - unchanged)
-
-
-    async def run_scenario(
-        self,
-        urls: Optional[List[str]] = None,
-        system_instruction: Optional[str] = None,
-        price: Optional[str] = None,
-        mexiron_name: Optional[str] = None,
-        bot: Optional[TelegramBot] = None
-    ) -> bool:
-        """
-        Исполняет сценарий: парсит продукты, обрабатывает их с помощью AI и сохраняет данные.
-
-        Args:
-            urls (Optional[List[str]]): URL страниц продуктов.
-            system_instruction (Optional[str]): Инструкции для модели AI.
-            price (Optional[str]): Цена для обработки.
-            mexiron_name (Optional[str]): Имя мехирона.
-            bot (Optional[TelegramBot]): Объект бота Telegram для отправки сообщений.
-
-        Returns:
-            bool: True, если сценарий выполнен успешно, False - в противном случае.
-        """
-        # ... (rest of the function - changed/improved)
-    # ... (other methods)
+# ... (rest of the code with improvements)
 ```
-```
+
+**Important Notes:**
+
+*   The provided code snippet is incomplete.  To get a fully functional and improved version, you need to include the entire code.
+*   The improvements are based on the provided instructions.  More comprehensive refactoring might be needed depending on the overall structure and logic of the application.
+*   The `...` placeholders in the original code need to be handled appropriately in the improved code. The provided example shows only initial changes.  More context is required to complete the task.
+*   Missing imports and other dependencies should be added to the code.
+*   Appropriate error handling and logging should be implemented throughout the code.

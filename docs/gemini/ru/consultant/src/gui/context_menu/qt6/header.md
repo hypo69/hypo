@@ -50,14 +50,19 @@ sys.path.append (__root__)
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
+Модуль для работы с контекстным меню в Qt6.
+=============================================
+
+Этот модуль предоставляет базовые функции для работы с контекстным меню в приложении Hypotez.
+
 .. module:: src.gui.context_menu.qt6
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит константу MODE.
+	:platform: Windows, Unix
+	:synopsis: Контекстное меню для Qt6.
 """
 import sys
 import os
@@ -68,121 +73,83 @@ MODE = 'dev'
 
 
 """
-.. data:: MODE
-    :type: str
-    :platform: Windows, Unix
-    :synopsis: Константа, определяющая режим работы.
+Константа MODE. Представляет режим работы приложения.
+:type: str
+:ivar: dev
 """
+MODE = 'dev'
 
 
-def get_project_root() -> Path:
-    """
-    Возвращает корневую директорию проекта.
+"""
+Путь к корневой папке проекта.
+:type: pathlib.Path
+:ivar: __root__
+"""
+__root__ : Path = Path(os.path.dirname(os.path.abspath(__file__))).resolve().parent # Исправлено получение __root__
+__root__ = __root__.parent.parent
 
-    :return: Путь к корневой директории проекта.
-    :rtype: Path
-    """
-    try:
-        # Возвращает путь до директории hypotez
-        return Path(os.getcwd())[:os.getcwd().rfind('hypotez') + len('hypotez')]
-    except Exception as e:
-        logger.error("Ошибка получения корневой директории проекта", e)
-        return None
+"""
+Добавление корневой папки проекта в sys.path для импорта модулей из других папок.
+"""
+sys.path.append(str(__root__))
 
-
-def add_project_root_to_path(project_root: Path):
-    """
-    Добавляет корневую директории проекта в sys.path.
-
-    :param project_root: Корневая директория проекта.
-    :type project_root: Path
-    """
-    try:
-        if project_root:
-            sys.path.append(str(project_root))
-    except Exception as e:
-        logger.error("Ошибка добавления корневой директории в sys.path", e)
-
-
-if __name__ == "__main__":
-    project_root = get_project_root()
-    add_project_root_to_path(project_root)
 
 ```
 
 # Changes Made
 
 *   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Функция `get_project_root` возвращает Path объект.
-*   Добавлена функция `add_project_root_to_path` для добавления корневой директории проекта в `sys.path`
-*   Добавлены обработка ошибок с использованием `logger.error` для повышения надежности кода.
-*   Добавлена проверка на существование `project_root` в `add_project_root_to_path`.
-*   Переписаны docstrings в формате reStructuredText (RST) для функций и переменных.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлен блок `if __name__ == "__main__":` для корректного вызова функций только при непосредственном запуске файла.
-*   Изменён способ получения корневой директории проекта.
-*   Заменён код `sys.path.append(...)` на вызов функции для лучшей структуры.
-*   Комментарии прокомментированы построчно с объяснением.
+*   Исправлен способ получения корневой директории проекта (`__root__`).  Теперь используется `Path` для работы с путями и предотвращается ошибка индексации.
+*   Добавлены docstrings в формате reStructuredText для модуля и переменных.  Комментарии переписаны в RST стиль.
+*   Заменены  неявные переменные (`__root__`) на явные.
+*   Добавлены более точные и информативные комментарии.
+*   Изменен способ определения корневой директории проекта для повышения надежности.
+*   Удалены неиспользуемые строки документации.
+*   Исправлены ошибки в коде.
 
-# Full Code
+# FULL Code
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
+Модуль для работы с контекстным меню в Qt6.
+=============================================
+
+Этот модуль предоставляет базовые функции для работы с контекстным меню в приложении Hypotez.
+
 .. module:: src.gui.context_menu.qt6
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит константу MODE.
+	:platform: Windows, Unix
+	:synopsis: Контекстное меню для Qt6.
 """
 import sys
 import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
-from src.logger import logger # Импортируем функцию логирования
 
 MODE = 'dev'
 
 
 """
-.. data:: MODE
-    :type: str
-    :platform: Windows, Unix
-    :synopsis: Константа, определяющая режим работы.
+Константа MODE. Представляет режим работы приложения.
+:type: str
+:ivar: dev
 """
+MODE = 'dev'
 
 
-def get_project_root() -> Path:
-    """
-    Возвращает корневую директорию проекта.
+"""
+Путь к корневой папке проекта.
+:type: pathlib.Path
+:ivar: __root__
+"""
+__root__ : Path = Path(os.path.dirname(os.path.abspath(__file__))).resolve().parent # Исправлено получение __root__
+__root__ = __root__.parent.parent
 
-    :return: Путь к корневой директории проекта.
-    :rtype: Path
-    """
-    try:
-        # Возвращает путь до директории hypotez
-        return Path(os.getcwd())[:os.getcwd().rfind('hypotez') + len('hypotez')]
-    except Exception as e:
-        logger.error("Ошибка получения корневой директории проекта", e)
-        return None
-
-
-def add_project_root_to_path(project_root: Path):
-    """
-    Добавляет корневую директории проекта в sys.path.
-
-    :param project_root: Корневая директория проекта.
-    :type project_root: Path
-    """
-    try:
-        if project_root:
-            sys.path.append(str(project_root))
-    except Exception as e:
-        logger.error("Ошибка добавления корневой директории в sys.path", e)
-
-
-if __name__ == "__main__":
-    project_root = get_project_root()
-    add_project_root_to_path(project_root)
+"""
+Добавление корневой папки проекта в sys.path для импорта модулей из других папок.
+"""
+sys.path.append(str(__root__))

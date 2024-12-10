@@ -1,4 +1,4 @@
-## Received Code
+# Received Code
 
 ```python
 ## \file hypotez/src/suppliers/wallmart/header.py
@@ -48,19 +48,25 @@ __root__ = set_project_root()
 """__root__ (Path): Path to the root directory of the project"""
 
 from src import gs
+from src.utils.jjson import j_loads
 
 settings:dict = None
 try:
+    # код исполняет чтение файла настроек
     with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
-        settings = json.load(settings_file)
-except (FileNotFoundError, json.JSONDecodeError):
+        settings = j_loads(settings_file) # Использование j_loads для чтения файла
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    # Если файл не найден или ошибка декодирования, выводим сообщение об ошибке
+    logger.error('Ошибка загрузки настроек: {}'.format(e))
     ...
+
 
 doc_str:str = None
 try:
     with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
         doc_str = settings_file.read()
-except (FileNotFoundError, json.JSONDecodeError):
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка загрузки README: {}'.format(e))
     ...
 
 
@@ -73,7 +79,8 @@ __copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
-## Improved Code
+```markdown
+# Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/wallmart/header.py
@@ -82,66 +89,62 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с настройками проекта и документацией.
-=======================================================
-
-Этот модуль загружает настройки проекта из файла `settings.json` и документацию из файла `README.MD`.
+.. module:: src.suppliers.wallmart
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с поставщиком Walmart.
 """
 import sys
 from pathlib import Path
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
-
-import src.logger as logger  # Импорт логгера
+from src.utils.jjson import j_loads
+from src import gs
+from src.logger import logger
 
 MODE = 'dev'
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневую директорию проекта, начиная с текущей директории.
-    Поиск вверх по дереву директорий до нахождения одного из указанных файлов.
+    Определяет корневую директорию проекта, начиная от текущей директории.
 
-    :param marker_files: Список файлов/директорий, используемых для определения корневой директории.
+    :param marker_files: Список файлов, по наличию которых определяется корневая директория.
     :type marker_files: tuple
     :return: Путь к корневой директории проекта.
-    :rtype: pathlib.Path
+    :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    __root__: Path
+    current_path: Path = Path(__file__).resolve().parent
+    __root__ = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            __root__ = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
 
 
 # Определение корневой директории проекта
-project_root = set_project_root()
-"""project_root (Path): Корневая директория проекта."""
+__root__ = set_project_root()
+"""__root__ (Path): Путь к корневой директории проекта."""
 
 
 settings: dict = None
+# Загрузка настроек из файла
 try:
-    settings = j_loads((project_root / 'src' / 'settings.json').resolve())  # Чтение настроек с использованием j_loads
-except FileNotFoundError:
-    logger.error('Файл settings.json не найден')  # Логирование ошибки
-except json.JSONDecodeError as e:
-    logger.error('Ошибка при декодировании файла settings.json:', e)  # Логирование ошибки
-except Exception as e:
-    logger.error('Произошла непредвиденная ошибка:', e)
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').open())  # Чтение файла настроек с помощью j_loads
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка загрузки файла settings.json: %s', e)
+    settings = None
 
 
 doc_str: str = None
+# Чтение файла README
 try:
-    doc_str = (project_root / 'src' / 'README.MD').read_text() # Чтение файла README
-except FileNotFoundError:
-    logger.error('Файл README.MD не найден')
-except Exception as e:
-    logger.error('Ошибка при чтении файла README.MD:', e)
-
+    doc_str = (gs.path.root / 'src' / 'README.MD').open().read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка загрузки файла README.MD: %s', e)
+    doc_str = None
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
@@ -153,18 +156,17 @@ __copyright__ = settings.get("copyright", '') if settings else ''
 __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
-## Changes Made
+```markdown
+# Changes Made
 
-- Импортирован `j_loads` из `src.utils.jjson` для чтения файла `settings.json`.
-- Добавлено логирование ошибок с помощью `logger.error` при чтении файлов.
-- Удалены неиспользуемые импорты и переменные.
-- Переименована переменная `__root__` на `project_root` для лучшей читаемости.
-- Добавлены комментарии RST для модуля, функции `set_project_root`, и переменных.
-- Исправлена типизация функции `set_project_root`.
-- Используется метод `read_text()` для чтения файла.
-- Добавлено более подробное логирование ошибок с указанием типа ошибки.
+- Заменены все использования `json.load` на `j_loads` из `src.utils.jjson` для корректного чтения json-файлов.
+- Добавлены обработчики ошибок с использованием `logger.error` для более информативного вывода в случае проблем с файлами.
+- Добавлены RST-комментарии к модулю, функции `set_project_root`.
+- Изменены имена переменных в соответствии со стилем, используемым в других файлах.
+- Исправлены некоторые стилистические ошибки в комментариях.
+- В коде и документации убраны лишние комментарии.
 
-## FULL Code
+# FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/wallmart/header.py
@@ -173,66 +175,62 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с настройками проекта и документацией.
-=======================================================
-
-Этот модуль загружает настройки проекта из файла `settings.json` и документацию из файла `README.MD`.
+.. module:: src.suppliers.wallmart
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с поставщиком Walmart.
 """
 import sys
 from pathlib import Path
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
-
-import src.logger as logger  # Импорт логгера
+from src.utils.jjson import j_loads
+from src import gs
+from src.logger import logger
 
 MODE = 'dev'
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневую директорию проекта, начиная с текущей директории.
-    Поиск вверх по дереву директорий до нахождения одного из указанных файлов.
+    Определяет корневую директорию проекта, начиная от текущей директории.
 
-    :param marker_files: Список файлов/директорий, используемых для определения корневой директории.
+    :param marker_files: Список файлов, по наличию которых определяется корневая директория.
     :type marker_files: tuple
     :return: Путь к корневой директории проекта.
-    :rtype: pathlib.Path
+    :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    __root__: Path
+    current_path: Path = Path(__file__).resolve().parent
+    __root__ = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            __root__ = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
 
 
 # Определение корневой директории проекта
-project_root = set_project_root()
-"""project_root (Path): Корневая директория проекта."""
+__root__ = set_project_root()
+"""__root__ (Path): Путь к корневой директории проекта."""
 
 
 settings: dict = None
+# Загрузка настроек из файла
 try:
-    settings = j_loads((project_root / 'src' / 'settings.json').resolve())  # Чтение настроек с использованием j_loads
-except FileNotFoundError:
-    logger.error('Файл settings.json не найден')  # Логирование ошибки
-except json.JSONDecodeError as e:
-    logger.error('Ошибка при декодировании файла settings.json:', e)  # Логирование ошибки
-except Exception as e:
-    logger.error('Произошла непредвиденная ошибка:', e)
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').open())  # Чтение файла настроек с помощью j_loads
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка загрузки файла settings.json: %s', e)
+    settings = None
 
 
 doc_str: str = None
+# Чтение файла README
 try:
-    doc_str = (project_root / 'src' / 'README.MD').read_text() # Чтение файла README
-except FileNotFoundError:
-    logger.error('Файл README.MD не найден')
-except Exception as e:
-    logger.error('Ошибка при чтении файла README.MD:', e)
-
+    doc_str = (gs.path.root / 'src' / 'README.MD').open().read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка загрузки файла README.MD: %s', e)
+    doc_str = None
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
@@ -242,3 +240,4 @@ __details__ = ''
 __author__ = settings.get("author", '') if settings else ''
 __copyright__ = settings.get("copyright", '') if settings else ''
 __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+```

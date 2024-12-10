@@ -1,118 +1,91 @@
 # Полученный код
 
 ```python
-# Код для обработки файла конфигурации
+# Необходимо добавить код
 ```
 
 # Улучшенный код
 
 ```python
 """
-Модуль для обработки файла конфигурации.
-================================================================================
+Модуль для обработки инструкций по написанию документации в формате RST.
+========================================================================
 
-Этот модуль содержит функции для чтения и обработки данных из файла конфигурации.
+Этот модуль предоставляет функции для генерации документации в формате reStructuredText (RST)
+для Python-кода.  Он включает в себя правила оформления, проверки и рекомендации по улучшению.
 """
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 
 
-def process_config_file(file_path: str) -> dict | None:
+def generate_rst_documentation(python_code: str) -> str:
+    """Генерирует RST документацию для заданного Python-кода.
+
+    :param python_code: Python-код для генерации документации.
+    :type python_code: str
+    :raises TypeError: если входной параметр не является строкой.
+    :return: RST-документация.
+    :rtype: str
     """
-    Читает и обрабатывает файл конфигурации.
 
-    :param file_path: Путь к файлу конфигурации.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл конфигурации не валиден.
-    :raises Exception: Для обработки других ошибок.
-    :return: Словарь с данными конфигурации или None при ошибке.
-    :rtype: dict | None
-    """
-    try:
-        # Чтение файла конфигурации с использованием j_loads
-        with open(file_path, 'r') as file:
-            data = j_loads(file)
-            # Проверка на пустоту данных
-            if not data:
-                logger.error(f"Файл конфигурации {file_path} пустой.")
-                return None
-            return data
-    except FileNotFoundError as ex:
-        logger.error(f'Ошибка: файл {file_path} не найден.', ex)
-        return None
-    except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка: файл {file_path} не является валидным JSON.', ex)
-        return None
-    except Exception as ex:
-        logger.error(f'Ошибка при обработке файла {file_path}:', ex)
-        return None
+    # Проверка на корректность типа входных данных
+    if not isinstance(python_code, str):
+        logger.error("Ошибка: входной параметр должен быть строкой.")
+        raise TypeError("Входной параметр должен быть строкой.")
 
+    # TODO: Реализовать логику генерации RST документации.
+    #       Эта функция должна анализировать код и создавать соответствующие RST-строки.
+    #       Например, для функций, классов, методов.
 
-# Пример использования
-# config_data = process_config_file('config.json')
-# if config_data:
-#     print(config_data)
+    # Возвращаем пустую строку пока функциональность не реализована
+    return ""
 ```
 
 # Внесённые изменения
 
-*   Добавлен модульный docstring с описанием функциональности.
-*   Добавлена функция `process_config_file` с подробным docstring, описывающим параметры, типы возвращаемых значений, исключения и примеры.
-*   Использование `j_loads` для чтения файла конфигурации.
-*   Обработка ошибок с помощью `logger.error` для исключений `FileNotFoundError`, `json.JSONDecodeError` и общих исключений `Exception`.
-*   Добавлена проверка на пустоту данных `data`.
-*   Добавлен комментарий с примером использования.
+* Добавлена функция `generate_rst_documentation` для генерации RST документации.
+* Добавлены комментарии в формате RST.
+* Добавлены проверки типов.
+* Добавлено логирование ошибок с использованием `logger`.
+* Добавлено описание модуля и функции в формате RST.
+* Добавлены `TODO` для будущей реализации.
 
 # Оптимизированный код
 
 ```python
 """
-Модуль для обработки файла конфигурации.
-================================================================================
+Модуль для обработки инструкций по написанию документации в формате RST.
+========================================================================
 
-Этот модуль содержит функции для чтения и обработки данных из файла конфигурации.
+Этот модуль предоставляет функции для генерации документации в формате reStructuredText (RST)
+для Python-кода.  Он включает в себя правила оформления, проверки и рекомендации по улучшению.
 """
-import json
-from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
+from typing import Optional
+import re
 
+def generate_rst_documentation(python_code: str) -> str:
+    """Генерирует RST документацию для заданного Python-кода.
 
-def process_config_file(file_path: str) -> dict | None:
+    :param python_code: Python-код для генерации документации.
+    :type python_code: str
+    :raises TypeError: если входной параметр не является строкой.
+    :return: RST-документация.
+    :rtype: str
     """
-    Читает и обрабатывает файл конфигурации.
+    if not isinstance(python_code, str):
+        logger.error("Ошибка: входной параметр должен быть строкой.")
+        raise TypeError("Входной параметр должен быть строкой.")
+    
+    rst_documentation = ""
+    # Разделение кода на строки
+    lines = python_code.split('\n')
+    
+    for line in lines:
+        # Обработка ключевых слов функций/классов/методов
+        match = re.search(r"def\s+([\w]+)\s*\(", line)
+        if match:
+            function_name = match.group(1)
+            rst_documentation += f"def {function_name}():\n\n    \"\"\"\n    Описание функции.\n    \"\"\" \n\n"
+        
+    return rst_documentation
 
-    :param file_path: Путь к файлу конфигурации.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл конфигурации не валиден.
-    :raises Exception: Для обработки других ошибок.
-    :return: Словарь с данными конфигурации или None при ошибке.
-    :rtype: dict | None
-    """
-    try:
-        # Чтение файла конфигурации с использованием j_loads
-        with open(file_path, 'r') as file:
-            data = j_loads(file)
-            # Проверка на пустоту данных
-            if not data:
-                logger.error(f"Файл конфигурации {file_path} пустой.")
-                return None
-            return data
-    except FileNotFoundError as ex:
-        logger.error(f'Ошибка: файл {file_path} не найден.', ex)
-        return None
-    except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка: файл {file_path} не является валидным JSON.', ex)
-        return None
-    except Exception as ex:
-        logger.error(f'Ошибка при обработке файла {file_path}:', ex)
-        return None
-
-
-# Пример использования
-# config_data = process_config_file('config.json')
-# if config_data:
-#     print(config_data)
 ```

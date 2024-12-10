@@ -1,127 +1,167 @@
 ```MD
-# Анализ кода из hypotez/src/webdriver/executor.py
-
-## <input code>
+# <input code>
 
 ```python
-# ... (код из файла)
+## \file hypotez/src/webdriver/executor.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.webdriver 
+	:platform: Windows, Unix
+	:synopsis: The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
+known as "locators." These configurations (or "locators") are dictionaries containing information on how to locate and interact with elements on a web page. The module provides the following functionalities:
+
+1. **Parsing and Handling Locators**: Converts dictionaries with configurations into `SimpleNamespace` objects, 
+allowing for flexible manipulation of locator data.
+
+2. **Interacting with Web Elements**: Depending on the provided data, the module can perform various actions such as clicks, 
+sending messages, executing events, and retrieving attributes from web elements.
+
+3. **Error Handling**: The module supports continuing execution in case of an error, allowing for the processing of web pages 
+that might have unstable elements or require a special approach.
+
+4. **Support for Multiple Locator Types**: Handles both single and multiple locators, enabling the identification and interaction 
+with one or several web elements simultaneously.
+
+This module provides flexibility and versatility in working with web elements, enabling the automation of complex web interaction scenarios.
+
+
+"""
+MODE = 'dev'
+
+import asyncio
+import re
+import sys
+import time
+from dataclasses import dataclass, field
+from enum import Enum
+from pathlib import Path
+from types import SimpleNamespace
+from typing import BinaryIO, ByteString, Dict, List, Optional, Union
+
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    JavascriptException,
+    NoSuchElementException,
+    StaleElementReferenceException,  # Этот импорт был добавлен
+    TimeoutException,
+)
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+import header
+from src import gs
+from src.logger import logger
+from src.logger.exceptions import (
+    DefaultSettingsException,
+    ExecuteLocatorException,
+    WebDriverException,
+)
+
+from src.utils.jjson import j_dumps, j_loads, j_loads_ns
+from src.utils.printer import pprint
+from src.utils.image import save_png
+
+
+# ... (rest of the code)
 ```
 
-## <algorithm>
+# <algorithm>
 
-**Шаг 1:**  Проверка типа локатора. Функция `execute_locator` принимает локатор `locator`.  Она проверяет, является ли локатор `SimpleNamespace` или `dict`. Если это `dict`, преобразует его в `SimpleNamespace`.
+1. **Input:** `locator` (dict or SimpleNamespace), optional parameters (timeout, timeout_for_event, message, etc.).
+2. **Convert to SimpleNamespace:** If `locator` is a dictionary, it's converted to a `SimpleNamespace` object.
+3. **Empty Locator Check:** If both `locator.attribute` and `locator.selector` are empty, return `None`. This handles cases where the locator doesn't specify an action.
+4. **`_parse_locator` function:** This function handles the main logic of parsing and executing the locator.
+   - **Error Handling:** It catches exceptions during locator parsing and logging them, if needed.
+   - **Event Execution:** If `locator.event` is present, calls `execute_event`.
+   - **Attribute Retrieval:** If `locator.attribute` is present, calls `get_attribute_by_locator`.
+   - **Element Retrieval:** If neither event nor attribute are present, calls `get_webelement_by_locator`.
+5. **Return Result:** The result of the `_parse_locator` function (or `None` in case of error) is returned.
 
-**Шаг 2:** Проверка валидности локатора. Проверяется, имеются ли в локаторе атрибуты `attribute` или `selector`. Если нет, возвращается `None`.
-
-**Шаг 3:** Вызов вспомогательной функции `_parse_locator`. Передается локатор и необязательное сообщение.
-
-**Шаг 4:** Парсинг и обработка локатора в `_parse_locator`.
-    * Задает атрибут `locator.by` согласно `by_mapping`.
-    * Обрабатывает атрибут `locator.attribute` (например, преобразуя выражения с шаблонами `%...%`).
-* Если есть событие `locator.event`, выполняет `execute_event`.
-* Если есть атрибут `locator.attribute`, выполняет `get_attribute_by_locator`.
-* Иначе выполняет `get_webelement_by_locator`.
-* Возвращает результат обработки локатора.
-
-**Шаг 5:** Выполнение событий в `execute_event`.
-   * Разбивает строку событий `locator.event` по разделителю `;`.
-   * Для каждого события:
-       * Обрабатывает `click()`, `pause()`, `upload_media()`, `screenshot()`, `clear()`, `send_keys()`, `type()`.
-       * Добавляет результат в список `result`.
-
-**Шаг 6:** Обработка атрибутов в `get_attribute_by_locator`.
-   * Получает веб-элемент по локатору.
-   * Если атрибут `locator.attribute` — словарь, извлекает атрибуты по ключам.
-   * Возвращает атрибуты или сам веб-элемент.
-
-**Шаг 7:** Поиск веб-элемента в `get_webelement_by_locator`.
-   * Если `timeout` равен 0, сразу пытается найти элемент.
-   * Иначе ожидает элемент с заданным временем ожидания, используя `WebDriverWait`.
-   * Возвращает найденный элемент или список элементов.
-
-**Пример:**
-
-Если `locator` - `{ "by": "XPATH", "selector": "//button[@id='submit']", "event": "click()" }`, то алгоритм выполнит поиск элемента по XPath, выполнит клик на нём и вернет `True`.
-
-
-## <mermaid>
+# <mermaid>
 
 ```mermaid
-graph LR
-    subgraph Execute Locator
-        A[Start] --> B{Is locator dict?};
-        B -- Yes --> C[Convert to SimpleNamespace];
-        B -- No --> C;
-        C --> D[Check for attribute/selector];
-        D -- False --> E[Return None];
-        D -- True --> F[_parse_locator];
-        F --> G{locator.event?};
-        G -- Yes --> H[execute_event];
-        G -- No --> I{locator.attribute?};
-        I -- Yes --> J[get_attribute_by_locator];
-        I -- No --> K[get_webelement_by_locator];
-        H --> L[Return event result];
-        J --> L;
-        K --> L;
-        L --> M[Return result];
-    end
-    M --> N[End];
+graph TD
+    A[Start] --> B(Check if locator is dict/SimpleNamespace);
+    B -- dict --> C{Convert to SimpleNamespace};
+    B -- SimpleNamespace --> D[Use locator as is];
+    C --> D;
+    D --> E[Define async function _parse_locator];
+    E --> F{locator.event, locator.attribute, locator.mandatory?}
+    F -- No --> G[Return None];
+    F -- Yes --> H[Try to map by and evaluate attribute];
+    H --> I{locator.event?};
+    I -- Yes --> J[Execute event];
+    I -- No --> K{locator.attribute?};
+    K -- Yes --> L[get_attribute_by_locator];
+    K -- No --> M[get_webelement_by_locator];
+    J --> N[Return result of event];
+    L --> N;
+    M --> N;
+    N --> O[Return final result of _parse_locator];
+    O --> P[Return result of execute_locator];
+    P --> Q[End];
 ```
 
-**Объяснение диаграммы:**
+# <explanation>
 
-Диаграмма представляет главные ветки выполнения функций, демонстрируя последовательность проверки и обработки локатора. Подключаемые зависимости подразумеваются через вызовы функций, которые сами являются зависимостями от Selenium и других модулей из `src`.
+**Imports:**
 
+- The code imports various modules for different functionalities.  Crucially, it imports from `src` packages, indicating a modular structure within the project. This modularity promotes organization and reusability of code across the project.
+- Selenium modules are imported for web driver interaction.
+- `src.logger` and `src.logger.exceptions` likely provide custom logging and exception handling mechanisms specific to the project.
+- `src.utils.jjson` handles JSON manipulation, enhancing code maintainability by encapsulating these operations.
+- `src.utils.printer` presumably provides custom printing functions (e.g., for formatted output) useful for debugging.
+- `src.utils.image` suggests the module is for image processing operations, possibly for saving screenshots or other image-related tasks.
 
-## <explanation>
+**Classes:**
 
-**Импорты:**
-* `asyncio`, `re`, `sys`, `time`, `dataclass`, `Enum`, `Path`, `SimpleNamespace`, `typing`: Стандартные библиотеки Python.
-* `selenium.common.exceptions`: Классы исключений Selenium для обработки ошибок.
-* `selenium.webdriver.*`: Модули Selenium для работы с веб-драйвером.  Это основной инструмент для автоматизации веб-тестирования.
-* `header`: Вероятно, файл с заголовками, конфигурациями или настройками.
-* `gs`: Модуль `gs` (непонятно для чего).
-* `src.logger`, `src.logger.exceptions`: Модули для логгирования и обработки пользовательских исключений.
-* `src.utils.jjson`: Модуль для работы с JSON (возможно, для сериализации/десериализации).
-* `src.utils.printer`: Модуль для печати данных в удобном формате.
-* `src.utils.image`: Модуль для сохранения скриншотов.
-
-**Классы:**
-* `ExecuteLocator`: Обработчик локаторов. Хранит веб-драйвер `driver`, цепочки действий `actions` и словарь соответствий `by_mapping`.
-    * `__post_init__`: Инициализирует `actions` при наличии `driver`.
-    * `execute_locator`:  Обрабатывает локаторы, вызывает подфункции для выполнения кликов, получения атрибутов и т.д.
-    * `evaluate_locator`:  Анализирует выражения с `%...%`.
-    * `get_attribute_by_locator`: Получает атрибуты элемента(ов).
-    * `get_webelement_by_locator`: Находит элемент(ы) по локатору.
-    * `get_webelement_as_screenshot`: Создает скриншот.
-    * `execute_event`: Выполняет события, связанные с локатором (например, click(), send_keys()).
-    * `send_message`: Отправляет сообщение (заполнена частично).
-
-**Функции:**
-* `_parse_locator`: Вспомогательная функция для обработки локатора.
-* `evaluate_locator`: Анализирует атрибуты локатора, заменяя шаблоны.
-* `get_attribute_by_locator`: Извлекает атрибуты найденных элементов.
-* `get_webelement_by_locator`: Находит веб-элементы.
-* `get_webelement_as_screenshot`: Создает скриншот.
-* `execute_event`: Выполняет действия (клики, ввод текста).
-* `send_message`: Отправляет сообщение (частично реализована).
+- **`ExecuteLocator`:** This class handles the execution of locators.
+    - `driver`: Selenium WebDriver instance.
+    - `actions`: `ActionChains` instance for performing mouse and keyboard actions (essential for Selenium automation).
+    - `by_mapping`: Maps locator types (e.g., "XPATH," "ID") to their Selenium equivalents (`By.XPATH`, `By.ID`).
+    - `mode`: Specifies the execution mode ('dev', 'debug').
+    - `__post_init__`: Initializes `actions` if `driver` is provided.
+    - `execute_locator`: The core method that takes a locator and executes the associated actions.
+    - `evaluate_locator`: Parses locator attributes. (e.g. `%KEY%` into `Keys.KEY`).
+    - `get_attribute_by_locator`: Retrieves attribute value(s) from a web element.
+    - `get_webelement_by_locator`: Locates web elements on the page.
+    - `get_webelement_as_screenshot`: Captures screenshots.
+    - `execute_event`: Executes actions (click, typing, pausing, screenshot, clear).
+    - `send_message`: Handles sending messages.
 
 
-**Переменные:**
-* `MODE`: Режим работы (debug или dev).
+**Functions:**
 
-**Возможные ошибки/улучшения:**
+- `execute_locator`:  Takes the locator and optional params and delegates the work to asynchronous functions.  Uses error handling and asynchronous operations.
+- `evaluate_locator`: Evaluates attributes and expands them.  It uses regex to parse the string attributes that might contain `%KEY%` format.  Important step for flexibility and potential usage of special keys.
+- `get_attribute_by_locator`: Locates an element, handles list of elements or single element.  Extracts attributes if specified.
+- `get_webelement_by_locator`: Fetches web elements with specific locators, using either immediate lookup or `WebDriverWait`. Handles timeouts and exceptions gracefully.  Crucially, it handles various scenarios of locating a single or multiple elements in different ways and filtering based on given criteria in `locator.if_list`.
+- `execute_event`: A crucial function to implement actions on the located element; click, typing (send_keys), pauses, screenshots.
+- `get_webelement_as_screenshot`: Efficiently takes a screenshot of the web element.
+- `send_message`: Sends messages to web elements (e.g., typing).  Includes special handling for typing speed and potentially special keys using `replace_dict` argument.
 
-* **Нечетко определены связи между модулями:** Необходимо более подробно описать взаимодействие с другими модулями `src`.
-* **Избыточность проверки типов:**  Внутренние функции могут излишне проверять тип `locator` (почти все функции, особенно `execute_locator`).
-* **Обработка ошибок:**  Обработка ошибок в `try...except` блоках слишком упрощена.  Необходимо более детальное выявление и logging причин ошибок.
-* **asyncio.to_thread():**  Использование `asyncio.to_thread` для синхронных методов Selenium - потенциальная ошибка.
-* **Передача параметров по умолчанию:**  Функции часто принимают параметры по умолчанию, но их использование не всегда соответствует лучшим практикам Python.
-* **Много повторений кода:**  Код для преобразования словаря в `SimpleNamespace` повторяется.
-* **Недостаток обработки пауз:**  В коде есть `pause()`, но нет проверки её корректности, что может привести к ошибкам в циклах.
-* **Непроверенные условия:**  Неясно, как обрабатываются ложные значения `locator.attribute` или `locator.selector`.
-* **Зависимость от внешних библиотек:**  Код сильно зависит от Selenium.
+**Variables:**
 
-**Взаимосвязи с другими частями проекта:**
+- `MODE`: A global variable for the execution mode, facilitating easy toggling between debug and release modes.
+- `timeout_for_event`: Configures the type of wait condition to use when locating elements.
 
-Модуль `executor` зависит от Selenium для взаимодействия с веб-драйвером и `src.logger` для ведения логов. Он использует `jjson` для работы с данными, `printer` для вывода информации, а `image` для скриншотов.  Другие модули, вероятно, пользуются модулем `executor` для управления элементами на странице браузера.
+**Possible Errors/Improvements:**
+
+- **Error Handling:** Exception handling is present, but the `...` parts are placeholders. More explicit error handling or logging (e.g., logging the specific error type) might be helpful for debugging.
+- **Documentation:**  The code has docstrings explaining most functions, but more in-depth documentation and examples would be beneficial.  Use appropriate Sphinx style documentation.
+- **Asynchronous Operations:**  Extensive use of `asyncio` is good for asynchronous handling, but more context and explanation of async/await use cases would improve readability.
+- **Input Validation:** Adding input validation to check the validity of the `locator` data and optional arguments would prevent unexpected behavior or crashes.
+
+
+
+**Inter-project dependencies:**
+
+- The code heavily relies on the modules from the `src` directory, which indicates a complex, well-organized project structure.  There are direct imports from `src.logger`, `src.utils.jjson`, `src.utils.printer`, `src.utils.image`, and `src` itself.  These suggest a well-defined structure with clear responsibilities and data/function flows between modules.
+- The dependence on Selenium suggests this code is part of a larger web automation project. The Selenium package is used for interacting with web browsers.

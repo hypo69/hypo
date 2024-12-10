@@ -157,9 +157,9 @@ class CodeAssistant:
                 / f"instruction_{self.role}_{self.lang}.md"
             ).read_text(encoding="UTF-8")
         except Exception as ex:
-            logger.error(f"Error reading instruction file", ex)
+            logger.error(f"Error reading instruction file", ex, False)
             ...
-            return False
+            return ''
 
     @property
     def translations(self) -> SimpleNamespace:
@@ -297,8 +297,10 @@ class CodeAssistant:
                 "input_code": f"```{content}```",
             }
         except Exception as ex:
-            logger.error(f"Ошибка в составлении запроса ", ex)
+            logger.error(f"Ошибка в составлении запроса ", ex, False)
             ...
+            return content
+
         return str(content_request)
 
     def _yield_files_content(

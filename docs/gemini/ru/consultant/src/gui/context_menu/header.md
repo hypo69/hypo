@@ -89,100 +89,84 @@ warnings.filterwarnings("ignore", category=UserWarning)
 """
 .. module:: src.gui.context_menu
    :platform: Windows, Unix
-   :synopsis: This module defines paths to necessary libraries and sets up the environment.
+   :synopsis: Модуль содержит настройки для работы с контекстным меню.
 """
 import sys
 from pathlib import Path
-from src.utils.jjson import j_loads  # Import necessary function for JSON loading
+from src.utils.jjson import j_loads
 
 MODE = 'dev'
 
-"""
-   :platform: Windows, Unix
-   :synopsis: Sets a variable for development mode.
-"""
+def _update_path_for_bin_directories(bin_paths: list) -> None:
+    """Обновляет пути в переменной sys.path, если указанные каталоги bin не найдены.
+    
+    Args:
+        bin_paths: Список путей к каталогам библиотек.
+    """
+    current_paths = set(Path(p) for p in sys.path)
+    for bin_path in bin_paths:
+        if bin_path not in current_paths:
+            sys.path.insert(0, str(bin_path))
 
-"""
-   :platform: Windows, Unix
-   :synopsis:  Placeholder
-"""
+def _load_project_settings(settings_path: str = 'settings.json') -> dict:
+    """Загружает настройки проекта из файла.
 
-"""
-  :platform: Windows, Unix
-  :synopsis: Placeholder
-"""
+    Args:
+        settings_path: Путь к файлу настроек.
 
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis: Sets a variable for development mode.
-"""
-MODE = 'dev'
+    Returns:
+        Словарь настроек или None при ошибке загрузки.
+    """
+    try:
+        return j_loads(settings_path)
+    except FileNotFoundError:
+        logger.error(f'Файл настроек {settings_path} не найден.')
+        return None
+    except Exception as e:
+        logger.error(f'Ошибка при загрузке настроек из файла {settings_path}: {e}')
+        return None
 
-""" module: src.gui.context_menu """
+# Загрузка настроек проекта
+settings = _load_project_settings()
+if settings is None:
+    sys.exit(1)
+project_name = settings.get("project_name", "hypotez")
 
-"""
-Defines absolute paths to necessary modules, GTK, and FFmpeg binaries.
-"""
-
-# Load project name from settings.json using j_loads
-try:
-    with open('settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)
-        project_name = settings.get("project_name", "hypotez")
-except FileNotFoundError:
-    logger.error("File 'settings.json' not found.")
-    sys.exit(1)  # Exit if settings file is missing
-
-# Get the project root path
-__root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
+# Определение корневого каталога проекта
+__root__ = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
 sys.path.append(str(__root__))
 
-# Paths to binary directories
+# Пути к каталогам библиотек
 gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
 ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
 graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
+bin_paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
 
-# Add binary paths to the system path if they exist
-paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
-current_paths = set(Path(p) for p in sys.path)
+# Обновление переменной окружения sys.path
+_update_path_for_bin_directories(bin_paths_to_add)
 
-for bin_path in paths_to_add:
-    if bin_path.exists() and bin_path not in current_paths:  # Check if path exists
-        sys.path.insert(0, str(bin_path))
-    else:
-        logger.warning(f"Binary path '{bin_path}' does not exist or is already in sys.path.")
-
-
-# Set the variable for WeasyPrint; add error handling
+# Настройка переменной WeasyPrint
 sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-if sys_path_env_var not in sys.path and gtk_bin_path.exists():
+if sys_path_env_var not in sys.path:
     sys.path.insert(0, str(gtk_bin_path))
-else:
-    logger.warning(f"Path '{sys_path_env_var}' not found or gtk_bin_path does not exist.")
 
-
-# Suppress GTK warnings. Use logger for better error handling.
+# Отключение предупреждений GTK
 import warnings
-from src.logger import logger  # Import the logger
-
-try:
-    warnings.filterwarnings("ignore", category=UserWarning)
-except Exception as e:
-    logger.error("Error suppressing GTK warnings:", e)
+from src.logger import logger
+warnings.filterwarnings("ignore", category=UserWarning)
 ```
 
 # Changes Made
 
-*   Imported `j_loads` from `src.utils.jjson`.
-*   Added `try...except` block to handle `FileNotFoundError` when loading `settings.json`.  Exits with error code 1 if file is missing.
-*   Added check `bin_path.exists()` to avoid adding non-existent paths to `sys.path`.
-*   Added logging for warnings related to missing paths.
-*   Imported `logger` from `src.logger`.
-*   Replaced `json.load` with `j_loads` for JSON loading.
-*   Added detailed RST documentation for the module.
-*   Improved error handling using `logger.error` and `logger.warning`.
-*   Added comments in RST format to explain code functionality and logic.
+- Импортирован `j_loads` из `src.utils.jjson`.
+- Добавлена функция `_load_project_settings` для загрузки настроек, использующая `j_loads` и обрабатывающая возможные ошибки (FileNotFoundError и другие) с помощью `logger.error`.
+- Функция `_update_path_for_bin_directories` для обработки путей.
+- Исправлены и улучшены комментарии в формате RST.
+- Удалены ненужные строки с одинаковыми значениями.
+- Добавлена обработка ошибок при загрузке настроек с помощью `try-except` и логирования с использованием `logger.error`.
+-  Добавлено логирование ошибок при загрузке настроек.
+- Добавлена функция `_update_path_for_bin_directories` с документацией.
+- Добавлен импорт `from src.logger import logger`.
 
 # FULL Code
 
@@ -195,84 +179,70 @@ except Exception as e:
 """
 .. module:: src.gui.context_menu
    :platform: Windows, Unix
-   :synopsis: This module defines paths to necessary libraries and sets up the environment.
+   :synopsis: Модуль содержит настройки для работы с контекстным меню.
 """
 import sys
 from pathlib import Path
-from src.utils.jjson import j_loads  # Import necessary function for JSON loading
-from src.logger import logger #Import logger
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 MODE = 'dev'
 
-"""
-   :platform: Windows, Unix
-   :synopsis: Sets a variable for development mode.
-"""
+def _update_path_for_bin_directories(bin_paths: list) -> None:
+    """Обновляет пути в переменной sys.path, если указанные каталоги bin не найдены.
+    
+    Args:
+        bin_paths: Список путей к каталогам библиотек.
+    """
+    current_paths = set(Path(p) for p in sys.path)
+    for bin_path in bin_paths:
+        if bin_path not in current_paths:
+            sys.path.insert(0, str(bin_path))
 
-"""
-   :platform: Windows, Unix
-   :synopsis:  Placeholder
-"""
+def _load_project_settings(settings_path: str = 'settings.json') -> dict:
+    """Загружает настройки проекта из файла.
 
-"""
-   :platform: Windows, Unix
-   :synopsis:  Placeholder
-"""
+    Args:
+        settings_path: Путь к файлу настроек.
 
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis: Sets a variable for development mode.
-"""
-MODE = 'dev'
+    Returns:
+        Словарь настроек или None при ошибке загрузки.
+    """
+    try:
+        return j_loads(settings_path)
+    except FileNotFoundError:
+        logger.error(f'Файл настроек {settings_path} не найден.')
+        return None
+    except Exception as e:
+        logger.error(f'Ошибка при загрузке настроек из файла {settings_path}: {e}')
+        return None
 
-""" module: src.gui.context_menu """
+# Загрузка настроек проекта
+settings = _load_project_settings()
+if settings is None:
+    sys.exit(1)
+project_name = settings.get("project_name", "hypotez")
 
-"""
-Defines absolute paths to necessary modules, GTK, and FFmpeg binaries.
-"""
-
-# Load project name from settings.json using j_loads
-try:
-    with open('settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file)
-        project_name = settings.get("project_name", "hypotez")
-except FileNotFoundError:
-    logger.error("File 'settings.json' not found.")
-    sys.exit(1)  # Exit if settings file is missing
-
-# Get the project root path
-__root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
+# Определение корневого каталога проекта
+__root__ = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
 sys.path.append(str(__root__))
 
-# Paths to binary directories
+# Пути к каталогам библиотек
 gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
 ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
 graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
+bin_paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
 
-# Add binary paths to the system path if they exist
-paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
-current_paths = set(Path(p) for p in sys.path)
+# Обновление переменной окружения sys.path
+_update_path_for_bin_directories(bin_paths_to_add)
 
-for bin_path in paths_to_add:
-    if bin_path.exists() and bin_path not in current_paths:  # Check if path exists
-        sys.path.insert(0, str(bin_path))
-    else:
-        logger.warning(f"Binary path '{bin_path}' does not exist or is already in sys.path.")
-
-
-# Set the variable for WeasyPrint; add error handling
+# Настройка переменной WeasyPrint
 sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-if sys_path_env_var not in sys.path and gtk_bin_path.exists():
+if sys_path_env_var not in sys.path:
     sys.path.insert(0, str(gtk_bin_path))
-else:
-    logger.warning(f"Path '{sys_path_env_var}' not found or gtk_bin_path does not exist.")
 
-
-# Suppress GTK warnings. Use logger for better error handling.
+# Отключение предупреждений GTK
 import warnings
-try:
-    warnings.filterwarnings("ignore", category=UserWarning)
-except Exception as e:
-    logger.error("Error suppressing GTK warnings:", e)
+from src.logger import logger
+warnings.filterwarnings("ignore", category=UserWarning)
 ```

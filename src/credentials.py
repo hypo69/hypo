@@ -498,7 +498,7 @@ class ProgramSettings(BaseModel):
         Returns:
             str: Текущая метка времени в строковом формате.
         """
-        timestamp = datetime.now().strftime(self.credentials.timestamp_format)
+        timestamp = datetime.now().strftime(self.config.timestamp_format)
         # Вернём только первые 3 цифры миллисекунд, т.к. %f возвращает микросекунды (6 цифр)
         return f"{timestamp[:-3]}"
 

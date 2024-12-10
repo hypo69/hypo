@@ -41,152 +41,118 @@ from pathlib import Path
 from typing import Optional
 import asyncio
 from src.logger import logger
+# ... (rest of the code)
 ```
-```
+
 # <algorithm>
 
 **save_video_from_url(url, save_path):**
 
-1. **Input Validation:** Takes URL and save path as input, converts save_path to Path object.
-2. **Error Handling (try-except):** Attempts to download the video asynchronously using aiohttp and aiofiles.  Catches aiohttp.ClientError (network errors) and other general exceptions.
-3. **HTTP Error Checking:** `response.raise_for_status()` checks for bad HTTP responses (4xx or 5xx).
-4. **Directory Creation:** `save_path.parent.mkdir(parents=True, exist_ok=True)` creates necessary parent directories if they don't exist, ensuring file saving won't fail due to missing folders.
-5. **Chunk-by-Chunk Download:** Reads the video content in chunks (8192 bytes) to handle large files efficiently.
-6. **File Saving:** Writes each chunk to the specified file.
-7. **Post-Download Checks:** Crucial checks to ensure the file was saved correctly.
-   - Checks if the file actually exists using `save_path.exists()`.
-   - Checks if the saved file is not empty using `save_path.stat().st_size`.
-   - If either of these checks fails, logs an error and returns `None`.
-8. **Return Value:** Returns `save_path` if the download and saving process are successful, otherwise returns `None`.
+1. Takes a URL and save path as input.
+2. Creates a `ClientSession` for asynchronous HTTP requests.
+3. Issues a GET request to the URL.
+4. **Error Handling:** Checks for HTTP errors (e.g., 404) using `response.raise_for_status()`.
+5. Creates parent directories for the save path if they don't exist using `mkdir(parents=True, exist_ok=True)`.
+6. Opens the save path in binary write mode (`"wb"`) using `aiofiles`.
+7. Reads the response content in chunks of 8192 bytes using a `while` loop.
+8. Writes each chunk to the file.
+9. **Crucial Checks:**
+   - Checks if the file was actually saved (`save_path.exists()`).
+   - Checks if the file size is zero (`save_path.stat().st_size == 0`).  If either check fails, the function returns `None`.
+10. Returns the `Path` object if the download and save succeed, or `None` otherwise.
+11. **Error Handling:** Catches `aiohttp.ClientError` (network problems) and other general exceptions (`Exception`).
+
 
 **get_video_data(file_name):**
 
-1. **Input Validation:** Takes file name as input, converts it to Path object.
-2. **File Existence Check:** Checks if the file exists using `file_path.exists()`.  If not, logs an error and returns `None`.
-3. **Error Handling (try-except):** Attempts to open the file in binary read mode and read its entire content into a byte array. Catches general exceptions.
-4. **Return Value:** Returns the binary data (bytes) if successful, otherwise returns `None`.
+1. Takes a file name as input.
+2. Checks if the file exists using `Path(file_name).exists()`.
+3. If the file exists, opens it in binary read mode (`"rb"`) using the `with open` statement (ensures file is closed).
+4. Reads the entire file content into a byte string using `file.read()`.
+5. Returns the byte string, or `None` if the file is not found or an error occurs during reading.
 
 
-**main():**
-
-1. **Input:** Sets example URL and save path variables.
-2. **Asynchronous Download:** Calls `save_video_from_url` asynchronously using `asyncio.run()`.
-3. **Result Handling:** Checks if `save_video_from_url` returned a valid path. If successful, prints the save path.
-
-
-
-**Data Flow:**
-
-
-```mermaid
-graph TD
-    A[User input: URL, Save Path] --> B{save_video_from_url};
-    B --> C[aiohttp ClientSession];
-    C --> D[aiohttp.get(url)];
-    D --> E[response.raise_for_status()];
-    E --Success--> F[Create directories];
-    F --> G[aiofiles.open(save_path, "wb")];
-    G --> H[Read chunk(8192)];
-    H --not empty--> I[Write chunk to file];
-    I --Success--> J[File exists check];
-    J --Success--> K[File size check];
-    K --Success--> L[save_video_from_url Return value];
-    L --> M[User output (if success)];
-    
-    B --Error--> N[Error Handling (e.g., aiohttp.ClientError)];
-    N --> O[Error Logging];
-    O --> L;
-    
-    B --> P[get_video_data(file_name)];
-    P --> Q[File exists check];
-    Q --Success--> R[open(file_path, "rb")];
-    R --> S[Read file data];
-    S --Success--> T[get_video_data Return value];
-    
-    Q --Fail--> O;
-
-```
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    subgraph "Video Download"
-        A[User] --> B(save_video_from_url);
-        B --> C{aiohttp ClientSession};
-        C --> D{aiohttp.get(url)};
-        D --> E{HTTP Status Check};
-        E --Success--> F{Directory Creation};
-        F --> G{aiofiles.open};
-        G --> H{Read in chunks};
-        H --> I{Write to file};
-        I --> J{File Existence Check};
-        J --Success--> K{File Size Check};
-        K --Success--> L[Return Path];
-        L --> M[User Output];
-        
-        E --Fail--> N[Error Logging];
-        N --> L;
-        
-        subgraph "Error Handling"
-            H --Error--> O[Exception Handling];
-            O --> N;
-        end
+graph TD
+    A[save_video_from_url(url, save_path)] --> B{Check for Errors};
+    B -- Success --> C[Create ClientSession];
+    B -- Failure --> E[Return None];
+    C --> D[Make GET Request];
+    D --> F{Check HTTP Status};
+    F -- Success --> G[Create Directories];
+    F -- Failure --> E;
+    G --> H[Open File "wb"];
+    H --> I[Read in chunks];
+    I --> J[Write Chunk];
+    J --> K[Check File Exists];
+    K -- True --> L{Check File Size};
+    L -- Non-zero --> M[Return Path];
+    L -- Zero --> E;
+    K -- False --> E;
+    I -- End of Chunk --> O[Close File];
+    O --> M;
+    H --> N{Exception Handling};
+    N -- aiohttp.ClientError --> E;
+    N -- Other Errors --> E;
+    M --> A;
+    E --> A;
+
+
+    subgraph get_video_data(file_name)
+        a[get_video_data(file_name)] --> b{File Exists?};
+        b -- True --> c[Open File "rb"];
+        c --> d[Read File];
+        d --> e[Return Data];
+        b -- False --> f[Return None];
+        c --> g{Exception Handling};
+        g -- Exception --> f;
     end
-    subgraph "Video Data Retrieval"
-        A --> P(get_video_data);
-        P --> Q{File Exists?};
-        Q --Yes--> R{Open File};
-        R --> S{Read File Data};
-        S --> T[Return Data];
-        Q --No--> N;
-    end
-    
-    B -.-> P
 ```
 
 # <explanation>
 
 **Imports:**
 
-- `aiohttp`: Asynchronous HTTP client for downloading the video.
-- `aiofiles`: Asynchronous file I/O for saving the video locally.
+- `aiohttp`: Asynchronous HTTP client library for making requests to download the video.
+- `aiofiles`: Asynchronous file I/O library for saving the video locally.
 - `pathlib`: For working with file paths in a platform-independent way.
-- `typing`: For type hinting.
-- `asyncio`:  For asynchronous operations.
-- `src.logger`: Custom logger module likely defined elsewhere in the `src` directory, for logging errors and messages.  The inclusion of this logger suggests logging is an important part of the application's error handling and debugging.
+- `typing`: For type hinting (e.g., `Optional[Path]`).
+- `asyncio`: For asynchronous operations.
+- `logger`: Custom logging module (`src.logger`) is used for reporting errors. This is a crucial part of maintaining structured logging across the project, enhancing debugging, and providing crucial information about the process.
 
 
 **Classes:**
 
-- No classes are explicitly defined in this code.
+- None.  The code uses no custom classes.
 
 
 **Functions:**
 
-- `save_video_from_url(url: str, save_path: str) -> Optional[Path]`: Downloads a video asynchronously from a given URL and saves it to the specified local path.  Critically, it includes error handling to gracefully manage network issues, file saving problems, and empty file downloads.
-    - Takes the URL and save path as input.
-    - Returns the `Path` object of the saved file if successful or `None` on failure.  Importantly, checks for both network issues and empty downloads.
-- `get_video_data(file_name: str) -> Optional[bytes]`: Reads the binary data of a video file.
-    - Takes the file name as input.
-    - Returns the file data as bytes if successful, or `None` if the file is not found or there is an error.
+- `save_video_from_url(url: str, save_path: str) -> Optional[Path]`: Downloads a video from a given URL and saves it to the specified local path asynchronously. It handles various potential errors during the download and saving process, including network issues, file saving failures, and empty files.  Crucially, it also checks for errors after saving, making it much more robust.
+- `get_video_data(file_name: str) -> Optional[bytes]`: Reads the binary data from a video file. Returns `None` if the file does not exist or if there are errors during reading.
 
 
 **Variables:**
 
-- `MODE = 'dev'`: A global variable, likely used for different configurations (e.g., 'dev' vs. 'prod')
-- `url`, `save_path`:  Used for specifying the download location and destination.
-- `result`:  A variable used in the main function to hold the return value from the asynchronous function.
+- `MODE`: A string that likely defines the operation mode of the application.
+- `url`, `save_path`: Strings representing the URL to download from and the local save path for the video.
+- `chunk`: Bytes representing a chunk of the video data read in the download process (used for memory efficiency).
+- `save_path`: `Path` object representing the local video file after downloading.  Crucially used for platform-independent operations.
+- `file_path`: `Path` object for representing the video file in the `get_video_data` function.  Again, crucial for platform-independence.
 
 
-**Possible Errors/Improvements:**
+**Possible Improvements:**
 
-- **Robust Error Handling:** The code has good error handling, but could potentially include more specific error checks (e.g., checking the content-type of the response to ensure it's a video).  Catching exceptions with `exc_info=True` is a good practice.
-- **Progress Indicator:** Adding a progress bar would greatly improve the user experience during downloads.
-- **Content-Type Validation:**  A crucial addition would be to validate the content type of the response to confirm it is indeed a video file.  This prevents saving potentially harmful or non-video files.
-- **Retry Mechanism:** Incorporating a retry mechanism (e.g., exponential backoff) for network errors could further improve the reliability of the download process.
-- **File Locking:** If there's a possibility of concurrent access to the save file, consider file locking mechanisms to prevent issues.
+- **More specific error handling:** Provide more detailed error messages in the logger (e.g., HTTP error codes instead of just "Network error").
+- **Progress reporting:** Add progress indicators to `save_video_from_url` to show the download progress.
+- **Retry mechanism:** Add a retry mechanism in `save_video_from_url` for transient network issues.  This would allow the program to retry the download a few times if it fails.
+- **Input validation:** Validate the input `url` and `save_path` to prevent potential issues.
+- **File Locking (Optional):** Consider file locking if multiple processes might try to save to the same file simultaneously (highly unlikely for this use-case, but potentially good practice).
 
-**Relationship to other parts of the project:**
 
-The `src.logger` import indicates that this `video.py` module is part of a larger project structure (`src`) and relies on a logging system (`logger`). This logging system is likely to be used throughout the rest of the project to report events and errors.  The `hypotez` folder might be the root of the project, and `src` is likely its source code.
+**Relationships with other parts of the project:**
+
+The `src.logger` module is directly linked, showing dependency on this module to handle logging and error reporting. This demonstrates the module's role as a utility within a larger project, potentially handling downloads for different content types.

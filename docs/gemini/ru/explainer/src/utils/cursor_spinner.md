@@ -1,4 +1,3 @@
-```MD
 # <input code>
 
 ```python
@@ -68,112 +67,98 @@ if __name__ == "__main__":
 
 # <algorithm>
 
-**Algorithm:**
+**Шаг 1:** Функция `spinning_cursor()`
+* Создает бесконечный цикл `while True`.
+* Внутри цикла проходит по строке `'|/-\\'`.
+* Для каждого символа из строки `yield` значение в виде строки.
+**Пример:**  Функция `spinning_cursor()` возвращает итератор, который при каждом вызове `next()` вернет очередной символ из спиннера (`|`, `/`, `-`, `\`).
 
-1. **`spinning_cursor()`:**
-   - Enters an infinite loop (`while True`).
-   - Iterates through the string '|/-\\'.
-   - Yields each character.  
-
-   *Example:*
-   ```
-   - Yielding '|'
-   - Yielding '/'
-   - Yielding '-'
-   - Yielding '\'
-   ```
-   The generator `spinning_cursor` essentially produces a sequence of characters.
-
-2. **`show_spinner()`:**
-   - Takes `duration` and `delay` as input.
-   - Initializes `spinner` with `spinning_cursor()` to get the generator.
-   - Calculates `end_time`.
-   - Enters a `while` loop that continues until `time.time()` is greater than `end_time`.
-   - Inside the loop:
-     - Gets the next character from `spinner` using `next(spinner)`.
-     - Prints the character to `sys.stdout`.
-     - Flushes `sys.stdout` to ensure the character is immediately displayed.
-     - Waits for the specified `delay` using `time.sleep()`.
-     - Writes a backspace (`\b`) to the console to overwrite the previous character, keeping the cursor in place.
-
-   *Example:*
-   ```
-   - Sets duration = 5 seconds
-   - Sets delay = 0.1 seconds.
-   - Gets first spinner character '|'
-   - Prints '|' to console.
-   - Waits 0.1 seconds.
-   - Overwrites '|' with '/'.
-   - Waits 0.1 seconds and so on.
-   ```
-   The `show_spinner` function effectively creates a continuously rotating cursor symbol.
+**Шаг 2:** Функция `show_spinner()`
+* Принимает `duration` и `delay` в качестве аргументов.
+* Создает итератор `spinner` с помощью функции `spinning_cursor()`.
+* Вычисляет время окончания отображения спиннера `end_time`.
+* В цикле `while`:
+    * Выводит следующий символ из итератора `spinner` на консоль (`sys.stdout.write(next(spinner))`).
+    * Обновляет вывод на консоль, чтобы символ отображался сразу (`sys.stdout.flush()`).
+    * Ожидает `delay` секунд (`time.sleep(delay)`).
+    * Возвращает курсор назад на одну позицию, чтобы перекрыть предыдущий символ (`sys.stdout.write('\b')`).
+**Пример:**
+`show_spinner(duration=3, delay=0.5)` запустит процесс отображения спиннера в течение 3 секунд, каждый символ которого будет выводиться с задержкой в 0.5 секунд.
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[Main] --> B{Check __name__ == "__main__"};
-    B -- True --> C[print("Spinner for 5 seconds:")];
-    C --> D(show_spinner(duration=5.0, delay=0.1));
-    D --> E[print("\nDone!")]
-    subgraph spinning_cursor
-        F[spinning_cursor] --> G[while True];
-        G --> H[for cursor in '|/-\\'];
-        H --> I[yield cursor];
+    A[main] --> B{if __name__ == "__main__":};
+    B --> C[print("Spinner for 5 seconds:")];
+    C --> D[show_spinner(duration=5.0, delay=0.1)];
+    D --> E[print("\nDone!")];
+    subgraph "show_spinner"
+        D --> F[spinner = spinning_cursor()];
+        F --> G[end_time = time.time() + duration];
+        G --> H[while time.time() < end_time];
+        H --> I[sys.stdout.write(next(spinner))];
+        I --> J[sys.stdout.flush()];
+        J --> K[time.sleep(delay)];
+        K --> L[sys.stdout.write('\b')];
+        L --> H;
     end
-    subgraph show_spinner
-        J[show_spinner(duration, delay)] --> K[spinner = spinning_cursor()];
-        K --> L[end_time = time.time() + duration];
-        L --> M[while time.time() < end_time];
-        M --> N[sys.stdout.write(next(spinner))];
-        N --> O[sys.stdout.flush()];
-        O --> P[time.sleep(delay)];
-        P --> Q[sys.stdout.write('\b')];
-        
+    subgraph "spinning_cursor"
+        F --> M[while True];
+        M --> N[for cursor in '|/-\\'];
+        N --> O[yield cursor];
+        O --> M;
     end
-
-
 ```
+
+**Описание диаграммы:**
+
+Диаграмма представляет две ключевые функции: `show_spinner` и `spinning_cursor`.
+
+* `spinning_cursor` - генератор, возвращающий символы спиннера. Он представляет собой бесконечный цикл, идущий по строке символов спиннера.
+* `show_spinner` - функция, которая использует генератор `spinning_cursor` для отображения спиннера в течение заданного времени. Она управляет выводом на консоль, задержкой и возвращением курсора.
+
+**Зависимости:**
+
+Код использует модули `time` для управления задержкой и `sys` для работы с потоком вывода на консоль.
+
 
 # <explanation>
 
-**Imports:**
+**Импорты:**
 
-- `time`: Provides time-related functions, used for pausing and calculating time durations.
-- `sys`: Provides access to system-specific parameters and functions, used for interacting with the standard output stream (`sys.stdout`).
+* `time`: Модуль для работы со временем, используется для управления задержкой и вычисления времени окончания процесса.
+* `sys`: Модуль для взаимодействия с системными ресурсами, в данном случае используется для доступа к потоку вывода на консоль (`sys.stdout`).
 
-**Classes:**
+**Классы:**
 
-There are no classes in this code.
+Код не содержит классов.
 
-**Functions:**
+**Функции:**
 
-- `spinning_cursor()`:
-    -  A generator function that yields the characters '|', '/', '-', and '\' in a cyclic manner.
-    - Arguments: None
-    - Returns: A generator object (yields each character).
-- `show_spinner(duration: float = 5.0, delay: float = 0.1)`:
-    - Takes `duration` (float) and `delay` (float) as arguments to control the spinner's duration and character display speed.
-    - Prints a spinning cursor to the console for the specified `duration` with a given `delay` between characters.  
-    - Arguments:
-        - `duration`: The desired duration of the spinner in seconds.
-        - `delay`: The delay between successive characters in seconds.
-    - Returns: None.
+* `spinning_cursor()`:  Генератор, который возвращает итератор, сгенерировавший очередной символ спиннера.
+    *  Аргументы:  Нет
+    *  Возвращаемое значение: итератор, последовательно возвращающий символы `|`, `/`, `-`, `\`
+* `show_spinner(duration=5.0, delay=0.1)`: Показывает спиннер на консоли в течение заданного времени.
+    * `duration`: Время отображения спиннера (по умолчанию 5 секунд).
+    * `delay`: Задержка между отображением символов спиннера (по умолчанию 0.1 секунды).
+    *  Возвращаемое значение:  Нет.
 
+**Переменные:**
 
-**Variables:**
+* `MODE`:  Переменная со строковым значением, скорее всего, для обозначения режима работы, но в данном контексте не используется.
+* `duration`: Переменная типа `float` для указания длительности процесса.
+* `delay`: Переменная типа `float` для указания задержки между итерациями.
+* `spinner`: Переменная типа итератор, созданная из `spinning_cursor()`.
+* `end_time`: Переменная типа `float`, определяющая время окончания спиннера.
 
-- `MODE`: A string constant, likely used for configuration but its value doesn't directly impact the spinner's function.
-- `duration`, `delay`: Floats, representing time in seconds,  set to default values but can be changed when calling `show_spinner`.
+**Возможные ошибки или улучшения:**
 
-**Possible Errors/Improvements:**
-
-- **Error Handling:** The code doesn't handle potential exceptions (e.g., if `next(spinner)` raises an exception). Adding error handling would make the code more robust.
-- **Clearer Documentation:** While docstrings are present, they could be made more comprehensive, particularly regarding the role of `sys.stdout.flush()` and `\b` (the backspace character) in controlling the cursor.  
-- **Alternative libraries:**  Libraries such as `tqdm` or `progress` provide more features for showing progress bars and spinners with more detail and flexibility.
-- **Alternative rendering**: The rendering method could be improved by using ANSI escape codes to generate the spinning cursor without clearing the previous character in the console.
+* Отсутствие проверки на корректность входных данных (например, `duration` и `delay` должны быть положительными числами).
+* Приложение работает в текущем потоке. Если понадобится обрабатывать другие операции параллельно, необходимо будет создать отдельный поток или использовать `threading`.
+* Непонятное назначение переменной `MODE` и ее использования.
 
 
-**Inter-relation with other parts of the project:**
+**Взаимосвязь с другими частями проекта:**
 
-The `cursor_spinner` module likely belongs to a larger application or library, where it is used to visually signal loading times or other processes.  It is likely used within other modules in the project to display progress, thus facilitating the user experience.
+Модуль `cursor_spinner.py` предоставляет вспомогательную функцию для отображения спиннера и скорее всего используется другими модулями в проекте для отображения прогресса задач или ожиданий пользователя.

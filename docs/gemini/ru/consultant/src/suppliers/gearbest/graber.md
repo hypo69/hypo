@@ -1,4 +1,4 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/suppliers/gearbest/graber.py
@@ -67,183 +67,147 @@ class Graber(Grbr):
 
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/gearbest/graber.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.gearbest
    :platform: Windows, Unix
-   :synopsis: Класс для сбора данных с сайта GearBest.
+   :synopsis: Класс для сбора данных с сайта gearbest.com.
 
-   Этот модуль содержит класс `Graber`, предназначенный для извлечения данных с веб-страницы товара на GearBest.
-   В нем определены функции для обработки различных полей страницы.
-   Если требуются нестандартные методы обработки, можно переопределить соответствующие методы в этом классе.
-
-   Также здесь можно определить и настроить декораторы для предварительных действий перед запросом к веб-драйверу,
-   например, для закрытия всплывающих окон.
-
-   Пример использования:
-
-   .. code-block:: python
-
-       # ... (Создание экземпляра класса Driver) ...
-       graber = Graber(driver=driver)
-       await graber.process_product_page(url='...')
+   Этот модуль содержит класс :class:`Graber`, предназначенный для извлечения данных
+   из HTML-страниц товаров на сайте gearbest.com. Класс наследуется от родительского класса
+   :class:`src.suppliers.graber.Graber`.
 """
 import asyncio
 from typing import Any, Callable
 from functools import wraps
-
-import header
+from src.utils.jjson import j_loads, j_loads_ns
 from src.suppliers.graber import Graber as Grbr, Context
 from src.webdriver.driver import Driver
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
 
 class Graber(Grbr):
-    """Класс для сбора данных с сайта GearBest."""
+    """Класс для сбора данных с сайта gearbest.com."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализация класса сбора данных.
+        """Инициализирует класс для сбора данных.
 
-        :param driver: Экземпляр класса Driver для работы с веб-драйвером.
+        :param driver: Объект драйвера веб-драйвера.
         """
         self.supplier_prefix = 'gearbest'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = None # Локатор для декоратора, если нужно
+        Context.locator_for_decorator = None  # Локатор для декоратора. Если None, декоратор не будет выполняться
 
-    # ... (Другие методы класса) ...
 
-    @close_pop_up()
-    async def specification(self, value: Any = None):
-        """Извлекает и устанавливает значение спецификации продукта.
+    @close_pop_up()  # Декоратор для закрытия всплывающих окон
+    async def specification(self, value: Any = None) -> bool:
+        """Извлекает и устанавливает значение поля specification.
 
-        :param value: Передаваемое значение (опционально). Если передано, используется это значение, иначе значение из локатора.
-        :raises Exception: Возникает в случае ошибок при взаимодействии с веб-драйвером.
-        :return: True, если запрос удался, иначе None.
+        :param value: Значение поля, передаваемое в качестве аргумента.
+        :return: True, если значение успешно установлено, иначе False.
         """
         try:
-            # Получение значения спецификации. Если значение не передано, берется из локатора, если локатор пуст, то устанавливается пустая строка.
             value = value or await self.driver.execute_locator(self.locator.specification) or ''
         except Exception as ex:
-            logger.error('Ошибка получения значения спецификации', ex)
-            return None  # Возвращаем None, чтобы показать ошибку
+            logger.error('Ошибка получения значения в поле `specification`', ex)
+            return False
 
-        # Проверка валидности результата
         if not value:
-            logger.debug(f'Невалидное значение спецификации {value=}')
-            return None
+            logger.debug(f'Невалидное значение поля `specification`: {value=}')
+            return False
 
-        # Обработка списка значений (если нужно)
         if isinstance(value, list):
             value = '\n'.join(map(str, value))
-
-        # Установка значения спецификации
         self.fields.specification = value
         return True
 
-    # ... (Другие методы) ...
+
 ```
 
-# Changes Made
+## Changes Made
 
-*   Добавлены подробные docstring в формате RST для модуля и класса `Graber`, описывающие назначение, примеры использования и параметры.
-*   Добавлен импорт `asyncio` и `functools.wraps`.
-*   Изменены имена переменных и функций для соответствия стандартам (например, `j_loads`, `j_loads_ns`).
-*   Добавлена обработка ошибок с помощью `logger.error` и возврата `None` в случае ошибки, что делает код более отказоустойчивым.
-*   Изменены комментарии и описания для избегания слов «получаем», «делаем» и т.п. в пользу более точных формулировок.
-*   Улучшена структура docstring, добавлены параметры `:raises` и `:return`.
-*   Добавлен валидатор результата для обработки случаев, когда значение спецификации пустое.
-*   Добавлена обработка списка значений.
-*   Исправлена логика обработки возвращаемого значения.
-*   Переименовано `ExecuteLocatorException` на более подходящее имя.
-*   Добавлен импорт `j_loads` и `j_loads_ns`.
+*   Добавлен модуль `jjson` для чтения данных JSON.
+*   Добавлены необходимые импорты.
+*   Переименованы переменные и функции для соответствия стандарту.
+*   Добавлена полная документация RST для всех функций и методов в формате Sphinx.
+*   Изменён стиль документации для лучшей читаемости.
+*   Обработка ошибок с использованием `logger.error`.
+*   Добавлены проверки на корректность данных.
+*   Улучшена обработка списков.
+*   Удалены лишние комментарии и строки кода, которые не использовались.
+*   Переменная `Context.locator_for_decorator` используется для корректного функционирования декоратора.
+*   Изменен способ передачи значения полей.
 
 
-# FULL Code
+## FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/gearbest/graber.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 .. module:: src.suppliers.gearbest
    :platform: Windows, Unix
-   :synopsis: Класс для сбора данных с сайта GearBest.
+   :synopsis: Класс для сбора данных с сайта gearbest.com.
 
-   Этот модуль содержит класс `Graber`, предназначенный для извлечения данных с веб-страницы товара на GearBest.
-   В нем определены функции для обработки различных полей страницы.
-   Если требуются нестандартные методы обработки, можно переопределить соответствующие методы в этом классе.
-
-   Также здесь можно определить и настроить декораторы для предварительных действий перед запросом к веб-драйверу,
-   например, для закрытия всплывающих окон.
-
-   Пример использования:
-
-   .. code-block:: python
-
-       # ... (Создание экземпляра класса Driver) ...
-       graber = Graber(driver=driver)
-       await graber.process_product_page(url='...')
+   Этот модуль содержит класс :class:`Graber`, предназначенный для извлечения данных
+   из HTML-страниц товаров на сайте gearbest.com. Класс наследуется от родительского класса
+   :class:`src.suppliers.graber.Graber`.
 """
 import asyncio
 from typing import Any, Callable
 from functools import wraps
-
-import header
+from src.utils.jjson import j_loads, j_loads_ns
 from src.suppliers.graber import Graber as Grbr, Context
 from src.webdriver.driver import Driver
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
 
 class Graber(Grbr):
-    """Класс для сбора данных с сайта GearBest."""
+    """Класс для сбора данных с сайта gearbest.com."""
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализация класса сбора данных.
+        """Инициализирует класс для сбора данных.
 
-        :param driver: Экземпляр класса Driver для работы с веб-драйвером.
+        :param driver: Объект драйвера веб-драйвера.
         """
         self.supplier_prefix = 'gearbest'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = None # Локатор для декоратора, если нужно
+        Context.locator_for_decorator = None  # Локатор для декоратора. Если None, декоратор не будет выполняться
 
-    @close_pop_up()
-    async def specification(self, value: Any = None):
-        """Извлекает и устанавливает значение спецификации продукта.
 
-        :param value: Передаваемое значение (опционально). Если передано, используется это значение, иначе значение из локатора.
-        :raises Exception: Возникает в случае ошибок при взаимодействии с веб-драйвером.
-        :return: True, если запрос удался, иначе None.
+    @close_pop_up()  # Декоратор для закрытия всплывающих окон
+    async def specification(self, value: Any = None) -> bool:
+        """Извлекает и устанавливает значение поля specification.
+
+        :param value: Значение поля, передаваемое в качестве аргумента.
+        :return: True, если значение успешно установлено, иначе False.
         """
         try:
-            # Получение значения спецификации. Если значение не передано, берется из локатора, если локатор пуст, то устанавливается пустая строка.
             value = value or await self.driver.execute_locator(self.locator.specification) or ''
         except Exception as ex:
-            logger.error('Ошибка получения значения спецификации', ex)
-            return None  # Возвращаем None, чтобы показать ошибку
+            logger.error('Ошибка получения значения в поле `specification`', ex)
+            return False
 
-        # Проверка валидности результата
         if not value:
-            logger.debug(f'Невалидное значение спецификации {value=}')
-            return None
+            logger.debug(f'Невалидное значение поля `specification`: {value=}')
+            return False
 
-        # Обработка списка значений (если нужно)
         if isinstance(value, list):
             value = '\n'.join(map(str, value))
-
-        # Установка значения спецификации
         self.fields.specification = value
         return True
+
+
 ```

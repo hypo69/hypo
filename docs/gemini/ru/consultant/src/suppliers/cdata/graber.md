@@ -61,12 +61,13 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара.
 
         Args:
-            driver: Объект WebDriver.
+            driver (Driver): Экземпляр класса Driver.
         """
         self.supplier_prefix = 'cdata'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
         # Устанавливаем глобальные настройки через Context
-        Context.locator_for_decorator = None  # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+        Context.locator_for_decorator = None # <- если будет уастановлено значение - то оно выполнится в декораторе `@close_pop_up`
+
 ```
 
 # Improved Code
@@ -81,15 +82,14 @@ class Graber(Grbr):
 .. module:: src.suppliers.cdata
    :platform: Windows, Unix
    :synopsis: Класс для сбора данных с сайта cdata.co.il.
-
 """
+
 import header
-from typing import Any, Callable
-from functools import wraps
-from src.suppliers.graber import Graber as Grbr, Context
+from typing import Any
+from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
 
 class Graber(Grbr):
@@ -97,49 +97,46 @@ class Graber(Grbr):
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализирует класс для сбора данных.
+        """Инициализация класса.
 
-        :param driver: Объект WebDriver.
+        :param driver: Экземпляр класса Driver.
         """
         self.supplier_prefix = 'cdata'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = None  # Для декоратора, если понадобится
+        Context.locator_for_decorator = None  # Значение для декоратора
 
-    @close_pop_up()
-    async def get_product_data(self) -> dict:
-        """Получает данные о товаре.
 
-        :return: Словарь с данными о товаре.
-        """
+    #  Пример переопределения функции для обработки определенного поля.
+    #  Подставьте нужные локаторы и логику обработки.
+    @close_pop_up()  
+    async def get_price(self):
+        """Получение цены товара."""
         try:
-            # Код получает данные о товаре
-            data = await self.driver.execute_script(...)
-            # Валидация полученных данных (например, проверка на пустоту)
-            if not data:
-                logger.error("Получены пустые данные о товаре")
-                return {}
-            return j_loads(data)  # Используем j_loads для парсинга JSON
+            price_element = await self.driver.execute_locator(self.locator.price)
+            if price_element:
+                price_text = await price_element.text
+                price = float(price_text.replace(',', '.'))
+                return price
+            else:
+                logger.error('Элемент цены не найден.')
+                return None
         except Exception as e:
-            logger.error("Ошибка при сборе данных о товаре", exc_info=True)
-            return {}
-
-
-#TODO: Добавьте docstrings для других функций и методов.
-#TODO: Подробно документируйте декоратор close_pop_up.
+            logger.error('Ошибка при получении цены', exc_info=True)
+            return None
 ```
 
 # Changes Made
 
-*   Добавлены необходимые импорты: `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Изменен способ чтения JSON-данных: теперь используется `j_loads` из `src.utils.jjson`.
-*   Добавлена обработка ошибок с использованием `logger.error` вместо стандартных `try-except` блоков.
-*   Добавлены docstrings в формате RST для класса `Graber` и функции `get_product_data` с использованием `:param` и `:return`.
-*   Изменены формулировки комментариев, избегая слов "получаем", "делаем" и заменяя их на более точные.
-*   Добавлена проверка на пустые данные и логирование ошибок.
-*   Комментарии заменены на docstrings.
-*   Удалена бесполезная и неиспользуемая часть кода, отвечающая за декоратор, который не используется.
-
-
+*   Добавлен импорт `j_loads_ns` из `src.utils.jjson`.
+*   Добавлены docstring в формате RST для класса `Graber` и метода `__init__`.
+*   Изменён пример `@close_pop_up`  на реальный пример.
+*   Изменены все комментарии в формате RST.
+*   Добавлен пример переопределения функции `get_price` с обработкой ошибки.
+*   Добавлен логгер для вывода ошибок.
+*   Изменён способ обработки ошибок (использование `logger.error`).
+*   Заменены неинформативные комментарии на более подробные и конкретные.
+*   Убран ненужный импорт `Callable` и `wraps`.
+*   Обработка исключений теперь более подробная (с `exc_info=True`).
 
 # FULL Code
 
@@ -153,15 +150,14 @@ class Graber(Grbr):
 .. module:: src.suppliers.cdata
    :platform: Windows, Unix
    :synopsis: Класс для сбора данных с сайта cdata.co.il.
-
 """
+
 import header
-from typing import Any, Callable
-from functools import wraps
-from src.suppliers.graber import Graber as Grbr, Context
+from typing import Any
+from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
+from src.utils.jjson import j_loads_ns
 from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
 
 class Graber(Grbr):
@@ -169,32 +165,29 @@ class Graber(Grbr):
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
-        """Инициализирует класс для сбора данных.
+        """Инициализация класса.
 
-        :param driver: Объект WebDriver.
+        :param driver: Экземпляр класса Driver.
         """
         self.supplier_prefix = 'cdata'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        Context.locator_for_decorator = None  # Для декоратора, если понадобится
+        Context.locator_for_decorator = None  # Значение для декоратора
 
-    @close_pop_up()
-    async def get_product_data(self) -> dict:
-        """Получает данные о товаре.
 
-        :return: Словарь с данными о товаре.
-        """
+    #  Пример переопределения функции для обработки определенного поля.
+    #  Подставьте нужные локаторы и логику обработки.
+    @close_pop_up()  
+    async def get_price(self):
+        """Получение цены товара."""
         try:
-            # Код получает данные о товаре
-            data = await self.driver.execute_script(...)
-            # Валидация полученных данных (например, проверка на пустоту)
-            if not data:
-                logger.error("Получены пустые данные о товаре")
-                return {}
-            return j_loads(data)  # Используем j_loads для парсинга JSON
+            price_element = await self.driver.execute_locator(self.locator.price)
+            if price_element:
+                price_text = await price_element.text
+                price = float(price_text.replace(',', '.'))
+                return price
+            else:
+                logger.error('Элемент цены не найден.')
+                return None
         except Exception as e:
-            logger.error("Ошибка при сборе данных о товаре", exc_info=True)
-            return {}
-
-
-#TODO: Добавьте docstrings для других функций и методов.
-#TODO: Подробно документируйте декоратор close_pop_up.
+            logger.error('Ошибка при получении цены', exc_info=True)
+            return None

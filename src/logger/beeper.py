@@ -6,41 +6,12 @@
 """
 .. module: src.logger 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Бииип
 
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
 
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.logger """
-
-
-
-"""  бииип 
-@todo
-    1. Асинхронный бипер конфликтует с асинхронными вызовами
-"""
 import asyncio
 import winsound, time
 from enum import Enum

@@ -1,147 +1,138 @@
 # Received Code
 
 ```rst
-.. :module: src
+.. module: src
 ```
-[English](https://github.com/hypo69/hypo/blob/master/src/readme.md) 
 
-Обзор модулей
-=========================================================================================
+```html
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.RU.MD'>[Root ↑]</A>
+</TD>
 
-Этот документ предоставляет обзор различных модулей, включая ссылки на исходный код, документацию, тесты и примеры.
-
-# Оглавление
-
-1. [ai](#ai)  
-2. [bots](#bots)  
-3. [category](#category)  
-4. [db](#db)  
-5. [endpoints](#endpoints)  
-6. [fast_api](#fast_api)  
-7. [goog](#goog)  
-8. [logger](#logger)  
-9. [product](#product)  
-10. [scenario](#scenario)  
-11. [suppliers](#suppliers)  
-12. [templates](#templates)  
-13. [translators](#translators)  
-14. [utils](#utils)  
-15. [webdriver](#webdriver)  
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>English</A>
+</TD>
+</TABLE>
 
 
-# Модули
+# Модули проекта
 
-## ai  
-Модуль для интеграции с искусственным интеллектом, включая взаимодействие с различными ИИ-моделями.
+## Обзор
 
-- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/ai/readme.ru.md) - Исходный код модуля `ai`.
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/ai/readme.ru.md) - Документация по модулю `ai`.
-- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/ai) - Тесты для проверки функциональности модуля `ai`.
-- [Примеры](https://github.com/hypo69/hypo/tree/master/docs/examples/ai) - Примеры использования модуля `ai`.
+Данный документ предоставляет обзор различных модулей проекта, включая ссылки на исходный код, документацию, тесты и примеры.
 
 
-## bots  
-Модуль для создания и управления ботами, которые взаимодействуют с пользователями.
+## Модуль `bot`
 
-- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/bots/readme.ru.md) - Исходный код модуля `bots`.
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bots/readme.ru.md) - Документация по модулю `bots`.
-- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/bots) - Тесты для проверки функциональности модуля `bots`.
-- [Примеры](https://github.com/hypo69/hypo/tree/master/docs/examples/bots) - Примеры использования модуля `bots`.
+Модуль интерфейсов для `telegram`,`doscord` ботов
 
-
-## category  
-Модуль для работы с категориями товаров или данных.
-
-- [Код модуля](https://github.com/hypo69/hypo/blob/master/src/category/readme.ru.md) - Исходный код модуля `category`.
-- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/category/readme.ru.md) - Документация по модулю `category`.
-- [Тесты](https://github.com/hypo69/hypo/tree/master/pytest/gemini/src/category) - Тесты для проверки функциональности модуля `category`.
-- [Примеры](https://github.com/hypo69/hypo/tree/master/docs/examples/category) - Примеры использования модуля `category`.
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/bot/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bot/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/bot)
 
 
-# ... (остальные разделы)
+## Модуль `scenario`
+
+Модуль для работы со сценариями, включая генерацию и выполнение сценариев.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/scenario/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/scenario/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/scenario)
+
+
+## Модуль `suppliers`
+
+Модуль для работы с поставщиками, включая управление их данными и отношениями.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/suppliers/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers)
+
+
+## Модуль `templates`
+
+Модуль для работы с шаблонами, включая создание и управление шаблонами для различных целей.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/templates/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/templates/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/templates)
+
+
+## Модуль `translators`
+
+Модуль для работы с переводчиками и переводом текста.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/translators/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/translators/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/translators)
+
+
+## Модуль `utils`
+
+Модуль для вспомогательных утилит, упрощающих выполнение общих задач.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/utils/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/utils)
+
+
+## Модуль `webdriver`
+
+Модуль для работы с драйверами веб-браузера и управления веб-элементами.
+
+- [Исходный код модуля](https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.ru.md)
+- [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/webdriver/readme.ru.md)
+- [Тесты](https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver)
+- [Примеры](https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver)
+
+---
+
+Глоссарий
+=========\n
+### 1. **webdriver**
+   - **`Driver`**: Объект, управляющий браузером (например, Chrome, Firefox) и выполняющий действия, такие как навигация по веб-страницам, заполнение форм и т. д.
+   - **`Executor`**: Интерфейс или класс, выполняющий команды или скрипты в контексте веб-драйвера.
+   - **`Chrome`, `Firefox`, ...**: Конкретные браузеры, которые могут управляться с помощью веб-драйвера.
+   - **`locator`**: Механизм поиска элементов на веб-странице (например, по ID, селектору CSS, XPath).
+
+### 2. **`Supplier`**
+   - **Список поставщиков (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: Список компаний или платформ, предоставляющих продукты или услуги.
+   - **`Graber`**: Инструмент или модуль, автоматически собирающий данные с сайтов поставщиков (например, цены, наличие продуктов).
+
+### 3. **`Product`**
+   - **`Product`**: Объект, представляющий продукт или услугу, которые могут быть доступны на различных платформах.
+   - **`ProductFields`**: Поля или атрибуты, описывающие характеристики продукта (например, название, цена, описание, изображения).
+
+### 4. **`ai`**
+	- **`Model Prompt`**: Указывает, как модель должна обрабатывать входящую информацию и возвращать ответ. Устанавливается во время инициализации модели.
+	- **`Command Instruction`**: Небольшая команда или инструкция, отправляемая с каждым запросом.
+
+Next
+=====\n
+[Project Initialization and Setup](https://github.com/hypo69/hypo/blob/master/src/credentials.md)
 ```
 
 # Improved Code
 
 ```python
-"""
-Модуль для работы с описанием модулей.
-=========================================================================================
-
-Этот документ предоставляет обзор различных модулей, включая ссылки на исходный код, документацию, тесты и примеры.
-"""
-
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
-from src.logger import logger  # Импорт logger для логирования
-
-
-# ... (остальные разделы, аналогично улучшенному коду)
+# --- Этот код не требует изменений, так как это только RST ---
 ```
 
 # Changes Made
 
-- Добавлена строка импорта `from src.logger import logger`.
-- Добавлена строка импорта `from src.utils.jjson import j_loads, j_loads_ns`.
-- Добавлена строка документации RST для модуля.
-- Остальные разделы улучшены (TODO: добавить примеры в соответствии с требованиями).
-
+- Код не содержит Python кода, поэтому не было внесено никаких изменений.
 
 # FULL Code
 
 ```python
-"""
-Модуль для работы с описанием модулей.
-=========================================================================================
-
-Этот документ предоставляет обзор различных модулей, включая ссылки на исходный код, документацию, тесты и примеры.
-"""
-
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
-from src.logger import logger  # Импорт logger для логирования
-
-# ... (остальные разделы с улучшенной документацией и обработкой ошибок, например:
-# Замените json.load на j_loads/j_loads_ns в соответствующих местах.
-# Улучшите комментарии к функциям и переменным.
-# Добавьте logging.error для обработки исключений.
-# Удалите избыточные try-except блоки.)
-
-# Пример улучшенного кода:
-# from src.utils.jjson import j_loads
-#
-# # Исходный код с ошибкой:
-# # try:
-# #     data = json.load(file)
-# # except json.JSONDecodeError as e:
-# #     logger.error('Ошибка декодирования JSON', e)
-# #     ... # Обработка ошибки
-#
-# # Улучшенный код:
-# try:
-#     data = j_loads(file)
-# except Exception as ex:
-#     logger.error('Ошибка при чтении файла', ex)
-#     ... # Обработка ошибки
-#
-# # ... (остальной код)
-#
-# # Пример документации функции:
-# def process_data(data: list) -> None:
-#     """Обрабатывает данные из списка.
-#
-#     :param data: Список данных.
-#     :return: None
-#     """
-#     try:
-#         # Обработка данных
-#         ...
-#     except Exception as e:
-#         logger.error('Ошибка при обработке данных', e)
-#         return
-#
-#     return None
-
-# ... (остальные разделы, аналогично улучшенному коду)
+# --- Этот код не требует изменений, так как это только RST ---
 ```
 ```
-
-**Примечание:**  Полный код не может быть сгенерирован без исходного кода.  Вместо этого, предоставлен шаблон с указаниями на то, как необходимо изменить существующий код, используя `j_loads`, `logger.error` и  RST документацию.  Необходимо заменить `...` на соответствующий код из вашего исходного файла.  Также, для полного улучшения кода, нужны конкретные участки кода из вашего исходного файла для адаптации предложенных изменений.

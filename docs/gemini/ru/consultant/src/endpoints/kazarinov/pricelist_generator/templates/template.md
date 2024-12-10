@@ -80,19 +80,19 @@
         <p class="lead">{{ description }}</p>
 
         <div class="row">
-            {% for product in products %}
-            <div class="product-card">
-                <h3>{{ product.product_title }}</h3>
-                <div class="product-content">
-                    <img src="{{ product.image_local_saved_path }}" 
-                         alt="{{ product.product_title }}" />
-                    <div class="product-info">
-                        <p>{{ product.product_description }}</p>
-                        <p>{{ product.specification }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+            {% for product in products %}\
+            <div class="product-card">\
+                <h3>{{ product.product_title }}</h3>\
+                <div class="product-content">\
+                    <img src="{{ product.image_local_saved_path }}" \
+                         alt="{{ product.product_title }}" />\
+                    <div class="product-info">\
+                        <p>{{ product.product_description }}</p>\
+                        <p>{{ product.specification }}</p>\
+                    </div>\
+                </div>\
+            </div>\
+            {% endfor %}\
         </div>
 
         <div class="footer">
@@ -109,17 +109,80 @@
 # Improved Code
 
 ```html
-<!-- Шаблон для генерации прайс-листа -->
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <style>
-        /* ... (CSS-стили как в исходном коде) ... */
+        /* Стили для страницы */
+        body {
+            background-color: #ffffff;  /* Установка белого фона */
+            color: #000000;  /* Цвет текста */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 50px;  /* Использование пикселей для отступов */
+            font-size: 36px;  /* Использование пикселей для размера шрифта */
+        }
+        .lead {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;  /* Использование пикселей для отступов */
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .product-card {
+            background-color: #f8f9fa;  /* Цвет фона карточек */
+            border: 1px solid #dee2e6;  /* Толщина рамки в пикселях */
+            border-radius: 8px;  /* Радиус скругления в пикселях */
+            padding: 15px;  /* Отступы в пикселях */
+            margin: 15px 0;  /* Отступы в пикселях */
+            width: calc(50% - 10px); /* Занимает 50% ширины с учетом отступа */
+            box-sizing: border-box;
+        }
+        .product-card h3 {
+            margin-top: 0;
+        }
+        .product-card img {
+            width: 100px;  /* Ширина изображения в пикселях */
+            height: auto;  /* Автоматическая высота, сохранение пропорций */
+            object-fit: cover; /* Обрезка изображения до размера контейнера */
+            border-radius: 5px;
+            margin-right: 15px;  /* Отступ в пикселях */
+            background-color: white;  /* Установка белого фона */
+        }
+        .product-info {
+            flex: 1;
+        }
+        .price-tag {
+            background-color: #238636;
+            color: white;
+            padding: 5px 10px;  /* Отступы в пикселях */
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #dee2e6;  /* Толщина рамки в пикселях */
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>{{ title }}</h1>
@@ -127,47 +190,113 @@
 
         <div class="row">
             {% for product in products %}
-            <!-- Карточка продукта -->
-            <div class="product-card">
-                <h3>{{ product.product_title }}</h3>
-                <div class="product-content">
-                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}">
-                    <div class="product-info">
-                        <p>{{ product.product_description }}</p>
-                        <p>{{ product.specification|default:'' }}</p> <!-- Обработка отсутствующих значений -->
+                <div class="product-card">
+                    <h3>{{ product.product_title }}</h3>
+                    <div class="product-content">
+                        <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" />
+                        <div class="product-info">
+                            <p>{{ product.product_description }}</p>
+                            <p>{{ product.specification }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
-
         <div class="footer">
-            <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
+            <p>Общая стоимость:
+                <span class="price-tag">{{ price }} {{ currency }}</span>
+            </p>
         </div>
     </div>
 </body>
+
 </html>
 ```
 
 # Changes Made
 
-*   Добавлены комментарии в формате RST для объяснения структуры и назначения кода.
-*   Добавлен обработчик отсутствующих значений `product.specification|default:''` для предотвращения ошибок при отображении данных.  Это важно, так как не все поля `product` могут содержать значение `specification`.
+*   Изменены некоторые стили, заменив точки (pt) на пиксели (px).
+*   Добавлены комментарии к стилям, поясняющие назначение каждого параметра.
+*   Изменена ширина `.product-card` для адаптивного отображения карточек.
+*   Изменен метод обрезки изображений (`object-fit: cover`) для лучшего отображения.
 
 # FULL Code
 
 ```html
-<!-- Шаблон для генерации прайс-листа -->
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <style>
-        /* ... (CSS-стили как в исходном коде) ... */
+        /* Стили для страницы */
+        body {
+            background-color: #ffffff;  /* Установка белого фона */
+            color: #000000;  /* Цвет текста */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 50px;  /* Использование пикселей для отступов */
+            font-size: 36px;  /* Использование пикселей для размера шрифта */
+        }
+        .lead {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;  /* Использование пикселей для отступов */
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .product-card {
+            background-color: #f8f9fa;  /* Цвет фона карточек */
+            border: 1px solid #dee2e6;  /* Толщина рамки в пикселях */
+            border-radius: 8px;  /* Радиус скругления в пикселях */
+            padding: 15px;  /* Отступы в пикселях */
+            margin: 15px 0;  /* Отступы в пикселях */
+            width: calc(50% - 10px); /* Занимает 50% ширины с учетом отступа */
+            box-sizing: border-box;
+        }
+        .product-card h3 {
+            margin-top: 0;
+        }
+        .product-card img {
+            width: 100px;  /* Ширина изображения в пикселях */
+            height: auto;  /* Автоматическая высота, сохранение пропорций */
+            object-fit: cover; /* Обрезка изображения до размера контейнера */
+            border-radius: 5px;
+            margin-right: 15px;  /* Отступ в пикселях */
+            background-color: white;  /* Установка белого фона */
+        }
+        .product-info {
+            flex: 1;
+        }
+        .price-tag {
+            background-color: #238636;
+            color: white;
+            padding: 5px 10px;  /* Отступы в пикселях */
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #dee2e6;  /* Толщина рамки в пикселях */
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>{{ title }}</h1>
@@ -175,24 +304,24 @@
 
         <div class="row">
             {% for product in products %}
-            <!-- Карточка продукта -->
-            <div class="product-card">
-                <h3>{{ product.product_title }}</h3>
-                <div class="product-content">
-                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}">
-                    <div class="product-info">
-                        <p>{{ product.product_description }}</p>
-                        <p>{{ product.specification|default:'' }}</p> <!-- Обработка отсутствующих значений -->
+                <div class="product-card">
+                    <h3>{{ product.product_title }}</h3>
+                    <div class="product-content">
+                        <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" />
+                        <div class="product-info">
+                            <p>{{ product.product_description }}</p>
+                            <p>{{ product.specification }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
-
         <div class="footer">
-            <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
+            <p>Общая стоимость:
+                <span class="price-tag">{{ price }} {{ currency }}</span>
+            </p>
         </div>
     </div>
 </body>
+
 </html>
-```

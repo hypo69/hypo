@@ -31,92 +31,76 @@
 
 ### 1. Blog Post: Latest Trends in Content Marketing
 
-.. _content_marketing_trends:
+.. rubric:: Цели
 
-**Objective:** Inform the audience about recent content marketing trends and how to apply them.
+    Информировать аудиторию о последних трендах в контент-маркетинге и о том, как они могут использовать эти тренды для улучшения собственных стратегий.
 
-**Key Points to Cover:**
 
-* The increasing role of AI in content creation.
-* The importance of creating personalized content.
-* The growing influence of video content.
-* Measuring the success of content marketing efforts.
+.. rubric:: Ключевые моменты
 
-### 2. Social Media Campaign: Engaging Audiences with Interactive Content
+    - Возникновение искусственного интеллекта в создании контента
+    - Важность персонализированного контента
+    - Растущее влияние видеоконтента
+    - Как измерить успех усилий по контент-маркетингу
 
-.. _social_media_campaign:
 
-**Objective:** Increase audience engagement on social media via interactive content.
+### 2. Социальная медиа-кампания: вовлечение аудитории с помощью интерактивного контента
 
-**Key Elements:**
+.. rubric:: Цели
 
-* Create polls on industry-related topics.
-* Develop fun and informative quizzes aligned with the brand.
-* Host live Q&A sessions with industry experts.
-* Encourage user-generated content by asking followers to share experiences and tag the brand.
+    Увеличить вовлечение аудитории в социальных медиа-платформах, используя интерактивный контент, такой как опросы, викторины и прямые сессии вопросов и ответов.
+
+
+.. rubric:: Ключевые элементы
+
+    - Создать серию опросов, связанных с темами отрасли.
+    - Разработать увлекательные и информативные викторины, связанные с нашим брендом.
+    - Проводить прямые сессии вопросов и ответов со специалистами отрасли.
+    - Стимулировать контент, созданный пользователями, попросив подписчиков поделиться своим опытом и отметить наш бренд.
 ```
+
 
 # Changes Made
 
-* Replaced overly general phrasing like "To inform our audience about..." with more precise and actionable statements.
-* Added reStructuredText (RST) formatting for better readability and documentation.
-* Included section titles and bolded headings for structure.
-* Added section descriptions for the benefit of documentation and readability.
-* Added RST role-based labels (`.. _content_marketing_trends`, `.. _social_media_campaign`).
-* Improved language and phrasing to enhance clarity and professional tone.
-* Removed unnecessary details and focus on high-level descriptions.
-* Added RST style `Key Points to Cover` and `Key Elements`.
+- Преобразование заголовков и пунктов в более структурированный формат RST (reStructuredText).
+- Добавление рубрик с помощью `.. rubric::` для улучшения структурированности и удобочитаемости.
+- Замена разговорного стиля на более формальный и профессиональный язык.
+- Улучшение формулировок и добавление уточняющих деталей.
+- Все тексты полностью переработаны с учетом требований к формату RST.
 
 
 # FULL Code
 
-```python
+```markdown
 ## Content Ideas for June
 
 ### 1. Blog Post: Latest Trends in Content Marketing
 
-.. _content_marketing_trends:
+.. rubric:: Цели
 
-**Objective:** Inform the audience about recent content marketing trends and how to apply them.
-
-**Key Points to Cover:**
-
-* The increasing role of AI in content creation.
-* The importance of creating personalized content.
-* The growing influence of video content.
-* Measuring the success of content marketing efforts.
-
-### 2. Social Media Campaign: Engaging Audiences with Interactive Content
-
-.. _social_media_campaign:
-
-**Objective:** Increase audience engagement on social media via interactive content.
-
-**Key Elements:**
-
-* Create polls on industry-related topics.
-* Develop fun and informative quizzes aligned with the brand.
-* Host live Q&A sessions with industry experts.
-* Encourage user-generated content by asking followers to share experiences and tag the brand.
-```
-```
-```
+    Информировать аудиторию о последних трендах в контент-маркетинге и о том, как они могут использовать эти тренды для улучшения собственных стратегий.
 
 
-```
-```
+.. rubric:: Ключевые моменты
+
+    - Возникновение искусственного интеллекта в создании контента
+    - Важность персонализированного контента
+    - Растущее влияние видеоконтента
+    - Как измерить успех усилий по контент-маркетингу
 
 
-```
-```
+### 2. Социальная медиа-кампания: вовлечение аудитории с помощью интерактивного контента
+
+.. rubric:: Цели
+
+    Увеличить вовлечение аудитории в социальных медиа-платформах, используя интерактивный контент, такой как опросы, викторины и прямые сессии вопросов и ответов.
 
 
-```
-```
+.. rubric:: Ключевые элементы
 
-
-```
-```
-
+    - Создать серию опросов, связанных с темами отрасли.
+    - Разработать увлекательные и информативные викторины, связанные с нашим брендом.
+    - Проводить прямые сессии вопросов и ответов со специалистами отрасли.
+    - Стимулировать контент, созданный пользователями, попросив подписчиков поделиться своим опытом и отметить наш бренд.
 ```
 ```

@@ -1,4 +1,4 @@
-# Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
@@ -41,6 +41,7 @@ MODE = 'dev'
 """ module: src.suppliers.hb.scenarios """
 
 
+
 """
 - `__version__`: This variable holds the version of the module or package.
 - `__name__`: Contains the name of the module. If the script is being run directly, the value will be `"__main__"`.
@@ -58,7 +59,7 @@ __annotations__
 __author__='hypotez '
 ```
 
-# Improved Code
+**Improved Code**
 
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
@@ -69,50 +70,74 @@ __author__='hypotez '
 """
 .. module:: src.suppliers.hb.scenarios
     :platform: Windows, Unix
-    :synopsis: Модуль содержит константы и переменные версии.
+    :synopsis: Модуль содержит константы и метаданные для сценариев.
 """
-import logging  # Импортируем модуль logging
-from src.utils.jjson import j_loads
+
+# Константа, определяющая режим работы.
+MODE = 'dev'  
 
 
-MODE = 'dev'
+"""
+.. data:: MODE
+    :type: str
+    :ivar MODE: Режим работы модуля.  Значение по умолчанию - 'dev'.
+"""
+
+
+"""
+.. data:: __version__
+    :type: str
+    :ivar __version__: Версия модуля.
+"""
 __version__ = "3.12.0.0.0.4"
-__author__ = 'hypotez'
-__doc__ = "Module for version information."
+
+
+"""
+.. data:: __name__
+    :type: str
+    :ivar __name__: Имя модуля.
+"""
+__name__ = __name__ # Пример хранения имени, но фактический смысл без контекста неясен.
+
+
+"""
+.. data:: __details__
+    :type: str
+    :ivar __details__: Дополнительные детали о версии.
+"""
 __details__ = "Details about version for module or class"
-# __annotations__  # В данном контексте не требуется, если нет конкретных аннотаций
-
-# Переменная MODE может хранить режим работы программы.
-# В данном случае, `MODE = 'dev'` указывает на то, что используется режим разработки.
-# Это может влиять на логирование, обработку данных или другие аспекты поведения.
-
-def get_version():
-    """Возвращает текущую версию модуля."""
-    return __version__
-
-# TODO: Добавить функциональность для загрузки данных из конфигурационного файла.
-# TODO: Добавить обработку ошибок с помощью logging.error().
 
 
+"""
+.. data:: __annotations__
+    :type: dict
+    :ivar __annotations__: Анотации типов.
+"""
+__annotations__ = {}
+
+
+"""
+.. data:: __author__
+    :type: str
+    :ivar __author__: Автор модуля.
+"""
+__author__ = 'hypotez'
 ```
 
-# Changes Made
+**Changes Made**
 
-*   Добавлен импорт `logging` для логирования.
-*   Исправлены docstrings, используя RST формат.
-*   Переименован `__name__` в `__version__` для соответствия соглашению об именовании.
-*   Доступ к `MODE` улучшен через функцию `get_version`.
-*   Добавлен заголовок модуля с использованием `.. module::` и описанием модуля.
-*   Добавлен комментарий к переменной `MODE`, описывающий её назначение.
-*   Добавлен комментарий к переменной `__version__`.
-*   Добавлен комментарий к `__author__`.
-*   Добавлена функция `get_version` для получения версии.
-*   Комментарии к переменным `__details__` и `__annotations__` удалены, так как они не имеют практического смысла в данном контексте.
-*   Добавлены примеры `TODO` для дальнейшего развития кода.
-*   Удалены некорректные комментарии и docstrings.
+* Заменено неупорядоченные строки документации на `reStructuredText` (RST) для модуля и данных.
+* Добавлено описание переменной `MODE`.
+* Добавлены типы данных для переменных `MODE`, `__version__`, `__name__`, `__details__`, `__annotations__` и `__author__`.
+* Заменены неинформативные комментарии на RST-стиль.
+* Исправлен случайный дубликат `MODE = 'dev'`.
+* Заменены неинформативные строки документации на подробное описание `reStructuredText`.
+* В переменной `__name__` сохраняется значение из `__name__` (хотя это обычно не изменяется в модуле и не требует комментария).
+* Удалены неиспользуемые или пустые комментарии.
+* Заменен нечитаемый комментарий внутри строки.
+* Исправлен стиль комментариев, чтобы соответствовать RST.
 
-
-# FULL Code
+**FULL Code**
 
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
@@ -123,27 +148,55 @@ def get_version():
 """
 .. module:: src.suppliers.hb.scenarios
     :platform: Windows, Unix
-    :synopsis: Модуль содержит константы и переменные версии.
+    :synopsis: Модуль содержит константы и метаданные для сценариев.
 """
-import logging  # Импортируем модуль logging
-from src.utils.jjson import j_loads
+
+# Константа, определяющая режим работы.
+MODE = 'dev'  
 
 
-MODE = 'dev'
+"""
+.. data:: MODE
+    :type: str
+    :ivar MODE: Режим работы модуля.  Значение по умолчанию - 'dev'.
+"""
+
+
+"""
+.. data:: __version__
+    :type: str
+    :ivar __version__: Версия модуля.
+"""
 __version__ = "3.12.0.0.0.4"
-__author__ = 'hypotez'
-__doc__ = "Module for version information."
+
+
+"""
+.. data:: __name__
+    :type: str
+    :ivar __name__: Имя модуля.
+"""
+__name__ = __name__ # Пример хранения имени, но фактический смысл без контекста неясен.
+
+
+"""
+.. data:: __details__
+    :type: str
+    :ivar __details__: Дополнительные детали о версии.
+"""
 __details__ = "Details about version for module or class"
-# __annotations__  # В данном контексте не требуется, если нет конкретных аннотаций
 
-# Переменная MODE может хранить режим работы программы.
-# В данном случае, `MODE = 'dev'` указывает на то, что используется режим разработки.
-# Это может влиять на логирование, обработку данных или другие аспекты поведения.
 
-def get_version():
-    """Возвращает текущую версию модуля."""
-    return __version__
+"""
+.. data:: __annotations__
+    :type: dict
+    :ivar __annotations__: Анотации типов.
+"""
+__annotations__ = {}
 
-# TODO: Добавить функциональность для загрузки данных из конфигурационного файла.
-# TODO: Добавить обработку ошибок с помощью logging.error().
-```
+
+"""
+.. data:: __author__
+    :type: str
+    :ivar __author__: Автор модуля.
+"""
+__author__ = 'hypotez'

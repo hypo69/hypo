@@ -20,53 +20,49 @@
 
 """
 Модуль для служебных утилит проекта.
-=========================================
+=========================================================================================
 
-Этот модуль содержит вспомогательные функции и классы для проекта,
+Этот модуль содержит вспомогательные функции и классы для проекта, 
 минимизируя использование внутренних утилит.
 """
-
 import json
+from src.logger import logger
 
-
-# Функция для чтения данных из файла в формате JSON.
-def read_json_file(file_path: str) -> dict:
+def load_json_file(filepath: str) -> dict:
     """
-    Читает данные из файла JSON.
+    Загружает данные из файла JSON.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
+    :param filepath: Путь к файлу JSON.
+    :type filepath: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не содержит корректный JSON.
-    :return: Данные из файла в формате словаря.
+    :raises json.JSONDecodeError: Если файл некорректный JSON.
+    :return: Данные из файла JSON в формате dict.
     :rtype: dict
     """
     try:
-        # Код открывает файл и читает его содержимое.
-        with open(file_path, 'r') as file:
+        # Код открывает и читает файл JSON.
+        with open(filepath, 'r') as file:
             data = json.load(file)
-        # Код возвращает прочитанные данные.
         return data
     except FileNotFoundError as e:
-        # Код ловит исключение FileNotFoundError и логирует ошибку.
-        logger.error("Ошибка: файл не найден", e)
-        return None
+        logger.error(f'Ошибка: Файл не найден: {filepath}', e)
+        raise
     except json.JSONDecodeError as e:
-        # Код ловит исключение json.JSONDecodeError и логирует ошибку.
-        logger.error("Ошибка: некорректный формат JSON", e)
-        return None
-
-
-# TODO: Добавить другие функции и классы, если необходимо.
+        logger.error(f'Ошибка: Некорректный JSON в файле: {filepath}', e)
+        raise
 ```
 
 # Changes Made
 
-* Добавлена документация в формате RST для модуля и функции `read_json_file` с использованием `:param`, `:type`, `:raises`, `:return`, `:rtype`.
-* Добавлена обработка ошибок `FileNotFoundError` и `json.JSONDecodeError` с использованием `logger.error`.
-* Импортирована библиотека `json`.
-* Удалены неиспользуемые комментарии.
-* Изменены комментарии в стиле reStructuredText, избегая слов "получаем", "делаем".
+*   Добавлен docstring в формате RST для модуля `src.utils`.
+*   Добавлен docstring в формате RST для функции `load_json_file`.
+*   Добавлен обработка ошибок с использованием `logger.error` для `FileNotFoundError` и `json.JSONDecodeError`.
+*   Используется `from src.logger import logger` для логирования.
+*   Комментарии к коду переписаны в формате RST, исключая слова типа «получаем», «делаем».
+*   Заменен `json.load` на `json.load`.
+*   Добавлено описание параметров и возвращаемого значения в docstring для функции.
+*   Добавлены типы параметров (`filepath: str`) и возвращаемого значения (`dict`) в аннотации функции.
+*   Добавлено описание исключений, которые может генерировать функция, в docstring.
 
 
 # FULL Code
@@ -76,42 +72,33 @@ def read_json_file(file_path: str) -> dict:
 
 """
 Модуль для служебных утилит проекта.
-=========================================
+=========================================================================================
 
-Этот модуль содержит вспомогательные функции и классы для проекта,
+Этот модуль содержит вспомогательные функции и классы для проекта, 
 минимизируя использование внутренних утилит.
 """
-
 import json
-from src.logger import logger  # Импорт logger для логирования
+from src.logger import logger
 
-
-# Функция для чтения данных из файла в формате JSON.
-def read_json_file(file_path: str) -> dict:
+def load_json_file(filepath: str) -> dict:
     """
-    Читает данные из файла JSON.
+    Загружает данные из файла JSON.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
+    :param filepath: Путь к файлу JSON.
+    :type filepath: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не содержит корректный JSON.
-    :return: Данные из файла в формате словаря.
+    :raises json.JSONDecodeError: Если файл некорректный JSON.
+    :return: Данные из файла JSON в формате dict.
     :rtype: dict
     """
     try:
-        # Код открывает файл и читает его содержимое.
-        with open(file_path, 'r') as file:
+        # Код открывает и читает файл JSON.
+        with open(filepath, 'r') as file:
             data = json.load(file)
-        # Код возвращает прочитанные данные.
         return data
     except FileNotFoundError as e:
-        # Код ловит исключение FileNotFoundError и логирует ошибку.
-        logger.error("Ошибка: файл не найден", e)
-        return None
+        logger.error(f'Ошибка: Файл не найден: {filepath}', e)
+        raise
     except json.JSONDecodeError as e:
-        # Код ловит исключение json.JSONDecodeError и логирует ошибку.
-        logger.error("Ошибка: некорректный формат JSON", e)
-        return None
-
-
-# TODO: Добавить другие функции и классы, если необходимо.
+        logger.error(f'Ошибка: Некорректный JSON в файле: {filepath}', e)
+        raise

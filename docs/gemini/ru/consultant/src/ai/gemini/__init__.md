@@ -27,31 +27,45 @@ from .generative_ai import GoogleGenerativeAI
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.gemini
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с моделью Gemini.
+Модуль для работы с моделью Gemini.
+=====================================
 
-Этот модуль предоставляет интерфейс для взаимодействия с моделью Gemini.
+Этот модуль предоставляет инструменты для взаимодействия с моделью Gemini.
+
 """
 import os
-from src.utils.jjson import j_loads, j_loads_ns
-#from src.logger import logger  # Импортируем logger для логирования
+import sys
+
+MODE = 'dev'  # Режим работы (dev, prod)
 
 
-MODE = 'dev'
-
-
+# Импортируем нужные классы из подмодулей
 from .generative_ai import GoogleGenerativeAI
+from src.logger import logger
+
+
+def get_ai_model() -> GoogleGenerativeAI:
+    """
+    Возвращает экземпляр класса GoogleGenerativeAI.
+
+    :return: Экземпляр класса GoogleGenerativeAI.
+    """
+    # код инициализирует и возвращает объект класса GoogleGenerativeAI
+    try:
+        return GoogleGenerativeAI()
+    except Exception as e:
+        logger.error("Ошибка инициализации модели Gemini: ", e)
+        return None
 ```
 
 # Changes Made
 
-*   Добавлен импорт `os` (если необходимы операции с файлами).
-*   Добавлен import `j_loads`, `j_loads_ns` из `src.utils.jjson`.
-*   Переписана документация в формате reStructuredText (RST) для модуля.
-*   Добавлен import `from src.logger import logger` (предварительно).
-*   Комментарии переписаны в соответствии с требованиями RST.
-*   Удалены неиспользуемые пустые строки.
+*   Добавлен импорт `os`, `sys` и `logger` из `src.logger`
+*   Добавлена функция `get_ai_model()`, которая создаёт экземпляр `GoogleGenerativeAI` и возвращает его.
+*   Добавлена обработка ошибок с помощью `logger.error` для улучшения отказоустойчивости.
+*   Переписаны docstrings в формате RST для улучшения документации.
+*   Убраны лишние комментарии.
+*   Добавлены описания параметров и возвращаемых значений для функций.
 
 
 # FULL Code
@@ -63,18 +77,34 @@ from .generative_ai import GoogleGenerativeAI
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.gemini
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с моделью Gemini.
+Модуль для работы с моделью Gemini.
+=====================================
 
-Этот модуль предоставляет интерфейс для взаимодействия с моделью Gemini.
+Этот модуль предоставляет инструменты для взаимодействия с моделью Gemini.
+
 """
 import os
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger  # Импортируем logger для логирования
+import sys
+import json
+
+MODE = 'dev'  # Режим работы (dev, prod)
 
 
-MODE = 'dev'
-
-
+# Импортируем нужные классы из подмодулей
 from .generative_ai import GoogleGenerativeAI
+from src.logger import logger
+
+
+def get_ai_model() -> GoogleGenerativeAI:
+    """
+    Возвращает экземпляр класса GoogleGenerativeAI.
+
+    :return: Экземпляр класса GoogleGenerativeAI.
+    """
+    # код инициализирует и возвращает объект класса GoogleGenerativeAI
+    try:
+        return GoogleGenerativeAI()
+    except Exception as e:
+        logger.error("Ошибка инициализации модели Gemini: ", e)
+        return None
+```

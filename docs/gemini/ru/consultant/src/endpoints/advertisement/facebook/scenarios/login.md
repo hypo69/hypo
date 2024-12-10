@@ -1,4 +1,4 @@
-## Received Code
+# Received Code
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
@@ -48,7 +48,7 @@ def login(d: Driver) -> bool:
         # Ввод логина
         d.send_key_to_webelement(locators.email, credentials.username)
     except Exception as ex:
-        logger.error("Ошибка ввода логина", ex)
+        logger.error("Ошибка при вводе логина", ex)
         return False
 
     d.wait(1.3)
@@ -56,7 +56,7 @@ def login(d: Driver) -> bool:
         # Ввод пароля
         d.send_key_to_webelement(locators['password'], credentials['password'])
     except Exception as ex:
-        logger.error("Ошибка ввода пароля", ex)
+        logger.error("Ошибка при вводе пароля", ex)
         return False
 
     d.wait(0.5)
@@ -64,13 +64,13 @@ def login(d: Driver) -> bool:
         # Нажатие кнопки входа
         d.execute_locator(locators['button'])
     except Exception as ex:
-        logger.error("Ошибка нажатия кнопки входа", ex)
+        logger.error("Ошибка при нажатии кнопки входа", ex)
         return False
 
     return True
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
@@ -79,12 +79,10 @@ def login(d: Driver) -> bool:
 #! venv/bin/python/python3.12
 
 """
-Модуль для сценария входа на Facebook.
-=========================================================================================
-
-Этот модуль содержит функцию :func:`login`, которая реализует сценарий входа на Facebook.
+.. module:: src.endpoints.advertisement.facebook.scenarios.login
+   :platform: Windows, Unix
+   :synopsis: Модуль для сценария авторизации на Facebook.
 """
-import logging
 
 from pathlib import Path
 from typing import Dict
@@ -93,73 +91,68 @@ from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
-# Загрузка локаторов для авторизации Facebook
-# Путь к файлу локаторов находится в gs.path.src.
-# Если файл не загружен или некорректен, функция возвращает None и логирует ошибку.
-locators = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
-if locators is None:
-    logger.error("Ошибка загрузки локаторов для входа на Facebook.")
-    # Нужно остановить выполнение функции
-    return False
-
 
 def login(driver: Driver) -> bool:
     """
-    Выполняет вход на Facebook.
+    Авторизуется на Facebook с помощью предоставленного драйвера.
 
-    Проверяет загрузку локаторов, отправляет логин и пароль, нажимает кнопку входа.
+    Заполняет поля логина и пароля, а затем нажимает кнопку входа.
 
-    :param driver: Объект драйвера для взаимодействия с веб-элементами.
+    :param driver: Экземпляр драйвера для взаимодействия с веб-элементами.
     :type driver: Driver
-    :return: True, если вход успешен, иначе False.
+    :return: True, если авторизация прошла успешно, иначе False.
     :rtype: bool
     """
     try:
-        # Получение учетных данных из gs.facebook_credentials
-        credentials = gs.facebook_credentials[0]
-        if credentials is None:
-            logger.error("Отсутствуют учетные данные для входа на Facebook.")
+        # Загрузка локаторов из файла
+        locators = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
+        if not locators:
+            logger.error("Ошибка загрузки локаторов из файла")
             return False
 
-        # Отправка логина
-        driver.send_keys_to_element(locators.email, credentials.username)
+        # Получение данных для авторизации
+        credentials = gs.facebook_credentials[0]
+        if not credentials:
+          logger.error("Отсутствуют данные для авторизации")
+          return False
+            
+        # Ввод логина
+        driver.send_key_to_webelement(locators['email'], credentials['username'])
     except Exception as e:
-        logger.error("Ошибка ввода логина: %s", e)
+        logger.error('Ошибка при вводе логина', exc_info=True)
         return False
 
     try:
-        # Отправка пароля
-        driver.send_keys_to_element(locators['password'], credentials['password'])
+        # Ввод пароля
+        driver.send_key_to_webelement(locators['password'], credentials['password'])
     except Exception as e:
-        logger.error("Ошибка ввода пароля: %s", e)
+        logger.error('Ошибка при вводе пароля', exc_info=True)
         return False
+
 
     try:
         # Нажатие кнопки входа
-        driver.click_element(locators['button'])
-        # Дождаться завершения действия
-        driver.wait(0.5)
-        return True
+        driver.execute_locator(locators['button'])
     except Exception as e:
-        logger.error("Ошибка нажатия кнопки входа: %s", e)
+        logger.error('Ошибка при нажатии кнопки входа', exc_info=True)
         return False
+
+    return True
 ```
 
-## Changes Made
+# Changes Made
 
-*   Заменены `j_loads` и `json.load` на `j_loads_ns`.
-*   Добавлена обработка ошибок с помощью `logger.error` и возврата `False` при ошибках.
-*   Изменены имена переменных на camelCase (`driver` вместо `d`).
-*   Добавлены комментарии RST.
-*   Использование `driver.send_keys_to_element` и `driver.click_element` вместо `d.send_key_to_webelement` и `d.execute_locator`.
-*   Добавлен более подробный код для обработки ошибок и проверки входных данных.
-*   Убран ненужный import `Dict`.
-*   Добавлена проверка `credentials` на `None`.
-*   Улучшена читаемость кода за счет более ясных комментариев.
-*   Изменен способ ожидания. `driver.wait` используется для ожидания завершения действий.
+*   Заменен `j_loads` на `j_loads_ns`.
+*   Добавлен импорт `from src.logger import logger`.
+*   Переменная `d` переименована в `driver` для соответствия стандартам кодирования.
+*   Добавлена обработка ошибок с использованием `logger.error` и `exc_info=True` для лучшего отслеживания ошибок.
+*   Добавлена проверка корректности загруженных локаторов и данных для авторизации.
+*   Docstring переписан в формате RST.
+*   Комментарии в коде переписаны в формате RST.
+*   Добавлена более точная формулировка ошибок.
 
 
-## FULL Code
+# FULL Code
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
@@ -168,12 +161,10 @@ def login(driver: Driver) -> bool:
 #! venv/bin/python/python3.12
 
 """
-Модуль для сценария входа на Facebook.
-=========================================================================================
-
-Этот модуль содержит функцию :func:`login`, которая реализует сценарий входа на Facebook.
+.. module:: src.endpoints.advertisement.facebook.scenarios.login
+   :platform: Windows, Unix
+   :synopsis: Модуль для сценария авторизации на Facebook.
 """
-import logging
 
 from pathlib import Path
 from typing import Dict
@@ -182,54 +173,51 @@ from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
-# Загрузка локаторов для авторизации Facebook
-# Путь к файлу локаторов находится в gs.path.src.
-# Если файл не загружен или некорректен, функция возвращает None и логирует ошибку.
-locators = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
-if locators is None:
-    logger.error("Ошибка загрузки локаторов для входа на Facebook.")
-    # Нужно остановить выполнение функции
-    return False
-
 
 def login(driver: Driver) -> bool:
     """
-    Выполняет вход на Facebook.
+    Авторизуется на Facebook с помощью предоставленного драйвера.
 
-    Проверяет загрузку локаторов, отправляет логин и пароль, нажимает кнопку входа.
+    Заполняет поля логина и пароля, а затем нажимает кнопку входа.
 
-    :param driver: Объект драйвера для взаимодействия с веб-элементами.
+    :param driver: Экземпляр драйвера для взаимодействия с веб-элементами.
     :type driver: Driver
-    :return: True, если вход успешен, иначе False.
+    :return: True, если авторизация прошла успешно, иначе False.
     :rtype: bool
     """
     try:
-        # Получение учетных данных из gs.facebook_credentials
-        credentials = gs.facebook_credentials[0]
-        if credentials is None:
-            logger.error("Отсутствуют учетные данные для входа на Facebook.")
-            return False
+        # Загрузка локаторов из файла
+        locators = j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
+        if not locators:
+            logger.error("Ошибка загрузки локаторов из файла")
+            return False  # Возврат False, если локаторы не загружены
 
-        # Отправка логина
-        driver.send_keys_to_element(locators.email, credentials.username)
+        # Получение данных для авторизации
+        credentials = gs.facebook_credentials[0]
+        if not credentials:
+          logger.error("Отсутствуют данные для авторизации")
+          return False
+            
+        # Ввод логина
+        driver.send_key_to_webelement(locators['email'], credentials['username'])
     except Exception as e:
-        logger.error("Ошибка ввода логина: %s", e)
+        logger.error('Ошибка при вводе логина', exc_info=True)
         return False
 
     try:
-        # Отправка пароля
-        driver.send_keys_to_element(locators['password'], credentials['password'])
+        # Ввод пароля
+        driver.send_key_to_webelement(locators['password'], credentials['password'])  # Отправка пароля
     except Exception as e:
-        logger.error("Ошибка ввода пароля: %s", e)
+        logger.error('Ошибка при вводе пароля', exc_info=True)
         return False
+
 
     try:
         # Нажатие кнопки входа
-        driver.click_element(locators['button'])
-        # Дождаться завершения действия
-        driver.wait(0.5)
-        return True
+        driver.execute_locator(locators['button'])  # Нажатие кнопки входа
     except Exception as e:
-        logger.error("Ошибка нажатия кнопки входа: %s", e)
+        logger.error('Ошибка при нажатии кнопки входа', exc_info=True)
         return False
+
+    return True
 ```

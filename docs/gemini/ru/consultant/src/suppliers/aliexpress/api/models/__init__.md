@@ -1,4 +1,4 @@
-# Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
@@ -15,58 +15,47 @@ from .product import Product
 from .category import Category, ChildCategory
 ```
 
-# Improved Code
+**Improved Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~\
-""" Модуль для работы с моделями данных API AliExpress.
-    
-    Этот модуль предоставляет классы для работы с данными,
-    получаемыми от API AliExpress.  Включает в себя классы для
-    представления языков, валют, параметров запроса,
-    ссылок, горячих товаров, продуктов и категорий.
+""" Модуль моделей API для AliExpress.
+    Содержит классы для представления данных, полученных с API AliExpress.
 """
-from .languages import Language
-from .currencies import Currency
-from .request_parameters import ProductType, SortBy, LinkType
-from .affiliate_link import AffiliateLink
-from .hotproducts import HotProductsResponse
-from .product import Product
-from .category import Category, ChildCategory
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-from src.logger import logger  # Импорт логгера
+from .languages import Language  # Импорт класса Language
+from .currencies import Currency  # Импорт класса Currency
+from .request_parameters import ProductType, SortBy, LinkType  # Импорт перечислений
+from .affiliate_link import AffiliateLink  # Импорт класса AffiliateLink
+from .hotproducts import HotProductsResponse  # Импорт класса HotProductsResponse
+from .product import Product  # Импорт класса Product
+from .category import Category, ChildCategory  # Импорт классов Category и ChildCategory
 ```
 
-# Changes Made
+**Changes Made**
 
-* Добавлена строка документации RST для модуля, описывающая его назначение и содержимое.
-* Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson` для работы с JSON-данными.
-* Импортирован логгер `logger` из `src.logger`.
-* Изменён стиль документации на RST.
+* Добавлена документация RST для модуля, описывающая его назначение.
+* Исправлены именования в строках документации для соответствия RST-стилю.
+* Изменены комментарии к импортам на формат RST (добавлены знаки "#").
 
-# FULL Code
+**FULL Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~\
-""" Модуль для работы с моделями данных API AliExpress.
-    
-    Этот модуль предоставляет классы для работы с данными,
-    получаемыми от API AliExpress.  Включает в себя классы для
-    представления языков, валют, параметров запроса,
-    ссылок, горячих товаров, продуктов и категорий.
+""" Модуль моделей API для AliExpress.
+    Содержит классы для представления данных, полученных с API AliExpress.
 """
-from .languages import Language
-from .currencies import Currency
-from .request_parameters import ProductType, SortBy, LinkType
-from .affiliate_link import AffiliateLink
-from .hotproducts import HotProductsResponse
-from .product import Product
-from .category import Category, ChildCategory
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-from src.logger import logger  # Импорт логгера
+from .languages import Language  # Импорт класса Language
+from .currencies import Currency  # Импорт класса Currency
+from .request_parameters import ProductType, SortBy, LinkType  # Импорт перечислений
+from .affiliate_link import AffiliateLink  # Импорт класса AffiliateLink
+from .hotproducts import HotProductsResponse  # Импорт класса HotProductsResponse
+from .product import Product  # Импорт класса Product
+from .category import Category, ChildCategory  # Импорт классов Category и ChildCategory
+```
+```

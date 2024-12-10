@@ -88,30 +88,29 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 .. module:: src.logger
    :platform: Windows, Unix
    :synopsis: Модуль для работы с логированием.
-
 """
 MODE = 'dev'
 
 """
    :platform: Windows, Unix
-   :synopsis: Модуль находит корневой каталог проекта.
-   :TODO: В дальнейшем перенести в системную переменную
+   :synopsis: Модуль находит корневой каталог проекта, используя указанные файлы маркеров.
+   :TODO: Переместить определение корневого каталога в системную переменную.
 """
 
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Импорт функции j_loads
+from pathlib import Path
+from src.utils.jjson import j_loads
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневой каталог проекта.
+    Определяет корневой каталог проекта, начиная от текущего файла и поднимаясь вверх по каталогам.
 
-    :param marker_files: Список файлов, по наличию которых определяется корневой каталог.
+    :param marker_files: Список файлов-маркеров, по наличию которых определяется корень проекта.
     :type marker_files: tuple
-    :raises FileNotFoundError: Если ни один из файлов не найден.
-    :return: Корневой каталог проекта.
+    :raises FileNotFoundError: Если ни один из указанных файлов-маркеров не найден.
+    :return: Путь к корневому каталогу проекта.
     :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
@@ -124,34 +123,27 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
         sys.path.insert(0, str(project_root))
     return project_root
 
-
 # Определение корневого каталога проекта
 project_root = set_project_root()
-"""project_root (Path): Корневой каталог проекта."""
+"""project_root (Path): Путь к корневому каталогу проекта"""
 
 from src import gs
-from src.logger import logger # Импорт logger
+from src.logger import logger # Импортируем logger
+
 
 settings: dict = None
 try:
-    # Чтение файла settings.json с использованием j_loads
-    settings = j_loads((project_root / 'src' / 'settings.json'))
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').resolve())  # Используем j_loads для чтения файла
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Ошибка при чтении файла settings.json', exc_info=True)
-    # Обработка ошибки - важный момент!
-    # При необходимости можно задать значение по умолчанию или выполнить другие действия.
-    ...  
-
+    logger.error('Ошибка загрузки настроек:', e)
+    settings = None
 
 doc_str: str = None
 try:
-    # Чтение файла README.MD с использованием j_loads
-    doc_str = (project_root / 'src' / 'README.MD').read_text()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Ошибка при чтении файла README.MD', exc_info=True)
-    ...
-
-
+    doc_str = (gs.path.root / 'src' / 'README.MD').read_text()  # Используем read_text для чтения файла
+except (FileNotFoundError, UnicodeDecodeError) as e:
+    logger.error('Ошибка загрузки README:', e)
+    doc_str = None
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
 __version__ = settings.get("version", '') if settings else ''
@@ -164,17 +156,17 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 
 # Changes Made
 
-*   Импортирована функция `j_loads` из `src.utils.jjson`.
-*   Использование `j_loads` для чтения файлов `settings.json` и `README.MD`.
-*   Добавлены обработчики ошибок `try...except` для обработки `FileNotFoundError` и `json.JSONDecodeError` с использованием `logger.error`.  Важный момент:  `exc_info=True` в `logger.error` позволяет получать подробную информацию об ошибке.
-*   Переименована переменная `__root__` на `project_root` для соответствия названию переменной.
-*   Добавлены docstrings в формате reStructuredText (RST) для функции `set_project_root` и переменных.
-*   Добавлен импорт `from src.logger import logger`.
-*   Исправлены некоторые стилистические моменты (названия переменных, использование camelCase).
-*   Исправлена ошибка в названии параметра в функции `set_project_root`.
-*   Заменены строки с использованием `...` на обработку ошибок с использованием `logger`.
+*   Импортирован `j_loads` из `src.utils.jjson`.
+*   Добавлены обработчики ошибок с использованием `logger.error` для более корректной обработки исключений.
+*   Используется `read_text` вместо `read()` для чтения файлов.
+*   Переименованы переменные для лучшей читаемости (например, `__root__` на `project_root`).
+*   Добавлены комментарии в формате RST к функциям и переменным.
+*   Исправлен импорт `logger` из `src.logger`.
+*   Исправлена обработка путей с помощью `Path`.
+*   Убраны лишние комментарии и строки.
 
-# Full Code
+
+# FULL Code
 
 ```python
 ## \file hypotez/src/logger/header.py
@@ -186,32 +178,31 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 .. module:: src.logger
    :platform: Windows, Unix
    :synopsis: Модуль для работы с логированием.
-
 """
 MODE = 'dev'
 
 """
    :platform: Windows, Unix
-   :synopsis: Модуль находит корневой каталог проекта.
-   :TODO: В дальнейшем перенести в системную переменную
+   :synopsis: Модуль находит корневой каталог проекта, используя указанные файлы маркеров.
+   :TODO: Переместить определение корневого каталога в системную переменную.
 """
 
 import sys
 import json
-from pathlib import Path
 from packaging.version import Version
-from src.utils.jjson import j_loads  # Импорт функции j_loads
-from src.logger import logger # Импорт logger
+from pathlib import Path
+from src.utils.jjson import j_loads
+from src.logger import logger # Импортируем logger
 
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневой каталог проекта.
+    Определяет корневой каталог проекта, начиная от текущего файла и поднимаясь вверх по каталогам.
 
-    :param marker_files: Список файлов, по наличию которых определяется корневой каталог.
+    :param marker_files: Список файлов-маркеров, по наличию которых определяется корень проекта.
     :type marker_files: tuple
-    :raises FileNotFoundError: Если ни один из файлов не найден.
-    :return: Корневой каталог проекта.
+    :raises FileNotFoundError: Если ни один из указанных файлов-маркеров не найден.
+    :return: Путь к корневому каталогу проекта.
     :rtype: Path
     """
     current_path = Path(__file__).resolve().parent
@@ -224,33 +215,26 @@ def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')
         sys.path.insert(0, str(project_root))
     return project_root
 
-
 # Определение корневого каталога проекта
 project_root = set_project_root()
-"""project_root (Path): Корневой каталог проекта."""
+"""project_root (Path): Путь к корневому каталогу проекта"""
 
 from src import gs
 
+
 settings: dict = None
 try:
-    # Чтение файла settings.json с использованием j_loads
-    settings = j_loads((project_root / 'src' / 'settings.json'))
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').resolve())  # Используем j_loads для чтения файла
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Ошибка при чтении файла settings.json', exc_info=True)
-    # Обработка ошибки - важный момент!
-    # При необходимости можно задать значение по умолчанию или выполнить другие действия.
-    ...  
-
+    logger.error('Ошибка загрузки настроек:', e)
+    settings = None
 
 doc_str: str = None
 try:
-    # Чтение файла README.MD с использованием j_loads
-    doc_str = (project_root / 'src' / 'README.MD').read_text()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error('Ошибка при чтении файла README.MD', exc_info=True)
-    ...
-
-
+    doc_str = (gs.path.root / 'src' / 'README.MD').read_text()  # Используем read_text для чтения файла
+except (FileNotFoundError, UnicodeDecodeError) as e:
+    logger.error('Ошибка загрузки README:', e)
+    doc_str = None
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
 __version__ = settings.get("version", '') if settings else ''

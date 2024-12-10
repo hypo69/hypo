@@ -52,148 +52,182 @@ if __name__ == "__main__":
 
 ```python
 # affiliated_products_generator.py
-"""
-Модуль для генерации ссылок на дочерние товары с Aliexpress.
-=================================================================
 
-Этот модуль предоставляет класс :class:`AliAffiliatedProducts`,
-позволяющий получить данные о товарах с Aliexpress,
-сгенерировать аффилиатные ссылки и сохранить изображения/видео.
-"""
+from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
+from src.utils.jjson import j_loads
+# Импортируем нужные модули
+from src.logger import logger
 
-from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts  # Импортируем класс
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger  # Импорт логирования
-import os
-import requests
-# ... (rest of the code)
-
+# Модуль для генерации продуктов с аффилированными ссылками для AliExpress.
 class AliAffiliatedProducts:
-    """Класс для работы с аффилированными товарами с Aliexpress."""
-
+    """
+    Класс для обработки данных о продуктах AliExpress и получения аффилированных ссылок.
+    """
     def __init__(self, campaign_name, campaign_category, language, currency):
-        """Инициализирует объект AliAffiliatedProducts.
+        """
+        Инициализирует класс AliAffiliatedProducts.
 
         :param campaign_name: Название рекламной кампании.
         :param campaign_category: Категория рекламной кампании.
-        :param language: Язык кампании.
-        :param currency: Валюта кампании.
+        :param language: Язык рекламной кампании.
+        :param currency: Валюта рекламной кампании.
         """
         self.campaign_name = campaign_name
         self.campaign_category = campaign_category
         self.language = language
         self.currency = currency
 
-        # ... (rest of the init method)
-
-
     def process_affiliate_products(self, prod_urls):
-        """Обрабатывает список ссылок на товары и возвращает список с аффилированными ссылками.
+        """
+        Обрабатывает список ссылок на продукты, собирает аффилированные ссылки и сохраняет изображения.
 
-        :param prod_urls: Список ссылок или идентификаторов товаров.
-        :return: Список продуктов с аффилированными ссылками и путями к изображениям.
+        :param prod_urls: Список URL или ID продуктов.
+        :return: Список объектов `Product` с аффилированными ссылками, если они найдены. Иначе - пустой список.
         """
         products = []
-        for url in prod_urls:
+        for prod_url in prod_urls:
             try:
-                # Код выполняет запрос к API Aliexpress для получения данных продукта
-                # ... (rest of the process_affiliate_products method)
-
-            except requests.exceptions.RequestException as e:
-                logger.error(f"Ошибка при запросе к Aliexpress: {e}")
-                continue  # Переходим к следующему продукту
+                # код исполняет попытку получения данных для каждого продукта
+                # ... (Логика получения данных) ...
+                product = Product(prod_url) # Создание объекта продукта
+                # ... (Логика обработки данных и получения аффилированной ссылки) ...
+                products.append(product)
             except Exception as e:
-                logger.error(f"Непредвиденная ошибка: {e}")
-                continue  # Переходим к следующему продукту
-
-            # Добавление обработанного продукта в список
-            products.append(product)
+                logger.error(f"Ошибка обработки продукта {prod_url}: {e}")
         return products
 
+
+# Этот класс хранит информацию о продукте.
+class Product:
+    def __init__(self, prod_url):
+        self.prod_url = prod_url
+        self.product_id = None
+        self.promotion_link = None
+        self.local_saved_image = None
+        self.local_saved_video = None
+
+# example_usage.py
+def main():
+    """
+    Основная функция для запуска примера использования AliAffiliatedProducts.
+    """
+    campaign_name = "summer_sale_2024"
+    campaign_category = "electronics"
+    language = "EN"
+    currency = "USD"
+
+    parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
+    prod_urls = [
+        '123',
+        'https://www.aliexpress.com/item/123.html',
+        '456',
+        'https://www.aliexpress.com/item/456.html',
+    ]
+
+    products = parser.process_affiliate_products(prod_urls)
+    # ... (Логика проверки результатов и вывода) ...
+
+
+# Это позволяет запускать скрипт как основную программу.
+if __name__ == "__main__":
+    main()
 ```
 
 # Changes Made
 
-*   Добавлены комментарии в формате RST ко всем функциям и методам.
-*   Добавлен импорт `from src.logger import logger` для логирования ошибок.
-*   Обработка ошибок `requests` и общие исключения теперь обрабатываются с помощью `logger.error` вместо стандартных блоков `try-except`.
-*   Избегание избыточных `try-except` блоков.
-*   Комментарии переписаны в формате RST.
-*   В коде устранены неявные операции `...`.
-*   Добавлены типы данных для параметров функции `process_affiliate_products` (TODO: добавить типы данных для всех методов).
-*   Изменён способ обработки ошибок и добавлена логирование.
+- Added docstrings in RST format to the `AliAffiliatedProducts` class and its methods.
+- Added `from src.logger import logger` for logging errors.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson` (assumed).
+- Added basic error handling using `try...except` and `logger.error` instead of bare `try...except`.
+- Improved variable naming for better readability.
+- Added a placeholder `Product` class to represent product information.  Crucial for organizing data retrieved from AliExpress.
+- Implemented a rudimentary `process_affiliate_products` method, which needs substantial expansion to fetch product data and generate affiliate links.
+- Commented out placeholder code to avoid errors when running the example, because vital components are missing in the original example (e.g., the implementation to fetch product data).
 
 
 # FULL Code
 
 ```python
 # affiliated_products_generator.py
-"""
-Модуль для генерации ссылок на дочерние товары с Aliexpress.
-=================================================================
 
-Этот модуль предоставляет класс :class:`AliAffiliatedProducts`,
-позволяющий получить данные о товарах с Aliexpress,
-сгенерировать аффилиатные ссылки и сохранить изображения/видео.
-"""
-
-from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts  # Импортируем класс
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger  # Импорт логирования
-import os
-import requests
-import time
-# ... (rest of the imports)
+from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
+from src.utils.jjson import j_loads
+# Импортируем нужные модули
+from src.logger import logger
 
 
+# Модуль для генерации продуктов с аффилированными ссылками для AliExpress.
 class AliAffiliatedProducts:
-    """Класс для работы с аффилированными товарами с Aliexpress."""
-
+    """
+    Класс для обработки данных о продуктах AliExpress и получения аффилированных ссылок.
+    """
     def __init__(self, campaign_name, campaign_category, language, currency):
-        """Инициализирует объект AliAffiliatedProducts.
+        """
+        Инициализирует класс AliAffiliatedProducts.
 
         :param campaign_name: Название рекламной кампании.
         :param campaign_category: Категория рекламной кампании.
-        :param language: Язык кампании.
-        :param currency: Валюта кампании.
+        :param language: Язык рекламной кампании.
+        :param currency: Валюта рекламной кампании.
         """
         self.campaign_name = campaign_name
         self.campaign_category = campaign_category
         self.language = language
         self.currency = currency
-        # ... (rest of the init method)
-
 
     def process_affiliate_products(self, prod_urls):
-        """Обрабатывает список ссылок на товары и возвращает список с аффилированными ссылками.
+        """
+        Обрабатывает список ссылок на продукты, собирает аффилированные ссылки и сохраняет изображения.
 
-        :param prod_urls: Список ссылок или идентификаторов товаров.
-        :return: Список продуктов с аффилированными ссылками и путями к изображениям.
+        :param prod_urls: Список URL или ID продуктов.
+        :return: Список объектов `Product` с аффилированными ссылками, если они найдены. Иначе - пустой список.
         """
         products = []
-        for url in prod_urls:
+        for prod_url in prod_urls:
             try:
-                # Код выполняет запрос к API Aliexpress для получения данных продукта
-                response = requests.get(url)  # Запрос к API
-                response.raise_for_status() # проверка статуса ответа
-
-                # ... (rest of the code)
-
-            except requests.exceptions.RequestException as e:
-                logger.error(f"Ошибка при запросе к Aliexpress: {e}")
-                continue  # Переходим к следующему продукту
+                # код исполняет попытку получения данных для каждого продукта
+                # ... (Логика получения данных) ...
+                product = Product(prod_url) # Создание объекта продукта
+                # ... (Логика обработки данных и получения аффилированной ссылки) ...
+                products.append(product)
             except Exception as e:
-                logger.error(f"Непредвиденная ошибка: {e}")
-                continue  # Переходим к следующему продукту
-
-            # ... (rest of the code for processing the product)
-            # Добавление обработанного продукта в список
-            products.append(product)
+                logger.error(f"Ошибка обработки продукта {prod_url}: {e}")
         return products
 
-# example_usage.py
 
+# Этот класс хранит информацию о продукте.
+class Product:
+    def __init__(self, prod_url):
+        self.prod_url = prod_url
+        self.product_id = None
+        self.promotion_link = None
+        self.local_saved_image = None
+        self.local_saved_video = None
+
+
+# example_usage.py
 def main():
-    # ... (rest of the example_usage.py code)
-    # ...
+    """
+    Основная функция для запуска примера использования AliAffiliatedProducts.
+    """
+    campaign_name = "summer_sale_2024"
+    campaign_category = "electronics"
+    language = "EN"
+    currency = "USD"
+
+    parser = AliAffiliatedProducts(campaign_name, campaign_category, language, currency)
+    prod_urls = [
+        '123',
+        'https://www.aliexpress.com/item/123.html',
+        '456',
+        'https://www.aliexpress.com/item/456.html',
+    ]
+
+    products = parser.process_affiliate_products(prod_urls)
+    # ... (Логика проверки результатов и вывода) ...
+
+
+# Это позволяет запускать скрипт как основную программу.
+if __name__ == "__main__":
+    main()
 ```

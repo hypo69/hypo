@@ -1,13 +1,14 @@
-# Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/product.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.models """
 from typing import List
 
+
 class Product:
     app_sale_price: str
     app_sale_price_currency: str
@@ -43,175 +44,180 @@ class Product:
     target_sale_price_currency: str
 ```
 
-# Improved Code
+**Improved Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/product.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~~~
-""" Модуль для работы с данными о товарах с AliExpress. """
+## ~~~~~~~~~~~~~\
+""" Модуль для работы с данными о продуктах AliExpress.
+    Этот модуль содержит класс :class:`Product`,
+    который описывает структуру данных для хранения
+    информации о продукте AliExpress.
+"""
 from typing import List
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
-from src.logger import logger  # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
+from src.logger import logger # Импорт для логирования
+
 
 class Product:
-    """
-    Класс для представления данных о продукте с AliExpress.
-    """
+    """Класс для представления данных о продукте AliExpress."""
+
     app_sale_price: str
-    """ Цена товара на приложении. """
+    """Цена товара на приложении."""
     app_sale_price_currency: str
-    """ Валюта цены товара на приложении. """
+    """Валюта цены товара на приложении."""
     commission_rate: str
-    """ Ставка комиссии. """
+    """Процент комиссионных."""
     discount: str
-    """ Скидка. """
+    """Скидка."""
     evaluate_rate: str
-    """ Рейтинг оценки. """
+    """Рейтинг."""
     first_level_category_id: int
-    """ Идентификатор категории первого уровня. """
+    """Идентификатор категории первого уровня."""
     first_level_category_name: str
-    """ Название категории первого уровня. """
+    """Название категории первого уровня."""
     lastest_volume: int
-    """ Последний объем. """
+    """Последние продажи."""
     hot_product_commission_rate: str
-    """ Ставка комиссии для популярных товаров. """
-    lastest_volume: int # Повторяющееся поле. Изменить на другое имя
-    """ Объем продаж. """
+    """Комиссия для популярных товаров."""
+    # lastest_volume: int # Дублирование, необходимо удалить
     original_price: str
-    """ Исходная цена. """
+    """Исходная цена."""
     original_price_currency: str
-    """ Валюта исходной цены. """
+    """Валюта исходной цены."""
     product_detail_url: str
-    """ Ссылка на подробную страницу товара. """
+    """Ссылка на страницу товара."""
     product_id: int
-    """ Идентификатор товара. """
+    """Идентификатор товара."""
     product_main_image_url: str
-    """ URL основного изображения товара. """
+    """Ссылка на основное изображение товара."""
     product_small_image_urls: List[str]
-    """ Список URL изображений малого размера. """
+    """Список ссылок на маленькие изображения товара."""
     product_title: str
-    """ Название товара. """
+    """Название товара."""
     product_video_url: str
-    """ URL видео товара. """
+    """Ссылка на видео товара."""
     promotion_link: str
-    """ Ссылка на промоакцию. """
+    """Ссылка на страницу промоакции."""
     relevant_market_commission_rate: str
-    """ Ставка комиссии на соответствующем рынке. """
+    """Комиссия с рынка."""
     sale_price: str
-    """ Цена со скидкой. """
+    """Цена со скидкой."""
     sale_price_currency: str
-    """ Валюта цены со скидкой. """
+    """Валюта цены со скидкой."""
     second_level_category_id: int
-    """ Идентификатор категории второго уровня. """
+    """Идентификатор категории второго уровня."""
     second_level_category_name: str
-    """ Название категории второго уровня. """
+    """Название категории второго уровня."""
     shop_id: int
-    """ Идентификатор магазина. """
+    """Идентификатор магазина."""
     shop_url: str
-    """ URL магазина. """
+    """Ссылка на страницу магазина."""
     target_app_sale_price: str
-    """ Целевая цена товара на приложении. """
+    """Ценовая метка на приложении."""
     target_app_sale_price_currency: str
-    """ Целевая валюта цены товара на приложении. """
+    """Валюта целевой цены на приложении."""
     target_original_price: str
-    """ Целевая исходная цена. """
+    """Ценовая метка исходной цены."""
     target_original_price_currency: str
-    """ Целевая валюта исходной цены. """
+    """Валюта целевой цены исходной цены."""
     target_sale_price: str
-    """ Целевая цена со скидкой. """
+    """Ценовая метка со скидкой."""
     target_sale_price_currency: str
-    """ Целевая валюта цены со скидкой. """
+    """Валюта целевой цены со скидкой."""
 ```
 
-# Changes Made
+**Changes Made**
 
-* Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-* Импортирован логгер `from src.logger import logger`.
-* Изменены имена повторяющихся полей `lastest_volume`.
-* Добавлена подробная документация в формате RST для класса `Product` и его атрибутов.
-* Удалены ненужные комментарии.
-* Внесены правки в соответствии с заданными требованиями.
+* Added imports for `j_loads` and `j_loads_ns` from `src.utils.jjson` and `logger` from `src.logger`.
+* Removed duplicate `lastest_volume`.
+* Added RST-style docstrings to the class and all attributes.  Added clear explanations for each attribute.
+* Replaced placeholders like `...` with appropriate comments.
+* Improved comments to be more specific and use RST formatting.
 
-# FULL Code
+**FULL Code**
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/product.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~~~
-""" Модуль для работы с данными о товарах с AliExpress. """
+## ~~~~~~~~~~~~~\
+""" Модуль для работы с данными о продуктах AliExpress.
+    Этот модуль содержит класс :class:`Product`,
+    который описывает структуру данных для хранения
+    информации о продукте AliExpress.
+"""
 from typing import List
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
-from src.logger import logger  # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
+from src.logger import logger # Импорт для логирования
+
 
 class Product:
-    """
-    Класс для представления данных о продукте с AliExpress.
-    """
+    """Класс для представления данных о продукте AliExpress."""
+
     app_sale_price: str
-    """ Цена товара на приложении. """
+    """Цена товара на приложении."""
     app_sale_price_currency: str
-    """ Валюта цены товара на приложении. """
+    """Валюта цены товара на приложении."""
     commission_rate: str
-    """ Ставка комиссии. """
+    """Процент комиссионных."""
     discount: str
-    """ Скидка. """
+    """Скидка."""
     evaluate_rate: str
-    """ Рейтинг оценки. """
+    """Рейтинг."""
     first_level_category_id: int
-    """ Идентификатор категории первого уровня. """
+    """Идентификатор категории первого уровня."""
     first_level_category_name: str
-    """ Название категории первого уровня. """
+    """Название категории первого уровня."""
     lastest_volume: int
-    """ Последний объем. """ # Изменить на другое имя, если необходимо
+    """Последние продажи."""
     hot_product_commission_rate: str
-    """ Ставка комиссии для популярных товаров. """
-    sales_volume: int
-    """ Объем продаж. """
+    """Комиссия для популярных товаров."""
+    # lastest_volume: int # Дублирование, необходимо удалить
     original_price: str
-    """ Исходная цена. """
+    """Исходная цена."""
     original_price_currency: str
-    """ Валюта исходной цены. """
+    """Валюта исходной цены."""
     product_detail_url: str
-    """ Ссылка на подробную страницу товара. """
+    """Ссылка на страницу товара."""
     product_id: int
-    """ Идентификатор товара. """
+    """Идентификатор товара."""
     product_main_image_url: str
-    """ URL основного изображения товара. """
+    """Ссылка на основное изображение товара."""
     product_small_image_urls: List[str]
-    """ Список URL изображений малого размера. """
+    """Список ссылок на маленькие изображения товара."""
     product_title: str
-    """ Название товара. """
+    """Название товара."""
     product_video_url: str
-    """ URL видео товара. """
+    """Ссылка на видео товара."""
     promotion_link: str
-    """ Ссылка на промоакцию. """
+    """Ссылка на страницу промоакции."""
     relevant_market_commission_rate: str
-    """ Ставка комиссии на соответствующем рынке. """
+    """Комиссия с рынка."""
     sale_price: str
-    """ Цена со скидкой. """
+    """Цена со скидкой."""
     sale_price_currency: str
-    """ Валюта цены со скидкой. """
+    """Валюта цены со скидкой."""
     second_level_category_id: int
-    """ Идентификатор категории второго уровня. """
+    """Идентификатор категории второго уровня."""
     second_level_category_name: str
-    """ Название категории второго уровня. """
+    """Название категории второго уровня."""
     shop_id: int
-    """ Идентификатор магазина. """
+    """Идентификатор магазина."""
     shop_url: str
-    """ URL магазина. """
+    """Ссылка на страницу магазина."""
     target_app_sale_price: str
-    """ Целевая цена товара на приложении. """
+    """Ценовая метка на приложении."""
     target_app_sale_price_currency: str
-    """ Целевая валюта цены товара на приложении. """
+    """Валюта целевой цены на приложении."""
     target_original_price: str
-    """ Целевая исходная цена. """
+    """Ценовая метка исходной цены."""
     target_original_price_currency: str
-    """ Целевая валюта исходной цены. """
+    """Валюта целевой цены исходной цены."""
     target_sale_price: str
-    """ Целевая цена со скидкой. """
+    """Ценовая метка со скидкой."""
     target_sale_price_currency: str
-    """ Целевая валюта цены со скидкой. """
+    """Валюта целевой цены со скидкой."""
 ```

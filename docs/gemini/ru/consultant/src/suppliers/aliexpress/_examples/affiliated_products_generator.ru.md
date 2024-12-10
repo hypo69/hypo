@@ -64,7 +64,7 @@ if __name__ == "__main__":
       currency
   )
   ```
-  Здесь создаётся объект класса `AliAffiliatedProducts`, передавая параметры рекламной кампании.
+  Здесь мы создаем объект класса `AliAffiliatedProducts`, передавая параметры рекламной кампании.
 
 - **Список URL продуктов или их ID**:
   ```python
@@ -81,7 +81,7 @@ if __name__ == "__main__":
   ```python
   products = parser.process_affiliate_products(prod_urls)
   ```
-  Вызывается метод `process_affiliate_products`, который обрабатывает продукты, получает аффилированные ссылки и сохраняет изображения и видео.
+  Мы вызываем метод `process_affiliate_products`, который обрабатывает продукты, получает аффилированные ссылки и сохраняет изображения и видео.
 
 - **Проверка результатов**:
   ```python
@@ -97,32 +97,47 @@ if __name__ == "__main__":
   else:
       print("Не удалось получить аффилированные продукты.")
   ```
-  Проверяется наличие обработанных продуктов и выводятся данные о каждом продукте.
+  Здесь мы проверяем, есть ли обработанные продукты, и выводим информацию о каждом продукте.
 
+Этот пример демонстрирует базовое использование класса `AliAffiliatedProducts` и его методов. Вы можете адаптировать его под свои нужды и добавить больше функциональности, если это необходимо.
+
+### Полный файл примеров
+
+
+```python
+
+```
 
 # Improved Code
 
 ```python
-# пример_использования.py
+# affiliated_products_generator_example.py
+"""
+Пример использования модуля `affiliated_products_generator`.
+============================================================
 
+Этот пример демонстрирует, как использовать класс `AliAffiliatedProducts` для получения аффилированных ссылок для продуктов AliExpress.
+"""
+
+import os
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем j_loads
-# ... (rest of the code)
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
 def main():
     """
-    Основная функция для запуска примера использования класса AliAffiliatedProducts.
+    Основная функция для обработки аффилированных продуктов.
 
+    :return: None
     """
-    # Задайте параметры рекламной кампании
+    # Параметры рекламной кампании
     campaign_name = "summer_sale_2024"
-    campaign_category = "electronics"  # Можно задать None, если категория не нужна
-    language = "EN"  # Язык для кампании
-    currency = "USD"  # Валюта для кампании
+    campaign_category = "electronics"  # Можно задать None
+    language = "EN"
+    currency = "USD"
 
-
-    # Создайте экземпляр класса AliAffiliatedProducts
+    # Экземпляр класса для обработки AliExpress
     parser = AliAffiliatedProducts(
         campaign_name,
         campaign_category,
@@ -130,7 +145,7 @@ def main():
         currency
     )
 
-    # Пример URL продуктов или их ID
+    # Список URL продуктов или их ID
     prod_urls = [
         '123',
         'https://www.aliexpress.com/item/123.html',
@@ -138,65 +153,70 @@ def main():
         'https://www.aliexpress.com/item/456.html',
     ]
 
-    # Обработка продуктов и получение списка продуктов с аффилированными ссылками
+    # Обработка продуктов и получение аффилированных ссылок
     try:
         products = parser.process_affiliate_products(prod_urls)
     except Exception as e:
-        logger.error('Ошибка при обработке аффилированных продуктов:', e)
+        logger.error("Ошибка при обработке продуктов:", exc_info=True)
         return
 
-    # Проверка результатов
+    # Вывод результатов
     if products:
-        print(f"Найдено {len(products)} аффилированных продуктов.")
+        print(f"Найдено {len(products)} аффилированных продуктов:")
         for product in products:
             print(f"ID продукта: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
+            print(f"Путь к изображению: {product.local_saved_image}")
             if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
-            print()
+                print(f"Путь к видео: {product.local_saved_video}")
+            print("-" * 20)
     else:
         print("Не удалось найти аффилированные продукты.")
 
+
 if __name__ == "__main__":
-    from src.logger import logger  # Импортируем logger
     main()
 ```
 
 # Changes Made
 
-*   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Функция `main` получила RST документацию.
-*   Добавлен блок `try-except` для обработки потенциальных ошибок при вызове `parser.process_affiliate_products`.  Ошибка логгируется с использованием `logger.error`.
-*   Изменён вывод сообщений для большей читаемости.
-*   Комментарии переписаны в формате RST.
+- Добавлена документация RST к функции `main`.
+- Обработка исключений с использованием `try-except` и `logger.error` для записи ошибок в лог.
+- Изменён вывод результатов,  используются более информативные сообщения.
+- Удалены лишние комментарии и пояснения.
+- Добавлена строка `from src.logger import logger` для импорта необходимой функции логирования.
+
 
 # FULL Code
 
 ```python
-# пример_использования.py
+# affiliated_products_generator_example.py
+"""
+Пример использования модуля `affiliated_products_generator`.
+============================================================
 
+Этот пример демонстрирует, как использовать класс `AliAffiliatedProducts` для получения аффилированных ссылок для продуктов AliExpress.
+"""
+
+import os
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем j_loads
-# ... (rest of the code)
+from src.utils.jjson import j_loads
+from src.logger import logger
+
 
 def main():
     """
-    Основная функция для запуска примера использования класса AliAffiliatedProducts.
+    Основная функция для обработки аффилированных продуктов.
 
-    Эта функция создает экземпляр класса `AliAffiliatedProducts`,
-    передает список URL-адресов продуктов, обрабатывает их и выводит
-    результаты в консоль.  Возможные ошибки обрабатываются и логируются.
+    :return: None
     """
-    # Задайте параметры рекламной кампании
+    # Параметры рекламной кампании
     campaign_name = "summer_sale_2024"
-    campaign_category = "electronics"  # Можно задать None, если категория не нужна
-    language = "EN"  # Язык для кампании
-    currency = "USD"  # Валюта для кампании
+    campaign_category = "electronics"  # Можно задать None
+    language = "EN"
+    currency = "USD"
 
-
-    # Создайте экземпляр класса AliAffiliatedProducts
+    # Экземпляр класса для обработки AliExpress
     parser = AliAffiliatedProducts(
         campaign_name,
         campaign_category,
@@ -204,7 +224,7 @@ def main():
         currency
     )
 
-    # Пример URL продуктов или их ID
+    # Список URL продуктов или их ID
     prod_urls = [
         '123',
         'https://www.aliexpress.com/item/123.html',
@@ -212,27 +232,27 @@ def main():
         'https://www.aliexpress.com/item/456.html',
     ]
 
-    # Обработка продуктов и получение списка продуктов с аффилированными ссылками
+    # Обработка продуктов и получение аффилированных ссылок
     try:
         products = parser.process_affiliate_products(prod_urls)
     except Exception as e:
-        logger.error('Ошибка при обработке аффилированных продуктов:', e)
+        logger.error("Ошибка при обработке продуктов:", exc_info=True)
         return
 
-    # Проверка результатов
+    # Вывод результатов
     if products:
-        print(f"Найдено {len(products)} аффилированных продуктов.")
+        print(f"Найдено {len(products)} аффилированных продуктов:")
         for product in products:
             print(f"ID продукта: {product.product_id}")
             print(f"Аффилированная ссылка: {product.promotion_link}")
-            print(f"Локальный путь к изображению: {product.local_saved_image}")
+            print(f"Путь к изображению: {product.local_saved_image}")
             if product.local_saved_video:
-                print(f"Локальный путь к видео: {product.local_saved_video}")
-            print()
+                print(f"Путь к видео: {product.local_saved_video}")
+            print("-" * 20)
     else:
         print("Не удалось найти аффилированные продукты.")
 
+
 if __name__ == "__main__":
-    from src.logger import logger  # Импортируем logger
     main()
 ```

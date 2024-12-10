@@ -1,141 +1,118 @@
 # Received Code
 
 ```python
-# Код для проверки
-# ... (Original code here, without any changes)
+# Function to process data
+def process_data(file_path):
+    try:
+        # Load data from file using json.load
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        # Process the data
+        ...
+    except Exception as e:
+        print(f"Error processing file {file_path}: {e}")
+        return None
+    return data
 ```
 
 # Improved Code
 
 ```python
-# Модуль для работы с проверкой кода
 """
-Модуль для проверки кода и предоставления рекомендаций по улучшению.
-====================================================================
+Module for data processing.
 
-Этот модуль предоставляет функции для проверки предоставленного кода и выдачи рекомендаций по улучшению его структуры, стиля и логики.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    # Пример использования функций проверки кода
-    result = check_code(code_snippet)
-    print(result)
-
+This module provides a function for loading and processing data from JSON files.
 """
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 import json
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
-# Проверка кода
-def check_code(code_snippet):
+def process_data(file_path):
     """
-    Проверяет предоставленный код и возвращает рекомендации по улучшению.
+    Loads and processes data from a JSON file.
 
-    :param code_snippet: Сниппет кода для проверки.
-    :type code_snippet: str
-    :raises TypeError: Если code_snippet не является строкой.
-    :raises ValueError: Если в коде есть ошибки.
-    :return: Результат проверки в виде строки.
-    :rtype: str
+    :param file_path: Path to the JSON file.
+    :type file_path: str
+    :raises FileNotFoundError: If the file does not exist.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: The loaded and processed data, or None if an error occurs.
+    :rtype: dict or None
     """
-    if not isinstance(code_snippet, str):
-        logger.error('Переданный фрагмент кода не является строкой.')
-        raise TypeError('Переданный фрагмент кода не является строкой.')
-        
-    # Проверка на наличие ошибок в коде (синтаксис, семантика)
     try:
-        # Код исполняет проверку синтаксиса и семантики
-        compile(code_snippet, '<string>', 'exec')  # проверка синтаксиса
-    except SyntaxError as e:
-        logger.error('Ошибка синтаксиса в коде:', e)
-        return f'Ошибка синтаксиса: {e}'
+        # Load data from file using j_loads for better error handling
+        with open(file_path, 'r') as f:
+            data = j_loads(f)
+        # Process the data (add your processing logic here)
+        # Example: validating data structure
+        if not isinstance(data, dict):
+            logger.error(f"Invalid data format in {file_path}: Expected dict, got {type(data)}")
+            return None
+        # ... (add your processing logic here)
+        return data
+    except FileNotFoundError as e:
+        logger.error(f"Error: File not found - {file_path}", exc_info=True)
+        return None
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON in {file_path}", exc_info=True)
+        return None
     except Exception as e:
-        logger.error('Ошибка во время проверки кода:', e)
-        return f'Ошибка: {e}'
-
-    # Дополнительные проверки и рекомендации (TODO: реализовать более сложные проверки)
-    recommendations = []
-    # ... (Logic for generating recommendations)
-
-
-    # Возврат результатов
-    return '\n'.join(recommendations)
+        logger.error(f"An unexpected error occurred while processing {file_path}: {e}", exc_info=True)
+        return None
 ```
 
 # Changes Made
 
-*   Добавлен модуль docstring в формате RST.
-*   Добавлены docstrings к функции `check_code` в формате RST.
-*   Добавлен импорт `json` и `logger`.
-*   Добавлена проверка типа входного параметра `code_snippet`.
-*   Реализована базовая проверка синтаксиса кода с использованием `compile`.
-*   Обработка исключений `SyntaxError` и других.
-*   Добавлена логирование ошибок (`logger.error`).
-*   Избегание избыточного использования `try-except` в пользу `logger`.
-*   Замена `json.load` на `j_loads` для чтения данных.
+*   Replaced `json.load` with `j_loads` from `src.utils.jjson` for improved error handling.
+*   Added detailed docstrings in RST format for the `process_data` function, explaining parameters, return types, and potential exceptions.
+*   Added `try...except` blocks to handle `FileNotFoundError`, `json.JSONDecodeError`, and other potential exceptions using `logger.error`.
+*   Improved error messages using f-strings.
+*   Added a check for the correct type of the loaded data (`dict`).
+*   Included example error handling.
 
 
 # FULL Code
 
 ```python
-# Модуль для работы с проверкой кода
 """
-Модуль для проверки кода и предоставления рекомендаций по улучшению.
-====================================================================
+Module for data processing.
 
-Этот модуль предоставляет функции для проверки предоставленного кода и выдачи рекомендаций по улучшению его структуры, стиля и логики.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    # Пример использования функций проверки кода
-    result = check_code(code_snippet)
-    print(result)
-
+This module provides a function for loading and processing data from JSON files.
 """
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
 import json
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
-# Проверка кода
-def check_code(code_snippet):
+def process_data(file_path):
     """
-    Проверяет предоставленный код и возвращает рекомендации по улучшению.
+    Loads and processes data from a JSON file.
 
-    :param code_snippet: Сниппет кода для проверки.
-    :type code_snippet: str
-    :raises TypeError: Если code_snippet не является строкой.
-    :raises ValueError: Если в коде есть ошибки.
-    :return: Результат проверки в виде строки.
-    :rtype: str
+    :param file_path: Path to the JSON file.
+    :type file_path: str
+    :raises FileNotFoundError: If the file does not exist.
+    :raises json.JSONDecodeError: If the file content is not valid JSON.
+    :return: The loaded and processed data, or None if an error occurs.
+    :rtype: dict or None
     """
-    if not isinstance(code_snippet, str):
-        logger.error('Переданный фрагмент кода не является строкой.')
-        raise TypeError('Переданный фрагмент кода не является строкой.')
-        
-    # Проверка на наличие ошибок в коде (синтаксис, семантика)
     try:
-        # Код исполняет проверку синтаксиса и семантики
-        compile(code_snippet, '<string>', 'exec')  # проверка синтаксиса
-    except SyntaxError as e:
-        logger.error('Ошибка синтаксиса в коде:', e)
-        return f'Ошибка синтаксиса: {e}'
+        # Load data from file using j_loads for better error handling
+        with open(file_path, 'r') as f:
+            data = j_loads(f)
+        # Process the data (add your processing logic here)
+        # Example: validating data structure
+        if not isinstance(data, dict):
+            logger.error(f"Invalid data format in {file_path}: Expected dict, got {type(data)}")
+            return None
+        # ... (add your processing logic here)
+        return data
+    except FileNotFoundError as e:
+        logger.error(f"Error: File not found - {file_path}", exc_info=True)
+        return None
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON in {file_path}", exc_info=True)
+        return None
     except Exception as e:
-        logger.error('Ошибка во время проверки кода:', e)
-        return f'Ошибка: {e}'
-
-    # Дополнительные проверки и рекомендации (TODO: реализовать более сложные проверки)
-    recommendations = []
-    # ... (Logic for generating recommendations)
-
-
-    # Возврат результатов
-    return '\n'.join(recommendations)
+        logger.error(f"An unexpected error occurred while processing {file_path}: {e}", exc_info=True)
+        return None
 ```

@@ -73,50 +73,56 @@ __author__='hypotez '
     :platform: Windows, Unix
     :synopsis: Модуль для работы с версиями.
 """
-import sys # Необходимо для работы с sys.version_info
-from src.utils.jjson import j_loads # Импорт функции j_loads
-from src.logger import logger # Импорт функции для логирования
 
-
+# Константа, определяющая режим работы.
 MODE = 'dev'
 
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Описание режима работы.
+"""
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Описание дополнительной информации.
+"""
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Описание версии модуля.
+"""
 __version__ = "3.12.0.0.0.4"
-__author__ = 'hypotez'
-__name__ = __name__  # Имя модуля
-__doc__ = __doc__  # Документация модуля
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Дополнительная информация о версии.
+"""
 __details__ = "Details about version for module or class"
-__annotations__ = None # Необходимо для соответствия PEP 484
 
+"""
+    :platform: Windows, Unix
+    :synopsis:  Информация об авторе модуля.
+"""
+__author__ = 'hypotez'
 
-def get_python_version():
-    """Возвращает информацию о версии Python."""
-    return sys.version_info
+# Документация для переменных, содержащих данные о модуле.
+__doc__ = __doc__
+__name__ = __name__
 
-
-# Код ниже требует улучшения.
-# Обработка ошибок с использованием logger.
-# Неявный import sys - добавлен
-try:
-    # Неясно, что делается с версией Python. Предполагается вывод версии в консоль.
-    python_version = get_python_version()
-    logger.info(f"Python version: {python_version}")
-except Exception as e:
-    logger.error("Ошибка при получении информации о версии Python:", e)
-    # ... обработка ошибки ...
+__annotations__ = {} # Пустой словарь для анотаций
 ```
 
 # Changes Made
 
-*   Добавлен импорт `sys` для работы с информацией о версии Python.
-*   Импортирована функция `j_loads` из `src.utils.jjson` для чтения файлов.
-*   Импортирован `logger` из `src.logger` для логирования.
-*   Добавлена функция `get_python_version` для получения версии Python.
-*   Комментарии переписаны в формате RST.
-*   Добавлены docstring для функций.
-*   Обработка ошибок с использованием `logger.error` вместо `try-except`.
-*   Изменены комментарии для соответствия стилю reStructuredText.
-*   Уточнены комментарии и добавлено описание к `__annotations__`.
-
+*   Добавлены комментарии в формате RST к переменным `MODE`, `__version__`, `__details__`, `__author__`.
+*   Изменён формат документации, чтобы соответствовать RST стандарту.
+*   Исправлены опечатки и стилистические ошибки в комментариях.
+*   Добавлена более подробная документация к модулю.
+*   Добавлен `__annotations__` пустым словарём, так как в примере он был некорректно использован.
 
 # FULL Code
 
@@ -131,33 +137,44 @@ except Exception as e:
     :platform: Windows, Unix
     :synopsis: Модуль для работы с версиями.
 """
-import sys # Необходимо для работы с sys.version_info
-from src.utils.jjson import j_loads # Импорт функции j_loads
-from src.logger import logger # Импорт функции для логирования
 
-
+# Константа, определяющая режим работы.
 MODE = 'dev'
 
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Описание режима работы.
+"""
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Описание дополнительной информации.
+"""
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Описание версии модуля.
+"""
 __version__ = "3.12.0.0.0.4"
-__author__ = 'hypotez'
-__name__ = __name__  # Имя модуля
-__doc__ = __doc__  # Документация модуля
+
+
+"""
+    :platform: Windows, Unix
+    :synopsis: Дополнительная информация о версии.
+"""
 __details__ = "Details about version for module or class"
-__annotations__ = None # Необходимо для соответствия PEP 484
 
+"""
+    :platform: Windows, Unix
+    :synopsis:  Информация об авторе модуля.
+"""
+__author__ = 'hypotez'
 
-def get_python_version():
-    """Возвращает информацию о версии Python."""
-    return sys.version_info
+# Документация для переменных, содержащих данные о модуле.
+__doc__ = __doc__
+__name__ = __name__
 
-
-# Код ниже требует улучшения.
-# Обработка ошибок с использованием logger.
-# Неявный import sys - добавлен
-try:
-    # Неясно, что делается с версией Python. Предполагается вывод версии в консоль.
-    python_version = get_python_version()
-    logger.info(f"Python version: {python_version}")
-except Exception as e:
-    logger.error("Ошибка при получении информации о версии Python:", e)
-    # ... обработка ошибки ...
+__annotations__ = {} # Пустой словарь для анотаций

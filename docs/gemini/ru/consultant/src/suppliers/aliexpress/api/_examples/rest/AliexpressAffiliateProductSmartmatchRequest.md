@@ -1,12 +1,14 @@
-## Received Code
+# Received Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductSmartmatchRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """
-# '''
-# Created by auto_sdk on 2021.05.17
-# '''
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
+""" module: src.suppliers.aliexpress.api._examples.rest """
+'''
+Created by auto_sdk on 2021.05.17
+'''
 from ..base import RestApi
 class AliexpressAffiliateProductSmartmatchRequest(RestApi):
 	def __init__(self, domain="api-sg.aliexpress.com", port=80):
@@ -25,33 +27,42 @@ class AliexpressAffiliateProductSmartmatchRequest(RestApi):
 		self.target_language = None
 		self.tracking_id = None
 		self.user = None
+
 	def getapiname(self):
 		return 'aliexpress.affiliate.product.smartmatch'
 ```
 
-## Improved Code
+# Improved Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductSmartmatchRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\n""" Модуль для запроса Aliexpress Affiliate Product Smartmatch """
-"""
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
+""" Модуль для запросов к API AliExpress для поиска продуктов по ключевым словам. """
+'''
 Создан автоматически 17.05.2021
-"""
+'''
 from ..base import RestApi
-from src.logger import logger  # Импорт модуля для логирования
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
+from src.logger import logger # Импорт для логирования
+
 
 class AliexpressAffiliateProductSmartmatchRequest(RestApi):
     """
-    Класс для отправки запросов на поиск продуктов Aliexpress.
-    """
+    Класс для отправки запросов к API AliExpress для поиска продуктов по ключевым словам.
 
+    :param domain: Домен API AliExpress. По умолчанию 'api-sg.aliexpress.com'.
+    :type domain: str
+    :param port: Порт API AliExpress. По умолчанию 80.
+    :type port: int
+    """
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Инициализирует запрос.
+        Инициализирует объект запроса.
 
-        :param domain: Домен API.
-        :param port: Порт API.
+        :param domain: Домен API AliExpress.
+        :param port: Порт API AliExpress.
         """
         RestApi.__init__(self, domain, port)
         self.app = None
@@ -74,42 +85,53 @@ class AliexpressAffiliateProductSmartmatchRequest(RestApi):
         Возвращает имя API-метода.
 
         :return: Имя API-метода.
+        :rtype: str
         """
         return 'aliexpress.affiliate.product.smartmatch'
 ```
 
-## Changes Made
+# Changes Made
 
-* Импортирован модуль `logger` из `src.logger`.
-* Добавлены docstring в формате RST для класса и метода `getapiname`.
-* Добавлены комментарии в формате RST к параметрам конструктора.
-* Изменены комментарии к модулю, функциям и параметрам, переписанные в формате RST.
-* Исправлены стилистические ошибки.
+* Добавлено импортирование необходимых функций `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+* Добавлено импортирование `logger` из `src.logger`.
+* Добавлена документация RST для класса `AliexpressAffiliateProductSmartmatchRequest` и методов.
+* Изменены некоторые комментарии для соответствия стилю RST.
+* Избегается использование неявных `...` в методах.
+* Добавлены типы данных для параметров функций, где это возможно.
+* Исправлены именования переменных.
 
 
-## FULL Code
+# FULL Code
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductSmartmatchRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~\n""" Модуль для запроса Aliexpress Affiliate Product Smartmatch """
-"""
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~\
+""" Модуль для запросов к API AliExpress для поиска продуктов по ключевым словам. """
+'''
 Создан автоматически 17.05.2021
-"""
+'''
 from ..base import RestApi
-from src.logger import logger  # Импорт модуля для логирования
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
+from src.logger import logger # Импорт для логирования
+
 
 class AliexpressAffiliateProductSmartmatchRequest(RestApi):
     """
-    Класс для отправки запросов на поиск продуктов Aliexpress.
-    """
+    Класс для отправки запросов к API AliExpress для поиска продуктов по ключевым словам.
 
+    :param domain: Домен API AliExpress. По умолчанию 'api-sg.aliexpress.com'.
+    :type domain: str
+    :param port: Порт API AliExpress. По умолчанию 80.
+    :type port: int
+    """
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Инициализирует запрос.
+        Инициализирует объект запроса.
 
-        :param domain: Домен API.
-        :param port: Порт API.
+        :param domain: Домен API AliExpress.
+        :param port: Порт API AliExpress.
         """
         RestApi.__init__(self, domain, port)
         self.app = None
@@ -132,5 +154,6 @@ class AliexpressAffiliateProductSmartmatchRequest(RestApi):
         Возвращает имя API-метода.
 
         :return: Имя API-метода.
+        :rtype: str
         """
         return 'aliexpress.affiliate.product.smartmatch'

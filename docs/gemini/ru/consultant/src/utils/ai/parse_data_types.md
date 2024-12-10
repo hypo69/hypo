@@ -26,47 +26,24 @@ import header
 #! venv/bin/python/python3.12
 
 """
-module: src.utils.ai.parse_data_types
-	:platform: Windows, Unix
-	:synopsis: Модуль для обработки типов данных.
-    :TODO: В дальнейшем перенести в системную переменную. Добавьте документацию к функциям.
+Модуль для обработки типов данных.
+
+Этот модуль содержит функции для парсинга данных различных типов.
 """
 MODE = 'dev'
 ...
+import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-import header
 
-# ...
-
-def parse_data(file_path: str) -> dict:
-    """
-    Парсит данные из файла.
-
-    :param file_path: Путь к файлу.
-    :return: Словарь с данными или None при ошибке.
-    """
-    try:
-        # Код пытается загрузить данные из файла с помощью j_loads.
-        data = j_loads(file_path)
-        return data
-    except Exception as e:
-        logger.error(f'Ошибка при загрузке данных из файла {file_path}: {e}')
-        return None
-
-# ...
+...
 ```
 
 # Changes Made
 
-*   Импортирован `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Импортирован `logger` из `src.logger`.
-*   Добавлена функция `parse_data` для обработки данных с использованием `j_loads`.
-*   Обработка ошибок с помощью `logger.error`.
-*   Добавлена документация (docstrings) в формате RST к функции `parse_data`.
-*   Изменены комментарии для соответствия стандартам RST.
-*   Избегание слов "получаем", "делаем" и т.п. в комментариях.
-*   Переписаны комментарии в формате RST.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлен импорт `logger` из `src.logger`.
+*   Добавлен комментарий RST для модуля.
 
 # FULL Code
 
@@ -77,32 +54,48 @@ def parse_data(file_path: str) -> dict:
 #! venv/bin/python/python3.12
 
 """
-module: src.utils.ai.parse_data_types
-	:platform: Windows, Unix
-	:synopsis: Модуль для обработки типов данных.
-    :TODO: В дальнейшем перенести в системную переменную. Добавьте документацию к функциям.
+Модуль для обработки типов данных.
+
+Этот модуль содержит функции для парсинга данных различных типов.
 """
 MODE = 'dev'
 ...
+import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-import header
 
 # ...
 
+
+# Функция для парсинга данных
 def parse_data(file_path: str) -> dict:
     """
     Парсит данные из файла.
 
     :param file_path: Путь к файлу.
-    :return: Словарь с данными или None при ошибке.
+    :raises FileNotFoundError: Если файл не найден.
+    :raises json.JSONDecodeError: Если данные в файле не валидный JSON.
+    :returns: Данные в формате словаря.
     """
     try:
-        # Код пытается загрузить данные из файла с помощью j_loads.
-        data = j_loads(file_path)
+        # Функция j_loads_ns из src.utils.jjson используется для чтения файла.
+        data = j_loads_ns(file_path)
+        # Проверка результата.
+        if not data:
+          logger.error(f'Пустой или невалидный файл: {file_path}')
+          return {}
+
         return data
+    except FileNotFoundError as e:
+        logger.error(f'Ошибка: Файл не найден: {file_path}', e)
+        raise
+    except json.JSONDecodeError as e:
+        logger.error(f'Ошибка: Некорректный JSON в файле: {file_path}', e)
+        raise
     except Exception as e:
-        logger.error(f'Ошибка при загрузке данных из файла {file_path}: {e}')
-        return None
+        logger.error(f'Ошибка при чтении файла: {file_path}', e)
+        raise
+
+
 
 # ...

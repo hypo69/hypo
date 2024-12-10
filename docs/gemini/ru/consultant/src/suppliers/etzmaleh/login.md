@@ -72,52 +72,45 @@ def login(s) -> bool:
 .. module:: src.suppliers.etzmaleh
     :platform: Windows, Unix
     :synopsis: Модуль для авторизации на сайте etzmaleh.
+
 """
 MODE = 'dev'
 
 
-def login(supplier: object) -> bool:
+def login(s) -> bool:
     """
-    Производит вход на сайт etzmaleh.
+    Выполняет авторизацию на сайте etzmaleh.
 
-    :param supplier: Объект, представляющий поставщика.
-    :type supplier: object
-    :raises TypeError: Если переданный объект не является допустимым типом.
-    :returns: True, если вход успешен, иначе False.
+    :param s: Объект поставщика (Supplier).
+    :type s: Supplier
+    :raises TypeError: Если переданный объект не является Supplier.
+    :returns: True, если авторизация успешна, иначе False.
     :rtype: bool
     """
+    # Проверка типа переданного объекта.
+    if not isinstance(s, Supplier):
+        logger.error("Ошибка: Переданный объект не является Supplier.")
+        raise TypeError("Переданный объект не является Supplier.")
+        
     try:
-        # Проверка типа переданного объекта.  # TODO:  Добавить конкретную проверку типа
-        if not isinstance(supplier, object):
-            raise TypeError("Переданный объект не является допустимым типом.")
-
-        # Проверка на пустоту (если необходимо) # TODO:  указать условия проверки 
-        if not supplier:
-           logger.error("Объект поставщика пуст или не содержит необходимых данных для входа.")
-           return False
-       
-        #  Код исполняет вход на сайт (подробнее в реализации)
-        logger.info(f"Попытка входа на сайт etzmaleh...")
-        # ... (Код входа) ...
-        return True  # Возвращаем True, если вход успешен
+        # ... код, отвечающий за логин ...
+        logger.info('Попытка авторизации...')
+        # ...  
+        return True  # Возвращаем True, если авторизация прошла успешно
     except Exception as e:
-        logger.error(f"Ошибка при входе на сайт etzmaleh: {e}", exc_info=True)
+        logger.error(f'Ошибка авторизации: {e}')
         return False
-
 ```
 
 # Changes Made
 
-*   Изменён тип возвращаемого значения функции `login` на `bool`.
-*   Добавлен параметр `supplier` с типом `object` в функцию `login` для указания, что функция работает с объектом, представляющим поставщика.
-*   Добавлен `try...except` блок для обработки потенциальных исключений.
-*   Исправлена ошибка в коде `return Truee` на `return True`.
-*   Добавлен комментарий RST для функции `login` с описанием параметров, возвращаемого значения и возможных исключений.
-*   Добавлены проверки типа и пустоты.
-*   Изменён стиль документации в соответствии с RST.
-*   Комментарии переписаны в формате RST.
-*   Использование `logger.error` для логирования ошибок вместо стандартного `try-except`.
-
+*   Добавлены docstring в формате RST для функции `login`.
+*   Добавлена проверка типа аргумента `s` на соответствие типу `Supplier`.
+*   Используется `logger.error` для вывода сообщений об ошибках.
+*   Изменён return Truee на return True.
+*   Исправлен стиль комментариев (использованы `.. module::` и `:param`, `:type`, `:returns`, `:rtype`, и т.д.).
+*   Добавлен блок `try-except` для обработки потенциальных ошибок при логине, с использованием `logger.error`
+*   Убраны лишние строки документации.
 
 # FULL Code
 
@@ -131,34 +124,40 @@ def login(supplier: object) -> bool:
 .. module:: src.suppliers.etzmaleh
     :platform: Windows, Unix
     :synopsis: Модуль для авторизации на сайте etzmaleh.
+
 """
 MODE = 'dev'
 
 
-def login(supplier: object) -> bool:
-    """
-    Производит вход на сайт etzmaleh.
+# Импорт нужных библиотек
+from src.logger import logger
+from typing import Any
 
-    :param supplier: Объект, представляющий поставщика.
-    :type supplier: object
-    :raises TypeError: Если переданный объект не является допустимым типом.
-    :returns: True, если вход успешен, иначе False.
+# Добавление класса Supplier (предполагается, что он определен в другом месте)
+class Supplier:
+    pass
+
+
+def login(s: Supplier) -> bool:
+    """
+    Выполняет авторизацию на сайте etzmaleh.
+
+    :param s: Объект поставщика (Supplier).
+    :type s: Supplier
+    :raises TypeError: Если переданный объект не является Supplier.
+    :returns: True, если авторизация успешна, иначе False.
     :rtype: bool
     """
+    # Проверка типа переданного объекта.
+    if not isinstance(s, Supplier):
+        logger.error("Ошибка: Переданный объект не является Supplier.")
+        raise TypeError("Переданный объект не является Supplier.")
+        
     try:
-        # Проверка типа переданного объекта.  # TODO:  Добавить конкретную проверку типа
-        if not isinstance(supplier, object):
-            raise TypeError("Переданный объект не является допустимым типом.")
-
-        # Проверка на пустоту (если необходимо) # TODO:  указать условия проверки 
-        if not supplier:
-           logger.error("Объект поставщика пуст или не содержит необходимых данных для входа.")
-           return False
-       
-        #  Код исполняет вход на сайт (подробнее в реализации)
-        logger.info(f"Попытка входа на сайт etzmaleh...")
-        # ... (Код входа) ...
-        return True  # Возвращаем True, если вход успешен
+        # ... код, отвечающий за логин ...
+        logger.info('Попытка авторизации...')
+        # ...  # Добавить логирование, если нужно.
+        return True  # Возвращаем True, если авторизация прошла успешно
     except Exception as e:
-        logger.error(f"Ошибка при входе на сайт etzmaleh: {e}", exc_info=True)
+        logger.error(f'Ошибка авторизации: {e}')
         return False

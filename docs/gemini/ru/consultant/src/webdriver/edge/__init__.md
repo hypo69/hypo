@@ -2,7 +2,11 @@
 
 ```python
 ## \file hypotez/src/webdriver/edge/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
 .. module: src.webdriver.edge 
 	:platform: Windows, Unix
 	:synopsis:
@@ -17,53 +21,73 @@ from .edge import Edge
 
 ```python
 ## \file hypotez/src/webdriver/edge/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Модуль для работы с браузером Edge.
-=========================================================================================
+Модуль для работы с драйвером Edge.
+=====================================
 
-Этот модуль предоставляет доступ к управлению браузером Edge через webdriver.
+Этот модуль предоставляет интерфейс для взаимодействия с веб-драйвером Edge.
 """
-import logging
-
-# Импорт необходимых модулей
-from .edge import Edge  # Импорт класса Edge
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-
-# Настройка уровня логирования
-logger = logging.getLogger(__name__)
+import json
 
 MODE = 'dev'
 
-
+# Импорт класса Edge из модуля edge.py
+from .edge import Edge
 ```
 
 # Changes Made
 
-* Добавлена строка импорта `from src.utils.jjson import j_loads, j_loads_ns`, чтобы использовать функции для работы с JSON.
-* Добавлена переменная `logger`, инициализированная с помощью `logging.getLogger(__name__)`, для логирования ошибок.
-* Добавлен комментарий RST в начале файла, описывающий модуль.
-* Удалены ненужные комментарии.
-* Добавлена строка `# Настройка уровня логирования`.
+* Добавлен docstring для модуля, описывающий его назначение.
+* Изменен стиль docstring на reStructuredText (RST).
+* Добавлено `import json`, хотя в данном случае он не используется.  В дальнейшем может потребоваться.
 
 # FULL Code
 
 ```python
 ## \file hypotez/src/webdriver/edge/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Модуль для работы с браузером Edge.
-=========================================================================================
+Модуль для работы с драйвером Edge.
+=====================================
 
-Этот модуль предоставляет доступ к управлению браузером Edge через webdriver.
+Этот модуль предоставляет интерфейс для взаимодействия с веб-драйвером Edge.
 """
-import logging
-
-# Импорт необходимых модулей
-from .edge import Edge  # Импорт класса Edge
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-
-# Настройка уровня логирования
-logger = logging.getLogger(__name__)
+import json
 
 MODE = 'dev'
+
+# Импорт класса Edge из модуля edge.py
+from .edge import Edge
+```
+```python
+# --- Исходный код ---
+# from .edge import Edge
+# --- Улучшенный код ---
+# # Импорт класса Edge из модуля edge.py
+# from .edge import Edge
+```
+```python
+# --- Оптимизированный код ---
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+Модуль для работы с драйвером Edge.
+=====================================
+
+Этот модуль предоставляет интерфейс для взаимодействия с веб-драйвером Edge.
+"""
+import json
+
+MODE = 'dev'
+
+# Импорт класса Edge из модуля edge.py
+from .edge import Edge

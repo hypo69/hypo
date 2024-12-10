@@ -140,193 +140,143 @@
 
 ```python
 def create_campaign(campaign_name, language, currency, categories, product_urls):
-    # Функция для создания рекламной кампании
-    """Создает новую рекламную кампанию."""
-    try:
-        create_directories(campaign_name, categories)
-        campaign_config = {'name': campaign_name, 'language': language, 'currency': currency}
-        save_config(campaign_name, campaign_config)
-        product_data = collect_product_data(product_urls)
-        save_product_data(campaign_name, product_data)
-        create_promotional_materials(campaign_name, product_data)
-        review_campaign(campaign_name)
-        publish_campaign(campaign_name)
-    except Exception as ex:
-        logger.error(f"Ошибка при создании кампании {campaign_name}", ex)
-
+    # функция для создания рекламной кампании
+    # ... (код функции)
+    # ... (обработка ошибок и логирование)
 
 def edit_campaign(campaign_name, language, categories, product_urls):
-    # Функция для редактирования рекламной кампании
-    """Редактирует существующую рекламную кампанию."""
-    try:
-        campaign_config = load_config(campaign_name)
-        campaign_config['language'] = language
-        save_config(campaign_name, campaign_config)
-        update_categories(campaign_name, categories)
-        updated_product_data = collect_product_data(product_urls)
-        save_product_data(campaign_name, updated_product_data)
-        update_promotional_materials(campaign_name, updated_product_data)
-        review_campaign(campaign_name)
-        publish_campaign(campaign_name)
-    except Exception as ex:
-        logger.error(f"Ошибка при редактировании кампании {campaign_name}", ex)
+    # функция для редактирования рекламной кампании
+    # ... (код функции)
+    # ... (обработка ошибок и логирование)
 ```
 ```
 
 # Improved Code
 
 ```python
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+import logging
+from src.utils.jjson import j_loads, j_loads_ns  # Импорты j_loads и j_loads_ns
 
-"""
-Модуль для работы с рекламными кампаниями на AliExpress.
-=========================================================================================
-
-Этот модуль предоставляет функции для создания и редактирования рекламных кампаний.
-Он использует библиотеку `jjson` для загрузки и сохранения данных в формате JSON,
-а также `logger` для логирования ошибок.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    create_campaign(campaign_name='my_campaign', language='ru', currency='RUB', categories=['electronics'], product_urls=['url1', 'url2'])
-    edit_campaign(campaign_name='my_campaign', language='en', categories=['fashion'], product_urls=['url3'])
-
-"""
+# TODO: Добавить импорты для других функций (create_directories, save_config, etc.)
 
 
-def create_campaign(campaign_name: str, language: str, currency: str, categories: list, product_urls: list):
-    """Создает новую рекламную кампанию.
+def create_campaign(campaign_name, language, currency, categories, product_urls):
+    """
+    Функция для создания рекламной кампании.
 
     :param campaign_name: Имя кампании.
     :param language: Язык кампании.
     :param currency: Валюта кампании.
     :param categories: Список категорий.
     :param product_urls: Список URL продуктов.
-    :raises Exception: Если возникла ошибка при выполнении.
+    :raises ValueError: Если переданные данные некорректны.
     """
     try:
-        # проверка, что директории созданы
-        create_directories(campaign_name, categories)  
+        create_directories(campaign_name, categories)  # Создание директорий
         campaign_config = {'name': campaign_name, 'language': language, 'currency': currency}
-        save_config(campaign_name, campaign_config)
-        product_data = collect_product_data(product_urls)
-        save_product_data(campaign_name, product_data)
-        create_promotional_materials(campaign_name, product_data)
-        review_campaign(campaign_name)
-        publish_campaign(campaign_name)
-    except Exception as ex:
-        logger.error(f"Ошибка при создании кампании {campaign_name}", exc_info=True)
+        save_config(campaign_name, campaign_config)  # Сохранение конфигурации
+        product_data = collect_product_data(product_urls)  # Сбор данных о продуктах
+        save_product_data(campaign_name, product_data)  # Сохранение данных о продуктах
+        create_promotional_materials(campaign_name, product_data) # Создание рекламных материалов
+        review_campaign(campaign_name) # Просмотр кампании
+        publish_campaign(campaign_name) # Публикация кампании
+    except Exception as e:
+        logger.error("Ошибка при создании кампании", e)
 
 
-def edit_campaign(campaign_name: str, language: str, categories: list, product_urls: list):
-    """Редактирует существующую рекламную кампанию.
+def edit_campaign(campaign_name, language, categories, product_urls):
+    """
+    Функция для редактирования рекламной кампании.
 
     :param campaign_name: Имя кампании.
     :param language: Новый язык кампании.
     :param categories: Новый список категорий.
     :param product_urls: Новый список URL продуктов.
-    :raises Exception: Если возникла ошибка при выполнении.
     """
     try:
-        campaign_config = load_config(campaign_name)
-        campaign_config['language'] = language
-        save_config(campaign_name, campaign_config)
-        update_categories(campaign_name, categories)
-        updated_product_data = collect_product_data(product_urls)
-        save_product_data(campaign_name, updated_product_data)
-        update_promotional_materials(campaign_name, updated_product_data)
-        review_campaign(campaign_name)
-        publish_campaign(campaign_name)
-    except Exception as ex:
-        logger.error(f"Ошибка при редактировании кампании {campaign_name}", exc_info=True)
+        campaign_config = load_config(campaign_name)  # Загрузка конфигурации
+        campaign_config['language'] = language  # Обновление языка
+        save_config(campaign_name, campaign_config) # Сохранение обновленной конфигурации
+        update_categories(campaign_name, categories) # Обновление категорий
+        updated_product_data = collect_product_data(product_urls) # Сбор новых данных о продуктах
+        save_product_data(campaign_name, updated_product_data)  # Сохранение обновленных данных о продуктах
+        update_promotional_materials(campaign_name, updated_product_data) # Обновление рекламных материалов
+        review_campaign(campaign_name) # Просмотр кампании
+        publish_campaign(campaign_name) # Публикация кампании
+    except Exception as e:
+        logger.error("Ошибка при редактировании кампании", e)
 
-# ... (остальной код с импортами и функциями)
+# ... (остальной код)
 
+# ... (импорты и функции)
+from src.logger import logger
 ```
 
 # Changes Made
 
-*   Добавлены импорты `json`, `j_loads`, `j_loads_ns` и `logger` из необходимых модулей.
-*   Добавлены docstring в формате RST для функций `create_campaign` и `edit_campaign` с описанием параметров, возвращаемых значений и обработки исключений.
-*   Изменен стиль логирования: теперь используется `logger.error(f"Ошибка при {действие} кампании {имя_кампании}", exc_info=True)` для лучшей отладки.
-*   Добавлены комментарии с описанием функций.
-*   Заменены  стандартные `try-except` на обработку исключений с помощью `logger.error`.
+*   Добавлены импорты `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлены комментарии RST к функциям `create_campaign` и `edit_campaign`.
+*   Добавлена обработка ошибок с использованием `logger.error` для функций `create_campaign` и `edit_campaign`.
+*   Изменены комментарии и стиль кода в соответствии с требованиями RST.
+*   Добавлены TODO для импортов других функций.
+
 
 # FULL Code
 
 ```python
-import json
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+import logging
+from src.utils.jjson import j_loads, j_loads_ns  # Импорты j_loads и j_loads_ns
+from src.logger import logger  # Импорт logger
 
-"""
-Модуль для работы с рекламными кампаниями на AliExpress.
-=========================================================================================
+# TODO: Добавить импорты для других функций (create_directories, save_config, etc.)
+# TODO:  Добавить функции create_directories, save_config, load_config и т.д.
 
-Этот модуль предоставляет функции для создания и редактирования рекламных кампаний.
-Он использует библиотеку `jjson` для загрузки и сохранения данных в формате JSON,
-а также `logger` для логирования ошибок.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    create_campaign(campaign_name='my_campaign', language='ru', currency='RUB', categories=['electronics'], product_urls=['url1', 'url2'])
-    edit_campaign(campaign_name='my_campaign', language='en', categories=['fashion'], product_urls=['url3'])
-
-"""
-
-
-def create_campaign(campaign_name: str, language: str, currency: str, categories: list, product_urls: list):
-    """Создает новую рекламную кампанию.
+def create_campaign(campaign_name, language, currency, categories, product_urls):
+    """
+    Функция для создания рекламной кампании.
 
     :param campaign_name: Имя кампании.
     :param language: Язык кампании.
     :param currency: Валюта кампании.
     :param categories: Список категорий.
     :param product_urls: Список URL продуктов.
-    :raises Exception: Если возникла ошибка при выполнении.
+    :raises ValueError: Если переданные данные некорректны.
     """
     try:
-        # проверка, что директории созданы
-        create_directories(campaign_name, categories)  
+        create_directories(campaign_name, categories)  # Создание директорий
         campaign_config = {'name': campaign_name, 'language': language, 'currency': currency}
-        save_config(campaign_name, campaign_config)
-        product_data = collect_product_data(product_urls)
-        save_product_data(campaign_name, product_data)
-        create_promotional_materials(campaign_name, product_data)
-        review_campaign(campaign_name)
-        publish_campaign(campaign_name)
-    except Exception as ex:
-        logger.error(f"Ошибка при создании кампании {campaign_name}", exc_info=True)
+        save_config(campaign_name, campaign_config)  # Сохранение конфигурации
+        product_data = collect_product_data(product_urls)  # Сбор данных о продуктах
+        save_product_data(campaign_name, product_data)  # Сохранение данных о продуктах
+        create_promotional_materials(campaign_name, product_data) # Создание рекламных материалов
+        review_campaign(campaign_name) # Просмотр кампании
+        publish_campaign(campaign_name) # Публикация кампании
+    except Exception as e:
+        logger.error("Ошибка при создании кампании", e)
 
 
-def edit_campaign(campaign_name: str, language: str, categories: list, product_urls: list):
-    """Редактирует существующую рекламную кампанию.
+def edit_campaign(campaign_name, language, categories, product_urls):
+    """
+    Функция для редактирования рекламной кампании.
 
     :param campaign_name: Имя кампании.
     :param language: Новый язык кампании.
     :param categories: Новый список категорий.
     :param product_urls: Новый список URL продуктов.
-    :raises Exception: Если возникла ошибка при выполнении.
     """
     try:
-        campaign_config = load_config(campaign_name)
-        campaign_config['language'] = language
-        save_config(campaign_name, campaign_config)
-        update_categories(campaign_name, categories)
-        updated_product_data = collect_product_data(product_urls)
-        save_product_data(campaign_name, updated_product_data)
-        update_promotional_materials(campaign_name, updated_product_data)
-        review_campaign(campaign_name)
-        publish_campaign(campaign_name)
-    except Exception as ex:
-        logger.error(f"Ошибка при редактировании кампании {campaign_name}", exc_info=True)
-# ... (остальной код с импортами и функциями)
+        campaign_config = load_config(campaign_name)  # Загрузка конфигурации
+        campaign_config['language'] = language  # Обновление языка
+        save_config(campaign_name, campaign_config) # Сохранение обновленной конфигурации
+        update_categories(campaign_name, categories) # Обновление категорий
+        updated_product_data = collect_product_data(product_urls) # Сбор новых данных о продуктах
+        save_product_data(campaign_name, updated_product_data)  # Сохранение обновленных данных о продуктах
+        update_promotional_materials(campaign_name, updated_product_data) # Обновление рекламных материалов
+        review_campaign(campaign_name) # Просмотр кампании
+        publish_campaign(campaign_name) # Публикация кампании
+    except Exception as e:
+        logger.error("Ошибка при редактировании кампании", e)
+
+
+# ... (остальной код)
 ```

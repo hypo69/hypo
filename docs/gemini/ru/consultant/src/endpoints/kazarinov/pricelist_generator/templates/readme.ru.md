@@ -8,102 +8,133 @@
 
 ```python
 """
-Модуль для создания HTML отчетов на основе сценариев мехирона.
-=====================================================================
+Модуль для генерации HTML отчетов на основе сценариев мехаронов.
+=================================================================
 
-Этот модуль содержит функции для генерации HTML отчетов
-на основе данных, полученных из сценариев мехирона.
+Этот модуль содержит функции для создания HTML отчетов,
+используя данные из сценариев мехаронов.  Он предоставляет
+способ форматирования и отображения данных в отчетах.
 """
-from src.utils.jjson import j_loads
-# Импорт необходимых библиотек
 import os
 import json
-from jinja2 import Environment, FileSystemLoader
 
-# ...
+from src.utils.jjson import j_loads
 
 
-# Функция для генерации HTML отчета
 def generate_html_report(scenario_file: str) -> str:
     """
-    Генерирует HTML отчет на основе сценария мехирона.
+    Генерирует HTML отчет на основе сценария мехарона.
 
-    :param scenario_file: Путь к файлу сценария.
-    :return: Сгенерированный HTML отчет.
-    :raises FileNotFoundError: Если файл сценария не найден.
+    :param scenario_file: Путь к файлу сценария мехарона.
+    :return: HTML строка отчета. Возвращает пустую строку в случае ошибки.
     """
     # Проверка существования файла сценария
     if not os.path.exists(scenario_file):
-        raise FileNotFoundError(f"Файл сценария '{scenario_file}' не найден.")
+        logger.error(f"Файл сценария '{scenario_file}' не найден.")
+        return ""
+
 
     try:
-        # Чтение данных сценария с использованием j_loads
-        scenario_data = j_loads(scenario_file)
-        # ...
-    except Exception as e:
-        logger.error("Ошибка при чтении файла сценария:", e)
-        raise
+        # Чтение данных из файла сценария
+        with open(scenario_file, 'r') as f:
+            scenario_data = j_loads(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Ошибка чтения файла сценария '{scenario_file}': {e}", exc_info=True)
+        return ""
 
-    # ... (Здесь код для обработки и форматирования данных)
+    # ... (Здесь будет код для формирования HTML) ...
+    # Пример формирования HTML.  Необходимо заменить на
+    # реальную логику генерации HTML
+    html_report = f"<html><body><h1>Отчет по сценарию: {scenario_file}</h1>\n"
+    html_report += f"<pre>{json.dumps(scenario_data, indent=4)}</pre>\n"  # Представление данных в виде JSON
+    html_report += "</body></html>"
+
+    return html_report
 
 
-# ... (Остальной код)
-# ...
+#TODO: Добавить обработку различных типов сценариев.
+#TODO: Добавить возможность указания пути к шаблону.
+#TODO: Добавить поддержку форматирования данных в отчете.
+
+# Пример использования (для тестирования):
+# if __name__ == "__main__":
+#     from src.logger import logger
+#     try:
+#         report = generate_html_report('path/to/your/scenario.json')
+#         if report:
+#             print(report)
+#     except Exception as ex:
+#         logger.error(f"Ошибка при генерации отчета: {ex}")
 
 ```
 
 # Changes Made
 
-*   Добавлен модульный комментарий RST.
-*   Добавлен docstring для функции `generate_html_report` в формате RST.
-*   Добавлена проверка существования файла сценария перед чтением.
-*   Обработка ошибок чтения файла сценария с помощью `logger.error`.
-*   Используется `j_loads` для чтения файла.
-
+*   Добавлен docstring в формате reStructuredText для модуля и функции `generate_html_report`.
+*   Добавлены проверки существования файла и обработка ошибок при чтении файла с помощью `j_loads` и логирования через `logger.error`.
+*   Заменены стандартные `json.load` на `j_loads` из `src.utils.jjson`.
+*   Добавлен пример использования (commented out) для демонстрации использования функции.
+*   Добавлены TODO-задачи для дальнейшего развития (более гибких сценариев, шаблонов, форматирования).
+*   Комментарии переписаны в формате RST.
+*   Приведен пример корректного использования логирования.
+*   Избегаются слова "получаем", "делаем" и т.п. в комментариях.
 
 # FULL Code
 
 ```python
 """
-Модуль для создания HTML отчетов на основе сценариев мехирона.
-=====================================================================
+Модуль для генерации HTML отчетов на основе сценариев мехаронов.
+=================================================================
 
-Этот модуль содержит функции для генерации HTML отчетов
-на основе данных, полученных из сценариев мехирона.
+Этот модуль содержит функции для создания HTML отчетов,
+используя данные из сценариев мехаронов.  Он предоставляет
+способ форматирования и отображения данных в отчетах.
 """
-from src.utils.jjson import j_loads
-# Импорт необходимых библиотек
 import os
 import json
-from jinja2 import Environment, FileSystemLoader
 from src.logger import logger
-# ...
+from src.utils.jjson import j_loads
 
 
-# Функция для генерации HTML отчета
 def generate_html_report(scenario_file: str) -> str:
     """
-    Генерирует HTML отчет на основе сценария мехирона.
+    Генерирует HTML отчет на основе сценария мехарона.
 
-    :param scenario_file: Путь к файлу сценария.
-    :return: Сгенерированный HTML отчет.
-    :raises FileNotFoundError: Если файл сценария не найден.
+    :param scenario_file: Путь к файлу сценария мехарона.
+    :return: HTML строка отчета. Возвращает пустую строку в случае ошибки.
     """
     # Проверка существования файла сценария
     if not os.path.exists(scenario_file):
-        raise FileNotFoundError(f"Файл сценария '{scenario_file}' не найден.")
+        logger.error(f"Файл сценария '{scenario_file}' не найден.")
+        return ""
 
     try:
-        # Чтение данных сценария с использованием j_loads
-        scenario_data = j_loads(scenario_file)
-        # ...
-    except Exception as e:
-        logger.error("Ошибка при чтении файла сценария:", e)
-        raise
+        # Чтение данных из файла сценария
+        with open(scenario_file, 'r') as f:
+            scenario_data = j_loads(f) # Используется j_loads для чтения JSON
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        logger.error(f"Ошибка чтения файла сценария '{scenario_file}': {e}", exc_info=True)
+        return ""
 
-    # ... (Здесь код для обработки и форматирования данных)
-    # ...
+    # ... (Здесь будет код для формирования HTML) ...
+    # Пример формирования HTML.  Необходимо заменить на
+    # реальную логику генерации HTML
+    html_report = f"<html><body><h1>Отчет по сценарию: {scenario_file}</h1>\n"
+    html_report += f"<pre>{json.dumps(scenario_data, indent=4)}</pre>\n"  # Представление данных в виде JSON
+    html_report += "</body></html>"
 
-```
-```
-**Примечание:**  В приведенном примере остальная часть кода не представлена, поскольку она не указана.  Вам нужно добавить недостающие части, связанные с обработкой данных и генерацией HTML, чтобы завершить функцию.  Также рекомендуется добавить обработку ошибок (try...except блоки) в остальных частях кода, если они есть.
+    return html_report
+
+
+#TODO: Добавить обработку различных типов сценариев.
+#TODO: Добавить возможность указания пути к шаблону.
+#TODO: Добавить поддержку форматирования данных в отчете.
+
+# Пример использования (для тестирования):
+# if __name__ == "__main__":
+#     try:
+#         report = generate_html_report('path/to/your/scenario.json')
+#         if report:
+#             print(report)
+#     except Exception as ex:
+#         logger.error(f"Ошибка при генерации отчета: {ex}")

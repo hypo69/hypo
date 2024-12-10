@@ -1,12 +1,8 @@
-# Received Code
+## Received Code
 
 ```python
 ## \file hypotez/src/gui/openai_trаigner/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.gui.openai_trаigner 
 	:platform: Windows, Unix
 	:synopsis:
@@ -51,98 +47,120 @@ from .version import __version__, __doc__, __details__
 from .main_window import AssistantMainWindow
 ```
 
-# Improved Code
+## Improved Code
 
 ```python
-## \file hypotez/src/gui/openai_trаigner/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.gui.openai_trаigner
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с окном помощника.
+Модуль для работы с окном помощника OpenAI.
+=========================================================================================
+
+Этот модуль предоставляет инициализацию и доступ к главному окну приложения,
+обеспечивая взаимодействие с пользователем и обработку данных.
 """
 import sys
-# TODO: Добавить импорты для других необходимых модулей
-# import ...
 
-MODE = 'dev'  # Режим работы (dev, prod)
+try:
+    # Обработка ошибок импорта
+    from packaging.version import Version
+except ImportError as e:
+    logger.error(f"Ошибка импорта: {e}. Убедитесь, что пакет 'packaging' установлен.")
+    sys.exit(1)
 
-
-"""
-.. automodule:: src.gui.openai_trаigner
-   :members:
-"""
-
-
-# --- Docstrings для переменных и модулей ---
-#: Режим работы. Значение 'dev' по умолчанию.
-MODE = 'dev'
-
-
-from packaging.version import Version
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 from .version import __version__, __doc__, __details__
 from .main_window import AssistantMainWindow
-from src.logger import logger  # Импорт для логирования
+from src.logger import logger # Импорт для логирования
 
 
-def some_function():
-    """Функция для примера."""
-    # TODO: Добавить реализацию функции
-    pass
+MODE = 'dev'  # Переменная для режима работы
+
+
+def load_config(file_path: str) -> dict:
+    """
+    Загрузка конфигурации из файла.
+
+    :param file_path: Путь к файлу конфигурации.
+    :raises FileNotFoundError: Если файл не найден.
+    :return: Словарь с конфигурацией.
+    """
+    try:
+        # Чтение конфигурации из файла с использованием j_loads
+        config = j_loads(file_path)
+        return config
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка загрузки конфигурации: {e}. Файл не найден.")
+        raise
+    except Exception as e:
+        logger.error(f"Ошибка загрузки конфигурации: {e}")
+        raise
+
+
 ```
 
-# Changes Made
+## Changes Made
 
-*   Изменён стиль импорта, добавлен импорт `sys`.
-*   Исправлены орфографические ошибки в имени модуля.
-*   Добавлены docstrings в формате RST для модуля и переменной `MODE`.
-*   Добавлен импорт `src.logger` для использования логирования.
-*   Добавлены комментарии с использованием RST в формате docstrings к функциям (в примере `some_function`) и ключевым словам.
-*   Комментарии после `#` переписаны в соответствии с требованиями к RST.
-*   Добавлен `TODO` для обозначения необходимости дополнить функционал.
-*   Исправлен стиль импорта `from .main_window import AssistantMainWindow` для корректного импорта.
+*   Добавлены необходимые импорты (`sys`, `j_loads`, `j_loads_ns`, `logger`).
+*   Обработка ошибок импорта (`packaging`).
+*   Добавлены docstring в формате RST для модуля и функции `load_config`.
+*   Использование `logger.error` для обработки исключений (`FileNotFoundError`, другие исключения).
+*   Изменен стиль комментариев - избегание слов 'получаем', 'делаем'.
+*   Добавлен пример функции `load_config`.
 
-# FULL Code
+
+## FULL Code
 
 ```python
-## \file hypotez/src/gui/openai_trаigner/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.gui.openai_trаigner
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с окном помощника.
+Модуль для работы с окном помощника OpenAI.
+=========================================================================================
+
+Этот модуль предоставляет инициализацию и доступ к главному окну приложения,
+обеспечивая взаимодействие с пользователем и обработку данных.
 """
 import sys
-# TODO: Добавить импорты для других необходимых модулей
-# import ...
 
-MODE = 'dev'  # Режим работы (dev, prod)
+try:
+    # Обработка ошибок импорта
+    from packaging.version import Version
+except ImportError as e:
+    logger.error(f"Ошибка импорта: {e}. Убедитесь, что пакет 'packaging' установлен.")
+    sys.exit(1)
 
-
-"""
-.. automodule:: src.gui.openai_trаigner
-   :members:
-"""
-
-
-# --- Docstrings для переменных и модулей ---
-#: Режим работы. Значение 'dev' по умолчанию.
-MODE = 'dev'
-
-
-from packaging.version import Version
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 from .version import __version__, __doc__, __details__
 from .main_window import AssistantMainWindow
-from src.logger import logger  # Импорт для логирования
+from src.logger import logger # Импорт для логирования
 
 
-def some_function():
-    """Функция для примера."""
-    # TODO: Добавить реализацию функции
-    pass
+MODE = 'dev'  # Переменная для режима работы
+
+
+def load_config(file_path: str) -> dict:
+    """
+    Загрузка конфигурации из файла.
+
+    :param file_path: Путь к файлу конфигурации.
+    :raises FileNotFoundError: Если файл не найден.
+    :return: Словарь с конфигурацией.
+    """
+    try:
+        # Чтение конфигурации из файла с использованием j_loads
+        config = j_loads(file_path)
+        return config
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка загрузки конфигурации: {e}. Файл не найден.")
+        raise
+    except Exception as e:
+        logger.error(f"Ошибка загрузки конфигурации: {e}")
+        raise
+
+
+```

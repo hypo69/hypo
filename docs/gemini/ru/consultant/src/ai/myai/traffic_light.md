@@ -53,83 +53,76 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-# Модуль для обработки данных светофора.
-# Содержит функции для чтения и обработки данных светофора.
-def read_traffic_light_data(file_path: str) -> dict:
-    """
-    Читает данные светофора из файла.
 
-    :param file_path: Путь к файлу со светофорными данными.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :raises Exception: Общая ошибка при чтении файла.
-    :return: Словарь с данными светофора.
-    :rtype: dict
+class TrafficLight:
     """
-    try:
-        # Чтение данных из файла с помощью j_loads.
-        with open(file_path, 'r') as f:
-            data = j_loads(f.read())
-        return data
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка: Файл не найден {file_path=}', e)
-        raise
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: Некорректный формат JSON в файле {file_path=}', e)
-        raise
-    except Exception as e:
-        logger.error(f'Ошибка при чтении файла {file_path=}', e)
-        raise
+    Класс для работы с светофором.
 
-# Функция для обработки данных светофора.
-def process_traffic_light_data(data: dict) -> None:
+    :ivar mode: Режим работы.
     """
-    Обрабатывает данные светофора.
 
-    :param data: Данные светофора в формате словаря.
-    :type data: dict
-    """
-    # Проверка на валидность входных данных.
-    if not isinstance(data, dict):
-        logger.error(f'Ошибка: Неверный формат данных: {data=}')
-        return  # Возвращаем None, если входные данные некорректны.
+    def __init__(self, mode='dev'):
+        """
+        Инициализация класса.
+
+        :param mode: Режим работы (dev/prod). По умолчанию 'dev'.
+        """
+        self.mode = mode
+        # Проверка валидности режима
+        if self.mode not in ['dev', 'prod']:
+            logger.error(f'Неверный режим работы: {self.mode}')
+            raise ValueError('Неверный режим работы')
+        # ... (возможная инициализация других свойств)
     
-    # ... (Здесь должен быть код обработки данных)
-    pass
 
-# Пример использования.
-def main():
-    """
-    Главная функция для запуска модуля.
-    """
-    try:
-        # Путь к файлу со светофорными данными.
-        file_path = 'traffic_light_data.json'
-        # Чтение данных светофора из файла.
-        data = read_traffic_light_data(file_path)
-        # Обработка данных светофора.
-        process_traffic_light_data(data)
-    except Exception as e:
-        logger.error('Ошибка в главной функции', e)
+    def get_status(self, filename):
+        """
+        Получает статус светофора из файла.
 
-if __name__ == '__main__':
-    main()
+        :param filename: Имя файла со статусом.
+        :type filename: str
+        :raises FileNotFoundError: Если файл не найден.
+        :raises json.JSONDecodeError: Если файл не содержит корректный JSON.
+        :raises Exception: Если произошла неизвестная ошибка.
+        :return: Статус светофора (словарь).
+        :rtype: dict
+        """
+        try:
+            # Чтение файла с использованием j_loads
+            with open(filename, 'r') as f:
+                data = j_loads(f)
+            # Проверка структуры данных
+            if not isinstance(data, dict):
+                logger.error('Файл не содержит ожидаемый формат JSON')
+                raise TypeError('Некорректный формат JSON')
+            return data['status']
+        except FileNotFoundError as e:
+            logger.error(f'Ошибка: файл {filename} не найден', e)
+            raise
+        except json.JSONDecodeError as e:
+            logger.error(f'Ошибка декодирования JSON: {filename}', e)
+            raise
+        except Exception as e:
+            logger.error(f'Произошла ошибка при чтении файла {filename}', e)
+            raise
+    
+
+    # ... (другие методы)
 ```
 
 # Changes Made
 
-*   Добавлены необходимые импорты `json`, `j_loads`, `j_loads_ns` и `logger` из соответствующих модулей.
-*   Добавлена функция `read_traffic_light_data` для чтения данных светофора из файла, использующая `j_loads`. Добавлена обработка исключений `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
-*   Функции и переменные переименованы для соответствия стилю кода.
-*   Добавлены docstrings в формате reStructuredText (RST) для всех функций, методов и класса.
-*   Добавлена функция `process_traffic_light_data`.
-*   Добавлен пример использования в функции `main`.
-*   Добавлена обработка исключений в `main` для более надежного кода.
-*   Устранены неиспользуемые или неявные строки.
-*   Добавлены проверки типов.
-*   Изменен стиль комментариев.
-*   Добавлена проверка валидности входных данных в функции `process_traffic_light_data`.
+*   Импортирован `j_loads` из `src.utils.jjson`.
+*   Добавлены docstring в формате RST для класса `TrafficLight` и метода `get_status`.
+*   Добавлен обработчик ошибок с использованием `logger.error` для повышения надежности.
+*   Добавлена валидация режима работы.
+*   Изменен способ чтения файла, теперь используется `j_loads` из `src.utils.jjson`.
+*   Проверка типа данных в `get_status`.
+*   Изменены сообщения об ошибках.
+*   Добавлены типы данных для параметров и возвращаемых значений в docstring.
+*   Убраны лишние комментарии.
+*   Переписаны комментарии в формате RST.
+*   Избегается использование слов 'получаем', 'делаем' и т.п.
 
 
 # FULL Code
@@ -139,65 +132,58 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-# Модуль для обработки данных светофора.
-# Содержит функции для чтения и обработки данных светофора.
-def read_traffic_light_data(file_path: str) -> dict:
-    """
-    Читает данные светофора из файла.
 
-    :param file_path: Путь к файлу со светофорными данными.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :raises Exception: Общая ошибка при чтении файла.
-    :return: Словарь с данными светофора.
-    :rtype: dict
+class TrafficLight:
     """
-    try:
-        # Чтение данных из файла с помощью j_loads.
-        with open(file_path, 'r') as f:
-            data = j_loads(f.read())
-        return data
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка: Файл не найден {file_path=}', e)
-        raise
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: Некорректный формат JSON в файле {file_path=}', e)
-        raise
-    except Exception as e:
-        logger.error(f'Ошибка при чтении файла {file_path=}', e)
-        raise
+    Класс для работы с светофором.
 
-# Функция для обработки данных светофора.
-def process_traffic_light_data(data: dict) -> None:
+    :ivar mode: Режим работы.
     """
-    Обрабатывает данные светофора.
 
-    :param data: Данные светофора в формате словаря.
-    :type data: dict
-    """
-    # Проверка на валидность входных данных.
-    if not isinstance(data, dict):
-        logger.error(f'Ошибка: Неверный формат данных: {data=}')
-        return  # Возвращаем None, если входные данные некорректны.
+    def __init__(self, mode='dev'):
+        """
+        Инициализация класса.
+
+        :param mode: Режим работы (dev/prod). По умолчанию 'dev'.
+        """
+        self.mode = mode
+        # Проверка валидности режима
+        if self.mode not in ['dev', 'prod']:
+            logger.error(f'Неверный режим работы: {self.mode}')
+            raise ValueError('Неверный режим работы')
+        # ... (возможная инициализация других свойств)
     
-    # ... (Здесь должен быть код обработки данных)
-    pass
 
-# Пример использования.
-def main():
-    """
-    Главная функция для запуска модуля.
-    """
-    try:
-        # Путь к файлу со светофорными данными.
-        file_path = 'traffic_light_data.json'
-        # Чтение данных светофора из файла.
-        data = read_traffic_light_data(file_path)
-        # Обработка данных светофора.
-        process_traffic_light_data(data)
-    except Exception as e:
-        logger.error('Ошибка в главной функции', e)
+    def get_status(self, filename):
+        """
+        Получает статус светофора из файла.
 
-if __name__ == '__main__':
-    main()
+        :param filename: Имя файла со статусом.
+        :type filename: str
+        :raises FileNotFoundError: Если файл не найден.
+        :raises json.JSONDecodeError: Если файл не содержит корректный JSON.
+        :raises Exception: Если произошла неизвестная ошибка.
+        :return: Статус светофора (словарь).
+        :rtype: dict
+        """
+        try:
+            # Чтение файла с использованием j_loads
+            with open(filename, 'r') as f:
+                data = j_loads(f)
+            # Проверка структуры данных
+            if not isinstance(data, dict):
+                logger.error('Файл не содержит ожидаемый формат JSON')
+                raise TypeError('Некорректный формат JSON')
+            return data['status']
+        except FileNotFoundError as e:
+            logger.error(f'Ошибка: файл {filename} не найден', e)
+            raise
+        except json.JSONDecodeError as e:
+            logger.error(f'Ошибка декодирования JSON: {filename}', e)
+            raise
+        except Exception as e:
+            logger.error(f'Произошла ошибка при чтении файла {filename}', e)
+            raise
+    
+
+    # ... (другие методы)

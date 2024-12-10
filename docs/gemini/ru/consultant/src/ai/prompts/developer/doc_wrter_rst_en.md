@@ -1,137 +1,133 @@
 # Received Code
 
 ```python
-# Этот код нуждается в документировании и улучшении.
-import json
-from typing import Any
-
+# Модуль для работы с файлами JSON.
 # ...
+import json
 
-
-def process_file(file_path: str) -> Any:
-    """Обрабатывает файл."""
+def load_json_file(file_path):
+    # Загружает данные из файла JSON.
+    # ...
     try:
-        with open(file_path, 'r') as f:
-            data = json.load(f)
+        with open(file_path, 'r') as file:
+            data = json.load(file)
         return data
     except FileNotFoundError:
         return None
-    except json.JSONDecodeError as e:
-        print(f"Ошибка декодирования JSON: {e}")
+    except json.JSONDecodeError:
         return None
-
-# ...
 ```
 
 # Improved Code
 
 ```python
 """
-Модуль для обработки JSON-файлов.
+Модуль для работы с файлами JSON.
 =========================================================================================
 
-Этот модуль предоставляет функцию для чтения JSON-файлов и обработки данных.
-Функции модуля обрабатывают возможные исключения,
-такие как отсутствие файла и ошибки декодирования JSON.
+Этот модуль содержит функцию для загрузки данных из файла JSON.  Функция обрабатывает
+возможные ошибки: файл не найден или некорректный формат JSON.
 
 Пример использования
 --------------------
 
 .. code-block:: python
 
-    result = process_file('data.json')
-    if result:
-        print(result)
+    file_path = 'data.json'
+    data = load_json_file(file_path)
+    if data:
+        print(data)
     else:
-        print("Файл не найден или ошибка декодирования")
+        print(f"Ошибка загрузки файла {file_path}")
 """
-import json
-from typing import Any
-from src.utils.jjson import j_loads  # Импорт функции для чтения JSON
-from src.logger import logger  # Импорт функции для логирования
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
-def process_file(file_path: str) -> Any:
+def load_json_file(file_path: str) -> dict:
     """
-    Читает JSON-данные из файла.
+    Загружает данные из файла JSON.
 
-    :param file_path: Путь к файлу.
+    :param file_path: Путь к файлу JSON.
     :type file_path: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если данные в файле не являются валидным JSON.
-    :return: JSON-данные из файла или None, если файл не найден или данные невалидны.
-    :rtype: Any
+    :raises json.JSONDecodeError: Если файл имеет некорректный формат JSON.
+    :return: Данные из файла JSON в формате словаря. Возвращает None, если файл не найден
+      или имеет некорректный формат JSON.
+    :rtype: dict
     """
     try:
-        # Используем j_loads для чтения JSON-данных
-        with open(file_path, 'r') as f:
-            data = j_loads(f)
+        # Код пытается загрузить данные из файла с помощью j_loads.
+        with open(file_path, 'r') as file:
+            data = j_loads(file)  # Используем j_loads для загрузки.
         return data
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка: файл {file_path} не найден.', e)
+    except FileNotFoundError as ex:
+        logger.error(f'Ошибка: файл {file_path} не найден.', ex)
         return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка декодирования JSON в файле {file_path}: {e}', e)
+    except json.JSONDecodeError as ex:
+        logger.error(f'Ошибка: некорректный формат JSON в файле {file_path}.', ex)
         return None
 ```
 
 # Changes Made
 
-*   Импортирована функция `j_loads` из `src.utils.jjson` для чтения JSON-файлов.
-*   Импортирована функция `logger` из `src.logger` для логирования.
-*   Добавлены комментарии в формате reStructuredText (RST) для модуля и функции `process_file`.
-*   Изменён способ обработки ошибок: вместо `print` используется `logger.error` для записи сообщений об ошибках в лог.  Используются более точные сообщения об ошибках.
-*   Добавлены аннотации типов.
-*   Функция `process_file` теперь возвращает `None`, если файл не найден или произошла ошибка декодирования, а не печатает сообщения.
-*   Добавлена документация для функции `process_file` в соответствии с RST.
+- Импортирован `j_loads` из `src.utils.jjson` вместо `json.load`.
+- Добавлены комментарии в формате RST для модуля и функции `load_json_file`.
+- Добавлены аннотации типов (type hints).
+- Обработка ошибок с помощью `logger.error` вместо стандартных `try-except`.
+- Изменены сообщения об ошибках на более информативные.
+- Удален ненужный блок `# ...`.
+- Заменен `json.load` на `j_loads` для корректной загрузки JSON (согласно условию).
+- Добавлено описание параметров и возвращаемого значения функции в формате RST.
+- Добавлен пример использования в RST формате.
+
 
 # FULL Code
 
 ```python
 """
-Модуль для обработки JSON-файлов.
+Модуль для работы с файлами JSON.
 =========================================================================================
 
-Этот модуль предоставляет функцию для чтения JSON-файлов и обработки данных.
-Функции модуля обрабатывают возможные исключения,
-такие как отсутствие файла и ошибки декодирования JSON.
+Этот модуль содержит функцию для загрузки данных из файла JSON.  Функция обрабатывает
+возможные ошибки: файл не найден или некорректный формат JSON.
 
 Пример использования
 --------------------
 
 .. code-block:: python
 
-    result = process_file('data.json')
-    if result:
-        print(result)
+    file_path = 'data.json'
+    data = load_json_file(file_path)
+    if data:
+        print(data)
     else:
-        print("Файл не найден или ошибка декодирования")
+        print(f"Ошибка загрузки файла {file_path}")
 """
-import json
-from typing import Any
-from src.utils.jjson import j_loads  # Импорт функции для чтения JSON
-from src.logger import logger  # Импорт функции для логирования
+from src.utils.jjson import j_loads
+from src.logger import logger
 
 
-def process_file(file_path: str) -> Any:
+def load_json_file(file_path: str) -> dict:
     """
-    Читает JSON-данные из файла.
+    Загружает данные из файла JSON.
 
-    :param file_path: Путь к файлу.
+    :param file_path: Путь к файлу JSON.
     :type file_path: str
     :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если данные в файле не являются валидным JSON.
-    :return: JSON-данные из файла или None, если файл не найден или данные невалидны.
-    :rtype: Any
+    :raises json.JSONDecodeError: Если файл имеет некорректный формат JSON.
+    :return: Данные из файла JSON в формате словаря. Возвращает None, если файл не найден
+      или имеет некорректный формат JSON.
+    :rtype: dict
     """
     try:
-        # Используем j_loads для чтения JSON-данных
-        with open(file_path, 'r') as f:
-            data = j_loads(f)
+        # Код пытается загрузить данные из файла с помощью j_loads.
+        with open(file_path, 'r') as file:
+            data = j_loads(file)  # Используем j_loads для загрузки.
         return data
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка: файл {file_path} не найден.', e)
+    except FileNotFoundError as ex:
+        logger.error(f'Ошибка: файл {file_path} не найден.', ex)
         return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка декодирования JSON в файле {file_path}: {e}', e)
+    except json.JSONDecodeError as ex:
+        logger.error(f'Ошибка: некорректный формат JSON в файле {file_path}.', ex)
         return None

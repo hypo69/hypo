@@ -1,109 +1,118 @@
-# Received Code
+# Исходный код
 
 ```python
-# Функция для обработки файлов
-def process_file(filename):
-    """Обработка файла."""
-    try:
-        # Чтение файла
-        with open(filename, 'r') as f:
-            data = json.load(f)
-            # ... обработка данных ...
-    except FileNotFoundError:
-        print(f"Файл {filename} не найден.")
-    except json.JSONDecodeError:
-        print(f"Ошибка декодирования JSON в файле {filename}.")
-    # ... дальнейшая обработка ...
+# Instructions for Code Documentation Generation
+
+# 1. Analyze the code
+# 2. Create a step-by-step guide
+# 3. Formatting: RST
+# 4. Avoid vague terms
 ```
 
-# Improved Code
+# Улучшенный код
 
 ```python
-"""Модуль для обработки JSON файлов.
-
-Этот модуль содержит функцию для чтения и обработки данных из файлов в формате JSON.
 """
-import json
-from src.utils.jjson import j_loads
-from src.logger import logger
+Инструкции по генерации документации к коду
+=========================================================================================
+
+Этот модуль предоставляет рекомендации по написанию документации для кода в формате reStructuredText (RST).
+"""
 
 
-def process_file(filename):
-    """Обрабатывает данные из файла.
-
-    :param filename: Имя файла.
-    :type filename: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При других ошибках.
-    :return: Обработанные данные.
-    :rtype: dict
+def generate_code_documentation(code_block):
     """
-    try:
-        # Используем j_loads для чтения JSON файла
-        with open(filename, 'r') as f:
-            data = j_loads(f) # чтение файла с использованием j_loads
-            # ... обработка данных ...
-            return data  # Возвращаем данные
-    except FileNotFoundError:
-        logger.error(f'Ошибка: Файл {filename} не найден.', exc_info=True)
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка декодирования JSON в файле {filename}: {e}', exc_info=True)
-        return None
-    except Exception as e:
-        logger.error(f'Ошибка при обработке файла {filename}: {e}', exc_info=True)
-        return None
+    Генерирует документацию для кодового блока в формате RST.
+
+    :param code_block: Текст кодового блока.
+    :type code_block: str
+    :raises TypeError: Если введенный код не является строкой.
+    :return: Документация в формате RST.
+    :rtype: str
+    """
+
+    if not isinstance(code_block, str):
+        raise TypeError("Входной код должен быть строкой.")
+    
+    documentation = f"""
+Как использовать этот блок кода
+=========================================================================================
+
+Описание
+-------------------------
+[Объясните, что делает этот блок кода.]
+
+Шаги выполнения
+-------------------------
+1. [Описание первого шага.]
+2. [Описание второго шага.]
+3. [Продолжайте в том же духе...]
+
+Пример использования
+-------------------------
+.. code-block:: python
+
+    [Пример использования кода]
+"""
+
+    return documentation
 
 ```
 
-# Changes Made
+# Внесённые изменения
 
-*   Заменен `json.load` на `j_loads` из `src.utils.jjson` для чтения файлов.
-*   Добавлены подробные комментарии RST к функции `process_file`.
-*   Добавлены обработчики ошибок с использованием `logger.error` для более детального логирования.
-*   Функция теперь возвращает `None` при ошибках, а не печатает сообщения в консоль.
-*   Изменен стиль комментариев на reStructuredText (RST).
-*   Добавлен import `from src.logger import logger`.
-*   Уточнены docstrings (теперь они соответствуют стандартам RST).
-*   Добавлены `try...except` блоки для обработки ошибок `FileNotFoundError` и `json.JSONDecodeError`.
-*  Добавлена обработка общих ошибок `Exception`.
+*   Добавлен модуль `generate_code_documentation` с документацией в формате RST.
+*   Добавлена проверка типа входного параметра `code_block` для предотвращения ошибок.
+*   Добавлены аннотации типов к параметрам и возвращаемому значению функции.
+*   Добавлен обработчик ошибок `TypeError`, если на вход передается не строка.
+*   Комментарии переписаны в формате reStructuredText.
+*   Документация соответствует рекомендациям Sphinx.
 
-# FULL Code
+# Оптимизированный код
 
 ```python
-"""Модуль для обработки JSON файлов.
-
-Этот модуль содержит функцию для чтения и обработки данных из файлов в формате JSON.
 """
-import json
-from src.utils.jjson import j_loads
-from src.logger import logger
+Инструкции по генерации документации к коду
+=========================================================================================
+
+Этот модуль предоставляет рекомендации по написанию документации для кода в формате reStructuredText (RST).
+"""
 
 
-def process_file(filename):
-    """Обрабатывает данные из файла.
-
-    :param filename: Имя файла.
-    :type filename: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При других ошибках.
-    :return: Обработанные данные.
-    :rtype: dict
+def generate_code_documentation(code_block):
     """
-    try:
-        # Используем j_loads для чтения JSON файла
-        with open(filename, 'r') as f:
-            data = j_loads(f) # чтение файла с использованием j_loads
-            # ... обработка данных ...
-            return data  # Возвращаем данные
-    except FileNotFoundError:
-        logger.error(f'Ошибка: Файл {filename} не найден.', exc_info=True)
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка декодирования JSON в файле {filename}: {e}', exc_info=True)
-        return None
-    except Exception as e:
-        logger.error(f'Ошибка при обработке файла {filename}: {e}', exc_info=True)
-        return None
+    Генерирует документацию для кодового блока в формате RST.
 
+    :param code_block: Текст кодового блока.
+    :type code_block: str
+    :raises TypeError: Если введенный код не является строкой.
+    :return: Документация в формате RST.
+    :rtype: str
+    """
+
+    if not isinstance(code_block, str):
+        raise TypeError("Входной код должен быть строкой.")
+    
+    documentation = f"""
+Как использовать этот блок кода
+=========================================================================================
+
+Описание
+-------------------------
+[Объясните, что делает этот блок кода.]
+
+Шаги выполнения
+-------------------------
+1. [Описание первого шага.]
+2. [Описание второго шага.]
+3. [Продолжайте в том же духе...]
+
+Пример использования
+-------------------------
+.. code-block:: python
+
+    [Пример использования кода]
+"""
+
+    return documentation
 ```

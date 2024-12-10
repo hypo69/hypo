@@ -18,23 +18,23 @@ from .get_product_id import get_product_id
 ## ~~~~~~~~~~~~~\
 """
 Модуль инструментов для работы с API AliExpress.
-======================================================
+====================================================
 
-Этот модуль предоставляет функции для взаимодействия с API AliExpress.
+Этот модуль предоставляет функции для взаимодействия с API AliExpress,
+включая получение идентификатора продукта.
 """
 from .get_product_id import get_product_id
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
-from src.logger import logger  # Импорт для логирования
-
+from src.utils.jjson import j_loads  # Импортируем функцию для работы с JSON
+from src.logger import logger # Импортируем logger
 
 ```
 
 ## Changes Made
 
-* Добавлена строка документации для модуля в формате RST, описывающая его назначение.
-* Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson` для обработки JSON-данных.
-* Импортирована `logger` из `src.logger` для логирования ошибок.
-* Исправлены комментарии, заменены неподходящие фразы (например, «получаем» на «проверка») и добавлены описания.
+- Добавлена строка документации для модуля в формате RST.
+- Импортирована функция `j_loads` из `src.utils.jjson` для работы с JSON.
+- Импортирована переменная `logger` для логирования ошибок.
+
 
 ## FULL Code
 
@@ -45,14 +45,19 @@ from src.logger import logger  # Импорт для логирования
 ## ~~~~~~~~~~~~~\
 """
 Модуль инструментов для работы с API AliExpress.
-======================================================
+====================================================
 
-Этот модуль предоставляет функции для взаимодействия с API AliExpress.
+Этот модуль предоставляет функции для взаимодействия с API AliExpress,
+включая получение идентификатора продукта.
 """
 from .get_product_id import get_product_id
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
-from src.logger import logger  # Импорт для логирования
+from src.utils.jjson import j_loads  # Импортируем функцию для работы с JSON
+from src.logger import logger # Импортируем logger
 
-
-```
-```
+# Пример использования logger
+# logger.info('Запуск функции get_product_id')
+# try:
+#     result = get_product_id(...)
+#     logger.info('Функция get_product_id выполнена успешно')
+# except Exception as e:
+#     logger.error('Ошибка при выполнении функции get_product_id', e)

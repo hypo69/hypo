@@ -1,4 +1,4 @@
-# Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/api/__init__.py
@@ -17,84 +17,64 @@ MODE = 'dev'
 from .api import PrestaShop
 ```
 
-# Improved Code
+**Improved Code**
 
 ```python
+## \file hypotez/src/endpoints/prestashop/api/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Модуль для работы с API PrestaShop
-====================================
+.. module:: src.endpoints.prestashop.api
+    :platform: Windows, Unix
+    :synopsis: Предоставляет интерфейс для работы с API PrestaShop.
 
-Этот модуль содержит необходимые импорты для работы с API Престашоп.
 """
-import json
-
-# Импортируем класс PrestaShop из файла api.py
-from .api import PrestaShop
-
-# Импортируем j_loads для работы с JSON
-from src.utils.jjson import j_loads
-
-# Для логирования ошибок
-from src.logger import logger
-
-
+import json # импорт модуля json
 MODE = 'dev'
+
+# Импорт класса PrestaShop из модуля .api
+from .api import PrestaShop
+from src.utils.jjson import j_loads # импорт функции j_loads для обработки JSON
+from src.logger import logger # Импорт для логирования
+
+
 ```
 
-# Changes Made
+**Changes Made**
 
 * Добавлено описание модуля в формате RST.
-* Добавлена строка импорта `from src.utils.jjson import j_loads`.
-* Добавлена строка импорта `from src.logger import logger`.
-* Убран неиспользуемый импорт `json`.  
-* Добавлено более подробное описание.  
-* Исправлен стиль docstrings.
+* Добавлен импорт `json`.
+* Добавлен импорт `j_loads` из `src.utils.jjson`.
+* Добавлен импорт `logger` из `src.logger`.
+* Исправлен синтаксис RST, добавлено `::`.
+* Добавлен комментарий к переменной `MODE` (необязательно, но желательно).
 
-# FULL Code
+
+**FULL Code**
 
 ```python
-"""
-Модуль для работы с API PrestaShop
-====================================
+## \file hypotez/src/endpoints/prestashop/api/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-Этот модуль содержит необходимые импорты для работы с API Престашоп.
 """
-import json
+.. module:: src.endpoints.prestashop.api
+    :platform: Windows, Unix
+    :synopsis: Предоставляет интерфейс для работы с API PrestaShop.
 
-# Импортируем класс PrestaShop из файла api.py
+"""
+import json # импорт модуля json
+MODE = 'dev' # Переменная MODE определяет режим работы (например, dev, prod)
+# ...
+
+# Импорт класса PrestaShop из модуля .api
 from .api import PrestaShop
-
-# Импортируем j_loads для работы с JSON
-from src.utils.jjson import j_loads
-
-# Для логирования ошибок
-from src.logger import logger
+from src.utils.jjson import j_loads # импорт функции j_loads для обработки JSON
+from src.logger import logger # Импорт для логирования
 
 
-MODE = 'dev'
 ```
 ```python
-"""
-Модуль для работы с API PrestaShop
-====================================
-
-Этот модуль содержит необходимые импорты для работы с API Престашоп.
-"""
-import json
-
-# Импортируем класс PrestaShop из файла api.py
-# # from .api import PrestaShop
-from .api import PrestaShop
-
-# Импортируем j_loads для работы с JSON
-# # from src.utils.jjson import j_loads
-from src.utils.jjson import j_loads
-
-# Для логирования ошибок
-# # from src.logger import logger
-from src.logger import logger
-
-
-# Режим работы (dev/prod)
-# # MODE = 'dev'
-MODE = 'dev'

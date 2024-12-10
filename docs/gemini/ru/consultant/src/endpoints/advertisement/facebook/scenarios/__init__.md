@@ -44,64 +44,43 @@ from .post_ad import post_ad
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook.scenarios
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит сценарии для работы с рекламой на Facebook.
+.. module:: src.endpoints.advertisement.facebook.scenarios
+   :platform: Windows, Unix
+   :synopsis: Модуль содержит сценарии для работы с рекламными постами в Facebook.
 """
 import json
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нужные функции
-from src.logger import logger  # Импортируем логгер
-from typing import Any
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 MODE = 'dev'
 
+# Импорты функций для работы с постами
 from .login import login
 from .post_message import post_message, post_message_title, upload_post_media, update_post_media_captions, message_publish
 from .switch_account import switch_account
-from .post_event import (post_event_title,
-                         post_event_description,
-                         post_date,
-                         post_time,
-                         post_event)
+from .post_event import (post_event_title, post_event_description,
+                         post_date, post_time, post_event)
 from .post_ad import post_ad
 
-
-# Функция для загрузки данных из файла.
-def load_data_from_file(file_path: str) -> dict:
-    """Загружает данные из файла JSON.
-    
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не валидный JSON.
-    :return: Данные из файла в формате словаря.
-    :rtype: dict
-    """
-    try:
-        with open(file_path, 'r') as f:
-            # Чтение файла с использованием j_loads
-            data = j_loads(f.read())
-        return data
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка: файл {file_path} не найден.', e)
-        raise
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: файл {file_path} содержит невалидный JSON.', e)
-        raise
+# Функции для работы с постами
+# ...
 
 
+#TODO: Добавьте более подробную документацию к каждой функции
+#TODO: Обработайте возможные исключения с помощью logger.error
 ```
 
 # Changes Made
 
-*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Добавлена функция `load_data_from_file` для загрузки данных из файла JSON, которая обрабатывает исключения `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
-*   Изменены импорты для пост-месседжей, чтобы использовать алиасы.
-*   Добавлена типизация для функции `load_data_from_file` с помощью `typing.Any`.
-*   Добавлена документация RST в начале файла и для функции.
-*   Изменены комментарии для повышения читаемости и соблюдения стиля RST.
-*   Добавлена обработка ошибок с использованием `logger.error`.
+*   Добавлены импорты `j_loads` и `j_loads_ns` из `src.utils.jjson`
+*   Используется `from src.logger import logger` для логирования.
+*   Комментарии в RST формате.
+*   Комментарии после `#` улучшены.
+*   Добавлена общая документация для модуля в формате RST.
+*   Изменены импорты для лучшей читаемости и согласованности.
+*   Добавлены TODO для улучшения документации.
+*   Убраны лишние комментарии.
+
 
 
 # FULL Code
@@ -113,48 +92,26 @@ def load_data_from_file(file_path: str) -> dict:
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook.scenarios
-    :platform: Windows, Unix
-    :synopsis: Модуль содержит сценарии для работы с рекламой на Facebook.
+.. module:: src.endpoints.advertisement.facebook.scenarios
+   :platform: Windows, Unix
+   :synopsis: Модуль содержит сценарии для работы с рекламными постами в Facebook.
 """
 import json
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нужные функции
-from src.logger import logger  # Импортируем логгер
-from typing import Any
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 MODE = 'dev'
 
+# Импорты функций для работы с постами
 from .login import login
 from .post_message import post_message, post_message_title, upload_post_media, update_post_media_captions, message_publish
 from .switch_account import switch_account
-from .post_event import (post_event_title,
-                         post_event_description,
-                         post_date,
-                         post_time,
-                         post_event)
+from .post_event import (post_event_title, post_event_description,
+                         post_date, post_time, post_event)
 from .post_ad import post_ad
 
+# Функции для работы с постами
+# ...
 
-# Функция для загрузки данных из файла.
-def load_data_from_file(file_path: str) -> dict:
-    """Загружает данные из файла JSON.
-    
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не валидный JSON.
-    :return: Данные из файла в формате словаря.
-    :rtype: dict
-    """
-    try:
-        with open(file_path, 'r') as f:
-            # Чтение файла с использованием j_loads
-            data = j_loads(f.read())
-        return data
-    except FileNotFoundError as e:
-        logger.error(f'Ошибка: файл {file_path} не найден.', e)
-        raise
-    except json.JSONDecodeError as e:
-        logger.error(f'Ошибка: файл {file_path} содержит невалидный JSON.', e)
-        raise
-```
+#TODO: Добавьте более подробную документацию к каждой функции
+#TODO: Обработайте возможные исключения с помощью logger.error

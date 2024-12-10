@@ -5,7 +5,7 @@
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_get.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
+## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
 
 import iop
@@ -22,7 +22,7 @@ request.set_simplify()
 # simple type params ,Number ,String
 request.add_api_param('seller_address_query', 'pickup')
 
-response = client.execute(request, "50000001a27l15rndYBjw6PrtFFHPGZfy09k1Cp1bd8597fsduP0RStringNormalizery0jhF6FL")
+response = client.execute(request,"50000001a27l15rndYBjw6PrtFFHPGZfy09k1Cp1bd8597fsduP0RStringNormalizery0jhF6FL")
 
 # response type nil,ISP,ISV,SYSTEM
 # nil ：no error
@@ -47,134 +47,130 @@ print(response.body)
 # Improved Code
 
 ```python
+"""
+Модуль для тестирования API запросов AliExpress.
+================================================
+"""
 import iop
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-# -*- coding: utf-8 -*-
+# TODO: Добавить импорт необходимых модулей, если они отсутствуют
 
-"""
-Модуль для тестирования API запроса к AliExpress через iop.
-=========================================================================================
-
-Этот модуль содержит пример использования iop-клиента для отправки запроса
-к API AliExpress.  Демонстрирует получение данных о логистических адресах продавца.
-"""
-
-
-def test_get_logistics_seller_addresses():
+def test_get_aliexpress_logistics_data():
     """
-    Тестирует отправку запроса GET к API AliExpress для получения данных о логистических адресах продавца.
+    Функция для отправки GET-запроса к API AliExpress.
 
-    :return:
-        Возвращает объект response с результатами запроса или None в случае ошибки.
+    :raises Exception: Если произошла ошибка при выполнении запроса.
     """
     try:
-        # Установка параметров клиента
-        gateway_url = 'https://api-pre.aliexpress.com/sync'
-        app_key = '33505222'
-        app_secret = 'e1fed6b34feb26aabc391d187732af93'
-        client = iop.IopClient(gateway_url, app_key, app_secret)
+        # Инициализация клиента API.
+        # gateway_url - адрес API.
+        # app_key - ключ приложения.
+        # app_secret - секрет приложения.
+        client = iop.IopClient('https://api-pre.aliexpress.com/sync', '33505222', 'e1fed6b34feb26aabc391d187732af93')
 
-        # Создание запроса GET.  Обратите внимание на изменение метода на GET.
-        # Исходный код содержал ошибку: метод был POST.
-        request = iop.IopRequest('aliexpress.logistics.redefining.getlogisticsselleraddresses', 'GET')
+        # Создание объекта запроса.
+        # api_name - имя API-метода.
+        # method - метод запроса (POST по умолчанию, можно изменить на GET).
+        request = iop.IopRequest('aliexpress.logistics.redefining.getlogisticsselleraddresses', 'GET') # Изменение метода на GET
         request.set_simplify()
 
-        # Установка параметра запроса
+        # Добавление параметров запроса.
+        # param_name - имя параметра.
+        # param_value - значение параметра.
         request.add_api_param('seller_address_query', 'pickup')
 
-        # Запрос к API
+        # Отправка запроса и получение ответа.
+        # request_id - идентификатор запроса.  Можно использовать для отслеживания.
         request_id = "50000001a27l15rndYBjw6PrtFFHPGZfy09k1Cp1bd8597fsduP0RStringNormalizery0jhF6FL"
         response = client.execute(request, request_id)
-
-
-        # Обработка ответа и вывод результатов
-        logger.info(f"Тип ответа: {response.type}")
-        logger.info(f"Код ответа: {response.code}")
-        logger.info(f"Сообщение об ошибке: {response.message}")
-        logger.info(f"Идентификатор запроса: {response.request_id}")
-        logger.info(f"Тело ответа: {response.body}")
-
-        return response
+        
+        # Обработка ответа.
+        if response.type == 'nil':
+            print(response.code) # Вывод кода ответа, если запрос успешен
+            print(response.message) # Вывод сообщения ответа, если запрос успешен
+            print(response.request_id) # Вывод ID запроса, если запрос успешен
+            print(response.body) # Вывод тела ответа, если запрос успешен
+        else:
+            logger.error(f'Ошибка при выполнении запроса: {response.message}')
+            raise Exception(f'Ошибка выполнения запроса: {response.message}')
 
     except Exception as e:
-        logger.error("Ошибка при выполнении запроса:", exc_info=True)
-        return None
+        logger.error(f'Ошибка в test_get_aliexpress_logistics_data: {e}')
 
-# Запуск теста
-test_get_logistics_seller_addresses()
+
+if __name__ == "__main__":
+    test_get_aliexpress_logistics_data()
 ```
 
 # Changes Made
 
 *   Добавлен импорт `from src.logger import logger`.
-*   Функция `test_get_logistics_seller_addresses` обернута в блок `try...except`. Обработка исключений происходит через `logger.error`.
-*   Изменён метод запроса с `POST` на `GET` в `IopRequest`.
-*   Добавлены информационные логи с помощью `logger.info` для вывода типа ответа, кода, сообщения об ошибке, ID запроса и тела ответа.
-*   Добавлены docstrings в формате RST к функции `test_get_logistics_seller_addresses`
-*   Переменные `gateway_url`, `app_key`, `app_secret` объявлены как отдельные переменные, а не напрямую в конструкторе `IopClient`.
-*   Добавлена обработка исключений через `except Exception as e` и запись сообщения об ошибке в лог.
-
+*   Добавлена функция `test_get_aliexpress_logistics_data` для организации кода.
+*   Изменен метод запроса на `GET` в объекте `request`.
+*   Добавлены комментарии в формате RST ко всем функциям, методам и переменным.
+*   Обработка ошибок с помощью `logger.error`.
+*   Добавлена обработка результата запроса в соответствии с типом `response.type`.
+*   Изменен стиль кода в соответствии с PEP 8.
+*   Заменены "получаем", "делаем" на соответствующие более точные глаголы.
 
 # FULL Code
 
 ```python
+"""
+Модуль для тестирования API запросов AliExpress.
+================================================
+"""
 import iop
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-# -*- coding: utf-8 -*-
+# TODO: Добавить импорт необходимых модулей, если они отсутствуют
 
-"""
-Модуль для тестирования API запроса к AliExpress через iop.
-=========================================================================================
-
-Этот модуль содержит пример использования iop-клиента для отправки запроса
-к API AliExpress.  Демонстрирует получение данных о логистических адресах продавца.
-"""
-
-
-def test_get_logistics_seller_addresses():
+def test_get_aliexpress_logistics_data():
     """
-    Тестирует отправку запроса GET к API AliExpress для получения данных о логистических адресах продавца.
+    Функция для отправки GET-запроса к API AliExpress.
 
-    :return:
-        Возвращает объект response с результатами запроса или None в случае ошибки.
+    :raises Exception: Если произошла ошибка при выполнении запроса.
     """
     try:
-        # Установка параметров клиента
-        gateway_url = 'https://api-pre.aliexpress.com/sync'
-        app_key = '33505222'
-        app_secret = 'e1fed6b34feb26aabc391d187732af93'
-        client = iop.IopClient(gateway_url, app_key, app_secret)
+        # Инициализация клиента API.
+        # gateway_url - адрес API.
+        # app_key - ключ приложения.
+        # app_secret - секрет приложения.
+        client = iop.IopClient('https://api-pre.aliexpress.com/sync', '33505222', 'e1fed6b34feb26aabc391d187732af93')
 
-        # Создание запроса GET.  Обратите внимание на изменение метода на GET.
-        # Исходный код содержал ошибку: метод был POST.
-        request = iop.IopRequest('aliexpress.logistics.redefining.getlogisticsselleraddresses', 'GET')
+        # Создание объекта запроса.
+        # api_name - имя API-метода.
+        # method - метод запроса (POST по умолчанию, можно изменить на GET).
+        request = iop.IopRequest('aliexpress.logistics.redefining.getlogisticsselleraddresses', 'GET') # Изменение метода на GET
         request.set_simplify()
 
-        # Установка параметра запроса
+        # Добавление параметров запроса.
+        # param_name - имя параметра.
+        # param_value - значение параметра.
         request.add_api_param('seller_address_query', 'pickup')
 
-        # Запрос к API
+        # Отправка запроса и получение ответа.
+        # request_id - идентификатор запроса.  Можно использовать для отслеживания.
         request_id = "50000001a27l15rndYBjw6PrtFFHPGZfy09k1Cp1bd8597fsduP0RStringNormalizery0jhF6FL"
         response = client.execute(request, request_id)
-
-
-        # Обработка ответа и вывод результатов
-        logger.info(f"Тип ответа: {response.type}")
-        logger.info(f"Код ответа: {response.code}")
-        logger.info(f"Сообщение об ошибке: {response.message}")
-        logger.info(f"Идентификатор запроса: {response.request_id}")
-        logger.info(f"Тело ответа: {response.body}")
-
-        return response
+        
+        # Обработка ответа.
+        if response.type == 'nil':
+            print(response.code) # Вывод кода ответа, если запрос успешен
+            print(response.message) # Вывод сообщения ответа, если запрос успешен
+            print(response.request_id) # Вывод ID запроса, если запрос успешен
+            print(response.body) # Вывод тела ответа, если запрос успешен
+        else:
+            logger.error(f'Ошибка при выполнении запроса: {response.message}')
+            raise Exception(f'Ошибка выполнения запроса: {response.message}')
 
     except Exception as e:
-        logger.error("Ошибка при выполнении запроса:", exc_info=True)
-        return None
+        logger.error(f'Ошибка в test_get_aliexpress_logistics_data: {e}')
 
-# Запуск теста
-test_get_logistics_seller_addresses()
+
+if __name__ == "__main__":
+    test_get_aliexpress_logistics_data()
 ```

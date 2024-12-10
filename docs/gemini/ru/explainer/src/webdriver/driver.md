@@ -1,9 +1,8 @@
-```MD
 # <input code>
 
 ```python
 ## \file hypotez/src/webdriver/driver.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -46,112 +45,91 @@ import header
 from src import gs
 from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException, WebDriverException
-
-
-class Driver:
-    """
-    .. class:: Driver
-       :platform: Windows, Unix
-       :synopsis: Унифицированный класс для взаимодействия с Selenium WebDriver.
-
-    Класс обеспечивает удобный интерфейс для работы с различными драйверами, такими как Chrome, Firefox и Edge.
-
-    Атрибуты:
-        driver (selenium.webdriver): Экземпляр Selenium WebDriver.
-    """
-
-    def __init__(self, webdriver_cls, *args, **kwargs):
-        """
-        .. method:: __init__(self, webdriver_cls, *args, **kwargs)
-        
-        Инициализирует экземпляр класса Driver.
-
-        :param webdriver_cls: Класс WebDriver, например Chrome или Firefox.
-        :type webdriver_cls: type
-        :param args: Позиционные аргументы для драйвера.
-        :param kwargs: Ключевые аргументы для драйвера.
-
-        Пример:
-            >>> from selenium.webdriver import Chrome
-            >>> driver = Driver(Chrome, executable_path='/path/to/chromedriver')
-        """
-        if not hasattr(webdriver_cls, 'get'):
-            raise TypeError('`webdriver_cls` должен быть допустимым классом WebDriver.')
-        self.driver = webdriver_cls(*args, **kwargs)
-
-    # ... (остальной код)
 ```
 
 # <algorithm>
 
-**Шаг 1:** Инициализация `Driver`.
-   - Принимает `webdriver_cls` (класс WebDriver) и параметры для его инициализации.
-   - Создаёт экземпляр `webdriver_cls` и сохраняет его в `self.driver`.
-   - Проверяет, что `webdriver_cls` является допустимым классом WebDriver.
+**Шаг 1: Инициализация драйвера**
 
-**Шаг 2:**  Метод `get_url`.
-   - Запоминает текущий URL в `_previous_url`.
-   - Использует метод `get` веб-драйвера для перехода по URL.
-   - Ожидает, пока состояние загрузки страницы станет 'complete'.
-   - Если текущий URL не совпадает с целевым, сохраняет старый в `self.previous_url`.
-   - Сохраняет куки.
-   - Возвращает `True`, если переход успешен, `False` иначе.
+- Принимает класс WebDriver (например, `Chrome`, `Firefox`) и параметры для его создания (`executable_path`, и т.д.)
+- Создаёт экземпляр WebDriver.
+
+**Шаг 2: Проверка типа webdriver_cls**
+
+- Проверяет, что переданный `webdriver_cls` является допустимым классом WebDriver, иначе выбрасывает `TypeError`.
 
 
-**Шаг 3:**  Метод `scroll`.
-   - Выполняет прокрутку страницы вверх/вниз или в обоих направлениях.
-   - Вызывает вспомогательную функцию `carousel` с заданными параметрами.
+**Шаг 3: Метод `scroll`**
 
-**Шаг 4:**  Метод `locale`.
-   - Пытается определить язык сайта из мета-тегов.
-   - Если мета-тегов нет, пытается определить язык через JavaScript.
-   - Возвращает код языка или `None`.
+- Вызывает внутреннюю функцию `carousel` для прокрутки в заданном направлении.
+- Если направление 'both', то вызывает `carousel` дважды для прокрутки вверх и вниз.
+- Логирует ошибки, которые могут возникнуть во время прокрутки.
+
+**Шаг 4: Метод `get_url`**
+
+- Сохраняет текущий URL.
+- Переходит по URL используя `self.driver.get(url)`.
+- Ожидает завершения загрузки страницы (цикл `while`).
+- Сравнивает текущий URL с ожидаемым.
+- Сохраняет куки в файл `gs.cookies_filepath`.
+- Возвращает `True` при успехе, `False` в противном случае, обрабатывая различные исключения (WebDriverException, InvalidArgumentException и др.).
 
 
-**Пример данных:**
+**Шаг 5: Метод `fetch_html`**
 
-- Входные данные для `__init__`: `Chrome`, `executable_path='/path/to/chromedriver'`.
-- Входные данные для `get_url`: `url='https://example.com'`.
-- Передача данных между методами: `self.driver` используется в разных методах для взаимодействия с WebDriver.
+- Проверяет тип URL (локальный файл или веб-страница).
+- Если локальный файл, то пытается прочитать его содержимое.
+- Если веб-страница, то вызывает `get_url` и извлекает `page_source`.
+- Логирует ошибки при чтении файла или получении контента.
+
 
 # <mermaid>
 
 ```mermaid
-graph LR
+graph TD
     A[Driver Class] --> B{__init__(webdriver_cls, *args, **kwargs)};
     B --> C[driver = webdriver_cls(*args, **kwargs)];
-    C --> D[Check webdriver_cls];
-    D -- Valid -- E[Initialization Success];
-    E --> F[Return self];
-    D -- Invalid -- G[TypeError Exception];
-    F --> H[get_url(url)];
-    H --> I[driver.get(url)];
-    I --> J[ready_state check];
-    J -- complete -- K[Save cookies];
-    K --> L[return True];
-    J -- not complete -- J;
-    H --> M[Exception Handling];
-    M --> N[Error Logging];
-    N --> L;
-    H -- Fail -- G;
-    F --> O[scroll(scrolls, frame_size, direction, delay)];
-    O --> P[carousel(direction, scrolls, frame_size, delay)];
-    P --> Q[execute_script];
-    Q --> R[Wait];
-    R --> P;
-    P --> S[Return True/False];
-    H --> T[locale()];
-    T --> U[find_element];
-    U --> V[get_attribute];
-    V --> W[Return Language];
-    U -- Exception -- X[get_page_lang()];
-    X --> Y[JavaScript Lang Check];
-    Y --> W;
-    subgraph "External Dependencies"
-        Z[selenium.webdriver]
-        AA[src.logger]
-        BB[gs]
-        CC[header]
+    C --> D{hasattr(webdriver_cls, 'get')};
+    D -- True --> E[Driver initialized];
+    D -- False --> F[TypeError];
+    E --> G[get_url(url)];
+    G --> H[self.driver.get(url)];
+    H --> I[while self.ready_state != 'complete'];
+    I --> J[if url != _previous_url];
+    J --> K[self.previous_url = _previous_url];
+    K --> L[self._save_cookies_localy()];
+    L --> M[return True];
+    G --> N[Exception];
+    N --> O[logger.error];
+    O --> M;
+    G --> P[WebDriverException];
+    P --> O;
+    G --> Q[InvalidArgumentException];
+    Q --> O;
+    G --> R[Exception];
+    R --> O;
+    E --> S[scroll(scrolls, frame_size, direction, delay)];
+    S --> T[carousel(direction, scrolls, frame_size, delay)];
+    T -- Success --> U[return True];
+    T -- Error --> O;
+    E --> V[fetch_html(url)];
+    V --> W[if url.startswith('file://')];
+    W --> X[try to read file];
+    X -- Success --> Y[return True];
+    X -- Error --> O;
+    W --> Z[return False];
+    V --> AA[if url.startswith('http')];
+    AA --> AB[self.get_url(url)];
+    AB -- Success --> AC[self.html_content = self.page_source];
+    AC --> Y;
+    AB -- Error --> O;
+    AA --> AD[return False];
+    subgraph init_subclass
+        E --> AA[__init_subclass__(browser_name=None, **kwargs)];
+        AA --> AE[if browser_name is None];
+        AE -- True --> AF[ValueError];
+        AE -- False --> AG[cls.browser_name = browser_name];
+        AG --> E;
     end
 ```
 
@@ -159,57 +137,52 @@ graph LR
 
 **Импорты:**
 
-- `copy`, `pickle`, `time`, `re`, `Path`, `Optional`, `By`: Стандартные библиотеки Python для копирования, сериализации, работы со временем, регулярными выражениями, путями к файлам, типов данных, и поиска элементов на странице.
-- `InvalidArgumentException`, `ElementClickInterceptedException`, `ElementNotInteractableException`, `ElementNotVisibleException`: Исключения из пакета `selenium.common.exceptions`, связанные с ошибками работы с веб-драйвером.
-- `header`: Вероятно, содержит дополнительные импорты или конфигурационные настройки.
-- `gs`:  Вероятно, модуль для доступа к глобальным переменным или конфигурационным данным (например, путь к файлу с куками).
-- `logger`, `ExecuteLocatorException`, `WebDriverException`: Модули для логирования ошибок и собственные исключения, которые, вероятно, определены в `src.logger` и `src.logger.exceptions`.
-- `selenium.webdriver.common.by`: Предоставляет методы для поиска элементов на веб-странице, например, по CSS-селекторам.
--  `typing.Optional`:  Указывает, что переменная может принимать значение `None`.
+- `copy`, `pickle`, `time`, `re`, `pathlib`, `typing`, `selenium.webdriver`, `selenium.common.exceptions` — стандартные библиотеки Python и Selenium, используемые для копирования, сериализации данных, управления временем, регулярных выражений, работы с файлами, типов данных и обработки исключений.
+- `header` — вероятно, собственный модуль, предоставляющий дополнительные функции.
+- `src.gs` —  модуль из проекта, вероятно, содержащий глобальные константы или настройки.
+- `src.logger` и `src.logger.exceptions` —  модуль и подмодуль для логирования и обработки специфических исключений, используемых для вывода сообщений об ошибках и отслеживания проблем.
 
 
 **Классы:**
 
-- `Driver`: Класс для работы с веб-драйверами Selenium.
-  - `driver`: Экземпляр WebDriver (e.g., Chrome, Firefox).
-  - `__init__(...)`: Инициализирует экземпляр с указанием класса веб-драйвера и необходимых аргументов.
-  - `__getattr__(...)`: Прокси-метод для доступа к атрибутам веб-драйвера (e.g., `driver.title`, `driver.current_url`).
-  - `scroll(...)`: Прокручивает страницу.
-  - `locale(...)`: Определяет язык сайта.
-  - `get_url(...)`: Переходит по URL и сохраняет куки.
-  - `window_open(...)`: Открывает новую вкладку.
-  - `wait(...)`: Задержка выполнения.
-  - `_save_cookies_localy(...)`: Сохраняет куки в файл.
-  - `fetch_html(...)`: Загружает HTML-контент из файла или URL.
-  - `__init_subclass__(...)`:  Автоматически вызывается при создании подкласса `Driver`. Требует `browser_name` для идентификации браузера.
-
+- **`Driver`:**  Основной класс для взаимодействия с веб-драйверами.  Используется для инициализации драйвера, навигации по сайту, управления куки, прокрутки и извлечения контента.
+   - `driver (selenium.webdriver)`: экземпляр веб-драйвера, предоставляемого Selenium.
+   - `__init__(self, webdriver_cls, *args, **kwargs)`:  Инициализирует экземпляр класса, принимая класс веб-драйвера и аргументы для его инициализации. Важно: проверка корректности типа драйвера.
+   - `__init_subclass__(cls, *, browser_name=None, **kwargs)`: Автоматически вызывается при создании подкласса `Driver`, проверяет наличие `browser_name` и инициализирует его.  Это полезно для работы с разными типами браузеров, например, Chrome, Firefox, Edge.  Однако, данная функция требует дополнительного понимания работы `__init_subclass__`.
+   - `__getattr__(self, item)`:  Прокси-метод для доступа к атрибутам драйвера (например, `driver.current_url`).
+   - `scroll(self, scrolls, frame_size, direction, delay)`: Прокручивает страницу в заданном направлении.
+   - `get_url(self, url)`: Переходит по URL, ожидает полной загрузки и сохраняет куки. Обрабатывает ошибки при переходе (например, неверный URL, ошибка драйвера).
+   - `locale(self)`:  Определяет язык страницы.
+   - `wait(self, delay)`:  Ожидает указанное количество времени.
+   - `_save_cookies_localy(self)`:  Сохраняет куки в файл.
+   - `fetch_html(self, url)`: Извлекает HTML-контент из файла или URL.
 
 
 **Функции:**
 
-- `carousel(...)`: Вспомогательная функция для прокрутки страницы.
-
+- `carousel(direction, scrolls, frame_size, delay)`: Вложенная функция для прокрутки.  Предназначена для повторного вызова для прокрутки вверх/вниз.
 
 **Переменные:**
 
-- `MODE`: Вероятно, содержит режим работы (e.g., 'dev', 'prod').
-- `gs.cookies_filepath`: Путь к файлу, где хранятся куки.
+- `MODE`: Строковая переменная, хранит режим работы ('dev').
+- `gs.cookies_filepath`:  Путь к файлу, в котором сохраняются куки.
 
 **Возможные ошибки и улучшения:**
 
-- Неясно, как обрабатываются ошибки при поиске элемента.
-- Отсутствует проверка корректности аргументов в методах.
-- Можно добавить `try...except` блоки для обработки различных ошибок (например, `NoSuchElementException`).
-- При переходе по URL не хватает проверки, что ожидаемый URL получен.
-- Функция `_save_cookies_localy` возвращает `True`, но не использует результат.  Желательно бросать исключение или возвращать результат выполнения.
+- **Недостаточная обработка ошибок:** Хотя код содержит `try...except` блоки, некоторые исключения могут не быть отловлены или обработаны адекватно. Нужно добавить более подробное описание исключений и их решений.
+- **Упрощение кода `fetch_html`**: Логика для обработки локальных файлов и веб-страниц выглядит несколько громоздко.  Можно выделить отдельные функции для каждого типа.
+- **Документация**: Документация к классам и методам могла бы быть более подробной, особенно по параметрам и возвращаемым значениям.
+- **Комментарии**: Больше комментариев внутри кода, особенно в сложных местах, могут улучшить читаемость и понимание.
+- **Переменные с фиксированными значениями**:  Значения по умолчанию в методах `scroll` и `carousel` (`scrolls = 1`, `frame_size = 600`, `delay = 0.3`) — могут быть не самыми лучшими для всех случаев, нужно рассмотреть возможность их адаптации.
+- **`return True` в `_save_cookies_localy`**: Возвращение `True` в `_save_cookies_localy` бессмысленно, если метод ничего не возвращает.  Удалите этот `return`.
 
 
-**Взаимосвязи с другими частями проекта:**
+**Взаимосвязь с другими частями проекта:**
 
-- `gs`: Вероятно, взаимодействует с другими частями проекта для получения конфигурации.
-- `logger`:  Используется для логирования ошибок, что подразумевает связь с системой логирования.
+- `src.gs`:  Поле `gs.cookies_filepath` указывает на необходимость существования внешней переменной, задающей путь к файлу куки.
+- `src.logger`: Для логирования ошибок, сообщений и отладки.
 
 
-**Общее:**
+**Общее замечание:**
 
-Код имеет хорошую структуру с использованием документации `..`, но требует улучшений в обработке ошибок и возвращаемых значений. Определенно необходим более тщательный тест.  Определение валидности `webdriver_cls` немного недостаточно - важно убедиться, что драйвер поддерживает необходимые методы.
+Код структурирован и хорошо документирован, но требует дополнительных улучшений для повышения его надежности и читаемости.  Обработка различных типов исключений и более подробная документация улучшат код.

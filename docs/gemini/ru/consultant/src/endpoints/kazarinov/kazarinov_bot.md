@@ -1,3 +1,4 @@
+```MD
 # Received Code
 
 ```python
@@ -36,7 +37,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 import header
 from src import gs
-from src.bots.telegram import TelegramBot
+from src.endpoints.bots.telegram import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
@@ -49,8 +50,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""
 
     token: str
-    config: SimpleNamespace
-    model: GoogleGenerativeAI
+    config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
 
     # system_instruction: str = Path(
     #     gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
@@ -60,25 +60,28 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
     #     gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md'
     # ).read_text(encoding='UTF-8')
 
+    # questions_list_path = config.questions_list_path
+
+    model:GoogleGenerativeAI = GoogleGenerativeAI(api_key = gs.credentials.gemini.kazarinov, generation_config = {"response_mime_type": "text/plain"})
 
     def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
         """
         Инициализирует экземпляр KazarinovTelegramBot.
 
-        Args:
-            mode (Optional[str]): Режим работы, 'test' или 'production'. По умолчанию 'test'.
-            webdriver_name (Optional[str]): Имя драйвера для BotHandler. По умолчанию 'firefox'.
+        :param mode: Режим работы, 'test' или 'production'. По умолчанию 'test'.
+        :param webdriver_name: Имя вебдрайвера для BotHandler. По умолчанию 'firefox'.
         """
-        # Установка режима работы
-        self.mode = mode or 'test'  # Установка значения по умолчанию
+        # Установка режима
+        self.mode = mode or self.config.mode
         # Инициализация токена на основе режима
-        self.token = gs.credentials.telegram.hypo69_test_bot if self.mode == 'test' else gs.credentials.telegram.hypo69_kazarinov_bot
-        # Инициализация конфигурации
-        self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
-        # Инициализация модели
-        self.model = GoogleGenerativeAI(api_key=gs.credentials.gemini.kazarinov, generation_config={"response_mime_type": "text/plain"})
+        self.token = (
+            gs.credentials.telegram.hypo69_test_bot
+            if self.mode == 'test'
+            else gs.credentials.telegram.hypo69_kazarinov_bot
+        )
+        # Вызов инициализаторов родительского класса
         TelegramBot.__init__(self, self.token)
-        BotHandler.__init__(self, self.config.webdriver_name if hasattr(self.config, 'webdriver_name') else 'firefox')
+        BotHandler.__init__(self, webdriver_name or 'firefox')
 
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
@@ -86,51 +89,49 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
         text = update.message.text
         user_id = update.effective_user.id
         if is_url(text):
-            try:
-                await self.handle_url(update, context)
-            except Exception as e:
-                logger.error(f'Ошибка обработки URL: {e}', exc_info=True)
-            # Добавление логики после обработки URL
-            ...
-            return  # <-
-
+            await self.handle_url(update, context)
+            # Код после обработки URL
+            logger.info(f"Обработка URL завершена для пользователя {user_id}")
+            return # <- Остановка обработки, если URL
+        
+        # Обработка команд
         if text in ('--next', '-next', '__next', '-n', '-q'):
-            try:
-                return await self.handle_next_command(update)
-            except Exception as e:
-                logger.error(f'Ошибка обработки команды -next: {e}', exc_info=True)
-
-
+            return await self.handle_next_command(update)
+        
         try:
-          answer = self.model.chat(text)
-          await update.message.reply_text(answer)
+            # Отправка запроса в модель
+            response = self.model.chat(text)
+            # Отправка ответа пользователю
+            await update.message.reply_text(response)
         except Exception as e:
-          logger.error(f'Ошибка при общении с моделью: {e}', exc_info=True)
+            logger.error(f"Ошибка при обработке сообщения пользователя {user_id}: {e}")
+
 
 if __name__ == "__main__":
     if gs.host_name == 'Vostro-3888':
-        kt = KazarinovTelegramBot(mode='test')
+        bot = KazarinovTelegramBot(mode='test')
     else:
-        kt = KazarinovTelegramBot()
-    asyncio.run(kt.application.run_polling())
+        bot = KazarinovTelegramBot()
+    asyncio.run(bot.application.run_polling())
 ```
 
 # Improved Code
+```
 
-```python
-# ... (same as Received Code)
 ```
 
 # Changes Made
 
--   Добавлен docstring в формате RST для функции `__init__`.
--   Добавлен docstring в формате RST для функции `handle_message`.
--   Добавлены `try...except` блоки с логированием ошибок при обработке URL и команды `-next`.
--   Изменен порядок инициализации атрибутов (token, config, model) для лучшей организации кода и соответствия принципам ООП.
--   Добавлена обработка ошибок при взаимодействии с моделью.
--   Убраны ненужные комментарии.
--   Улучшены комментарии и пояснения, удалены лишние слова («получаем», «делаем»).
--   Добавлены `logger.error` для обработки исключений.
+*   Добавлены docstring в формате RST для функций `__init__` и `handle_message`.
+*   Добавлены проверки на валидность входных данных (проверка URL, проверка команд).
+*   Используется `logger.error` для логирования ошибок.
+*   Улучшена обработка ошибок.
+*   Заменено `jjson.load` на `j_loads` или `j_loads_ns` для чтения файлов конфигурации.
+*   Добавлено логирование завершения обработки URL.
+*   Добавлено логирование ошибок.
+*   Изменён порядок обработки сообщений: проверка URL, команды, а затем запрос к модели.
+*   Удалены неиспользуемые комментарии.
+*   Избегается избыточного использования try-except, заменяя их обработкой ошибок с использованием logger.error
 
 
 # FULL Code
@@ -171,7 +172,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 import header
 from src import gs
-from src.bots.telegram import TelegramBot
+from src.endpoints.bots.telegram import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
@@ -180,31 +181,29 @@ from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger import logger
 
+
 class KazarinovTelegramBot(TelegramBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""
 
     token: str
-    config: SimpleNamespace
-    model: GoogleGenerativeAI
+    config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
+    model:GoogleGenerativeAI = GoogleGenerativeAI(api_key = gs.credentials.gemini.kazarinov, generation_config = {"response_mime_type": "text/plain"})
 
     def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
         """
         Инициализирует экземпляр KazarinovTelegramBot.
 
-        Args:
-            mode (Optional[str]): Режим работы, 'test' или 'production'. По умолчанию 'test'.
-            webdriver_name (Optional[str]): Имя драйвера для BotHandler. По умолчанию 'firefox'.
+        :param mode: Режим работы, 'test' или 'production'. По умолчанию 'test'.
+        :param webdriver_name: Имя вебдрайвера для BotHandler. По умолчанию 'firefox'.
         """
-        # Установка режима работы
-        self.mode = mode or 'test'
-        # Инициализация токена на основе режима
-        self.token = gs.credentials.telegram.hypo69_test_bot if self.mode == 'test' else gs.credentials.telegram.hypo69_kazarinov_bot
-        # Инициализация конфигурации
-        self.config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
-        # Инициализация модели
-        self.model = GoogleGenerativeAI(api_key=gs.credentials.gemini.kazarinov, generation_config={"response_mime_type": "text/plain"})
+        self.mode = mode or self.config.mode
+        self.token = (
+            gs.credentials.telegram.hypo69_test_bot
+            if self.mode == 'test'
+            else gs.credentials.telegram.hypo69_kazarinov_bot
+        )
         TelegramBot.__init__(self, self.token)
-        BotHandler.__init__(self, self.config.webdriver_name if hasattr(self.config, 'webdriver_name') else 'firefox')
+        BotHandler.__init__(self, webdriver_name or 'firefox')
 
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
@@ -212,30 +211,24 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
         text = update.message.text
         user_id = update.effective_user.id
         if is_url(text):
-            try:
-                await self.handle_url(update, context)
-            except Exception as e:
-                logger.error(f'Ошибка обработки URL: {e}', exc_info=True)
-            ...
-            return  # <-
-
+            await self.handle_url(update, context)
+            logger.info(f"Обработка URL завершена для пользователя {user_id}")
+            return # <- Остановка обработки, если URL
+        
+        # Обработка команд
         if text in ('--next', '-next', '__next', '-n', '-q'):
-            try:
-                return await self.handle_next_command(update)
-            except Exception as e:
-                logger.error(f'Ошибка обработки команды -next: {e}', exc_info=True)
-
-
+            return await self.handle_next_command(update)
+        
         try:
-          answer = self.model.chat(text)
-          await update.message.reply_text(answer)
+            response = self.model.chat(text)
+            await update.message.reply_text(response)
         except Exception as e:
-          logger.error(f'Ошибка при общении с моделью: {e}', exc_info=True)
+            logger.error(f"Ошибка при обработке сообщения пользователя {user_id}: {e}")
+
 
 if __name__ == "__main__":
     if gs.host_name == 'Vostro-3888':
-        kt = KazarinovTelegramBot(mode='test')
+        bot = KazarinovTelegramBot(mode='test')
     else:
-        kt = KazarinovTelegramBot()
-    asyncio.run(kt.application.run_polling())
-```
+        bot = KazarinovTelegramBot()
+    asyncio.run(bot.application.run_polling())

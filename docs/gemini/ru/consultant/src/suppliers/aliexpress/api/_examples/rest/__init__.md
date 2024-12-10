@@ -18,16 +18,18 @@ from .AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQu
 from .AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
 from .AliexpressAffiliateOrderListbyindexRequest import AliexpressAffiliateOrderListbyindexRequest
 from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGenerateRequest
+
 ```
 
 # Improved Code
 
 ```python
-"""
-Модуль содержит запросы для работы с API AliExpress.
-================================================================================
-Этот модуль экспортирует классы, представляющие запросы к API AliExpress,
-для работы с различными типами данных, такими как продукты, заказы и т.д.
+## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с API AliExpress.  
+    Содержит импорты запросов для разных функциональных возможностей.
 """
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 from .AliexpressAffiliateOrderGetRequest import AliexpressAffiliateOrderGetRequest
@@ -41,27 +43,33 @@ from .AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQu
 from .AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
 from .AliexpressAffiliateOrderListbyindexRequest import AliexpressAffiliateOrderListbyindexRequest
 from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGenerateRequest
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем необходимые функции для обработки JSON
-from src.logger import logger # Импортируем логгер
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
-# ... (Остальной код)
+# Пример использования j_loads_ns
+# data = j_loads_ns('path/to/file.json')
+# data = j_loads('path/to/file.json')
+
+
 ```
 
 # Changes Made
 
-* Добавлена документация RST для модуля `__init__.py`.
-* Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-* Импортирован логгер `logger` из `src.logger`.
-* Все комментарии к импортам изменены в формате RST.
+* Добавлена строка документации для модуля, описывающая его назначение.
+* Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+* Добавлено место для примера использования функций `j_loads` и `j_loads_ns`.
+* Убраны ненужные комментарии.
+* Исправлены стилистические ошибки.
+
 
 # FULL Code
 
 ```python
-"""
-Модуль содержит запросы для работы с API AliExpress.
-================================================================================
-Этот модуль экспортирует классы, представляющие запросы к API AliExpress,
-для работы с различными типами данных, такими как продукты, заказы и т.д.
+## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~~~~
+""" Модуль для работы с API AliExpress.  
+    Содержит импорты запросов для разных функциональных возможностей.
 """
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 from .AliexpressAffiliateOrderGetRequest import AliexpressAffiliateOrderGetRequest
@@ -75,8 +83,9 @@ from .AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQu
 from .AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
 from .AliexpressAffiliateOrderListbyindexRequest import AliexpressAffiliateOrderListbyindexRequest
 from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGenerateRequest
-from src.utils.jjson import j_loads, j_loads_ns # Импортируем необходимые функции для обработки JSON
-from src.logger import logger # Импортируем логгер
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
-# ... (Остальной код)
+# Пример использования j_loads_ns
+# data = j_loads_ns('path/to/file.json')
+# data = j_loads('path/to/file.json')
 ```

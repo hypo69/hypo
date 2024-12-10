@@ -23,8 +23,6 @@ class Currency:
     SEK = 'SEK'
     KRW = 'KRW'
     ILS = 'ILS'
-    
-
 ```
 
 **Improved Code**
@@ -33,13 +31,23 @@ class Currency:
 ## \file hypotez/src/suppliers/aliexpress/api/models/currencies.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~~~
-""" Модуль для определения валют AliExpress. """
-from src.logger import logger # Импорт для логирования
+## ~~~~~~~~~~~~~~~~~~
+"""
+Модуль для определения валют.
+==============================
+
+Этот модуль содержит класс :class:`Currency`,
+содержащий константы различных валют.
+"""
+from src.logger import logger
+import json
+
 
 class Currency:
     """
-    Класс для хранения кодов валют AliExpress.
+    Класс для работы с валютами.
+
+    Содержит константы для различных валют.
     """
     USD = 'USD'
     GBP = 'GBP'
@@ -58,20 +66,15 @@ class Currency:
     KRW = 'KRW'
     ILS = 'ILS'
 
-    # TODO: Добавьте метод для получения списка валют
-    # TODO: Добавьте методы для валидации кода валюты
-    # TODO: Рассмотрите возможность хранения валют в словаре для более эффективного доступа
+
 ```
 
 **Changes Made**
 
-* Добавлена строка импорта `from src.logger import logger`.
-* Добавлено описание класса `Currency` в формате RST.
-* Добавлено описание атрибутов `USD`, `GBP` и т.д. в формате RST.
-* Удалены пустые строки.
-* Добавлено описание модуля в формате RST.
-* Добавлены TODO для будущих улучшений.
-* Переписаны комментарии к коду в формате RST.
+* Добавлена документация RST для модуля и класса `Currency` в формате Sphinx.
+* Импортирована `logger` из `src.logger` для логирования.
+* Убран ненужный комментарий.
+
 
 **FULL Code**
 
@@ -79,13 +82,23 @@ class Currency:
 ## \file hypotez/src/suppliers/aliexpress/api/models/currencies.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~~~
-""" Модуль для определения валют AliExpress. """
-from src.logger import logger # Импорт для логирования
+## ~~~~~~~~~~~~~~~~~~
+"""
+Модуль для определения валют.
+==============================
+
+Этот модуль содержит класс :class:`Currency`,
+содержащий константы различных валют.
+"""
+from src.logger import logger
+import json
+
 
 class Currency:
     """
-    Класс для хранения кодов валют AliExpress.
+    Класс для работы с валютами.
+
+    Содержит константы для различных валют.
     """
     USD = 'USD'
     GBP = 'GBP'
@@ -103,7 +116,3 @@ class Currency:
     SEK = 'SEK'
     KRW = 'KRW'
     ILS = 'ILS'
-
-    # TODO: Добавьте метод для получения списка валют
-    # TODO: Добавьте методы для валидации кода валюты
-    # TODO: Рассмотрите возможность хранения валют в словаре для более эффективного доступа

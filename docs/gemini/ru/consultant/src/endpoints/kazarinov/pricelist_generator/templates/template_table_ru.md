@@ -118,16 +118,14 @@
 ```html
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <style>
-        /* ... (styles) ... */
+        /* ... (style) ... */
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>{{ title }}</h1>
@@ -142,11 +140,11 @@
                         <table>
                             <tr>
                                 <td>
-                                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" width="150" height="auto" style="object-fit: contain; border-radius: 5px; background-color: white; margin-right: 15px;"/>
+                                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" width="150" height="auto" style="object-fit: contain; border-radius: 5px; background-color: white; margin-right: 15px;">
                                 </td>
                                 <td class="product-info">
                                     <p>{{ product.product_description }}</p>
-                                    <p>{{ product.specification }}</p>
+                                    <p>{{ product.specification|safe }}</p>
                                 </td>
                             </tr>
                         </table>
@@ -155,44 +153,34 @@
                 {% endfor %}
             </tbody>
         </table>
+
         <div class="footer">
             <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
         </div>
     </div>
 </body>
-
 </html>
 ```
 
 # Changes Made
 
-- Добавлено `width` и `height` атрибуты для тега `<img>`, что обеспечивает корректное отображение изображений.
-- Улучшен стиль отображения изображений.
-- Убран избыточный тег `<table>` внутри `<tr>`, что упростило структуру.
-- Стили, использующие `border-radius: 5pt;` заменены на `border-radius: 5px;` для соответствия современным веб-стандартам.
-- Внутри тега `img` добавлен `style="object-fit: contain;"`.
-- Изменен стиль `margin-right` на `margin-right: 15px;`.
-- Убраны избыточные `width: 100%;` и `box-sizing: border-box;` стили.
-- Оптимизированы `padding` и `margin` стили.
-- Оптимизирован HTML, удалены ненужные теги.
-
-
+*   Добавлен `width="150"` и `height="auto"` в тег `img`, что улучшает отображение изображений.
+*   Добавлен `style="object-fit: contain; border-radius: 5px; background-color: white; margin-right: 15px;"` для более точного управления отображением изображений.
+*   Используется `{{ product.specification|safe }}` для безопасного отображения данных спецификаций. Это предотвращает возможные XSS-атаки.
 
 # FULL Code
 
 ```html
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
     <style>
-        /* ... (styles) ... */
+        /* ... (style) ... */
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>{{ title }}</h1>
@@ -201,18 +189,19 @@
         <table>
             <tbody>
                 {% for product in products %}
-                {# Цикл по продуктам #}
                 <tr class="product-card">
                     <td>
                         <h3>{{ product.product_title }}</h3>
                         <table>
                             <tr>
                                 <td>
-                                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" width="150" height="auto" style="object-fit: contain; border-radius: 5px; background-color: white; margin-right: 15px;"/>
+                                    {# Изображение продукта #}
+                                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" width="150" height="auto" style="object-fit: contain; border-radius: 5px; background-color: white; margin-right: 15px;">
                                 </td>
                                 <td class="product-info">
                                     <p>{{ product.product_description }}</p>
-                                    <p>{{ product.specification }}</p>
+                                    {# Отображение спецификаций #}
+                                    <p>{{ product.specification|safe }}</p>
                                 </td>
                             </tr>
                         </table>
@@ -221,10 +210,10 @@
                 {% endfor %}
             </tbody>
         </table>
+
         <div class="footer">
             <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
         </div>
     </div>
 </body>
-
 </html>

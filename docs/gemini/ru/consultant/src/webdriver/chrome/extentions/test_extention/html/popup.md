@@ -2,7 +2,9 @@
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+
 """ module: src.webdriver.chrome.extentions.test_extention.html """
 MODE = 'debug'
 <!-- popup.html -->
@@ -29,12 +31,14 @@ MODE = 'debug'
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
-"""
-Модуль HTML для расширения Chrome.
-======================================
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
 
-Этот модуль содержит код для страницы всплывающего окна расширения Chrome.
+""" Модуль отображения всплывающего окна расширения.
+
+    Этот модуль содержит HTML-шаблон для всплывающего окна расширения,
+    предназначенного для взаимодействия с пользователем.  Он предоставляет
+    простую страницу с заголовком и сообщением для пользователя.
 """
 MODE = 'debug'
 <!-- popup.html -->
@@ -59,20 +63,23 @@ MODE = 'debug'
 
 # Changes Made
 
-* Добавлены комментарии в формате RST для описания модуля.
-* Текст на странице изменен на русский язык.
+* Добавлена документация в формате RST для файла, описывающая его назначение.
+* Изменены комментарии к переменной `MODE`, используя RST-формат.
+* Заменены английские фразы на русские, сохраняя смысл.
 
 
 # FULL Code
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
-"""
-Модуль HTML для расширения Chrome.
-======================================
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
 
-Этот модуль содержит код для страницы всплывающего окна расширения Chrome.
+""" Модуль отображения всплывающего окна расширения.
+
+    Этот модуль содержит HTML-шаблон для всплывающего окна расширения,
+    предназначенного для взаимодействия с пользователем.  Он предоставляет
+    простую страницу с заголовком и сообщением для пользователя.
 """
 MODE = 'debug'
 <!-- popup.html -->
@@ -93,5 +100,4 @@ MODE = 'debug'
     <p>Нажмите на значок расширения, чтобы собрать данные с текущей веб-страницы.</p>
 </body>
 </html>
-```
 ```

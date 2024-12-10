@@ -1,3 +1,4 @@
+```MD
 # Received Code
 
 ```python
@@ -55,36 +56,35 @@ MODE = 'dev'
 
 def switch_account(driver: Driver):
     """
-    Переключает аккаунт, если кнопка переключения доступна.
+    Переключает учетную запись Facebook.
 
     :param driver: Объект драйвера веб-драйвера.
-    :raises Exception: Если произошла ошибка во время поиска или нажатия кнопки.
+    :raises Exception: Если произошла ошибка при переключении.
     """
-    # Загрузка локеторов из JSON файла.
+    # Загрузка локаторов из JSON файла.
     try:
-        locator = j_loads_ns(
+        locator: SimpleNamespace = j_loads_ns(
             Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
         )
     except Exception as e:
-        logger.error("Ошибка загрузки локеторов:", exc_info=True)
+        logger.error('Ошибка загрузки локаторов:', e)
         return
-    #  Код пытается найти и нажать кнопку переключения аккаунта.
+    
+    # Проверка наличия кнопки переключения учетной записи.
     try:
-        driver.execute_locator(locator.switch_to_account_button)  # Нажатие кнопки переключения аккаунта
+        driver.execute_locator(locator.switch_to_account_button)
     except Exception as e:
-        logger.error("Ошибка переключения аккаунта:", exc_info=True)
+        logger.error('Ошибка при переключении учетной записи:', e)
 ```
 
 # Changes Made
 
 *   Добавлен импорт `logging` и `logger` из `src.logger`.
-*   Добавлены обработка ошибок `try-except` с использованием `logger.error` для логирования исключений.
-*   Добавлена строка документации RST для функции `switch_account`.
-*   Переименована переменная `locator` для лучшей читаемости.
-*   Изменён стиль коментариев, заменены фразы типа «Если есть кнопка…», на более формальные описания, соответствующие RST стилю.
-*   Добавлены проверки на правильность загрузки локеторов из json файла.
-*   Добавлена обработка ошибок в случае, если локетор не найден.
-*   Изменён стиль комментариев.
+*   Добавлен обработчик ошибок `try...except` для загрузки локаторов и переключения учетной записи. Ошибки логируются с помощью `logger.error`.
+*   Изменены docstrings для модуля и функции в формате RST.  Удалены неинформативные фразы.
+*   Добавлен `:raises Exception: ` в описание функции, для явного указания на возможность возникновения исключений.
+*   Изменены имена переменных и функции на более информативные и понятные.
+
 
 # FULL Code
 
@@ -112,22 +112,22 @@ MODE = 'dev'
 
 def switch_account(driver: Driver):
     """
-    Переключает аккаунт, если кнопка переключения доступна.
+    Переключает учетную запись Facebook.
 
     :param driver: Объект драйвера веб-драйвера.
-    :raises Exception: Если произошла ошибка во время поиска или нажатия кнопки.
+    :raises Exception: Если произошла ошибка при переключении.
     """
-    # Загрузка локеторов из JSON файла.
+    # Загрузка локаторов из JSON файла.
     try:
-        locator = j_loads_ns(
+        locator: SimpleNamespace = j_loads_ns(
             Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
         )
     except Exception as e:
-        logger.error("Ошибка загрузки локеторов:", exc_info=True)
+        logger.error('Ошибка загрузки локаторов:', e)
         return
-    #  Код пытается найти и нажать кнопку переключения аккаунта.
+    
+    # Проверка наличия кнопки переключения учетной записи.
     try:
-        driver.execute_locator(locator.switch_to_account_button)  # Нажатие кнопки переключения аккаунта
+        driver.execute_locator(locator.switch_to_account_button)
     except Exception as e:
-        logger.error("Ошибка переключения аккаунта:", exc_info=True)
-```
+        logger.error('Ошибка при переключении учетной записи:', e)

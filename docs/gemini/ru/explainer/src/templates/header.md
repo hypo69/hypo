@@ -3,90 +3,144 @@
 
 ```python
 ## \file hypotez/src/templates/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.templates \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\nMODE = \'dev\'\n  \n\nimport sys\nimport json\nfrom packaging.version import Version\n\nfrom pathlib import Path\ndef set_project_root(marker_files=(\'pyproject.toml\', \'requirements.txt\', \'.git\')) -> Path:\n    """\n    Finds the root directory of the project starting from the current file\'s directory,\n    searching upwards and stopping at the first directory containing any of the marker files.\n\n    Args:\n        marker_files (tuple): Filenames or directory names to identify the project root.\n    \n    Returns:\n        Path: Path to the root directory if found, otherwise the directory where the script is located.\n    """\n    __root__:Path\n    current_path:Path = Path(__file__).resolve().parent\n    __root__ = current_path\n    for parent in [current_path] + list(current_path.parents):\n        if any((parent / marker).exists() for marker in marker_files):\n            __root__ = parent\n            break\n    if __root__ not in sys.path:\n        sys.path.insert(0, str(__root__))\n    return __root__\n\n\n# Get the root directory of the project\n__root__ = set_project_root()\n"""__root__ (Path): Path to the root directory of the project"""\n\nfrom src import gs
+# -*- coding: utf-8 -*-\
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module: src.templates 
+	:platform: Windows, Unix
+	:synopsis:
+
+"""
+
+MODE = 'dev'
+  
+
+import sys
+import json
+from packaging.version import Version
+
+from pathlib import Path
+def set_project_root(marker_files=(\'pyproject.toml\', \'requirements.txt\', \'.git\')) -> Path:
+    """
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+    
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    """
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
+    __root__ = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            __root__ = parent
+            break
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
+
+
+# Get the root directory of the project
+__root__ = set_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
+
+from src import gs
 ```
 
 # <algorithm>
 
-**Алгоритм поиска корневой директории проекта:**
+**Алгоритм работы функции `set_project_root`:**
 
 1. **Инициализация:**
-   - `current_path` получает путь к текущему файлу (`header.py`).
+   - `current_path` получает путь к текущему файлу (`__file__`) и делает его абсолютным (`resolve()`) и родительским каталогом (`parent`).
    - `__root__` инициализируется значением `current_path`.
 
-2. **Поиск вверх по дереву директорий:**
-   - Цикл `for parent in [current_path] + list(current_path.parents)` итерирует по родительским директориям текущего файла, начиная с самого текущего.
-   - Внутри цикла:
-     - `any((parent / marker).exists() for marker in marker_files)` проверяет, существует ли хотя бы один из файлов/папок `marker_files` в текущей родительской директории (`parent`).
-     - Если такой файл/папка найдена:
-       - `__root__` обновляется до `parent`.
-       - Цикл прерывается (`break`).
+2. **Поиск корневого каталога:**
+   - Цикл `for` перебирает текущий каталог (`current_path`) и все родительские каталоги.
+   - Внутри цикла проверяется, существует ли какой-либо файл/каталог из `marker_files` в текущем родительском каталоге (`any((parent / marker).exists() for marker in marker_files)`).
+   - Если такой файл/каталог найден, `__root__` обновляется на родительский каталог, и цикл прерывается (`break`).
 
-3. **Добавление в `sys.path`:**
-   - `if __root__ not in sys.path:` проверяет, уже ли корневой каталог в `sys.path`.
-   - Если не в `sys.path` - добавляется в начало `sys.path` с помощью `sys.path.insert(0, str(__root__))`.
+3. **Добавление в `sys.path` (если необходимо):**
+   - Проверяется, что найденный корневой каталог (`__root__`) не содержится в `sys.path`.
+   - Если не содержится, то корневой каталог добавляется в `sys.path` с помощью `sys.path.insert(0, str(__root__))`.
 
 4. **Возврат:**
-   - Функция возвращает значение `__root__`.
+   - Функция возвращает значение `__root__`, которое содержит путь к корневому каталогу проекта.
+
 
 **Пример:**
 
-Если `header.py` находится в `hypotez/src/templates`, а `pyproject.toml` находится в `hypotez`, то алгоритм будет находить корневой каталог `hypotez`.
+Предположим, `__file__` указывает на файл `hypotez/src/templates/header.py`.
+- `current_path` будет `hypotez/src/templates`.
+- Цикл перебирает `hypotez/src/templates`, `hypotez/src`, `hypotez`, ...
+- Если `pyproject.toml` найден в `hypotez`, то `__root__` становится `hypotez`, и цикл прерывается.
+- `__root__` добавляется в `sys.path`.
+- Функция возвращает `Path("hypotez")`.
+
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[current_path = Path(__file__).resolve().parent] --> B{any((parent / marker).exists() for marker in marker_files)};
-    B -- true --> C[__root__ = parent];
-    B -- false --> D[next parent];
-    C --> E[if __root__ not in sys.path];
-    E -- true --> F[sys.path.insert(0, str(__root__))];
-    E -- false --> G[return __root__];
-    D --> B;
-    A --> C;
-    C --> G;
-    subgraph "Модуль gs"
-        G --> H[import gs from src];
+    A[__file__ -> Path] --> B{resolve & parent};
+    B --> C[__root__ = Path];
+    C --> D[for parent in current_path & parents];
+    D -- exists(marker) --> E{__root__ = parent & break};
+    D -- !exists(marker) --> D;
+    E --> F{__root__ in sys.path?};
+    F -- yes --> G[return __root__];
+    F -- no --> H[sys.path.insert(0, str(__root__))];
+    H --> G;
+    G --> I[return __root__];
+    subgraph "Import gs"
+    I --> J[from src import gs];
     end
-    style C fill:#f9f,stroke:#333,stroke-width:2px;
 ```
 
 **Объяснение диаграммы:**
 
-* **current_path:** Путь к текущему файлу.
-* **B:** Проверка существования файлов/папок из `marker_files` в текущей родительской директории.
-* **C:** Обновление `__root__` при нахождении одного из маркеров.
-* **E:** Проверка, присутствует ли `__root__` в `sys.path`.
-* **F:** Добавление `__root__` в `sys.path` если не присутствует.
-* **G:** Возврат найденного `__root__`.
-* **H:** Импорт модуля `gs` из пакета `src`.  Это зависимость от другого модуля в проекте.
+Диаграмма отображает последовательность действий при выполнении кода. Она показывает, как путь к файлу преобразуется в путь к корневому каталогу проекта, как происходит проверка на наличие маркеров проекта (`pyproject.toml`, `requirements.txt`, `.git`) в родительских каталогах, и как, если корневой каталог не находится в `sys.path`, он туда добавляется.  Зависимость от модуля `gs` также отмечена.
+
 
 # <explanation>
 
 **Импорты:**
 
-- `sys`: предоставляет доступ к системным переменным и функциям, например, `sys.path` для управления путями поиска модулей.
-- `json`: для работы с JSON-данными (хотя в данном примере не используется).
-- `packaging.version`: для работы с версиями пакетов.
-- `pathlib`: для работы с путями к файлам и каталогам.
-- `gs`: импортируется из `src.gs`.  Это указывает на то, что `gs` — это модуль (или пакет) внутри проекта `hypotez`, и его присутствие необходимо для работы текущего файла.  Это внешняя зависимость от других частей проекта.
+- `sys`: предоставляет доступ к системным параметрам, в том числе к пути поиска модулей (`sys.path`).
+- `json`: используется для работы с данными в формате JSON (хотя в данном примере не используется напрямую).
+- `packaging.version`: используется для работы с версиями пакетов.
+- `pathlib`: предоставляет класс `Path` для работы с путями файлов и каталогов. Важная зависимость, так как код манипулирует с файловой системой.
+- `src.gs`: импорт из другого модуля проекта (`src`). Это указывает на то, что `gs` является частью структуры проекта и содержит логику, которая используется в текущем файле.
+
+
+**Классы:**
+
+Код не содержит классов.
+
 
 **Функции:**
 
-- `set_project_root(marker_files=(\'pyproject.toml\', \'requirements.txt\', \'.git\'))`: Находит корневую директорию проекта, начиная с текущего файла.  Функция очень важная в Python проектах, т.к. она гарантирует, что Python может найти необходимые модули.  `marker_files` позволяет гибко определять, по каким файлам/каталогам искать корень проекта. Аргумент `marker_files` - кортеж имен файлов или папок.  Возвращает `Path` объект к корневой директории проекта.
+- `set_project_root(marker_files=...)`:  Ищет корневой каталог проекта, начиная с текущего файла и идя вверх по каталогам. Принимает в качестве аргумента кортеж `marker_files`, указывающий на файлы, которые должны присутствовать в корневом каталоге.  Возвращает `Path` к корневому каталогу, и, если нужно, добавляет его в `sys.path`.
+
 
 **Переменные:**
 
-- `MODE = \'dev\'`:  Возможно, используется для определения режима работы приложения (например, 'dev', 'prod').
-- `__root__`: Содержит путь к корневому каталогу проекта. Это глобальная переменная, доступная во всем скрипте.
-
-**Возможные ошибки и улучшения:**
-
--  Нет обработки исключений.  Если `__file__` не существует или какой-то из файлов в `marker_files` не найден, то код не обрабатывает эту ситуацию. Нужно добавить обработку исключений (например, `try...except`) для повышения устойчивости кода.
--  Может быть слишком много обработок для поиска `__root__`. Можно рассматривать оптимизацию для поиска, например, использование `os.path.abspath` с проверкой на наличие маркеров в начале поиска.
+- `MODE`: строковая переменная, хранящая значение 'dev'.
+- `__root__`: переменная, которая хранит `Path` до корневого каталога проекта.
 
 
-**Взаимосвязи с другими частями проекта:**
+**Возможные ошибки или области для улучшений:**
 
-Код `header.py` играет критическую роль при инициализации проекта.  Он находит корневой каталог, добавляет его в `sys.path`, что позволяет другим модулям и файлам в проекте `hypotez` импортировать другие модули из соответствующих каталогов, устанавливая необходимую связь между модулями. Этот код необходим для правильной работы других частей проекта, таких как модуль `gs`, который импортируется в конце скрипта.
+- Отсутствие обработки исключений: код не обрабатывает ситуации, когда корневой каталог не найден. Это может привести к ошибкам при работе с модулями из `src`.
+
+- Возможно, имеет смысл добавить логгирование, чтобы понять, где `__root__` был найден и какие файлы/каталоги проверялись. Это очень полезно в случае ошибок.
+
+
+**Цепочка взаимосвязей:**
+
+Функция `set_project_root` из модуля `header.py` используется для определения корневого каталога проекта, который, в свою очередь, необходим для корректного импорта других модулей из пакета `src`, таких как `gs`.

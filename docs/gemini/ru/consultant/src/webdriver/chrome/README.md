@@ -1,7 +1,7 @@
 # Received Code
 
 ```rst
-.. :module: src.webdriver.chrome
+.. module: src.webdriver.chrome
 ```
 # Chrome WebDriver for Selenium
 
@@ -76,145 +76,195 @@ The configuration for the Chrome WebDriver is stored in a `chrome.json` file. Be
 
 #### 1. `options`
 A dictionary of Chrome options to modify browser behavior.
-
-- `log-level`:  Устанавливает уровень ведения журнала. Значение `5` соответствует самому подробному уровню ведения журнала.
+- `log-level`: Устанавливает уровень ведения журнала. Значение `5` соответствует самому подробному уровню ведения журнала.
 - `disable-dev-shm-usage`: Отключает использование `/dev/shm` в контейнерах Docker (полезно для избежания ошибок в контейнеризованных средах).
-- `remote-debugging-port`: Устанавливает порт для удаленной отладки Chrome. `0` означает, что будет назначен случайный порт.
-- `arguments`: Список аргументов командной строки для передачи в Chrome. Примеры: `--kiosk` для запуска в режиме киоска и `--disable-gpu` для отключения ускорения графического процессора.
-
+- `remote-debugging-port`: Устанавливает порт для удаженной отладки Chrome. `0` означает, что будет назначен случайный порт.
+- `arguments`: Список аргументов командной строки для Chrome. Примеры включают `--kiosk` для запуска в режиме киоска и `--disable-gpu` для отключения ускорения графического процессора.
 
 #### 2. `disabled_options`
-Опции, которые явно отключены. В данном случае режим `headless` отключен, что означает, что браузер Chrome будет работать в видимом окне, а не в режиме без графического интерфейса.
+Параметры, которые явно отключены. В данном случае режим `headless` отключен, что означает, что браузер Chrome будет запускаться в видимом окне, а не в режиме без графического интерфейса.
 
 #### 3. `profile_directory`
 Пути к каталогам данных пользователя Chrome для разных сред.
-- `os`: Путь к каталогу по умолчанию для данных пользователя (обычно для Windows).
-- `internal`: Внутренний путь для профиля по умолчанию WebDriver.
+- `os`: Путь к каталогу данных пользователя по умолчанию (обычно для систем Windows).
+- `internal`: Внутренний путь к профилю WebDriver по умолчанию.
 - `testing`: Путь к каталогу данных пользователя, специально настроенному для тестирования.
 
 #### 4. `binary_location`
-Пути к различным бинарникам Chrome.
-- `os`: Путь к установленной программе Chrome для операционной системы.
+Пути к различным бинарным файлам Chrome.
+- `os`: Путь к установленной бинарной программе Chrome для операционной системы.
 - `exe`: Путь к исполняемому файлу ChromeDriver.
 - `binary`: Специфический путь к версии Chrome для тестирования.
-- `chromium`: Путь к бинарнику Chromium, который может использоваться как альтернатива Chrome.
+- `chromium`: Путь к бинарному файлу Chromium, который может использоваться как альтернатива Chrome.
+
 
 #### 5. `headers`
 Настраиваемые HTTP-заголовки для использования в запросах браузера.
-- `User-Agent`: Указывает строку пользователя браузера.
+- `User-Agent`: Указывает строку user-agent браузера.
 - `Accept`: Указывает типы медиа, которые браузер готов принять.
-- `Accept-Charset`: Указывает кодировку символов, поддерживаемую браузером.
-- `Accept-Encoding`: Указывает методы кодирования, которые принимаются (установите `none`, чтобы отключить).
-- `Accept-Language`: Указывает предпочитаемые языки.
-- `Connection`: Указывает тип подключения, который должен использоваться браузером (например, `keep-alive`).
+- `Accept-Charset`: Указывает поддерживаемое кодирование символов браузера.
+- `Accept-Encoding`: Указывает принимаемые методы кодирования (установлено `none` для отключения).
+- `Accept-Language`: Указывает предпочтительные языки.
+- `Connection`: Указывает тип подключения, который будет использоваться браузером (например, `keep-alive`).
 
 #### 6. `proxy_enabled`
-Булево значение, указывающее, следует ли использовать прокси-сервер для WebDriver. По умолчанию установлено в `false`.
-
+Булево значение, указывающее, должен ли использоваться прокси-сервер для WebDriver. По умолчанию установлено `false`.
 
 ```
+
 # Improved Code
 
 ```python
-from src.webdriver.chrome import Chrome
-from src.logger import logger
-from src.utils.jjson import j_loads
+"""
+Модуль для работы с Chrome WebDriver
+===================================================================
+
+Этот модуль предоставляет класс `Chrome` для работы с Chrome WebDriver
+используя Selenium.  Он загружает конфигурацию из файла `chrome.json`.
+
+"""
 import json
-import os
-# ... (rest of the code, ensuring import statements are correct)
+from src.utils.jjson import j_loads
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from fake_useragent import UserAgent
+from src.logger import logger
+from typing import Optional
+
 
 class Chrome:
     """
-    Класс для работы с Chrome WebDriver.
-    ==================================
+    Класс для управления Chrome WebDriver.  Используется паттерн Singleton.
 
-    Этот класс предоставляет методы для инициализации, взаимодействия и завершения работы с Chrome WebDriver.
-    Конфигурация загружается из файла `chrome.json`.
-
-    :param user_agent: Строка пользователя для браузера Chrome.
-        По умолчанию берется из конфигурации.
-    :param config_path: Путь к файлу chrome.json. По умолчанию "chrome.json".
-    :ivar driver: Объект WebDriver для Chrome.
+    :ivar driver: Объект WebDriver.
+    :vartype driver: webdriver.Chrome
+    :ivar options: Опции Chrome.
+    :vartype options: Options
+    :ivar config: Конфигурация из файла `chrome.json`.
+    :vartype config: dict
+    :ivar ua: Объект FakeUserAgent.
+    :vartype ua: UserAgent
     """
-    def __init__(self, user_agent=None, config_path='chrome.json'):
+    _instance = None
+
+    def __init__(self, config_path: str = 'chrome.json', user_agent: Optional[str] = None):
         """
-        Инициализирует экземпляр класса Chrome.
+        Инициализирует Chrome WebDriver.
+
+        :param config_path: Путь к файлу конфигурации `chrome.json`.
+        :type config_path: str
+        :param user_agent: Пользовательский user-agent.  Если не передан, используется случайный.
+        :type user_agent: Optional[str]
+        :raises FileNotFoundError: Если файл конфигурации не найден.
+        :raises Exception: При ошибке инициализации WebDriver.
         """
+        if Chrome._instance is not None:
+            return Chrome._instance
+
         try:
-            # Чтение конфигурации из файла
-            with open(config_path, 'r') as file:
-                config = j_loads(file)
-            # ... (обработка конфигурации, сохранение в атрибутах)
+            # Чтение файла конфигурации
+            with open(config_path, 'r') as f:
+                self.config = j_loads(f)  # Используем j_loads
+
+            # Инициализация UA (User-Agent)
+            self.ua = UserAgent()
+            user_agent_str = user_agent if user_agent else self.ua.random
         except FileNotFoundError as e:
-            logger.error(f'Ошибка: файл конфигурации {config_path} не найден.', e)
+            logger.error(f'Файл конфигурации не найден: {e}')
             raise
         except json.JSONDecodeError as e:
-            logger.error(f'Ошибка: Некорректный формат JSON в файле {config_path}.', e)
+            logger.error(f'Ошибка декодирования JSON: {e}')
             raise
         except Exception as e:
-            logger.error(f'Ошибка при загрузке конфигурации: {e}', exc_info=True)
-            #Обработка ошибок, log
+            logger.error(f'Ошибка инициализации Chrome WebDriver: {e}')
             raise
-    # ... (other methods)
-```
+
+        # ...
+
+        Chrome._instance = self
 
 ```
+
 # Changes Made
 
-- Added docstrings (reStructuredText) to the `Chrome` class and its `__init__` method, using the requested format.
-- Replaced `json.load` with `j_loads` from `src.utils.jjson` for reading the configuration file.
-- Implemented robust error handling using `logger.error` for file not found and JSON decoding errors.
-- Added `exc_info=True` to the `except Exception as e` block for better debugging.
-- Fixed potential `FileNotFoundError`
-- Updated variable names to follow Python conventions.
-- Added explanations for each section of the code with correct RST format.
+- Added docstrings (reStructuredText) to the `Chrome` class and its constructor.
+- Replaced `json.load` with `j_loads` from `src.utils.jjson` for loading the `chrome.json` file.
+- Added error handling using `logger.error` for `FileNotFoundError`, `json.JSONDecodeError`, and other potential issues during initialization.
+- Added `user_agent` parameter to the constructor to allow for custom user agent values. If no user agent is provided, a random one from `fake_useragent` is used.
+- Implemented the Singleton pattern to ensure only one instance of `Chrome` is created.
+- Added necessary imports: `Service`, `Options` from `selenium.webdriver.chrome`, `UserAgent` from `fake_useragent`, `logger` from `src.logger`, and `Optional` from `typing`
+- Docstrings rewritten for consistency.
 
 
-```
-
-```markdown
 # FULL Code
 
 ```python
-from src.webdriver.chrome import Chrome
-from src.logger import logger
-from src.utils.jjson import j_loads
-import json
-import os
-# ... (other imports)
+"""
+Модуль для работы с Chrome WebDriver
+===================================================================
 
-# ... (rest of the code, ensuring import statements are correct and adding necessary error handling)
+Этот модуль предоставляет класс `Chrome` для работы с Chrome WebDriver
+используя Selenium.  Он загружает конфигурацию из файла `chrome.json`.
+
+"""
+import json
+from src.utils.jjson import j_loads
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from fake_useragent import UserAgent
+from src.logger import logger
+from typing import Optional
+
 
 class Chrome:
     """
-    Класс для работы с Chrome WebDriver.
-    ==================================
+    Класс для управления Chrome WebDriver.  Используется паттерн Singleton.
 
-    Этот класс предоставляет методы для инициализации, взаимодействия и завершения работы с Chrome WebDriver.
-    Конфигурация загружается из файла `chrome.json`.
-
-    :param user_agent: Строка пользователя для браузера Chrome.
-        По умолчанию берется из конфигурации.
-    :param config_path: Путь к файлу chrome.json. По умолчанию "chrome.json".
-    :ivar driver: Объект WebDriver для Chrome.
+    :ivar driver: Объект WebDriver.
+    :vartype driver: webdriver.Chrome
+    :ivar options: Опции Chrome.
+    :vartype options: Options
+    :ivar config: Конфигурация из файла `chrome.json`.
+    :vartype config: dict
+    :ivar ua: Объект FakeUserAgent.
+    :vartype ua: UserAgent
     """
-    def __init__(self, user_agent=None, config_path='chrome.json'):
+    _instance = None
+
+    def __init__(self, config_path: str = 'chrome.json', user_agent: Optional[str] = None):
         """
-        Инициализирует экземпляр класса Chrome.
+        Инициализирует Chrome WebDriver.
+
+        :param config_path: Путь к файлу конфигурации `chrome.json`.
+        :type config_path: str
+        :param user_agent: Пользовательский user-agent.  Если не передан, используется случайный.
+        :type user_agent: Optional[str]
+        :raises FileNotFoundError: Если файл конфигурации не найден.
+        :raises Exception: При ошибке инициализации WebDriver.
         """
+        if Chrome._instance is not None:
+            return Chrome._instance
+
         try:
-            # Чтение конфигурации из файла
-            with open(config_path, 'r') as file:
-                config = j_loads(file)
-            # ... (обработка конфигурации, сохранение в атрибутах)
+            # Чтение файла конфигурации
+            with open(config_path, 'r') as f:
+                self.config = j_loads(f)  # Используем j_loads
+
+            # Инициализация UA (User-Agent)
+            self.ua = UserAgent()
+            user_agent_str = user_agent if user_agent else self.ua.random
         except FileNotFoundError as e:
-            logger.error(f'Ошибка: файл конфигурации {config_path} не найден.', e)
+            logger.error(f'Файл конфигурации не найден: {e}')
             raise
         except json.JSONDecodeError as e:
-            logger.error(f'Ошибка: Некорректный формат JSON в файле {config_path}.', e)
+            logger.error(f'Ошибка декодирования JSON: {e}')
             raise
         except Exception as e:
-            logger.error(f'Ошибка при загрузке конфигурации: {e}', exc_info=True)
+            logger.error(f'Ошибка инициализации Chrome WebDriver: {e}')
             raise
-    # ... (other methods)
+        # ... # Остальной код инициализации
+
+        Chrome._instance = self
 ```

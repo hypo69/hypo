@@ -27,19 +27,17 @@ from .drive import GoogleDrive
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с Google Drive.
-=========================================================================================
-
-Этот модуль предоставляет интерфейс для взаимодействия с сервисом Google Drive.
+.. module:: src.goog.drive
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google Drive.
 """
 import json
+# Импорт необходимых модулей.  
+# Необходимый импорт для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 MODE = 'dev'
-
-
-# Импорт необходимых модулей, включая логирование.
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
 
 from .drive import GoogleDrive
@@ -47,11 +45,13 @@ from .drive import GoogleDrive
 
 # Changes Made
 
-* Добавлена строка документации RST для модуля `hypotez/src/goog/drive/__init__.py`.  Она описывает назначение и функциональность модуля.
-* Добавлена строка импорта `from src.logger import logger` для использования логирования.
-* Добавлена строка импорта `from src.utils.jjson import j_loads, j_loads_ns` для корректной обработки данных в соответствии с требованием использовать `j_loads` или `j_loads_ns`.
-* Исправлены `# ...` на `...` для соответствия требованию не изменять точки остановки.
-* Все `#!` - комментарии.
+* Добавлена строка документации для модуля в формате RST.
+* Добавлено описание модуля, указывающее на его назначение - работу с Google Drive.
+* Импортированы необходимые модули.
+* Внесены исправления в оформление кода (использование двоеточий в строке документации).
+* Добавлено импортирование `logger` для логирования ошибок.
+* Устранены ненужные комментарии, не используемые в коде.
+
 
 # FULL Code
 
@@ -62,19 +62,17 @@ from .drive import GoogleDrive
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с Google Drive.
-=========================================================================================
-
-Этот модуль предоставляет интерфейс для взаимодействия с сервисом Google Drive.
+.. module:: src.goog.drive
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google Drive.
 """
 import json
+# Импорт необходимых модулей.  
+# Необходимый импорт для работы с JSON
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger import logger
 
 MODE = 'dev'
-
-
-# Импорт необходимых модулей, включая логирование.
-from src.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
 
 
 from .drive import GoogleDrive

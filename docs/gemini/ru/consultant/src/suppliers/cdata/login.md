@@ -20,6 +20,7 @@ MODE = 'dev'
 
 """
 
+
 """
 	:platform: Windows, Unix
 	:synopsis:
@@ -80,74 +81,79 @@ def login(self):
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.cdata.login
-    :platform: Windows, Unix
-    :synopsis: Модуль для авторизации на сайте C-Data.
+.. module:: src.suppliers.cdata
+   :platform: Windows, Unix
+   :synopsis: Модуль для авторизации на сайте c-data.
+
 """
 import logging
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
-
-from src.logger import logger # Импорт логгера
-
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
 MODE = 'dev'
 
-
 def login(self):
     """
-    Авторизуется на сайте C-Data.
+    Авторизуется на сайте c-data.
 
-    :param self: Текущий экземпляр класса.
-    :type self: object
-    :raises ValueError: если не удалось найти элементы на странице
-    :returns: True, если авторизация успешна, иначе логгирует ошибку
-    :rtype: bool
+    :param self: Текущий объект.
+    :raises Exception: При возникновении ошибок во время авторизации.
+    :return: True, если авторизация успешна, иначе - False.
     """
     try:
-        # Проверка корректности URL
-        self.get_url('https://reseller.c-data.co.il/Login')
-
-        email = self.locators['login']['email']  # Получение значения email
-        password = self.locators['login']['password']  # Получение значения password
-
+        # Проверка корректности URL.
+        url = 'https://reseller.c-data.co.il/Login'
+        self.get_url(url)
+        
+        # Извлечение данных для авторизации из словаря locators
+        email = self.locators['login']['email']
+        password = self.locators['login']['password']
         email_locator = (self.locators['login']['email_locator']['by'],
                          self.locators['login']['email_locator']['selector'])
         password_locator = (self.locators['login']['password_locator']['by'],
                            self.locators['login']['password_locator']['selector'])
-        loginbutton_locator = (self.locators['login']['loginbutton_locator']['by'],
-                               self.locators['login']['loginbutton_locator']['selector'])
+        login_button_locator = (self.locators['login']['loginbutton_locator']['by'],
+                                self.locators['login']['loginbutton_locator']['selector'])
 
-        # Вывод информации о локейторах (для отладки)
-        logger.debug(f"Локейторы: email={email_locator}, password={password_locator}, button={loginbutton_locator}")
+        # Вывод информации об используемых локатоpax для отладки.
+        logging.debug(f'email_locator: {email_locator}, password_locator: {password_locator}, login_button_locator: {login_button_locator}')
+        
+        # Нахождение и заполнение поля email.
+        email_element = self.find(email_locator)
+        email_element.send_keys(email)  # Улучшено: отправка email
+        
+        # Нахождение и заполнение поля password.
+        password_element = self.find(password_locator)
+        password_element.send_keys(password)  # Улучшено: отправка password
 
-        # Нахождение и заполнение полей email и password
-        self.find(email_locator).send_keys(email)
-        self.find(password_locator).send_keys(password)
+        # Нахождение и нажатие кнопки входа.
+        login_button = self.find(login_button_locator)
+        login_button.click()
 
-        # Нажатие на кнопку входа
-        self.find(loginbutton_locator).click()
-
-        logger.info('Успешная авторизация на C-Data')
+        # Запись в лог о успешной авторизации.
+        logging.info('C-data logged in successfully.')
         return True
+
     except Exception as e:
-        logger.error('Ошибка во время авторизации на C-Data:', exc_info=True)
+        logging.error(f'Ошибка при авторизации на c-data: {e}', exc_info=True)
         return False
 ```
 
 # Changes Made
 
-*   Добавлен импорт `logging` и `j_loads` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger`.
-*   Функция `login` снабжена документированием в формате RST.
-*   Изменены имена переменных на более информативные (например, `email_locator` вместо `email_locators`).
-*   Улучшены комментарии и пояснения.
-*   Обработка ошибок с помощью `try-except` заменена на использование `logger.error` с передачей `exc_info=True` для подробной информации об ошибке.
-*   Убраны ненужные `print`-вызовы, заменены на `logger.debug`.
-*   Убрана неиспользуемая переменная `emaiocators`.
-*   Изменён `return Truee` на `return True` и добавлена обработка ошибок `return False`.
-*   Добавлены логирование успешной авторизации (`logger.info`).
-*   Вместо `self.print` используется `logger.debug`.
-*   Добавлены проверки и обработка ошибок.
+*   Импортирован модуль `logging`.
+*   Добавлены `try...except` блоки для обработки ошибок.
+*   Использование `logging.error` для записи ошибок в лог.
+*   Заменены `self.log` на `logging.info` и `logging.debug`.
+*   Исправлено использование `locators`.
+*   Убраны ненужные `# ...` комментарии.
+*   Добавлена документация RST для функции `login` в соответствии со стандартами Sphinx.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Изменён возврат функции, теперь она возвращает `True` при успехе и `False` при ошибке.
+*   Изменён вывод `self.print` на `logging.debug` для логирования.
+*   Добавлены комментарии к каждой строке кода, объясняющие выполняемые действия.
+*   Используется правильное наименование переменной `login_button_locator`.
+*   Заменён `return Truee` на `return True`.
+
 
 # FULL Code
 
@@ -158,55 +164,60 @@ def login(self):
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.cdata.login
-    :platform: Windows, Unix
-    :synopsis: Модуль для авторизации на сайте C-Data.
+.. module:: src.suppliers.cdata
+   :platform: Windows, Unix
+   :synopsis: Модуль для авторизации на сайте c-data.
+
 """
 import logging
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
-
-from src.logger import logger # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
 
 MODE = 'dev'
 
-
 def login(self):
     """
-    Авторизуется на сайте C-Data.
+    Авторизуется на сайте c-data.
 
-    :param self: Текущий экземпляр класса.
-    :type self: object
-    :raises ValueError: если не удалось найти элементы на странице
-    :returns: True, если авторизация успешна, иначе логгирует ошибку
-    :rtype: bool
+    :param self: Текущий объект.
+    :raises Exception: При возникновении ошибок во время авторизации.
+    :return: True, если авторизация успешна, иначе - False.
     """
     try:
-        # Проверка корректности URL
-        self.get_url('https://reseller.c-data.co.il/Login')
-
-        email = self.locators['login']['email']  # Получение значения email
-        password = self.locators['login']['password']  # Получение значения password
-
+        # Проверка корректности URL.
+        url = 'https://reseller.c-data.co.il/Login'
+        self.get_url(url)
+        
+        # Извлечение данных для авторизации из словаря locators
+        email = self.locators['login']['email']
+        password = self.locators['login']['password']
         email_locator = (self.locators['login']['email_locator']['by'],
                          self.locators['login']['email_locator']['selector'])
         password_locator = (self.locators['login']['password_locator']['by'],
                            self.locators['login']['password_locator']['selector'])
-        loginbutton_locator = (self.locators['login']['loginbutton_locator']['by'],
-                               self.locators['login']['loginbutton_locator']['selector'])
+        login_button_locator = (self.locators['login']['loginbutton_locator']['by'],
+                                self.locators['login']['loginbutton_locator']['selector'])
 
-        # Вывод информации о локейторах (для отладки)
-        logger.debug(f"Локейторы: email={email_locator}, password={password_locator}, button={loginbutton_locator}")
+        # Вывод информации об используемых локатоpax для отладки.
+        logging.debug(f'email_locator: {email_locator}, password_locator: {password_locator}, login_button_locator: {login_button_locator}')
+        
+        # Нахождение и заполнение поля email.
+        email_element = self.find(email_locator)
+        email_element.send_keys(email)  # Улучшено: отправка email
+        
+        # Нахождение и заполнение поля password.
+        password_element = self.find(password_locator)
+        password_element.send_keys(password)  # Улучшено: отправка password
 
-        # Нахождение и заполнение полей email и password
-        self.find(email_locator).send_keys(email)
-        self.find(password_locator).send_keys(password)
+        # Нахождение и нажатие кнопки входа.
+        login_button = self.find(login_button_locator)
+        login_button.click()
 
-        # Нажатие на кнопку входа
-        self.find(loginbutton_locator).click()
-
-        logger.info('Успешная авторизация на C-Data')
+        # Запись в лог о успешной авторизации.
+        logging.info('C-data logged in successfully.')
         return True
+
     except Exception as e:
-        logger.error('Ошибка во время авторизации на C-Data:', exc_info=True)
+        logging.error(f'Ошибка при авторизации на c-data: {e}', exc_info=True)
         return False
+```

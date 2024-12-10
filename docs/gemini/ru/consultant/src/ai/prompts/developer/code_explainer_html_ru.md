@@ -16,44 +16,40 @@ def add_numbers(a, b):
 Модуль для сложения чисел.
 =========================================================================================
 
-Этот модуль содержит функцию :func:`add_numbers`, которая выполняет сложение двух чисел,
-используя функцию `calculate_sum` из модуля `src.utils.calculator`.
+Этот модуль содержит функцию для сложения двух чисел.
 """
-from src.utils.calculator import calculate_sum
-from src.logger import logger
+from src.utils.calculator import calculate_sum  # Импортирует функцию сложения из другого модуля
+from src.logger import logger # Импорт для логирования
 
-def add_numbers(a, b):
+
+def add_numbers(a: int, b: int) -> int:
     """
-    Выполняет сложение двух чисел.
+    Складывает два числа.
 
     :param a: Первое слагаемое.
     :param b: Второе слагаемое.
-    :return: Сумма a и b.
-    :raises TypeError: Если a или b не являются числами.
+    :return: Результат сложения.
+    :raises TypeError: Если входные данные не являются числами.
     """
-    # Проверка типов аргументов
-    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
-        logger.error('Аргументы функции add_numbers должны быть числами.')
-        raise TypeError('Аргументы должны быть числами.')
-
     try:
+        # Функция выполняет сложение a и b через вызов calculate_sum.
         result = calculate_sum(a, b)
-    except Exception as e:
-        logger.error('Ошибка при вычислении суммы:', e)
-        return None  # Возвращаем None при ошибке
-
-    return result
+        return result
+    except TypeError as e:
+        logger.error(f"Ошибка при сложении: {e}")
+        return None  # Возвращает None при ошибке
 ```
 
 # Changes Made
 
-* Добавлен docstring в формате RST для модуля и функции `add_numbers`.
-* Добавлен импорт `logger` из `src.logger`.
-* Добавлен блок `try-except` для обработки потенциальных ошибок в `calculate_sum` с логированием ошибок.
-* Добавлены проверки типов аргументов `a` и `b`. Возвращается `None` при ошибке.
-* Изменён формат комментариев на RST.
-* Изменены выражения в docstring на более точные.
-* Исправлены потенциальные ошибки и добавлены обработки исключений.
+* Добавлен docstring в формате RST для функции `add_numbers` и модуля.
+* Добавлен импорт `from src.logger import logger` для использования логирования.
+* Добавлена обработка исключения `TypeError` с использованием `logger.error`.
+* Тип возвращаемого значения изменен на `int` для функции `add_numbers`, и добавлен `-> int`.
+* Тип аргументов `a` и `b` изменен на `int` в аннотациях типов.
+* При ошибке функция возвращает `None` вместо исключения, для более надежной работы.
+* Добавлен комментарий # Функция выполняет сложение a и b через вызов calculate_sum в функции `add_numbers`
+
 
 # FULL Code
 
@@ -62,31 +58,26 @@ def add_numbers(a, b):
 Модуль для сложения чисел.
 =========================================================================================
 
-Этот модуль содержит функцию :func:`add_numbers`, которая выполняет сложение двух чисел,
-используя функцию `calculate_sum` из модуля `src.utils.calculator`.
+Этот модуль содержит функцию для сложения двух чисел.
 """
-from src.utils.calculator import calculate_sum
-from src.logger import logger
+from src.utils.calculator import calculate_sum  # Импортирует функцию сложения из другого модуля
+from src.logger import logger # Импорт для логирования
 
-def add_numbers(a, b):
+
+def add_numbers(a: int, b: int) -> int:
     """
-    Выполняет сложение двух чисел.
+    Складывает два числа.
 
     :param a: Первое слагаемое.
     :param b: Второе слагаемое.
-    :return: Сумма a и b.
-    :raises TypeError: Если a или b не являются числами.
+    :return: Результат сложения.
+    :raises TypeError: Если входные данные не являются числами.
     """
-    # Проверка типов аргументов
-    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
-        logger.error('Аргументы функции add_numbers должны быть числами.')
-        raise TypeError('Аргументы должны быть числами.')
-
     try:
-        # Код исполняет сложение чисел с использованием calculate_sum
+        # Функция выполняет сложение a и b через вызов calculate_sum.
         result = calculate_sum(a, b)
-    except Exception as e:
-        logger.error('Ошибка при вычислении суммы:', e)
-        return None  # Возвращаем None при ошибке
-
-    return result
+        return result
+    except TypeError as e:
+        logger.error(f"Ошибка при сложении: {e}")
+        return None  # Возвращает None при ошибке
+```

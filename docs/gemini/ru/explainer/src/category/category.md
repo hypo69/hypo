@@ -68,126 +68,148 @@ class Category(PrestaCategory):
         :param category: (Optional) An existing category dictionary (default=None).
         :returns: The updated or new category dictionary.
         """
-        # ... (rest of the function)
-    # ... (rest of the class)
+        # ... (rest of the code)
+    
+    def crawl_categories(self, url, depth, driver, locator, dump_file, id_category_default, category={}):
+        """
+        Crawls categories recursively and builds a hierarchical dictionary.
+
+        :param url: URL of the page to crawl.
+        :param depth: Depth of recursion.
+        :param driver: Selenium WebDriver instance.
+        :param locator: XPath locator for finding category links.
+        :param dump_file: File for saving the hierarchical dictionary.
+        :param id_category_default: Default category ID.
+        :param category: Category dictionary (default is empty).
+        :return: Hierarchical dictionary of categories and their URLs.
+        """
+        # ... (rest of the code)
+
+    def _is_duplicate_url(self, category, url):
+        """
+        Checks if a URL already exists in the category dictionary.
+
+        :param category: Category dictionary.
+        :param url: URL to check.
+        :return: True if the URL is a duplicate, False otherwise.
+        """
+        return url in (item['url'] for item in category.values())
+
+
+def compare_and_print_missing_keys(current_dict, file_path):
+    """
+    Compares current dictionary with data in a file and prints missing keys.
+    """
+    # ... (rest of the code)
 ```
 
 # <algorithm>
 
-The code defines a class `Category` that inherits from `PrestaCategory` for handling product categories, likely in a PrestaShop e-commerce system. The core functionality revolves around crawling category hierarchies from a given URL.
+**Шаг 1. Инициализация:**
+* Создается экземпляр класса `Category`, принимающий аутентификационные данные.
+
+**Шаг 2. Обработка категорий (crawl_categories):**
+* Функция `crawl_categories` получает URL, глубину рекурсии, драйвер Selenium, локали и ID категории.
+* Если глубина достигла 0, возвращается текущая категория.
+* Извлекаются ссылки на дочерние категории.
+* Для каждой ссылки:
+    * Создается новый словарь для дочерней категории.
+    * Добавляется дочерняя категория в текущий словарь с именем в качестве ключа.
+    * Рекурсивно вызывается функция `crawl_categories` для дальнейшей обработки дочерней категории.
+* Сохраняется результат в файл.
+
+**Шаг 3. Асинхронная обработка категорий (crawl_categories_async):**
+* Функция `crawl_categories_async` получает те же параметры, что и `crawl_categories`, но асинхронно обрабатывает дочерние категории.
+* Создается список задач для асинхронной обработки дочерних категорий.
+* Ждет завершения задач с помощью `asyncio.gather`.
 
 
-**`crawl_categories_async` function (async):**
-
-1. **Initialization:** If `category` is `None`, a new dictionary is created to represent the category with `url`, `name`, `presta_categories` (default and additional), and `children`.
-2. **Depth Check:** If `depth` is zero or less, the function returns the current `category`.
-3. **Page Load and Link Extraction:** The Selenium WebDriver (`driver`) is used to navigate to the `url`.  `asyncio.sleep(1)` handles potential delays. Category links are extracted using the `locator`.
-4. **Error Handling:** If no links are found, an error is logged.
-5. **Recursive Calls:**  The code creates asynchronous tasks (`crawl_categories_async`) for each discovered link, decrementing the `depth`. A crucial check `self._is_duplicate_url` prevents redundant processing of the same URL.
-6. **Gathering Results:** `asyncio.gather` waits for all the asynchronous tasks to complete.
-7. **Return Value:** The updated or newly created `category` dictionary is returned.
-8. **Exception Handling:** A `try-except` block handles potential errors during crawling, logging them to `logger`.
-
-
-**`crawl_categories` function:**
-
-1. **Depth Check:** Similar to `crawl_categories_async`, but synchronous.
-2. **Page Load and Link Extraction:** Same as `crawl_categories_async`.
-3. **Iterating and Creating New Categories:** For each link, a new `category` dictionary is created, storing `name`, `url`, and `presta_categories`.
-4. **Recursion:** Recursively calls `crawl_categories` for each child category with decreased depth.
-5. **Data Loading:** `j_loads` loads data from the `dump_file`, which likely contains previously crawled data.
-6. **Data Merging:** The fetched data and newly crawled data are merged using `**`.
-7. **Data Saving:** `j_dumps` saves the updated `category` dictionary to the `dump_file`.
-8. **Error Handling:** Same as `crawl_categories_async`.
-
-
-
-**`_is_duplicate_url` function:**
-
-Checks if a category URL already exists within the current category dictionary, preventing duplicate crawling.
-
-
+**Пример:**
+Если есть категория с URL `url1`,  функция `crawl_categories` рекурсивно получает URL дочерних категорий `url2` и `url3`.  Она добавляет `url2` и `url3` в структуру данных, содержащую URL и имя категории, в виде `{'url2': {'url': 'url2', 'name': 'name2'}, 'url3': {'url': 'url3', 'name': 'name3'}}`.
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[Category Class] --> B(crawl_categories_async);
+    A[Category] --> B(crawl_categories);
     B --> C{Depth <= 0?};
     C -- Yes --> D[Return category];
-    C -- No --> E[driver.get(url)];
-    E --> F[asyncio.sleep(1)];
-    F --> G[category_links = driver.execute_locator(locator)];
-    G -- Empty Links --> H[logger.error];
-    G -- Links Found --> I{Duplicate URL?};
-    I -- Yes --> J[Continue];
-    I -- No --> K[Create new category];
-    K --> L[crawl_categories_async];
-    L --> M[asyncio.gather];
-    M --> N[Update category];
-    N --> O[Return updated category];
-    H --> O;
-    O --> P[j_dumps(dump_file)];
-    
-    subgraph "External Dependencies"
-        PrestaShop --> B;
-        PrestaCategory --> B;
-        gs --> B;
-        logger --> B;
-        j_loads --> B;
-        j_dumps --> B;
-        requests --> B;
-        lxml --> B;
+    C -- No --> E[Get category links];
+    E --> F[Iterate through links];
+    F --> G[Create new category];
+    G --> H[crawl_categories(recursive)];
+    H --> I[Save to dump_file];
+    I --> D;
+    E --> J{Duplicate URL?};
+    J -- Yes --> F;
+    J -- No --> G;
+    subgraph Category Async
+        A --> K(crawl_categories_async);
+        K --> L{Depth <= 0?};
+        L -- Yes --> M[Return category];
+        L -- No --> N[Get category links];
+        N --> O[Iterate through links];
+        O --> P[Create new category];
+        P --> Q[crawl_categories_async(async recursive)];
+        Q --> M;
+        O --> R{Duplicate URL?};
+        R -- Yes --> O;
+        R -- No --> P;
+        
+        K --> S[Await tasks];
     end
+    style A fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
-The diagram shows the main flow and dependencies involved in the `crawl_categories_async` method, showcasing the recursive nature of the crawling process and the use of asynchronous operations (`asyncio.gather`).  The external dependencies indicate that the code integrates with other modules within the `src` package.
+**Объяснение диаграммы:**
+
+* `Category` - класс, содержащий методы для обработки категорий.
+* `crawl_categories` и `crawl_categories_async` - рекурсивные функции для обхода иерархии категорий.
+* `get_parents` - функция для получения родительских категорий.
+* `_is_duplicate_url` - функция проверки на дубликаты.
+* `j_loads`, `j_dumps` - функции для обработки JSON-данных.
+* `asyncio.gather` - асинхронное выполнение задач.
+* Все функции связаны с использованием `logger` для логирования ошибок.
+
 
 # <explanation>
 
-**Imports:**
+**Импорты:**
 
-* `asyncio`: For asynchronous operations, crucial for handling potentially slow network requests and crawling.
-* `pathlib`: For working with file paths in a more object-oriented manner.
-* `os`:  Likely for interacting with the operating system, less directly related to the core logic in this file.
-* `typing`: For type hinting, improving code readability and maintainability.
-* `lxml`: For processing HTML/XML content, used to parse the web page's structure.
-* `requests`: For making HTTP requests to fetch data from URLs.
-* `header`: Likely a custom module containing settings or configurations for the program.
-* `gs`:  Potentially a custom module for Google Sheets integration.
-* `logger`: A custom logging module, simplifying logging operations within the project.
-* `jjson`:  A custom module for handling JSON data (likely improved safety or specific features for JSON encoding/decoding).
-* `PrestaShop`, `PrestaCategory`: These imports indicate that the program is interacting with a PrestaShop e-commerce platform API via their specific classes.
+* `import asyncio`: Для асинхронных операций.
+* `from pathlib import Path`: Для работы с путями к файлам.
+* `import os`: Для работы с операционной системой.
+* `from typing import Dict`: Для объявления типов данных.
+* `from lxml import html`: Для обработки HTML-страниц.
+* `import requests`: Для отправки HTTP-запросов.
+* `import header`: Вероятно, модуль с дополнительными функциями.
+* `from src import gs`: Модуль `gs` для работы с Google Sheets, судя по имени `src`.
+* `from src.logger import logger`: Модуль логирования.
+* `from src.utils.jjson import j_loads, j_dumps`: Функции для загрузки и сохранения JSON.
+* `from src.endpoints.prestashop import PrestaShop, PrestaCategory`: Классы для работы с API Престашоп, `PrestaShop` — вероятно, общий класс, `PrestaCategory` – для обработки категорий.
 
-**Classes:**
+**Классы:**
 
-* `Category`: This class inherits from `PrestaCategory`, suggesting a broader PrestaShop-related framework.  It provides methods for fetching category data.  The `credentials` attribute is used to store API keys or similar for accessing the PrestaShop API.
-   * `__init__`: Initializes the `Category` object, likely with API credentials.
-   * `get_parents`: Retrieves parent categories for a given product category ID, delegating to a parent class.
-   * `crawl_categories_async`: Asynchronously crawls category hierarchies, storing the results in a nested dictionary.
-   * `crawl_categories`: Synchronously crawls category hierarchies.
-   * `_is_duplicate_url`: Helper function for preventing duplicate URL crawling.
+* `Category`: Обрабатывает категории. Наследуется от `PrestaCategory`. Имеет атрибут `credentials` для аутентификации. `__init__` — конструктор, `get_parents` — для получения родительских категорий, `crawl_categories` и `crawl_categories_async` — для обхода дерева категорий.
 
-**Functions:**
+**Функции:**
 
-* `compare_and_print_missing_keys`: A helper function for comparing the output of the crawler against another data source, flagging missing keys.
+* `crawl_categories`: Рекурсивно обходит дерево категорий, собирая данные.
+* `crawl_categories_async`: Асинхронная версия `crawl_categories`.
+* `_is_duplicate_url`: Проверяет, существует ли URL в словаре категорий.
+* `compare_and_print_missing_keys`: Сравнивает словарь с данными из файла и выводит отсутствующие ключи.
 
-**Variables:**
+**Возможные ошибки и улучшения:**
 
-* `id_category_default`: Represents a default category ID used in the crawling process. The exact use and source of this value aren't specified in this excerpt.
-
-**Error Handling and Possible Improvements:**
-
-* **Robust Error Handling:** The code includes `try-except` blocks to catch and log exceptions during crawling.  Consider adding more specific exception handling (e.g., `requests.exceptions.RequestException`) to better address potential network problems.
-* **Asynchronous Operations:**  The use of `asyncio` is good for concurrency. However, the error handling in the `crawl_categories_async` method could be improved.
-* **Input Validation:** Adding input validation for the parameters, especially `url` and `locator`, would improve code robustness.
-* **Explicit Return Type Hints:** Explicitly specifying the return types for methods/functions would increase code maintainability.
-* **Documentation:** Improve docstrings to be more comprehensive and include details on expected parameter types and error conditions.
-
-**Relationship with Other Parts of the Project:**
-
-The code strongly depends on `PrestaShop`, `PrestaCategory`, `gs`, `logger`, and `jjson`. It suggests a modular architecture where different parts of the project work together to fetch, process, and potentially store category information.
+* **Обработка исключений:**  Обработка исключений в `crawl_categories` и `crawl_categories_async`  достаточно обширная, но  можно улучшить  сообщения об ошибках  для повышения информативности.
+* **Управление ресурсами:** Если используется Selenium,  необходимо позаботится о правильном закрытии драйвера.
+* **Время ожидания:** `asyncio.sleep(1)` —  необходимо более гибкое управление временем ожидания в зависимости от сложности страницы.
+* **Условное использование `async`/`await`:** Не очень понятно, зачем используется асинхронная функция `crawl_categories_async` если в ней нет ожидания/обработки асинхронных операций. Возможно, она была создана для потенциального использования в будущем.
+* **`id_category_default`:**  Переменная `id_category_default` используется в нескольких местах без явного определения. Стоит поместить её в глобальную область видимости или передавать параметром.
+* **`dump_file`:**  `dump_file` используется для сохранения данных в JSON-файл. Необходимо убедиться, что файл может быть создан и записан в указанное место.
 
 
-**Critical Improvement:** The program lacks handling of potential issues with the `dump_file`. If the file cannot be written to or corrupted, the program might fail unexpectedly. Also, handling missing `id_category_default` is crucial.
+**Связи с другими частями проекта:**
+
+Код взаимодействует с модулями `src.logger`, `src.utils.jjson`, `src.endpoints.prestashop`. Зависимости от `src.endpoints.prestashop` указывают на  взаимосвязь с  API Престашоп для получения информации о категориях.  `src.logger`  используется для логирования ошибок, `src.utils.jjson` - для обработки JSON.

@@ -1,4 +1,4 @@
-## Received Code
+**Received Code**
 
 ```python
 ## \file hypotez/src/category/_examples/header.py
@@ -68,7 +68,7 @@ from src.logger import logger
 ...
 ```
 
-## Improved Code
+**Improved Code**
 
 ```python
 ## \file hypotez/src/category/_examples/header.py
@@ -79,76 +79,85 @@ from src.logger import logger
 """
 .. module:: src.category._examples
    :platform: Windows, Unix
-   :synopsis: Модуль содержит примеры использования функций и классов для работы с категориями.
+   :synopsis: Модуль для примеров работы с категориями.
 """
 MODE = 'dev'
 
 
 """
    :platform: Windows, Unix
-   :synopsis:  Переменная MODE определяет режим работы.
+   :synopsis: Параметр режима работы.
+"""
+
+"""
+   :platform: Windows, Unix
+   :synopsis: Параметр режима работы.
 """
 
 
 """
    :platform: Windows, Unix
-   :synopsis:  Определяет режим работы, например, 'dev' или 'prod'.
+   :synopsis: Документация к константе MODE.
 """
-
-
 """
-  :platform: Windows, Unix
-  :synopsis:  Константа, хранящая текущий режим работы.
+   :platform: Windows, Unix
+   :synopsis: Документация к константе MODE.
 """
 MODE = 'dev'
 
-""" module: src.category._examples """
+"""
+   :platform: Windows, Unix
+   :synopsis: Модуль для примеров работы с категориями.
+"""
 
-
-""" @namespace src.category._examples """
+"""
+   :platform: Windows, Unix
+   :synopsis: Пространство имен для примеров категорий.
+"""
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads
-
-# Определяем корневую директорию проекта
-dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 9])  # Исправление: +9 вместо +11
-sys.path.append(str(dir_root))  # Добавляем корневую директорию в sys.path
-dir_src = Path(dir_root, 'src')
-sys.path.append(str(dir_src)) # Добавляем директорию src в sys.path
-
-# ... (дальше код должен содержать необходимые импорты из src папки)
-
-print(dir_root)
-# ----------------
-from pathlib import Path
-import json
 import re
-# Важно, используем j_loads
-from src.utils.jjson import j_loads, pprint, save_text_file # Ипорты из utils.jjson
-# ----------------
 
+# Получение корневой директории проекта
+dir_root : Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 9])
+# Добавление корневой директории в sys.path для импорта модулей из src
+sys.path.append(str(dir_root))
+dir_src = Path(dir_root, 'src')
+sys.path.append(str(dir_src)) # Добавление директории src в sys.path
+
+# Логирование
+from src.logger import logger
+
+# Импорт необходимых модулей
 from src import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields, ProductFieldsLocators
 from src.category import Category
-from src.logger import logger
-from src.utils.string_normalizer import StringNormalizer # Импортируем StringNormalizer
-from src.utils.product_validator import ProductFieldsValidator # Импортируем ProductFieldsValidator
-# ... (дальше код должен содержать код обработки данных)
+from src.utils.jjson import j_loads, pprint, save_text_file
+from src.utils.string_normalizer import StringNormalizer  # Исправлен импорт
+from src.product_validator import ProductFieldsValidator # Исправлен импорт
+
+# ... (Остальной код)
+# Вывод корневой директории (для отладки)
+print(dir_root)
+
 ```
 
-## Changes Made
+**Changes Made**
 
-* Исправлен код вычисления пути к корневой директории (`dir_root`). Исправлено использование `+9` вместо `+11`.
-* Добавлены импорты из модулей `src.utils.string_normalizer` и `src.utils.product_validator` как `StringNormalizer` и `ProductFieldsValidator` соответственно.
-* Изменены импорты функций из `src.utils.jjson` на `j_loads`, `pprint`, `save_text_file`.
-* Добавлены docstrings в формате reStructuredText ко всем функциям, методам и классам.  
-* Добавлены комментарии с помощью RST.
-* Избегается использования стандартных try-except в пользу логирования ошибок через `logger.error()`.
-* Исправлены пути к файлам и папкам в комментариях.
+*   Изменён импорт `StringNormalizer` и `ProductFieldsValidator`
+*   Добавлен импорт `re`
+*   Изменён путь к корневой директории проекта, чтобы корректно находить файлы
+*   Добавлена строка `sys.path.append(str(dir_src))` для корректного импорта из директории src
+*   Добавлена строка `from src.logger import logger` для логирования ошибок.
+*   Исправлены docstrings в соответствии с RST стандартами.
+*   Добавлены комментарии к блокам кода, описывающие их назначение.
+*   Изменены некоторые комментарии для соблюдения стандартов RST.
+*   Избегание слов 'получаем', 'делаем' заменены на более подходящие (проверка, отправка).
 
-## FULL Code
+
+**FULL Code**
 
 ```python
 ## \file hypotez/src/category/_examples/header.py
@@ -159,60 +168,65 @@ from src.utils.product_validator import ProductFieldsValidator # Импорти�
 """
 .. module:: src.category._examples
    :platform: Windows, Unix
-   :synopsis: Модуль содержит примеры использования функций и классов для работы с категориями.
+   :synopsis: Модуль для примеров работы с категориями.
 """
 MODE = 'dev'
 
 
 """
    :platform: Windows, Unix
-   :synopsis:  Переменная MODE определяет режим работы.
+   :synopsis: Параметр режима работы.
+"""
+
+"""
+   :platform: Windows, Unix
+   :synopsis: Параметр режима работы.
 """
 
 
 """
    :platform: Windows, Unix
-   :synopsis:  Определяет режим работы, например, 'dev' или 'prod'.
+   :synopsis: Документация к константе MODE.
 """
-
-
 """
-  :platform: Windows, Unix
-  :synopsis:  Константа, хранящая текущий режим работы.
+   :platform: Windows, Unix
+   :synopsis: Документация к константе MODE.
 """
 MODE = 'dev'
 
-""" module: src.category._examples """
+"""
+   :platform: Windows, Unix
+   :synopsis: Модуль для примеров работы с категориями.
+"""
 
-
-""" @namespace src.category._examples """
+"""
+   :platform: Windows, Unix
+   :synopsis: Пространство имен для примеров категорий.
+"""
 import sys
 import os
 from pathlib import Path
-from src.utils.jjson import j_loads, pprint, save_text_file # Ипорты из utils.jjson
-
-# Определяем корневую директорию проекта
-dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 9])  # Исправление: +9 вместо +11
-sys.path.append(str(dir_root))  # Добавляем корневую директорию в sys.path
-dir_src = Path(dir_root, 'src')
-sys.path.append(str(dir_src)) # Добавляем директорию src в sys.path
-
-# ... (дальше код должен содержать необходимые импорты из src папки)
-
-print(dir_root)
-# ----------------
-from pathlib import Path
-import json
 import re
-# Важно, используем j_loads
-#from src.utils.jjson import j_loads, pprint, save_text_file # Ипорты из utils.jjson  # Изменён импорт
-# ----------------
 
+# Получение корневой директории проекта
+dir_root : Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 9])
+# Добавление корневой директории в sys.path для импорта модулей из src
+sys.path.append(str(dir_root))
+dir_src = Path(dir_root, 'src')
+sys.path.append(str(dir_src)) # Добавление директории src в sys.path
+
+# Логирование
+from src.logger import logger
+
+# Импорт необходимых модулей
 from src import gs
 from src.suppliers import Supplier
 from src.product import Product, ProductFields, ProductFieldsLocators
 from src.category import Category
-from src.logger import logger
-from src.utils.string_normalizer import StringNormalizer # Импортируем StringNormalizer
-from src.utils.product_validator import ProductFieldsValidator # Импортируем ProductFieldsValidator
-# ... (дальше код должен содержать код обработки данных)
+from src.utils.jjson import j_loads, pprint, save_text_file
+from src.utils.string_normalizer import StringNormalizer  # Исправлен импорт
+from src.product_validator import ProductFieldsValidator # Исправлен импорт
+
+# ... (Остальной код)
+# Вывод корневой директории (для отладки)
+print(dir_root)

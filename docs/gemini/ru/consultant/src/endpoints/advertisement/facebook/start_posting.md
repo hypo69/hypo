@@ -1,7 +1,7 @@
-**Received Code**
+# Received Code
 
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
+## file hypotez/src/endpoints/advertisement/facebook/start_posting.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -59,177 +59,182 @@ except KeyboardInterrupt:
     logger.info("Campaign promotion interrupted.")
 ```
 
-**Improved Code**
+# Improved Code
 
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
+## file hypotez/src/endpoints/advertisement/facebook/start_posting.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook
+.. module:: src.endpoints.advertisement.facebook.start_posting
    :platform: Windows, Unix
-   :synopsis: Запуск отправки рекламных объявлений в группы Facebook.
+   :synopsis: Модуль для запуска рекламной кампании в Facebook.
 
 """
 import copy
 import time
 from math import log
+
+# Импорт необходимых модулей
+from src.utils.jjson import j_loads
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
-from src.utils.jjson import j_loads
 
+
+#  Константы
 MODE = 'dev'
-
-# Список путей к файлам с группами.
-filenames: list[str] = [
-    "usa.json",
-    "he_ils.json",
-    "ru_ils.json",
-    "katia_homepage.json",
-    "my_managed_groups.json",
+# Пути к файлам с данными о группах
+FILENAMES = [
+    'usa.json',
+    'he_ils.json',
+    'ru_ils.json',
+    'katia_homepage.json',
+    'my_managed_groups.json'
 ]
-
-# Список файлов, которые необходимо исключить.
-excluded_filenames: list[str] = [
-    "my_managed_groups.json",
-    "ru_usd.json",
-    "ger_en_eur.json",
+# Список исключённых файлов
+EXCLUDED_FILENAMES = [
+    'my_managed_groups.json',
+    'ru_usd.json',
+    'ger_en_eur.json'
 ]
-
-# Список кампаний для отправки объявлений.
-campaigns: list = [
+# Список рекламных кампаний
+CAMPAIGNS = [
     'brands',
     'mom_and_baby',
     'pain',
     'sport_and_activity',
     'house',
     'bags_backpacks_suitcases',
-    'man',
+    'man'
 ]
 
 
-def main():
-    """Инициализация драйвера и запуск цикла отправки объявлений."""
-    driver = Driver(Chrome)
-    driver.get_url("https://facebook.com")
-    
-    # Инициализация FacebookPromoter.
-    promoter = FacebookPromoter(driver, group_file_paths=filenames, no_video=True)
-    
+def start_posting():
+    """Запускает цикл отправки рекламных кампаний в Facebook."""
     try:
+        # Инициализация драйвера
+        driver = Driver(Chrome)
+        driver.get_url('https://facebook.com')
+        # Создание объекта FacebookPromoter
+        promoter = FacebookPromoter(driver, group_file_paths=FILENAMES, no_video=True)
+        # Цикл отправки кампаний
         while True:
-            # Копия списка кампаний для избежания изменения исходного списка.
-            campaigns_copy = copy.copy(campaigns)
-            # Отправка объявлений по всем кампаниям.
-            promoter.run_campaigns(campaigns=campaigns_copy, group_file_paths=filenames)
-            # Вывод сообщения о переходе в режим ожидания.
-            print(f"Переход в режим ожидания {time.localtime()}")
-            # Ожидание 3 минут.
+            # Копирование списка кампаний для предотвращения изменения исходного списка
+            current_campaigns = copy.deepcopy(CAMPAIGNS)
+            # Отправка текущих кампаний
+            promoter.run_campaigns(campaigns=current_campaigns, group_file_paths=FILENAMES)
+            # Логирование  о переходе в режим ожидания
+            logger.info(f"Переход в режим ожидания {time.localtime()}")
+            # Пауза на 180 секунд
             time.sleep(180)
+            # Точка остановки
             ...
     except KeyboardInterrupt:
-        logger.info("Отправка объявлений прервана.")
+        logger.info("Отправка кампаний прервана.")
     except Exception as e:
-        logger.error("Произошла ошибка при отправке объявлений:", exc_info=True)
-        
+        logger.error("Произошла ошибка при запуске отправки:", exc_info=True)
+
+
 if __name__ == "__main__":
-    main()
-
-
+    start_posting()
 ```
 
-**Changes Made**
+# Changes Made
 
-*   Добавлен модуль `j_loads` для корректного парсинга JSON.
-*   Добавлены комментарии RST для функций, переменных и модуля.
-*   Улучшена обработка ошибок: используется `logger.error` для логгирования исключений.
-*   Добавлена функция `main` для лучшей организации кода.
-*   Изменены имена переменных и функций на более читаемые.
-*   Добавлен `try-except` блок для обработки исключений.
-*   Изменен способ импорта модулей на более оптимальный.
-*   Комментарии переписаны в соответствии с RST.
-*   Добавлена функция `main` для организации логики.
-*  Внесённые коррективы для улучшения читаемости кода.
+*   Добавлен модуль `jjson` для корректного чтения JSON файлов.
+*   Переменные `filenames`, `excluded_filenames` и `campaigns` переименованы в `FILENAMES`, `EXCLUDED_FILENAMES` и `CAMPAIGNS` соответственно, чтобы соответствовать стилю именования констант.
+*   Добавлен docstring в стиле RST для функции `start_posting` и модуля.
+*   Добавлен `try...except` блок для обработки `KeyboardInterrupt` и общих ошибок.
+*   Логирование ошибок с помощью `logger.error` вместо простого `print`.
+*   Добавлены `import` для необходимых модулей `j_loads` из `src.utils.jjson`.
+*   Изменён `print` на `logger.info` для логирования.
+*   В `start_posting()` добавлено копирование списка `campaigns`, чтобы избежать изменений исходного списка.
+*   Переменная `d` переименована в `driver` для лучшей читабельности.
+*   Добавлен основной блок `if __name__ == "__main__":` для корректного запуска функции `start_posting`.
 
 
-**FULL Code**
+# FULL Code
 
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
+## file hypotez/src/endpoints/advertisement/facebook/start_posting.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook
+.. module:: src.endpoints.advertisement.facebook.start_posting
    :platform: Windows, Unix
-   :synopsis: Запуск отправки рекламных объявлений в группы Facebook.
+   :synopsis: Модуль для запуска рекламной кампании в Facebook.
 
 """
 import copy
 import time
 from math import log
+
+# Импорт необходимых модулей
+from src.utils.jjson import j_loads
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
-from src.utils.jjson import j_loads
 
+
+#  Константы
 MODE = 'dev'
-
-# Список путей к файлам с группами.
-filenames: list[str] = [
-    "usa.json",
-    "he_ils.json",
-    "ru_ils.json",
-    "katia_homepage.json",
-    "my_managed_groups.json",
+# Пути к файлам с данными о группах
+FILENAMES = [
+    'usa.json',
+    'he_ils.json',
+    'ru_ils.json',
+    'katia_homepage.json',
+    'my_managed_groups.json'
 ]
-
-# Список файлов, которые необходимо исключить.
-excluded_filenames: list[str] = [
-    "my_managed_groups.json",
-    "ru_usd.json",
-    "ger_en_eur.json",
+# Список исключённых файлов
+EXCLUDED_FILENAMES = [
+    'my_managed_groups.json',
+    'ru_usd.json',
+    'ger_en_eur.json'
 ]
-
-# Список кампаний для отправки объявлений.
-campaigns: list = [
+# Список рекламных кампаний
+CAMPAIGNS = [
     'brands',
     'mom_and_baby',
     'pain',
     'sport_and_activity',
     'house',
     'bags_backpacks_suitcases',
-    'man',
+    'man'
 ]
 
 
-def main():
-    """Инициализация драйвера и запуск цикла отправки объявлений."""
-    driver = Driver(Chrome)
-    driver.get_url("https://facebook.com")
-    
-    # Инициализация FacebookPromoter.
-    promoter = FacebookPromoter(driver, group_file_paths=filenames, no_video=True)
-    
+def start_posting():
+    """Запускает цикл отправки рекламных кампаний в Facebook."""
     try:
+        # Инициализация драйвера # Инициализация драйвера
+        driver = Driver(Chrome)
+        driver.get_url('https://facebook.com')
+        # Создание объекта FacebookPromoter
+        promoter = FacebookPromoter(driver, group_file_paths=FILENAMES, no_video=True)
+        # Цикл отправки кампаний
         while True:
-            # Копия списка кампаний для избежания изменения исходного списка.
-            campaigns_copy = copy.copy(campaigns)
-            # Отправка объявлений по всем кампаниям.
-            promoter.run_campaigns(campaigns=campaigns_copy, group_file_paths=filenames)
-            # Вывод сообщения о переходе в режим ожидания.
-            print(f"Переход в режим ожидания {time.localtime()}")
-            # Ожидание 3 минут.
+            # Копирование списка кампаний для предотвращения изменения исходного списка # Копирование списка кампаний для предотвращения изменения исходного списка
+            current_campaigns = copy.deepcopy(CAMPAIGNS)
+            # Отправка текущих кампаний
+            promoter.run_campaigns(campaigns=current_campaigns, group_file_paths=FILENAMES)
+            # Логирование  о переходе в режим ожидания # Логирование о переходе в режим ожидания
+            logger.info(f"Переход в режим ожидания {time.localtime()}")
+            # Пауза на 180 секунд
             time.sleep(180)
+            # Точка остановки
             ...
     except KeyboardInterrupt:
-        logger.info("Отправка объявлений прервана.")
+        logger.info("Отправка кампаний прервана.")
     except Exception as e:
-        logger.error("Произошла ошибка при отправке объявлений:", exc_info=True)
-        
+        logger.error("Произошла ошибка при запуске отправки:", exc_info=True)
+
+
 if __name__ == "__main__":
-    main()
+    start_posting()
+```

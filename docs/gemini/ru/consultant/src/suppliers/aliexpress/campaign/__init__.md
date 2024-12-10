@@ -31,89 +31,60 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.aliexpress.campaign
-    :platform: Windows, Unix
-    :synopsis: Модуль для управления рекламными кампаниями Aliexpress.
+Модуль для управления рекламными кампаниями на Aliexpress.
+=========================================================
+
+Этот модуль предоставляет инструменты для работы с рекламными кампаниями на Aliexpress.
+Он включает классы для редактирования кампаний, обработки данных кампаний,
+генерации HTML-отчетов и (в будущем) интеграции с Google Sheets.
+
 
 """
-import json
+import logging
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 MODE = 'dev'
 
-
 from .ali_campaign_editor import AliCampaignEditor
-#from .gsheet import AliCampaignGoogleSheet  # Возможно, потребуется импортировать
-from .prepare_campaigns import process_campaign, process_campaign_category, process_all_campaigns
-#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets # Возможно, потребуется импортировать
-from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-from src.logger import logger # импорт модуля логирования
+#from .gsheet import AliCampaignGoogleSheet  # Комментарий о неиспользуемом импорте
+from .prepare_campaigns import (  # Улучшенная конструкция импорта
+    process_campaign,
+    process_campaign_category,
+    process_all_campaigns,
+)
+#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets # Комментарий о неиспользуемом импорте
+from .html_generators import (
+    CategoryHTMLGenerator,
+    ProductHTMLGenerator,
+)
 
 
-def process_campaign(campaign_data: str) -> None:
-    """Обработка данных рекламной кампании.
+# Функция для обработки данных кампании
+def process_campaign_data(campaign_data_path: str):
+    """Обрабатывает данные рекламной кампании.
 
-    :param campaign_data: Данные рекламной кампании.
-    :raises ValueError: Если входные данные некорректны.
+    :param campaign_data_path: Путь к файлу с данными кампании.
+    :return: Обработанные данные кампании.
     """
     try:
-        # код исполняет чтение данных JSON
-        campaign_data_loaded = j_loads(campaign_data)
-        # ... (обработка данных) ...
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка декодирования JSON:', e)
-        raise ValueError("Некорректные данные JSON") from e
-    except Exception as ex:
-        logger.error('Ошибка обработки данных кампании', exc_info=True)
-        # ... (Обработка ошибок) ...
-    # ... (код обработки данных) ...
-
-def process_campaign_category(category_data: str) -> None:
-    """Обработка данных категории кампании.
-
-    :param category_data: Данные категории кампании.
-    :raises ValueError: Если входные данные некорректны.
-    """
-    try:
-        # код исполняет чтение данных JSON
-        category_data_loaded = j_loads(category_data)
-        # ... (обработка данных) ...
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка декодирования JSON:', e)
-        raise ValueError("Некорректные данные JSON") from e
-    except Exception as ex:
-        logger.error('Ошибка обработки данных категории кампании', exc_info=True)
-        # ... (обработка ошибок) ...
-    # ... (код обработки данных) ...
-
-def process_all_campaigns(campaigns_data: str) -> None:
-    """Обработка всех данных кампаний.
-
-    :param campaigns_data: Данные всех кампаний.
-    :raises ValueError: Если входные данные некорректны.
-    """
-    try:
-        # код исполняет чтение данных JSON
-        campaigns_data_loaded = j_loads(campaigns_data)
-        # ... (обработка данных) ...
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка декодирования JSON:', e)
-        raise ValueError("Некорректные данные JSON") from e
-    except Exception as ex:
-        logger.error('Ошибка обработки всех данных кампаний', exc_info=True)
-        # ... (обработка ошибок) ...
-    # ... (код обработки данных) ...
+        # Чтение данных из файла с помощью j_loads
+        campaign_data = j_loads(campaign_data_path)
+        # ... (Обработка данных) ...
+        return campaign_data  # Возвращает обработанные данные
+    except Exception as e:
+        logger.error('Ошибка при чтении или обработке данных кампании:', e)
+        return None
 ```
 
 # Changes Made
 
-* Добавлена строка импорта `from src.logger import logger`.
-* Добавлена обработка ошибок с помощью `try-except` и `logger.error`.  Избегание избыточного использования стандартных блоков `try-except` в пользу обработки ошибок с использованием `logger`.
-* Функции `process_campaign`, `process_campaign_category`, `process_all_campaigns` получили docstrings в формате RST.
-* Импортированы функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-* Добавлены проверочные блоки `try-except` для обработки ошибок при чтении данных JSON и других возможных исключений.
-* В docstrings и комментариях удалены слова "получаем", "делаем" и им подобные.
-
+*   Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлены комментарии RST для модуля.
+*   Добавлены комментарии RST к функции `process_campaign_data`.
+*   Исправлена конструкция импорта, используя `from ... import ...`.
+*   Добавлена обработка ошибок с помощью `logger.error`.
+*   Заменены неинформативные комментарии на более подробные.
+*   Добавлен пример функции `process_campaign_data` с документацией и обработкой ошибок.
 
 # FULL Code
 
@@ -124,76 +95,47 @@ def process_all_campaigns(campaigns_data: str) -> None:
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.suppliers.aliexpress.campaign
-    :platform: Windows, Unix
-    :synopsis: Модуль для управления рекламными кампаниями Aliexpress.
+Модуль для управления рекламными кампаниями на Aliexpress.
+=========================================================
+
+Этот модуль предоставляет инструменты для работы с рекламными кампаниями на Aliexpress.
+Он включает классы для редактирования кампаний, обработки данных кампаний,
+генерации HTML-отчетов и (в будущем) интеграции с Google Sheets.
+
 
 """
-import json
+import logging
+from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 MODE = 'dev'
 
-
 from .ali_campaign_editor import AliCampaignEditor
-#from .gsheet import AliCampaignGoogleSheet  # Возможно, потребуется импортировать
-from .prepare_campaigns import process_campaign, process_campaign_category, process_all_campaigns
-#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets # Возможно, потребуется импортировать
-from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
-from src.logger import logger # импорт модуля логирования
+#from .gsheet import AliCampaignGoogleSheet  # Комментарий о неиспользуемом импорте
+from .prepare_campaigns import (  # Улучшенная конструкция импорта
+    process_campaign,
+    process_campaign_category,
+    process_all_campaigns,
+)
+#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets # Комментарий о неиспользуемом импорте
+from .html_generators import (
+    CategoryHTMLGenerator,
+    ProductHTMLGenerator,
+)
+from src.logger import logger  # Импорт logger
 
 
-def process_campaign(campaign_data: str) -> None:
-    """Обработка данных рекламной кампании.
+# Функция для обработки данных кампании
+def process_campaign_data(campaign_data_path: str):
+    """Обрабатывает данные рекламной кампании.
 
-    :param campaign_data: Данные рекламной кампании.
-    :raises ValueError: Если входные данные некорректны.
+    :param campaign_data_path: Путь к файлу с данными кампании.
+    :return: Обработанные данные кампании.
     """
     try:
-        # код исполняет чтение данных JSON
-        campaign_data_loaded = j_loads(campaign_data)
-        # ... (обработка данных) ...
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка декодирования JSON:', e)
-        raise ValueError("Некорректные данные JSON") from e
-    except Exception as ex:
-        logger.error('Ошибка обработки данных кампании', exc_info=True)
-        # ... (Обработка ошибок) ...
-    # ... (код обработки данных) ...
-
-def process_campaign_category(category_data: str) -> None:
-    """Обработка данных категории кампании.
-
-    :param category_data: Данные категории кампании.
-    :raises ValueError: Если входные данные некорректны.
-    """
-    try:
-        # код исполняет чтение данных JSON
-        category_data_loaded = j_loads(category_data)
-        # ... (обработка данных) ...
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка декодирования JSON:', e)
-        raise ValueError("Некорректные данные JSON") from e
-    except Exception as ex:
-        logger.error('Ошибка обработки данных категории кампании', exc_info=True)
-        # ... (обработка ошибок) ...
-    # ... (код обработки данных) ...
-
-def process_all_campaigns(campaigns_data: str) -> None:
-    """Обработка всех данных кампаний.
-
-    :param campaigns_data: Данные всех кампаний.
-    :raises ValueError: Если входные данные некорректны.
-    """
-    try:
-        # код исполняет чтение данных JSON
-        campaigns_data_loaded = j_loads(campaigns_data)
-        # ... (обработка данных) ...
-    except json.JSONDecodeError as e:
-        logger.error('Ошибка декодирования JSON:', e)
-        raise ValueError("Некорректные данные JSON") from e
-    except Exception as ex:
-        logger.error('Ошибка обработки всех данных кампаний', exc_info=True)
-        # ... (обработка ошибок) ...
-    # ... (код обработки данных) ...
-```
+        # Чтение данных из файла с помощью j_loads
+        campaign_data = j_loads(campaign_data_path)
+        # ... (Обработка данных) ...
+        return campaign_data  # Возвращает обработанные данные
+    except Exception as e:
+        logger.error('Ошибка при чтении или обработке данных кампании:', e)
+        return None

@@ -45,9 +45,64 @@ from packaging.version import Version
 from pathlib import Path
 
 from src import gs
-from src.utils import jjson
+from src.utils.jjson import j_loads, j_loads_ns
 
-# from src.utils import jjson # Импорт необходимой функции
+
+def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+    """
+    Находит корневую директорию проекта, начиная с текущей директории файла,
+    ищет вверх по дереву каталогов и останавливается на первой директории,
+    содержащей любой из указанных файлов или директорий.
+
+    :param marker_files: Список файлов или директорий, которые указывают на корень проекта.
+    :type marker_files: tuple
+    :raises TypeError: Если marker_files не является кортежем.
+    :returns: Путь к корневой директории проекта.
+    :rtype: Path
+    """
+    current_path: Path = Path(__file__).resolve().parent
+    root_path = current_path
+    for parent in [current_path] + list(current_path.parents):
+        if any((parent / marker).exists() for marker in marker_files):
+            root_path = parent
+            break
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
+
+
+# Получаем корневую директорию проекта
+__root__ = set_project_root()
+"""__root__ (Path): Путь к корневой директории проекта"""
+
+
+settings: dict = None
+try:
+    # Чтение настроек из файла settings.json
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').open('r'))
+    # settings = json.load(settings_file) # Заменено на j_loads
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка при загрузке настроек из settings.json:', e)
+    ...
+
+
+doc_str: str = None
+try:
+    # Чтение README из файла README.MD
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
+        doc_str = readme_file.read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    logger.error('Ошибка при загрузке README.MD:', e)
+    ...
+
+
+__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+__version__: str = settings.get("version", '') if settings else ''
+__doc__: str = doc_str if doc_str else ''
+__details__: str = ''
+__author__: str = settings.get("author", '') if settings else ''
+__copyright__: str = settings.get("copyright", '') if settings else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 # Improved Code
@@ -60,115 +115,86 @@ from src.utils import jjson
 
 """
 .. module:: src.ai.myai
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с AI-ассистентом.
-"""
-MODE = 'dev'
-
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с AI.
 
 """
-    :platform: Windows, Unix
-    :synopsis: Переменная MODE.
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis: Переменная MODE.
-"""
-
-
-"""
-  :platform: Windows, Unix
-  :synopsis: Переменная MODE.
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis: Переменная MODE.
-"""
-MODE = 'dev'
-
-""" module: src.ai.myai """
-
 import sys
-import json
-from packaging.version import Version
 from pathlib import Path
+
+from packaging.version import Version
+
 from src import gs
-from src.utils import jjson # Импорт функции для работы с JSON
+from src.utils.jjson import j_loads
+from src.logger import logger
+
+
+MODE = 'dev'
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 
-    :param marker_files: Список файлов/директорий, по которым определяется корень проекта.
+    :param marker_files: Список файлов, указывающих на корневую директорию.
     :type marker_files: tuple
     :raises TypeError: Если marker_files не является кортежем.
-    :return: Путь к корню проекта.
+    :returns: Путь к корневой директории.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    current_path: Path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Получение корневой директории проекта.
-project_root = set_project_root()
+# Получение корневой директории проекта
+__root__ = set_project_root()
+"""__root__ (Path): Корневой каталог проекта."""
 
 
-"""project_root (Path): Корневая директория проекта."""
-
-
-settings = None
+settings: dict = None
 try:
-    # Чтение файла настроек с использованием j_loads для обработки JSON.
-    settings = jjson.j_loads((project_root / 'src' / 'settings.json').resolve()) 
+    # Чтение файла настроек.
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').open('r'))
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    from src.logger import logger
-    logger.error('Ошибка при чтении файла настроек:', exc_info=True)
-    # ... (Обработка ошибки)
-    pass
+    logger.error('Ошибка при чтении файла настроек:', e)
+    # Обработка ошибки, например, установка default значений.
+    settings = {}
 
 
-doc_str = None
+doc_str: str = None
 try:
-    # Чтение файла README с использованием j_loads для обработки JSON.
-    with open(project_root / 'src' / 'README.MD', 'r', encoding='utf-8') as readme_file:
+    # Чтение файла README.
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
         doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    from src.logger import logger
-    logger.error('Ошибка при чтении файла README:', exc_info=True)
-    pass
+    logger.error('Ошибка при чтении файла README:', e)
+    doc_str = ""
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
-__version__ = settings.get("version", '') if settings else ''
-__doc__ = doc_str if doc_str else ''
-__details__ = ''
-__author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__version__: str = settings.get("version", '') if settings else ''
+__doc__: str = doc_str if doc_str else ''
+__details__: str = ''
+__author__: str = settings.get("author", '') if settings else ''
+__copyright__: str = settings.get("copyright", '') if settings else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 ```
 
 # Changes Made
 
-*   Импортирован `jjson` из `src.utils` для корректной обработки JSON.
-*   Заменено `json.load` на `jjson.j_loads` для чтения файлов.
-*   Добавлены комментарии RST к функции `set_project_root` и другим блокам кода.
-*   Добавлены обработчики ошибок с использованием `logger.error` для улучшенной обработки исключений.
-*   Изменён способ обращения к файлам настроек и документации, теперь используется `project_root`.
-*   Добавлен импорт `logger` из `src.logger` для логирования ошибок.
-*   Улучшены комментарии в коде, используя более точную и формализованную терминологию, исключая такие слова, как `получаем`, `делаем`, заменяя их на более подходящие описания.
-*   Добавлена обработка исключений (try-except) с использованием `logger.error` для отслеживания ошибок.
-*   Проверка типа `marker_files` в функции `set_project_root`.
-
+*   Импорты `j_loads`, `j_loads_ns` добавлены из `src.utils.jjson`.
+*   Стандартный `json.load` заменен на `j_loads` для чтения файлов.
+*   Добавлены комментарии в формате RST к функции `set_project_root` и переменной `__root__`.
+*   Добавлен импорт `from src.logger import logger`.
+*   Обработка ошибок с использованием `logger.error` для улучшения логирования.
+*   Изменены комментарии, чтобы избежать использования слов 'получаем', 'делаем' и т.п.
+*   Переписаны docstrings для всех функций, методов и переменных в формате reStructuredText (RST)
 
 # FULL Code
 
@@ -180,98 +206,71 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 
 """
 .. module:: src.ai.myai
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с AI-ассистентом.
-"""
-MODE = 'dev'
-
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с AI.
 
 """
-    :platform: Windows, Unix
-    :synopsis: Переменная MODE.
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis: Переменная MODE.
-"""
-
-
-"""
-  :platform: Windows, Unix
-  :synopsis: Переменная MODE.
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis: Переменная MODE.
-"""
-MODE = 'dev'
-
-""" module: src.ai.myai """
-
 import sys
-import json
-from packaging.version import Version
 from pathlib import Path
+from packaging.version import Version
+
 from src import gs
-from src.utils import jjson # Импорт функции для работы с JSON
+from src.utils.jjson import j_loads
+from src.logger import logger
+
+
+MODE = 'dev'
 
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 
-    :param marker_files: Список файлов/директорий, по которым определяется корень проекта.
+    :param marker_files: Список файлов, указывающих на корневую директорию.
     :type marker_files: tuple
     :raises TypeError: Если marker_files не является кортежем.
-    :return: Путь к корню проекта.
+    :returns: Путь к корневой директории.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    current_path: Path = Path(__file__).resolve().parent
+    root_path = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            root_path = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    if root_path not in sys.path:
+        sys.path.insert(0, str(root_path))
+    return root_path
 
 
-# Получение корневой директории проекта.
-project_root = set_project_root()
+# Получение корневой директории проекта
+__root__ = set_project_root()
+"""__root__ (Path): Корневой каталог проекта."""
 
 
-"""project_root (Path): Корневая директория проекта."""
-
-
-settings = None
+settings: dict = None
 try:
-    # Чтение файла настроек с использованием j_loads для обработки JSON.
-    settings = jjson.j_loads((project_root / 'src' / 'settings.json').resolve()) 
+    # Чтение файла настроек.
+    settings = j_loads((gs.path.root / 'src' / 'settings.json').open('r'))
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    from src.logger import logger
-    logger.error('Ошибка при чтении файла настроек:', exc_info=True)
-    # ... (Обработка ошибки)
-    pass
+    logger.error('Ошибка при чтении файла настроек:', e)
+    # Обработка ошибки, например, установка default значений.
+    settings = {}
 
 
-doc_str = None
+doc_str: str = None
 try:
-    # Чтение файла README с использованием j_loads для обработки JSON.
-    with open(project_root / 'src' / 'README.MD', 'r', encoding='utf-8') as readme_file:
+    # Чтение файла README.
+    with open(gs.path.root / 'src' / 'README.MD', 'r') as readme_file:
         doc_str = readme_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    from src.logger import logger
-    logger.error('Ошибка при чтении файла README:', exc_info=True)
-    pass
+    logger.error('Ошибка при чтении файла README:', e)
+    doc_str = ""
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
-__version__ = settings.get("version", '') if settings else ''
-__doc__ = doc_str if doc_str else ''
-__details__ = ''
-__author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+__version__: str = settings.get("version", '') if settings else ''
+__doc__: str = doc_str if doc_str else ''
+__details__: str = ''
+__author__: str = settings.get("author", '') if settings else ''
+__copyright__: str = settings.get("copyright", '') if settings else ''
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
