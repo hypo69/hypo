@@ -1,7 +1,7 @@
 ```MD
 # Анализ кода AliCampaignEditor
 
-**1. <input code>**
+## <input code>
 
 ```graph LR
     subgraph AliCampaignEditor
@@ -50,11 +50,18 @@
     end
 ```
 
-**2. <algorithm>**
+## <algorithm>
 
-(Блок-схема описывается в предоставленной диаграмме.)  Этот код описывает алгоритм работы редактора кампании AliExpress. Он принимает данные от пользователя, обрабатывает их и обновляет различные данные кампании, продукты и категории.
+Диаграмма показывает алгоритм работы `AliCampaignEditor`.  Вводятся данные о кампании (campaign_name, language, currency). Далее происходит инициализация `AliPromoCampaign`, после чего выполняются различные операции, такие как удаление, обновление, чтение и запись данных о продуктах, категориях и самой кампании.  Происходит чтение файлов, проверка наличия элементов, обновление данных, работа с JSON-файлами.  Все операции происходят в рамках объекта `AliCampaignEditor`.
 
-**3. <mermaid>**
+Примеры:
+- `update_product`: Обновление информации о продукте в базе.
+- `get_category`: Получение данных о категории по имени.
+- `delete_product`: Удаление продукта, если найдено совпадение.
+
+Данные передаются между методами через аргументы и возвращаемые значения. Например, `delete_product` получает список продуктов, проверяет соответствие условиям и возвращает обновленный список.
+
+## <mermaid>
 
 ```mermaid
 graph LR
@@ -63,71 +70,86 @@ graph LR
         B --> C(AliPromoCampaign.__init__);
         C --> D[Initialization];
         D --> E[AliCampaignEditor];
-
-        subgraph Operations
-            E --> F[delete_product];
-            F --> G[read_sources];
-            G --> H[Iterate & Check];
-            H -- Match --> I[Remove & Save];
-            H -- No Match --> J[Rename];
-            E --> K[update_product];
-            K --> L[dump_category_products];
-            E --> M[update_campaign];
-            M --> N[Update parameters];
-            E --> O[update_category];
-            O --> P[j_loads];
-            P --> Q[Update];
-            Q --> R[j_dumps];
-            E --> S[get_category];
-            S --> T[Check Exist];
-            T -- True --> U[Return];
-            T -- False --> V[Log Warning];
-            E --> W[list_categories];
-            W --> X[Check Exist];
-            X -- True --> Y[Return];
-            X -- False --> Z[Log Warning];
-            E --> AA[get_category_products];
-            AA --> AB[Get Path];
-            AB --> AC[Get JSON];
-            AC -- No Files --> AG[Log Error];
-            AG --> AH[Process Category];
-            AC --> AD[Read Files];
-            AD --> AE[Create SimpleNamespace];
-            AE --> AF[Return Products];
-            E --> AI[Other Methods];
-        end
+        E --> F[delete_product];
+        F --> G[read_text_file];
+        G --> H[Iterate & check];
+        H -- Match --> I[remove & save];
+        H -- No Match --> J[rename product file];
+        
+        E --> K[update_product];
+        K --> L[dump_category_products_files];
+        
+        E --> M[update_campaign];
+        M --> N[update campaign parameters];
+        
+        E --> O[update_category];
+        O --> P[j_loads];
+        P --> Q[Update category];
+        Q --> R[j_dumps];
+        
+        E --> S[get_category];
+        S --> T[Check if exists];
+        T -- Found --> U[Return SimpleNamespace];
+        T -- Not Found --> V[Log warning];
+        
+        E --> W[list_categories];
+        W --> X[Check category attribute];
+        X -- Found --> Y[Return category list];
+        X -- Not Found --> Z[Log warning];
+        
+        E --> AA[get_category_products];
+        AA --> AB[Get category path];
+        AB --> AC[Get JSON filenames];
+        AC --> AD[Read JSON files];
+        AD --> AE[Create SimpleNamespace];
+        AE --> AF[Return products];
+        AC -- No JSON files --> AG[Log error];
+        AG --> AH[Process category];
+        
+        E --> AI[Other methods];
     end
 ```
 
-**4. <explanation>**
-
-* **Импорты:**  Не указаны импорты, но можно предположить, что `sources.txt`, `dump_category_products_files`,  `j_loads`, `j_dumps` и `SimpleNamespace` импортируются из других модулей проекта `src`. `AliPromoCampaign` скорее всего из подпапки `campaign` (или в `src.suppliers.aliexpress.campaign`).  Без конкретного кода импортов это лишь предположения.
-
-* **Классы:**
-    * `AliCampaignEditor`:  Класс, представляющий редактор кампании. Он инициализируется данными пользователя (`campaign_name`, `language`, `currency`) и взаимодействует с `AliPromoCampaign`.  В нем содержатся методы для всех операций по редактированию кампании.
-
-    * `AliPromoCampaign`:  Не ясен его функционал без кода, но, скорее всего, он связан с выполнением действий над промо-кампаниями.
-
-* **Функции:**
-    * `__init__`: Конструктор для классов, инициализирующий необходимые переменные.
-    * `delete_product`, `update_product`, `update_campaign`, `update_category`, `get_category`, `list_categories`, `get_category_products`: Методы класса `AliCampaignEditor`, реализующие соответствующие функции.  Они могут принимать аргументы (например, идентификатор продукта, данные для обновления) и возвращать результаты (например, подтверждение удаления, обновленные данные).
-
-* **Переменные:**
-    * `campaign_name`, `language`, `currency`: Строковые переменные, хранящие данные о кампании.
-    * Все переменные, используемые внутри методов.
-
-* **Возможные ошибки и улучшения:**
-    * Отсутствует подробная информация о типе данных, возвращаемых методами.
-    * Не описана обработка ошибок (например, если `sources.txt` не найден или данные в нём некорректны).
-    * Не описаны зависимости от внешних сервисов (например, если используются сторонние API).
-    * Не указаны пути к файлам.
-    * Не описаны типы данных, которые возвращаются `read_text_file`, `j_loads` и другими методами.
-
-**Цепочка взаимосвязей:**
-
-Пользовательский ввод -> `AliCampaignEditor` -> `AliPromoCampaign` -> Обработка данных и обновление файлов -> обновление данных. Взаимодействие между этими частями происходит через методы и передачу данных. Подробности должны быть получены из кода, который не был предоставлен.
+Диаграмма `mermaid` отображает взаимосвязи методов `AliCampaignEditor`. Видна иерархия вызовов, как данные передаются между методами, и какие зависимости существуют.
 
 
-**Заключение:**
+## <explanation>
 
-Данная блок-схема описывает общую логику работы редактора кампаний.  Для полного понимания необходим код `AliCampaignEditor` и `AliPromoCampaign` для определения точного алгоритма обработки данных, типов аргументов, возвращаемых значений, а также обработки ошибок.
+**Импорты:**
+
+Код `AliCampaignEditor` импортирует необходимый функционал из других модулей.  Специфика импорта не приведена, поэтому сложно сказать, какие именно классы и функции импортированы.
+
+
+**Классы:**
+
+- `AliCampaignEditor`: Класс, отвечающий за редактирование кампаний на AliExpress.  Методы класса представляют различные операции редактирования: `delete_product`, `update_product`, `update_campaign`, `update_category`, `get_category`, `list_categories`, `get_category_products`.
+
+- `AliPromoCampaign`: Вероятно, класс, представляющий логику промо-кампаний.  Судя по диаграмме, `AliCampaignEditor` использует `AliPromoCampaign` для инициализации.
+
+
+**Функции:**
+
+- `read_text_file`: Функция для чтения данных из текстового файла (скорее всего, списка продуктов).
+- `dump_category_products_files`: Функция, которая обновляет файлы с продуктами в каталогах (по описанию логики работы).
+- `j_loads`: Функция для парсинга JSON.
+- `j_dumps`: Функция для сериализации JSON.
+
+
+**Переменные:**
+
+- `campaign_name`, `language`, `currency`: Вероятно, переменные, содержащие входные данные от пользователя.
+- Переменные, содержащиеся внутри методов, являются локальными.
+
+
+**Возможные ошибки и улучшения:**
+
+- **Отсутствует ясность по импорту:** Необходимо знать, какие именно модули и классы импортируются, чтобы точно понять логику работы и функционал.
+- **Сложность логики `update_product`:**  Необходимо больше информации о том, как `update_product` обновляет данные.
+- **Не указан тип данных:** Необходимо знать типы данных, с которыми работают функции и методы, для лучшей оценки корректности и эффективности.
+- **Обработка ошибок:** Не ясно, как обрабатываются возможные ошибки (например, файл не найден, данные некорректны).  Добавление обработки ошибок повысит устойчивость кода.
+- **Неопределённые зависимости:** Не понятно, какие классы или модули вызываются внутри `delete_product`, `update_campaign`, `update_category`, `get_category` и т.д.  Необходима более подробная документация.
+
+
+**Взаимосвязи с другими частями проекта:**
+
+Связь с `src`-пакетами неясна из предоставленной диаграммы. Необходима информация о том, где находятся и как взаимодействуют `sources.txt`, JSON-файлы и другие данные, необходимые для работы `AliCampaignEditor`.

@@ -120,29 +120,29 @@ class Logger(metaclass=SingletonMeta):
 
         self.logger_console = logging.getLogger(name = kwards.get('conslole_name',  f'console_{timestamp}.log') )
         self.logger_console.setLevel(logging.DEBUG)
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(
-            logging.Formatter("%(levelname)s: %(message)s")
-        )
-        self.logger_console.addHandler(console_handler)
+        # _handler = logging.StreamHandler()
+        # _handler.setFormatter(
+        #     logging.Formatter("%(levelname)s: %(message)s")
+        # )
+        # self.logger_console.addHandler(_handler)
 
 
         self.logger_file_info = logging.getLogger(name = kwards.get('file_info_name',  f'file_info_{timestamp}.log') )
         self.logger_file_info.setLevel(logging.INFO)
-        file_info_handler = logging.StreamHandler()
-        file_info_handler.setFormatter(
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(
             logging.Formatter("%(levelname)s: %(message)s")
         )
-        self.logger_file_info.addHandler(console_handler)
+        self.logger_file_info.addHandler(_handler)
 
 
         self.logger_file_debug = logging.getLogger(name = kwards.get('file_debug_name',  f'debug_{timestamp}.log') )
         self.logger_file_debug.setLevel(logging.DEBUG)
-        file_debug_handler = logging.StreamHandler()
-        file_debug_handler.setFormatter(
+        _handler = logging.StreamHandler()
+        _handler.setFormatter(
             logging.Formatter("%(levelname)s: %(message)s")
         )
-        self.logger_file_debug.addHandler(console_handler)
+        self.logger_file_debug.addHandler(_handler)
 
         self.logger_file_warning = logging.getLogger(name = kwards.get('file__warning_name',  f'warnings_{timestamp}.log') )
         self.logger_file_warning.setLevel(logging.ERROR)

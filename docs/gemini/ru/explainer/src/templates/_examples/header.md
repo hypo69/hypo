@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/templates/_examples/header.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.templates._examples 
+.. module:: src.templates._examples 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -19,7 +19,6 @@ MODE = 'dev'
 	:synopsis:
 
 """
-
 
 """
 	:platform: Windows, Unix
@@ -63,80 +62,87 @@ from src.suppliers import Supplier
 from src.product import Product, ProductFields, ProductFieldsLocators
 from src.category import Category
 from src.utils.jjson import j_dumps, j_loads,   pprint, save_text_file
-from src.logger import logger
+from src.logger.logger import logger
 , StringNormalizer, ProductFieldsValidator
 ...
 ```
 
 # <algorithm>
 
-Алгоритм работы кода включает в себя следующие шаги:
+```mermaid
+graph TD
+    A[Get current working directory] --> B{Find 'hypotez' substring};
+    B -- Success --> C[Extract path up to 'hypotez'];
+    B -- Fail --> D[Error handling];
+    C --> E[Create Path object];
+    E --> F[Append to sys.path];
+    F --> G[Create src directory Path object];
+    G --> H[Append to sys.path];
+    H --> I[Print dir_root];
+    I --> J[Import modules];
+    J --> K[Further code execution];
+```
 
-1. **Установка пути поиска модулей:**  Код определяет корневую директорию проекта `hypotez` и добавляет её в системный путь поиска модулей `sys.path`. Это важно для импорта файлов из других директорий проекта.
-2. **Импорт библиотек:**  Код импортирует необходимые библиотеки, такие как `sys`, `os`, `pathlib`, `json`, `re`, и собственные модули из пакета `src`.
-3. **Инициализация переменных:** Определяет переменную `dir_root`, представляющую корневую директорию проекта.
-4. **Печать пути:**  Выводит значение `dir_root` в консоль, подтверждая успешное определение пути.
-5. **Импорт дополнительных модулей:** Происходит импорт других модулей, находящихся внутри пакета `src`, включая: `gs`, `Supplier`, `Product`, `Category`, `j_dumps`, `j_loads`,  `pprint`, `save_text_file`, `logger`, `StringNormalizer` и `ProductFieldsValidator`.
-6. **Использование данных:** Код далее использует импортированные классы и функции для работы с данными продукта, поставщиками и категориями.
+**Example:** If `os.getcwd()` returns `/home/user/project/hypotez/test`, then `dir_root` will be `/home/user/project/hypotez`.
 
 
 # <mermaid>
 
 ```mermaid
 graph LR
-    A[hypotez] --> B(sys.path.append);
-    B --> C{Импорт модулей};
-    C --> D[src];
-    D --> E[gs];
-    D --> F[suppliers];
-    D --> G[product];
-    D --> H[category];
-    D --> I[utils.jjson];
-    D --> J[logger];
-   
-    
-    
+    subgraph Imports
+        A[sys] --> B(import);
+        C[os] --> B;
+        D[pathlib] --> B;
+        E[json] --> B;
+        F[re] --> B;
+        G[gs] --> H(from src);
+        I[Supplier] --> H;
+        J[Product] --> H;
+        K[ProductFields] --> H;
+        L[ProductFieldsLocators] --> H;
+        M[Category] --> H;
+        N[j_dumps] --> O(from src.utils.jjson);
+        P[j_loads] --> O;
+        Q[pprint] --> O;
+        R[save_text_file] --> O;
+        S[logger] --> T(from src.logger.logger);
+        U[StringNormalizer] --> T;
+        V[ProductFieldsValidator] --> T;
+    end
+    B --> K;
+    K --> L{Further code execution};
 ```
-**Объяснение к диаграмме:**
 
-Код инициализирует системный путь поиска (`sys.path`) для поиска файлов и модулей из пакета `src`, содержащего различные модули (классы, функции, переменные), отвечающие за работу с данными проекта `hypotez`.
+**Explanation of Dependencies:**  The code imports various modules from the `src` package and its sub-packages.  This indicates a structured Python project where different functionalities (e.g., `gs`, `suppliers`, `product`, `category`, `utils`, `logger`) are separated into modules.
+
 
 # <explanation>
 
-**Импорты:**
+**Imports:**
 
-* `sys`, `os`, `pathlib`: Стандартные библиотеки Python, необходимые для работы с системными ресурсами (пути, модули).
-* `json`, `re`: Библиотеки для работы с JSON-данными и регулярными выражениями соответственно.
-* `pathlib`:  Модуль для работы с файлами и путями более удобным образом.
-* `gs`, `Supplier`, `Product`, `ProductFields`, `ProductFieldsLocators`, `Category`, `j_dumps`, `j_loads`, `pprint`, `save_text_file`, `logger`, `StringNormalizer`, `ProductFieldsValidator`: Это импортированные модули из пакета `src`,  вероятно, отвечающие за обработку данных, логику приложения и взаимодействия с данными.
+- `sys`, `os`, `pathlib`: Standard Python modules for system interaction, file path manipulation, and controlling Python's import process.
+- `json`, `re`: Standard libraries for working with JSON data and regular expressions, respectively.
+- `gs`, `Supplier`, `Product`, `ProductFields`, `ProductFieldsLocators`, `Category`, `j_dumps`, `j_loads`, `pprint`, `save_text_file`, `logger`, `StringNormalizer`, `ProductFieldsValidator`: These imports originate from packages within the `src` folder, indicating a well-organized project structure.  This code adds the parent directory to `sys.path`,  allowing Python to find modules located in the `src` folder. This is a crucial step for importing custom modules.
+
+**Variables:**
+
+- `dir_root`, `dir_src`: These variables hold `Path` objects representing paths to the project root and the `src` directory, respectively. The code calculates the `dir_root` using the current working directory and the `hypotez` directory.  This provides a way to reference the project's base directory consistently, independent of the current working directory.
+
+**Potential Errors and Improvements:**
+
+- **Missing `...`:** The `...` in the code suggests missing lines.  These missing parts are essential for completing the logic. Be sure to supply the code following the `...` section to have a complete and executable script.
+- **Error Handling:** The code lacks robust error handling. If `os.getcwd()[:os.getcwd().rfind('hypotez')+11]` fails to find 'hypotez', the script will raise an exception. Consider using `try-except` blocks to handle these edge cases and provide informative error messages.
+- **Unnecessary repetition**:  The `sys.path.append(str(dir_root))` appears twice. This should be optimized to a single line.
+- **Clarity of `...` code:**  The `...` portion likely involves more import statements and/or other functions which should be explained.
+- **File paths:**  It's generally preferable to use `importlib.util.find_spec()` for dynamic imports to allow proper error handling and a cleaner approach.
 
 
-**Классы:**
 
-* `Supplier`, `Product`, `Category`: Классы, вероятно, представляющие сущности приложения (поставщики, продукты, категории).  Нельзя точно определить их функциональность без дополнительного контекста кода этих классов.
-* `ProductFields`, `ProductFieldsLocators`: Возможно, описывают поля и локейторы для работы с объектами `Product`.
-* `StringNormalizer`, `ProductFieldsValidator`:  Предполагаемые классы, отвечающие за нормализацию строк и валидацию полей продуктов соответственно.
-* `logger`: Вероятно, класс для работы с логами (запись в журналы событий).
+**Relationship to other parts of the project:**
+
+This `header.py` file likely acts as an entry point or initial setup for the project. The imports suggest that other modules within the `src` package are defining classes and functions for handling data and tasks related to products, suppliers, categories, and logging. The `MODE` variable suggests a potential for conditional logic or different behaviors based on a development mode.  The use of `src/logger/logger` indicates that logging is a feature of the project.
 
 
-**Функции:**
 
-*  `j_dumps`, `j_loads`, `pprint`, `save_text_file`: Функции для работы с JSON-данными (сериализация, десериализация, вывод, сохранение).
-*  Функции из классов `StringNormalizer`, `ProductFieldsValidator` (не определённые) скорее всего обрабатывают строки и валидируют данные.
-
-**Переменные:**
-
-* `dir_root`: Переменная пути, содержащая корневую директорию проекта.
-* `dir_src`: Переменная пути, содержащая подпапку `src`.
-* `MODE`: Строковая переменная, вероятно, определяющая режим работы приложения (например, 'dev' или 'prod').
-
-**Возможные ошибки или области для улучшений:**
-
-* **Отсутствие ясности в коде:**  Много комментариев вида `"""..."""`. Не хватает комментариев к конкретным функциям и методам. Необходимы более подробные описания.
-* **Непонятны зависимости:** Необходимо понимать, как эти классы и функции взаимодействуют друг с другом для полной картины.
-* **Не хватает кода:** Код содержит `...`,  что делает анализ фрагмента неполным.  Нужно рассмотреть полный код `src` и его файлов.
-* **Не указана целиком структура проекта:** Невозможно оценить полный функционал приложения, зная только часть кода.
-
-**Взаимосвязи с другими частями проекта:**
-
-Код устанавливает путь поиска модулей в `sys.path`, что подразумевает взаимосвязь с другими частями проекта, находящимися в папке `src`.  Однако, без полного кода `src`  невозможно проследить все взаимосвязи.
+```
