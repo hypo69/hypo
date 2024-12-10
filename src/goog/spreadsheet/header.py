@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.spreadsheet 
+.. module:: src.goog.spreadsheet 
 	:platform: Windows, Unix
 	:synopsis:
 

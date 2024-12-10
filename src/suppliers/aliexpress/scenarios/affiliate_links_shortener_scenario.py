@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.scenarios 
+.. module:: src.suppliers.aliexpress.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Сокращатель ссылок через веббраузер
 

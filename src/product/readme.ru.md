@@ -1,5 +1,5 @@
 ```rst
-.. module: src.product
+.. module:: src.product
 ```
 [Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
 

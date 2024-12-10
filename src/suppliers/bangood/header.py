@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.bangood 
+.. module:: src.suppliers.bangood 
 	:platform: Windows, Unix
 	:synopsis:
 

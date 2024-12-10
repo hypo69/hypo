@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.supplier 
+.. module:: src.suppliers.supplier 
 	:platform: Windows, Unix
 	:synopsis: Base class for suppliers
 

@@ -1,5 +1,5 @@
 ```rst
-.. module: src
+.. module:: src
 ```
 
 <TABLE >

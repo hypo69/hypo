@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.chat_gpt.scenarios 
+.. module:: src.suppliers.chat_gpt.scenarios 
 	:platform: Windows, Unix
 	:synopsis:
 

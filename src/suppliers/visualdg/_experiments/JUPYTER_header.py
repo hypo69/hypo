@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.visualdg._experiments 
+.. module:: src.suppliers.visualdg._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

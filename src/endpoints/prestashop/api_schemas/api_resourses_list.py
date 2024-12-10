@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop.api_schemas 
+.. module:: src.endpoints.prestashop.api_schemas 
 	:platform: Windows, Unix
 	:synopsis: Список всех доступных ресурсов для API вызовов
 

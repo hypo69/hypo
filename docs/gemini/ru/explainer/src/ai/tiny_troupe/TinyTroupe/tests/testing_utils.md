@@ -25,56 +25,44 @@ def contains_action_type(actions, action_type):
     """
     Checks if the given list of actions contains an action of the given type.
     """
-
     for action in actions:
         if action["action"]["type"] == action_type:
             return True
-    
     return False
 
 def contains_action_content(actions:list, action_content: str):
     """
     Checks if the given list of actions contains an action with the given content.
     """
-
     for action in actions:
-        # checks whether the desired content is contained in the action content
         if action_content.lower() in action["action"]["content"].lower():
             return True
-    
     return False
 
 def contains_stimulus_type(stimuli, stimulus_type):
     """
     Checks if the given list of stimuli contains a stimulus of the given type.
     """
-
     for stimulus in stimuli:
         if stimulus["type"] == stimulus_type:
             return True
-    
     return False
 
 def contains_stimulus_content(stimuli, stimulus_content):
     """
     Checks if the given list of stimuli contains a stimulus with the given content.
     """
-
     for stimulus in stimuli:
-        # checks whether the desired content is contained in the stimulus content
         if stimulus_content.lower() in stimulus["content"].lower():
             return True
-    
     return False
 
 def terminates_with_action_type(actions, action_type):
     """
     Checks if the given list of actions terminates with an action of the given type.
     """
-
     if len(actions) == 0:
         return False
-    
     return actions[-1]["action"]["type"] == action_type
 
 def proposition_holds(proposition: str) -> bool:
@@ -83,23 +71,16 @@ def proposition_holds(proposition: str) -> bool:
     This can be used to check for text properties that are hard to
     verify mechanically, such as "the text contains some ideas for a product".
     """
-
     system_prompt = f"""
     Check whether the following proposition is true or false. If it is
     true, write "true", otherwise write "false". Don't write anything else!
     """
-
     user_prompt = f"""
     Proposition: {proposition}
     """
-
     messages = [{"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}]
-
-    # call the LLM
     next_message = openai_utils.client().send_message(messages)
-
-    # check the result
     cleaned_message = only_alphanumeric(next_message["content"])
     if cleaned_message.lower().startswith("true"):
         return True
@@ -118,30 +99,23 @@ def create_test_system_user_message(user_prompt, system_prompt="You are a helpfu
     """
     Creates a list containing one system message and one user message. 
     """
-
     messages = [{"role": "system", "content": system_prompt}]
-
     if user_prompt is not None:
         messages.append({"role": "user", "content": user_prompt})
-
     return messages
 
 def agents_configs_are_equal(agent1, agent2, ignore_name=False):
     """
     Checks if the configurations of two agents are equal.
     """
-
     ignore_keys = []
     if ignore_name:
         ignore_keys.append("name")
-    
     for key in agent1._configuration.keys():
         if key in ignore_keys:
             continue
-        
         if agent1._configuration[key] != agent2._configuration[key]:
             return False
-    
     return True
 ############################################################################################################
 # I/O utilities
@@ -151,7 +125,6 @@ def remove_file_if_exists(file_path):
     """
     Removes the file at the given path if it exists.
     """
-    
     if os.path.exists(file_path):
         os.remove(file_path)
 
@@ -159,7 +132,6 @@ def get_relative_to_test_path(path_suffix):
     """
     Returns the path to the test file with the given suffix.
     """
-    
     return os.path.join(os.path.dirname(__file__), path_suffix)
 
 
@@ -169,8 +141,7 @@ def get_relative_to_test_path(path_suffix):
 
 @pytest.fixture(scope="function")
 def focus_group_world():
-    import tinytroupe.examples as examples   
-    
+    import tinytroupe.examples as examples
     world = TinyWorld("Focus group", [examples.create_lisa_the_data_scientist(), examples.create_oscar_the_architect(), examples.create_marcos_the_physician()])
     return world
 
@@ -178,119 +149,106 @@ def focus_group_world():
 def setup():
     TinyPerson.clear_agents()
     TinyWorld.clear_environments()
-
     yield
 ```
-
-# <algorithm>
-
-(Блок-схема отсутствует из-за сложности визуализации, так как код содержит много функций)
-
-**Описание алгоритма (вместо блок-схемы):**
-
-Код содержит различные вспомогательные функции для тестирования модулей `tinytroupe`.
-
-Функции `contains_action_type`, `contains_action_content`, `contains_stimulus_type`, `contains_stimulus_content`, `terminates_with_action_type` проверяют наличие определённых типов действий или стимулов в списках.
-
-Функция `proposition_holds` использует внешнюю LLM (OpenAI), чтобы проверить истинность утверждения.
-
-Функция `only_alphanumeric` удаляет из строки неалфавитно-цифровые символы.
-
-Функция `create_test_system_user_message` создает сообщения для взаимодействия с LLM.
-
-Функция `agents_configs_are_equal` сравнивает конфигурации двух агентов, исключая возможное различие в имени.
-
-Функции `remove_file_if_exists` и `get_relative_to_test_path` предназначены для управления файлами, часто используемыми в тестах.
-
-Фикстура `focus_group_world` создает тестовое окружение `TinyWorld` с определёнными агентами.
-
-Фикстура `setup` очищает глобальные данные, используемые агентами и окружениями.
-
-
-# <mermaid>
-
 ```mermaid
-graph LR
-    subgraph "tinytroupe.openai_utils"
-        openai_utils --> client
+graph TD
+    subgraph "Testing Utilities"
+        A[contains_action_type] --> B{Check action type};
+        B -- True --> C[True];
+        B -- False --> D[False];
+        E[contains_action_content] --> F{Check action content};
+        F -- True --> G[True];
+        F -- False --> H[False];
+        I[contains_stimulus_type] --> J{Check stimulus type};
+        J -- True --> K[True];
+        J -- False --> L[False];
+        M[contains_stimulus_content] --> N{Check stimulus content};
+        N -- True --> O[True];
+        N -- False --> P[False];
+        Q[terminates_with_action_type] --> R{Check last action type};
+        R -- True --> S[True];
+        R -- False --> T[False];
+        U[proposition_holds] --> V{LLM call};
+        V -- True --> W[True];
+        V -- False --> X[False];
+        V -- Unexpected --> Y[Exception];
     end
-    subgraph "tinytroupe.agent"
-        TinyPerson --> clear_agents
+    subgraph "I/O Utilities"
+        Z[remove_file_if_exists] --> AA{Check file existence};
+        AA -- True --> AB[Remove file];
+        AA -- False --> AC[Skip];
+        AD[get_relative_to_test_path] --> AE{Join path};
+        AE --> AF[Return path];
     end
-    subgraph "tinytroupe.environment"
-        TinyWorld --> clear_environments
+    subgraph "Fixtures"
+        AG[focus_group_world] --> AH{Create world};
+        AH --> AI[Return world];
+        AJ[setup] --> AK{Clear agents};
+        AK --> AL{Clear environments};
+        AL --> AM[Yield];
     end
-    focus_group_world --> TinyWorld
-    focus_group_world --> examples
-    setup --> TinyPerson.clear_agents
-    setup --> TinyWorld.clear_environments
-    setup --> yield
-    contains_action_type --> action
-    contains_action_content --> action
-    contains_stimulus_type --> stimulus
-    contains_stimulus_content --> stimulus
-    terminates_with_action_type --> actions
-    proposition_holds --> openai_utils
-    proposition_holds --> client
-    proposition_holds --> messages
-    only_alphanumeric --> string
-    create_test_system_user_message --> messages
-    agents_configs_are_equal --> agent1
-    agents_configs_are_equal --> agent2
-    remove_file_if_exists --> file_path
-    get_relative_to_test_path --> path_suffix
-    
-    examples --> create_lisa_the_data_scientist
-    examples --> create_oscar_the_architect
-    examples --> create_marcos_the_physician
-
+    A --> A;
+    E --> E;
+    I --> I;
+    M --> M;
+    Q --> Q;
+    U --> U;
+    Z --> Z;
+    AD --> AD;
+    AG --> AG;
+    AJ --> AJ;
 ```
-
 
 # <explanation>
 
-**Импорты**:
+**Импорты:**
 
-- `os`, `sys`, `time`: Стандартные модули Python для работы с операционной системой, системами, временем.
-- `tinytroupe.openai_utils`: Модуль, вероятно, предоставляющий интерфейс для взаимодействия с API OpenAI.
-- `tinytroupe.agent`: Модуль, содержащий класс `TinyPerson` (агент), вероятно, представляющий пользователя или действующее лицо.
-- `tinytroupe.environment`: Модуль, содержащий классы `TinyWorld` (окружение) и `TinySocialNetwork` (социальная сеть).
-- `pytest`: Модуль для тестирования, предоставляющий функции и декораторы для запуска тестов.
-- `importlib`: Модуль для динамической загрузки модулей.
+* `import os`: Импортирует модуль для работы с операционной системой, например, для работы с файлами.
+* `import sys`: Импортирует модуль `sys` для взаимодействия с интерпретатором Python, включая добавление путей к модулям.
+* `from time import sleep`: Импортирует функцию `sleep` для приостановки выполнения кода.
+* `import tinytroupe.openai_utils as openai_utils`: Импортирует утилиты для взаимодействия с OpenAI API из пакета `tinytroupe`.
+* `from tinytroupe.agent import TinyPerson`: Импортирует класс `TinyPerson` из пакета `tinytroupe.agent`. Представляет агента в системе.
+* `from tinytroupe.environment import TinyWorld, TinySocialNetwork`: Импортирует классы `TinyWorld` и `TinySocialNetwork` из пакета `tinytroupe.environment`. Определяют окружение и социальную сеть для агентов.
+* `import pytest`: Импортирует фреймворк для тестирования `pytest`.
+* `import importlib`: Импортирует модуль `importlib`, который нужен для динамической загрузки модулей.
 
-Связь с `src`:  Все импорты относятся к пакетам внутри `hypotez`, `src` folder (по расположению файла). Пакеты `tinytroupe.openai_utils`, `tinytroupe.agent`, `tinytroupe.environment` находятся внутри пакета `tinytroupe`, который, вероятно, представляет core логику приложения.
-
-**Классы**:
-
-- `TinyPerson`: Представляет агента. Имеет метод `clear_agents`,  вероятно, для очищения всех агентов в системе.
-- `TinyWorld`: Представляет окружение. Имеет метод `clear_environments`, для очищения всех окружений.  Конфигурация и взаимодействие с агентами не описаны в коде.
-
-**Функции**:
-
-- `contains_action_type`, `contains_action_content`, `contains_stimulus_type`, `contains_stimulus_content`:  Проверяют наличие элементов в списках.
-- `terminates_with_action_type`: Проверяет, завершается ли список действий определённым типом действия.
-- `proposition_holds`:  Проверяет истинность утверждения, используя API OpenAI. Важно отметить зависимость от внешнего ресурса (OpenAI).
-- `only_alphanumeric`: Удаляет из строки все символы, которые не являются буквенно-цифровыми.
-- `create_test_system_user_message`:  Формирует сообщения для LLM (в формате, требуемом OpenAI).
-- `agents_configs_are_equal`: Сравнивает конфигурации двух агентов.
-- `remove_file_if_exists`: Удаляет файл, если он существует.
-- `get_relative_to_test_path`:  Создаёт абсолютный путь к файлу относительно тестовой папки.
-
-**Переменные**:
-
-Переменные в основном представляют списки действий, стимулов, конфигураций агентов, сообщения для LLM, пути к файлам.
+Связь с другими пакетами:
+Файлы `openai_utils`, `agent`, и `environment` являются частью проекта `tinytroupe`.
 
 
-**Возможные ошибки/улучшения**:
+**Классы:**
 
-- Отсутствует явное описание типов данных в аргументах и возвращаемых значениях некоторых функций. Это может привести к ошибкам.
-- Отсутствуют проверки входных данных в некоторых функциях (например, `proposition_holds` не проверяет, что `proposition` является строкой).
-- Не указано, как происходит взаимодействие между `TinyPerson`, `TinyWorld`, `TinySocialNetwork`.  
-- Возможные проблемы с производительностью при использовании OpenAI API (слишком много запросов, ограничения API).  Необходимы проверки на ошибки.
-- Необходимо документировать методы классов `TinyPerson` и `TinyWorld`, чтобы понять их внутреннее функционирование.
+* `TinyPerson`: Представляет агента.  В этом файле, видимо, нет определения атрибутов или методов этого класса.  Возможно, они определены в другом файле, и этот файл лишь использует его.
+* `TinyWorld`: Представляет окружение. Аналогично `TinyPerson`, детальное описание атрибутов и методов не приведено в данном файле.
+* `TinySocialNetwork`: Представляет социальную сеть. Опять же, это только использование, и описание класса находится в другом файле.
+
+**Функции:**
+
+* `contains_action_type`, `contains_action_content`, `contains_stimulus_type`, `contains_stimulus_content`: Проверяют наличие определенных типов и содержимого в списках действий и стимулов. Используются для валидации.
+* `terminates_with_action_type`: Проверяет, завершается ли список действий определенным типом действия.
+* `proposition_holds`: Проверяет истинность утверждения с помощью вызова OpenAI API.  Подразумевает наличие некоторого механизма для запроса к OpenAI API (утилиты `openai_utils`).
+* `only_alphanumeric`: Возвращает строку, содержащую только буквенно-цифровые символы, удаляя все остальные.
+* `create_test_system_user_message`: Создает список сообщений для взаимодействия с OpenAI API. Использует системное сообщение и (при наличии) пользовательское сообщение.
+* `agents_configs_are_equal`: Проверяет равенство конфигураций двух агентов, исключая ключ "name", если требуется.
+* `remove_file_if_exists`: Удаляет файл, если он существует.
+* `get_relative_to_test_path`: Возвращает относительный путь к файлу теста.
+
+**Переменные:**
 
 
+**Возможные ошибки и улучшения:**
 
-**Взаимосвязь с другими частями проекта**:
+* Отсутствие обработки исключений при вызове OpenAI API (`openai_utils.client().send_message`).
+* Недостаточное документирование. Нужно более подробно описать логику работы функций.
+* В `proposition_holds`:  Можно добавить вывод логов (например, с помощью `logging`), чтобы отследить полученные ответы от LLM.
+* В `agents_configs_are_equal`: Рассмотреть случай, когда один из агентов не имеет определенного ключа.
+* Потенциальная проблема с переполнением памяти при работе с очень большими списками действий или стимулов.
 
-Функции тестирования, вероятно, используются для проверки корректности поведения агентов, окружения `TinyWorld` и их взаимодействия.  Функции тестов зависят от внешних сервисов (например, OpenAI).  Взаимосвязь с `tinytroupe.examples`  для создания тестовых агентов.
+**Взаимосвязь с другими частями проекта:**
+
+Этот файл является частью тестового пакета. Функции и классы взаимодействуют с OpenAI API, классами `TinyPerson`, `TinyWorld` и, вероятно, другими компонентами проекта `tinytroupe` для тестирования поведения агентов в определённой среде. `openai_utils` предоставляет интерфейс для доступа к OpenAI API. `TinyPerson` и `TinyWorld` - сущности, которые используются в тестах.  Файл `tinytroupe.examples` определяет примеры объектов для `TinyWorld`, что показывает, как инициализировать объекты `TinyWorld`.
+
+**Вывод:**
+
+Код выполняет различные проверки на действиях и стимулах, используя OpenAI API для проверки сложных утверждений, и является частью тестового набора для проекта `tinytroupe`.  Недостающее описание и/или отсутствие обработки исключений может указывать на необходимость дополнений.

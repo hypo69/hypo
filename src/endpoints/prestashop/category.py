@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop 
+.. module:: src.endpoints.prestashop 
 	:platform: Windows, Unix
 	:synopsis: `PrestaCategory` layer between client categories (PrestaShop, in my case) and suppliers
 The class provides methods for adding, deleting, updating categories, 

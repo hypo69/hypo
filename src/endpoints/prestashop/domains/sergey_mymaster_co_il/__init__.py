@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop.domains.sergey_mymaster_co_il 
+.. module:: src.endpoints.prestashop.domains.sergey_mymaster_co_il 
 	:platform: Windows, Unix
 	:synopsis:
 

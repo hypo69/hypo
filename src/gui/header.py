@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.gui 
+.. module:: src.gui 
 	:platform: Windows, Unix
 	:synopsis:
 

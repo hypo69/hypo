@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog 
+.. module:: src.goog 
 	:platform: Windows, Unix
 	:synopsis:
 

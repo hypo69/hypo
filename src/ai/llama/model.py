@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.llama 
+.. module:: src.ai.llama 
 	:platform: Windows, Unix
 	:synopsis:
 

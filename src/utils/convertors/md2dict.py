@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.md2dict 
+.. module:: src.utils.convertors.md2dict 
 	:platform: Windows, Unix
 	:synopsis: Модуль для конвертации строки Markdown в структурированный словарь, включая извлечение JSON содержимого, если оно присутствует.
 """

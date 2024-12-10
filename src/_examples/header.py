@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils._examples 
+.. module:: src.utils._examples 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.bots.telegram 
+.. module:: src.endpoints.bots.telegram 
 	:platform: Windows, Unix
 	:synopsis:
 

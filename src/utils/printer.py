@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils
+.. module::  src.utils
     :platform: Windows, Unix
     :synopsis: Utility functions for pretty printing and text styling.
 

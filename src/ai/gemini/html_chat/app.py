@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.gemini.html_chat 
+.. module:: src.ai.gemini.html_chat 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.gui.context_menu.tkinter 
+.. module:: src.gui.context_menu.tkinter 
 	:platform: Windows, Unix
 	:synopsis:
 

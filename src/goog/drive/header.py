@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.drive 
+.. module:: src.goog.drive 
 	:platform: Windows, Unix
 	:synopsis:
 

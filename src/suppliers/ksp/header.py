@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.ksp 
+.. module:: src.suppliers.ksp 
 	:platform: Windows, Unix
 	:synopsis:
 

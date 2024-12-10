@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.cdata 
+.. module:: src.suppliers.cdata 
 	:platform: Windows, Unix
 	:synopsis:  Класс собирает значение полей на странице  товара `cdata.co.il`. 
     Для каждого поля страницы товара сделана функция обработки поля в родительском классе.

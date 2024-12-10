@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.js
+.. module::  src.webdriver.js
     :platform: Windows, Unix
     :synopsis: Provides JavaScript utility functions for interacting with a web page.
 

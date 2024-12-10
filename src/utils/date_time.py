@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils 
+.. module:: src.utils 
 	:platform: Windows, Unix
 	:synopsis: function to check if the current time is within a specified interval with an optional timeout
 

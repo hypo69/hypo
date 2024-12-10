@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.bots.openai_bots 
+.. module:: src.bots.openai_bots 
 	:platform: Windows, Unix
 	:synopsis:
 

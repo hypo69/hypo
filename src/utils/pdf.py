@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.pdf 
+.. module:: src.utils.pdf 
     :platform: Windows, Unix
     :synopsis: Модуль для преобразования HTML-контента или файлов в PDF
 

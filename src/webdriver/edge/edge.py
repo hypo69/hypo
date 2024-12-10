@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.edge
+.. module::  src.webdriver.edge
    :platform: Windows, Unix
    :synopsis: Custom Edge WebDriver class with simplified configuration using fake_useragent.
 

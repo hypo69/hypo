@@ -95,107 +95,119 @@ def test_repeat_on_error():
 
 # <algorithm>
 
-**test_extract_json:**
+**Функция `extract_json`:**
 
-1. **Initialization**: Input text is provided.
-2. **Extract**: `extract_json` function parses the input text for JSON.
-3. **Validation**: Results are compared against expected JSON objects.
-4. **Repeat**: The steps 2-3 are repeated for various test cases (valid JSON, JSON array, escaped characters, invalid JSON, no JSON).
+1. Принимает строку `text` на вход.
+2. Ищет JSON-объект (или массив) в строке.
+3. Если JSON найден, парсит его и возвращает.
+4. Если JSON не найден или при парсинге возникает ошибка, возвращает пустой словарь `{}`.
 
+**Функция `name_or_empty`:**
 
-**test_name_or_empty:**
+1. Принимает объект `entity` на вход.
+2. Если объект не `None` и у него есть атрибут `name`, возвращает его значение.
+3. Если объект `None` или атрибут `name` отсутствует, возвращает пустую строку `""`.
 
-1. **Initialization**: A `MockEntity` object (or `None`) is provided.
-2. **Check**: The `name_or_empty` function checks if the input is an object with a `name` attribute or `None`.
-3. **Return**: It returns the `name` attribute value or an empty string if the input is `None` or not an entity with a `name` attribute
+**Функция `repeat_on_error`:**
 
+1. Принимает функцию `decorated_function` на вход.
+2. Устанавливает максимальное количество попыток `retries` и список исключений `exceptions`.
+3. При вызове `decorated_function` пытается выполнить ее.
+4. Если происходит исключение, указанное в `exceptions`, повторно выполняет функцию, до тех пор пока попытки не исчерпаны или не будет достигнуто успешное выполнение.
+5. Возвращает результат выполнения, либо вызывает исключение, если все попытки закончились неудачей.
 
-**test_repeat_on_error:**
+**Пример (extract_json):**
 
-1. **Initialization**:  A function (`dummy_function`) is decorated with `repeat_on_error`. The decorator is aware of the number of `retries` and a list of exceptions.
-2. **Try**: `dummy_function` is called. If an exception in `exceptions` list occurs, the function is called again (up to `retries`).
-3. **Check**: The number of calls to `dummy_function` is checked. If an exception is raised, the function is called the correct number of times, otherwise, only once.
-4. **Validation**:  If the exception is not in the list the `dummy_function` should be called only once and the exception is raised as expected
+Вход: `'Some text before {"key": "value"} some text after'`
+Выход: `{'key': 'value'}`
+
+**Пример (name_or_empty):**
+
+Вход: `MockEntity("Test")` (где `MockEntity` имеет атрибут `name`)
+Выход: `"Test"`
+
+**Пример (repeat_on_error):**
+
+Вход: функция, которая вызывает `dummy_function`, которая может кидать `DummyException`
+Выход: повторение функции, пока не получится без `DummyException`, либо сброс исключения.
 
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[test_extract_json] --> B(extract_json);
-    B --> C{Validate Result};
-    C -- Success --> D[Assertion];
-    C -- Failure --> E[Assertion Fail];
-    subgraph Test Cases
-        F[Simple JSON];
-        G[JSON Array];
-        H[Escaped Characters];
-        I[Invalid JSON];
-        J[No JSON];
+graph TD
+    subgraph "extract_json"
+        A[text] --> B{Find JSON};
+        B -- Yes --> C[Parse JSON];
+        B -- No --> D[Return {}];
+        C --> E[Return JSON];
+        D --> E;
     end
 
-    K[test_name_or_empty] --> L(name_or_empty);
-    L --> M{Validate Input};
-    M -- Success --> N[Assertion];
-    M -- Failure --> O[Assertion Fail];
-    subgraph Test Cases 2
-        P[Named Entity];
-        Q[None Input];
+    subgraph "name_or_empty"
+        F[entity] --> G{entity is None?};
+        G -- Yes --> H[Return ""];
+        G -- No --> I{entity has 'name'?};
+        I -- Yes --> J[Return entity.name];
+        I -- No --> H;
+        H --> K[Return];
     end
 
+    subgraph "repeat_on_error"
+        L[decorated_function] --> M{Exception in exceptions?};
+        M -- Yes --> N[Retry];
+        M -- No --> O[Return Result];
+        N --> L;
+        O --> P[Return];
 
-    R[test_repeat_on_error] --> S(repeat_on_error);
-    S --> T{Exception Occurs?};
-    T -- Yes --> U{Retry};
-    U --> S;
-    T -- No --> V[Single Call];
-    V --> W[Assertion];
-    subgraph Test Cases 3
-        X[Exception in Exceptions List];
-        Y[Exception not in List];
+        subgraph "Retry"
+          N --  --> Q[Attempt Count < retries?];
+          Q -- Yes --> L;
+          Q -- No --> R[Raise Exception];
+        end
     end
+        E --> Result;
+        J --> Result;
+        K --> Result;
+        P --> Result;
+        R --> Result;
+
 ```
 
 # <explanation>
 
 **Импорты:**
 
-- `pytest`: Библиотека для тестирования.
-- `unittest.mock`: Для создания Mock-объектов, позволяющих имитировать поведение функций и методов.
-- `sys`: Для манипуляции с системными переменными, в данном случае, добавления путей к модулям. `sys.path.append()` позволяет Python находить модули в указанных директориях,  необходимы для работы с `tinytroupe` модулем.
-- `tinytroupe.utils`: Содержит функции `name_or_empty`, `extract_json` и `repeat_on_error`, необходимые для работы тестов.
-- `testing_utils`:  (не описан в предоставленном коде) скорее всего, содержит вспомогательные функции и классы для тестирования, которые используются в тесте,  и определяет `MockEntity` класс, необходимый для тестирования `name_or_empty`.
+- `pytest`: фреймворк для тестирования.
+- `unittest.mock.MagicMock`: для создания "моков" (заглушек) функций и объектов.
+- `sys`: для изменения пути поиска модулей.
+- `tinytroupe.utils`: собственный модуль проекта, содержащий полезные функции, такие как парсинг JSON и обработка ошибок.
+- `testing_utils`:  предполагаемый модуль для тестирования, возможно, содержащий вспомогательные функции или классы.
 
 **Классы:**
 
-- `MockEntity`:  Простой класс, используемый для имитации сущности с именем. Он нужен для тестирования функции `name_or_empty`.  Он создает объекты, которые содержат поле `name`.
-
+- `MockEntity`:  Простой класс для тестирования, он содержит атрибут `name` для хранения имени. Использовался только для тестирования функции `name_or_empty`.
 
 **Функции:**
 
-- `name_or_empty(entity)`: Возвращает имя сущности (`entity`) если оно есть и пустую строку в противном случае.
-- `extract_json(text)`:  Извлекает JSON из строки. Возвращает `dict` или `list` соответствующие JSON структуре.  Умеет справляться с ошибками при разборе и возвращает пустой словарь.
-- `repeat_on_error(retries=3, exceptions=[Exception])`: Декоратор, который позволяет повторять выполнение функции несколько раз при возникновении определённых исключений.  Указывает максимальное число повторов и список ожидаемых исключений.
-
+- `extract_json(text)`:  Парсит JSON из строки. Возвращает JSON-объект или пустой словарь, если JSON не найден или ошибка. Используется для извлечения JSON фрагментов.
+- `name_or_empty(entity)`: Возвращает имя сущности, если оно задано, или пустую строку, если сущность `None` или у нее нет имени.
+- `repeat_on_error(retries, exceptions, decorated_function)`: Декоратор, который повторяет вызов функции, пока не достигнут `retries` или не возникнет исключение, не указанное в `exceptions`.  Это полезно для обработки ситуаций, где может возникнуть временная ошибка при запросе к внешнему API или другому ресурсу.
 
 **Переменные:**
 
-- `text`, `result`: Переменные для хранения входных данных и результатов тестирования, используется для проверки поведения `extract_json`
-- `entity`: Переменная для хранения экземпляра класса `MockEntity`. Используется при тестировании `name_or_empty`.
-- `retries`: Целочисленное значение, определяющее сколько раз функция будет повторяться, используемое при тестировании `repeat_on_error`.
+- `text`, `result`: строковые и словарике переменные, использующиеся при тестировании для хранения входных данных и результатов извлечения JSON.
+
+**Возможные ошибки или улучшения:**
+
+- Нет проверки типов входных данных для `extract_json` (может быть ошибка, если `text` не строка).
+- Отсутствие документации для функций `extract_json` и `name_or_empty`.
+- `repeat_on_error` обрабатывает только заданные исключения. Следовало бы использовать более общие обработки ошибок, например `except Exception` для большей гибкости.
+- Не совсем понятно назначение `sys.path.append`  , оно может привести к проблемам импортирования, если вложенные пути не корректны. Рекомендуется использовать `relative imports` ('.', '..') где это возможно.
+- Лучше было бы сделать `extract_json` более универсальной, обрабатывая разные типы JSON (например, массивы).
+- `TODO` комментарий указывает на не реализованную функцию, что требует более подробного пояснения.
 
 
-**Возможные ошибки или области для улучшений:**
+**Взаимосвязь с другими частями проекта:**
 
-- Отсутствует документация. Необходимо добавить комментарии к функциям и классам, поясняющие их назначение.
-- Тестирование `json_serializer` не реализовано и помечено как TODO.
-- Возможно, стоит добавить больше тестов для `extract_json` для различных типов ошибок в JSON строках.
--  Не указано, как обрабатывается `testing_utils`, хотя код использует его классы.  Необходимо уточнить его роль и местоположение в проекте.
--  `sys.path.append` может быть не оптимальным решением для управления путями к модулям. Вместо `sys.path.append` лучше использовать установку проекта как виртуальной среды.
-
-**Цепочка взаимосвязей:**
-
-Тесты (`test_*.py`) в папке `tests` проверяют корректность работы функций в `tinytroupe.utils`, проверяя, соответствует ли поведение этих функций ожидаемому.
-
-
-**Примечание:**  Для лучшего анализа необходимо контекст `testing_utils` модуля, в частности, определить, как он взаимодействует с другими частями проекта.
+Функции `extract_json`, `name_or_empty` и `repeat_on_error` входят в модуль `utils` проекта `tinytroupe`. Вероятно, эти функции используются в других частях проекта для обработки данных. Модуль `testing_utils` явно используется для тестирования.  Без контекста проекта трудно сказать, как эти функции используются в других частях кода.

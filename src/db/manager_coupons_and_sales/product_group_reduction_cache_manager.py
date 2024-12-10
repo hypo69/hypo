@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.db.manager_coupons_and_sales 
+.. module:: src.db.manager_coupons_and_sales 
 	:platform: Windows, Unix
 	:synopsis:
 

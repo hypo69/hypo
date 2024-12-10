@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.grandadvance 
+.. module:: src.suppliers.grandadvance 
 	:platform: Windows, Unix
 	:synopsis:
 

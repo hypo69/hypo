@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.fast_api.html 
+.. module:: src.fast_api.html 
 	:platform: Windows, Unix
 	:synopsis:
 

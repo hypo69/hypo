@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.csv
+.. module::  src.utils.csv
 	:platform: Windows, Unix
 	:synopsis: Utilities for working with CSV and JSON files.
 """

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.firefox._pytest 
+.. module:: src.webdriver.firefox._pytest 
 	:platform: Windows, Unix
 	:synopsis:
 

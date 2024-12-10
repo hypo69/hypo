@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.hb 
+.. module:: src.suppliers.hb 
 	:platform: Windows, Unix
 	:synopsis: Класс собирает значение полей на странице  товара `hb.co.il`. 
     Для каждого поля страницы товара сделана функция обработки поля в родительском классе.

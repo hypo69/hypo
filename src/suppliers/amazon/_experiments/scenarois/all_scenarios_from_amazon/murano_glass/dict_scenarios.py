@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass 
+.. module:: src.suppliers.amazon._experiments.scenarois.all_scenarios_from_amazon.murano_glass 
 	:platform: Windows, Unix
 	:synopsis:
 

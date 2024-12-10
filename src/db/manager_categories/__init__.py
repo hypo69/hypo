@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.db.manager_categories 
+.. module:: src.db.manager_categories 
 	:platform: Windows, Unix
 	:synopsis:
 

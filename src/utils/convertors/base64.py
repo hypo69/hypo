@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.base64 
+.. module:: src.utils.convertors.base64 
 	:platform: Windows, Unix
 	:synopsis: Convert Base64 encoded content to a temporary file
 

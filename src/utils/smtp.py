@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils 
+.. module:: src.utils 
 	:platform: Windows, Unix
 	:synopsis: SMTP Email Interface
 

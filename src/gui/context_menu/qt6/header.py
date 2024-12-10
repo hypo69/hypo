@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.gui.context_menu.qt6 
+.. module:: src.gui.context_menu.qt6 
 	:platform: Windows, Unix
 	:synopsis:
 

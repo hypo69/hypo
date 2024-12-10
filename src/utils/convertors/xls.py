@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors 
+.. module:: src.utils.convertors 
 	:platform: Windows, Unix
 	:synopsis:
 

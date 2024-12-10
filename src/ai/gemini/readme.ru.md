@@ -1,5 +1,5 @@
 ```rst
-.. module: src.ai.gemini
+.. module:: src.ai.gemini
 ```
 [English](https://github.com/hypo69/hypo/tree/master/src/ai/gemini/README.MD)
 # Модуль интеграции Google Generative AI

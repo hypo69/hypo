@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils 
+.. module:: src.utils 
 	:platform: Windows, Unix
 	:synopsis: interface for interacting with FTP servers
 This module provides an interface for interacting with FTP servers. It includes functions to send, receive, and delete files from an FTP server.

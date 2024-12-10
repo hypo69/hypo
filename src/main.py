@@ -25,7 +25,7 @@ It takes user input to select and execute scripts 1 or 2.
 
 Usage Example
 --------------------
-.. module: src 
+.. module:: src 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.scenario.executor
+.. module::  src.scenario.executor
    :platform: Windows, Unix
    :synopsis: Module for executing scenarios.
 

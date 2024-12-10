@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.logger.exceptions
+.. module:: src.logger.exceptions
     :platform: Windows, Unix
     :synopsis: This module defines custom exceptions used in the application.
 

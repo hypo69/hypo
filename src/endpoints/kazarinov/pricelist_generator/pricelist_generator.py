@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov.react 
+.. module:: src.endpoints.kazarinov.react 
 	:platform: Windows, Unix
 	:synopsis: Генератор HTML и PDF для мехиронов Казаринова
 

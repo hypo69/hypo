@@ -1,3 +1,4 @@
+```MD
 # <input code>
 
 ```python
@@ -30,160 +31,131 @@ from tinytroupe.utils import JsonSerializableRegistry
 
 from tinytroupe import openai_utils
 import tinytroupe.utils as utils
+
+class ResultsExtractor:
+
+    def __init__(self):
+        self._extraction_prompt_template_path = os.path.join(os.path.dirname(__file__), 'prompts/interaction_results_extractor.mustache')
+
+        # we'll cache the last extraction results for each type of extraction, so that we can use them to
+        # generate reports or other additional outputs.
+        self.agent_extraction = {}
+        self.world_extraction = {}
+
+    # ... (rest of the code)
 ```
-```
+
 # <algorithm>
 
-**1. Initialization (ResultsExtractor):**
+The code implements a system for extracting and reducing data from agent and world simulations, using an LLM.  A high-level algorithm can be described as follows:
 
-*   Creates an instance of `ResultsExtractor`.
-*   Sets the path to the extraction prompt template.
-*   Initializes empty dictionaries `agent_extraction` and `world_extraction` to cache results.
+1. **Initialization:**
+   - `ResultsExtractor` initializes empty dictionaries for caching extraction results (`agent_extraction`, `world_extraction`).
+   - `ResultsReducer` initializes empty dictionaries for rules (`rules`).
+   - `ArtifactExporter` initializes a base output folder.
 
-**2. Extract Results from Agent:**
+2. **Extraction:**
+   - `extract_results_from_agent`:
+     - Constructs a prompt for the LLM using a template (`interaction_results_extractor.mustache`) with potentially provided fields and hints.
+     - Extracts interaction history from the agent.
+     - Constructs a complete prompt for the LLM.
+     - Sends the prompt to the LLM and caches the result.
 
-*   Takes `TinyPerson` instance and extraction parameters.
-*   Renders the prompt template using `chevron` with provided fields and hints.
-*   Retrieves the interaction history from `tinyperson`.
-*   Constructs an extraction request prompt, including the objective, situation, and interaction history.
-*   Sends the prompt to the OpenAI API via `openai_utils.client().send_message()`.
-*   Extracts JSON data from the response using `utils.extract_json()`.
-*   Caches the result in `self.agent_extraction`.
-*   Returns the extracted result.
+   - `extract_results_from_world`: Similar to `extract_results_from_agent` but considers multiple agents in the world.
+   -  Data flows: TinyPerson/TinyWorld --> `pretty_current_interactions()` --> interaction history --> prompt --> LLM --> extraction result --> `ResultsExtractor` cache.
 
-**3. Extract Results from World:**
+3. **Reduction:**
+   - `reduce_agent`: Iterates through the agent's episodic memory.
+     - For each message, if the role is 'user' or 'assistant', it checks if a reduction rule (`stimulus_type` or `action_type`) exists for the message content and applies the rule if found, creating the `reduction` list.
+     - Data flows: Agent's `episodic_memory` --> `reduce_agent` --> reduction list.
+   - `reduce_agent_to_dataframe`: Converts the reduced data to a Pandas DataFrame.
 
-*   Similar to step 2, but for `TinyWorld` instance.
-*   Constructs a different prompt that considers interactions from multiple agents within the environment.
-*   Caches the result in `self.world_extraction`.
+4. **Export:**
+   - `save_as_json`: Saves the extraction results to a JSON file, combining agent and world results.
 
+5. **Normalization (using Normalizer class):**
+    - `__init__`: Initializes `Normalizer` with elements and `n` (number of output elements).  Constructs LLM prompts to normalize the elements.
+    - `normalize`: Normalizes a given element (or list of elements) if not already in the internal cache, sending a prompt to the LLM. Updates the internal `normalizing_map` for later use.
 
-**4. Save as JSON:**
+**Example data flow in `extract_results_from_agent`:**
 
-*   Saves the cached results (`agent_extraction`, `world_extraction`) to a JSON file.
-
-
-**5. Reduction (ResultsReducer):**
-
-*   Initializes `ResultsReducer` and an empty `results` dictionary.  
-*   Adds reduction rules using `add_reduction_rule`.
-*   Handles `stimulus` and `action` messages:
-    *   If a message is of type 'stimulus' or 'action', and a rule exists, applies that rule, extracting data.
-    *   Adds the extracted data to the `reduction` list.
-*   Creates a DataFrame from the `reduction` list.
-
-
-**6. Export (ArtifactExporter):**
-
-*   Initializes `ArtifactExporter` with a base output folder.
-*   Handles different export formats (txt, json, docx):
-    *   Handles potential issues like invalid characters in artifact names.
-    *   Uses `_compose_filepath` to generate the correct file path.
-    *   Uses appropriate methods (`_export_as_txt`, `_export_as_json`, `_export_as_docx`) to export the artifact data in the selected format.  
-*   Handles string and dictionary inputs for `artifact_data`.
-*   Handles different content types.
+* Input: A `TinyPerson` object.
+* Interaction history (e.g., list of strings) from the agent.
+* LLM prompt is constructed using the interaction history and a template.
+* LLM responds with an extraction.
+* Result is cached in `agent_extraction`.
 
 
-**7. Normalization (Normalizer):**
-
-*   Initializes `Normalizer` with elements, number of desired outputs and verbosity flag.
-*   Gets rid of duplicate elements.
-*   Constructs initial LLM messages using templates.
-*   Sends the messages to the LLM.
-*   Extracts the normalized results.
-
-**8. Normalization (continued):**
-
-*   Uses the caching mechanism (`normalizing_map`) to only normalize elements not already normalized.
-*   Returns normalized results.
-
-
-```
 # <mermaid>
+
 ```mermaid
-graph LR
-    subgraph Initialization
-        A[ResultsExtractor] --> B{agent_extraction};
-        A --> C{world_extraction};
-        B --> D[extract_results_from_agent];
+graph TD
+    subgraph TinyTroupe Data Extraction
+        A[TinyPerson/TinyWorld] --> B{pretty_current_interactions};
+        B --> C[Interaction History];
+        C --> D[Extraction Prompt];
+        D --> E[LLM (OpenAI)];
+        E --> F[Extraction Result];
+        F --> G[ResultsExtractor];
+        G -.-> H[Agent/World Extraction Cache];
     end
-    subgraph Extraction
-        D --> E[openai_utils.client().send_message];
-        E --> F[utils.extract_json];
-        F --> G[cache result];
-        D --> H[extract_results_from_world];
+    subgraph Data Reduction
+        G --> I[ResultsReducer];
+        I -.-> J[Reduction List];
+        J --> K[DataFrame];
     end
-    subgraph Saving
-        G --> I[save_as_json];
-        I --> J{save to file};
+    subgraph Data Export
+        K --> L[save_as_json];
+        L --> M[JSON File];
+        
+        H -.-> M;
+
     end
-    subgraph Reduction
-        K[ResultsReducer] --> L{add_reduction_rule};
-        L --> M[reduce_agent];
-        M --> N[DataFrame creation];
+
+    subgraph Normalizer
+        A --> N[Normalizer];
+        N --> O[LLM (OpenAI) - Normalization];
+        O --> P[Normalized Elements];
+        P --> Q[Normalizing Map];
     end
-    subgraph Exporting
-        O[ArtifactExporter] --> P{export};
-        P --> Q[compose filepath];
-        Q --> R{_export_as_txt};
-        Q --> S{_export_as_json};
-        Q --> T{_export_as_docx};
-    end
-    subgraph Normalization
-        U[Normalizer] --> V{initial LLM message};
-        V --> W[process normalized result];
-        W --> X[normalize];
-    end
+
     
-    A --> D;
-    A --> H;
-    K --> M;
-    O --> P;
-    U --> V;
 ```
+
 # <explanation>
 
-**Imports**:
+**Imports:**
 
-*   `os`, `json`, `chevron`, `logging`, `pandas`, `pypandoc`, `markdown`, `typing`, `openai_utils`: Standard Python libraries and custom libraries from the `tinytroupe` project.  `pypandoc` and `markdown` are used for document format conversion.
-*   `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.factory`, `tinytroupe.utils`: Modules from the `tinytroupe` package, likely containing classes and functions related to agents, environments, and utility functions, respectively.
-*   `openai_utils`: Likely a module from the project that handles interactions with the OpenAI API.
-*   `tinytroupe.utils`: Provides utility functions used throughout the code, such as JSON extraction and prompt template rendering.
-
-
-**Classes**:
-
-*   **`ResultsExtractor`**: Handles data extraction from agents and worlds, caching results for later use.  It's crucial for organizing simulation data and leveraging the results in further analysis or reporting.   `agent_extraction` and `world_extraction` are dictionaries for caching results; the structure is suitable for quick lookup based on the agent/world name.
-
-*   **`ResultsReducer`**: Reduces the extracted data further using predefined rules.  `rules` dictionary allows flexible and customizable data reduction.   The structure is suitable to process historical data and apply reduction rules.
-
-*   **`ArtifactExporter`**: Responsible for exporting the extracted data into various formats (JSON, text, DOCX).   `base_output_folder` makes it easy to control output locations and avoids hardcoding.  `_export_*` methods provide specific format handling, preventing code duplication.
-
-*   **`Normalizer`**: Normalizes textual elements, likely to improve data consistency and quality for subsequent processing steps, potentially important for semantic analysis.  It demonstrates a proper use of caching with `normalizing_map` for efficiency.
-
-**Functions**:
-
-*   `extract_results_from_agent`, `extract_results_from_world`: These functions send prompts to OpenAI to extract insights from interaction histories.
-*   `save_as_json`: Saves extracted results to a JSON file. The method is clear and well-documented.
-*   `add_reduction_rule`: Adds rules to the `ResultsReducer` for further data processing. The code handles the possibility of a rule already existing and raises an exception, a vital aspect for correctness.
-*   `reduce_agent`: Reduces agent data based on defined rules and events, effectively summarizing information extracted from the data, facilitating the process of analyzing agent activities.  The structure carefully considers both stimulus and action types, with the ability to apply custom functions depending on the specific event.
-*   `reduce_agent_to_dataframe`: Creates a pandas DataFrame from the reduced agent data. This step is essential to making the data usable for further analysis.
-*   `export`: Exports an artifact in various formats like JSON, text, or DOCX files.  The function is well-structured, considering different types of input data and output formats, allowing for various uses of this module.
+- `os`, `json`, `chevron`, `logging`, `pandas` are standard Python libraries for file operations, JSON handling, templating, logging, and data manipulation, respectively.
+- `pypandoc` and `markdown`: used for converting markdown to docx (via html intermediary).
+- `typing`: provides type hints to improve code readability and maintainability.
+- `logging`: used for logging messages. `logger = logging.getLogger("tinytroupe")` creates a logger instance named "tinytroupe" to record messages.
+- `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.factory`, `tinytroupe.utils`, `openai_utils`: These are likely internal packages in the TinyTroupe project. They likely define classes and functions related to agents, environments, factories for agent creation, general utility functions (e.g., handling JSON data), and interacting with the OpenAI API.
 
 
-**Variables**:
+**Classes:**
 
-*   `_extraction_prompt_template_path`: Path to the template for constructing prompts to send to the LLM.  This makes the code adaptable to different input structures.
-*   `agent_extraction`, `world_extraction`: Dictionaries to cache the extraction results for agents and worlds, respectively. This improves performance by avoiding redundant API calls.
-*   `results`: An empty dictionary in the `ResultsReducer` class.  Suitable for storing the results of data reduction.
-*   `rules`: A dictionary to store the reduction rules in the `ResultsReducer` class.
+- **`ResultsExtractor`:** Responsible for extracting information from agents and worlds, leveraging LLMs to process interaction histories. The `_extraction_prompt_template_path` aids in customizing prompts. `agent_extraction` and `world_extraction` are caches for the results.
+- **`ResultsReducer`:** Designed to process the extraction results in a rule-based manner.  `add_reduction_rule` allows users to define custom reduction rules based on stimuli types or actions.  This step is crucial for transforming raw LLM output into a more manageable format.
+- **`ArtifactExporter`:** Handles the export of extracted data to various formats (JSON, TXT, DOCX). The `_compose_filepath` function defines the output folder structure and filename convention, and `_export_as_txt`, `_export_as_json`, `_export_as_docx` functions handle the specific export format.
+- **`JsonSerializableRegistry`:** Likely an abstract base class for object serialization that is inherited by `ArtifactExporter`.
+- **`Normalizer`:** This class performs normalization of text elements using an LLM. Its use suggests that the data might contain ambiguous or inconsistent terms, which are to be transformed into standardized ones. The `normalize` method implements a cache to avoid redundant LLM calls.
+
+**Functions:**
+
+- Most functions are clearly documented with docstrings, describing their purpose, arguments, and return values.
+- `extract_results_from_agent`, `extract_results_from_world`:  These functions utilize an LLM (through `openai_utils`) to analyze agent/world interaction history and provide structured extraction results, demonstrating a key integration point with external AI services.
+- `reduce_agent`, `reduce_agent_to_dataframe`: These functions are crucial for data processing and transforming the LLM output into a structured format suitable for further analysis or storage.
 
 
-**Possible Errors or Improvements**:
+**Possible Improvements:**
 
-*   Error handling in `ResultsReducer.add_reduction_rule`: The function should ideally raise a more informative exception if a rule for the trigger already exists. The current exception message is slightly too generic.
+- Error handling could be improved by adding more comprehensive error checks and handling for invalid input types or unexpected LLM responses.
+- Consider using a more robust caching mechanism (e.g., memoization) in the `Normalizer` class.
+- The use of default values like "The main points present in the agent's interactions history" in `extract_results_from_agent` could be made more flexible and configurable.
+- The extraction objective and the resulting prompts could be made more flexible and user-customizable.
 
 
-**Relationships with other parts of the project**:
+**Relationships with other parts of the project:**
 
-*   The code heavily relies on `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.utils`, and `openai_utils`. This clearly indicates that this extraction module is part of a larger TinyTroupe project aimed at agent simulation and interactions.  The relationships to `tinytroupe` classes and functions are crucial for the project's architecture. The `utils` module and `openai_utils` provide important supporting functions to the entire framework.  The use of the OpenAI API suggests a role in data analysis and generation within the broader simulation.
+The code relies heavily on external libraries like OpenAI and Pandas.  It interacts with the `TinyPerson` and `TinyWorld` classes from the `tinytroupe` package, illustrating a clear dependency on classes for representing simulated elements in TinyTroupe. The usage of `utils` modules (like `extract_json`, `dedent`) emphasizes utility functions that simplify data processing.

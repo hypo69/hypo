@@ -7,7 +7,7 @@ from __future__ import annotations
 """
 
 ```rst
-.. module: src.suppliers 
+.. module:: src.suppliers 
 	:platform: Windows, Unix
 	:synopsis:  Базовый класс сбора данных со старницы HTML поставщиков.
     Целевые поля страницы (`название`,`описание`,`спецификация`,`артикул`,`цена`,...) собирает вебдрйвер (class: [`Driver`](../webdriver))

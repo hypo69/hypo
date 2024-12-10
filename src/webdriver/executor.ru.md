@@ -1,5 +1,5 @@
 ```rst
-.. module: src.webdriver.excutor
+.. module:: src.webdriver.excutor
 ```
 [English](https://github.com/hypo69/hypo/blob/master/src/webdriver/executor.md)
 # Документация по `executor.py`

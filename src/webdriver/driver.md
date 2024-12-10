@@ -1,5 +1,5 @@
 ```rst
-.. module: src.webdriver.driver
+.. module:: src.webdriver.driver
 ```
 [Русский](https://github.com/hypo69/hypo/blob/master/src/webdriver/driver.ru.md)
 

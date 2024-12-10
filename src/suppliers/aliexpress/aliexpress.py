@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress 
+.. module:: src.suppliers.aliexpress 
 	:platform: Windows, Unix
 	:synopsis: module provides the `Aliexpress` class, which integrates functionality
 from `Supplier`, `AliRequests`, and `AliApi` for working with AliExpress.

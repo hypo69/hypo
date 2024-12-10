@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.cdata 
+.. module:: src.suppliers.cdata 
 	:platform: Windows, Unix
 	:synopsis:
 

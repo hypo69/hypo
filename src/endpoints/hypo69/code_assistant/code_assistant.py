@@ -20,7 +20,7 @@
     assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
     assistant.process_files()
 
-.. module: src.endpoints.hypo69.code_assistant 
+.. module:: src.endpoints.hypo69.code_assistant 
     :platform: Windows, Unix
     :synopsis: Модуль обучения модели машинного обучения кодовой базе, составления документации к проекту, примеров кода и тестов
 

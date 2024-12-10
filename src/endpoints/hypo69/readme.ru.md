@@ -1,5 +1,5 @@
 ```rst
-.. module: src.endpoints.hypo69
+.. module:: src.endpoints.hypo69
 	.. synopsys: эндпоинты для разработчика 
 ```
 <TABLE >

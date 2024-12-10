@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.fast_api.gemini.backend 
+.. module:: src.fast_api.gemini.backend 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -1,5 +1,5 @@
 ```rst
-.. module: src.ai.anthropic
+.. module:: src.ai.anthropic
 ```
 <TABLE >
 <TR>

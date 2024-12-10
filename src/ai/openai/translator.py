@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai
+.. module::  src.ai.openai
     :platform: Windows, Unix
     :synopsis: Модуль для перевода текста с использованием OpenAI API.
 """

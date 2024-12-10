@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.playwright 
+.. module:: src.webdriver.playwright 
 	:platform: Windows, Unix
 	:synopsis:
 

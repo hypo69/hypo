@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver._experiments 
+.. module:: src.webdriver._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.openai.model 
+.. module:: src.ai.openai.model 
 	:platform: Windows, Unix
 	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook 
+.. module:: src.endpoints.advertisement.facebook 
 	:platform: Windows, Unix
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Katia?)
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.openai.model._experiments 
+.. module:: src.ai.openai.model._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

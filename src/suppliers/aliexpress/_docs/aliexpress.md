@@ -1,7 +1,7 @@
 # <Input Code>
 
 ```rst
-.. module:: src.suppliers.aliexpress
+.. module::  src.suppliers.aliexpress
 ```
 
 # Module Aliexpress
@@ -105,7 +105,7 @@ Pass *args and **kwargs to internal components (`Supplier`, `AliRequests`, `AliA
 
 # <Explanation>
 
-* **Imports**: The directive `.. module:: src.suppliers.aliexpress` in reStructuredText format indicates that this is part of a larger project. Explicit imports are not shown in the snippet.
+* **Imports**: The directive `.. module::  src.suppliers.aliexpress` in reStructuredText format indicates that this is part of a larger project. Explicit imports are not shown in the snippet.
 
 * **Classes**:
   - **`Aliexpress`**: Serves as the primary interface for working with AliExpress, encapsulating initialization, configuration (locale, WebDriver), and functionalities from `Supplier`, `AliRequests`, and `AliApi`.

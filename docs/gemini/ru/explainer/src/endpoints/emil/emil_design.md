@@ -7,13 +7,12 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.emil 
+.. module::src.endpoints.emil 
 	:platform: Windows, Unix
 	:synopsis:
 
 """
 MODE = 'dev'
-
 
 """
 	:platform: Windows, Unix
@@ -80,8 +79,76 @@ class EmilDesign:
             from_url (str, optional): If True, uses URL to describe images. Defaults to False.
         """
         ...
-        # ... (rest of the describe_images method)
-    
+
+        # Define paths for system instructions, examples, images directory, and output file
+        system_instruction_path: Path = (
+            self.base_path 
+            / 'instructions'
+            / 'hand_made_furniture_he.txt'
+        )
+
+        examples_path: Path = ( 
+            self.base_path 
+            / 'instructions'
+            / "examples_he.txt"
+        )
+
+        images_dir: Path = (
+            self.base_path
+            / "images"
+        )
+
+        output_file: Path = (
+            self.base_path
+            /  "images_descritions_he.json"
+        )
+        
+        base_url: str = r'https://emil-design.com/img/images_emil/'
+        trainig_data = read_text_file(system_instruction_path)
+
+        updated_images_path: Path = self.base_path / 'updated_images.txt'
+        
+        system_instruction = read_text_file(system_instruction_path)
+        examples = read_text_file(examples_path)
+        
+        # Prompt for the AI model
+        prompt: str = "איזה רהיטים מוצגים כאן?"
+        
+        # Initialize the AI model with the system instructions
+        model = OpenAIModel(system_instruction=system_instruction, assistant_id='asst_uDr5aVY3qRByRwt5qFiMDk43')
+        
+        # Ask the model to categorize examples
+        response = model.ask(examples, "this is example for build categories")
+        logger.info(response)
+
+        updated_images_list: list = read_text_file(updated_images_path, as_list=True) or []
+
+        images_path_list: list = get_filenames(images_dir)
+        data: list = []
+        
+        for image_path in images_path_list:
+            if image_path in updated_images_list:
+                continue
+
+            # Describe the image either from URL or local file
+            if from_url:
+                response = model.describe_image(str(base_url + image_path), prompt, system_instruction)  # <- url
+            else:
+                response = model.describe_image(images_dir / image_path, prompt, system_instruction)  # <- local file
+
+            if not response:
+                continue
+
+            # Process the response into a structured format
+            res_ns: SimpleNamespace = j_loads_ns(response)
+            setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
+            data.append(res_ns)
+            j_dumps(data, output_file)
+            updated_images_list.append(image_path)
+            save_text_file(updated_images_list, updated_images_path)
+            logger.info(response)
+            # ...
+
     def promote_to_facebook(self):
         """ Promote images and their descriptions to Facebook.
 
@@ -93,14 +160,13 @@ class EmilDesign:
         
         for m in messages:
             message: SimpleNamespace = SimpleNamespace() 
-            setattr(message, 'title', f"{m.parent}\\n{m.category}")
+            setattr(message, 'title', f"{m.parent}\n{m.category}")
             setattr(message, 'description', m.description)
             message.products = SimpleNamespace()
             setattr(message.products, 'local_saved_image', [m.local_saved_image])
            
             post_message(d, message, without_captions=True)
             ...
-
 
     def upload_to_PrestaShop(self):
         """ Upload product information to PrestaShop.
@@ -119,145 +185,98 @@ if __name__ == "__main__":
 
 # <algorithm>
 
-**Algorithm for `describe_images`:**
+**Описание алгоритма работы функции describe_images:**
 
-1. **Initialization:** Defines paths for instructions, examples, image directory, and output file. Loads system instructions and examples from text files.
-2. **Prompt Creation:** Generates an AI prompt.
-3. **AI Model Initialization:** Initializes the OpenAI model with system instructions and assistant ID.
-4. **Example Categorization:** Sends examples to the AI model to categorize them.  
-5. **Image Processing Loop:** Iterates through image files in the directory.
-   - Skips images already processed (from `updated_images.txt`).
-   - Describes the image using the AI model (either from URL or local file).
-   - Parses the AI response into a structured format (using `j_loads_ns`).
-   - Stores the result into the `data` list.
-   - Adds the image path to the `updated_images_list`.
-   - Saves the `updated_images_list` back to the file.
-   - Logs the response.
-6. **Data Saving:** Saves the processed data to a JSON file.
+1. **Инициализация путей:** Определяются пути к файлам инструкций, примеров, директории изображений и выходному файлу.
+2. **Чтение данных:** Читаются файлы инструкций, примеров и список обновленных изображений.
+3. **Формирование запроса:** Формируется запрос к модели OpenAI.
+4. **Инициализация модели:** Инициализируется модель OpenAI с заданными инструкциями.
+5. **Обработка примеров:** Модель OpenAI обрабатывает примеры и строит категории.
+6. **Обработка изображений:** Цикл по списку изображений. Если изображение уже обрабатывалось, пропускается. В противном случае, описывается изображение с помощью модели, результат сохраняется и обновляется список обработанных изображений.
+7. **Сохранение результатов:** Результаты (описания изображений) сохраняются в файл images_descritions_he.json.
+8. **Возврат:** Возвращает `None`
 
-**Algorithm for `promote_to_facebook`:**
+**Описание алгоритма работы функции promote_to_facebook:**
 
-1. **Initialization:** Creates a WebDriver instance, opens the Facebook group URL.
-2. **Load Data:** Loads the image descriptions from the JSON file into the `messages` list.
-3. **Facebook Post Loop:** Iterates through each image description in the `messages` list.
-4. **Message Construction:** Constructs a `SimpleNamespace` object for each image, containing title, description, and image path.
-5. **Facebook Post:** Calls the `post_message` function to post the image and description to Facebook.
+1. **Инициализация драйвера:** Инициализируется драйвер для авторизации на Facebook.
+2. **Получение данных:** Загружаются данные из файла `images_descritions_he.json`.
+3. **Цикл по сообщениям:** Цикл по загруженным данным.
+4. **Формирование сообщений:** Для каждого сообщения формируется заголовок и описание.
+5. **Добавление изображений:** К сообщению добавляются изображения.
+6. **Отправка сообщений:** Сообщения отправляются на Facebook.
+7. **Возврат:** Возвращает `None`
 
-**Data Flow:**
-
-- Image file paths are read from a file.
-- The AI model processes image data (possibly URLs).
-- The processed image data is then saved to JSON file (`images_descriptions_he.json`).
-- `promote_to_facebook` reads this file to get descriptions.
 
 # <mermaid>
 
 ```mermaid
-graph TD
-    A[EmilDesign] --> B{describe_images};
-    B --> C[AI Model];
-    C --> D{Image Processing};
-    D --> E[JSON Save];
-    E --> F[promote_to_facebook];
-    F --> G[Facebook Post];
-    
-    subgraph "AI Model Dependencies"
-        C --> H[OpenAIModel];
-        H --> I[system_instructions]
-        H --> J[examples];
-        I --> K[prompt];
+graph LR
+    subgraph EmilDesign Class
+        EmilDesign --> describe_images
+        EmilDesign --> promote_to_facebook
+        EmilDesign --> upload_to_PrestaShop
     end
+    describe_images --> OpenAIModel: описывает изображения
+    describe_images --> read_text_file: Чтение инструкций и примеров
+    describe_images --> get_filenames: Получение списка файлов
+    describe_images --> j_loads_ns: Разбор JSON
+    describe_images --> j_dumps: Формирование JSON
+    describe_images --> save_text_file: Сохранение обновленного списка
+    promote_to_facebook --> Driver(Chrome): авторизация
+    promote_to_facebook --> j_loads_ns: Загрузка из JSON
+    promote_to_facebook --> post_message: отправка сообщений
+    upload_to_PrestaShop --> Product: создание экземпляра
+    upload_to_PrestaShop --> PrestaShop: взаимодействие с API
+    OpenAIModel --> logger: запись логов
+    logger --> console: вывод в консоль
     
-    subgraph "Facebook Dependencies"
-        F --> L[Facebook WebDriver];
-        L --> M[post_message]
-    end
-    
-    
-    subgraph "Input Data"
-        B --> N[Image Files];
-        N --> D
-    end
-    
-    subgraph "Output Data"
-       E --> O[images_descriptions_he.json];
-       O --> F
-    end
-
-    style B fill:#f9f,stroke:#333,stroke-width:2px;
-    style C fill:#ccf,stroke:#333,stroke-width:2px;
-    style D fill:#ccf,stroke:#333,stroke-width:2px;
-    style E fill:#ccf,stroke:#333,stroke-width:2px;
-    style F fill:#ccf,stroke:#333,stroke-width:2px;
-    style G fill:#ccf,stroke:#333,stroke-width:2px;
 ```
-
 
 # <explanation>
 
-**Imports:**
+**Импорты:**
 
-- `header`: Likely a custom module for general project-wide header or initialization.  
-- `pathlib`: For working with file paths in an object-oriented way.
-- `types`: To work with `SimpleNamespace`.
-- `time`: Used for potential pausing or timing in the code (not currently active).
-- `gs` and `logger`: From the `src` package, likely for Google Cloud Storage interaction and logging configuration.
-- `PrestaShop`: From the `src.endpoints.PrestaShop.api.api` module, for interacting with the PrestaShop API.
-- `Driver`, `Chrome`: From the `src.webdriver.driver` module, for using a web driver (likely for Facebook interaction).
-- `GoogleGenerativeAI`: From `src.ai.gemini`, potentially an unused or backup AI model.
-- `OpenAIModel`: From `src.ai.openai.model`, for interacting with the OpenAI API.
-- `Product`: From `src.product`, likely to interact with product data.
-- `post_message`, `post_title`, `upload_media`: from `src.endpoints.advertisement.facebook.scenarios.post_message`, for posting to Facebook (likely).
-- `read_text_file`, `save_text_file`, `get_filenames`: from `src.utils.file`, for file IO.
-- `j_loads_ns`, `j_dumps`: from `src.utils.jjson`, for JSON parsing into `SimpleNamespace`.
-- `logger`: From `src.logger`, for logging.
+- `header`: Скорее всего, содержит общие импорты для проекта. Необходимо дополнительное контекст.
+- `pathlib`: Обеспечивает удобный способ работы с путями к файлам и директориям.
+- `types`: Предоставляет базовый класс `SimpleNamespace`.
+- `time`: Используется для введения задержек (сейчас закомментировано).
+- `gs`, `logger`: Возможно, внутренние пакеты, управляющие доступом к Google Drive и логами.
+- `PrestaShop`: Класс для взаимодействия с API PrestaShop.
+- `Driver`, `Chrome`: Классы для управления веб-драйвером (вероятно, Chrome).
+- `GoogleGenerativeAI`, `OpenAIModel`: Классы для работы с моделями генеративного искусственного интеллекта (Gemini и OpenAI).
+- `Product`: Класс для представления данных о продукте.
+- `post_message`, `post_title`, `upload_media`: Функции для отправки сообщений и загрузки медиа на Facebook.
+- `read_text_file`, `save_text_file`, `get_filenames`: Функции для работы с файлами.
+- `j_loads_ns`, `j_dumps`: Функции для работы с JSON (вероятно, для обработки данных в формате SimpleNamespace).
+- `logger`: Класс для ведения журналов.
 
-**Classes:**
+**Классы:**
 
-- `EmilDesign`: This is the main class for the module. Its role is to handle image description, Facebook promotion, and PrestaShop uploading.
-    - `base_path`: A class attribute that stores the base path for the module's data, derived from `gs.path.google_drive`.
-    - `__init__`: The constructor.
-    - `describe_images`: Processes image descriptions from instructions and examples using the OpenAI model.
-    - `promote_to_facebook`: Posts image descriptions to a Facebook group.
-    - `upload_to_PrestaShop`: Uploads product data to PrestaShop.
+- `EmilDesign`:  Центральный класс для управления процессом описания изображений и продвижения на Facebook и PrestaShop. Содержит методы для описания изображений, отправки на Facebook и загрузки на PrestaShop.
 
+**Функции:**
 
-**Functions:**
+- `describe_images`:  Описывает изображения на основе инструкций и примеров, используя AI модель (OpenAI).
+- `promote_to_facebook`:  Продвигает описанные изображения на Facebook.
+- `upload_to_PrestaShop`: Загружает данные о продукте на PrestaShop.
 
-- `describe_images`: Takes an optional `from_url` argument indicating whether to use image URLs or local file paths.  This function reads images from local files or provided URLs, processes them using the AI model (OpenAI), and saves the results to a JSON file.
-- `promote_to_facebook`: Posts processed image descriptions to a Facebook group. It uses a WebDriver to interact with Facebook.
-- `upload_to_PrestaShop`: Initializes `Product` and `PrestaShop` objects for uploading product information to PrestaShop.
+**Переменные:**
 
-**Variables:**
+- `MODE`: Переменная, определяющая режим работы (вероятно, 'dev' или 'prod').
+- `base_path`: Путь к основному каталогу данных модуля в Google Drive.
 
-- `MODE`: A global string variable, presumably used to control different modes of operation (e.g., development vs. production).
-- `system_instruction_path`, `examples_path`, `images_dir`, `output_file`, `updated_images_path`: Variables holding file paths.
-- `base_url`: Stores the base URL for images.
-- `trainig_data`, `system_instruction`, `examples`, `prompt`: Variables related to input data and AI prompts.
-- `model`: An instance of `OpenAIModel`.
-- `updated_images_list`: List of already processed images.
-- `images_path_list`: List of image file names in the images directory.
-- `data`: List to hold the results of image descriptions.
-- `res_ns`: Instance of `SimpleNamespace` to hold the processed response.
-- `d`: Instance of `Driver`, used for interacting with the Facebook page.
-- `messages`: The list of image descriptions to post to Facebook.
-- `message`:  A SimpleNamespace used to hold the message data to be posted.
-- `p`: Instance of `Product`.
-- `presta`: Instance of `PrestaShop`.
+**Возможные ошибки и улучшения:**
 
+- **Обработка ошибок:** Отсутствует полная обработка ошибок (например, при чтении файлов, запросах к API). Необходимо добавить обработку исключений (try-except блоки).
+- **Оптимизация:**  В `describe_images` задержки (`time.sleep(20)`) в цикле могут быть неэффективны. Лучше переписать на асинхронную обработку, или использовать пулы потоков (threads).
+- **Документация:**  Не хватает комментариев и документации к методам.
+- **Конкретизация путей:** Пути к файлам инструкций и примеров (`system_instruction_path`, `examples_path`) могут быть более сложными, чем показано в коде.
 
-**Possible Errors/Improvements:**
+**Взаимосвязь с другими частями проекта:**
 
-- **Error Handling:** The code lacks robust error handling. For example, if an API call fails, or if a file cannot be read, it could result in a crash or unexpected behavior.  Add `try...except` blocks to handle potential exceptions.
-- **Input Validation:** Validate inputs to ensure that image URLs are valid and that file paths exist.
-- **Concurrency:** Using asynchronous operations (e.g., using libraries like `asyncio`) for describing multiple images or promoting multiple messages could significantly improve performance.
-- **Facebook Login:**  The code assumes the WebDriver is already logged into Facebook.  Implement Facebook login logic, using appropriate Facebook authentication and session handling.
-- **Rate Limiting:** Add rate limiting to API calls to avoid being blocked by the API providers (OpenAI, Facebook).
-- **Logging details**: The `logger` is used, but details could be improved (e.g., timestamps, more descriptive messages).
-- **`...` Placeholders:** The code has many `...` placeholders that indicate unfinished logic.  Complete these sections.
+- Сильно зависит от различных библиотек (OpenAI, Facebook API, PrestaShop API).
+- Использует классы `Product`, `PrestaShop`, `GoogleGenerativeAI`, `OpenAIModel` из других модулей `src`.
+- Работает с файлами в `gs.path.google_drive`.
+- Использует функции из `src.utils.file`, `src.utils.jjson`.
 
-**Relationships with Other Parts of the Project:**
-
-The code heavily relies on various modules within the `src` package.  Dependencies are explicitly defined by imports.  The `gs`, `logger`, `PrestaShop`, `Driver`, `Chrome`, `Product`, `OpenAIModel`, and specific Facebook posting modules (like `post_message`) are all part of this ecosystem. The system likely uses a configuration system like Google Cloud Storage to manage storage (through `gs`).
-
-This analysis provides a comprehensive understanding of the `emil_design.py` script and its interaction with the surrounding project structure.
+Код выглядит довольно сложным и содержит много мелких деталей, которые необходимо уточнить для полного понимания. Необходимо посмотреть на реализацию функций `read_text_file`, `save_text_file`, `get_filenames` и др.

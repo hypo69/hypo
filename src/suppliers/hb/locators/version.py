@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.hb.locators 
+.. module:: src.suppliers.hb.locators 
 	:platform: Windows, Unix
 	:synopsis:
 

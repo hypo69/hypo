@@ -1,5 +1,5 @@
 ```rst
-.. module: src.webdriver.chrome
+.. module:: src.webdriver.chrome
 ```
 # Chrome WebDriver для Selenium
 

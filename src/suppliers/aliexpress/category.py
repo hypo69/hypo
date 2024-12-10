@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress 
+.. module:: src.suppliers.aliexpress 
 	:platform: Windows, Unix
 	:synopsis:  управление категориями aliexpress
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.html 
+.. module:: src.utils.convertors.html 
 	:platform: Windows, Unix
 	:synopsis: HTML conversion utilities
 Functions:

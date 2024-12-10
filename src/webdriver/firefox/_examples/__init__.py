@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.firefox._examples 
+.. module:: src.webdriver.firefox._examples 
 	:platform: Windows, Unix
 	:synopsis:
 

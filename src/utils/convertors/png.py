@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.png 
+.. module:: src.utils.convertors.png 
 	:platform: Windows, Unix
 	:synopsis: png convertors 
 Module reads text from a file, generates PNG images for each line of text using Pillow,

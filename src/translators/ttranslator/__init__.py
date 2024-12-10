@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.translators.ttranslator 
+.. module:: src.translators.ttranslator 
 	:platform: Windows, Unix
 	:synopsis:
 

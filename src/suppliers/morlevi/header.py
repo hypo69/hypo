@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.morlevi 
+.. module:: src.suppliers.morlevi 
 	:platform: Windows, Unix
 	:synopsis:
 

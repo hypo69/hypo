@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.gemini
+.. module::  src.ai.gemini
    :platform: Windows, Unix
    :synopsis: Google generative AI integration
    https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md

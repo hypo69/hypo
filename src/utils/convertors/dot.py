@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.dot 
+.. module:: src.utils.convertors.dot 
 	:platform: Windows, Unix
 	:synopsis: converts DOT files into PNG images using the Graphviz library
 

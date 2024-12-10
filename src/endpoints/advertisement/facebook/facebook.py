@@ -5,7 +5,7 @@ from __future__ import annotations
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook 
+.. module:: src.endpoints.advertisement.facebook 
     :platform: Windows, Unix
     :synopsis: Модуль рекламы на фейсбук
 

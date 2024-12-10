@@ -1,5 +1,5 @@
 ```rst
-.. module: src.endpoints.bots
+.. module:: src.endpoints.bots
 ```
 <TABLE >
 <TR>

@@ -2,25 +2,16 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-.. module: src.endpoints.kazarinov.kazarinov_bot 
+Модуль реализует Telegram-бота для проекта Kazarinov
+====================================================
+Модуль реализует Telegram-бота, поддерживающего 
+различные сценарии обработки команд и сообщений. Бот взаимодействует 
+с парсером Mexiron и моделью Google Generative AI, поддерживает обработку текстовых сообщений, документов и URL.
+
+.. module:: src.endpoints.kazarinov.kazarinov_bot 
 	:platform: Windows, Unix
 	:synopsis: KazarinovTelegramBot
-
-Описание:
-Модуль реализует Telegram-бота для проекта Kazarinov, поддерживающего 
-различные сценарии обработки команд и сообщений. Бот взаимодействует 
-с парсером Mexiron и моделью Google Generative AI, а также поддерживает 
-обработку текстовых сообщений, документов и URL.
-
-Основные возможности:
-1. Инициализация и настройка Telegram-бота на основе конфигурационного JSON-файла.
-2. Регистрация команд и обработчиков сообщений.
-3. Маршрутизация текстовых сообщений по URL с возможностью обработки ссылок на OneTab и поставщиков.
-4. Использование объекта Mexiron для парсинга данных товаров от поставщиков и генерации прайс-листов.
-5. Генерация ответов на сообщения через Google Generative AI.
-6. Логирование сообщений пользователей и их дальнейшая обработка.
 
 """
 MODE = 'dev'
@@ -47,18 +38,8 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
     token: str
     config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
-
-    # system_instruction: str = Path(
-    #     gs.path.endpoints / 'kazarinov' / 'instructions' / 'system_instruction_mexiron.md'
-    # ).read_text(encoding='UTF-8')
-
-    # mexiron_command_instruction: str = Path(
-    #     gs.path.endpoints / 'kazarinov' / 'instructions' / 'command_instruction_mexiron.md'
-    # ).read_text(encoding='UTF-8')
-
-    # questions_list_path = config.questions_list_path
-
     model:GoogleGenerativeAI = GoogleGenerativeAI(api_key = gs.credentials.gemini.kazarinov, generation_config = {"response_mime_type": "text/plain"})
+    """Эта модель используется для диалога с пользователем. Для обработки сценариев используется модель, определяемая в классе `BotHandler`"""
 
     def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
         """
@@ -92,8 +73,6 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
             ...
             return # <- 
 
-        # log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
-        # save_text_file(f"User {user_id}: {response}\n", Path(log_path), mode='a')
 
         if q in ('--next', '-next', '__next', '-n', '-q'):
             return await self.handle_next_command(update)

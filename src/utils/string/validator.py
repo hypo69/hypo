@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.string 
+.. module:: src.utils.string 
 	:platform: Windows, Unix
 	:synopsis: Модуль валидации строк
 Модуль может предоставлять функции для проверки строк на соответствие определенным критериям или форматам.

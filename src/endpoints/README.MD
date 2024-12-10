@@ -1,5 +1,5 @@
 ```rst
-.. module: src.endpoints
+.. module:: src.endpoints
 ```
 [Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
 

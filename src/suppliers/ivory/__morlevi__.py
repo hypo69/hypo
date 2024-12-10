@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.ivory 
+.. module:: src.suppliers.ivory 
 	:platform: Windows, Unix
 	:synopsis:
 

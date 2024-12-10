@@ -10,7 +10,7 @@ This module provides classes for interacting with and
 processing product category data, particularly relevant for PrestaShop.
 
 ```rst
-.. module: src.category 
+.. module:: src.category 
 	:platform: Windows, Unix
 	:synopsis: Module for working with categories, primarily for PrestaShop.
 ```

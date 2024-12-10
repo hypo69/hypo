@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.dict 
+.. module:: src.utils.convertors.dict 
 	:platform: Windows, Unix
 	:synopsis: Converter for converting between dict and SimpleNamespace objects
 

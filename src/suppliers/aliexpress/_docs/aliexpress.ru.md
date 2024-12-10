@@ -1,5 +1,5 @@
 ```rst
-.. module:: src.suppliers.aliexpress
+.. module::  src.suppliers.aliexpress
 ```
 
 # Модуль Aliexpress
@@ -103,7 +103,7 @@ a = Aliexpress('chrome')
 
 # <объяснение>
 
-* **Импорты**: Директива `.. module:: src.suppliers.aliexpress` в формате reStructuredText указывает, что это часть более крупного проекта. Явные импорты не показаны в фрагменте.
+* **Импорты**: Директива `.. module::  src.suppliers.aliexpress` в формате reStructuredText указывает, что это часть более крупного проекта. Явные импорты не показаны в фрагменте.
 
 * **Классы**:
   - **`Aliexpress`**: Выступает основным интерфейсом для работы с AliExpress, инкапсулируя логику инициализации, настройки (locale, WebDriver) и использование классов `Supplier`, `AliRequests` и `AliApi`.

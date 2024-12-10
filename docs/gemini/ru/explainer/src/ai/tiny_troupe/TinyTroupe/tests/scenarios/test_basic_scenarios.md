@@ -49,78 +49,83 @@ def test_scenario_1():
     # TODO check file creation
 
     control.end()
-
 ```
 
 # <algorithm>
 
-**Шаг 1:** Инициализация
-* Модули `pytest`, `logging`, `sys`, и другие модули, относящиеся к системе и логированию, импортируются.
-* Пути поиска модулей корректируются `sys.path`.
-* Внутри теста функция `control.reset()` сбрасывает состояние системы моделирования.
-* Проверяется, что текущая симуляция равна None.
+**Шаг 1:** Инициализация.
+* Сброс текущих симуляций.
+* Начальная проверка отсутствия активной симуляции.
 
-**Шаг 2:** Начало симуляции
-* Метод `control.begin()` запускает симуляцию.
-* Проверка, что статус симуляции `Simulation.STATUS_STARTED`.
+**Пример:** `control.reset()`  сбрасывает состояние симуляции. `control._current_simulations["default"] is None` проверяет, что текущей симуляции нет.
 
-**Шаг 3:** Создание агента
-* Функция `create_oscar_the_architect()` создает агента типа `TinyPerson`.
-* Переменная `agent` хранит созданный объект.
+**Шаг 2:** Начало симуляции.
+* Инициализация начала симуляции.
+* Проверка статуса симуляции на статус "запущена".
 
-**Шаг 4:** Определение свойств агента
-* Метод `agent.define()` устанавливает значения атрибутов агента (`age`, `nationality`).
+**Пример:** `control.begin()`, `assert control._current_simulations["default"].status == Simulation.STATUS_STARTED`
 
-**Шаг 5:** Проверка трассировки
-* Проверяется, что у симуляции есть кешированная трассировка (`cached_trace`) и исполняемая трассировка (`execution_trace`).
 
-**Шаг 6:** Сохранение точки
-* Метод `control.checkpoint()` сохраняет текущее состояние симуляции.
-* Необходимо добавить проверку создания файлов (TODO).
+**Шаг 3:** Создание агента.
+* Создание агента `oscar_the_architect` с помощью фабрики.
 
-**Шаг 7:** Взаимодействие с агентом
-* Метод `agent.listen_and_act()` моделирует взаимодействие агента с окружением.
-* Метод `agent.define()` устанавливает новое значение атрибута `occupation`.
+**Пример:** `agent = create_oscar_the_architect()`
 
-**Шаг 8:** Еще одна точка сохранения
-* Метод `control.checkpoint()` сохраняет текущее состояние симуляции.
-* Необходимо добавить проверку создания файлов (TODO).
+**Шаг 4:** Определение атрибутов агента.
+* Установка значений атрибутов `age` и `nationality` агента.
 
-**Шаг 9:** Завершение симуляции
-* Метод `control.end()` завершает симуляцию.
+**Пример:** `agent.define("age", 19)`, `agent.define("nationality", "Brazilian")`
+
+**Шаг 5:** Проверка трейсов.
+* Проверка существования кэшированного и исполняемого трейсов.
+
+**Пример:** `assert control._current_simulations["default"].cached_trace is not None`, `assert control._current_simulations["default"].execution_trace is not None`
+
+
+**Шаг 6:** Сохранение точки.
+* Сохранение точки симуляции.
+
+**Пример:** `control.checkpoint()`
+
+**Шаг 7:** Действие агента.
+* Обработка события `listen_and_act` с заданным сообщением.
+
+**Пример:** `agent.listen_and_act("How are you doing?")`
+
+**Шаг 8:** Определение дополнительного атрибута агента.
+* Установка значения атрибута `occupation` агента.
+
+**Пример:** `agent.define("occupation", "Engineer")`
+
+
+**Шаг 9:** Сохранение точки.
+* Сохранение точки симуляции.
+
+**Пример:** `control.checkpoint()`
+
+**Шаг 10:** Окончание симуляции.
+* Окончание симуляции.
+
+**Пример:** `control.end()`
 
 # <mermaid>
 
 ```mermaid
-graph LR
+graph TD
     A[test_scenario_1] --> B{control.reset()};
     B --> C[assert control._current_simulations["default"] is None];
-    B --> D[control.begin()];
-    D --> E{assert control._current_simulations["default"].status == Simulation.STATUS_STARTED};
+    C --> D[control.begin()];
+    D --> E[assert control._current_simulations["default"].status == Simulation.STATUS_STARTED];
     D --> F[agent = create_oscar_the_architect()];
     F --> G[agent.define("age", 19)];
-    G --> H[agent.define("nationality", "Brazilian")];
-    H --> I{assert control._current_simulations["default"].cached_trace is not None};
-    I --> J{assert control._current_simulations["default"].execution_trace is not None};
-    J --> K[control.checkpoint()];
-    K --> L[TODO check file creation];
-    F --> M[agent.listen_and_act("How are you doing?")];
-    M --> N[agent.define("occupation", "Engineer")];
-    N --> O[control.checkpoint()];
-    O --> P[TODO check file creation];
-    O --> Q[control.end()];
-    
-    subgraph TinyTroupe
-        TinyPerson --> TinyPersonFactory;
-        TinyWorld --> TinySocialNetwork;
-        TinyPersonFactory --> TinyPerson;
-        TinySocialNetwork --> TinyWorld;
-        ResultsExtractor --> TinyWorld;
-    end
-    
-    subgraph Testing Utils
-        testing_utils --> *;
-    end
+    F --> H[agent.define("nationality", "Brazilian")];
+    G --> I[assert control._current_simulations["default"].cached_trace is not None];
+    H --> J[assert control._current_simulations["default"].execution_trace is not None];
+    I --> K[control.checkpoint()];
+    J --> L[agent.listen_and_act("How are you doing?")];
+    L --> M[agent.define("occupation", "Engineer")];
+    M --> N[control.checkpoint()];
+    N --> O[control.end()];
 ```
 
 # <explanation>
@@ -128,38 +133,39 @@ graph LR
 **Импорты:**
 
 * `pytest`: Фреймворк для тестирования.
-* `logging`: Модуль для ведения логов.
-* `sys`: Модуль для работы с системными переменными, в том числе для манипуляции `sys.path`.
-* `tinytroupe`, `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.factory`, `tinytroupe.extraction`, `tinytroupe.examples`, `tinytroupe.control`, `testing_utils`:  Все эти импорты относятся к собственному проекту `tinytroupe`, определяя необходимые классы и функции для тестирования сценариев.
-* `from tinytroupe.extraction import default_extractor as extractor`:  Этот импорт подключает функцию `default_extractor` из модуля `tinytroupe.extraction` и переименовывает ее в `extractor`. Вероятнее, это используется для упрощения использования функции.
+* `logging`: Для ведения журналов.
+* `sys`: Модуль для работы с системой.
+* `tinytroupe`, `tinytroupe.agent`, `tinytroupe.environment`, `tinytroupe.factory`, `tinytroupe.extraction`, `tinytroupe.examples`, `tinytroupe.control`: Импортирует модули из пакета `tinytroupe`, содержащие классы и функции для моделирования агентов, окружения, фабрики создания агентов, сбора результатов и контроллера симуляции.
+* `testing_utils`: Вероятно, модуль, содержащий вспомогательные функции для тестирования.  Необходимо посмотреть содержимое `testing_utils`.
 
 
-**Классы:**
+**Классы (предположительно):**
 
-* `TinyPerson`: Класс, представляющий агента в модели.
-* `TinyWorld`, `TinySocialNetwork`: Классы, представляющие окружение и социальную сеть в модели.
-* `TinyPersonFactory`: Класс, вероятно, для создания агентов.
-* `ResultsExtractor`: Класс, отвечающий за извлечение результатов из симуляции.
-* `Simulation`: Класс, представляющий симуляцию.
-
+* `TinyPerson`: Класс, представляющий агента (человека) в симуляции.  Метод `define` устанавливает значения атрибутов агента.  Метод `listen_and_act` реагирует на внешние стимулы.
+* `TinyWorld`, `TinySocialNetwork`: Представляют среду и социальную сеть в симуляции.
+* `TinyPersonFactory`: Класс для создания агентов.
+* `ResultsExtractor`: Класс для обработки результатов.
+* `Simulation`: Класс, представляющий симуляцию. Хранит состояние и трейсы.
 
 **Функции:**
 
-* `test_scenario_1()`: Функция тестирования.
-* `create_lisa_the_data_scientist()`, `create_oscar_the_architect()`, `create_marcos_the_physician()`: Эти функции создают экземпляры агентов с определёнными начальными характеристиками.
+* `test_scenario_1()`: Функция тестирования. Инициализирует симуляцию, создает агента, выполняет действия и проверяет результаты. `control.reset()`, `control.begin()`, `control.checkpoint()`, `control.end()` управляют жизненным циклом симуляции.  `assert` утверждения проверяют ожидаемые результаты.
 
 **Переменные:**
 
-* `control`: Переменная, хранит объект контроллера для управления симуляцией.
-* `agent`: Переменная, хранит объект агента.
+* `control._current_simulations`: Словарь, содержащий текущие симуляции.
+
 
 **Возможные ошибки/улучшения:**
 
-* Не хватает проверок на корректное создание файлов во время сохранения точек. (`TODO`-комментарий).
-* Код содержит `assert` утверждения, что делает тест более строгим. Но можно добавить  более подробные `pytest` ассерты, если это необходимо.
-* Недостаточно комментариев, описывающих назначение переменных и логику каждой функции.
+* Отсутствуют проверки на корректность вводимых данных.
+* `# TODO check file creation`: Необходимо реализовать проверку создания файлов, связанных с чекпоинтами.
+* Не очень понятно, что делает `testing_utils`. Необходима дополнительная информация о его содержимом для понимания полной картины.
 
+**Цепочка взаимосвязей:**
 
-**Взаимосвязи с другими частями проекта:**
+`test_scenario_1()` использует классы и функции из пакета `tinytroupe` для выполнения симуляции.  Тестовая функция вызывает методы контроллера симуляции (control), которые, в свою очередь, взаимодействуют с объектами симуляции (agent).
 
-Код взаимодействует со множеством классов и функций из модуля `tinytroupe`,  это предполагает, что `tinytroupe` содержит классы и методы, отвечающие за создание `TinyPerson`, управление симуляцией, и сохранение данных в файлах. `testing_utils` содержит вспомогательные функции для тестирования. Код неявно полагается на существование и корректную работу компонентов из `tinytroupe`.
+**Выводы:**
+
+Код реализует тест сценария для симуляционной системы. Он проверяет ключевые функции симуляции (старт, чекпоинты, стоп) и работу агента. Необходимо реализовать часть по проверке создания файлов.

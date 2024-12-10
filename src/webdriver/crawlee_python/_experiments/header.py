@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.crawlee_python._experiments 
+.. module:: src.webdriver.crawlee_python._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

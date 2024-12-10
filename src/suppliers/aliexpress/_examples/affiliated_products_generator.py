@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress._examples 
+.. module:: src.suppliers.aliexpress._examples 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.revai 
+.. module:: src.ai.revai 
 	:platform: Windows, Unix
 	:synopsis:
 

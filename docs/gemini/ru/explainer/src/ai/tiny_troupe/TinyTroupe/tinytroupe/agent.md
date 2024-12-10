@@ -43,127 +43,143 @@ AgentOrWorld = Union[Self, "TinyWorld"]
 
 # <algorithm>
 
-The code defines a class `TinyPerson` representing an agent.  The algorithm for `TinyPerson` involves these steps:
+Unfortunately, a visual flowchart for the entire code is not feasible due to its complexity.  Instead, a textual description of the TinyPerson class's core logic will be provided:
 
-1. **Initialization (`__init__` and `_post_init`):**
-    * Takes optional arguments for memory and mental faculties.
-    * Sets default values for attributes like `current_messages`, `environment`, `_actions_buffer`, `_accessible_agents`, etc.
-    * Loads the agent configuration from a Mustache template.
-    * Initializes the agent's initial system message.
-    * Adds the agent to the global list of agents (`TinyPerson.all_agents`).
-    * Resets the prompt (`reset_prompt`) for interactions.
-    * Handles simulation context if available.
+1. **Initialization (`__init__`, `_post_init`):**  
+   - Takes name, optional memory, and mental faculties as input.
+   - Initializes internal attributes:  `current_messages`, `environment`, `_actions_buffer`, `_accessible_agents`, `_displayed_communications_buffer`, and default memory and mental faculties (if not provided).
+   - Creates a configuration dictionary (`_configuration`) with default values (e.g., age, occupation, etc.).
+   - Initializes the prompt template (`_prompt_template_path`).
+   - Loads/creates initial system message (`_init_system_message`).
+   - Registers the agent in the global `all_agents` list.
+   - Resets the prompt (`reset_prompt`) for the agent.
+   - Optionally, handles agent renaming, potentially creating new names if a collision occurs (`_rename`).
 
-2. **Prompt Generation (`generate_agent_prompt`):**
-    * Reads the agent prompt template.
-    * Creates a copy of the agent's configuration.
-    * Adds prompts for mental faculties.
-    * Includes RAI prompts if enabled.
-    * Renders the template using the configuration and mental faculty prompts.
+2. **Agent Actions (`act`, `listen`, `see`, `think`, `socialize`):**
+   - `act`:  
+     - (Optionally) performs a set number of actions (`n`) or until "DONE". 
+     - Uses the `_produce_message` function to get the action from the LLM (OpenAI API call).
+     - Stores the action, cognitive state update, and communication.
+     - Calls `_display_communication` and stores communications in a buffer for later display.
+     - Processes the action using mental faculties (`_mental_faculties`).
+     - Updates cognitive states (`_update_cognitive_state`).
+   - `listen`, `see`, `socialize`, `think`, `internalize_goal`:
+     - Store the stimulus in episodic memory.
+     - Displays the received stimulus, if `communication_display` is True.
+     - (Optionally) Calls a tool method.
 
-3. **Prompt Reset (`reset_prompt`):**
-    * Generates the agent prompt.
-    * Sets up initial messages for the agent interaction.
-    * Retrieves recent messages from episodic memory.
+3. **Configuration Management (`define`, `define_several`, `define_relationships`, `clear_relationships`):**
+   - Allows modification of the agent's configuration.
+   - `define`: Adds a new key-value pair to the agent's configuration or adds a value to an existing group.
+   - `define_relationships`: Adds/updates agent relationships (potentially to multiple agents).
+   - `clear_relationships`: Removes all relationships.
 
-4. **Configuration Management (`define`, `define_several`, `define_relationships`, `clear_relationships`, `related_to`):**
-    * Defines values in the agent's configuration, either directly or into a group.
-    * Defines or updates relationships with other agents.
-    * Clears relationships.
-    * Defines relationships between the current agent and another.  
+4. **Input/Output (`save_spec`, `load_spec`, `encode_complete_state`, `decode_complete_state`):**
+   - `save_spec`: Saves the agent's configuration (and possibly memory) to a JSON file.
+   - `load_spec`: Loads an agent's configuration from a JSON file.
+   - `encode_complete_state`: Serializes the agent's state for storage (critical part).
+   - `decode_complete_state`:  Deserializes the agent's state to restore the state (critical part).
 
-5. **Action and Interaction (`act`, `listen`, `see`, `think`, `internalize_goal`):**
-    * Acts in the environment, optionally until done or for a fixed number of steps.
-    * Produces messages (`_produce_message`).
-    * Stores messages in episodic memory.
-    * Updates cognitive state based on the action output.
-    * Processes action through mental faculties.
-    * Displays communication, optionally in a simplified form.
-    * Listens to others, stores and processes stimuli from the environment.
+5. **Display (`pp_current_interactions`, `pretty_current_interactions`):**
+   - Displays the current agent's interactions and conversation history (messages).
 
-6. **IO (`save_spec`, `load_spec`, `encode_complete_state`, `decode_complete_state`, `create_new_agent_from_current_spec`):**
-    * Saves the agent's configuration to a JSON file.
-    * Loads a JSON agent specification.
-    * Encodes the agent's complete state for serialization.
-    * Decodes and restores the agent state.
-    * Creates a new agent from an existing spec, with a unique name.
-    * Global agent management (`add_agent`, `has_agent`, `get_agent_by_name`, `clear_agents`).
 
-7. **Display and Communication (`_display_communication`, `pop_and_display_latest_communications`, `clear_communications_buffer`)**:  Manages the display of agent interactions, including rich text formatting through the `rich` library.   The agent communicates with the environment if it exists, otherwise directly with the user.
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    subgraph TinyTroupe Agent
-        TinyPerson --> Agent Initialization
-        Agent Initialization --> Prompt Generation
-        Prompt Generation --> Prompt Reset
-        Prompt Reset --> Configuration Management
-        Configuration Management --> Interaction
-        Interaction --> Action & Interaction
-        Action & Interaction --> IO
-        IO --> Agent State Management
-        Agent State Management --> Display & Communication
-    end
-    Interaction --> listen
-    Interaction --> see
-    Interaction --> act
-    Interaction --> think
-    Interaction --> internalize_goal
-    Display & Communication --> _display_communication
-    Display & Communication --> pop_and_display_latest_communications
-    Display & Communication --> clear_communications_buffer
-    Agent --> TinyMentalFaculty
-    TinyMentalFaculty --> RecallFaculty
-    TinyMentalFaculty --> FilesAndWebGroundingFaculty
-    TinyMentalFaculty --> TinyToolUse
-    Agent --> TinyMemory
-    TinyMemory --> EpisodicMemory
-    TinyMemory --> SemanticMemory
-    subgraph Environment
-        Environment --> stimuli
-        stimuli --> TinyPerson
+graph TD
+    subgraph TinyPerson Class
+        A[TinyPerson] --> B(init);
+        B --> C{act/listen/etc};
+        C --> D[OpenAI API Call];
+        D --> E[_produce_message];
+        E --> F[_update_cognitive_state];
+        F --> G[Episodic Memory];
+        G --> H[Semantic Memory];
+        H --> I[Mental Faculties];
+        I --> J[Configuration Management];
+        J --> K{save/load};
+        K --> L[Output/Display];
     end
     subgraph OpenAI API
-        TinyPerson --> OpenAI API --> TinyPerson
+        D --> |API Request| API;
+        API --> |API Response| E;
+    end
+    subgraph Episodic Memory
+        G --> |Store| G;
+        G --> |Retrieve| G;
+    end
+    subgraph Mental Faculties
+        I --> |Process Action| I;
+    end
+    subgraph Semantic Memory
+        H --> |Retrieve Relevant| H;
+        H --> |Add Documents| H;
+    end
+    subgraph Configuration
+       J --> |Define| J;
+       J --> |Define Relationships| J;
     end
 
 ```
 
 # <explanation>
 
-* **Imports:**
-    * `os`, `csv`, `json`, `ast`, `textwrap`, `datetime`, `chevron`, `logging`: Standard Python libraries for file handling, data serialization, string formatting, date/time, templating, and logging.
-    * `tinytroupe.utils`, `tinytroupe.control`: Custom modules from the `tinytroupe` package, providing utility functions (e.g., configuration reading, transaction management) and control mechanisms.
-    * `rich`: A library for rich text output, enabling colorful and formatted agent interactions (important for user experience).
-    * `copy`: For deep copying objects, crucial for serialization and creating new agents from existing configurations without modifying the original.
-    * `JsonSerializableRegistry`:  Base class to support JSON serialization/deserialization of objects.
-    * `typing`: Types for improved code readability and maintainability.
+**1. Imports:**
 
-* **Classes:**
-    * `TinyPerson`: The core agent class, containing methods to interact with the environment, other agents, and perform actions.  Its attributes include memory (`episodic_memory`, `semantic_memory`), cognitive state, actions buffer, accessible agents, configuration, and mental faculties.  The `@post_init` decorator ensures `_post_init` is called after `__init__`.
-    * `TinyMentalFaculty`: Base class for all mental faculties, defining common attributes and abstract methods for processing actions. It facilitates a flexible design for adding new faculties.
-    * `RecallFaculty`, `FilesAndWebGroundingFaculty`, `TinyToolUse`: Specific mental faculties, providing capabilities for recalling information, accessing files/webpages, and using tools, respectively.  Subclasses implement specific action processing, prompt generation, etc. These are crucial for the agent's cognitive abilities.
-    * `TinyMemory`, `EpisodicMemory`, `SemanticMemory`: Represent different memory types. `EpisodicMemory` stores recent interactions; `SemanticMemory` utilizes `llama_index` to retrieve information from documents/webpages.
+- `os`, `csv`, `json`, `ast`, `textwrap`, `datetime`, `chevron`, `logging`, `copy`: Standard Python libraries for file system operations, data serialization, string manipulation, time management, template parsing, logging, and object copying.
+- `rich`: A rich library for formatting and displaying text output.
+- `tinytroupe.utils`, `tinytroupe.control`: Custom modules within the `tinytroupe` package (likely related to utility functions, simulation control, and perhaps other TinyTroupe components).  The import paths indicate a package structure.  `JsonSerializableRegistry` suggests a custom class for serialization.  
+- `llama_index.embeddings.openai`, `llama_index.core`, `llama_index.readers.web`: Modules from the `llama_index` library, indicating an integration with large language models and document loading for semantic memory.
+- `from tinytroupe import openai_utils`: Imports a module specifically for interacting with the OpenAI API.
 
 
-* **Functions:**
-    * `generate_agent_prompt`, `reset_prompt`, `define`, `define_relationships`, `act`, `listen`, `see`, `think`, `internalize_goal`, `save_spec`, `load_spec`, `encode_complete_state`, `decode_complete_state`, `create_new_agent_from_current_spec`:  These functions implement various agent behaviors, configuration management, memory interaction, and communication with other agents. `@transactional` decorator suggests atomicity of these operations in control contexts, possibly within the larger simulation.
-    * Crucial helper methods like `_produce_message`, `_update_cognitive_state`, and `_display_communication` encapsulate internal processing, facilitating cleaner interaction flow and modularity.
 
-* **Variables:**
-    * `config`: Global configuration from `utils.read_config_file()`.  This is critical for accessing external configuration files and parameters from various sources, particularly for external libraries like OpenAI.
-    * `default`: Default parameter values, pulled from the config.
-    * `llmaindex_openai_embed_model`, `Settings.embed_model`: Configuration elements used in integrating with `llama_index`.  This is important for grounding the agent in document knowledge.
+**2. Classes:**
+
+- **`TinyPerson`:** Represents a simulated person.
+    - **Attributes:** `name`, `episodic_memory`, `semantic_memory`, `_mental_faculties`, `_configuration`, `all_agents`, `communication_style`, `communication_display`, `current_messages`, `environment`, `_actions_buffer`, `_accessible_agents`, `_displayed_communications_buffer`, `MAX_ACTIONS_BEFORE_DONE`, `PP_TEXT_WIDTH`, `_prompt_template_path`, `_init_system_message`, `simulation_id`.
+    - **Methods:**  Methods like `__init__`, `_post_init`, `generate_agent_prompt`, `reset_prompt`, `get`, `define`, `define_several`, `define_relationships`, `clear_relationships`, `related_to`, `act`, `listen`, `socialize`, `see`, `think`, `internalize_goal`, `_observe`, `listen_and_act`, `see_and_act`, `think_and_act`, `read_documents_from_folder`, `read_documents_from_web`, `move_to`, `change_context`, `make_agent_accessible`, `make_agent_inaccessible`, `make_all_agents_inaccessible`, `_produce_message`, `_update_cognitive_state`, `_display_communication`, `_push_and_display_latest_communication`, `pop_and_display_latest_communications`, `clear_communications_buffer`, `pop_latest_actions`, `pop_actions_and_get_contents_for`, `__repr__`, `minibio`, `iso_datetime`, `save_spec`, `load_spec`, `encode_complete_state`, `decode_complete_state`, `create_new_agent_from_current_spec`, `add_agent`, `has_agent`, `set_simulation_for_free_agents`, `get_agent_by_name`, `clear_agents`.  Many of these methods handle agent interaction, memory management, configuration changes, and communication.
+
+- **`TinyMentalFaculty`:** Base class for agent mental faculties. Defines common structure.
+    - **Methods:** `process_action`, `actions_definitions_prompt`, `actions_constraints_prompt`.
+
+- **`RecallFaculty`:** Implements the memory recall faculty for the agent.
+
+- **`FilesAndWebGroundingFaculty`:** Allows the agent to access and use local file content and web pages for knowledge grounding. This is an example of how the agent can access external data.
+
+- **`TinyToolUse`:** Enables tool usage by the agent.  Allows agent interaction with simulated tools (which would be implemented in other modules).
+
+- **`TinyMemory`:** Base class for memory implementations (episodic and semantic).
+
+- **`EpisodicMemory`:** Manages the agent's short-term memory (recent events).
+
+- **`SemanticMemory`:** Manages the agent's long-term, factual knowledge, using `llama_index` for vectorized document search.
 
 
-* **Possible Errors/Improvements:**
-    * The code relies on external libraries like `llama_index`, `OpenAI`, and `rich`.  Errors could arise from issues with those libraries (network problems, API errors, etc.).  Robust error handling (e.g., `try...except` blocks) is encouraged to manage possible exceptions, especially when interacting with external APIs or potentially unreliable data sources (e.g., external websites, files).
-
-* **Relationships with other parts of the project:**
-    * The `TinyPerson` class heavily depends on the `tinytroupe.utils` and `tinytroupe.control` modules, as well as external libraries (`llama_index`, `OpenAI`).
-    * The structure suggests the existence of `EpisodicMemory`, `SemanticMemory`, and other mental faculties that define the agent's behavior and interaction capabilities.
+**3. Functions:**
 
 
-**In summary:** This code implements a sophisticated agent class (`TinyPerson`) designed for human-like behavior simulation within a TinyTroupe environment. It's modular, handles memory effectively, integrates with external knowledge sources (via `llama_index`), and employs rich text formatting. Robust error handling and clear modularity are key aspects of its design.  The code is well-commented and explains its design choices, making it easier to understand and maintain.
+**4. Variables:**
+
+- `config`: A configuration object holding settings (likely from a configuration file).
+- `default`: A dictionary containing default parameters for embedding models, display lengths, etc.
+
+**5. Possible Errors/Improvements:**
+
+- **Error Handling:** While the code uses `@repeat_on_error`, more comprehensive error handling (e.g., for the OpenAI API) could be beneficial.
+- **LLM interaction:** The use of the OpenAI API is a key component, but the code's quality could be improved with error handling.
+- **Scalability:** The global `all_agents` dictionary might become a bottleneck as the number of agents grows.  Consider alternative implementations for managing agents in a larger context.
+
+- **Clearer separation of concerns:** Although the code is quite well-structured, some methods could benefit from a tighter division of responsibilities to reduce complexity.
+
+- **Documentation:** While the docstrings are helpful, more detailed explanations and examples within the code (especially for more complex logic) are recommended.
+
+
+**Relationships with Other Parts of the Project:**
+
+This code relies heavily on other parts of the TinyTroupe project, particularly the `utils` module for various utility functions, the `control` module for simulation handling, `openai_utils` for OpenAI API interaction, and the `llama_index` library for semantic memory operations.
+
+
+**Overall:** This code appears well-structured and designed for implementing sophisticated agents.  The use of `llama_index` and the focus on memory aspects are important components.  The combination of episodic and semantic memory, and the handling of external documents via `semantic_memory`, provides a more realistic representation of human-like agents compared to simple LLM-based agents.  Further enhancement could involve adding more robust error handling and more detailed logging to assist with debugging.

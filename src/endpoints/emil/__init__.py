@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.emil 
+.. module:: src.endpoints.emil 
 	:platform: Windows, Unix
 	:synopsis:
 

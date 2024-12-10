@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.gemini 
+.. module:: src.ai.gemini 
 	:platform: Windows, Unix
 	:synopsis: Модуль интерфейса с моделью от Coogle - generativeai
 

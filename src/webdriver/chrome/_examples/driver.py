@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.chrome._examples 
+.. module:: src.webdriver.chrome._examples 
 	:platform: Windows, Unix
 	:synopsis:
 

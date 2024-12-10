@@ -1,6 +1,6 @@
 ```rst
 
-.. module: src.ai
+.. module:: src.ai
 ```
 <TABLE >
 <TR>

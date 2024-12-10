@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.convertors.csv 
+.. module:: src.utils.convertors.csv 
 	:platform: Windows, Unix
 	:synopsis: CSV and JSON conversion utilities
 

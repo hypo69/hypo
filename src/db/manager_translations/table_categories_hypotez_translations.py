@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.db.manager_translations 
+.. module:: src.db.manager_translations 
 	:platform: Windows, Unix
 	:synopsis:
 

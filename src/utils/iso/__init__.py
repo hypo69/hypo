@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.iso 
+.. module:: src.utils.iso 
 	:platform: Windows, Unix
 	:synopsis:
 

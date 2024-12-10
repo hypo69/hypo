@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.kualastyle 
+.. module:: src.suppliers.kualastyle 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -106,6 +106,7 @@ class TinyPersonFactory(TinyFactory):
         self.generated_minibios = [] # keep track of the generated persons. We keep the minibio to avoid generating the same person twice.
         self.generated_names = []
 
+
     @staticmethod
     def generate_person_factories(number_of_factories, generic_context_text):
         """
@@ -123,99 +124,88 @@ class TinyPersonFactory(TinyFactory):
 
 # <algorithm>
 
-**Описание алгоритма:**
+**Шаг 1:** Импорт необходимых библиотек (os, json, chevron, logging, copy, openai_utils, TinyPerson, utils, transactional).
 
-Класс `TinyFactory` служит базовым классом для создания различных фабрик. Он хранит список созданных фабрик `all_factories` для последующего использования и поддерживает механизм кэширования состояний.
-Класс `TinyPersonFactory` наследуется от `TinyFactory` и отвечает за генерацию агентов `TinyPerson` на основе контекста.
-Алгоритм генерации `TinyPersonFactory`:
-1. При создании фабрики генерируется уникальный идентификатор `name`.
-2. Фабрика добавляется в глобальный словарь `all_factories`.
-3. При генерации списка `TinyPersonFactory` используется OpenAI API для получения описаний людей.
-4. На основе полученных описаний создаются экземпляры `TinyPersonFactory`.
-5. Для каждого агента создается экземпляр `TinyPerson` и устанавливаются необходимые атрибуты.
-6. Генерация агента происходит в цикле с определенным количеством попыток, если генерация терпит неудачу, то генерируется новый агент.
-7. Генерируются имена и мини-биографии агентов, чтобы не генерировать одинаковых.
+**Шаг 2:** Создание базового класса `TinyFactory`:
+    * Хранит словарь `all_factories` для хранения всех созданных фабрик.
+    * `__init__`: Инициализирует фабрику, генерирует уникальный идентификатор, сохраняет `simulation_id` и добавляет себя в `all_factories`.
+    * `__repr__`: Возвращает строковое представление фабрики.
+    * `add_factory`: Добавляет фабрику в `all_factories`, проверяя уникальность имени.
+    * `set_simulation_for_free_factories`: Устанавливает `simulation_id` для фабрик, если он не задан.
+    * `clear_factories`: Очищает `all_factories`.
+    * `encode_complete_state`, `decode_complete_state`: Методы для кодирования/декодирования состояния фабрики для кэширования.
+**Шаг 3:** Создание дочернего класса `TinyPersonFactory`, наследующего от `TinyFactory`:
+    * `__init__`: Инициализирует фабрику, сохраняет контекст, путь к шаблону, списки сгенерированных мини-био и имен.
+    * `generate_person_factories`: Создает список `TinyPersonFactory` объектов на основе запроса к OpenAI.
+    * `generate_person`: Генерирует `TinyPerson` объект на основе текущего контекста и дополнительных параметров. Использует шаблон и вызывается через `_aux_model_call`.
+    * `_aux_model_call`:  Вспомогательная функция для вызова модели OpenAI, позволяющая использовать декоратор `@transactional`.
+    * `_setup_agent`: Настраивает `TinyPerson` объект с параметрами, полученными от OpenAI.
 
 
 # <mermaid>
 
 ```mermaid
-graph TD
+graph LR
     subgraph TinyFactory
         TinyFactory --> encode_complete_state;
-        TinyFactory --> decode_complete_state;
-        TinyFactory --> add_factory;
-        TinyFactory --> set_simulation_for_free_factories;
-        TinyFactory --> clear_factories;
+        encode_complete_state --> state;
+        state --> decode_complete_state;
+        decode_complete_state --> TinyFactory;
     end
     subgraph TinyPersonFactory
         TinyPersonFactory --> generate_person_factories;
-        generate_person_factories --> openai_utils.client().send_message;
-        openai_utils.client().send_message --> utils.extract_json;
-        utils.extract_json --> TinyPersonFactory (for each person);
+        generate_person_factories --> openai_utils;
+        openai_utils --> result;
+        result --> TinyPersonFactory;
         TinyPersonFactory --> generate_person;
-        generate_person --> openai_utils.client().send_message;
-        openai_utils.client().send_message --> utils.extract_json;
-        utils.extract_json --> TinyPerson;
+        generate_person --> _aux_model_call;
+        _aux_model_call --> openai_utils;
+        openai_utils --> agent_spec;
+        agent_spec --> TinyPerson;
         TinyPerson --> _setup_agent;
-        _setup_agent --> TinyPerson.define/define_several;
+        _setup_agent --> TinyPersonFactory;
     end
-
-    openai_utils.client --> TinyPersonFactory;
-    utils --> TinyPersonFactory;
-    openai_utils --> TinyFactory;
-    TinyPerson --> TinyPersonFactory;
-    TinyPersonFactory --(add)--> TinyFactory;
+    TinyFactory --> TinyPersonFactory;
 ```
-
 
 # <explanation>
 
 **Импорты:**
 
-- `os`:  Для работы с операционной системой, в частности, для получения пути к файлам.
-- `json`: Для работы с JSON-данными.
-- `chevron`: Для шаблонизации текста (Mustache).
-- `logging`: Для ведения логов (отладки).
-- `copy`: Для создания глубоких копий объектов.
-- `openai_utils`:  Внутри проекта `tinytroupe`, вероятно, для взаимодействия с API OpenAI.
-- `TinyPerson`:  Класс из модуля `tinytroupe.agent`, представляющий агента.
-- `utils`:  Модуль `tinytroupe.utils` содержит вспомогательные функции, скорее всего, для работы с данными, например, для извлечения JSON из строки.
-- `transactional`: Из модуля `tinytroupe.control`,  вероятно, для управления транзакциями и кэшированием.
+* `os`, `json`, `chevron`, `logging`, `copy`: Стандартные библиотеки Python, используемые для работы с файлами, данными, логированием и копированием объектов.
+* `openai_utils`:  Возможно, из собственной библиотеки (`src.tinytroupe.openai_utils`) для работы с API OpenAI, предоставляя интерфейс для отправки запросов.
+* `TinyPerson`: Из пакета `tinytroupe.agent`, определяет класс `TinyPerson`, представляющий агента.
+* `utils`: Из пакета `tinytroupe.utils`, содержит вспомогательные функции (например, `fresh_id`, `extract_json`).
+* `transactional`: Из пакета `tinytroupe.control`, содержит декоратор `@transactional`, вероятно, для управления транзакциями и кэшированием.
 
 **Классы:**
 
-- `TinyFactory`: Базовый класс для фабрик. Хранит все созданные фабрики `all_factories`.  Определяет методы для кэширования состояний и обработки операций добавления фабрик.
-- `TinyPersonFactory`: Наследуется от `TinyFactory` и отвечает за генерацию агентов `TinyPerson`. Хранит контекст, шаблон запроса, мини-биографии и имена сгенерированных агентов для избежания дублирования.
+* `TinyFactory`: Базовый класс для фабрик, используемых для создания различных типов объектов.  `all_factories` – словарь для хранения созданных фабрик.  Включает методы для добавления, удаления и получения фабрик, а также методы `encode_complete_state` и `decode_complete_state` для кэширования состояния.
+* `TinyPersonFactory`: Наследуется от `TinyFactory` и предназначен для создания `TinyPerson` объектов. Содержит `context_text`, для хранения данных, используемых в процессе создания `TinyPerson`.
 
 **Функции:**
 
-- `__init__` (в обоих классах): Инициализирует объекты.
-- `__repr__`: Возвращает строковое представление объекта.
-- `set_simulation_for_free_factories`: Устанавливает `simulation_id` для не связанных с симуляцией фабрик, если он не задан.
-- `add_factory`: Добавляет фабрику в глобальный список `all_factories`.
-- `clear_factories`: Очищает глобальный список фабрик.
-- `encode_complete_state`/`decode_complete_state`: Методы для кодирования и декодирования состояния объекта в формат, подходящий для кэширования.
-- `generate_person_factories`: Генерирует список `TinyPersonFactory` с помощью OpenAI LLM. Получает информацию о числе агентов и контекст.
-- `generate_person`: Генерирует экземпляр `TinyPerson` с помощью OpenAI. Принимает контекст и особенности агента.
-- `_aux_model_call`: Вспомогательная функция для вызова модели, позволяющая использовать декоратор `@transactional`.
-- `_setup_agent`: Подготовка агента с помощью переданных параметров.
+* `__init__`: Инициализирует экземпляры классов.
+* `generate_person_factories`: Генерирует `TinyPersonFactory` объекты с использованием OpenAI.
+* `generate_person`: Генерирует `TinyPerson` объект с использованием OpenAI на основе шаблона и контекста.
+* `_aux_model_call`: Вспомогательная функция для вызова модели OpenAI, позволяющая использовать декоратор `@transactional`.
+* `_setup_agent`: Настраивает `TinyPerson` объект.
 
 **Переменные:**
 
-- `all_factories`: Словарь, хранящий все созданные фабрики.
-- `simulation_id`: Идентификатор симуляции.
-- `person_prompt_template_path`: Путь к файлу шаблона для запроса к OpenAI.
+* `all_factories`: Словарь, содержащий все созданные фабрики.
+* `simulation_id`: Идентификатор симуляции.
+* `context_text`: Текст, используемый для генерации агентов.
 
 **Возможные ошибки и улучшения:**
 
-- Отсутствие проверки корректности входных данных (например, `number_of_factories` в `generate_person_factories`).
-- Необходимо добавить логирование ошибок при вызовах OpenAI API.
-- При генерации агентов использование `try-except`  для обработки потенциальных исключений из OpenAI API.
-- Дополнить документацию классами и методами для лучшей читаемости.
-- Добавить обработку пустых ответов от OpenAI API.
-- Разделение логики генерации агента (`generate_person`) на отдельные функции для улучшения структуры и возможности повторного использования.
+* Отсутствие явного указания ошибок: Может быть неясно, что происходит, если OpenAI возвращает неверные данные.
+* Модульность: Можно выделить отдельный класс для работы с шаблонами, чтобы код стал более модульным.
+* Обработка исключений: Функция `generate_person` должна лучше обрабатывать исключения при вызове модели OpenAI.
+* Проверка параметров: Важно проверять входящие параметры (например, количество фабрик в `generate_person_factories`).
+* Документация: Документация к методам `_setup_agent`, `_aux_model_call` и некоторым другим может быть улучшена для большей ясности.
 
-**Цепочка взаимосвязей:**
+**Взаимосвязи с другими частями проекта:**
 
-`TinyFactory` -> `TinyPersonFactory` -> `openai_utils` -> `TinyPerson` -> `utils`
+* `openai_utils` и `TinyPerson` используются для генерации и управления агентами, что указывает на тесную связь с другими модулями, отвечающими за обработку данных OpenAI и работу с агентами.
+* `utils` и `transactional` служат вспомогательными функциями и инструментами для обработки данных и управления транзакциями соответственно, которые подразумевают тесную связь с другими частями приложения.

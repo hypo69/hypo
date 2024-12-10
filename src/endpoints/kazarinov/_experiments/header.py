@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov._experiments 
+.. module:: src.endpoints.kazarinov._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

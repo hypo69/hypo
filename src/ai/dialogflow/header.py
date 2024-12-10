@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.dialogflow 
+.. module:: src.ai.dialogflow 
 	:platform: Windows, Unix
 	:synopsis:
 

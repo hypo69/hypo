@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.hypo69.small_talk_bot 
+.. module:: src.endpoints.hypo69.small_talk_bot 
 	:platform: Windows, Unix
 	:synopsis:
 

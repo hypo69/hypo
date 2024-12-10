@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov 
+.. module:: src.endpoints.kazarinov 
 	:platform: Windows, Unix
 	:synopsis: Module that handles model training using GoogleGenerativeAI for the Kazarinov project
 

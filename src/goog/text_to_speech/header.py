@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.text_to_speech 
+.. module:: src.goog.text_to_speech 
 	:platform: Windows, Unix
 	:synopsis:
 

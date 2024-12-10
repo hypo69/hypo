@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.hypo69.code_assistant._experiments 
+.. module:: src.endpoints.hypo69.code_assistant._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

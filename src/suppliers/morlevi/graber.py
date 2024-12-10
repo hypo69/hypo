@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.morlevi 
+.. module:: src.suppliers.morlevi 
 	:platform: Windows, Unix
 	:synopsis: Класс собирает значение полей на странице  товара `morlevi.co.il`. 
     Для каждого поля страницы товара сделана функция обработки поля в родительском классе.

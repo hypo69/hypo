@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.goog.spreadsheet._examples 
+.. module:: src.goog.spreadsheet._examples 
 	:platform: Windows, Unix
 	:synopsis:
 

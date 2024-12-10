@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.playwright 
+.. module:: src.webdriver.playwright 
 	:platform: Windows, Unix
 	:synopsis:
 https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2

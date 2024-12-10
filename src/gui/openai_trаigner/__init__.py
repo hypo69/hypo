@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.gui.openai_trаigner 
+.. module:: src.gui.openai_trаigner 
 	:platform: Windows, Unix
 	:synopsis:
 

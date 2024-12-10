@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.webdriver.edge._examples 
+.. module:: src.webdriver.edge._examples 
 	:platform: Windows, Unix
 	:synopsis:
 

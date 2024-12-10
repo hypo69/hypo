@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress 
+.. module:: src.suppliers.aliexpress 
 	:platform: Windows, Unix
 	:synopsis: Класс собирает значение полей на странице  товара `aliexpress.com`. 
     Для каждого поля страницы товара сделана функция обработки поля в родительском классе.

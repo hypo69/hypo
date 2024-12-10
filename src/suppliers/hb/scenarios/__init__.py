@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.hb.scenarios 
+.. module:: src.suppliers.hb.scenarios 
 	:platform: Windows, Unix
 	:synopsis:
 

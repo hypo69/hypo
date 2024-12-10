@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.utils 
+.. module:: src.suppliers.aliexpress.utils 
 	:platform: Windows, Unix
 	:synopsis: Module for loading locales data from JSON file.
 

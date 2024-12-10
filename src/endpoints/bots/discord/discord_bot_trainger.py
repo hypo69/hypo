@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.bots.discord 
+.. module:: src.endpoints.bots.discord 
 	:platform: Windows, Unix
 	:synopsis:
 

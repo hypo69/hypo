@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.driver
+.. module::  src.webdriver.driver
    :platform: Windows, Unix
    :synopsis: Модуль для работы с веб-драйверами Selenium.
 

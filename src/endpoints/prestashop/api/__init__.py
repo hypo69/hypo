@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop.api 
+.. module:: src.endpoints.prestashop.api 
 	:platform: Windows, Unix
 	:synopsis:
 

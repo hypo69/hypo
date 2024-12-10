@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.fast_api 
+.. module:: src.fast_api 
 	:platform: Windows, Unix
 	:synopsis:This module provides a FastAPI application for interacting with the OpenAI model.
 It includes API endpoints for querying the model and training it based on provided data.

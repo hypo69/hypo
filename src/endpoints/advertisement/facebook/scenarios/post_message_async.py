@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook.scenarios.post_message_async 
+.. module:: src.endpoints.advertisement.facebook.scenarios.post_message_async 
 	:platform: Windows, Unix
 	:synopsis: Публикация сообщения из `aliexpress` промо
 

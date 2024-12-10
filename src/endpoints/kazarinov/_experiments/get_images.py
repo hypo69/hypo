@@ -6,7 +6,7 @@
 Список картинок, сгенерированный ИИ
 ====================================
 
-.. module: src.endpoints.kazarinov._experiments 
+.. module:: src.endpoints.kazarinov._experiments 
 	:platform: Windows, Unix
 	:synopsis:
 

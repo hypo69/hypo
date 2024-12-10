@@ -1,5 +1,5 @@
 ```rst
-.. module: src.logger
+.. module:: src.logger
 ```
 <TABLE >
 <TR>

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.product 
+.. module:: src.product 
 	:platform: Windows, Unix
 	:synopsis: Product module
 External classes and attributes:

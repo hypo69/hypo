@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement 
+.. module:: src.endpoints.advertisement 
 	:platform: Windows, Unix
 	:synopsis:
 

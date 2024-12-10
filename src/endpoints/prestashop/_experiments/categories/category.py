@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop._experiments.categories 
+.. module:: src.endpoints.prestashop._experiments.categories 
 	:platform: Windows, Unix
 	:synopsis:
 

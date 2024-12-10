@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.aliexpress.campaign._pytest 
+.. module:: src.suppliers.aliexpress.campaign._pytest 
 	:platform: Windows, Unix
 	:synopsis:
 

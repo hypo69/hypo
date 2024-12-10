@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.ai.helicone 
+.. module:: src.ai.helicone 
     :platform: Windows, Unix
     :synopsis:
 

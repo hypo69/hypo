@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils._examples.get_relative_path 
+.. module:: src.utils._examples.get_relative_path 
 	:platform: Windows, Unix
 	:synopsis:
 

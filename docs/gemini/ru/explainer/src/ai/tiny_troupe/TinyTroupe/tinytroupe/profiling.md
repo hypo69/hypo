@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from typing import List
 from tinytroupe.agent import TinyPerson
 
+
 def plot_age_distribution(agents:List[TinyPerson], title:str="Age Distribution", show:bool=True):
     """
     Plots the age distribution of the given agents.
@@ -63,90 +64,92 @@ def plot_interest_distribution(agents:List[TinyPerson], title:str="Interest Dist
 
 # <algorithm>
 
+**Алгоритм работы функций `plot_age_distribution` и `plot_interest_distribution`**
+
 **plot_age_distribution:**
 
-1. **Input:** List of `TinyPerson` objects (`agents`), optional title and display flag.
-2. **Extract ages:** Create a list `ages` containing the `age` attribute of each agent.
-3. **Create DataFrame:** Create a Pandas DataFrame `df` from the `ages` list, with the column named "Age".
-4. **Plot histogram:** Plot a histogram of the ages using `df["Age"].plot.hist(bins=20, title=title)`. This visualizes the age distribution.
-5. **Display (Optional):** If `show` is True, display the plot using `plt.show()`.
-6. **Return DataFrame:** Return the DataFrame `df` containing the age data.
-
+1. **Получение данных:** Из списка `agents` извлекаются значения `age` для каждого агента и сохраняются в список `ages`.
+2. **Создание DataFrame:** Данные `ages` преобразуются в Pandas DataFrame `df` с единственной колонкой "Age".
+3. **Гистограмма:** Используется метод `.plot.hist()` для построения гистограммы распределения возраста, заданная переменными `bins` и `title`.
+4. **Вывод графика:** Если `show=True`, то график отображается с помощью `plt.show()`.
+5. **Возврат DataFrame:** Возвращается DataFrame `df`, содержащий данные для построения гистограммы.
 
 **plot_interest_distribution:**
 
-1. **Input:** List of `TinyPerson` objects (`agents`), optional title and display flag.
-2. **Extract interests:** Create a list `interests` containing the `interests` attribute of each agent.  (Assumes `interests` is a list itself).
-3. **Create DataFrame:** Create a Pandas DataFrame `df` from the `interests` list, with the column named "Interests".
-4. **Plot pie chart:** Plot a pie chart of the interest distribution using `df["Interests"].value_counts().plot.pie(title=title)`. This visualizes the frequency of each interest.
-5. **Display (Optional):** If `show` is True, display the plot using `plt.show()`.
-6. **Return DataFrame:** Return the DataFrame `df` containing the interest data.
+1. **Получение данных:** Из списка `agents` извлекаются значения `interests` для каждого агента и сохраняются в список `interests`.
+2. **Создание DataFrame:** Данные `interests` преобразуются в Pandas DataFrame `df` с единственной колонкой "Interests".
+3. **Круговая диаграмма:** Используется метод `.value_counts()` для подсчета количества каждого значения интереса и метод `.plot.pie()` для построения круговой диаграммы распределения интересов, заданной переменной `title`.
+4. **Вывод графика:** Если `show=True`, то график отображается с помощью `plt.show()`.
+5. **Возврат DataFrame:** Возвращается DataFrame `df`, содержащий данные для построения круговой диаграммы.
 
+**Примеры:**
+
+* `plot_age_distribution([TinyPerson(age=20), TinyPerson(age=25), TinyPerson(age=20)])` создает гистограмму возраста, показывающую два человека 20 лет и одного человека 25 лет.
+* `plot_interest_distribution([TinyPerson(interests=["reading"]), TinyPerson(interests=["reading"]), TinyPerson(interests=["sport"])])` создает круговую диаграмму, показывающую распределение интересов.
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[Main Script] --> B{plot_age_distribution};
-    B --> C[Extract ages];
-    C --> D[Create DataFrame];
-    D --> E[Plot Histogram];
-    E --> F[Display Plot (Optional)];
-    F --> G[Return DataFrame];
-    B --> H{plot_interest_distribution};
-    H --> I[Extract interests];
-    I --> J[Create DataFrame];
-    J --> K[Plot Pie Chart];
-    K --> L[Display Plot (Optional)];
-    L --> M[Return DataFrame];
+    A[plot_age_distribution] --> B{ages};
+    B --> C[DataFrame];
+    C --> D(hist plot);
+    D --> E[plt.show()];
+    E --> F[return df];
+    
+    A1[plot_interest_distribution] --> G{interests};
+    G --> H[DataFrame];
+    H --> I(pie chart);
+    I --> J[plt.show()];
+    J --> K[return df];
+    
     subgraph TinyPerson
-        TinyPerson --> C;
-        TinyPerson --> I;
+        TinyPerson --> agents;
     end
-
-    style B fill:#f9f,stroke:#333,stroke-width:2px;
-    style H fill:#ccf,stroke:#333,stroke-width:2px;
 ```
 
 # <explanation>
 
 **Импорты:**
 
-- `pandas as pd`:  Импортирует библиотеку Pandas для работы с DataFrame, необходимую для манипуляции и анализа данных.
-- `matplotlib.pyplot as plt`: Импортирует библиотеку Matplotlib для визуализации данных, в частности, построения гистограмм и круговых диаграмм.
-- `from typing import List`: Импортирует тип данных `List` из модуля `typing`, что позволяет явно указывать типы данных аргументов функций.
-- `from tinytroupe.agent import TinyPerson`: Импортирует класс `TinyPerson` из модуля `tinytroupe.agent`.  Это указывает, что `TinyPerson` определен в другом файле (`agent.py`) в папке `tinytroupe` проекта.
+- `pandas as pd`: Библиотека для работы с таблицами данных. Используется для создания DataFrame и построения графиков.
+- `matplotlib.pyplot as plt`: Библиотека для визуализации данных. Используется для построения гистограмм и круговых диаграмм.
+- `typing.List`: Модуль для объявления типов. Используется для определения, что аргумент `agents` является списком.
+- `tinytroupe.agent import TinyPerson`: Импортирует класс `TinyPerson` из модуля `tinytroupe.agent`. Это ключевой компонент, описывающий агентов, чьи характеристики (возраст, интересы) анализируются. Связь с другими частями проекта осуществляется через этот импорт, устанавливая зависимости между модулями `profiling` и `agent`.
 
 **Классы:**
 
-- `TinyPerson`:  Этот класс не показан полностью в данном фрагменте кода, но предполагается, что он хранит информацию об агентах, включая их возраст (`age`) и интересы (`interests`).  Важно, что в методах `plot_age_distribution` и `plot_interest_distribution` предполагается, что объекты `TinyPerson` обладают атрибутом `get("age")`, `get("interests")` для доступа к этим данным.
+- `TinyPerson`: Представлен, но не описан в данном фрагменте.  Важно, чтобы этот класс был определен в `tinytroupe.agent`. Он описывает агентов и, по всей видимости, имеет атрибуты `age` и `interests`. Без доступа к определению класса `TinyPerson` невозможно дать полное описание.
+
 
 **Функции:**
 
-- `plot_age_distribution(agents, title="Age Distribution", show=True)`:  Функция строит гистограмму распределения возраста агентов.
+- `plot_age_distribution(agents, title="Age Distribution", show=True)`: Строит гистограмму распределения возраста агентов.
     - `agents`: Список объектов `TinyPerson`.
     - `title`: Заголовок графика.
-    - `show`: Флаг отображения графика. Возвращает Pandas DataFrame с данными.
-- `plot_interest_distribution(agents, title="Interest Distribution", show=True)`:  Функция строит круговую диаграмму распределения интересов агентов.
+    - `show`: Флаг, определяющий вывод графика.
+    - Возвращает DataFrame с данными для построения графика.
+
+- `plot_interest_distribution(agents, title="Interest Distribution", show=True)`: Строит круговую диаграмму распределения интересов агентов.
     - `agents`: Список объектов `TinyPerson`.
     - `title`: Заголовок графика.
-    - `show`: Флаг отображения графика. Возвращает Pandas DataFrame с данными.
+    - `show`: Флаг, определяющий вывод графика.
+    - Возвращает DataFrame с данными для построения графика.
 
 **Переменные:**
 
-- `ages`: Список чисел, представляющих возраст каждого агента.
-- `interests`: Список, содержащий данные об интересах каждого агента.
-- `df`: DataFrame, используемый для хранения и обработки данных, необходимых для построения графиков.
+- `ages`: Список чисел, представляющих возраст агентов.
+- `interests`: Список строк, представляющих интересы агентов.
+- `df`: DataFrame, используемый для хранения и визуализации данных.
 
-**Возможные ошибки и улучшения:**
+**Возможные ошибки или области для улучшений:**
 
-- **Обработка ошибок:** Если `agent.get("age")` или `agent.get("interests")` возвращают `None` для какого-либо агента, произойдёт ошибка.  Нужно добавить обработку исключений (например, `try...except`).
-- **Типизация:** Дополнительно можно указать типы данных для переменных, например, тип данных для `interests` (например, список строк).
-- **Улучшенная обработка интересов:** Если интересы могут быть списками строк, то стоит учесть это при построении pie-chart'ов, и в случае, если список пуст, то `value_counts()` может выкинуть исключение.  Следует рассмотреть более гибкие варианты.
-- **Поля:** Важно, чтобы `age` и `interests` были корректными полями в объекте `TinyPerson`.
-- **Документация:** Добавьте подробную документацию для `TinyPerson`, чтобы прояснить, как получить `age` и `interests`.
-- **Модульная организация:**  Для поддержки читабельности и масштабируемости, стоит рассмотреть структурирование кода в отдельные модули и классы для отдельных функций.
+- **Обработка ошибок:** Функции не обрабатывают случаи, когда `agents` может быть пустым списком или когда значения `age` или `interests` отсутствуют в объектах `TinyPerson`. Добавление проверки на эти случаи повысит надежность кода.
+- **Документация:** Добавьте более подробную документацию для функций, включая возможные исключения и варианты использования.
+- **Модульность:** Рассмотрите возможность разделить функции по категориям, например, `plot_age_distribution`, `plot_interest_distribution`, `plot_social_network_analysis`, для лучшей модульности.
+- **Глубокий анализ:**  Функции не проводят дополнительный анализ полученных данных. Например, вывод среднего возраста, или частот встречаемости разных интересов.
 
-**Взаимосвязь с другими частями проекта:**
 
-Функции зависят от наличия класса `TinyPerson` в модуле `tinytroupe.agent` для корректного доступа к атрибутам `age` и `interests`.  Это указывает на необходимость совместного использования этих модулей для формирования анализа агентов.
+**Взаимосвязи с другими частями проекта:**
+
+Функции `plot_age_distribution` и `plot_interest_distribution` напрямую зависят от класса `TinyPerson`, определенного в модуле `tinytroupe.agent`.  Модуль `profiling` использует данные, представленные в объектах `TinyPerson`, для визуализации.  Поэтому `tinytroupe.agent`  является зависимым модулем и играет ключевую роль в работе модуля `profiling`.

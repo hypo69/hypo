@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src 
+.. module:: src 
 	:platform: Windows, Unix
 	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
 

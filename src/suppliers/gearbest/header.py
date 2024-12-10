@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.suppliers.gearbest 
+.. module:: src.suppliers.gearbest 
 	:platform: Windows, Unix
 	:synopsis:
 

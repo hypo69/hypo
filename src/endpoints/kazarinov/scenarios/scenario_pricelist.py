@@ -9,7 +9,7 @@ from __future__ import annotations
 ==================================================================
 
 ```rst
-.. module: src.endpoints.kazarinov.scenarios 
+.. module:: src.endpoints.kazarinov.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Provides functionality for extracting, parsing, and processing product data from 
 various suppliers. The module handles data preparation, AI processing, 

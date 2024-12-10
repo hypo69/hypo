@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils.string 
+.. module:: src.utils.string 
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность UR
 

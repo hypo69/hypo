@@ -8,7 +8,7 @@
 ==================================================================
 
 ```rst
-.. module: src.endpoints.kazarinov.scenarios._experiments 
+.. module:: src.endpoints.kazarinov.scenarios._experiments 
 	:platform: Windows, Unix
 	:synopsis: Provides functionality for extracting, parsing, and processing product data from 
 various suppliers. The module handles data preparation, AI processing, 

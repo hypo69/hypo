@@ -1,5 +1,5 @@
 ```rst
-.. module: src.credentials
+.. module:: src.credentials
 ```
 [Русский](https://github.com/hypo69/hypo/tree/master/src/credentials.ru.md)
 [Up to Parent](https://github.com/hypo69/hypo/tree/master/src/README.MD)

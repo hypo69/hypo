@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov.pricelist_generator 
+.. module:: src.endpoints.kazarinov.pricelist_generator 
 	:platform: Windows, Unix
 	:synopsis:
 

@@ -4,7 +4,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.product.product_fields 
+.. module:: src.product.product_fields 
 	:platform: Windows, Unix
 	:synopsis: Модуль перевода полей товара на языки клиентской базы данных
 
