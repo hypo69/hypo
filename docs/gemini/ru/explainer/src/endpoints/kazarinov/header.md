@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/endpoints/kazarinov/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.kazarinov 
+.. module:: src.endpoints.kazarinov 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -74,100 +74,97 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 # <algorithm>
 
-1. **`set_project_root()` function:**
-   - Takes a tuple of marker files as input.
-   - Starts from the directory of the current script (`__file__`).
-   - Iterates through parent directories until a directory containing one of the marker files is found.
-   - If a root directory is found, it adds it to `sys.path` if it's not already there.
-   - Returns the root path.
+**Шаг 1:**  Функция `set_project_root` находит корневую директорию проекта.
+* Входные данные: кортеж `marker_files`, содержащий имена файлов или папок, которые указывают на корень проекта.
+* Выходные данные: `Path` объект, представляющий путь к корневой директории проекта или текущей директории, если корень не найден.
+* Логика: функция итерирует по родительским директориям текущей директории. Для каждой директории проверяется наличие файлов из `marker_files`. Если один из файлов найден, то функция возвращает путь к родительской директории. В противном случае функция продолжает поиск в родительских директориях.  Если ни один из файлов не найден, то возвращается путь текущей директории.  Если корень проекта не найден в `sys.path`, то он добавляется в `sys.path` для правильной импортации модулей.
 
-   ```
-   [Start] --> [Get current file path] --> [Resolve current path] --> [Get parent dir]
-                                                                |
-                                                                V
-                              [Check for marker files in current dir] --> [Yes] --> [Set root = current dir] --> [Return root]
-                                                                                |
-                                                                                V
-                                                               [No] --> [Get parent dir] --> [Check for marker files] ... [Repeat]
-   ```
+**Шаг 2:**  Извлекается корневая директория проекта с помощью `__root__ = set_project_root()`.
 
-2. **Initialization:**
-   - Calls `set_project_root()` to get the project root directory.
-   - Initializes `settings`, `doc_str` to `None`
+**Шаг 3:**  Импортируется модуль `gs` из пакета `src`.
 
-3. **Loading settings:**
-   - Tries to open `src/settings.json` and load JSON data into `settings`.
-   - Handles `FileNotFoundError` and `json.JSONDecodeError`.
+**Шаг 4:**  Файл `settings.json` в папке `src` пытается быть прочитан и распарсен как JSON. 
+* Если файл найден и парсинг прошел успешно, то данные из `settings.json` сохраняются в переменной `settings`.
+* В противном случае `settings` остается `None`.
 
-4. **Loading documentation:**
-   - Tries to open `src/README.MD` and reads the file content into `doc_str`.
-   - Handles `FileNotFoundError` and `json.JSONDecodeError`.
+**Шаг 5:** Файл `README.MD` в папке `src` пытается быть прочитан.
+* Если файл найден, то содержимое файла сохраняется в переменную `doc_str`.
+* В противном случае `doc_str` остается `None`.
 
-5. **Extracting project metadata:**
-   - Uses `settings.get()` to extract `project_name`, `version`, `author`, `copyright`, `cofee` from the `settings` dictionary if it exists.
-   - Defaults to fallback values if `settings` or a key is missing.
+**Шаг 6:**  Извлекаются значения настроек из `settings` или устанавливаются значения по умолчанию.
+* Значения настроек извлекаются с помощью `settings.get()` и устанавливаются в соответствующие переменные.
+* Если `settings` равно `None`, то используется значение по умолчанию.
 
 
 # <mermaid>
 
 ```mermaid
 graph TD
-    A[set_project_root] --> B{Find root dir};
-    B --Marker files found--> C[Set root];
-    B --No marker files found--> D[Check parent dir];
-    C --> E[Add to sys.path if not present];
-    C --> F[Return root dir];
-    D --> B;
-    F --> G[Load settings];
-    G --> H{settings loaded?};
-    H --Yes--> I[Extract metadata];
-    H --No--> J[Default metadata];
-    I --> K[Load doc_str];
-    K --> L{doc_str loaded?};
-    L --Yes--> I;
-    L --No--> M[Default doc_str];
-    I --> N[Assign metadata to variables];
-    N --> O[End];
-    G -.-> G1;
-    G1 -.-> I;
-    J -.-> I;
-    M -.-> I;
-
-
-subgraph Project Files
-    E --> |src/settings.json|;
-    K --> |src/README.MD|;
-end
+    A[set_project_root] --> B{Marker Files Exist?};
+    B -- Yes --> C[Return Root Path];
+    B -- No --> D[Check Parent Directory];
+    D --> E{Marker Files Exist?};
+    E -- Yes --> C;
+    E -- No --> D;
+    C --> F[Add to sys.path];
+    F --> G[Return Root Path];
+    subgraph Get Settings
+        H[Open settings.json] --> I{File Found & Parse Success?};
+        I -- Yes --> J[Load settings];
+        I -- No --> K[settings = None];
+        J --> L[Extract Settings];
+        K --> L;
+    end
+    subgraph Get README
+        M[Open README.MD] --> N{File Found?};
+        N -- Yes --> O[Read README];
+        N -- No --> P[doc_str = None];
+        O --> Q[doc_str = content];
+    end
+    L --> R[Assign Values];
+    Q --> R;
+    G --> R;
+    R --> S[Global Variables];
 ```
+
+**Объяснение диаграммы:**
+
+Диаграмма показывает последовательность действий в коде. Функция `set_project_root` ищет корень проекта, затем происходит чтение настроек из `settings.json` и `README.MD`. Результаты этих операций используются для задания значений глобальных переменных.
 
 
 # <explanation>
 
-* **Imports:**
-    - `sys`: Provides access to system-specific parameters and functions. Used for modifying the system path.
-    - `json`: For working with JSON data, loading and saving settings from a file.
-    - `packaging.version`: Used for handling versions; however, it is not used directly in this code (unclear purpose).
-    - `pathlib`: For working with file paths in a more object-oriented and platform-independent manner.
-    - `src.gs`: An internal module probably dealing with the project's global settings, or file system path utilities. The `gs.path.root` object suggests this. The lack of its full definition makes it impossible to tell the exact implementation or dependencies.
+**Импорты:**
 
-* **Classes:** No classes defined.
+* `sys`: Предоставляет доступ к системным переменным и функциям. Используется для добавления корневой директории проекта в `sys.path`, чтобы Python мог находить модули.
+* `json`: Для работы с JSON-файлами, используется для чтения настроек из `settings.json`.
+* `packaging.version`: Для работы с версиями пакетов.  В данном случае, скорее всего, не используется, но импортирован для потенциального использования в будущем.
+* `pathlib`: Для работы с путями к файлам и папкам. Используется для эффективного и безопасного доступа к файлам.
+* `gs`:  Предполагается, что это модуль из пакета `src`, предназначенный для работы с ресурсами проекта, например, указанием пути к файлам. Подробно о его функциональности судить трудно, без анализа самого модуля `gs`.
 
-* **Functions:**
-    - `set_project_root(marker_files=...)`: Finds the project root directory by checking parent directories until it finds a directory containing one of the specified marker files. This is crucial for correctly locating project resources and modules. It's a good practice as it ensures that the project's directory structure is correctly identified.
+**Классы:**
 
-* **Variables:**
-    - `MODE`: A string defining the operation mode, likely for development or production.
-    - `__root__`: A path object representing the root directory of the project. A constant variable.
-    - `settings`: A dictionary variable containing project settings, loaded from `settings.json`.
-    - `doc_str`: A string variable containing the project documentation, read from `README.MD`.
-    - `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`: Variables containing project metadata, derived from `settings.json`.
+Код не содержит классов.
 
-* **Possible Errors/Improvements:**
-    - The use of `...` to skip exceptions during the loading of `settings` and `doc_str` is a simplistic approach. More comprehensive error handling would provide better user experience and insights into failures.
-    - The use of `any()` within the loop for finding the root directory is a bit verbose. It could be more concise and efficient by using the `first()` method from the `itertools` module if it is available or by using a generator expression. This may have a performance impact when searching through many levels of directories.
+**Функции:**
 
-* **Relationships with other parts of the project:**
-    - The code strongly relies on the `gs` module, particularly the `gs.path.root` object. This suggests that the `gs` module provides a central point for accessing project-related paths and resources. This means the `gs` module likely contains other supporting functions for handling project-related paths, or file management.  The relationship is crucial for consistent and well-structured access to project resources.
+* `set_project_root(marker_files)`:  Находит корневую директорию проекта.  Аргумент `marker_files` позволяет указать список маркеров, которые будут использованы для поиска корня (например, `pyproject.toml`). Возвращает `Path` объект.  Критически важна для корректной работы остальных частей кода, т.к. позволяет найти корневую директорию проекта.  Возвращает путь до корня проекта, добавляет его в `sys.path` если он там еще не был.
 
+**Переменные:**
 
-```
+* `__root__`: `Path`-объект, хранящий путь к корневой директории проекта.
+* `settings`: Словарь (`dict`) с настройками проекта, загруженный из `settings.json`.
+* `doc_str`: Строка, содержащая содержимое файла `README.MD` или `None`, если файл не найден.
+* `__project_name__`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__`:  Глобальные переменные, содержащие информацию о проекте, извлеченную из `settings.json` (или значения по умолчанию).
+
+**Возможные ошибки и улучшения:**
+
+* **Обработка исключений:** Обработка `FileNotFoundError` и `json.JSONDecodeError` в блоках `try...except` - это хорошо, но можно добавить более подробные сообщения об ошибках для лучшей диагностики проблем.
+* **Типы данных:** Использование аннотаций типов (`-> Path`) улучшает читабельность и позволяет статическим анализаторам кода выявлять потенциальные ошибки.
+* **`gs`:**  Необходимо понимать, что делает модуль `gs`.  Проверка наличия файлов и корректность пути - критическая часть, которая не видна в приведенном фрагменте.
+* **Документация:** Документация внутри кода (`"""Docstring"""`) должна быть более подробной и точной.
+* **Использование `Path`:** Используйте `Path` везде, где это возможно, для лучшей совместимости и обработки путей на разных платформах.
+
+**Цепочка взаимосвязей:**
+
+Этот файл `header.py` является частью проекта, который, скорее всего, использует настройки из `settings.json` и/или `README.MD` для конфигурации и документации.  Он устанавливает корневой путь для проекта, необходимый для корректной работы последующих импортов.  Связь с другими частями проекта косвенная через `gs` и потенциально другие импорты.  Важно детальное понимание `gs`, чтобы оценить эту взаимосвязь.

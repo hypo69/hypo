@@ -1,14 +1,13 @@
-```MD
-# <input code>
+## <input code>
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/customer.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop 
+.. module:: src.endpoints.prestashop 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -20,7 +19,7 @@ import sys
 import os
 from attr import attr, attrs
 from pathlib import Path
-from typing import Union, Optional
+from typing import Union
 from types import SimpleNamespace
 
 import header
@@ -30,6 +29,8 @@ from src.utils.jjson import j_loads as j_loads
 from .api import PrestaShop
 from src.logger import logger
 from src.logger.exceptions import PrestaShopException
+
+from typing import Optional
 
 class PrestaCustomer(PrestaShop):
     """    
@@ -45,7 +46,7 @@ class PrestaCustomer(PrestaShop):
         prestacustomer.update_customer_PrestaShop(4, 'Updated Customer Name')
         print(prestacustomer.get_customer_details_PrestaShop(5))
     """
-
+    
     def __init__(self, 
                  credentials: Optional[dict | SimpleNamespace] = None, 
                  api_domain: Optional[str] = None, 
@@ -58,95 +59,89 @@ class PrestaCustomer(PrestaShop):
             api_domain (Optional[str], optional): Домен API. Defaults to None.
             api_key (Optional[str], optional): Ключ API. Defaults to None.
         """
-
+        
         if credentials is not None:
             api_domain = credentials.get('api_domain', api_domain)
             api_key = credentials.get('api_key', api_key)
-
+        
         if not api_domain or not api_key:
             raise ValueError('Необходимы оба параметра: api_domain и api_key.')
-
+        
         super().__init__(api_domain, api_key, *args, **kwards)
 ```
 
-# <algorithm>
+## <algorithm>
 
-**Шаг 1:** Инициализация класса `PrestaCustomer`.
-* Принимает необязательные аргументы `credentials`, `api_domain`, `api_key`.
-* Если `credentials` задан, берет значения `api_domain` и `api_key` из него.
-* Проверяет, что `api_domain` и `api_key` заданы.  Если нет, выбрасывает исключение `ValueError`.
-* Вызывает метод `__init__` родительского класса `PrestaShop` с переданными `api_domain`, `api_key`, остальными аргументами `*args, **kwards`.
-
-
-**Пример:**
-
-```
-credentials = {'api_domain': 'example.com', 'api_key': 'secret_key'}
-prestacustomer = PrestaCustomer(credentials=credentials)
-```
+1. **Инициализация класса `PrestaCustomer`:**
+    * Принимает параметры `credentials`, `api_domain`, `api_key`.
+    * Если `credentials` передан, извлекает `api_domain` и `api_key` из него.
+    * Проверяет, что `api_domain` и `api_key` не пусты. Если нет, бросает исключение `ValueError`.
+    * Вызывает конструктор родительского класса `PrestaShop` с переданными значениями `api_domain`, `api_key` и другими аргументами.
 
 
-# <mermaid>
+## <mermaid>
 
 ```mermaid
 graph TD
     A[PrestaCustomer.__init__] --> B{credentials is None?};
-    B -- Yes --> C[api_domain/api_key validation];
-    B -- No --> D[credentials extraction];
-    C -- Error --> E[raise ValueError];
-    C -- Valid --> F[PrestaShop.__init__];
-    D --> C;
-    F --> G[PrestaCustomer object];
+    B -- Yes --> C[api_domain, api_key check];
+    B -- No --> D[credentials.get];
+    C -- True --> E[ValueError];
+    C -- False --> F[super().__init__];
+    D --> G{api_domain is None?};
+    G -- Yes --> E;
+    G -- No --> H{api_key is None?};
+    H -- Yes --> E;
+    H -- No --> F;
+
+    subgraph PrestaShop.__init__
+        F --> I[... initializations of PrestaShop];
+    end
 ```
 
-**Объяснение диаграммы:**
-
-* **`PrestaCustomer.__init__`**: Инициализирующий метод класса `PrestaCustomer`.
-* **`credentials is None?`**: Проверка, заданы ли данные аутентификации через аргумент `credentials`.
-* **`credentials extraction`**: Извлечение значений `api_domain` и `api_key` из словаря или объекта `credentials`.
-* **`api_domain/api_key validation`**: Проверка, что `api_domain` и `api_key` не пустые.
-* **`raise ValueError`**: Выброс исключения, если значения не валидны.
-* **`PrestaShop.__init__`**: Вызов метода инициализации родительского класса `PrestaShop` для настройки подключения к API PrestaShop.
-* **`PrestaCustomer object`**: Объект класса `PrestaCustomer` после инициализации.
-
-**Зависимости:**
-
-* `PrestaCustomer` зависит от `PrestaShop`, т.к. наследуется от него.
-* `PrestaShop` отвечает за работу с API PrestaShop (вероятно, включает в себя настройки запросов и обработку ответов).
-* `logger`, `j_loads` и другие классы из `src.*` используются для логирования и обработки JSON данных.
-
-
-# <explanation>
+## <explanation>
 
 **Импорты:**
 
-* `sys`, `os`, `pathlib`: Стандартные модули для работы с системой, файлами и путями.
-* `attr`, `typing`, `types`: Модули для аннотаций типов и работы с типами данных.
-* `header`, `gs`, `logger`: Импортированные из пакета `src`, предполагают модули для логирования, работы с внешними сервисами, и возможно, других вспомогательных функций.
-* `PrestaShop`:  Импортируется из текущего пакета (`./api`), что указывает на класс для работы с основным API PrestaShop.
-* `PrestaShopException`: Класс исключений, вероятно, специфичный для PrestaShop.
-* `j_loads`:  Функция для парсинга JSON (из `src.utils.jjson`).
+* `sys`, `os`: Стандартные модули Python для работы с системой.
+* `attr`: Модуль для аннотаций атрибутов классов.
+* `pathlib`: Модуль для работы с путями к файлам.
+* `typing`: Модуль для типов данных.
+* `types`: Модуль для работы с типами данных.
+* `header`: Возможно, внутренний модуль проекта, нужен для определенных операций.
+* `gs`: Вероятно, модуль для работы с Google Sheets или аналогичными сервисами.
+* `logger`: Модуль для логирования.
+* `j_loads`: Модуль для работы с JSON данными.
+* `.api`: Модуль внутри текущей папки (prestashop) для работы с API PrestaShop.
+* `PrestaShopException`: Вероятно, кастомное исключение для ошибок PrestaShop.
 
 **Классы:**
 
-* `PrestaCustomer`: Наследуется от `PrestaShop`, предназначен для работы с клиентами в PrestaShop.  Обладает методами для работы с клиентами (добавление, удаление, обновление, получение деталей).
-* `PrestaShop`: Родительский класс, вероятно, содержит методы для базовой работы с API PrestaShop. (в том числе, аутентификацию).
+* `PrestaCustomer`: Наследуется от `PrestaShop`. Предназначен для работы с клиентами PrestaShop.  Содержит метод `__init__` для инициализации.
 
 **Функции:**
 
-* `__init__`:  Конструктор класса. Принимает аргументы для инициализации подключения к API (credentials, api_domain, api_key). Важно валидировать api_domain и api_key.
+* `__init__`: Инициализирует объект `PrestaCustomer`.  Принимает `credentials`, `api_domain` и `api_key` как параметры.  Внутренне извлекает значения `api_domain` и `api_key` из переданного словаря или объекта `SimpleNamespace` (если `credentials` указан).  Проверяет, что оба параметра (`api_domain` и `api_key`) получены и не пусты,  и вызывается родительский метод `__init__`.
+
 
 **Переменные:**
 
-* `MODE`: Строковая переменная, вероятно, для определения режима работы (dev, prod).
-* `credentials`, `api_domain`, `api_key`: Переменные, хранящие данные для аутентификации с API PrestaShop.
+* `MODE`: Переменная, которая содержит строку 'dev'.  Возможно, используется для переключения режимов работы.
+* `credentials`: Может содержать словарь или объект `SimpleNamespace` с параметрами `api_domain` и `api_key`.
 
-**Возможные ошибки и улучшения:**
+**Возможные ошибки/улучшения:**
 
-* Не хватает обработки возможных исключений, возникающих при взаимодействии с API Престашоп.
-* Добавьте обработку случаев, когда API возвращает ошибку или не ожидаемый формат данных.
-* Добавьте документацию для методов `add_customer_PrestaShop`, `delete_customer_PrestaShop`, `update_customer_PrestaShop`, `get_customer_details_PrestaShop`.
+* Отсутствует проверка типа данных для `credentials`. Было бы лучше использовать аннотации типов.
+* Отсутствуют тесты для класса `PrestaCustomer`.
 
-**Цепочка взаимосвязей:**
 
-Код `PrestaCustomer` зависит от `PrestaShop`, который, в свою очередь, зависит от сервисов для работы с API PrestaShop (включая аутентификацию).  Зависимости от `logger`, `gs`, и `jjson` для логирования, хранения данных и работы с JSON-данными.
+**Взаимосвязи с другими частями проекта:**
+
+* `PrestaCustomer` зависит от `PrestaShop`, который, вероятно, обрабатывает общие операции с API.
+* `PrestaCustomer` зависит от `src.logger` для логирования.
+* `PrestaCustomer` зависит от `src.utils.jjson` для работы с JSON.
+
+
+**Общий вывод:**
+
+Код определяет класс `PrestaCustomer` для взаимодействия с API PrestaShop, принимая данные для авторизации (`credentials`, `api_domain`, `api_key`) для инициализации. Важно, что проверка валидности входных параметров `api_domain` и `api_key` (наличие и непустота) выполняется, что предотвращает необработанные ошибки при взаимодействии с API.  Однако, не хватает деталей о том, как `PrestaCustomer` взаимодействует с конкретными методами `PrestaShop` для выполнения операций с клиентами PrestaShop.

@@ -1,14 +1,28 @@
-```MD
-# <input code>
+```mermaid
+graph TD
+    A[post_event] --> B{Проверка driver};
+    B -- driver OK --> C[post_title];
+    B -- driver BAD --> F[Возврат False];
+    C --> D[post_date];
+    D --> E[post_time];
+    E --> G[post_description];
+    G --> H[Отправка события];
+    H --> I[Пауза 30 сек];
+    I --> J[Возврат True];
+    F --> J;
+```
+
+```markdown
+1. **<input code>**:
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook.scenarios 
+.. module:: src.endpoints.advertisement.facebook.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Публикация календарного события v группах фейсбук
 
@@ -35,197 +49,109 @@ locator: SimpleNamespace = j_loads_ns(
 
 
 def post_title(d: Driver, title: str) -> bool:
-    """ Sends the title of event.
-
-    Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        event (SimpleNamespace): The event containing the title, data of event and description to be sent.
-
-    Returns:
-        bool: `True` if the title and description were sent successfully, otherwise `None`.
-
-    Examples:
-        >>> driver = Driver(...)
-        >>> event = SimpleNamespace(title="Campaign Title", description="Event Description")
-        >>> post_title(driver, event)
-        True
-    """
-
+    """ Sends the title of event. """
     if not d.execute_locator(locator=locator.event_title, message=title):
         logger.error("Failed to send event title", exc_info=False)
-        return
+        return False
     return True
 
 
 def post_date(d: Driver, date: str) -> bool:
-    """ Sends the title of event.
-
-    Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        event (SimpleNamespace): The event containing the title, data of event and description to be sent.
-
-    Returns:
-        bool: `True` if the title and description were sent successfully, otherwise `None`.
-
-    Examples:
-        >>> driver = Driver(...)
-        >>> event = SimpleNamespace(title="Campaign Title", description="Event Description")
-        >>> post_title(driver, event)
-        True
-    """
+    """ Sends the title of event. """
     if not d.execute_locator(locator=locator.start_date, message=date):
         logger.error("Failed to send event date", exc_info=False)
-        return
+        return False
     return True
 
 
 def post_time(d: Driver, time: str) -> bool:
-    """ Sends the title of event.
-
-    Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        event (SimpleNamespace): The event containing the title, data of event and description to be sent.
-
-    Returns:
-        bool: `True` if the title and description were sent successfully, otherwise `None`.
-
-    Examples:
-        >>> driver = Driver(...)
-        >>> event = SimpleNamespace(title="Campaign Title", description="Event Description")
-        >>> post_title(driver, event)
-        True
-    """
+    """ Sends the title of event. """
     if not d.execute_locator(locator=locator.start_time, message=time):
         logger.error("Failed to send event time", exc_info=False)
-        return
+        return False
     return True
 
 
 def post_description(d: Driver, description: str) -> bool:
-    """ Sends the title of event.
-
-    Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        event (SimpleNamespace): The event containing the title, data of event and description to be sent.
-
-    Returns:
-        bool: `True` if the title and description were sent successfully, otherwise `None`.
-
-    Examples:
-        >>> driver = Driver(...)
-        >>> event = SimpleNamespace(title="Campaign Title", description="Event Description")
-        >>> post_title(driver, event)
-        True
-    """
+    """ Sends the description of event. """
     d.scroll(1, 300, 'down')
     if not d.execute_locator(locator=locator.event_description, message=description):
         logger.error("Failed to send event description", exc_info=False)
-        return
+        return False
     return True
 
 
 def post_event(d: Driver, event: SimpleNamespace) -> bool:
-    """ Manages the process of promoting a post with a title, description, and media files.
-
-    Args:
-        d (Driver): The driver instance used for interacting with the webpage.
-        event (SimpleNamespace): The event details to be posted.
-
-    Examples:
-        >>> driver = Driver(...)
-        >>> event = SimpleNamespace(title="Campaign Title", description="Campaign Description", start="2024-10-27 10:00")
-        >>> post_event(driver, event)
-
-    """
+    """ Manages the process of promoting a post. """
     if not post_title(d, event.title):
-        return
+        return False
+
     dt, tm = event.start.split()
     if not post_date(d, dt.strip()):
-        return
+        return False
     if not post_time(d, tm.strip()):
-        return
-    if not post_description(d, f"{event.description}\n{event.promotional_link}"):
-        return
+        return False
+
+    if not post_description(d, f"{event.description}\\n{event.promotional_link}"):
+        return False
     if not d.execute_locator(locator=locator.event_send):
-        return
+        return False
     time.sleep(30)
     return True
 ```
 
-# <algorithm>
+2. **<algorithm>**:
 
-**Алгоритм работы post_event.py:**
-
-1. **Загрузка локейторов:**
-    * Читает локейторы из файла `post_event.json` с помощью `j_loads_ns` и сохраняет их в `locator`.
-
-2. **Публикация события:**
-    * Принимает экземпляр `Driver` (`d`) и `SimpleNamespace` `event` содержащий данные для публикации.
-    * Вызывает последовательно функции для заполнения полей события:
-        * `post_title`: Заполняет поле заголовка.
-        * `post_date`: Заполняет поле даты.
-        * `post_time`: Заполняет поле времени.
-        * `post_description`: Заполняет поле описания, добавляя `promotional_link`.
-        * `execute_locator`: Выполняет отправку/клик на кнопку отправки.
-        * `time.sleep(30)`: Ожидание 30 секунд для завершения процесса.
-    * Если любая из функций `post_title`, `post_date`, `post_time`, `post_description` или `d.execute_locator` возвращает `False` или `None`, то функция `post_event` возвращает `None`, что означает неудачную публикацию.
-    * Иначе возвращает `True`.
+Функция `post_event` принимает `Driver` и `SimpleNamespace` с данными события.  
+Она последовательно вызывает функции `post_title`, `post_date`, `post_time` и `post_description`, передавая нужные данные. Если какая-либо из этих функций возвращает `False`, то функция `post_event` также возвращает `False`, прерывая выполнение.  В противном случае, выполняется отправка события ( `d.execute_locator(locator=locator.event_send)`). После чего происходит пауза в 30 секунд и функция возвращает `True`.
 
 
-# <mermaid>
+3. **<mermaid>**:
 
 ```mermaid
 graph TD
-    A[post_event] --> B{Получить Driver, Event};
-    B -- True --> C[post_title];
-    B -- False --> E[Возврат False];
-    C --> D[post_date];
-    D --> F[post_time];
-    F --> G[post_description];
-    G --> H[d.execute_locator];
-    H --> I[time.sleep(30)];
-    I --> J[Возврат True];
-    E --> J;
-    subgraph Функции
-        C -- title --> K[execute_locator];
-        D -- date --> L[execute_locator];
-        F -- time --> M[execute_locator];
-        G -- description --> N[execute_locator];
-        H -- send --> O[execute_locator];
-    end
+    A[post_event(d, event)] --> B{event.title};
+    B -- True --> C[post_title(d, event.title)];
+    B -- False --> J[False];
+    C -- True --> D{event.start};
+    D -- True --> E[post_date(d, dt)];
+    D -- False --> J;
+    E -- True --> F[post_time(d, tm)];
+    F -- True --> G[post_description(d, description)];
+    F -- False --> J;
+    G -- True --> H[d.execute_locator(event_send)];
+    G -- False --> J;
+    H -- True --> I[time.sleep(30)];
+    I --> K[True];
+    J --> K;
+    K --> L(Return);
 ```
 
-**Подключаемые зависимости:**
+4. **<explanation>**:
 
-* `src.gs`:  Утилиты для доступа к системным константам (например, пути к файлам).
-* `src.webdriver.driver`: Модуль для работы с веб-драйвером (Selenium).
-* `src.utils.jjson`: Модуль для работы с JSON-данными (например, чтение локейторов).
-* `src.logger`: Модуль для логирования ошибок и сообщений.
-* `pathlib`, `time`, `SimpleNamespace`, `typing`, `urlencode`, `selenium.webdriver.remote.webelement` - стандартные библиотеки Python.
+* **Импорты**:
+    * `from src import gs`: Импортирует модуль `gs` из пакета `src`.  Вероятно, `gs` содержит конфигурационные данные (например, пути к файлам).
+    * `from src.webdriver.driver import Driver`: Импортирует класс `Driver` из модуля `driver` пакета `src.webdriver`.  Этот класс, вероятно, отвечает за взаимодействие с веб-драйвером (Selenium).
+    * `from src.utils.jjson import j_loads_ns, pprint`: Импортирует функции `j_loads_ns` и `pprint` из модуля `jjson` пакета `src.utils`. Вероятно, для работы с JSON-данными и вывода.
+    * `from src.logger import logger`: Импортирует логгер из пакета `src.logger`.
+
+* **Классы**:
+    * `Driver`:  Этот класс предоставляет методы для взаимодействия с веб-страницей (например, `execute_locator`, `scroll`).  Его реализация содержится в файле `src/webdriver/driver.py`.
+
+* **Функции**:
+    * `post_title`, `post_date`, `post_time`, `post_description`: Эти функции отвечают за отправку конкретных данных (заголовка, даты, времени, описания) события в Facebook.  Они используют методы `d.execute_locator` для взаимодействия с веб-страницей. Важно отметить, что функции возвращают `bool` – `True` в случае успеха, и `False` в противном случае, позволяя функции `post_event` корректно обрабатывать ошибки.
+    * `post_event`: Эта функция управляет процессом публикации события в Facebook.  Она последовательно вызывает другие функции для заполнения необходимых полей, проверяет успешность выполнения каждой операции и возвращает результат в зависимости от успешности каждой операции.
+
+* **Переменные**:
+    * `locator`:  Переменная, загруженная из `post_event.json`, содержащая локаторы для элементов на странице Facebook.
+
+* **Возможные ошибки/улучшения**:
+    * Отсутствует обработка исключений внутри функций `post_*`, что может привести к непредсказуемому поведению при возникновении проблем во время взаимодействия с браузером.
+    * `post_*` функции должны принимать аргумент `event` и использовать его для заполнения полей. Это более правильно, чем предполагалось из примера, и лучше соответствует принципам ООП.
+    * Добавьте проверку `if d:` перед использованием `d.execute_locator`, чтобы избежать ошибок, если `d` вдруг окажется `None`.
 
 
-# <explanation>
+**Цепочка взаимосвязей**:
 
-* **Импорты:**
-    * `src.gs`:  Представляет собой модуль, содержащий константы (скорее всего, пути к файлам или директориям), относящиеся к проекту.
-    * `src.webdriver.driver`:  Обеспечивает инкапсуляцию логики взаимодействия с веб-драйвером Selenium.
-    * `src.utils.jjson`: Обеспечивает функции для загрузки данных из JSON-файлов, в данном случае локейторов.
-    * `src.logger`: Модуль для логирования событий в проекте (ошибки, успехи и т.д.).
-    * Остальные импорты - стандартные библиотеки Python, необходимые для работы с файлами, временем, типами данных, веб-драйверами и парсингом URL.
-* **Классы:**
-    * `Driver`: Не показан в данном коде, но импортируется. Представляет собой класс, отвечающий за взаимодействие с веб-драйвером, например, поиск элементов, отправка данных, навигация по страницам.
-* **Функции:**
-    * `post_title`, `post_date`, `post_time`, `post_description`: Эти функции обрабатывают отправку отдельных полей события (заголовок, дата, время, описание).  Они принимают `Driver` и значение поля, выполняют поиск элемента на странице, заполняют его полученным значением, логируют ошибки и возвращают `True`/`None` в зависимости от успеха.  Функции излишне повторяют код, это можно улучшить.
-    * `post_event`: Является точкой входа для публикации события. Принимает объект `Driver` и `SimpleNamespace`, содержащий данные события.  Вызывает все остальные функции в определённом порядке и обрабатывает ошибки. Возвращает `True` в случае успеха и `None` в случае неудачи.
-* **Переменные:**
-    * `locator`: Содержит локейторы (данные для поиска элементов на странице) загруженные из JSON файла.  Этот подход удобен, т.к. позволяет удобно модифицировать локейторы в json файле, без изменения python кода.
-    * `MODE`: Представляет собой переменную, хранящую режим работы (вероятно 'dev' или 'prod').
-    * Переменные, используемые внутри функций, например, `title`, `date`, `description`: Представляют собой данные, необходимые для заполнения полей формы.
-* **Возможные ошибки и улучшения:**
-    * **Повторный код:** Функции `post_title`, `post_date`, `post_time` и `post_description` практически идентичны.  Можно создать общую функцию для отправки значений.
-    * **Обработка ошибок:** Хотя код логирует ошибки, он не обрабатывает исключения, которые могут возникнуть во время работы с веб-драйвером (например, если элемент не найден).
-    * **Неявный возврат `None`:** Если любая из функций `post_title`, `post_date`, `post_time`, `post_description` или `d.execute_locator` возвращает `None` (например, если элемент не найден или произошла ошибка), то функция `post_event` молчаливо завершается, не выдав никаких уведомлений.  Рекомендуется явное возвращение `False` или `None` в случае ошибки, а также информация об ошибке в логирование.
-
-**Цепочка взаимосвязей с другими частями проекта:**
-
-Функция `post_event` использует `Driver` из `src.webdriver.driver`, `j_loads_ns` из `src.utils.jjson`, `logger` из `src.logger` и константы из `src.gs`. Это указывает на то, что `post_event` зависит от этих компонентов.  Вероятно, эти модули отвечают за работу с веб-драйвером, обработку JSON данных и логирование сообщений, соответственно.  Файл `post_event.json` содержит данные, необходимые для поиска элементов на странице.  Эти элементы, скорее всего, являются конкретными кнопками или полями для заполнения формы на веб-сайте Facebook.
+`post_event.py` зависит от `gs` (конфигурация), `src.webdriver.driver` (для работы с браузером), `src.utils.jjson` (для работы с JSON данными), `src.logger` (для логирования ошибок).  `post_event.py` взаимодействует с веб-сайтом Facebook через `Driver` класс.  `post_event.json` предоставляет локаторы для элементов страницы. Логирование ошибок `post_event.py` использует `src.logger`
+```

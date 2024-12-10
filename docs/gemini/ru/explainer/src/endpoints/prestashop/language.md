@@ -1,13 +1,14 @@
+```MD
 # <input code>
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/language.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.prestashop 
+.. module:: src.endpoints.prestashop 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -62,19 +63,33 @@ class PrestaLanguage(PrestaShop):
             raise ValueError('Необходимы оба параметра: api_domain и api_key.')
 
         super().__init__(api_domain, api_key, *args, **kwards)
+
+
 ```
 
 # <algorithm>
 
-**Шаг 1:** Инициализация класса `PrestaLanguage`.
-  * Принимает необязательные аргументы `credentials`, `api_domain` и `api_key`.
-  * Если `credentials` задан, берет значения `api_domain` и `api_key` из него.
-  * Проверяет, что `api_domain` и `api_key` заданы.  Если нет, выбрасывает исключение `ValueError`.
-  * Вызывает конструктор родительского класса `PrestaShop`.  Пример: `credentials = {'api_domain': 'example.com', 'api_key': '12345'}`
+**Алгоритм:**
 
-**Шаг 2:**  Вызов методов класса `PrestaLanguage`.  (Методы `add_language_PrestaShop`, `delete_language_PrestaShop`, `update_language_PrestaShop`, и  `get_language_details_PrestaShop`  не представлены в коде, но предполагаются по названию, например, `prestalanguage.add_language_PrestaShop('English', 'en')`)
-  * Выполнение специфичных для языка Престашоп операций.
-  * Передача данных (например, название языка, код языка) в соответствующие методы.
+1. **Инициализация:** При создании объекта `PrestaLanguage` проверяются `credentials`, `api_domain` и `api_key`. Если `credentials` присутствует, из него берутся значения. Если `api_domain` или `api_key` отсутствуют, генерируется исключение `ValueError`.
+2. **Наследование:** Конструктор `__init__` вызывает конструктор родительского класса `PrestaShop`, передавая ему `api_domain` и `api_key`.
+
+
+**Пример:**
+
+```
+credentials = {'api_domain': 'example.com', 'api_key': 'secret_key'}
+presta_language = PrestaLanguage(credentials=credentials) 
+```
+
+**Данные:**
+
+- `credentials`: словарь или `SimpleNamespace`
+- `api_domain`: строка
+- `api_key`: строка
+
+Передача данных происходит при вызове конструктора `PrestaLanguage`.
+
 
 # <mermaid>
 
@@ -82,48 +97,68 @@ class PrestaLanguage(PrestaShop):
 graph TD
     A[PrestaLanguage] --> B(init);
     B --> C{credentials?};
-    C -- yes --> D[get api_domain/api_key];
-    C -- no --> E{api_domain/api_key?};
-    E -- yes --> F[super().__init__];
-    E -- no --> G[raise ValueError];
-    F --> H[methods (add, delete, update, get)];
-    H --> I[PrestaShop API calls];
-    I --> J[Data from API];
-    J --> K[Processing/Return];
-    K --> L(result);
+    C -- yes --> D[api_domain & api_key from credentials];
+    C -- no --> E{api_domain & api_key?};
+    E -- yes --> F[super().__init__(api_domain, api_key)];
+    E -- no --> G[ValueError];
+    D --> F;
+    G --> H[Error];
 ```
+
+**Описание диаграммы:**
+
+* **PrestaLanguage:** Класс, для которого определен метод `__init__`.
+* **init:** Метод инициализации класса.
+* **credentials?:** Проверка наличия аргумента `credentials`.
+* **api_domain & api_key from credentials:**  Извлечение `api_domain` и `api_key` из `credentials`.
+* **api_domain & api_key?:** Проверка наличия `api_domain` и `api_key`.
+* **super().__init__(api_domain, api_key):** Вызов конструктора родительского класса `PrestaShop` для инициализации.
+* **ValueError:** Генерируется исключение, если оба значения `api_domain` и `api_key` отсутствуют.
+* **Error:** Область, в которой происходит обработка исключения.
+
+**Зависимости:**
+
+- `PrestaLanguage` зависит от `PrestaShop`, определяемого в `./api`.
+- `PrestaShop` может зависеть от других внутренних модулей (внешний вид модуля неизвестен).
+- `src.gs`, `src.utils.printer`, `header`, `src.logger`, `src.logger.exceptions` - внутренние компоненты проекта, необходимые для работы.
 
 # <explanation>
 
-* **Импорты:**
-    * `from types import SimpleNamespace`:  Импортирует класс `SimpleNamespace` для создания объектов, содержащих атрибуты (например, для хранения API-ключей и доменов).
-    * `from .api import PrestaShop`: Импортирует класс `PrestaShop` из модуля `api.py` в том же каталоге. Это, вероятно, базовый класс для работы с API PrestaShop.
-    * `from src import gs`: Импортирует модуль `gs`, предполагаемо, для работы с Google Sheets или другой сервисом.
-    * `from src.utils.printer import pprint`: Импортирует функцию `pprint` для красивой печати.
-    * `import header`: Импортирует модуль `header`.  Без предоставленного кода `header` невозможно определить назначение, но это, скорее всего, модуль для обработки заголовков (headers).
-    * `from src.logger import logger`: Импортирует объект логгера `logger` из модуля `logger`, вероятно, из `src.logger`.
-    * `from src.logger.exceptions import PrestaShopException`: Импортирует пользовательское исключение `PrestaShopException`, специфичное для работы с PrestaShop.
-    * `from typing import Optional`:  Для указания возможного отсутствия аргументов функций.
+**Импорты:**
 
-* **Классы:**
-    * `PrestaLanguage(PrestaShop)`: Наследует функциональность класса `PrestaShop`, добавляя специфичные методы для работы с языками Престашоп.  В нем реализованы проверки валидности входных данных.
-        * `__init__`: Инициализирует класс с обязательными `api_domain` и `api_key`.  Обрабатывает передачу `credentials`, чтобы позволять инициализацию из словаря или объекта SimpleNamespace.  Вызывает конструктор родительского класса `PrestaShop` для выполнения базовой инициализации, например, для создания экземпляра API.
+- `from types import SimpleNamespace`: Импортирует класс `SimpleNamespace` для работы с данными в виде объекта, имеющего атрибуты.
+- `from .api import PrestaShop`: Импортирует класс `PrestaShop` из модуля `api` в текущем каталоге.
+- `from src import gs`: Импортирует модуль `gs` из корневого каталога проекта (`src`).
+- `from src.utils.printer import pprint`: Импортирует функцию `pprint` из модуля `printer` в `utils` каталога `src`.
+- `from .api import PrestaShop`: Повторяющийся импорт `PrestaShop`, вероятно, ошибка или излишний.
+- `import header`: Импортирует модуль `header`. Непонятно, зачем, без контекста кода.
+- `from src.logger import logger`: Импортирует логгер `logger` из модуля `logger` в каталоге `src`.
+- `from src.logger.exceptions import PrestaShopException`: Импортирует класс исключений `PrestaShopException` из подмодуля `exceptions` в модуле `logger` в каталоге `src`.
+- `from typing import Optional`: Импортирует тип данных `Optional` для указания необязательности параметров.
 
-* **Функции:**
-    * В коде нет самостоятельных функций, только методы класса `PrestaLanguage` (например, `add_language_PrestaShop`, которые вероятно содержат логику взаимодействия с API PrestaShop).
+**Классы:**
 
-* **Переменные:**
-    * `MODE`: Строковая переменная, хранит режим работы (вероятно, `dev` или `prod`).
-    * `credentials`: `Optional[dict | SimpleNamespace]`.  Аргумент класса, может содержать данные для аутентификации.
-    * `api_domain`, `api_key`: Строковые переменные для параметров API Престашоп.
+- `PrestaLanguage`:  Наследует от `PrestaShop`.  Предназначен для работы с языками в магазине PrestaShop.  Методы `add_language_PrestaShop`, `delete_language_PrestaShop`, `update_language_PrestaShop`, `get_language_details_PrestaShop`  вероятно, реализованы в родительском классе `PrestaShop` и отвечают за взаимодействие с API PrestaShop.
 
-* **Возможные ошибки/улучшения:**
-    * Отсутствуют реализации методов `add_language_PrestaShop`, `delete_language_PrestaShop`, `update_language_PrestaShop`, `get_language_details_PrestaShop`. Необходимо реализовать эти методы для работы с API PrestaShop.
-    * Непонятно, где и как определяются `API_DOMAIN` и `API_KEY`.  Эти переменные должны быть определены где-то в области видимости, где используется класс `PrestaLanguage`.  Рекомендуется использовать конфигурационный файл или переменные окружения.
-    * Добавьте обработку возможных исключений, возвращаемых API.
-    * Добавьте типизацию возвращаемых значений методов.
+**Функции:**
 
-* **Взаимосвязи с другими частями проекта:**
-    * `PrestaLanguage` использует `PrestaShop`, которая, вероятно, реализует взаимодействие с API Престашоп.  Модули `gs`, `utils.printer` и `logger` используются для различных дополнительных функций проекта. `header` вероятно необходим для правильной работы с API.
+- `__init__`: Конструктор класса `PrestaLanguage`. Принимает необязательные аргументы `credentials`, `api_domain`, `api_key` и инициализирует родительский класс `PrestaShop`.  Обрабатывает переданные данные и вызывает метод родительского класса.
 
-**Общая идея:** Код представляет собой часть фреймворка или проекта, предназначенного для работы с API PrestaShop. Он предоставляет абстракцию для взаимодействия с API и предоставляет набор методов для управления данными о языках.
+**Переменные:**
+
+- `MODE`:  Переменная, содержащая строку `'dev'`.  Возможно, определяет режим работы.
+
+**Возможные ошибки/улучшения:**
+
+- Повторный импорт `PrestaShop` из `./api`.  Удалите один из импортов.
+- Непонятен смысл импорта `header` без контекста.
+- Отсутствие документации для методов класса `PrestaLanguage` (не реализованных).  Необходимо добавить документацию в стиле Sphinx для всех методов и атрибутов.
+- Проверка корректности входных данных для `api_domain` и `api_key`.
+- Возможные ошибки в родительском классе `PrestaShop`.
+
+
+**Взаимосвязи с другими частями проекта:**
+
+- `PrestaLanguage` взаимодействует с API PrestaShop через методы родительского класса `PrestaShop`.
+- `PrestaShop` взаимодействует с внешним API PrestaShop.
+- `src.gs`, `src.utils.printer`, `src.logger`, `src.logger.exceptions` -  связаны с логикой приложения и управлением данными.  Подробности зависят от реализации `gs`, `pprint`, `logger`, и `PrestaShop`.

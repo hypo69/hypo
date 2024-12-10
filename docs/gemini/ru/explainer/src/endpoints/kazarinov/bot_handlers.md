@@ -2,11 +2,11 @@
 
 ```python
 ## \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 """
-.. module: src.endpoints.kazarinov.bot_handlers 
+.. module:: src.endpoints.kazarinov.bot_handlers 
 	:platform: Windows, Unix
 	:synopsis: Обработка событий телеграм бота
 
@@ -92,150 +92,105 @@ class BotHandler:
             await update.message.reply_text('Ошибка. Попробуй ещё раз.')
             return
 
-
-    async def handle_next_command(self, update: Update) -> None:
-        """
-        Обработка команды '--next' и её аналогов.
-
-        Args:
-            update (Update): Объект обновления из телеграма.
-        """
-        try:
-            question = random.choice(self.questions_list)
-            answer = self.model.ask(question)
-            await asyncio.gather(
-                update.message.reply_text(question),
-                update.message.reply_text(answer)
-            )
-        except Exception as ex:
-            logger.debug('Ошибка чтения вопросов: %s', ex)
-            await update.message.reply_text('Произошла ошибка при чтении вопросов.')
-
-
-    def fetch_target_urls_onetab(self, one_tab_url: str) -> list[str] | bool:
-        """
-        Извлечение целевых URL с указанного URL OneTab.
-
-        Выполняется GET-запрос к указанному URL, парсится HTML-контент
-        и извлекаются ссылки из тегов 'a' с классом 'tabLink'.
-
-        Args:
-            one_tab_url (str): URL страницы OneTab.
-
-        Returns:
-            list[str] | bool: Список целевых URL или False при ошибке.
-        """
-        try:
-            response = requests.get(one_tab_url, timeout=10)
-            response.raise_for_status()
-
-            if response.status_code != 200:
-                logger.debug(f'Ошибка response\n{pprint(response)}')
-                return
-
-            soup = BeautifulSoup(response.content, 'html.parser')
-
-            urls = [a['href'] for a in soup.find_all('a', class_='tabLink')]
-
-            element = soup.find('div', class_='tabGroupLabel')
-            data = element.get_text() if element else None
-
-            if not data:
-                price = None
-                mexiron_name = gs.now
-            else:
-                parts = data.split(maxsplit=1)
-                price = int(parts[0]) or None
-                mexiron_name = parts[1] if len(parts) > 1 else gs.now
-
-            return price, mexiron_name, urls
-
-        except requests.exceptions.RequestException as ex:
-            logger.error('Ошибка при выполнении запроса: %s', ex)
-            return
-```
-
-```mermaid
-graph LR
-    subgraph "Telegram Bot"
-        A[User sends URL] --> B(BotHandler.handle_url);
-        B --> C{Is URL onetab?};
-        C -- Yes --> D[BotHandler.fetch_target_urls_onetab];
-        D --> E[Data extraction];
-        E --> F[MexironBuilder.run_scenario];
-        F -- Success --> G[Reply "Готово!"];
-        F -- Failure --> H[Reply "Ошибка"];
-        C -- No --> I[Reply "Ошибка"];
-    end
-    subgraph "MexironBuilder"
-        F --> J[Scenario Execution];
-        J --> K[WhatsApp Sending];
-    end
+    # ... (other methods)
 ```
 
 # <algorithm>
 
-1. **Пользователь отправляет URL:** Пользователь вводит URL в бот.
-2. **Обработка URL:** `BotHandler.handle_url` проверяет, является ли URL ссылкой на OneTab.
-3. **Извлечение ссылок:** Если это ссылка OneTab, `BotHandler.fetch_target_urls_onetab` делает запрос к URL и извлекает необходимые данные (цену, название, ссылки).
-4. **Проверка данных:** Проверяет корректность извлеченных данных (не пустой ли список ссылок).
-5. **Выполнение сценария:** `MexironBuilder.run_scenario` выполняет сценарий (логика не представлена в коде).
-6. **Обратная связь:** Если сценарий успешно выполнен, бот отправляет сообщение "Готово!" и, возможно, выполняется дополнительное действие (например, отправка ссылки на WhatsApp). Иначе выводится сообщение об ошибке.
+**Алгоритм работы кода (handle_url):**
+
+1. **Получение URL:** Читает текст сообщения от пользователя.
+2. **Проверка на OneTab URL:** Проверяет, начинается ли полученная строка с URL OneTab.
+3. **Извлечение данных (fetch_target_urls_onetab):** Если URL OneTab, вызывает функцию `fetch_target_urls_onetab` для извлечения цены, названия и списка ссылок.
+4. **Проверка корректности:** Если извлеченные ссылки пустые, отправляет сообщение об ошибке пользователю.
+5. **Выполнение сценария (mexiron.run_scenario):** Вызывает метод `run_scenario` класса `MexironBuilder`. Передает данные (цена, название, ссылки).
+6. **Результат сценария:** Если метод `run_scenario` возвращает True, значит сценарий завершился успешно, отправляется сообщение пользователю. Иначе - ошибка.
+7. **Ошибка:** Если URL не соответствует OneTab, отправляется сообщение об ошибке.
+
+**Пример данных:**
+
+Входящий текст: `https://one-tab.com/someurl`
+
+*   price = 100
+*   mexiron_name = "Product X"
+*   urls = ["url1", "url2"]
+
+
+**Перемещение данных:**
+
+Данные из `update.message.text` передаются в функцию `fetch_target_urls_onetab`, которая возвращает их обратно. Результат этой функции передается в метод `mexiron.run_scenario`.
+
+
+# <mermaid>
+
+```mermaid
+graph TD
+    A[Пользователь вводит URL OneTab] --> B{Проверка на URL OneTab};
+    B -- Да --> C[fetch_target_urls_onetab];
+    B -- Нет --> D[Ошибка. Попробуй ещё раз];
+    C --> E[price, mexiron_name, urls];
+    E --> F{Проверка на пустые urls};
+    F -- Нет --> G[mexiron.run_scenario(price, mexiron_name, urls)];
+    F -- Да --> H[Некорректные данные];
+    G -- True --> I[Готово! Вывод ссылки на WhatsApp];
+    G -- False --> J[Ошибка. Попробуй ещё раз];
+    H --> J;
+    D --> J;
+```
+
+**Зависимости:**
+
+*   `requests`: Библиотека для выполнения HTTP-запросов.
+*   `BeautifulSoup`: Библиотека для парсинга HTML.
+*   `telegram`: Библиотека для работы с Telegram API.
+*   `asyncio`: Библиотека для асинхронного программирования.
+*   `src.gs`: Возможно, содержит глобальные настройки или данные.
+*   `src.logger`: Библиотека для логирования.
+*   `src.webdriver.driver`: Базовый класс для работы с веб-драйверами.
+*   `src.webdriver.chrome`, `src.webdriver.firefox`, `src.webdriver.edge`: Классы для работы с конкретными веб-драйверами.
+*   `src.ai.gemini`: Класс для работы с Google Generative AI.
+*   `src.endpoints.kazarinov.scenarios.scenario_pricelist`: Класс для работы с сценариями (MexironBuilder).
+*   `src.utils.url`, `src.utils.printer`: Утилиты для работы с URL и вывода данных.
+
 
 # <explanation>
 
 **Импорты:**
 
-- `header`: Вероятно, содержит конфигурацию или другие вспомогательные функции, относящиеся к Telegram-боту.
-- `random`: Для случайного выбора элементов, как в `handle_next_command`.
-- `asyncio`: Для асинхронного выполнения операций, особенно важен для работы с Telegram.
-- `requests`: Для выполнения HTTP-запросов к OneTab для извлечения URL-адресов.
-- `typing`: Для типизации.
-- `BeautifulSoup`: Для парсинга HTML-кода.
-- `gs`: Вероятно, содержит глобальные константы или переменные.
-- `logger`: Для логирования ошибок.
-- `Driver`, `Chrome`, `Firefox`, `Edge`: Для управления веб-драйверами (Chrome, Firefox, Edge).
-- `GoogleGenerativeAI`: Вероятно, для доступа к API генеративного ИИ (Gemini).
-- `MexironBuilder`: Для запуска сценариев.
-- `is_url`, `pprint`: Для проверки URL и форматирования вывода, соответственно.
-- `telegram`, `CallbackContext`: Для работы с Telegram API.
+*   `header`, `random`, `asyncio`, `requests`, `typing`, `BeautifulSoup`: Стандартные библиотеки Python.
+*   `src import gs`: Вероятно, содержит глобальные переменные или константы.
+*   `src.logger`: Модуль для логирования, скорее всего, реализован в `src` пакете.
+*   `src.webdriver.*`: Модули для работы с веб-драйверами (Chrome, Firefox, Edge), обеспечивающие взаимодействие с браузерами.
+*   `src.ai.gemini`: Модуль для работы с AI-моделями.
+*   `src.endpoints.kazarinov.scenarios.scenario_pricelist`: Модуль для работы с конкретными сценариями, вероятно, связанными с ценами.
+*   `src.utils.url`, `src.utils.printer`: Утилиты для обработки URL и вывода данных.
+*   `telegram`: Библиотека для работы с Telegram API.
+*   `telegram.ext`: Модуль для создания Telegram ботов.
+
 
 **Классы:**
 
-- `BotHandler`: Обрабатывает входящие URL и запускает сценарий `MexironBuilder`.
-    - `mexiron`: Объект класса `MexironBuilder` для выполнения сценариев.
-    - `__init__`: Инициализирует `mexiron` с нужным веб-драйвером.
-    - `handle_url`: Обрабатывает входящий URL.
-    - `handle_next_command`: Обрабатывает команду `--next`.
-    - `fetch_target_urls_onetab`: Извлекает целевые URL с OneTab.
+*   `BotHandler`: Обрабатывает события от телеграм-бота. Содержит метод `handle_url` для обработки ссылок OneTab. Свойство `mexiron` - экземпляр `MexironBuilder`, используемый для выполнения сценариев.
 
 **Функции:**
 
-- `fetch_target_urls_onetab`: Извлекает данные с OneTab.
-- `handle_url`: Обрабатывает входящие данные, связывается с `fetch_target_urls_onetab` и `MexironBuilder`.
-- `handle_next_command`: Использует `random.choice` для получения вопроса и `self.model.ask` для ответа.
-
+*   `handle_url`: Обрабатывает URL от пользователя, проверяет корректность ссылки, извлекает необходимые данные из `fetch_target_urls_onetab` и запускает сценарий.
+*   `fetch_target_urls_onetab`: Извлекает целевые URL, цену и название с URL OneTab. Использует `requests` и `BeautifulSoup` для парсинга HTML.
 
 **Переменные:**
 
-- `MODE`: Вероятно, режим работы бота ('dev' или 'prod').
-- `response`: Строка, полученная от пользователя.
-- `price`, `mexiron_name`, `urls`: Данные, извлеченные из HTML.
+*   `MODE`: Строковая переменная, скорее всего, для обозначения режима работы (например, 'dev', 'prod').
+*   `response`: Содержит текст сообщения от пользователя.
+*   `price`, `mexiron_name`, `urls`: Содержат результаты извлечения данных с `fetch_target_urls_onetab`.
+
 
 **Возможные ошибки и улучшения:**
 
-- Отсутствие обработки ошибок при выполнении `requests.get` (нет `except` в `fetch_target_urls_onetab`).
-- Неясно, как работает `mexiron.run_scenario`. Нужно знать структуру `MexironBuilder`.
-- Отсутствует `self.model` в классе `BotHandler`.
-- `self.questions_list` нет в коде.
-- Отсутствуют проверки корректности входных данных, например, `price` должно быть целым числом.
-- Отсутствие детализации работы `MexironBuilder`.
-- Необходима ясность в реализации `MexironBuilder`.
+*   Отсутствует обработка ошибок в методе `fetch_target_urls_onetab` для случаев некорректных входных данных или отсутствия нужных тегов на странице OneTab.
+*   Нет проверки валидности извлечённых данных `price` (например, является ли это целым числом).
+*   Функционал `handle_next_command` не используется, но описан.
+
 
 **Взаимосвязь с другими частями проекта:**
 
-- `BotHandler` взаимодействует с `MexironBuilder`, `Driver`, вероятно, `GoogleGenerativeAI`.
-- `logger` связывается с системой логирования.
-
-
-**Общее:**  Код демонстрирует асинхронную обработку сообщений Telegram, взаимодействие с веб-драйверами и парсинг HTML.  Необходимо добавить детали для понимания `MexironBuilder` и `self.model`, чтобы полностью оценить функциональность.
+`BotHandler` взаимодействует с `MexironBuilder` для выполнения сценариев, связанных с ценами.  `BotHandler` также использует классы из `src.webdriver`, `src.ai`, `src.utils`. Эта зависимость четко иллюстрирует структуру приложения - разделение на обработку событий бота, парсинг данных, взаимодействие с веб-драйвером, и выполнение сценариев (управление ценами).

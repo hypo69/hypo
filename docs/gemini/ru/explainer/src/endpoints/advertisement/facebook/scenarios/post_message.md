@@ -2,12 +2,12 @@
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module: src.endpoints.advertisement.facebook.scenarios 
+.. module:: src.endpoints.advertisement.facebook.scenarios 
 	:platform: Windows, Unix
 	:synopsis: Публикация сообщения
 
@@ -48,133 +48,201 @@ def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
         >>> post_title(driver, category)
         True
     """
-    # Scroll backward in the page
-    if not d.scroll(1, 1200, 'backward'):
-        logger.error("Scroll failed during post title")
-        return
-
-    # Open the 'add post' box
-    if not d.execute_locator(locator=locator.open_add_post_box):
-        logger.debug("Failed to open 'add post' box")
-        return
-
-    # Add the message to the post box
-    m = f"{message.title}\\n{message.description}" if isinstance(message, SimpleNamespace) else message
-    if not d.execute_locator(locator.add_message, message=m, timeout=5, timeout_for_event='element_to_be_clickable'):
-        logger.debug(f"Failed to add message to post box: {m=}")
-        return
-
+    # ... (Implementation details)
     return True
 
 
-def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], no_video: bool = False, without_captions: bool = False) -> bool:
-    # ... (rest of the function)
+def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], no_video: bool = False, without_captions:bool = False) -> bool:
+    """ Uploads media files to the images section and updates captions.
+
+    Args:
+        d (Driver): The driver instance used for interacting with the webpage.
+        media (SimpleNamespace | List[SimpleNamespace] | str | list[str]): Media to upload.
+
+    Returns:
+        bool: `True` if media files were uploaded successfully, otherwise `None`.
+    """
+    # ... (Implementation details)
+    return True
+
+
+def update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
+    """ Adds descriptions to uploaded media files. """
+    # ... (Implementation details)
+
+
+def publish(d:Driver, attempts = 5) -> bool:
+    """ Publishes the post. """
+    # ... (Implementation details)
+    return True
+
+
+def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool:
+    """ Manages the process of promoting a post. """
+    # ... (Implementation details)
+    return True
+
+
+def post_message(d: Driver, message: SimpleNamespace, no_video: bool = False, images:Optional[str | list[str]] = None, without_captions:bool = False) -> bool:
+    """ Manages the process of posting a message. """
+    # ... (Implementation details)
+    return True
 ```
 
 # <algorithm>
 
-**Описание алгоритма**
+**Функция post_message:**
 
-Функция `post_message` отвечает за публикацию сообщения в Facebook. Она последовательно выполняет следующие шаги:
+1. Вызывает `post_title` для ввода заголовка и описания.
+2. Вызывает `upload_media` для загрузки медиа.
+3. Проверяет наличие кнопки "Отправить" и возвращает `True` если она есть.
+4. Вызывает `publish` для публикации.
+5. Возвращает `True` если публикация прошла успешно.
 
-1. **Заголовок и описание:** Вызывает функцию `post_title` для ввода заголовка и описания сообщения.
-2. **Загрузка медиа:** Вызывает функцию `upload_media` для загрузки медиафайлов (изображений или видео).
-3. **Настройка и публикация:** Выполняет действия, связанные с нажатием кнопок завершения редактирования и публикации.  Обрабатывает возможные ошибки и повторные попытки.
+**Функция post_title:**
 
-Функция `upload_media` загружает медиафайлы, если они переданы, открывает форму загрузки, загружает каждый файл в очередь, обрабатывает исключения при загрузке и при необходимости добавляет подписи к изображениям.
+1. Проверяет успешность скролла страницы.
+2. Вызывает `execute_locator` для открытия окна добавления поста.
+3. Формирует сообщение, комбинируя `title` и `description`.
+4. Вызывает `execute_locator` для добавления сообщения.
+5. Возвращает `True` при успешном добавлении.
 
-Функция `update_images_captions` добавляет подписи к загруженным изображениям, используя переводы из файла `translations.json`.
+**Функция upload_media:**
 
-Функция `publish`  пытается опубликовать сообщение, обрабатывая потенциальные ошибки (повторные попытки публикации, закрытие всплывающих окон и т.д.).
+1. Проверяет наличие медиа данных.
+2. Вызывает `execute_locator` для открытия формы добавления медиа.
+3. Преобразует `media` в список, если это не список.
+4. Итерируется по `media`:
+   - Получает путь к медиа файлу из `SimpleNamespace`.
+   - Вызывает `execute_locator` для загрузки медиа.
+   - Обрабатывает ошибки при загрузке.
+5. Если `without_captions` - возвращает `True`.
+6. Вызывает `execute_locator` для открытия формы редактирования медиа.
+7. Выбирает `uploaded_media_frame`.
+8. Вызывает `execute_locator` для получения областей для подписей.
+9. Вызывает `update_images_captions` для добавления подписей.
+10. Возвращает `True`.
+
+**Функция update_images_captions:**
+
+1. Загружает локальные переводы.
+2. Определяет направление текста (`LTR` или `RTL`).
+3. Итерируется по `media`:
+   - Формирует сообщение из данных продукта, используя переводы.
+   - Отправляет сообщение в соответствующее поле.
+4. Возвращает `None`.
+
+**Функция publish:**
+
+1. Проверяет количество попыток.
+2. Вызывает `execute_locator` для завершения редактирования.
+3. Вызывает `execute_locator` для публикации.
+4. При неудаче публикации:
+   - Повторяет публикацию, уменьшая количество попыток.
+   - Обрабатывает возможные всплывающие окна.
+5. Возвращает `True` если публикация успешна или количество попыток исчерпано.
 
 
-**Пример данных**
+**Данные передаются между функциями:**
 
-Входные данные:
-
-* `d`: Экземпляр драйвера Selenium.
-* `message`: Объект SimpleNamespace с полями `title`, `description`, и `products` (список объектов с путями к медиафайлам).
-* `no_video`: Флаг, указывающий, следует ли игнорировать загрузку видео.
-* `images`: Список путей к изображениям, если они не находятся в `message.products`.
-
-
-Выходные данные:
-
-* `True` - если сообщение успешно опубликовано.
-* `None` - если произошла ошибка.
+- `Driver` объект передается по ссылке между всеми функциями для взаимодействия с веб-драйвером.
+- `SimpleNamespace` и списки `SimpleNamespace` передаются в качестве аргументов, содержащих данные для обработки.
+- Функции возвращают логические значения (True/False), которые используются для принятия решений в других функциях (например, в `post_message`).
 
 
 # <mermaid>
 
 ```mermaid
-graph LR
-    A[post_message(d, message)] --> B{post_title(d, message)};
-    B -- success --> C[upload_media(d, message.products)];
-    C -- success --> D[publish(d)];
-    D -- success --> E[success];
-    B -- fail --> F[fail];
-    C -- fail --> F;
-    D -- fail --> F;
-    subgraph "Локаторы из JSON"
-        G[locator.open_add_post_box] --> B;
-        H[locator.add_message] --> B;
-        I[locator.open_add_foto_video_form] --> C;
-        J[locator.foto_video_input] --> C;
-        K[locator.finish_editing_button] --> D;
-        L[locator.publish] --> D;
-        M[locator.close_pop_up] --> D;
-        N[locator.not_now] --> D;
+graph TD
+    A[post_message] --> B{Открыть форму добавления поста};
+    B -- Успешно --> C[post_title];
+    B -- Неуспешно --> F[Возврат False];
+    C --> D{Загрузить медиа};
+    D -- Успешно --> E[upload_media];
+    D -- Неуспешно --> F;
+    E --> G[publish];
+    G -- Успешно --> H[Возврат True];
+    G -- Неуспешно --> I[Обработка ошибок публикации];
+    I --> G;
+    F --> H;
+
+    subgraph upload_media
+        E --> J[Обработать изображения и подписи];
+        J --> K[update_images_captions];
+        K --> E;
     end
+
+    subgraph post_title
+        C --> L[Формирование сообщения];
+        L --> M[Отправка сообщения];
+    end
+    
+    style H fill:#a0e995,stroke:#69b469,stroke-width:2px
+    style F fill:#f4b8aa,stroke:#c94b4b,stroke-width:2px
+
 ```
+
+**Объяснение диаграммы:**
+
+*   `post_message` - главный метод, который вызывает `post_title` и `upload_media`.
+*   `post_title` - отправляет заголовок и описание.
+*   `upload_media` - загружает медиа и обрабатывает подписи.
+*   `update_images_captions` - обрабатывает подписи к изображениям.
+*   `publish` - публикует пост.
+*   Стрелки показывают последовательность вызовов и возможные пути (успех/неуспех).
+*   Цветные блоки обозначают разветвления по результатам выполнения.
+
 
 # <explanation>
 
 **Импорты:**
 
-* `from src import gs`: Импортирует модуль `gs` из пакета `src`. Вероятно, `gs` содержит конфигурационные данные, например, пути к файлам.
-* `from src.webdriver.driver import Driver`: Импортирует класс `Driver` из пакета `src.webdriver`.  Этот класс, вероятно, отвечает за взаимодействие с веб-драйвером (например, Selenium).
-* `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` из пакета `src.utils.jjson`. Вероятно, эта функция используется для загрузки данных из JSON-файлов.
-* `from src.utils.printer import pprint`: Импортирует функцию `pprint` из пакета `src.utils.printer`. Используется для красивой печати данных.
-* `from src.logger import logger`: Импортирует объект логгирования `logger` из пакета `src.logger`.
+- `from src import gs`: Импортирует модуль `gs`, скорее всего, содержащий конфигурационные настройки (например, пути к файлам).
+- `from src.webdriver.driver import Driver`: Импортирует класс `Driver`, отвечающий за взаимодействие с веб-драйвером.
+- `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` для загрузки локаторов из JSON.
+- `from src.utils.printer import pprint`: Импортирует функцию `pprint` для красивой печати.
+- `from src.logger import logger`: Импортирует логгер для записи сообщений об ошибках.
+- Остальные импорты стандартные (`time`, `pathlib`, `types`, `typing`, `selenium.webdriver.remote.webelement`)
 
 
 **Классы:**
 
-* `Driver`: Класс, представляющий собой веб-драйвер. Подробная информация о методах и атрибутах находится в файле `src/webdriver/driver.py`.
-
+- `Driver`: Это класс, который, вероятно, предоставляет методы для управления веб-драйвером. Очевидно, в нем есть методы `scroll`, `execute_locator`, `wait` и другие.
 
 **Функции:**
 
-* `post_title(d: Driver, message: SimpleNamespace | str) -> bool`: Функция отправляет заголовок и описание сообщения.
-    * `d`: Экземпляр класса `Driver`.
-    * `message`:  Может быть `SimpleNamespace` с полями `title` и `description` или строка.
-    * Возвращает `True`, если операция прошла успешно, иначе `None`.
-* `upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], no_video: bool = False, without_captions: bool = False) -> bool`: Функция загружает медиафайлы (изображения/видео).
-    * `media`: Может быть `SimpleNamespace` или список таких объектов с указанием путей к медиафайлам.
-    * Возможны флаги `no_video` и `without_captions`.
-    * Возвращает `True`, если загрузка прошла успешно, `None` в случае ошибки.
-* `update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None`: Функция добавляет подписи к изображениям.
-    * `media`: Список объектов `SimpleNamespace` с информацией об изображениях и подписях.
-    * `textarea_list`: Список элементов textarea, куда нужно вставить подписи.
-    * Использует локализацию из файла `translations.json` для корректного форматирования подписей.
-* `publish(d:Driver, attempts = 5) -> bool`:  Функция публикует сообщение, обрабатывает ошибки и повторные попытки.
-    * `attempts`: Максимальное число попыток.
+- `post_title`: Отправляет заголовок и описание поста. Принимает экземпляр класса `Driver` и данные поста. Возвращает `True` при успехе, иначе `None`.
+- `upload_media`: Загружает медиа файлы. Принимает экземпляр класса `Driver`, список медиа файлов. Возвращает `True` при успехе, иначе `None`. Важно отметить перегрузку аргументов для обработки разных типов медиа.
+- `update_images_captions`: Добавляет подписи к загруженным медиа файлам.
+- `publish`: Публикует пост. Принимает экземпляр класса `Driver` и число попыток. Возвращает `True` или `None`. Использование рекурсии для обработки возможных ошибок публикации.
+- `promote_post`: Объединяет `post_title`, `upload_media` и `publish` для публикации поста.
+- `post_message`: Главная функция для публикации поста.
 
 
 **Переменные:**
 
-* `locator`: Объект `SimpleNamespace`, содержащий логеры для взаимодействия с веб-элементами.  Загружен из `post_message.json`
-* `MODE`: Строковая переменная, вероятно, для обозначения режима работы (например, 'dev', 'prod').
+- `MODE`: Строковая переменная, вероятно, определяющая режим работы (например, `dev` или `prod`).
+- `locator`: Объект `SimpleNamespace`, содержащий локаторы, загруженные из JSON файла.
 
 
 **Возможные ошибки и улучшения:**
 
-* **Обработка ошибок:** Функции `upload_media` и `update_images_captions` содержат обработку исключений, но некоторые части кода (например, `publish`)  могли бы быть еще более надежными при наличии более широкого диапазона обработчиков.
-* **Локализация:**  Использование файла `translations.json` для локализации - хорошее решение. В идеале, нужно более тщательно продумать структуру и валидацию данных внутри этого файла.
-* **Время ожидания:** Функция `publish` использует  `d.wait(x)`, но могло бы быть более эффективно использовать механизмы ожидания Selenium (например, `WebDriverWait`) для более точного управления ожиданием нахождения элементов.
-* **Управление потоками:** Если эта функция используется в многопоточном окружении, необходимо тщательно проверить работу в условиях гонки ресурсов.
-* **Внутренние функции:** Внутренние функции (`handle_product`) могут быть перенесены в отдельный файл для повышения структурированности кода.
+- **Обработка исключений:** Код содержит некоторые `try...except` блоки, но они могут быть расширены для более надежной обработки ошибок. Например, в `upload_media` необходимо указать обработку исключений для каждой операции загрузки.
+- **Улучшение обработки ошибок:** Функции, такие как `publish`, должны иметь более ясную логику обработки ошибок, и должно быть улучшено уведомление о возникновении проблем.
+- **Дополнения:** Необходимо добавить валидации аргументов, чтобы гарантировать корректность входных данных для предотвращения неожиданного поведения.
+- **Константы:** Рекомендуется использовать константы для значений таймаутов и других часто используемых величин.
+- **Повторяющийся код:** В функции `publish` повторяется код для обработки ошибок публикации. Можно выделить отдельную функцию для обработки ошибок.
+- **Улучшенная логика в publish:** Возможна более оптимальная логика в `publish` для обработки сообщений об ошибках, например, `if attempts > 0:`.
 
-**Цепочка взаимосвязей:**
 
-Функция `post_message` использует функции `post_title`, `upload_media`, `publish` и, косвенно, `update_images_captions`.  Эти функции, в свою очередь, используют класс `Driver` и логеры для взаимодействия с веб-страницей и записью информации о ходе выполнения. Зависимости определяются через импорты из пакета `src`.
+**Взаимосвязи с другими частями проекта:**
+
+- `gs`: вероятно содержит конфигурацию.
+- `src.webdriver.driver`: содержит класс для работы с веб-драйвером.
+- `src.utils.jjson`: содержит методы для парсинга JSON.
+- `src.logger`: для записи логов.
+- `src.endpoints.advertisement.facebook.locators`:  конфигурация локаторов.
+- `src.advertisement.facebook.scenarios.translations`: переводы для описаний.
+
+
+Этот код, вероятно, часть системы автоматизированного маркетинга, которая публикует рекламные объявления на Facebook.
