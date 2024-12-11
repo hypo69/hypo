@@ -1,9 +1,33 @@
 ```rst
 .. module:: src.endpoints
-```
-[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
+    :synopsis: Endpoints for various customers
 
-[Русский](https://github.com/hypo69/hypo/blob/master/endpoints/readme.ru.md)
+.. moduleauthor:: hypo69 <hypo69@davidka.net>
+
+.. note::
+    This module provides API endpoints tailored for different customers.
+
+.. warning::
+    Ensure proper authentication and authorization when using these endpoints.
+
+.. seealso::
+    For more details on how to use these endpoints, refer to the :doc:`API documentation <api_doc>`.
+```
+
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \ 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD'>English</A>
+</TD>
+</TR>
+</TABLE>
 
 Data Consumer Endpoints Module  
 =========================================================================================  
