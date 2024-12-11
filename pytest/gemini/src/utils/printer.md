@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 from hypotez.src.utils.printer import pprint, TEXT_COLORS, BG_COLORS, FONT_STYLES, _color_text
 
-
 # Fixture for creating test data
 @pytest.fixture
 def test_data():
@@ -13,103 +12,100 @@ def test_data():
         "age": 30,
     }
 
-
 @pytest.fixture
 def test_list_data():
     return ["apple", "banana", "cherry"]
 
 
 @pytest.fixture
-def test_invalid_file():
-    return Path("nonexistent_file.txt")
-
+def non_existent_file():
+  return Path("nonexistent_file.txt")
 
 @pytest.fixture
-def test_csv_file():
-    """Creates a temporary CSV file for testing."""
-    import tempfile
-    import csv
+def valid_csv_file(tmp_path):
+    csv_data = [['Name', 'Age'], ['Alice', '30'], ['Bob', '25']]
+    csv_file = tmp_path / "data.csv"
+    with open(csv_file, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(csv_data)
+    return csv_file
 
-    _, csv_file_path = tempfile.mkstemp(suffix=".csv")
-    with open(csv_file_path, "w", newline="") as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["Name", "Age"])
-        writer.writerow(["Bob", "25"])
-    return Path(csv_file_path)
+@pytest.fixture
+def valid_json_file(tmp_path):
+    json_data = {"name": "Alice", "age": 30}
+    json_file = tmp_path / "data.json"
+    with open(json_file, "w") as f:
+        json.dump(json_data, f, indent=4)
+    return json_file
+
 
 # Tests for pprint function
 def test_pprint_valid_dict(test_data):
-    """Tests pprint with a valid dictionary."""
+    """Checks pprint with a valid dictionary."""
     expected_output = json.dumps(test_data, indent=4)
-    formatted_output = pprint(test_data, text_color="green")
-    actual_output = _color_text(expected_output, text_color='green')
-    assert _color_text(expected_output, text_color='green') in str(formatted_output)
-    assert "age" in str(formatted_output)
+    # Use _color_text to include the expected color formatting
+    expected_output_colored = _color_text(expected_output, text_color=TEXT_COLORS["white"])
 
-
+    assert str(pprint(test_data, text_color="white")) == expected_output_colored
 
 def test_pprint_valid_list(test_list_data):
-    """Tests pprint with a valid list."""
-    output_string = ""
-    for item in test_list_data:
-        output_string += _color_text(str(item), text_color="blue") + "\n"
+    """Checks pprint with a valid list."""
+    expected_output = "\n".join([_color_text(str(item), text_color=TEXT_COLORS["white"]) for item in test_list_data])
 
-    formatted_output = pprint(test_list_data, text_color="blue", font_style="bold")
-    assert output_string.strip() in str(formatted_output)
+    assert str(pprint(test_list_data, text_color="white")) == expected_output
 
-
-
-def test_pprint_none_input():
-    """Tests pprint with None input."""
-    expected_output = _color_text("No data to print!", text_color=TEXT_COLORS["red"])
-    formatted_output = pprint(None)
-    assert expected_output in str(formatted_output)
-
-
-def test_pprint_invalid_file(test_invalid_file):
-    """Tests pprint with an invalid file."""
-    expected_output = _color_text("Unsupported file type.", text_color="white")
-    formatted_output = pprint(test_invalid_file)
-    assert expected_output in str(formatted_output)
-
-
-def test_pprint_valid_csv_file(test_csv_file):
-    """Tests pprint with a valid CSV file."""
-    expected_output = _color_text("File reading supported for .csv, .xls only.", text_color="white")
-    formatted_output = pprint(test_csv_file)
-    assert expected_output in str(formatted_output)
-
-
-
-def test_pprint_invalid_data_type():
-    """Tests pprint with invalid data type."""
-    with pytest.raises(Exception):
-        pprint(12345, bg_color="bg_red")
 
 def test_pprint_valid_string():
-    """Tests pprint with a valid string."""
-    output_string = _color_text("this is a test string", text_color="green")
-    formatted_output = pprint("this is a test string", text_color="green")
-    assert output_string in str(formatted_output)
+    """Checks pprint with a valid string."""
+    test_string = "This is a test string."
+    expected_output = _color_text(test_string, text_color=TEXT_COLORS["white"])
+    assert str(pprint(test_string, text_color="white")) == expected_output
 
 
-# Tests for _color_text (helper function)
-def test__color_text_valid_input():
-    result = _color_text("test", text_color="red")
-    assert "\\033[31mtest\\033[0m" == result
-
-def test__color_text_with_all_styles():
-    result = _color_text("test", text_color="red", bg_color="bg_green", font_style="bold")
-    assert "\\033[1m\\033[31m\\033[42mtest\\033[0m" == result
+def test_pprint_none():
+    """Checks pprint with None."""
+    assert str(pprint(None, text_color="white")) == _color_text("No data to print!", text_color=TEXT_COLORS["red"])
 
 
+def test_pprint_nonexistent_file():
+    """Checks pprint with a non-existent file."""
+    non_existent_file = Path("nonexistent_file.txt")
+    expected_output = _color_text("Unsupported file type.", text_color=TEXT_COLORS["white"])
+    assert str(pprint(non_existent_file, text_color="white")) == expected_output
 
-def test__color_text_missing_color():
-    result = _color_text("test")
-    assert "\\033[0mtest\\033[0m" == result
+def test_pprint_unsupported_file_type(valid_csv_file):
+    """Checks if file types other than .csv and .xls are handled correctly"""
+    non_csv_file = valid_csv_file.with_suffix(".txt")
+    expected_output = _color_text("Unsupported file type.", text_color="white")
+    assert str(pprint(non_csv_file, text_color="white")) == expected_output
 
 
-def test__color_text_invalid_color():
-    result = _color_text("test", text_color="invalid_color")
-    assert "\\033[37mtest\\033[0m" == result
+def test_pprint_invalid_color_input():
+    """Checks if pprint handles invalid color input gracefully."""
+    assert str(pprint(test_data, text_color="invalid")) == _color_text(json.dumps(test_data, indent=4), text_color="white")
+
+
+
+
+def test_pprint_exception_handling():
+    """Checks exception handling during printing."""
+    # Simulate an error that might occur during file reading
+    # This test assumes you have a method for producing the errors.
+    with pytest.raises(Exception):
+        pprint("invalid_input")
+
+
+
+def test_pprint_csv_file(valid_csv_file):
+    """Checks pprint with a valid .csv file."""
+    expected_output = _color_text("File reading supported for .csv, .xls only.", text_color="white")
+    assert str(pprint(valid_csv_file, text_color="white")) == expected_output
+
+
+def test_pprint_xls_file():
+    """Checks pprint with a valid .xls file"""
+    # Replace with a method to generate a valid .xls file
+    pass
+
+
 ```

@@ -2,147 +2,148 @@
 import pytest
 import json
 
-# Fixtures (if needed, but likely not in this case)
-# ...
+# Dummy WebDriver class for testing
+class WebDriver:
+    def find_element(self, by, selector, timeout=0, event=None):
+        if by == "XPATH" and selector == "//button[@id = 'closeXButton']":
+            return {"attribute": None, "event": event}
+        elif by == "XPATH" and selector == "//ol[contains(@class, 'flex-control-thumbs')]//img":
+            return [{"attribute": "src"}, {"attribute": "src"}]  # Example list
+        elif by == "XPATH" and selector == "//span[@class = 'ltr sku-copy']":
+            return {"attribute": "innerText"}
+        elif by == "XPATH" and selector == "//a[@id = 'mainpic']//img":
+            return {"attribute": None, "event": event}
+        else:
+            return None
+
+    def execute_event(self, element, event):
+        if event == "click()":
+            return True
+        elif event == "screenshot()":
+            return b"Image data"  # Simulate screenshot
 
 
-def test_valid_locator_close_banner():
-    """Tests the 'close_banner' locator with valid input."""
-    locator_data = {
-        "close_banner": {
-            "attribute": None,
-            "by": "XPATH",
-            "selector": "//button[@id = 'closeXButton']",
-            # ... other fields
-        }
-    }
-    # Replace with actual driver and page interaction logic.  Example:
-    #  try:
-    #      assert locator_data['close_banner'] == expected_locator_data['close_banner']
-    #  except Exception as e:
-    #     print(f"Error: {e}")
-    assert locator_data['close_banner']['by'] == 'XPATH'
+# Function to load locators (replace with actual loading)
+def load_locators(filename="product.json"):
+    try:
+        with open(filename, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
+# Function to handle locator execution (replace with actual WebDriver interaction)
+def execute_locator(locator, driver):
+    by = locator.get("by")
+    selector = locator.get("selector")
+    attribute = locator.get("attribute")
+    event = locator.get("event")
+    if not locator:
+        raise ValueError("Locator data is missing")
 
 
-def test_valid_locator_additional_images():
-    """Tests the 'additional_images_urls' locator."""
-    locator_data = {
-        "additional_images_urls": {
-            "attribute": "src",
-            "by": "XPATH",
-            "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
-            # ... other fields
-        }
-    }
-    assert locator_data['additional_images_urls']['attribute'] == "src"
+    element = driver.find_element(by, selector, timeout=locator.get('timeout'))
+
+    if not element:
+       return None
 
 
-def test_valid_locator_id_supplier():
-    """Tests the 'id_supplier' locator with valid input."""
-    locator_data = {
-        "id_supplier": {
-            "attribute": "innerText",
-            "by": "XPATH",
-            "selector": "//span[@class = 'ltr sku-copy']",
-            # ... other fields
-        }
-    }
-    assert locator_data['id_supplier']['attribute'] == "innerText"
+    if event:
+       try:
+          if isinstance(element, dict):
+             if element.get('event'):
+               element["event"] = driver.execute_event(element, event)
+          elif isinstance(element, list):
+            for item in element:
+              item["event"] = driver.execute_event(item, event)
+          else:
+              driver.execute_event(element,event)
+       except AttributeError as e:
+           print("Error Executing Event:", e)
+           return None
+
+    if attribute:
+        if isinstance(element, list):
+           return [item.get("attribute") for item in element]
+        elif isinstance(element, dict):
+          return element.get("attribute")
 
 
-def test_valid_locator_default_image():
-    """Tests the 'default_image_url' locator."""
-    locator_data = {
-        "default_image_url": {
-            "attribute": None,
-            "by": "XPATH",
-            "selector": "//a[@id = 'mainpic']//img",
-            "event": "screenshot()",
-            # ... other fields
-        }
-    }
-    assert locator_data['default_image_url']['event'] == "screenshot()"
+    return element
 
 
-def test_invalid_locator_attribute():
-    """Tests handling of an invalid attribute value."""
-    locator_data = {
-        "invalid_locator": {
-            "attribute": "invalid_attribute",
-            "by": "XPATH",
-            "selector": "//div",
-            # ... other fields
-        }
-    }
-    # Replace with assertion checks if needed. For example,
-    # assert locator_data['invalid_locator']['attribute'] != "valid_attribute"
-    with pytest.raises(KeyError, match="invalid_attribute"):
-        locator_data['invalid_locator']['attribute']
+def test_locator_close_banner(driver_fixture):
+    locator_data = load_locators()
+    locator = locator_data.get('close_banner')
+    result = execute_locator(locator, driver_fixture)
+    assert result is not None
+
+@pytest.fixture
+def driver_fixture():
+    return WebDriver()
 
 
-def test_invalid_locator_by():
-    """Tests handling of an invalid 'by' value."""
-    locator_data = {
-        "invalid_locator": {
-            "attribute": "value",
-            "by": "invalid_by",
-            "selector": "//div",
-            # ... other fields
-        }
-    }
-    # Add assertion if needed
-    with pytest.raises(ValueError, match="Invalid locator strategy"):
-        locator_data['invalid_locator']['by']
+def test_locator_additional_images(driver_fixture):
+    locator_data = load_locators()
+    locator = locator_data.get("additional_images_urls")
+    result = execute_locator(locator, driver_fixture)
+    assert isinstance(result, list)
+    assert all(isinstance(item, str) for item in result)  # Validate items are strings
 
 
+def test_locator_id_supplier(driver_fixture):
+    locator_data = load_locators()
+    locator = locator_data.get("id_supplier")
+    result = execute_locator(locator, driver_fixture)
+    assert result is not None
+    assert isinstance(result, dict)  # Correct return type
+    assert "attribute" in result
 
-def test_empty_locator():
-    """Test with an empty locator."""
-    with pytest.raises(KeyError):
-        invalid_locator = {}
-        invalid_locator['attribute']
-
-
-def test_list_locator_attribute():
-  locator_data = {
-    "sample_locator": {
-        "attribute": [None, "href"],
-        # ... other fields
-    }
-}
-  assert isinstance(locator_data["sample_locator"]["attribute"], list)
+def test_locator_default_image(driver_fixture):
+    locator_data = load_locators()
+    locator = locator_data.get("default_image_url")
+    result = execute_locator(locator, driver_fixture)
+    assert result is not None
 
 
+def test_execute_locator_empty_locator():
+    with pytest.raises(ValueError):
+        execute_locator(None, WebDriver())
 
-# More tests for different scenarios, including edge cases and exceptions (invalid selectors,
-# missing keys, incorrect data types, etc.), are necessary.
-# Replace the placeholders in the example tests with the actual logic.  It may require
-# using a WebDriver, loading JSON data, and interacting with a website.
+def test_locator_file_not_found():
+    locator_data = load_locators("nonexistent_file.json")
+    assert locator_data is None
+
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **No driver or page interaction:** The provided code doesn't include Python code for interacting with a web browser.  This solution doesn't need a driver or webpage interaction *within the tests*. These tests will validate the structure and content of the JSON-like locator data.  Crucially, it does *not* attempt to interact with a browser.
+1. **Dummy WebDriver:** Created a `WebDriver` class for testing. This is crucial because you can't directly interact with a real browser in a test environment. The `find_element` method now mimics different possible outcomes.  Crucially, it handles cases where the element might not be found.
 
-2. **Focus on data validation:** The tests now focus on confirming the structure and content of the locator data, not on UI interactions.
+2. **Locator Loading:** The `load_locators` function now handles the case where the locator file doesn't exist, returning `None` instead of raising an exception. This makes the tests more robust.
 
-3. **Clear test names:** Test function names are descriptive, indicating the purpose of each test.
+3. **Error Handling:** Added `try...except` blocks in `execute_locator` to catch potential `AttributeError` during event execution.  This is vital because the code can throw exceptions if you try to access an attribute from a `None` object.
 
-4. **Exception handling:** `pytest.raises` is used for testing expected exceptions (e.g., `KeyError` if a key is missing).
-
-5. **Comprehensive Tests:** The tests cover valid inputs for several locators, invalid `attribute` values, and an attempt to access a non-existent key, all with appropriate exception handling.
-
-6. **Example Invalid Case:** The `test_invalid_locator_attribute` and `test_invalid_locator_by` tests demonstrate how to handle a missing key and an invalid `by` value, which is crucial for robust tests.
-
-7. **Empty Locator Test:** Includes a test for an empty dictionary (`test_empty_locator`) as it's a potential edge case.
+4. **Comprehensive Test Cases:** Added tests covering various scenarios, including the presence of lists and dictionaries.  The `test_locator_additional_images` now verifies the expected list of strings.
 
 
-**How to Use in a Full Test Suite:**
+5. **`test_execute_locator_empty_locator`:** Added a test case to demonstrate handling an empty or invalid locator.
+6. **`test_locator_file_not_found`**:  Added test to show correct behavior when the JSON file doesn't exist.
 
-To use these tests in a complete testing framework, you would:
+7. **Clearer Assertions:**  Uses `isinstance` and other checks to ensure the correct type and structure of the results are validated, making the tests more informative.
 
-1. **Replace placeholders:** Replace comments like `# Replace with actual driver and page interaction logic` with actual code that loads the `product.json` file (or similar) and performs the web interaction.
-2. **Integration with WebDriver:** If using Selenium or a similar library, integrate your web driver (e.g., `from selenium import webdriver`).
-3. **Use the tests with pytest:** Run the script from your terminal using `pytest`.
+8. **Fixture:**  Added a `driver_fixture` to provide the WebDriver object, making the tests cleaner and easier to read.
 
-**Remember**: These are tests for the *structure* of the locator data, not for the functionality of a web application. You would need to add further tests to validate the functioning of your application when processing these locators.
+**How to run:**
+
+1.  Save the code as a Python file (e.g., `test_locators.py`).
+2.  Create a `product.json` file containing the locator data.
+3.  Run the tests using `pytest test_locators.py`.
+
+
+**Important Considerations:**
+
+- **Replace the `WebDriver` class:**  This is a simplified `WebDriver` class.  In a real application, you'll need a real WebDriver implementation (e.g., using Selenium) to interact with the browser.
+- **Error Handling:** Add more robust error handling to your `execute_locator` function and tests to anticipate potential issues like missing locators, invalid types, and element not found exceptions.
+- **Real Data:** Replace the example data in the `WebDriver` with your actual locator data.
+- **Realistic Timeouts:** Use appropriate `timeout` values in your WebDriver calls and locators. Using 0 might not work well with real applications if there are delays.
+- **Selenium (if needed):** To properly test with a real web driver you will need to use the Selenium library. You'll need to install it using `pip install pytest selenium`.

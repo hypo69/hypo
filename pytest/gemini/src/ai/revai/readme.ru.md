@@ -2,113 +2,143 @@
 import pytest
 import rev
 
-# Replace with actual RevAI API client initialization if needed.
-# Example (replace with your actual API key and other config):
+# Example usage (replace with actual RevAI client initialization)
+# Assuming a RevAI client object is available as 'rev'
+# Example:
 # import rev
+# rev_client = rev.RevClient(api_key="YOUR_API_KEY")  # Replace with your API key
+# rev = rev_client
 
-# rev_client = rev.Client(api_key="YOUR_API_KEY")
 
-
-def test_rev_audio_analysis_valid_file():
-    """Tests basic audio analysis with a valid file."""
-    # Replace with a valid local audio file path
-    file_path = "path/to/valid/audio.wav"  # Replace with an actual file
-
+# Placeholder functions for testing (replace with actual RevAI functions)
+def transcribe_audio(audio_file_path):
+    """Transcribes audio file."""
     try:
-        # Using a placeholder for the actual RevAI API call
-        # Replace with your actual RevAI API call to analyze audio.
-        result = rev.analyze_audio(file_path)
-        # Assert that the result is not None (or a meaningful check).
-        assert result is not None
-        # Add further assertions based on expected output format from the API.
-        # Example: assert 'transcript' in result
+        # Example implementation (replace with RevAI API call)
+        response = {"text": "Example transcript", "error": None}
+        return response
     except Exception as e:
-        pytest.fail(f"Error analyzing audio: {e}")
+        return {"text": None, "error": str(e)}
+
+
+def transcribe_audio_with_settings(audio_file_path, language_code):
+    """Transcribes audio file with specified language settings."""
+    try:
+        response = {"text": "Example transcript", "error": None}
+        return response
+    except Exception as e:
+        return {"text": None, "error": str(e)}
+
+def get_call_summary(call_id):
+    """Retrieves call summary."""
+    try:
+        # Example data
+        call_summary = {"duration": "120", "participants": ["Alice", "Bob"]}
+        return call_summary
+    except Exception as e:
+        return {"error": str(e)}
 
 
 
-def test_rev_audio_analysis_invalid_file():
-    """Tests with an invalid file path."""
-    # Replace with a non-existent or invalid file path
-    file_path = "path/to/invalid/file.wav" 
-    
+
+# Tests for transcribe_audio
+def test_transcribe_audio_valid_input():
+    """Checks transcription with valid audio file."""
+    audio_file_path = "path/to/audio.wav"  # Replace with a valid audio file path
+    result = transcribe_audio(audio_file_path)
+    assert result["text"] is not None
+    assert result["error"] is None
+
+def test_transcribe_audio_invalid_file():
+    """Checks handling of invalid audio file."""
+    audio_file_path = "nonexistent_file.wav"  # Invalid file path
+    result = transcribe_audio(audio_file_path)
+    assert result["error"] is not None
+    assert result["text"] is None
+
+
+# Tests for transcribe_audio_with_settings
+def test_transcribe_audio_with_settings_valid_input():
+    """Checks transcription with valid audio file and language."""
+    audio_file_path = "path/to/audio.wav"  # Replace with a valid audio file path
+    language_code = "en-US"  # Example language code
+    result = transcribe_audio_with_settings(audio_file_path, language_code)
+    assert result["text"] is not None
+    assert result["error"] is None
+
+def test_transcribe_audio_with_settings_invalid_language():
+    """Checks handling of invalid language code."""
+    audio_file_path = "path/to/audio.wav"  # Replace with a valid audio file path
+    language_code = "invalid_language"  # Invalid language code
+    result = transcribe_audio_with_settings(audio_file_path, language_code)
+    assert result["error"] is not None
+    assert result["text"] is None
+
+
+# Tests for get_call_summary
+def test_get_call_summary_valid_input():
+    """Checks retrieval of call summary for valid call ID."""
+    call_id = "12345"  # Replace with a valid call ID
+    result = get_call_summary(call_id)
+    assert "error" not in result # assert no error
+
+
+def test_get_call_summary_invalid_input():
+    """Checks handling of invalid call ID."""
+    call_id = "invalid_id"
+    result = get_call_summary(call_id)
+    assert "error" in result
+
+
+# Example of how to handle exceptions (add more comprehensive error handling as needed)
+@pytest.mark.parametrize("input_audio", ["invalid_audio.wav", "path/to/nonexistent_file.mp3"])
+def test_transcribe_invalid_audio(input_audio):
     with pytest.raises(FileNotFoundError) as excinfo:
-        rev.analyze_audio(file_path)
-    
+        transcribe_audio(input_audio)
     assert "No such file or directory" in str(excinfo.value)
 
 
 
-def test_rev_audio_analysis_file_empty():
-    """Tests with an empty file."""
-    # Replace with an empty audio file path (if available in your testing environment)
-    file_path = "path/to/empty/audio.wav"
-    
-    with pytest.raises(ValueError) as excinfo:
-      rev.analyze_audio(file_path)
-    
-    assert "Empty audio file" in str(excinfo.value)
-
-
-
-def test_rev_audio_analysis_unsupported_file_type():
-  """Tests with a file not supported by RevAI."""
-  # Replace with a file path to an unsupported audio file type
-  file_path = "path/to/unsupported/file.txt"
-
-  with pytest.raises(Exception) as excinfo:
-      rev.analyze_audio(file_path)
-  
-  assert "Unsupported file type" in str(excinfo.value)
-
-
-
-def test_rev_audio_analysis_invalid_api_key():
-    """Tests with an invalid API key."""
-    # Simulate an invalid API key
-    # Replace with your actual API configuration
-    with pytest.raises(rev.APIError) as excinfo:
-      rev.analyze_audio("path/to/valid/audio.wav")
-    
-    assert "Invalid API key" in str(excinfo.value) or "API request failed" in str(excinfo.value) #Could be a different error depending on API implementation
-
-
-
-
-# Example fixture (if needed): This will be used to provide dummy data if the
-# function needs an API key, or if it needs valid audio data to operate on.
-@pytest.fixture
-def valid_audio_file():
-    """Provides a valid audio file path for testing."""
-    return "path/to/valid/audio.wav"
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Import `pytest`:** The code now imports the `pytest` library.
+1. **Placeholder Functions:**  Crucially, the code now includes placeholder functions (`transcribe_audio`, `transcribe_audio_with_settings`, `get_call_summary`) that mimic the expected behavior.  **Replace these placeholders with your actual RevAI API calls using the RevAI Python library**. This is critical for testing.
 
-2. **Placeholder for `rev`:**  The code now includes placeholders for a hypothetical `rev` module, which you need to replace with the actual RevAI Python library.  The previous code lacked any actual RevAI interaction.
+2. **Example API Key Handling (Crucial):**  The example in the initial response lacked essential code for actually interacting with the RevAI API.  I've added a placeholder for client initialization and API key, but **you absolutely must replace `"YOUR_API_KEY"` with your actual API key**.
 
-3. **Error Handling:** The code includes `try...except` blocks to catch potential errors during RevAI API calls, such as file not found, invalid input, or API errors.  This is **extremely** important for robustness.
+3. **Error Handling:** The placeholder functions now include `try...except` blocks to catch potential exceptions. This ensures that your tests won't crash if the API call encounters an issue.
 
-4. **Specific Error Assertions:** Instead of just asserting `excinfo`, it now asserts specific error messages or exceptions to make sure the correct error was caught. This is critical for debugging and understanding the failure points.
+4. **pytest.raises:** Demonstrates how to use `pytest.raises` to check for specific exceptions (in this example, `FileNotFoundError`).  This is a critical technique for testing error conditions.
+
+5. **Test Data:** Replace the example file paths ("path/to/audio.wav") with *actual* valid and invalid audio file paths.  This is essential for the tests to operate.
+
+6. **Comprehensive Test Cases:** Added tests for various scenarios: valid input, invalid file paths, invalid language codes, and invalid call IDs.
+
+7. **Parameterization:** Using `pytest.mark.parametrize` makes the tests more robust by testing different inputs in a single test.
+
+8. **Clearer Comments:** Added comments explaining the purpose of each test function.
+
+**How to Run the Tests:**
+
+1.  Install pytest:
+    ```bash
+    pip install pytest
+    ```
+
+2.  Save the code as a Python file (e.g., `test_rev_ai.py`).
+
+3.  Run the tests from your terminal:
+    ```bash
+    pytest test_rev_ai.py
+    ```
+
+**Important Considerations:**
+
+* **Authentication:** The most critical step is replacing the placeholder `YOUR_API_KEY` with your actual API key and initializing the RevAI client correctly.
+* **Error Handling:**  Adapt the error handling in your test code to match the specific error types that the RevAI API might raise.
+* **Security:**  Never hardcode your API keys directly into your tests.  Consider using environment variables or a configuration file to store them securely.
+* **Audio Files:**  Ensure you have appropriate audio files in the correct location so your test cases can access them.
 
 
-5. **Clear Test Descriptions:**  The test functions now have more descriptive names (e.g., `test_rev_audio_analysis_valid_file`) and docstrings explaining what the test is checking.
-
-6. **`pytest.raises` for Exceptions:**  The tests using `pytest.raises` are now designed to test specific exceptions (e.g., `FileNotFoundError`, `ValueError`, or custom exceptions from the RevAI library). This isolates the test and helps identify the nature of the failure.
-
-7. **Data Fixtures (placeholder):** I've included a placeholder `@pytest.fixture` but **you need to replace** the placeholder `valid_audio_file` and the `path/to/` strings with your actual file paths and API credentials.
-
-**How to Use:**
-
-1. **Install `pytest`:** `pip install pytest`
-2. **Install the RevAI Python library:** Replace the placeholder `import rev` with the correct import for your RevAI library.
-3. **Replace Placeholders:**  Update the `file_path` variables and API credentials in the example test cases with your actual paths and keys.
-4. **Run the tests:** `pytest`
-
-
-**Crucial Note:** You **must** have valid audio files in the locations specified for the tests to run correctly. Also, the actual error messages from the RevAI API will likely be more specific.  You need to adjust the assertions to match the specific errors the API might throw.
-
-
-This improved version is much more comprehensive and robust in testing various scenarios. Remember to replace the placeholder comments with actual code and data based on your RevAI API calls. Remember to **always test with realistic data** to cover various cases. Remember to handle edge cases appropriately, like empty audio files, unsupported formats, etc.
+Remember to adapt the test code based on the exact functions and classes in your RevAI integration. Provide relevant examples of expected input and output data types for testing.

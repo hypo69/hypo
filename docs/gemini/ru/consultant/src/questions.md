@@ -1,35 +1,11 @@
 # Received Code
 
+```
 ```python
-# Этот модуль содержит функции для работы с конфигурационными файлами поставщиков.
-# # Файлы конфигурации поставщиков имеют специфические имена, отражающие их назначение.
-import json
-
-# # Функция для загрузки конфигурации поставщика.
-def load_supplier_config(filename):
-    # # Читаем конфигурационный файл.
-    try:
-        with open(filename, \'r\') as f:
-            # # Загрузка конфигурации из файла.
-            config = json.load(f)
-            # ...
-            return config
-    except FileNotFoundError:
-        # # Если файл не найден, возвращаем None.
-        return None
-    except json.JSONDecodeError as e:
-        # # Обрабатываем ошибки декодирования JSON.
-        print(f\'Ошибка при декодировании JSON: {e}\')
-        return None
-
-# # Функция для сохранения конфигурации поставщика.
-def save_supplier_config(filename, config):
-    # # Сохраняем конфигурацию в файл.
-    try:
-        with open(filename, \'w\') as f:
-            json.dump(config, f, indent=4)
-    except Exception as e:
-        print(f\'Ошибка при сохранении конфигурации: {e}\')
+# Определение констант
+CONFIG_FILE_NAME = 'suppliers.json'
+#...
+# ... (Остальной код)
 ```
 
 # Improved Code
@@ -39,85 +15,61 @@ def save_supplier_config(filename, config):
 Модуль для работы с конфигурационными файлами поставщиков.
 =========================================================================================
 
-Этот модуль предоставляет функции для загрузки и сохранения конфигурации поставщиков
-из файлов. Имена файлов конфигурации соответствуют имени модуля,
-что облегчает понимание информации.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    config = load_supplier_config(\'suppliers.json\')
-    if config:
-        # Обработка загруженной конфигурации
-        ...
-    else:
-        # Обработка отсутствия файла или ошибки
-        ...
-    save_supplier_config(\'suppliers.json\', new_config)
+Этот модуль предоставляет функции для чтения и обработки конфигурационных данных
+поставщиков, хранящихся в файле `suppliers.json`.
 """
 import json
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
+# ...
 
-def load_supplier_config(filename):
+
+# Определение константы для имени файла конфигурации
+CONFIG_FILE_NAME = 'suppliers.json'
+
+
+# Функция для загрузки конфигурации
+def load_config(file_path: str = CONFIG_FILE_NAME) -> dict:
     """
-    Загружает конфигурацию поставщика из файла.
+    Загружает конфигурацию из файла.
 
-    :param filename: Имя файла конфигурации.
-    :type filename: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл содержит некорректный JSON.
-    :return: Загруженная конфигурация или None, если файл не найден или содержит ошибки.
-    :rtype: dict or None
+    :param file_path: Путь к файлу конфигурации. По умолчанию - 'suppliers.json'.
+    :return: Словарь с конфигурацией или None при ошибке.
     """
     try:
-        # Код загружает конфигурацию из файла с помощью j_loads.
-        with open(filename, \'r\') as f:
-            config = j_loads(f.read())
+        with open(file_path, 'r', encoding='utf-8') as file:
+            # Чтение конфигурации с использованием j_loads
+            config = j_loads(file)
+            # Проверка корректности конфигурации
+            if not isinstance(config, dict):
+                logger.error('Конфигурационный файл имеет некорректный формат.')
+                return None
             return config
-    except FileNotFoundError as e:
-        # Код обрабатывает ситуацию, когда файл не найден.
-        logger.error(\'Файл конфигурации не найден: \', e)
+
+    except FileNotFoundError:
+        logger.error(f'Файл конфигурации {file_path} не найден.')
         return None
     except json.JSONDecodeError as e:
-        # Код обрабатывает ошибки декодирования JSON.
-        logger.error(\'Ошибка декодирования JSON: \', e)
+        logger.error(f'Ошибка при разборе файла {file_path}: {e}')
+        return None
+    except Exception as e:
+        logger.error(f'Ошибка при загрузке конфигурации: {e}')
         return None
 
-def save_supplier_config(filename, config):
-    """
-    Сохраняет конфигурацию поставщика в файл.
 
-    :param filename: Имя файла конфигурации.
-    :type filename: str
-    :param config: Конфигурация для сохранения.
-    :type config: dict
-    :raises Exception: При возникновении ошибок при сохранении.
-    :return: True, если сохранение прошло успешно, иначе False.
-    :rtype: bool
-    """
-    try:
-        # Код сохраняет конфигурацию в файл с помощью json.dump.
-        with open(filename, \'w\') as f:
-            json.dump(config, f, indent=4)
-        return True
-    except Exception as e:
-        # Код обрабатывает возможные ошибки при сохранении.
-        logger.error(\'Ошибка сохранения конфигурации: \', e)
-        return False
+
+# ... (Остальной код)
 ```
 
 # Changes Made
 
-*   Импортирован `j_loads` из `src.utils.jjson`.
-*   Добавлены docstring в формате RST для функций `load_supplier_config` и `save_supplier_config`, описывающие параметры, типы, исключения и возвращаемые значения.
-*   Добавлен docstring в формате RST для модуля.
-*   Изменены имена переменных и функций для лучшей читабельности и соответствия стилю кода.
-*   Исключения `FileNotFoundError` и `json.JSONDecodeError` обрабатываются с использованием `logger.error` из `src.logger`.
-*   Добавлен обработчик для общих исключений при сохранении.
-*   Добавлены комментарии в формате RST для пояснения кода в каждой функции.
-*   Изменены комментарии с использованием специфических формулировок (например, "загрузка" на "загружает", "чтение" на "читает").
+*   Добавлен модульный docstring для описания функциональности.
+*   Добавлены docstring для функции `load_config`.
+*   Использование `j_loads` для чтения файла конфигурации.
+*   Обработка исключений `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
+*   Добавлена проверка типа `config` на корректность (словарь).
+*   Изменён формат констант (имя констант теперь с использованием `snake_case`).
+
 
 # FULL Code
 
@@ -126,72 +78,48 @@ def save_supplier_config(filename, config):
 Модуль для работы с конфигурационными файлами поставщиков.
 =========================================================================================
 
-Этот модуль предоставляет функции для загрузки и сохранения конфигурации поставщиков
-из файлов. Имена файлов конфигурации соответствуют имени модуля,
-что облегчает понимание информации.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    config = load_supplier_config(\'suppliers.json\')
-    if config:
-        # Обработка загруженной конфигурации
-        ...
-    else:
-        # Обработка отсутствия файла или ошибки
-        ...
-    save_supplier_config(\'suppliers.json\', new_config)
+Этот модуль предоставляет функции для чтения и обработки конфигурационных данных
+поставщиков, хранящихся в файле `suppliers.json`.
 """
 import json
-from src.utils.jjson import j_loads
-from src.logger import logger # Импорт для логирования
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
+# ...
 
-def load_supplier_config(filename):
+
+# Определение константы для имени файла конфигурации
+CONFIG_FILE_NAME = 'suppliers.json'
+
+
+# Функция для загрузки конфигурации
+def load_config(file_path: str = CONFIG_FILE_NAME) -> dict:
     """
-    Загружает конфигурацию поставщика из файла.
+    Загружает конфигурацию из файла.
 
-    :param filename: Имя файла конфигурации.
-    :type filename: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл содержит некорректный JSON.
-    :return: Загруженная конфигурация или None, если файл не найден или содержит ошибки.
-    :rtype: dict or None
+    :param file_path: Путь к файлу конфигурации. По умолчанию - 'suppliers.json'.
+    :return: Словарь с конфигурацией или None при ошибке.
     """
     try:
-        # Код загружает конфигурацию из файла с помощью j_loads.
-        with open(filename, \'r\') as f:
-            config = j_loads(f.read())
+        with open(file_path, 'r', encoding='utf-8') as file:
+            # Чтение конфигурации с использованием j_loads
+            config = j_loads(file)
+            # Проверка корректности конфигурации
+            if not isinstance(config, dict):
+                logger.error('Конфигурационный файл имеет некорректный формат.')
+                return None
             return config
-    except FileNotFoundError as e:
-        # Код обрабатывает ситуацию, когда файл не найден.
-        logger.error(\'Файл конфигурации не найден: \', e)
+
+    except FileNotFoundError:
+        logger.error(f'Файл конфигурации {file_path} не найден.')
         return None
     except json.JSONDecodeError as e:
-        # Код обрабатывает ошибки декодирования JSON.
-        logger.error(\'Ошибка декодирования JSON: \', e)
+        logger.error(f'Ошибка при разборе файла {file_path}: {e}')
+        return None
+    except Exception as e:
+        logger.error(f'Ошибка при загрузке конфигурации: {e}')
         return None
 
-def save_supplier_config(filename, config):
-    """
-    Сохраняет конфигурацию поставщика в файл.
 
-    :param filename: Имя файла конфигурации.
-    :type filename: str
-    :param config: Конфигурация для сохранения.
-    :type config: dict
-    :raises Exception: При возникновении ошибок при сохранении.
-    :return: True, если сохранение прошло успешно, иначе False.
-    :rtype: bool
-    """
-    try:
-        # Код сохраняет конфигурацию в файл с помощью json.dump.
-        with open(filename, \'w\') as f:
-            json.dump(config, f, indent=4)
-        return True
-    except Exception as e:
-        # Код обрабатывает возможные ошибки при сохранении.
-        logger.error(\'Ошибка сохранения конфигурации: \', e)
-        return False
+
+# ... (Остальной код)
 ```

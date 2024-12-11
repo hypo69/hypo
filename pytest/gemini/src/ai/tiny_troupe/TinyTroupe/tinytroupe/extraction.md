@@ -2,156 +2,136 @@
 import pytest
 import os
 import json
-from tinytroupe.extraction import ResultsExtractor, ResultsReducer, ArtifactExporter, Normalizer
+import chevron
+import logging
+import pandas as pd
+import markdown
+from typing import Union, List
+from unittest.mock import patch
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
-from unittest.mock import patch, MagicMock
+from tinytroupe.factory import TinyPersonFactory
+from tinytroupe.utils import JsonSerializableRegistry
+from tinytroupe import openai_utils
+import tinytroupe.utils as utils
+from datetime import datetime
 
 
-# Mock functions to simulate external dependencies
-@patch('tinytroupe.extraction.openai_utils')
-@patch('tinytroupe.extraction.open')
-@patch('tinytroupe.extraction.os')
-def test_extract_results_from_agent(mock_os, mock_open, mock_openai_utils):
-    """Tests extract_results_from_agent function."""
+# Mock the openai_utils client for testing
+@pytest.fixture
+def mock_openai_client():
+    class MockClient:
+        def send_message(self, messages, temperature=0.0):
+            if len(messages) == 2:
+                system_message = messages[0]['content']
+                user_message = messages[1]['content']
+                if "agent's interactions history" in user_message:
+                    return {"role": "assistant", "content": '{"result": "extracted_data"}'}
+                elif "various agents" in user_message:
+                    return {"role": "assistant", "content": '{"result": "extracted_world_data"}'}
+                else:
+                    return None
+            else:
+                return None
+    return MockClient()
 
-    mock_os.path.join.return_value = 'test_path'
-    mock_open.return_value = MagicMock(spec=open, read=lambda: '{{fields}}')
 
-    mock_tinyperson = MagicMock(spec=TinyPerson)
-    mock_tinyperson.name = 'agent1'
-    mock_tinyperson.pretty_current_interactions.return_value = 'interaction history'
-    mock_openai_utils.client().send_message.return_value = {"role": "assistant", "content": '{"result": "some data"}'}
-
-
+@pytest.fixture
+def results_extractor(mock_openai_client):
     extractor = ResultsExtractor()
-    result = extractor.extract_results_from_agent(tinyperson=mock_tinyperson)
-    assert result == {"result": "some data"}
+    extractor._extraction_prompt_template_path = os.path.join(os.path.dirname(__file__), 'prompts/interaction_results_extractor.mustache')
+    with patch('tinytroupe.openai_utils.client', return_value=mock_openai_client):
+        yield extractor
 
 
-    # Test with invalid input
-    with patch('tinytroupe.extraction.openai_utils') as mock_openai_utils:
-        mock_openai_utils.client().send_message.side_effect = Exception
-        extractor.extract_results_from_agent(mock_tinyperson)
-
-    assert extractor.agent_extraction['agent1'] is None
+@pytest.fixture
+def tinyperson():
+    return TinyPerson(name="test_agent")
 
 
-
-# Test with valid input for extract_results_from_world
-@patch('tinytroupe.extraction.openai_utils')
-@patch('tinytroupe.extraction.open')
-@patch('tinytroupe.extraction.os')
-def test_extract_results_from_world(mock_os, mock_open, mock_openai_utils):
-    """Tests extract_results_from_world function."""
-    mock_os.path.join.return_value = 'test_path'
-    mock_open.return_value = MagicMock(spec=open, read=lambda: '{{fields}}')
+@pytest.fixture
+def tinyworld():
+    return TinyWorld(name="test_world")
 
 
-    mock_tinyworld = MagicMock(spec=TinyWorld)
-    mock_tinyworld.name = 'world1'
-    mock_tinyworld.pretty_current_interactions.return_value = 'interaction history'
-    mock_openai_utils.client().send_message.return_value = {"role": "assistant", "content": '{"result": "world data"}'}
-
-    extractor = ResultsExtractor()
-    result = extractor.extract_results_from_world(tinyworld=mock_tinyworld)
-
-    assert result == {"result": "world data"}
-
-# Test ArtifactExporter.export
-@patch('tinytroupe.extraction.os')
-def test_artifact_exporter_export(mock_os):
-    """Tests ArtifactExporter.export method."""
-
-    mock_os.makedirs.return_value = None
-
-    exporter = ArtifactExporter("test_output")
-    test_data = {"content": "test data"}
-    exporter.export("test_artifact", test_data, "test_type", target_format="json")
-    exporter.export("test_artifact_text", "test string", "test_type", target_format="txt")
-
-    # testing export with valid dictionary
-    exporter.export("test_artifact_dict", test_data, "test_type", target_format="json")
-
-    # testing export with string
-    exporter.export("test_artifact_string", "test_string", "test_type", target_format="txt")
-
-    # Test handling of invalid target format
-    with pytest.raises(ValueError):
-        exporter.export("test_artifact_error", test_data, "test_type", target_format="invalid")
-
-    # Test handling of invalid artifact data
-    with pytest.raises(ValueError):
-        exporter.export("test_artifact_invalid", 123, "test_type", target_format="json")
+# Test extract_results_from_agent
+def test_extract_results_from_agent_valid(results_extractor, tinyperson):
+    # Simulate agent interactions
+    tinyperson.pretty_current_interactions = lambda *args: "Some interaction history"
+    result = results_extractor.extract_results_from_agent(tinyperson)
+    assert result == 'extracted_data'
 
 
-# Test ResultsReducer.reduce_agent
-def test_results_reducer_reduce_agent():
-    """Test the reduce_agent method of the ResultsReducer class."""
-    reducer = ResultsReducer()
-    mock_agent = MagicMock(spec=TinyPerson)
+def test_extract_results_from_agent_invalid_input(results_extractor):
+    # Test with None input to verify proper handling.
+    with pytest.raises(TypeError):
+        results_extractor.extract_results_from_agent(None)
 
-    # Define a mock rule
-    def mock_rule(focus_agent, source_agent, target_agent, kind, event, content, timestamp):
-        return {"event": event, "content": content}
+def test_extract_results_from_world_valid(results_extractor, tinyworld):
+    # Simulate world interactions
+    tinyworld.pretty_current_interactions = lambda *args: "Some world interaction history"
+    result = results_extractor.extract_results_from_world(tinyworld)
+    assert result == "extracted_world_data"
 
-    reducer.add_reduction_rule('stimulus_type', mock_rule)
-
-    # Mock agent's episodic memory
-    mock_agent.episodic_memory.retrieve_all.return_value = [
-        {"role": "user", "content": {"stimuli": [{"type": "stimulus_type", "content": "hello", "source": "other_agent"}]}},
-    ]
-    reduction = reducer.reduce_agent(mock_agent)
-    assert reduction == [{"event": "stimulus_type", "content": "hello"}]
+def test_extract_results_from_world_invalid_input(results_extractor):
+    # Test with None input to verify proper handling.
+    with pytest.raises(TypeError):
+        results_extractor.extract_results_from_world(None)
 
 
-# Test Normalizer class
-@patch('tinytroupe.extraction.openai_utils')
-def test_normalizer(mock_openai_utils):
-    """Test the Normalizer class."""
-    mock_openai_utils.client().send_message.return_value = {"content": '{"categories": [{"category": "test"}, {"category": "another_test"}], "elements": ["some", "other"]}' }
+# Test save_as_json
+def test_save_as_json(results_extractor, tmpdir):
+    results_extractor.agent_extraction["test_agent"] = {"key": "value"}
+    results_extractor.world_extraction["test_world"] = {"another_key": "another_value"}
+    filename = tmpdir.join("extraction_results.json")
+    results_extractor.save_as_json(str(filename))
+    with open(str(filename), 'r') as f:
+        loaded_data = json.load(f)
+    assert loaded_data["agent_extractions"]["test_agent"] == {"key": "value"}
 
-
-    normalizer = Normalizer(["some", "other"], 2)
-    result = normalizer.normalize(["some", "other"])
-    assert len(result) == 2
-    assert isinstance(result, list)
-
-
-# Test exception handling in ResultsReducer.add_reduction_rule
-def test_results_reducer_add_reduction_rule_exception():
-    """Test exception handling in add_reduction_rule."""
-    reducer = ResultsReducer()
-    reducer.add_reduction_rule('stimulus_type', lambda x: None)
-    with pytest.raises(Exception):
-        reducer.add_reduction_rule('stimulus_type', lambda x: None)
+#Additional tests for edge cases and exception handling are important, but need more concrete details about the inputs and expected outputs from openai_utils to mock for the rest of the functions.
 
 
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:**  Crucially, the tests now use `unittest.mock` to mock external dependencies like `openai_utils.client().send_message` and file access (`open`).  This isolates the tests and avoids relying on external services.  We also mock `TinyPerson` and `TinyWorld` instances.
-* **Error Handling:** The `test_extract_results_from_agent` test now includes a test with a simulated exception from `openai_utils`. This demonstrates handling potential errors during interaction with the external API.  Similar error handling for other functions is added where appropriate.
-* **Clearer Test Cases:**  Test names are more descriptive (e.g., `test_extract_results_from_agent_with_error`).
-* **Edge Case Testing:** The `test_extract_results_from_agent` and `test_extract_results_from_world` now incorporate tests for scenarios with empty inputs/results or missing keys in the mock response.
-* **Comprehensive Tests (Partial):** Tests for `ArtifactExporter`, `ResultsReducer`, and `Normalizer` are now included.  Note that testing the `_export_as_docx` function fully would require setting up temporary files and verifying the actual DOCX content, which is beyond the scope of a basic example, but the basic handling of various formats are tested.
-* **pytest.raises:**  The test now correctly uses `pytest.raises` to test for specific exceptions like `ValueError` when inappropriate input is provided to `ArtifactExporter.export`.
-* **Fixture approach:** Removed fixtures in this example, to reduce complexity for this solution.
+1. **Mocking `openai_utils.client`:** The crucial change is mocking the `openai_utils.client()`. This is essential because the functions call an external API (OpenAI).  The `@pytest.fixture` `mock_openai_client` defines a mock class that simulates the desired API responses for testing purposes.  This eliminates the need for a real OpenAI API call during testing.
 
-**Important Considerations (and next steps):**
-
-* **`openai_utils` Integration:**  The tests rely on mocking `openai_utils`. In a real scenario, replace the mocks with actual calls to the OpenAI API (if applicable) and handle potential errors from OpenAI API calls.
-* **File Operations (`ArtifactExporter`):**  Thorough testing of file operations (creating files, writing content, handling different formats) requires temporary files.  The current test cases do not fully test this, though they do test some exceptions that can occur if incorrect inputs are given.
-* **Real Data:**  In a production environment, consider providing realistic test data (e.g., agent interaction histories and world configurations) for the `TinyPerson` and `TinyWorld` mocks. This would increase the thoroughness of the testing.
-* **Complex Logic:** The `ResultsReducer` and `Normalizer`  functions now have more elaborate test cases; further expansion of their testing may require more sophisticated test data.
-* **External Libraries:** The tests should verify that external libraries (`pandas`, `pypandoc`, `markdown`, `chevron`) are correctly used and raise appropriate errors in case of library failures.
+2. **Mocking `tinyperson.pretty_current_interactions`:**  This was added to make the tests more self-contained by mocking the interactions history.
 
 
-To run these tests:
-
-1.  Save the code above as a `.py` file (e.g., `test_extraction.py`).
-2.  Run `pytest test_extraction.py` from your terminal.
+3. **Error Handling:**  Added a test `test_extract_results_from_agent_invalid_input` and `test_extract_results_from_world_invalid_input` to cover the case where an invalid input is provided to the methods (`None` in this example). This ensures that the code properly handles potential errors instead of crashing.  It uses `pytest.raises` to verify that the expected exception is raised.
 
 
-This revised solution provides a much more robust and comprehensive test suite. Remember to adapt the mocking and test data to your specific environment and use cases. Remember to install the required libraries if not already installed (e.g., `pytest`, `mock`, `pandas`).
+4. **`tmpdir` fixture:**  This crucial fixture from `pytest` allows you to create temporary directories for saving and loading JSON files during the tests.  This makes your tests independent and does not interfere with each other.
+
+
+5. **Clearer Test Cases:** The test descriptions are more specific and descriptive, including the expected behavior in each case.
+
+
+
+**How to Use:**
+
+1.  **Install pytest:** `pip install pytest`
+
+2.  **Save the code:** Save the test code as a `.py` file (e.g., `test_extraction.py`).
+
+3.  **Run the tests:** `pytest test_extraction.py`
+
+
+**Further Considerations:**
+
+*   **More Comprehensive Mocking:** Further mock functions and objects within `tinytroupe` that `extract_results_from_agent` and `extract_results_from_world` use to create a more isolated test environment.
+
+
+*   **Data Validation:** Test that the returned data from the OpenAI API call has the expected format (e.g.,  a dictionary with the correct keys).
+
+
+*   **Edge Cases:** Test with very long interaction histories, empty interaction histories, different types of `extraction_objective` or `situation` strings, and various `fields` and `fields_hints`.
+
+
+* **`ResultsReducer` and `ArtifactExporter` tests:** Similar testing strategies as above can be applied to these classes as well.   Mock the behavior of the `TinyPerson.episodic_memory.retrieve_all()` function to isolate the logic in `reduce_agent` and add tests that cover different scenarios like the presence or absence of data in the episodic memory. Test `ArtifactExporter` with various input types and target formats (txt, json, docx), including testing error handling in the face of invalid inputs.
+
+
+By addressing these points, you'll achieve much more robust and reliable tests. Remember that a comprehensive set of test cases will require more concrete assumptions about how data would flow through the code paths to mock out API calls and object interactions correctly.

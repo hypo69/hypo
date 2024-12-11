@@ -1,108 +1,71 @@
 ```python
 import pytest
-import os
+import json
 from pathlib import Path
 from packaging.version import Version
-from unittest.mock import patch
 
-# import the module under test
 from hypotez.src.goog.header import set_project_root
 
 
+# Fixtures
 @pytest.fixture
-def mock_project_root(tmp_path):
-    """Creates a mock project directory for testing."""
-    (tmp_path / 'pyproject.toml').touch()
+def test_data_dir(tmp_path):
+    (tmp_path / "pyproject.toml").touch()
+    (tmp_path / "requirements.txt").touch()
+    (tmp_path / "settings.json").write_text(json.dumps({"project_name": "test_project"}))
+    (tmp_path / "README.MD").write_text("This is a README.")
+    return tmp_path
+
+@pytest.fixture
+def invalid_data_dir(tmp_path):
     return tmp_path
 
 
-def test_set_project_root_valid_input(mock_project_root):
-    """Tests set_project_root with a valid project root."""
-    root_path = set_project_root(marker_files=('pyproject.toml',))
-    assert root_path == mock_project_root
+# Tests for set_project_root
+def test_set_project_root_valid_input(test_data_dir):
+    """Tests set_project_root with a directory containing marker files."""
+    root_path = set_project_root(marker_files=("pyproject.toml", "requirements.txt", ".git"), current_path=test_data_dir)
+    assert root_path == test_data_dir
+
+def test_set_project_root_root_marker(test_data_dir):
+    """Tests set_project_root when the marker file is in the root directory."""
+    root_path = set_project_root(marker_files=("pyproject.toml",), current_path=test_data_dir)
+    assert root_path == test_data_dir
 
 
-def test_set_project_root_marker_in_current_dir(tmp_path):
-    """Tests set_project_root when marker file is in current directory."""
-    (tmp_path / 'pyproject.toml').touch()
-    root_path = set_project_root(marker_files=('pyproject.toml',))
-    assert root_path == tmp_path
-
-def test_set_project_root_no_marker(tmp_path):
-    """Tests set_project_root when no marker files are found."""
-    root_path = set_project_root()
-    assert root_path == tmp_path
+def test_set_project_root_no_marker(invalid_data_dir):
+    """Tests set_project_root with no marker files found."""
+    root_path = set_project_root(current_path=invalid_data_dir)
+    #Assert that the path is the same as the starting path since the marker files were not found. 
+    assert root_path == invalid_data_dir
 
 
-def test_set_project_root_marker_in_parent_dir(tmp_path):
-    """Tests set_project_root when marker file is in parent directory."""
-    (tmp_path.parent / 'pyproject.toml').touch()
-    root_path = set_project_root(marker_files=('pyproject.toml',))
-    assert root_path == tmp_path.parent
+def test_set_project_root_marker_in_parent(test_data_dir):
+    """Tests set_project_root when the marker file is in a parent directory."""
+    # Create a parent directory and marker file.
+    parent_dir = test_data_dir.parent
+    (parent_dir / "pyproject.toml").touch()
+    root_path = set_project_root(marker_files=("pyproject.toml",), current_path=test_data_dir)
+    assert root_path == parent_dir
 
 
-@pytest.mark.parametrize("marker_files", [
-    ('pyproject.toml', 'requirements.txt', '.git'),
-    ('requirements.txt',),
-    ('nonexistent.file',),
-    (),
-])
-
-def test_set_project_root_different_marker(tmp_path, marker_files):
-    """Tests set_project_root with different marker file configurations."""
-    if not marker_files:
-        root_path = set_project_root()
-        assert root_path == tmp_path
-    else:
-        if len(marker_files) == 1:
-            (tmp_path / marker_files[0]).touch()
-        else:
-            for f in marker_files:
-                (tmp_path / f).touch()
-
-        root_path = set_project_root(marker_files=marker_files)
-        assert root_path == tmp_path
-
+def test_set_project_root_multiple_markers(test_data_dir):
+    """Tests set_project_root when multiple marker files are provided."""
+    root_path = set_project_root(marker_files=("pyproject.toml", "README.MD"), current_path=test_data_dir)
+    assert root_path == test_data_dir
 
 def test_set_project_root_no_marker_files(tmp_path):
-    """Tests set_project_root when no marker files are found, even in parent."""
-    root_path = set_project_root(marker_files=('nonexistent.file',))
-    assert root_path == tmp_path  # Should return current path if no marker found
+    root_path = set_project_root(marker_files=())
+    assert root_path == Path(__file__).resolve().parent
 
 
-@patch("hypotez.src.goog.header.Path")
-def test_set_project_root_path_exception(mock_path):
-    """Tests set_project_root with a mock exception for Path."""
-    mock_path.resolve.side_effect = OSError
-    with pytest.raises(OSError):
-        set_project_root()
+def test_set_project_root_file_not_found(tmp_path):
+    root_path = set_project_root(marker_files=("nonexistent_file.txt",))
+    # Assert that the root path is the same as the starting path
+    assert root_path == tmp_path
+
+
 
 
 
 ```
-
-**Explanation and Improvements:**
-
-1. **`pytest.fixture` for `mock_project_root`:**  This fixture creates a temporary directory with the `pyproject.toml` file, making tests more reliable and avoiding conflicts.
-
-2. **Clearer Test Names:**  Test names now more precisely describe the test condition.
-
-3. **Parameterization:** The `test_set_project_root_different_marker` test now uses `pytest.mark.parametrize` to test various configurations of marker files, making the test more comprehensive.
-
-4. **Edge Cases:** The tests now include cases where marker files are in the current directory, in the parent directory,  and no marker files are found, as well as a crucial case where no marker files are in the parent directories.
-
-
-5. **Exception Handling:** `test_set_project_root_path_exception` demonstrates how to test for exceptions raised by the `Path` object using `pytest.raises` and `patch`.
-
-6. **Robustness:**  The tests are more robust in checking for file existence and handling potential errors, such as nonexistent marker files and cases where `marker_files` is an empty tuple.
-
-7. **Documentation:**  Added more informative docstrings for tests to improve understanding of the test cases.
-
-
-**How to Run the Tests:**
-
-1.  Save the test code as a Python file (e.g., `test_header.py`).
-2.  Run pytest from your terminal: `pytest test_header.py`
-
-
-This improved test suite provides better coverage, especially for unexpected input scenarios and error handling, making your code more reliable and maintainable. Remember to install the necessary libraries (`pytest`, `packaging`) if you haven't already.  You'll also need a `hypotez` directory structure to match the import statements within your original code (`from src import gs`).

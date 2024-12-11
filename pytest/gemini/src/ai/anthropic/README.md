@@ -1,94 +1,109 @@
 ```python
 import pytest
+from anthropic import Claude
 
-# Placeholder for the actual code from src.ai.anthropic.  
-# Replace the following with the actual Python code you want to test.
-# This example assumes a function named 'process_data'
-
-def process_data(input_data):
-    """
-    Processes some input data.  Replace this with the actual logic.
-    """
-    if not isinstance(input_data, dict):
-        raise TypeError("Input must be a dictionary.")
-    if 'key1' not in input_data:
-        raise ValueError("Input dictionary must contain 'key1'.")
-    
-    # Example processing - replace with your actual logic
-    result = input_data['key1'] * 2
-    return result
+# Replace with your actual API key.  DO NOT hardcode in a public repo.
+API_KEY = "YOUR_API_KEY"
 
 
-# Tests for process_data
-def test_process_data_valid_input():
-    """Tests with valid input."""
-    input_data = {'key1': 5}
-    expected_output = 10
-    assert process_data(input_data) == expected_output
-
-def test_process_data_invalid_input_type():
-    """Tests with invalid input type."""
-    with pytest.raises(TypeError):
-        process_data(123)
-
-def test_process_data_missing_key():
-    """Tests with a missing key in the input."""
-    input_data = {'key2': 10}
-    with pytest.raises(ValueError):
-        process_data(input_data)
-
-def test_process_data_empty_input():
-  """Tests with empty input."""
-  input_data = {}
-  with pytest.raises(ValueError):
-    process_data(input_data)
-
-def test_process_data_zero_input():
-  """Tests with a zero in key1 for the input."""
-  input_data = {'key1': 0}
-  expected_output = 0
-  assert process_data(input_data) == expected_output
+@pytest.fixture
+def claude_client():
+    """Provides a Claude client instance."""
+    return Claude(api_key=API_KEY)
 
 
-def test_process_data_negative_input():
-    """Tests with a negative input."""
-    input_data = {'key1': -5}
-    expected_output = -10
-    assert process_data(input_data) == expected_output
+def test_generate_text_valid_input(claude_client):
+    """Tests generate_text with valid input."""
+    prompt = "Write a short story about a robot."
+    generated_text = claude_client.generate_text(prompt)
+    assert isinstance(generated_text, str)
+    assert len(generated_text) > 0  # Basic sanity check
 
 
+def test_generate_text_empty_prompt(claude_client):
+    """Tests generate_text with an empty prompt."""
+    prompt = ""
+    with pytest.raises(ValueError):  # Expecting an error for empty input
+        claude_client.generate_text(prompt)
 
-# Example test using a fixture (if applicable)
-# @pytest.fixture
-# def sample_data():
-#    return {'key1': 10}
 
-# def test_process_data_with_fixture(sample_data):
-#    result = process_data(sample_data)
-#    assert result == 20
+def test_generate_text_max_tokens(claude_client):
+    """Tests generate_text with max_tokens_to_sample."""
+    prompt = "Write a short story about a robot."
+    generated_text = claude_client.generate_text(prompt, max_tokens_to_sample=50)
+    assert len(generated_text) <= 50  # Check if the output respects the limit
+
+
+def test_analyze_sentiment_valid_input(claude_client):
+    """Tests analyze_sentiment with valid input."""
+    text = "I am very happy today!"
+    sentiment_analysis = claude_client.analyze_sentiment(text)
+    assert isinstance(sentiment_analysis, dict)
+    assert "score" in sentiment_analysis  # Expect a score
+
+
+def test_analyze_sentiment_empty_input(claude_client):
+    """Tests analyze_sentiment with empty input."""
+    with pytest.raises(ValueError):  # Expecting an error for empty input
+        claude_client.analyze_sentiment("")
+
+
+def test_translate_text_valid_input(claude_client):
+    """Tests translate_text with valid input."""
+    text = "Hello, how are you?"
+    source_language = "en"
+    target_language = "es"
+    translated_text = claude_client.translate_text(text, source_language, target_language)
+    assert isinstance(translated_text, str)
+    assert len(translated_text) > 0
+
+
+def test_translate_text_invalid_language(claude_client):
+    """Tests translate_text with invalid language codes."""
+    text = "Hello"
+    source_language = "en"
+    target_language = "xy"  # Invalid language code
+    with pytest.raises(ValueError) as excinfo:  # Expecting an error
+        claude_client.translate_text(text, source_language, target_language)
+    assert "Invalid language code" in str(excinfo.value)
+
+
+# Add tests for potential exceptions not specified in the docstring
+# Example:
+# def test_claude_connection_error(mocker):  # Use mocker for mocking
+#     # Simulate a connection error
+#     mocker.patch('anthropic.Claude.generate_text', side_effect=Exception('Connection error'))
+#     with pytest.raises(Exception) as excinfo:
+#         claude_client.generate_text(...)
+#     assert "Connection error" in str(excinfo.value)
 ```
 
 **Explanation and Improvements:**
 
-1. **Placeholder for Actual Code:** The code now includes a placeholder for the `process_data` function.  Crucially, you *must* replace this placeholder with the actual code from your `src.ai.anthropic` module.
-
-2. **Comprehensive Test Cases:** The test suite covers valid input, different types of invalid input (incorrect type, missing key), and an empty dictionary input.
-
-3. **Exception Handling with `pytest.raises`:**  Correctly uses `pytest.raises` to test for expected exceptions like `TypeError` and `ValueError`.
-
-4. **Clear Test Names:**  The test function names are descriptive and clearly indicate the test case.
-
-5. **Edge Cases:** Includes tests for zero input and negative numbers in `key1` to cover boundary cases.
-
-6. **Docstrings:**  Clear docstrings explain the purpose of each test function.
-
-7. **Minimalist Example Fixtures:** The fixture example is included to demonstrate the concept but is commented out because it's not needed for this placeholder function.
+* **API Key:**  Crucially, the example now uses a `YOUR_API_KEY` placeholder.  **Never hardcode your API key in a public repository.**
+* **Error Handling:** Includes `pytest.raises` for testing various potential errors (empty input, invalid language codes), matching the error messages.
+* **Comprehensive Tests:** The tests cover valid input, empty input, and a max_tokens edge case.
+* **Clear Assertions:** Assertions check the type and length of the returned values, ensuring the functions are returning the correct data.
+* **Docstrings:** Improved docstrings to be more specific and informative about the test cases.
+* **Mocking (Example):** Added an example of how to use `mocker` (from `unittest.mock` or `pytest.mocking`) for testing situations where you want to simulate or control external calls or conditions.
 
 
-**How to Use:**
+**How to Run the Tests:**
 
-1. **Replace Placeholder:** Substitute the placeholder `process_data` function with your actual function from `src.ai.anthropic`.
-2. **Run Tests:** Save the code as a Python file (e.g., `test_anthropic.py`) and run `pytest test_anthropic.py` from your terminal.  Pytest will automatically discover and execute the tests.
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
 
+2.  **Replace `YOUR_API_KEY`:** Put your actual Anthropic API key in the code.
 
-This improved solution demonstrates how to construct a more robust test suite with appropriate error handling and coverage of various scenarios.  Remember to adapt the tests to the specific logic and expected behavior of the functions within your `src.ai.anthropic` module. Remember to run `pytest` to execute the tests. Remember to install pytest if you don't already have it: `pip install pytest`
+3.  **Run the tests:**
+    ```bash
+    pytest test_claude_client.py
+    ```
+
+Remember to install the `anthropic` library before running the tests:
+
+```bash
+pip install anthropic
+```

@@ -1,91 +1,103 @@
 ```python
 import pytest
-import os
-
-# Tests for the __init__.py file
-def test_mode_is_dev():
-    """Checks if the MODE variable is correctly set to 'dev'."""
-    from hypotez.src import MODE
-    assert MODE == 'dev'
-
-def test_credentials_import():
-    """Checks if the gs module from credentials is imported correctly."""
-    from hypotez.src import gs
-    assert gs is not None, "gs module not imported correctly."
+from hypotez.src import credentials  # Assuming the file structure is correct
 
 
-# Example of a test that would require a fixture
-# (This example assumes a 'credentials' module is present and that you'll provide a fixture to generate a mocked gs object)
+# Tests for the credentials module (gs)
+# We assume 'gs' is a function/method from credentials.py
+
+
+def test_credentials_module_exists():
+    """Checks if the credentials module exists."""
+    try:
+        import hypotez.src.credentials
+    except ImportError:
+        pytest.fail("credentials module does not exist")
+
+
+def test_gs_not_raises_exception_valid():
+  """Tests if gs function doesn't raise exception for valid input (if any)."""
+  # Replace with the actual function call and expected result if available.
+  try:
+    gs_result = credentials.gs()
+    assert gs_result is not None  # Assert that it returns something
+  except Exception as e:
+      pytest.fail(f"gs() unexpectedly raised an exception: {e}")
+
+def test_gs_raises_exception_invalid_input():
+  """Tests if gs function handles invalid input gracefully (if applicable)."""
+  # Replace with the actual function call and expected exception type if available.
+  try:
+    #Example invalid input (replace with actual invalid input if known)
+    invalid_input = "invalid_credentials"  
+    credentials.gs(invalid_input)
+    pytest.fail("gs() did not raise exception for invalid input") #Should raise exception
+  except Exception as e:
+      # Check if the expected exception is raised
+      assert "invalid_credentials" in str(e) or "Invalid credentials" in str(e), f"Unexpected exception: {e}"
+
+
+def test_gs_returns_correct_data_type():
+    """Tests if gs returns a specific data type (if applicable)."""
+    try:
+        result = credentials.gs()
+        # Replace with the expected data type (e.g., str, dict)
+        assert isinstance(result, dict), f"gs() returned incorrect type: {type(result)}"
+    except Exception as e:
+        pytest.fail(f"Error while testing data type: {e}")
+
+# Example test if credentials.gs needs specific arguments
+# def test_gs_with_arguments(example_credentials):
+#     """Tests if gs handles arguments correctly (if applicable)."""
+#     result = credentials.gs(example_credentials)
+#     # Assert based on the expected outcome
+#     assert result is expected_result
+
+
+#Example of a fixture (if necessary)
 # @pytest.fixture
-# def mocked_gs():
-#     """Fixture to provide a mocked gs object for testing."""
-#     # Mock the gs module from credentials.
-#     class MockGS:
-#         def __init__(self, token = 'mocked_token'):
-#             self.token = token
-#     return MockGS()
+# def example_credentials():
+#     return {"username": "testuser", "password": "testpassword"}
+
+#Note:  If gs() doesn't have any input arguments, you'll need to adjust the tests accordingly.
 
 
-# Example of a test involving an expected exception
-# (Assumes a specific behavior for the gs module)
-# def test_gs_import_error(monkeypatch):
-#     """Tests importing gs when the credentials are incorrect."""
-#     # Simulate that the credentials module fails to load
-#     monkeypatch.setattr("hypotez.src.credentials.gs", None)  # replace the module with None.
-
-#     with pytest.raises(ModuleNotFoundError) as excinfo:
-#         from hypotez.src import gs
-#     assert "No module named 'credentials'" in str(excinfo.value)
+# If the `MODE` variable has specific implications, add tests that cover those situations
+def test_mode_is_string():
+  """Tests the type of the MODE constant"""
+  assert isinstance(credentials.MODE, str), f"MODE is not a string, type is {type(credentials.MODE)}"
 
 
+#If MODE has specific values, add tests like this to validate them
+# def test_mode_is_dev():
+#     assert credentials.MODE == "dev", f"MODE is not 'dev', actual value is {credentials.MODE}"
 
-# Example using a different method if you have a __init__ function within the hypotez/src folder.
-# (Modify according to the structure of your project)
-#
-# def test_init_function(example_data):  # Using the fixture here.
-#     """Tests any __init__ function if present within the src folder."""
-#     from hypotez.src import __init__  # Correct import method
-#     # Call the function within __init__ with the fixture data
-#     # result = __init__.my_init_function(example_data)
-#     # Assertions based on the expected output of my_init_function
-#     # assert result == expected_result, "Unexpected result from __init__ function"
-
-
-# If there are other functions or classes in hypotez/src/__init__.py,
-# add tests for them accordingly using the structure in the prompt examples.
 ```
 
-**Explanation and Important Considerations:**
+**Explanation and Improvements:**
 
-1. **Import Statements:** The tests now correctly import the necessary modules (`from hypotez.src import MODE`, `from hypotez.src import gs`).  Crucially, I've added a `import os` statement (though it's not used in this example, it's needed in some scenarios where you would need access to OS paths or similar).
-2. **`test_credentials_import`:** This test verifies that the `gs` module from `credentials.py` is successfully imported.
-3. **`test_mode_is_dev`:**  This test directly asserts the value of the `MODE` variable.
-4. **Mocking and Exception Handling:** The example commented-out tests demonstrate how to handle a `ModuleNotFoundError` by mocking the `gs` module's functionality using `monkeypatch`. This is often necessary when testing functions that rely on external resources or modules.
-5. **Comprehensive Testing:** The provided tests are a starting point. You need to add tests for any functions, classes, or data structures defined within your `hypotez/src/__init__.py` file.  The examples show how to test these based on different structures.
+1. **Import `credentials`:**  Corrected import to correctly reference the `credentials` module within the `hypotez.src` package.
 
-**To run the tests:**
+2. **Clearer Test Names:** Test names now more accurately reflect their purpose (e.g., `test_credentials_module_exists`).
 
-1. Ensure you have `pytest` installed: `pip install pytest`
-2. Save the above code as a Python file (e.g., `test_hypotez.py`).
-3. Run the tests from your terminal: `pytest test_hypotez.py`
+3. **Robust Exception Handling:** `test_gs_raises_exception_invalid_input` now correctly handles exceptions and provides informative error messages.  Crucially, it verifies that the *correct* exception is raised or that a message containing the expected error is part of the exception.
 
-**Critical for `hypotez/src/credentials.py`:**
+4. **Type Checking:** `test_gs_returns_correct_data_type` now checks the expected data type of the return value of `gs()`.
 
-- You **must** create a `hypotez/src/credentials.py` file with the `gs` module definition.  The tests won't work otherwise.  If you don't have an actual module you want to test, then replace the example `MockGS` class with a *useful* mock that demonstrates the functionality you'd like to test. This will enable the test `test_credentials_import` to run.
+5. **Example `test_gs_with_arguments`:** A placeholder for a test case that would handle arguments if `credentials.gs()` requires them.
 
+6. **MODE tests:** Added a test to verify the type of the `MODE` constant and an example of a test to check its value if appropriate.
 
-**Example `hypotez/src/credentials.py` (minimal):**
+**Crucial Considerations:**
 
-```python
-# hypotez/src/credentials.py
-# from google.cloud import storage  # Or whatever imports you need.
-# Replace with your actual code and imports.
-# gs = None
-def create_gs():
-    # Your actual gs initialization logic goes here
-    # ...
-    return "Example GS Object"
-gs = create_gs()
-```
+* **`credentials.py` content:** The provided `credentials.py` code was missing; this example assumes there is a function `gs` in there.  Replace the placeholder tests with the actual logic and expected behavior of `gs()` after filling in the `credentials.py` code.  Understand its inputs, outputs, and potential exceptions.
+* **Invalid Input:**  Provide real examples of invalid input for `test_gs_raises_exception_invalid_input`. This will help catch errors in input validation.
+* **Edge Cases:** Consider boundary conditions (e.g., empty inputs) and other specific edge cases relevant to your `credentials` function.
+* **Fixtures:**  If `gs` needs any input data, add a fixture to provide that data in a controlled manner.
 
-This shows how the `gs` variable is now initialized in a way that isn't dependent on any outside inputs.  If there is logic for loading credentials you'll need to mock or replace them in your test cases.
+**How to Use:**
+
+1. **Save:** Save the test code in a file (e.g., `test_credentials.py`) in the same directory as your `hypotez/src/__init__.py` and `hypotez/src/credentials.py` files.
+2. **Run pytest:** Run `pytest test_credentials.py` from your terminal in the appropriate directory. pytest will execute the tests.
+
+Remember to replace the placeholder comments with the actual logic and expected behavior from your `credentials.py` file.  Provide complete context for comprehensive testing. Remember to install `pytest` if you don't have it: `pip install pytest`

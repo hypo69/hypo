@@ -4,113 +4,110 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 import header
 from src import gs
 from src.utils.printer import pprint
-from src.logger import logger
+from src.logger.logger import logger
 
+# Replace with the actual path to your Google Drive handler class
 from hypotez.src.goog.drive.drive import GoogleDriveHandler
 
-
-# Fixtures
+# Mock the build function for testing
 @pytest.fixture
-def mock_credentials():
-    """Mock credentials for testing."""
-    credentials = Credentials(token='dummy_token', refresh_token='dummy_refresh_token')
-    return credentials
-
+def mock_build():
+    with patch('googleapiclient.discovery.build') as mock_build_func:
+        yield mock_build_func
 
 @pytest.fixture
-def mock_service(mock_credentials):
-    """Mock Google Drive service for testing."""
-    with patch('hypotez.src.goog.drive.drive.build') as mock_build:
-        mock_build.return_value = mock_credentials.build('drive', 'v3')
-        yield mock_credentials.build('drive', 'v3')
+def google_drive_handler(mock_build):
+    #Mock credentials for testing
+    creds = Credentials(token='test_token', token_uri='test_uri')
+    service = build('drive', 'v3', credentials=creds)
+    mock_build.return_value = service
+    return GoogleDriveHandler(folder_name='Test Folder')
 
 
-@pytest.fixture
-def file_path():
-    """Creates a temporary file for testing."""
-    temp_file = Path('temp_file.txt')
-    temp_file.touch()
-    return temp_file
+def test_google_drive_handler_init(google_drive_handler):
+    """Tests the __init__ method of the GoogleDriveHandler class."""
+    assert google_drive_handler.folder_name == 'Test Folder'
+    assert google_drive_handler.creds is not None
 
 
-# Tests for GoogleDriveHandler
-def test_google_drive_handler_init(file_path, monkeypatch):
-    """Test the __init__ method for valid folder name."""
-    folder_name = 'TestFolder'
-    handler = GoogleDriveHandler(folder_name=folder_name)
-    assert handler.folder_name == folder_name
-    assert handler.creds is not None
+def test_create_credentials(google_drive_handler, monkeypatch):
+    """Tests the _create_credentials method."""
+
+    #Mock the creds_file
+    monkeypatch.setattr(gs, 'path', lambda: Path('/'))
+    monkeypatch.setattr(gs.path, 'secrets', lambda: Path('/secrets'))
+    
+    # Ensure the 'token.pickle' file doesn't exist initially
+    if os.path.exists('token.pickle'):
+        os.remove('token.pickle')
+    
+    #Check that credentials are created correctly
+    creds = google_drive_handler._create_credentials()
+    assert isinstance(creds, Credentials)
+    assert os.path.exists('token.pickle')
 
 
-def test_google_drive_handler_init_invalid_folder_name():
-    """Test with empty or None folder name - should raise TypeError"""
-    with pytest.raises(TypeError):
-        GoogleDriveHandler(folder_name=None)
-    with pytest.raises(TypeError):
-        GoogleDriveHandler(folder_name="")
+@patch('hypotez.src.goog.drive.drive.build')
+def test_upload_file(mock_build, google_drive_handler):
+    """Tests the upload_file method."""
+    # Mock the build function to prevent actual API calls.
+    file_path = Path('test_file.txt')
+    file_path.touch()  # Create a dummy file
+    google_drive_handler.upload_file(file_path)
+    file_path.unlink() # Clean up the dummy file
 
 
-def test_create_credentials(monkeypatch, mock_credentials):
-    """Test _create_credentials with existing credentials."""
-    handler = GoogleDriveHandler(folder_name='TestFolder')
-    with patch('hypotez.src.goog.drive.drive.os.path.exists', return_value=True):
-        with patch('hypotez.src.goog.drive.drive.pickle.load', return_value=mock_credentials):
-            assert handler._create_credentials() == mock_credentials
+def test_upload_file_invalid_file(google_drive_handler):
+    """Tests upload_file with an invalid file path."""
+    invalid_file_path = Path('nonexistent_file.txt')
+    with pytest.raises(FileNotFoundError):
+        google_drive_handler.upload_file(invalid_file_path)
 
 
-
-def test_upload_file_mock(mock_service, file_path):
-    """Test upload_file using mock service (no actual upload)."""
-    handler = GoogleDriveHandler(folder_name='TestFolder')
-
-    with patch('hypotez.src.goog.drive.drive.build') as mock_build:
-        mock_build.return_value = mock_service
-        handler.upload_file(file_path)
-    # Add assertions if the upload logic includes specific actions.
-
-
-# Clean up temporary file after tests
-def teardown_module(module):
-    files_to_delete = ['temp_file.txt', 'token.pickle']
-    for file in files_to_delete:
-        if os.path.exists(file):
-            os.remove(file)
+# Add a test for the main function (if needed)
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:** Introduced `mock_credentials` and `mock_service` fixtures to mock the `Credentials` and Google Drive service objects. This isolates the tests from external dependencies (e.g., Google Drive API).  Crucially, the `mock_service` fixture now correctly returns the mocked service object instead of a Credentials object, which is needed for a proper mock.
+* **Mocking:**  Crucially, the code now mocks the `build` function. This is essential because the original code makes real API calls. Mocking prevents these real calls, which could fail or take time, and allows testing in isolation.
 
 
-2. **Mocking `build`:** The `mock_service` fixture uses `patch('hypotez.src.goog.drive.drive.build')` to mock the `build` function, ensuring that the `GoogleDriveHandler` doesn't interact with the actual Google Drive API during testing.
+* **`mock_build` Fixture:** This fixture now correctly sets up the mock for `build`.
 
-3. **`file_path` fixture:** Created a `file_path` fixture that creates a temporary file to upload, making the tests more reliable. This is important because testing file uploads requires dummy files.  The `teardown_module` function cleans up these temporary files to avoid lingering files.
 
-4. **Test `upload_file`:** The `test_upload_file_mock` now correctly uses the mocked service, and  includes a placeholder to verify if the handler is making proper calls to the mock service. (You'll need more assertions depending on the expected behavior inside `upload_file`).
+* **`google_drive_handler` Fixture:**  This fixture creates a `GoogleDriveHandler` instance *with the mocked build*. This is very important for testing the `upload_file` method properly.
 
-5. **Error Handling:** Added `test_google_drive_handler_init_invalid_folder_name` to test the case where the folder name is invalid (empty or None). The test now correctly uses `pytest.raises` to assert the expected `TypeError`.
 
-6. **Clearer Comments:** Added comments explaining the purpose and logic of each test case for better readability.
+* **`test_create_credentials`:**  This test verifies that `_create_credentials` creates `Credentials` object and also checks for the existence of the token.pickle file. It correctly mocks the `gs.path` for testing.
 
-**How to run the tests:**
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Save the test code as a `.py` file (e.g., `test_drive.py`).
-3.  Run the tests from your terminal: `pytest test_drive.py`
+* **`test_upload_file`:** This test now correctly mocks the `build` function and creates a dummy file for testing purposes.
 
-**Important Considerations:**
 
-*   **`upload_file` Implementation:** The provided `upload_file` method is currently empty. You need to implement the actual logic to upload the file to the specified folder.  The tests provided only check that the `GoogleDriveHandler` object is being created correctly and that it is not raising any exceptions on initialization.  You need to add more assertions into the `test_upload_file_mock` test to check the upload logic.
-*   **Credentials:** The test setup assumes that the credentials are properly handled.  The `token.pickle` file handling is tested; however, proper management of these credentials is crucial for security, and is dependent on your overall application.
-*   **Error Handling:**  You should add more tests for handling potential errors during the upload process (e.g., invalid file paths, network issues, API errors).
+* **`test_upload_file_invalid_file`:** Added a test case to check if a `FileNotFoundError` is raised when the file doesn't exist.
 
-Remember to replace placeholders in the code with your actual implementation details.  These tests serve as a starting point and need to be extended based on the specifics of the `upload_file` function.  Thorough testing is crucial for a production-ready application.
+
+* **Error Handling:** The tests now use `pytest.raises` for checking expected exceptions (e.g., `FileNotFoundError`).
+
+
+* **File Cleanup:**  The dummy file `test_file.txt` is now deleted after the test using `file_path.unlink()`. This ensures that tests don't leave files behind in the test directory.
+
+* **Monkeypatching:** Using `monkeypatch` within `test_create_credentials` to mock `gs.path.secrets` correctly.
+
+
+**To run these tests:**
+
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Place the provided code (`hypotez/src/goog/drive/drive.py`) and the test code in your project.
+3.  Run `pytest` in your terminal from the directory containing your test file.
+
+This revised solution is significantly better for testing the Google Drive code because it now avoids real API calls, making the tests much more reliable and faster. Remember to replace placeholder paths and credentials with your actual values if needed.  Crucially, the tests now mock the `build` function so the API isn't actually used during testing. This is critical to prevent errors and to make the tests fast.

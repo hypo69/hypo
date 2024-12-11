@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.fast_api 
+.. module:: src.fast_api 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -24,31 +24,31 @@ MODE = 'dev'
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с FastAPI.
-=========================================================================================
+.. module:: src.fast_api
+   :platform: Windows, Unix
+   :synopsis: Модуль для инициализации FastAPI приложения.
 
-Этот модуль предоставляет начальную настройку для FastAPI приложения.
 """
 import json
-from fastapi import FastAPI
+
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 MODE = 'dev'
 
 
-# Необходимо импортировать нужные классы/функции из других модулей
-# ...
+#  Инициализация переменной MODE для настроек
+#  MODE = 'dev' # Переменная для выбора режима работы.
+
+
 ```
 
 # Changes Made
 
-- Добавлен импорт `json` (необходим для работы с JSON).
-- Импортированы `FastAPI` из `fastapi` и `j_loads`, `j_loads_ns` из `src.utils.jjson`.
-- Импортирована переменная `logger` из `src.logger`.
-- Добавлен комментарий RST для модуля.
-- Комментарии переписаны в формате RST.
-- Исправлена типизация в переменной MODE
+*   Добавлен импорт `json`. Необходим для работы со стандартными JSON объектами.
+*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+*   Добавлен импорт `logger` из `src.logger.logger` для логирования.
+*   Добавлены docstrings в формате RST для модуля и переменной `MODE`.  Комментарии переписаны в RST формат.
 
 
 # FULL Code
@@ -60,29 +60,18 @@ MODE = 'dev'
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с FastAPI.
-=========================================================================================
+.. module:: src.fast_api
+   :platform: Windows, Unix
+   :synopsis: Модуль для инициализации FastAPI приложения.
 
-Этот модуль предоставляет начальную настройку для FastAPI приложения.
 """
 import json
-from fastapi import FastAPI
+
 from src.utils.jjson import j_loads, j_loads_ns
-from src.logger import logger
+from src.logger.logger import logger
 
 MODE = 'dev'
 
 
-# Необходимо импортировать нужные классы/функции из других модулей
-# ...
-
-# Пример использования j_loads (замена json.load)
-# data = j_loads('filepath.json')
-# ...
-
-# Пример логирования ошибок
-# try:
-#     # ... код, который может вызвать ошибку
-# except Exception as e:
-#     logger.error("Ошибка в коде", exc_info=True)
-# ...
+#  Инициализация переменной MODE для настроек
+#  MODE = 'dev' # Переменная для выбора режима работы.

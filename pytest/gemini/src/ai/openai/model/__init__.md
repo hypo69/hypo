@@ -1,98 +1,110 @@
 ```python
 import pytest
+
 from hypotez.src.ai.openai.model import OpenAIModel
 
 
-# Test cases for the OpenAIModel class (assuming it has methods)
-class TestOpenAIModel:
-    def test_openai_model_creation(self):
-        """Tests that OpenAIModel can be instantiated."""
-        model = OpenAIModel()
-        assert isinstance(model, OpenAIModel)
+# Tests for OpenAIModel (assuming it has methods like 'train' and 'predict')
 
 
-    def test_openai_model_mode(self):
-        """Tests that MODE is correctly assigned."""
-        # If MODE has a specific value to test
-        assert OpenAIModel.MODE == 'dev'
-
-
-    @pytest.mark.xfail(reason="No specified methods to test")
-    def test_openai_model_method_valid_input(self):
-        """Tests a method of OpenAIModel with valid input."""
-        # Replace with actual method call and assertions if a method exists
-        model = OpenAIModel()
-        # Example:
-        # result = model.some_method("valid_input")
-        # assert result == "expected_output"
-        pass
-
-    @pytest.mark.xfail(reason="No specified methods to test")
-    def test_openai_model_method_invalid_input(self):
-        """Tests a method of OpenAIModel with invalid input."""
-        # Replace with actual method call and exception assertion if a method exists
-        model = OpenAIModel()
-        # Example:
-        # with pytest.raises(ValueError) as excinfo:
-        #    model.some_method("invalid_input")
-        # assert str(excinfo.value) == "Error message for invalid input"
-        pass
-
-    @pytest.mark.xfail(reason="No specified methods to test")
-    def test_openai_model_method_edge_case(self):
-        """Tests a method of OpenAIModel with an edge case."""
-        # Replace with actual method call and assertion if a method exists
-        model = OpenAIModel()
-        # Example:
-        # result = model.some_method("edge_case_input")
-        # assert result == "expected_edge_case_output"
-        pass
-
-
-
-    @pytest.mark.xfail(reason="No specified methods to test")
-    def test_openai_model_method_exception_handling(self):
-        """Tests a method of OpenAIModel that raises an exception."""
-        model = OpenAIModel()
-        # Replace with actual method call and exception assertion if a method exists
-        # Example:
-        # with pytest.raises(TypeError) as excinfo:
-        #    model.some_method("invalid_type")
-        # assert str(excinfo.value) == "Error message for invalid type"
-        pass
-
-    
-    # Add more test methods as necessary based on the actual methods in OpenAIModel
-
-
-
-```
-
-**Explanation and Crucial Improvements:**
-
-1. **Clearer Test Names:**  Test names now explicitly state the purpose (e.g., `test_openai_model_creation`).
-
-2. **`pytest.raises` for Exceptions:**  Correctly uses `pytest.raises` to assert that exceptions are raised when expected with informative error messages.
-
-3. **Marked Tests:** Tests for missing methods are now marked with `@pytest.mark.xfail` to avoid failing the test suite if the `OpenAIModel` class or its methods don't exist or haven't been implemented.  Crucially, the reason for the `xfail` is noted.
-
-4. **Thoroughness:**  The example tests now cover basic functionality like creation and the example edge cases of valid/invalid input.
-
-5. **Placeholder Comments:**   Placeholder comments are included for where actual test cases would go if there were methods in the `OpenAIModel` class. You need to replace these placeholders with actual calls to the model's methods and relevant assertions based on the specifics of the code under test.
-
-
-**How to Use:**
-
-1. **Replace Placeholders:**  Remove the `@pytest.mark.xfail` decorators and replace the example method calls and assertions with the actual methods and expected results from your `OpenAIModel`.
-2. **Run Tests:** Execute the tests using `pytest` in your terminal.  This will automatically discover and run the test functions.
-
-**Example of adding a specific test (assuming a `get_model_type` method):**
-
-```python
-def test_openai_model_get_model_type(self):
+def test_openai_model_train_valid_input():
+    """
+    Checks the train method with valid input.
+    This test needs to be tailored to the actual OpenAIModel's train method
+    and the structure of its expected input.
+    """
     model = OpenAIModel()
-    model_type = model.get_model_type() # Replace with the actual method call
-    assert model_type == "gpt-3.5-turbo"  # Replace with the expected model type
+    # Replace with actual valid training data.
+    train_data = {"examples": [{"input": "Hello", "output": "Hi"}]}
+    # Expecting some return value or attribute modification.
+    model.train(train_data)
+    assert hasattr(model, 'trained')  # Check if a training attribute exists
+    assert model.trained == True
+
+
+def test_openai_model_train_invalid_input_type():
+    """
+    Tests the train method with invalid input types.
+    """
+    model = OpenAIModel()
+    with pytest.raises(TypeError):  # Expecting a TypeError
+        model.train(123) # Example of invalid input
+
+
+def test_openai_model_train_invalid_input_format():
+    """
+    Tests the train method with invalid input format.
+    """
+    model = OpenAIModel()
+    with pytest.raises(ValueError) as excinfo: # Example of expected error
+        model.train({"examples": [123]})
+    assert "Invalid input format for training data." in str(excinfo.value)
+
+def test_openai_model_predict_valid_input():
+  """Tests the predict method with valid input."""
+  model = OpenAIModel()
+  # Mock training for this test if the model requires it.
+  model.train({"examples": [{"input": "Hello", "output": "Hi"}]})
+  input_text = "Hello"
+  predicted_output = model.predict(input_text)  
+  assert predicted_output == "Hi"
+
+
+def test_openai_model_predict_empty_input():
+    """Tests the predict method with an empty input string."""
+    model = OpenAIModel()
+    model.train({"examples": [{"input": "Hello", "output": "Hi"}]})
+    input_text = ""
+    with pytest.raises(ValueError) as excinfo:
+      model.predict(input_text)
+    assert "Input cannot be empty." in str(excinfo.value)
+
+def test_openai_model_predict_no_training_data():
+    """
+    Tests the predict method when no training data is available.
+    """
+    model = OpenAIModel()
+    input_text = "Hello"
+    with pytest.raises(RuntimeError) as excinfo:
+      model.predict(input_text)
+    assert "Model not trained." in str(excinfo.value)
+
+
+# ... Add more test cases for other methods/attributes as needed ...
+
+
+# Example fixture (if needed)
+# @pytest.fixture
+# def example_training_data():
+#    """Provides example training data."""
+#    return {"examples": [{"input": "Hello", "output": "Hi"}]}
+
+
+
+
 ```
 
-Remember to adapt these tests to the specific methods and functionalities within your `OpenAIModel`. This structure will help in creating a comprehensive and maintainable test suite. If the `OpenAIModel` class in `hypotez/src/ai/openai/model/__init__.py` has no methods or any attributes, then you have nothing to test in the first place.
+**Explanation and Important Considerations:**
+
+1. **Placeholders:** The tests currently contain placeholders (`# Replace with actual valid training data`, etc.).  You **must** replace these with the correct data, method inputs, and expected outputs based on the actual implementation of `OpenAIModel`.
+
+2. **Error Handling:**  The tests include examples of raising `TypeError` and `ValueError`. You should adapt these to match the specific exceptions your `OpenAIModel`'s methods are likely to raise.  Crucially, you need to understand the expected error messages for proper testing.
+
+3. **Method `predict`:** A crucial test is added for the `predict` method to verify that it works correctly with valid input and also appropriately handles various edge cases.
+
+
+4. **`test_openai_model_predict_no_training_data`:** This is essential to verify that your model gracefully handles the case where it hasn't been trained yet. It should raise a meaningful exception.
+
+5. **Fixtures:** The example fixture is commented out. If your `OpenAIModel` needs specific data for its `train` method that is difficult to directly construct, a fixture may be useful for creating that data to use across tests.
+
+6. **Comprehensive Coverage:**  Add tests for more methods within the `OpenAIModel` class, including various input types, edge cases, and invalid scenarios.
+
+
+**How to Run the Tests:**
+
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the test code (e.g., `test_openai_model.py`) in the same directory as your `OpenAIModel` code.
+3.  Run the tests from your terminal using: `pytest test_openai_model.py`
+
+
+Remember to adapt these tests based on the exact implementation of the `OpenAIModel` class and the expected behavior of your code. Add more tests to cover all the different scenarios that might occur. Always use meaningful and descriptive test names.

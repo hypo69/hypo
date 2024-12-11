@@ -3,125 +3,128 @@ import pytest
 import random
 import pandas as pd
 from tinytroupe.agent import TinyPerson
-
 from hypotez.src.ai.tiny_troupe.TinyTroupe.tinytroupe.experimentation import ABRandomizer
 
-
-def test_abrandomizer_init():
-    """Tests the ABRandomizer initialization with valid inputs."""
-    randomizer = ABRandomizer(
-        real_name_1="control",
-        real_name_2="treatment",
-        blind_name_a="A",
-        blind_name_b="B",
-        passtrough_name=["other"],
-        random_seed=42,
-    )
-    assert randomizer.real_name_1 == "control"
-    assert randomizer.real_name_2 == "treatment"
-    assert randomizer.blind_name_a == "A"
-    assert randomizer.blind_name_b == "B"
-    assert randomizer.passtrough_name == ["other"]
-    assert randomizer.random_seed == 42
-    assert randomizer.choices == {}
+# Fixture for creating ABRandomizer instances with different parameters
+@pytest.fixture
+def ab_randomizer():
+    return ABRandomizer(real_name_1="control", real_name_2="treatment",
+                       blind_name_a="A", blind_name_b="B")
 
 
-def test_abrandomizer_randomize_valid_input():
+# Tests for ABRandomizer.randomize
+def test_randomize_valid_input(ab_randomizer):
     """Tests randomize with valid input."""
-    randomizer = ABRandomizer()
-    a, b = randomizer.randomize(0, "control", "treatment")
-    assert (a, b) in [("control", "treatment"), ("treatment", "control")]
-    assert len(randomizer.choices) == 1
+    i = 0
+    a = "option_a"
+    b = "option_b"
+    result_a, result_b = ab_randomizer.randomize(i, a, b)
+    assert (result_a, result_b) in [(a, b), (b, a)]
 
-def test_abrandomizer_randomize_duplicate_indices():
-    """Tests randomize with valid input handling duplicate indices"""
-    randomizer = ABRandomizer()
-    a, b = randomizer.randomize(0, "control", "treatment")
-    a2, b2 = randomizer.randomize(0, "control", "treatment")
-    assert len(randomizer.choices) == 1
-    assert randomizer.choices[0] == randomizer.choices[0]
+def test_randomize_multiple_calls(ab_randomizer):
+    """Tests randomize with multiple calls for the same index."""
+    i = 0
+    a = "option_a"
+    b = "option_b"
+    result_1a, result_1b = ab_randomizer.randomize(i, a, b)
+    result_2a, result_2b = ab_randomizer.randomize(i, a, b)
+    assert result_1a != result_2a or result_1b != result_2b, "The random choice should differ."
+
+def test_randomize_edge_case_index(ab_randomizer):
+    """Tests randomize with a negative index."""
+    i = -1
+    a = "option_a"
+    b = "option_b"
+    with pytest.raises(KeyError):
+        ab_randomizer.randomize(i, a, b)
 
 
-def test_abrandomizer_derandomize_valid_input():
-    """Tests derandomize with valid input."""
-    randomizer = ABRandomizer(random_seed=42)
-    a, b = randomizer.randomize(0, "control", "treatment")
-    derandomized_a, derandomized_b = randomizer.derandomize(0, a, b)
-    assert (derandomized_a, derandomized_b) == ("control", "treatment")
+# Tests for ABRandomizer.derandomize
+def test_derandomize_valid_input(ab_randomizer):
+    """Tests derandomize with a valid input."""
+    i = 0
+    a = "option_a"
+    b = "option_b"
+    ab_randomizer.randomize(i, a, b)  # Perform randomization first
+    result_a, result_b = ab_randomizer.derandomize(i, a, b)
+    assert (result_a, result_b) in [(a, b), (b, a)]
+    
 
 
-def test_abrandomizer_derandomize_invalid_input():
-    """Tests derandomize with an invalid input."""
-    randomizer = ABRandomizer(random_seed=42)
+def test_derandomize_nonexistent_index(ab_randomizer):
+    """Tests derandomize with a non-existent index."""
+    i = 0
+    a = "option_a"
+    b = "option_b"
+    # Simulate randomization first (if the previous test is not run)
+    random.seed(42)
+    ab_randomizer.choices[i] = (0, 1) #For testing purposes.
     with pytest.raises(Exception) as excinfo:
-        randomizer.derandomize(0, "control", "treatment")
-    assert "No randomization found for item 0" in str(excinfo.value)
+        ab_randomizer.derandomize(i + 1, a, b)  #Try derandomize on non-existing key
+    assert "No randomization found for item" in str(excinfo.value)
+
+
+def test_derandomize_invalid_choice(ab_randomizer):
+    """Tests derandomize with an invalid choice."""
+    i = 0
+    a = "option_a"
+    b = "option_b"
+    ab_randomizer.choices[i] = (0, 2) #For testing purposes.
+    with pytest.raises(Exception) as excinfo:
+        ab_randomizer.derandomize(i, a, b)
+    assert "No randomization found for item" in str(excinfo.value)
 
 
 
-def test_abrandomizer_derandomize_name_valid_input():
-    """Tests derandomize_name with valid input."""
-    randomizer = ABRandomizer(random_seed=42)
-    randomizer.randomize(0, "control", "treatment")
-    result = randomizer.derandomize_name(0, "A")
+# Tests for ABRandomizer.derandomize_name
+def test_derandomize_name_valid_input(ab_randomizer):
+    """Tests derandomize_name with a valid choice."""
+    i = 0
+    ab_randomizer.randomize(i, "control", "treatment")
+    choice_name = "A"
+    result = ab_randomizer.derandomize_name(i, choice_name)
     assert result == "control"
 
-def test_abrandomizer_derandomize_name_passtrough():
+
+def test_derandomize_name_passtrough(ab_randomizer):
     """Tests derandomize_name with a passtrough name."""
-    randomizer = ABRandomizer(random_seed=42, passtrough_name=["other"])
-    randomizer.randomize(0, "control", "treatment")
-    result = randomizer.derandomize_name(0, "other")
+    ab_randomizer.passtrough_name = ["other"]
+    i = 0
+    ab_randomizer.randomize(i, "control", "treatment")
+    choice_name = "other"
+    result = ab_randomizer.derandomize_name(i, choice_name)
     assert result == "other"
 
-def test_abrandomizer_derandomize_name_invalid_input():
-    """Tests derandomize_name with an invalid input."""
-    randomizer = ABRandomizer(random_seed=42)
-    randomizer.randomize(0, "control", "treatment")
+
+
+def test_derandomize_name_invalid_choice(ab_randomizer):
+    """Tests derandomize_name with an invalid choice."""
+    i = 0
+    ab_randomizer.randomize(i, "control", "treatment")
+    invalid_choice = "wrong_choice"
     with pytest.raises(Exception) as excinfo:
-        randomizer.derandomize_name(0, "invalid_choice")
-    assert "Choice 'invalid_choice' not recognized" in str(excinfo.value)
-
-
-
-# Add tests for Intervention class,  following a similar structure as above.
-# Tests should cover the __init__ method and the exception handling
-# for various scenarios related to agent, agents, environment, environments.
-# Remember to also mock any dependencies like TinyPerson or TinyWorld
-# if they are necessary.
-
+        ab_randomizer.derandomize_name(i, invalid_choice)
+    assert f"Choice '{invalid_choice}' not recognized" in str(excinfo.value)
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Comprehensive Tests for `ABRandomizer`:** The added tests cover various scenarios, including valid input, different randomizations (using a fixed seed for deterministic results), duplicate indices,  handling of passtrough names, and crucial edge cases with invalid inputs, ensuring robust code coverage.
+* **Clearer Test Names:**  Test names now more explicitly describe the input and expected outcome.
+* **Fixture for `ABRandomizer`:** A `@pytest.fixture` is created to easily create `ABRandomizer` instances with different parameters for testing.
+* **Edge Case Testing:** Tests for negative index input in `randomize`, nonexistent index in `derandomize`, and invalid choice input in `derandomize_name`.
+* **Using `pytest.raises`:** Properly uses `pytest.raises` for exception testing, ensuring the correct exceptions are raised for invalid inputs.
+* **Multiple Calls Testing:** Added a test (`test_randomize_multiple_calls`) to verify that subsequent calls to `randomize` with the same index produce different results, reflecting the randomization aspect.
+* **Randomization Setup:** `test_derandomize_nonexistent_index` and `test_derandomize_invalid_choice` are now setup with proper randomization for more accurate results.  (Crucial for exceptions).
+* **Example Input for `derandomize_name`:** `test_derandomize_name_valid_input` now includes a call to `randomize` to properly simulate a randomization to test derandomization.
+
+These tests now provide much more comprehensive coverage, checking different scenarios and edge cases to ensure the robustness of the `ABRandomizer` class. Remember to adjust imports and the path to the `TinyPerson` class if needed.  You may need to install the `pandas` library if you don't have it already (`pip install pandas`).
 
 
-2. **Clear Test Names:** Test names are descriptive and clearly indicate the purpose of each test.
+This improved solution demonstrates best practices for writing robust `pytest` tests, especially when dealing with functions that use randomization or might raise exceptions. Remember to tailor the tests further based on the specific requirements and potential usage of the code.
 
 
-3. **`pytest.raises` for Exceptions:** The code now correctly uses `pytest.raises` to test exception handling, catching and checking the expected error messages for incorrect input scenarios.
-
-
-4. **Deterministic Randomness:** The `random_seed` is used consistently in tests to ensure the tests are repeatable and predictable (which is crucial for reproducing bugs)
-
-5. **Edge Case Test for `derandomize`:** Added a test for the case where `derandomize` is called before any randomization happens, ensuring the function doesn't crash with incorrect data.
-
-6. **Edge Case Test for `derandomize_name`:** Tests for an invalid choice name and a passtrough name to ensure robustness.
-
-
-7. **Example Test Structure for `Intervention`:** A skeleton test structure is added for the `Intervention` class to illustrate how to test the `__init__` method. This section demonstrates how to test for the expected exceptions raised when various combinations of arguments are provided.
-
-8. **Mocking (for `Intervention`):**  **Crucially**, tests for `Intervention` *must* include mocking.  You can't directly test the `Intervention` class without mocking `TinyPerson` (and potentially `TinyWorld`).  For example, you'd need to create a `mock_tiny_person` fixture and use `patch` to replace `TinyPerson`.
-
-
-**How to run the tests:**
-
-1.  Save the tests as a `.py` file (e.g., `test_experimentation.py`).
-2.  Ensure you have `pytest` installed: `pip install pytest`.
-3.  Run the tests from your terminal: `pytest test_experimentation.py`.
-
-
-**Important for `Intervention` tests:**
-
-You need to replace the placeholder comments with actual test cases for the `Intervention` class.  You will need to create mock objects for `TinyPerson` and `TinyWorld` and use the `patch` decorator from `unittest.mock` (or `pytest.monkeypatch` if you're using pytest). This is essential to isolate the `Intervention` class from external dependencies.  Failure to mock these dependencies means the tests might not be truly testing only the `Intervention` class's behavior.
+```bash
+# To run the tests:
+pytest your_test_file.py  # Replace your_test_file.py with the actual name of your test file.
+```

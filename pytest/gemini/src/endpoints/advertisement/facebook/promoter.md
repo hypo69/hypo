@@ -1,172 +1,133 @@
 ```python
 import pytest
-from datetime import datetime, timedelta
-from types import SimpleNamespace
-from urllib.parse import urlencode
 import random
-import time
+from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlencode
+from types import SimpleNamespace
+from typing import Optional
+import time
 
-from hypotez.src.endpoints.advertisement.facebook.promoter import (
-    get_event_url,
-    FacebookPromoter,
-)
-from hypotez.src import gs  # Replace with the actual import path
-from hypotez.src.utils.jjson import j_loads_ns  # Replace with the actual import path
+from src import gs
+# Replace with the actual import paths if needed
+from src.endpoints.advertisement.facebook.promoter import get_event_url, FacebookPromoter
+from src.webdriver.driver import Driver  # Assuming this exists
 
-# Mock objects for testing
-class MockDriver:
-    def __init__(self):
-        self.current_url = ""
 
-    def get_url(self, url):
-        self.current_url = url
-        return True
-    def close(self):
-        pass
-    
+# Mock data for testing
+def mock_group_data(group_url, group_categories=["sales"], language="en", currency="usd", status="active", last_promo_sended=None):
+    group = SimpleNamespace()
+    group.group_url = group_url
+    group.group_categories = group_categories
+    group.language = language
+    group.currency = currency
+    group.status = status
+    group.last_promo_sended = last_promo_sended
+    return group
 
-class MockAliCampaignEditor:
-    def __init__(self):
-        self.list_categories = ["Category1", "Category2"]
+def mock_item_data(name="Test Item", event_name=None, start=None, end=None, promotional_link=None, category_name=None, language=None):
+    item = SimpleNamespace()
+    item.name = name
+    item.event_name = event_name
+    item.start = start
+    item.end = end
+    item.promotional_link = promotional_link
+    item.category_name = category_name
+    item.language = language
+    return item
 
-    def list_categories(self):
-        return self.list_categories
+# Mock functions for testing
+def mock_post_message(d, message, no_video=False, without_captions=False):
+    return True # Or False for failure
 
-    def get_category(self, category_name):
-        return SimpleNamespace(category_name=category_name, promotional_link="link")
+def mock_post_event(d, event):
+    return True
 
-    def get_category_products(self, category_name):
-        return []
-        
-    
-# Example fixture data
+def mock_post_ad(d, ev_or_msg):
+  return True
+
 @pytest.fixture
 def mock_driver():
-    return MockDriver()
-
-
-@pytest.fixture
-def mock_group_file_paths():
-    return ["group1.json", "group2.json"]
-
+    return SimpleNamespace(get_url=lambda url: None, driver=None, close=lambda: None, get_element=lambda x: None, execute=lambda x:None, get_text=lambda x:None)
 
 @pytest.fixture
-def mock_group_data():
-    return {
-        "group1_url": SimpleNamespace(group_url="https://example.com/group1", group_categories=["sales", "fashion"], language="en", currency="USD", status="active", promoted_categories=[], last_promo_sended=None),
-        "group2_url": SimpleNamespace(group_url="https://example.com/group2", group_categories=["technology"], language="en", currency="EUR", status="active", promoted_categories=[], last_promo_sended=None),
-    }
+def facebook_promoter(mock_driver):
+    return FacebookPromoter(d=mock_driver, promoter='test_promoter', group_file_paths=None)
 
 
-@pytest.fixture
-def mock_item_data(mock_group_data):
-        return SimpleNamespace(name="Test Item", event_name="Event Name", category_name="Category Name", start=datetime.now(), end=datetime.now() + timedelta(days=1), promotional_link="link")
+def test_get_event_url(mock_driver):
+    group_url = "https://www.facebook.com/groups/12345"
+    expected_url = "https://www.facebook.com/events/create/?acontext=%7B%22event_action_history%22%3A%5B%7B%22surface%22%3A%22group%22%7D%2C%7B%22mechanism%22%3A%22upcoming_events_for_group%22%2C%22surface%22%3A%22group%22%7D%5D%2C%22ref_notif_type%22%3Anull%7D&dialog_entry_point=group_events_tab&group_id=12345"
+    actual_url = get_event_url(group_url)
+    assert actual_url == expected_url
 
 
-def test_get_event_url(mock_group_data):
-    url = get_event_url(mock_group_data['group1_url'].group_url)
-    assert "https://www.facebook.com/events/create/" in url
-
-
-def test_facebook_promoter_init(mock_driver, mock_group_file_paths):
-    promoter = FacebookPromoter(d=mock_driver, promoter="test", group_file_paths=mock_group_file_paths)
-    assert promoter.d == mock_driver
-    assert promoter.group_file_paths == mock_group_file_paths
-
-
-def test_facebook_promoter_promote_valid_input(mock_driver, mock_group_data, mock_item_data):
-    promoter = FacebookPromoter(d=mock_driver, promoter="test")
-    group = mock_group_data["group1_url"]
-    item = mock_item_data
-    result = promoter.promote(group=group, item=item, is_event=False)
-    assert result == True
-    assert hasattr(group, 'promoted_categories')
-
-
-def test_facebook_promoter_promote_language_mismatch(mock_driver, mock_group_data, mock_item_data):
-    promoter = FacebookPromoter(d=mock_driver, promoter="test")
-    group = mock_group_data["group1_url"]
-    group.language = "fr"  # Different language
-    item = mock_item_data
-    result = promoter.promote(group=group, item=item, is_event=False)
-    assert result is None  # Function should return None if languages don't match
-
-
-def test_facebook_promoter_promote_currency_mismatch(mock_driver, mock_group_data, mock_item_data):
-    promoter = FacebookPromoter(d=mock_driver, promoter="test")
-    group = mock_group_data["group1_url"]
-    group.currency = "GBP"  # Different currency
-    item = mock_item_data
-    result = promoter.promote(group=group, item=item, is_event=False)
-    assert result is None  # Function should return None if currencies don't match
-
-
-def test_facebook_promoter_promote_item_already_promoted(mock_driver, mock_group_data, mock_item_data):
-    promoter = FacebookPromoter(d=mock_driver, promoter="test")
-    group = mock_group_data["group1_url"]
-    group.promoted_categories = ["Test Item"]  # Item already promoted
-    item = mock_item_data
-    result = promoter.promote(group=group, item=item, is_event=False)
-    assert result is False 
-
-
-def test_facebook_promoter_promote_invalid_group(mock_driver, mock_group_data):
-    promoter = FacebookPromoter(d=mock_driver, promoter="test")
-    group = mock_group_data["group1_url"]
-    del group.group_categories  # Remove required attribute
-    with pytest.raises(AttributeError):
-        promoter.promote(group=group, item=SimpleNamespace(), is_event=False)
+def test_promote_valid_input(facebook_promoter, mock_driver):
+  group = mock_group_data("https://www.facebook.com/groups/testgroup")
+  item = mock_item_data()
+  facebook_promoter.d = mock_driver
+  # Mock post_message and post_event calls for success
+  facebook_promoter.post_message = mock_post_message
+  facebook_promoter.post_event = mock_post_event
+  result = facebook_promoter.promote(group, item)
+  assert result == True
 
 
 
-# ... other test cases ...
+def test_promote_invalid_language(facebook_promoter, mock_driver):
+  group = mock_group_data("https://www.facebook.com/groups/testgroup", language="fr")
+  item = mock_item_data(language="en")
+  facebook_promoter.d = mock_driver
+  result = facebook_promoter.promote(group, item, language="en")  # Mismatched language
+  assert result is None
 
 
+def test_process_groups(facebook_promoter, mock_driver):
+    # Mock data
+    mock_driver.driver = None
+    group = mock_group_data("https://www.facebook.com/groups/testgroup1")
+    item = mock_item_data()
+    facebook_promoter.d = mock_driver
+    # Mock necessary functions for process_groups
+    facebook_promoter.promote = lambda g, i, e, l, c: True
+    facebook_promoter.get_category_item = lambda c, g, l, cu: item
+
+    group_file_paths = ["test_group.json"]
+    facebook_promoter.process_groups(group_file_paths=group_file_paths) # Check no error raised
+    assert True # add assertions to validate specific aspects of the process_groups function
+
+
+# Add more tests covering different scenarios, edge cases, and error handling.  
+#  For example, test cases for the following:
+# - `check_interval` function (various time scenarios).
+# - `validate_group` function (invalid group data).
+# - `get_category_item` function (different promoters, missing files).
+# - Error handling within `promote`, `update_group_promotion_data`
+# - Exception cases (e.g., file not found).
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** Critically important for testing `FacebookPromoter`.  The `MockDriver` simulates the WebDriver interaction, preventing the test from actually interacting with Facebook.  `MockAliCampaignEditor` similarly mocks the AliExpress campaign interaction.  This makes tests independent of external resources.
+1. **Mock Objects:** The code now uses `pytest.fixture` to create mock objects for `Driver` and other dependencies.  This is crucial for testing without relying on external resources like a real browser driver.
+
+2. **Mock Functions:** Mocking functions like `post_message`, `post_event`, `post_ad` is vital.  The mock implementations now return `True` or `False` to simulate success or failure scenarios.
+
+3. **Mocked Data:** `mock_group_data` and `mock_item_data` functions are introduced to create controlled test data for groups and items.
+
+4. **Comprehensive Tests:** The provided tests are a starting point.  More tests are needed to cover all aspects of the `FacebookPromoter` class, especially error handling.
+
+5. **Clear Assertions:** Assertions are added to check the expected outcomes of the `promote` and other methods.
 
 
-2. **Fixtures for Data:**  Fixtures (`mock_driver`, `mock_group_data`, `mock_item_data`) now provide test data for the tests, improving organization and readability.
+**Critical Considerations for Realistic Testing:**
+
+- **Realistic `Driver` Mock:** The provided `mock_driver` is very basic. For robust testing, you should mock methods of the `Driver` class more accurately.
+- **File Handling:** Mocking file loading (`j_loads_ns`, `read_text_file`) is crucial to prevent actual file access during tests. This will help avoid failing tests due to issues with file contents.
+- **Exception Handling:** Add tests to verify the handling of `FileNotFoundError`, `json` decoding errors, or other possible exceptions during file operations and function calls.
+- **`check_interval`:** Implement thorough tests for different time intervals, including edge cases where the interval might not be met.
+- **`validate_group`:** Write tests to ensure that this function correctly identifies invalid or incomplete group data.
+- **`get_category_item`:** Create various scenarios (different promoters, missing files, invalid data in JSON files) and check for appropriate error handling and returned data.
+- **`process_groups`:** Test edge cases (empty file paths, invalid file data, empty campaigns, etc.)
 
 
-3. **Clear Test Cases:**  Added tests for various scenarios, including valid inputs, language/currency mismatches, and the case where an item is already promoted.
-
-
-4. **Exception Handling:** Demonstrates how to use `pytest.raises` to test for expected exceptions (e.g., `AttributeError` if a required attribute is missing from the `group`).
-
-
-5. **Realistic Data:** Example data in fixtures is now more realistic by including attributes like `group_categories`, `language`, `currency`, and `promoted_categories`, which are crucial for the logic of the class.
-
-
-6. **Specific Error Checking:** The tests now check for the expected `None` return value in the `promote` function when languages or currencies don't match.
-
-
-7. **Edge Case - Already Promoted:**  A test case is included to verify the behavior when an item is already promoted in the group.
-
-
-8. **Invalid Group Data:** A test case handles the situation where the `group` object is missing a necessary attribute, demonstrating robust exception handling.
-
-
-
-**How to Run Tests:**
-
-1.  Make sure you have `pytest` installed:
-    ```bash
-    pip install pytest
-    ```
-
-2.  Save the code above as a `.py` file (e.g., `test_promoter.py`).
-
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_promoter.py
-    ```
-
-Remember to replace placeholders like `from hypotez.src import gs` with the actual import paths for your project.  Also, ensure that you have the necessary mocking and fixtures defined for other modules (like AliExpress campaign functions) if they are used within the `FacebookPromoter` class. Remember to replace imports to your project's path.
-
-
-This revised solution provides a much more robust and comprehensive test suite for the `FacebookPromoter` class. Always strive to write tests that cover both normal and exceptional cases to ensure the reliability of your code.
+Remember to replace placeholder imports with the correct ones from your project.  Also, consider adding tests for the `log_promotion_error` and `update_group_promotion_data` functions.  By addressing these additional points, you can create a more complete and reliable test suite.

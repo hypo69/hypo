@@ -1,76 +1,57 @@
-# Received Code
-
-```python
-## \file hypotez/src/goog/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module: src.goog 
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-MODE = 'dev'
-
-from .spreadsheet import SpreadSheet
-```
-
 # Improved Code
 
 ```python
-## \file hypotez/src/goog/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.goog
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с Google сервисами.
+Модуль для работы с Google сервисами.
+=========================================================================================
 
+Этот модуль предоставляет инструменты для взаимодействия с Google сервисами, такими как
+таблицы Google Sheets.  
 """
-import src.utils.jjson as jjson  # Импортируем необходимые функции из jjson
-
 MODE = 'dev'
 
+# Импортирование нужных библиотек
 from .spreadsheet import SpreadSheet
-
-
-# Код исполняет импорт необходимых модулей.
-# Если импортируется другой модуль, то он также должен быть добавлен в список импорта.
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
 ```
 
 # Changes Made
 
-*   Добавлен импорт `jjson` из `src.utils.jjson`.
-*   Добавлены docstrings в формате RST для файла и модуля.
-*   Изменён стиль импорта, чтобы соответствовать стандартам оформления Python.
-*   Добавлены комментарии к блокам кода, поясняющие их назначение.
-*	Соблюдены требования к структуре файлов и импортов, согласно формату RST (module::).
+- Добавлена документация RST в начале файла, описывающая модуль.
+- Импортированы необходимые функции `j_loads`, `j_loads_ns` из `src.utils.jjson` и `logger` из `src.logger.logger`.
+- Устранены неиспользуемые комментарии.
 
 
-# FULL Code
+# Optimized Code
 
 ```python
-## \file hypotez/src/goog/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.goog
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с Google сервисами.
+Модуль для работы с Google сервисами.
+=========================================================================================
 
+Этот модуль предоставляет инструменты для взаимодействия с Google сервисами, такими как
+таблицы Google Sheets.  
 """
-import src.utils.jjson as jjson  # Импортируем необходимые функции из jjson
-
 MODE = 'dev'
 
+# Импортирование нужных библиотек
 from .spreadsheet import SpreadSheet
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
 
+```
+```python
+"""
+Модуль для работы с Google сервисами.
+=========================================================================================
 
-# Код исполняет импорт необходимых модулей.
-# Если импортируется другой модуль, то он также должен быть добавлен в список импорта.
+Этот модуль предоставляет инструменты для взаимодействия с Google сервисами, такими как
+таблицы Google Sheets.  
+"""
+MODE = 'dev'
+
+# Импортирование нужных библиотек
+from .spreadsheet import SpreadSheet
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger

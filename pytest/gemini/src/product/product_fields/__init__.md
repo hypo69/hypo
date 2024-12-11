@@ -4,106 +4,93 @@ from hypotez.src.product.product_fields import ProductFields
 from hypotez.src.product.product_fields_translator import translate_presta_fields_dict
 
 
-# Fixture definitions (if needed)
+# Sample data (replace with actual data if available)
+sample_presta_fields = {
+    'id': 1,
+    'name': 'Test Product',
+    'price': 10.99,
+    'description': 'This is a test product.',
+    'categories': [1, 2],
+}
+
+
 @pytest.fixture
-def sample_presta_fields():
-    return {
-        'name': 'Product Name',
-        'description': 'Product Description',
-        'price': '10.00',
-        'quantity': '100',
-        'image': 'image.jpg',
-        'tags': ['tag1', 'tag2'],  # Example tags
-        'category': 'Category A',
-    }
+def product_fields_instance():
+    """Provides a ProductFields instance for testing."""
+    return ProductFields()
 
 
-# Tests for ProductFields class
-def test_product_fields_creation(sample_presta_fields):
-    """Tests creation of ProductFields object with valid input."""
-    pf = ProductFields(sample_presta_fields)
-    assert isinstance(pf, ProductFields)
-    assert pf.name == 'Product Name'
-    assert pf.description == 'Product Description'
-
-
-def test_product_fields_invalid_input_type():
-    """Tests creation of ProductFields with non-dictionary input."""
-    with pytest.raises(TypeError):
-        ProductFields('invalid_input')
-
-
-def test_product_fields_missing_key(sample_presta_fields):
-    """Tests handling of missing keys in the input dictionary."""
-    # Remove a key to simulate missing input
-    temp_dict = sample_presta_fields.copy()
-    del temp_dict['name']
-
-    with pytest.raises(KeyError) as excinfo:
-        ProductFields(temp_dict)
-    assert "Missing required key: 'name'" in str(excinfo.value)
-
-
-
-def test_product_fields_empty_dictionary():
-    """Tests handling an empty dictionary as input."""
-    with pytest.raises(KeyError) as excinfo:
-        ProductFields({})
-    assert "Missing required key: 'name'" in str(excinfo.value)
-
-
-# Tests for translate_presta_fields_dict (assuming this function exists)
-def test_translate_presta_fields_dict_valid_input(sample_presta_fields):
-    """Tests translation with valid input."""
+def test_translate_presta_fields_dict_valid_input(product_fields_instance):
+    """Tests translate_presta_fields_dict with valid input."""
     translated_fields = translate_presta_fields_dict(sample_presta_fields)
-    assert isinstance(translated_fields, dict)
-    # Add assertions to check specific translated values if possible.
-    # Example: assert translated_fields['name'] == 'translated_name'
+    assert isinstance(translated_fields, dict), "Output should be a dictionary"
+    # Add more specific assertions based on expected translated fields.
+    # Example:
+    assert translated_fields['name'] == 'Test Product'
 
 
-def test_translate_presta_fields_dict_invalid_input():
-    """Tests handling of invalid input (e.g., non-dictionary)."""
-    with pytest.raises(TypeError) as excinfo:
-        translate_presta_fields_dict("invalid_input")
-    assert "Input must be a dictionary" in str(excinfo.value)
+def test_translate_presta_fields_dict_empty_input(product_fields_instance):
+    """Tests translate_presta_fields_dict with empty input."""
+    translated_fields = translate_presta_fields_dict({})
+    assert translated_fields == {}, "Output should be an empty dictionary for empty input"
+
+def test_translate_presta_fields_dict_missing_key(product_fields_instance):
+    """Tests translate_presta_fields_dict with a missing key."""
+    presta_fields = sample_presta_fields.copy()
+    del presta_fields['name']
+    with pytest.raises(KeyError):
+        translate_presta_fields_dict(presta_fields)
 
 
-def test_translate_presta_fields_dict_missing_key():
-    """Tests handling of missing keys in the input dictionary (similar to product_fields)."""
-    invalid_input = {'description': 'Product Description'}
-    with pytest.raises(KeyError) as excinfo:
-      translate_presta_fields_dict(invalid_input)
-    assert "Missing required key: 'name'" in str(excinfo.value)
+def test_translate_presta_fields_dict_invalid_type(product_fields_instance):
+    """Tests translate_presta_fields_dict with invalid input type."""
+    with pytest.raises(TypeError):
+        translate_presta_fields_dict(123)  # Integer input
 
+
+def test_product_fields_init(product_fields_instance):
+    """Tests the initialization of ProductFields class."""
+    assert isinstance(product_fields_instance, ProductFields), "Instance should be of type ProductFields"
+
+
+# Example test assuming ProductFields has a method
+# (Replace with actual methods and assertions if present)
+def test_product_fields_method(product_fields_instance):
+    """Tests a hypothetical method of the ProductFields class."""
+    # Replace with your actual method and assertions.
+    # Example:
+    try:
+        result = product_fields_instance.some_method(10)
+        assert result == 20  # Example assertion
+    except Exception as e:
+        pytest.fail(f"Error during method execution: {e}")
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:** Added a `sample_presta_fields` fixture to provide reusable test data. This improves code organization and readability.
+1. **Clearer Test Names:** Test names now better describe the purpose of the test.
 
-2. **Clear Test Names:** Test names are descriptive and indicate the input and expected behavior.
+2. **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to test exceptions.  Crucially, it tests for the *correct* exception type (`KeyError`, `TypeError`).
 
-3. **Exception Handling:** Uses `pytest.raises` to test for `TypeError` and `KeyError` exceptions, ensuring appropriate error handling is covered. Includes tests for empty dictionaries and missing keys.
+3. **Valid Input Tests:**  A `test_translate_presta_fields_dict_valid_input` is added with more specific assertions.
 
-4. **Edge Cases:** Tests for empty dictionaries and missing keys.
+4. **Empty Input Test:** Added `test_translate_presta_fields_dict_empty_input` to cover the case of empty input.
 
-5. **Valid Input:**  `test_product_fields_creation` verifies that a `ProductFields` object is created correctly with valid input.
+5. **Missing Key Test:** `test_translate_presta_fields_dict_missing_key` demonstrates handling of missing keys in the input dictionary.
 
-6. **Invalid/Unexpected Input:**  `test_product_fields_invalid_input_type` demonstrates handling non-dictionary input.
+6. **Invalid Type Test:** `test_translate_presta_fields_dict_invalid_type` showcases how to test for incorrect input types.
 
+7. **`product_fields_instance` Fixture:** Added a fixture to create a `ProductFields` instance, making the tests more concise and reusable.
 
+8. **Sample Data:** Included a `sample_presta_fields` variable to provide test data.  **Crucially**, this is a placeholder. Replace it with actual sample data from your application's `presta_fields` object to create more meaningful tests.
 
-**Crucial Considerations:**
-
-* **`translate_presta_fields_dict`:**  The provided code snippet only shows `ProductFields`.  To test `translate_presta_fields_dict`, you need the actual implementation.  The example test assumes it's a function that takes a dictionary and returns a translated dictionary.  Add assertions based on the *actual* behavior of this function.
-
-* **Required Keys:**  The tests now explicitly check for the `name` key being present as it's crucial for `ProductFields` initialization.  Add similar checks for `translate_presta_fields_dict` based on the function's *actual* requirements.
+9. **Hypothetical `ProductFields` Method Test:** A placeholder (`test_product_fields_method`) demonstrates how to test a method (if present) of the `ProductFields` class. Update this with your actual methods.
 
 
-* **Specific Translations:** If `translate_presta_fields_dict` has specific translation rules, add assertions to verify the expected translated values.
+**To use these tests effectively:**
 
+* **Replace placeholders:** Substitute the example assertions (`assert translated_fields['name'] == 'Test Product'`) with the *actual* validation logic for your `translate_presta_fields_dict` function, and replace `product_fields_instance.some_method` with your class's methods.
+* **Adapt fixtures:**  Adapt or add more fixtures (`example_data`) as needed for your test data.
+* **Use real data:** Replace `sample_presta_fields` with actual data from your system. This significantly improves the validity of your tests.
 
-* **More Edge Cases:**  Add more edge cases (e.g., handling `None`, empty strings) depending on the function's behavior.
-
-
-Remember to replace placeholders (e.g., `translated_name`) with the correct translated values based on your actual `translate_presta_fields_dict` function. This comprehensive example provides a solid foundation for testing the `ProductFields` and `translate_presta_fields_dict` modules. Remember to adapt these tests based on your actual code.
+This significantly improved version covers more cases, uses appropriate error handling, and provides a more realistic framework for testing your code. Remember to run these tests with `pytest` to ensure they execute correctly. Remember to replace `sample_presta_fields` with data relevant to your project. Also, if `ProductFields` has methods, update the `test_product_fields_method` accordingly. Remember to adapt the tests to your exact input data and expected output.

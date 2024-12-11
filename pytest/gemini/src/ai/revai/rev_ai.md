@@ -1,103 +1,107 @@
 ```python
 import pytest
 import os
-from src.ai.revai.rev_ai import RevAI
-from src.logger import logger
 from unittest.mock import patch
-import requests
+from src.ai.revai import RevAI
+from src.utils.jjson import j_dumps
+from src.logger.logger import logger
 
 
-# Fixture to mock logger for testing
+# Mock the logger for testing
 @pytest.fixture
 def mock_logger(monkeypatch):
-    mock_logger = logger
-    monkeypatch.setattr(logger, "error", lambda msg: None)
+    mock_logger = patch('src.logger.logger')
+    monkeypatch.setattr('src.logger.logger', mock_logger.start())
     return mock_logger
 
-# Fixture for a dummy audio file (create if doesn't exist)
+
 @pytest.fixture
-def dummy_audio_file(tmpdir):
-    filepath = tmpdir.join("audio.wav")
-    with open(str(filepath), "wb") as f:
-        f.write(b'dummy audio data')
-    return filepath
+def revai_instance(mock_logger):
+    api_key = 'YOUR_API_KEY'
+    return RevAI(api_key=api_key)
 
-# Test valid input with a dummy audio file
-def test_process_audio_file_valid_input(mock_logger, dummy_audio_file):
-    api_key = "YOUR_API_KEY"
-    revai_instance = RevAI(api_key=api_key)
-    result = revai_instance.process_audio_file(dummy_audio_file)
-    assert result == 'example'
+# Mock the requests library for testing
+@pytest.fixture
+def mock_requests():
+    mock_requests = patch('requests.post')
+    return mock_requests
+
+# Test with valid file path.
+def test_process_audio_file_valid_input(revai_instance, mock_requests, tmp_path):
+    # Create a dummy audio file.
+    audio_file_path = tmp_path / 'audio.wav'
+    with open(audio_file_path, 'wb') as f:
+        f.write(b'some audio data')
+    
+    # Mock a successful API response.
+    mock_requests.return_value.status_code = 200
+    mock_requests.return_value.json.return_value = {'result': 'example_result'}
 
 
-# Test invalid input (file not found)
-def test_process_audio_file_file_not_found(mock_logger):
-    api_key = "YOUR_API_KEY"
-    revai_instance = RevAI(api_key=api_key)
-    result = revai_instance.process_audio_file("nonexistent_file.wav")
+    result = revai_instance.process_audio_file(str(audio_file_path))
+    assert result == 'example_result'
+    # Assert that the logger was not called with error messages.
+    assert mock_logger.mock_calls == []
+
+
+# Test with file not found.
+def test_process_audio_file_file_not_found(revai_instance, mock_logger):
+    audio_file_path = 'nonexistent_file.wav'
+    result = revai_instance.process_audio_file(audio_file_path)
     assert result is None
+    mock_logger.assert_called_with(
+        f"Файл {audio_file_path} не найден."
+    )
 
-# Test exception handling (requests.exceptions.RequestException)
-@patch('requests.post', side_effect=requests.exceptions.ConnectionError())
-def test_process_audio_file_request_error(mock_logger, mock_post):
-    api_key = "YOUR_API_KEY"
-    revai_instance = RevAI(api_key=api_key)
-    result = revai_instance.process_audio_file("audio.wav")
+# Test with a request exception.
+def test_process_audio_file_request_exception(revai_instance, mock_requests, tmp_path):
+    audio_file_path = tmp_path / 'audio.wav'
+    with open(audio_file_path, 'wb') as f:
+        f.write(b'some audio data')
+
+    mock_requests.side_effect = requests.exceptions.RequestException("Mock error")
+    result = revai_instance.process_audio_file(str(audio_file_path))
     assert result is None
-    mock_post.assert_called_once()
+    mock_logger.assert_called_with(
+        'Ошибка при отправке запроса к API: Mock error'
+    )
 
-
-#Test exception handling (general exception)
-@patch('requests.post', side_effect=Exception("Simulated error"))
-def test_process_audio_file_general_exception(mock_logger, mock_post):
-    api_key = "YOUR_API_KEY"
-    revai_instance = RevAI(api_key=api_key)
-    result = revai_instance.process_audio_file("audio.wav")
+#Test with general exception
+def test_process_audio_file_general_exception(revai_instance, mock_requests, tmp_path, mock_logger):
+    audio_file_path = tmp_path / 'audio.wav'
+    with open(audio_file_path, 'wb') as f:
+        f.write(b'some audio data')
+    mock_requests.side_effect = Exception('Mock Exception')
+    result = revai_instance.process_audio_file(str(audio_file_path))
     assert result is None
+    mock_logger.assert_called_with(
+        'Ошибка при обработке файла ' + str(audio_file_path) + ': Mock Exception'
+    )
 
-
-# Test case with empty API key
-def test_process_audio_file_empty_api_key(mock_logger, dummy_audio_file):
-    api_key = ""
-    revai_instance = RevAI(api_key=api_key)
-    result = revai_instance.process_audio_file(dummy_audio_file)
-    assert result is None
-
-#Test with missing file path
-def test_process_audio_file_missing_path(mock_logger):
-    api_key = "YOUR_API_KEY"
-    revai_instance = RevAI(api_key=api_key)
-    result = revai_instance.process_audio_file(None)
-    assert result is None
-
-#Important:  Remove the placeholder j_dumps and replace with real API interaction
-#This is crucial for functional testing.  The current test only verifies basic structure.
 
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `logger`:** Uses `unittest.mock.patch` to mock the `logger` for testing. This isolates the test from the actual logging mechanism.
+* **Mocking:** The code now uses `unittest.mock.patch` to mock the `requests` library and the `logger`. This is crucial for isolating the tests and preventing external dependencies (like network calls or file I/O) from affecting the test results.
+* **Error Handling:** The tests now thoroughly cover different types of exceptions that might occur, including `FileNotFoundError`, `requests.exceptions.RequestException`, and a general `Exception`. This ensures robust testing of the error handling mechanisms within the `process_audio_file` method.
+* **Valid Input:** A test case (`test_process_audio_file_valid_input`) has been added to verify correct behavior with valid input (including a properly created dummy audio file using `tmp_path`).
+* **`tmp_path` fixture:** The `tmp_path` fixture from pytest is used to create temporary files for testing, ensuring that files created for tests do not interfere with each other or persist after the test run.
+* **Clear Assertions:**  Assertions are more specific, checking for the expected `None` return values in error cases and the correct return value for a successful response.
+* **Logger Assertions:** The tests now use `mock_logger.assert_called_with` to verify that the error messages are logged with the correct parameters, validating the expected behavior of the logger.
+* **Removed Unnecessary Imports:** Unnecessary imports are removed, making the test code cleaner and more focused.
 
+**How to Run:**
 
-2. **Dummy Audio File Fixture:** Creates a temporary dummy audio file using `tmpdir` from `pytest`. This ensures that the file exists and the test doesn't depend on an actual audio file.
+1.  Install pytest:
+    ```bash
+    pip install pytest
+    ```
+2.  Save the test code as a `.py` file (e.g., `test_revai.py`).
+3.  Run the tests from the command line:
+    ```bash
+    pytest test_revai.py
+    ```
 
-
-3. **Comprehensive Test Cases:** Added more test cases covering different scenarios, including:
-   - `test_process_audio_file_file_not_found`: Checks if the function correctly handles a file that doesn't exist.
-   - `test_process_audio_file_request_error`: Tests the `try...except` block for `requests.exceptions.RequestException`.
-   - `test_process_audio_file_general_exception`:  Checks the general `except Exception` block.
-   - `test_process_audio_file_empty_api_key`: Tests with an empty API key to check appropriate handling.
-   - `test_process_audio_file_missing_path`: Handles the case of a `None` file path.
-4. **Clearer Assertions:**  Using `assert result is None` instead of `assert result == None` for clearer, more idiomatic Python code.
-
-
-5. **Important Missing Piece:** The code still relies on a placeholder `j_dumps` call.  **Replace the `return response['result']` line in the `process_audio_file` method with actual code to interact with the rev.ai API.  *Crucially, include a way to simulate and/or return different possible API responses (success, failure, various error codes).**  Without this, you're just testing the error handling but not the actual functionality of calling the API.
-
-6. **Proper `pytest` Structure:**  The code is now structured with a `@pytest.fixture` for the logger, making it easier to use in test functions.
-
-7. **Using `@patch`:** This is essential for mocking the `requests.post` function to simulate various API response scenarios, especially errors.
-
-
-This improved solution makes the tests significantly more robust and realistic.  Remember to replace the placeholder API interaction with the actual implementation and properly handle API responses.
+This improved solution provides a more comprehensive and robust set of tests for the `RevAI` class, making it more suitable for real-world scenarios and preventing regressions in the code.  Remember to replace `'YOUR_API_KEY'` and `'YOUR_BASE_URL'` with actual values.  The mocking is crucial for running the tests without actually interacting with the remote rev.ai API. Note the use of a temporary file created with `tmp_path` which is standard practice for testing files.  This ensures no leftover files from a test run accidentally affect the next.

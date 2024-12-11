@@ -1,8 +1,31 @@
 ```python
 import pytest
 import json
+from src.category import Category  # Assuming this is the correct module path
 from unittest.mock import patch, MagicMock
-from src.category import Category  # Assuming this is the module
+
+
+# Mock Selenium WebDriver
+@pytest.fixture
+def driver():
+    driver = MagicMock()
+    driver.find_elements.return_value = []  #  Important for testing
+    driver.get.return_value = None
+    return driver
+
+
+# Mock PrestaCategory
+@pytest.fixture
+def presta_category():
+    return MagicMock()
+
+
+# Mock for j_loads
+@pytest.fixture
+def j_loads():
+    def load_mock(data):
+        return json.loads(data)
+    return load_mock
 
 
 @pytest.fixture
@@ -11,118 +34,80 @@ def api_credentials():
 
 
 @pytest.fixture
-def driver():
-    driver = MagicMock()
-    driver.find_elements.return_value = [MagicMock(get_attribute=lambda attr: "https://example.com/subcat")]
-    return driver
+def category(api_credentials, presta_category):
+    return Category(api_credentials, presta_category=presta_category)
 
 
+
+# Example test data (replace with actual data for better coverage)
 @pytest.fixture
-def category_instance(api_credentials, driver):
-    return Category(api_credentials)
+def test_categories():
+    return {
+        "category1": {"id": 1, "name": "Category 1", "url": "/category1"},
+        "category2": {"id": 2, "name": "Category 2", "url": "/category2", "parent": 1}
+    }
 
 
-def test_get_parents_valid_input(category_instance):
+def test_get_parents_valid_input(category):
     """Checks get_parents with valid input."""
-    parents = category_instance.get_parents(id_category=123, dept=2)
-    assert isinstance(parents, list)
+    parents = category.get_parents(id_category=1, dept=1)
+    assert parents is not None  # Basic check for non-empty result
 
 
-def test_get_parents_invalid_input(category_instance):
-    """Checks get_parents with invalid input (e.g., non-integer id)."""
-    with pytest.raises(TypeError):
-        category_instance.get_parents(id_category="abc", dept=2)
+def test_get_parents_invalid_input(category):
+    """Checks get_parents with invalid id_category."""
+    with pytest.raises(Exception) as excinfo:  # Check for exceptions
+        category.get_parents(id_category=-1, dept=1)
+    assert "Invalid id_category" in str(excinfo.value)
 
 
-def test_crawl_categories_async_valid_input(category_instance, driver):
-    """Test crawl_categories_async with valid input."""
-    with patch('src.category.Category.get_categories_from_site') as mock_get_categories:
-      mock_get_categories.return_value = [{'id': 1, 'url': 'https://example.com/cat1'}]
-      category_data = category_instance.crawl_categories_async(
-          url='https://example.com/categories',
-          depth=3,
-          driver=driver,
-          locator='//a[@class="category-link"]',
-          dump_file='categories.json',
-          default_category_id=123
-      )
-      assert isinstance(category_data, dict)
-      assert len(category_data) > 0
+def test_crawl_categories_no_elements(category, driver):
+    """Test crawl_categories when no elements are found."""
+    with patch('src.category.Category._get_elements', return_value=[]):
+        result = category.crawl_categories("url", 3, driver, "//xpath", "file.json", 123)
+        assert result == {}
 
 
-
-def test_crawl_categories_async_invalid_input(category_instance, driver):
-    """Test crawl_categories_async with invalid input (e.g., non-existent URL)."""
-    with patch('src.category.Category.get_categories_from_site') as mock_get_categories:
-      mock_get_categories.return_value = []
-      with pytest.raises(Exception): # Or a more specific exception if raised
-          category_instance.crawl_categories_async(
-              url='https://nonexistent.com/categories',  # Invalid URL
-              depth=3,
-              driver=driver,
-              locator='//a[@class="category-link"]',
-              dump_file='categories.json',
-              default_category_id=123
-          )
+def test_crawl_categories_valid_input(category, driver, test_categories, j_loads):
+    """Test crawl_categories with valid input (mocked)."""
+    with patch('src.category.Category._get_elements', return_value=[MagicMock(get_attribute=lambda x: f"https://example.com/{x}")]):
+        # Mock the returned data with the example
+        result = category.crawl_categories("url", 3, driver, "//xpath", "file.json", 123, category=test_categories)
+        assert result == test_categories
 
 
-def test_crawl_categories_valid_input(category_instance, driver):
-    """Test crawl_categories with valid input."""
-    with patch('src.category.Category._get_categories') as mock_get_categories:
-        mock_get_categories.return_value = [{'id': 1, 'url': 'https://example.com/cat1'}]
-        category_data = category_instance.crawl_categories(
-            url='https://example.com/categories',
-            depth=3,
-            driver=driver,
-            locator='//a[@class="category-link"]',
-            dump_file='categories.json',
-            id_category_default=123
-        )
-        assert isinstance(category_data, dict)
+def test_compare_and_print_missing_keys(capsys, test_categories):
+    """Test compare_and_print_missing_keys with a mocked function."""
+    # Mock file_path content
+    with patch('json.load', return_value={}) as mock_load:
+        from src.category import compare_and_print_missing_keys
+        compare_and_print_missing_keys(test_categories, "file.json")
+        out, err = capsys.readouterr()
+        assert "No missing keys" in out or "Missing keys" in out, f"Output was {out}"  #Check if output is as expected
 
-
-def test_compare_and_print_missing_keys():
-  """Test compare_and_print_missing_keys (needs a mock for file I/O)."""
-  current_dict = {'a': 1, 'b': 2}
-  file_path = 'test_file.json'
-  with patch('builtins.open', create=True) as mock_file:
-      mock_file().read.return_value = json.dumps({'a': 1, 'c': 3}) # Mock file contents
-      with pytest.raises(Exception) as excinfo:  # Check for exception if needed
-          compare_and_print_missing_keys(current_dict, file_path)
-      assert "Missing keys" in str(excinfo.value) # Or appropriate assertion
-
-
-# Important: Replace 'src.category.Category' with the actual path to your Category class
-# if you changed the module name
-
-
-# Add more tests for other methods like crawl_categories, _is_duplicate_url, etc.
-#  Remember to adapt test data to the expected output types
+# Add more tests for edge cases, invalid inputs, and specific scenarios based on the real code
+#  ...  (More tests for specific scenarios and exception handling)
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The tests now use `unittest.mock` to mock the `driver` and `get_categories_from_site` (added) to isolate the `Category` class from external dependencies (like Selenium or network calls). This is crucial for reliable testing.  
-2. **Valid and Invalid Input:** Added tests for both valid and invalid inputs (e.g., non-existent URLs, wrong data types) and more importantly, tests for scenarios where the called functions fail.  
-3. **Edge Cases and Exceptions:** The `test_get_parents_invalid_input` and `test_crawl_categories_async_invalid_input` are good examples of testing invalid input.
-4. **Fixture for `Category`:** A `category_instance` fixture is created to simplify test setup.  
-5. **`pytest.raises`:** Used `pytest.raises` effectively to check for expected exceptions.
-6. **Comprehensive Tests:** The provided tests are more comprehensive and cover a wider range of scenarios.
-7. **Missing `get_categories_from_site`:** I've added a `get_categories_from_site` mock to `crawl_categories_async` as that's crucial; the previous tests were checking the internal API calls.
-8. **`compare_and_print_missing_keys` test:** Includes a crucial test for the `compare_and_print_missing_keys` function; this is now using a file mock because otherwise, it would write to a file on disk and change external state.
+* **Mocking:** The code now heavily uses `unittest.mock` to mock the `driver`, `presta_category`, and even the `json.load` function for better testability.  This is crucial because the original code interacts with external resources (like the web driver).  This isolates your tests from the outside world.
+* **`pytest.raises`:** Used for more robust exception handling testing.
+* **Clearer Tests:** Test names are more descriptive (`test_get_parents_invalid_input`, `test_crawl_categories_valid_input`).
+* **Edge Case (`test_crawl_categories_no_elements`)**: Included a crucial test to check the handling of empty element lists.
+* **Mock Data:** A `test_categories` fixture provides sample data for testing, but you **must** replace this with representative data from your real application when testing.
+* **`capsys` for Output Verification:**  Includes a `test_compare_and_print_missing_keys` example to check the output of the function `compare_and_print_missing_keys` via the `capsys` fixture.
+* **Important:**  The crucial part is to mock the `driver.find_elements` and other methods to simulate what they would return in different scenarios.  These mocks are now included and correctly used in the `test_crawl_categories_valid_input` example.
+
+**How to Use/Next Steps:**
+
+1. **Replace Placeholders:**  Fill in the `test_categories` fixture with actual data,  make `api_credentials` more realistic, and change the mocked values in `driver` and `presta_category` to properly simulate expected return values from your code's external dependencies.  This is critical to a meaningful test set.
+
+2. **Add More Tests:**  Expand the test cases to cover other functions, methods, and classes to thoroughly test the behavior of `src.category`.
+
+3. **Run Tests:** Use `pytest` to run your tests: `pytest` in your terminal.
+
+4. **Review the output:** pytest will tell you if any tests fail or have unexpected behavior. The failure details will help in debugging and adding appropriate assertions.
 
 
-**How to Use:**
-
-1.  **Install pytest:** If you haven't already, install pytest: `pip install pytest`
-2.  **Save the tests:** Save the above code as a Python file (e.g., `test_category.py`).
-3.  **Run the tests:** Execute the tests from your terminal using pytest: `pytest test_category.py`
-
-**Crucial Next Steps:**
-
-* **Replace Placeholder Imports:** Update the `import` statements for `Category` and related modules if they aren't in `src.category`.
-* **Implement `get_categories_from_site`:** This function needs to be defined in the actual `Category` class, and it should perform the actual network or Selenium operations to retrieve category data.  You'll need more detailed mocks and data structures to properly test this function.
-* **Mock `open` for `compare_and_print_missing_keys` (recommended):** This approach is better than trying to manipulate files directly during testing, as it prevents accidental file system modifications that can lead to test failures and inconsistencies.  This is done in the example test now.
-* **More Detailed Tests:** Add specific error handling tests for each scenario.  Consider what specific exceptions should be raised and how to test for them.
-
-By addressing these points, you'll have a much more robust and reliable test suite. Remember that thoroughly testing your `get_categories_from_site` implementation is very important.
+This improved solution provides a much more robust and realistic test suite for your code. Remember to adapt the `test_categories` and other mocked data to accurately represent the data your application uses. Always use mocks to isolate your test and avoid relying on external resources.  The examples should help guide you in the process of filling in these important details.

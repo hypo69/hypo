@@ -1,99 +1,90 @@
 ```python
 import pytest
 
-# Replace with the actual Python code you want to test.  
-# This example is a placeholder.
+# Placeholder for the Python code to be tested
+# Replace this with the actual code you want to test
 
-def calculate_sum(numbers: list[int]) -> int:
+def function1(param: str, param1: str = None) -> dict:
     """
-    Calculates the sum of a list of numbers.
-
     Args:
-        numbers (list[int]): A list of integers.
+        param (str): Description of the `param` parameter.
+        param1 (str, optional): Description of the `param1` parameter. Defaults to None.
 
     Returns:
-        int: The sum of the numbers in the list.
+        dict: Description of the return value. Returns a dictionary.
 
     Raises:
-        TypeError: If input is not a list of integers.
+        ValueError: Description of the situation in which the ValueError exception is raised.
     """
-    if not isinstance(numbers, list):
-        raise TypeError("Input must be a list.")
-    if not all(isinstance(num, int) for num in numbers):
-        raise TypeError("All elements in the list must be integers.")
+    if param is None:
+        raise ValueError("Param cannot be None")
+    result = {"param": param}
+    if param1:
+        result["param1"] = param1
+    return result
+
+
+def function2(data: list) -> int:
+    """
+    Args:
+        data (list): Description of the data parameter.
+    
+    Returns:
+        int: Description of the return value.
+    
+    Raises:
+        TypeError: Description of the situation in which the TypeError exception is raised.
+    """
+    if not isinstance(data, list):
+        raise TypeError("Input must be a list")
 
     total = 0
-    for number in numbers:
-        total += number
+    for item in data:
+        if not isinstance(item, (int, float)):
+          raise TypeError("List elements must be numbers")
+        total += item
     return total
 
 
-def greet(name: str, greeting: str = "Hello") -> str:
-    """
-    Greets the person by name.
+# Tests for function1
+def test_function1_valid_input():
+    result = function1("test_param", "test_param1")
+    assert result == {"param": "test_param", "param1": "test_param1"}
 
-    Args:
-        name (str): The name of the person to greet.
-        greeting (str, optional): The greeting to use. Defaults to "Hello".
+def test_function1_param1_none():
+  result = function1("test_param")
+  assert result == {"param": "test_param"}
 
-    Returns:
-        str: The greeting message.
-    """
-    return f"{greeting}, {name}!"
-
-
-# Test cases for calculate_sum
-def test_calculate_sum_valid_input():
-    """Tests calculate_sum with a valid list of integers."""
-    numbers = [1, 2, 3, 4, 5]
-    expected_sum = 15
-    assert calculate_sum(numbers) == expected_sum
+def test_function1_invalid_input():
+    with pytest.raises(ValueError) as exinfo:
+        function1(None)
+    assert str(exinfo.value) == "Param cannot be None"
 
 
-def test_calculate_sum_empty_list():
-    """Tests calculate_sum with an empty list."""
-    numbers = []
-    expected_sum = 0
-    assert calculate_sum(numbers) == expected_sum
+# Tests for function2
+def test_function2_valid_input():
+    data = [1, 2, 3, 4, 5]
+    result = function2(data)
+    assert result == 15
 
+def test_function2_empty_list():
+  data = []
+  result = function2(data)
+  assert result == 0
 
-def test_calculate_sum_with_negative_numbers():
-    """Tests calculate_sum with negative numbers."""
-    numbers = [-1, -2, -3]
-    expected_sum = -6
-    assert calculate_sum(numbers) == expected_sum
-
-
-def test_calculate_sum_invalid_input_not_list():
-    """Tests calculate_sum with invalid input (not a list)."""
+def test_function2_mixed_types():
     with pytest.raises(TypeError) as exinfo:
-        calculate_sum(123)
-    assert "Input must be a list." in str(exinfo.value)
+        function2([1, 2, "a"])
+    assert "List elements must be numbers" in str(exinfo.value)
 
 
-def test_calculate_sum_invalid_input_not_int():
-    """Tests calculate_sum with invalid input (not all integers)."""
-    with pytest.raises(TypeError) as exinfo:
-        calculate_sum([1, 2, 'a'])
-    assert "All elements in the list must be integers." in str(exinfo.value)
-
-
-
-
-# Test cases for greet
-def test_greet_valid_input():
-    """Tests greet with a valid name."""
-    name = "Alice"
-    expected_greeting = "Hello, Alice!"
-    assert greet(name) == expected_greeting
-
-
-def test_greet_custom_greeting():
-    """Tests greet with a custom greeting."""
-    name = "Bob"
-    greeting = "Hi"
-    expected_greeting = "Hi, Bob!"
-    assert greet(name, greeting) == expected_greeting
+def test_function2_invalid_input_type():
+  with pytest.raises(TypeError) as exinfo:
+    function2("not a list")
+  assert "Input must be a list" in str(exinfo.value)
 
 
 ```
+
+```markdown
+This file contains pytest test cases for the provided Python code.  The tests cover various scenarios, including valid inputs, invalid inputs, and edge cases.  Exception handling is also included using `pytest.raises`.  Please replace the placeholder code with the actual Python code you want to test.

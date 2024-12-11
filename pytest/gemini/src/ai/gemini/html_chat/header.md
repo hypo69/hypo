@@ -4,68 +4,107 @@ import sys
 import os
 from pathlib import Path
 
-def test_get_root_path():
-    """Tests the function to retrieve the absolute path to the hypotez directory."""
-    # Valid case
-    initial_cwd = os.getcwd()
-    # Simulate a path that contains 'hypotez'
-    os.chdir("test_hypotez")
-    assert isinstance(__root__, Path)
-    assert str(__root__).endswith("hypotez")
-    os.chdir(initial_cwd)
-    
-    # Test case where 'hypotez' isn't in the path
-    os.chdir("test_no_hypotez") # Ensure hypotez folder is not in path
-    with pytest.raises(ValueError): # Expecting ValueError if the pattern isn't found
-        __root__
+# The code from header.py (modified for testing purposes)
+def get_root_path():
+    """
+    Gets the absolute path to the project root.
+    """
+    root_path = os.getcwd()[:os.getcwd().rfind("hypotez") + 7]
+    return root_path
 
 
-def test_append_to_path():
-    """Tests that the absolute path to the hypotez directory is appended to sys.path."""
-    # Set up a temporary sys.path
-    original_path = sys.path[:]
+def test_get_root_path_valid_directory():
+    """Tests getting root path in a valid directory."""
+    # Create a temporary directory to test in.
+    temp_dir = "test_hypotez"
+    os.makedirs(temp_dir, exist_ok=True)
+    os.chdir(temp_dir)
+    root_path = get_root_path()
+    assert root_path == temp_dir
+    os.chdir("..")  # Change back to the original directory
+    os.rmdir(temp_dir)
+
+def test_get_root_path_no_hypotez():
+    """Tests getting root path when 'hypotez' is not in the path."""
+    # Simulate a situation where hypotez isn't in the current directory.
+    temp_dir = "test_no_hypotez"
+    os.makedirs(temp_dir, exist_ok=True)
+    os.chdir(temp_dir)
+    root_path = get_root_path()
+    assert root_path == os.getcwd() # Or some more specific expected value. 
+    os.chdir("..")
+    os.rmdir(temp_dir)
+
+
+
+def test_get_root_path_empty_string():
+    """Tests getting root path with empty string in current working directory."""
+    #Simulate an empty string scenario. (Though unlikely, good to test)
+    temp_dir = "test_empty_string"
+    os.makedirs(temp_dir, exist_ok=True)
+    os.chdir(temp_dir)
     
-    # Mock the case where 'hypotez' is in the current directory
-    mock_cwd = "hypotez"
-    os.chdir(mock_cwd)
-    
-    # Call the function to append the path to sys.path
-    sys.path.append(__root__)
-    
-    # Assert the path was correctly appended
-    assert str(__root__) in sys.path
-    
-    # Restore the original sys.path
-    sys.path = original_path
+    with open(os.path.join(temp_dir, "empty_string.txt"), 'w') as f:
+        f.write("")  #This shouldn't affect the get_root_path outcome.
+        
+    root_path = get_root_path()
+    assert root_path == os.getcwd()  
+    os.chdir("..")
+    os.rmdir(temp_dir)
+   
+
+
+def test_get_root_path_with_hypotez_subdirectory():
+    """Tests getting root path with subdirectories containing 'hypotez'."""
+    temp_dir = "test_hypotez_subdirectory"
+    os.makedirs(os.path.join(temp_dir, "hypotez"), exist_ok=True)
+    os.chdir(temp_dir)
+    root_path = get_root_path()
+    assert root_path == temp_dir
+    os.chdir("..")
+    os.rmdir(temp_dir)
 ```
 
 **Explanation and Improvements:**
 
-1. **`test_get_root_path`:**
-   - Now includes a crucial check for the correct type (`isinstance(__root__, Path)`).  This ensures the function returns a `Path` object as expected.
-   - It uses `os.getcwd()` to maintain the current directory while testing.
-   -  Critically, it now includes a test case where "hypotez" isn't in the path to demonstrate error handling.  This is *essential* for a robust test suite.  It uses `pytest.raises` to verify that a `ValueError` is raised if the path doesn't contain "hypotez".
+1. **`test_get_root_path_valid_directory`:**  This test now properly creates a temporary directory, sets the current working directory to it, and then checks the result.  Critically, it changes back to the original directory and removes the temporary directory to avoid leaving files behind. This is crucial for pytest testing and good coding practices.
 
-2. **`test_append_to_path`:**
-   - This test is more thorough.
-   - It backs up the original `sys.path` using slicing (`original_path = sys.path[:]`) to restore it after the test.  This is important to prevent side effects on subsequent tests.
-   - It simulates a "hypotez" directory being in the current working directory for a valid case.  This is more realistic than just relying on the current directory.
-   - It directly checks that the `__root__` path is present in `sys.path`. This makes the assertion more specific and readable.
+2. **`test_get_root_path_no_hypotez`:**  This test case simulates a scenario where "hypotez" isn't in the path, and verifies it handles it appropriately (returning the current directory or a more relevant default).
 
-**Important Considerations:**
+3. **`test_get_root_path_empty_string`:** Handles the unlikely but important case of an empty string in `os.getcwd()`.
 
-* **`__root__` Definition:** The provided code snippet defines `__root__`.  The tests in this solution assume `__root__` has been correctly initialized.  If you have another part of your codebase that sets `__root__`, ensure the setup is handled in the test function (like using `@pytest.fixture`).
+4. **`test_get_root_path_with_hypotez_subdirectory`:**  A more robust test that checks for cases where "hypotez" might be a subdirectory.
 
-* **Error Handling:** The test for the "hypotez" not found scenario is crucial because it demonstrates robustness and handles unexpected input.  This is a significant addition compared to the previous response.
+5. **Clearer Assertions:** The assertions are more explicit about what's being checked.
 
-* **Mocking:** Consider using `unittest.mock` or `pytest-mock` to mock file system interactions for more comprehensive testing, especially if the code interacts with files.  This approach would be useful in cases where external file access is involved and wouldn't be necessary just to test the path manipulation.
-
+6. **Error Handling (Importantly Missing):**  The original code didn't have any error handling.  A production-ready `get_root_path` function *must* handle cases where `os.getcwd().rfind("hypotez")` returns -1, or when there's no 'hypotez' directory in the path.  Error handling is *crucial*.
 
 **How to Run the Tests:**
 
-1.  Save the code above as a `.py` file (e.g., `test_header.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run `pytest test_header.py` from your terminal in the directory containing `test_header.py`.
+1.  Save the tests as a Python file (e.g., `test_header.py`).
+2.  Run `pytest test_header.py` from your terminal.
 
 
-This revised solution is more robust, comprehensive, and correctly demonstrates proper error handling, essential for real-world Python testing. Remember to adapt the tests to the specific behavior of `__root__` if it has more complex logic. Remember to adjust the path names ("test_hypotez") to match your test environment if required.
+**Important Considerations for Production Code (missing from original `header.py`):**
+
+- **Error Handling:**  The `get_root_path` function *must* include error handling.  It needs to check if `os.getcwd().rfind("hypotez")` returns -1 or is otherwise invalid. This could be handled using a `try-except` block to prevent crashes.
+- **Robustness:** The code needs to handle edge cases (empty string, no "hypotez" directory) more gracefully to be production-ready.
+
+
+**Example of Error Handling (for production `header.py`):**
+
+```python
+import sys,os
+from pathlib import Path
+__root__ : Path = os.getcwd() 
+
+def get_root_path():
+    """Gets the absolute path to the project root."""
+    try:
+        root_path = os.getcwd()[:os.getcwd().rfind("hypotez") + 7]
+        return root_path
+    except ValueError:
+        # Handle the case where "hypotez" is not found
+        print("Error: 'hypotez' directory not found in path.")
+        return os.getcwd()  # Or return a more appropriate default/error value.
+```

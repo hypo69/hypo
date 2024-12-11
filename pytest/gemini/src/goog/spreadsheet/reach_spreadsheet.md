@@ -3,138 +3,141 @@ import pytest
 import httplib2
 import googleapiclient.discovery
 import googleapiclient.errors
-from unittest.mock import patch, Mock
 from oauth2client.service_account import ServiceAccountCredentials
 import tempfile
-from pathlib import Path
+import os
+from unittest.mock import patch
 
 from hypotez.src.goog.spreadsheet.reach_spreadsheet import (
     ReachSpreadsheet,
     SpreadsheetError,
     SpreadsheetNotSetError,
     SheetNotSetError,
-    htmlColorToJSON,
+    htmlColorToJSON
 )
 
-
-# Fixture to mock the Google API calls
+# Mock for testing
 @pytest.fixture
-def mock_service():
-    service = Mock()
-    service.spreadsheets.create.return_value.execute.return_value = {
-        "spreadsheetId": "test_spreadsheet_id",
-        "sheets": [{"properties": {"sheetId": 1, "title": "test_sheet"}}]
-    }
-    service.spreadsheets.get.return_value.execute.return_value = {
-        "spreadsheetId": "test_spreadsheet_id",
-        "sheets": [{"properties": {"sheetId": 1, "title": "test_sheet"}}]
-    }
+def mocked_service():
+    """Mock the Google Sheets service."""
+    with patch('googleapiclient.discovery.build') as mock_build:
+        mock_build.return_value.spreadsheets.create.return_value.execute.return_value = {"spreadsheetId": "12345", "sheets": [{"properties": {"sheetId": 67890, "title": "Sheet1"}}]}
+        mock_build.return_value.spreadsheets.get.return_value.execute.return_value = {"spreadsheetId": "12345", "sheets": [{"properties": {"sheetId": 67890, "title": "Sheet1"}}]}
+        mock_build.return_value.spreadsheets.batchUpdate.return_value.execute.return_value = {"replies": [{"addSheet": {"properties": {"sheetId": 12345, "title": "NewSheet"}}}]}
+        mock_build.return_value.spreadsheets().values().batchUpdate.return_value.execute.return_value = {"responses": []}
+        mock_build.return_value.drive.permissions.create.return_value.execute.return_value = {"id": "permission_id"}
 
-    service.spreadsheets().batchUpdate.return_value.execute.return_value = {"replies": [{"addSheet": {"properties": {"sheetId": 2, "title": "new_sheet"}}}]}
-    service.spreadsheets().values().batchUpdate.return_value.execute.return_value = {"responses": []}
-    service.spreadsheets().permissions().create.return_value.execute.return_value = {"id": "permission_id"}
-
-    return service
-
-@pytest.fixture
-def mock_drive_service(mocker):
-    driveService = mocker.MagicMock()
-    driveService.permissions.create.return_value.execute.return_value = {"id": "permission_id"}
-    return driveService
+        yield mock_build
 
 
-@pytest.fixture
-def credentials():
-    return Mock(spec=ServiceAccountCredentials)
+def test_create_spreadsheet(mocked_service):
+    """Test creating a spreadsheet."""
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.create("TestSpreadsheet", "TestSheet")
+    assert ss.spreadsheetId == "12345"
+    assert ss.sheetId == 67890
+    assert ss.sheetTitle == "Sheet1"
+    
 
 
-def test_create_spreadsheet(mock_service, credentials):
-    ss = ReachSpreadsheet(debugMode=True)
+def test_create_spreadsheet_raises_exception(mocked_service):
+    with patch('googleapiclient.discovery.build') as mock_build:
+        mock_build.side_effect = googleapiclient.errors.HttpError("Error")
+        ss = ReachSpreadsheet(debugMode=False)
+        with pytest.raises(googleapiclient.errors.HttpError):
+            ss.create("TestSpreadsheet", "TestSheet")
 
-    with patch("hypotez.src.goog.spreadsheet.reach_spreadsheet.ServiceAccountCredentials.from_json_keyfile_name", return_value=credentials):
-        with patch("hypotez.src.goog.spreadsheet.reach_spreadsheet.googleapiclient.discovery.build") as mock_build:
-            mock_build.return_value = mock_service
-            ss.create("Test Spreadsheet", "Test Sheet")
 
-    assert ss.spreadsheetId == "test_spreadsheet_id"
-    assert ss.sheetId == 1
-    assert ss.sheetTitle == "test_sheet"
+def test_share_spreadsheet(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.spreadsheetId = "12345"
+    ss.share({"type": "user", "role": "reader", "emailAddress": "test@example.com"})
 
-def test_create_spreadsheet_error(mock_service, credentials):
-    ss = ReachSpreadsheet(debugMode=True)
-
-    with patch("hypotez.src.goog.spreadsheet.reach_spreadsheet.ServiceAccountCredentials.from_json_keyfile_name", return_value=credentials) as mock_creds:
-        with patch("hypotez.src.goog.spreadsheet.reach_spreadsheet.googleapiclient.discovery.build") as mock_build:
-            mock_build.side_effect = Exception("Error creating service")
-            with pytest.raises(Exception):
-                ss.create("Test Spreadsheet", "Test Sheet")
-    assert mock_creds.called
-
-def test_share(mock_service, mock_drive_service, credentials):
-    ss = ReachSpreadsheet(debugMode=True)
-    ss.spreadsheetId = "test_spreadsheet_id"
-
-    with patch("hypotez.src.goog.spreadsheet.reach_spreadsheet.googleapiclient.discovery.build") as mock_build:
-           mock_build.side_effect = [mock_service,mock_drive_service]
-           ss.share({"type": "user", "role": "reader", "emailAddress": "test@example.com"})
-
-    mock_drive_service.permissions.create.assert_called_once_with(
-        fileId="test_spreadsheet_id",
-        body={"type": "user", "role": "reader", "emailAddress": "test@example.com"},
-        fields="id",
-    )
-
-def test_share_spreadsheet_not_set(mock_service, mock_drive_service, credentials):
-    ss = ReachSpreadsheet(debugMode=True)
+def test_share_spreadsheet_raises_spreadsheet_not_set(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
     with pytest.raises(SpreadsheetNotSetError):
         ss.share({"type": "user", "role": "reader", "emailAddress": "test@example.com"})
 
 
-def test_add_sheet(mock_service, credentials):
-    ss = ReachSpreadsheet(debugMode=True)
-    ss.spreadsheetId = "test_spreadsheet_id"
-    with patch("hypotez.src.goog.spreadsheet.reach_spreadsheet.googleapiclient.discovery.build") as mock_build:
-            mock_build.return_value = mock_service
-            sheet_id = ss.addSheet("New Sheet", 10, 20)
-            assert sheet_id == 2
+def test_set_spreadsheet_by_id(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.setSpreadsheetById("12345")
+    assert ss.spreadsheetId == "12345"
+    
 
-def test_add_sheet_spreadsheet_not_set(mock_service, credentials):
-    ss = ReachSpreadsheet(debugMode=True)
+
+def test_add_sheet(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.spreadsheetId = "12345"
+    ss.addSheet("NewSheet")
+    assert ss.sheetId == 12345  #Check that id was correctly retrieved
+
+
+def test_to_grid_range(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.spreadsheetId = "12345"
+    ss.sheetId = 67890
+    result = ss.toGridRange("A1:B2")
+    assert result == {"sheetId": 67890, "startRowIndex": 0, "endRowIndex": 2, "startColumnIndex": 0, "endColumnIndex": 2}
+
+
+def test_to_grid_range_invalid_input(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.spreadsheetId = "12345"
+    ss.sheetId = 67890
+    with pytest.raises(SheetNotSetError):
+        ss.toGridRange("A1")
+
+
+def test_get_sheet_url(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
+    ss.spreadsheetId = "12345"
+    ss.sheetId = 67890
+    url = ss.getSheetURL()
+    assert "https://docs.google.com/spreadsheets/d/12345/edit#gid=67890" in url
+
+
+
+def test_get_sheet_url_raises_exception(mocked_service):
+    ss = ReachSpreadsheet(debugMode=False)
     with pytest.raises(SpreadsheetNotSetError):
-        ss.addSheet("New Sheet", 10, 20)
+        ss.getSheetURL()
 
 
-# Add more tests for other methods (setSpreadsheetById, toGridRange, etc.) following a similar pattern
+
+# Add more test cases for other functions as needed, including error handling.
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:**  The code now heavily uses `unittest.mock` to mock the Google API calls (`googleapiclient.discovery.build`).  This is crucial for testing external dependencies without needing actual Google Sheets access.  Mocks return predefined data for success or simulate errors, allowing the `ReachSpreadsheet` class to be tested in isolation.
+1. **Mocking:** The solution now uses `unittest.mock.patch` to mock the `googleapiclient.discovery.build` function. This is crucial for testing functions that interact with external APIs (like Google Sheets) without actually making network calls.  This prevents the tests from depending on external resources.
 
-2. **Error Handling:** Added a test `test_create_spreadsheet_error` to demonstrate handling an exception during service creation.
+2. **`mocked_service` Fixture:** This fixture simplifies setting up the mocked service for repeated use.
 
-3. **Fixture for `credentials`:** Introduces `credentials` fixture for better organization and readability.
+3. **Error Handling:** Added tests explicitly checking for `SpreadsheetNotSetError` and `SheetNotSetError` to ensure these exceptions are raised when necessary. Also added a test to handle the `HttpError` raised by the Google Sheets API if there's a problem with the request.
 
-4. **Clearer Assertions:**  Assertions now directly check the values of the expected attributes (`spreadsheetId`, `sheetId`, etc.).
+4. **Clearer Assertions:** Assertions are more specific, verifying the expected values for `spreadsheetId`, `sheetId`, `sheetTitle` after operations.
 
-5. **Comprehensive Tests:**  Added tests for `test_create_spreadsheet` and `test_share` to demonstrate mocking and error handling.  Crucially, `test_add_sheet` is added and adjusted to use the mock. More test cases should be added for other methods.
+5. **Comprehensive Test Cases:** The provided tests are a starting point.  You should add more test cases to cover all the aspects of the `ReachSpreadsheet` class, including edge cases, invalid inputs, and various scenarios for different methods.  For example, test the `prepare_setDimensionPixelSize`, `prepare_setValues`, `runPrepared`, and other functions with different parameters.
 
-6. **Import Statements:** Ensured correct imports for `tempfile` and `Path`.
-
-7. **Mock `driveService`:** Added `mock_drive_service` fixture for testing the `share` method and its interaction with Drive API.
-
-**Next Steps (Important):**
-
-* **Complete `toGridRange` Tests:**  Add tests covering various string input formats for `toGridRange` (e.g., partial ranges, empty ranges).
-* **`setSpreadsheetById` Tests:**  Test scenarios where `setSpreadsheetById` succeeds and fails (nonexistent spreadsheet ID).
-* **`runPrepared` Tests:**  Test different scenarios for `runPrepared` with empty or valid requests and value ranges.  Include tests with exceptions.
-* **Edge Cases and Invalid Inputs:**  Implement tests for all possible invalid or unexpected inputs and edge cases (e.g., invalid spreadsheet ID, malformed cell ranges).
-* **Other Methods:** Add tests for `prepare_setDimensionPixelSize`, `prepare_setColumnsWidth`, `prepare_setColumnWidth`, `prepare_setRowsHeight`, `prepare_setRowHeight`, `prepare_setValues`, `prepare_mergeCells`, `prepare_setCellStringFormatterormat`, `prepare_setCellStringFormatterormats`.
-* **`htmlColorToJSON` Test:**  Add a test case for this utility function.
-* **`create_pricelist` and `testCreateTimeManagementReport` Tests:**  Enhance tests for these functions to cover potential issues.
+6. **`htmlColorToJSON` Test (crucial):**  Critically, there was no test for `htmlColorToJSON`. You'll need tests to ensure it handles various valid and invalid HTML color formats.
 
 
-Remember to replace `"test_spreadsheet_id"` with actual spreadsheet IDs that you have access to if you want to run real tests.
+**How to Run:**
+
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
+
+2.  **Save:** Save the test code (e.g., `test_reach_spreadsheet.py`) in a directory alongside your `hypotez/src/goog/spreadsheet/reach_spreadsheet.py` file.
 
 
-This improved solution is much more robust and allows you to thoroughly test the `ReachSpreadsheet` class without relying on external Google services. Remember to adjust the mocked return values to match the expected response format of the Google Sheets API. Remember to also add more tests for error handling.
+3.  **Run:**
+    ```bash
+    pytest test_reach_spreadsheet.py
+    ```
+
+Remember to replace placeholder values like "12345" with actual spreadsheet IDs from your Google Sheet if you want to run the tests with real data.   The mocked `googleapiclient` calls are vital, and they are more straightforward.  It's important to address the error handling scenarios and make the tests less brittle by not relying on external data.

@@ -10,6 +10,9 @@ module: src.ai.anthropic.claude
     :TODO: В дальнейшем перенести в системную переменную"""
 MODE = 'dev'
 
+# test
+
+
 
 import anthropic
 

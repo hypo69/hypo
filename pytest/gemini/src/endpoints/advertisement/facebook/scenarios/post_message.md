@@ -2,10 +2,15 @@
 import pytest
 from pathlib import Path
 from types import SimpleNamespace
+from typing import List
 from selenium.webdriver.remote.webelement import WebElement
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
-# Replace with your actual import
+# Replace with the actual import paths if necessary
+from src import gs
+from src.webdriver.driver import Driver
+from src.utils.jjson import j_loads_ns
+from src.logger.logger import logger
 from hypotez.src.endpoints.advertisement.facebook.scenarios.post_message import (
     post_title,
     upload_media,
@@ -13,139 +18,130 @@ from hypotez.src.endpoints.advertisement.facebook.scenarios.post_message import 
     publish,
     update_images_captions,
 )
-from src import gs
-from src.webdriver.driver import Driver
 
 
-# Mock the Driver class for testing
+# Dummy fixture for Driver (replace with your actual fixture)
 @pytest.fixture
-def mock_driver(monkeypatch):
-    class MockDriver:
-        def __init__(self):
-            self.locators = {}  # Store locators
-
-        def scroll(self, arg1, arg2, arg3):
-            return True
-
-        def execute_locator(self, locator, message=None, timeout=None, timeout_for_event=None):
-            if locator in self.locators:
-                return self.locators[locator]
-            return False
-
-        def wait(self, seconds):
-            pass  # Placeholder for wait
-
-        def close_pop_up(self):
-            return True
+def driver_mock():
+    driver = Mock(spec=Driver)
+    driver.scroll.return_value = True
+    driver.execute_locator.side_effect = [
+        True,  # open_add_post_box
+        True,  # add_message (valid input)
+        True,  # open_add_foto_video_form
+        True,  # foto_video_input
+        [Mock(spec=WebElement)],  # uploaded_media_frame
+        [Mock(spec=WebElement)],  # edit_image_properties_textarea
+        True,  # finish_editing_button
+        True,  # publish
+        True,  # close_pop_up (optional, for testing publish logic)
+        True, # not_now (optional, for testing publish logic)
+        True, # send
         
-        def not_now(self):
-            return True
-
-        def get_element(self):
-            return True
-            
-    driver = MockDriver()
-    monkeypatch.setattr("src.webdriver.driver.Driver", MockDriver)
+    ]
+    driver.wait.side_effect = [None] * 10 # Avoid errors during testing
     return driver
 
 
 @pytest.fixture
 def message_data():
-    return SimpleNamespace(title="Test Title", description="Test Description", products=[SimpleNamespace(local_saved_image="image.jpg")])
+    """Provides sample message data."""
+    return SimpleNamespace(title="Campaign Title", description="Campaign Description", products=[SimpleNamespace(local_saved_image="path/to/image.jpg")])
 
 
-def test_post_title_valid_input(mock_driver):
+@pytest.fixture
+def locator_mock():
+    return j_loads_ns(Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json'))
+
+
+def test_post_title_valid_input(driver_mock, message_data):
     """Tests post_title with valid input."""
-    message = SimpleNamespace(title="Test Title", description="Test Description")
-    result = post_title(mock_driver, message)
+    result = post_title(driver_mock, message_data)
     assert result is True
 
 
-def test_post_title_invalid_input(mock_driver):
-    """Tests post_title with invalid input (non-SimpleNamespace)."""
-    message = "Invalid message"
-    result = post_title(mock_driver, message)
+def test_post_title_invalid_input_scroll(driver_mock, message_data):
+    """Tests post_title with invalid scroll."""
+    driver_mock.scroll.return_value = False
+    result = post_title(driver_mock, message_data)
     assert result is None
 
 
-@patch("hypotez.src.endpoints.advertisement.facebook.scenarios.post_message.logger")
-def test_upload_media_success(mock_driver, mock_logger):
-    """Tests upload_media with valid input (list of SimpleNamespace)."""
-    media = [SimpleNamespace(local_saved_image="image.jpg")]
-    mock_driver.locators[{"open_add_foto_video_form"}] = True
-    mock_driver.locators[{"foto_video_input"}] = True
-    result = upload_media(mock_driver, media)
+def test_post_title_invalid_input_open_box(driver_mock, message_data):
+    """Tests post_title with failed open box."""
+    driver_mock.execute_locator.side_effect = [False]
+    result = post_title(driver_mock, message_data)
+    assert result is None
+
+
+def test_upload_media_valid_input(driver_mock, message_data):
+    """Tests upload_media with valid input."""
+    result = upload_media(driver_mock, message_data.products)
     assert result is True
 
 
-@patch("hypotez.src.endpoints.advertisement.facebook.scenarios.post_message.logger")
-def test_upload_media_empty_input(mock_driver, mock_logger):
+
+def test_upload_media_empty_input(driver_mock):
     """Tests upload_media with empty input."""
-    media = []
-    result = upload_media(mock_driver, media)
-    assert result is True
-    mock_logger.debug.assert_called_once_with("Нет медиа для сообщения!")
+    result = upload_media(driver_mock, [])
+    assert result is None
+    driver_mock.execute_locator.assert_called_with(locator.open_add_foto_video_form)
 
 
-
-def test_post_message_success(mock_driver, message_data):
-    """Tests post_message with valid input."""
-    mock_driver.locators[{"open_add_post_box"}] = True
-    mock_driver.locators[{"send"}] = True
-    mock_driver.locators[{"finish_editing_button"}] = True
-    mock_driver.locators[{"publish"}] = True
-    result = post_message(mock_driver, message_data)
+def test_publish_successful(driver_mock):
+    """Tests publish function with successful execution."""
+    result = publish(driver_mock)
     assert result is True
 
 
+def test_publish_failed_attempts(driver_mock):
+    """Tests publish function with failed attempts."""
+    driver_mock.execute_locator.side_effect = [False, False, False, False, False]
+    result = publish(driver_mock)
+    assert result is None
+    #assert driver_mock.execute_locator.call_count == 5, "execute_locator should be called 5 times"
 
-# Add more test cases for publish function, update_images_captions, and other functions as needed.
-#  Remember to mock appropriate parts of the system.
-#  Add checks for edge cases, empty lists, and potential exceptions.
+def test_post_message_valid_input(driver_mock, message_data):
+    result = post_message(driver_mock, message_data)
+    assert result is True
 
-# Example for testing exception handling:
-@pytest.mark.parametrize("input_value", [None, 123, "invalid"])
-def test_post_title_invalid_driver(input_value, mock_driver):
-    with pytest.raises(TypeError) as excinfo:
-        post_title(input_value, SimpleNamespace(title="Test", description="Test"))
-    assert "d must be of type Driver" in str(excinfo.value)
-
-
-
-
+# Add more tests for various scenarios, including error cases,
+# edge cases for publish, different types of media,
+# and more comprehensive test data.
+# Don't forget to mock out the necessary external functions or libraries.
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking `Driver`:** The `mock_driver` fixture now properly mocks the `Driver` class using `monkeypatch`. This is crucial for isolating tests from external dependencies like the webdriver. The mock returns `True` for success and `False` for failure.  Crucially, it now sets up the mock correctly.
+1. **Mocking `Driver`:**  The crucial improvement is mocking the `Driver` object. This isolates the tests from the actual web driver interaction, preventing real browser usage and allowing for easier control of test cases.  I've included example side effects for methods like `scroll`, `execute_locator`, and `wait`.  Crucially, the `side_effect` handles different return values for different calls, as per the provided code's flow.
 
-* **Comprehensive Tests:** The provided examples are expanded to cover `post_title`, `upload_media`, and `post_message`.
+2. **Clearer Test Cases:** The tests now have more specific names (e.g., `test_post_title_invalid_input_scroll`) and aim to cover different failure scenarios.  The test for empty input is included.
 
-* **Edge Cases:** Tests now include cases with empty lists (e.g., empty `media` in `upload_media`).
+3. **Complete `post_title` Test Cases:** Added tests for `post_title` covering valid input and important error conditions (failing scroll and open box).
 
-* **Exception Handling:** The example `test_post_title_invalid_driver` demonstrates exception testing using `pytest.raises` and correctly checks the exception type and message.  The added `@pytest.mark.parametrize` makes it more efficient by running tests with multiple inputs.
+4. **Complete `upload_media` Test Cases:** Tests for valid input and an empty input list are now included. This addresses potential issues when no media needs to be uploaded.
 
-* **Clearer Assertions:** Assertions are made clearer (e.g., `assert result is True` instead of implicit assertions based on the return value).
+5. **`publish` function tests:** Added tests for the `publish` function covering success and failure scenarios of several attempts.
 
+6. **`post_message` Test:** This covers a basic successful case of the `post_message` function.
 
-**How to run the tests:**
+7. **`pytest.raises` (not directly used):** `pytest.raises` is not needed for these tests as I used mocking to handle different outcomes directly within the `side_effect`.
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-
-2.  Save the code as `test_post_message.py` (or a similar name).
-
-3.  Run the tests from your terminal: `pytest test_post_message.py`
-
-**Important Considerations:**
-
-*   **Real Driver:**  In a real application, you would not use a mock. The `Driver` class should be instantiated and interact with a real browser.
-*   **Locators:**  The provided test code relies on mocking the `execute_locator` method.  Replace the `mock_driver` fixture and the mock logic with the code to actually interact with the locators in your real driver instance. This requires loading the locators into your mock, which would normally be read from a JSON file as in your original code.
-
-*   **File Paths:** If your `local_saved_image` or `local_saved_video` paths are actually hardcoded, adjust the tests to use mock paths (e.g. `"/tmp/image.jpg"`) for your test purposes. This prevents the tests from being dependent on specific image files being in the file system.
-
-*   **`logger` Mocking:**  The example test uses `@patch` to mock the logger for more controlled testing.  This stops the tests from depending on `print()` and `logger`.  Update this if you have a different logging setup.
-
-*   **`update_images_captions`:** Add more test cases for `update_images_captions` to test different scenarios (e.g., different languages, attributes not being present, error handling).
+8. **`@patch` (Optional):** In a real-world scenario, you might use `@patch` to mock the `j_loads_ns` function if it relies on external files.  I didn't include that here for brevity, but it's good practice.
 
 
-This revised solution provides a much more robust and testable approach to testing your Facebook advertisement posting code using pytest.  Remember to adapt the test cases to your actual code and requirements. Remember to replace placeholders with your actual code.
+**To Run These Tests:**
+
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
+
+2. **Replace placeholders:** Update the imports (`from src import ...`) to point to your actual modules.  Also, replace the dummy path in the `locator_mock` fixture with the correct path.
+
+3. **Run the tests:**
+   ```bash
+   pytest test_post_message.py  # Assuming your test file is test_post_message.py
+   ```
+
+Remember to adapt these tests based on the actual logic and expected behaviors of the `post_message` functions.  Add more tests to cover edge cases and exceptional scenarios (e.g., wrong file types, incorrect input formats, and specific error handling). Remember, thorough testing is key!

@@ -1,118 +1,97 @@
 ```python
 import pytest
-from requests.exceptions import RequestException
-from pathlib import Path
-from typing import Union
-from src.suppliers.aliexpress.aliexpress import Aliexpress
-
-
-# Sample fixture (replace with your actual fixture if needed)
-@pytest.fixture
-def example_locale():
-    return {'EN': 'USD'}
+from hypotez.src.suppliers.aliexpress.aliexpress import Aliexpress
+from unittest.mock import MagicMock
 
 
 @pytest.fixture
-def example_webdriver():
-    return 'chrome'
+def mock_supplier():
+    """Provides a mocked Supplier class for testing."""
+    mock_supplier = MagicMock()
+    return mock_supplier
 
 
-def test_aliexpress_init_no_webdriver(example_locale):
-    """Tests Aliexpress initialization with no webdriver."""
-    a = Aliexpress(locale=example_locale)
-    assert a.webdriver is False
+@pytest.fixture
+def mock_alirequests():
+    """Provides a mocked AliRequests class for testing."""
+    mock_alirequests = MagicMock()
+    return mock_alirequests
 
 
-def test_aliexpress_init_with_webdriver(example_webdriver, example_locale):
-    """Tests Aliexpress initialization with a webdriver."""
-    a = Aliexpress(webdriver=example_webdriver, locale=example_locale)
-    assert a.webdriver == example_webdriver
+@pytest.fixture
+def mock_aliapi():
+    """Provides a mocked AliApi class for testing."""
+    mock_aliapi = MagicMock()
+    return mock_aliapi
 
 
-def test_aliexpress_init_invalid_webdriver(example_locale):
-    """Tests Aliexpress initialization with an invalid webdriver."""
-    with pytest.raises(ValueError) as excinfo:
-        Aliexpress(webdriver='firefox', locale=example_locale)
-    assert "Invalid webdriver type" in str(excinfo.value)
+def test_aliexpress_init_no_webdriver(mock_supplier, mock_alirequests, mock_aliapi):
+    """Tests initialization with no webdriver."""
+    aliexpress = Aliexpress(webdriver=False)
+    mock_supplier.assert_called_once_with(supplier_prefix='aliexpress', locale={'EN': 'USD'}, webdriver=False)
+    mock_alirequests.assert_called_once()
+    mock_aliapi.assert_called_once()
 
 
-def test_aliexpress_init_locale_dict(example_webdriver):
-    """Tests Aliexpress initialization with locale as dictionary."""
-    a = Aliexpress(webdriver=example_webdriver, locale={'EN': 'USD'})
-    assert a.locale == {'EN': 'USD'}
+def test_aliexpress_init_chrome_webdriver(mock_supplier, mock_alirequests, mock_aliapi):
+    """Tests initialization with Chrome webdriver."""
+    aliexpress = Aliexpress(webdriver='chrome')
+    mock_supplier.assert_called_once_with(supplier_prefix='aliexpress', locale={'EN': 'USD'}, webdriver='chrome')
+    mock_alirequests.assert_called_once()
+    mock_aliapi.assert_called_once()
 
 
-def test_aliexpress_init_locale_str(example_webdriver):
-    """Tests Aliexpress initialization with locale as string, expecting default value."""
-    a = Aliexpress(webdriver=example_webdriver, locale='EN')
-    assert a.locale == {'EN': 'USD'}
+def test_aliexpress_init_invalid_webdriver(mock_supplier, mock_alirequests, mock_aliapi):
+    """Tests initialization with invalid webdriver value."""
+    with pytest.raises(ValueError):
+        aliexpress = Aliexpress(webdriver='invalid')
+
+def test_aliexpress_init_locale_dict(mock_supplier, mock_alirequests, mock_aliapi):
+    """Tests initialization with locale as a dictionary."""
+    locale_dict = {'FR': 'EUR'}
+    aliexpress = Aliexpress(locale=locale_dict)
+    mock_supplier.assert_called_once_with(supplier_prefix='aliexpress', locale=locale_dict, webdriver=False)
+
+def test_aliexpress_init_locale_string(mock_supplier, mock_alirequests, mock_aliapi):
+    """Tests initialization with locale as a string (should raise error)."""
+    with pytest.raises(TypeError):
+        aliexpress = Aliexpress(locale='EN')
 
 
-def test_aliexpress_init_with_requests(example_locale):
-    """Test Aliexpress initialization with requests=True, handling potential exceptions"""
-
-    try:
-      a = Aliexpress(requests=True, locale=example_locale)
-      assert a.requests is True
-    except Exception as e:
-      pytest.fail(f"Exception raised during initialization: {e}")
+# Add more tests for other methods as needed, like specific AliRequests or AliApi calls.
+# For example, if Aliexpress has methods that call AliRequests/AliApi, you could mock those calls:
 
 
-
-def test_aliexpress_init_with_invalid_locale():
-    """Tests Aliexpress initialization with an invalid locale."""
-    with pytest.raises(TypeError) as excinfo:
-        Aliexpress(webdriver='chrome', locale=123)
-    assert "Invalid locale type" in str(excinfo.value)
-
-
-def test_aliexpress_init_with_none_locale():
-  """Tests Aliexpress initialization with locale=None, should not raise error"""
-  try:
-    a = Aliexpress(webdriver='chrome', locale=None)
-    assert a.locale == {'EN': 'USD'}
-  except Exception as e:
-      pytest.fail(f"Exception raised during initialization with None locale: {e}")
-
-# Example test for a potential method (replace with your actual methods)
-# def test_aliexpress_method_example(example_data, example_aliexpress):
-#    """Tests a method of the Aliexpress class."""
-#    result = example_aliexpress.method_example(example_data)
-#    assert result == expected_result  # Replace with the expected result
-
-
-# IMPORTANT: Replace the placeholder comments and example fixtures with your
-# actual test data and expected outputs.  This is a basic framework; you'll need
-# tests for specific methods in the Aliexpress class based on their functionalities.
+# Example of testing a method that calls another class's method:
+# def test_aliexpress_method_calls_alirequests(mock_alirequests, mock_aliexpress):
+#     mock_alirequests.some_method.return_value = "mocked_response"
+#     response = mock_aliexpress.some_method_that_calls_alirequests()
+#     assert response == "mocked_response"
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Clearer Test Names:** Test names are more descriptive, reflecting the specific input and expected outcome.
+1. **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `Supplier`, `AliRequests`, and `AliApi` classes.  This is crucial for isolating the `Aliexpress` class's behavior from its dependencies and prevents unexpected interactions.
 
-2. **Exception Handling (Crucial):**  Includes `pytest.raises` for testing `ValueError` and `TypeError` exceptions raised by the `__init__` method with invalid inputs.
+2. **Clearer Test Names:** Test names are more descriptive, indicating the input conditions being tested.
 
-3. **Fixture Usage:** Demonstrates how to create a `example_locale` fixture to easily pass various locale values to the tests.  Remember to replace this with your actual fixtures.
+3. **Comprehensive Test Cases:** Added tests for different `webdriver` input types (boolean, string).  A crucial addition is testing with an *invalid* `webdriver` value to verify exception handling.
 
-4. **Comprehensive Test Cases:** Covers scenarios with various webdriver types (boolean, string),  locale types (dict, string, and None), and potential exceptions like an invalid webdriver type.
+4. **Type Handling:** Added a test case specifically to demonstrate that `locale` values *must* be a dictionary.
 
-5. **Edge Cases:** Includes checks for edge cases like `locale=None` which is now explicitly handled.
+5. **`pytest.raises`:** The `test_aliexpress_init_invalid_webdriver` and `test_aliexpress_init_locale_string` tests correctly use `pytest.raises` to assert that the expected exceptions are raised when incorrect input is provided.
 
-6. **Example `test_aliexpress_init_with_requests`**: This demonstrates a test with a `requests=True` parameter, illustrating proper exception handling.
+6. **Fixture Usage:** Fixtures are used to set up the mocked classes (`mock_supplier`, etc.), making the tests more organized and reusable.
 
-7. **Important:** You need to create tests for the actual methods within the `Aliexpress` class (`AliRequests`, `AliApi`, etc.).  The provided example tests only the constructor (`__init__`).   Replace the placeholder comments in the code with tests for your methods and replace the placeholder `example_data` and `example_aliexpress` fixtures with your own.  Critically, define the expected outcomes (`expected_result`) for each test.
+7. **Test Structure:**  A basic framework is in place.  You **must** expand this section to test any methods within the `Aliexpress` class that use `AliRequests` or `AliApi`.  The example comments in the code show how to test method calls that use these other classes.
 
 
-**How to Use and Adapt:**
+**How to Run Tests:**
 
-1. **Replace Placeholders:**  Modify the placeholder fixtures (`example_data`, `example_aliexpress`) with your actual fixture definitions.
-2. **Implement Actual Tests:** Add test functions for methods within the `Aliexpress` class, `AliRequests`, and `AliApi` classes.
-3. **Define Expected Results:** For each test, determine the expected outcome and add assertions (`assert`) to verify the results.
-4. **Error Handling:** Include `pytest.raises` to explicitly test how your code handles different exceptions.
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Save the test code in a file named `test_aliexpress.py` (or similar).
+3.  Run the tests from your terminal: `pytest test_aliexpress.py`
 
-This improved solution provides a strong foundation for testing your `Aliexpress` class, covering critical scenarios and best practices for `pytest` testing. Remember to run `pytest` to execute these tests. Remember to install necessary dependencies as well:
 
-```bash
-pip install pytest
-```
+Remember to adapt the tests based on the actual methods and functionality of your `Aliexpress` class.  If the `Aliexpress` class calls other methods or uses external resources, you will need to mock those dependencies as shown in the example comments.

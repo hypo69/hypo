@@ -2,95 +2,85 @@
 import pytest
 from hypotez.src.goog.drive import GoogleDrive
 
-# Tests for the GoogleDrive module (assuming it has functions)
+# Tests for GoogleDrive (assuming GoogleDrive class exists and has methods)
 
-# Example fixtures (replace with actual fixtures if needed)
+# Example fixture (replace with actual fixture if needed)
 @pytest.fixture
-def valid_credentials():
-    """Provides valid credentials for testing."""
-    return {"token": "YOUR_VALID_TOKEN", "refresh_token": "YOUR_REFRESH_TOKEN"}
-
-@pytest.fixture
-def invalid_credentials():
-    """Provides invalid credentials for testing (e.g., missing fields)."""
-    return {"token": "YOUR_INVALID_TOKEN"}
+def example_drive_instance():
+    return GoogleDrive()
 
 
-# Tests
-def test_google_drive_init_valid_credentials(valid_credentials):
-    """Tests GoogleDrive initialization with valid credentials."""
-    drive = GoogleDrive(credentials=valid_credentials)
-    assert drive is not None, "GoogleDrive object should be created"
-    # Add assertions to check specific attributes of the GoogleDrive object if available.
-    # Example: assert drive.token == valid_credentials['token']
-
-def test_google_drive_init_missing_credentials():
-    """Tests GoogleDrive initialization with missing credentials."""
-    with pytest.raises(KeyError):
-        GoogleDrive(credentials={})  # Simulate missing credentials
-        # Add assertion about exception if there is specific information in the exception
-
-def test_google_drive_init_invalid_credentials(invalid_credentials):
-    """Tests GoogleDrive initialization with invalid credentials."""
-    with pytest.raises(ValueError) as excinfo: #More specific error
-        GoogleDrive(credentials=invalid_credentials)
-    assert "Invalid credentials" in str(excinfo.value)
+def test_google_drive_initialization(example_drive_instance):
+    """Checks if GoogleDrive object initializes correctly."""
+    assert example_drive_instance is not None, "GoogleDrive instance should not be None"
 
 
-# Example test assuming a function like 'get_files' exists
-# Replace with your actual functions and test cases.
-def test_get_files_valid_credentials(valid_credentials, monkeypatch):
-  """Tests the get_files function with valid credentials."""
-  # Mock the external API call (crucial for testing without actually hitting the Google Drive API).
-  def mock_get_files(credentials):
-      return ["file1", "file2"]  # Replace with actual file objects or data
-  monkeypatch.setattr('hypotez.src.goog.drive.drive.get_files', mock_get_files)
-  drive = GoogleDrive(credentials=valid_credentials)
-  files = drive.get_files()
-  assert files == ["file1", "file2"]
+def test_google_drive_mode():
+    """Checks if MODE is correctly defined."""
+    assert GoogleDrive.MODE == 'dev', "MODE should be 'dev'"
 
 
-# If there are more functions or classes in your module, add more test functions
-# following a similar structure, incorporating assertions and edge cases.
+# Example test; replace with actual test method for .drive import
+def test_drive_module_import():
+    """Checks if the .drive module can be imported successfully."""
+    from hypotez.src.goog.drive import drive
+    assert drive is not None, ".drive module should be importable."
+
+#  Example test to illustrate potential exception handling
+def test_drive_method_invalid_input(example_drive_instance):
+  """Test for potential exception in GoogleDrive methods (Example)."""
+  # Replace with the actual method and expected exception
+  # Example: If a method raises ValueError for invalid input
+  with pytest.raises(ValueError):
+      example_drive_instance.invalid_method("invalid_input")
+  # Or, check for another type of exception if applicable
 
 
-# Example test for a possible exception
-def test_get_files_invalid_credentials(invalid_credentials):
-  """Tests the get_files function with invalid credentials."""
-  with pytest.raises(Exception) as excinfo:
-    GoogleDrive(credentials=invalid_credentials).get_files()
-  assert "Invalid credentials" in str(excinfo.value)
+# Add more tests as needed based on the actual GoogleDrive class methods
+#  For example:  
+# def test_drive_method_valid_input(example_drive_instance):
+#   """Test a valid method with valid input."""
+#   actual_result = example_drive_instance.valid_method(valid_input)
+#   expected_result = ... # Set expected result from documentation
+#   assert actual_result == expected_result, f"Expected {expected_result}, got {actual_result}"
 
 
-#Important Note: Replace placeholder values like "YOUR_VALID_TOKEN"
-# and mock functions like 'mock_get_files' with your actual values or implementations.
-# Also, ensure that the 'drive' module (or the relevant part of it) is properly imported.
+
+# Example test for a method that might return data. 
+# Replace with specific return values based on the actual GoogleDrive methods.
+# def test_drive_method_valid_data_return(example_drive_instance):
+#     """Test for retrieving data from the GoogleDrive API."""
+#     data = example_drive_instance.get_drive_data()
+#     assert isinstance(data, list) or isinstance(data, dict), "Returned data is not a list or dict."
+#     assert data is not None # Ensure data is not None
+
+
+# IMPORTANT:  Replace the placeholder comments with actual tests that cover the methods in your GoogleDrive class.
+# The example test cases above are just placeholders and must be adapted.
+
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Fixtures:** Added `valid_credentials` and `invalid_credentials` fixtures for better organization and reuse of test data.
+1. **Import `pytest`:**  The code now imports the necessary `pytest` library.
 
-2. **Error Handling:** Used `pytest.raises` to test exceptions properly, catching `KeyError` for missing credentials and a more specific `ValueError` for handling incorrect credentials and including assertions to validate the exception message.
+2. **Fixture (example):** A `@pytest.fixture` is provided for `example_drive_instance` as a placeholder. Replace this with a fixture that creates a proper `GoogleDrive` object *if* one is needed.  Crucially, this avoids the error where you might be trying to use an object that hasn't been instantiated.
 
-3. **Mocking:** The `test_get_files_valid_credentials` now uses `monkeypatch` to mock the `get_files` function within the `drive` module. This is absolutely critical.  Never directly call external APIs from your test functions; you will need to mock them (e.g., using `unittest.mock` or `pytest.monkeypatch`).
+3. **Example Tests:** Added example test functions (e.g., `test_google_drive_initialization`, `test_google_drive_mode`) illustrating various test types, including checking for correct object initialization, values, and imports.
 
-4. **Clearer Assertions:** Improved assertions to check specific expected behaviors and results.
+4. **Exception Handling (example):** Includes `test_drive_method_invalid_input` to demonstrate how to use `pytest.raises` to verify exception handling. Replace the example placeholder with the actual method and expected exception (e.g., `ValueError`, `TypeError`, etc.).
 
-5. **Comprehensive Tests:** The tests now cover more aspects of the code, including initialization with valid and invalid credentials and the example `get_files` function.
+5. **Docstrings:** Improved docstrings to clearly explain the purpose of each test.  **This is vital for maintainability and understanding of your tests**.
 
-6. **Example Placeholder:** Remember to replace the placeholder values (`YOUR_VALID_TOKEN`, etc.) with actual valid and invalid data.
+6. **Specific Test Cases:** The crucial missing part – the actual test cases for the *methods* in your `GoogleDrive` class. The example tests are empty placeholders. You must replace these with specific tests targeting the `GoogleDrive` methods.
 
-7. **Import:** Make sure the `drive` module is imported correctly and that the functions you are testing are actually defined.
+7. **Data Return:** An example test case (`test_drive_method_valid_data_return`) demonstrates how to test methods that return data.
 
-**How to Run:**
+**How to Use and Adapt:**
 
-Save this code as a `.py` file (e.g., `test_drive.py`), then run `pytest test_drive.py` from your terminal to execute the tests.
+1. **Replace Placeholders:** Replace the example tests with tests tailored for the specific methods, attributes, and expected behavior of your `GoogleDrive` class, including methods for valid inputs, incorrect input types, edge cases, and possible exceptions.
+2. **Import `GoogleDrive`:**  Ensure you import `GoogleDrive` correctly.
+3. **Create a Proper `GoogleDrive` Object:** Inside the fixture (if you've defined one), create a functioning `GoogleDrive` object. If your module imports other external libraries, these need to be mocked or tested in appropriate ways for the tests to execute successfully.
+4. **Set Expected Results:** You need to clearly define the expected results for each test.  This is essential for accurate assertions.  Refer to your `GoogleDrive`'s documentation (or source code) to see the correct expected values and behaviors.
 
-
-**Important Considerations for Real-World Testing:**
-
-* **Mocking External Dependencies:**  *Always* mock external dependencies like Google Drive API calls in your tests. This avoids issues with network requests and API rate limits, making your tests faster and more reliable.
-* **Realistic Test Data:** Replace the example credentials and data with your actual test data and mock the external library calls.
-* **Specific Error Messages:**  Catch specific exceptions and validate the error messages.
-* **Class Structure:** If `GoogleDrive` is a class, the tests should cover the constructor (`__init__`), relevant methods, and class attributes. Add assertion for class-specific attributes.
+Once you fill in the missing tests with the specifics of your `GoogleDrive` class, these tests will be more complete and comprehensive. Remember to cover various scenarios (valid and invalid inputs, edge cases, exceptions) to achieve thorough test coverage.

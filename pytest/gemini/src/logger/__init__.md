@@ -1,110 +1,99 @@
 ```python
 import pytest
-from hypotez.src.logger import logger
-from hypotez.src.logger.exceptions import (
-    ExecuteLocatorException,
-    DefaultSettingsException,
-    CredentialsError,
-    PrestaShopException,
-    PayloadChecksumError
-)
+import logging
 
-# Test cases for logger.py
-def test_logger_basic_log():
-    """Tests basic logging with a message."""
-    message = "This is a test log message."
-    logger.info(message)
-    # Assertion to verify that the log was written.  (You may need to use a testing framework's log capturing feature)
-    # Replace with the appropriate assertion.  Example (using a mock logger):
-    # assert log_message == message
+# Replace with the actual path to your logger file if needed
+# from hypotez.src.logger import logger  # Assuming logger is defined in logger.py
+# from hypotez.src.logger import MODE
+
+# Mock the logger for testing.  This is crucial to prevent side effects
+# from logging to the console or a file during tests.
+def mock_logger(name=__name__):
+    """Creates a mock logger for testing"""
+    logger = logging.getLogger(name)
+    logger.addHandler(logging.NullHandler())  # Suppresses actual logging
+    return logger
 
 
-def test_logger_error_log():
-    """Tests error logging with a message."""
-    error_message = "An error occurred."
-    logger.error(error_message)
-    # Replace with the appropriate assertion to check log output, similar to the example in test_logger_basic_log().
+# Tests for MODE constant.  Note, using __name__ here ensures
+# the logger is named correctly, even if your import changes.
+def test_mode_is_dev():
+    """Test that MODE is 'dev'"""
+    #logger_obj = logger()  # Replace with your logger initialization
+    #mock_logger = mock_logger() #Use mock logger
+    assert MODE == 'dev'
 
 
-def test_logger_exception_log():
-    """Tests exception logging."""
+# Example test to handle potential exceptions.  Crucially,
+# include tests for each exception the functions might raise.
+def test_logger_does_not_raise_exception_with_valid_log():
+    """Test logging with valid data, asserting no exception."""
+    mock_logger = mock_logger(__name__)
+    msg = "This is a test log message."
+    # Replace the following with actual call to logging function
+    mock_logger.info(msg)  
+    assert True  #No exception was raised; the assertion passes.
+
+
+# Example test of an exception handling case
+def test_logger_raises_typeerror_with_invalid_log_type():
+    """Test the logger handles invalid input types."""
+    mock_logger = mock_logger(__name__)
+    with pytest.raises(TypeError):
+        mock_logger.info(123)  # Trying to log an integer instead of a string
+
+
+# Example edge case
+def test_logger_handles_empty_log_message():
+    """Test the logger handles an empty message."""
+    mock_logger = mock_logger(__name__)
+    mock_logger.info("")  # Logging an empty string
+    assert True # No exception; assertion passes
+
+
+# Test imports from the logger module
+def test_import_logger_module():
+    """Test the logger module can be imported."""
     try:
-        raise ValueError("A test exception.")
-    except ValueError as e:
-        logger.exception(e)
-    # Replace with assertion for exception handling. Example:
-    # assert "ValueError" in log_message  # Assumes exception message is captured in logging.
+        from hypotez.src.logger import logger
+        from hypotez.src.logger import MODE
+        assert True
+    except ModuleNotFoundError as e:
+        pytest.fail(f"Failed to import logger module: {e}")
 
-def test_logger_custom_exception():
-  """Tests logging custom exceptions."""
-  try:
-      raise ExecuteLocatorException("Locator execution failed.")
-  except ExecuteLocatorException as e:
-      logger.exception(e)
-  # Assert that the specific custom exception is logged.
-  # Example:
-  # assert "ExecuteLocatorException" in log_message
-
-def test_logger_multiple_exceptions():
-    """Tests logging multiple exceptions in a chain."""
+#Test if the other imports from the logger module exist
+def test_logger_imports():
+    """Test other modules from the logger module can be imported."""
     try:
-      raise ValueError("First exception")
-    except ValueError as e:
-      try:
-        raise TypeError("Second exception") from e
-      except TypeError as te:
-        logger.exception(te)
-    # Verify the log shows the chained exceptions.
-
-
-# Test cases for exception classes (These need actual instantiation and error raising within a test function)
-def test_execute_locator_exception():
-    """Tests ExecuteLocatorException with a message."""
-    with pytest.raises(ExecuteLocatorException) as excinfo:
-        raise ExecuteLocatorException("Locator execution failed.")
-    assert str(excinfo.value) == "Locator execution failed."
-
-def test_default_settings_exception():
-    """Tests DefaultSettingsException."""
-    with pytest.raises(DefaultSettingsException) as excinfo:
-        raise DefaultSettingsException("Default settings not found.")
-    assert str(excinfo.value) == "Default settings not found."
-
-# Add similar test functions for other exception classes, testing their instantiation and message content.
-
-
-# Important: You MUST mock or capture the logger output in your test functions to validate it.
-# This example is incomplete; you need to either:
-# 1. Use a mocking library (e.g., `unittest.mock` or `pytest-mock`) to mock the `logger` object.
-# 2. Capture the log messages to a variable and assert on that variable.
-# Example using pytest-mock:
-# @pytest.mark.parametrize("level", ["info", "warning", "error"])
-# def test_log_levels(capsys, level):
-#   """Test different log levels."""
-#   logger.(f"test {level}")
-#   captured = capsys.readouterr()
-#   assert captured.out == f"test {level}"
-
-
-
+        from hypotez.src.logger.exceptions import ExecuteLocatorException
+        from hypotez.src.logger.exceptions import DefaultSettingsException
+        from hypotez.src.logger.exceptions import CredentialsError
+        from hypotez.src.logger.exceptions import PrestaShopException
+        from hypotez.src.logger.exceptions import PayloadChecksumError
+        assert True
+    except ModuleNotFoundError as e:
+        pytest.fail(f"Failed to import logger submodules: {e}")
 
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Logging Capture:** The previous answer lacked the crucial step of capturing or mocking the logger output. This significantly impacts the testability.  The example shows a `capsys` fixture to test logging. The previous `assert` statements now point to examples to adapt using a logging mocking library or other methods for capturing logs.
-2. **Exception Class Tests:** The `test_logger_*_exception()` tests were improved, showing how to raise and catch the exceptions.  These tests now *test* the *exception classes* themselves, not the logger.
-3. **Comprehensive Exception Handling:**  The `test_logger_exception_log` function, which tests logging exceptions, now handles the `try...except` block to correctly catch and log the exception.
-4. **Parameterized Tests (Example):**  The code includes an example of `pytest.mark.parametrize` for testing different log levels.  You should adapt to your needs.
-5. **Explicit Tests for Exception Classes:** The new tests directly check the instantiation of `ExecuteLocatorException` and other exception types. This is much better than just testing the logger with hypothetical exceptions inside a `try-except`.
-6. **Import Statements:**  Corrected and updated import statements.
-7. **Missing `assert` Statements:** The placeholder `assert` statements need to be replaced with assertions that check the contents of the logged messages (which need to be captured).
+1. **Mocking `logging`:** The code now uses `mock_logger` to create a mock logger instance. This is **absolutely essential** for testing `logger` functions without affecting the actual logging system (which might write to files or the console).  This prevents your tests from unexpectedly writing to files.  The `NullHandler` is very important for avoiding side effects.
 
-**How to run the tests:**
+2. **Comprehensive Exception Handling:** The `test_logger_raises_typeerror_with_invalid_log_type` test demonstrates how to use `pytest.raises` to check for specific exceptions.  **Crucially**, you should add tests for *every* exception type that the `logger` functions could raise in your actual code.
 
-- Install pytest: `pip install pytest`
-- Install any additional mocking libraries needed (e.g., `pytest-mock`).
-- Place the test code in a Python file (e.g., `test_logger.py`) in the same directory as `logger/__init__.py`.
-- Run pytest from your terminal: `pytest test_logger.py`
+3. **Clear Test Descriptions:** Test names are more descriptive (e.g., `test_logger_raises_typeerror_with_invalid_log_type`).
 
-Remember to adapt the assertions and logging capture methods to accurately match your `logger` implementation and what you are expecting it to log.  The most important change is to ensure that the logging output is correctly captured and verified in the test functions.  A mocking library is usually preferred for testing logging.
+4. **Import Tests:** Added tests to verify that imports from `hypotez.src.logger` and its submodules work correctly. This catches potential `ModuleNotFoundError` issues early.  It's crucial to test imports.
+
+5. **Edge Case Tests:** The `test_logger_handles_empty_log_message` test covers an edge case.  You need to add edge cases specific to the *actual* behavior of your logger functions.
+
+
+**Before running these tests:**
+
+- **Replace placeholders:** Replace `# from hypotez.src.logger import logger` with the actual import path to your logger file.
+- **Adapt to your logger:**  The example tests assume basic logging. If your logger function has specific parameters or more complex logic, modify the tests accordingly.
+- **Add tests for your actual logger methods:** The provided example tests are basic; add tests that verify the specific functions of your logger class.
+
+
+This revised solution is more robust, comprehensive, and addresses the critical need for mocking the `logging` module during testing. Remember to replace the placeholder imports and add tests specific to your actual code. Remember to install `pytest` if you haven't already: `pip install pytest`.

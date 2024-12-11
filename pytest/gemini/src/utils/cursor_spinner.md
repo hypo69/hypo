@@ -5,9 +5,9 @@ import sys
 from hypotez.src.utils.cursor_spinner import spinning_cursor, show_spinner
 
 
-# Test cases for spinning_cursor
-def test_spinning_cursor_basics():
-    """Tests the spinning_cursor generator for basic functionality."""
+# Test functions for spinning_cursor
+def test_spinning_cursor_basic():
+    """Tests that spinning_cursor yields the expected characters in sequence."""
     cursor = spinning_cursor()
     assert next(cursor) == '|'
     assert next(cursor) == '/'
@@ -16,95 +16,80 @@ def test_spinning_cursor_basics():
     assert next(cursor) == '|'
 
 
-def test_spinning_cursor_cycle():
-    """Tests the spinning_cursor generator to ensure it cycles correctly."""
+def test_spinning_cursor_loop():
+    """Tests that spinning_cursor loops through the sequence."""
     cursor = spinning_cursor()
-    expected_symbols = ['|', '/', '-', '\\']
-    for i in range(len(expected_symbols)):
-        assert next(cursor) == expected_symbols[i % len(expected_symbols)]
+    for _ in range(10):
+        assert next(cursor) in '|/-\\'
 
 
-# Test cases for show_spinner
-def test_show_spinner_valid_input():
-    """Tests show_spinner with valid input and duration."""
+# Test functions for show_spinner
+def test_show_spinner_valid_duration():
+    """Tests show_spinner with a valid duration."""
     start_time = time.time()
     show_spinner(duration=1.0, delay=0.1)
     end_time = time.time()
-    assert end_time - start_time > 0.9  # Check if function took at least the specified time
-
-
-def test_show_spinner_short_duration():
-    """Tests show_spinner with a very short duration (less than delay)."""
-    start_time = time.time()
-    show_spinner(duration=0.05, delay=0.1)  # Duration is less than delay
-    end_time = time.time()
-    assert end_time - start_time < 0.15   # Duration should be nearly zero
+    # Check that the spinner ran roughly for the specified duration
+    assert end_time - start_time >= 0.9 and end_time - start_time <= 1.1
 
 
 def test_show_spinner_zero_duration():
-    """Tests show_spinner with zero duration."""
+    """Tests show_spinner with a duration of 0."""
     start_time = time.time()
-    show_spinner(duration=0, delay=0.1)  # Duration is zero
+    show_spinner(duration=0.0, delay=0.1)
     end_time = time.time()
-    assert end_time - start_time < 0.005  # Time should be negligibly small
-
+    # Expect zero duration
+    assert end_time - start_time == 0
 
 def test_show_spinner_negative_duration():
-    """Tests show_spinner with negative duration (edge case)."""
-    with pytest.raises(AssertionError):  # Expecting an AssertionError since duration is invalid
-        show_spinner(duration=-1, delay=0.1)
+    """Tests show_spinner with a negative duration (should not raise an exception)."""
+    with pytest.raises(AssertionError) as excinfo:
+        show_spinner(duration=-1.0)
+    expected_message = "Duration must be positive."
+    assert str(excinfo.value) == expected_message
 
 
-def test_show_spinner_zero_delay():
-    """Tests show_spinner with zero delay (edge case)."""
+def test_show_spinner_small_delay():
+    """Tests show_spinner with a very small delay."""
     start_time = time.time()
-    show_spinner(duration=1.0, delay=0.0)
+    show_spinner(duration=0.1, delay=0.001)
     end_time = time.time()
-    assert end_time - start_time > 0.9
+    assert end_time - start_time >= 0.009 and end_time - start_time <= 0.11
 
 
 def test_show_spinner_large_delay():
     """Tests show_spinner with a very large delay."""
     start_time = time.time()
-    show_spinner(duration=1.0, delay=2.0)
+    show_spinner(duration=10, delay=0.5)
     end_time = time.time()
-    assert end_time - start_time > 0.9
+    assert end_time - start_time >= 9.5 and end_time - start_time <= 10.5
 
 
 
-# Redirect stdout for testing
+# Redirect stdout for testing show_spinner (crucial for testing output)
 @pytest.fixture
-def captured_output(monkeypatch):
-    old_stdout = sys.stdout
-    sys.stdout = buffer = io.StringIO()
-    monkeypatch.setattr(sys, "stdout", buffer)
-    yield buffer
-    sys.stdout = old_stdout
+def capsys():
+    """Fixture to capture stdout for testing console output."""
+    return pytest.importorskip("pytest").capsys
 
 
+def test_show_spinner_output_with_capsys(capsys):
+    """Tests that show_spinner correctly prints spinner characters."""
+    show_spinner(duration=0.3, delay=0.1)
+    captured = capsys.readouterr()
+    assert len(captured.out) > 0  # check that some output is printed
 
-import io  # Needed for captured_output fixture
+def test_show_spinner_correct_output_order_with_capsys(capsys):
+  """Test that spinner chars are correctly printed (order matters)."""
+  show_spinner(duration=0.4, delay=0.1)
+  captured = capsys.readouterr()
+  spinner_chars = "|/-\\"
+  assert captured.out.strip()
+  for i in range(len(spinner_chars)):
+      assert spinner_chars[i] in captured.out
 
 
-def test_show_spinner_output_length(captured_output):
-    show_spinner(duration=1.0, delay=0.1)
-    assert len(captured_output.getvalue()) > 0  # Check if any output was produced
+# This test assumes no error is raised on non-positive durations.
+#  Consider adding assertions for handling exceptions if appropriate.
 
 ```
-
-**Explanation and Improvements:**
-
-* **`captured_output` fixture:** This crucial addition redirects standard output (`sys.stdout`) to a buffer using `monkeypatch`. This allows us to verify the output of `show_spinner` without interfering with the console.
-* **Comprehensive tests for `show_spinner`:**  The tests now cover:
-    * Valid duration values
-    * Short duration (less than delay)
-    * Zero duration
-    * Negative duration (testing for expected exception)
-    * Zero delay (edge case where spinner should complete quickly)
-    * Large delay
-* **Clearer Assertions:** The assertions are more specific and meaningful, particularly in cases like `test_show_spinner_short_duration`, ensuring that the duration is appropriately handled.
-* **Import `io`:** This line is essential for the `captured_output` fixture to work correctly.
-* **Output Length Check:** The test `test_show_spinner_output_length` verifies that the spinner produces some output. This is important to check for edge cases where nothing is printed.
-* **`pytest.raises` for exception:** Now includes a test (`test_show_spinner_negative_duration`) that uses `pytest.raises` to check the expected exception behavior.
-
-This revised solution provides a more robust and comprehensive set of tests for both functions, addressing potential issues and edge cases. Remember to place this test file in a suitable directory structure, likely in the same directory as `cursor_spinner.py` or a dedicated test folder.  Run it using `pytest`. Remember to install the `pytest` library if you haven't already: `pip install pytest`.

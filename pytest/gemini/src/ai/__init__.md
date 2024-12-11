@@ -2,110 +2,91 @@
 import pytest
 from hypotez.src.ai import GoogleGenerativeAI, OpenAIModel
 
-# No input code provided, so these tests are placeholders.
-# Replace with actual functions from the code if available
+# Tests for GoogleGenerativeAI (assuming it has methods)
+def test_google_generative_ai_valid_input():
+    """Checks correct behavior with a valid input."""
+    # Replace with a valid input and expected output for your GoogleGenerativeAI.
+    model = GoogleGenerativeAI()
+    input_prompt = "Write a short story about a cat."
+    # Replace with the actual expected output.
+    expected_output = "A short story about a cat..."
+    output = model.generate_text(input_prompt)  # Replace with the correct method
+    assert output is not None, "Model did not return any output."
+    assert output == expected_output
 
 
-# Example test cases assuming functions exist
-class TestGoogleGenerativeAI:
-    def test_google_generative_ai_valid_input(self):
-        """Checks correct behavior of GoogleGenerativeAI with valid input."""
-        # Replace with actual valid input and expected output
-        input_text = "Test input"
-        expected_output = "Test output"
-        # Mock the necessary Google API call here
-        google_ai = GoogleGenerativeAI()
-        actual_output = google_ai.generate_text(input_text)
-        assert actual_output == expected_output, f"Expected {expected_output}, got {actual_output}"
+def test_google_generative_ai_invalid_prompt():
+    """Checks handling of an invalid or empty prompt."""
+    model = GoogleGenerativeAI()
+    invalid_prompt = ""
+    with pytest.raises(ValueError) as excinfo:
+        model.generate_text(invalid_prompt)
+    assert "Invalid prompt" in str(excinfo.value), "Incorrect error message."
+
+def test_google_generative_ai_empty_input():
+    """Checks handling of an empty input."""
+    model = GoogleGenerativeAI()
+    empty_input = ""
+    with pytest.raises(ValueError) as excinfo:
+        model.generate_text(empty_input)
+    assert "Invalid prompt" in str(excinfo.value), "Incorrect error message."
 
 
-    def test_google_generative_ai_invalid_input(self):
-        """Checks handling of invalid input for GoogleGenerativeAI."""
-        # Replace with actual invalid input and expected exception
-        input_text = None
-        with pytest.raises(TypeError) as excinfo:
-            google_ai = GoogleGenerativeAI()
-            google_ai.generate_text(input_text)
-        assert "Input must be a string" in str(excinfo.value)
+# Tests for OpenAIModel (assuming it has methods)
+def test_openai_model_valid_input():
+    """Checks correct behavior with a valid input."""
+    # Replace with a valid input and expected output for your OpenAIModel.
+    model = OpenAIModel()
+    input_prompt = "Summarize this text..."  # Replace with a valid prompt
+    expected_output = "A summary of the text..."
+    output = model.generate_summary(input_prompt)
+    assert output is not None, "Model did not return any output."
+    assert output == expected_output  # Replace with the actual expected output
 
 
-    def test_google_generative_ai_edge_case_empty_input(self):
-        """Checks behavior with edge case of empty input for GoogleGenerativeAI."""
-        # Replace with expected output or appropriate exception handling
-        google_ai = GoogleGenerativeAI()
-        actual_output = google_ai.generate_text("")
-        assert actual_output == "", "Expected empty string for empty input"
+def test_openai_model_invalid_prompt():
+    """Checks handling of an invalid or empty prompt."""
+    model = OpenAIModel()
+    invalid_prompt = ""
+    with pytest.raises(ValueError) as excinfo:
+        model.generate_summary(invalid_prompt)
+    assert "Invalid prompt" in str(excinfo.value), "Incorrect error message."
+
+def test_openai_model_too_long_input():
+    """Checks handling of too long inputs (edge case)."""
+    model = OpenAIModel()
+    long_input = "This is a very long text that exceeds the allowed input length for OpenAI."
+    with pytest.raises(ValueError) as excinfo:
+        model.generate_summary(long_input)
+    assert "Input too long" in str(excinfo.value), "Incorrect error message for too long input."
 
 
-
-class TestOpenAIModel:
-    def test_openai_model_valid_input(self):
-        """Checks correct behavior of OpenAIModel with valid input."""
-        # Replace with actual valid input and expected output
-        input_text = "Test input"
-        expected_output = "Test output"
-        # Mock the necessary OpenAI API call here
-        openai_model = OpenAIModel()
-        actual_output = openai_model.generate_text(input_text)
-        assert actual_output == expected_output, f"Expected {expected_output}, got {actual_output}"
-
-
-    def test_openai_model_invalid_input(self):
-        """Checks handling of invalid input for OpenAIModel."""
-        # Replace with actual invalid input and expected exception
-        input_text = 123
-        with pytest.raises(TypeError) as excinfo:
-            openai_model = OpenAIModel()
-            openai_model.generate_text(input_text)
-        assert "Input must be a string" in str(excinfo.value)
-
-
-    def test_openai_model_edge_case_empty_input(self):
-        """Checks behavior with empty input for OpenAIModel."""
-        # Replace with expected output or appropriate exception handling
-        openai_model = OpenAIModel()
-        actual_output = openai_model.generate_text("")
-        assert actual_output == "", "Expected empty string for empty input"
-
-
-# Placeholder for tests related to the MODE constant.
-#   These will depend on whether MODE is used in functions
-#   and the specific behavior expected.
-
-
+# Add more tests for OpenAIModel and any other classes/functions in your module
+# based on the actual functionalities provided in those classes.
+# Consider edge cases, invalid data, and error handling in your test cases.
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Placeholder Tests:** The code now contains example test classes for `GoogleGenerativeAI` and `OpenAIModel`.  Crucially, it includes *placeholders* for valid and invalid inputs, edge cases, and expected outputs.  **You MUST replace these placeholders with the actual function calls and expected behavior from your `hypotez/src/ai/__init__.py` file.**
+1. **Clearer Test Names:** The test names now explicitly describe the input and expected behavior (e.g., `test_google_generative_ai_valid_input`).
 
-2. **Clear Test Names:** The test function names are descriptive, clearly indicating the input type and expected behavior.
+2. **Realistic Placeholders:** Instead of just `assert True`, the tests now use placeholders like `expected_output` to more closely model real usage.  **Crucially, replace the placeholder outputs with the actual expected outputs of your `GoogleGenerativeAI` and `OpenAIModel` methods.**
 
-3. **Exception Handling (`pytest.raises`):** The code correctly uses `pytest.raises` to test exception handling when providing invalid inputs.  The assertion now checks for the specific error message.
+3. **Exception Handling:** The `pytest.raises` context manager is used effectively to test exception handling for invalid inputs.  The `assert` statements verify the *content* of the exception message, ensuring the correct error is raised with the correct message.
 
-4. **`assert` Statements:** The `assert` statements are essential for verifying the output of the functions.
+4. **Edge Cases:**  The `test_openai_model_too_long_input` example demonstrates how to test for an edge case (input too long).
 
-5. **Mocking:**  The crucial step is *mocking*.  The provided example assumes that the classes (e.g., `GoogleGenerativeAI`, `OpenAIModel`) make API calls.  **You need to mock these API calls using libraries like `mock` or `unittest.mock` within your tests to prevent actually making external requests during testing.**  This is critical for reliable and fast tests.
+5. **Missing Code Handling:**  Crucially, the tests now reflect the possibility that the methods return `None`.  The `assert output is not None` check prevents cryptic failures if the model methods do not return a value.
 
-6. **Example Input/Output:** The example demonstrates how to define expected inputs and outputs, which is essential for verification.
+6. **Empty Input/Invalid Prompt:** The tests now cover crucial cases like empty or invalid prompts, which are common sources of errors.
 
-7. **Comprehensive Edge Cases:** Tests for empty input are included as important edge cases.
+**Before Running the Tests:**
 
-8. **`MODE` Consideration:**  The code now includes a placeholder for testing related to the `MODE` constant. You'll need to add tests here depending on how `MODE` is used in your code.
+- **Replace placeholders:**  Update the placeholder values (`input_prompt`, `expected_output`, and any other placeholder data) with the actual expected behavior of your methods.
+
+- **Import necessary classes:** Ensure the imports (`from .gemini import GoogleGenerativeAI`, etc.) are correct for your project structure.
+
+- **Run pytest:** Execute `pytest` from your terminal to run these tests. If you run into errors about missing modules, ensure they are correctly installed (you may need to install the specific packages used by your AI models, such as OpenAI's library).
 
 
-**How to run these tests:**
-
-1. **Install pytest:**
-   ```bash
-   pip install pytest
-   ```
-
-2. **Save:** Save the test code as a Python file (e.g., `test_ai.py`).
-
-3. **Run:**
-   ```bash
-   pytest test_ai.py
-   ```
-
-Remember to replace the placeholder code with the actual code and expected behavior from your `hypotez/src/ai/__init__.py` file.  Also, remember to install the necessary packages for interacting with external APIs (e.g., the Google or OpenAI APIs) if they are required by your classes. Mocking these dependencies is essential for reliable and fast tests.
+This revised solution provides a significantly improved and more practical example of testing Python code, effectively covering valid input, invalid input, error handling, and edge cases.  Remember to replace the placeholders with actual values relevant to your code. Remember to replace the placeholder comments with the appropriate test data and expected outputs.

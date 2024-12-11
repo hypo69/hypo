@@ -1,113 +1,120 @@
 ```python
 import pytest
 from fastapi import HTTPException
-from fastapi.responses import HTMLResponse
+from pydantic import ValidationError
 
-# Import the necessary module
+# Import the code you want to test
 from hypotez.src.fast_api.openai import app, AskRequest, ask_model, root
 
-# Replace 'your_model' with the actual OpenAIModel class
-from unittest.mock import Mock
+# Mocking OpenAIModel (replace with actual mocking if OpenAIModel is more complex)
+class MockOpenAIModel:
+    def ask(self, message, system_instruction):
+        # Simulate a response
+        if message == "invalid input":
+            raise ValueError("Invalid input")
+        return f"Response for: {message}"
 
-# Fixture for mocking OpenAIModel
 @pytest.fixture
 def mock_model():
-    """Provides a mock OpenAIModel object."""
-    mock_model = Mock(spec=OpenAIModel)
-    mock_model.ask.return_value = "Mock Response"  # Example return value
-    return mock_model
+  return MockOpenAIModel()
 
+
+def test_root_valid_input(client):
+    """Test the root endpoint with valid input."""
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == "text/html"
+
+def test_root_invalid_input(client, monkeypatch):
+    """Test the root endpoint with a simulated file error."""
+    # Mock the open function to raise an exception
+    def mock_open(*args, **kwargs):
+      raise FileNotFoundError("File not found")
+    monkeypatch.setattr("builtins.open", mock_open)
+    response = client.get("/")
+    assert response.status_code == 500
+
+def test_ask_valid_input(client, mock_model):
+    """Test ask endpoint with valid input."""
+    app.dependency_overrides[OpenAIModel] = lambda: mock_model
+    request_data = {"message": "Hello, world!", "system_instruction": "Be helpful."}
+    response = client.post("/ask", json=request_data)
+    assert response.status_code == 200
+    assert response.json() == {"response": "Response for: Hello, world!"}
+
+def test_ask_invalid_input(client, mock_model):
+    """Test ask endpoint with invalid input."""
+    app.dependency_overrides[OpenAIModel] = lambda: mock_model
+    request_data = {"message": "invalid input"}
+    with pytest.raises(HTTPException) as excinfo:
+        client.post("/ask", json=request_data)
+    assert excinfo.value.status_code == 500
+
+def test_ask_invalid_request_format(client, mock_model):
+  """Test ask endpoint with invalid request format."""
+  app.dependency_overrides[OpenAIModel] = lambda: mock_model
+  request_data = {"message": 123}  # Invalid input type
+  with pytest.raises(ValidationError):
+      client.post("/ask", json=request_data)
+
+def test_ask_missing_message(client, mock_model):
+    """Test ask endpoint with missing message."""
+    app.dependency_overrides[OpenAIModel] = lambda: mock_model
+    request_data = {}
+    with pytest.raises(ValidationError):
+        client.post("/ask", json=request_data)
+
+
+
+# Example of a test fixture for a client
 @pytest.fixture
-def test_data():
-    """Provides test data for ask_model."""
-    return AskRequest(message="Hello", system_instruction="Be helpful.")
+def client(test_client):
+    return test_client
 
 
-# Test Cases for root()
-def test_root_success(tmp_path):
-    """Checks that root returns index.html successfully."""
-    # Create a dummy index.html file
-    (tmp_path / "html/openai/index.html").touch()
-    response = root()
-    assert isinstance(response, HTMLResponse)
-
-def test_root_failure(tmp_path):
-    """Checks that root raises HTTPException on file error."""
-    with pytest.raises(HTTPException) as excinfo:
-        # Simulate a missing file
-        response = root()
-
-    assert excinfo.value.status_code == 500
-
-# Test cases for ask_model()
-def test_ask_model_valid_input(mock_model, test_data):
-    """Checks valid input with mocked model."""
-    with app:
-        response = ask_model(test_data)
-    assert response == {"response": "Mock Response"}
-    mock_model.ask.assert_called_once_with("Hello", "Be helpful.")
-
-def test_ask_model_invalid_input_message(mock_model, test_data):
-    """Checks that ask_model handles invalid input (empty message)."""
-    test_data.message = ""
-    with pytest.raises(HTTPException) as excinfo:
-        ask_model(test_data)
-
-    assert excinfo.value.status_code == 500
-    mock_model.ask.assert_not_called()
-
-def test_ask_model_exception(mock_model):
-    """Test exception handling for ask_model."""
-    mock_model.ask.side_effect = ValueError("Simulated Error")
-    with pytest.raises(HTTPException) as excinfo:
-        ask_model(AskRequest(message="Test", system_instruction="Test2"))
-
-    assert excinfo.value.status_code == 500
+@pytest.mark.asyncio
+async def test_ask_with_system_instruction(client, mock_model):
+  """Test with system instruction."""
+  app.dependency_overrides[OpenAIModel] = lambda: mock_model
+  request_data = {"message": "Tell me a joke", "system_instruction": "Be funny."}
+  response = await client.post("/ask", json=request_data)
+  assert response.status_code == 200
+  assert response.json() == {"response": "Response for: Tell me a joke"}
 
 
-def test_ask_model_no_system_instruction(mock_model):
-    """Test case for a request with no system_instruction."""
-    request = AskRequest(message="Hello")
-    with app:
-      response = ask_model(request)
-    assert response == {"response": "Mock Response"}
-    mock_model.ask.assert_called_once_with("Hello", None)
-
-# Example usage for a more complex test (replace with your actual tests)
-# def test_function_with_fixture(example_data):
-#     assert function_call(example_data) == expected_output
-
-#Important: Replace 'OpenAIModel' with the actual class name if different.
-# Also replace placeholder error messages and return values to match the actual behaviour.
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `OpenAIModel`:**  Critically, the code now uses `unittest.mock.Mock` to mock the `OpenAIModel` class. This is essential for testing the `ask_model` function without depending on a real OpenAI connection, which would be slow and unreliable in a test environment.
-
-2. **`@pytest.fixture` for Data:** A `test_data` fixture provides data for `AskRequest` objects in a more organized way, making tests easier to read and manage.
-
-3. **Comprehensive Test Cases:**
-   - `test_ask_model_valid_input`: Tests a successful call with valid input, checking that the mocked `ask` method was called correctly.
-   - `test_ask_model_invalid_input_message`: Tests handling an empty message, demonstrating a realistic edge case.
-   - `test_ask_model_exception`: Checks the exception handling for potential errors during the model's `ask` method call, which would be triggered by the real OpenAI library.
-   - `test_ask_model_no_system_instruction`: Checks that the function correctly handles requests without a system_instruction.
-
-4. **Clearer Error Handling:** The tests now more clearly assert that the correct exception type (`HTTPException`) is raised with the appropriate status code (500) when an error occurs.
-
-5. **`tmp_path` for root test:** The use of `tmp_path` fixture from pytest ensures that a dummy file is created in a temporary directory. This avoids creating and deleting files in a non-temporary location.
-
-6. **Import Statements:** The code now correctly imports `AskRequest`, `ask_model`, `root`, and `app` from the target module.
-
-7. **`with app:` block:** Added a `with app:` context to make tests independent of global app state.
+* **Mocking `OpenAIModel`:** The crucial part is mocking `OpenAIModel`. This avoids depending on an external OpenAI API or a live OpenAI model instance during testing. The `MockOpenAIModel` simulates the `ask` method's behavior, returning a placeholder response or raising exceptions as needed.  This is vital for isolated tests.
+* **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to catch and assert on `HTTPException` and `ValidationError`.
+* **Clear Test Names:** Test names are more descriptive (e.g., `test_ask_invalid_input`).
+* **Test Invalid Input:** Added tests for invalid input types (like `test_ask_invalid_request_format`) and missing required fields (`test_ask_missing_message`).
+* **Test with System Instruction:** A new test `test_ask_with_system_instruction` to cover use case where a system instruction is provided.
+* **Client Fixture:** Creates a `client` fixture to simplify interaction with the FastAPI app.
+* **Dependency Overrides:**  The `app.dependency_overrides` solution is crucial for substituting the `OpenAIModel` instance *during the test*. This is a proper way to inject a mocked dependency.
+* **Async Testing:** Added `@pytest.mark.asyncio` and `await` for the `test_ask_with_system_instruction` to correctly handle any async nature of the tested code.
 
 
-**How to Run:**
+**To run these tests:**
 
-1.  Make sure you have `pytest` installed (`pip install pytest`).
-2.  Save the test code as a `.py` file (e.g., `test_openai.py`).
-3.  Run `pytest test_openai.py` in your terminal.
+1.  Make sure you have `pytest` installed: `pip install pytest`
+2.  Run the tests: `pytest`
+
+**Important:** Replace `MockOpenAIModel` with a more sophisticated mock (e.g., using `unittest.mock`) if the `OpenAIModel` class is more complex or has dependencies beyond just the `ask` method. Also, you will need to have `test_client` fixture available as used in the test code above (if you are using FastAPI test client). Make sure to adjust imports and class names to match your actual code if necessary. Remember to import necessary modules like `unittest.mock` if using a more complex mock. This revised solution provides robust testing by mocking crucial parts of the application.
 
 
-This revised solution provides significantly improved test coverage, handles potential errors, and is far more robust. Remember to replace placeholder values (like "Mock Response" and error messages) with your actual expected results and error handling from the `OpenAIModel` class.
+```python
+import pytest
+# ... (other imports)
+
+@pytest.fixture
+async def test_client(test_app):
+    """Fixture for the test client."""
+    client = test_app.test_client()
+    return client
+
+
+# ... (rest of the test functions)
+```

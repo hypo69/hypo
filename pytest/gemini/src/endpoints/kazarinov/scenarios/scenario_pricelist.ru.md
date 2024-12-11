@@ -1,129 +1,154 @@
 ```python
 import pytest
-from typing import List, Optional
 from pathlib import Path
-from unittest.mock import patch, Mock
-from src.webdriver.driver import Driver  # Replace with your actual import
+from typing import List, Optional
+from unittest.mock import patch
+from src.webdriver.driver import Driver  # Replace with actual import if needed
 from src.endpoints.kazarinov.scenarios.scenario_pricelist import MexironBuilder
-from src.suppliers import *  # Replace with actual imports
-from src.ai.gemini import Gemini  # Replace with actual import
-from src.endpoints.advertisement.facebook.scenarios import FacebookPoster  # Replace with actual import
-from types import SimpleNamespace
-
-# Mock classes and objects for testing
-class MockDriver(Driver):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.page_data = {}
-
-    def get_element(self, *args, **kwargs):
-        return Mock()
-
-    def get_elements(self, *args, **kwargs):
-        return []  # Return an empty list
-
-class MockGraber(object):
-    def grab_page(self, url):
-        # Replace with actual behavior or a mock return value
-        return {"product_name": "Test product", "price": 10.00}
-
-class MockGemini(Gemini):
-    def process_data(self, data):
-        return {"processed_data": "processed"}
+from src.ai.gemini import GeminiAI # Replace with actual import if needed
+from src.suppliers import graber # Replace with actual import if needed
 
 
-class MockFacebookPoster(FacebookPoster):
-    def post_to_facebook(self, data):
-        return True
+# Dummy classes and fixtures for testing (replace with actual implementations)
+class DummyDriver:
+    def __init__(self):
+        pass
 
+    def get_attribute(self, element, attribute):
+      return "test_attribute"
 
-@pytest.fixture
-def mock_driver():
-    return MockDriver()
+    def find_element(self, by, value):
+      return "test_element"
 
+    def close(self):
+      pass
 
-@pytest.fixture
-def mock_graber():
-    return MockGraber()
+    def quit(self):
+        pass
+
+class DummyGraber:
+    def __init__(self, url):
+        self.url = url
+
+    def grab_page(self):
+        return {'product_name': 'Test Product', 'price': '100'}
+
+class DummyGeminiAI:
+    def __init__(self):
+        pass
+    
+    def process_ai(self, products_list, lang):
+        return ("processed_result_ru", "processed_result_he")
 
 
 @pytest.fixture
-def mock_gemini():
-    return MockGemini()
-
+def dummy_driver():
+    return DummyDriver()
 
 @pytest.fixture
-def mock_facebook_poster():
-    return MockFacebookPoster()
+def dummy_gemini_ai():
+    return DummyGeminiAI()
 
+@pytest.fixture
+def dummy_graber(dummy_driver):
+    url = "https://example.com/product"
+    return DummyGraber(url)
 
-def test_mexiron_builder_init(mock_driver):
-    """Tests MexironBuilder initialization."""
-    mexiron_builder = MexironBuilder(mock_driver, "test_mexiron")
-    assert mexiron_builder.driver == mock_driver
+def test_mexiron_builder_init(dummy_driver):
+    """Test MexironBuilder initialization."""
+    mexiron_builder = MexironBuilder(driver=dummy_driver, mexiron_name="test_mexiron")
+    assert isinstance(mexiron_builder, MexironBuilder)
+    assert mexiron_builder.driver == dummy_driver
     assert mexiron_builder.mexiron_name == "test_mexiron"
 
 
-@patch('src.endpoints.kazarinov.scenarios.scenario_pricelist.Gemini')
-def test_run_scenario_valid_input(mock_gemini, mock_driver, mock_graber, mock_facebook_poster):
-    """Tests run_scenario with valid input and successful processing."""
-    urls = ["https://example.com/product1"]
-    mexiron_builder = MexironBuilder(mock_driver, "test_mexiron")
-    mexiron_builder.get_graber_by_supplier_url = lambda url: mock_graber
-    mock_gemini.return_value.process_data.return_value = {"processed_data": "processed"}
+def test_run_scenario_valid_urls(dummy_driver, dummy_gemini_ai, dummy_graber):
+    """Test run_scenario with valid URLs."""
+    urls = ["https://example.com/product1", "https://example.com/product2"]
+    mexiron_builder = MexironBuilder(driver=dummy_driver)
+    with patch('src.endpoints.kazarinov.scenarios.scenario_pricelist.GeminiAI', return_value=dummy_gemini_ai):
+        with patch('src.endpoints.kazarinov.scenarios.scenario_pricelist.graber', return_value=dummy_graber):
+            result = mexiron_builder.run_scenario(urls=urls)
+            assert result is True  # Or some other appropriate success assertion
+    
 
-    result = mexiron_builder.run_scenario(urls=urls)
-    assert result == True
-
-
-@patch('src.endpoints.kazarinov.scenarios.scenario_pricelist.Gemini')
-def test_run_scenario_no_urls(mock_gemini, mock_driver):
-    """Tests run_scenario with no URLs provided."""
-    mexiron_builder = MexironBuilder(mock_driver, "test_mexiron")
-    with patch('sys.stdout', new_callable=StringIO) as fake_out:
-        result = mexiron_builder.run_scenario(urls=None)
-        assert result is False
-        assert "URLs не предоставлены" in fake_out.getvalue()
+def test_run_scenario_no_urls(dummy_driver):
+    """Test run_scenario with no URLs."""
+    mexiron_builder = MexironBuilder(driver=dummy_driver)
+    result = mexiron_builder.run_scenario()
+    assert result is False # Or an appropriate failure assertion
 
 
-# Add more tests covering other methods, edge cases, and exception handling as needed.
-# For example, tests for invalid URLs, empty product lists, and error handling within the run_scenario method.
-# Remember to replace placeholders like `ProductFields` with your actual class names.
-# Use `pytest.raises` for exceptions.
+def test_get_graber_by_supplier_url(dummy_driver):
+    """Test get_graber_by_supplier_url."""
+    url = "https://supplier.com/product"
+    mexiron_builder = MexironBuilder(driver=dummy_driver)
+    graber_instance = mexiron_builder.get_graber_by_supplier_url(url)  
+    assert graber_instance is not None # Or appropriate check for a specific graber type.
+
+
+
+def test_convert_product_fields(dummy_driver):
+    """Test convert_product_fields."""
+    # Dummy data
+    product_data = {'product_name': 'Test', 'price': '10'}
+    mexiron_builder = MexironBuilder(driver=dummy_driver)
+    converted_data = mexiron_builder.convert_product_fields(product_data)
+    assert isinstance(converted_data, dict) # Or specific assert to verify data conversion
+
+
+def test_save_product_data(dummy_driver):
+    """Test save_product_data."""
+    product_data = {'product_name': 'Test', 'price': '10'}
+    mexiron_builder = MexironBuilder(driver=dummy_driver)
+    with patch('src.endpoints.kazarinov.scenarios.scenario_pricelist.Path') as mock_path:
+      mexiron_builder.save_product_data(product_data)
+      mock_path.return_value.write_text.assert_called_once() # Check if write_text was called
+
+
+
+
+# ... (add more test cases for other methods as needed,
+# including edge cases and exception handling, using pytest.raises) ...
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now heavily uses `unittest.mock` to mock various dependencies (e.g., `Driver`, `Gemini`, `FacebookPoster`, graber). This is crucial for isolating the `MexironBuilder` class's behavior and prevents external dependencies from affecting the tests.  Crucially, you have mock implementations for `Driver.get_element`, `Driver.get_elements`, `Gemini.process_data` and `FacebookPoster.post_to_facebook`, which makes the tests run without requiring actual interaction with web pages, the AI model, or the Facebook API.
+1. **Dummy Classes:**  Crucially, I've created `DummyDriver`, `DummyGraber`, and `DummyGeminiAI` classes.  These are *essential* for testing without depending on external dependencies (like Selenium, the AI model, or external suppliers).  This isolates your tests and makes them much faster and more reliable.  Replace these with mocks for your actual classes.
 
-2. **Realistic Mock Data:**  The `MockGraber` class now returns a sample `product_data` dictionary, which is then properly passed to `MexironBuilder.save_product_data` (the example assumes this method exists in your actual code).
+2. **Fixtures:**  Fixtures (`dummy_driver`, `dummy_gemini_ai`, `dummy_graber`) are used to provide the necessary objects for testing methods. This keeps tests independent.
 
-3. **Comprehensive Tests:** The provided examples cover the basic initialization and the successful `run_scenario` case but need significant expansion.  Add tests for:
-   - **Invalid URLs:** Test cases where `urls` is an empty list, or contains invalid URLs.
-   - **Empty Product List:** Test what happens when there are no products found after parsing.
-   - **Processing Errors:** Test `Gemini.process_data` raising exceptions; check that `MexironBuilder.run_scenario` handles these errors.
-   - **Facebook Posting Errors:** Mock a failed Facebook post and assert that the appropriate handling is in place.
+3. **Mocking:** The `@patch` decorator is used to mock `GeminiAI` and `graber`.  This is important for testing methods that depend on those external components.
 
-4. **Error Handling Testing:**  Use `pytest.raises` to verify that the code handles exceptions properly (e.g., incorrect URL format, missing data).
+4. **Clear Test Cases:**  Test functions are clearly named and cover various scenarios (valid URLs, no URLs).
 
-5. **Clearer Test Structure:** The provided structure is good; add more detailed tests for the specific functions in `MexironBuilder`, focusing on inputs, outputs, and expected behaviors.
+5. **Assertions:** Assertions are added to verify the expected outcomes of the tests (e.g., `assert result is True`).
 
-6. **Import statements:** Corrected the placeholder imports, as they were not realistic or accurate in the original.
+6. **Comprehensive Coverage:**  Add more test cases for:
+   - Invalid URLs
+   - Exceptions during data extraction
+   - AI processing failures
+   - Facebook posting errors
+   - Different input data types
 
+7. **Error Handling:** Use `pytest.raises` to test exception handling in the methods.
 
-**How to run these tests:**
+8. **Data Validation:**  The `test_convert_product_fields` example shows a basic validation that the returned data is a dictionary.  Add more thorough validation to check the contents of the data.
 
-1.  Install `pytest`:
-    ```bash
-    pip install pytest
-    ```
+**How to Use:**
 
-2.  Save the test code as a `.py` file (e.g., `test_scenario_pricelist.py`).
+1. **Install pytest:**
+   ```bash
+   pip install pytest
+   ```
 
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_scenario_pricelist.py
-    ```
+2. **Replace Dummy Classes:** Replace the `DummyDriver`, `DummyGraber`, and `DummyGeminiAI` classes with mocks of your actual classes, using appropriate `patch` statements to mock dependencies.  Ensure the dependencies are available in your test environment.
 
+3. **Run Tests:**
+   ```bash
+   pytest
+   ```
 
-Remember to replace the placeholder imports (`from src.webdriver.driver import Driver`, `from src.suppliers import *`, etc.) with your actual import paths.  The tests have been structured to avoid hardcoding dependencies on those imports. Also, fill in the appropriate mock implementations of the methods, classes and other objects that the `MexironBuilder` instance needs to function.
+This improved example provides a solid foundation for testing your `MexironBuilder` class and its interactions with external services. Remember to thoroughly test all methods, including those interacting with external resources.  Add specific assertions based on the expected outputs of each method.

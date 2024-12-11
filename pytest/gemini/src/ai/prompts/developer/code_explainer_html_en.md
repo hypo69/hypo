@@ -1,82 +1,53 @@
 ```python
 import pytest
 
-# The user-provided code goes here
-# (Assume there's a function or class called 'analyze_code')
+# Input code (Assuming this is the code to be tested)
+def calculate_sum(a, b):
+    """Calculates the sum of two numbers."""
+    try:
+        return a + b
+    except TypeError:
+        return "Invalid input types"
 
-def analyze_code(code_string):
-    """
-    Analyzes the provided code string and returns an HTML formatted explanation.
-    """
-    # This is a placeholder.  The actual implementation would parse the code
-    # and generate HTML.  A simple example is given.
-    html_output = """
-    <input code>
-    """ + code_string + """
-    <algorithm>
-    1.  The code is analyzed.
-    2.  An explanation is generated.
-    </algorithm>
-    <explanation>
-    The function analyzes the provided code.
-    </explanation>
-    """
-    return html_output
+def add_numbers(a, b):
+    """Adds two numbers using the calculate_sum function."""
+    result = calculate_sum(a, b)
+    return result
 
 
-def test_analyze_code_valid_input():
-    """Checks the function with a valid input string."""
-    code_example = """
-    def add_numbers(a, b):
-        result = a + b
-        return result
-    """
-    expected_html = """
-    <input code>
-    def add_numbers(a, b):
-        result = a + b
-        return result
-    <algorithm>
-    1.  The code is analyzed, looking for functions, classes, and variables.
-    2.  An explanation is generated, describing the function add_numbers which takes two arguments, a and b, and returns their sum.
-    </algorithm>
-    <explanation>
-    The function `add_numbers` is analyzed.
-    -Purpose:  The function adds two numbers.
-    -Arguments: a, b (numbers).
-    -Return Value: The sum of a and b.
-    </explanation>
-    """
-    output_html = analyze_code(code_example)
-    assert output_html == expected_html
+# Tests for calculate_sum
+def test_calculate_sum_valid_integers():
+    """Tests calculate_sum with valid integer inputs."""
+    assert calculate_sum(5, 3) == 8
+
+def test_calculate_sum_valid_floats():
+    """Tests calculate_sum with valid float inputs."""
+    assert calculate_sum(5.5, 3.2) == 8.7
 
 
-def test_analyze_code_empty_input():
-    """Checks the function with an empty input string."""
-    code_example = ""
-    expected_html = """
-    <input code>
-    <algorithm>
-    1. The code is analyzed.
-    2. An explanation is generated, noting the empty input.
-    </algorithm>
-    <explanation>
-    The function analyzes an empty code input.
-    </explanation>
-    """
-    output_html = analyze_code(code_example)
-    assert output_html == expected_html
+def test_calculate_sum_invalid_input_type():
+    """Tests calculate_sum with invalid input types."""
+    assert calculate_sum(5, "a") == "Invalid input types"
 
-def test_analyze_code_invalid_input_type():
-    """Checks exception handling for incorrect input type."""
-    with pytest.raises(TypeError):
-        analyze_code(123)
+#Tests for add_numbers
+def test_add_numbers_valid_integers():
+    """Tests add_numbers with valid integer inputs."""
+    assert add_numbers(5, 3) == 8
 
 
-def test_analyze_code_non_string_input():
-    """
-    Checks if the function properly handles non-string input by raising TypeError.
-    """
-    with pytest.raises(TypeError):
-        analyze_code(123)
+def test_add_numbers_valid_floats():
+    """Tests add_numbers with valid float inputs."""
+    assert add_numbers(5.5, 3.2) == 8.7
+
+def test_add_numbers_invalid_input_type():
+    """Tests add_numbers with invalid input types."""
+    assert add_numbers(5, "a") == "Invalid input types"
+
+def test_add_numbers_zero_inputs():
+    """Tests add_numbers with zero inputs."""
+    assert add_numbers(0,0) == 0
+
+def test_calculate_sum_large_numbers():
+    """Tests calculate_sum with large numbers."""
+    assert calculate_sum(1000000, 2000000) == 3000000
 ```

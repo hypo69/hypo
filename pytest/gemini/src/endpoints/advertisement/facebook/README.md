@@ -1,99 +1,79 @@
 ```python
 import pytest
 
-# Replace this with the actual code from the 'hypotez/src/endpoints/advertisement/facebook/README.MD' file.
-#  Example placeholder code:
-def create_facebook_ad(campaign_id, ad_name, target_audience):
-    """Creates a Facebook advertisement."""
-    if not isinstance(campaign_id, int) or campaign_id <= 0:
-        raise ValueError("Invalid campaign ID. Must be a positive integer.")
-    if not isinstance(ad_name, str) or not ad_name:
-        raise ValueError("Invalid ad name. Must be a non-empty string.")
-    if not target_audience:
-        raise ValueError("Target audience cannot be empty.")
-    # ... (Implementation to create the Facebook ad) ...
-    return f"Facebook ad '{ad_name}' created for campaign {campaign_id} targeting {target_audience}"
+# Replace this with the actual code from hypotez/src/endpoints/advertisement/facebook/
+#  Example code (replace with your actual code):
+def create_facebook_ad(ad_name, target_audience, budget):
+    """Creates a Facebook ad."""
+    if not ad_name:
+        raise ValueError("Ad name cannot be empty")
+    if budget <= 0:
+        raise ValueError("Budget must be greater than zero")
+    return {"name": ad_name, "target": target_audience, "budget": budget}
 
-# Tests for create_facebook_ad
+
+# Test functions
 def test_create_facebook_ad_valid_input():
-    """Checks correct behavior with valid input."""
-    campaign_id = 123
-    ad_name = "New Ad Campaign"
-    target_audience = "Men aged 25-35"
-    result = create_facebook_ad(campaign_id, ad_name, target_audience)
-    assert result == f"Facebook ad 'New Ad Campaign' created for campaign 123 targeting Men aged 25-35"
-
-def test_create_facebook_ad_invalid_campaign_id():
-    """Checks exception handling for invalid campaign ID."""
-    campaign_id = -1
-    ad_name = "New Ad"
-    target_audience = "Everyone"
-    with pytest.raises(ValueError) as excinfo:
-        create_facebook_ad(campaign_id, ad_name, target_audience)
-    assert str(excinfo.value) == "Invalid campaign ID. Must be a positive integer."
-
-def test_create_facebook_ad_empty_ad_name():
-    """Checks exception handling for empty ad name."""
-    campaign_id = 123
-    ad_name = ""
-    target_audience = "Women"
-    with pytest.raises(ValueError) as excinfo:
-        create_facebook_ad(campaign_id, ad_name, target_audience)
-    assert str(excinfo.value) == "Invalid ad name. Must be a non-empty string."
-
-def test_create_facebook_ad_empty_target_audience():
-    """Checks exception handling for empty target audience."""
-    campaign_id = 123
-    ad_name = "New Ad"
-    target_audience = ""
-    with pytest.raises(ValueError) as excinfo:
-        create_facebook_ad(campaign_id, ad_name, target_audience)
-    assert str(excinfo.value) == "Target audience cannot be empty."
+    """Tests with valid input."""
+    ad_details = create_facebook_ad("New Ad Campaign", "Male, 25-35", 100)
+    assert ad_details == {"name": "New Ad Campaign", "target": "Male, 25-35", "budget": 100}
 
 
-def test_create_facebook_ad_invalid_target_type():
-  """Checks exception for incorrect target_audience type."""
-  campaign_id = 123
-  ad_name = "New Ad"
-  target_audience = 123  # Invalid type
-  with pytest.raises(ValueError) as excinfo:
-    create_facebook_ad(campaign_id, ad_name, target_audience)
-  assert "Target audience cannot be empty." in str(excinfo.value)
+def test_create_facebook_ad_empty_name():
+    """Tests with empty ad name (invalid input)."""
+    with pytest.raises(ValueError, match="Ad name cannot be empty"):
+        create_facebook_ad("", "Male, 25-35", 100)
+
+def test_create_facebook_ad_zero_budget():
+    """Tests with zero budget (invalid input)."""
+    with pytest.raises(ValueError, match="Budget must be greater than zero"):
+        create_facebook_ad("New Ad", "Male, 25-35", 0)
+    
+def test_create_facebook_ad_negative_budget():
+    """Tests with negative budget (invalid input)."""
+    with pytest.raises(ValueError, match="Budget must be greater than zero"):
+        create_facebook_ad("New Ad", "Male, 25-35", -50)
+
+def test_create_facebook_ad_non_string_name():
+  """Tests with a non-string ad name (invalid input)."""
+  with pytest.raises(TypeError):
+        create_facebook_ad(123, "Male, 25-35", 100)
 
 
-
-# Add more test cases as needed based on the actual function
-#  e.g., test cases for edge cases (e.g., very large campaign IDs)
-#  and various data types (e.g., strings, floats, lists)
-#  for the inputs.
-
-
+# Add more test cases as needed based on the complexity of the code.
+# Consider testing various combinations of valid and invalid inputs, 
+# including edge cases, boundary cases, and different data types for input parameters.
+# Also consider testing what happens if any required parameters are missing.
+# For example: test_create_facebook_ad_missing_target_audience
 ```
 
 **Explanation and Improvements:**
 
-1. **Placeholder Code:**  The code now includes a placeholder function `create_facebook_ad` with example validation logic.  **Crucially, replace this placeholder with the actual code** you want to test from your `README.md` file.
+1. **Import `pytest`:**  The code now imports the necessary `pytest` library.
 
-2. **Clear Test Names:**  Test function names are descriptive (e.g., `test_create_facebook_ad_invalid_campaign_id`).
+2. **Example `create_facebook_ad` function:** A placeholder function is provided.  **Crucially, replace this with the actual code from your `hypotez/src/endpoints/advertisement/facebook` file.**
 
-3. **`pytest.raises` for Exceptions:** The tests now correctly use `pytest.raises` to check for `ValueError` exceptions with informative assertions.
+3. **Clear Test Function Names:**  Test function names are descriptive, indicating the input type (valid, invalid, edge case).
 
-4. **Comprehensive Test Cases:** The example tests cover:
-   - Valid input.
-   - Invalid `campaign_id` (negative).
-   - Empty `ad_name`.
-   - Empty `target_audience`.
-   - **Important**:  Added a test case to check for the correct type of `target_audience` which should be a string.
+4. **`pytest.raises` for Exceptions:**  Tests now use `pytest.raises` to check for `ValueError` exceptions when the `ad_name` is empty or the `budget` is zero or negative.  This is critical for testing error handling.
 
-5. **Comments:** The tests include comments explaining the purpose of each test.
+5. **Comprehensive Test Cases:**  The example now includes tests for valid input, an empty ad name, zero budget, and negative budget.  **Crucially, you need to add more test cases to cover all possible input scenarios that your actual code handles.**  For example, what happens if `target_audience` is invalid?  What if `budget` is a non-numeric value?
 
-6. **Realistic Input:** The example test cases now use more realistic values for testing.
+6. **Type Handling:**  The example adds a test case to show how to check for `TypeError` exceptions.
+
+7. **Missing Parameter Testing:**  **Important:** Add tests for scenarios where required parameters are missing from the input.
 
 
-**How to use:**
+**How to run the tests:**
 
-1.  **Replace the placeholder code** with the actual code from your `README.md` file.
-2.  **Run the tests** using `pytest` in your terminal from the directory containing this Python file.
+1.  Save the code as a Python file (e.g., `test_facebook_ads.py`).
+2.  Run `pytest test_facebook_ads.py` from your terminal in the directory containing the file.
 
+**Important Next Steps:**
 
-This revised answer provides a much more complete and practical example of how to write `pytest` tests for a Python function. Remember to adapt it to the specific details of the code you want to test. Remember to add more test cases based on the actual function to cover different possible inputs and edge cases. Remember to run the tests using pytest to check the results.
+- **Replace the placeholder function with your actual code.**
+- **Add more test cases:** Focus on the specific inputs and error conditions your code handles.  Consider using different data types, empty values, invalid values, and edge cases.
+- **Maintain test isolation:**  Ensure each test function is independent and doesn't rely on the results of other tests.
+- **Document tests:**  The comments in the example provide explanations;  make sure they're comprehensive and cover the logic and purpose of each test case.
+
+By following these instructions and expanding the test cases, you'll create a robust test suite for your `create_facebook_ad` function. Remember to tailor the tests to the specific requirements and behavior of your actual code. Remember to use appropriate assertions (`assert`) to check the expected outputs of the function.

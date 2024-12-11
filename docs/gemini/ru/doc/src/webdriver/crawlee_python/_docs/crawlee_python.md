@@ -1,116 +1,152 @@
-# Модуль `crawlee_python`
+# Модуль crawlee_python
 
 ## Обзор
 
-Данный модуль предоставляет класс `CrawleePython` для выполнения веб-скрапинга с использованием библиотеки `crawlee` и Playwright.  Класс позволяет настроить, запустить и экспортировать данные, собранные с веб-сайта, в формате JSON.
+Данный модуль предоставляет класс `CrawleePython` для выполнения веб-скрейпинга с использованием библиотеки `crawlee` и фреймворка Playwright.  Класс позволяет настроить и запустить процесс сбора данных с веб-сайтов, извлечь определенную информацию и сохранить результаты в формате JSON.
 
 ## Оглавление
 
-* [Модуль `crawlee_python`](#модуль-crawlee-python)
-* [Класс `CrawleePython`](#класс-crawleepython)
-    * [Метод `__init__`](#метод-init)
-    * [Метод `setup_crawler`](#метод-setup-crawler)
-    * [Метод `run_crawler`](#метод-run-crawler)
-    * [Метод `export_data`](#метод-export-data)
-    * [Метод `get_data`](#метод-get-data)
-    * [Метод `run`](#метод-run)
-* [Пример использования](#пример-использования)
+* [Классы](#классы)
+    * [CrawleePython](#crawleepython)
+        * [__init__](#init)
+        * [setup_crawler](#setup-crawler)
+        * [run_crawler](#run-crawler)
+        * [export_data](#export-data)
+        * [get_data](#get-data)
+        * [run](#run)
 
+## Классы
 
-## Класс `CrawleePython`
+### `CrawleePython`
 
-### Описание
+**Описание**: Класс для выполнения веб-скрейпинга с использованием Playwright.
 
-Класс `CrawleePython` реализует веб-скрапер, использующий Playwright для взаимодействия с веб-страницами. Он позволяет настроить параметры сканирования, собрать данные и экспортировать их в файл JSON.
+#### `__init__`
 
-### Метод `__init__`
+**Описание**: Конструктор класса. Инициализирует объект `PlaywrightCrawler` с заданными параметрами.
 
 ```python
-def __init__(self, max_requests: int, headless: bool = True, browser_type: str = 'chromium') -> None:
+def __init__(self, max_requests: int, headless: bool = True, browser_type: str = 'chromium'):
     """
     Args:
-        max_requests (int): Максимальное количество запросов.
-        headless (bool, optional): Режим работы браузера без графического интерфейса. По умолчанию True.
-        browser_type (str, optional): Тип браузера. По умолчанию 'chromium'.
+        max_requests (int): Максимальное количество запросов во время сбора данных.
+        headless (bool, optional): Флаг, указывающий на работу в бескладовом режиме. По умолчанию True.
+        browser_type (str, optional): Тип браузера (например, 'chromium', 'firefox'). По умолчанию 'chromium'.
 
     Raises:
-        TypeError: Если передан неверный тип данных для параметра.
-        ValueError: Если передан неверный диапазон значений для параметра.
+        ValueError: Если `max_requests` не является положительным числом.
     """
 ```
 
-### Метод `setup_crawler`
+#### `setup_crawler`
+
+**Описание**: Настройка обработчика запросов для сбора данных.
 
 ```python
-def setup_crawler(self) -> None:
+def setup_crawler(self):
     """
-    Настраивает сканер, определяя обработчик запросов по умолчанию.
-    """
-```
-
-### Метод `run_crawler`
-
-```python
-async def run_crawler(self, initial_urls: list) -> None:
-    """
-    Запускает сканирование с заданными начальными URL.
-
     Args:
-        initial_urls (list): Список начальных URL для сканирования.
-    """
-```
-
-### Метод `export_data`
-
-```python
-def export_data(self, data: list, filename: str) -> None:
-    """
-    Экспортирует собранные данные в файл JSON.
-
-    Args:
-        data (list): Список словарей с собранными данными.
-        filename (str): Имя файла для экспорта.
-    """
-```
-
-### Метод `get_data`
-
-```python
-def get_data(self) -> dict:
-    """
-    Возвращает собранные данные в виде словаря.
+        self: Экземпляр класса CrawleePython.
 
     Returns:
-        dict: Словарь с собранными данными.
-        None: Если данные не были собраны.
+        None
+
     """
 ```
 
-### Метод `run`
+#### `run_crawler`
+
+**Описание**: Запуск процесса сбора данных с заданным списком начальных URL.
 
 ```python
-async def run(self, initial_urls: list, filename: str = 'data.json') -> None:
+async def run_crawler(self, initial_urls: list[str]):
     """
-    Осуществляет полный цикл сканирования: настройку сканера, сканирование, экспорт данных и вывод результатов.
-
     Args:
-        initial_urls (list): Список начальных URL для сканирования.
-        filename (str, optional): Имя файла для экспорта данных. По умолчанию 'data.json'.
+        self: Экземпляр класса CrawleePython.
+        initial_urls (list[str]): Список начальных URL для сбора данных.
+
+    Returns:
+        None
     """
 ```
 
-## Пример использования
+#### `export_data`
+
+**Описание**: Экспорт собранных данных в файл JSON.
 
 ```python
-import asyncio
-from crawlee_python import CrawleePython
+def export_data(self, data: list[dict], filename: str = 'data.json'):
+    """
+    Args:
+        self: Экземпляр класса CrawleePython.
+        data (list[dict]): Список словарей с собранными данными.
+        filename (str, optional): Имя файла для экспорта данных. По умолчанию 'data.json'.
 
+    Returns:
+        None
+    """
+```
+
+#### `get_data`
+
+**Описание**: Возвращает собранные данные в формате словаря.
+
+```python
+def get_data(self) -> dict | None:
+    """
+    Args:
+        self: Экземпляр класса CrawleePython.
+
+    Returns:
+        dict | None: Словарь с собранными данными или None, если данные не найдены.
+
+    """
+```
+
+#### `run`
+
+**Описание**: Главная функция для запуска процесса сбора данных.
+
+```python
+async def run(self, initial_urls: list[str]):
+    """
+    Args:
+        self: Экземпляр класса CrawleePython.
+        initial_urls (list[str]): Список начальных URL для сбора данных.
+
+    Returns:
+        None
+
+    """
+```
+
+## Функции
+
+
+## Примеры использования
+
+```python
+# Пример использования
 async def main():
-    crawler = CrawleePython(max_requests=10, headless=False, browser_type='firefox')
-    await crawler.run(['https://news.ycombinator.com/'], 'hn_data.json')
+    crawler = CrawleePython(max_requests=10)
+    await crawler.run(['https://news.ycombinator.com/'])
 
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(main())
 ```
 
-Этот пример запускает сканер на Hacker News с параметрами по умолчанию и сохраняет результат в `hn_data.json`.  Обратите внимание, что для корректной работы необходима установка Playwright и других необходимых зависимостей.
+
+```python
+# Пример инициализации и запуска
+async def main():
+  try:
+    crawler = CrawleePython(max_requests=50, headless=False)  # Запуск в режиме с GUI
+    await crawler.run(['https://news.ycombinator.com/'])
+  except Exception as ex:
+    print(f"Произошла ошибка: {ex}")
+
+if __name__ == "__main__":
+  import asyncio
+  asyncio.run(main())
+```

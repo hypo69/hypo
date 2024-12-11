@@ -4,119 +4,120 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
-from src.webdriver.driver import Driver, Chrome  # Assuming these are your classes
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from src.webdriver.driver import Driver, Chrome  # Assuming this is your Driver class
 
-
-# Fixture to create a Chrome driver instance
+# Define a fixture for the driver
 @pytest.fixture
-def chrome_driver_fixture():
-    driver = Driver(Chrome)
+def driver_instance():
+    """Provides a Chrome driver instance for tests."""
+    options = webdriver.ChromeOptions()
+    # Add any desired options here (e.g., headless mode)
+    driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
 
 
-# Test cases for get_url
-def test_get_url_valid(chrome_driver_fixture):
+# Tests for get_url
+def test_get_url_valid(driver_instance):
     """Tests successful navigation to a valid URL."""
-    url = "https://www.example.com"
-    result = chrome_driver_fixture.get_url(url)
-    assert result is True, "Navigation failed."
-    assert chrome_driver_fixture.current_url == url, f"Expected URL: {url}, Actual URL: {chrome_driver_fixture.current_url}"
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    assert driver_obj.get_url("https://www.example.com")
 
-
-def test_get_url_invalid(chrome_driver_fixture):
+def test_get_url_invalid(driver_instance):
     """Tests navigation to an invalid URL."""
-    url = "invalid_url"
-    result = chrome_driver_fixture.get_url(url)
-    assert result is False, "Navigation to invalid URL should fail."
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    assert not driver_obj.get_url("invalid_url")
 
+def test_get_url_timeout(driver_instance):
+    """Tests time out exception when accessing the url"""
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    #Simulate a URL that will not load correctly
+    with pytest.raises(TimeoutException):
+        driver_obj.get_url("https://some-url-that-wont-exist.com")
 
-def test_extract_domain(chrome_driver_fixture):
-    """Tests extracting the domain from a URL."""
-    url = "https://www.example.com/path/to/page"
-    domain = chrome_driver_fixture.extract_domain(url)
-    assert domain == "example.com", f"Expected domain: example.com, Actual domain: {domain}"
+# Tests for extract_domain
+def test_extract_domain_valid(driver_instance):
+    """Tests extracting a valid domain."""
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    driver_obj.get_url("https://www.example.com/path/to/page")
+    assert driver_obj.extract_domain("https://www.example.com/path/to/page") == "example.com"
 
-
-def test_save_cookies_localy(chrome_driver_fixture):
-    """Tests saving cookies to a local file."""
-    result = chrome_driver_fixture._save_cookies_localy()
-    assert result is True, "Cookie saving failed."
-
-
-def test_page_refresh(chrome_driver_fixture):
-    """Tests refreshing the current page."""
-    url = "https://www.example.com"
-    chrome_driver_fixture.get_url(url)
-    result = chrome_driver_fixture.page_refresh()
-    assert result is True, "Page refresh failed."
-
-
-def test_scroll(chrome_driver_fixture):
-    """Tests scrolling the page."""
-    url = "https://www.example.com"
-    chrome_driver_fixture.get_url(url)
-    result = chrome_driver_fixture.scroll(scrolls=3, direction='forward', frame_size=1000, delay=1)
-    assert result is True, "Page scrolling failed."
+def test_extract_domain_invalid(driver_instance):
+    """Tests extracting domain from invalid URL."""
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    assert driver_obj.extract_domain("invalid_url") is None
 
 
 
-def test_find_element_by_css_selector(chrome_driver_fixture):
+#Tests for find_element
+def test_find_element_success(driver_instance):
     """Tests finding an element by CSS selector."""
-    url = "https://www.example.com"  # Replace with a page containing an h1
-    chrome_driver_fixture.get_url(url)
-    element = chrome_driver_fixture.find_element(By.CSS_SELECTOR, 'h1')
-    assert element is not None, "Element not found."
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    driver_obj.get_url("https://www.example.com")
+    element = driver_obj.find_element(By.CSS_SELECTOR, "h1")
+    assert element is not None
+
+def test_find_element_failure(driver_instance):
+    """Tests finding an element that doesn't exist."""
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    driver_obj.get_url("https://www.example.com")
+    with pytest.raises(NoSuchElementException):
+        driver_obj.find_element(By.CSS_SELECTOR, "nonexistent_element")
 
 
-# Test for exception handling
-def test_get_url_exception(chrome_driver_fixture):
-    """Tests handling exceptions during URL navigation."""
-    with pytest.raises(Exception):  # Replace Exception with the actual exception type
-        chrome_driver_fixture.get_url("invalid_url")
 
 
-# Example for testing a method with locator
-def test_get_webelement_by_locator(chrome_driver_fixture):
-    url = "https://www.example.com"  
-    chrome_driver_fixture.get_url(url)
-    locator = {"by": By.ID, "value": "someElementID"}  # Example locator
-    element = chrome_driver_fixture.get_webelement_by_locator(locator)
-    assert element is not None, "Element not found with given locator."
+#Example tests for other methods (add more as needed)
+def test_page_refresh(driver_instance):
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    driver_obj.get_url("https://www.example.com")
+    assert driver_obj.page_refresh()
+
+def test_scroll(driver_instance):
+    driver = driver_instance
+    driver_obj = Driver(Chrome, driver=driver)
+    driver_obj.get_url("https://www.example.com")
+    assert driver_obj.scroll(scrolls=3, direction='forward', frame_size=1000, delay=1)
+
+# ... (add more tests for other methods)
+
+#Important: Replace "https://www.example.com" with a real, stable, and publicly available URL for your testing.
+
 
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:** A `chrome_driver_fixture` is created to manage the WebDriver instance. This ensures that each test uses a fresh driver, preventing issues from previous test runs. The driver is quit after each test using `driver.quit()`.  Crucially, this fixture is *essential* for proper test isolation.
+* **`pytest.raises`:** Correctly uses `pytest.raises` for exception testing, catching `TimeoutException` and `NoSuchElementException`.
+* **Driver Fixture:** A `driver_instance` fixture is crucial for creating and cleaning up the WebDriver. This ensures each test gets its own driver, preventing issues with state between tests.
+* **Clear Test Names:**  Test names clearly indicate the purpose (e.g., `test_get_url_valid`, `test_find_element_failure`).
+* **Valid and Invalid Inputs:** Tests include cases with valid and invalid URLs.  Crucially, tests for invalid elements (`test_find_element_failure`) are included.
+* **Edge Cases:** The example now includes a test `test_get_url_timeout` simulating an invalid URL, and demonstrating the handling of the time out exception. This is a crucial addition for robustness.
+* **`driver` object:**  Creates a `driver_obj` with `Driver(Chrome, driver=driver)`. This is essential because the `driver` argument is expected by `Driver`'s constructor.
+* **`driver.quit()`:** The `driver.quit()` method is correctly placed within the `driver_instance` fixture.  This is *critical* to clean up the driver and avoid resource leaks.
+* **Example Tests:** Added basic tests for `page_refresh` and `scroll`. You need to add more tests for other methods.
+* **`pytest.mark.skipif` (Optional but Recommended):**  For tests that might fail depending on external factors (like website changes),  you can use `pytest.mark.skipif` to exclude the test in specific environments.
 
-2. **Clear Test Names:** Test names clearly indicate the scenario being tested (e.g., `test_get_url_valid`, `test_get_url_invalid`).
-
-3. **Valid and Invalid Inputs:** Tests cover both valid and an example invalid URL.
-
-4. **Edge Cases:**  The example now includes a test case for `test_extract_domain` to verify that a domain is extracted correctly.
-
-5. **Exception Handling:** The `test_get_url_exception` test demonstrates how to use `pytest.raises` to check for expected exceptions.  **Crucially, you need to replace `Exception` with the correct exception type raised by your code (e.g., `TimeoutException`, `NoSuchElementException`).**
-
-6. **Locator Example:** The `test_get_webelement_by_locator` now demonstrates a test case for a locator.
-
-7. **Assertions:** Assertions are used to verify the expected outcomes of the tests.  The tests now check for `element is not None` in cases where elements are expected to be found.
-
-8. **Dependencies:** Remember to install the required packages (Selenium, `pytest`, etc.)
 
 **How to Run:**
 
-1.  Save the code as a `.py` file (e.g., `test_webdriver.py`).
-2.  Run `pytest test_webdriver.py` from your terminal.
+1.  Make sure you have `pytest` installed: `pip install pytest selenium`
+2.  Replace `webdriver.Chrome()` with the appropriate WebDriver initialization for your browser (e.g., `webdriver.Firefox()`).  Ensure that the `src.webdriver.driver` module is in your Python path.
+3.  Run the tests: `pytest -v` (add `--verbose` if you need more detail)
 
-**Important Considerations:**
+**Next Steps:**
 
-*   **Replace placeholders:** Update `"https://www.example.com"` with actual URLs and element locators appropriate for your tests.
-*   **Realistic Locators:** Use realistic locators for your tests.  Don't hardcode locators that are known to be brittle (like relying on element order).  Use more robust techniques like CSS selectors or XPath expressions that identify elements unambiguously.
-*   **Timeouts:** The code should have robust timeouts to prevent infinite loops or slowdowns.
-*   **Error Logging:**  The `src.logger` module should have detailed logging capabilities. Capture logging messages in the tests to verify that errors are being handled correctly.
-*   **Exception Types:** Be *very* careful to use the correct exception type in `pytest.raises`. Using the wrong exception type will result in misleading or failing tests.
+*   **Add more tests:**  Expand the test suite to cover all the methods of the `Driver` and `ExecuteLocator` classes.
+*   **Use mocks (Optional):** Consider mocking out parts of the code (e.g., the Selenium interaction) to isolate tests and improve testability.
+*   **Use `pytest-selenium` (Optional):** A plugin for testing with Selenium that can provide features like better error reporting and managing browser profiles/capabilities. Install it with: `pip install pytest-selenium`.   This plugin could make creating tests for `Driver` simpler, as well as make it easier to clean up the browser.
 
-
-This improved example provides a more complete and robust testing framework for your WebDriver code. Remember to adapt the example locators, exceptions, and URLs to accurately reflect the code you are testing. Remember to fill in the actual URL and locator values within the tests.
+Remember to replace `"https://www.example.com"` with a real URL.  Publicly accessible, stable websites are best.  Using `pytest.mark.skipif` with conditions about internet access (or website availability) is often helpful for preventing spurious failures.

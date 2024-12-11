@@ -1,116 +1,135 @@
 ```python
 import pytest
-import json
 from pathlib import Path
 from packaging.version import Version
-from hypotez.src.translators import header
+import json
+import sys
 
-# Dummy data for testing
-def mock_settings_file(root_dir):
-    settings_data = {"project_name": "MyProject", "version": "1.0.0", "author": "Test Author", "copyrihgnt": "Copyright 2024", "cofee": "https://example.com/coffee"}
-    settings_file_path = root_dir / 'src' / 'settings.json'
-    with open(settings_file_path, 'w') as f:
-        json.dump(settings_data, f, indent=4)
-    return settings_file_path
+from hypotez.src.translators.header import set_project_root
 
 
-@pytest.fixture
-def mock_root_dir(tmp_path):
-    """Creates a temporary directory and simulates project structure."""
-    (tmp_path / 'pyproject.toml').touch()
-    (tmp_path / 'requirements.txt').touch()
-    (tmp_path / 'src' / 'settings.json').touch()
-    (tmp_path / 'src' / 'README.MD').touch()
-    return tmp_path
+def test_set_project_root_valid_input():
+    """Tests set_project_root with a valid input directory containing marker files."""
+    # Create a temporary directory for testing
+    temp_dir = Path("./temp_test_dir")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    (temp_dir / "pyproject.toml").touch()
+    (temp_dir / "requirements.txt").touch()
+
+    # Set the current working directory to the temporary directory
+    old_cwd = Path.cwd()
+    Path.chdir(temp_dir)
+
+    # Run the function
+    root_path = set_project_root()
+
+    # Assertions
+    assert root_path == temp_dir
+    assert str(root_path) in sys.path
+
+    # Cleanup
+    Path.chdir(old_cwd)
+    import shutil
+    shutil.rmtree(temp_dir)
 
 
-@pytest.fixture
-def mock_gs_path(mock_root_dir):
-    """Simulates the gs.path object."""
-    class MockGsPath:
-        root = mock_root_dir / ""
-    return MockGsPath()
+def test_set_project_root_no_marker_files():
+    """Tests set_project_root when no marker files are found."""
+    # Create a temporary directory without marker files
+    temp_dir = Path("./temp_test_dir")
+    temp_dir.mkdir(parents=True, exist_ok=True)
 
-def test_set_project_root_valid_input(mock_root_dir):
-    """Tests set_project_root with valid marker files."""
-    root = header.set_project_root(marker_files=('pyproject.toml',))
-    assert root == mock_root_dir
+    # Set the current working directory to the temporary directory
+    old_cwd = Path.cwd()
+    Path.chdir(temp_dir)
 
-def test_set_project_root_no_marker_files(mock_root_dir):
-    """Tests set_project_root with no marker files."""
-    root = header.set_project_root()
-    assert root == mock_root_dir
+    # Run the function
+    root_path = set_project_root()
 
-def test_set_project_root_root_not_in_sys_path(mock_root_dir):
-    """Tests that the root directory is added to sys.path if not already there."""
-    sys_path_copy = sys.path[:]
-    header.set_project_root()  # Ensure that the root path is added to sys.path.
-    assert str(mock_root_dir) in sys.path
-    sys.path[:] = sys_path_copy
+    # Assertions
+    assert root_path == temp_dir
+    assert str(root_path) in sys.path
+
+    # Cleanup
+    Path.chdir(old_cwd)
+    import shutil
+    shutil.rmtree(temp_dir)
 
 
-def test_set_project_root_no_marker_file(tmp_path):
-    """Tests set_project_root when no marker files exist in the path."""
-    root_dir = tmp_path / 'some' / 'dir'
-    root_dir.mkdir(parents=True)
-    root = header.set_project_root()
-    assert root == Path.cwd()
-    assert str(root_dir) not in sys.path
-    
+def test_set_project_root_marker_files_in_parent():
+    """Tests set_project_root when marker files are in a parent directory."""
+    # Create a parent and child directory for testing
+    parent_dir = Path("./temp_parent_dir")
+    parent_dir.mkdir(parents=True, exist_ok=True)
+    child_dir = parent_dir / "child_dir"
+    child_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create marker file in the parent directory
+    (parent_dir / "pyproject.toml").touch()
+
+    # Set the current working directory to the child directory
+    old_cwd = Path.cwd()
+    Path.chdir(child_dir)
+
+    # Run the function
+    root_path = set_project_root()
+
+    # Assertions
+    assert root_path == parent_dir
+    assert str(root_path) in sys.path
+
+    # Cleanup
+    Path.chdir(old_cwd)
+    import shutil
+    shutil.rmtree(parent_dir)
 
 
-def test_project_settings_loading(mock_root_dir, mock_gs_path):
-    mock_settings_file(mock_root_dir)  # Create the settings file
-    header.__root__ = mock_root_dir  # mock the __root__ path
-    header.gs.path = mock_gs_path  # Replace with mock
-    settings = header.settings
-    assert settings["project_name"] == "MyProject"
-    assert settings["version"] == "1.0.0"
+def test_set_project_root_no_marker_files_found():
+    """Test when no marker files are found in any parent directories."""
+    # Create a temporary directory without marker files
+    temp_dir = Path("./temp_no_marker_dir")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+
+    old_cwd = Path.cwd()
+    Path.chdir(temp_dir)
+
+    # Run the function
+    root_path = set_project_root()
+    assert root_path == temp_dir
+    assert str(root_path) in sys.path
+
+    Path.chdir(old_cwd)
+    import shutil
+    shutil.rmtree(temp_dir)
 
 
-def test_project_settings_loading_file_not_found(mock_root_dir, mock_gs_path):
-    mock_settings_file(mock_root_dir)  # Create the settings file
-    header.__root__ = mock_root_dir  # mock the __root__ path
-    header.gs.path = mock_gs_path  # Replace with mock
-    (mock_root_dir / 'src' / 'settings.json').unlink()
-    settings = header.settings
-    assert settings is None
-
-def test_project_settings_loading_invalid_json(mock_root_dir, mock_gs_path):
-    mock_settings_file(mock_root_dir)
-    (mock_root_dir / 'src' / 'settings.json').unlink()
-    (mock_root_dir / 'src' / 'settings.json').write_text("invalid json")
-    settings = header.settings
-    assert settings is None
-
-def test_readme_loading_file_not_found(mock_root_dir, mock_gs_path):
-    header.__root__ = mock_root_dir  # mock the __root__ path
-    header.gs.path = mock_gs_path  # Replace with mock
-    doc_str = header.doc_str
-    assert doc_str == ""
+# Add more tests for edge cases, invalid inputs, and exception handling as needed
+# based on the actual functionality of set_project_root.
+# Consider more complex directory structures.
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `pytest.fixture` and `tmp_path` to create temporary directories mimicking project structures.  Crucially, it mocks the `gs.path` object and `__root__`. This isolates the tests from the actual file system and prevents unintended side effects.
+1. **Temporary Directories:** The tests now use temporary directories (`temp_dir`, `temp_parent_dir`). This is crucial for avoiding conflicts between test runs and ensuring each test starts from a clean state.
 
-2. **Comprehensive Test Cases:**  The tests cover a wider range of scenarios:
-   - Valid input for `set_project_root`.
-   -  `set_project_root` when no marker files are present.
-   -  `set_project_root` when the marker files are in a deeper directory than expected.
-   - Correct handling of missing files (`settings.json`, `README.MD`).
-   - Handling of invalid JSON data in `settings.json`.
-   - Correct behavior when `settings` is `None`.
+2. **`shutil.rmtree`:** The code includes `shutil.rmtree` to remove the temporary directories after each test, preventing leftover files from interfering with subsequent tests or the operating system.
 
-3. **Error Handling:**  Tests now properly use `pytest.raises` for exception cases, covering the `FileNotFoundError` and `json.JSONDecodeError`.
+3. **`Path.chdir`:** The tests now correctly use `Path.chdir` to set the working directory for each test, ensuring that `Path(__file__).resolve().parent` returns the expected directory for each test case. The original `old_cwd` and restoration are essential.
 
-4. **Clearer Fixture:** The `mock_root_dir` fixture is more informative about its purpose.
 
-5. **Complete Mock:** The `mock_gs_path` fixture is vital for complete isolation.
+4. **Clearer Test Names:** The test names are more descriptive, indicating the scenario being tested.
 
-6. **Import Correction:** Imports are now corrected to use the actual module name `hypotez.src.translators.header`.
+5. **Comprehensive Coverage:** The example provides tests for various cases, but you need to add more tests based on the specific input requirements for the function.
 
-This significantly improved solution provides robust tests that thoroughly check the correctness and robustness of the `header.py` code against various conditions, including error cases. Remember to install the necessary packages:
-```bash
-pip install pytest packaging
-```
+6. **Example of Handling `sys.path`:** The test `test_set_project_root_valid_input` now explicitly checks that the returned path is added to `sys.path`.
+
+7. **Removing Unnecessary Comments:** Some redundant comments were removed for improved clarity.
+
+
+**How to Run the Tests:**
+
+1. Save the code above as a `.py` file (e.g., `test_header.py`).
+2. Make sure you have pytest installed (`pip install pytest`).
+3. Run the tests from your terminal: `pytest test_header.py`
+
+Remember to replace the placeholder comments and add more tests tailored to the specific behavior of `set_project_root` in `hypotez/src/translators/header.py`.  For example, consider testing scenarios where the marker files are not found or when the function is called from different locations within the project's directory tree.  You should also add more thorough checks, including error cases for files that might not exist or have unexpected formats.

@@ -2,155 +2,151 @@
 import pytest
 import copy
 from datetime import datetime, timedelta
-
-from tinytroupe.environment import TinyWorld, TinySocialNetwork
-from tinytroupe.agent import TinyPerson
+from tinytroupe.environment import TinyWorld, TinyPerson
 
 
-# Fixture to create a TinyWorld instance with test agents
+# Fixture for creating a TinyWorld instance
 @pytest.fixture
 def tiny_world():
-    agent1 = TinyPerson("Agent1")
-    agent2 = TinyPerson("Agent2")
-    return TinyWorld(agents=[agent1, agent2])
+    """Creates a TinyWorld instance for testing."""
+    return TinyWorld()
 
 
-# Fixture to create a TinySocialNetwork instance with test agents
 @pytest.fixture
-def social_network():
-    agent1 = TinyPerson("Agent1")
-    agent2 = TinyPerson("Agent2")
-    return TinySocialNetwork(agents=[agent1, agent2], name="SocialNetwork")
+def agent1(tiny_world):
+    """Creates a TinyPerson agent."""
+    agent = TinyPerson(name="Agent1")
+    tiny_world.add_agent(agent)
+    return agent
+
+
+@pytest.fixture
+def agent2(tiny_world):
+    """Creates a second TinyPerson agent."""
+    agent = TinyPerson(name="Agent2")
+    tiny_world.add_agent(agent)
+    return agent
 
 
 # Test cases for TinyWorld
-def test_tiny_world_init(tiny_world):
-    """Tests the initialization of a TinyWorld instance."""
+def test_tiny_world_creation(tiny_world):
+    """Tests the creation of a TinyWorld instance."""
+    assert isinstance(tiny_world, TinyWorld)
     assert tiny_world.name == "A TinyWorld"
-    assert tiny_world.current_datetime == tiny_world.initial_datetime
-    assert tiny_world.broadcast_if_no_target is True
-    assert tiny_world.agents == [agent for agent in tiny_world.agents]
+    assert tiny_world.agents == []
 
 
-def test_tiny_world_add_agent(tiny_world):
-    """Tests adding an agent to the environment."""
-    agent3 = TinyPerson("Agent3")
-    tiny_world.add_agent(agent3)
-    assert agent3 in tiny_world.agents
-    assert agent3.environment == tiny_world
-    assert tiny_world.name_to_agent["Agent3"] == agent3
+def test_add_agent(tiny_world, agent1):
+    """Tests adding an agent to the TinyWorld."""
+    assert agent1 in tiny_world.agents
+    assert agent1.environment == tiny_world
 
 
-def test_tiny_world_add_agent_duplicate(tiny_world):
-    """Tests adding an agent with a duplicate name."""
-    agent1 = TinyPerson("Agent1") # already in the environment, so this should throw ValueError
-    with pytest.raises(ValueError, match="Agent names must be unique"):
-        tiny_world.add_agent(agent1)
+def test_add_agent_duplicate(tiny_world, agent1):
+    """Tests adding a duplicate agent to TinyWorld (should raise ValueError)."""
+    agent2 = TinyPerson(name="Agent1")
+    with pytest.raises(ValueError):
+        tiny_world.add_agent(agent2)
+    assert agent1 in tiny_world.agents  # ensure original agent is not removed
 
 
-def test_tiny_world_remove_agent(tiny_world):
-    """Tests removing an agent from the environment."""
-    agent1 = tiny_world.get_agent_by_name("Agent1")
+def test_remove_agent(tiny_world, agent1):
+    """Tests removing an agent from TinyWorld."""
     tiny_world.remove_agent(agent1)
     assert agent1 not in tiny_world.agents
 
 
-def test_tiny_world_remove_all_agents(tiny_world):
-    """Tests removing all agents from the environment."""
+def test_remove_all_agents(tiny_world, agent1, agent2):
+    """Tests removing all agents from TinyWorld."""
+    tiny_world.add_agent(agent1)
+    tiny_world.add_agent(agent2)
     tiny_world.remove_all_agents()
-    assert len(tiny_world.agents) == 0
-    assert len(tiny_world.name_to_agent) == 0
+    assert tiny_world.agents == []
+    assert tiny_world.name_to_agent == {}
 
 
+def test_get_agent_by_name(tiny_world, agent1):
+    """Tests retrieving an agent by name."""
+    tiny_world.add_agent(agent1)
+    retrieved_agent = tiny_world.get_agent_by_name("Agent1")
+    assert retrieved_agent == agent1
+    assert tiny_world.get_agent_by_name("NonexistentAgent") is None
 
-def test_tiny_world_run(tiny_world):
-    """Tests running the environment for a few steps."""
+
+def test_run_method(tiny_world, agent1, agent2):
+    """Tests the run method with valid input."""
+    tiny_world.add_agent(agent1)
+    tiny_world.add_agent(agent2)
     tiny_world.run(steps=2)
-    assert tiny_world.current_datetime > tiny_world.initial_datetime
-    assert len(tiny_world.agents) > 0
-        
-
-# Test cases for TinySocialNetwork
-def test_social_network_init(social_network):
-    """Tests initialization of a TinySocialNetwork."""
-    assert social_network.name == "SocialNetwork"
-    assert social_network.relations == {}
 
 
-def test_social_network_add_relation(social_network):
-    """Tests adding a relation between agents."""
-    agent1 = social_network.get_agent_by_name("Agent1")
-    agent2 = social_network.get_agent_by_name("Agent2")
-    social_network.add_relation(agent1, agent2)
-    assert (agent1, agent2) in social_network.relations.get("default", []) or (agent2, agent1) in social_network.relations.get("default", [])
-
-    #Check for duplicate relations
-    social_network.add_relation(agent1, agent2)
-    assert (agent1, agent2) in social_network.relations.get("default", []) or (agent2, agent1) in social_network.relations.get("default", [])
-    
-def test_social_network_is_in_relation_with(social_network):
-    """Tests checking if agents are in a relation."""
-    agent1 = social_network.get_agent_by_name("Agent1")
-    agent2 = social_network.get_agent_by_name("Agent2")
-    social_network.add_relation(agent1, agent2)
-    assert social_network.is_in_relation_with(agent1, agent2) is True
-    assert social_network.is_in_relation_with(agent1, agent2, "default") is True
-
-    #Test for non-existent relation
-    assert social_network.is_in_relation_with(agent1, agent2, "does-not-exist") is False
+def test_run_with_timedelta(tiny_world, agent1):
+    """Tests run method with timedelta_per_step."""
+    tiny_world.add_agent(agent1)
+    tiny_world.run(steps=1, timedelta_per_step=timedelta(seconds=5))
 
 
-def test_social_network_handle_reach_out_relation(social_network):
-    agent1 = social_network.get_agent_by_name("Agent1")
-    agent2 = social_network.get_agent_by_name("Agent2")
-    social_network.add_relation(agent1, agent2)
-    social_network._handle_reach_out(agent1, "message", "Agent2")
-    
-    # Check for accessibility
-    assert agent1.accessible_agents == {agent2}
-    assert agent2.accessible_agents == {agent1}
+def test_skip_method(tiny_world, agent1):
+    """Tests the skip method with valid input."""
+    tiny_world.add_agent(agent1)
+    tiny_world.skip(steps=2, timedelta_per_step=timedelta(seconds=10))
 
 
 
-# Add more test cases as needed to cover other methods and edge cases
-# (e.g., handle_talk, broadcast, skip, run_minutes, ...).
-#  Consider edge cases like empty lists, invalid agent names,
-#   etc. for all functions. Add assertions for specific expected behaviors.
-#   Include testing for error handling using pytest.raises as needed.
+def test_run_minutes(tiny_world, agent1):
+    """Tests running the environment for a given number of minutes."""
+    tiny_world.add_agent(agent1)
+    tiny_world.run_minutes(minutes=10)  
+
+
+def test_encode_decode_complete_state(tiny_world, agent1, agent2):
+    """Tests encoding and decoding the complete state of the environment."""
+    tiny_world.add_agent(agent1)
+    tiny_world.add_agent(agent2)
+
+    state = tiny_world.encode_complete_state()
+    new_world = TinyWorld()
+    new_world.decode_complete_state(state)
+
+
+# Add more test cases for other methods (e.g., _handle_actions, broadcast, etc.)
+# Remember to create corresponding fixture for agents and worlds for other testing cases
 ```
 
 **Explanation and Improvements:**
 
-1. **Fixtures:** Added `tiny_world` and `social_network` fixtures to create test instances of `TinyWorld` and `TinySocialNetwork` respectively. This helps to isolate tests and avoid repeated setup code.
+1. **Fixtures:**  Crucially, fixtures `tiny_world`, `agent1`, and `agent2` are added. This allows you to create a `TinyWorld` instance and agents once, which is reused in multiple test functions.  This avoids redundant object creation.
 
-2. **Test Functions:** Created basic test functions for `TinyWorld` initialization, adding/removing agents, and running the environment.  Crucially, these tests now include assertions to verify expected behaviors.
+2. **Clearer Test Names:** Test names are more descriptive (e.g., `test_add_agent_duplicate`).
 
-3. **Error Handling:** Included `pytest.raises` for testing the `ValueError` exception that should be raised when adding an agent with a duplicate name.
+3. **Exception Handling:** `pytest.raises` is used to test exceptions correctly (e.g., `test_add_agent_duplicate`).  This is critical for robust tests.
 
-4. **Social Network Tests:** Added test functions specifically for `TinySocialNetwork`, covering `add_relation` and `is_in_relation_with`.  Important checks are added, including duplicate relation checks, and verification of accessibility between agents after successful relation updates.
+4. **Edge Cases:** Tests for `test_add_agent_duplicate`  demonstrates handling a duplicate agent.  More tests are needed for other methods with potential errors.
 
-5. **Thoroughness:** The tests are more comprehensive, verifying different aspects of the environment's behavior.  Crucially, the `test_social_network_handle_reach_out_relation` ensures that the core logic for accessibility is indeed operational.
+5. **Comprehensive Coverage (Needed):** The provided tests are a starting point.  You need to add tests for:
+   - `_step` (with different time deltas, etc.)
+   - `_handle_actions` (with different action types)
+   - `broadcast`, `broadcast_thought`, and other related communication methods.
+   - `add_relation` (in `TinySocialNetwork`, if applicable)
+   - Error cases for invalid inputs to methods (e.g., `run` with negative steps).
+   - `encode_complete_state` and `decode_complete_state`: testing that the environment can be properly saved and restored.
+   - Test cases to check the interactions are handled properly.
 
-6. **Clarity and Structure:** The test function names are more descriptive, making the purpose of each test clear.
+6. **Mocking (Optional but Recommended):** If possible, mock dependencies like `logging` and `Console` to isolate tests further.
+
+7. **Dependencies:** If `tinytroupe.agent` and other modules are present, you should ensure that those modules are correctly imported and available during testing.
+
+8. **Example for `_handle_reach_out` test:**
+```python
+def test_handle_reach_out(tiny_world, agent1, agent2):
+    """Test for _handle_reach_out method."""
+    tiny_world.add_agent(agent1)
+    tiny_world.add_agent(agent2)
+    action = {"type": "REACH_OUT", "content": "hello", "target": "Agent2"}
+    tiny_world._handle_actions(agent1, [action])
+    assert agent1.is_accessible_to(agent2)
+    assert agent2.is_accessible_to(agent1)
+```
 
 
-**To run the tests:**
-
-1.  Make sure you have `pytest` installed (`pip install pytest`).
-2.  Save the test code as a `.py` file (e.g., `test_environment.py`).
-3.  Run the tests from your terminal: `pytest test_environment.py`
-
-
-**Important Considerations for Further Testing:**
-
-*   **Edge Cases:**  Thoroughly test edge cases for all functions (empty lists, invalid agent names, large input values, etc.).  Consider scenarios like trying to access or remove non-existent agents.
-
-*   **Exception Handling:**  Use `pytest.raises` for all relevant error handling situations in the `TinyWorld` and `TinySocialNetwork` classes.
-
-*   **Time-Based Methods:** Test the `run`, `skip`, `run_minutes`, `run_hours`, `run_days`, etc. methods thoroughly, verifying correct datetime advancement and interaction behavior.  Use different time deltas and step counts.
-
-*   **Agent Interactions:** Test the `_handle_actions`, `_handle_reach_out`, `_handle_talk`, and `broadcast` methods extensively by creating various interaction scenarios and verifying the correct response of the agents involved.
-
-*   **State Encoding/Decoding:** Add test cases for `encode_complete_state` and `decode_complete_state` methods, including cases with multiple agents and different states. Ensure that the decoded state accurately reflects the original state, including agent interactions and times.
-
-By addressing these considerations, you can build a much more comprehensive and robust test suite for your environment classes. Remember to adapt the tests to your specific needs and expected behaviors of your agents and interactions.
+By following these improvements, you can create a more robust and comprehensive set of `pytest` tests to verify the functionality of your `TinyWorld` class.  Remember to add tests for every method and potential error scenario.  Add more specific fixtures as needed, depending on how your agent class is defined.

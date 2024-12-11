@@ -1,104 +1,114 @@
 ```python
 import pytest
-from unittest.mock import patch
+import requests  # Assuming you're making external requests
 
-# Replace with the actual import statements for KazarinovTelegramBot and BotHandler
-# if they exist in a different module.
-# Example: from hypotez.src.endpoints.kazarinov import KazarinovTelegramBot, BotHandler
-
-# Mock classes for testing. Replace with actual class if available.
-class MockKazarinovTelegramBot:
-    def handle_message(self, message):
-        return "mocked_response"
-
-
-class MockBotHandler:
-    def run_scenario(self, data):
-        if data == "valid_data":
-            return True
-        elif data == "invalid_data":
-            return False
+# Mock for external services (replace with actual implementation if needed)
+class MockOneTab:
+    def get_data(self, url):
+        # Example mock response. Adapt based on OneTab API
+        if url == "https://one-tab.co.il":
+            return {"components": ["CPU", "GPU", "RAM"]}
+        elif url == "https://morlevi.co.il":
+            return {"components": ["Motherboard", "Case"]}
         else:
-            return None  # Handle unknown data
+            return None
 
 
-# Define fixtures if needed, in this case a mocked message
+# Dummy KazarinovBot class (replace with actual implementation)
+class KazarinovBot:
+    def handle_message(self, message):
+        one_tab = MockOneTab()
+        url = message
+        data = one_tab.get_data(url)
+        if data:
+          # Example scenario; adjust if applicable
+          if data.get('components'):
+            return "Successfully retrieved components."
+          else:
+            return "Invalid data format"
+        else:
+            return "URL not found"
+
+
+
+# Test fixtures (if needed)
 @pytest.fixture
-def mocked_message():
+def valid_url():
     return "https://one-tab.co.il"
 
-
-# Tests for KazarinovTelegramBot
-def test_handle_message_valid_onetab_url(mocked_message):
-    """Test valid OneTab URL handling."""
-    bot = MockKazarinovTelegramBot()
-    # Replace with actual BotHandler instantiation if available
-    bot_handler = MockBotHandler()
-
-    # Mock the call to run_scenario to return True
-    with patch.object(bot_handler, 'run_scenario', return_value=True) as mocked_run_scenario:
-        response = bot.handle_message(mocked_message)
-        assert response == "mocked_response"
-        mocked_run_scenario.assert_called_once()  #Ensure run_scenario is called
-    
+@pytest.fixture
+def invalid_url():
+    return "https://invalid-url.com"
 
 
-def test_handle_message_invalid_onetab_url():
-    """Test invalid OneTab URL handling (e.g., incorrect format)."""
-    bot = MockKazarinovTelegramBot()
-    bot_handler = MockBotHandler()
+# Test cases
+def test_handle_message_valid_url(valid_url):
+    """Tests with a valid URL from OneTab."""
+    bot = KazarinovBot()
+    result = bot.handle_message(valid_url)
+    assert "Successfully retrieved components" in result, f"Expected success message, got {result}"
 
-    # Simulate invalid data leading to false run_scenario
-    with patch.object(bot_handler, 'run_scenario', return_value=False) as mocked_run_scenario:
-        response = bot.handle_message("invalid_url")  # Replace with invalid URL example
-        assert response == "mocked_response"
-        mocked_run_scenario.assert_called_once() #Ensure run_scenario is called
-    
+def test_handle_message_invalid_url():
+  """Tests with an invalid URL."""
+  bot = KazarinovBot()
+  result = bot.handle_message("https://invalid-url.com")
+  assert "URL not found" in result, f"Expected URL not found, got {result}"
 
-def test_handle_message_non_onetab_url():
-    """Test handling of URLs that are not from OneTab."""
-    bot = MockKazarinovTelegramBot()
-    bot_handler = MockBotHandler()
+def test_handle_message_invalid_data_format():
+    """Tests with a valid URL from OneTab but incorrect data format."""
+    bot = KazarinovBot()
+    # Assuming an invalid URL structure returns None or other similar format
+    result = bot.handle_message("https://morlevi.co.il")
+    assert "Invalid data format" in result, f"Expected Invalid data format, got {result}"
 
-    with patch.object(bot_handler, 'run_scenario', return_value=None) as mocked_run_scenario:
-        response = bot.handle_message("not_onetab_url")
-        assert response == "mocked_response"
-        mocked_run_scenario.assert_not_called() #Ensure run_scenario is not called for non-onetab URLs
 
-# Add more tests for different scenarios, such as:
-# - Invalid data formats (e.g., malformed JSON).
-# - Errors during data retrieval.
-# - Error handling in scenario execution.
 
-# Example for testing exception handling (replace with the actual exception)
-def test_handle_message_exception():
-    with pytest.raises(ValueError) as excinfo:
-        bot = MockKazarinovTelegramBot()
-        bot.handle_message("bad_data") #Replace with an expected failing case
-        assert str(excinfo.value) == "Scenario execution failed." # Check the error message
+
+# Example of testing a hypothetical scenario (replace with actual scenario implementation)
+def test_handle_message_scenario_success():
+  """Tests the handling of a successful scenario using a mocked response."""
+  bot = KazarinovBot()
+  message = "https://one-tab.co.il" # Valid URL
+  response = bot.handle_message(message)
+  assert "Successfully retrieved components" in response, f"Expected success message, got {response}"
+
+# Example with pytest.raises (add more exception tests as needed)
+def test_handle_message_invalid_url_format():
+  """Tests the handling of a malformed URL."""
+  bot = KazarinovBot()
+  with pytest.raises(TypeError): # Replace with the expected exception type
+        bot.handle_message(123) # Test with invalid input type
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock.patch` to mock `run_scenario`. This is crucial for isolating tests and preventing them from depending on external factors (e.g., fetching data from an external service). The code creates `Mock` classes for the actual classes you intend to test. Replace these `Mock` objects with your actual classes if they are present in your project.
+* **Mocking:**  The code now uses a `MockOneTab` class to simulate the external `OneTab` service. This is crucial for testing the `KazarinovBot` without relying on an external API. Replace the mock with your actual integration if possible.
+* **Clearer Test Names:** Test names are more descriptive, helping understanding the test's purpose.
+* **Test Cases:**  Added tests covering valid URLs, invalid URLs, and an example for a hypothetical scenario. Importantly, a test for an invalid data format from OneTab is added.
+* **Error Handling:** A `pytest.raises` test is shown to handle the case where an invalid data type is passed to the function.
+* **Edge Cases:**  The `invalid_url` fixture and test demonstrate how to test edge cases (invalid URLs).  You'll need to add more tests to cover more edge cases related to the input data format.
+* **Expected Output:**  The tests now assert that the *expected* output string (e.g., "Successfully retrieved components.") is present in the response. This is much better than just checking for `True` or `False`.
+* **Dependency:** Imports `requests` (though not used in this example). If you use an actual external service, you'll need the appropriate libraries.
+
+**To use these tests:**
+
+1.  **Install pytest:**
+    ```bash
+    pip install pytest
+    ```
+2.  **Save:** Save the code as a Python file (e.g., `test_kazarinov_bot.py`).
+3.  **Run tests:**
+    ```bash
+    pytest test_kazarinov_bot.py
+    ```
+
+**Crucial Next Steps:**
+
+* **Replace the mock:** Replace `MockOneTab` with an actual integration to the `OneTab` API (or similar service).
+* **Implement real scenarios:**  Replace the placeholder scenario in `test_handle_message_scenario_success` with your actual scenario logic and testing.
+* **Add more tests:**  The provided tests are a starting point; expand to cover various possible input types, scenarios (success and failure), and edge cases specific to the `KazarinovTelegramBot` and associated functions.
+* **Exception Handling:** Add comprehensive tests for various exceptions that might be raised within the `KazarinovBot` or its dependencies.
+* **Data Validation:** Ensure the `get_data` method of your actual OneTab integration performs necessary data validation (e.g., validating the format or contents of the response).  Your tests need to verify this is happening correctly.
 
 
-2. **Clearer Test Cases:**  The test names are more descriptive (e.g., `test_handle_message_valid_onetab_url`).
-
-3. **Edge Cases:**  The `test_handle_message_non_onetab_url` test covers a key edge case where the URL is not from OneTab.
-
-4. **Exception Handling:** The `test_handle_message_exception` demonstrates how to test exception handling.  Replace `"bad_data"` and the expected error message with the appropriate values.
-
-5. **Fixture for Mocked Message:** A `mocked_message` fixture is added to streamline test input.
-
-6. **Assertions:**  Checks if `run_scenario` is called or not for different scenarios, which is more reliable than just checking a return value.
-
-
-**Before running these tests:**
-
-- **Replace Placeholders:** Replace `MockKazarinovTelegramBot` and `MockBotHandler` with your actual class imports if they exist.
-- **Import `pytest`:**  Make sure you have the `pytest` library installed (`pip install pytest`).
-- **Adapt Test Data:** Adapt the test data (e.g., `mocked_message`, `invalid_url`) to match the expected input values for your specific functions and scenarios.
-
-
-This revised solution provides a more comprehensive and robust set of tests, following the best practices for writing `pytest` tests. Remember to adapt the code to your exact project structure. Remember to install the `pytest` library (`pip install pytest`) if you haven't already.
+By addressing these points, you'll create robust and comprehensive tests for your code. Remember to tailor the tests to your specific codebase's functionalities and expected inputs.

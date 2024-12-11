@@ -2,94 +2,95 @@
 import pytest
 from hypotez.src.endpoints.advertisement import Facebook
 
+# Tests for Facebook class (assuming Facebook class has methods)
 
-# Tests for Facebook class
-def test_facebook_class_creation():
-    """Tests if Facebook class can be instantiated successfully."""
-    fb = Facebook()
-    assert isinstance(fb, Facebook)
-
-
-# Test cases for Facebook class, assuming Facebook has methods.  
-# Since the provided code only imports Facebook, we need to
-#  create dummy methods and attributes to test.  Adapt these to your actual implementation!
-class TestFacebookMethods:
-    def test_facebook_method_valid_input(self):
-        """Tests a Facebook method with valid input (dummy)."""
-        fb = Facebook()
-        # Replace with actual method and input.  Example:
-        # result = fb.fetch_ads(campaign_id='123')
-        # assert result == expected_result
-        # assert "success" in fb.do_something(123)  #Example assertion.
-        assert hasattr(fb, "do_something")  #Check if attribute exists.
-
-    def test_facebook_method_invalid_input(self):
-        """Tests a Facebook method with invalid input (dummy)."""
-        fb = Facebook()
-        try:
-            # Replace with actual method and input. Example:
-            # fb.fetch_ads(campaign_id='invalid_id')  # Expected to raise exception
-            fb.do_something("not_an_int") # Example invalid input
-        except Exception as e:
-            assert "Invalid input" in str(e) or "ValueError" in str(e) or "TypeError" in str(e), \
-                f"Unexpected exception type {type(e).__name__}"
-        else:
-            assert False, "Expected exception was not raised."  # Fail if no exception
-
-    def test_facebook_method_edge_case(self):
-        """Tests a Facebook method with edge case input (dummy)."""
-        fb = Facebook()
-        try:
-            # Replace with actual method and input. Example:
-            # result = fb.fetch_ads(campaign_id=None)
-            result = fb.do_something(0) # Example edge case (zero)
-            # assert result == expected_result
-            assert result is not None # or more specific assertions
-        except Exception as e:
-            assert False, f"Unexpected exception {type(e).__name__} raised."
-        
-
-    def test_facebook_method_empty_input(self):
-        """Tests a Facebook method with empty input (dummy)."""
-        fb = Facebook()
-        try:
-            # Replace with actual method and input. Example:
-            # result = fb.fetch_ads(campaign_id='')
-            result = fb.do_something("")
-            # assert result == expected_result
-            assert result is not None  # Check if it returns something
-        except Exception as e:
-            assert False, f"Unexpected exception {type(e).__name__} raised."
+def test_facebook_class_exists():
+    """Checks if the Facebook class exists."""
+    assert Facebook
 
 
-# This section is crucial and needs adjustment to match your actual code
-# The tests below need to be changed accordingly.
+# Example test cases assuming Facebook class has a method 'get_ads'
+def test_get_ads_valid_input():
+    """Tests get_ads with valid input (example)."""
+    # Replace with actual valid data from the Facebook API
+    ads_data = {"ads": [{"id": 1, "name": "Ad 1"}]}  
+    mock_facebook = Facebook()  # Replace with actual initialization if needed
+    result = mock_facebook.get_ads(some_params) # Replace with appropriate parameters
+    assert result == ads_data # Check if the result matches the expected format
 
-# Add more test functions as needed to cover different aspects of Facebook
-#  class methods, attributes, and input validation.
+# Example Test Cases for Invalid/Edge Cases, assuming Facebook.get_ads has appropriate error handling:
 
 
+def test_get_ads_invalid_input():
+    """Test get_ads with invalid input (example)."""
+    mock_facebook = Facebook()
+    with pytest.raises(ValueError) as excinfo:
+        mock_facebook.get_ads(invalid_params)  # Replace invalid params
+    assert "Invalid input" in str(excinfo.value)  # Assuming the exception message
+
+
+def test_get_ads_empty_response():
+    """Test get_ads with an empty response from the Facebook API (example)."""
+    mock_facebook = Facebook()
+    # Simulate an empty response; replace with actual API mocking
+    result = mock_facebook.get_ads(some_params)  # Replace with appropriate parameters
+    assert result == []  # Check if the result is an empty list
+
+
+def test_get_ads_api_error():
+    """Test get_ads with an API error (example)."""
+    mock_facebook = Facebook()
+    with pytest.raises(Exception) as excinfo:  # Or a more specific exception type
+        mock_facebook.get_ads(some_params)  # Replace with appropriate parameters
+    assert "API error" in str(excinfo.value)  # Replace with the expected error message
+
+
+# Example using a fixture (if needed)
+@pytest.fixture
+def facebook_instance():
+    """Provides a Facebook instance for testing."""
+    return Facebook()
+
+
+# Example test using a fixture
+def test_get_ads_with_fixture(facebook_instance):
+    """Tests get_ads using a fixture."""
+    # Replace with actual valid data
+    result = facebook_instance.get_ads(some_params)
+    # Add assertions for the actual result based on expected output
+    assert isinstance(result, list)  # Or other assertions based on the method
+
+# Add tests for other methods of the Facebook class as needed, following the same structure and approach.
+# Replace placeholder comments with concrete assertions and error handling based on the expected behavior. 
+# Consider using a mocking library like `unittest.mock` if you need to simulate Facebook API interactions.
+
+
+# Additional test cases should be added for each method within the Facebook class
+# Replace placeholders like 'some_params', 'invalid_params' with actual examples.
 ```
 
 **Explanation and Crucial Improvements:**
 
-1. **Dummy Methods:** The original response lacked methods to test.  The `TestFacebookMethods` class now includes example methods (`fetch_ads`, `do_something`).  **You MUST replace these dummy examples with actual method calls** from your `Facebook` class.  Crucially, this now allows us to test the *structure* and *validity* of method calls.
+1. **Clearer Test Names:** Test names now better reflect the test's purpose (e.g., `test_get_ads_valid_input`).
 
-2. **Error Handling:**  `pytest.raises` is used (or a `try...except` block). The test now checks for *specific* exception types (ValueError, TypeError, etc) instead of just catching `Exception`.  This is critical for robust error handling testing.
+2. **Example Input:** The tests now include example `ads_data` for `test_get_ads_valid_input`.  Crucially, this example data needs to be realistic to the actual Facebook API response format.
 
-3. **Clear Assertions:** Assertions now are more specific (e.g., `assert "success" in ...`).  This makes tests more readable and allows you to check for specific results.
+3. **Exception Handling:** `pytest.raises` is used correctly to check for `ValueError` (or other expected exceptions) in `test_get_ads_invalid_input` and `test_get_ads_api_error`.
 
-4. **Edge Cases:** Tests are added for edge cases (e.g., empty strings, `None` values).
+4. **Edge Cases:** `test_get_ads_empty_response` demonstrates an important edge case: an empty response from the API.
 
-5. **Complete Test Class:** I've included a `TestFacebookMethods` class for better organization and readability. You might have more complex tests requiring multiple test classes.
+5. **Mocking (Crucial):** The code now includes comments about using mocking (with `unittest.mock` or similar) to simulate the `Facebook` API calls.  **You MUST mock the `Facebook` API calls** if your code interacts with external dependencies like Facebook's API.  **Without mocking, your tests will be extremely unreliable, failing due to external factors.**  Otherwise, these tests are testing the internal logic of the `Facebook` class.   These are stubs; you will have to implement `some_params` and the `invalid_params`.
+
+6. **Fixture:** A `facebook_instance` fixture is provided as a best practice for reusing the `Facebook` object in multiple tests, improving code organization.
+
+7. **Assertions:** Assertions are crucial for validating the expected output.   Examples of the form `assert isinstance(result, list)` have been added.
+
+**How to Adapt These Tests:**
+
+* **Replace Placeholders:**  Replace comments like `"Replace with actual valid data"` with actual data structures (dictionaries, lists, etc.) relevant to your `Facebook` class and API.
+* **Import the Correct Class:** Make sure you're importing the correct `Facebook` class if it's not defined in `hypotez/src/endpoints/advertisement/__init__.py`.
+* **Mock API Calls:**  If the `Facebook` code interacts with an external API, use a mocking library to isolate the test from the actual API calls, using stubbed data.
+* **Add Tests for Missing Methods:** The example tests only cover `get_ads`.  Add tests for any other methods in your `Facebook` class.
 
 
-
-**How to adapt to your code:**
-
-* **Replace the dummy method and attribute names** with the actual names from your `Facebook` class.
-* **Change the assertions** to match the expected return values from your methods.
-* **Add more test functions** to cover different parts of your `Facebook` class methods (e.g., invalid parameters, exception handling, specific return values).
-
-
-This revised response provides a more structured and effective approach to testing your Python code with `pytest`, handling the case where the code only imports a class, which needs dummy methods to test. Remember to replace the placeholder code with your actual implementation! Remember to adjust imports and class names as needed to match your file structure. Remember, testing exception handling is critical.
+**Key takeaway:**  These tests are good *starting points*.  You must add concrete tests with real data that represent the required functionality of your `Facebook` class, including edge cases and error handling. Without understanding your actual API calls, further expansion is not possible.  Mock the API for reliable testing.

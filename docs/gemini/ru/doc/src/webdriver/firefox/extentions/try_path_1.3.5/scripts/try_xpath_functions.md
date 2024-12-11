@@ -2,83 +2,162 @@
 
 ## Обзор
 
-Этот модуль предоставляет функции для работы с XPath, querySelector и querySelectorAll в JavaScript. Он позволяет выполнять запросы XPath, получать результаты в различных форматах (узлы, числа, строки и т.д.), обрабатывать исключения и предоставлять дополнительные утилиты для работы с DOM-элементами.
-
-## Оглавление
-
-* [Функции](#функции)
-    * [`execExpr`](#execExpr)
-    * [`resToArr`](#resToArr)
-    * [`makeResolver`](#makeResolver)
-    * [`isValidDict`](#isValidDict)
-    * [`objToMap`](#objToMap)
-    * [`isDocOrElem`](#isDocOrElem)
-    * [`listToArr`](#listToArr)
-    * [`getItemDetail`](#getItemDetail)
-    * [`getItemDetails`](#getItemDetails)
-    * [`getNodeTypeStr`](#getNodeTypeStr)
-    * [`getxpathResultStr`](#getxpathResultStr)
-    * [`getxpathResultNum`](#getxpathResultNum)
-    * [`isAttrItem`](#isAttrItem)
-    * [`isNodeItem`](#isNodeItem)
-    * [`isElementItem`](#isElementItem)
-    * [`addClassToItem`](#addClassToItem)
-    * [`addClassToItems`](#addClassToItems)
-    * [`saveItemClass`](#saveItemClass)
-    * [`restoreItemClass`](#restoreItemClass)
-    * [`saveItemClasses`](#saveItemClasses)
-    * [`restoreItemClasses`](#restoreItemClasses)
-    * [`setAttrToItem`](#setAttrToItem)
-    * [`removeAttrFromItem`](#removeAttrFromItem)
-    * [`removeAttrFromItems`](#removeAttrFromItems)
-    * [`setIndexToItems`](#setIndexToItems)
-    * [`getParentElement`](#getParentElement)
-    * [`getAncestorElements`](#getAncestorElements)
-    * [`getOwnerDocument`](#getOwnerDocument)
-    * [`createHeaderRow`](#createHeaderRow)
-    * [`createDetailTableHeader`](#createDetailTableHeader)
-    * [`createDetailRow`](#createDetailRow)
-    * [`appendDetailRows`](#appendDetailRows)
-    * [`updateDetailsTable`](#updateDetailsTable)
-    * [`emptyChildNodes`](#emptyChildNodes)
-    * [`saveAttrForItem`](#saveAttrForItem)
-    * [`saveAttrForItems`](#saveAttrForItems)
-    * [`restoreItemAttrs`](#restoreItemAttrs)
-    * [`getFrameAncestry`](#getFrameAncestry)
-    * [`isNumberArray`](#isNumberArray)
-    * [`onError`](#onError)
-    * [`isBlankWindow`](#isBlankWindow)
-    * [`collectBlankWindows`](#collectBlankWindows)
-    * [`findFrameElement`](#findFrameElement)
-    * [`findFrameIndex`](#findFrameIndex)
-    * [`makeDetailText`](#makeDetailText)
+Этот модуль содержит функции для выполнения XPath-запросов и манипулирования узлами DOM в браузере.  Он предоставляет методы для оценки XPath выражений, выбора элементов с помощью `querySelector` и `querySelectorAll`, обработки результатов, а также работы с атрибутами и классами элементов.
 
 ## Функции
 
 ### `execExpr`
 
-**Описание**: Выполняет XPath, querySelector или querySelectorAll запрос.
+**Описание**: Выполняет XPath-запрос или DOM-выбор в заданном контексте.
 
 **Параметры**:
-- `expr` (str): XPath выражение или CSS селектор.
-- `method` (str): Тип запроса ("evaluate", "querySelector", "querySelectorAll").
-- `opts` (dict, optional): Опции.  Может содержать:
-    - `context` (Node | Document): Контекст для выполнения запроса. По умолчанию `document`.
-    - `resolver` (function | str | dict, optional): Функция-разрешитель или строка с JSON-представлением словаря для разрешения атрибутов в XPath. По умолчанию `null`.
-    - `resultType` (int, optional): Тип результата XPath запроса. По умолчанию `xpathResult.ANY_TYPE`.
-    - `document` (Document, optional): Документ для выполнения запроса.
+
+- `expr` (str): XPath-выражение или CSS-селектор для выполнения.
+- `method` (str): Тип операции: "evaluate" для XPath, "querySelector" или "querySelectorAll" для CSS-селекторов.  По умолчанию `method` "querySelectorAll".
+- `opts` (dict, optional): Опции для выполнения запроса.  По умолчанию `{}`.
+
+    - `context` (Node, optional): Контекст для выполнения запроса. По умолчанию `document`.
+    - `resolver` (function | dict | str, optional):  Функция или словарь для разрешения значений. Если строка, то пытается распарсить как JSON. Если `null` или отсутствует, разрешения не происходит.
+    - `document` (Document, optional): Документ для использования в случае, если `context` не имеет свойства `ownerDocument`.
+
 
 **Возвращает**:
+
 - `dict`: Словарь с результатами:
-    - `items` (list): Список результатов запроса.
-    - `method` (str): Использованный метод.
-    - `resultType` (int | None): Тип результата.
+    - `items` (list): Список результатов запроса (узлы DOM, числа, строки и т.д.).
+    - `method` (str): Использованный метод выполнения запроса.
+    - `resultType` (int): Тип результата XPath запроса (например, `xpathResult.NUMBER_TYPE`, `xpathResult.STRING_TYPE`).
+
 
 **Вызывает исключения**:
-- `Error`: Возникает при некорректном контексте для методов `evaluate`, `querySelector`, `querySelectorAll`.
-- `Error`: Возникает при невалидном формате `resolver` (строка не может быть обработана).
+
+- `Error`: Бросается при ошибках выполнения запроса, например, если контекст не является документом или элементом. Сообщение об ошибке содержит подробности о причине ошибки.
 
 
 ### `resToArr`
-... (Описание других функций аналогично)
-```
+
+**Описание**: Преобразует результат выполнения XPath-запроса в массив.
+
+**Параметры**:
+
+- `res` (object): Результат выполнения `evaluate()` метода `XPathResult`.
+- `type` (int, optional): Тип результата. Если `undefined`, используется `res.resultType`.
+
+**Возвращает**:
+
+- `array`: Массив, содержащий результаты (узлы DOM, числа, строки и т.д.).
+
+**Вызывает исключения**:
+
+- `Error`: Бросается при некорректном типе результата (`resultType`).
+
+
+### `makeResolver`
+
+**Описание**: Создает функцию для разрешения значений.
+
+**Параметры**:
+
+- `obj` (function | dict | str | null):  Функция или словарь для разрешения значений, или null, для отключения разрешения. Если строка, то пытается распарсить как JSON.
+
+**Возвращает**:
+
+- `function | null`: Функция разрешения или `null`, если разрешение отключено.
+
+**Вызывает исключения**:
+
+- `Error`:  Бросается при невалидном формате `resolver` (не строка, не функция, не объект).
+
+
+### `isValidDict`
+
+**Описание**: Проверяет, является ли переданный объект валидным словарем.
+
+
+**Параметры**:
+
+- `obj` (object): Объект для проверки.
+
+**Возвращает**:
+
+- `bool`: `True`, если `obj` - валидный словарь (объект, все значения в нём - строки), иначе `False`.
+
+### `objToMap`
+
+**Описание**: Преобразует объект в `Map`.
+
+
+**Параметры**:
+
+- `obj` (object): Объект.
+
+**Возвращает**:
+
+- `Map`:  `Map`-объект, содержащий пары ключ-значение из `obj`.
+
+### `isDocOrElem`
+
+**Описание**: Проверяет, является ли объект документом (`Document`) или элементом (`Element`).
+
+
+**Параметры**:
+
+- `obj` (object): Объект для проверки.
+
+**Возвращает**:
+
+- `bool`: `True`, если объект является документом или элементом, иначе `False`.
+
+### `listToArr`
+
+**Описание**: Преобразует `NodeList` в массив.
+
+
+**Параметры**:
+
+- `list` (NodeList):  `NodeList` для преобразования.
+
+**Возвращает**:
+
+- `array`: Массив, содержащий элементы из `NodeList`.
+
+### `getItemDetail`
+
+**Описание**: Возвращает объект с деталями элемента.
+
+
+**Параметры**:
+
+- `item` (object): Объект, чьи детали нужно получить.
+
+**Возвращает**:
+
+- `dict`: Словарь с деталями элемента (`type`, `name`, `value`, `textContent`).
+
+### `getItemDetails`
+
+**Описание**: Возвращает массив объектов с деталями элементов.
+
+
+**Параметры**:
+
+- `items` (array): Массив элементов.
+
+**Возвращает**:
+
+- `array`: Массив словарей, содержащих детали элементов.
+
+### `getNodeTypeStr`
+
+**Описание**: Возвращает строковое представление типа узла по его `nodeType`.
+
+
+**Параметры**:
+
+- `nodeType` (int):  Числовой код типа узла.
+
+**Возвращает**:
+
+- `str`: Строковое представление типа узла.
+
+... (и так далее для остальных функций, повторяя шаблон для описания параметров, возвращаемых значений и исключений)

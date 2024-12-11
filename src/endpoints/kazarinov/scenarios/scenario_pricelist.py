@@ -70,6 +70,10 @@ class MexironBuilder:
     model: GoogleGenerativeAI
     config: SimpleNamespace
 
+    # telegram
+    update: Update 
+    context: CallbackContext
+
     def __init__(self, driver: Driver, mexiron_name: Optional[str] = None):
         """
         Initializes Mexiron class with required components.
@@ -112,11 +116,12 @@ class MexironBuilder:
 
     async def run_scenario(
         self, 
-        system_instruction: Optional[str] = None, 
-        price: Optional[str] = None, 
-        mexiron_name: Optional[str] = None, 
-        urls: Optional[str | List[str]] = None,
-        bot  = None, 
+        update: Update, 
+        context: CallbackContext,
+        urls: list[str],
+        price: Optional[str] = '', 
+        mexiron_name: Optional[str] = '', 
+        
     ) -> bool:
         """
         Executes the scenario: parses products, processes them via AI, and stores data.
@@ -153,12 +158,10 @@ flowchart TD
 
 ```
         """
-        urls_list = [urls] if isinstance(urls, str) else urls
-        if not urls_list:
-            logger.debug('No URLs provided for parsing.')
-            ...
-            return False
+        self.update = update
+        self.context = context
 
+        # Не все поля товара надо заполнять. Вот кортеж необходимых полей:
         required_fields:tuple = ('id_product',
                                  'name',
                                  'description_short',
@@ -167,14 +170,17 @@ flowchart TD
                                  'local_saved_image')
         products_list = []
 
-        for url in urls_list:
-            # await update.message.reply_text(f"Старт: {url}")
-            graber = self.get_graber_by_supplier_url(url)
+        for url in urls:
+
+            graber = self.get_graber_by_supplier_url(url) 
+            
             if not graber:
+                logger.debug(f"Нет грабера для:\n{url}", None, False)
                 ...
                 continue
 
             try:
+                await update.message.reply_text(f'Strat parsing: /n{url}')
                 f = await graber.grab_page(*required_fields)
                 if gs.host_name == 'Vostro-3888':
                     self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
@@ -201,29 +207,32 @@ flowchart TD
             products_list.append(product_data)    
 
         # AI processing
-        he = await self.process_ai(products_list,'he')
-        ru = await self.process_ai(products_list,'ru')
-        """ сырые данные уходят в обработку моделью (`gemini`) -> 
+        """ список компонентов сборки компьютера уходит в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
+        await update.message.reply_text(f"Start processing AI. lang = he")
+        he = await self.process_ai(products_list,'he')
 
-        if he:
-            if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
-                logger.error(f'Ошибка сохранения словаря `he`')
-                ...
-        if ru:        
-            if not j_dumps(ru, self.export_path / f'{self.mexiron_name}_ru.json'):
-                logger.error(f'Ошибка сохранения словаря `ru`')
-                ...
-            await self.create_report(he, Path(self.export_path/f'{self.mexiron_name}_he.html'), Path(self.export_path/f'{self.mexiron_name}_he.pdf'))
+        await update.message.reply_text(f"Start processing AI. lang = he")
+        ru = await self.process_ai(products_list,'ru')
 
-            await self.create_report(ru, Path(self.export_path/f'{self.mexiron_name}_ru.html'), Path(self.export_path/f'{self.mexiron_name}_ru.pdf'))
-            
-            # await self.post_facebook(he)
-            # await self.post_facebook(ru)
-            return True
+
+        if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
+            logger.error(f'Ошибка сохранения словаря `he`', None, False)
+            ...
+                
+        if not j_dumps(ru, self.export_path / f'{self.mexiron_name}_ru.json'):
+            logger.error(f'Ошибка сохранения словаря `ru`', None, False)
+            ...
+
+        if not await self.create_report(he, Path(self.export_path/f'{self.mexiron_name}_he.html'), Path(self.export_path/f'{self.mexiron_name}_he.pdf')):
+            logger.error(f"Ошибка создания PDF: {self.mexiron_name}_he.pdf", None, False)
+            ...
+
+        if not await self.create_report(ru, Path(self.export_path/f'{self.mexiron_name}_ru.html'), Path(self.export_path/f'{self.mexiron_name}_ru.pdf')):
+            logger.error(f"Ошибка создания PDF: {self.mexiron_name}_ru.pdf", None, False)
         ...
-        return 
+        return True 
 
 
     def get_graber_by_supplier_url(self, url: str):
@@ -261,14 +270,18 @@ flowchart TD
 
         Returns:
             dict: Formatted product data dictionary.
+
+        .. note:: Правила построения полей определяются в `ProductFields`
         """
 
+
+
         return {
-            'product_title': f.name['language'][0]['value'].strip(),
+            'product_title': f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
             'product_id': f.id_product,
-            'description_short': f.description_short['language'][0]['value'].strip(),
-            'description': f.description['language'][0]['value'].strip(),
-            'specification': f.specification['language'][0]['value'].strip(),
+            'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
+            'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
+            'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
             'local_saved_image': str(f.local_saved_image),
         }
 

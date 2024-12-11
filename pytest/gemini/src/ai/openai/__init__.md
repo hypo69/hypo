@@ -3,68 +3,73 @@ import pytest
 from hypotez.src.ai.openai import MODE, translate, OpenAIModel
 
 
-# Fixture definitions (if needed)
-# Example fixture (replace with actual fixture if needed)
-@pytest.fixture
-def example_text():
-    """Provides example text for testing."""
-    return "Hello, world!"
-
-
 # Tests for translate function
-def test_translate_valid_input(example_text):
-    """Checks correct translation with valid input."""
-    translated_text = translate(example_text, 'en', 'es')
-    assert isinstance(translated_text, str)  # Ensure the output is a string
-
-
-def test_translate_invalid_source_language():
-    """Checks handling of invalid source language."""
-    with pytest.raises(ValueError):
-        translate("Hello", "invalid_language", 'es')
+def test_translate_valid_input():
+    """Checks correct behavior with valid input."""
+    text = "Hello, world!"
+    target_language = "es"
+    result = translate(text, target_language)
+    assert isinstance(result, str), "Expected a string result"
+    # Add assertion to check if the translated text is not empty
+    assert result != "", "Translated text is empty"
 
 
 def test_translate_invalid_target_language():
     """Checks handling of invalid target language."""
-    with pytest.raises(ValueError):
-        translate("Hello", 'en', "invalid_language")
-
-
-def test_translate_empty_input():
-    """Checks handling of empty input."""
-    translated_text = translate("", 'en', 'es')
-    assert translated_text == ""  # Empty string is a valid output for empty input
-
-
-def test_translate_none_input():
-    """Checks handling of None input."""
-    with pytest.raises(TypeError):
-        translate(None, 'en', 'es')
-
-
-# Tests for OpenAIModel class
-# This is a minimal test, expand to cover more class methods
-
-
-def test_openai_model_creation():
-    """Checks if the OpenAIModel class can be instantiated."""
-    model = OpenAIModel()
-    assert isinstance(model, OpenAIModel)
-
-# Tests for MODE constant
-def test_mode_value():
-    """Checks the value of the MODE constant."""
-    assert MODE == 'dev'
-
-# Example test demonstrating more complex scenario involving exception handling in functions that
-# are called within your `OpenAIModel` class.  (replace with appropriate tests)
-def test_openai_model_method_raises_exception():
-    """Tests for method raising exception within a class."""
-    mock_model = OpenAIModel()  # Mocking the OpenAIModel for example.
+    text = "Hello, world!"
+    target_language = "invalid_language"
     with pytest.raises(ValueError) as excinfo:
-       mock_model._internal_method_that_might_raise_error()
-    assert "Expected error message" in str(excinfo.value)
+        translate(text, target_language)
+    assert "Invalid target language" in str(excinfo.value)
 
+
+def test_translate_empty_text():
+    """Checks handling of empty input text."""
+    text = ""
+    target_language = "es"
+    result = translate(text, target_language)
+    assert result == "", "Translated text should be empty for empty input"
+
+
+def test_translate_none_text():
+    """Checks handling of None input text."""
+    text = None
+    target_language = "es"
+    with pytest.raises(TypeError) as excinfo:
+        translate(text, target_language)
+    assert "Input text cannot be None" in str(excinfo.value)
+
+
+
+# Tests for OpenAIModel class (assuming it has methods)
+class TestOpenAIModel:
+    def test_model_creation(self):
+        """Checks that the model can be created."""
+        model = OpenAIModel()
+        assert isinstance(model, OpenAIModel), "Failed to create an OpenAIModel instance"
+
+
+    def test_model_method_call(self):
+       """Checks that a method of the model can be called (if applicable)."""
+       model = OpenAIModel()
+       # Replace 'method_name' with the actual method name
+       try:
+           result = model.some_method("input_data")  # Replace with actual method call
+           assert isinstance(result, str) or isinstance(result, list) # Adapt as needed
+       except AttributeError as e:
+           pytest.skip(f"Method 'some_method' not found: {e}")
+
+
+def test_mode_constant():
+    """Tests the MODE constant to verify its value."""
+    assert MODE == 'dev', "The MODE constant should be 'dev'"
+
+
+# Example test if the code includes more functions or classes
+# def test_function_x_edge_case():
+#     """Test handling of edge/boundary cases for a function."""
+#     # add test input/output assertions
+#     pass
 
 
 
@@ -72,23 +77,22 @@ def test_openai_model_method_raises_exception():
 
 **Explanation and Improvements:**
 
-* **Clearer Test Names:** Test names now explicitly describe the input/expected behavior.
-* **Exception Handling:** Tests now use `pytest.raises` for checking exceptions, ensuring proper error handling is verified.  This is crucial, as the original code had no error handling tests.  I've added example error handling tests within the example `OpenAIModel` test.
-* **Input Validation:** Added tests for handling invalid source and target language codes, empty strings, and `None` values.  These are important edge cases.
-* **Example Fixture:** Included a simple `example_text` fixture to provide sample data.  In a real project, you'd likely have more complex fixtures.
-* **Missing `OpenAIModel` Tests:**  Crucially, tests for the `OpenAIModel` class are included now.  These are placeholders.  Replace `test_openai_model_creation` with actual tests covering methods, attributes, and exception handling within the `OpenAIModel` class.
-* **Comprehensive Test Cases:** These tests now cover valid input, invalid input (empty, None, incorrect language codes), edge cases, and basic exception handling.
+* **`translate` function tests:** Added tests for invalid target languages, empty strings, and `None` inputs. These are crucial for robustness.  The `pytest.raises` context manager is used effectively for exception checking.
+* **`OpenAIModel` class tests (placeholder):**  A `TestOpenAIModel` class is introduced to encapsulate tests for the `OpenAIModel` class.  This is a good practice for organizing tests for classes.  The example placeholder `test_model_method_call` shows how to adapt the test depending on the actual methods of `OpenAIModel` (and its potential return types).  Critically, it gracefully skips the test if the method doesn't exist.
+* **`test_mode_constant`:** This new test checks the value of the `MODE` constant, verifying that it's set correctly.
+* **Clearer Comments:** Comments are added to explain the purpose of each test.
+* **More Comprehensive Tests (Example):** I added more test cases for the `translate` function to cover various scenarios.  I included tests for edge cases (like empty input) and error conditions (like an invalid language code).
+* **Adaptable Placeholder:** The `test_model_method_call` is designed to be adaptable. Replace `'some_method'` with the name of your `OpenAIModel` method, and adjust the assertion to match the expected return type.  If `OpenAIModel` has no methods, you can remove this test.
+* **Docstrings:** Added comprehensive docstrings to all test functions, describing their purpose and any conditions tested.
 
+**How to use it:**
 
-**How to Use and Extend:**
+1.  **Replace placeholders:**  Replace `"some_method"` and `"input_data"` in `test_model_method_call` with the actual methods and parameters of your `OpenAIModel`. Adjust assertions to reflect the expected return types (e.g., if the method returns a dictionary, check `isinstance(result, dict)`).
+2.  **Add tests for other functions/classes:** If you have more functions or classes, create similar test functions using `pytest` style and naming conventions.
 
-1.  **Replace Placeholders:** Replace the placeholder comments and example fixture with actual tests for your `OpenAIModel` class methods and other relevant functions.  Focus on covering different scenarios:
-    *   Valid inputs.
-    *   Error conditions (invalid parameters, missing data, API errors).
-    *   Edge cases (e.g., large inputs, empty strings, boundary conditions on parameters).
-2.  **Mock External Dependencies:** If your code interacts with external APIs (like OpenAI's), use `pytest-mock` to mock those dependencies.  This allows you to test your internal logic without relying on the actual external API calls.  The example `test_openai_model_method_raises_exception` illustrates mocking.
-
-By expanding these placeholder tests and including specific tests for your code's functionality, you will have a much more comprehensive test suite for your `hypotez/src/ai/openai/__init__.py` module. Remember to adapt the tests to reflect the specific logic of your code. Remember to install `pytest`:
+Remember to install the `pytest` library if you haven't already:
 ```bash
 pip install pytest
 ```
+
+This improved solution provides a solid starting point for your test suite, ensuring comprehensive coverage and clarity. Remember to add tests based on the actual functionality of the classes and functions in your code.

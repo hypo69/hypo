@@ -7,7 +7,7 @@
 	:platform: Windows, Unix
 	:synopsis: Обработка событий телеграм бота
 
-Модуль для работы с событиями телеграм-бота
+Обработчик собтий телеграм-бота  `kazarinov_bot`
 =========================================================================================
 
 Этот модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab
@@ -83,8 +83,8 @@ class BotHandler:
             if not urls:
                 await update.message.reply_text('Некорректные данные.')
 
-            if await self.mexiron.run_scenario(price=price, mexiron_name=mexiron_name, urls=urls, bot = super()):
-                await update.message.reply_text('Готово!\nСсылку я вышлю на WhatsApp')
+            if await self.mexiron.run_scenario( update=update, context=context, urls=urls if isinstance (urls, list) else [urls], price=price, mexiron_name=mexiron_name  ):
+                await update.message.reply_text('Готово!')
                 return True
         else:
             await update.message.reply_text('Ошибка. Попробуй ещё раз.')
@@ -144,12 +144,12 @@ class BotHandler:
 
             if not data:
                 ...
-                price = None
+                price = ''
                 mexiron_name = gs.now
             else:
                 # Разбивка данных на цену и имя
                 parts = data.split(maxsplit=1)
-                price = int(parts[0]) or None
+                price = int(parts[0]) or ''
                 mexiron_name = parts[1] if len(parts) > 1 else gs.now
 
             return price, mexiron_name, urls

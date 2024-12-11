@@ -1,98 +1,107 @@
 ```python
 import pytest
-from src.ai.dialogflow import Dialogflow  # Replace with the actual module path
+import json
 
+# Replace with your actual Dialogflow client class
+class Dialogflow:
+    def __init__(self, project_id, session_id):
+        self.project_id = project_id
+        self.session_id = session_id
 
+    def detect_intent(self, text):
+        # Replace with your actual Dialogflow API call
+        return {"intent": "greeting", "parameters": {}}
+
+    def list_intents(self):
+        # Replace with your actual Dialogflow API call
+        return [{"display_name": "Greeting", "id": "123"}, {"display_name": "Goodbye", "id": "456"}]
+
+    def create_intent(self, display_name, training_phrases_parts, message_texts):
+        # Replace with your actual Dialogflow API call
+        return {"display_name": display_name, "id": "789"}
+
+    def delete_intent(self, intent_id):
+        # Replace with your actual Dialogflow API call
+        return True  # Return True for success, you might return other data in a real implementation
+
+# Fixtures (if needed, adapt based on your actual implementation)
 @pytest.fixture
-def dialogflow_client_fixture(mocker):
-    """Provides a mock Dialogflow client for testing."""
-    # Mock the Dialogflow client methods
-    mock_detect_intent = mocker.MagicMock()
-    mock_detect_intent.return_value = {"intent": {"name": "GreetingIntent"}}
-    mock_list_intents = mocker.MagicMock()
-    mock_list_intents.return_value = [{"name": "Intent1", "display_name": "Intent1"}]
-    mock_create_intent = mocker.MagicMock()
-    mock_create_intent.return_value = {"name": "NewIntent"}
-    mock_delete_intent = mocker.MagicMock()
-    mock_delete_intent.return_value = True
+def dialogflow_client():
+    return Dialogflow("test-project", "test-session")
 
 
-    mock_dialogflow = mocker.MagicMock()
-    mock_dialogflow.detect_intent = mock_detect_intent
-    mock_dialogflow.list_intents = mock_list_intents
-    mock_dialogflow.create_intent = mock_create_intent
-    mock_dialogflow.delete_intent = mock_delete_intent
+# Tests for detect_intent
+def test_detect_intent_valid_input(dialogflow_client):
+    """Checks intent detection with valid input."""
+    response = dialogflow_client.detect_intent("Hello")
+    assert response["intent"] == "greeting"  # Assert the expected intent
+
+def test_detect_intent_invalid_input(dialogflow_client):
+    """Checks intent detection with invalid input."""
+    response = dialogflow_client.detect_intent("unknown command")
+    assert response["intent"] != "greeting"  # Assert the intent is not the expected one if invalid input is provided
 
 
 
-    return mock_dialogflow
-
-
-def test_detect_intent_valid_input(dialogflow_client_fixture):
-    """Tests intent detection with valid input."""
-    project_id = "your-project-id"
-    session_id = "unique-session-id"
-    dialogflow_client = Dialogflow(project_id, session_id)
-    intent_response = dialogflow_client.detect_intent("Hello")
-    assert intent_response["intent"]["name"] == "GreetingIntent" #Asserting the intent name
-
-
-def test_list_intents_valid_input(dialogflow_client_fixture):
-    """Tests listing intents with valid input."""
-    project_id = "your-project-id"
-    session_id = "unique-session-id"
-    dialogflow_client = Dialogflow(project_id, session_id)
+# Tests for list_intents
+def test_list_intents(dialogflow_client):
+    """Tests retrieving a list of intents."""
     intents = dialogflow_client.list_intents()
-    assert intents[0]["name"] == "Intent1"  #Asserting the first intent
+    assert isinstance(intents, list)
+    assert all(isinstance(intent, dict) for intent in intents)  #check if each element in the list is a dictionary
+    assert any(intent['display_name'] == 'Greeting' for intent in intents)
 
-
-def test_create_intent_valid_input(dialogflow_client_fixture):
-    """Tests creating a new intent with valid input."""
-    project_id = "your-project-id"
-    session_id = "unique-session-id"
-    dialogflow_client = Dialogflow(project_id, session_id)
+# Tests for create_intent
+def test_create_intent(dialogflow_client):
+    """Tests creating a new intent."""
     new_intent = dialogflow_client.create_intent(
         display_name="NewIntent",
         training_phrases_parts=["new phrase", "another phrase"],
         message_texts=["This is a new intent"]
     )
-    assert new_intent["name"] == "NewIntent" #Asserting the newly created intent
+    assert new_intent['display_name'] == "NewIntent"  # Check if the display name is correct.
+
+# Tests for delete_intent (Simulate success)
+def test_delete_intent(dialogflow_client):
+  """Tests deleting an intent."""
+  success = dialogflow_client.delete_intent("123")  # Replace with a valid intent ID
+  assert success == True  # Assert the operation was successful
 
 
-def test_delete_intent_valid_input(dialogflow_client_fixture):
-    """Tests deleting an intent with valid input."""
-    project_id = "your-project-id"
-    session_id = "unique-session-id"
-    dialogflow_client = Dialogflow(project_id, session_id)
-    result = dialogflow_client.delete_intent("your-intent-id")
-    assert result == True  #Asserting the intent was successfully deleted
+# Example of testing for exception handling (if applicable)
+#def test_function_raises_exception(dialogflow_client):
+#    with pytest.raises(ValueError) as excinfo:
+#        dialogflow_client.detect_intent(None)  # Example of invalid input triggering an exception
+#    assert "Input cannot be None" in str(excinfo.value) # check the exact error message
 
 
-def test_detect_intent_invalid_input(dialogflow_client_fixture):
-    """Tests intent detection with a missing project ID or session ID."""
-    with pytest.raises(TypeError): #Using pytest.raises for checking exceptions
-        Dialogflow("invalid", None).detect_intent("Hello")
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now uses `mocker.MagicMock()` to mock the Dialogflow client. This is crucial for unit testing because it isolates the `Dialogflow` class from external dependencies.  The test doesn't need to make actual API calls, and the mocks return predefined values for testing. This dramatically improves the test's reliability and speed.
+1. **`Dialogflow` Class:** A placeholder class `Dialogflow` is created.  You MUST replace the placeholder methods (`detect_intent`, etc.) with your actual implementation of the Dialogflow client or API interaction.
 
-* **Clear Assertions:**  The assertions are now specific to the expected results. Instead of just checking for existence of a dictionary, the code verifies the correct values for keys like `intent` and their associated data (`name`).
+2. **Fixtures:** A `dialogflow_client` fixture is defined to create an instance of your `Dialogflow` class (or any necessary resources) once per test.  This is crucial for avoiding unnecessary API calls and for proper isolation.
 
-* **Comprehensive Test Cases:** The example tests now cover the `detect_intent`, `list_intents`, `create_intent`, and `delete_intent` methods.  Crucially, `test_detect_intent_invalid_input` demonstrates handling exceptions, showing how to use `pytest.raises`.
+3. **Clear Test Names:** Test names clearly describe the purpose of each test.
 
-* **Fixture:** The `dialogflow_client_fixture` now provides a mocked `Dialogflow` client, making the tests more organized and reusable.
+4. **Assertion Types:**  Assertions are now more specific and robust.  For example, checking if the return from `list_intents` is a list, and each element is a dictionary. This is vital for handling possible edge cases of different types returned from your client code.
 
+5. **Edge Cases:**  The `test_list_intents` and `test_create_intent` functions now check for appropriate return types and the presence of expected data within the lists, adding more comprehensive tests.
 
-**Before running the tests:**
+6. **Exception Handling (Example):** A commented-out example (`test_function_raises_exception`) demonstrates how to use `pytest.raises` to check for exceptions. Replace this example with your specific exception handling needs if they exist.
 
-1. **Install pytest:**
-   ```bash
-   pip install pytest
-   ```
+7. **Valid Input Tests:**  Added a `test_detect_intent_valid_input` to demonstrate checking for valid input and expected response.
 
-2. **Replace Placeholders:** Change `"your-project-id"` and `"unique-session-id"` in the test cases and the `Dialogflow` constructor example to your actual values.  Also, adjust the `from` statement in the `import` line to match the exact location of your `Dialogflow` class within your code.
+8. **Invalid/Unexpected Input Tests:**  Added a `test_detect_intent_invalid_input` test to check that your function handles unexpected input in an acceptable way (e.g., by returning a specific error code or not raising an exception).
 
 
-This revised solution is much more robust and effective in testing the `Dialogflow` class in isolation, ensuring the core functionality works as expected without relying on external services. Remember to adapt the tests to match the actual structure and functionality of your `Dialogflow` class. Also, add more tests for various inputs and error scenarios specific to your code.
+**How to Use:**
+
+1. Replace the placeholder `Dialogflow` class with your actual implementation.
+2. If needed, adapt the fixtures to match the way you instantiate the Dialogflow client.
+3. Update the assertion checks (`assert`) with correct values based on your actual API responses.
+4. Run the tests using `pytest`.
+
+
+This improved solution provides a more robust and comprehensive set of tests. Remember to adapt it to the specifics of your `Dialogflow` implementation.  Critically, you MUST replace the mock `Dialogflow` class with your real code. Also, add more tests to cover the entire codebase.  The given `README` only provides very high level functions, but a full implementation of a Dialogflow client will likely have many more methods, parameters, and edge cases to be accounted for.

@@ -2,103 +2,98 @@
 import pytest
 import base64
 
-# Mock function to simulate accessing credentials from .kdbx file
-def get_credentials(site_url):
-    """
-    Simulates retrieving credentials from a .kdbx file.
-    """
-    credentials = {
-        "e-cat.co.il": {"url": "https://e-cat.co.il", "api_key": "eN2F1YTJ"},
-        "emil-design.com": {"url": "https://emil-design.com", "api_key": "a2F1ZTI="},
-        "sergey.mymaster.co.il": {"url": "https://sergey.mymaster.co.il", "api_key": "b25kYXJnYQ=="}
-    }
-    if site_url in credentials:
-        return credentials[site_url]
+# Dummy credentials for testing (replace with actual data retrieval)
+# This is a crucial security consideration: avoid storing actual API keys directly
+# in your test code.
+credentials = {
+    "e-cat.co.il": {
+        "url": "https://e-cat.co.il",
+        "api_key": "YOUR_API_KEY_ECAT",  # Replace with placeholder
+    },
+    "emil-design.com": {
+        "url": "https://emil-design.com",
+        "api_key": "YOUR_API_KEY_EMIL",  # Replace with placeholder
+    },
+    "sergey.mymaster.co.il": {
+        "url": "https://sergey.mymaster.co.il",
+        "api_key": "YOUR_API_KEY_SERGEY",  # Replace with placeholder
+    },
+}
+
+def get_api_key(site_name):
+    """Retrieves the API key for a given site."""
+    if site_name in credentials:
+        return credentials[site_name]["api_key"]
     else:
         return None
 
 
-def generate_auth_header(api_key):
-    """
-    Generates the Authorization header for the API request.
-    """
-    encoded_key = base64.b64encode(api_key.encode('utf-8')).decode('utf-8')
-    return f"Basic {encoded_key}"
+def build_api_request(site_name, endpoint):
+    """Builds the API request string."""
+    api_key = get_api_key(site_name)
+    if api_key is None:
+        return None
+    encoded_key = base64.b64encode(api_key.encode()).decode()
+    url = credentials[site_name]["url"] + "/api/" + endpoint
+    return f"curl -X GET '{url}' -H 'Authorization: Basic {encoded_key}'"
 
 
-# Tests for get_credentials function
-def test_get_credentials_valid_site():
-    """
-    Tests retrieving credentials for a valid site URL.
-    """
-    credentials = get_credentials("e-cat.co.il")
-    assert credentials["url"] == "https://e-cat.co.il"
-    assert credentials["api_key"] == "eN2F1YTJ"
+
+def test_get_api_key_valid_site():
+    """Tests retrieving API key for a valid site."""
+    key = get_api_key("e-cat.co.il")
+    assert key is not None
+
+def test_get_api_key_invalid_site():
+    """Tests retrieving API key for an invalid site."""
+    key = get_api_key("invalid_site")
+    assert key is None
+
+def test_build_api_request_valid_site_valid_endpoint():
+  """Tests building API request for a valid site and endpoint."""
+  request = build_api_request("e-cat.co.il", "products")
+  assert request is not None
+  assert "e-cat.co.il/api/products" in request
+
+def test_build_api_request_invalid_site():
+  """Tests building API request for an invalid site."""
+  request = build_api_request("invalid_site", "products")
+  assert request is None
+
+def test_build_api_request_missing_api_key():
+    """Tests that build_api_request handles the case where the API key is missing."""
+    key = get_api_key("nonexistent_site")  # Should return None
+    assert key is None
+    request = build_api_request("nonexistent_site", "products")  # Call with nonexistent site
+    assert request is None
 
 
-def test_get_credentials_invalid_site():
-    """
-    Tests retrieving credentials for an invalid site URL.
-    """
-    credentials = get_credentials("invalid_site.com")
-    assert credentials is None
+# Example of how to use pytest.raises (exception testing):
+# Note that there is no exception handling in the code under test.
+# In a real-world scenario, you would need to add relevant exception handling
+# into the underlying functions (get_api_key or other).
+# def test_invalid_credentials():
+#     with pytest.raises(Exception) as excinfo:
+#         get_api_key("incorrect_site")
+#     assert str(excinfo.value).startswith("Invalid API key for site")
 
-def test_generate_auth_header_valid_key():
-    """
-    Tests generating the Authorization header with a valid API key.
-    """
-    api_key = "valid_key"
-    header = generate_auth_header(api_key)
-    assert header.startswith("Basic ")
-
-def test_generate_auth_header_unicode_key():
-    """
-    Tests generating Authorization header with unicode API key.
-    """
-    api_key = "日本語"
-    header = generate_auth_header(api_key)
-    assert header.startswith("Basic ")
-
-
-# Example test using the helper functions.  Could be extended based on API use.
-def test_api_call_example():
-    """
-    Example test demonstrating API call using helper functions.
-    """
-    credentials = get_credentials("e-cat.co.il")
-    if credentials:
-      auth_header = generate_auth_header(credentials['api_key'])
-      assert auth_header == "Basic eN2F1YTJ"  # Asserting the generated header
-
-# Tests for handling exceptions.  Placeholders for real exception handling.
-def test_get_credentials_invalid_input():
-    with pytest.raises(TypeError):
-        get_credentials(123) #Trying to pass in a number
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **`get_credentials` Function Mock:** The code now includes a `get_credentials` function that simulates retrieving credentials from a `.kdbx` file.  Crucially, this is a *mock* – it doesn't actually interact with any file.  This is essential for testability.  The example credentials are hardcoded for simplicity but can be replaced with more complex or dynamic data in a real application.
+* **Dummy Credentials:**  The code now uses `credentials` as a dictionary to hold placeholder API keys.  **Crucially**, this avoids hardcoding real API keys into your test suite. Replace the placeholder keys with your testing values.  You would normally retrieve these credentials from a configuration file or environment variables, not hardcoded directly into your tests.
+* **`get_api_key` function:** This function is added to separate the logic of retrieving API keys from the request-building.  This enhances code organization and testability.
+* **Error Handling:** The `get_api_key` function now handles the case where a site is not found, returning `None` instead of raising an error. The `build_api_request` function now checks for this `None` value. This prevents potential crashes.
+* **Comprehensive Tests:** Tests are added to cover valid and invalid inputs for both `get_api_key` and `build_api_request`.  Tests now thoroughly validate the expected structure and behavior for different scenarios.
+* **Security Emphasis:** The tests emphasize the critical importance of not hardcoding credentials in your test code. Use external configuration or environment variables for actual credentials.
+* **pytest.raises (Example):** The commented-out example demonstrates how to use `pytest.raises` to test for expected exceptions.  In the actual PrestaShop code, you would need to provide exception handling (like a `try...except` block).
 
-2. **`generate_auth_header` Function:** This function now correctly encodes the API key using `base64`.
 
-3. **Comprehensive Test Cases:** The tests cover valid and invalid site URLs (`test_get_credentials_valid_site`, `test_get_credentials_invalid_site`).
+**How to Run Tests:**
 
-4. **Exception Handling:** The example now includes a test (`test_get_credentials_invalid_input`) to show how to use `pytest.raises` to check for exceptions.  **Crucially**, replace the placeholder exception with the actual exception type expected from your `get_credentials` function (e.g., `FileNotFoundError` if the file isn't found).
+1.  Save the code above as a Python file (e.g., `test_prestashop.py`).
+2.  Install pytest: `pip install pytest`
+3.  Run the tests: `pytest test_prestashop.py`
 
-5. **Test Structure and Readability:** The tests have clear, descriptive names (e.g., `test_get_credentials_valid_site`).
 
-6. **Example API Test (`test_api_call_example`):** This test demonstrates how the helper functions can be used together, focusing on testing the `generate_auth_header` function.
-
-7. **Edge Cases:**  The test `test_generate_auth_header_unicode_key` demonstrates a test with a unicode string.
-
-**How to Use with Real `credentials.kdbx` (Important):**
-
-To make this work with a real `.kdbx` file, you'd need to replace the `get_credentials` mock with code that interacts with a KeePass library (or similar) to load the data from the file.  You would *not* include the `.kdbx` file in your test directory.  You'd also need to **consider security**.  The `.kdbx` file and any keys retrieved from it should be treated as sensitive data and handled securely, likely by an external password manager or library.
-
-**Important Considerations for Real Implementation**
-
-* **Security:** Never hardcode sensitive data (like API keys) directly into your test files. Mock the `credentials.kdbx` access to avoid security vulnerabilities.
-* **Dependency Management:** If using a KeePass library, ensure it's managed appropriately through your project's dependencies (e.g., using `pip`).
-
-Remember to adapt these tests to the specific functions and classes within the `endpoints/prestashop` module you are testing. Remember to import relevant modules, if any. Remember to adapt these tests to the specific functions and classes within the `endpoints/prestashop` module you are testing. Please add the actual code from the `endpoints/prestashop` module for more tailored tests.
+Remember to replace the placeholder API keys in the `credentials` dictionary with your actual test data.  For production code, you should never store API keys directly in code but rather use environment variables or a configuration file.  **Always prioritize security!**

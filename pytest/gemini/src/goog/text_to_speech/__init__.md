@@ -4,80 +4,55 @@ import pyttsx3
 from gtts import gTTS
 from hypotez.src.goog.text_to_speech import TTS
 
+# Test fixture for TTS object
+@pytest.fixture
+def tts_instance():
+    return TTS()
 
-# Fixture definitions (if needed)
-# No fixtures are required for these tests.
+
+def test_tts_creation(tts_instance):
+    """Test the TTS class initialization."""
+    # Check if the TTS object is created successfully.  
+    assert isinstance(tts_instance, TTS)
+    # Assert that pyttsx3 is successfully initialized 
+    assert isinstance(tts_instance._tts, pyttsx3.Engine)
 
 
-# Tests for the TTS class
-def test_tts_object_creation():
-    """Checks if the TTS object is created successfully."""
-    tts_object = TTS()
-    assert isinstance(tts_object, TTS)
+def test_voices_retrieval(tts_instance):
+    """Test voice retrieval."""
+    # Check if voices property is accessible and not None.
+    voices = tts_instance._tts.getProperty('voices')
+    assert voices is not None
+    # Check if voices is a list.  
+    assert isinstance(voices, list)
+    # Check if voices contains at least one voice (crucial for a TTS engine).
+    assert len(voices) > 0
     
-    #Checking if pyttsx3 is initialized
-    assert hasattr(tts_object, '_tts')
-    assert isinstance(tts_object._tts, pyttsx3.Engine)
+    # Accessing a voice (crucial as it is a getter, not a setter).
+    # The `0` index is a reasonable way to check a voice exists.
+    assert voices[0] is not None
 
-
-def test_voices_are_printed():
-    """Checks if the voices property is correctly accessed and printed."""
-    tts_object = TTS()
+def test_voice_printing(tts_instance):
+    """Test that the voices are printed during initialization (a side effect)."""
+    # Since this is a side-effect-based test, we need to check the output. 
+    # Capture stdout to check the output of print statements.
+    import io
+    from contextlib import redirect_stdout
     
-    # Ensure that the print statements within the __init__ method are executed without errors.
-    # The print statements are just informational, so we don't need to verify their output directly.
-    # We only need to check that no errors occur during initialization.
+    captured_output = io.StringIO()
+    with redirect_stdout(captured_output):
+        tts_instance._tts.getProperty('voices')
+
+    output = captured_output.getvalue()
     
-    # Using a try-except block to avoid failing the test if print statements are not functioning as expected.
-    try:
-        tts_object = TTS()
-    except Exception as e:
-        pytest.fail(f"Error during TTS initialization: {e}")
+    # Check that at least one voice's information was printed.
+    assert "name" in output
 
 
-# Test for potential exceptions (if any)
-def test_tts_exception():
-    """Tests if any exceptions are raised during initialization."""
-    
-    # This tests for potential exceptions that might be raised during the initialization of pyttsx3
-    # or gtts, even if we don't explicitly expect them based on the provided code.
-    with pytest.raises((AttributeError, RuntimeError)):
-        # Simulate incorrect usage or a missing dependency to trigger an expected exception.
-        # Ideally, these should be replaced with more relevant error cases based on the actual code and potential problems.
-        # Using a class that doesn't exist
-        dummy_class = "nonexistentclass"
-        TTS(dummy_class)
+# Test cases covering potential exceptions are excluded since
+# the current code doesn't have error handling mechanisms.
+# Adding exceptions to the init method of the class could allow for
+# the tests below.
 
-# If any additional functions or methods exist in the code,
-# add test cases similar to these examples.  Make sure to test 
-# edge cases or invalid input conditions appropriately.
+
 ```
-
-**Explanation and Improvements:**
-
-1. **Clear Test Names:**  Test names like `test_tts_object_creation` clearly indicate the purpose of each test.
-
-2. **Robust Exception Handling:** The `test_tts_exception` function uses `pytest.raises` to check for expected exceptions during initialization. This is crucial for robust testing.  The example in the provided code was inadequate; this is a better and more comprehensive example.
-
-3. **Avoid Unnecessary Assertions:** The original code attempted to assert on the printed output of `print(v)`. This is often unreliable and unnecessary.  The primary focus should be on verifying the *correctness* of the object creation.
-
-4. **Focus on Core Functionality:**  Instead of trying to directly capture and verify the `print` output, the test now verifies that the `TTS` object is properly initialized and the `voices` property is accessed without errors. This focus on the core function of the `TTS` class is much more beneficial.
-
-5. **Potential Error Simulation:** The example in `test_tts_exception` is a placeholder; replace it with more specific and accurate exceptions related to the actual `TTS` code if relevant.
-
-6. **Comprehensive Testing:**  The current tests cover the basic functionality.  Add more tests to cover potential errors (e.g., missing libraries, invalid input values).
-
-
-
-**How to Run the Tests:**
-
-1.  Save the test code in a file (e.g., `test_tts.py`).
-2.  Make sure you have `pytest` installed (`pip install pytest`).
-3.  Run the tests from your terminal: `pytest test_tts.py`
-
-
-**Important Considerations:**
-
-*   **Dependency Handling:** If your code depends on external libraries (like `pyttsx3` and `gtts`), make sure they are installed.
-*   **Edge Cases:** Thoroughly test edge cases (invalid input types, empty strings, etc.).
-*   **Mock/Stubbing:**  If your `TTS` class interacts with external services or resources, consider using mock objects or stubs in your tests to isolate your tests.

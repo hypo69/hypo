@@ -1,87 +1,108 @@
 ```python
 import pytest
 from hypotez.src.scenario import run_scenario_files, run_scenarios
-# Example Supplier class (replace with your actual Supplier class if available)
+
+
+# Sample Supplier class (replace with your actual Supplier class if available)
 class Supplier:
     def __init__(self, name):
         self.name = name
-    
+
     def run(self, *args):
-      # Placeholder for Supplier.run() implementation.
-      # Replace with actual Supplier function calls.
-      return "Run Successful for " + self.name
+        pass  # Placeholder for Supplier run method
 
 
-# Sample scenario data (adjust as needed)
-scenario_file1 = {"scenarios": {"scenario1": {"url": "example.com"}}}
-scenario_file2 = {"scenarios": {"scenario2": {"url": "example2.com"}}}
-scenario_list = [scenario_file1, scenario_file2]
-valid_supplier = Supplier("aliexpress")
+# Sample scenario data (replace with actual data if available)
+scenario_file_data = {"scenarios": {"scenario1": {"url": "example.com"}}}
 
 
 # Tests for run_scenario_files
-def test_run_scenario_files_valid_file():
-    """Checks correct behavior with a valid scenario file."""
-    result = run_scenario_files(valid_supplier, "scenario1.json")
-    assert result == "Run Successful for aliexpress"
+def test_run_scenario_files_valid_input():
+    """Tests run_scenario_files with a valid file name."""
+    s = Supplier('test_supplier')
+    run_scenario_files(s, 'file1.json')  # Replace 'file1.json' with a valid file
+
+
+def test_run_scenario_files_invalid_file():
+    """Tests run_scenario_files with an invalid file name."""
+    s = Supplier('test_supplier')
+    with pytest.raises(FileNotFoundError):  # Assuming FileNotFoundError is raised
+        run_scenario_files(s, 'nonexistent_file.json')
+
 
 def test_run_scenario_files_multiple_files():
-  """Checks correct behavior with multiple scenario files."""
-  files = ["scenario1.json", "scenario2.json"]
-  result = run_scenario_files(valid_supplier, files)
-  assert result == "Run Successful for aliexpress"
-    
-def test_run_scenario_files_invalid_file():
-    """Checks correct behavior with an invalid scenario file."""
-    with pytest.raises(FileNotFoundError):
-        run_scenario_files(valid_supplier, "nonexistent_file.json")
-        
+    """Tests run_scenario_files with a list of file names."""
+    s = Supplier('test_supplier')
+    scenario_files = ['file1.json', 'file2.json']  # Replace with valid files
+    run_scenario_files(s, scenario_files)
+
 
 # Tests for run_scenarios
-def test_run_scenarios_valid_scenario():
-  """Checks correct behavior with a valid scenario."""
-  result = run_scenarios(valid_supplier, scenario_file1)
-  assert result == "Run Successful for aliexpress"
-  
-def test_run_scenarios_multiple_scenarios():
-  """Checks correct behavior with multiple scenarios."""
-  result = run_scenarios(valid_supplier, scenario_list)
-  assert result == "Run Successful for aliexpress"
-
-def test_run_scenarios_invalid_scenario():
-  """Checks correct behavior with an invalid scenario (empty dict)."""
-  with pytest.raises(TypeError):
-      run_scenarios(valid_supplier, {})
-# Example usage (replace with your actual scenario data)
+def test_run_scenarios_valid_scenario_dict():
+    """Tests run_scenarios with a valid scenario dictionary."""
+    s = Supplier('test_supplier')
+    scenario_data = {"scenarios": {"scenario1": {"url": "example.com"}}}
+    run_scenarios(s, scenario_data)
 
 
+def test_run_scenarios_invalid_scenario_format():
+    """Tests run_scenarios with an invalid scenario format."""
+    s = Supplier('test_supplier')
+    with pytest.raises(TypeError):  # or another suitable exception
+        run_scenarios(s, "invalid_format")  # Check for appropriate exception
+
+
+def test_run_scenarios_list_of_scenarios():
+    """Tests run_scenarios with a list of valid scenario dictionaries."""
+    s = Supplier('test_supplier')
+    list_of_scenarios = [{"scenarios": {"scenario1": {"url": "example.com"}}},
+                         {"scenarios": {"scenario2": {"url": "example.net"}}}]
+    run_scenarios(s, list_of_scenarios)
+
+
+# Example test with a fixture (if needed)
+@pytest.fixture
+def test_supplier():
+  """Provides a test supplier for testing functions."""
+  return Supplier('test_supplier')
+
+def test_run_scenario_file_with_fixture(test_supplier):
+  """Tests run_scenario_file with a fixture to provide test data."""
+  run_scenario_file(test_supplier, 'file1.json') # Replace 'file1.json' with valid file
+
+
+# Add more tests as necessary for different input types and edge cases,
+# replacing placeholders like 'file1.json' with actual file paths
+# or data structures. Remember to adapt exception types based on your implementation.
 ```
 
 **Explanation and Improvements:**
 
-1. **Example `Supplier` Class:**  A placeholder `Supplier` class is added.  Crucially, you **must** replace this with your actual `Supplier` class if you have one.  This allows the tests to interact with the functions you're testing.
+1. **Supplier Class:** Added a placeholder `Supplier` class to make the tests runnable.  Crucially, replace this placeholder with your actual `Supplier` class if available.  This is *essential* for meaningful testing.
 
-2. **Sample Scenario Data:**  Example `scenario_file1`, `scenario_file2`, and `scenario_list` are added to provide concrete data for testing.  Replace these with your actual scenario data structure.
+2. **Sample Data:**  Added `scenario_file_data` to provide example scenario data for testing `run_scenario_files`.  Replace this with your actual data format.
 
-3. **Clear Test Names:** Test names clearly indicate the test case's purpose.
+3. **Clearer Test Names:** Test names now more accurately reflect the purpose of each test.
 
-4. **Exception Handling:** The `test_run_scenario_files_invalid_file` test now correctly uses `pytest.raises` to check for the `FileNotFoundError`.
+4. **Exception Handling:** `test_run_scenario_files_invalid_file` demonstrates how to use `pytest.raises` to test for `FileNotFoundError`.  Replace `FileNotFoundError` with the correct exception type if different. Added `test_run_scenarios_invalid_scenario_format` to demonstrate handling of incorrect input formats.
 
-5. **Comprehensive Scenarios:** The tests now cover valid inputs (including multiple files) and an invalid scenario (an empty dictionary).  This is crucial to ensure that edge cases and potential errors are considered.
+5. **Fixture:** Created a `test_supplier` fixture for better organization and reuse of the `Supplier` instance.  This is highly recommended for improved modularity.  Example use is provided.
 
-6. **Fixtures:** No fixtures are needed in this particular case since the scenario files are not dynamic. However, if the scenario files needed data from a separate source, a fixture would be appropriate to handle that.
-
-**How to Use:**
-
-1. **Replace Placeholders:** Substitute the example `Supplier` class, scenario data, and file paths with your actual code.
-
-2. **Run Tests:**  Run `pytest` from your terminal in the directory containing your test file.
+6. **Comprehensive Coverage:** Added tests for multiple scenarios: valid input, invalid file, multiple files, and different input types.
 
 
-**Important Considerations:**
+**To Run the Tests:**
 
-- **Realistic Data:** Use more realistic scenario data and inputs to thoroughly test your functions.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the test code as a `.py` file (e.g., `test_scenario.py`).
+3.  Run `pytest test_scenario.py` from your terminal.
 
-- **Error Handling:**  Always test how your functions handle potential errors, exceptions, and invalid data.
+**Critical Next Steps:**
 
-- **Specific Supplier Actions:** The example `Supplier` class has a placeholder `run` method.  In a real application, you'll want to test *specific* actions of your `Supplier` class, such as database interactions, file handling, etc.  If the functions inside the supplier make calls to an external API or database, test those interactions separately.
+*   **Replace Placeholders:**  Replace the placeholder `Supplier` class, example scenario data (e.g., `'file1.json'`), and error types with the actual values from your project.
+*   **Add More Tests:** Expand the test cases to cover more use cases, including edge cases and invalid inputs (e.g., empty lists, malformed JSON, etc.).
+*   **Adapt Error Handling:**  Ensure the exception handling accurately reflects the exceptions raised by your `run_scenario_files` and `run_scenarios` functions.  If your functions raise exceptions other than `FileNotFoundError`, change the test accordingly.
+*   **Realistic Data:**  Use realistic, varied data in your tests to achieve better test coverage and catch more potential errors.
+
+
+This improved solution addresses the critical need for realistic data, error handling, and placeholder replacement to make the test code truly effective in verifying your scenario handling logic. Remember that robust testing relies on having the correct `Supplier` class and input data.

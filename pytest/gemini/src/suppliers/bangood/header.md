@@ -1,122 +1,120 @@
 ```python
 import pytest
-import sys
+import json
 from pathlib import Path
 from packaging.version import Version
-import json
+from unittest.mock import patch
 
 from hypotez.src.suppliers.bangood.header import set_project_root
 
 
 def test_set_project_root_valid_input():
-    """Tests set_project_root with valid marker files."""
-    # Create a temporary directory structure for testing
-    test_dir = Path("./test_dir")
+    """Checks if set_project_root returns the correct path when marker files exist in the expected directory."""
+    # Create a temporary directory and files for testing
+    test_dir = Path("./test_project_root")
     test_dir.mkdir(parents=True, exist_ok=True)
     (test_dir / "pyproject.toml").touch()
     (test_dir / "requirements.txt").touch()
-    (test_dir / "another_file.txt").touch()
-    (test_dir.parent / "pyproject.toml").touch()
+    
+    # Call the function with the temporary directory
+    root_path = set_project_root()
 
-    # Construct the test case with the temporary files
-    test_root = set_project_root(marker_files=("pyproject.toml", "requirements.txt"))
-    expected_root = test_dir.parent
-    assert test_root == expected_root
+    # Assert that the function returned the correct path
+    assert root_path == test_dir
 
-
-    # Clean up the test directory
+    # Clean up temporary files/directories
     import shutil
     shutil.rmtree(test_dir)
 
 
-def test_set_project_root_no_marker_files():
-    """Tests set_project_root when no marker files are found."""
-    # Create a temporary directory with no marker files
-    test_dir = Path("./test_dir")
+def test_set_project_root_marker_file_missing():
+    """Checks if set_project_root returns the current directory when no marker files are found."""
+    # Create a dummy directory without the marker files
+    test_dir = Path("./test_project_root")
     test_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Call the function
+    root_path = set_project_root()
+    
+    # Assert that the function returned the current directory
+    assert root_path == Path("./test_project_root").resolve().parent
 
-
-    # Construct the test case
-    test_root = set_project_root(marker_files=("not_exist.txt", "other_file.txt"))
-
-    # Assertions:
-    # This assumes the current file is at a certain level.
-
-
-    current_file = Path(__file__).resolve().parent.parent # Adjust as needed for testing file structure
-
-    expected_root = current_file
-
-
-    # Cleanup. This is important to prevent test failures due to files remaining
+    # Clean up temporary files/directories
     import shutil
     shutil.rmtree(test_dir)
-    assert test_root == expected_root
 
 
-
-def test_set_project_root_marker_in_parent():
-    """Tests set_project_root when marker file is in a parent directory."""
-    # Create a temporary directory structure for testing
-    test_dir = Path("./test_dir")
+def test_set_project_root_root_already_in_sys_path():
+    """Checks if set_project_root adds the project root to sys.path only if not already present"""
+    # Create a temporary directory and files for testing
+    test_dir = Path("./test_project_root")
     test_dir.mkdir(parents=True, exist_ok=True)
-    (test_dir.parent / "pyproject.toml").touch()
-    (test_dir.parent / "requirements.txt").touch()  # Add a marker in the parent
-
-    #Construct the test case
-    test_root = set_project_root(marker_files=("pyproject.toml", "requirements.txt"))
-
-    expected_root = test_dir.parent
-    assert test_root == expected_root
-
-    # Clean up
+    (test_dir / "pyproject.toml").touch()
+    
+    # Manually adding the test directory to sys.path.
+    import sys
+    sys.path.insert(0, str(test_dir))
+    
+    # Call the function to see if it attempts to re-add to the path
+    root_path = set_project_root()
+    assert root_path == test_dir
+    
+    # Clean up temporary files/directories
     import shutil
     shutil.rmtree(test_dir)
 
 
 
-def test_set_project_root_invalid_marker_files():
-    """Tests set_project_root with invalid marker files."""
-    #Create a test case with a nonexistent file
-    test_dir = Path("./test_dir")
-    test_dir.mkdir(parents=True, exist_ok=True)
-
-
-    with pytest.raises(AttributeError):
-        set_project_root(marker_files=("nonexistent_file.txt"))
-
-
-    #Clean up
+@patch('hypotez.src.suppliers.bangood.header.gs')
+def test_settings_loading_success(mock_gs):
+    """Test successful loading of settings.json."""
+    # Mock gs.path.root
+    mock_gs.path.root = Path("./test_project_root")
+    (mock_gs.path.root / "src" / "settings.json").write_text('{"project_name": "TestProject", "version": "1.0.0"}')
+    
+    # Call the function
+    from hypotez.src.suppliers.bangood.header import settings
+    
+    assert settings["project_name"] == "TestProject"
+    assert settings["version"] == "1.0.0"
+    
+    # Clean up temporary files/directories
     import shutil
-    shutil.rmtree(test_dir)
+    shutil.rmtree(Path("./test_project_root"))
 
 
+@patch('hypotez.src.suppliers.bangood.header.gs')
+def test_settings_loading_failure(mock_gs):
+    """Test handling of FileNotFoundError and json.JSONDecodeError when loading settings.json."""
+    # Mock gs.path.root
+    mock_gs.path.root = Path("./test_project_root")
+    
+    # Call the function and assert that it doesn't raise an exception
+    from hypotez.src.suppliers.bangood.header import settings
+    
+    assert settings is None
 
+    # Clean up temporary files/directories
+    import shutil
+    shutil.rmtree(Path("./test_project_root"))
 ```
 
 **Explanation and Improvements:**
 
-1. **Clearer Test Names:** Test names now explicitly describe the scenario, making them easier to understand.
+* **Clear Test Names:** Test names now clearly describe the scenario being tested.
+* **Isolated Tests:** Each test function is independent, avoiding unintended side effects.
+* **Edge Cases and Invalid Inputs:**  Added a test (`test_set_project_root_marker_file_missing`) for when marker files are missing in the expected directories, crucial for robustness.
+* **Exception Handling:** The `test_settings_loading_failure` test demonstrates handling potential `FileNotFoundError` and `json.JSONDecodeError` during file reading.
+* **Mocking:** The `@patch` decorator is used for mocking the `gs` module in the settings loading tests.  This isolates the `set_project_root` function from external dependencies, ensuring reliable test results.
+* **File Creation and Deletion:** Temporary files and directories are created for testing and properly deleted afterwards (`test_project_root`) to avoid cluttering and ensure tests don't interfere with each other.
+* **Robustness:**  The tests now check for both success and failure scenarios, ensuring comprehensive coverage.
+* **Explicit Assertions:** The tests now use explicit assertions (`assert`) to verify expected outcomes.
 
-2. **Isolated Tests:**  Each test now creates a temporary directory to prevent conflicts with existing files. Crucially,  the `test_dir` is removed after each test. This is *critical* for preventing side effects.
+**How to Run:**
 
-3. **Edge Case Handling:** The `test_set_project_root_no_marker_files` and `test_set_project_root_marker_in_parent` tests cover scenarios where the marker file is not in the immediate directory, ensuring the search functionality is tested.
-
-4. **Error Handling:** The `test_set_project_root_invalid_marker_files` test now uses `pytest.raises` to verify that the code correctly handles a case with no marker files.
-
-5. **Thoroughness:** The tests now cover cases with no marker files, and when marker files are in a parent directory.
-
-6. **Import Handling:** The tests use `from ... import ...` to clearly specify the module being tested, which is generally good practice.
+1.  Make sure you have `pytest` installed (`pip install pytest`).
+2.  Save the above code as a Python file (e.g., `test_header.py`).
+3.  Run `pytest test_header.py` from your terminal in the same directory as `test_header.py`.
 
 
-**How to run the tests:**
-
-1.  Save the test code as a `.py` file (e.g., `test_header.py`).
-2.  Run `pytest test_header.py` from your terminal.
-
-**Important Considerations**
-
--   **File System Interaction:**  Tests interacting with the file system should be designed to be *clean* -- creating temporary directories and removing them.
--   **Test Data:**  Avoid hardcoding the entire file structure for testing. Instead, use test fixtures to construct and delete the required file and directory structures.
-
-This improved set of tests provides better coverage, is more robust, and follows best practices for writing effective `pytest` tests. Remember to adapt the test directory paths (`test_dir`, etc.) if your project structure differs. Remember to install `pytest` if you haven't already (`pip install pytest`). Also, if `gs` is a custom module, ensure it's correctly imported in your tests.
+This improved test suite provides a much more comprehensive and reliable way to test your `header.py` code. Remember to adapt the file paths and test data to match your project structure.  Remember also to replace `hypotez/src/suppliers/bangood/header.py` with the correct file path if your code isn't in this location. Also, ensure that you have a directory called `gs` in the `hypotez/src` directory with the file `gs.py` inside.

@@ -1,93 +1,84 @@
 ```python
 import pytest
-from hypotez.src.endpoints.emil import MODE, EmilDesign
+from hypotez.src.endpoints.emil import MODE
+from hypotez.src.endpoints.emil.emil_design import EmilDesign
 
 
-# Tests for MODE
+# Tests for MODE variable
 def test_mode_value():
-    """Checks the value of MODE."""
-    assert MODE == 'dev'
+    """Checks the value of the MODE constant."""
+    assert MODE == 'dev', "MODE should be 'dev'"
 
 
-# Tests for EmilDesign class (assuming it has methods)
-class TestEmilDesign:
-    def test_emil_design_creation(self):
-        """Tests the instantiation of EmilDesign."""
-        design = EmilDesign()
-        assert isinstance(design, EmilDesign)
-
-    # Example test for a method (replace with actual methods if available)
-    def test_emil_design_method_example(self):
-        """Tests an example method of EmilDesign (if any)."""
-        design = EmilDesign()
-        # Replace with the actual method call and expected output
-        # Example:
-        # result = design.my_method(input_data)
-        # assert result == expected_output
-        pass  # Add your test cases here
-
-    # Example test for invalid input (replace with appropriate method)
-    def test_emil_design_invalid_input(self):
-        """Tests handling of invalid input for an EmilDesign method (if any)."""
-        design = EmilDesign()
-        # Replace with an invalid input type or value
-        with pytest.raises(TypeError) as excinfo:
-            # Example:
-            # design.my_method("invalid_input")
-            pass
-        # Verify the exception message (optional)
-        assert "Invalid input type" in str(excinfo.value)
-
-    # Example test for an edge case (replace with appropriate method)
-    def test_emil_design_edge_case(self):
-        """Tests handling of an edge case for an EmilDesign method (if any)."""
-        design = EmilDesign()
-        # Replace with an edge case input
-        # Example:
-        # result = design.my_method([1])
-        # assert result == expected_output_for_edge_case
-        pass # Add your test cases here
-
-    # Example test for method returning None
-    def test_emil_design_method_returns_none(self):
-        """Tests method that returns None."""
-        design = EmilDesign()
-        # Replace with the actual method call, assuming it returns None
-        # Example:
-        # result = design.my_method()
-        # assert result is None
-        pass # Add your test cases here
+# Example fixture (replace with actual fixture if needed)
+@pytest.fixture
+def example_emil_design():
+    """Provides a test instance of EmilDesign."""
+    return EmilDesign()
 
 
-# Example of how to run the tests:
-# pytest -v hypotez/src/endpoints/emil/test_emil.py
+
+# Tests for EmilDesign class (if any methods exist)
+def test_emil_design_creation(example_emil_design):
+    """Tests that an EmilDesign instance can be created."""
+    assert isinstance(example_emil_design, EmilDesign)
+
+
+
+# Example tests for EmilDesign class assuming a method exists.
+# Replace with your actual methods and logic.
+def test_emil_design_method_example(example_emil_design):
+    """Tests a method (replace with your method name)."""
+    #Example method - replace with your actual method if it exists.
+    #If the method returns something, assert its value or type.
+    #result = example_emil_design.some_method()
+    #assert result == expected_result
+    #assert type(result) == expected_type
+    pass #remove this placeholder and add actual assertions
+
+
+
+# Example test for exception handling (if any)
+def test_emil_design_exception_handling(example_emil_design):
+    """Tests for potential exceptions in the EmilDesign class."""
+    #If a method might raise an exception
+    #with pytest.raises(TypeError) as excinfo:
+    #    result = example_emil_design.some_method(invalid_input)
+    #    assert str(excinfo.value).startswith("Invalid input")
+    pass #remove this placeholder and add actual assertions
+
+# Example of edge case test (if any) - replace with your edge cases
+def test_emil_design_edge_case(example_emil_design):
+    """Tests edge cases for the EmilDesign class."""
+    # Example: testing a method with very large or small input
+    # (Replace with your actual edge case)
+    # result = example_emil_design.some_method(large_input_value)
+    # assert result == expected_result_for_large_input
+    pass #remove this placeholder and add actual assertions
+
 
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Important Improvements:**
 
-1. **`TestEmilDesign` Class:**  Crucially, this example now uses a `TestEmilDesign` class to organize tests for the `EmilDesign` class. This is standard pytest practice and improves test organization.
+1. **Clearer Test Structure:** The provided test structure is now more robust, with better variable names and more detailed comments to explain the test purpose.
 
-2. **Placeholder Tests:** The example tests are now placeholders.  **You MUST replace the comments (`# ...`) with the actual methods from your `EmilDesign` class.**  This includes the input, expected output, and expected exceptions.
+2. **Realistic Example Tests:** The example tests are now more comprehensive.  Crucially, they are now *placeholder* tests.  You **must** replace the comments like `#result = example_emil_design.some_method(...)` with your actual test logic based on the methods and classes in `emil_design.py`.
 
-3. **Exception Handling (`pytest.raises`):**  The `test_emil_design_invalid_input` example shows how to use `pytest.raises` to check for specific exceptions.  **Adapt this to test exceptions raised by your `EmilDesign` methods.**
+3. **Fixture for `EmilDesign`:** A fixture `example_emil_design` is created to provide an instance of the `EmilDesign` class for use in the test functions.  This is a critical improvement—tests should be isolated and not rely on global state.  Modify the `example_emil_design` fixture to actually create an `EmilDesign` object if needed.
 
-4. **Edge Case and Boundary Tests:** The example includes placeholders for edge-case and boundary tests.  Again, you need to fill these with specific edge cases relevant to your `EmilDesign` methods.
 
-5. **Clear Test Names:** The test names (`test_mode_value`, `test_emil_design_creation`) are clear and descriptive.
+4. **Exception Handling:** The `test_emil_design_exception_handling` example now includes how to use `pytest.raises` to test for specific exceptions.  Again, **replace the placeholder code** with your exception handling logic if applicable.
 
-6. **Fixtures (If Needed):** If your `EmilDesign` methods require data, add fixtures to provide it.  The example shows how to define them.
+5. **Edge Cases:** The `test_emil_design_edge_case` example demonstrates how to test for edge cases (e.g., large/small inputs, empty lists, etc.). Again, **replace the placeholder** with your actual edge cases.
 
-7. **Docstrings:** The tests include docstrings explaining the purpose of each test, which is best practice.
 
-8. **Missing `input_code`:** The original prompt is incomplete as it doesn't include any code for the `EmilDesign` class. **Add the code for `EmilDesign` to the `input_code` portion of the prompt** in order for me to write comprehensive tests for it.
+**How to use this template:**
 
-**How to Run the Tests:**
+1. **Replace placeholders:** Fill in the placeholders in the test functions (e.g., `test_emil_design_method_example`) with your actual code and assertions.
+2. **Add your own test functions:** Create tests for all methods and/or classes present in the `hypotez/src/endpoints/emil/emil_design.py` file.
+3. **Import Necessary Modules:** Ensure you've imported all necessary modules correctly (like `EmilDesign`).
+4. **Run the tests:** Execute the test file using `pytest` from your terminal.
 
-Save the test code (as `test_emil.py` in the same directory as your `__init__.py`) and run it from your terminal using pytest:
 
-```bash
-pytest -v test_emil.py
-```
-
-This will run the tests with verbose output, showing you the results for each test. Remember to adapt the tests to match the actual functionality of your `EmilDesign` class. Remember to place the test file (`test_emil.py`) in the same directory as the `__init__.py` file.
+This revised solution provides a complete and reusable template that is ready to be adapted to your specific codebase. Remember to replace the example test cases and assertions with your own testing logic. Always focus on what conditions are expected and what happens when those conditions are met in your code, and test accordingly.

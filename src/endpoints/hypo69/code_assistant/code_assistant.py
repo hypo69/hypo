@@ -273,7 +273,7 @@ class CodeAssistant:
                     pprint(f"Processed file number: {i + 1}", text_color="yellow")
                     ...
                 else:
-                    logger.error("Ошибка ответа модели")
+                    logger.error("Ошибка ответа модели", None, False)
                     ...
                     continue
 

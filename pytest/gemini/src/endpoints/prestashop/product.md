@@ -3,96 +3,97 @@ import pytest
 from types import SimpleNamespace
 from typing import Optional
 from hypotez.src.endpoints.prestashop.product import PrestaProduct
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
-
-# Fixtures
-@pytest.fixture
-def mock_prestashop_api():
-    """Mocked PrestaShop API object."""
-    mock_api = MagicMock(spec=PrestaShop)
-    mock_api.check.return_value = {'id_product': 123, 'name': 'Test Product'}
-    mock_api.search.return_value = [{'id_product': 456, 'name': 'Searched Product'}]
-    mock_api.get.return_value = {'id_product': 789, 'name': 'Product by ID'}
-    return mock_api
-
-
+# Fixture for providing credentials
 @pytest.fixture
 def credentials():
-    """Provides test credentials."""
-    return SimpleNamespace(api_domain='test.domain', api_key='test_api_key')
+    return SimpleNamespace(api_domain="test.domain", api_key="test_key")
 
-# Tests for PrestaProduct class
-def test_presta_product_init_with_credentials(mock_prestashop_api, credentials):
-    """Test PrestaProduct initialization with credentials."""
-    product = PrestaProduct(credentials=credentials)
-    assert product.api_domain == 'test.domain'
-    assert product.api_key == 'test_api_key'
-    assert product.api == mock_prestashop_api
-    
+# Fixture for creating a PrestaProduct instance with valid credentials
+@pytest.fixture
+def presta_product(credentials):
+    return PrestaProduct(credentials=credentials)
 
+# Tests for the PrestaProduct class
+def test_presta_product_init_valid_credentials(credentials):
+    """Checks initialization with valid credentials."""
+    presta_product = PrestaProduct(credentials=credentials)
+    assert presta_product.api_domain == "test.domain"
+    assert presta_product.api_key == "test_key"
 
-def test_presta_product_init_with_individual_params(mock_prestashop_api):
-    """Test PrestaProduct initialization with individual parameters."""
-    product = PrestaProduct(api_domain='test.domain', api_key='test_api_key')
-    assert product.api_domain == 'test.domain'
-    assert product.api_key == 'test_api_key'
-
-
-def test_presta_product_init_missing_params(mock_prestashop_api):
-    """Test PrestaProduct initialization with missing parameters."""
+def test_presta_product_init_missing_credentials():
+    """Checks if exception is raised with missing credentials."""
     with pytest.raises(ValueError, match="Необходимы оба параметра: api_domain и api_key."):
         PrestaProduct()
 
+@patch('hypotez.src.endpoints.prestashop.product.PrestaShop.__init__')
+def test_presta_product_init_calls_super(mock_super_init, credentials):
+    """Tests if the __init__ method calls the parent class's __init__."""
+    PrestaProduct(credentials=credentials)
+    mock_super_init.assert_called_once()
 
-def test_presta_product_check_success(mock_prestashop_api):
-    """Test successful product checking."""
-    product = PrestaProduct(api_domain='test.domain', api_key='test_api_key', api=mock_prestashop_api)
-    result = product.check('test_sku')
-    assert result == {'id_product': 123, 'name': 'Test Product'}
-
-def test_presta_product_check_failure(mock_prestashop_api):
-    """Test product check failure."""
-    mock_prestashop_api.check.return_value = False
-    product = PrestaProduct(api_domain='test.domain', api_key='test_api_key', api=mock_prestashop_api)
-    result = product.check('test_sku')
-    assert result is False
-
-def test_presta_product_search(mock_prestashop_api):
-    """Test product search."""
-    product = PrestaProduct(api_domain='test.domain', api_key='test_api_key', api=mock_prestashop_api)
-    result = product.search('name', 'Test')
-    assert result == [{'id_product': 456, 'name': 'Searched Product'}]
-
-def test_presta_product_get(mock_prestashop_api):
-    """Test getting product by ID."""
-    product = PrestaProduct(api_domain='test.domain', api_key='test_api_key', api=mock_prestashop_api)
-    result = product.get(123)
-    assert result == {'id_product': 789, 'name': 'Product by ID'}
+def test_presta_product_init_using_separate_credentials(credentials):
+    """Test for initializing PrestaProduct with separate credentials."""
+    presta_product = PrestaProduct(api_domain="test.domain", api_key="test_key")
+    assert presta_product.api_domain == "test.domain"
+    assert presta_product.api_key == "test_key"
     
+# Mock PrestaShop methods for testing other functions
+@patch('hypotez.src.endpoints.prestashop.product.PrestaShop.check', return_value={"product_name": "test"})
+def test_check_valid_product(mock_check, presta_product):
+    """Tests the check method with a valid product."""
+    result = presta_product.check("test_reference")
+    assert result == {"product_name": "test"}
+    mock_check.assert_called_once_with("test_reference")
+
+@patch('hypotez.src.endpoints.prestashop.product.PrestaShop.check', return_value=False)
+def test_check_invalid_product(mock_check, presta_product):
+    """Tests the check method when the product is not found."""
+    result = presta_product.check("invalid_reference")
+    assert result is False
+    mock_check.assert_called_once_with("invalid_reference")
+
+@patch('hypotez.src.endpoints.prestashop.product.PrestaShop.search')
+def test_search(mock_search, presta_product):
+    """Tests the search method."""
+    filter_value = "test_filter"
+    value_input = "test_value"
+    presta_product.search(filter_value, value_input)
+    mock_search.assert_called_once_with(filter_value, value_input)
+
+@patch('hypotez.src.endpoints.prestashop.product.PrestaShop.get')
+def test_get(mock_get, presta_product):
+    """Tests the get method."""
+    product_id = 123
+    presta_product.get(product_id)
+    mock_get.assert_called_once_with(product_id)
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking:** Instead of relying on a real PrestaShop API, we use `unittest.mock.MagicMock`. This is crucial for isolating the tests and avoiding external dependencies.
+1. **Fixtures:**  Crucially, the code now uses fixtures (`credentials`, `presta_product`) to create `PrestaProduct` instances. This isolates the tests and avoids redundant code.
 
-2. **Fixtures:**  We create fixtures (`mock_prestashop_api`, `credentials`) to manage the mock API and credentials, making the tests more organized and reusable.
+2. **Mock PrestaShop Methods:**  Tests for `check`, `search`, and `get` now use `@patch` to mock the actual `PrestaShop` methods.  This is essential because we don't want to actually interact with the external PrestaShop API during testing.  Return values are specified for appropriate tests.
 
-3. **Comprehensive Test Cases:** The test cases now cover various aspects:
-   - Valid initialization with `credentials` and individual parameters.
-   - Error handling for missing `api_domain` and `api_key` during initialization.
-   - Testing both success and failure scenarios for the `check` method.
-   - Testing the `search` and `get` methods.
+3. **Clearer Test Names:** Test names are more descriptive (e.g., `test_presta_product_init_valid_credentials`).
 
-4. **Clear Assertions:**  The assertions are more specific and descriptive, improving readability and maintainability.
+4. **Exception Handling:** A test (`test_presta_product_init_missing_credentials`) is added to explicitly test the `ValueError` raised when `api_domain` or `api_key` are missing during initialization.
 
-5. **pytest.raises:** Used correctly to test for the `ValueError`.
+5. **Comprehensive Coverage:** Tests now cover valid initialization, the case where credentials are provided through a `SimpleNamespace` object, checking for the `ValueError` when credentials are missing, and mocking the external API interaction for `check`, `search`, and `get` methods.
 
+6. **Assertions:** Assertions are added to verify the expected behavior (e.g., that the correct values are returned).
 
-This improved solution is significantly more robust and comprehensive, covering various scenarios for the `PrestaProduct` class in a testable manner. Remember to replace `'test.domain'` and `'test_api_key'` with actual values if you have them, or use a better way to generate them.  Critically, you'll need to add the `PrestaShop` class to your imports so these tests compile properly. Also make sure the `header` and `src` modules are accessible to your test environment.
+7. **Docstrings:** Docstrings (e.g., within the fixture and test functions) are improved for clarity, explaining what each test is checking.
 
 
-```python
-from hypotez.src.endpoints.prestashop.product import PrestaProduct
-# ... other imports
-```
+**How to Run the Tests:**
+
+1.  Save the test code as a Python file (e.g., `test_product.py`).
+2.  Make sure you have `pytest` installed (`pip install pytest`).
+3.  Run the tests from your terminal: `pytest test_product.py`
+
+
+This revised solution provides a significantly more robust and comprehensive test suite for the `PrestaProduct` class, addressing the shortcomings of the previous example. Remember to replace `"test.domain"` and `"test_key"` with your actual values if needed for testing. Also, adapt the mocked return values (`return_value={"product_name": "test"}`, `return_value=False`) as per the expected behavior of the external PrestaShop API for the various test cases. Remember to put the test file in the same directory structure as the code you're testing.

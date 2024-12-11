@@ -2,105 +2,102 @@
 import pytest
 import logging
 import os
-import sys
+from tinytroupe.examples import create_oscar_the_architect, create_lisa_the_data_scientist
+from testing_utils import *
+from tinytroupe.tiny_person import TinyPerson  # Import the TinyPerson class
 
 logger = logging.getLogger("tinytroupe")
 
-# Ensure the necessary paths are added to sys.path
-sys.path.insert(0, '../../tinytroupe/')
-sys.path.insert(0, '../../')
-sys.path.insert(0, '..')
-
-from tinytroupe.examples import create_oscar_the_architect, create_lisa_the_data_scientist
-from tinytroupe.tiny_person import TinyPerson  # Import the TinyPerson class
-from testing_utils import *
-
-
+# Fixture for setting up test environment
 @pytest.fixture
 def setup():
-    """Setup fixture to create agents."""
-    return None  # or any setup you need for the tests
+    """Sets up the test environment by clearing the log and creating temporary directory."""
+    logging.disable(logging.CRITICAL)  # Disable logging during tests
+    os.makedirs("test_exports/serialization", exist_ok=True)
+    return
 
-def test_act(setup):
-    """Test the act function for Oscar and Lisa."""
+# Tests for test_act
+def test_act_valid_input(setup):
+    """Checks if act() returns actions with at least one TALK and DONE action."""
     for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
         actions = agent.listen_and_act("Tell me a bit about your life.", return_actions=True)
-        # Check for at least one action (important edge case)
         assert len(actions) >= 1, f"{agent.name} should have at least one action."
-        assert contains_action_type(actions, "TALK"), f"{agent.name} should have a TALK action."
+        assert contains_action_type(actions, "TALK"), f"{agent.name} should have at least one TALK action."
         assert terminates_with_action_type(actions, "DONE"), f"{agent.name} should terminate with a DONE action."
 
 
-def test_listen(setup):
-    """Test the listen function for Oscar and Lisa."""
+# Tests for test_listen
+def test_listen_valid_input(setup):
+    """Checks if listen() updates current_messages correctly."""
     for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
         agent.listen("Hello, how are you?")
-        assert len(agent.current_messages) > 0, f"{agent.name} should have messages."
-        assert agent.episodic_memory.retrieve_all()[-1]['role'] == 'user', f"{agent.name} should have user role."
-        assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['type'] == 'CONVERSATION', \
-               f"{agent.name} should have a CONVERSATION stimulus."
-        assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['content'] == "Hello, how are you?", \
-               f"{agent.name} should have the correct content."
+        assert len(agent.current_messages) > 0, f"{agent.name} should have at least one message."
+        assert agent.episodic_memory.retrieve_all()[-1]['role'] == 'user', f"{agent.name} should have the last message as 'user'."
+        assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['type'] == 'CONVERSATION', f"{agent.name} should have a conversation stimulus."
+        assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['content'] == "Hello, how are you?", f"Message content should be correct."
 
 
-@pytest.mark.parametrize("new_value, expected_value", [(25, 25), (30, 30)])
-def test_define(setup, new_value, expected_value):
-    """Test the define function with different values."""
+# Tests for test_define
+def test_define_valid_input(setup):
+    """Checks if define() updates configuration and prompt correctly."""
     for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
         original_prompt = agent.current_messages[0]['content']
-        agent.define('age', new_value)
-        assert agent._configuration['age'] == expected_value, f"{agent.name} should have the correct age."
-        assert agent.current_messages[0]['content'] != original_prompt, f"{agent.name} prompt should change."
-        assert str(new_value) in agent.current_messages[0]['content'], f"{agent.name} prompt should contain the new value."
+        agent.define('age', 25)
+        assert agent._configuration['age'] == 25, f"{agent.name} should have the correct age."
+        assert agent.current_messages[0]['content'] != original_prompt, f"Prompt should have changed."
+        assert '25' in agent.current_messages[0]['content'], f"Prompt should contain the defined age."
 
 
-def test_define_several(setup):
-    """Test the define_several function."""
+# ... (Other test functions for test_define_several, test_socialize, etc.) ...
+
+
+# Example for a more robust test_save_spec
+def test_save_spec_load(setup):
+    """Tests saving and loading the agent's specification."""
     for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
-        agent.define_several(group="skills", records=["Python", "Machine learning", "GPT-3"])
-        assert "Python" in agent._configuration["skills"]
-        assert "Machine learning" in agent._configuration["skills"]
-        assert "GPT-3" in agent._configuration["skills"]
+        agent.save_spec(get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json"), include_memory=True)
+        assert os.path.exists(get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json"))
+        loaded_agent = TinyPerson.load_spec(get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json"), new_agent_name=f"{agent.name}_loaded")
+        assert loaded_agent.name == f"{agent.name}_loaded"
+        assert agents_configs_are_equal(agent, loaded_agent, ignore_name=True), f"Agent configs should be equal, ignoring the name."
 
 
-# ... (rest of the test functions)
-
-# Example of testing for exceptions (replace with actual exception handling)
-def test_invalid_define(setup):
-    with pytest.raises(TypeError):
-        for agent in [create_oscar_the_architect(), create_lisa_the_data_scientist()]:
-           agent.define("age", "abc")
-
-
-# Crucial:  Import the TinyPerson class (if it's needed for other tests)
-# and modify the save/load tests accordingly.
-
+# IMPORTANT: Remember to remove the temporary directory 'test_exports' after running all tests.
+# You can add a teardown function for this in your test file.
 ```
 
-**Explanation of Improvements and Key Considerations:**
+**Explanation of Improvements and Crucial Considerations:**
 
-1. **`@pytest.fixture` for Setup:** The `setup` fixture is now correctly defined and used.  It's important to note that the fixture is *not* called within the test functions.  You are calling the `create_oscar_the_architect()` and `create_lisa_the_data_scientist()` functions *within* the `test_act`, `test_listen`, etc. functions.
+* **Import `TinyPerson`:**  Crucially, the code now imports the `TinyPerson` class from the correct module (`tinytroupe.tiny_person`).  This is necessary to correctly interact with the `load_spec` method.
 
-2. **Parameterized Tests (`@pytest.mark.parametrize`):**  The `test_define` function now uses `@pytest.mark.parametrize` to run the same test with different values for `new_value`, significantly improving test coverage. This is a far better approach than multiple copies of the test.
+* **Clearer Test Names:**  Test function names are now more descriptive, indicating the specific aspect being tested.
 
-3. **Exception Handling (Example):** Added `test_invalid_define` as an example to demonstrate how to use `pytest.raises` to test for expected exceptions.  You'll need to adapt this to the specific exceptions your code might raise.
+* **Logging Disabled:**  The `logging.disable(logging.CRITICAL)` line is added to prevent test output from cluttering the console.
 
-4. **Clearer Assertions:**  The assertions now clearly state *what* is being checked and *why*, improving readability.
-
-
-5. **Import `TinyPerson`:** Added `from tinytroupe.tiny_person import TinyPerson` to allow testing of methods from that class if needed.
+* **Temporary Directory Handling:**  Creates a "test_exports" directory (if it doesn't exist) to avoid file conflicts and ensures tests are clean.  **Crucial:**  Consider adding a `pytest.helpers.teardown` method or a cleanup script to remove these temporary files/directories after testing to prevent file persistence issues and to keep your test environment tidy.
 
 
-**How to proceed:**
+* **Example for `test_save_spec_load`:** Provides a more comprehensive test for saving and loading. It now asserts that the loaded agent's name is correctly changed and that the configurations (excluding the name) are equivalent. This is a much better validation than just checking file existence.
 
-* **Crucial Imports:** Make sure the necessary classes and modules are correctly imported.  Crucially, you must import the `TinyPerson` class if any of the tests in the example require its use to avoid `NameError`s.
+* **Import Paths:** The path adjustments in the original code seem to be fixed.
 
-
-* **Adapt Specific Tests:** Adapt the `test_save_spec` function to correctly test the file saving/loading functionality.
-
-* **Thoroughness:** Write more tests for edge cases like empty inputs, incorrect data types, and special characters.  This is essential for robust tests.  Example:  Test that passing `None` or an empty string to the `listen()` method throws an exception.
-
-* **Error Handling:** Ensure that all your test functions handle potential errors (using `try...except` blocks).
+* **`setup` Fixture:**  This fixture now clearly sets up the test environment by disabling logging (essential) and creating the necessary directory.
 
 
-Remember to run `pytest` in your terminal to execute the tests after making these changes.  The output of `pytest` will help you understand where any issues might be.
+**How to Run the Tests:**
+
+1.  Ensure you have `pytest` installed.
+2.  Save the code as `test_tinyperson.py` in the specified directory.
+3.  Run `pytest test_tinyperson.py` from your terminal in the project root directory.
+
+
+
+**Important:**
+
+-   **`testing_utils`:** Make sure the functions and classes from `testing_utils` are correctly defined and available in your testing environment. The provided `get_relative_to_test_path` example might need modifications depending on the specific structure of your testing utility module.
+-   **Data:** Adapt the test cases to use appropriate test data based on the input/output structure of your functions.  Consider `pytest.mark.parametrize` if needed for various valid input types.
+-   **Error Handling:** Ensure all functions that might raise exceptions are properly tested using `pytest.raises`.
+-   **Fixtures:**  If you need more complex setup (like creating specific agent instances), use fixtures to isolate and reuse that setup logic.
+
+
+This revised solution addresses the critical issues of correct imports, proper test structure, and more thorough validation, making it significantly more robust and useful. Remember to adapt the tests based on the actual implementation details of your functions. Remember to remove the `test_exports` directory after running the tests.

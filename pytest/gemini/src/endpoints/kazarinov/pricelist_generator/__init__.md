@@ -2,67 +2,98 @@
 import pytest
 from hypotez.src.endpoints.kazarinov.pricelist_generator import ReportGenerator
 
-# Fixture definitions (if needed)
-# No fixtures are needed for this simple example.
+# Sample data for testing.  Replace with more robust data if available.
+SAMPLE_DATA = {
+    'report_type': 'test',
+    'data': [
+        {'id': 1, 'name': 'Product A', 'price': 10.0},
+        {'id': 2, 'name': 'Product B', 'price': 20.0},
+    ]
+}
+
+# Fixtures (if needed)
+@pytest.fixture
+def report_generator_instance():
+    """Provides a ReportGenerator instance for testing."""
+    return ReportGenerator()
 
 
-# Tests for ReportGenerator class
-def test_report_generator_valid_input():
-    """Checks correct instantiation with valid input."""
-    generator = ReportGenerator()
-    assert isinstance(generator, ReportGenerator)  # Verify object creation
+# Tests for ReportGenerator
+def test_generate_report_valid_input(report_generator_instance):
+    """Tests ReportGenerator with valid input."""
+    result = report_generator_instance.generate_report(SAMPLE_DATA)
+    # Assert that the result is not None and contains the expected data.
+    #  Modify the assertion based on the expected output format.
+    assert result is not None
+    assert isinstance(result, dict)
 
 
-def test_report_generator_invalid_mode():
-    """Checks exception handling for invalid mode."""
-    with pytest.raises(ValueError):
-        ReportGenerator(mode="invalid")  # Expect ValueError for invalid mode
+def test_generate_report_missing_data(report_generator_instance):
+    """Tests ReportGenerator with missing 'data' key."""
+    invalid_data = {'report_type': 'test'}
+    with pytest.raises(KeyError):
+        report_generator_instance.generate_report(invalid_data)
 
 
-def test_report_generator_empty_data():
-    """Checks behavior with empty data input."""
-    generator = ReportGenerator()  # Use default mode
-    # The ReportGenerator class may not require data input in this example.
-    # Replace with actual test if data is expected.
-    assert generator  #Check if object initialization succeeds even with empty data
+def test_generate_report_empty_data(report_generator_instance):
+    """Tests ReportGenerator with empty data list."""
+    invalid_data = {'report_type': 'test', 'data': []}
+    result = report_generator_instance.generate_report(invalid_data)
+    # Check if the result is not None and has an expected structure.
+    assert result is not None
+    assert isinstance(result, dict)
+    # Add more specific assertions if the expected output for empty data is known.
+
+
+def test_generate_report_invalid_data_type(report_generator_instance):
+    """Tests ReportGenerator with invalid data type."""
+    invalid_data = {'report_type': 'test', 'data': 'not_a_list'}
+    with pytest.raises(TypeError):
+        report_generator_instance.generate_report(invalid_data)
+
+def test_generate_report_price_not_numeric(report_generator_instance):
+    """Tests ReportGenerator with a price that is not numeric."""
+    invalid_data = {'report_type': 'test', 'data': [{'id': 1, 'name': 'Product A', 'price': 'abc'}]}
+    with pytest.raises(ValueError) as excinfo:
+        report_generator_instance.generate_report(invalid_data)
+    assert "Price must be numeric" in str(excinfo.value)
+
+
+# Important:  Add more tests based on the actual functionality of
+#  the ReportGenerator class and its expected behavior.
+#  The example tests are basic and need significant expansion.
+#  Test different report types, various edge cases, and different error conditions.
+
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Import:**  Import `ReportGenerator` correctly from the specified module path.
+1. **Import necessary modules:** Imports `pytest` and the `ReportGenerator` class.
 
-2. **Fixtures:**  No fixtures are needed for the provided code snippet as it only contains a class definition.
+2. **Sample Data:** Creates `SAMPLE_DATA` for testing.  Crucially, this should be representative of the data the function actually receives.  Replace this with appropriate, real-world data.
 
-3. **`test_report_generator_valid_input`:**  This test verifies that the `ReportGenerator` class can be instantiated successfully.
+3. **Fixtures (if needed):**  A `report_generator_instance` fixture is included as an example.
 
+4. **Test Cases:**
+   - `test_generate_report_valid_input`: Tests with valid data.  Crucially, **assert** something meaningful.
+   - `test_generate_report_missing_data`, `test_generate_report_empty_data`, and `test_generate_report_invalid_data_type` :  Tests for different kinds of invalid input.  Using `pytest.raises` is correct for these cases.
+   - `test_generate_report_price_not_numeric`  Now includes a more specific assertion to check the error message itself.
 
-4. **`test_report_generator_invalid_mode`:** This test checks for exception handling when an invalid `mode` is passed during instantiation.  It's crucial to test exception handling for robustness.  Crucially, it uses `pytest.raises` to assert the expected exception type.
+5. **Comprehensive Testing:** The provided tests are a starting point.  You *must* add more test cases to cover all possible inputs, outputs, and error conditions of the `generate_report` function.  Think about various report types, edge cases involving data size (maximum/minimum, etc.), and unexpected formats.
 
-5. **`test_report_generator_empty_data`:** This test case is essential. It attempts to use the `ReportGenerator` with empty data.  Because there is no clear input data passed to the constructor, I have kept this test as a check for the successful creation of the object even with no data being passed.  It would need modification if you had input data to check against the expected functionality in the class.  (If the class has methods to process data, those methods should also be tested).
+**Before running the tests:**
 
+- Make sure the `hypotez/src/endpoints/kazarinov/pricelist_generator/__init__.py` file (the code you want to test) exists and contains the `ReportGenerator` class definition.
+- Ensure your test file (the Python file containing the `test_` functions) is in a location where `pytest` can find it.
 
-**Important Considerations for More Comprehensive Testing:**
+**How to run the tests:**
 
-* **Missing `__init__` parameters:**  If `ReportGenerator` has parameters in its constructor that accept input data, you'll need test cases for various valid and invalid data formats (e.g., different data types, empty data, incorrect data structures).
+Open your terminal, navigate to the directory containing your test file, and run:
 
-
-* **Method testing:**  If `ReportGenerator` has methods (e.g., `generate_report`), you must add test cases to verify those methods.  This would include testing various input scenarios (valid, invalid, edge cases) for these methods, as well as checking the output produced.
-
-
-* **Output validation:**  For methods that return data, make sure to validate the returned data's format, type, and content.  What output are you expecting from the class (e.g., a generated report file, a dictionary)?
-
-
-
-**Example with Data:**
-
-If the `ReportGenerator` class had an `__init__` method accepting data:
-
-```python
-def test_report_generator_valid_data():
-    data = {"key1": "value1"}  # Example data
-    generator = ReportGenerator(data=data)
-    assert generator.data == data  # Check if data is correctly stored. 
+```bash
+pytest
 ```
 
 
-These improvements make the tests more comprehensive and robust. Remember to adapt these tests based on the actual implementation details of your `ReportGenerator` class.  You need more information on the expected inputs, outputs, and functionality to write accurate and valuable tests.
+This improved example demonstrates a better structure and more comprehensive approach to testing, focusing on various aspects of input validation and error handling.  Crucially, **replace the example data and assertions with real data and expected outcomes.** Remember to adjust test cases based on the actual function's behavior.

@@ -1,55 +1,95 @@
 ```python
 import pytest
 
-# No user-provided code, so we'll create a dummy function for testing
+# No Python code provided to test, so creating dummy functions for demonstration.
 def analyze_code(code_block):
-    """Analyzes a code block and returns a documentation string."""
-    if not isinstance(code_block, str):
-        raise TypeError("Input must be a string.")
-    
-    if not code_block:
-        return "The code block is empty."
+    """Analyzes the provided code block."""
+    if "print" in code_block:
+        return "The code prints something."
+    elif "calculation" in code_block.lower():
+        return "The code performs calculations."
+    else:
+        return "The code does something else."
 
-    # Simulate analysis; replace with actual analysis logic
-    docstring = f"The code block '{code_block[:20]}...' contains some code."
-    return docstring
+def generate_documentation(code_block):
+    """Generates documentation for the given code block."""
+    description = analyze_code(code_block)
+    return f"""
+How to use this code block
+=========================================================================================
 
+Description
+-------------------------
+{description}
 
-def test_analyze_code_valid_input():
-    """Tests analyze_code with valid input."""
-    code_example = "def my_function():\n\tpass"
-    result = analyze_code(code_example)
-    assert isinstance(result, str)
-    assert "my_function" in result  #basic check to ensure it processed the input
+Execution steps
+-------------------------
+1.  The function takes a code block as input.
+2.  It analyzes the code block to determine its purpose.
+3.  It generates a description based on the analysis.
+4.  It returns a formatted string containing the description.
 
+Usage example
+-------------------------
+.. code-block:: python
 
-def test_analyze_code_empty_input():
-    """Tests analyze_code with empty input."""
-    result = analyze_code("")
-    assert result == "The code block is empty."
+    code_snippet = '''print("Hello, world!")'''
+    documentation = generate_documentation(code_snippet)
+    print(documentation)
+"""
 
+# Test cases
+def test_analyze_code_print():
+    """Checks if the analysis correctly identifies print statements."""
+    code_block = "print('Hello, world!')"
+    result = analyze_code(code_block)
+    assert result == "The code prints something."
 
-def test_analyze_code_invalid_input_type():
-    """Tests analyze_code with invalid input type."""
-    with pytest.raises(TypeError):
-        analyze_code(123)
+def test_analyze_code_calculation():
+    """Tests the analysis for calculation code."""
+    code_block = "result = 10 + 5"
+    result = analyze_code(code_block)
+    assert result == "The code performs calculations."
 
+def test_analyze_code_no_match():
+    """Tests analysis for code with no known pattern."""
+    code_block = "import math"
+    result = analyze_code(code_block)
+    assert result == "The code does something else."
 
-def test_analyze_code_nonempty_input():
-    """Tests analyze_code with valid non-empty input."""
-    code_example = """\
-def my_function(a, b):\n\
-    return a + b"""
-    result = analyze_code(code_example)
-    assert isinstance(result, str)
-    assert "my_function" in result
+def test_generate_documentation_valid_input():
+    """Tests documentation generation with a valid code snippet."""
+    code_snippet = "print('Hello, world!')"
+    expected_output = """
+How to use this code block
+=========================================================================================
 
-def test_analyze_code_long_input():
-    """Test with a longer input to ensure it doesn't crash."""
-    long_code = "def complex_function(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10):\n\t# ... some complex logic ...\n\treturn result"
-    result = analyze_code(long_code)
-    assert isinstance(result, str)
-    assert "complex_function" in result
+Description
+-------------------------
+The code prints something.
 
+Execution steps
+-------------------------
+1.  The function takes a code block as input.
+2.  It analyzes the code block to determine its purpose.
+3.  It generates a description based on the analysis.
+4.  It returns a formatted string containing the description.
 
+Usage example
+-------------------------
+.. code-block:: python
+
+    code_snippet = 'print(\'Hello, world!\')'
+    documentation = generate_documentation(code_snippet)
+    print(documentation)
+"""
+    actual_output = generate_documentation(code_snippet)
+    assert expected_output.strip() == actual_output.strip()
+
+# Example of testing exception handling (as no exceptions are raised in the given code,
+# this shows how it could be done):
+def test_generate_documentation_invalid_input():
+    """Tests handling of invalid input (e.g., non-string input)."""
+    with pytest.raises(TypeError):  # Expect TypeError for non-string input
+        generate_documentation(123)
 ```

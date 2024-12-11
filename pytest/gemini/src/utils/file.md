@@ -1,158 +1,133 @@
 ```python
 import pytest
 import os
-import json
 from pathlib import Path
-from typing import List, Optional, Union, Generator
-from hypotez.src.utils.file import (
-    save_text_file,
-    read_text_file,
-    get_filenames,
-    recursively_yield_file_path,
-    recursively_get_file_path,
-    recursively_read_text_files,
-    get_directory_names,
-    read_files_content,
-    remove_bom,
-    traverse_and_clean,
-)
+from hypotez.src.utils.file import save_text_file, read_text_file, get_filenames, recursively_yield_file_path, recursively_get_file_path, recursively_read_text_files, get_directory_names, remove_bom, traverse_and_clean
 from unittest.mock import patch
+from io import StringIO
+import json
 
 
-# Fixtures
+# Fixture for creating temporary files
 @pytest.fixture
 def temp_file(tmpdir):
-    """Creates a temporary file for testing."""
-    test_file = tmpdir.join("test.txt")
-    test_file.write("This is some test data.")
-    return test_file
-
-
-@pytest.fixture
-def temp_dir(tmpdir):
-    """Creates a temporary directory for testing."""
-    test_dir = tmpdir.mkdir("testdir")
-    test_file = test_dir.join("test.txt")
-    test_file.write("This is another test.")
-    return test_dir
+    file_path = tmpdir.join("testfile.txt")
+    return file_path
 
 
 # Tests for save_text_file
-def test_save_text_file_valid_string(temp_file):
+def test_save_text_file_string(temp_file):
     """Tests saving a string to a file."""
-    data = "Testing string save."
-    assert save_text_file(data, temp_file)
+    data = "This is a test string."
+    save_text_file(data, temp_file)
+    assert temp_file.read_text() == data
 
 
-def test_save_text_file_valid_list(temp_file):
+def test_save_text_file_list(temp_file):
     """Tests saving a list of strings to a file."""
-    data = ["Line 1", "Line 2"]
-    assert save_text_file(data, temp_file, mode="a")
+    data = ["Line 1", "Line 2", "Line 3"]
+    save_text_file(data, temp_file)
+    assert temp_file.read_text() == "Line 1\nLine 2\nLine 3\n"
 
 
-def test_save_text_file_valid_dict(temp_file):
+def test_save_text_file_dict(temp_file):
     """Tests saving a dictionary to a file."""
-    data = {"key": "value"}
-    assert save_text_file(data, temp_file)
+    data = {"key1": "value1", "key2": "value2"}
+    save_text_file(data, temp_file)
+    expected_content = json.dumps(data, ensure_ascii=False, indent=4)
+    assert temp_file.read_text() == expected_content
 
 
-def test_save_text_file_invalid_path(tmpdir):
-    """Tests saving to a non-existent path."""
-    file_path = tmpdir.join("nonexistent/file.txt")
-    assert not save_text_file("Test", file_path)
+def test_save_text_file_invalid_path(temp_file):
+    """Tests saving to a path that doesn't exist."""
+    data = "Test data"
+    nonexistent_path = "some/nonexistent/path/testfile.txt"
+    result = save_text_file(data, nonexistent_path)
+    assert not result  # Should return False on failure
 
+
+def test_save_text_file_append_mode(temp_file):
+    """Tests saving in append mode."""
+    data = "This is the first line."
+    save_text_file(data, temp_file, mode='w')
+    data2 = "This is the second line."
+    save_text_file(data2, temp_file, mode='a')
+    assert temp_file.read_text() == "This is the first line.\nThis is the second line.\n"
 
 
 # Tests for read_text_file
-def test_read_text_file_valid_file(temp_file):
-    """Tests reading a file."""
+def test_read_text_file_string(temp_file):
+    """Tests reading a string from a file."""
+    data = "This is a test file."
+    temp_file.write_text(data)
     content = read_text_file(temp_file)
-    assert content == "This is some test data."
+    assert content == data
 
 
-def test_read_text_file_as_list(temp_file):
-    """Tests reading a file as a list of lines."""
-    lines = read_text_file(temp_file, as_list=True)
-    assert lines == ["This is some test data.\n"]
+def test_read_text_file_list(temp_file):
+    data = ["Line 1\n", "Line 2\n", "Line 3\n"]
+    temp_file.write_text(''.join(data))
+    content = read_text_file(temp_file, as_list=True)
+    assert content == data
 
 
-def test_read_text_file_invalid_file(tmpdir):
+def test_read_text_file_nonexistent_file():
     """Tests reading a non-existent file."""
-    assert read_text_file(tmpdir.join("nonexistent.txt")) is None
+    nonexistent_file = "nonexistent_file.txt"
+    content = read_text_file(nonexistent_file)
+    assert content is None
 
 
-def test_read_text_file_directory(temp_dir):
-  """Tests reading a directory"""
-  content = read_text_file(temp_dir)
-  assert content == "This is another test."
-
-
-# Tests for get_filenames
-def test_get_filenames_valid_directory(temp_dir):
-  """Tests getting filenames in a directory."""
-  filenames = get_filenames(temp_dir)
-  assert "test.txt" in filenames
-
-
-def test_get_filenames_with_extension(temp_dir):
-    """Test getting filenames with specific extension."""
-    filenames = get_filenames(temp_dir, extensions="txt")
-    assert "test.txt" in filenames
-
-
-def test_get_filenames_invalid_directory():
-    """Tests getting filenames in a non-existent directory."""
-    filenames = get_filenames("nonexistent_dir")
-    assert filenames == []
+def test_read_text_file_directory(tmpdir):
+    """Tests reading content from a directory."""
+    dir_path = tmpdir.mkdir("testdir")
+    file1 = dir_path.join("file1.txt")
+    file1.write_text("File 1 content")
+    file2 = dir_path.join("file2.txt")
+    file2.write_text("File 2 content")
+    content = read_text_file(dir_path, as_list=True)
+    assert content == ["File 1 content\n", "File 2 content\n"]
 
 
 
-# Example tests for other functions (add more as needed)
-def test_recursively_read_text_files_valid_directory(temp_dir):
-    """Tests recursively reading files from a directory."""
-    contents = recursively_read_text_files(temp_dir, "*.txt")
-    assert "This is another test." in contents
+# Add more tests for other functions as needed (get_filenames, etc.)
+# Example for exception handling (using pytest.raises)
+# def test_function_raises_exception():
+#     with pytest.raises(ValueError):
+#         function_that_raises_error(invalid_input)
 
-
-def test_remove_bom(tmpdir):
-    """Tests removing BOM."""
-    file_path = tmpdir.join("test.txt")
-    file_path.write_binary("\ufeffThis is some text.")
-    remove_bom(file_path)
-    assert file_path.read() == "This is some text."
-
-#Example for exception testing
-def test_save_text_file_exception(tmpdir):
-    """Test saving to a file that cannot be written to."""
-    file_path = tmpdir.join("test.txt")
-    with open(file_path, 'w') as f:
-        f.close()
-        os.chmod(file_path, 0o000)
-        with pytest.raises(PermissionError):
-            save_text_file("Test", file_path)
-
-
-
-# Add more tests for other functions as needed...
-
+# Remember to adapt the test cases to the specific functionalities of your code,
+# and add tests for all the functions and different scenarios.
 
 ```
 
 **Explanation and Improvements:**
 
-* **Fixtures:** Uses `pytest.fixture` for creating temporary files and directories, making tests more isolated and reusable.  This is *critical* for testing file operations.
-* **Clear Test Names:**  Test names clearly indicate the purpose and input type (e.g., `test_save_text_file_valid_string`).
-* **Comprehensive Coverage:** Added tests for various data types (string, list, dict), valid/invalid file paths, and edge cases like reading directories. Tests for  `recursively_read_text_files`, and `remove_bom`.
-* **Exception Handling:** Included tests using `pytest.raises` to verify exception handling in `save_text_file` and other functions when encountering errors (e.g., file not found, permission issues, etc.)
-* **Example Tests:**  Demonstrates adding more tests for different functions.  Crucially, you should expand these to cover all the cases discussed in the docstrings of the functions you're testing.
-* **`temp_file` and `temp_dir` fixtures:** These are essential for testing file I/O. They ensure each test starts with a clean slate, preventing unintended side effects from one test impacting another.
-* **Specific Error Handling:** Instead of just `assert not save_text_file(...)`, the `test_save_text_file_exception` example now demonstrates how to assert a specific exception type (`PermissionError` in this case).
+* **`temp_file` Fixture:**  Crucially, a `pytest` fixture `temp_file` is introduced to create and manage temporary files. This avoids cluttering tests with file creation and removal logic.  Using `tmpdir` ensures the files are in a temporary directory that gets cleaned up automatically after the tests.
+* **More Comprehensive Tests:** Tests now cover saving strings, lists of strings (crucial for file writing!), and dictionaries (using `json.dump`).
+* **Error Handling:**  The `test_save_text_file_invalid_path` test checks for correct behavior when saving to a nonexistent path (returning `False`).
+* **Append Mode:**  `test_save_text_file_append_mode` demonstrates handling of append mode (`'a'`).
+* **Non-existent File:** `test_read_text_file_nonexistent_file` checks the proper handling of a non-existent file path.
+* **Directory Handling:** The `test_read_text_file_directory` test demonstrates reading files from a directory and handling the return type as a list of strings.
 
+**How to Run:**
 
-**To run these tests:**
+1.  Make sure you have `pytest` installed:
+    ```bash
+    pip install pytest
+    ```
 
-1.  Save the tests as a `.py` file (e.g., `test_file.py`).
-2.  Make sure the `hypotez` project structure is set up correctly.
-3.  Run `pytest test_file.py` from your terminal.
+2.  Save the test code (e.g., as `test_file.py`) in the same directory as your `hypotez/src/utils/file.py` file.
 
-Remember to adapt and add more tests to cover all the different cases and error conditions in the functions from `hypotez/src/utils/file.py`.  This example gives you a good starting point and demonstrates the key aspects of robust `pytest` testing for file-related code. Remember to add more test cases for all of the functions, especially those dealing with directories, recursive operations, and potential errors. For example, there should be tests for `get_directory_names`, `read_files_content`, and others.
+3.  Run the tests:
+    ```bash
+    pytest test_file.py
+    ```
+
+**Important Next Steps:**
+
+*   **More Specific Tests:** Add tests covering different aspects of each function (e.g., handling different types of extensions, empty directories, various patterns for `recursively_read_text_files`).
+*   **Edge Cases:**  Test boundary conditions, such as empty lists, or unusual data inputs.
+*   **Exception Handling:**  Use `pytest.raises` to test how your code handles different potential exceptions in `read_text_file`, `save_text_file`, and other functions.
+*   **Logger Integration:** Because your code uses a logger, you might want tests that verify the correct logging messages are emitted under various success and failure conditions.  A `@patch('hypotez.src.utils.file.logger')` could help test logger calls.
+*   **Directory-Specific Tests:** Tests to ensure that your code properly handles cases where the directory doesn't exist, is empty, contains files, or contains subdirectories should be included.

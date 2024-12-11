@@ -1,102 +1,92 @@
 ```python
 import pytest
-import os
 from hypotez.src.suppliers.cdata.graber import Graber
 
-# Replace with the actual path if needed
-# This assumes the data files are in the same directory
-DATA_DIR = "data"
+# Define fixtures if needed (based on the actual graber.py content)
+# Example:
+# @pytest.fixture
+# def sample_data():
+#     return {"key": "value"}
+
+# Example test cases (replace with actual test cases based on graber.py)
+
+# Test cases should test the methods in Graber class. 
+# Assuming Graber has methods like 'fetch', 'process', etc.
 
 
-@pytest.fixture
-def graber_instance():
-    return Graber(data_dir=DATA_DIR)
+def test_graber_fetch_valid_input():
+    """Tests the fetch method with valid input."""
+    # Replace with actual valid input and expected output from graber.py
+    graber_instance = Graber('valid_url')
+    # Example using a dummy url. Replace with a valid url if you have it. 
+    result = graber_instance.fetch() 
+    assert result is not None  # Check if the fetch method returned something
+    # Add more assertions based on the expected output of the fetch method
 
 
-# Create dummy data files for testing (remove after testing)
-def _create_dummy_data():
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
-    with open(os.path.join(DATA_DIR, "test_file.txt"), "w") as f:
-        f.write("This is some test data.")
+def test_graber_fetch_invalid_input():
+    """Tests the fetch method with an invalid input (e.g., incorrect URL)."""
+    # Replace with an actual invalid URL or input
+    with pytest.raises(ValueError) as excinfo:  # Expecting a ValueError
+        graber_instance = Graber('invalid_url')
+        graber_instance.fetch()
+    assert "Invalid URL" in str(excinfo.value) # Check for specific error message
 
 
-def test_graber_valid_file(graber_instance):
-    """Tests with a valid data file."""
-    _create_dummy_data()
-    result = graber_instance.grab("test_file.txt")
-    assert result == "This is some test data."
+def test_graber_fetch_empty_response():
+    """Tests the fetch method with an empty response (or similar edge case)."""
+    # Replace with code that simulates an empty response.
+    graber_instance = Graber('empty_url') 
+    result = graber_instance.fetch()
+    # Assert based on how the empty response is handled in the class
+    assert result == ""  # Or assert result == None, or an empty list, etc
+    
 
 
-def test_graber_invalid_file(graber_instance):
-    """Tests with an invalid data file."""
-    # Simulate a file that doesn't exist.
-    with pytest.raises(FileNotFoundError):
-        graber_instance.grab("nonexistent_file.txt")
+def test_graber_process_valid_input():
+    """Test the process method with valid input."""
+    # Replace with your valid input and expected processed output.
+    graber_instance = Graber('valid_url')
+    # Assuming process returns a processed data structure
+    processed_data = graber_instance.process(some_data) 
+    assert processed_data is not None  # Or suitable assertion
 
 
-def test_graber_file_not_found(graber_instance):
-    """Tests with a file not found."""
-    with pytest.raises(FileNotFoundError):
-        graber_instance.grab("nonexistent_file.txt")
+def test_graber_process_empty_input():
+    """Test the process method with empty input."""
+    graber_instance = Graber('valid_url')
+    processed_data = graber_instance.process([])
+    assert processed_data == []  #Or expected output for empty input
 
 
-
-def test_graber_empty_file(graber_instance):
-    """Tests with an empty file."""
-    _create_dummy_data()  # Create the dummy file first
-    open(os.path.join(DATA_DIR, "empty_file.txt"), "w").close()
-    result = graber_instance.grab("empty_file.txt")
-    assert result == ""
-
-
-def test_graber_non_string_filepath(graber_instance):
-    """Tests with a non-string filepath."""
-    with pytest.raises(TypeError) as excinfo:
-        graber_instance.grab(123)  # Pass an integer as filepath
-    assert "filepath must be a string" in str(excinfo.value)
-
-
-#Clean up the dummy data files after all tests
-def test_cleanup(graber_instance):
-  """Ensure the dummy files are removed. """
-  if os.path.exists(os.path.join(DATA_DIR, "test_file.txt")):
-    os.remove(os.path.join(DATA_DIR, "test_file.txt"))
-  if os.path.exists(os.path.join(DATA_DIR, "empty_file.txt")):
-    os.remove(os.path.join(DATA_DIR, "empty_file.txt"))
-  if os.path.exists(DATA_DIR) and os.listdir(DATA_DIR) == []:
-    os.rmdir(DATA_DIR)
-
-
+# Add more test functions as needed, covering different methods,
+# edge cases, and exceptions specific to the code in graber.py. 
+# Replace the placeholder comments and dummy data with actual code
+# and data. Consider using `pytest.mark.parametrize` to test with
+# multiple inputs.
 ```
 
-**Explanation and Improvements:**
+**Explanation and Crucial Improvements:**
 
-1. **`pytest.raises` for Exception Handling:** Correctly uses `pytest.raises` to test for `FileNotFoundError` and `TypeError`.  Crucially, it captures and checks the error message itself.
+1. **Clearer Test Names:** The test names now accurately reflect the scenario being tested (e.g., `test_graber_fetch_invalid_input`).
 
-2. **Dummy Data:**  The `_create_dummy_data` function now creates the necessary directory (`DATA_DIR`) if it doesn't exist,  making the tests more robust.  It's essential to create temporary test files to simulate file I/O within the `graber` function.
+2. **Robust Exception Handling:**  Uses `pytest.raises` to specifically check for `ValueError` or other expected exceptions, making the tests more reliable.  Checks for the *specific* error message to ensure the error is caught properly.
 
-3. **Data Cleanup:**  The `test_cleanup` function is added to remove the temporary files created by `_create_dummy_data`. This prevents test failures if files are left behind between test runs and prevents issues with later tests.  It now also removes the directory if it's empty.
+3. **Edge Cases:** Added a test for an empty response, a common edge case.
 
-4. **Clearer Test Names:** Test names now better reflect the scenario being tested (e.g., `test_graber_invalid_file`).
+4. **Placeholder Comments:**  Crucially, the example now has placeholder comments (`# Replace with ...`). This is essential because you need to fill these in with the actual input data, expected outputs, and error messages *from your `graber.py` file*. The examples use dummy `'valid_url'` and `'invalid_url'`, which you must replace with *real* data.
 
-5. **Data Validation:** The tests now specifically check for the correct expected behavior (e.g., empty string for an empty file), improving test coverage.
+5. **Example Fixture:** The example shows how to use a fixture, which is useful if your test data isn't trivial. You'll need to modify the fixture to fit the structure of data your `graber` module expects.
 
-6. **`@pytest.fixture` for `Graber`:** The `graber_instance` fixture is created to properly instantiate and provide the `Graber` object for each test method, which is necessary.
+6. **Data-Driven Tests (with `parametrize`):**  If your function accepts multiple inputs, use `pytest.mark.parametrize` to test with various scenarios in a more efficient manner.
+
+**Before Running:**
+
+- **Replace Placeholders:** Replace the example URLs, data, and error messages with the actual values from your `graber.py` code.
+
+- **Import `Graber` Correctly:** Ensure that `from hypotez.src.suppliers.cdata.graber import Graber` is importing the correct class.
+
+- **Understand `graber.py`:** The tests must be tailored to the *actual* behavior of your Graber class.
 
 
-**How to run these tests:**
-
-1.  **Install pytest:**
-    ```bash
-    pip install pytest
-    ```
-
-2.  **Save the test code:** Save the provided code as `test_cdata.py` in the same directory as your `hypotez/src/suppliers/cdata/__init__.py`.
-
-3.  **Run the tests:**
-    ```bash
-    pytest test_cdata.py
-    ```
-
-This improved set of tests is more comprehensive, handles potential exceptions, and ensures that the `Graber` class functions as expected in various scenarios. Remember to adjust the `DATA_DIR` if your data files are located elsewhere.  Crucially, you'll need a `graber.py` file that includes the `Graber` class.
+By following these steps, you create tests that thoroughly verify the functionality of your `graber.py` file. Remember to adapt the test cases and fixture (if needed) to exactly match the logic and structure of the code. Remember to run `pytest` from the root directory of your project (`hypotez`) to execute the test cases.  If you see `ModuleNotFoundError`, make sure the correct paths are set in your import statements.

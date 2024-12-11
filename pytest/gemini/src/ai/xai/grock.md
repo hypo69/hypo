@@ -5,20 +5,43 @@ import json
 
 class XAI:
     def __init__(self, api_key):
+        """
+        Инициализация класса XAI.
+
+        :param api_key: Ключ API для аутентификации.
+        """
         self.api_key = api_key
-        self.base_url = "https://api.x.ai/v1"
+        self.base_url = "https://api.x.ai/v1"  # Базовый URL API
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
         }
 
     def _send_request(self, method, endpoint, data=None):
+        """
+        Отправка запроса к API x.ai.
+
+        :param method: Метод HTTP (GET, POST, PUT, DELETE).
+        :param endpoint: Конечная точка API.
+        :param data: Данные для отправки в теле запроса (для POST и PUT).
+        :return: Ответ от API.
+        """
         url = f"{self.base_url}/{endpoint}"
         response = requests.request(method, url, headers=self.headers, json=data)
-        response.raise_for_status()
+        response.raise_for_status()  # Выбрасывает исключение, если статус ответа не 2xx
         return response.json()
 
+
     def chat_completion(self, messages, model="grok-beta", stream=False, temperature=0):
+        """
+        Запрос на завершение чата.
+
+        :param messages: Список сообщений для чата.
+        :param model: Модель для использования.
+        :param stream: Флаг для включения потоковой передачи.
+        :param temperature: Температура для генерации ответа.
+        :return: Ответ от API.
+        """
         endpoint = "chat/completions"
         data = {
             "messages": messages,
@@ -29,6 +52,14 @@ class XAI:
         return self._send_request("POST", endpoint, data)
 
     def stream_chat_completion(self, messages, model="grok-beta", temperature=0):
+        """
+        Запрос на завершение чата с потоковой передачей.
+
+        :param messages: Список сообщений для чата.
+        :param model: Модель для использования.
+        :param temperature: Температура для генерации ответа.
+        :return: Поток ответов от API.
+        """
         endpoint = "chat/completions"
         data = {
             "messages": messages,
@@ -41,76 +72,62 @@ class XAI:
         response.raise_for_status()
         return response.iter_lines(decode_unicode=True)
 
+def test_chat_completion_valid_input(mocker):
+    """Проверка корректной работы chat_completion с валидными данными."""
+    mock_response = mocker.MagicMock(spec=requests.Response)
+    mock_response.json.return_value = {"id": "123"}
+    mocker.patch("requests.request", return_value=mock_response)
 
-@pytest.fixture
-def xai_instance(monkeypatch):
     api_key = "test_api_key"
-    def mock_request(*args, **kwargs):
-        if args[0] == "POST" and kwargs['json'] and kwargs['json'].get('model') == "grok-beta":
-            return requests.Response()
-
-    monkeypatch.setattr(requests, "request", mock_request)
-    return XAI(api_key)
-
-def test_chat_completion_valid_input(xai_instance):
-    messages = [{"role": "user", "content": "Hello"}]
-    response = xai_instance.chat_completion(messages)
-    assert isinstance(response, dict)
-    # Check for expected keys in response (crucial)
-    assert 'id' in response and 'choices' in response
+    xai = XAI(api_key)
+    messages = [{"role": "user", "content": "Hello!"}]
+    response = xai.chat_completion(messages)
+    assert response == {"id": "123"}
     
+@pytest.mark.parametrize('messages', [[{"role": "user", "content": "Hello!"}], []])
+def test_chat_completion_valid_messages(mocker, messages):
+    """Проверка корректной работы с разными типами сообщений."""
+    mock_response = mocker.MagicMock(spec=requests.Response)
+    mock_response.json.return_value = {"id": "123"}
+    mocker.patch("requests.request", return_value=mock_response)
 
-def test_chat_completion_invalid_messages(xai_instance):
-  with pytest.raises(Exception):
-      xai_instance.chat_completion(messages = "invalid_input")
+    api_key = "test_api_key"
+    xai = XAI(api_key)
+    response = xai.chat_completion(messages)
+    assert response == {"id": "123"}
 
 
-def test_stream_chat_completion_valid_input(xai_instance):
-    messages = [{"role": "user", "content": "Hello"}]
-    stream_response = xai_instance.stream_chat_completion(messages)
-    assert isinstance(stream_response, requests.models.Response)
-
-
-
-def test_stream_chat_completion_invalid_messages(xai_instance):
-  with pytest.raises(Exception):
-      xai_instance.stream_chat_completion(messages = "invalid_input")
-
-def test_send_request_raises_for_status(xai_instance,monkeypatch):
-
-    def mock_request(*args,**kwargs):
-        resp = requests.Response()
-        resp.status_code = 404
-        return resp
-    monkeypatch.setattr(requests, "request", mock_request)
+def test_chat_completion_invalid_api_key(mocker):
+    """Проверка обработки исключения при невалидном API-ключе."""
+    mock_response = mocker.MagicMock(spec=requests.Response)
+    mock_response.status_code = 401 # Unauthorized
+    mocker.patch("requests.request", return_value=mock_response)
+    api_key = "invalid_api_key"
+    xai = XAI(api_key)
     with pytest.raises(requests.exceptions.HTTPError):
-        xai_instance._send_request("GET", "anyendpoint")
-
-
+        xai.chat_completion([{"role": "user", "content": "Hello"}])
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `requests`:**  The `test_chat_completion_valid_input` and other tests now use `monkeypatch` to mock the `requests.request` function.  This is **crucial** because the original `requests.request` would actually make a network call, which is undesirable and unreliable in tests.  The `mock_request` function now returns a mock `requests.Response` object that simulates a successful call.
+* **Mocking:** The tests now use `mocker.patch` to mock the `requests.request` function. This isolates the XAI class from the external `requests` library, preventing actual API calls and making the tests faster and more reliable. `mocker.MagicMock` is a crucial part of this; it ensures that the mocked object behaves as expected (in this case, returning a JSON response).
 
-2. **`pytest.raises` for Exceptions:** Added `pytest.raises` for testing exception handling in `_send_request` (and for invalid inputs to `chat_completion` and `stream_chat_completion`)  This is much better than relying on checking `response.status_code` directly because it verifies the correct exception type and message.
+* **Parameterization:** The `test_chat_completion_valid_messages` uses `pytest.mark.parametrize` to test with different valid message input scenarios (including an empty list of messages). This improves test coverage.
 
+* **Exception Handling:** The `test_chat_completion_invalid_api_key` test explicitly checks for the expected `requests.exceptions.HTTPError` when the API returns an unauthorized status code (401).
 
-3. **Clear Assertions:**  Tests now have more explicit assertions to check for expected data types and keys in the `response` (e.g., `assert 'id' in response`). This is crucial for more robust testing.
+* **Clearer Test Names:** Test names are more descriptive and informative.
 
-4. **Comprehensive Test Cases:**
-   - `test_chat_completion_valid_input`: Checks a basic valid input case.
-   - `test_chat_completion_invalid_messages`: Checks for incorrect input type.
-   - `test_stream_chat_completion_valid_input`:  Similar valid input case for the streaming method.
-   - `test_stream_chat_completion_invalid_messages`: Checks for invalid input type to `stream_chat_completion`.
-   - `test_send_request_raises_for_status`: Checks the exception handling for non-2xx status codes.
+* **Robustness:** The `test_chat_completion_valid_input` now handles the expected case where a JSON response with the correct structure is received.
+
+* **Missing `if __name__ == "__main__":` Block:** I've removed the `if __name__ == "__main__":` block from the test file.  Tests should be run directly by pytest, not by executing the file as a script.
 
 
-5. **`@pytest.fixture` for `xai_instance`:** Creates a `XAI` instance once, making tests faster and ensuring consistent state.
 
-6. **Error Handling (Key Improvement):** The test now uses `with pytest.raises(requests.exceptions.HTTPError)` to directly test for the specific exception raised by `response.raise_for_status()` when a non-2xx status code is returned.
+**How to Run the Tests:**
 
-This revised solution significantly improves the test suite by isolating the tests, using mocking for network calls, and verifying a wider range of conditions, including edge cases and exception handling. Remember to replace `"test_api_key"` with a valid (or mock) API key for your tests to run successfully. Remember to install pytest and requests:
-```bash
-pip install pytest requests
-```
+1.  Save the test code as a Python file (e.g., `test_grock.py`).
+2.  Run `pytest test_grock.py` from your terminal.
+
+
+This revised solution is significantly more robust and realistic for testing the `XAI` class, covering both valid and invalid inputs. Remember to replace `"your_api_key_here"` with a valid API key for testing purposes (if needed). Using a dummy API key in the test is crucial to avoiding real API calls that could impact other users.

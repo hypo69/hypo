@@ -1,136 +1,122 @@
 ```python
 import pytest
-import logging
+import json
 
-# Placeholder for the functions represented in the sequence diagram
-def process_ai(products_list, attempts):
-    """
-    Simulates the AI model processing.  
-    For testing purposes, this function will return a pre-defined response
-    or raise exceptions based on the scenario.
-    """
-    if attempts > 3:  # Simulate maximum retry attempts
-        raise Exception("Too many attempts")
-    
-    if products_list is None or len(products_list) == 0:
-      raise ValueError("Empty products list")
+# Placeholder for the actual code.  Replace with your code.
+# This is a dummy implementation to demonstrate testing structure.
+def process_ai(products_list, attempts=3):
+    """Processes the products list using an AI model."""
+
+    if attempts <= 0:
+        raise ValueError("Too many attempts.")
 
     try:
+        # Simulate AI model response (replace with actual API call)
         if attempts == 1:
-          return {"ru": "response_ru", "he": "response_he"}  # Valid data
-        elif attempts == 2:
-          raise Exception("no response from gemini")
-        elif attempts == 3:
-          return [{"ru": "response_ru", "he": "response_he"}] #Valid list of objects
-        else:
-          return []
-    except (ValueError, Exception) as e:
-        logging.error(f"Error processing products list: {str(e)}")
+            raise ValueError("no response from gemini")
+
+        response_data = {
+            "products": [
+                {"ru": "Product 1", "he": "Product 1 (he)"},
+                {"ru": "Product 2", "he": "Product 2 (he)"},
+            ]
+        }
+
+        # Simulate a bad response format
+        # response_data = "invalid_response"
+
+        # Simulate data in the form of a list
+        # response_data = [{"ru": "Product 1", "he": "Product 1 (he)"}]
+        # response_data = [{"invalid_data"}]
+
+
+        # Basic validation
+        if not isinstance(response_data, dict):
+            raise ValueError("Error in data from gemini")
+
+        if "products" not in response_data:
+            raise ValueError("Error in data from gemini")
+
+
+        products = response_data.get("products")
+        if isinstance(products, list):
+            for product in products:
+                if not (isinstance(product, dict) and "ru" in product and "he" in product):
+                    raise ValueError("Проблема парсинга ответа")
+        elif not isinstance(products, dict):
+            raise ValueError("Проблема парсинга ответа")
+
+        if not all(isinstance(product.get("ru"), str) for product in products):
+            raise ValueError("Invalid ru or he data")
+
+
+        result = []
+        for product in products:
+            result.append({"ru": product["ru"], "he": product["he"]})
+        return result
+
+
+    except ValueError as e:
+        print(f"Error during processing: {e}")
         return None
-
-def extract_ru_he(data):
-  """
-  Extracts 'ru' and 'he' from the data structure. 
-  This will fail for invalid data.
-  """
-  if isinstance(data, dict):
-    return data.get('ru'), data.get('he')
-  elif isinstance(data, list):
-    if len(data) > 0:
-      return extract_ru_he(data[0])
-    else:
-      return None, None
-  else:
-    raise ValueError("Invalid data structure")
+        # Return None instead of raising exception for demo purposes
+        # raise
 
 
+    except Exception as e:
+        # Simulates logging the error
+        print(f"Unexpected error during processing: {e}")
+        # raise
 
-# Fixtures (you would replace these with actual data fetching or creation)
+
+# Fixtures (optional but helpful for test data)
 @pytest.fixture
 def valid_products():
-    return ["product1", "product2"]
+    return [{"ru": "Product 1", "he": "Product 1"}, {"ru": "Product 2", "he": "Product 2"}]
 
 
 @pytest.fixture
-def invalid_products():
-    return None
+def invalid_data():
+    return "invalid_data"
+
+# Test cases
+
+def test_process_ai_valid_input(valid_products):
+    """Tests with a valid list of products."""
+    result = process_ai(valid_products)
+    assert result is not None
+    assert len(result) == 2
+    assert result[0]["ru"] == "Product 1"
 
 
-@pytest.mark.parametrize("products_list, expected_ru, expected_he", [
-    (valid_products, "response_ru", "response_he"),
-    ([{'ru': 'test', 'he': 'test2'}], 'test', 'test2')
+def test_process_ai_invalid_data(invalid_data):
+    """Tests with invalid input data."""
+    result = process_ai(invalid_data)
+    assert result is None
 
-])
-def test_process_ai_valid_input(products_list, expected_ru, expected_he):
-    """
-    Valid input processing
-    """
-    result = process_ai(products_list, 1)
-    ru, he = extract_ru_he(result)
-    assert ru == expected_ru
-    assert he == expected_he
-
-
-def test_process_ai_no_response(valid_products):
-    with pytest.raises(Exception) as excinfo:
-        process_ai(valid_products, 2)
-    assert "no response from gemini" in str(excinfo.value)
+def test_process_ai_no_response(monkeypatch):
+    """Tests the 'no response' scenario."""
+    monkeypatch.setattr('builtins.print', lambda x: None) # Suppress print output
+    with pytest.raises(ValueError, match="no response from gemini"):
+        process_ai([{"ru":"test"}], attempts=1)
+def test_process_ai_bad_format_response():
+    """Tests processing a response that is not in the correct format."""
+    response_data = "invalid_response"
+    result = process_ai(response_data)
+    assert result is None
 
 
-def test_process_ai_invalid_data(valid_products):
-    with pytest.raises(ValueError) as excinfo:
-        process_ai(invalid_products,1)
-    assert "Empty products list" in str(excinfo.value)
+def test_process_ai_empty_products():
+    """Tests with an empty product list."""
+    result = process_ai([])
+    assert result is not None and len(result) == 0
+
+def test_process_ai_invalid_ru_data():
+    """Tests with invalid ru data in a product."""
+    products = [{"ru": 123, "he": "Product 1"}]
+    result = process_ai(products)
+    assert result is None
 
 
-
-def test_process_ai_invalid_structure():
-    with pytest.raises(ValueError) as excinfo:
-        result = process_ai(valid_products,3)
-        extract_ru_he(result) #check the error is raised in the right place
-    assert "Invalid data structure" in str(excinfo.value)
-
-
-def test_process_ai_too_many_attempts():
-  with pytest.raises(Exception) as excinfo:
-    process_ai(valid_products, 4)
-  assert "Too many attempts" in str(excinfo.value)
 
 ```
-
-**Explanation and Improvements:**
-
-* **Clearer Error Handling:**  The `process_ai` function now raises specific exceptions (e.g., `ValueError` for empty input) making tests more robust.  Crucially, it logs errors to `logging` which is good practice.
-
-
-* **Parameterized Tests:**  `pytest.mark.parametrize` is used to create multiple tests with different input values, making the tests more concise and efficient.
-
-* **Comprehensive Edge Cases:** Tests cover empty input lists, invalid data structures (not just dictionaries), and the maximum retry attempts.
-
-
-* **Mock Data:** The fixtures (`valid_products`, `invalid_products`)  are placeholders.  In a real application, you'd replace these with actual data fetching or creation logic.
-
-
-* **Exception Handling:** `pytest.raises` is used to assert that the correct exceptions are raised in the `process_ai` function when there are issues.  Testing for the expected error messages is crucial for debugging and error analysis.
-
-* **`extract_ru_he` function:** Added to handle different data structures (lists and dicts) more robustly and tests are adjusted to accomodate that function.
-
-
-* **Realistic Testing:** The tests are more realistic in their approach to catching common errors and handling more than just valid scenarios.
-
-
-**How to Run:**
-
-1.  **Install pytest:**
-    ```bash
-    pip install pytest
-    ```
-
-2.  **Save:** Save the above code as a Python file (e.g., `test_process_ai.py`).
-
-3.  **Run:**
-    ```bash
-    pytest test_process_ai.py
-    ```
-
-This revised solution is more complete and robust, covering a wider range of scenarios and potential errors. Remember to replace the placeholder functions with your actual implementation for production-level testing. Remember to install the `pytest` library in your environment if you don't have it already.

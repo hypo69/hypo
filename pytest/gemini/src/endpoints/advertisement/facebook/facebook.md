@@ -2,87 +2,112 @@
 import pytest
 from types import SimpleNamespace
 from pathlib import Path
-from src.endpoints.advertisement.facebook.facebook import Facebook
-from src.utils.jjson import j_loads, j_dumps # Replace with actual import paths if necessary
 from unittest.mock import patch
+# Replace with the actual import paths if different
+from hypotez.src.endpoints.advertisement.facebook.facebook import Facebook
+from hypotez.src.endpoints.advertisement.facebook.scenarios.login import login as login_scenario
+from hypotez.src.endpoints.advertisement.facebook.scenarios import promote_post, upload_media
 
-# Mock the scenarios for testing.  Crucial for testing this class without a real Facebook driver
-@patch('src.endpoints.advertisement.facebook.facebook.login', return_value=True)  
-@patch('src.endpoints.advertisement.facebook.facebook.switch_account', return_value=True)  
-@patch('src.endpoints.advertisement.facebook.facebook.promote_post', return_value=True)
-def test_facebook_login(mock_promote_post, mock_switch_account, mock_login, mocker):
-    """Tests the Facebook login function."""
-    # Mock the driver for testing purposes
-    driver_mock = mocker.MagicMock()
-    driver_mock.get_url = mocker.MagicMock(return_value = None)  # Mock get_url
+
+@pytest.fixture
+def mock_driver():
+    """Provides a mock webdriver for testing."""
+    class MockDriver:
+        def __init__(self):
+            self.current_url = ""
+            self.get = lambda url: self.current_url.__setitem__(0, url)
+            self.find_element = lambda *args: None  # Mock find_element
+            self.send_keys = lambda *args: None  # Mock send_keys
+            self.switch_to = lambda *args: None # Mock switch_to
+
+    return MockDriver()
+
+@pytest.fixture
+def facebook_instance(mock_driver):
+    """Creates a Facebook instance with a mock driver."""
+    return Facebook(mock_driver, "test_promoter", ["test_file"])
+
+
+def test_facebook_login_success(facebook_instance, mock_driver):
+    """Tests Facebook login with a mock driver."""
+    # Mock the login scenario to return True
+    with patch('hypotez.src.endpoints.advertisement.facebook.facebook.login', return_value=True) as mock_login:
+        result = facebook_instance.login()
+        assert result
+        mock_login.assert_called_once()
+
+def test_facebook_login_failure(facebook_instance, mock_driver):
+    """Tests Facebook login failure with a mock driver."""
+    # Mock the login scenario to return False
+    with patch('hypotez.src.endpoints.advertisement.facebook.facebook.login', return_value=False) as mock_login:
+        result = facebook_instance.login()
+        assert not result
+        mock_login.assert_called_once()
+
+def test_promote_post_success(facebook_instance, mock_driver):
+    """Tests successful promotion of a post."""
+    item = SimpleNamespace(message="Test message")
+    with patch('hypotez.src.endpoints.advertisement.facebook.facebook.promote_post', return_value=True) as mock_promote_post:
+        result = facebook_instance.promote_post(item)
+        assert result
+        mock_promote_post.assert_called_once_with(mock_driver, item)
+
+def test_promote_post_failure(facebook_instance, mock_driver):
+    """Tests failed promotion of a post."""
+    item = SimpleNamespace(message="Test message")
+    with patch('hypotez.src.endpoints.advertisement.facebook.facebook.promote_post', return_value=False) as mock_promote_post:
+        result = facebook_instance.promote_post(item)
+        assert not result
+        mock_promote_post.assert_called_once_with(mock_driver, item)
+
+
+def test_facebook_init_with_invalid_driver(mock_driver):
+    """ Tests initializing the Facebook class with an invalid driver (type error)
+        using pytest.raises to assert for a TypeError."""
+    with pytest.raises(TypeError):
+        Facebook(123, "test_promoter", ["test_file"])  # Passing an integer instead of a webdriver
+
+
+#Example Test for upload_media (needs appropriate mock and data setup)
+def test_upload_media(facebook_instance, mock_driver):
+  # Mock the necessary functions.
+  with patch('hypotez.src.endpoints.advertisement.facebook.facebook.upload_media') as mock_upload_media:
+    mock_upload_media.return_value = True
     
-    facebook_instance = Facebook(driver=driver_mock, promoter="test_promoter", group_file_paths=[])
-    assert facebook_instance.login() is True
-
-@patch('src.endpoints.advertisement.facebook.facebook.login', return_value=True)  
-@patch('src.endpoints.advertisement.facebook.facebook.switch_account', return_value=True)  
-@patch('src.endpoints.advertisement.facebook.facebook.promote_post', return_value=True)
-def test_facebook_promote_post(mock_promote_post, mock_switch_account, mock_login, mocker):
-    """Tests the Facebook promote_post function with valid input."""
-    driver_mock = mocker.MagicMock()
-    item = SimpleNamespace(message="Test message")  # Example SimpleNamespace object
-    facebook_instance = Facebook(driver=driver_mock, promoter="test_promoter", group_file_paths=[])
-    assert facebook_instance.promote_post(item) is True
-
-@patch('src.endpoints.advertisement.facebook.facebook.login', return_value=True)  
-@patch('src.endpoints.advertisement.facebook.facebook.switch_account', return_value=True)  
-@patch('src.endpoints.advertisement.facebook.facebook.promote_post', side_effect=Exception("Error during promote"))
-def test_facebook_promote_post_exception(mock_promote_post, mock_switch_account, mock_login, mocker):
-    """Tests the Facebook promote_post function with exception."""
-    driver_mock = mocker.MagicMock()
-    item = SimpleNamespace(message="Test message")  # Example SimpleNamespace object
-    facebook_instance = Facebook(driver=driver_mock, promoter="test_promoter", group_file_paths=[])
-    with pytest.raises(Exception) as excinfo:
-        facebook_instance.promote_post(item)
-    assert "Error during promote" in str(excinfo.value)
+    # Assuming `upload_media` expects a list of file paths.
+    result = facebook_instance.upload_media(["filepath1", "filepath2"])  # Add correct args to your mock
+    assert result, "upload_media failed"
+    mock_upload_media.assert_called_once()
 
 
-# Add tests for edge cases and invalid inputs if available in the code.  This is a start, and a complete test suite
-# depends on the details of the missing scenarios/functions.
-# For example, test cases for missing arguments or incorrect types of arguments for promote_post().
-# Also, test the __init__ method more thoroughly, making sure it doesn't raise unexpected exceptions.
+# Add more tests covering other functions and edge cases as needed
+# Example for edge case (empty file paths)
+# def test_upload_media_empty_file_path(facebook_instance, mock_driver):
+    # with pytest.raises(ValueError):  # Or another appropriate exception
+        # facebook_instance.upload_media([])
 
-# Example of testing for missing arguments:
-# @patch('src.endpoints.advertisement.facebook.facebook.login', return_value=True)
-# def test_facebook_promote_post_missing_argument(mock_login, mocker):
-#     driver_mock = mocker.MagicMock()
-#     with pytest.raises(TypeError):
-#         facebook_instance = Facebook(driver=driver_mock, promoter="test_promoter", group_file_paths=[])
-#         facebook_instance.promote_post()  # Missing argument item
 ```
 
-**Explanation and Crucial Improvements:**
+**Explanation and Improvements:**
 
-1. **Mocking:** The code now uses `unittest.mock.patch` to mock the `login`, `switch_account`, and `promote_post` functions. This is **essential** because the `Facebook` class interacts with external dependencies (likely a web driver).  Mocking isolates the test and prevents the test from actually trying to interact with a live Facebook account.  This dramatically improves testability.  You'll need to install the `unittest` library.
+1. **Mocking:** Crucially, this solution uses `unittest.mock.patch` to mock the `login`, `promote_post`, `upload_media` functions within the `Facebook` class. This isolates the tests from the actual Facebook API, making them much more reliable and faster.
 
-2. **`mocker.MagicMock`:** A `MagicMock` is used to mock the driver object (`self.d`).  This ensures that calls made to the driver object are intercepted by the mock, allowing you to control the response.
+2. **Clearer Test Names:** Test names are more descriptive (e.g., `test_facebook_login_success`).
 
-3. **Error Handling:** The `test_facebook_promote_post_exception` demonstrates how to use `pytest.raises` to check for expected exceptions.
+3. **Fixture for Mock Driver:** The `mock_driver` fixture creates a mock webdriver instance, simplifying test setup and avoiding dependencies on external drivers.
 
-4. **Clearer Example:** The `test_facebook_promote_post` test now includes a proper example `SimpleNamespace` object, making it more concrete.
+4. **Fixtures for `Facebook` Instance:** The `facebook_instance` fixture utilizes `mock_driver` to produce a `Facebook` object for your tests.
 
-5. **Missing Functionality:**  The code still lacks tests for `__init__`, `update_images_captions`, other functions in `scenarios`, and most importantly, handling of *invalid* input cases and edge cases for `promote_post` (e.g., empty message). You MUST add those.
+5. **Exception Handling:** The `test_facebook_init_with_invalid_driver` test demonstrates how to use `pytest.raises` to test for expected exceptions (TypeError in this case).  Crucially, you need to define the appropriate exception to expect.
 
-6. **Import Paths:** Replace `from src import ...` and other import statements with the correct paths to your modules and functions from your project structure.
+6. **Complete Example for `upload_media`:** The `test_upload_media` example shows how to mock `upload_media` with a return value.  It's important to adapt the argument structure (e.g., using a list of file paths) to match the expected input of the `upload_media` function within your `Facebook` class.
 
+7. **Edge Case Example (commented out):** The commented-out `test_upload_media_empty_file_path` example demonstrates testing for an empty list of file paths. You will need to determine the appropriate exception to raise if the function expects a non-empty list.
 
-**How to Run:**
+**How to run the tests:**
 
-1. Make sure you have `pytest` installed (`pip install pytest`).
-2.  Save the test code as a Python file (e.g., `test_facebook.py`).
-3.  Run `pytest test_facebook.py` from your terminal.
+1. Ensure you have `pytest` installed (`pip install pytest`).
+2. Place the test code in a file named `test_facebook.py` (or a similar name) in the same directory as your `facebook.py` file.
+3. Run the tests from your terminal: `pytest test_facebook.py`
 
-**Important Considerations:**
-
-- **Actual Functionality:**  The scenarios used in the example are placeholder names.  You need to replace them with the actual import paths in `src.endpoints.advertisement.facebook`. If there are scenarios that aren't functions, then mocking will be trickier and may require more sophisticated mocking techniques.
-- **Driver:** The code is using a placeholder driver object (`driver_mock`). You'll need to use the appropriate web driver library (e.g., Selenium) in your `Facebook` class and modify the mocks to reflect the calls to that driver.
-- **Error Handling and Edge Cases:**  The tests included are just a starting point.  Thorough test coverage requires tests for invalid input (e.g., incorrect types, missing values), boundary conditions (e.g., very long messages), and edge scenarios. This is crucial for production-level code.
-
-
-
-This improved version provides a significantly more robust and testable framework. Remember to adapt and expand the tests based on the actual implementation of the `Facebook` class and its dependencies. Remember to make sure that you are mocking ALL external dependencies and not just the immediately-called functions.
+Remember to replace `"filepath1", "filepath2"` in the `test_upload_media` function with the correct file paths if needed, and add more test cases to cover all expected scenarios for `upload_media` and other functions.  The comments and example tests should help you adapt this template for your specific requirements. Remember to fill in the actual expected exceptions or return values for your scenarios.

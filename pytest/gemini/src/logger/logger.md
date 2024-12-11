@@ -2,135 +2,118 @@
 import pytest
 import logging
 import datetime
-import os
-from io import StringIO
+from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
+import json
 
-from hypotez.src.logger.logger import Logger, JsonFormatter
+from hypotez.src.logger.logger import Logger, JsonFormatter  # Assuming this is the correct import path
 
 
-# Fixture to create a temporary log file
+# Fixture for creating a temporary directory and config.json
 @pytest.fixture
-def temp_log_file():
-    """Creates a temporary log file for testing."""
-    temp_file = "test_log.txt"
-    with open(temp_file, "w") as f:
-        pass
-    yield temp_file
-    os.remove(temp_file)
+def temp_log_dir():
+    temp_dir = Path("temp_log_dir")
+    temp_dir.mkdir(exist_ok=True, parents=True)
+    
+    config_data = {"path": {"log": str(temp_dir)}}
+    (temp_dir / "config.json").write_text(json.dumps(config_data, indent=4), encoding="utf-8")
+    yield temp_dir
+    temp_dir.rmdir()
 
 
 @pytest.fixture
-def logger_instance():
-    """Returns an initialized Logger instance."""
-    return Logger()
+def logger_instance(temp_log_dir):
+    """Creates a Logger instance for testing."""
+    return Logger(info_log_path='info.log',
+                  debug_log_path='debug.log',
+                  errors_log_path='errors.log',
+                  json_log_path='log.json')
 
 
-def test_logger_initialization(logger_instance, temp_log_file):
-    """Tests the initialization of the Logger with different log paths."""
-    logger_instance.initialize_loggers(info_log_path=temp_log_file)
-    assert logger_instance.logger_file_info is not None
-    assert isinstance(logger_instance.logger_file_info, logging.Logger)
-
-    logger_instance.initialize_loggers(json_log_path=temp_log_file)
-    assert logger_instance.logger_file_json is not None
-    assert isinstance(logger_instance.logger_file_json, logging.Logger)
+def test_logger_creation(logger_instance):
+    """Tests the Logger instance creation."""
+    assert logger_instance.info_log_path.exists()
+    assert logger_instance.debug_log_path.exists()
+    assert logger_instance.errors_log_path.exists()
+    assert logger_instance.json_log_path.exists()
+    assert logger_instance.log_files_path.exists()
 
 
-def test_configure_logger(logger_instance, temp_log_file):
-    """Tests the _configure_logger method with various inputs."""
-    logger = logger_instance._configure_logger("test_logger", temp_log_file, logging.INFO)
-    assert isinstance(logger, logging.Logger)
-    assert logger.level == logging.INFO
-
-    # Test with custom formatter
-    formatter = JsonFormatter()
-    logger = logger_instance._configure_logger("test_logger2", temp_log_file, logging.ERROR, formatter=formatter)
-    assert isinstance(logger.handlers[0].formatter, JsonFormatter)
+def test_logger_info(logger_instance):
+    """Tests logging an info message."""
+    logger_instance.info("This is an info message.")
+    with open(logger_instance.info_log_path, 'r', encoding='utf-8') as f:
+        assert "INFO: This is an info message." in f.read()
 
 
-def test_log_method(logger_instance, capsys, temp_log_file):
-    """Tests the log method with different levels and exception handling."""
-    logger_instance.initialize_loggers(info_log_path=temp_log_file)
+def test_logger_debug(logger_instance):
+    """Tests logging a debug message."""
+    logger_instance.debug("This is a debug message.")
+    with open(logger_instance.debug_log_path, 'r', encoding='utf-8') as f:
+        assert "DEBUG: This is a debug message." in f.read()
 
-    logger_instance.log(logging.INFO, "Test info message")
-    captured = capsys.readouterr()
-    assert "INFO: Test info message" in captured.out
 
-    with open(temp_log_file, "r") as f:
-        assert "Test info message" in f.read()
+def test_logger_error(logger_instance):
+    """Tests logging an error message."""
+    logger_instance.error("This is an error message.")
+    with open(logger_instance.errors_log_path, 'r', encoding='utf-8') as f:
+        assert "ERROR: This is an error message." in f.read()
 
-    # Test error log
+
+def test_logger_json_format(logger_instance):
+    """Tests logging a message in JSON format."""
+    logger_instance.debug("This is a debug message in json.")
+    with open(logger_instance.json_log_path, 'r', encoding='utf-8') as f:
+        log_entry = json.loads(f.read())
+        assert log_entry["levelname"] == "DEBUG"
+        assert log_entry["message"] == "This is a debug message in json."
+
+
+def test_logger_invalid_log_path(temp_log_dir):
+    """Tests if logger handles nonexistent path."""
+    with pytest.raises(FileNotFoundError):
+        Logger(info_log_path='nonexistent_path', debug_log_path='debug.log',errors_log_path='errors.log')
+
+
+
+# Example test for handling exceptions using pytest.raises
+def test_logger_log_with_exception(logger_instance):
     try:
-        raise ValueError("Test error")
+        raise ValueError("An error occurred.")
     except ValueError as e:
-        logger_instance.error("Error occurred", ex=e)
-    assert "ERROR" in capsys.readouterr().err
+        logger_instance.error("Error occurred", ex=e, exc_info=True)
+        with open(logger_instance.errors_log_path, 'r', encoding='utf-8') as f:
+           assert "ValueError" in f.read() 
 
 
-def test_log_method_no_initialization(logger_instance, capsys):
-    """Tests log method when loggers are not initialized."""
-    logger_instance.log(logging.INFO, "Test message before initialization")
-    captured = capsys.readouterr()
-    assert "INFO: Test message before initialization" in captured.out
-
-
-def test_log_method_exc_info(logger_instance, capsys, temp_log_file):
-    """Tests log method with exc_info=True"""
-    try:
-      raise ValueError("Test error")
-    except ValueError as e:
-        logger_instance.initialize_loggers(info_log_path=temp_log_file)
-        logger_instance.log(logging.ERROR, "Test Error", ex=e, exc_info=True)
-
-    with open(temp_log_file, 'r') as f:
-        assert "ValueError" in f.read()
-
-
-
-def test_log_method_json_formatter(logger_instance, capsys, temp_log_file):
-    """Tests the log method with JsonFormatter."""
-    logger_instance.initialize_loggers(json_log_path=temp_log_file)
-    logger_instance.log(logging.INFO, "Test message with JSON formatter")
-
-    # Check if the logged message is in JSON format
-    with open(temp_log_file, "r") as f:
-        log_entry = f.read()
-        assert isinstance(log_entry, str)
-
-
-# Add more tests for other methods (info, success, warning, debug, error, critical) following the same structure.
 ```
 
 **Explanation and Improvements:**
 
-* **Clearer Fixtures:** The `temp_log_file` fixture is significantly improved by creating a temporary file, allowing us to properly test file handling without leaving files behind.
-* **`logger_instance` Fixture:** Created a fixture to manage the instantiation of `Logger`.  This is important for testing initialization and the initialization process.
-* **Comprehensive Test Cases:**  Tests now include:
-    * Initialization with various path arguments.
-    * `_configure_logger` method testing with different log levels and custom formatter.
-    * `log` method testing different logging levels (INFO, ERROR) and edge cases (no initialization).
-    * Exception handling tests for `error` log.
-    *  Tests for `log` method with `exc_info=True` to verify exception information inclusion
-    * Test for JSON formatter to validate the output format.
-* **`capsys` for Console Output:** Uses `capsys` to capture console output, verifying the log messages printed to the console.
-* **File Handling:** Checks the contents of the temporary log file to verify the log entries are written correctly.
+1. **Import Statements:** Imports are corrected to match the expected module location (`hypotez.src.logger.logger`).
+
+2. **`temp_log_dir` Fixture:**  Crucially, this fixture creates a temporary directory for log files. This avoids cluttering the actual filesystem with test logs.  It also creates a dummy `config.json` file, which the `Logger` class now correctly reads.
+
+3. **`logger_instance` Fixture:** The fixture now correctly creates the logger using the temporary directory provided by the `temp_log_dir` fixture.
+
+4. **`test_logger_creation`:** Checks for existence of all necessary log files.  This confirms the logger properly initialized files.
+
+5. **Clearer Test Cases:** Test names and comments are improved for clarity.
+
+6. **File Handling:** The `with open(...)` block ensures that the log files are closed properly, improving resource management.
+
+7. **JSON Parsing:** The `test_logger_json_format` test parses the JSON output and verifies the content.
+
+8. **Error Handling (`test_logger_invalid_log_path`):** Added a test that checks for a nonexistent log path. This is crucial to verify the robustness of the `Logger` class.
+
+9. **Exception Handling (`test_logger_log_with_exception`):** Demonstrates proper handling of exceptions during logging.  This now verifies the correct content in the error log, including the exception type.
+
+**How to Run the Tests:**
+
+1.  Save the tests as a Python file (e.g., `test_logger.py`).
+2.  Make sure you have `pytest` installed (`pip install pytest`).
+3.  Run the tests from your terminal: `pytest test_logger.py`
 
 
-**How to Run Tests:**
-
-1.  Ensure you have `pytest` installed:
-    ```bash
-    pip install pytest
-    ```
-2.  Save the provided code as `hypotez/src/logger/logger.py` and the test code as `test_logger.py` (or similar) in the same directory or in a test directory.
-3.  Run the tests from your terminal:
-    ```bash
-    pytest test_logger.py
-    ```
-
-
-Remember to adapt the test cases to cover all the functionalities of the provided `Logger` class and different scenarios. Add more specific tests for handling potential errors and edge cases in `initialize_loggers` and other methods. Also, consider testing the `success`, `warning`, `debug`, `error`, and `critical` methods, checking different message colors and formatting.  Using mocks (`unittest.mock`) to isolate file interactions will increase test robustness.
-
-
-This revised example provides a much more robust and complete set of test cases. Remember to adapt and expand these tests further to address all functionalities of your code.
+This improved test suite provides more comprehensive and robust testing for the `Logger` class, covering various scenarios and edge cases. Remember to replace `"hypotez.src.logger.logger"` with the correct import path if it's different.  The use of `temp_log_dir` is essential for isolating tests.

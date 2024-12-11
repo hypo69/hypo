@@ -1,135 +1,158 @@
 ```python
 import pytest
-import time
-from selenium import webdriver  # Assuming Selenium is used
-from unittest.mock import patch  # For mocking
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
-# Fixture for creating a webdriver instance (replace with your actual setup)
+# Replace with your actual logger implementation
+class MockLogger:
+    def debug(self, msg):
+        print(f"DEBUG: {msg}")
+
+    def info(self, msg):
+        print(f"INFO: {msg}")
+
+    def error(self, msg):
+        print(f"ERROR: {msg}")
+
+
+# Mock for the Supplier class (replace with your actual implementation)
+class MockSupplier:
+    def __init__(self, driver, locators_store):
+        self.driver = driver
+        self.locators_store = locators_store
+
+
+# Mock webdriver for testing
+class MockWebDriver:
+    def __init__(self):
+        self.current_url = "https://amazon.com"  # Initial URL
+        self.locators = {}  # Add locators for testing
+        self.logger = MockLogger()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def get_url(self, url):
+        self.current_url = url
+
+    def window_focus(self):
+        pass
+
+    def click(self, locator):
+        if locator in self.locators:
+          return True
+        else:
+          return False
+
+    def execute_locator(self, locator):
+        # Simulate success or failure based on the locator
+        if locator in self.locators:
+            return True
+        else:
+          return False
+
+    def refresh(self):
+        pass
+    
+    def wait(self, timeout):
+        pass
+
+
+    def maximize_window(self):
+        pass
+
+    def dump_cookies_to_file(self):
+        pass
+
+
 @pytest.fixture
-def driver_fixture():
-    driver = webdriver.Chrome()  # Replace with your webdriver initialization
-    driver.implicitly_wait(10)  # Add implicit wait for elements
-    yield driver
-    driver.quit()
-
+def driver_mock():
+  return MockWebDriver()
 
 @pytest.fixture
-def locators():
-    """Provides locators for testing."""
-    return {
-        'login': {
-            'open_login_inputs': 'open_login_input_selector',  # Replace with actual selector
-            'email_input': 'email_input_selector',  # Replace with actual selector
-            'continue_button': 'continue_button_selector',  # Replace with actual selector
-            'password_input': 'password_input_selector',  # Replace with actual selector
-            'keep_signed_in_checkbox': 'keep_signed_in_selector', # Replace with actual selector
-            'success_login_button': 'success_login_selector', # Replace with actual selector
-        }
-    }
+def supplier(driver_mock):
+    locators_store = {'login': {'open_login_inputs': "open_login_inputs",
+                                'email_input': "email_input",
+                                'continue_button': "continue_button",
+                                'password_input': "password_input",
+                                'keep_signed_in_checkbox': "keep_signed_in_checkbox",
+                                'success_login_button': "success_login_button"}}
+    return MockSupplier(driver_mock, locators_store)
 
 
-@pytest.mark.usefixtures("driver_fixture", "locators")
-def test_login_valid_input(driver_fixture, locators):
-    """Tests login with valid inputs (mock)."""
-    # Mock the locators and driver for testing
-    s = {'locators_store': locators}  # Replace 's' with the actual object structure
-    
-    driver = driver_fixture
-    
-    with patch('hypotez.src.suppliers.amazon.login.logger') as mock_logger:  # Mock logger
-        result = login(s)
-        assert result is True
-        mock_logger.info.assert_called_with("Залогинился ...")
-        
+def test_login_success(supplier):
+    """Tests login with valid locators."""
+    supplier.driver.locators = {'open_login_inputs': True,
+                                'email_input': True,
+                                'continue_button': True,
+                                'password_input': True,
+                                'keep_signed_in_checkbox': True,
+                                'success_login_button': True}
 
-@pytest.mark.usefixtures("driver_fixture", "locators")
-def test_login_invalid_input(driver_fixture, locators):
-    """Tests login with invalid inputs (mock)."""
-    s = {'locators_store': locators}
-    
-    driver = driver_fixture
-
-    # Mocks the click function.  This simulates failing on click
-    with patch('hypotez.src.suppliers.amazon.login.webdriver.WebElement.click', return_value=False) as mock_click:
-        with patch('hypotez.src.suppliers.amazon.login.logger') as mock_logger:
-            result = login(s)
-            assert result is False
-            mock_logger.error.assert_called_with("Неудачный логин")
+    result = login(supplier)
+    assert result is True
+    assert supplier.driver.current_url != "https://www.amazon.com/ap/signin"
 
 
-# ... (Other test cases for invalid input, edge cases, exceptions)
-
-def test_login_exception(driver_fixture, locators):
-    """Tests exception handling with wrong locator (mock)."""
-
-    s = {'locators_store': locators}
-
-
-    driver = driver_fixture
-
-    with pytest.raises(AttributeError) as excinfo:
-        login(s)  # Replace 'login_function' with your function call
+def test_login_failure(supplier):
+    """Tests login with invalid locators."""
+    supplier.driver.locators = {'open_login_inputs': False,
+                                'email_input': False,
+                                'continue_button': False,
+                                'password_input': False,
+                                'keep_signed_in_checkbox': False,
+                                'success_login_button': False}
 
 
-    # Assert the expected error message
-    assert 'has no attribute' in str(excinfo.value)
+    result = login(supplier)
+    assert result is not True
 
 
-# ---Import login function from the file--
-from hypotez.src.suppliers.amazon.login import login
 
-
-# --- Add more tests for different scenarios --
-# For example:
-# def test_login_missing_locator(driver_fixture, locators):
-#     # Simulate missing locator
-#     s = {'locators_store': {'login': {'open_login_inputs': None}}}
-#     with pytest.raises(AttributeError) as e:
-#         login(s)
-
+# ... other test cases as needed (invalid input, exceptions, etc.)
 ```
 
 **Explanation and Improvements:**
 
-1. **Selenium Fixture:** The code now includes a `driver_fixture` that creates and manages a Selenium WebDriver instance.  Crucially, it quits the driver after the test, ensuring resources are released.  This is **essential** for avoiding conflicts and test failures.  Replace `webdriver.Chrome()` with the appropriate WebDriver constructor for your browser.
-
-2. **Locators Fixture:** A `locators` fixture is introduced to provide mock locator data.  This is a much better approach than hardcoding locators directly into tests.  Replace the placeholder selectors with your actual locators.
-
-3. **Mocking:** The most important change is the use of `unittest.mock.patch`. This lets you control parts of the `login` function and test its behavior under various conditions. This is crucial for testing without relying on external factors (like a real web browser).
-
-4. **Exception Handling:** The example `test_login_exception` demonstrates how to test for `AttributeError` using `pytest.raises`.
-
-5. **Clearer Test Names:** Test names are more descriptive, indicating the purpose of each test.
-
-6. **Resource Management:** The `driver_fixture` ensures that the WebDriver is properly cleaned up after each test.
-
-7. **Error Handling:** The tests now check that appropriate errors are raised when there are issues.
-
-8. **Mock Logger:** Mocking the `logger` is essential for avoiding unintended side effects and for verifying that the logger is used correctly.
+1. **Mocking:** The code now heavily utilizes mocking.  Crucially, it mocks the `webdriver` and `Supplier` classes. This is essential for unit testing because it isolates the `login` function from external dependencies (like a real browser).  The `MockWebDriver` handles simulating the browser interactions and their possible success or failure.
 
 
-**How to Use:**
+2. **Clearer Test Cases:** The test cases are now more focused and explicit about the conditions they test (success and failure).
 
-1. **Install pytest and Selenium:**
+
+3. **Error Handling:** Basic error handling in the `login` function is mocked in the test cases.  The `login` function needs to be modified to handle actual errors as well.
+
+
+
+**How to run:**
+
+1. **Install pytest:**
    ```bash
-   pip install pytest pytest-selenium selenium
+   pip install pytest
    ```
 
-2. **Replace Placeholders:** Replace the placeholder selectors (`'open_login_input_selector'`, etc.) with the actual selectors from your HTML.  Ensure the selectors are correct for your specific web page structure.
+2. **Save the code:** Save the test code and the `login.py` code in the same directory.
 
-3. **Run Tests:** Run the tests using `pytest`.
+3. **Run the tests:**
+   ```bash
+   pytest
+   ```
 
-**Critical Considerations:**
+**Important Considerations for Real Implementation:**
 
-* **Real Browser:** The tests still need significant improvement to simulate using a real browser. The mocks are a step toward this but a real browser will be required for robust testing.
+* **Real WebDriver:** Replace the `MockWebDriver` with the appropriate `webdriver` (e.g., `Chrome`, `Firefox`).
+* **Locators:** Replace the mock locators with actual locators (e.g., `By.ID`, `By.XPATH`, `By.CSS_SELECTOR`). This is crucial; the test cases should use correct and reliable locators.
+* **Exception Handling:**  Robust exception handling (using `try...except` blocks) is essential in the `login` function in your real code and *within* the test cases.
+* **Wait conditions:**  Add appropriate `WebDriverWait` or other wait conditions to handle situations where elements are not immediately available.
+* **Selenium Implicit Waits:**  Use Selenium implicit waits, where appropriate, for improved code efficiency and readability, in your `login` function and the test cases.  However, implicit waits can cause unexpected behavior if you have elements that will never appear.
+* **Robust Logging:** Implement appropriate logging in your production code to provide detailed information during the login process.  This is essential for debugging and troubleshooting.
 
-* **Robust Locator Strategy:**  Using `driver.find_element` and robust strategies to locate elements in the actual browser is crucial for avoiding unreliable tests that may fail unexpectedly.  The mocks and testing strategy here assume selectors can be validated, and if not the tests may not catch potential issues.  Robust and well-maintained locators in the `locators` fixture are paramount.
 
-* **Data-Driven Tests:**  Consider how to create data-driven tests where different login credentials are used to cover various scenarios.
-
-* **More Comprehensive Tests:**  You need significantly more tests to thoroughly cover different cases.  Add tests for various scenarios like:
-   - Missing inputs.
-   - Incorrect inputs.
-   - Interactions with other elements during the login process.
-   - Handling different login page structures.
+This revised example provides a much more realistic and robust approach to testing your `login` function using `pytest` and mocking. Remember to replace the placeholder comments with the actual implementation details from your `login.py` file.  Most importantly, adapt to the correct locating methods and exception handling needs for your real `login` function.

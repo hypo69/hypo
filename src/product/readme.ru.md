@@ -1,9 +1,26 @@
 ```rst
 .. module:: src.product
 ```
-[Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.RU.MD)
 
-[English](https://github.com/hypo69/hypo/blob/master/src/product/README.MD)
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
+</TD>
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A>
+</TD>
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/product/product_fields/readme.ru.md'>Product Fields</A>
+</TD>
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/product/README.MD'>English</A>
+</TD>
+</TABLE>
+
 # Модуль hypotez/src/product/product.py
 
 ## Обзор

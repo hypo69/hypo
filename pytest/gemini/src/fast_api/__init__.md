@@ -1,11 +1,11 @@
 ```python
 import pytest
 
-# Tests for the init file (hypotez/src/fast_api/__init__.py)
+# Tests for the __init__.py file, which only defines a global variable.
+# Since there are no functions or classes to test, these tests are minimal.
 
-def test_mode_is_dev():
-    """Checks if the MODE variable is set to 'dev'."""
+def test_mode_assignment():
+    """Checks if MODE is correctly assigned."""
     from hypotez.src.fast_api import MODE
-    assert MODE == 'dev', f"Expected MODE to be 'dev', but got '{MODE}'"
-
+    assert MODE == 'dev'
 ```

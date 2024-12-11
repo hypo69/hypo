@@ -6,92 +6,88 @@ from unittest.mock import patch
 from hypotez.src.check_release import check_latest_release
 
 
-@pytest.fixture
-def mock_response_200():
-    """Fixture to mock a successful API request."""
-    mock_response = requests.Response()
-    mock_response.status_code = 200
-    mock_response.json = lambda: {'tag_name': 'v1.0.0'}
-    return mock_response
+# Mock the requests library
+@patch('hypotez.src.check_release.requests')
+def test_check_latest_release_valid_input(mock_requests):
+    """Tests with valid input and a successful response."""
+    mock_response = mock_requests.get
+    mock_response.return_value.status_code = 200
+    mock_response.return_value.json.return_value = {'tag_name': 'v1.0.0'}
+
+    latest_release = check_latest_release('owner', 'repo')
+    assert latest_release == 'v1.0.0'
+    mock_response.assert_called_once_with('https://api.github.com/repos/owner/repo/releases/latest')
 
 
-@pytest.fixture
-def mock_response_404():
-    """Fixture to mock a 404 error."""
-    mock_response = requests.Response()
-    mock_response.status_code = 404
-    return mock_response
+@patch('hypotez.src.check_release.requests')
+def test_check_latest_release_invalid_status_code(mock_requests):
+    """Tests with an invalid status code (e.g., 404)."""
+    mock_response = mock_requests.get
+    mock_response.return_value.status_code = 404
+    
+    latest_release = check_latest_release('owner', 'repo')
+    assert latest_release is None
+    mock_response.assert_called_once_with('https://api.github.com/repos/owner/repo/releases/latest')
 
 
-# Tests for check_latest_release function
-def test_check_latest_release_valid_input(mock_response_200):
-    """Checks the function with valid input and successful API call."""
-    with patch('requests.get', return_value=mock_response_200):
-        result = check_latest_release("owner", "repo")
-        assert result == "v1.0.0"
+@patch('hypotez.src.check_release.requests')
+def test_check_latest_release_empty_json(mock_requests):
+    """Tests with a 200 status code but empty JSON response."""
+    mock_response = mock_requests.get
+    mock_response.return_value.status_code = 200
+    mock_response.return_value.json.return_value = {}
+
+    latest_release = check_latest_release('owner', 'repo')
+    assert latest_release is None
+    mock_response.assert_called_once_with('https://api.github.com/repos/owner/repo/releases/latest')
 
 
-def test_check_latest_release_api_error(mock_response_404):
-    """Checks if the function handles API errors (404)."""
-    with patch('requests.get', return_value=mock_response_404):
-        result = check_latest_release("owner", "repo")
-        assert result is None
+@patch('hypotez.src.check_release.requests')
+def test_check_latest_release_invalid_json_structure(mock_requests):
+    """Tests with a 200 status code but invalid JSON structure (missing tag_name)."""
+    mock_response = mock_requests.get
+    mock_response.return_value.status_code = 200
+    mock_response.return_value.json.return_value = {'some_other_key': 'value'}
 
-def test_check_latest_release_invalid_owner_repo():
-  """Checks if handling an invalid repository or owner."""
-  with patch('requests.get') as mock_get:  # mock the requests.get() call
-    mock_get.return_value.status_code = 404  # Simulate a 404 response
-    result = check_latest_release("invalid_owner", "invalid_repo")
-    assert result is None
+    latest_release = check_latest_release('owner', 'repo')
+    assert latest_release is None
+    mock_response.assert_called_once_with('https://api.github.com/repos/owner/repo/releases/latest')
 
 
-def test_check_latest_release_empty_response():
-    """Tests if the function returns None for an empty response."""
-    with patch('requests.get') as mock_get:
-      mock_response = requests.Response()
-      mock_response.status_code = 200
-      mock_response.json = lambda: {}  # Simulate an empty JSON response.
-      mock_get.return_value = mock_response
-      result = check_latest_release("owner", "repo")
-      assert result is None
+@patch('hypotez.src.check_release.requests', side_effect=requests.exceptions.RequestException)
+def test_check_latest_release_request_exception(mock_requests):
+    """Tests with a request exception."""
+    mock_requests.get.side_effect = requests.exceptions.RequestException("Connection error")
 
+    latest_release = check_latest_release('owner', 'repo')
+    assert latest_release is None
 
-
-def test_check_latest_release_non_200_status_code():
-    """Test if the function returns None for non-200 status codes."""
-    with patch('requests.get') as mock_get:
-        mock_response = requests.Response()
-        mock_response.status_code = 500
-        mock_get.return_value = mock_response
-        result = check_latest_release("owner", "repo")
-        assert result is None
-
-# Example of testing exception handling (not directly applicable to the code)
-# This section is commented out as it would require a different implementation
-#
-# def test_check_latest_release_invalid_url():
-#     with pytest.raises(requests.exceptions.RequestException) as excinfo:
-#         check_latest_release("owner", "repo")
-#         assert str(excinfo.value) == "Invalid URL"
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `requests.get`:** The tests now use `unittest.mock.patch` to mock the `requests.get` function. This isolates the test from the actual API call and allows us to control the response.
+1. **Mocking `requests`:** The tests now use `unittest.mock.patch` to mock the `requests` library. This isolates the `check_latest_release` function from external dependencies and allows us to control the responses.  This is crucial for reliable and fast testing.
 
-2. **Clearer Fixtures:** `mock_response_200` and `mock_response_404` fixtures provide specific mock responses for different scenarios, making the tests more focused.
+2. **Comprehensive Test Cases:** The tests cover various scenarios:
+   - Valid input with a successful response.
+   - Invalid status codes (e.g., 404).
+   - Empty JSON response.
+   - JSON with missing `tag_name`.
+   - `requests` exceptions.
 
-3. **Comprehensive Test Cases:** The tests cover various scenarios:
-   - Valid input (200 status code).
-   - API error (404).
-   - Invalid owner/repo (404).
-   - Empty response (simulating a valid but empty JSON response).
-   - Non-200 status codes.
-   -  Handling an exception
-
-4. **`pytest.raises` (commented out):**  While the original code did not explicitly raise exceptions, the test framework handles situations where `requests.get` might raise exceptions.  However, the code provided *doesn't* raise any exceptions under normal operation, so this is a hypothetical and unnecessary test case for this specific code.
-
-5. **Edge Cases:** The tests now consider cases like empty responses or invalid repository names, making the tests more robust.
+3. **Clearer Assertions:**  The assertions are more specific and descriptive.
 
 
-This improved solution provides more comprehensive and realistic test cases that effectively verify the functionality of the `check_latest_release` function while avoiding unnecessary complexity for this specific code. Remember to install the necessary libraries: `pytest`, `requests`.  Run the tests with `pytest`. Remember to place the above code inside a file named, e.g., `test_check_release.py`.
+4. **Error Handling:** The tests now handle the case where the `requests` call might fail due to a `requests.exceptions.RequestException`.  This is a more realistic scenario than assuming a simple `requests.get` issue.
+
+5. **`pytest.raises` is not needed:**  With the mocked `requests` response, we can directly assert the status code and the absence of a `tag_name` to validate the expected behavior.
+
+6. **Fixture avoidance:**  We did not need a fixture in this case.
+
+
+This improved test suite provides more thorough coverage of the `check_latest_release` function, making the tests more robust and reliable. Remember to install the `pytest` library and the `requests` library if you haven't already:
+
+
+```bash
+pip install pytest requests
+```

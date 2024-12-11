@@ -9,121 +9,104 @@ from unittest.mock import patch, MagicMock
 from src.ai.gooogle_generativeai.kazarinov import Kazarinov
 import random
 from pathlib import Path
-import threading
-import webbrowser
 from typing import List
 
+# Replace with actual import path if necessary
+try:
+    from src import gs
+except ImportError:
+    gs = MagicMock(path=MagicMock(src=MagicMock(ai=MagicMock(gooogle_generativeai=MagicMock(chat=MagicMock(templates=MagicMock(directory="templates"),static=MagicMock(directory="static")))))))
 
-# Mock necessary modules for testing
-def mock_kazarinov_response(question: str) -> str:
-    """Mocks the Kazarinov API response."""
-    if question == "What is the capital of France?":
-        return "Paris"
-    elif question == "Who painted the Mona Lisa?":
-        return "Leonardo da Vinci"
-    else:
-        return "I don't know."
-
+# Mock the Kazarinov class for testing
 @pytest.fixture
 def mock_kazarinov():
-    """Mocking Kazarinov class for testing."""
-    mock_k = MagicMock(spec=Kazarinov)
-    mock_k.ask.side_effect = mock_kazarinov_response
-    return mock_k
+    k = Kazarinov(system_instruction=None, generation_config={'response_mime_type': 'text/plain'})
+    k.ask = MagicMock(return_value="Test response")
+    return k
 
 
+# Mock the questions list for testing
 @pytest.fixture
-def test_app(mock_kazarinov):
-    """Fixture to create a FastAPI app for testing."""
-    # Mock essential components for testing
-    templates = Jinja2Templates(directory=Path('dummy_template_path')) # Replace with dummy path
-    app = FastAPI()
-    app.mount("/static", StaticFiles(directory=Path('dummy_static_path')), name="static")
-    app.k = mock_kazarinov # Inject the mock Kazarinov instance
-    app.templates = templates
-    return app
-
-@pytest.mark.asyncio
-async def test_get_chat(test_app: FastAPI):
-    """Tests the get_chat function."""
-    request = Request("", method="GET")
-    response = await test_app.get_chat(request)
-    assert response.status_code == 200
-    # Further assertions can be added to validate the response content, such as checking if the expected template is rendered.
-
-@pytest.mark.asyncio
-async def test_ask_question_valid_input(test_app: FastAPI):
-    """Tests ask_question with valid input."""
-    request = Request("", method="POST")
-    question = Question(question="What is the capital of France?")
-    response = await test_app.ask_question(question, request)
-    assert response.status_code == 200
-    assert "Paris" in response.body.decode("utf-8")  # Validate that the response contains the expected output.
+def mock_questions_list():
+    return ["Question 1", "Question 2"]
 
 
-@pytest.mark.asyncio
-async def test_ask_question_next_command(test_app: FastAPI):
-    """Tests ask_question with '--next' command."""
-    request = Request("", method="POST")
+# Mock the templates
+@pytest.fixture
+def mock_templates():
+    templates = Jinja2Templates(directory="templates")
+    return templates
+
+
+
+# Mock the request for testing
+@pytest.fixture
+def mock_request():
+    return Request("", method="POST")
+
+
+def test_ask_question_valid_input(mock_kazarinov, mock_request, mock_templates, mock_questions_list):
+    """Tests the ask_question function with valid user input."""
+    question = Question(question="Test question")
+
+    with patch('hypotez.src.ai.gemini.html_chat.app.templates', mock_templates) as mock_template, \
+        patch('hypotez.src.ai.gemini.html_chat.app.questions_list', mock_questions_list), \
+        patch('hypotez.src.ai.gemini.html_chat.app.k', mock_kazarinov) as mock_kaz:
+
+
+        response = asyncio.run(app.post("/ask", question=question, request=mock_request))
+    mock_kazarinov.ask.assert_called_with("Test question", no_log=False, with_pretrain=False)
+
+
+def test_ask_question_next_question(mock_kazarinov, mock_request, mock_templates, mock_questions_list):
+
     question = Question(question="--next")
-    response = await test_app.ask_question(question, request)
-    assert response.status_code == 200
-    # Validate that the response has a random question's answer in it (complex due to randomness)
+    with patch('hypotez.src.ai.gemini.html_chat.app.k', mock_kazarinov), patch('hypotez.src.ai.gemini.html_chat.app.questions_list', mock_questions_list):
+        response = asyncio.run(app.post("/ask", question=question, request=mock_request))
+        assert response == mock_templates.TemplateResponse("chat.html", {"request": mock_request, "response": mock_kazarinov.ask.return_value})
 
-# Add tests for invalid input (empty question, malformed question)
-@pytest.mark.asyncio
-async def test_ask_question_invalid_input(test_app: FastAPI):
-    """Tests ask_question with invalid input (empty string)."""
-    request = Request("", method="POST")
-    question = Question(question="")
-    response = await test_app.ask_question(question, request)
-    assert response.status_code == 200
-    # Assertions to validate the response and expected behavior with empty/invalid question.
+        # Assertions based on expected behavior for the "--next" case
+        mock_kazarinov.ask.assert_called()
+        
 
 
-# Test for different question types
-@pytest.mark.asyncio
-async def test_ask_question_different_question(test_app: FastAPI):
-    """Tests ask_question with various types of questions."""
-    request = Request("", method="POST")
-    question = Question(question="Who painted the Mona Lisa?")
-    response = await test_app.ask_question(question, request)
-    assert response.status_code == 200
-    assert "Leonardo da Vinci" in response.body.decode("utf-8")
+# ... (Other test cases for invalid input, edge cases, etc.)
 
-
+# Define the Question model
 class Question(BaseModel):
     question: str
 
-# ... other test functions
+
+# Replace 'app' with the actual app object from your code
+app = FastAPI()
+
+
+# ... (Your test code for get_chat, etc.)
 ```
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now utilizes `unittest.mock` to mock the `Kazarinov` class and its `ask` method.  This is crucial for testing the `app` without needing a running external API or database. The `mock_kazarinov_response` function defines the mock behavior, returning different responses for various inputs.
-* **`@pytest.mark.asyncio`:**  The `async def` functions are now decorated with `@pytest.mark.asyncio` to indicate that they are asynchronous tests. This is essential when working with FastAPI endpoints that involve asynchronous operations.
-* **Clearer Assertions:** Assertions are made more specific to check for the presence of expected strings in the response body, ensuring that the correct output is generated.
-* **`test_app` Fixture:** A fixture `test_app` creates a FastAPI app instance within the test function and initializes necessary components, simplifying testing. It injects the mock Kazarinov instance.
-* **`mock_kazarinov` Fixture:** The `mock_kazarinov` fixture provides a mock Kazarinov object, allowing the tests to control the response.
-* **Error Handling:** Added a basic test for invalid input (empty question), showcasing how to handle different cases.
-* **Example Template Path:** The `Jinja2Templates` now takes a dummy path instead of a real template directory.  This is critical for running tests without external template files.
+1. **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the `Kazarinov` class and the `questions_list`.  This isolates the `ask_question` function from the external dependencies.  This is essential for proper unit testing.  Mocking `templates` and `request` is also important for isolating the template rendering part.
+2. **Asynchronous Handling:**  The `asyncio.run` is now correctly used to run the asynchronous `app.post` method within the test.
+3. **Clearer Assertions:** The assertions now check for the expected return value and the correct calling of `mock_kazarinov.ask`.
+4. **Example Test Cases:**  The provided test cases are only basic, a complete test suite would need much more elaborate cases (edge cases, error handling, empty questions, etc.).
+5. **`gs` import handling:** Added a `try...except` block for mocking `gs` in case the import fails (e.g., during testing).
+6. **Fixture for Mock Data:** `mock_questions_list` fixture makes the test data controllable.
 
 
-**To run these tests:**
+**How to Run the Tests:**
 
-1.  Install necessary libraries:
-    ```bash
-    pip install pytest fastapi uvicorn pytest-asyncio pydantic
-    ```
-2.  Create dummy placeholder files (if needed) for static and templates:
-    Create empty files at `dummy_template_path` and `dummy_static_path` in the current working directory or the correct location for your dummy files.
+1.  Install pytest: `pip install pytest`
+2.  Save the above test code in a file (e.g., `test_app.py`).
+3.  Run the tests from your terminal: `pytest test_app.py`
 
 
-3.  Replace `'dummy_template_path'` and `'dummy_static_path'` with the correct dummy folder paths in the `test_app` fixture.
+**Important Considerations for a Complete Test Suite:**
 
-4.  Run the tests:
-    ```bash
-    pytest
-    ```
+*   **Invalid Input:** Test cases should handle empty strings, excessively long strings, special characters, etc., for the `user_question`.  The tests should also check that the proper error is thrown.
+*   **Edge Cases:** Consider cases with very large or small input values for `user_question`.  Consider edge cases for the `questions_list` such as empty lists, and the `--next` case's handling when `questions_list` is empty.
+*   **Exception Handling:** Add tests to check how the function handles exceptions raised by `Kazarinov.ask`.
+*   **Concurrency:** If there are any threads or concurrent operations, tests should verify the correct behavior in these scenarios.
+*   **HTTP Responses:** Test that the HTTP response is correct and suitable for the given scenarios.
 
-This revised solution provides a much more robust and complete set of test cases for the `app.py` code, addressing the core requirements and using best practices for pytest testing. Remember to adapt the assertions and test cases to reflect the specific logic and expected behavior of your actual application. Remember to adjust the dummy paths to match your actual file structure.
+Remember to adjust the mocking and assertions to accurately reflect the expected behavior of your code. This revised structure provides a strong foundation for creating a robust test suite.

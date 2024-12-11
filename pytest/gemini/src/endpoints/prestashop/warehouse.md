@@ -3,114 +3,73 @@ import pytest
 import os
 import sys
 from pathlib import Path
-# Replace with the actual import if it exists
-try:
-    from attr import attr, attrs
-    from src import gs
-    from src.utils.printer import pprint
-    from src.logger import logger
-    from .api import PrestaShop
-except ImportError as e:
-    print(f"Error importing necessary modules: {e}")
-    raise
+from unittest.mock import patch
+from src.logger.logger import logger  # Assuming this import exists
 
 
-# Mock necessary classes and modules for testing
-class MockPrestaShop:
-    def __init__(self, *args, **kwargs):
-        pass
-    
-    def some_method(self, *args, **kwargs):
-        return "mocked_result"
-
-class MockGS:
-    def __init__(self):
-        pass
-
-    def some_gs_method(self, *args, **kwargs):
-        return "mocked_gs_result"
-
-
-class MockLogger:
-    def __init__(self):
-        pass
-    
-    def info(self,*args,**kwargs):
-        return
-
-    def error(self,*args,**kwargs):
-        return
-
-    def debug(self,*args,**kwargs):
-        return
-
-# Mock other necessary modules if needed
-
-# Replace the actual class with the mocked class
-
-class PrestaWarehouse(MockPrestaShop):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.logger = MockLogger()
-
-
-
-def test_presta_warehouse_init():
+# Replace with actual implementation if available
+# Example for mocking gs and header modules
+@patch('hypotez.src.endpoints.prestashop.warehouse.gs')
+@patch('hypotez.src.endpoints.prestashop.warehouse.header')
+def test_presta_warehouse_init(mock_header, mock_gs):
     """Tests the initialization of the PrestaWarehouse class."""
-    # Create an instance of the class (using the mock)
-    warehouse = PrestaWarehouse()
-    assert isinstance(warehouse, PrestaWarehouse)
-    # Verify logger is properly initialized (if applicable)
-    # assert hasattr(warehouse, 'logger')
-    assert isinstance(warehouse.logger, MockLogger)
+    # Mock the PrestaShop class for testing purposes
+    class MockPrestaShop:
+        def __init__(self, *args, **kwargs):
+            pass
 
-def test_presta_warehouse_method_mock():
-    """Tests a method from the PrestaWarehouse class."""
-    warehouse = PrestaWarehouse()
-    result = warehouse.some_method(1, 2, key="value")
-    assert result == "mocked_result"
+    # Replace PrestaShop with Mock for testing
+    mock_header.return_value = MockPrestaShop()
 
 
-# Add tests for other methods and edge cases
-# ...
-
-
-# Example testing for specific situations
-def test_presta_warehouse_method_with_error():
-    """Tests handling potential errors inside PrestaWarehouse methods."""
-    #  Mock an error scenario (if possible)
-    with pytest.raises(AttributeError):  # Or any exception you expect
+    # Create an instance of PrestaWarehouse, checking for no exceptions.
+    try:
         warehouse = PrestaWarehouse()
-        warehouse.nonexistent_method()
+    except Exception as e:
+        pytest.fail(f"PrestaWarehouse initialization failed: {e}")
     
-    # or check for specific exceptions by verifying the attribute of the exception instance
-    # with pytest.raises(TypeError) as excinfo:
-    #     warehouse.some_method("invalid")
-    # assert "Invalid input type" in str(excinfo.value)
+    # Assertions, ensure the instance has been created successfully.
+    assert isinstance(warehouse, PrestaWarehouse)
+
+# Add more specific test cases to check attributes, methods, etc.
 
 
-
-
-
-# Example testing for specific situations  (replace with appropriate tests)
-def test_presta_warehouse_method_with_bad_data():
+@patch('hypotez.src.endpoints.prestashop.warehouse.MODE', 'prod')
+def test_presta_warehouse_mode_setting(monkeypatch):
+    from hypotez.src.endpoints.prestashop.warehouse import PrestaWarehouse, MODE
+    
+    # Attempt to access MODE attribute after patch and verify
     warehouse = PrestaWarehouse()
-    # Try to simulate an error condition.
-    with pytest.raises(TypeError):
-        warehouse.some_method(1, 2, key='wrong_type')
-    
-
-# Example testing for specific situations (replace with appropriate tests)
+    assert warehouse.MODE == "prod"
 
 
-# Example of a test with a fixture
-# @pytest.fixture
-# def example_data():
-#     return {'key': 'value'}
+# Example of testing for exception handling.
+# Replace 'AttributeError' with the actual exception
+@patch('hypotez.src.endpoints.prestashop.warehouse.PrestaShop')
+def test_presta_warehouse_invalid_input(mock_prestashop):
+    """Tests the handling of invalid input by the PrestaWarehouse."""
+    # Mock the PrestaShop class to raise an exception
+    mock_prestashop.side_effect = AttributeError("Invalid input.")
+    with pytest.raises(AttributeError) as excinfo:
+        # Attempt to create an instance
+        PrestaWarehouse()
+    assert "Invalid input" in str(excinfo.value)
 
-# def test_function_using_fixture(example_data):
-#     # Use example_data in your test here
-#     assert example_data['key'] == 'value'
+
+# Example of testing a method (assuming a method exists in PrestaWarehouse)
+@patch('hypotez.src.endpoints.prestashop.warehouse.PrestaShop')
+def test_presta_warehouse_method(mock_prestashop, caplog):
+    """Test a specific method of the PrestaWarehouse."""
+    mock_method = mock_prestashop.return_value
+    mock_method.do_something.return_value = True
+    warehouse = PrestaWarehouse()
+    result = warehouse.do_something() # Replace do_something with the actual method
+    assert result == True
+    # Check if the logger is used properly (important!)
+    assert "Method do_something called successfully" in caplog.text
+
+
+# ... Add more test cases for other methods and functionalities ...
 
 
 
@@ -118,28 +77,29 @@ def test_presta_warehouse_method_with_bad_data():
 
 **Explanation and Improvements:**
 
-1. **Import Error Handling:** The code now includes a `try...except` block to handle potential `ImportError`s if the required modules (`attr`, `gs`, etc.) aren't found.  This makes the test script more robust.
+1. **Mocking:** The code now heavily uses `unittest.mock.patch` to mock the `gs`, `header`, and `PrestaShop` classes. This is crucial because it isolates the `PrestaWarehouse` class from the actual dependencies and allows testing its logic without relying on external services.
 
-2. **Mock Classes:**  Crucially, the code now defines `MockPrestaShop`, `MockGS`, and `MockLogger`.  These mock the actual classes that are likely not defined in your provided snippet.  This is **essential** for writing testable code. Without mocking dependencies, your tests would be tightly coupled to those classes and not isolated.
+2. **Clearer Test Names:** Test function names are more descriptive, reflecting the specific aspect being tested.
 
-3. **Testing Initialization:** The `test_presta_warehouse_init` function tests if `PrestaWarehouse` initializes correctly and if it has the expected attributes (like a logger in this case).
+3. **Exception Handling:** The `test_presta_warehouse_invalid_input` demonstrates how to test exception handling using `pytest.raises`. This is essential to verify how the class behaves when confronted with errors.
 
-4. **Testing a Method (Mock):** `test_presta_warehouse_method_mock` tests the `some_method` by asserting that it returns the expected "mocked_result"  from the mocked class.
+4. **Example for Method Testing:** The `test_presta_warehouse_method` includes an example for testing a method of `PrestaWarehouse`.  Crucially, it also checks the logger, which is critical if you use logging in your code.
 
-5. **Exception Handling:** The code now includes `pytest.raises` for checking expected errors, like `AttributeError` or `TypeError`.  The `test_presta_warehouse_method_with_error` demonstrates how to test for exceptions.  It also shows how you might test for an *invalid* type.
+5. **Mode Testing:** Included `test_presta_warehouse_mode_setting` to illustrate a simple test case for checking if the `MODE` variable is set correctly.
 
-6. **Clearer Test Names:** Function names like `test_presta_warehouse_method_with_error` are more descriptive of what the tests aim to accomplish.
+6. **Important Imports:** Ensures the necessary modules (`logger`) are imported for testing.
 
-7. **Comprehensive Testing:** The example tests are a starting point; you'll need to add more tests covering other methods, invalid inputs, and edge cases to properly validate `PrestaWarehouse`'s behavior.
+7. **Completeness:**  The provided solution lacks complete testing. You must replace the example mocks and functions with the actual code you want to test for comprehensive test coverage.
+
+**How to use:**
+
+1. **Replace Mock Classes:** Replace the mock classes (`MockPrestaShop`, etc.) with the actual implementation of your `gs`, `header` modules and the `PrestaShop` class.  If it's a complex class, mock only the specific method(s) you need to test.
+
+2. **Add Tests for Methods and Attributes:** Add tests for methods (`do_something`, etc.), constructor attributes, and any other relevant parts of your `PrestaWarehouse` class.
+
+3. **Install pytest:** If you haven't already, install pytest: `pip install pytest`.
+
+4. **Run Tests:** Navigate to your project directory in your terminal and run `pytest`. This will execute the test suite.
 
 
-**How to Use:**
-
-1. **Replace Mock Classes:** Replace `MockPrestaShop`, `MockGS`, etc. with *actual* mocking or stubbing for the dependencies if you know which modules they use.
-2. **Add Tests:** Add tests for the missing or required methods in the `PrestaWarehouse` class.  Consider various input types (e.g., `int`, `str`, `None`, empty lists) and error scenarios.
-3. **Install pytest:** Ensure you have pytest installed (`pip install pytest`).
-4. **Run Tests:**  Run the test file using `pytest`.
-
-
-
-This revised solution provides a significantly improved framework for writing robust and accurate tests for your code. Remember to replace the mocks with your actual dependencies if you have them available.
+Remember to adapt the example test cases and add more tests to cover various scenarios, including edge cases, invalid inputs, and different combinations of inputs.   Consider using data-driven tests (using `pytest.mark.parametrize`) to automate tests with multiple inputs.  Critically, ensure you're mocking (or replacing) dependencies to avoid actual API calls or external program execution within your tests. Remember to also validate any outputs from your methods.

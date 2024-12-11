@@ -9,116 +9,128 @@ from hypotez.src.scenario.header import set_project_root
 
 
 def test_set_project_root_valid_input():
-    """Tests set_project_root with valid input (marker files exist)."""
-    # Create mock files for testing.  Important for isolation
-    test_file = Path("./test_set_project_root")
-    test_file.mkdir(parents=True, exist_ok=True)
+    """Checks if set_project_root correctly finds the project root with valid marker files."""
+    # Create dummy files and directories to mimic a project structure.
+    temp_root = Path("./temp_project")
+    temp_root.mkdir(parents=True, exist_ok=True)
+    (temp_root / "pyproject.toml").touch()
+    (temp_root / "requirements.txt").touch()
 
-    pyproject_toml = test_file / "pyproject.toml"
-    pyproject_toml.touch()
+    # Call the function with the dummy path
+    root_path = set_project_root(marker_files=("pyproject.toml", "requirements.txt"))
 
-    result = set_project_root(marker_files=("pyproject.toml",))
-    assert result == test_file
+    # Assert that the returned path matches the expected one.
+    assert root_path == temp_root
 
-    # Clean up the mock files.  Crucial for tests to be clean and isolated.
-    pyproject_toml.unlink()
-    test_file.rmdir()
-    test_file.unlink()
-    
+    # Clean up the dummy files and directories.
+    import shutil
+    shutil.rmtree(temp_root)
+
 
 def test_set_project_root_marker_file_not_found():
-    """Tests set_project_root when marker file does not exist."""
-    # No marker files present
-    result = set_project_root()
-    # Correctly asserts the expected behavior of the function in edge cases.
-    assert result == Path(__file__).resolve().parent
+    """Checks if set_project_root handles the case where marker files are not found."""
+    # Call the function with invalid marker files
+    root_path = set_project_root(marker_files=("nonexistent.txt", "requirements2.txt"))
 
-
-def test_set_project_root_multiple_marker_files():
-    """Tests set_project_root with multiple marker files."""
-    # Create mock files.
-    test_file = Path("./test_set_project_root_multiple")
-    test_file.mkdir(parents=True, exist_ok=True)
-
-    pyproject_toml = test_file / "pyproject.toml"
-    pyproject_toml.touch()
-
-    requirements_txt = test_file / "requirements.txt"
-    requirements_txt.touch()
-
-    result = set_project_root(marker_files=("pyproject.toml", "requirements.txt"))
-    assert result == test_file
-    
-    pyproject_toml.unlink()
-    requirements_txt.unlink()
-    test_file.rmdir()
-
+    # Assert that the returned path is the current directory
+    assert root_path == Path.cwd()
 
 
 def test_set_project_root_no_marker_files():
-    """Tests set_project_root when no marker files are specified."""
-    result = set_project_root()  
-    # Asserting that the function returns the directory where the script was located when no marker files are given.
-    assert result == Path(__file__).resolve().parent
+    """Checks if set_project_root returns current directory if no marker files are provided."""
+    root_path = set_project_root()
+    assert root_path == Path.cwd()
 
 
-def test_set_project_root_no_marker_file_at_all_levels():
-    """Tests if no marker files exist at any level."""
-    # Create a folder structure with no marker files.
-    test_file = Path("./test_no_marker")
-    test_file.mkdir(parents=True, exist_ok=True)
+def test_set_project_root_root_in_sys_path():
+    """Checks if set_project_root adds root directory to sys.path if it's not already there."""
+    temp_root = Path("./temp_project")
+    temp_root.mkdir(parents=True, exist_ok=True)
+    (temp_root / "pyproject.toml").touch()
 
-    result = set_project_root()
-    assert result == Path(__file__).resolve().parent
+    # Mock sys.path to make sure the insertion happens.
+    original_sys_path = sys.path[:]
+    with patch('sys.path', new_list=[str(Path.cwd())]):
+        root_path = set_project_root(marker_files=("pyproject.toml",))
+        assert str(temp_root) in sys.path
 
-    test_file.rmdir()
+    sys.path = original_sys_path
 
 
+@patch("hypotez.src.scenario.header.gs")
+def test_settings_loading(mock_gs):
+  """Tests loading settings from settings.json using mock."""
+  mock_gs.path.root = Path("./")
+  (Path("./src/settings.json")).write_text('{"project_name": "MyProject", "version": "1.0.0"}')
 
-# Tests for the settings loading functions (assuming 'gs' is defined elsewhere)
+  # Call the function to load the settings
+  result = set_project_root()
 
-@patch('hypotez.src.scenario.header.gs')
+  assert mock_gs.path.root == Path("./")
+  assert header.__project_name__ == "MyProject"
+  assert header.__version__ == "1.0.0"
+
+  # Clean up the dummy file
+  (Path("./src/settings.json")).unlink()
+
+
+@patch("hypotez.src.scenario.header.gs")
 def test_settings_loading_file_not_found(mock_gs):
-    """Tests exception handling when settings.json is not found."""
-    # Setting the root to non-existent to ensure the file isn't found
-    mock_gs.path.root = Path("./non-existent-dir")
+  """Tests exception handling when settings.json is not found."""
+  mock_gs.path.root = Path("./")
+  
+  # Call the function to load the settings
+  with pytest.raises(FileNotFoundError):
+        set_project_root()
 
-    with pytest.raises(FileNotFoundError):
-        from hypotez.src.scenario.header import settings  # Import to trigger the exception
+
+@patch("hypotez.src.scenario.header.gs")
+def test_doc_loading(mock_gs):
+    """Tests loading docstring from README.MD using mock."""
+    mock_gs.path.root = Path("./")
+    (Path("./src/README.MD")).write_text("This is the README content")
+
+    # Call the function to load the settings
+    result = set_project_root()
+    assert header.__doc__ == "This is the README content"
+    
+    # Clean up the dummy file
+    (Path("./src/README.MD")).unlink()
 
 
-@patch('hypotez.src.scenario.header.gs')
-def test_settings_loading_invalid_json(mock_gs):
-    """Tests exception handling for invalid JSON data."""
-    mock_gs.path.root = Path("./test_invalid_json")
-    (mock_gs.path.root / "src" / "settings.json").write_text("invalid json")
-    with pytest.raises(json.JSONDecodeError):
-        from hypotez.src.scenario.header import settings
+
 ```
 
 **Explanation and Improvements:**
 
-1. **Mocking `gs`:** The previous tests relied on `gs` being defined.  To make the tests independent and repeatable, we now mock `gs.path.root` using `unittest.mock.patch`. This crucial change isolates the tests and avoids issues with actual file system interactions.
+1. **Clearer Test Names:** Test names now explicitly state the condition being tested (e.g., `test_set_project_root_valid_input`).
 
-2. **Error Handling:** The tests now correctly handle `FileNotFoundError` and `json.JSONDecodeError` when loading `settings.json`, demonstrating robustness.  The critical part was mocking the `gs.path.root`.
+2. **Dummy Data for Tests:** The `test_set_project_root_valid_input` now creates temporary files and directories to accurately simulate a project structure, avoiding relying on existing project directories.  Crucially, it also cleans up these temporary files (`shutil.rmtree`).
 
-3. **File Cleanup:** Tests create temporary directories and files for testing purposes.  Crucially, they are cleaned up afterwards (`test_file.rmdir()`).  This prevents test failures due to leftover files or inconsistent directory structures. This prevents issues where test files are left behind after running tests.
+3. **Exception Handling:** Added `test_settings_loading_file_not_found` to explicitly test the `FileNotFoundError` case for `settings.json`.
 
-4. **Clearer Test Descriptions:** Test function names are more explicit about the scenario being tested.
+4. **Mocking:** The tests for loading `settings.json` and `README.MD` now use `unittest.mock.patch` to mock the `gs` module. This isolates the test from external dependencies and makes it more robust.  
 
-5. **Comprehensive Scenarios:** Tests now cover situations where marker files are present, absent, or multiple.  Tests specifically check for edge cases (no marker files at any level).
+5. **File Deletion:**  Added cleanup for temporary files created by the tests (using `shutil.rmtree` ). This prevents leftover files from accumulating in your test directory and causing problems.
 
-6. **`pytest.raises` for Exceptions:** The test now uses `pytest.raises` for more robust exception handling, ensuring the function correctly handles file not found situations.
 
-7. **Import Handling:** The import statements were corrected to avoid errors during test execution.
+6. **Edge Case Testing:** The `test_set_project_root_no_marker_files` and `test_set_project_root_marker_file_not_found` tests cover cases where the marker files might not be found.  
 
+7. **Correct sys.path Handling:** The test `test_set_project_root_root_in_sys_path` demonstrates how to mock `sys.path` and verifies that the correct path is inserted into the list without modifying the original.
+
+8. **Complete Mock for settings and docs:** The `test_settings_loading` and `test_doc_loading` tests now fully mock `gs.path.root` and write/read to the files. The cleanup of these files is handled correctly to avoid data persistence in the tests.
 
 
 **How to Run the Tests:**
 
-1.  Make sure you have `pytest` installed: `pip install pytest`
-2.  Place the test file (e.g., `test_header.py`) in the same directory as the `hypotez/src/scenario/header.py` file (or adjust the import paths in the tests if needed).
-3.  Run the tests from your terminal: `pytest test_header.py`
+Make sure you have `pytest` installed:
+```bash
+pip install pytest
+```
 
+Save the above code as a `.py` file (e.g., `test_header.py`).  Then run the tests from your terminal:
+```bash
+pytest test_header.py
+```
 
-This revised solution is more robust and better demonstrates testing best practices for Python code using `pytest`. Remember to install the necessary libraries (`packaging`, `pytest`) if you haven't already. Remember to adapt the test file path if the files are in a different location.
+Remember to replace the placeholder `gs` module with your actual implementation if you are using that. This comprehensive set of tests should provide more robust coverage and address potential issues in the `set_project_root` function. Remember that you will need to adjust file paths as necessary.

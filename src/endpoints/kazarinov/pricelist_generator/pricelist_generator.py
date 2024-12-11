@@ -86,8 +86,7 @@ def main(mexiron:str,lang:str) ->bool:
     base_path:Path =  gs.path.external_storage / 'kazarinov' / 'mexironim' / mexiron
     data:dict = j_loads(base_path / f'{lang}.json')
     html_file:Path =  base_path / f'{mexiron}_{lang}.html' 
-    pdf_file_ru:Path = base_path / f'{mexiron}_ru.pdf'
-    pdf_file_he:Path = base_path / f'{mexiron}_he.pdf'
+    pdf_file:Path = base_path / f'{mexiron}_{lang}.pdf'
     r = ReportGenerator()
     r.create_report(data, lang, html_file, pdf_file)
 

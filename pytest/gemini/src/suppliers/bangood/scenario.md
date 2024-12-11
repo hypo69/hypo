@@ -1,117 +1,106 @@
 ```python
 import pytest
-from unittest.mock import MagicMock
+from unittest.mock import Mock
 
-# Replace with your actual module imports if different
+# Replace with the actual path if needed
 from hypotez.src.suppliers.bangood.scenario import get_list_products_in_category, get_list_categories_from_site
-
+from src import gs
+from src.logger.logger import logger
 
 # Mock objects for testing
-class SupplierMock:
-    def __init__(self, driver_mock=None, locators=None):
-        self.driver = driver_mock or MagicMock()
-        self.locators = locators or {"category": {"product_links": "link1,link2"}, "product": {"close_banner": "banner_closed"}}
+class MockSupplier:
+    def __init__(self):
+        self.driver = Mock()
+        self.locators = {"category": {"product_links": ["https://example.com/product1", "https://example.com/product2"]}}
+        self.locators["product"]={"close_banner": "close banner"}  #Example locator
 
-    def execute_locator(self, locator):
-        return locator  # Mock execution
-
-    def scroll(self):  # Mock scrolling
+    def scroll(self):
+        # Implement scrolling if needed
         pass
     
-
-
-# Test cases for get_list_products_in_category
-def test_get_list_products_in_category_valid_input(supplier_mock):
-    """Test with valid input, returning a list of strings."""
-    supplier_mock.driver.execute_locator = lambda x: ["link1", "link2"]
-    result = get_list_products_in_category(supplier_mock)
-    assert result == ["link1", "link2"]
-
-
-def test_get_list_products_in_category_single_string_output(supplier_mock):
-    """Test with valid input, returning a list containing a single string."""
-    supplier_mock.driver.execute_locator = lambda x: "link1"
-    result = get_list_products_in_category(supplier_mock)
-    assert result == ["link1"]
-    
-
-def test_get_list_products_in_category_empty_locator(supplier_mock):
-    """Test with empty locator, returning None."""
-    supplier_mock.locators["category"] = {}
-    result = get_list_products_in_category(supplier_mock)
-    assert result is None
-
-
-def test_get_list_products_in_category_no_products_found(supplier_mock):
-    """Test with no products found, logging warning and returning None."""
-    supplier_mock.driver.execute_locator = lambda x: []
-    supplier_mock.driver.scroll = lambda: None  # Handle the scroll call
-    result = get_list_products_in_category(supplier_mock)
-    assert result is None
-
-
-@pytest.mark.skip(reason="requires a mocked logger")
-def test_get_list_products_in_category_error_logging(capsys, supplier_mock):
-    """Test error logging when locators are missing."""
-    supplier_mock.locators = None
-    get_list_products_in_category(supplier_mock)
-    captured = capsys.readouterr()
-    assert "А где локаторы" in captured.err
+    def execute_locator(self, locator):
+        if isinstance(locator, str):
+            return locator
+        if isinstance(locator, list):
+            return locator[0]  # Return first element for simplicity
+        return locator
 
 
 @pytest.fixture
-def supplier_mock():
-    """Fixture for creating a mocked supplier."""
-    return SupplierMock()
+def mock_supplier():
+    return MockSupplier()
+
+
+def test_get_list_products_in_category_valid_input(mock_supplier):
+    """Tests with valid input (list of URLs)."""
+    result = get_list_products_in_category(mock_supplier)
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert all(isinstance(url, str) for url in result)
+
+
+def test_get_list_products_in_category_empty_locator(mock_supplier):
+    """Tests with empty locator."""
+    mock_supplier.locators["category"] = {}  # Empty locator
+    result = get_list_products_in_category(mock_supplier)
+    assert result is None
+
+
+def test_get_list_products_in_category_locator_is_string(mock_supplier):
+    """Tests with locator as a string."""
+    mock_supplier.locators["category"] = {"product_links": "https://example.com"}
+    result = get_list_products_in_category(mock_supplier)
+    assert isinstance(result, list)
+    assert len(result) == 1
+    assert result[0] == "https://example.com"
+
+def test_get_list_products_in_category_locator_is_none(mock_supplier):
+    """Tests with locator as None."""
+    mock_supplier.locators["category"] = {"product_links": None}  # Empty locator
+    result = get_list_products_in_category(mock_supplier)
+    assert result is None
 
 
 
+def test_get_list_products_in_category_no_products(mock_supplier):
+    """Tests when no product links are found."""
+    mock_supplier.locators["category"] = {"product_links": []}
+    result = get_list_products_in_category(mock_supplier)
+    assert result is not None  # Correctly handles no products.
+    assert result == []
 
-# Example usage of fixtures in other tests (not required if your code uses separate classes/functions)
-# def test_function2_using_fixture(example_data):  
-#     assert ...
+def test_get_list_products_in_category_driver_error(mock_supplier):
+    """Tests with error during driver execution."""
+    mock_supplier.driver.execute_locator = lambda locator: None # Example error, replace with the actual error
+    mock_supplier.locators["category"] = {"product_links": "https://example.com"}
+    result = get_list_products_in_category(mock_supplier)
+    assert result is None  #Handles the expected result
+
+# Test get_list_categories_from_site (Placeholder - needs implementation in the original code)
+def test_get_list_categories_from_site(mock_supplier):
+    """Tests get_list_categories_from_site. Needs actual implementation in the original code."""
+    with pytest.raises(AttributeError):
+        get_list_categories_from_site(mock_supplier)
+
 ```
 
 **Explanation and Improvements:**
 
-1.  **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `driver` and `locators` attributes of the `Supplier`.  This is crucial for testing functions that interact with external systems (like web browsers).  We also correctly mock the `scroll` method.
+* **Mocking:**  Crucially, the code now uses `unittest.mock.Mock` to create mock objects for `Supplier`, `driver`, and `locators`. This isolates the tests from the actual external dependencies.  Avoids needing an actual web driver.
+* **Clearer Test Cases:**  Test names are more descriptive (e.g., `test_get_list_products_in_category_empty_locator`).
+* **Edge Case Handling:** Includes tests for empty locators, no product links, and different types of `locators`.
+* **Error Handling:** Checks for `None` return values, which are more realistic than just assuming a list.
+* **`pytest.raises`:** Added `pytest.raises(AttributeError)` for the placeholder `get_list_categories_from_site`.  This demonstrates how to test for expected exceptions.
+* **Explicit Assertions:** The assertions are now more explicit about the expected types and values.
+* **`isinstance` checks:** Added checks to ensure the correct types are returned.
+* **Mock `Supplier` class:**  Creates a proper `MockSupplier` class to make mocking more manageable.
 
-2.  **`supplier_mock` Fixture:**  A fixture is introduced to simplify creating and passing the mocked `Supplier` object to the tests. This makes the tests cleaner and more readable.
+**Important Considerations for Further Testing:**
 
-3.  **Clear Test Names:** Test names clearly indicate the input and expected outcome.
-
-4.  **Comprehensive Test Cases:**  Tests now cover various scenarios:
-    *   Valid input (list of product URLs).
-    *   Empty locator (returning `None`).
-    *   No products found (logging a warning and returning `None`).
-    *   Locator missing (logging an error and potentially returning `None`).
-    *   Single string output (a valid case in the function).
-
-5.  **`pytest.mark.skip`:** The error-logging test is marked with `@pytest.mark.skip` because it requires a mocked logger and capturing output, which would need further setup for this example.
-
-6. **Type Hinting**:  The input types are specified in the docstrings (`typing.Union`). This could help with more advanced type checking in your testing framework.
-
+* **`get_list_categories_from_site`:**  You need to implement this function in your original code to write valid test cases. The provided test case uses `pytest.raises` to demonstrate how to test when a function isn't implemented yet or is expected to raise an error.
+* **Real-World Error Scenarios:**  Mock more specific error conditions that might occur in the driver interactions or data retrieval.  For example, simulating network errors or timeouts.
+* **Data Validation:**  In production code, add validation to ensure that the URLs fetched in `get_list_products_in_category` are in the correct format and actually point to product pages.
+* **Robust Mocking:**  If your code interacts with external resources (like databases or files), mock these dependencies for better testing.  This also applies if you are using the `logger` module for logging; you likely want to mock it.  This is critical for maintaining test isolation.
 
 
-**How to Use:**
-
-1.  Install `pytest`:
-    ```bash
-    pip install pytest
-    ```
-
-2.  Replace the placeholder `from ...` lines with the actual import statements for your files.
-
-3.  Run the tests:
-    ```bash
-    pytest
-    ```
-
-**Important Considerations:**
-
-*   **Real Browser Interaction:**  For production-ready testing, consider using a browser automation library like `selenium`.  The mocks here are for testing in an isolated environment, not for actually navigating a browser.
-*   **Logger:** The error handling tests need to include more robust mocking of the `logger` to check its interaction.
-*   **Dependency Injection:**  If possible, use dependency injection for creating the `Supplier` object in your tests, so it's easier to mock its components.
-
-
-This improved solution provides more robust and comprehensive test cases, addressing potential issues with invalid inputs and edge cases, and enhancing the overall testing quality. Remember to adapt the mocks and fixtures to match your specific code structure.
+Remember to adapt the mocks to your actual function parameters and expected behaviours for comprehensive testing.
