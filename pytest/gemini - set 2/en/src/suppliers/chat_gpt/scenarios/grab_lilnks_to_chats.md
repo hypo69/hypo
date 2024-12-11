@@ -83,7 +83,7 @@ def test_get_links_no_links_found():
 
 * **Mocking:** The code now heavily utilizes `unittest.mock` to mock the `Driver` and `j_loads_ns` functions, making the tests independent of the external dependencies and preventing potential failures from issues beyond the `get_links` function itself.
 * **Comprehensive Error Handling:** Added tests for various potential exceptions, including `AttributeError` (from an invalid locator), `json.JSONDecodeError` (from bad JSON), and exception from `Driver` calls.  This is crucial for robust testing.
-* **Edge Case Testing:** Included a test for the case where no links are found, demonstrating a realistic edge case.  Also added test for invalid URL to cover scenario when URL causes an error.
+* **Edge Case Testing:** Included a test for the case where no links are found, demonStarting a realistic edge case.  Also added test for invalid URL to cover scenario when URL causes an error.
 * **Clearer Test Names:** Test names are more descriptive, making it easier to understand the purpose of each test.
 * **Fixtures:**  Uses `pytest.fixture` to manage the mock data, improving organization and readability.
 * **Correct Exception Types:** Uses `pytest.raises` to assert the expected exception type, which is essential for precise error checking.

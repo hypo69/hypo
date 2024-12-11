@@ -100,13 +100,13 @@ def test_switch_account_no_button(mock_driver):
 4. **Edge Case `test_switch_account_no_button`:** Added a test to check if the code handles the scenario where the button might not be found.
 
 
-5. **Error Handling (commented out example):** Demonstrated how to use `pytest.raises` for testing expected exceptions. Since the original code doesn't raise exceptions, I've commented out the exception testing section to avoid a false positive.
+5. **Error Handling (commented out example):** DemonStarted how to use `pytest.raises` for testing expected exceptions. Since the original code doesn't raise exceptions, I've commented out the exception testing section to avoid a false positive.
 
 
 6. **Stubbing `j_loads_ns`:**  Critically, the `j_loads_ns` function is now mocked.
 
 
-7. **Path Handling:**  The example now demonstrates how to use a fixture to mock the path to the JSON file,  making tests more resilient.
+7. **Path Handling:**  The example now demonStartes how to use a fixture to mock the path to the JSON file,  making tests more resilient.
 
 **How to run the tests:**
 

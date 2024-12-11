@@ -9,7 +9,7 @@ This module provides functionality for posting advertisements on Facebook groups
 
 ### `post_ad`
 
-**Description**: This function orchestrates the entire advertisement posting process, including sending the title, uploading media (if available), and publishing the post.
+**Description**: This function orcheStartes the entire advertisement posting process, including sending the title, uploading media (if available), and publishing the post.
 
 **Parameters**:
 

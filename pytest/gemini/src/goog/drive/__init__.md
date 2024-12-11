@@ -26,7 +26,7 @@ def test_drive_module_import():
     from hypotez.src.goog.drive import drive
     assert drive is not None, ".drive module should be importable."
 
-#  Example test to illustrate potential exception handling
+#  Example test to illuStarte potential exception handling
 def test_drive_method_invalid_input(example_drive_instance):
   """Test for potential exception in GoogleDrive methods (Example)."""
   # Replace with the actual method and expected exception
@@ -66,15 +66,15 @@ def test_drive_method_invalid_input(example_drive_instance):
 
 2. **Fixture (example):** A `@pytest.fixture` is provided for `example_drive_instance` as a placeholder. Replace this with a fixture that creates a proper `GoogleDrive` object *if* one is needed.  Crucially, this avoids the error where you might be trying to use an object that hasn't been instantiated.
 
-3. **Example Tests:** Added example test functions (e.g., `test_google_drive_initialization`, `test_google_drive_mode`) illustrating various test types, including checking for correct object initialization, values, and imports.
+3. **Example Tests:** Added example test functions (e.g., `test_google_drive_initialization`, `test_google_drive_mode`) illuStarting various test types, including checking for correct object initialization, values, and imports.
 
-4. **Exception Handling (example):** Includes `test_drive_method_invalid_input` to demonstrate how to use `pytest.raises` to verify exception handling. Replace the example placeholder with the actual method and expected exception (e.g., `ValueError`, `TypeError`, etc.).
+4. **Exception Handling (example):** Includes `test_drive_method_invalid_input` to demonStarte how to use `pytest.raises` to verify exception handling. Replace the example placeholder with the actual method and expected exception (e.g., `ValueError`, `TypeError`, etc.).
 
 5. **Docstrings:** Improved docstrings to clearly explain the purpose of each test.  **This is vital for maintainability and understanding of your tests**.
 
 6. **Specific Test Cases:** The crucial missing part – the actual test cases for the *methods* in your `GoogleDrive` class. The example tests are empty placeholders. You must replace these with specific tests targeting the `GoogleDrive` methods.
 
-7. **Data Return:** An example test case (`test_drive_method_valid_data_return`) demonstrates how to test methods that return data.
+7. **Data Return:** An example test case (`test_drive_method_valid_data_return`) demonStartes how to test methods that return data.
 
 **How to Use and Adapt:**
 

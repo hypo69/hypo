@@ -95,7 +95,7 @@ def test_story_continuation_empty_broadcast(setup, focus_group_world):
 
 2. **Clearer Test Names:** Test names now more explicitly describe the test conditions.
 
-3. **Input Validation (Crucial):** The `test_story_start_invalid_requirements` test demonstrates how to check for correct input types.  This is important for preventing unexpected behavior.
+3. **Input Validation (Crucial):** The `test_story_start_invalid_requirements` test demonStartes how to check for correct input types.  This is important for preventing unexpected behavior.
 
 4. **Error Handling:** `pytest.raises` is used to test exceptions, such as when there's no prior broadcast in `test_story_continuation_empty_broadcast`.
 

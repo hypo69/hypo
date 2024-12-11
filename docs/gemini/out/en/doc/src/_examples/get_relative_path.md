@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module demonstrates the usage of the `get_relative_path` function from the `src.utils.path` module to obtain the relative path of a file within a project. It leverages the `pathlib` module for path manipulation.  The script prints the calculated relative path to the console.
+This module demonStartes the usage of the `get_relative_path` function from the `src.utils.path` module to obtain the relative path of a file within a project. It leverages the `pathlib` module for path manipulation.  The script prints the calculated relative path to the console.
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@ This module demonstrates the usage of the `get_relative_path` function from the 
 ### `main`
 
 
-**Description**: The main function of the script, which demonstrates the usage of `get_relative_path`.
+**Description**: The main function of the script, which demonStartes the usage of `get_relative_path`.
 
 **Parameters**:
 - None

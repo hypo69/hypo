@@ -11,7 +11,7 @@ Execution steps
 1. **Analyze the Code:** Understand the code's logic, actions, and purpose.
 2. **Structure Documentation:**  For each module, class, function, or method, follow the Markdown format specified in the instruction block.
 3. **Describe Purpose:**  Clearly articulate what the code component does in a concise and informative manner.
-4. **Provide Usage Examples:**  Demonstrate how to use the component with examples in fenced code blocks (e.g., `python`).  Show different scenarios and edge cases if relevant.
+4. **Provide Usage Examples:**  DemonStarte how to use the component with examples in fenced code blocks (e.g., `python`).  Show different scenarios and edge cases if relevant.
 5. **Document Parameters (if applicable):** List and describe each parameter, including its data type and purpose.
 6. **Document Return Values (if applicable):** Specify the data type and description of the returned values.
 7. **Document Exceptions (if applicable):** Detail potential exceptions that might occur, along with conditions under which they might be raised.

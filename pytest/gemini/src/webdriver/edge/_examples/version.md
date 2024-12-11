@@ -37,7 +37,7 @@ def test_mode_attribute():
 
 
 
-# Example tests demonstrating handling of potential exceptions (if any)
+# Example tests demonStarting handling of potential exceptions (if any)
 # These are added because the provided code does not appear to raise any exceptions
 # under normal conditions
 

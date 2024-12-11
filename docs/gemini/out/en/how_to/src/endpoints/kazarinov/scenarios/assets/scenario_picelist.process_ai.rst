@@ -34,7 +34,7 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # (Illustrative example; replace with actual API calls and data handling)
+    # (IlluStartive example; replace with actual API calls and data handling)
     products_list = ["product1", "product2"]
 
     try:

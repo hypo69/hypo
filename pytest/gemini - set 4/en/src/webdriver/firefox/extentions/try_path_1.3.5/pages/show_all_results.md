@@ -76,7 +76,7 @@ def test_show_all_results_error_in_updateDetailsTable(mock_results):
 def test_makeInfoText_valid_input(mock_results):
     """Test makeInfoText with valid input."""
     info_text = tryxpath.makeInfoText(mock_results)
-    # Do some basic checks.  Regexes or a robust parsing strategy are essential 
+    # Do some basic checks.  Regexes or a robust parsing Startegy are essential 
     # to check against complex text output like this.
     assert "Mock message" in info_text
     assert "mockURL" in info_text

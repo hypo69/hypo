@@ -51,7 +51,7 @@ Usage example
 
     chat_gpt_instance = chat_gpt.ChatGpt()
     
-    #Example usage and demonstration (replace with your yielding logic)
+    #Example usage and demonStartion (replace with your yielding logic)
     for html_file in chat_gpt_instance.yeld_conversations_htmls():
         print(html_file)
 

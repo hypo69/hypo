@@ -85,7 +85,7 @@ async def test_get_data_valid_data(example_crawler):
 1. **Mocking:** The tests now effectively mock the `PlaywrightCrawler` and the `open()` function using `unittest.mock.patch`. This isolates the tests from the external dependencies and prevents them from actually making requests or writing to files. This is crucial for avoiding unintended side effects.
 
 
-2. **Error Handling:** Added a test `test_run_crawler_with_empty_urls` to check for a `TypeError` when `run_crawler` receives an empty list of URLs. This demonstrates robust error handling.  A test `test_crawler_initialization_with_invalid_type` is added to test for an invalid browser type, ensuring the code handles incorrect inputs appropriately.
+2. **Error Handling:** Added a test `test_run_crawler_with_empty_urls` to check for a `TypeError` when `run_crawler` receives an empty list of URLs. This demonStartes robust error handling.  A test `test_crawler_initialization_with_invalid_type` is added to test for an invalid browser type, ensuring the code handles incorrect inputs appropriately.
 
 
 3. **Data Validation:** The `test_get_data_valid_data` now checks if the returned data is a dictionary or a list of dictionaries to reflect the structure of data commonly returned by web scraping functions.

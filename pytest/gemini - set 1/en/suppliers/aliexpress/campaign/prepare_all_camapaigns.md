@@ -33,7 +33,7 @@ def test_process_all_campaigns_mock():
 * **Complex Logic:** If the function has more complex logic (e.g., loops, conditions, database interactions), you will need more sophisticated mock functions or fixtures to thoroughly test all possible paths and scenarios.
 
 
-**Example with more complex logic (Illustrative, needs adaption to your code):**
+**Example with more complex logic (IlluStartive, needs adaption to your code):**
 
 ```python
 import pytest
@@ -58,4 +58,4 @@ def test_process_all_campaigns_no_campaigns(mock_database):
 
 **Crucial Next Steps:**
 
-To create truly effective tests, you need to provide the actual implementation of `process_all_campaigns`.  This example demonstrates how to write tests *given* a function, but without the function's code, the tests remain incomplete.
+To create truly effective tests, you need to provide the actual implementation of `process_all_campaigns`.  This example demonStartes how to write tests *given* a function, but without the function's code, the tests remain incomplete.

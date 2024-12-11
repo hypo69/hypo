@@ -84,7 +84,7 @@ def test_empty_string_path():
 
 2. **Error Handling:** `test_root_path_calculation` now correctly handles the case where "hypotez" doesn't exist, raising a `ValueError` as expected.  It also includes a clean up step to remove the test directory.
 
-3. **Edge Cases:** `test_root_path_calculation` and `test_no_hypotez_path` specifically address the scenario where "hypotez" is not part of the current path.  `test_empty_string_path` demonstrates a crucial case with empty string.
+3. **Edge Cases:** `test_root_path_calculation` and `test_no_hypotez_path` specifically address the scenario where "hypotez" is not part of the current path.  `test_empty_string_path` demonStartes a crucial case with empty string.
 
 4. **Robustness:** The tests now clean up the test environment (removing the created directory) after each test, preventing issues in subsequent tests.
 

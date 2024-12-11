@@ -22,7 +22,7 @@ from .graber import Graber
 
 There is no algorithm in the provided code; it's an initialization file for a Python module.  The primary action is importing a class (`Graber`) from a sub-module (`graber`).
 
-**Data Flow (Illustrative):**
+**Data Flow (IlluStartive):**
 
 There's no data exchange to visualize. The code simply sets up a module, defining a variable (`MODE`) and importing a class.
 

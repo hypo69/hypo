@@ -70,7 +70,7 @@ def test_aliexpress_init_with_requests_true():
 
 4. **Exception Handling:** `pytest.raises` is used to test exception handling when an invalid `webdriver` is provided.  The `assert` statement verifies the *content* of the exception message, making the test more robust.
 
-5. **Edge Cases (example):** The `test_aliexpress_init_with_invalid_webdriver` example demonstrates how to test edge cases.
+5. **Edge Cases (example):** The `test_aliexpress_init_with_invalid_webdriver` example demonStartes how to test edge cases.
 
 6. **Documentation:** Each test includes a docstring explaining the test's purpose and the input/expected output.
 

@@ -108,7 +108,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The diagram illustrates dependencies through the function calls.  Crucial dependencies include:
+The diagram illuStartes dependencies through the function calls.  Crucial dependencies include:
 
 * **`j_loads_ns` & `j_loads`**: From `src.utils.jjson`, for JSON data loading.
 * **`get_filenames` & `read_text_file`**: From `src.utils.file`, for file handling.

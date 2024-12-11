@@ -85,7 +85,7 @@ def test_attribute_unchanged(example_request):
 
 2. **Comprehensive Tests:** The tests now cover the constructor (`__init__`),  `getapiname`, and attribute setting/getting.
 
-3. **Edge Cases:** Tests `test_attribute_setting_none` and `test_attribute_setting_empty_list` demonstrate setting attributes to `None` and empty lists.
+3. **Edge Cases:** Tests `test_attribute_setting_none` and `test_attribute_setting_empty_list` demonStarte setting attributes to `None` and empty lists.
 
 4. **Attribute Immutability Test:** `test_attribute_unchanged` checks that modifying an attribute in a test doesn't affect the original object.
 

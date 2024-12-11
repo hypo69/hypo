@@ -96,7 +96,7 @@ def test_facebook_promoter_missing_file(monkeypatch):
 
 7. **Edge Cases:** The tests now include an important edge case—an empty `campaigns` list.
 
-8. **Missing File Handling:**  A test (`test_facebook_promoter_missing_file`) simulates a missing file, demonstrating handling of `FileNotFoundError`.
+8. **Missing File Handling:**  A test (`test_facebook_promoter_missing_file`) simulates a missing file, demonStarting handling of `FileNotFoundError`.
 
 
 **To run these tests:**
@@ -114,4 +114,4 @@ def test_facebook_promoter_missing_file(monkeypatch):
 * **Input Validation:**  Add tests to validate that the inputs to `run_campaigns` are as expected. For example, if the campaigns list must be strings, make sure the tests confirm this.
 
 
-This significantly improved solution addresses the issues of the previous versions and provides a much more robust set of tests. Remember to adapt the mocking strategies based on the specific dependencies and error scenarios relevant to your code. Remember to install the `unittest.mock` library if you don't have it already.
+This significantly improved solution addresses the issues of the previous versions and provides a much more robust set of tests. Remember to adapt the mocking Startegies based on the specific dependencies and error scenarios relevant to your code. Remember to install the `unittest.mock` library if you don't have it already.

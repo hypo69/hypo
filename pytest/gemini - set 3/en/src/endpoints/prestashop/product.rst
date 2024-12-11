@@ -94,4 +94,4 @@ def test_check_product_not_found(mock_check):
 
 -   **`header`:**  You need to ensure that `header` is imported correctly or mock it out if it's not used.
 
-This improved solution is much more robust and comprehensive than the previous example and illustrates best practices for writing robust `pytest` tests. Remember to adapt the data and mocks to match the specific behavior and expected return values of your `PrestaShop` class methods. Remember to install pytest if you don't have it: `pip install pytest`
+This improved solution is much more robust and comprehensive than the previous example and illuStartes best practices for writing robust `pytest` tests. Remember to adapt the data and mocks to match the specific behavior and expected return values of your `PrestaShop` class methods. Remember to install pytest if you don't have it: `pip install pytest`

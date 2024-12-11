@@ -76,7 +76,7 @@ def test_execute_cdp_cmd_error(driver):
 4. **`test_cdp_connection`:** Tests if `Page.enable` works correctly and importantly handles potential exceptions.
 5. **`test_navigate_page`:** Tests a successful navigation and checks that the response is not None and contains a 'url' field.
 6. **`test_invalid_url`:** An edge case is introduced to test how the code handles an invalid URL.  This is essential.
-7. **`test_execute_cdp_cmd_error`:** This crucial test verifies that an exception is raised when an unknown command is used. This demonstrates error handling.
+7. **`test_execute_cdp_cmd_error`:** This crucial test verifies that an exception is raised when an unknown command is used. This demonStartes error handling.
 8. **Error Handling:** The tests now use `pytest.raises` for exception testing and include `try...except` blocks to catch and report potential errors during the execution of DevTools commands. This prevents test failures if a command fails.
 
 

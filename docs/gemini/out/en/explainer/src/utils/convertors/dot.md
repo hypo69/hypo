@@ -170,4 +170,4 @@ The code imports `sys` for system-related functions (like accessing command-line
 
 **Relationship with Other Parts of the Project:**
 
-This file (`dot.py`) likely resides in a larger project, likely a machine learning pipeline, where the visualization step is needed.  The output PNG might be used for documentation or to illustrate the graph structure in the model.  The calling code from other parts of the project is expected to supply proper input filenames and to be able to handle the potential exceptions raised by this file.
+This file (`dot.py`) likely resides in a larger project, likely a machine learning pipeline, where the visualization step is needed.  The output PNG might be used for documentation or to illuStarte the graph structure in the model.  The calling code from other parts of the project is expected to supply proper input filenames and to be able to handle the potential exceptions raised by this file.

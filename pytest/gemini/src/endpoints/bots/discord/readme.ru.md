@@ -93,7 +93,7 @@ def test_train_command_no_data(bot_instance):
 
 3. **Clearer Test Functions:** The test function names are more explicit about what they test.
 
-4. **Example Exception Handling:** The `test_train_command_no_data` function demonstrates how to use `pytest.raises` to check for specific exceptions.
+4. **Example Exception Handling:** The `test_train_command_no_data` function demonStartes how to use `pytest.raises` to check for specific exceptions.
 
 5. **Missing Code:** I have added placeholder comments (`# ... (Add tests for other commands and functions) ...`) for you to add tests for other functions (like `!train`, `!test`, etc.).  **You MUST replace these placeholders with actual test cases based on the functionality of those methods.**
 
@@ -124,4 +124,4 @@ def test_train_command_no_data(bot_instance):
    ```
 
 
-**Crucially:** The provided documentation is high-level. You need to understand the _implementation_ of the bot code to write effective tests.  You need to figure out what arguments and return values are expected from those functions.   The given code examples illustrate the mocking process, but you must write specific tests for each feature based on the code's actual implementation.
+**Crucially:** The provided documentation is high-level. You need to understand the _implementation_ of the bot code to write effective tests.  You need to figure out what arguments and return values are expected from those functions.   The given code examples illuStarte the mocking process, but you must write specific tests for each feature based on the code's actual implementation.

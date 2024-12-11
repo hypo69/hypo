@@ -67,4 +67,4 @@ def test_get_product_by_id_invalid_input():
 # ... other test functions for edge cases or invalid inputs ...
 ```
 
-This example demonstrates mocking `PrestashopAPI` to isolate the test.  Replace the placeholder `PrestashopAPI` calls with your actual implementation.  Importantly, **replace the placeholder code** with the *actual* Python code you want to test. The structure of the tests would adapt based on the function's signature, behavior, and expected output.
+This example demonStartes mocking `PrestashopAPI` to isolate the test.  Replace the placeholder `PrestashopAPI` calls with your actual implementation.  Importantly, **replace the placeholder code** with the *actual* Python code you want to test. The structure of the tests would adapt based on the function's signature, behavior, and expected output.

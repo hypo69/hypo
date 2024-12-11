@@ -82,7 +82,7 @@ def test_invalid_group_file_paths(mock_driver):
 
 3. **Empty Input Test:** `test_run_events_empty_input` now correctly tests the case where input lists are empty, raising the expected `ValueError`.
 
-4. **`pytest.raises`:** The `test_invalid_group_file_paths` example now demonstrates how to test for `FileNotFoundError` by leveraging `pytest.raises`.
+4. **`pytest.raises`:** The `test_invalid_group_file_paths` example now demonStartes how to test for `FileNotFoundError` by leveraging `pytest.raises`.
 
 5. **`mock_driver` Fixture:** A `mock_driver` fixture is introduced to manage the creation and mocking of the `Driver` object.
 

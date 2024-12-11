@@ -98,7 +98,7 @@ async def test_run_scenario_invalid_input(mock_driver, mock_graber, mock_model, 
 
 2. **Fixtures:** Fixtures are used to create and manage the mocks. This makes the tests cleaner and more organized.
 
-3. **Test Cases:** The `test_run_scenario_valid_input` and `test_run_scenario_invalid_input` tests are more comprehensive. `test_run_scenario_invalid_input` now demonstrates a scenario where `grab_page` returns `None`, ensuring the code correctly handles errors from external components.
+3. **Test Cases:** The `test_run_scenario_valid_input` and `test_run_scenario_invalid_input` tests are more comprehensive. `test_run_scenario_invalid_input` now demonStartes a scenario where `grab_page` returns `None`, ensuring the code correctly handles errors from external components.
 
 4. **Error Handling:** The original code includes error handling.  The tests now verify that error handling functions correctly in case of failures.
 

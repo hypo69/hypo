@@ -112,7 +112,7 @@ def test_print_dir_root():
 
 5. **Dummy Imports:** `stub_module_imports` creates dummy classes and modules to replace actual imports. This is crucial; otherwise, tests won't run because they can't import the missing modules.  You'll need to adapt this to match the actual modules and classes in your project.
 
-6. **File Handling (example):** The `test_print_dir_root` example demonstrates mocking file system interactions. **Crucially,** it removes the temporary test file at the end to avoid clutter.
+6. **File Handling (example):** The `test_print_dir_root` example demonStartes mocking file system interactions. **Crucially,** it removes the temporary test file at the end to avoid clutter.
 
 
 **How to Run:**

@@ -80,7 +80,7 @@ def test_version_no_project_name():
 
 * **Error Handling:** The original code had a `...` for exception handling, which is not good practice. The tests now properly handle `FileNotFoundError` and `json.JSONDecodeError`.
 * **Mocking `settings.json`:** The `mock_settings_json` function creates a temporary `settings.json` file, allowing the tests to be independent and avoid modifying the actual file. Crucial for isolating tests.
-* **Clearer Assertions:** The assertions are more specific and detailed, clearly demonstrating what is being checked.
+* **Clearer Assertions:** The assertions are more specific and detailed, clearly demonStarting what is being checked.
 * **Edge Cases:**  Tests added for missing/invalid `settings.json` and empty `settings.json` files covering different potential scenarios.
 * **`os.remove`:** Added `os.remove("settings.json")` after each test to clean up the temporary file. This prevents accumulating files in the test directory.
 * **Import correction:** The import statements are now prefixed with `from hypotez.src.templates.version import` to correctly refer to the functions.

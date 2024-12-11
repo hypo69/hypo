@@ -67,11 +67,11 @@ def test_version_missing_attribute():
 
 1. **Clearer Test Names:** Test names now explicitly state the attribute being tested.
 
-2. **Comprehensive Coverage:** Tests now cover the `__version__`, `__doc__`, `__details__`, `__name__`, `__author__` and  `MODE` attributes.  Crucially, it demonstrates how to test for missing or unexpected attributes.
+2. **Comprehensive Coverage:** Tests now cover the `__version__`, `__doc__`, `__details__`, `__name__`, `__author__` and  `MODE` attributes.  Crucially, it demonStartes how to test for missing or unexpected attributes.
 
 3. **Exception Handling:** Uses `pytest.raises` for testing `AttributeError` if an attribute doesn't exist, a crucial part of robust testing.
 
-4. **Placeholder Tests:** Added placeholder tests (`test_version_missing_attribute`, `test_version_unavailable_attribute`, `test_version_method_with_parameters`) to illustrate how to handle cases where functions or attributes might not exist. These need to be adapted to test actual functions of the module if present.
+4. **Placeholder Tests:** Added placeholder tests (`test_version_missing_attribute`, `test_version_unavailable_attribute`, `test_version_method_with_parameters`) to illuStarte how to handle cases where functions or attributes might not exist. These need to be adapted to test actual functions of the module if present.
 
 5. **Data-driven Testing (Example):** Included an example of how to use `pytest.mark.parametrize` for data-driven tests if the module has functions accepting multiple inputs.
 
@@ -82,7 +82,7 @@ def test_version_missing_attribute():
 
 1. **Replace Placeholders:**  Replace the comments (`# Add assertions ...`) with assertions that match the actual methods, attributes, and expected values from `hypotez/src/suppliers/hb/scenarios/version.py`. 
 
-2. **Identify Functions:** If `version.py` has functions (e.g., `calculate_version()`), create tests for these functions as demonstrated in the example with the placeholder tests.
+2. **Identify Functions:** If `version.py` has functions (e.g., `calculate_version()`), create tests for these functions as demonStarted in the example with the placeholder tests.
 
 3. **Run Tests:** Save the test code (e.g., `test_version.py`) in the same directory as `hypotez/src/suppliers/hb/scenarios/version.py`. Then run `pytest test_version.py` from your terminal.
 

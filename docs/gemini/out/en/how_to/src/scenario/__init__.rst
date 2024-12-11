@@ -17,7 +17,7 @@ Execution steps
 4. **PrestaShop Interactions:** The code utilizes functions for PrestaShop integrations (`execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`).  This suggests interaction with the PrestaShop API or database to update product information on the store.
 
 
-5. **Main Execution (Example):**  The code snippet demonstrates how to initiate the scenario execution from a main() method or similar entry point, where a `Supplier` object is instantiated and various `run` methods are invoked.
+5. **Main Execution (Example):**  The code snippet demonStartes how to initiate the scenario execution from a main() method or similar entry point, where a `Supplier` object is instantiated and various `run` methods are invoked.
 
 
 

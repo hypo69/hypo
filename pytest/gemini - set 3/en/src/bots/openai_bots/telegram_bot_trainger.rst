@@ -111,7 +111,7 @@ def test_main():
 * **Mocking:**  Crucially, the tests now use `unittest.mock` to mock the `Update`, `CallbackContext`, and `Model` objects.  This is essential for isolating the bot's functions from external dependencies like the Telegram API or actual database calls. This prevents accidental network interactions or other side effects.
 * **Asynchronous Tests:** The tests are marked with `@pytest.mark.asyncio` to properly run asynchronous functions.
 * **Clearer Fixtures:** The `mock_update` fixture now creates a more realistic mock object structure to represent the `Update` data. The other fixtures are streamlined.
-* **Comprehensive Test Cases:** The example test cases demonstrate how to use the mock objects and assert on the expected behavior.
+* **Comprehensive Test Cases:** The example test cases demonStarte how to use the mock objects and assert on the expected behavior.
 * **Testable `main`:** The `test_main` function now uses patching to mock the `Application` object. This makes the test robust without relying on the Telegram bot being actually running.
 * **Docstrings:** Updated docstrings for improved clarity.
 * **Error Handling (Example):**  Added a basic example of how to test error handling.  You'd add more tests for different possible errors.

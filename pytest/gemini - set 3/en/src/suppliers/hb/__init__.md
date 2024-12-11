@@ -75,7 +75,7 @@ def test_graber_instance():
 
 1. **Assumptions and Placeholder Data:** The original answer lacked any actual tests because the provided Python code was minimal.  The new tests make *reasonable* assumptions about what a `Graber` class *might* look like.  Replace the example placeholder data (e.g., `expected_output`) with actual expected data based on how `graber.get_data()` works in your real code.  **This is essential.**
 
-2. **Realistic Error Handling:** The `test_get_data_invalid_input` test now demonstrates proper exception handling using `pytest.raises` and checks that the correct error message is raised, as you should.
+2. **Realistic Error Handling:** The `test_get_data_invalid_input` test now demonStartes proper exception handling using `pytest.raises` and checks that the correct error message is raised, as you should.
 
 3. **Testing `MODE`:**  The test `test_graber_attribute_mode` now verifies that the `MODE` variable (which was part of the example code) is accessible and has the expected value.
 

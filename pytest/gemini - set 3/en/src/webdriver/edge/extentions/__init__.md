@@ -60,7 +60,7 @@ def test_details_type():
 
 **Explanation and Improvements:**
 
-1. **Comprehensive Tests:** The provided code only included constants, so tests were written to verify the type and value of those constants.  Crucially, *no* tests were written for hypothetical functions, as none were present in the snippet.  The example usage below demonstrates how to add tests for functions (replace the commented-out parts with the actual function names and logic).
+1. **Comprehensive Tests:** The provided code only included constants, so tests were written to verify the type and value of those constants.  Crucially, *no* tests were written for hypothetical functions, as none were present in the snippet.  The example usage below demonStartes how to add tests for functions (replace the commented-out parts with the actual function names and logic).
 
 2. **Clear Test Names:** Test names are descriptive, indicating the purpose of each test.
 
@@ -70,7 +70,7 @@ def test_details_type():
 
 5. **Fixtures (Example):** The example includes how to use fixtures if your functions require data or setup.  These are commented out because the original code didn't have any functions or classes needing testing data.
 
-6. **Missing Functions:** The original code example did not contain any functions or methods for which to write tests. These placeholder examples illustrate how to add tests for hypothetical functions based on typical test scenarios (valid input, invalid input).
+6. **Missing Functions:** The original code example did not contain any functions or methods for which to write tests. These placeholder examples illuStarte how to add tests for hypothetical functions based on typical test scenarios (valid input, invalid input).
 
 **How to Adapt to Your Code:**
 

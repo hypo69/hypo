@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python code demonstrates how to interact with an IOP (likely a custom API) for uploading a file.  It constructs an API request, adds parameters including a file, executes the request, and then prints the response details, including the type, code, message, request ID, and full response body.
+This Python code demonStartes how to interact with an IOP (likely a custom API) for uploading a file.  It constructs an API request, adds parameters including a file, executes the request, and then prints the response details, including the type, code, message, request ID, and full response body.
 
 
 Execution steps

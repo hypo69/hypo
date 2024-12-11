@@ -88,7 +88,7 @@ def test_run_scenarios_invalid_input():
 
 4. **Comprehensive Test Coverage:**  The tests now cover valid input, potentially empty scenarios, and a single scenario file (an edge case that was missing before).
 
-5. **Exception Handling (Placeholder):** The code has a placeholder `test_run_scenarios_invalid_input` which demonstrates how to use `pytest.raises` to check for exceptions (e.g., `TypeError` for invalid input).  **Crucially**, you need to uncomment this and adapt it according to the actual exceptions raised by your `run_scenarios` function.  If the functions don't raise exceptions with invalid data, this test won't be necessary.
+5. **Exception Handling (Placeholder):** The code has a placeholder `test_run_scenarios_invalid_input` which demonStartes how to use `pytest.raises` to check for exceptions (e.g., `TypeError` for invalid input).  **Crucially**, you need to uncomment this and adapt it according to the actual exceptions raised by your `run_scenarios` function.  If the functions don't raise exceptions with invalid data, this test won't be necessary.
 
 6. **`pytest.mark.skipif`:** This decorator is used to skip the test, useful for situations where you don't have the actual Supplier class or it's still under development. You'll need to replace `True` with a more useful condition to determine when the test should be skipped.
 

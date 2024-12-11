@@ -181,7 +181,7 @@ graph TD
         - `run_crawler`: Starts the crawling process given a list of URLs.
         - `export_data`: Saves the extracted data to a file.
         - `get_data`: Retrieves the extracted data.
-        - `run`: Orchestrates the crawler setup, running and data export.
+        - `run`: OrcheStartes the crawler setup, running and data export.
 
 
 * **Functions:**

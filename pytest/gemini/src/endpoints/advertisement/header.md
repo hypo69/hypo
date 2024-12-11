@@ -101,7 +101,7 @@ def test_doc_loading(mock_path):
 
 3. **Edge Case Testing:** Added a test (`test_set_project_root_invalid_path`) for when the given path doesn't contain the marker files. Also added a `test_set_project_root_no_marker_files` test to test when the marker files don't exist
 
-4. **Exception Handling:** Tests for `FileNotFoundError` and `json.JSONDecodeError` are included using `pytest.raises` for proper exception handling testing, demonstrating the appropriate catch handling now.
+4. **Exception Handling:** Tests for `FileNotFoundError` and `json.JSONDecodeError` are included using `pytest.raises` for proper exception handling testing, demonStarting the appropriate catch handling now.
 
 5. **Temporary Directories:**  The code now uses temporary directories (`temp_dir`) to create controlled test environments. This prevents conflicts with existing files or directories, making tests more robust. Critically, the `temp_dir` is cleaned up to prevent test failures due to leftover files.
 

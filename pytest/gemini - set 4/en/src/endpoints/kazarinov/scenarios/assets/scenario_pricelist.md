@@ -149,7 +149,7 @@ def test_ai_error():
 
 4. **Comprehensive Scenarios:** Tests cover valid input, invalid URL, parsing failure, conversion failure, saving failure, and AI processing errors, fulfilling the prompt's requirements.
 
-5. **Edge Cases:** The `test_saving_failure` and `test_ai_error` function illustrate how to mock failures in these specific cases.
+5. **Edge Cases:** The `test_saving_failure` and `test_ai_error` function illuStarte how to mock failures in these specific cases.
 
 
 **How to Run the Tests:**

@@ -89,7 +89,7 @@ def test__parse_invalid_xml(presta_shop):
 
 * **Mocking `requests`:** The crucial change is mocking the `requests` library using `unittest.mock.patch`. This isolates the tests from the external network and ensures consistent data for testing different scenarios.
 * **Clearer Test Names:** Test names now more accurately describe the input and expected outcome.
-* **Data-Driven Tests (Example):** The example `test_create_valid` demonstrates how to combine mocking with assertions for a valid `create` method call.  You'd need to adapt this to specific return values from your API.
+* **Data-Driven Tests (Example):** The example `test_create_valid` demonStartes how to combine mocking with assertions for a valid `create` method call.  You'd need to adapt this to specific return values from your API.
 * **Error Handling Tests (Example):** The `test__parse_invalid_xml` example shows a test for the `_parse` method to check for incorrect XML input.
 * **`tmp_path` Fixture:** Used for creating temporary files in the `create_binary` test, which is better practice than hardcoding file paths.  Install `pytest` if you don't have it already.
 * **Specific Error Cases:**  You should add test cases for various possible error responses from the PrestaShop API, such as `PrestaShopAuthenticationError` and general API errors.

@@ -3,7 +3,7 @@ import pytest
 import json
 
 # Placeholder for the actual code.  Replace with your code.
-# This is a dummy implementation to demonstrate testing structure.
+# This is a dummy implementation to demonStarte testing structure.
 def process_ai(products_list, attempts=3):
     """Processes the products list using an AI model."""
 

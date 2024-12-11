@@ -110,7 +110,7 @@ def test_prepare_product_async(product_editor, qtbot, file_path, expected_messag
 
 * **Clearer Test Cases:** The test cases are better structured, with clear expectations of output.
 
-* **Error Handling:** The `test_prepare_product_async` test case now demonstrates how to handle different error scenarios and assertions.
+* **Error Handling:** The `test_prepare_product_async` test case now demonStartes how to handle different error scenarios and assertions.
 
 * **Edge Cases:** The test cases include checks for missing data to cover edge cases
 

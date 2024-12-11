@@ -96,11 +96,11 @@ def test_translate_no_translation(mocked_openai):
 
 4. **Edge Cases:**  Includes tests for empty input text and an example for invalid languages.
 
-5. **Error Handling:** The `test_translate_api_error` case demonstrates how to test exception handling, verifying that the `translate` function returns `None` and logs the error as expected.  Crucially, this uses `@patch` to correctly mock the exception.
+5. **Error Handling:** The `test_translate_api_error` case demonStartes how to test exception handling, verifying that the `translate` function returns `None` and logs the error as expected.  Crucially, this uses `@patch` to correctly mock the exception.
 
 6. **No Translation:** The `test_translate_no_translation` case adds an important scenario where the response from OpenAI might not contain any translation text.
 
 7. **`assert` statements:**  Explicit assertions are used to verify expected outcomes.
 
 
-This revised solution is more comprehensive, covers various scenarios, and demonstrates best practices for writing robust `pytest` tests. Remember to install the necessary libraries: `pytest`, `openai`, etc. if you haven't already.  This is a significantly improved solution compared to the previous response.
+This revised solution is more comprehensive, covers various scenarios, and demonStartes best practices for writing robust `pytest` tests. Remember to install the necessary libraries: `pytest`, `openai`, etc. if you haven't already.  This is a significantly improved solution compared to the previous response.

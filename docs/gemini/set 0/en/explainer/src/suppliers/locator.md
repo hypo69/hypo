@@ -55,7 +55,7 @@
 
     *Example*: The `additional_images_urls` locator extracts the `src` attribute (image URLs).
 
-3. **Element Location Strategy:**  `by` specifies the method to locate the element.  Common strategies are using XPath.
+3. **Element Location Startegy:**  `by` specifies the method to locate the element.  Common Startegies are using XPath.
 
     *Example*:  `close_banner` uses XPath to locate a button with ID `closeXButton`.
 

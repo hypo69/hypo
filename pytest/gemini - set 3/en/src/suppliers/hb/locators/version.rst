@@ -52,7 +52,7 @@ def test_version_edge_case_1():
     assert __version__.lstrip("0") != ""
 
 
-# This example demonstrates testing with pytest.raises if exception handling is part of the function.
+# This example demonStartes testing with pytest.raises if exception handling is part of the function.
 # Since there's no explicit exception handling, this is commented out.
 # def test_version_invalid_input():
 #     """
@@ -72,7 +72,7 @@ def test_version_edge_case_1():
 
 3. **Edge Case Testing:** An example of an edge case is added—checking for leading zeros or other patterns in the version string. Modify this test to match the expected versioning scheme in your code.
 
-4. **Exception Handling (commented out):** Demonstrates how to use `pytest.raises` to check for expected exceptions. The example is commented out since the original code doesn't appear to raise exceptions for valid inputs.  Uncomment and modify if exception handling is present.
+4. **Exception Handling (commented out):** DemonStartes how to use `pytest.raises` to check for expected exceptions. The example is commented out since the original code doesn't appear to raise exceptions for valid inputs.  Uncomment and modify if exception handling is present.
 
 
 **How to Use and Adapt:**

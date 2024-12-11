@@ -39,7 +39,7 @@ def test_login_invalid_input_empty_string():
 
 2. **Clear Test Names:** The test names are now more descriptive.
 
-3. **Type Handling:**  The `test_login_invalid_input_type` and `test_login_invalid_input_none` tests are essential. They demonstrate how the function should handle arguments that are not expected types.  I've assumed the function `login` may expect a `str` as input (as indicated by the docstring).
+3. **Type Handling:**  The `test_login_invalid_input_type` and `test_login_invalid_input_none` tests are essential. They demonStarte how the function should handle arguments that are not expected types.  I've assumed the function `login` may expect a `str` as input (as indicated by the docstring).
 
 4. **Exception Handling with `pytest.raises`:** The `pytest.raises` is used correctly to catch the expected `TypeError` when the function receives inappropriate input.
 

@@ -64,7 +64,7 @@ def example_data():
 #    assert some_function(some_input) == expected_output
 
 # Add specific tests for handling invalid inputs, edge cases,
-# and exceptions using pytest.raises as demonstrated in the example.
+# and exceptions using pytest.raises as demonStarted in the example.
 ```
 
 **Explanation and Crucial Improvements:**
@@ -75,7 +75,7 @@ def example_data():
 
 3. **Clear Test Names:** The test names are more informative (e.g., `test_graber_method1_invalid_input`).
 
-4. **Exception Handling:** The `test_graber_method1_invalid_input` demonstrates using `pytest.raises` to test for specific exceptions.
+4. **Exception Handling:** The `test_graber_method1_invalid_input` demonStartes using `pytest.raises` to test for specific exceptions.
 
 5. **Example Fixture:** A basic `example_data` fixture is included.  If your code uses fixtures for `Graber`'s functions, replace this example with the appropriate fixture.
 

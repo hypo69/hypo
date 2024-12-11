@@ -117,7 +117,7 @@ def test_execute_locator_invalid_locator(mock_logger, tmpdir):
 
 4. **Edge Cases and Invalid Inputs:** The tests now cover cases where the file doesn't exist or isn't a valid HTML file (in `test_get_url_invalid_file_format`). This ensures robustness.
 
-5. **Complete `BS` Class Tests:** The `test_get_url_valid_file_path`, `test_get_url_invalid_file_path` and `test_execute_locator_invalid_locator` example tests demonstrate how to test the `BS` class's methods with various scenarios.
+5. **Complete `BS` Class Tests:** The `test_get_url_valid_file_path`, `test_get_url_invalid_file_path` and `test_execute_locator_invalid_locator` example tests demonStarte how to test the `BS` class's methods with various scenarios.
 
 6. **Robustness:** The tests check for correct behavior when an invalid file path is provided and also covers the scenario where no elements are found using an invalid locator.
 

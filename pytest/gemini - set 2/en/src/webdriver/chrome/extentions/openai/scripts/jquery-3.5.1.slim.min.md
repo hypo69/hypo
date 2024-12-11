@@ -90,7 +90,7 @@ def test_data():
 
 3. **Specific Test Cases:** The tests now cover more aspects of the likely jQuery library (e.g., `merge`, `each`, `grep`, `map`) and their typical function signatures/usage.
 
-4. **Error Handling with `pytest.raises`:**  The example `test_jquery_exception_handling` demonstrates how to use `pytest.raises` to check for specific exceptions (e.g., `TypeError` if you pass bad input). **Crucially,** you need to understand the exceptions the jQuery library might raise in the functions you test.
+4. **Error Handling with `pytest.raises`:**  The example `test_jquery_exception_handling` demonStartes how to use `pytest.raises` to check for specific exceptions (e.g., `TypeError` if you pass bad input). **Crucially,** you need to understand the exceptions the jQuery library might raise in the functions you test.
 
 5. **Fixture for Data:** The `test_data` fixture shows how to structure test data (or the arguments needed) outside of the test function body.
 

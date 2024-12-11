@@ -121,7 +121,7 @@ def test_isValidDict_valid_input(document_fixture):
 4. **Exception Handling:**  Tests now include `pytest.raises` to explicitly check for expected exceptions and include descriptive error messages for debugging.
 
 
-5. **Example Test Cases:**  The code now includes example tests for `execExpr` with different methods (`evaluate`, `querySelector`, `querySelectorAll`), demonstrating how to use the `document_fixture`.
+5. **Example Test Cases:**  The code now includes example tests for `execExpr` with different methods (`evaluate`, `querySelector`, `querySelectorAll`), demonStarting how to use the `document_fixture`.
 
 
 6. **Comprehensive Coverage (Add more):**  The tests are a starting point.  You need to add tests for:

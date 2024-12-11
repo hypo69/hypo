@@ -108,4 +108,4 @@ This revised solution addresses the core issues of the previous response and pro
 -   **Complex `script.py`:** If `script.py` is computationally intensive or has external dependencies, consider mocking or stubbing those dependencies as well for better testability.
 
 
-This improved response provides a significantly better testing strategy for your FastAPI code, improving its reliability and maintainability. Remember to replace `"html"` with the actual directory of your static HTML files. Remember to adapt the `SCRIPT_PATH` to your specific project.
+This improved response provides a significantly better testing Startegy for your FastAPI code, improving its reliability and maintainability. Remember to replace `"html"` with the actual directory of your static HTML files. Remember to adapt the `SCRIPT_PATH` to your specific project.

@@ -4,7 +4,7 @@ import hypotez.src.suppliers.ebay.shop as ebay_shop
 
 # No functions or classes are defined in the provided code.
 # Therefore, no tests can be written.  A placeholder test is included
-# to demonstrate the structure if the code contained functions.
+# to demonStarte the structure if the code contained functions.
 
 def test_empty_code_placeholder():
     """

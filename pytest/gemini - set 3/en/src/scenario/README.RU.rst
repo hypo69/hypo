@@ -87,7 +87,7 @@ def teardown_module(module):
 
 * **Mocking:**  Crucially, the code now uses `unittest.mock` to mock external dependencies like `requests.get` and database interactions.  This isolates the tests and avoids needing an actual internet connection or database.  Mocks are setup with `monkeypatch` and a fixture for cleaner testing.
 * **Edge Cases:** The `test_run_scenario_file_invalid_file` test covers the case where the scenario file doesn't exist.
-* **Error Handling:** The `test_run_scenario_invalid_url` test specifically checks for exception handling when the URL in the scenario data is invalid. This demonstrates proper error handling logic.
+* **Error Handling:** The `test_run_scenario_invalid_url` test specifically checks for exception handling when the URL in the scenario data is invalid. This demonStartes proper error handling logic.
 * **Parameterization:** The `test_run_scenario_file_valid_file` now uses parameterization (`pytest.mark.parametrize`) to make it more concise and maintainable.
 * **Clearer Fixture:** The `mock_run_scenario` fixture now sets up the mocks correctly for the requests and DB interaction.
 * **Scenario Data Handling:** Mock data is now directly created within the fixture and handled within the test for more controlled testing.
@@ -105,4 +105,4 @@ def teardown_module(module):
 Remember to replace `"hypotez.src.scenario"` with the correct path to your module. This improved solution is much more robust and effective for testing the scenario handling logic. Also, adapt the mocks to match the specifics of your `db_interaction` and `requests` calls for accurate testing.
 
 
-This complete example demonstrates a well-structured approach to testing the module using `pytest` and mocking. Remember to extend this with more test cases to cover different input scenarios, invalid data, and edge cases in your scenario files and database interactions. Remember to include the actual `run_scenario`, `save_products`, and `load_scenario_data` function from your module code in your `test_scenario.py` file to test it properly.
+This complete example demonStartes a well-structured approach to testing the module using `pytest` and mocking. Remember to extend this with more test cases to cover different input scenarios, invalid data, and edge cases in your scenario files and database interactions. Remember to include the actual `run_scenario`, `save_products`, and `load_scenario_data` function from your module code in your `test_scenario.py` file to test it properly.

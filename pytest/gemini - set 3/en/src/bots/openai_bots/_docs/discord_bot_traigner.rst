@@ -100,10 +100,10 @@ def test_select_dataset(bot):
 
 * **Dummy `DiscordBot` class:**  Crucially, I've created a placeholder `DiscordBot` class. Replace this with your actual bot code when you have it.  This makes the tests work without needing to run your Discord bot.
 * **Clear Test Names:**  Test names are descriptive and follow the example format.
-* **Exception Handling:** `test_train_invalid_data` and `test_test_invalid_json` demonstrate how to test for exceptions using `pytest.raises`.
+* **Exception Handling:** `test_train_invalid_data` and `test_test_invalid_json` demonStarte how to test for exceptions using `pytest.raises`.
 * **Valid Input Tests:** Tests for valid data input are present for training (`test_train_text_data`, `test_train_file`).
 * **Invalid/Unexpected Input Tests:** Tests for incorrect data types (`test_train_invalid_data`) and invalid JSON (`test_test_invalid_json`) are added.
-* **Edge Cases:**  `test_ask_invalid_question` demonstrates testing an unexpected question.
+* **Edge Cases:**  `test_ask_invalid_question` demonStartes testing an unexpected question.
 * **Fixture:** A `bot` fixture is introduced to manage instantiation.
 * **JSON Handling:** The `test_method` tests now properly load JSON input and handles potential JSONDecodeErrors.
 * **`assert` Statements:**  Tests have appropriate `assert` statements to verify the expected results.

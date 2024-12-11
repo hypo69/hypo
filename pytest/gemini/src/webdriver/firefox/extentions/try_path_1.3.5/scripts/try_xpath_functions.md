@@ -104,7 +104,7 @@ def test_execExpr_querySelectorAll_invalid_context(document_fixture):
 
 5. **Clearer Assertions:** Assertions are more specific and descriptive, checking for the expected types and contents of the results.  e.g. checking the tag of the node after a query.
 
-6. **Comprehensive Test Cases:** The provided example demonstrates how to test a few functions. You need to extend this with more tests for all functions (`isDocOrElem`, `makeResolver`, `resToArr`, and others) and diverse inputs.
+6. **Comprehensive Test Cases:** The provided example demonStartes how to test a few functions. You need to extend this with more tests for all functions (`isDocOrElem`, `makeResolver`, `resToArr`, and others) and diverse inputs.
 
 7. **JavaScript Evaluation:** The JavaScript code is now correctly evaluated using `js2py`, making it much easier to test.
 

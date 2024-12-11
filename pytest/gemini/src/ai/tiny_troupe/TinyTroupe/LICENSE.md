@@ -2,7 +2,7 @@
 import pytest
 
 # No Python code provided to test, so no tests can be generated.
-#  A placeholder test is included to demonstrate the structure.
+#  A placeholder test is included to demonStarte the structure.
 
 def test_placeholder():
     """

@@ -109,11 +109,11 @@ def test_prepare_category_success(category_editor, qtbot, mock_ali_campaign_edit
 
 3. **`tmp_path` fixture (pytest):** This fixture from `pytest` is now used to create a temporary file for testing file operations. This prevents polluting the file system and ensures tests run consistently.
 
-4. **Error Handling:** The `test_open_file_load_error` test demonstrates proper exception handling for JSON loading errors. The `pytest.raises` context manager is used to verify that the expected exception is raised.
+4. **Error Handling:** The `test_open_file_load_error` test demonStartes proper exception handling for JSON loading errors. The `pytest.raises` context manager is used to verify that the expected exception is raised.
 
 5. **Clearer Test Cases:** The test descriptions are more specific and explain the intended outcome of each test.
 
-6. **Completeness:** Added tests for `open_file` (no file selected), `prepare_all_categories_async`, and `prepare_category_async`, demonstrating success and error scenarios (when `AliCampaignEditor` methods raise an exception).  Add more specific test cases for various input scenarios based on the code.
+6. **Completeness:** Added tests for `open_file` (no file selected), `prepare_all_categories_async`, and `prepare_category_async`, demonStarting success and error scenarios (when `AliCampaignEditor` methods raise an exception).  Add more specific test cases for various input scenarios based on the code.
 
 7. **Explicit Example:** Provides example usage of how to write tests for file path validation using `Path`.
 
@@ -125,7 +125,7 @@ pip install pytest pytest-qt
 pytest
 ```
 
-Remember to install the required libraries (`pytest`, `pytest-qt`) before running the tests.  Also, ensure the necessary `src` modules and `j_loads_ns` function are correctly defined and accessible in your test environment.  This complete example now effectively demonstrates how to properly test PyQt applications using pytest and mocks for isolating the tested code.  Remember to adapt the example to your actual data structure and error handling in `AliCampaignEditor`.
+Remember to install the required libraries (`pytest`, `pytest-qt`) before running the tests.  Also, ensure the necessary `src` modules and `j_loads_ns` function are correctly defined and accessible in your test environment.  This complete example now effectively demonStartes how to properly test PyQt applications using pytest and mocks for isolating the tested code.  Remember to adapt the example to your actual data structure and error handling in `AliCampaignEditor`.
 
 
 This revised answer provides a more robust and comprehensive set of tests that adhere to the requested `pytest` framework and handles asynchronous operations correctly. Remember to add more specific test cases based on the actual functionality of the code you are testing.

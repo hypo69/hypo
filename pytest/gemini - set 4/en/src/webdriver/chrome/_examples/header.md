@@ -92,7 +92,7 @@ def test_dir_root_path():
 1. **Mocking:** The crucial part is mocking `os.getcwd()`, `sys.path.append()`, `print()`, and any other external calls. This allows testing the internal logic of the code *in isolation*.  The `mock_sys` and `mock_pathlib` are now more robust.
 
 
-2. **Clearer Test Cases:**  The example `test_dir_root_creation` now demonstrates how to use mocks effectively.  A separate `test_dir_root_path` is also added.
+2. **Clearer Test Cases:**  The example `test_dir_root_creation` now demonStartes how to use mocks effectively.  A separate `test_dir_root_path` is also added.
 
 
 3. **Robustness:**  The `modified_header_code` function now takes mocked functions as arguments and directly uses them, making it easier to test different aspects. It also clears the sys.path for each test.

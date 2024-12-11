@@ -93,7 +93,7 @@ def test_sendDataToServer_invalid_url(mock_chrome):
 
 * **Fixture for Mocking Chrome:** The `mock_chrome` fixture makes the tests more organized.
 
-* **Handling Invalid URLs:** `test_sendDataToServer_invalid_url` demonstrates how to test for invalid URLs, which the original code may not be handling correctly (although the exact behavior in that case is non-obvious without seeing the rest of the extension code).
+* **Handling Invalid URLs:** `test_sendDataToServer_invalid_url` demonStartes how to test for invalid URLs, which the original code may not be handling correctly (although the exact behavior in that case is non-obvious without seeing the rest of the extension code).
 
 
 **How to Run the Tests:**

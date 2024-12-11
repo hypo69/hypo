@@ -88,7 +88,7 @@ def test_genericListener_showAllResults(mocker):
 
 2. **`js2py` for JavaScript Evaluation:** The JavaScript code is now evaluated using `js2py` to make it usable within the Python tests.
 
-3. **Clearer Test Structure:** The example test demonstrates a correct way to test `genericListener.listeners.storePopupState`.  Add more test functions for other listener functions and other parts of the code to get full test coverage.
+3. **Clearer Test Structure:** The example test demonStartes a correct way to test `genericListener.listeners.storePopupState`.  Add more test functions for other listener functions and other parts of the code to get full test coverage.
 
 
 **How to Run Tests:**

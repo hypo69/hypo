@@ -51,7 +51,7 @@ def test_resource_list_invalid_type():
 
 2. **Comprehensive Coverage:** Added tests to verify the length of the list, the types of elements, the presence of specific resources, and the absence of empty strings. Tests for duplicate items and type checking (for potential errors).
 
-3. **Error Handling:** Included an example `test_resource_list_invalid_type` that demonstrates how to use `pytest.raises` to test for exceptions. This is important even if no explicit exceptions are raised in the code.  Note: since no explicit exception handling or raising exists in the provided code, this is an example and needs adaptation if actual exceptions are present in the functions.
+3. **Error Handling:** Included an example `test_resource_list_invalid_type` that demonStartes how to use `pytest.raises` to test for exceptions. This is important even if no explicit exceptions are raised in the code.  Note: since no explicit exception handling or raising exists in the provided code, this is an example and needs adaptation if actual exceptions are present in the functions.
 
 4. **Import Statements:** Corrected import statements to `hypotez` package path.
 

@@ -37,7 +37,7 @@ def test_greet_invalid_input():
 
 1. **No Code to Test:** The provided code is just a string.  To write meaningful tests, you *must* provide the Python code you want to test.
 
-2. **Example Tests:** The example above demonstrates how to write `pytest` tests for a `greet` function.  It includes tests for:
+2. **Example Tests:** The example above demonStartes how to write `pytest` tests for a `greet` function.  It includes tests for:
    - **Valid Input:**  `test_greet_valid_input` verifies the function works correctly with different valid strings.
    - **Invalid Input:** `test_greet_invalid_input` uses `pytest.raises` to check if a `TypeError` is raised when the input is not a string. This is *crucial* for robustness.
    - **Edge Case:** `test_greet_empty_name`  handles an edge case (empty name). How you handle an empty name is an important decision based on the expected behaviour of the `greet` function.

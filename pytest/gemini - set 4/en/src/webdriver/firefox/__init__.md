@@ -80,7 +80,7 @@ def test_firefox_method_example():
 
 8. **Thoroughness:**  Write tests that cover as many paths and conditions as possible for your `Firefox` class.  This is essential for ensuring the robustness and correctness of your implementation.
 
-**Example with Mock (Illustrative):**
+**Example with Mock (IlluStartive):**
 
 ```python
 import pytest

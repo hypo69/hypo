@@ -91,4 +91,4 @@ def test_sys_path_append():
 2.  Make sure you have `pytest` installed (`pip install pytest`).
 3.  Run `pytest test_header.py` from your terminal in the directory containing `test_header.py`.
 
-This improved test suite is more robust, more comprehensive, and better demonstrates correct exception handling and valid/invalid input handling within the test scenarios. Remember to adapt the error type (e.g., `ValueError`) if needed based on the actual exception raised in the `header.py` file. Remember to run the test in the same directory as the `header.py` file to avoid issues.
+This improved test suite is more robust, more comprehensive, and better demonStartes correct exception handling and valid/invalid input handling within the test scenarios. Remember to adapt the error type (e.g., `ValueError`) if needed based on the actual exception raised in the `header.py` file. Remember to run the test in the same directory as the `header.py` file to avoid issues.

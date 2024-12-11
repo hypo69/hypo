@@ -52,7 +52,7 @@ def test_presta_supplier_init_missing_api_key(credentials):
 # Add more tests as needed for other methods in the class if present.
 # For example, tests covering the behavior of `get_products`, `get_orders` etc.
 #
-# Example (Illustrative):
+# Example (IlluStartive):
 #
 # def test_presta_supplier_get_products_valid_input(supplier):
 #   """Tests getting products with valid input."""
@@ -60,7 +60,7 @@ def test_presta_supplier_init_missing_api_key(credentials):
 #   assert products is not None  # Check if the response is not None
 
 
-# Example edge case (Illustrative, adjust based on specific requirements)
+# Example edge case (IlluStartive, adjust based on specific requirements)
 # def test_presta_supplier_get_products_empty_response():
 #   """Tests for empty response."""
 #   with mock.patch('requests.get', return_value=mock.Mock(json=lambda: [])):
@@ -78,7 +78,7 @@ def test_presta_supplier_init_missing_api_key(credentials):
 
 3. **ValueError Handling:**  Critically, the tests now use `pytest.raises` to assert that a `ValueError` is raised when `api_domain` or `api_key` are missing, as required by the `ValueError` in the code under test.  The exception message is also verified.
 
-4. **Comprehensive Coverage (Illustrative):**  The example now includes tests for both providing credentials as a dictionary and as a `SimpleNamespace` object, addressing the `Optional[dict | SimpleNamespace]` in the `__init__` signature.
+4. **Comprehensive Coverage (IlluStartive):**  The example now includes tests for both providing credentials as a dictionary and as a `SimpleNamespace` object, addressing the `Optional[dict | SimpleNamespace]` in the `__init__` signature.
 
 5. **Edge Cases:** Added a test `test_presta_supplier_init_credentials_overrides_args` to cover the situation where arguments are passed to `__init__` *and* credentials are provided.  This ensures the code behaves as expected when both paths are followed.
 

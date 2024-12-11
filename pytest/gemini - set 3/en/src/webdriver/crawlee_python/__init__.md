@@ -91,7 +91,7 @@ def test_crawlee_python_run_simple_case(example_crawlee_instance):
 5. **Missing Method Handling:** The `test_crawlee_python_run_no_method` test is included. This test is essential; it checks if the class has a `run` method. This prevents cryptic errors later.
 
 
-6. **Illustrative Example:** The `test_crawlee_run_no_method` and  `test_crawlee_python_run_simple_case` provide *example* test cases.  **You absolutely need to fill in the specifics of what your `run` method does to test its functionality.** The placeholder assertions need to be replaced with the actual expected return values or other assertions, depending on the expected result of the `run()` method.
+6. **IlluStartive Example:** The `test_crawlee_run_no_method` and  `test_crawlee_python_run_simple_case` provide *example* test cases.  **You absolutely need to fill in the specifics of what your `run` method does to test its functionality.** The placeholder assertions need to be replaced with the actual expected return values or other assertions, depending on the expected result of the `run()` method.
 
 
 **How to Use/Extend:**

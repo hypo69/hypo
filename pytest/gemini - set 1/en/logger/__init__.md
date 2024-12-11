@@ -73,10 +73,10 @@ from hypotez.src.logger.exceptions import (
 
 2. **Crucial Missing Context:**  To write meaningful tests, you need the actual code (`logger`, `Beeper`, etc.) where these exceptions are used.  Where are these classes and functions defined?  How are the exceptions handled in the code you want to test? This context is needed to create actual, effective test cases that validate the code's behavior.
 
-3. **Example Test Structure (Illustrative):** The commented-out test examples illustrate how you would test the exceptions. They show how to use `pytest.raises` to assert that the exceptions are raised with the correct messages. You would need to modify these examples based on the specifics of your code.
+3. **Example Test Structure (IlluStartive):** The commented-out test examples illuStarte how you would test the exceptions. They show how to use `pytest.raises` to assert that the exceptions are raised with the correct messages. You would need to modify these examples based on the specifics of your code.
 
 
-4. **Data-Driven Tests (Illustrative):** For more comprehensive testing you could use a fixture to create different input data to validate against.
+4. **Data-Driven Tests (IlluStartive):** For more comprehensive testing you could use a fixture to create different input data to validate against.
 
 
 

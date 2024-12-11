@@ -101,7 +101,7 @@ def test_firefox_init_custom_profile(temp_profile_dir):
 3. **Error Handling:**  The tests now robustly handle `WebDriverException` exceptions during initialization, preventing test failures and providing informative error messages.
 4. **Valid/Invalid Geckodriver Path:**  Added tests for both valid and invalid geckodriver paths to test the exception handling.
 5. **No Profile Test:** Includes a test case that checks if the `Firefox` class works correctly without a specified profile.
-6. **Custom Profile Test:** Tests initialization with a profile named in a temp directory, demonstrating the correct usage with profile_name.
+6. **Custom Profile Test:** Tests initialization with a profile named in a temp directory, demonStarting the correct usage with profile_name.
 7. **Dummy Paths:** The code now uses placeholders for the `geckodriver_path` (which you should replace with the actual path).
 8. **Import fix:** The code imports the `Firefox` class from the correct location.
 

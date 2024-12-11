@@ -115,7 +115,7 @@ from hypotez.src.suppliers.aliexpress.scenarios.affiliate_links_shortener_scenar
 
 * **Exception Handling:** The tests now effectively use `pytest.raises` to assert that `ValueError` is raised with the expected message when the shortened URL is empty or invalid.
 
-* **Edge Cases:**  The `test_get_short_affiliate_link_empty_result` and `test_get_short_affiliate_link_invalid_url` tests demonstrate edge cases where the expected result is not a valid URL.
+* **Edge Cases:**  The `test_get_short_affiliate_link_empty_result` and `test_get_short_affiliate_link_invalid_url` tests demonStarte edge cases where the expected result is not a valid URL.
 
 * **Complete Test Coverage:** The tests cover cases where:
     * The function returns a valid shortened link.

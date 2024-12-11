@@ -5,7 +5,7 @@
 
 ### 1. Blog Post: Latest Trends in Content Marketing
 
-**Objective:** To inform our audience about the latest trends in content marketing and how they can leverage these trends to improve their own strategies.
+**Objective:** To inform our audience about the latest trends in content marketing and how they can leverage these trends to improve their own Startegies.
 
 **Key Points to Cover:**
 - The rise of AI in content creation
@@ -42,7 +42,7 @@ def blog_post_content_marketing_trends() -> None:
     Details the objectives and key points for a blog post on current content marketing trends.
     """
     # Objective of the blog post
-    objective = "To inform the audience about recent content marketing trends and provide actionable strategies."
+    objective = "To inform the audience about recent content marketing trends and provide actionable Startegies."
 
     # Key points to cover
     key_points = [
@@ -100,7 +100,7 @@ def blog_post_content_marketing_trends() -> None:
     Details the objectives and key points for a blog post on current content marketing trends.
     """
     # Objective of the blog post
-    objective = "To inform the audience about recent content marketing trends and provide actionable strategies."
+    objective = "To inform the audience about recent content marketing trends and provide actionable Startegies."
 
     # Key points to cover
     key_points = [

@@ -92,7 +92,7 @@ def test_run_campaigns_invalid_data(mock_promoter):
 * **Comprehensive Tests:** The tests cover valid input, exception handling (specifically for `KeyboardInterrupt`), and (crucially) now a test for `FacebookPromoter` initialization.
 * **Clearer Assertions:**  Assertions now check specific attributes and methods of the mock objects, ensuring that the interactions are correct (e.g., the `mock_promoter.run_campaigns.assert_called_once_with`).
 * **Example for Driver:** I've added an example `test_driver_get_url` to show how you might test methods of the `Driver` class if needed.  This would be necessary if `Driver.get_url()` does any significant work.
-* **Invalid Input:** An example `test_run_campaigns_invalid_data`  demonstrates handling a case where the function receives invalid data, triggering a `TypeError` (or other expected exception).
+* **Invalid Input:** An example `test_run_campaigns_invalid_data`  demonStartes handling a case where the function receives invalid data, triggering a `TypeError` (or other expected exception).
 
 **How to Run:**
 

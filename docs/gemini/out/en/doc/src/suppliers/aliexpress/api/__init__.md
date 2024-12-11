@@ -43,7 +43,7 @@ This module provides a wrapper for the AliExpress API.  It defines the `Aliexpre
 
 
 ```python
-# Example placeholder function (for demonstration purposes)
+# Example placeholder function (for demonStartion purposes)
 from typing import Optional, List
 
 
@@ -65,7 +65,7 @@ def get_products(query: str, page: int = 1) -> Optional[dict]:
 
 
 ```python
-# Example placeholder class (for demonstration purposes)
+# Example placeholder class (for demonStartion purposes)
 class AliexpressApi:
     def __init__(self, api_key: str, api_secret: str) -> None:
         """

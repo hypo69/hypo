@@ -123,7 +123,7 @@ def test_main_with_args(mock_aliexpress_editor, monkeypatch):
 
 3. **Clearer Test Cases:** Test names now clearly indicate the purpose, including valid/invalid/edge cases, leading to better readability and maintainability.
 
-4. **Exception Handling:** The `test_process_campaign_category_invalid_category` demonstrates how to test for exceptions raised by the `process_campaign_category` function, which is crucial.
+4. **Exception Handling:** The `test_process_campaign_category_invalid_category` demonStartes how to test for exceptions raised by the `process_campaign_category` function, which is crucial.
 
 5. **Test for `process_campaign`:**  Added a test case specifically for `process_campaign` to cover the function's expected behavior.
 

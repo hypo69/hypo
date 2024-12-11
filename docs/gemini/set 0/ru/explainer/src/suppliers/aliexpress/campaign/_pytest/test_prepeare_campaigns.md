@@ -58,7 +58,7 @@ from src.suppliers.aliexpress.campaign.prepare_campaigns import (
 
 # <algorithm>
 
-The code consists of unit tests for functions related to campaign preparation. Let's illustrate the algorithm for `test_update_category_success`:
+The code consists of unit tests for functions related to campaign preparation. Let's illuStarte the algorithm for `test_update_category_success`:
 
 1. **Setup:** A mock `mock_j_loads` is created, which is a patched version of `src.utils.jjson.j_loads`.  It's configured to return a predefined dictionary. Similarly, `mock_j_dumps` and `mock_logger` are mocked.
 
@@ -145,4 +145,4 @@ This diagram shows the core test cases (A-G) and how they interact with mocked f
 - `process_campaign` and `main` depend on `src.utils.get_directory_names`.
 - `logger.logger` from `src.logger` is used for logging events during the processing.
 
-The tests are well-structured and correctly use mocking techniques. They effectively test the isolated units. Overall, the provided code demonstrates a good practice for unit testing with mocks.
+The tests are well-structured and correctly use mocking techniques. They effectively test the isolated units. Overall, the provided code demonStartes a good practice for unit testing with mocks.

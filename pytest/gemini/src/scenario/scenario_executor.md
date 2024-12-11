@@ -106,7 +106,7 @@ def navigate_to_url(url):
 
 2. **Fixtures:** Fixtures (`valid_scenario_files`, `invalid_scenario_files`, `example_scenario`) are crucial for isolating tests and providing reusable data.  Crucially, these are now based on examples of possible inputs.
 
-3. **Exception Handling:**  The `test_run_scenario_file_exception` demonstrates how to test for expected exceptions using `pytest.raises`.  It also checks if the error message contains the expected substring.  Crucially, the test now has a meaningful use of `example_scenario` instead of a random value.
+3. **Exception Handling:**  The `test_run_scenario_file_exception` demonStartes how to test for expected exceptions using `pytest.raises`.  It also checks if the error message contains the expected substring.  Crucially, the test now has a meaningful use of `example_scenario` instead of a random value.
 
 4. **Realistic Data:** The `example_scenario` fixture provides example data that can be used in more complex test cases.
 

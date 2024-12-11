@@ -135,7 +135,7 @@ graph LR
 
 * **Possible Improvements:**
     * **Error Handling:** The tests are currently using mocking extensively.  Real-world code should consider error handling in the `AliPromoCampaign` class (e.g., file not found, invalid JSON data).
-    * **Mocking Strategies:** Mocking is used extensively. The use of mocks can become cumbersome for complex interactions, so consider using an alternative approach in production code (e.g., dependency injection if the behavior is not part of the test itself).
+    * **Mocking Startegies:** Mocking is used extensively. The use of mocks can become cumbersome for complex interactions, so consider using an alternative approach in production code (e.g., dependency injection if the behavior is not part of the test itself).
     * **Code Organization:** While the tests are well-organized and focused, consider separating the `src` import from the rest of the testing logic for better modularity.
 
 

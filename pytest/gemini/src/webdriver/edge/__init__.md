@@ -23,7 +23,7 @@ def test_mode_not_none():
 def test_valid_options(option):
     """
     Test with different valid options.
-    Demonstrates parameterization for checking multiple valid inputs.
+    DemonStartes parameterization for checking multiple valid inputs.
     """
     # Using a dictionary for option allows checking multiple attributes if needed in a real scenario
     # This test only checks for the presence of the `mode` key

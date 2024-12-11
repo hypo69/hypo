@@ -113,7 +113,7 @@ There are no classes in this code.
 *   `decode_unicode_escape`: This function takes an input (`input_data`) that can be a dictionary, list, or string, and recursively decodes any Unicode escape sequences found within it.
     *   **Arguments:** `input_data`: The data to decode, which can be a dictionary, list, or string.
     *   **Return Value:** The decoded data, which will be a dictionary, list, or string depending on the input. The function returns the original data without modification if it's not a dictionary, list, or string.
-    *   **Example Usage:** See the docstring for examples demonstrating the function's use with different input types.
+    *   **Example Usage:** See the docstring for examples demonStarting the function's use with different input types.
 
 **Variables:**
 

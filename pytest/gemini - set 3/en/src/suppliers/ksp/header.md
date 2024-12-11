@@ -107,7 +107,7 @@ def test_settings_json_loading_failure():
 4. **Data Mocking:** Example tests for `settings.json` loading now mock the `gs` module, which is crucial for testing functions that depend on external resources (like files). This avoids issues with file system access and ensures the tests run reliably.
 5. **Temporary Files:** Critically, temporary directories and files are created to simulate a project structure during testing and removed afterward to prevent test failures in subsequent runs. This avoids any issues of the tests modifying the project's actual structure.
 6. **Cleanup:** Added `shutil.rmtree` to remove the temporary directories, ensuring no leftover files or directories pollute your test environment.
-7. **`gs` Mocking:** Example tests demonstrate the appropriate mocking method, using `type('MockGs', ...)` to create mocks of the `gs` module to prevent unexpected behavior from unmocked external resources.
+7. **`gs` Mocking:** Example tests demonStarte the appropriate mocking method, using `type('MockGs', ...)` to create mocks of the `gs` module to prevent unexpected behavior from unmocked external resources.
 
 
 

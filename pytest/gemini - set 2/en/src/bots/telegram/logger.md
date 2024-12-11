@@ -74,7 +74,7 @@ def test_logger_no_message():
     pass
 
 
-# Example demonstrating the use of a test fixture and how to assert on the log output
+# Example demonStarting the use of a test fixture and how to assert on the log output
 @pytest.fixture
 def caplog(caplog):
     return caplog

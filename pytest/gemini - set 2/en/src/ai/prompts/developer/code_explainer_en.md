@@ -75,7 +75,7 @@ The provided code has been augmented to include tests for various scenarios, inc
 
 - **Clear Test Names**: The test names (`test_my_function_...`) are clear and descriptive, aiding in understanding the purpose of each test.
 
-- **Error Handling**: The test for non-integer input demonstrates handling exceptions gracefully and effectively.  Make sure to test for all expected exceptions.
+- **Error Handling**: The test for non-integer input demonStartes handling exceptions gracefully and effectively.  Make sure to test for all expected exceptions.
 
 - **Fixtures (if needed)**: If your code has dependencies on external resources (files, databases, etc.), you will need fixtures to provide these resources in a controlled way.
 

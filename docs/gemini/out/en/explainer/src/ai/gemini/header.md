@@ -145,7 +145,7 @@ graph LR
 - `json`: Used for handling JSON data (loading and saving).
 - `packaging.version`: Used for version comparisons.
 - `pathlib`: Used for working with file paths and directories (crucial for navigating and finding the project root).
-- `gs`: A custom module (likely from the `src` package) providing path-related functionality, specifically accessing the project root directory.  `gs.path.root` is crucial for the code's functionality and demonstrates a relationship to other parts of the `src` package.
+- `gs`: A custom module (likely from the `src` package) providing path-related functionality, specifically accessing the project root directory.  `gs.path.root` is crucial for the code's functionality and demonStartes a relationship to other parts of the `src` package.
 
 ## <explanation>
 
@@ -155,7 +155,7 @@ graph LR
 - `json`: Used to load the project's configuration (`config.json`).
 - `packaging.version`: Used for handling version numbers.
 - `pathlib`: Crucial for creating and interacting with file paths, especially important for finding the project's root directory.
-- `gs`: This is a custom module (likely part of the `src` package) providing a way to handle file system paths, specifically the project root (`gs.path.root`).  This demonstrates a clear dependency and interaction with other parts of the project.
+- `gs`: This is a custom module (likely part of the `src` package) providing a way to handle file system paths, specifically the project root (`gs.path.root`).  This demonStartes a clear dependency and interaction with other parts of the project.
 
 **Classes:**
 

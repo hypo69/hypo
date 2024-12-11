@@ -138,7 +138,7 @@ The code imports various Python modules for different functionalities:
     - `_pretty_stimuli`, `_pretty_action`: Methods for formatting outputs with rich text for display to the user.
     - `save_spec`, `load_spec`, `encode_complete_state`, `decode_complete_state`: Methods for saving, loading, and encoding/decoding the agent's state for persistence.
     - `create_new_agent_from_current_spec`: Method to create a new agent based on the current configuration.
-    - `add_agent`, `has_agent`, `set_simulation_for_free_agents`, `get_agent_by_name`, `clear_agents`: Static methods to handle agent registration, retrieval, and management.
+    - `add_agent`, `has_agent`, `set_simulation_for_free_agents`, `get_agent_by_name`, `clear_agents`: Static methods to handle agent regiStartion, retrieval, and management.
 
 - **`TinyMentalFaculty`:** Abstract base class for mental faculties.
 - **`RecallFaculty`, `FilesAndWebGroundingFaculty`, `TinyToolUse`:** Concrete mental faculties extending `TinyMentalFaculty`.

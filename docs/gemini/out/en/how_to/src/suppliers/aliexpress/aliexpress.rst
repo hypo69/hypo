@@ -42,7 +42,7 @@ Usage example
     #  ... (Further code to utilize the Aliexpress object, e.g., for scraping, search, etc.) ...
 
 
-    # Example demonstrating calling a method of the base class
+    # Example demonStarting calling a method of the base class
     # (Replace with the actual method and required arguments)
     try:
         response = aliexpress_instance.search_product("product_name")

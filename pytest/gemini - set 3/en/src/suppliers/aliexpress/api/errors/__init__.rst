@@ -4,7 +4,7 @@ import pytest
 # No code was provided in the input_code to test.
 # Assuming there are classes and functions related to errors, 
 # such as 'ApiException' and 'InvalidInputError'. 
-# This example demonstrates testing with a dummy implementation.
+# This example demonStartes testing with a dummy implementation.
 
 
 class ApiException(Exception):

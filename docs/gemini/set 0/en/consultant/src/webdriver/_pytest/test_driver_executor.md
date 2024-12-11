@@ -257,7 +257,7 @@ from src.logger import logger # Added import
 """
 .. module:: src.webdriver._pytest
    :platform: Windows, Unix
-   :synopsis: This module contains tests for the driver executor functionality, demonstrating interaction with web pages using Selenium and custom locator handling.
+   :synopsis: This module contains tests for the driver executor functionality, demonStarting interaction with web pages using Selenium and custom locator handling.
 """
 MODE = 'dev'
 
@@ -352,7 +352,7 @@ def execute_locator(driver):
 """
 .. module:: src.webdriver._pytest
    :platform: Windows, Unix
-   :synopsis: This module contains tests for the driver executor functionality, demonstrating interaction with web pages using Selenium and custom locator handling.
+   :synopsis: This module contains tests for the driver executor functionality, demonStarting interaction with web pages using Selenium and custom locator handling.
 """
 MODE = 'dev'
 

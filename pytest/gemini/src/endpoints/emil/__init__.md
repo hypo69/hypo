@@ -70,7 +70,7 @@ def test_emil_design_edge_case(example_emil_design):
 
 4. **Exception Handling:** The `test_emil_design_exception_handling` example now includes how to use `pytest.raises` to test for specific exceptions.  Again, **replace the placeholder code** with your exception handling logic if applicable.
 
-5. **Edge Cases:** The `test_emil_design_edge_case` example demonstrates how to test for edge cases (e.g., large/small inputs, empty lists, etc.). Again, **replace the placeholder** with your actual edge cases.
+5. **Edge Cases:** The `test_emil_design_edge_case` example demonStartes how to test for edge cases (e.g., large/small inputs, empty lists, etc.). Again, **replace the placeholder** with your actual edge cases.
 
 
 **How to use this template:**

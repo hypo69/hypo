@@ -84,7 +84,7 @@ def test_get_facebook_ad_status_empty_id():
 
 2. **Clear Test Names:** Test function names clearly indicate the input and expected outcome.
 
-3. **Exception Handling:** `test_create_facebook_ad_empty_campaign_id` and `test_create_facebook_ad_empty_ad_name` demonstrate how to test for `ValueError` exceptions using `pytest.raises`.  This is essential for robustness.
+3. **Exception Handling:** `test_create_facebook_ad_empty_campaign_id` and `test_create_facebook_ad_empty_ad_name` demonStarte how to test for `ValueError` exceptions using `pytest.raises`.  This is essential for robustness.
 
 
 4. **Edge Cases:** `test_get_facebook_ad_status_invalid_id` and the empty string test in `test_get_facebook_ad_status` cover a more general case than just a missing `id`.
@@ -105,4 +105,4 @@ def test_get_facebook_ad_status_empty_id():
    pytest test_facebook_ads.py
    ```
 
-This improved example demonstrates how to write effective, comprehensive tests covering valid inputs, invalid inputs, and exception handling. Remember to replace the placeholders with your actual code for accurate testing. Remember to replace `test_facebook_ads.py` with a filename matching your tests.
+This improved example demonStartes how to write effective, comprehensive tests covering valid inputs, invalid inputs, and exception handling. Remember to replace the placeholders with your actual code for accurate testing. Remember to replace `test_facebook_ads.py` with a filename matching your tests.

@@ -131,7 +131,7 @@ def test_loadOptions():
 
 1. **Mocking:** The code now effectively mocks the `browser` API, essential for testing asynchronous functions without relying on the real browser. This is crucial for making the tests run reliably and consistently.  Critically,  it mocks the asynchronous calls (like `browser.runtime.sendMessage`, `browser.tabs.create`, etc.) so the tests don't need to interact with a live browser.
 
-2. **Error Handling:**  The `test_loadDefaultCss_error` test demonstrates how to catch exceptions thrown by the code under test, verifying that the error handling (`fu.onError`) works as expected.
+2. **Error Handling:**  The `test_loadDefaultCss_error` test demonStartes how to catch exceptions thrown by the code under test, verifying that the error handling (`fu.onError`) works as expected.
 
 
 3. **Clearer Test Cases:**  The test functions now have clearer names, making it easier to understand their purpose and the scenario being tested.

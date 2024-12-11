@@ -91,11 +91,11 @@ def test_load_config_unexpected_error():
 2. **Clear Error Messages:**  `pytest.raises` now includes `match` arguments to precisely assert the expected error messages, making debugging easier.
 3. **`finally` Block:** The crucial addition of a `finally` block ensures that the temporary `kazarionav.json` file is always removed, even if an exception occurs. This prevents test failures from leaving temporary files behind and is crucial for clean testing.
 4. **`pytest.raises` for Specific Exceptions:** Correctly uses `pytest.raises` to catch specific exceptions and verify the exception message using a `match` argument.
-5. **Valid Input Test:**  `test_load_config_valid_json` now demonstrates a complete test case for a valid input file and correctly asserts the loaded configuration.
+5. **Valid Input Test:**  `test_load_config_valid_json` now demonStartes a complete test case for a valid input file and correctly asserts the loaded configuration.
 6. **Edge Case (Invalid JSON):**  `test_load_config_invalid_json` is a good test to cover malformed JSON input.
 7. **Edge Case (Non-existent File):** `test_load_config_file_not_found` covers a vital edge case where the input file doesn't exist.
-8. **Edge Case (Unexpected Error):** `test_load_config_unexpected_error` illustrates error handling for an unexpected runtime error.
-9. **Fixture (If Needed):**  The code demonstrates how to use a fixture if you needed data to be used repeatedly in the test functions.
+8. **Edge Case (Unexpected Error):** `test_load_config_unexpected_error` illuStartes error handling for an unexpected runtime error.
+9. **Fixture (If Needed):**  The code demonStartes how to use a fixture if you needed data to be used repeatedly in the test functions.
 
 **How to Run the Tests:**
 

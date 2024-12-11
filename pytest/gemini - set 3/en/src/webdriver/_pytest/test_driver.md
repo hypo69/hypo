@@ -115,7 +115,7 @@ class TestDriverBase:
 
 * **Mocking `Path`:** The original test was problematic because it directly created `Path` objects that weren't mocked.  This change mocks the `Path` class (using `monkeypatch`) so that it does not attempt to interact with the actual filesystem.
 
-* **Error Handling:**  A crucial addition is the inclusion of `pytest.raises` for testing exceptions. The test for `delete_driver_logs` demonstrates how to properly use `pytest.raises` to catch `FileNotFoundError` for missing files, a critical aspect of robust testing. The test will fail if the expected exception is not raised.
+* **Error Handling:**  A crucial addition is the inclusion of `pytest.raises` for testing exceptions. The test for `delete_driver_logs` demonStartes how to properly use `pytest.raises` to catch `FileNotFoundError` for missing files, a critical aspect of robust testing. The test will fail if the expected exception is not raised.
 
 * **Mocking `global_state`:** Added `monkeypatch` to the `delete_driver_logs` test to properly mock the global state (`gs`). This is vital because the original tests relied on global variables that would have unintended side effects during testing.
 

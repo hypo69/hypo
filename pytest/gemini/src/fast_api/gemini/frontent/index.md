@@ -33,7 +33,7 @@ The provided HTML file `index.html` is a static web page.  There is no Python co
 2. **Create Tests:**  Use `pytest` to test these isolated Python functions. Your tests would validate the correct rendering of HTML components, handling of inputs, and correctness of the output.
 
 
-**Example (Illustrative):**
+**Example (IlluStartive):**
 
 ```python
 # example_file.py (hypothetical code)

@@ -157,7 +157,7 @@ async def test_main(mock_get_directory_names):
 
 **Explanation of Improvements and Key Considerations:**
 
-* **Specific Exception Handling:**  Instead of just catching any `Exception`, the `test_update_category_failure_exception` test now uses a more specific exception, `Exception("Error loading JSON")`, to demonstrate how to handle specific error cases. This makes the tests more robust.
+* **Specific Exception Handling:**  Instead of just catching any `Exception`, the `test_update_category_failure_exception` test now uses a more specific exception, `Exception("Error loading JSON")`, to demonStarte how to handle specific error cases. This makes the tests more robust.
 
 * **Clearer Test Names:**  The test names now more precisely reflect the scenario they are testing (e.g., `test_update_category_failure_exception`).
 

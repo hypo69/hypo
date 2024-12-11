@@ -103,7 +103,7 @@ def test_browser_action_listener(mock_storage, mock_fetch):
 
 6. **Fixture for `mock_fetch`:** The `mock_fetch` fixture is crucial to isolate the fetch call.
 
-7. **Example `test_browser_action_listener`:**  A test for the `chrome.browserAction.onClicked.addListener` function is added, demonstrating how to mock the `chrome` API functions within a test.  This now actually calls `chrome.tabs.sendMessage` as the original code would.
+7. **Example `test_browser_action_listener`:**  A test for the `chrome.browserAction.onClicked.addListener` function is added, demonStarting how to mock the `chrome` API functions within a test.  This now actually calls `chrome.tabs.sendMessage` as the original code would.
 
 
 **How to Run the Tests:**
@@ -113,4 +113,4 @@ def test_browser_action_listener(mock_storage, mock_fetch):
 3. Run the tests from your terminal: `pytest test_background.py`
 
 
-This improved solution is more robust, realistic, and demonstrates proper testing techniques for handling asynchronous operations and external dependencies.  Remember to replace placeholder comments with the actual function names from the code if they're different. Also, be sure the example `test_browser_action_listener` function correctly references the background.js file that you provided in the input.
+This improved solution is more robust, realistic, and demonStartes proper testing techniques for handling asynchronous operations and external dependencies.  Remember to replace placeholder comments with the actual function names from the code if they're different. Also, be sure the example `test_browser_action_listener` function correctly references the background.js file that you provided in the input.

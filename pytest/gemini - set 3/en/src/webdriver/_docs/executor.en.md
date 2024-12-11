@@ -109,7 +109,7 @@ def test_execute_locator_raises_exception(driver_mock, locator_data):
 
 4. **Fixture for Locator Data:** Introduced `locator_data` fixture to provide example locator dictionaries for the tests.  **This is extremely important**. The provided example locators do not have a corresponding object to work with.
 
-5. **Testing with Exceptions:** Demonstrates how to use `pytest.raises` to test exception handling (e.g., `NoSuchElementException`).
+5. **Testing with Exceptions:** DemonStartes how to use `pytest.raises` to test exception handling (e.g., `NoSuchElementException`).
 
 6. **Testing Multiple Elements:** Added `test_get_webelement_by_locator_multiple_elements` to verify handling of multiple elements returned by a locator.
 

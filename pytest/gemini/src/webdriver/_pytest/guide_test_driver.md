@@ -77,7 +77,7 @@ def test_scroll_invalid_input(driver_instance):
 
 3. **Mock `send_command`:** Uses `unittest.mock.patch` to mock the `send_command` method (assuming your `DriverBase` uses it).  This isolates the tests from external dependencies and ensures that `send_command` is called with the expected arguments.  **Crucially adjust this part if your `DriverBase` uses different method names.**
 
-4. **Exception Handling:** The `test_driver_payload_exception` test demonstrates how to test for exceptions raised by `driver_payload` using `pytest.raises`.
+4. **Exception Handling:** The `test_driver_payload_exception` test demonStartes how to test for exceptions raised by `driver_payload` using `pytest.raises`.
 
 5. **Edge Case (`test_scroll_invalid_input`):**  Shows how to test for invalid input by checking if a TypeError is raised. **Add more edge case tests if appropriate** (e.g., if the `scroll` method expects specific data types).
 

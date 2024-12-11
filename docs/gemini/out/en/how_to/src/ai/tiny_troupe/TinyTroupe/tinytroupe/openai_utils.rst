@@ -26,7 +26,7 @@ Execution steps
 6. **Implement API calls:**
    The `_raw_model_call` method in `OpenAIClient` and `AzureClient` is a crucial function point.  It calls the respective OpenAI API, and `_raw_model_response_extractor` processes the raw response to return a useful Python dictionary.
 
-7. **Client registration and retrieval:**
+7. **Client regiStartion and retrieval:**
    The `register_client` function adds clients (OpenAI and Azure) to a registry. The `client()` function retrieves the appropriate client instance based on the `config.ini` setting.  This allows flexibility for using different API providers.
 
 8. **Caching Mechanism:**

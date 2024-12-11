@@ -110,11 +110,11 @@ if __name__ == "__main__":
 
 2. **Fixtures:**  A `mock_driver` fixture is created to provide a mock driver instance to the `graber` fixture and individual tests, ensuring isolation.
 
-3. **Error Handling:**  The `test_grab_page_with_exception` test now correctly demonstrates exception handling.  We mock the `ExecuteLocatorException` to simulate the error, ensuring the `try...except` block within `grab_page` functions as expected.
+3. **Error Handling:**  The `test_grab_page_with_exception` test now correctly demonStartes exception handling.  We mock the `ExecuteLocatorException` to simulate the error, ensuring the `try...except` block within `grab_page` functions as expected.
 
 4. **Comprehensive Tests (Important):**  Add tests for different input scenarios in `test_grab_page_valid_input`.  Focus on verifying the correct execution of the inner `fetch_all_data` function.  Instead of just checking for `ProductFields` type, check for the presence of the specific fields you expect (e.g., `graber.fields.name` from the `test_name` example).
 
-5. **Specific Method Tests:** The `test_name` example demonstrates how to test individual methods within the `Graber` class.  This is more useful than just testing `grab_page`.
+5. **Specific Method Tests:** The `test_name` example demonStartes how to test individual methods within the `Graber` class.  This is more useful than just testing `grab_page`.
 
 6. **Decorator Test:** The `test_close_pop_up_decorator` shows how to test the `close_pop_up` decorator's logic.
 

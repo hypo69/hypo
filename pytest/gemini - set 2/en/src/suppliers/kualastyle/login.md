@@ -83,7 +83,7 @@ def test_close_popup_no_driver(mock_supplier):
 
 2. **Clearer Test Names:** Test names now better reflect the purpose of each test.
 
-3. **Exception Handling:** `test_close_pop_up_exception` demonstrates how to test exception handling. It uses `pytest.raises` to verify that a `TypeError` is raised when an invalid input is passed (as would be expected if the locator is bad).
+3. **Exception Handling:** `test_close_pop_up_exception` demonStartes how to test exception handling. It uses `pytest.raises` to verify that a `TypeError` is raised when an invalid input is passed (as would be expected if the locator is bad).
 
 4. **Edge Cases and Invalid Inputs:**  The provided examples are now improved to cover at least one possible edge case for the `close_pop_up` function, e.g., no driver, or no locator found.
 

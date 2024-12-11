@@ -92,7 +92,7 @@ def test_get_translations_from_presta_translations_table_empty_db(mock_translati
 
 6. **Assertions:** Assertions are more specific and meaningful.  They check not only length but also the contents of the returned data.
 
-7. **Edge Cases:** The `test_get_translations_from_presta_translations_table_empty_db` example demonstrates testing an edge case (empty database).  You'll need to add similar tests for any other edge cases relevant to your specific application logic.
+7. **Edge Cases:** The `test_get_translations_from_presta_translations_table_empty_db` example demonStartes testing an edge case (empty database).  You'll need to add similar tests for any other edge cases relevant to your specific application logic.
 
 **To Use:**
 
@@ -100,4 +100,4 @@ def test_get_translations_from_presta_translations_table_empty_db(mock_translati
 - Adjust the `example_record` fixture to contain representative data for your `record` objects.
 - Replace `src/translators/product_translator.py` with your actual code.
 
-This improved example demonstrates how to write comprehensive, isolated, and robust tests for your Python code using `pytest` and mocking. Remember to tailor the tests to your specific application's requirements.  You'll likely need many more tests to thoroughly cover all possible scenarios.  Focus on the critical parts and edge cases first.
+This improved example demonStartes how to write comprehensive, isolated, and robust tests for your Python code using `pytest` and mocking. Remember to tailor the tests to your specific application's requirements.  You'll likely need many more tests to thoroughly cover all possible scenarios.  Focus on the critical parts and edge cases first.

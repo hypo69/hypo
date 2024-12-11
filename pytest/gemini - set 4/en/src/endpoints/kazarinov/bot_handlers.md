@@ -104,7 +104,7 @@ def test_handle_url_status_code_error(mock_get, mock_update, mock_context, mock_
 
 4. **Valid Input Test:** Added a test case `test_handle_url_valid_input` to show a scenario with a successful response from `fetch_target_urls_onetab`.
 
-5. **Invalid Input Test:** Added a test case `test_handle_url_invalid_input` to demonstrate the case where the parser doesn't find the necessary data.
+5. **Invalid Input Test:** Added a test case `test_handle_url_invalid_input` to demonStarte the case where the parser doesn't find the necessary data.
 
 6. **Status Code Error:** Added a test case for a `requests` error (404 not found).
 

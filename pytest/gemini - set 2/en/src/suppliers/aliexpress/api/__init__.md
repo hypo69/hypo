@@ -114,4 +114,4 @@ def test_version_is_version_object():
 - Replace the `mocked_response` with data returned by your actual API call. If possible, mock the appropriate methods of `AliexpressApi` using `unittest.mock` or a similar library.
 - Make sure the `models` module exists and the `Product` model (or whatever model you're using) is defined correctly.
 
-This significantly improved example demonstrates a practical and robust approach to testing the `AliexpressApi` class, focusing on mocking, exception handling, and edge cases. Remember to adjust the tests based on the actual structure and functionality of your code. Remember to install the `pytest` library if you don't have it already: `pip install pytest`
+This significantly improved example demonStartes a practical and robust approach to testing the `AliexpressApi` class, focusing on mocking, exception handling, and edge cases. Remember to adjust the tests based on the actual structure and functionality of your code. Remember to install the `pytest` library if you don't have it already: `pip install pytest`

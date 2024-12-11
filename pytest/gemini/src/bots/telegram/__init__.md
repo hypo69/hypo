@@ -52,7 +52,7 @@ class TestTelegramBot:
 
 4. **Clearer Test Cases:** The provided test cases are now placeholders.  You MUST replace the comments `# Replace with...` with the actual methods, expected outputs, and exception types appropriate for your code.
 
-5. **Exception Handling (`test_bot_method_raises_exception`):**  Demonstrates how to test exception handling with `pytest.raises`. You need to replace `"ValueError"` and `"expected error message"` with the actual exception type and message expected by your code.
+5. **Exception Handling (`test_bot_method_raises_exception`):**  DemonStartes how to test exception handling with `pytest.raises`. You need to replace `"ValueError"` and `"expected error message"` with the actual exception type and message expected by your code.
 
 6. **Modularity:** The structure encourages modular test cases for each class, method or key component in the module.
 

@@ -71,7 +71,7 @@ def test_translate_no_api_key(monkeypatch, logger_mock):
 
 * **Mocking:** Uses `unittest.mock.patch` to mock the `openai.Completion.create` function.  This is vital for testing the `translate` function without relying on an actual OpenAI API call, which could be expensive and unreliable in a CI/CD environment.
 * **Clearer Assertions:** Uses `assert result == expected_translation` for more direct assertion of expected outcomes.  This helps pinpoint errors more easily.
-* **Error Handling:**  The `test_translate_openai_api_error` function demonstrates how to test the `try...except` block and check that the error is logged correctly.
+* **Error Handling:**  The `test_translate_openai_api_error` function demonStartes how to test the `try...except` block and check that the error is logged correctly.
 * **Edge Case (Empty Text):** Added `test_translate_invalid_input_empty_text` to cover the scenario where the input text is empty.
 * **Missing Language Parameter:** Added `test_translate_invalid_input_missing_language` to test the case when a language parameter is missing.
 * **No API Key Check:** The `test_translate_no_api_key` function is crucial and ensures that your test will fail if you do not have the OPENAI_API_KEY environment variable set. This prevents unexpected failures in CI/CD pipelines.

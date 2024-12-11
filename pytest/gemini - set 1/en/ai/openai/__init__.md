@@ -25,7 +25,7 @@ def test_translate_valid_input():
       assert False
 
 
-#   Illustrative invalid input example (replace with realistic invalid inputs)
+#   IlluStartive invalid input example (replace with realistic invalid inputs)
 def test_translate_invalid_input():
     """Tests translate with empty string."""
     input_text = ""

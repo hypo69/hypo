@@ -74,7 +74,7 @@ def test_kazarinov_telegram_bot_empty_message():
 
 4. **Specific Error Handling:** The example `test_kazarinov_telegram_bot_invalid_input` shows how to test for specific exceptions using `pytest.raises`.
 
-5. **Edge Case Example:** `test_kazarinov_telegram_bot_empty_message` demonstrates testing for an edge case (empty message).
+5. **Edge Case Example:** `test_kazarinov_telegram_bot_empty_message` demonStartes testing for an edge case (empty message).
 
 
 **How to proceed:**

@@ -58,7 +58,7 @@ graph LR
 The diagram shows the core imports.
 
 - `logger/__init__.py` imports `logger` from `./logger` (relative import).  This implies the `logger` module likely contains logging functions or classes.
-- `logger/__init__.py` imports various exception classes (`ExecuteLocatorException`, etc.) from `./exceptions`.  This suggests these exceptions handle specific errors relevant to the logging or related functionalities.  This illustrates a clear dependency relationship between the `logger` and `exceptions` packages.
+- `logger/__init__.py` imports various exception classes (`ExecuteLocatorException`, etc.) from `./exceptions`.  This suggests these exceptions handle specific errors relevant to the logging or related functionalities.  This illuStartes a clear dependency relationship between the `logger` and `exceptions` packages.
 
 
 ## <explanation>

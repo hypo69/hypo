@@ -35,7 +35,7 @@ def test_graber_method_raises_attribute_error(monkeypatch):
 
 # --- Important ---
 # Replace the following with actual tests based on the methods
-# in the `Graber` class. The above test demonstrates a basic pattern.
+# in the `Graber` class. The above test demonStartes a basic pattern.
 # For example, if Graber has a method to fetch data:
 
 
@@ -84,7 +84,7 @@ def test_graber_method_raises_attribute_error(monkeypatch):
 4. **Run the tests:** Execute the `pytest` command in the terminal to run the tests.
 
 
-**Example `Graber` class and Tests (Illustrative):**
+**Example `Graber` class and Tests (IlluStartive):**
 
 ```python
 # ... other imports

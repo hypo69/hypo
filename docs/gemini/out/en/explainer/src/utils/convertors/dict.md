@@ -99,7 +99,7 @@ The diagram relies on several imports:
 * `reportlab.pdfgen.canvas`: Imports the canvas class from ReportLab, used for drawing and creating PDF documents.
 * `src.utils.xls`: Implied dependency on a module named `xls` within the `src.utils` package.  This likely handles XLS file operations.
 
-This diagram illustrates the recursive nature of `dict2ns`.
+This diagram illuStartes the recursive nature of `dict2ns`.
 
 
 ## <explanation>

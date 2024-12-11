@@ -84,7 +84,7 @@ def test_api_request_get_response_error(mock_logger):
 * **Comprehensive Error Cases:** The tests now cover more error scenarios, including missing `response_name`, JSON decoding errors, and exceptions during `request.getResponse()`.
 * **`assert actual_response is None`:**  Critically important for cases where the function returns `None` to signify failure or a non-specific error.
 * **`mock_logger` Verification:** The tests now verify if the mocked logger methods (e.g., `mock_logger.critical.assert_called_once()`) were called correctly, providing more confidence in the handling of different error conditions.
-* **Specific Exception Testing:** Example `test_api_request_invalid_input_raises_exception` illustrates how to test for specific exception types. You'd need to modify this based on the actual exceptions expected to be raised.
+* **Specific Exception Testing:** Example `test_api_request_invalid_input_raises_exception` illuStartes how to test for specific exception types. You'd need to modify this based on the actual exceptions expected to be raised.
 * **Important**: Replace placeholders like `"success"`, `"error"`, and `input_data` with meaningful values based on your actual code.
 
 **How to Run Tests:**

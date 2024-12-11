@@ -64,7 +64,7 @@ def test_google_generative_ai_class_exists():
 
 * **Comprehensive Module Existence Tests:** The initial tests now comprehensively check for the existence and proper initialization of the module.
 * **Clearer Test Descriptions:** Test function names are more explicit about their purpose.
-* **Example of Exception Handling:** Demonstrates how to test for `TypeError` exceptions (or any other specific exception) using `pytest.raises` with more informative assertions.  Crucially, it now checks if the *expected* error message is present in the exception.
+* **Example of Exception Handling:** DemonStartes how to test for `TypeError` exceptions (or any other specific exception) using `pytest.raises` with more informative assertions.  Crucially, it now checks if the *expected* error message is present in the exception.
 * **Fixture Example (commented-out):**  Shows how to use fixtures if your `GoogleGenerativeAI` class depends on external resources or complex setups (like a mock API).
 * **Missing Functionality:**  The example tests are placeholders.  You *must* adapt them based on the actual methods and functions present in the `GoogleGenerativeAI` class and the expected behavior.  You need to add tests for valid inputs, expected outputs, and edge cases.
 * **Crucial Adaption:** Replace the commented-out examples with your specific code and assertions.  For instance, if `generate_text` returns a dictionary, you would assert against the keys and values in that dictionary.

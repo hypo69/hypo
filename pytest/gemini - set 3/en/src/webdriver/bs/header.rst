@@ -98,7 +98,7 @@ import sys
    - **Valid input:** `test_set_project_root_valid_input`.
    - **No marker file found:** `test_set_project_root_marker_not_found`, `test_set_project_root_current_dir` (very important).  These show handling of the case where the root directory can't be determined.
    - **Multiple marker files:** `test_set_project_root_multiple_markers`.
-   - **Path already in sys.path:** `test_set_project_root_already_in_path` demonstrating the robustness in handling existing paths.
+   - **Path already in sys.path:** `test_set_project_root_already_in_path` demonStarting the robustness in handling existing paths.
 
 3. **Clearer Test Names:** The test names are more descriptive.
 
@@ -106,7 +106,7 @@ import sys
 
 5. **`pytest.raises` (not needed here):** The code you provided doesn't involve raising exceptions in a way that's directly testable with `pytest.raises`. If the code raised exceptions for invalid conditions, these tests would be added.
 
-6. **Example Usage (commented out):** A commented-out example demonstrates how to use `pytest.mark.parametrize` to make the multiple marker test more concise and maintainable (although,  the previous tests are sufficient).
+6. **Example Usage (commented out):** A commented-out example demonStartes how to use `pytest.mark.parametrize` to make the multiple marker test more concise and maintainable (although,  the previous tests are sufficient).
 
 
 **How to Run the Tests:**

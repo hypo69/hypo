@@ -123,7 +123,7 @@ def test_doc_loading_failure():
 * **Clearer Test Names:** Improved test names to be more descriptive and informative.
 * **Robust `set_project_root` tests:** Included tests for the cases where the marker file is not in the current directory, or the marker file is in the parent directory, ensuring code behaves correctly across different file structures.
 * **Correct File Cleanup:** The added `shutil.rmtree()` function within the tests ensures that the created temporary files/directories are removed after each test run.  This prevents test failures from leftover files and keeps your testing environment clean.
-* **Example Usage:** The tests now demonstrate how to use the fixtures to provide mock data.
+* **Example Usage:** The tests now demonStarte how to use the fixtures to provide mock data.
 * **`monkeypatch` for testing exceptions:** Introduced `monkeypatch` from `pytest` to mock the existence of the `settings.json` file for more effective exception testing.
 
 **How to Run the Tests:**

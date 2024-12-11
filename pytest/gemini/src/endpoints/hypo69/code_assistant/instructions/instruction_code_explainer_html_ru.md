@@ -73,7 +73,7 @@ def test_divide_negative_by_positive():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Code:** The provided input code was just a prompt for writing tests, so I've added dummy functions (`add`, `subtract`, `divide`) to demonstrate the test structure.  **Crucially, replace these with the actual functions you want to test.**
+1. **Placeholder Code:** The provided input code was just a prompt for writing tests, so I've added dummy functions (`add`, `subtract`, `divide`) to demonStarte the test structure.  **Crucially, replace these with the actual functions you want to test.**
 
 2. **Comprehensive Test Cases:** The tests now cover a broader range of scenarios:
    - Positive numbers

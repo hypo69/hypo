@@ -113,7 +113,7 @@ def test_save_png_non_png_data(temp_image_path):
 3. **Valid/Invalid Data:** `test_save_png_invalid_data` checks if the function handles an empty byte string properly. `test_save_png_non_png_data` verifies the function only processes PNG files.
 
 
-4. **Edge Cases:** The `test_save_png_from_url_invalid_url` test is an example of handling invalid inputs,  and `test_save_png_invalid_file_path` illustrates a file path issue.  
+4. **Edge Cases:** The `test_save_png_from_url_invalid_url` test is an example of handling invalid inputs,  and `test_save_png_invalid_file_path` illuStartes a file path issue.  
 
 5. **Clearer Test Names:** Test names are more descriptive (e.g., `test_save_png_valid_data`).
 
@@ -121,7 +121,7 @@ def test_save_png_non_png_data(temp_image_path):
 
 7. **Cleanup:** The `temp_dir` fixture now correctly removes the temporary directory after the tests, preventing file system issues.
 
-8. **Mocking:**  `test_save_png_from_url_no_internet` demonstrates how to mock the `aiohttp.ClientSession.get` method to simulate a network error.  This is a good practice for testing parts of your code that depend on external resources.
+8. **Mocking:**  `test_save_png_from_url_no_internet` demonStartes how to mock the `aiohttp.ClientSession.get` method to simulate a network error.  This is a good practice for testing parts of your code that depend on external resources.
 
 **How to run the tests:**
 

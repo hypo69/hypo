@@ -121,7 +121,7 @@ def test_encode_decode_complete_state(tiny_world, agent1, agent2):
 
 3. **Exception Handling:** `pytest.raises` is used to test exceptions correctly (e.g., `test_add_agent_duplicate`).  This is critical for robust tests.
 
-4. **Edge Cases:** Tests for `test_add_agent_duplicate`  demonstrates handling a duplicate agent.  More tests are needed for other methods with potential errors.
+4. **Edge Cases:** Tests for `test_add_agent_duplicate`  demonStartes handling a duplicate agent.  More tests are needed for other methods with potential errors.
 
 5. **Comprehensive Coverage (Needed):** The provided tests are a starting point.  You need to add tests for:
    - `_step` (with different time deltas, etc.)

@@ -93,7 +93,7 @@ def test_presta_language_update_language_PrestaShop(presta_language_mock):
 1. **Mocking:** The provided code lacked the necessary mocking to test `PrestaShop` methods.  The `test_presta_language_get_language_details_PrestaShop` and other method tests are now properly mocked.
 2. **Clearer Test Names:** Test names are more descriptive, making the purpose of each test evident.
 3. **Fixture for Credentials:** A `credentials` fixture is introduced to simplify the creation of `SimpleNamespace` objects for passing to the `PrestaLanguage` constructor.
-4. **Exception Handling:** The test `test_presta_language_init_missing_credentials` demonstrates how to test for expected exceptions.
+4. **Exception Handling:** The test `test_presta_language_init_missing_credentials` demonStartes how to test for expected exceptions.
 5. **pytest-mock (Recommended):** For more complex scenarios, using `pytest-mock` for mocking the `PrestaShop` methods is highly recommended. This would allow more flexible and accurate tests.
 
 **How to Use pytest-mock (Example):**

@@ -118,7 +118,7 @@ def test_child_category_creation():
 
 5. **Edge Cases:**  The tests now include tests for empty strings or other invalid inputs where applicable.
 
-6. **Comprehensive Tests:** The basic tests are added to demonstrate the required structure.  Add similar tests for other classes such as `Product`, `AffiliateLink`, etc.
+6. **Comprehensive Tests:** The basic tests are added to demonStarte the required structure.  Add similar tests for other classes such as `Product`, `AffiliateLink`, etc.
 
 
 **How to Run the Tests:**

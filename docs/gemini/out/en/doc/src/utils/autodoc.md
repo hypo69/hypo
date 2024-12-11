@@ -36,7 +36,7 @@ None.
 
 ### `example_function`
 
-**Description**: An example function demonstrating the `autodoc` decorator.  It prints a message indicating the input parameters and updates its docstring with the last call timestamp.
+**Description**: An example function demonStarting the `autodoc` decorator.  It prints a message indicating the input parameters and updates its docstring with the last call timestamp.
 
 **Parameters**:
 - `param1` (int): The first input parameter.
@@ -51,4 +51,4 @@ None.
 
 ## Usage Examples
 
-The provided example code demonstrates how to use the `autodoc` decorator.  Calling `example_function` multiple times will result in the docstring being updated with the timestamp of each invocation, effectively tracking usage.
+The provided example code demonStartes how to use the `autodoc` decorator.  Calling `example_function` multiple times will result in the docstring being updated with the timestamp of each invocation, effectively tracking usage.

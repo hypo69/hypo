@@ -96,7 +96,7 @@ def test_import_supplier():
 
 3. **Clearer Assertions:**  Instead of just relying on `assert True`, the tests now verify specific aspects, making them much more informative. For example, `test_dir_root_calculation` checks the *content* of the calculated `dir_root` rather than just existence.
 
-4. **Comprehensive Test Coverage:**  The example tests now include basic tests for `dir_root`, `sys.path` manipulation, and also demonstrates how to test imports (critical for a project like this).  You need to adapt these to actually test the `gs`, `Supplier`, etc. classes from your project.
+4. **Comprehensive Test Coverage:**  The example tests now include basic tests for `dir_root`, `sys.path` manipulation, and also demonStartes how to test imports (critical for a project like this).  You need to adapt these to actually test the `gs`, `Supplier`, etc. classes from your project.
 
 5. **Error Handling:** The import tests now include `try...except` blocks to handle `ImportError` exceptions and fail the test with a useful message if a module can't be imported.
 

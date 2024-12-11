@@ -158,7 +158,7 @@ graph LR
     - `from selenium.webdriver.edge.service import Service as EdgeService`: Imports `EdgeService` for managing the Edge WebDriver executable.
     - `from selenium.webdriver.edge.options import Options as EdgeOptions`: Imports `EdgeOptions` for customizing the WebDriver's behaviour.
     - `from selenium.common.exceptions import WebDriverException`: Imports `WebDriverException` for handling potential errors during WebDriver initialization.
-    - `from src.webdriver.executor import ExecuteLocator`: Imports the `ExecuteLocator` class, likely responsible for executing locator strategies and interacting with web elements.
+    - `from src.webdriver.executor import ExecuteLocator`: Imports the `ExecuteLocator` class, likely responsible for executing locator Startegies and interacting with web elements.
     - `from src.webdriver.js import JavaScript`: Imports the `JavaScript` class, responsible for executing JavaScript code within the browser context.
     - `from fake_useragent import UserAgent`: Imports the `UserAgent` class from the `fake_useragent` library, enabling the use of randomized user agents to simulate different browsers.
     - `from src import gs`: Imports the `gs` module, likely for global settings and paths.
@@ -185,4 +185,4 @@ graph LR
 
 
 
-- **Relationships with other parts of the project**: The code heavily relies on `src` modules (for global settings, logging, and utility functions) and the Selenium WebDriver for interacting with web browsers.  The `fake_useragent` library is used for generating user agent strings, enabling broader browser compatibility.  The `ExecuteLocator` and `JavaScript` modules are responsible for the particular webdriver methods and interactions needed by the application.  The dependency graph in the Mermaid diagram illustrates these relationships.
+- **Relationships with other parts of the project**: The code heavily relies on `src` modules (for global settings, logging, and utility functions) and the Selenium WebDriver for interacting with web browsers.  The `fake_useragent` library is used for generating user agent strings, enabling broader browser compatibility.  The `ExecuteLocator` and `JavaScript` modules are responsible for the particular webdriver methods and interactions needed by the application.  The dependency graph in the Mermaid diagram illuStartes these relationships.

@@ -119,7 +119,7 @@ def test_readme_md_loading_file_not_found():
 
 5. **`test_settings_json_loading_file_not_found` and `test_readme_md_loading_file_not_found`**:  These are crucial tests for robustness. They use patching to mock the `gs` module and simulate a situation where `settings.json` or `README.MD` is missing, verifying the code handles the exceptions properly by assigning `None` to the respective variables.
 
-6. **`test_set_project_root_invalid_marker_files`**:  This is a significant addition. It demonstrates exception handling using `pytest.raises`, testing for invalid file existence scenarios, which is critical.
+6. **`test_set_project_root_invalid_marker_files`**:  This is a significant addition. It demonStartes exception handling using `pytest.raises`, testing for invalid file existence scenarios, which is critical.
 
 7. **Cleanup:** All test cases now include cleanup steps (removing temporary directories) using `shutil.rmtree()`. This is essential for preventing test failures due to lingering files and ensures the tests are isolated and do not interfere with each other or leave the test environment in a corrupted state.
 

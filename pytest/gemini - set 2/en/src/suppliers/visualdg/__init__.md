@@ -75,7 +75,7 @@ def test_graber_url_attribute():
 
 6. **Example for Method Testing:** The code includes examples of testing the `get_data` method (replace with the real method name in your class). The test now checks if the returned `result` is of the expected type (e.g., a list, a dictionary) using `isinstance`.
 
-7. **Example of Exception Handling:** `test_graber_method_with_invalid_data` now illustrates how to test for exceptions raised within a method.
+7. **Example of Exception Handling:** `test_graber_method_with_invalid_data` now illuStartes how to test for exceptions raised within a method.
 
 
 **How to Run the Tests:**

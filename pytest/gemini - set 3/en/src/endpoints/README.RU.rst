@@ -70,7 +70,7 @@ def advertisement_api():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Classes:** The code now includes placeholder classes (`PrestashopAPI`, `AdvertisementAPI`) to illustrate the structure.  Replace these with your actual API classes.
+1. **Placeholder Classes:** The code now includes placeholder classes (`PrestashopAPI`, `AdvertisementAPI`) to illuStarte the structure.  Replace these with your actual API classes.
 
 
 2. **Fixtures:**  The `prestashop_api` fixture is crucial for isolating tests and avoiding the creation of an API instance multiple times.
@@ -79,9 +79,9 @@ def advertisement_api():
 
 4. **Valid Input Tests:**  Example tests for `create_product`, `update_product`, and `delete_product` show how to assert expected outputs.
 
-5. **Edge Case and Exception Handling (placeholder):**  The provided code lacks actual implementation, so these aspects are harder to demonstrate here.  When writing real tests, make sure you consider the edge cases (e.g., empty input, invalid types) and if any exceptions might be raised (use `pytest.raises`).
+5. **Edge Case and Exception Handling (placeholder):**  The provided code lacks actual implementation, so these aspects are harder to demonStarte here.  When writing real tests, make sure you consider the edge cases (e.g., empty input, invalid types) and if any exceptions might be raised (use `pytest.raises`).
 
-6. **Comprehensive Tests (placeholder):** For other modules like `advertisement`, `emil`, `hypo69`, and `kazarinov`, you need to adapt the example structure to test their specific API methods.  The placeholder `test_create_campaign_valid_input` is an illustration for you to follow.  Don't forget to create the API class for each module (e.g., `EmilAPI`, `Hypo69API`).
+6. **Comprehensive Tests (placeholder):** For other modules like `advertisement`, `emil`, `hypo69`, and `kazarinov`, you need to adapt the example structure to test their specific API methods.  The placeholder `test_create_campaign_valid_input` is an illuStartion for you to follow.  Don't forget to create the API class for each module (e.g., `EmilAPI`, `Hypo69API`).
 
 **How to Use This and Expand:**
 
@@ -107,4 +107,4 @@ def advertisement_api():
 4. **Run Tests:** Save the code as a Python file (e.g., `test_endpoints.py`) and run it using `pytest`.
 
 
-This expanded example demonstrates the structure and best practices for writing robust `pytest` tests for your `endpoints` module. Remember to adapt it to your specific APIs and their expected behavior.  Focus on testing *all* the important functionalities of each API method. Remember to install the `pytest` library (`pip install pytest`) if you haven't already.
+This expanded example demonStartes the structure and best practices for writing robust `pytest` tests for your `endpoints` module. Remember to adapt it to your specific APIs and their expected behavior.  Focus on testing *all* the important functionalities of each API method. Remember to install the `pytest` library (`pip install pytest`) if you haven't already.

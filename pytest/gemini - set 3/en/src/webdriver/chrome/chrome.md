@@ -82,7 +82,7 @@ def test_chrome_init_error_handling(patched_gs_path, monkeypatch):
 
 * **Fixtures for Mocking:**  The code now utilizes `pytest.fixture` to mock `gs.path` and `j_loads_ns`. This is crucial for isolating tests and preventing side effects.
 * **Clearer Test Names:** Test function names now clearly indicate the scenario being tested (e.g., `test_chrome_init_valid_input`).
-* **Error Handling Tests:**  `test_chrome_init_error_handling` demonstrates how to test for exceptions during initialization.
+* **Error Handling Tests:**  `test_chrome_init_error_handling` demonStartes how to test for exceptions during initialization.
 * **Mocking j_loads_ns:** The code now mocks `j_loads_ns` for accurate testing in various conditions. This prevents dependence on the actual JSON file. The test `test_chrome_init_invalid_config` verifies the handling of an empty or invalid JSON file.
 * **Mocking for Exception Conditions**  The `test_chrome_init_error_handling` now uses `monkeypatch` to directly substitute the `webdriver.Chrome` method to raise a WebDriverException and check if the exception is caught as expected.
 * **Data Handling:** It is very important to prepare mock data that can be used in different test cases.

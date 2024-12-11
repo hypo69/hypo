@@ -183,4 +183,4 @@ The mermaid diagram shows the imports and their relationships.  `aliexpress.py` 
 
 **Relationships:**
 
-The `Aliexpress` class relies heavily on the functionality provided by `Supplier`, `AliRequests`, and `AliApi`. This demonstrates a clear modular design. The `src` package likely houses other crucial components, such as data processing or configuration modules, that the `Aliexpress` class interacts with.  This is a typical structure for well-organized Python projects.
+The `Aliexpress` class relies heavily on the functionality provided by `Supplier`, `AliRequests`, and `AliApi`. This demonStartes a clear modular design. The `src` package likely houses other crucial components, such as data processing or configuration modules, that the `Aliexpress` class interacts with.  This is a typical structure for well-organized Python projects.

@@ -70,7 +70,7 @@ def invalid_data():
 
 1. **Import `src`:**  Crucially, the code now imports the module you want to test (`src`). This allows `pytest` to find the functions and classes you're testing.  Replace `src` with the actual name of your module if different.
 
-2. **Example Tests:** The example tests are now much more realistic and demonstrate how to test functions and classes, including exception handling with `pytest.raises`.
+2. **Example Tests:** The example tests are now much more realistic and demonStarte how to test functions and classes, including exception handling with `pytest.raises`.
 
 3. **Clearer Assertions:** The assertions (`assert result == 30`, etc.) now show *expected* results, not just checking for the result's type.  Crucially, the error message you expect from a raised exception is now checked within the `assert` statement.
 

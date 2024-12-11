@@ -45,15 +45,15 @@ import pytest
 
 The provided HTML file (`template_1.html`) is a template for rendering a web page. It doesn't contain any Python code that can be tested with `pytest`.  To write tests, you need Python functions or classes that the HTML file uses.
 
-* **Missing Python Code:** The example in the solution demonstrates a hypothetical scenario where there are Python functions to calculate prices and work with products, such as `calculate_total_price`.  **Crucially**, no such functions are present in the provided HTML file.
+* **Missing Python Code:** The example in the solution demonStartes a hypothetical scenario where there are Python functions to calculate prices and work with products, such as `calculate_total_price`.  **Crucially**, no such functions are present in the provided HTML file.
 
 
 * **Testing HTML Templates:**  You typically *don't* write unit tests for HTML templates directly.  Tests should focus on the Python logic that processes data and renders the HTML.
 
-* **Example Test Case (Illustrative):**  The example shows a placeholder test function (`test_calculate_total_price`) and a `calculate_total_price` function, which is fictional.  **This is crucial:** the test would only work if you had a corresponding Python function that the HTML *used* for rendering.
+* **Example Test Case (IlluStartive):**  The example shows a placeholder test function (`test_calculate_total_price`) and a `calculate_total_price` function, which is fictional.  **This is crucial:** the test would only work if you had a corresponding Python function that the HTML *used* for rendering.
 
 * **Data Fixtures:**  Data fixtures, as shown in the example, are essential for isolating test data from the code being tested and avoiding side effects.
 
-* **Error Handling:** The example includes tests for cases with empty lists and incorrect data types to demonstrate how to use `pytest.raises` for exception testing.
+* **Error Handling:** The example includes tests for cases with empty lists and incorrect data types to demonStarte how to use `pytest.raises` for exception testing.
 
 **To write meaningful tests, you need to provide the Python code that interacts with the template.**  You need functions that process data, populate the template's variables, and potentially integrate with a database. Then you can write tests for those functions to ensure that the rendered HTML page is correct and consistent with your expectations.

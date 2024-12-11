@@ -103,7 +103,7 @@ def test_get_directory_names(monkeypatch):
 * **Mocking:** Critically, the code now uses `unittest.mock` to mock `Driver`, `FacebookPromoter`, and potentially other classes. This isolates the tests from the external dependencies (like Facebook's website).  This is *essential* for testing functions that interact with external resources or have side effects.  The `mock_facebook_promoter` fixture simplifies testing `run_campaign`.
 * **Comprehensive Testing:** The tests cover `run_campaign`, `campaign_cycle`,  and `main` (a crucial aspect).
 * **Edge Cases and Invalid Input:** The tests now include a test for an empty `campaigns` list as an example of invalid input to `run_campaign`.
-* **Error Handling:** The `test_main_exception_handling` test demonstrates how to test exception handling using `pytest.raises`.  It's crucial to check how the code handles potential `KeyboardInterrupt` exceptions, which are very common in long-running scripts.
+* **Error Handling:** The `test_main_exception_handling` test demonStartes how to test exception handling using `pytest.raises`.  It's crucial to check how the code handles potential `KeyboardInterrupt` exceptions, which are very common in long-running scripts.
 * **Clearer Test Names:** The test names are more descriptive.
 * **Fixtures:** Fixtures are used to create mock objects, streamlining test setup.
 * **`monkeypatch` for mocking functions:**  Critically, the test for `get_directory_names` now correctly mocks the function using `monkeypatch`, making the test independent of the external function.

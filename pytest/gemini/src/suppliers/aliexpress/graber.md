@@ -81,7 +81,7 @@ def test_execute_locator_exception(mock_driver, mock_logger):
 
 5. **Clearer Test Names:** Test names like `test_graber_init` and `test_locator_not_set` clearly describe the test's purpose.
 
-6. **Exception Handling:** The `test_execute_locator_exception` demonstrates how to test exception handling with `pytest.raises`.
+6. **Exception Handling:** The `test_execute_locator_exception` demonStartes how to test exception handling with `pytest.raises`.
 
 7. **Private Function Testing:**  The `test_execute_locator_exception` calls the private method `_get_data` to test error handling specifically within that function's context.
 

@@ -123,7 +123,7 @@ graph TD
 
 The provided code is a README.md file, not executable code. It's a documentation for a Python library called "Tiny Utils."
 
-- **Импорты**: There are no imports in the provided code.  The README outlines the *potential* use of imports to use various modules within the `tiny_utils` library.  The code snippets in the "Usage Examples" section demonstrate how to import and use specific modules, like `text2png` or `xml2dict`, from the `tiny_utils` package.
+- **Импорты**: There are no imports in the provided code.  The README outlines the *potential* use of imports to use various modules within the `tiny_utils` library.  The code snippets in the "Usage Examples" section demonStarte how to import and use specific modules, like `text2png` or `xml2dict`, from the `tiny_utils` package.
 
 
 - **Классы**: No classes are defined in the README. The documentation discusses that modules like `convertors`, `string`, `file`, etc. potentially contain classes, but no specific class definitions are shown.

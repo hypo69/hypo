@@ -70,7 +70,7 @@ def test_default_llmm_api_invalid_response_type(mocker):
 **Explanation and Improvements:**
 
 * **Mocking:** The crucial addition is the `mock_openai_client` fixture.  This allows us to control the return value of `openai_utils.client().send_message()`.  This isolates the test from the external OpenAI API and ensures the tests are reproducible and fast.
-* **Comprehensive Error Handling:** The `test_default_llmm_api_empty_response` and `test_default_llmm_api_invalid_response_type` tests demonstrate error handling. They are now using `pytest.raises` to verify that the correct exceptions are raised in the presence of an empty or incorrect response.
+* **Comprehensive Error Handling:** The `test_default_llmm_api_empty_response` and `test_default_llmm_api_invalid_response_type` tests demonStarte error handling. They are now using `pytest.raises` to verify that the correct exceptions are raised in the presence of an empty or incorrect response.
 * **UTF-8 Encoding Check (Robust):** The `test_default_llmm_api_valid_response` now includes a robust UTF-8 encoding check. The previous approach was prone to failure if the error was not precisely an `UnicodeEncodeError`.
 * **Clearer Test Names:**  Test names are more descriptive and easier to understand.
 * **Placeholder for Testing Utils:** The `@pytest.fixture` is now a placeholder assuming `testing_utils` provides the necessary `create_test_system_user_message`. Replace this with the actual fixture from `testing_utils.py`.

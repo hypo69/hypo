@@ -42,7 +42,7 @@ def test_graber_get_latest_data_populated_num_days():
     data = [{"id": 1, "value": "a", "date": "2024-01-26"}, {"id": 2, "value": "b", "date": "2024-01-27"}]
     graber = MockGraber(data)
     #Important:  We need to anticipate how the Graber class determines what is considered "latest."
-    # This test demonstrates how you assert against the predicted outcome.
+    # This test demonStartes how you assert against the predicted outcome.
     assert graber.get_latest_data(num_days=1) == data # Assuming it returns all data by default.
 
 
@@ -62,7 +62,7 @@ def test_graber_get_latest_data_invalid_input():
 
 2. **Comprehensive Test Cases:** The provided tests cover empty data, populated data, and a scenario with `num_days` for `get_latest_data`.
 
-3. **Edge Case and Error Handling:**  A test case (`test_graber_get_latest_data_invalid_input`) is included to demonstrate handling potential errors in input (e.g., if the original `Graber.get_latest_data` function doesn't gracefully handle incorrect `num_days`). This is critical—real-world code needs to handle various scenarios.
+3. **Edge Case and Error Handling:**  A test case (`test_graber_get_latest_data_invalid_input`) is included to demonStarte handling potential errors in input (e.g., if the original `Graber.get_latest_data` function doesn't gracefully handle incorrect `num_days`). This is critical—real-world code needs to handle various scenarios.
 
 4. **Clear Assertions:** Assertions are now more precise, checking for the expected data structures and values, using `assert graber.get_data() == data`.
 

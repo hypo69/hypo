@@ -136,7 +136,7 @@ def test_resToArr_invalid_result_type():
    #the JavaScript functions
    ```
 
-3. **Modify `test_execExpr_...` for the functions you want to test** (the example above demonstrates this)
+3. **Modify `test_execExpr_...` for the functions you want to test** (the example above demonStartes this)
 
 4. **Run the tests:**
    ```bash

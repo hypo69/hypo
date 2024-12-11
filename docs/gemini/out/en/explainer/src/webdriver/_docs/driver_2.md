@@ -182,7 +182,7 @@ graph LR
 
 **Functions:**
 
-- Methods within `DriverBase` (e.g., `get_url`, `scroll`, `locale`): These functions demonstrate the standard interaction methods of an automated web browser.
+- Methods within `DriverBase` (e.g., `get_url`, `scroll`, `locale`): These functions demonStarte the standard interaction methods of an automated web browser.
 
 **Variables:**
 
@@ -193,7 +193,7 @@ graph LR
 - **Error Handling:** `DriverBase` methods lack comprehensive error handling. Robust error handling within methods, particularly `get_url`, `scroll`, and other actions, would improve resilience to unexpected situations.  Throwing specific exception types and handling them in calling functions is a crucial improvement.
 - **Explicit Typing:** While `typing` is used, leveraging `typing.List` and other type hints within function signatures could further improve maintainability, particularly for collections.
 - **Method Completeness:** The `# ...` comments indicate implementation details are omitted. These should be filled in to make the code complete.
-- **Dependency Management:**  The dependency management strategy (using imports from a `src` package) is good for modularity and should be consistent with the larger project structure.
+- **Dependency Management:**  The dependency management Startegy (using imports from a `src` package) is good for modularity and should be consistent with the larger project structure.
 
 **Relationships with Other Parts of the Project:**
 

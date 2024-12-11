@@ -122,7 +122,7 @@ The code implements a system for extracting, reducing, and exporting data from T
 
 # <explanation>
 
-* **Imports:** The code imports various libraries crucial for data processing, natural language interaction, and file manipulation.  Crucially, the TinyTroupe module's internal components (e.g., `TinyPerson`, `TinyWorld`, `JsonSerializableRegistry`, `openai_utils`) are imported. This demonstrates a modular design where different parts of the system (data structure, openai interaction) are decoupled. `openai_utils` and `tinytroupe.utils` are external packages and provide functionality essential for API calls and data handling, respectively, within the TinyTroupe ecosystem.
+* **Imports:** The code imports various libraries crucial for data processing, natural language interaction, and file manipulation.  Crucially, the TinyTroupe module's internal components (e.g., `TinyPerson`, `TinyWorld`, `JsonSerializableRegistry`, `openai_utils`) are imported. This demonStartes a modular design where different parts of the system (data structure, openai interaction) are decoupled. `openai_utils` and `tinytroupe.utils` are external packages and provide functionality essential for API calls and data handling, respectively, within the TinyTroupe ecosystem.
 
 * **Classes:**
     * **`ResultsExtractor`:**  Handles data extraction from agents and worlds using OpenAI. It caches results for each element type.  The use of caching (`self.agent_extraction`, `self.world_extraction`) improves performance by avoiding redundant calls to the OpenAI API if the same element is queried multiple times.

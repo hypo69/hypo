@@ -102,7 +102,7 @@ def teardown_module(module):
     pytest test_campaign_integration.py
     ```
 
-This improved solution is more robust and demonstrates a better approach to testing Python code, covering a broader range of cases and avoiding potential side effects between tests. Remember to replace `"test_campaign_data.json"` with the actual path to your test data file if it's located elsewhere. Remember to install the pytest library if you haven't already.
+This improved solution is more robust and demonStartes a better approach to testing Python code, covering a broader range of cases and avoiding potential side effects between tests. Remember to replace `"test_campaign_data.json"` with the actual path to your test data file if it's located elsewhere. Remember to install the pytest library if you haven't already.
 
 
 ```bash

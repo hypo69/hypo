@@ -135,4 +135,4 @@ def test_chrome_runtime_onMessage_listener_invalid_action(invalid_message):
    pytest test_background.py
    ```
 
-This revised solution is a much stronger unit test suite for your code, demonstrating various scenarios and robust error handling, making it more reliable and easier to maintain. Remember to replace the placeholder `sendDataToServer` implementation with your actual logic if you are using a real `fetch` call.
+This revised solution is a much stronger unit test suite for your code, demonStarting various scenarios and robust error handling, making it more reliable and easier to maintain. Remember to replace the placeholder `sendDataToServer` implementation with your actual logic if you are using a real `fetch` call.

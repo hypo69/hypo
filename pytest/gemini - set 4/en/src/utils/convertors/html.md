@@ -98,7 +98,7 @@ def test_html2pdf_invalid_input():
 
 1. **Comprehensive Test Cases:** Added tests for various scenarios like empty strings, no tags, and edge cases.
 
-2. **`pytest.raises` for Exceptions:** Includes a test `test_html2dict_malformed_html` to demonstrate handling a `HTMLParseError` using `pytest.raises`. This is crucial for robustness.
+2. **`pytest.raises` for Exceptions:** Includes a test `test_html2dict_malformed_html` to demonStarte handling a `HTMLParseError` using `pytest.raises`. This is crucial for robustness.
 
 3. **Parameterization:** Uses `pytest.mark.parametrize` for `test_html2pdf_valid_input` to run the test multiple times with different inputs, making tests more efficient.
 

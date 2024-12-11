@@ -125,7 +125,7 @@ def test_train_model_failure(mock_http, mocker):
 2. Ensure `pytest` is installed (`pip install pytest`).
 3. Run `pytest test_openai.py` from your terminal.
 
-This improved solution provides a more robust and realistic set of tests for the given code, demonstrating how to effectively mock external dependencies when testing. Remember to adapt the error messages in the mocked responses to match your actual API responses. Remember to replace the placeholder example with your actual API endpoints and response structures to make the tests truly comprehensive.
+This improved solution provides a more robust and realistic set of tests for the given code, demonStarting how to effectively mock external dependencies when testing. Remember to adapt the error messages in the mocked responses to match your actual API responses. Remember to replace the placeholder example with your actual API endpoints and response structures to make the tests truly comprehensive.
 
 
 **Important considerations for real-world use:**

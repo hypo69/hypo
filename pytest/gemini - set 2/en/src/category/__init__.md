@@ -85,11 +85,11 @@ def test_category_method_edge_case():
    - **Parameters:**  Use appropriate test inputs (valid, invalid, edge cases) for the parameters of each method.
    - **Expected Output:**  Ensure each test has an `assert` statement comparing the actual output with the expected output.  This is *essential* for verifying correctness.
 
-3. **Exception Handling:** `pytest.raises` is used correctly for testing exceptions. This is demonstrated in `test_category_invalid_input_type` and `test_category_method_invalid_input` and should be used similarly for any methods that might raise exceptions. **Crucially, it catches the exception to avoid failing the test if the exception is handled in the function itself.**  This is essential for robust exception handling.
+3. **Exception Handling:** `pytest.raises` is used correctly for testing exceptions. This is demonStarted in `test_category_invalid_input_type` and `test_category_method_invalid_input` and should be used similarly for any methods that might raise exceptions. **Crucially, it catches the exception to avoid failing the test if the exception is handled in the function itself.**  This is essential for robust exception handling.
 
 4. **Clear Descriptions:** Test function names are more descriptive.  `test_category_creation` describes the test case's purpose.
 
-5. **Edge Cases:** The example now includes a `test_category_method_edge_case` to illustrate testing edge cases.  *You should add edge cases for each relevant method.*
+5. **Edge Cases:** The example now includes a `test_category_method_edge_case` to illuStarte testing edge cases.  *You should add edge cases for each relevant method.*
 
 6. **Error Messages:** Exception messages are used in assertions. This helps in debugging failed tests.
 

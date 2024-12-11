@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module implements a Telegram bot for the Kazarinov project, supporting various command and message handling scenarios. The bot interacts with the Mexiron parser, a Google Generative AI model, and supports processing text messages, documents, and URLs.  It handles initialization, command registration, message routing, data parsing, generating responses, and logging.
+This module implements a Telegram bot for the Kazarinov project, supporting various command and message handling scenarios. The bot interacts with the Mexiron parser, a Google Generative AI model, and supports processing text messages, documents, and URLs.  It handles initialization, command regiStartion, message routing, data parsing, generating responses, and logging.
 
 
 ## Table of Contents

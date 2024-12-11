@@ -111,7 +111,7 @@ def test_program_settings_load_credentials_valid(program_settings):
 2. **`program_settings_data` and `program_settings` fixtures:** These fixtures now create a proper directory structure for testing and ensure the required files exist (though they are temporary) to avoid `FileNotFoundError`. This is essential because the `set_project_root()` function relies on files in the project directory.
 3. **Test `set_project_root` with different scenarios:**  The tests now explicitly handle cases where the marker files are not present.  Importantly, we are now using the `Path` objects to check the returned paths.
 4. **Cleaning up:** The tests now remove the temporary directory and config file after each test to prevent issues.
-5. **Error Handling:** The `test_program_settings_load_credentials_no_file` test now demonstrates checking for expected errors. This is a good example of how to test for an error situation.
+5. **Error Handling:** The `test_program_settings_load_credentials_no_file` test now demonStartes checking for expected errors. This is a good example of how to test for an error situation.
 
 **How to Run the Tests:**
 

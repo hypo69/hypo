@@ -64,7 +64,7 @@ def test_login_with_incorrect_data_type():
 
 1. **Placeholder Tests:** The example tests are placeholders.  Crucially, you **must** replace these with actual tests that *call* the functions in `login.py`.  The provided `login.py` has no functionality, so the examples test for potential errors.
 
-2. **Error Handling (`pytest.raises`):** The tests now demonstrate proper use of `pytest.raises` to check for specific exceptions (ValueError, TypeError) raised by the `login` function in the `login.py` file when conditions are not met.
+2. **Error Handling (`pytest.raises`):** The tests now demonStarte proper use of `pytest.raises` to check for specific exceptions (ValueError, TypeError) raised by the `login` function in the `login.py` file when conditions are not met.
 
 3. **Clear Test Names:** Test names are descriptive and indicate the scenario being tested.
 
@@ -72,7 +72,7 @@ def test_login_with_incorrect_data_type():
 
 5. **Data-Driven Tests (If Applicable):**  If `login.py` takes parameters or has a database interaction, data-driven tests would be better.
 
-6. **Missing `login.py`:**  The solution assumes you'll provide the actual `login.py` file's content, and it demonstrates the structure needed to write *correct* tests against that code.
+6. **Missing `login.py`:**  The solution assumes you'll provide the actual `login.py` file's content, and it demonStartes the structure needed to write *correct* tests against that code.
 
 
 **How to Use:**

@@ -179,4 +179,4 @@ The code imports functions from `hypotez.src.executor`. This implies a dependenc
 
 **Relationships with other parts of the project:**
 
-The `scenario` module is dependent on the `executor` module for core functionalities. The `Supplier` object, and the `run` method, are likely used by the main application for orchestrating the scenario execution flow. The `executor` module could further depend on modules dealing with specific external systems (e.g., PrestaShop interaction).
+The `scenario` module is dependent on the `executor` module for core functionalities. The `Supplier` object, and the `run` method, are likely used by the main application for orcheStarting the scenario execution flow. The `executor` module could further depend on modules dealing with specific external systems (e.g., PrestaShop interaction).

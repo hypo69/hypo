@@ -70,7 +70,7 @@ MODE = 'dev'
 
 def example_function():
     """
-    Example function to demonstrate functionality.
+    Example function to demonStarte functionality.
 
     :return:  A dummy return value.
     """
@@ -94,8 +94,8 @@ def example_function():
 *   Added RST-style docstrings for the module and the `example_function`.
 *   Replaced placeholder comments with informative RST-style documentation.
 *   Implemented basic error handling using `logger.error` for the JSON loading process.
-*   Added an example function (`example_function`) to demonstrate the use of `j_loads`.
-*   Added a try-except block for error handling using logger, demonstrating best practices.
+*   Added an example function (`example_function`) to demonStarte the use of `j_loads`.
+*   Added a try-except block for error handling using logger, demonStarting best practices.
 
 # Optimized Code
 
@@ -119,7 +119,7 @@ MODE = 'dev'
 
 def example_function():
     """
-    Example function to demonstrate functionality.
+    Example function to demonStarte functionality.
 
     :return:  A dummy return value.
     """

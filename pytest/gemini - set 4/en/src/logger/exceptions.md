@@ -91,7 +91,7 @@ def test_prestashop_authentication_error(mock_logger):
 
 2. **Mock Logger Fixture:**  A `@pytest.fixture` is added to create and return the `MockLogger` instance for use in tests.  This isolates the tests better.
 
-3. **Comprehensive Exception Tests:**  Test cases for `CustomException` are added, demonstrating different scenarios like original exception and `exc_info` handling.  Importantly, tests are added for `PrestaShopException` and `PrestaShopAuthenticationError`, which were missing before.
+3. **Comprehensive Exception Tests:**  Test cases for `CustomException` are added, demonStarting different scenarios like original exception and `exc_info` handling.  Importantly, tests are added for `PrestaShopException` and `PrestaShopAuthenticationError`, which were missing before.
 
 4. **Example for Other Exceptions:** The `test_file_not_found_exception` example shows how to test raising and handling other custom exceptions.
 

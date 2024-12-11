@@ -114,4 +114,4 @@ def test_main_valid_input(example_data, example_lang, tmpdir, monkeypatch):
 * **Import fix:** Replaced `from src import gs` (which was causing issues) with the explicit import of the correct path (`from hypotez.src import gs`).
 
 
-This improved solution provides a more robust and reliable set of tests, addressing the identified issues and ensuring better coverage of the codebase. Remember to install the necessary libraries (`pdfkit`, `pytest`, and `jinja2`).  Also, make sure the mocked wkhtmltopdf.exe is accessible by your test environment, or update the test to use a different mock strategy for `pdfkit.from_string`.
+This improved solution provides a more robust and reliable set of tests, addressing the identified issues and ensuring better coverage of the codebase. Remember to install the necessary libraries (`pdfkit`, `pytest`, and `jinja2`).  Also, make sure the mocked wkhtmltopdf.exe is accessible by your test environment, or update the test to use a different mock Startegy for `pdfkit.from_string`.

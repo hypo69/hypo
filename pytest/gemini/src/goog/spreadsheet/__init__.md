@@ -81,8 +81,8 @@ def test_reach_spreadsheet_nonexistent_method():
 * **Clear Test Names:**  Test names now accurately reflect the purpose of the test.
 * **Fixture for Data:**  A `example_spreadsheet_data` fixture is included to provide sample data for tests. Replace this with a more robust fixture if you have more complex data.
 * **Exception Handling:** `pytest.raises` is used effectively to test exception scenarios (e.g., missing `sheet_id`, incorrect types).  This is crucial for robust testing.
-* **Comprehensive Coverage:** The example tests cover the initialization of `SpreadSheet` and `ReachSpreadsheet`.  Crucially, it demonstrates how to test for missing attributes and improper types, which is essential for real-world code.
-* **Example `ReachSpreadsheet` Test:**  Includes a test case for the `ReachSpreadsheet` class, demonstrating how to test a possible `fetch_data` method (or other method if available).  It includes a basic try-except block for better error handling, and an assertion to verify that it returns a list type.  You will need to replace this with the appropriate method call and assertions based on the actual functionality of `ReachSpreadsheet`.
+* **Comprehensive Coverage:** The example tests cover the initialization of `SpreadSheet` and `ReachSpreadsheet`.  Crucially, it demonStartes how to test for missing attributes and improper types, which is essential for real-world code.
+* **Example `ReachSpreadsheet` Test:**  Includes a test case for the `ReachSpreadsheet` class, demonStarting how to test a possible `fetch_data` method (or other method if available).  It includes a basic try-except block for better error handling, and an assertion to verify that it returns a list type.  You will need to replace this with the appropriate method call and assertions based on the actual functionality of `ReachSpreadsheet`.
 * **Docstrings:** Tests now have comprehensive docstrings that explain the purpose of each test, which is good practice.
 
 

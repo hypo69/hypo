@@ -43,7 +43,7 @@ def test_AliexpressAffiliateHotproductDownloadRequest_init_invalid_port():
         AliexpressAffiliateHotproductDownloadRequest(port="abc")
 
 
-# Example tests demonstrating setting attributes.
+# Example tests demonStarting setting attributes.
 # These are crucial as they validate that the attributes can be set.
 
 def test_set_app_signature():
@@ -72,12 +72,12 @@ def test_set_category_id():
 
 2. **`getapiname` Test:** Added a test to verify the `getapiname` method directly returns the expected string.
 
-3. **Attribute Setting Tests:**  Crucially, the code now includes example tests demonstrating how to set attributes within the `AliexpressAffiliateHotproductDownloadRequest` class. This is important for ensuring the attributes can be modified and retrieved as expected.  Add similar tests for other attributes like `category_id`, `country`, etc.
+3. **Attribute Setting Tests:**  Crucially, the code now includes example tests demonStarting how to set attributes within the `AliexpressAffiliateHotproductDownloadRequest` class. This is important for ensuring the attributes can be modified and retrieved as expected.  Add similar tests for other attributes like `category_id`, `country`, etc.
 
 
 4. **Error Handling:** The code now includes `pytest.raises` to test for appropriate error handling, which was missing in the original example.   This is a **critical** part of comprehensive testing.
 
-5. **Edge Cases (Example):**  A placeholder `test_AliexpressAffiliateHotproductDownloadRequest_init_invalid_port` demonstrates how to test for edge cases. You'll need similar tests for other attributes and edge cases (e.g., `category_id` as a string, etc.).
+5. **Edge Cases (Example):**  A placeholder `test_AliexpressAffiliateHotproductDownloadRequest_init_invalid_port` demonStartes how to test for edge cases. You'll need similar tests for other attributes and edge cases (e.g., `category_id` as a string, etc.).
 
 6. **Clear and Descriptive Names:** Test function names are more informative (e.g., `test_AliexpressAffiliateHotproductDownloadRequest_init_valid`).
 

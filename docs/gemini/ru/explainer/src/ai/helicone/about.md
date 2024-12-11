@@ -40,7 +40,7 @@ Helicone.ai is a platform that provides access to specialized artificial intelli
 
 ### Getting Started with Helicone.ai
 
-1. **Registration and API Key**:
+1. **RegiStartion and API Key**:
    - Sign up on the Helicone.ai platform and obtain an API key to access the platform's functions.
 
 2. **Integration with Your Project**:
@@ -70,7 +70,7 @@ Helicone.ai is a powerful platform for developers and businesses looking to leve
 
 ```mermaid
 graph LR
-    A[Helicone.ai] --> B{Registration};
+    A[Helicone.ai] --> B{RegiStartion};
     B --> C[API Key];
     C --> D{Integration with Project};
     D --> E[Testing];
@@ -85,7 +85,7 @@ graph LR
 The provided text is not code; it's a marketing description of a platform called Helicone.ai.  It outlines the platform's features, use cases, and how to get started.  It doesn't contain any actual code to analyze.
 
 * **No imports, classes, functions, or variables are present in the text** which means no analysis of their nature or relationships can be done within the provided context.
-* **The Mermaid diagram** illustrates a high-level overview of the process of using the platform, starting with registration and API key acquisition, followed by integration, testing, and finally, deployment and use.  This diagram, however, is based on the *description* of the platform's usage, not on actual code.
+* **The Mermaid diagram** illuStartes a high-level overview of the process of using the platform, starting with regiStartion and API key acquisition, followed by integration, testing, and finally, deployment and use.  This diagram, however, is based on the *description* of the platform's usage, not on actual code.
 
 **Possible relationships with other parts of the project:**
 

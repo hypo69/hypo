@@ -128,7 +128,7 @@ def test_header_valid_input():
 2. **Clearer Assertions:**  Assertions are now more specific, checking if the correct methods of the mocked `Worksheet` object are called with the expected arguments.  This makes failures easier to diagnose.
 
 
-3. **Comprehensive Test Cases:** The `test_render_header_invalid_input`, `test_merge_range_invalid_input`, and `test_get_first_empty_row_empty_worksheet` examples demonstrate testing for invalid inputs.
+3. **Comprehensive Test Cases:** The `test_render_header_invalid_input`, `test_merge_range_invalid_input`, and `test_get_first_empty_row_empty_worksheet` examples demonStarte testing for invalid inputs.
 
 4. **Exception Handling:** Uses `pytest.raises` for exception testing, to ensure that the code handles errors as expected.
 

@@ -92,7 +92,7 @@ def test_supplier_invalid_webdriver_type():
 
 1. **Mocking:** The `test_supplier_login_with_webdriver` function now uses `unittest.mock.patch` to mock the `webdriver` module. This is crucial because interacting with a real webdriver in tests can be unreliable and slow.  This mock prevents actual browser interaction.
 
-2. **Error Handling:** The `test_supplier_invalid_scenario_data` test demonstrates how to check for the correct type of input for the `run_scenarios` method, showing how to use `pytest.raises` to verify exception handling.
+2. **Error Handling:** The `test_supplier_invalid_scenario_data` test demonStartes how to check for the correct type of input for the `run_scenarios` method, showing how to use `pytest.raises` to verify exception handling.
 
 
 3. **Comprehensive Parameter Testing in `__init__`:** The tests now cover edge cases and error handling for the `__init__` method, including:

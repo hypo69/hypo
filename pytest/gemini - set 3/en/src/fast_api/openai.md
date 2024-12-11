@@ -31,7 +31,7 @@ def test_root_valid_input(mock_model):
 def test_root_exception(mock_model, caplog):
     """Test the root endpoint with exception."""
 
-    # Mock a FileNotFoundError for demonstration
+    # Mock a FileNotFoundError for demonStartion
     def mock_open_file(*args, **kwargs):
         raise FileNotFoundError("File not found")
 
@@ -78,7 +78,7 @@ def test_ask_model_validation_error(mock_model):
 **Explanation and Improvements:**
 
 * **Mock OpenAIModel:**  Critically, the `MockOpenAIModel` class is introduced. This allows you to test the `ask_model` function without depending on a live OpenAI API connection.  This is **essential** for unit testing.  You'd replace `OpenAIModel` with your mock in the tests.
-* **`test_root_exception`:** Demonstrates how to test for exceptions during the `root` endpoint and checks for the appropriate error message.
+* **`test_root_exception`:** DemonStartes how to test for exceptions during the `root` endpoint and checks for the appropriate error message.
 * **`test_ask_model_validation_error`:** A crucial addition; this tests that the `AskRequest` Pydantic model correctly validates its input.
 * **`app.dependency_overrides`:**  Uses `dependency_overrides` to replace the `OpenAIModel` dependency with the mock during the tests. This ensures that your test code interacts with the *mock* object, and isolates the logic you want to test from the external dependency.  This is a much better testing practice than trying to replace the entire `app` object, as that can be very complicated.
 * **Clearer Test Names:**  Test names now more accurately reflect the input and expected outcome.
@@ -93,6 +93,6 @@ def test_ask_model_validation_error(mock_model):
 
 **Important Considerations for Real OpenAI Integration:**
 
-* **Mocking OpenAI API:** If you want to test interaction with the OpenAI API itself, you will need a robust mocking strategy.  There are excellent mocking libraries for this (e.g., `pytest-mock` for easily creating mocks).  This way, you can prevent requests to the actual OpenAI API during the tests.
+* **Mocking OpenAI API:** If you want to test interaction with the OpenAI API itself, you will need a robust mocking Startegy.  There are excellent mocking libraries for this (e.g., `pytest-mock` for easily creating mocks).  This way, you can prevent requests to the actual OpenAI API during the tests.
 
 This improved solution provides a much more robust and reliable testing framework for your OpenAI-related code. Remember that mocking the OpenAI API calls is a standard practice in testing backend applications that interact with external services. Remember to adjust imports and class names to match your actual code.

@@ -114,7 +114,7 @@ def test_genericListener_setContentInfo():
 
 4. **Mocking or Stubbing (Highly Recommended if possible):**  For functions that depend on external interactions (e.g., browser interactions), you should use mocking or stubbing. This isolates your tests and avoids relying on the browser environment.  Without mocking, tests may fail in different environments or take longer.
 
-5. **Comprehensive Test Cases:**  The example tests are more complete now, including tests for `setAttr`, `isFocusable`, `focusItem` (including error cases) , and examples of `getFrames`, `parseFrameDesignation`, `traceBlankWindows`, `genericListener.listeners.setContentInfo`, demonstrating how to test different parts.
+5. **Comprehensive Test Cases:**  The example tests are more complete now, including tests for `setAttr`, `isFocusable`, `focusItem` (including error cases) , and examples of `getFrames`, `parseFrameDesignation`, `traceBlankWindows`, `genericListener.listeners.setContentInfo`, demonStarting how to test different parts.
 
 6. **Clearer Descriptions:** The docstrings (test function names and comments) are improved to be more descriptive and easier to understand.
 

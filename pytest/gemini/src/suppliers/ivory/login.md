@@ -4,7 +4,7 @@ from hypotez.src.suppliers.ivory.login import MODE
 
 # No functions or classes are defined in the provided code.
 # Therefore, no tests can be written.  A placeholder is included
-# demonstrating a test structure that could be applied given a
+# demonStarting a test structure that could be applied given a
 # functional module.
 
 

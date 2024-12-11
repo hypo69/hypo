@@ -125,4 +125,4 @@ def test_handle_document(mock_update, mock_context):
 2.  Place the provided test code in a file named `test_bot.py` (or similar) in the same directory as `bot.py`.
 3.  Run `pytest test_bot.py` from your terminal.
 
-Remember to adapt the test data and mocking strategies further to cover more complex and realistic scenarios of the `bot.py` code. For example, you should test cases where the API request fails or there are different types of file inputs.  Crucially, test the various possible responses and handling of different URLs.
+Remember to adapt the test data and mocking Startegies further to cover more complex and realistic scenarios of the `bot.py` code. For example, you should test cases where the API request fails or there are different types of file inputs.  Crucially, test the various possible responses and handling of different URLs.

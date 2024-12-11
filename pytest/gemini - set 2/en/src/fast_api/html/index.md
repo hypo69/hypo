@@ -91,7 +91,7 @@ def test_html_bootstrap_link():
 **How to Extend and Make it Functional:**
 
 ```python
-# Example (Illustrative only - needs to be adapted to your FastAPI setup):
+# Example (IlluStartive only - needs to be adapted to your FastAPI setup):
 
 import pytest
 from fastapi import FastAPI, HTTPException

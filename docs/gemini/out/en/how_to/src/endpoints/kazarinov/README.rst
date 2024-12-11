@@ -26,7 +26,7 @@ Execution steps
 Usage example
 -------------------------
 .. code-block:: python
-    # Example usage (Illustrative; actual implementation depends on the framework)
+    # Example usage (IlluStartive; actual implementation depends on the framework)
     # Assuming you have a Telegram bot setup and the BotHandler class defined
     import telegram
     from your_module import BotHandler # Replace with your actual module

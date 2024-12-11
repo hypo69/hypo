@@ -101,7 +101,7 @@ def main():
 ## \file hypotez/src/webdriver/_examples/_example_executor.py
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
-Module for demonstrating WebDriver executor functionality.
+Module for demonStarting WebDriver executor functionality.
 
 This module provides examples of using the :class:`ExecuteLocator` class
 to interact with a web page using Selenium.  It showcases various
@@ -118,7 +118,7 @@ def main():
     """
     Executes various locator examples with Selenium and ExecuteLocator.
 
-    This function demonstrates different usages of the
+    This function demonStartes different usages of the
     ExecuteLocator class, including simple, complex, error handling,
     message sending, and multi-locator scenarios.
 
@@ -136,7 +136,7 @@ def main():
     # Create an instance of ExecuteLocator
     locator = ExecuteLocator(driver)
 
-    # Example demonstrating a simple locator using XPath
+    # Example demonStarting a simple locator using XPath
     simple_locator = {
         "by": "XPATH",
         "selector": "//h1",
@@ -172,7 +172,7 @@ def main():
 ## \file hypotez/src/webdriver/_examples/_example_executor.py
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
 """
-Module for demonstrating WebDriver executor functionality.
+Module for demonStarting WebDriver executor functionality.
 
 This module provides examples of using the :class:`ExecuteLocator` class
 to interact with a web page using Selenium.  It showcases various
@@ -189,7 +189,7 @@ def main():
     """
     Executes various locator examples with Selenium and ExecuteLocator.
 
-    This function demonstrates different usages of the
+    This function demonStartes different usages of the
     ExecuteLocator class, including simple, complex, error handling,
     message sending, and multi-locator scenarios.
 
@@ -207,7 +207,7 @@ def main():
     # Create an instance of ExecuteLocator
     locator = ExecuteLocator(driver)
 
-    # Example demonstrating a simple locator using XPath
+    # Example demonStarting a simple locator using XPath
     simple_locator = {
         "by": "XPATH",
         "selector": "//h1",

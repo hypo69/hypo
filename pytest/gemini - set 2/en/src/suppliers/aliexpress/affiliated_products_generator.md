@@ -96,7 +96,7 @@ def test_process_affiliate_products_empty_prod_ids(ali_affiliated_products, tmp_
 
 4. **Clearer Assertions:** Assertions are more explicit about what the expected outputs are.
 
-5. **Error Handling:** The test for `no affiliate links` demonstrates how to use `pytest.warns` to check for specific warnings.  Crucially, the test for empty `prod_ids` input is added to check the handling of empty input lists.
+5. **Error Handling:** The test for `no affiliate links` demonStartes how to use `pytest.warns` to check for specific warnings.  Crucially, the test for empty `prod_ids` input is added to check the handling of empty input lists.
 
 
 **How to Run the Tests:**

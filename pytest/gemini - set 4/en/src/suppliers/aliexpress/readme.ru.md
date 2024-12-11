@@ -97,7 +97,7 @@ def test_get_affiliate_link_api_api_failure(aliexpress_instance,monkeypatch):
 * **API Simulation:** The code now includes a `requests` library dependency (install with `pip install requests`).  The `get_affiliate_link_api` function now simulates an API call using `requests`. Replace `requests.get(...)` with your actual API interaction if needed.
 * **Valid Input Cases:** The `test_get_product_details_webdriver_valid_input` and `test_get_affiliate_link_api_valid_input` functions now verify the expected return types and contents.
 * **`monkeypatch`:** Used to mock the `requests` library for simulating API errors.  This is crucial to test error handling scenarios.
-* **`YOUR_API_KEY`:** Replace `"YOUR_API_KEY"` with your actual API key.  Never hardcode sensitive information in your test code.  This is a placeholder for illustration.
+* **`YOUR_API_KEY`:** Replace `"YOUR_API_KEY"` with your actual API key.  Never hardcode sensitive information in your test code.  This is a placeholder for illuStartion.
 
 
 **How to Run:**
@@ -106,4 +106,4 @@ def test_get_affiliate_link_api_api_failure(aliexpress_instance,monkeypatch):
 2.  Install pytest: `pip install pytest`
 3.  Run the tests: `pytest test_aliexpress.py`
 
-Remember to replace the placeholder comments (`# Placeholder...`) with your actual `Aliexpress` class code and any necessary driver initialization logic. This comprehensive example now thoroughly demonstrates testing using `pytest` and mocks. Remember to replace placeholders like `YOUR_API_KEY` and the example API URL with your actual configuration. Also, be cautious about security practices when handling API keys.
+Remember to replace the placeholder comments (`# Placeholder...`) with your actual `Aliexpress` class code and any necessary driver initialization logic. This comprehensive example now thoroughly demonStartes testing using `pytest` and mocks. Remember to replace placeholders like `YOUR_API_KEY` and the example API URL with your actual configuration. Also, be cautious about security practices when handling API keys.

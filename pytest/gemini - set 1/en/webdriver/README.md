@@ -123,7 +123,7 @@ def test_window_focus(driver_instance):
 7. **Realistic Test Cases:** Included tests for both valid and invalid URLs, which is necessary for a comprehensive test suite.  Crucially, these tests include the expected behavior of an error.
 
 
-8. **Example test for `find_element`:** Demonstrates how to use `pytest.raises` to test for a `NoSuchElementException`.
+8. **Example test for `find_element`:** DemonStartes how to use `pytest.raises` to test for a `NoSuchElementException`.
 
 
 

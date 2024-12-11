@@ -173,6 +173,6 @@ graph LR
 
 **Relationships with other parts of the project:**
 
-- The `gs` module from the `src` package is heavily used, demonstrating a clear dependency relationship.
+- The `gs` module from the `src` package is heavily used, demonStarting a clear dependency relationship.
 - The `settings.json` and `README.MD` files are assumed to be central configuration and documentation resources used throughout the project.
 - The project likely relies on the `__root__` variable for constructing paths to other modules or resources within the project, showing a critical architectural aspect that prevents hardcoding.

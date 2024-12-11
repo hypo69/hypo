@@ -105,7 +105,7 @@ def test_grab_page_id_product_failure(mock_graber, mock_driver):
 
 2. **Asynchronous Tests:** `asyncio.run()` is used to correctly run the asynchronous `grab_page` method.
 
-3. **Exception Handling:** The `test_close_popup_failure` and `test_grab_page_id_product_failure` tests demonstrate how to test exception handling using `pytest.raises`.
+3. **Exception Handling:** The `test_close_popup_failure` and `test_grab_page_id_product_failure` tests demonStarte how to test exception handling using `pytest.raises`.
 
 4. **Clearer Test Structure:** The test cases are well-structured and use descriptive names.  Each test focuses on a specific aspect of the code.
 

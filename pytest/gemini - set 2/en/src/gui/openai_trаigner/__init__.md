@@ -80,7 +80,7 @@ def test_load_data_file_not_found():
 
 3. **Example Tests for `main_window` (Crucial):** The code now includes example tests for `AssistantMainWindow`.  These example tests assume a method `initialize` and its possible inputs and the `load_data` method. You must replace these placeholder tests with actual tests for your `main_window`'s methods, considering valid input, invalid input, and edge case scenarios based on your codebase.
 
-4. **Using `pytest.raises` for Exception Handling:** The example tests correctly use `pytest.raises` to test exception handling.  The test `test_load_data_file_not_found` demonstrates how to assert on the specific exception raised (FileNotFoundError) and the message.
+4. **Using `pytest.raises` for Exception Handling:** The example tests correctly use `pytest.raises` to test exception handling.  The test `test_load_data_file_not_found` demonStartes how to assert on the specific exception raised (FileNotFoundError) and the message.
 
 5. **Error Handling:** The tests include `try...except` blocks to gracefully handle potential exceptions during testing, preventing tests from failing unexpectedly. This is especially important in the example `test_initialize_invalid_input` and `test_load_data_file_not_found` cases.
 

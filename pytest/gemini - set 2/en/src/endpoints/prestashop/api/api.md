@@ -103,7 +103,7 @@ def test_read_successful(api, mock_response):
 
 1. **Mocking:** The code now uses `unittest.mock.patch` to mock the `Session.request` method.  This is crucial for testing without relying on an external API.  The `mock_response` fixture provides a way to control the responses.  Critically, it now mocks the `Session` class itself rather than relying on monkey-patching the `PreparedRequest` which is not robust.
 
-2. **Error Handling:** Added `test_ping_failed` to test the error handling path.  This demonstrates the crucial `_check_response` method being called.
+2. **Error Handling:** Added `test_ping_failed` to test the error handling path.  This demonStartes the crucial `_check_response` method being called.
 
 3. **Comprehensive Test Coverage:** The example `test_create_successful` is added and provides the basic pattern for other tests.  You'll need to add similar tests for `read`, `write`, `unlink`, `search`, `create_binary`, `upload_image`, and more.
 

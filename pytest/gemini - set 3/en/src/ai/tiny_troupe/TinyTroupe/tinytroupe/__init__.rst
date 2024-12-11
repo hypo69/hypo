@@ -89,7 +89,7 @@ def test_inject_html_css_style_prefix_no_match():
 * **Clearer Test Names:** Test names now accurately describe the scenarios they test.
 * **Specific Assertions:**  The `test_pretty_print_config_valid_config` test now includes a call to `mock_stdout.assert_any_call("Config:")` to confirm that the correct output string is printed. (Add more assertions about the format of the printed output).
 * **`test_start_logger_valid_config`**: This test now correctly mocks the `logging.basicConfig` function.  It just asserts that the function was called and not what arguments were passed, so this test only verifies a basic level of correctness for this function.
-* **Edge Case for `inject_html_css_style_prefix`:** `test_inject_html_css_style_prefix_no_match` demonstrates what happens when the input HTML doesn't match the expected format.
+* **Edge Case for `inject_html_css_style_prefix`:** `test_inject_html_css_style_prefix_no_match` demonStartes what happens when the input HTML doesn't match the expected format.
 * **File Cleanup:** The `test_read_config_file_valid_config` now removes the temporary config file to avoid file system issues.
 * **`FileNotFoundError`:** Tests now use `pytest.raises` to ensure the correct exception is raised when the config file is missing.
 * **Comments:** Added comments to explain the logic and purpose of each test.

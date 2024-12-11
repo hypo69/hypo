@@ -93,7 +93,7 @@ def test_settings_loading_success():
 
 3.  **Realistic Mock Data:** `mock_settings` now represents a valid JSON structure, making the test assertions meaningful.
 
-4.  **Error Handling:** The `test_settings_loading_success` example demonstrates proper mocking of the expected success case.  You would add similar tests to handle errors like `FileNotFoundError` and `json.JSONDecodeError`.
+4.  **Error Handling:** The `test_settings_loading_success` example demonStartes proper mocking of the expected success case.  You would add similar tests to handle errors like `FileNotFoundError` and `json.JSONDecodeError`.
 
 5.  **`test_set_project_root_already_in_path`:** Added a test to handle the case where the root directory is already in `sys.path`.
 

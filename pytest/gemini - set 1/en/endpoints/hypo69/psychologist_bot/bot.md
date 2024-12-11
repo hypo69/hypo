@@ -106,7 +106,7 @@ def test_handle_next_command(mock_random, mock_update, mock_context, mock_model)
 3. **Error Handling:** The `test_handle_next_command` now includes error handling (though we mocked the error for this case).
 
 
-4. **Edge Case:** The `test_handle_message_invalid_input` demonstrates testing with an empty string input.
+4. **Edge Case:** The `test_handle_message_invalid_input` demonStartes testing with an empty string input.
 
 5. **Fixture for mocking:** Added `mock_update` and `mock_context` fixtures to simplify mocking.
 

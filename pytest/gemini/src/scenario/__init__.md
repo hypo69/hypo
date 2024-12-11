@@ -84,7 +84,7 @@ def test_run_scenario_file_with_fixture(test_supplier):
 
 3. **Clearer Test Names:** Test names now more accurately reflect the purpose of each test.
 
-4. **Exception Handling:** `test_run_scenario_files_invalid_file` demonstrates how to use `pytest.raises` to test for `FileNotFoundError`.  Replace `FileNotFoundError` with the correct exception type if different. Added `test_run_scenarios_invalid_scenario_format` to demonstrate handling of incorrect input formats.
+4. **Exception Handling:** `test_run_scenario_files_invalid_file` demonStartes how to use `pytest.raises` to test for `FileNotFoundError`.  Replace `FileNotFoundError` with the correct exception type if different. Added `test_run_scenarios_invalid_scenario_format` to demonStarte handling of incorrect input formats.
 
 5. **Fixture:** Created a `test_supplier` fixture for better organization and reuse of the `Supplier` instance.  This is highly recommended for improved modularity.  Example use is provided.
 

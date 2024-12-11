@@ -73,12 +73,12 @@ async def test_grab_page_with_non_existent_data(graber):
 * **`pytest.raises`:** Correctly uses `pytest.raises` for exception testing.
 * **Fixture for `Graber`:** A `@pytest.fixture` provides a `Graber` instance for each test, ensuring isolation.
 * **Mock `ProductFields`:** A mock `ProductFields` object is created for the test.
-* **Example Error Handling:** Added a test that simulates a missing attribute call during data fetching to demonstrate proper error handling.
+* **Example Error Handling:** Added a test that simulates a missing attribute call during data fetching to demonStarte proper error handling.
 
 **Important Considerations:**
 
 * **Real `Context` and `Driver`:**  Replace the mocked classes (`MockContext` and `MockDriver`) with the actual `Context` and `Driver` objects from your project once your `src` modules are imported correctly.
-* **`id_product` Function:**  The original code calls `id_product` and other methods asynchronously within `grab_page`, but these aren't defined in the provided snippet.  You need tests for those methods as well. The provided test `test_grab_page_with_non_existent_data` demonstrates testing a specific call for error handling to ensure that the `id_product` call is properly handled if the needed data doesn't exist.  Expand your tests to cover those specific methods appropriately.
+* **`id_product` Function:**  The original code calls `id_product` and other methods asynchronously within `grab_page`, but these aren't defined in the provided snippet.  You need tests for those methods as well. The provided test `test_grab_page_with_non_existent_data` demonStartes testing a specific call for error handling to ensure that the `id_product` call is properly handled if the needed data doesn't exist.  Expand your tests to cover those specific methods appropriately.
 * **Data Creation:**  The `valid_data` fixture is essential for providing well-formed test data to your methods.  You need to define an appropriate structure for this data based on the inputs expected by your functions.
 * **Assertions:**  Make sure your assertions are checking the *actual* results of the `grab_page` function (e.g., the contents of `graber.fields`). The example assertion checks for `graber.fields` not being `None`.
 

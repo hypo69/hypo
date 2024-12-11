@@ -118,9 +118,9 @@ def test_locator_complex_list_first():
 
 3. **Realistic Assertions:** Instead of just checking for `is_displayed()`, added checks like `assert len(elements) > 0` to verify list content.  Crucially, added a test to check if the text retrieved from the `id_supplier` locator is not empty.
 
-4. **Mandatory Locator Test:** Added a test (`test_locator_mandatory_failure`) to demonstrate how to handle scenarios where a mandatory locator fails to find the element (using `pytest.raises`).
+4. **Mandatory Locator Test:** Added a test (`test_locator_mandatory_failure`) to demonStarte how to handle scenarios where a mandatory locator fails to find the element (using `pytest.raises`).
 
-5. **Edge Case Example:** Added a test (`test_locator_complex_list_first`) to illustrate how you might handle a list of locators.  This example checks for the existence and content of the first element. Remember to add your own specific edge cases.
+5. **Edge Case Example:** Added a test (`test_locator_complex_list_first`) to illuStarte how you might handle a list of locators.  This example checks for the existence and content of the first element. Remember to add your own specific edge cases.
 
 6. **Error Handling:**  The test now includes an assertion `assert "Element not found" in str(excinfo.value)` to check for a specific error message instead of a generic exception.
 

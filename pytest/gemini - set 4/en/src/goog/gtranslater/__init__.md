@@ -100,7 +100,7 @@ from io import StringIO
 
 2. **Edge Cases and Error Handling:** Added tests for empty input (`test_translate_invalid_input`) and cases where the language detection or translation process throws an exception (`test_translate_exception`, `test_translate_language_detection_error`).
 
-3. **Explicit Locale Tests:** Added `test_translate_valid_input_explicit_locale` which demonstrates how to provide the `locale_in` parameter.  This demonstrates proper usage and avoids unexpected auto-detection.
+3. **Explicit Locale Tests:** Added `test_translate_valid_input_explicit_locale` which demonStartes how to provide the `locale_in` parameter.  This demonStartes proper usage and avoids unexpected auto-detection.
 
 
 4. **Clearer Assertions:** Assertions are more specific about what's expected (e.g., `assert translated_text != ""`).
@@ -108,7 +108,7 @@ from io import StringIO
 5. **Mock side effects:** Critically, the `side_effect` parameter of `patch` is used to simulate exceptions during language detection or translation. This tests the exception handling in the function.
 
 
-6. **`test_main`:** The `test_main` function is incomplete, but the stub demonstrates how to use `patch('builtins.input')` to mock user inputs,  and `StringIO` to capture the output for assertions. You need to add more scenarios for testing the input and output aspects of the `main` function, considering various inputs and expected outputs.
+6. **`test_main`:** The `test_main` function is incomplete, but the stub demonStartes how to use `patch('builtins.input')` to mock user inputs,  and `StringIO` to capture the output for assertions. You need to add more scenarios for testing the input and output aspects of the `main` function, considering various inputs and expected outputs.
 
 7. **Import `StringIO`:** Import statement added to use `StringIO`.
 

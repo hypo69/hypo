@@ -49,7 +49,7 @@ Usage example
 
 **Important Notes:**
 
-* The provided example demonstrates a basic usage case.  You'll need to replace `"12345"` with the actual product ID.
+* The provided example demonStartes a basic usage case.  You'll need to replace `"12345"` with the actual product ID.
 * Ensure you have the necessary dependencies (e.g., `pydantic`, `selenium`, etc.) installed.
 *  Make sure the `Driver` and `Context` objects are correctly initialized and used.
 * The `...` sections in the code indicate parts that are not shown and require further implementation to fetch specific attributes.  The `fetch_all_data` function should call the appropriate methods.

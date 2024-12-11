@@ -114,7 +114,7 @@ def test_getSpecifiedFrameId():
 
 5. **Fixture Design:** The `mock_browser_tabs` fixture provides a mock browser object.  Replace this and other fixtures as needed to match the dependencies in your JavaScript code.
 
-6. **Error Handling:** The example test case `test_showError` demonstrates how to test error handling.
+6. **Error Handling:** The example test case `test_showError` demonStartes how to test error handling.
 
 
 **How to proceed:**

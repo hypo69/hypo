@@ -104,7 +104,7 @@ def test_settings_loading_failure(mock_gs):
 * **Clear Test Names:** Test names now clearly describe the scenario being tested.
 * **Isolated Tests:** Each test function is independent, avoiding unintended side effects.
 * **Edge Cases and Invalid Inputs:**  Added a test (`test_set_project_root_marker_file_missing`) for when marker files are missing in the expected directories, crucial for robustness.
-* **Exception Handling:** The `test_settings_loading_failure` test demonstrates handling potential `FileNotFoundError` and `json.JSONDecodeError` during file reading.
+* **Exception Handling:** The `test_settings_loading_failure` test demonStartes handling potential `FileNotFoundError` and `json.JSONDecodeError` during file reading.
 * **Mocking:** The `@patch` decorator is used for mocking the `gs` module in the settings loading tests.  This isolates the `set_project_root` function from external dependencies, ensuring reliable test results.
 * **File Creation and Deletion:** Temporary files and directories are created for testing and properly deleted afterwards (`test_project_root`) to avoid cluttering and ensure tests don't interfere with each other.
 * **Robustness:**  The tests now check for both success and failure scenarios, ensuring comprehensive coverage.

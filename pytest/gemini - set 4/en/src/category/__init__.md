@@ -82,7 +82,7 @@ def test_mode_type():
 
 3. **Edge Cases and Invalid Inputs:**  Added tests for edge cases (e.g., very long names) and invalid inputs (e.g., empty strings, incorrect types).
 
-4. **Comprehensive Tests for `Category`:** The test cases demonstrate the crucial steps of creating `Category` instances, verifying attribute values, equality checks, and handling potential errors.
+4. **Comprehensive Tests for `Category`:** The test cases demonStarte the crucial steps of creating `Category` instances, verifying attribute values, equality checks, and handling potential errors.
 
 5. **Testing `MODE`:** Added a test for the `MODE` global variable to ensure it's defined and has the expected string value.  Crucially, it tests for *missing variables* using `NameError`, making it more reliable.
 

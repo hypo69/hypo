@@ -180,8 +180,8 @@ graph LR
 
 **Classes:**
 
-* `MockEntity`: A simple class for testing the `name_or_empty` function.  It has a single attribute, `name`, and a constructor to initialize it.  It's a simple example demonstrating a data structure expected by the function `name_or_empty`.
-* `DummyException`: A custom exception for testing the `repeat_on_error` decorator, demonstrating an exception class as input to this decorator.
+* `MockEntity`: A simple class for testing the `name_or_empty` function.  It has a single attribute, `name`, and a constructor to initialize it.  It's a simple example demonStarting a data structure expected by the function `name_or_empty`.
+* `DummyException`: A custom exception for testing the `repeat_on_error` decorator, demonStarting an exception class as input to this decorator.
 
 
 **Functions:**
@@ -193,7 +193,7 @@ graph LR
 
 **Variables:**
 
-Variables like `text`, `result`, and `retries` are used to store input data, the output of functions, and retry count for testing, demonstrating basic testing patterns.
+Variables like `text`, `result`, and `retries` are used to store input data, the output of functions, and retry count for testing, demonStarting basic testing patterns.
 
 **Potential Errors/Improvements:**
 
@@ -203,4 +203,4 @@ Variables like `text`, `result`, and `retries` are used to store input data, the
 
 **Relationships:**
 
-The code relies on `tinytroupe.utils` which in turn likely depends on other modules within the `tinytroupe` project for data processing or manipulation.  `testing_utils` is external to the `tinytroupe` module and provides test functions and classes.  `pytest`, `unittest.mock`, and `sys` are Python standard library modules.  This code demonstrates a typical structure for unit testing where external tools and the project's own modules interact to verify proper functionality.
+The code relies on `tinytroupe.utils` which in turn likely depends on other modules within the `tinytroupe` project for data processing or manipulation.  `testing_utils` is external to the `tinytroupe` module and provides test functions and classes.  `pytest`, `unittest.mock`, and `sys` are Python standard library modules.  This code demonStartes a typical structure for unit testing where external tools and the project's own modules interact to verify proper functionality.

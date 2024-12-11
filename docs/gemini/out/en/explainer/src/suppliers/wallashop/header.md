@@ -171,7 +171,7 @@ graph TD
 **Potential Errors/Improvements:**
 
 * The `try...except` blocks around file loading are good, but more specific exceptions (e.g., `IOError` for issues with file access) could be considered for a more robust implementation.
-* The usage of `...` in the exception handlers is not ideal; error handling should be more explicit, either by printing informative messages, logging the errors, or implementing a fallback strategy.
+* The usage of `...` in the exception handlers is not ideal; error handling should be more explicit, either by printing informative messages, logging the errors, or implementing a fallback Startegy.
 * The `__cofee__` variable name is unconventional, but it's a descriptive name for a variable containing the support information for the project developer.
 
 

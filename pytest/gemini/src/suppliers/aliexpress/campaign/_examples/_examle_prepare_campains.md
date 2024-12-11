@@ -69,7 +69,7 @@ def test_get_directory_names_valid_path():
     assert get_directory_names(campaigns_directory) == ["SummerSale", "WinterSale"]
 
 
-# Example to demonstrate mocking a file system interaction
+# Example to demonStarte mocking a file system interaction
 def test_get_directory_names_no_campaigns():
     """Tests get_directory_names when no campaigns exist."""
     campaigns_directory = Path("nonexistent_directory")
@@ -84,7 +84,7 @@ def test_get_directory_names_no_campaigns():
 
 3. **Edge Cases:**  A test (`test_get_directory_names_no_campaigns`) checks for the case where the directory doesn't exist, a common edge case.
 
-4. **Error Handling:**  A test (`test_process_campaign_category_invalid_input`) now demonstrates how to check for specific exceptions.
+4. **Error Handling:**  A test (`test_process_campaign_category_invalid_input`) now demonStartes how to check for specific exceptions.
 
 5. **Valid Input:** The tests now cover valid input scenarios, ensuring that the functions behave as expected with correct parameters.
 

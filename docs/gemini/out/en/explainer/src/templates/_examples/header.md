@@ -102,7 +102,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The mermaid diagram illustrates how the code establishes dependencies. The `src` directory (and subdirectories) are crucial for the modules to be imported. The structure `src.suppliers`, `src.product`, `src.category`, `src.utils.jjson`, `src.logger`, `src.utils.string` signifies a well-organized package structure, enabling clear module separation and reuse.
+The mermaid diagram illuStartes how the code establishes dependencies. The `src` directory (and subdirectories) are crucial for the modules to be imported. The structure `src.suppliers`, `src.product`, `src.category`, `src.utils.jjson`, `src.logger`, `src.utils.string` signifies a well-organized package structure, enabling clear module separation and reuse.
 
 
 ## <explanation>
@@ -136,4 +136,4 @@ The provided code lacks function definitions, making it impossible to analyze th
 
 ### Relationships with other parts of the project:
 
-The code clearly establishes dependencies on modules (e.g., `gs`, `Supplier`, `Product`) located within the `src` package of the `hypotez` project. This illustrates a modular design principle, promoting code reusability and maintainability.  Complete code would be needed to fully analyze the inter-dependencies between modules.
+The code clearly establishes dependencies on modules (e.g., `gs`, `Supplier`, `Product`) located within the `src` package of the `hypotez` project. This illuStartes a modular design principle, promoting code reusability and maintainability.  Complete code would be needed to fully analyze the inter-dependencies between modules.

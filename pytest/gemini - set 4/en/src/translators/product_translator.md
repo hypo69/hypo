@@ -102,4 +102,4 @@ def test_get_translations_from_presta_translations_table_empty_filter(mock_trans
     * `None` or `empty` inputs in `get_translations_from_presta_translations_table`.
 
 
-This significantly improved example demonstrates a complete, testable, and realistic approach for testing the `product_translator` functions, without relying on external services. Remember to replace the placeholders with your specific database interaction implementation. Always test various edge cases! Remember to adjust the imports and paths according to your project structure.  Also, consider creating a dedicated test file (`test_product_translator.py`) for your tests.
+This significantly improved example demonStartes a complete, testable, and realistic approach for testing the `product_translator` functions, without relying on external services. Remember to replace the placeholders with your specific database interaction implementation. Always test various edge cases! Remember to adjust the imports and paths according to your project structure.  Also, consider creating a dedicated test file (`test_product_translator.py`) for your tests.

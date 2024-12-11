@@ -85,7 +85,7 @@ class GSRender():
         padding: Any | None = None,
         horizontalAlignment: Any | None = None,
         verticalAlignment: Any | None = None,
-        wrapStrategy: Any | None = None,
+        wrapStartegy: Any | None = None,
         textDirection: Any | None = None,
         textFormat: Any | None = None,
         hyperlinkDisplayType: Any | None = None,

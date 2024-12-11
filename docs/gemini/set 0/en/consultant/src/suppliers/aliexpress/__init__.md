@@ -84,7 +84,7 @@ from src.logger import logger
 *   Added `from src.logger import logger`.
 *   Added missing imports (`os`, `json`).
 *   Removed redundant shebang lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`).  (These are usually handled by the operating system.)
-*   Added example usage docstring.  (Illustrative usage example)
+*   Added example usage docstring.  (IlluStartive usage example)
 *   Improved general code structure and readability.
 *   Replaced vague comments with specific terms for better clarity.
 

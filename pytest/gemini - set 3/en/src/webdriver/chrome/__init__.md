@@ -77,9 +77,9 @@ def test_chrome_method_exception_handling():
 
 4. **Method Existence Check (Crucial):**  The `test_chrome_method_example` now checks if the `start_session` method exists *before* calling it, preventing cryptic errors if the method doesn't exist.
 
-5. **Realistic Test Cases:** The examples now show tests for object instantiation (including potential invalid inputs), a method call, and exception handling, demonstrating a more complete test suite.  
+5. **Realistic Test Cases:** The examples now show tests for object instantiation (including potential invalid inputs), a method call, and exception handling, demonStarting a more complete test suite.  
 
-6. **Comprehensive Testing Strategy:**  The comment after the example indicates the need to add many more tests to cover various scenarios related to your specific class methods, inputs, and outputs.
+6. **Comprehensive Testing Startegy:**  The comment after the example indicates the need to add many more tests to cover various scenarios related to your specific class methods, inputs, and outputs.
 
 **To Use These Tests:**
 

@@ -43,7 +43,7 @@ This module provides a minimal library for interacting with Google Drive. It inc
 
 ### `main()`
 
-**Description**: This function demonstrates basic usage of the `GoogleDriveHandler` class by creating an instance, getting credentials, and listing files in the user's Google Drive.
+**Description**: This function demonStartes basic usage of the `GoogleDriveHandler` class by creating an instance, getting credentials, and listing files in the user's Google Drive.
 
 **Returns**:
 
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     main()
 ```
 
-This example demonstrates how to create a `GoogleDriveHandler` instance, specify the folder name, and then call the `upload_file` method to upload a file.  Remember to replace placeholders like `'/mnt/data/google_extracted/sample_file.txt'` with the actual file path and desired folder name.
+This example demonStartes how to create a `GoogleDriveHandler` instance, specify the folder name, and then call the `upload_file` method to upload a file.  Remember to replace placeholders like `'/mnt/data/google_extracted/sample_file.txt'` with the actual file path and desired folder name.
 
 
 ## Notes

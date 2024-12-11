@@ -90,7 +90,7 @@ def test_process_affiliate_products_invalid_url():
 2. **Comprehensive Test Cases:**
    - `test_process_affiliate_products_valid_urls`: Tests with various valid input types (both IDs and URLs).
    - `test_process_affiliate_products_empty_urls`:  Tests the case where the input list is empty.  Crucial for robustness.
-   - `test_process_affiliate_products_invalid_url`: Handles an invalid URL to ensure the code doesn't crash. This demonstrates more robust error handling/data validation that you likely need for a real application.
+   - `test_process_affiliate_products_invalid_url`: Handles an invalid URL to ensure the code doesn't crash. This demonStartes more robust error handling/data validation that you likely need for a real application.
 3. **Clear Assertions:** The tests now assert on expected types and lengths of the `products` list.
 
 

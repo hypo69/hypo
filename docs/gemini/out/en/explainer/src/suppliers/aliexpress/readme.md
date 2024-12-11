@@ -138,7 +138,7 @@ The diagram shows `Aliexpress` class and internally `Supplier`, `AliRequests`, `
 - `AliRequests`: Likely responsible for making HTTP requests to AliExpress API. This class will likely depend on `requests` package.
 - `AliApi`:  Handles interactions with the AliExpress API.  It might depend on `requests`, or other external APIs.
 
-The diagram doesn't illustrate the actual interactions and dependencies inside each class, which will depend on how the classes are implemented. The dependencies are implied but not detailed in this particular docstring.
+The diagram doesn't illuStarte the actual interactions and dependencies inside each class, which will depend on how the classes are implemented. The dependencies are implied but not detailed in this particular docstring.
 
 # <explanation>
 

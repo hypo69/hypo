@@ -13,7 +13,7 @@ def test_mode_type():
     from hypotez.src.fast_api import MODE
     assert isinstance(MODE, str)
 
-# Example demonstrating edge case (not directly in the code but good practice):
+# Example demonStarting edge case (not directly in the code but good practice):
 def test_mode_invalid_value():
     """Checks if different values cause issues."""
     from hypotez.src.fast_api import MODE

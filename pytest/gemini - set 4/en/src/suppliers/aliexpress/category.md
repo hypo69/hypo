@@ -111,7 +111,7 @@ def test_update_categories_in_scenario_file_error(mock_response, scenario_json,s
 2.  **Parameterization:** The `test_get_prod_urls_from_pagination` is parameterized to test different locator scenarios in a concise way.
 3.  **Clearer Assertions:** Assertions are now more specific, checking the expected types and lengths of the returned lists.
 4.  **Edge Case Testing:** Tests for empty categories and cases where no pagination is available.
-5.  **Error Handling:** The `test_update_categories_in_scenario_file_error` demonstrates handling a failed `requests` call.  This is *very* important in real-world testing.
+5.  **Error Handling:** The `test_update_categories_in_scenario_file_error` demonStartes handling a failed `requests` call.  This is *very* important in real-world testing.
 6.  **Fixture Structure:** Fixtures are set up to provide data for tests.
 7.  **Comprehensive `update_categories_in_scenario_file` testing:**  I added a test case for successful execution and a crucial one for error handling within the `update_categories_in_scenario_file` function.  Critically, I mock the crucial `json_loads` and `json_dump` calls to avoid real file I/O during testing and avoid unnecessary interaction with external dependencies (like `gs` modules).
 

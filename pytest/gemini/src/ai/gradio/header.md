@@ -108,7 +108,7 @@ def test_config_loading_file_not_found(monkeypatch):
 
 2. **Comprehensive `set_project_root` tests:**  The tests cover valid inputs, cases where marker files are not found (important edge case),  no marker files at all, and  a scenario where a marker file exists in the current directory. This is critical to ensure the function handles various scenarios correctly.
 3. **`monkeypatch` for `sys.path`:**  The `monkeypatch` solution from the previous response is employed correctly to allow testing the sys.path modification part without affecting the actual system.
-4. **`pytest.raises` for exception handling:**  The `test_config_loading_file_not_found` example demonstrates how to use `pytest.raises` to verify that the code handles `FileNotFoundError` and `json.JSONDecodeError` correctly.
+4. **`pytest.raises` for exception handling:**  The `test_config_loading_file_not_found` example demonStartes how to use `pytest.raises` to verify that the code handles `FileNotFoundError` and `json.JSONDecodeError` correctly.
 5. **Clearer Test Names:**  The test function names now more clearly indicate the purpose, making the tests easier to understand.
 6. **Fixture for `mock_config`:** This makes it easy to reuse the mock config in multiple tests.
 7. **Complete test suite:**  There are more tests for the `set_project_root` function.  More tests are needed for the remaining code sections.

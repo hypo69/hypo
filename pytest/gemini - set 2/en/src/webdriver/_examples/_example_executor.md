@@ -113,11 +113,11 @@ def test_evaluate_locator(locator_instance):
 
 * **`locator_instance` Fixture:** This fixture takes the `driver_instance` as a parameter using dependency injection, enabling reuse of the driver.
 
-* **`test_execute_locator_invalid_input_empty_locator`:** Demonstrates testing with an invalid (empty) locator, catching the expected exception.
+* **`test_execute_locator_invalid_input_empty_locator`:** DemonStartes testing with an invalid (empty) locator, catching the expected exception.
 
 * **`test_execute_locator_continue_on_error`:** This is *critical* for real-world tests. It shows how to handle locators that might fail, preventing the entire test suite from crashing due to a single element not being found.  The example now assumes the correct exception is `ExecuteLocatorException`.
 
-* **`test_send_message_valid_input`:** Added a test case for the `send_message` method, demonstrating proper usage and expected outcomes.
+* **`test_send_message_valid_input`:** Added a test case for the `send_message` method, demonStarting proper usage and expected outcomes.
 
 * **`test_evaluate_locator`:** Added a test for the `evaluate_locator` function.
 

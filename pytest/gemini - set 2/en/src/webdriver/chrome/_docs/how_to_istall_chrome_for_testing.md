@@ -55,7 +55,7 @@ def test_install_chrome_driver_missing_parameter():
 
 4. **Specific Error Message Check:** The `test_install_chrome_driver_invalid_path` now asserts that the correct error message is raised.  This is important for debugging and to know the error is precisely as expected.
 
-5. **Missing Parameter Test:** A test `test_install_chrome_driver_missing_parameter` has been added to demonstrate how to test for correct exception handling of missing input parameters.
+5. **Missing Parameter Test:** A test `test_install_chrome_driver_missing_parameter` has been added to demonStarte how to test for correct exception handling of missing input parameters.
 
 6. **Meaningful Test Names:** The test names clearly describe the purpose of each test.
 

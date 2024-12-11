@@ -57,7 +57,7 @@ def test_graber_fetch_data_invalid_input(graber_instance):
 # Provide appropriate test data, expected results, and error handling.
 
 
-# Example demonstrating a test that checks for correct exception raised
+# Example demonStarting a test that checks for correct exception raised
 # (Adapt to your actual exception and error condition)
 # def test_function_raises_exception():
 #     with pytest.raises(ValueError) as excinfo:

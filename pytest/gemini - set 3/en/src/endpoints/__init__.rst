@@ -71,4 +71,4 @@ def example_presta_shop_instance():
 2. **Example data and possible return values:**  What kind of data do the methods expect and return?  This helps in creating meaningful test cases.
 3. **Edge cases:**  What are the unusual inputs that the functions should handle correctly (e.g., empty lists, specific numerical values, special characters)?
 
-With the actual code, you can generate precise and valuable test cases, demonstrating appropriate usage of `pytest.raises` for exception handling and other pytest features like fixtures for dependency injection.
+With the actual code, you can generate precise and valuable test cases, demonStarting appropriate usage of `pytest.raises` for exception handling and other pytest features like fixtures for dependency injection.

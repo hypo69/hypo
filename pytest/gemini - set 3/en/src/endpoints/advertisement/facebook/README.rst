@@ -3,7 +3,7 @@ import pytest
 import datetime
 
 # Replace with the actual code from hypotez/src/endpoints/advertisement/facebook/
-# This example demonstrates testing a function that creates a Facebook ad campaign.
+# This example demonStartes testing a function that creates a Facebook ad campaign.
 
 def create_facebook_campaign(name, budget, start_date, end_date):
     """Creates a Facebook ad campaign.\n

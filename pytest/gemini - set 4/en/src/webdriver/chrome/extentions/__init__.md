@@ -25,7 +25,7 @@ def test_details_is_dict():
     assert isinstance(__details__, dict)
 
 # Tests for __details__ (assuming expected contents)
-# These tests are crucial as they demonstrate handling of specific details
+# These tests are crucial as they demonStarte handling of specific details
 def test_details_has_expected_keys():
     """Checks if __details__ contains expected keys."""
     expected_keys = ['name', 'description', 'author']
@@ -69,7 +69,7 @@ def test_details_missing_key_raises_exception():
 
 2. **Specific Assertions:**  Tests now check for the expected types (`Version`, `str`, `dict`) and not just for non-null values.  Crucially, it checks for the presence of `'name'`, `'description'`, and `'author'`  keys within the `__details__` dictionary.
 
-3. **Edge Case Testing (Missing Key):** Includes a test (`test_details_missing_key_raises_exception`) to demonstrate handling of a missing key, which is a common edge case.
+3. **Edge Case Testing (Missing Key):** Includes a test (`test_details_missing_key_raises_exception`) to demonStarte handling of a missing key, which is a common edge case.
 
 4. **Handling Potential `KeyError`:** Using `pytest.raises` is correct for testing exceptions.
 

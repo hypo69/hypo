@@ -138,7 +138,7 @@ graph LR
 
 **Relationship Chain:**
 
-The `src.scenario` module interacts with JSON files, external websites, and a database (likely PrestaShop). The JSON files define the actions to be taken. The `src.scenario` module fetches data, processes it, and stores it in the database. This demonstrates a pipeline of fetching, processing, and storing data.
+The `src.scenario` module interacts with JSON files, external websites, and a database (likely PrestaShop). The JSON files define the actions to be taken. The `src.scenario` module fetches data, processes it, and stores it in the database. This demonStartes a pipeline of fetching, processing, and storing data.
 
 
 ```

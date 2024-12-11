@@ -96,7 +96,7 @@ def example_function(param: str, param1: Optional[str | dict | str] = None) -> d
         return None
 
 
-# Example usage (Illustrative only)
+# Example usage (IlluStartive only)
 if __name__ == "__main__":
     # ... (Load data, call example_function, etc.) ...
     data = j_loads('path/to/your/data.json')
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 *   Added a descriptive module docstring.
 *   Added a function docstring following the requested format.
 *   Replaced placeholders with functional code.
-*   Included `if __name__ == "__main__":` block to demonstrate example usage.
+*   Included `if __name__ == "__main__":` block to demonStarte example usage.
 *   Updated `logger` import to the correct pattern, assuming it's from `src.logger`.
 
 
@@ -157,7 +157,7 @@ def example_function(param: str, param1: Optional[str | dict | str] = None) -> d
         return None
 
 
-# Example usage (Illustrative only)
+# Example usage (IlluStartive only)
 if __name__ == "__main__":
     # ... (Load data, call example_function, etc.) ...
     data = j_loads('path/to/your/data.json')  # Replace with actual file path.

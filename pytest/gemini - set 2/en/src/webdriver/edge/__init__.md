@@ -77,7 +77,7 @@ def test_mode_constant():
 
 2. **Isolated Tests:** Each test function is independent.
 
-3. **Various Scenarios (Example):** The `test_edge_with_different_mode` demonstrates changing the `MODE` for a specific test case.
+3. **Various Scenarios (Example):** The `test_edge_with_different_mode` demonStartes changing the `MODE` for a specific test case.
 
 4. **Exception Testing (`pytest.raises`):** Added a placeholder `test_edge_get_mode_exception` for handling potential exceptions.  **Crucially**, replace the example exception type and message with the actual exception your code is expected to raise.
 

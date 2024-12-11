@@ -83,7 +83,7 @@ def test_run_main_basic(mock_crawler, tmp_file_path, monkeypatch):
 
 * **Mocking:** Critically, the tests now heavily use `unittest.mock.patch` to mock `PlaywrightCrawler` and `asyncio.run` which significantly enhances testability, avoiding external dependencies.
 * **Clearer Assertions:** Added assertions to verify the expected behavior of the methods (e.g., verifying that `crawler` is set correctly, the format of the `get_data()` result) after running the `setup_crawler`, `run_crawler`, etc. functions.  The `run` function is still challenging to test without executing the underlying browser.
-* **Error Handling:** Included a test (`test_run_invalid_urls`) for an empty URL list, demonstrating how to handle potential errors.  Critically, pytest.raises is used.
+* **Error Handling:** Included a test (`test_run_invalid_urls`) for an empty URL list, demonStarting how to handle potential errors.  Critically, pytest.raises is used.
 * **Fixture for temporary file:** A fixture (`tmp_file_path`) is created to generate a temporary file path to ensure that the test does not depend on the location of the file in the filesystem. This is crucial for testing the file-related operations.
 * **Detailed test explanations:** Added comments to explain the logic of each test, making the tests more readable and maintainable.
 * **Mocking logger:** Added `monkeypatch` to `patch` the logger, to prevent it from printing output to the console in tests.
@@ -104,4 +104,4 @@ def test_run_main_basic(mock_crawler, tmp_file_path, monkeypatch):
 3.  Run the tests: `pytest`
 
 
-Remember to adapt the assertions and mocking strategies to match the actual behavior of your code and the expected output from each method. If you cannot mock Playwright or a headless browser directly, your tests will not be completely reliable.
+Remember to adapt the assertions and mocking Startegies to match the actual behavior of your code and the expected output from each method. If you cannot mock Playwright or a headless browser directly, your tests will not be completely reliable.

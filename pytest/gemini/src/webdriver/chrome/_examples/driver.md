@@ -108,7 +108,7 @@ def test_window_focus(chrome_driver):
 * **Fixture for Driver:** Created a `@pytest.fixture` named `chrome_driver` to create a `Driver` instance once for all test methods.  This avoids creating a new driver for each test, which is more efficient.
 * **Clear Test Names:** Test names are more descriptive and precise (e.g., `test_get_url_valid_input`).
 * **Edge Cases:** Included tests for invalid URLs, nonexistent elements, and cases where the function might return `None`.
-* **Exception Handling (`pytest.raises`):** Added `test_find_element_not_found` to demonstrate handling `NoSuchElementException`. This is crucial for robustness.
+* **Exception Handling (`pytest.raises`):** Added `test_find_element_not_found` to demonStarte handling `NoSuchElementException`. This is crucial for robustness.
 * **Assertions:** Replaced print statements with assertions (`assert`) to explicitly check for expected results.
 * **Mocking/Stubbing (Crucial in Real-World Scenarios):**  If the underlying `Chrome` class interacts with external resources (e.g., network requests), you'd likely need to mock or stub those interactions in your tests to isolate them from external dependencies.
 

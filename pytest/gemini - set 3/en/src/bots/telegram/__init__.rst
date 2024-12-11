@@ -1,7 +1,7 @@
 ```python
 import pytest
 
-# No code provided to test, creating dummy TelegramBot class for demonstration.
+# No code provided to test, creating dummy TelegramBot class for demonStartion.
 class TelegramBot:
     def __init__(self, mode):
         self.mode = mode
@@ -79,7 +79,7 @@ def test_telegram_bot_get_updates_invalid_mode():
 
 **Explanation and Improvements:**
 
-1. **Dummy `TelegramBot` class:**  Since the provided code was empty, a dummy `TelegramBot` class was created to demonstrate testing.  This is crucial; you'll replace this with the actual code from `hypotez/src/bots/telegram/__init__.py`.
+1. **Dummy `TelegramBot` class:**  Since the provided code was empty, a dummy `TelegramBot` class was created to demonStarte testing.  This is crucial; you'll replace this with the actual code from `hypotez/src/bots/telegram/__init__.py`.
 
 2. **Comprehensive Test Cases:** The tests now cover:
    - Object creation (valid modes).

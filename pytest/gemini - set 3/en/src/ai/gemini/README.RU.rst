@@ -57,7 +57,7 @@ def test_gemini_init_type_validation(capsys):
 
 1. **Mocking:** The code now uses `MockGemini` to avoid needing actual Gemini API calls.  This is crucial for unit testing.  Real API interaction should be mocked for complete isolation.
 2. **Clearer Test Names:**  Test names like `test_gemini_init_valid_input` clearly indicate the test's purpose.
-3. **Exception Handling:** `test_gemini_init_missing_api_key` demonstrates how to test for missing required parameters and appropriately handles exceptions.
+3. **Exception Handling:** `test_gemini_init_missing_api_key` demonStartes how to test for missing required parameters and appropriately handles exceptions.
 4. **Type Validation (Crucial):** `test_gemini_init_type_validation` checks that the `api_key` is of the correct type, as it's critical for a real API call.
 5. **Comprehensive Tests:** The examples provide a base, and you would need more tests (e.g., tests for different parameter types, null or empty string values) to cover all cases.
 6. **Docstrings:** Docstrings explain the purpose of each test function.  This is vital for readability and maintainability.

@@ -98,7 +98,7 @@ def test_no_body():
 
 2. **Clearer Test Cases:** The test names (`test_valid_page_load`, `test_empty_title`, etc.) are more descriptive.
 
-3. **Error Handling:** `test_fetch_error` demonstrates how to test for errors during the `fetch` operation. It mocks a non-200 response.
+3. **Error Handling:** `test_fetch_error` demonStartes how to test for errors during the `fetch` operation. It mocks a non-200 response.
 
 4. **Edge Cases:** `test_no_body` is added to handle the case of an empty body, which was missing in the original tests.
 

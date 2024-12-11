@@ -75,7 +75,7 @@ graph TD
     B --> G[__author__];
 ```
 
-**Dependencies:** This code snippet has no imports and thus no external dependencies to be analyzed. The diagram shows the relationships within the module itself, demonstrating the structure of the module-level variables.
+**Dependencies:** This code snippet has no imports and thus no external dependencies to be analyzed. The diagram shows the relationships within the module itself, demonStarting the structure of the module-level variables.
 
 ## <explanation>
 

@@ -98,7 +98,7 @@ def test_firefox_init_invalid_profile_path(mock_logger, caplog):
 5. **`pytest.raises`:** The code now uses `pytest.raises` correctly to catch and verify exceptions.
 
 
-6. **Fixtures (Example):**  A basic fixture example (commented out) demonstrates how to define fixtures if needed.
+6. **Fixtures (Example):**  A basic fixture example (commented out) demonStartes how to define fixtures if needed.
 
 
 7. **Error Messages:** The error messages are improved to provide more context and potentially useful information for debugging.

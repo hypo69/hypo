@@ -118,7 +118,7 @@ def test_genericListener_requestRestorePopupState():
 
 2.  **js2py:** The `js2py` library is used to convert the JavaScript code to Python code. This is necessary for running and testing the JavaScript functions.
 
-3.  **`test_loadDefaultCss` example:** This is a basic test case demonstrating how to use `js2py` and mocking to test a function that uses `XMLHttpRequest`.  Add similar test cases for other functions.
+3.  **`test_loadDefaultCss` example:** This is a basic test case demonStarting how to use `js2py` and mocking to test a function that uses `XMLHttpRequest`.  Add similar test cases for other functions.
 
 4.  **Error Handling:** The example `onError` function placeholder is a good start.  Replace it with proper error handling to test if the `catch` blocks are functioning as expected.
 

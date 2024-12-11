@@ -45,7 +45,7 @@ This module defines the `Graber` class for extracting product data from aliexpre
 
 ### (Commented-out) `close_pop_up`
 
-**Description**:  This function (commented out) creates a decorator to handle closing pop-up windows before performing other actions.  It's meant for a strategy pattern that would call the appropriate pop-up closure function through `Context.locator`. It's important to note this method is not operational as it's commented out.
+**Description**:  This function (commented out) creates a decorator to handle closing pop-up windows before performing other actions.  It's meant for a Startegy pattern that would call the appropriate pop-up closure function through `Context.locator`. It's important to note this method is not operational as it's commented out.
 
 
 

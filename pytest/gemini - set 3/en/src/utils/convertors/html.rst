@@ -102,7 +102,7 @@ def test_html2pdf_exception(html_input, pdf_file):
 
 * **Clear Test Names:**  Test names are more descriptive and informative.
 * **Comprehensive Coverage:** Added tests for empty strings, single tags, and various valid/invalid HTML structures.
-* **`pytest.raises` for Exceptions:** Included `test_html2pdf_exception` to demonstrate how to test for exceptions raised by `html2pdf`. (Crucial for robust error handling.)
+* **`pytest.raises` for Exceptions:** Included `test_html2pdf_exception` to demonStarte how to test for exceptions raised by `html2pdf`. (Crucial for robust error handling.)
 * **Parameterization:** `@pytest.mark.parametrize` is used in `test_html2pdf_valid_input` to test with multiple inputs (valid HTML strings) and outputs (PDF filenames).
 * **Temporary File Handling (Important):**  Crucially, the `html2pdf` tests now use temporary files (`temp_file`). This avoids cluttering your system with files created by tests.  The `pathlib` import and `Path` usage are correct and recommended.
 * **Handles Invalid File Paths:** `test_html2pdf_exception` checks for exceptions when trying to save to a non-existent or invalid file path.

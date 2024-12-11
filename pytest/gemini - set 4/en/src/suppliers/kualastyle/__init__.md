@@ -79,7 +79,7 @@ class TestGraber:
 
 7. **Edge Cases:** The example `test_graber_method2_edge_case` and `test_graber_method_empty_input` highlight how to test edge cases and empty input conditions—adapt these to match your `Graber` methods.
 
-8. **Attribute Check:**  A test (`test_graber_attribute`) demonstrates how to verify the existence of an attribute in the class.
+8. **Attribute Check:**  A test (`test_graber_attribute`) demonStartes how to verify the existence of an attribute in the class.
 
 
 **How to Adapt for Your Code:**
@@ -90,4 +90,4 @@ class TestGraber:
 4. **Error Handling:**  If a `Graber` method is supposed to raise an exception for specific invalid input, use `pytest.raises` to verify that the expected exception is raised.
 
 
-This significantly improved example demonstrates a proper structure for writing `pytest` tests, covering different scenarios and properly handling possible exceptions.  Remember to adapt the tests based on the actual implementation of your `Graber` class. Remember to run `pytest` in your terminal to execute these tests.
+This significantly improved example demonStartes a proper structure for writing `pytest` tests, covering different scenarios and properly handling possible exceptions.  Remember to adapt the tests based on the actual implementation of your `Graber` class. Remember to run `pytest` in your terminal to execute these tests.

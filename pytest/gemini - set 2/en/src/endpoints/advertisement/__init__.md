@@ -30,7 +30,7 @@ def test_facebook_no_attribute():
 **Explanation and Improvements:**
 
 * **Clear Test Names:** Test names are descriptive, clearly indicating the purpose of each test (e.g., `test_facebook_initialization`, `test_facebook_mode_property`).
-* **`pytest.raises` for Exceptions:**  A `test_facebook_no_attribute` test is added to demonstrate exception handling using `pytest.raises`. This is crucial for robustness.
+* **`pytest.raises` for Exceptions:**  A `test_facebook_no_attribute` test is added to demonStarte exception handling using `pytest.raises`. This is crucial for robustness.
 * **Parametrization:** The `test_facebook_mode_property` now uses `pytest.mark.parametrize` to test with different mode values ('dev', 'prod'). This is a good practice for testing different configurations.
 * **Valid Initialization Test:** A `test_facebook_initialization` is added to verify that the class initializes correctly.
 * **Missing Functionality Handling:**  The provided code just imports a class, so the tests are limited to verifying the existence of the class and its initialization and getting the value of the property MODE.  More tests would be required if the `Facebook` class had methods or attributes with logic to test.
@@ -62,4 +62,4 @@ def test_facebook_get_ads_invalid_input():
 Remember to replace placeholders like `some_valid_input` and `some_invalid_input` with actual data appropriate for the `Facebook` class's methods.  Provide appropriate fixtures to set up the required input data in a well organized way if needed.
 
 
-These additional tests would demonstrate a complete testing suite covering different scenarios for your code.  The examples above are based on the assumption of possible methods and attributes;  you must adapt them to the specific logic in your code.  Be sure to thoroughly test your classes and methods with varied input types and conditions. Remember to add docstrings to your tests as well.
+These additional tests would demonStarte a complete testing suite covering different scenarios for your code.  The examples above are based on the assumption of possible methods and attributes;  you must adapt them to the specific logic in your code.  Be sure to thoroughly test your classes and methods with varied input types and conditions. Remember to add docstrings to your tests as well.

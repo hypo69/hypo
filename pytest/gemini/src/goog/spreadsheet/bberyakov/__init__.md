@@ -89,13 +89,13 @@ def test_gsrenderer_rendering(sample_worksheet):
 
 2. **Specific Test Cases:** Test cases are now focused on the specific classes and methods in your `bberyakov` module.  The provided example test cases are now *much* more realistic and complete.
 
-3. **Error Handling:** `test_gspreadsheet_invalid_id` and `test_gworksheet_invalid_worksheet_name` demonstrate testing for `ValueError` exceptions, which is essential for robust testing.  `test_gworksheet_invalid_spreadsheet` also tests an invalid spreadsheet.
+3. **Error Handling:** `test_gspreadsheet_invalid_id` and `test_gworksheet_invalid_worksheet_name` demonStarte testing for `ValueError` exceptions, which is essential for robust testing.  `test_gworksheet_invalid_spreadsheet` also tests an invalid spreadsheet.
 
 4. **Comprehensive `GSRenderr` Test:** I've added a test case for `GSRenderr`.  Crucially, it now includes error handling.  This is extremely important; if the rendering fails with a different error, your test will actually fail for the right reason.
 
 5. **Example Placeholder Methods:** I've commented out placeholder tests for `get_worksheet`.  You should replace these with your actual methods if they exist.
 
-6. **Missing Information:**  The original code snippets were missing very important information about how GSpreadsheet, GWorksheet, and GSRenderr interacted and what they *did*.  This made it impossible to write real tests without more information.  The placeholder tests were crucial for illustrating a process but are obviously incomplete.
+6. **Missing Information:**  The original code snippets were missing very important information about how GSpreadsheet, GWorksheet, and GSRenderr interacted and what they *did*.  This made it impossible to write real tests without more information.  The placeholder tests were crucial for illuStarting a process but are obviously incomplete.
 
 **How to Adapt:**
 

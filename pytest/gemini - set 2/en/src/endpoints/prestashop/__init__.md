@@ -65,7 +65,7 @@ def test_presta_customer_import():
 1. **No Testing Functionality:** The provided Python code only imports classes.  Without any functions or methods defined in those classes, there's nothing to test in terms of their behavior.  This is why the tests are currently very basic (import checks).
 
 
-2. **Example Structure:** The example structure in the prompt is crucial for structuring your test cases.  This solution demonstrates a basic structure for testing if the classes exist and can be imported, which is the minimum you should do, but more substantial tests are needed if the classes define behaviors that can be tested.
+2. **Example Structure:** The example structure in the prompt is crucial for structuring your test cases.  This solution demonStartes a basic structure for testing if the classes exist and can be imported, which is the minimum you should do, but more substantial tests are needed if the classes define behaviors that can be tested.
 
 
 3. **Error Handling (pytest.raises):** The prompt mentions `pytest.raises`.  Error handling tests are important. However, as there's no code to raise exceptions, this is not used in this example.
@@ -88,7 +88,7 @@ def test_presta_customer_import():
 3. **Create Test Cases:** Write test functions that cover the different scenarios for each function/method (valid input, invalid input, edge cases). Include clear descriptions within the docstrings.
 
 
-4. **Example `api.py` (Illustrative):**
+4. **Example `api.py` (IlluStartive):**
    ```python
    # hypotez/src/endpoints/prestashop/api.py
    def get_products():

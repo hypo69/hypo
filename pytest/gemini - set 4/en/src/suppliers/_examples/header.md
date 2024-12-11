@@ -107,7 +107,7 @@ def test_sys_path_append_duplicate():
 
 * **`sys.path.clear()`:** Added `sys.path.clear()` before importing the `header` module to ensure each test starts with a clean `sys.path`, vital for isolation.  This is used in most test cases to ensure clean environment.
 
-* **Comprehensive Test Coverage:** The tests now cover a wider range of scenarios including the case when the directory doesn't contain 'hypotez', demonstrating proper error handling.
+* **Comprehensive Test Coverage:** The tests now cover a wider range of scenarios including the case when the directory doesn't contain 'hypotez', demonStarting proper error handling.
 
 * **Duplicate Appending:** `test_sys_path_append_duplicate` checks if appending the same path multiple times doesn't break the system.
 

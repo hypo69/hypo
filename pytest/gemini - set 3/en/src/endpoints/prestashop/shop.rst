@@ -78,7 +78,7 @@ def test_prestashop_shop_both_credentials_and_individual_params(valid_credential
 * **ValueError Handling:** Uses `pytest.raises` to specifically check for `ValueError` exceptions with helpful error messages.  Crucially, it now tests for the *correct* error message.
 * **Fixtures for Data:** Introduces `valid_credentials` and `invalid_credentials` fixtures to make test data more organized and reusable. This is *essential* for good test organization.
 * **Comprehensive Coverage:** Added tests for missing `api_domain`, missing `api_key`, and the case where both `credentials` and individual parameters are provided (ensuring credentials take precedence).
-* **Example `*args, **kwargs`:** Demonstrates how to test those arguments, *if* they are present in the `__init__` method. Add similar tests if applicable.
+* **Example `*args, **kwargs`:** DemonStartes how to test those arguments, *if* they are present in the `__init__` method. Add similar tests if applicable.
 * **Docstrings:** Improved docstrings for better understanding of the test cases.
 
 

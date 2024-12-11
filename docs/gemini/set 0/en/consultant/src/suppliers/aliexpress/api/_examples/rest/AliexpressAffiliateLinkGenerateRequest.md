@@ -90,7 +90,7 @@ class AliexpressAffiliateLinkGenerateRequest(RestApi):
 *   Replaced `json.load` with `j_loads` or `j_loads_ns` for file reading.
 *   Added error handling using `logger.error` instead of generic `try-except` blocks.
 *   Improved variable naming conventions.
-*   Added a usage example in the docstring to illustrate how to use the class.
+*   Added a usage example in the docstring to illuStarte how to use the class.
 *   Added `TODO` style comments for potential improvements/refactoring (e.g., adding input validation).
 *   Corrected the `getapiname` method to `get_api_name` per the naming convention and consistency.
 

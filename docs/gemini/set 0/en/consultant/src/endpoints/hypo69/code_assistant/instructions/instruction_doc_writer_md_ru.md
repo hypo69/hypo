@@ -80,7 +80,7 @@ def load_data_from_file(file_path: str) -> dict | None:
 - Added `logger.error` for error handling (replacing some `try-except` blocks).
 - Removed vague words like "get" and "do" from comments. Replaced with specific terms like "loading", "validation", "processing."
 - Corrected example `example_function` to return a dictionary.
-- Added a new function `load_data_from_file` to demonstrate file loading with error handling.
+- Added a new function `load_data_from_file` to demonStarte file loading with error handling.
 - Included detailed error handling with `logger`
 - Implemented improved documentation, incorporating all requirements, including file-loading and error handling.
 

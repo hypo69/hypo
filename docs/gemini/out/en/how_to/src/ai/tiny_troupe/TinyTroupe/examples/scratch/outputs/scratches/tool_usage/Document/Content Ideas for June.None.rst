@@ -36,7 +36,7 @@ Usage example
 
     **Headline:**  Revolutionizing Content Marketing in 2024: AI, Personalization, and Beyond
 
-    **Body:**  Dive into the latest trends impacting content creation and strategies. We'll cover how to leverage AI tools, personalize content for maximum impact, and the rising importance of video.
+    **Body:**  Dive into the latest trends impacting content creation and Startegies. We'll cover how to leverage AI tools, personalize content for maximum impact, and the rising importance of video.
 
     # Social Media Campaign: Engaging Audiences Through Interactive Content
 

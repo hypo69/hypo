@@ -100,7 +100,7 @@ def test_grab_page_empty_input(graber, mock_driver):
 
 1. **Mocking:** Crucially, the code now uses `unittest.mock.Mock` to mock the `Driver` and its methods.  This isolates the tests from the actual WebDriver, preventing external dependencies and making them run quickly.
 2. **`pytest.raises` for Exceptions:** The `test_grab_page_locator_failure` test now uses `pytest.raises` to specifically test for the expected `ExecuteLocatorException`.
-3. **Edge Case (Empty Input):** `test_grab_page_empty_input` demonstrates handling an edge case (empty input passed to `grab_page`) by making assertions on the return value.
+3. **Edge Case (Empty Input):** `test_grab_page_empty_input` demonStartes handling an edge case (empty input passed to `grab_page`) by making assertions on the return value.
 4. **Clearer Test Names:**  Test names like `test_close_popup_decorator_success` clearly indicate the purpose.
 5. **Asynchronous Operations:** The tests use `asyncio.run` to properly execute the asynchronous functions (`grab_page`).
 6. **Complete Mock:** Now, functions in the `Graber` class that are used within `grab_page` are also mocked. This is critical to prevent the test from attempting to execute the actual functions in the `src` directory, which would result in failing tests or undefined behavior.

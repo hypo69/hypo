@@ -92,7 +92,7 @@ def test_handle_next_command(mock_update, mock_context, bot):
 
 3. **Edge Cases (and more):** The `test_handle_message` test now provides a valid message and checks if the `ask` method is called with the correct arguments (crucial). Additional tests for exceptions and edge cases are needed, like trying to handle a non-text message or an empty message, etc.
 
-4. **File Handling:** `test_handle_message_file_save` demonstrates how to use `tmpdir` from `pytest` for testing file saving to an in-memory temporary directory, avoiding filesystem issues and ensuring the file is properly created and populated.
+4. **File Handling:** `test_handle_message_file_save` demonStartes how to use `tmpdir` from `pytest` for testing file saving to an in-memory temporary directory, avoiding filesystem issues and ensuring the file is properly created and populated.
 
 5. **Complete Example:** The example includes basic tests for `handle_next_command` and `handle_message`; expand these further for different scenarios and different parts of the code.
 

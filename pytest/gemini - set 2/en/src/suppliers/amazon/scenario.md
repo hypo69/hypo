@@ -1,7 +1,7 @@
 ```python
 import pytest
 from hypothesis import given
-from hypothesis import strategies as st
+from hypothesis import Startegies as st
 import logging
 
 # Mock the logger for testing purposes
@@ -95,7 +95,7 @@ def test_get_list_products_in_category(mock_logger, mock_driver, elements, expec
 * **Clearer Assertions:**  Assertions are made more explicit about what's being tested (e.g., checking the length of the output list or the existence of a specific error message).
 * **Parameterization:** Parameterization using `pytest.mark.parametrize` is used for better coverage and maintainability.
 * **Comprehensive Test Cases:**  The tests now cover various edge cases: empty lists, single product URLs, and `None` values.
-* **Hypothesis Library (optional):** While not absolutely necessary, the `@given` decorator with `hypothesis` strategies could be used in a real scenario to generate a larger number of valid/invalid input cases for better coverage, but is not necessary for a complete functional test of this basic logic.
+* **Hypothesis Library (optional):** While not absolutely necessary, the `@given` decorator with `hypothesis` Startegies could be used in a real scenario to generate a larger number of valid/invalid input cases for better coverage, but is not necessary for a complete functional test of this basic logic.
 
 
 **How to Run the Tests:**
@@ -110,7 +110,7 @@ def test_get_list_products_in_category(mock_logger, mock_driver, elements, expec
 **Important Considerations:**
 
 * **Real WebDriver:**  For production-quality tests, use a real `webdriver` object, along with an appropriate `Supplier` class in your test environment. The provided mock is critical for writing unit tests, but integration tests with the real implementation are required for more comprehensive testing.
-* **Data-driven testing (using Hypothesis):** To create a fully robust suite, use Hypothesis to create tests around a larger number of input values. The strategy part of the example above shows a small step towards this approach.
+* **Data-driven testing (using Hypothesis):** To create a fully robust suite, use Hypothesis to create tests around a larger number of input values. The Startegy part of the example above shows a small step towards this approach.
 
 
 

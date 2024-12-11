@@ -71,7 +71,7 @@ def test_text2png_invalid_file_type():
 
 2. **Realistic Testing (Simulating Files):**  The `test_text2png_valid_input` now uses `io.BytesIO()` to simulate writing to a file-like object. This is vital for unit tests because you don't want to create or modify files on the file system for every test.
 
-3. **Exception Handling:**  The tests now use `pytest.raises` for comprehensive exception handling.  This directly checks for the correct exception type and message.  Crucially, it tests for errors when the output file isn't writeable, demonstrating proper error handling.
+3. **Exception Handling:**  The tests now use `pytest.raises` for comprehensive exception handling.  This directly checks for the correct exception type and message.  Crucially, it tests for errors when the output file isn't writeable, demonStarting proper error handling.
 
 4. **More Comprehensive Input Validation Tests:** The tests check for a variety of error conditions.
 

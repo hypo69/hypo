@@ -16,7 +16,7 @@ Execution steps
     *   **Modules:**  Start with a module description explaining its overall function and role. Include examples of its use, formatted as fenced code blocks (language: python). Specify the platforms on which the module is intended to function and a concise overview of its purpose.
     *   **Classes:** Detail the class's purpose. Describe its attributes and methods in separate sections.  For each method, clearly define its parameters, return values, and provide example usage (in fenced code blocks).
     *   **Functions/Methods:**  Describe the parameters and return values of each function.  Explain what the function/method does and give example usage (using fenced code blocks).
-    *   **Exceptions:** Document potential exceptions that might occur within the code and their circumstances. This includes parameter descriptions for exceptions and illustrative code examples.
+    *   **Exceptions:** Document potential exceptions that might occur within the code and their circumstances. This includes parameter descriptions for exceptions and illuStartive code examples.
 
 
 3. **Formatting:** Adhere to the provided RST format (as seen in the prompt examples).  Use appropriate headings (e.g., `# Модуль: ...`, `## Атрибуты`, `### Метод: ...`) for clarity.

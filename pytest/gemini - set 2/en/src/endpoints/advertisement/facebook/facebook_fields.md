@@ -99,7 +99,7 @@ def test_facebook_fields_file_path(mock_gs_path, mock_j_loads, mock_logger):
 
 * **Explicit Mocking:** The code now explicitly mocks `j_loads` with different return values.
 
-* **Complete Example:** The example usage now includes the `mock_gs_path` and `mock_j_loads` fixtures, demonstrating how to incorporate the mocks.
+* **Complete Example:** The example usage now includes the `mock_gs_path` and `mock_j_loads` fixtures, demonStarting how to incorporate the mocks.
 
 **How to Run the Tests:**
 

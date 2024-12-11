@@ -2,7 +2,7 @@
 import pytest
 
 # No Python code provided to test.  
-# This example demonstrates testing using a dummy function.
+# This example demonStartes testing using a dummy function.
 # Replace this with your actual code and tests.
 
 
@@ -55,7 +55,7 @@ def test_dummy_function_non_string_input():
 
 **Explanation and Improvements:**
 
-1. **Dummy Function:** The provided code example was missing actual Python code to test. I created a `dummy_function` that checks if the input string contains "AI" (case-insensitive) to illustrate testing techniques.  **Replace this with your actual function(s).**
+1. **Dummy Function:** The provided code example was missing actual Python code to test. I created a `dummy_function` that checks if the input string contains "AI" (case-insensitive) to illuStarte testing techniques.  **Replace this with your actual function(s).**
 
 2. **Comprehensive Test Cases:** The test suite now includes tests for:
    - Valid input containing "AI".
@@ -68,7 +68,7 @@ def test_dummy_function_non_string_input():
 
 3. **Clear Test Names:** Test function names clearly describe the purpose of each test, making the test suite more readable.
 
-4. **`pytest.raises` for Exceptions:** The test `test_dummy_function_non_string_input` demonstrates how to use `pytest.raises` to test for specific exceptions. This is crucial for robust exception handling.
+4. **`pytest.raises` for Exceptions:** The test `test_dummy_function_non_string_input` demonStartes how to use `pytest.raises` to test for specific exceptions. This is crucial for robust exception handling.
 
 5. **Comments:**  The comments explain the logic and purpose of each test case.
 

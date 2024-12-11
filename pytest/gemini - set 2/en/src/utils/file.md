@@ -85,7 +85,7 @@ def test_read_text_file_nonexistent_file(temp_dir):
 
 2.  **Clear Test Names:** Test function names clearly indicate the input and expected outcome (e.g., `test_save_text_file_valid_string`).
 
-3.  **Comprehensive Test Cases:**  The provided example now demonstrates valid string, list, and dictionary input for `save_text_file`.  It also includes a test for reading a file and a test for a non-existent file, which covers a critical edge case.
+3.  **Comprehensive Test Cases:**  The provided example now demonStartes valid string, list, and dictionary input for `save_text_file`.  It also includes a test for reading a file and a test for a non-existent file, which covers a critical edge case.
 
 4. **File Creation:** The tests now create the necessary temporary files and directories to allow proper testing.
 
@@ -109,7 +109,7 @@ Follow the same pattern for `get_filenames`, `recursively_yield_file_path`, etc.
 *   Mock the `logger` if necessary for isolating tests involving logging.
 
 
-**Example for `get_filenames` test (Illustrative):**
+**Example for `get_filenames` test (IlluStartive):**
 
 ```python
 def test_get_filenames_valid_directory(temp_dir):

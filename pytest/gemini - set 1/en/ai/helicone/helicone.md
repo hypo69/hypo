@@ -27,13 +27,13 @@ def test_mode_is_development():
 #     assert str(excinfo.value) == "Invalid input provided"
 
 
-# Example test demonstrating edge cases, if applicable
+# Example test demonStarting edge cases, if applicable
 # def test_my_function_empty_input():
 #   result = header.my_function("")
 #   assert result is None
 
 
-# Example test demonstrating a boundary case, if applicable
+# Example test demonStarting a boundary case, if applicable
 # def test_my_function_max_input():
 #   max_input = 100  # Define a maximum input value, adjust as needed
 #   result = header.my_function(max_input)
@@ -80,10 +80,10 @@ def test_mode_is_development():
 2. **Import and Function Calls:** Ensure you correctly import the functions from `helicone.py` (e.g., `from helicone import my_function`).
 
 
-3. **Assertion Strategy:** Decide what to assert in your tests.
+3. **Assertion Startegy:** Decide what to assert in your tests.
    -  `assert header.MODE == 'development'` is a straightforward check.
    - For functions that return values, assert that the returned value matches the expected output (using appropriate comparison operators).
-   - For functions that might raise exceptions, use `pytest.raises` as demonstrated.
+   - For functions that might raise exceptions, use `pytest.raises` as demonStarted.
 
 4. **Edge, Boundary, and Invalid Input Cases:** Create tests for different input types, values, and scenarios.  Determine what are the *valid* inputs and possible errors for your functions. Add tests for these.
 

@@ -27,7 +27,7 @@ from src.logger import logger  # Import logger for error handling
 import json
 
 
-#Example function to demonstrate proper use of j_loads.
+#Example function to demonStarte proper use of j_loads.
 def example_iop_function(file_path):
     """
     Processes an IOP file.
@@ -86,7 +86,7 @@ from src.logger import logger  # Import logger for error handling
 import json
 
 
-#Example function to demonstrate proper use of j_loads.
+#Example function to demonStarte proper use of j_loads.
 def example_iop_function(file_path):
     """
     Processes an IOP file.

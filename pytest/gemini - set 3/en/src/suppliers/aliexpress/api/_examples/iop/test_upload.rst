@@ -105,7 +105,7 @@ def teardown_function():
 
 6. **Clearer Assertions:** The assertions are more specific (e.g., checking for the existence of 'success' in the response body).
 
-7. **Comprehensive Tests:** Added a test for a file not found exception (`test_upload_file_not_found`) to demonstrate handling a realistic edge case.
+7. **Comprehensive Tests:** Added a test for a file not found exception (`test_upload_file_not_found`) to demonStarte handling a realistic edge case.
 
 **How to run the tests:**
 

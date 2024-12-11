@@ -83,7 +83,7 @@ def create_lila_the_linguist():
 
 2. **`isinstance` checks:** Added `isinstance` checks to verify the correct object type is returned.  Crucially, this now handles the case where the `TinyPerson` object itself is returned.
 
-3. **Attribute Access:** The tests now demonstrate how to access attributes (e.g., `oscar.get("age")`) and nested attributes (e.g.,`oscar.get("personality_traits", 0)`),  and also use the `len()` function to confirm the correct length of lists of attributes.
+3. **Attribute Access:** The tests now demonStarte how to access attributes (e.g., `oscar.get("age")`) and nested attributes (e.g.,`oscar.get("personality_traits", 0)`),  and also use the `len()` function to confirm the correct length of lists of attributes.
 
 4. **Edge Cases (Implicit):**  While no explicit *invalid* input tests are included here as the function implementation is not visible,  the tests do verify basic valid data is created.
 

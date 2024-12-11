@@ -81,9 +81,9 @@ def test_detect_errors_valid_input():
 
 1. **Placeholder Tests:** The code now contains placeholder test functions like `test_code_assistant_object_creation`, `test_get_code_suggestions_valid_input`, etc.  Crucially, these are *example* tests.  You *absolutely must* replace the example code (e.g., `"print('Hello')"`) with the actual input/output of your `CodeAssistant` methods.
 
-2. **Specific Assertions:**  The placeholder tests demonstrate how to include assertions (`assert isinstance(suggestions, list)`, `assert suggestions == []`).  These assertions are vital for verifying the *correctness* of the output.
+2. **Specific Assertions:**  The placeholder tests demonStarte how to include assertions (`assert isinstance(suggestions, list)`, `assert suggestions == []`).  These assertions are vital for verifying the *correctness* of the output.
 
-3. **Error Handling (`pytest.raises`):** The `test_get_code_suggestions_invalid_input` example demonstrates how to use `pytest.raises` to test for specific exceptions.  This is *critical* for ensuring robust error handling in your code.
+3. **Error Handling (`pytest.raises`):** The `test_get_code_suggestions_invalid_input` example demonStartes how to use `pytest.raises` to test for specific exceptions.  This is *critical* for ensuring robust error handling in your code.
 
 4. **Clear Comments:** The comments now explain *why* each test is important, what input it uses, and what the expected output should be. This enhances readability and understanding of the test suite.
 

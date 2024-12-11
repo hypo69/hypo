@@ -98,7 +98,7 @@ def test_driver_scroll_invalid(mocker):
 
 4. **Valid and Invalid Inputs:** The tests now have examples of testing valid inputs and cases where the `get_url` method might fail (using mocking).
 
-5. **Edge Cases (Example):**  The `test_driver_scroll_invalid` test demonstrates how to test a scenario where the scroll method might not succeed.
+5. **Edge Cases (Example):**  The `test_driver_scroll_invalid` test demonStartes how to test a scenario where the scroll method might not succeed.
 
 6. **Fixture for URL:** The `example_url` fixture provides a reusable URL for testing.
 
@@ -126,4 +126,4 @@ def test_driver_scroll_invalid(mocker):
 *   **Dependency Injection:**  Consider making the browser (Chrome, Firefox, Edge) instances parameters to the `Driver` class to allow more flexibility in testing.
 
 
-This revised response is more robust and demonstrates a more complete approach to testing the example code using pytest and mocking. Remember to adapt the path `hypotez.src.webdriver._examples._example_driver` if your module structure is different. Remember to replace placeholders like `src.webdriver._examples._example_driver` with the actual path to the module if it's in a different location.
+This revised response is more robust and demonStartes a more complete approach to testing the example code using pytest and mocking. Remember to adapt the path `hypotez.src.webdriver._examples._example_driver` if your module structure is different. Remember to replace placeholders like `src.webdriver._examples._example_driver` with the actual path to the module if it's in a different location.

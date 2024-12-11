@@ -43,11 +43,11 @@ def test_prestashop_mode():
 
 1. **Missing `api.py`:** The provided code only imports `PrestaShop`, but there's no definition of the class or functions within `api.py`.  This example assumes a class exists.  You **absolutely need to provide the actual content of `api.py`** to write meaningful tests.
 
-2. **Example Test Structure:** The example tests for a `MODE` constant and illustrates how to use `pytest.raises` to test exception handling.  Importantly, the `test_prestashop_invalid_input` example demonstrates a *proper way* to handle invalid input.
+2. **Example Test Structure:** The example tests for a `MODE` constant and illuStartes how to use `pytest.raises` to test exception handling.  Importantly, the `test_prestashop_invalid_input` example demonStartes a *proper way* to handle invalid input.
 
 3. **Dummy Data:** The comment in the placeholder example shows how you'd need example data for your tests.  Replace the placeholder data and the `get_product` call with the actual logic from your `api.py` file.
 
-4. **Exception Handling:** The `test_prestashop_invalid_input` example demonstrates how to test error conditions. You **must** include tests for valid and *invalid* inputs to demonstrate a complete test suite.   **Asserting the specific error message** (as shown) is important.
+4. **Exception Handling:** The `test_prestashop_invalid_input` example demonStartes how to test error conditions. You **must** include tests for valid and *invalid* inputs to demonStarte a complete test suite.   **Asserting the specific error message** (as shown) is important.
 
 
 **To create complete tests, you need to:**
@@ -58,7 +58,7 @@ def test_prestashop_mode():
 - **Provide sample data or fixtures** as needed.
 
 
-**Example `api.py` (Illustrative):**
+**Example `api.py` (IlluStartive):**
 
 ```python
 # hypotez/src/endpoints/prestashop/api.py

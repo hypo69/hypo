@@ -1,7 +1,7 @@
 ```python
 import pytest
 
-# No Python code provided to test, so creating dummy functions for demonstration.
+# No Python code provided to test, so creating dummy functions for demonStartion.
 def analyze_code(code_block):
     """Analyzes the provided code block."""
     if "print" in code_block:

@@ -87,7 +87,7 @@ def expected_edge_case_output():
 
 2. **Placeholder Methods:** The test suite now includes example `test_tiny_troupe_method_valid_input`, `test_tiny_troupe_method_invalid_input`, etc. Replace `"some_method"` and the placeholder values with the actual method names, input types, and expected outputs from your code.
 
-3. **Exception Handling (pytest.raises):**  Demonstrates how to test for specific exceptions using `pytest.raises`.  The example now checks for `TypeError` and asserts the error message is correct.
+3. **Exception Handling (pytest.raises):**  DemonStartes how to test for specific exceptions using `pytest.raises`.  The example now checks for `TypeError` and asserts the error message is correct.
 
 4. **Fixtures:** The example now shows how to define fixtures (`valid_input`, `expected_output`) which can hold test data and reduce redundancy.
 

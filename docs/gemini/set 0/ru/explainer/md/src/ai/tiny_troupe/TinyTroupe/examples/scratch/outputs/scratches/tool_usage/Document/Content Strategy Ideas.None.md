@@ -1,10 +1,10 @@
 ```MD
-# Анализ кода: Content Strategy Ideas
+# Анализ кода: Content Startegy Ideas
 
 ## <input code>
 
 ```
-# Content Strategy Ideas
+# Content Startegy Ideas
 
 ## 1. Sustainable Living Tips
 
@@ -21,7 +21,7 @@
 
 ```mermaid
 graph LR
-    A[Content Strategy Ideas] --> B(Sustainable Living);
+    A[Content Startegy Ideas] --> B(Sustainable Living);
     B --> C{Content Types};
     C --> D[Articles];
     C --> E[Videos];
@@ -30,7 +30,7 @@ graph LR
     G --> H[Weekly Articles];
     G --> I[Bi-weekly Videos];
     G --> J[Daily Social Media Posts];
-    B --> K{Engagement Strategies};
+    B --> K{Engagement Startegies};
     K --> L[Interactive Content];
     K --> M[User-generated Content];
     K --> N[Collaborations];
@@ -47,7 +47,7 @@ graph LR
     X --> Y[Weekly Blog Posts];
     X --> Z[Monthly Webinars];
     X --> AA[Bi-weekly Infographics];
-    S --> BB{Engagement Strategies};
+    S --> BB{Engagement Startegies};
     BB --> CC[Interactive Content];
     BB --> DD[User-generated Content];
     BB --> EE[Collaborations];
@@ -60,7 +60,7 @@ graph LR
 
 **Объяснение диаграммы:**
 
-Диаграмма показывает две ветви стратегий – для устойчивого образа жизни (Sustainable Living) и удаленной работы (Remote Work Best Practices).  Каждая ветвь имеет подэлементы: типы контента, календарь публикации, стратегии вовлечения и метрики.  Подключаемые зависимости – это логические связи между разделами, например, «Content Types» влияет на «Content Calendar» и «Engagement Strategies».  Отсутствуют зависимости с другими частями проекта, так как это самостоятельный документ, описывающий контент-планы.
+Диаграмма показывает две ветви стратегий – для устойчивого образа жизни (Sustainable Living) и удаленной работы (Remote Work Best Practices).  Каждая ветвь имеет подэлементы: типы контента, календарь публикации, стратегии вовлечения и метрики.  Подключаемые зависимости – это логические связи между разделами, например, «Content Types» влияет на «Content Calendar» и «Engagement Startegies».  Отсутствуют зависимости с другими частями проекта, так как это самостоятельный документ, описывающий контент-планы.
 
 ## <explanation>
 
@@ -81,4 +81,4 @@ graph LR
 
 **Цепочка взаимосвязей:**
 
-Документ `Content Strategy Ideas`  является частью маркетингового планирования и предполагает использование других инструментов, таких как CMS (система управления контентом) и платформы социальных сетей для реализации стратегий.
+Документ `Content Startegy Ideas`  является частью маркетингового планирования и предполагает использование других инструментов, таких как CMS (система управления контентом) и платформы социальных сетей для реализации стратегий.

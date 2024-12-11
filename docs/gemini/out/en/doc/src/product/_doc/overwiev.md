@@ -117,7 +117,7 @@ else:
     print("Product not found")
 ```
 
-**(Note: This example is illustrative.  More detailed examples would be provided.)**
+**(Note: This example is illuStartive.  More detailed examples would be provided.)**
 
 
 ## Additional Information

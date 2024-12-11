@@ -152,7 +152,7 @@ graph LR
 - `import pytest`: This is the pytest library for writing and running unit tests.
 - `from unittest.mock import patch, mock_open, MagicMock`:  Provides tools for mocking objects (replacing real objects with simulated ones) during the testing.
 - `from pathlib import Path`:  Provides the `Path` object for working with file paths in a platform-independent manner.
-- `from src.utils.file.file import ...`: Imports functions for file handling from the `src.utils.file.file` module.  This likely handles things like saving, reading text files, finding files/directories. This illustrates a dependency on the `src` package for utility functions.
+- `from src.utils.file.file import ...`: Imports functions for file handling from the `src.utils.file.file` module.  This likely handles things like saving, reading text files, finding files/directories. This illuStartes a dependency on the `src` package for utility functions.
 
 ## <explanation>
 

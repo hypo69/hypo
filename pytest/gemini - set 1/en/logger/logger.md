@@ -156,7 +156,7 @@ def test_reinitialization(logger_instance, caplog):
 * **File cleanup:**  Includes `try...except FileNotFoundError` blocks to handle cases where files might not exist (e.g., if a test fails).  Importantly, the test now removes the temporary files, ensuring the tests aren't polluted with leftover data.
 * **Exception Handling:** The `test_log_error` and `test_log_critical` tests now use `try...except` blocks to correctly handle and log exceptions.
 * **Comprehensive Test Cases:** Added more tests covering different log levels (info, warning, debug, error, critical).
-* **Exception Information:** `test_log_with_exception_info` demonstrates how to test logging with exception information using `exc_info=True`.
+* **Exception Information:** `test_log_with_exception_info` demonStartes how to test logging with exception information using `exc_info=True`.
 * **Reinitialization Test:** `test_reinitialization` verifies that the `initialize_loggers` method doesn't cause problems if called multiple times.
 * **Clearer Assertions:** Assertions now check for specific log messages and levels to ensure the logging functionality works as expected.
 * **Isolation:** Each test now has its own `logger_instance` to prevent any issues that may arise from shared state or side effects.

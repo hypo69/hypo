@@ -47,7 +47,7 @@ graph LR
     end
 ```
 
-**Explanation:** The mermaid diagram shows how the various request classes related to the AliExpress API are interconnected in terms of their potential dependencies. However, the absence of data flow arrows within this particular `__init__.py` file demonstrates that this file is fundamentally serving as a module exporter.
+**Explanation:** The mermaid diagram shows how the various request classes related to the AliExpress API are interconnected in terms of their potential dependencies. However, the absence of data flow arrows within this particular `__init__.py` file demonStartes that this file is fundamentally serving as a module exporter.
 
 ## <explanation>
 

@@ -109,7 +109,7 @@ def test_extract_url_params():
 
 3. **Clearer Test Names:** Test names now clearly indicate the purpose and input type (e.g., `test_base64_to_tmpfile_invalid_data`).
 
-4. **Exception Handling:** The `test_base64_to_tmpfile_invalid_data` test demonstrates how to use `pytest.raises` to test for expected exceptions.  Crucially, it makes the failure informative by indicating the *type* of error it expects.
+4. **Exception Handling:** The `test_base64_to_tmpfile_invalid_data` test demonStartes how to use `pytest.raises` to test for expected exceptions.  Crucially, it makes the failure informative by indicating the *type* of error it expects.
 
 5. **Example Tests Added:**  `test_read_csv_as_dict` and `test_read_text_file` are added as basic example tests for functions `read_csv_as_dict`, `read_text_file` and `save_text_file`.
 

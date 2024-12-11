@@ -75,7 +75,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The diagram illustrates the dependencies between the `telegram_bot_trainger.py` file and other modules in the project, specifically from `src.` packages, which suggests a modular structure. `gs` likely handles configuration, `Model` is part of the OpenAI model training process, and `logger` manages logging operations.   `speech_recognition`, `requests`, `AudioSegment`, `gTTS`,  `recognizer`, `text_to_speech` are external libraries for specific tasks. The Python built-in libraries are also included, like `Path`, `tempfile`, and `asyncio`.
+The diagram illuStartes the dependencies between the `telegram_bot_trainger.py` file and other modules in the project, specifically from `src.` packages, which suggests a modular structure. `gs` likely handles configuration, `Model` is part of the OpenAI model training process, and `logger` manages logging operations.   `speech_recognition`, `requests`, `AudioSegment`, `gTTS`,  `recognizer`, `text_to_speech` are external libraries for specific tasks. The Python built-in libraries are also included, like `Path`, `tempfile`, and `asyncio`.
 
 
 ## <explanation>
@@ -132,4 +132,4 @@ The diagram illustrates the dependencies between the `telegram_bot_trainger.py` 
 
 **Relationships:**
 
-The code is part of a larger project, likely an AI-powered bot framework. The relationship with other parts of the project is demonstrated by the imports from `src` packages, which likely define utility functions, model training mechanisms, logging, and credential storage modules.  The `gs` import suggests a centralized configuration mechanism for storing important credentials.
+The code is part of a larger project, likely an AI-powered bot framework. The relationship with other parts of the project is demonStarted by the imports from `src` packages, which likely define utility functions, model training mechanisms, logging, and credential storage modules.  The `gs` import suggests a centralized configuration mechanism for storing important credentials.

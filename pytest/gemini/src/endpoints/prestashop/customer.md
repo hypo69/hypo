@@ -45,7 +45,7 @@ def test_presta_customer_init_none_credentials():
 
 # Tests for other methods of the class (add_customer_PrestaShop, delete_customer_PrestaShop, etc.)
 # These would require stubs or mocks for the underlying PrestaShop class and its methods.
-# Example (using a mock for demonstration):
+# Example (using a mock for demonStartion):
 # import unittest.mock as mock
 # @pytest.fixture
 # def mock_presta_shop():

@@ -69,7 +69,7 @@ def test_setting_keywords_list():
 
 2. **`getapiname` Testing:** A test specifically for the `getapiname` method is added to verify its output.
 
-3. **Attribute Setting Tests:**  More tests are added to demonstrate how to test the setting of attributes like `category_ids`, `keywords` etc.  This is important to verify the ability of the class to store different data types in various attributes.  The example includes testing with lists and strings, which would be more typical use cases.
+3. **Attribute Setting Tests:**  More tests are added to demonStarte how to test the setting of attributes like `category_ids`, `keywords` etc.  This is important to verify the ability of the class to store different data types in various attributes.  The example includes testing with lists and strings, which would be more typical use cases.
 
 4. **Error Handling:** The `pytest.raises` context manager is now used to specifically test exception handling.
 

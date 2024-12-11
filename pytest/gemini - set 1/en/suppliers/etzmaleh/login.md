@@ -48,7 +48,7 @@ def test_login_empty_string():
     login("")
   assert "unsupported operand type(s) for +: 'str' and 'str'" in str(excinfo.value)
 
-# Test cases to demonstrate a common issue:
+# Test cases to demonStarte a common issue:
 # Functions that rely on external calls (e.g., logging or database interactions)
 
 # Testing the logger for potential issues
@@ -61,7 +61,7 @@ def test_login_empty_string():
 1. **Mocking the Logger:** The original code used a `logger`.  Testing functions that use external calls like logging needs mocking. The `pytest.MonkeyPatch()` approach is used for this. This isolates the test from actual logging and avoids side effects.
 
 
-2. **Clearer Error Handling:** The tests now explicitly check for the expected `TypeError` when the input is not a string, demonstrating a better understanding of the function's potential errors. This makes the tests more robust.  More tests are added to cover different invalid input cases
+2. **Clearer Error Handling:** The tests now explicitly check for the expected `TypeError` when the input is not a string, demonStarting a better understanding of the function's potential errors. This makes the tests more robust.  More tests are added to cover different invalid input cases
 
 
 3. **Comprehensive Input Validation:** More cases with different invalid inputs are added to cover a wider range of error conditions, which helps create a more thorough test suite.

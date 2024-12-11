@@ -106,9 +106,9 @@ def test_set_spreadsheet_by_id_error(mock_service, mock_drive_service):
 
 2. **Error Handling:**  Added tests for scenarios where the Google API call might fail (e.g., `test_create_spreadsheet_error`), using `pytest.raises` to assert that the expected exceptions are raised.
 
-3. **`test_share_spreadsheet_no_spreadsheet_id`**: Added a test case to handle the `SpreadsheetNotSetError` when `spreadsheetId` is not set, demonstrating a more robust test suite.
+3. **`test_share_spreadsheet_no_spreadsheet_id`**: Added a test case to handle the `SpreadsheetNotSetError` when `spreadsheetId` is not set, demonStarting a more robust test suite.
 
-4. **`test_set_spreadsheet_by_id_error`**: Added a test that demonstrates error handling when the API call to retrieve a spreadsheet fails.
+4. **`test_set_spreadsheet_by_id_error`**: Added a test that demonStartes error handling when the API call to retrieve a spreadsheet fails.
 
 5. **Cleanup:** Added a crucial step to delete the temporary JSON file created in the `mock_credentials` fixture, preventing resource leaks.
 

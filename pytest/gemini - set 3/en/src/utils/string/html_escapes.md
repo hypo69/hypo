@@ -70,7 +70,7 @@ except ImportError as e:
 
 1. **Comprehensive Coverage:** The tests now cover various aspects, including valid inputs, edge cases (special characters, Unicode), missing keys, empty strings, and non-string inputs.
 
-2. **Error Handling with `pytest.raises`:** The tests use `pytest.raises` to check for `KeyError` and `TypeError` exceptions, demonstrating robust exception handling.
+2. **Error Handling with `pytest.raises`:** The tests use `pytest.raises` to check for `KeyError` and `TypeError` exceptions, demonStarting robust exception handling.
 
 3. **Clear Test Names:** The test function names are descriptive and clearly indicate the purpose of each test.
 
@@ -90,4 +90,4 @@ except ImportError as e:
 pytest test_html_escapes.py
 ```
 
-This improved test suite provides more comprehensive coverage and demonstrates better practices for writing robust and reliable tests. Remember to adapt the `large_string_key` in `test_html_escapes_large_input` to a suitable large string if needed.  If a different key size is expected to cause an issue in the actual function, update the test to use that key size instead. Remember to adapt the test cases to reflect the specific characteristics and error conditions in the `html_escapes` function you're testing.
+This improved test suite provides more comprehensive coverage and demonStartes better practices for writing robust and reliable tests. Remember to adapt the `large_string_key` in `test_html_escapes_large_input` to a suitable large string if needed.  If a different key size is expected to cause an issue in the actual function, update the test to use that key size instead. Remember to adapt the test cases to reflect the specific characteristics and error conditions in the `html_escapes` function you're testing.

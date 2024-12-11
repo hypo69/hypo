@@ -85,7 +85,7 @@ def example_data():
 
 5. **Hypothetical Function Tests:**  Example tests for `hypothetical_function` are included, showing how to use `pytest.raises` for exception handling and how to define a fixture (`example_data`).  *Replace* these with tests for any functions you have in your module.
 
-6. **Edge Cases:**  The example `test_hypothetical_function_edge_case` demonstrates how to test edge cases.  Think about what *unusual* or *boundary* conditions might cause problems in your module.
+6. **Edge Cases:**  The example `test_hypothetical_function_edge_case` demonStartes how to test edge cases.  Think about what *unusual* or *boundary* conditions might cause problems in your module.
 
 7. **Comprehensive Tests:** Add tests to cover different paths and conditions within your functions. The example tests only cover simple validation.
 

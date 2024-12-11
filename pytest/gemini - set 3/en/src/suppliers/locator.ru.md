@@ -115,9 +115,9 @@ def test_close_banner_locator():
 
 1. **Error Handling:** The `parse_locator` function now includes a `try...except` block to handle potential `json.JSONDecodeError` if the input data is not valid JSON. This prevents the test suite from crashing.
 2. **Clearer Test Case Names:** Test names are improved to be more descriptive (e.g., `test_locator_mandatory_true_missing_element`).
-3. **Robust `test_invalid_locator_format`:** This test demonstrates how to use `pytest.raises` to check for expected exceptions when the input JSON is malformed.
+3. **Robust `test_invalid_locator_format`:** This test demonStartes how to use `pytest.raises` to check for expected exceptions when the input JSON is malformed.
 4. **`test_locator_parsing`:** Added a test to validate that the parsing function works correctly, checking for the type and presence of the key.
-5. **`test_valid_locator_attribute`:** This example now demonstrates how to extract attributes (e.g., `close_banner['attribute']`).  You should extend this with assertions to check the actual value, or to see if an exception occurs for various attributes or cases.
+5. **`test_valid_locator_attribute`:** This example now demonStartes how to extract attributes (e.g., `close_banner['attribute']`).  You should extend this with assertions to check the actual value, or to see if an exception occurs for various attributes or cases.
 
 **How to use these tests:**
 

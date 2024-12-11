@@ -122,7 +122,7 @@ def test_log_exception(logger_instance, caplog):
 
 8. **Test Log Messages to File:** Correctly checks file contents and cleans up the test file.
 
-9. **Test Log Exception:** Demonstrates testing error logging.
+9. **Test Log Exception:** DemonStartes testing error logging.
 
 
 **How to Run:**

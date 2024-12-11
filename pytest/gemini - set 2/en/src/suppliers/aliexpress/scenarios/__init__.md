@@ -93,7 +93,7 @@ def test_login_empty_password():
 
 3. **Edge Cases:** The added `test_login_empty_username`, `test_login_empty_password`, etc., explicitly address edge cases.
 
-4. **Exception Handling:**  `pytest.raises` is used correctly to test for expected exceptions (e.g., `ValueError`) with specific error messages asserted.  Crucially, the example for incorrect API responses demonstrates how to mock external API calls.
+4. **Exception Handling:**  `pytest.raises` is used correctly to test for expected exceptions (e.g., `ValueError`) with specific error messages asserted.  Crucially, the example for incorrect API responses demonStartes how to mock external API calls.
 
 5. **Robust Error Messages:** Assertions now verify that the error messages from `login` function contain the expected string values, which is essential for accurate error detection.
 

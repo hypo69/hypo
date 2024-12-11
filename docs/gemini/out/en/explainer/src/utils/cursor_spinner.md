@@ -58,7 +58,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The `mermaid` diagram illustrates the flow from the `main` execution to the `spinning_cursor` function, which is then consumed by the `show_spinner` function.  Crucially, it shows how the `time` and `sys` modules are used within this process.  `time` provides functions for controlling time-related operations, and `sys` provides access to system-specific parameters or functions, including `stdout` for console output.
+The `mermaid` diagram illuStartes the flow from the `main` execution to the `spinning_cursor` function, which is then consumed by the `show_spinner` function.  Crucially, it shows how the `time` and `sys` modules are used within this process.  `time` provides functions for controlling time-related operations, and `sys` provides access to system-specific parameters or functions, including `stdout` for console output.
 
 # <explanation>
 

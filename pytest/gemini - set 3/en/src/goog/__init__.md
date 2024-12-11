@@ -82,7 +82,7 @@ class TestSpreadsheet:
 
 5. **Realistic Examples:** The test examples (`test_read_data_valid_input`, `test_read_data_invalid_file`) now use example data structures to verify that your code returns the expected result. **Critically:** Replace the placeholder data ("data_file.csv", etc) with paths to real or dummy files to make the test run.
 
-6. **Edge Cases:**  The `test_read_data_empty_file` example demonstrates handling empty file input, which is an important edge case.  Add more as needed for your `Spreadsheet` class.
+6. **Edge Cases:**  The `test_read_data_empty_file` example demonStartes handling empty file input, which is an important edge case.  Add more as needed for your `Spreadsheet` class.
 
 7. **Invalid Input:** `test_write_data_invalid_data` shows how to check for invalid input types (e.g., passing a string as data).  Always check for different invalid data types or unexpected situations.
 

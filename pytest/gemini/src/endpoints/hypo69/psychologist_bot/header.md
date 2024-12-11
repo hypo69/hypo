@@ -101,7 +101,7 @@ def test_set_project_root_add_path_to_sys_path(mock_root_dir, monkeypatch):
 * **Exception Handling:** Included tests for `FileNotFoundError` and `json.JSONDecodeError`, using `pytest.raises` for more robust testing.
 * **Robustness:** Added tests to ensure that `set_project_root` doesn't raise an error when no marker files are provided.
 * **Valid Input Tests:** Added a test (`test_set_project_root_valid_path`) to confirm the function's behavior with a valid project root.
-* **Type Handling:**  Added a test (`test_set_project_root_invalid_marker_files_type`) to demonstrate correct error handling when the marker_files parameter is not a tuple.
+* **Type Handling:**  Added a test (`test_set_project_root_invalid_marker_files_type`) to demonStarte correct error handling when the marker_files parameter is not a tuple.
 * **File Not Found Test:** Added a test `test_set_project_root_file_not_found` to show how to test when the marker file does not exist.
 * **sys.path:** Corrected logic to test `sys.path` addition.
 * **Monkeypatching:** Using `monkeypatch` in `test_set_project_root_no_marker_files` ensures that the `__file__` attribute is correctly set for the testing environment.

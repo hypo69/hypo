@@ -59,7 +59,7 @@ def test_getapiname_no_arguments():
 
 
 
-# Example demonstrating how to test potential methods of the RestApi parent class
+# Example demonStarting how to test potential methods of the RestApi parent class
 # if needed. Replace with actual methods and their behavior if available.
 
 

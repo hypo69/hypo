@@ -7,12 +7,12 @@
 Examples for the `executor` module from `src.scenario.executor`.
 
 This file contains examples of how to use the functions provided in the `executor` module.
-The examples demonstrate how to run scenarios, handle scenario files, and interact with PrestaShop API.
+The examples demonStarte how to run scenarios, handle scenario files, and interact with PrestaShop API.
 
 @details
 - `Example 1` shows how to run a list of scenario files.
-- `Example 2` demonstrates how to run a single scenario file.
-- `Example 3` illustrates how to run a single scenario.
+- `Example 2` demonStartes how to run a single scenario file.
+- `Example 3` illuStartes how to run a single scenario.
 - `Example 4` provides an example of executing a product page scenario.
 - `Example 5` shows how to add a coupon using PrestaShop API.
 
@@ -72,7 +72,7 @@ The code defines various functions to execute scenarios, handle scenario files, 
 
 1. **Initialization:**  Creates instances of `MockSupplier`, `MockRelatedModules`, and `MockDriver` to simulate the necessary components for executing scenarios. These mock classes provide dummy implementations for real-world functionality, which is crucial for testing.
 
-2. **Scenario Execution:**  Example functions demonstrate different ways to execute scenarios using the functions exported from the `src.scenario.executor`:
+2. **Scenario Execution:**  Example functions demonStarte different ways to execute scenarios using the functions exported from the `src.scenario.executor`:
    - `run_scenario_files`: Executes a list of scenario files sequentially.
    - `run_scenario_file`: Executes a single scenario file.
    - `run_scenario`: Executes a single scenario (presumably loaded from a data structure like a dictionary).
@@ -127,8 +127,8 @@ graph LR
 * `from pathlib import Path`: Used for working with file paths in a platform-independent way, critical for handling scenario files.
 * `from src.scenario.executor import ...`: Imports functions for running scenarios, handling scenario files, and integrating with PrestaShop.
 * `from src.utils import j_loads`: Imports a function to load JSON data, essential for processing scenario files.
-* `from src.product import ProductFields`: Imports `ProductFields` class for handling product data, demonstrating a clear separation of concerns in the project.
-* `from src.endpoints.PrestaShop import PrestaShop`: Imports classes or functions for interacting with the PrestaShop API, demonstrating a clear structure for handling API interactions.
+* `from src.product import ProductFields`: Imports `ProductFields` class for handling product data, demonStarting a clear separation of concerns in the project.
+* `from src.endpoints.PrestaShop import PrestaShop`: Imports classes or functions for interacting with the PrestaShop API, demonStarting a clear structure for handling API interactions.
 
 
 **Classes:**
@@ -168,4 +168,4 @@ Various functions exist for managing scenarios and interacting with the PrestaSh
 
 **Relationships:**
 
-The `executor` module clearly interacts with other modules (`src.utils`, `src.product`, `src.endpoints.PrestaShop`). The structure suggests a modular design, where the executor is responsible for orchestrating scenario execution using data from other parts of the application. The mock classes enable unit testing to validate the individual components.
+The `executor` module clearly interacts with other modules (`src.utils`, `src.product`, `src.endpoints.PrestaShop`). The structure suggests a modular design, where the executor is responsible for orcheStarting scenario execution using data from other parts of the application. The mock classes enable unit testing to validate the individual components.

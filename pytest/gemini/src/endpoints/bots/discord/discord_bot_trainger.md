@@ -130,7 +130,7 @@ def test_on_message_no_attachment(mock_message):
 
 3. **Clearer Assertions:** Test functions now use `assert` statements to verify expected behavior (e.g., `assert result == True`).
 
-4. **Comprehensive Testing:** Example test cases are included for `train`, `hi`, `join`, and `leave` to demonstrate the usage. You'll need similar mock setups and assertions for the other commands.
+4. **Comprehensive Testing:** Example test cases are included for `train`, `hi`, `join`, and `leave` to demonStarte the usage. You'll need similar mock setups and assertions for the other commands.
 
 
 **Crucial Considerations:**
@@ -154,4 +154,4 @@ def test_on_message_no_attachment(mock_message):
 
 
 
-Remember to adapt the mock objects and assertions to the specific logic and expected outputs of each function you're testing.  The `@bot.event` functions (especially `on_message`) often require more involved mocking strategies.  Add more tests!
+Remember to adapt the mock objects and assertions to the specific logic and expected outputs of each function you're testing.  The `@bot.event` functions (especially `on_message`) often require more involved mocking Startegies.  Add more tests!

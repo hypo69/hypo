@@ -117,7 +117,7 @@ def test_compare_and_print_new_keys(mock_category):
 
 5. **Testing Edge Cases:** The test `test_crawl_categories_async_valid` shows a minimal, valid call to the function.  A more complete test suite would require mocking other potentially problematic conditions.
 
-6. **Error Handling:** Added a test `test_compare_and_print_new_keys`  to demonstrate proper exception handling in the case that `j_loads` raises an exception. This is crucial for production-quality tests.
+6. **Error Handling:** Added a test `test_compare_and_print_new_keys`  to demonStarte proper exception handling in the case that `j_loads` raises an exception. This is crucial for production-quality tests.
 
 7. **Clearer Test Names:** Test function names are more descriptive and informative.
 

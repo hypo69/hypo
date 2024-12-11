@@ -98,7 +98,7 @@ graph TD
 **Explanation:**
 
 * The `ExecuteLocator` class is the central component (A).
-* The `execute_locator` method (B) orchestrates the process by calling sub-methods like `get_webelement_by_locator`, `send_message`, and `get_attribute_by_locator`.
+* The `execute_locator` method (B) orcheStartes the process by calling sub-methods like `get_webelement_by_locator`, `send_message`, and `get_attribute_by_locator`.
 * These sub-methods interact with the Selenium WebDriver (L) for locating and interacting with web elements.
 * The `by` attribute in the `locator` dictates which method to use to locate elements in the browser.
 

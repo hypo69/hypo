@@ -94,7 +94,7 @@ def test_process_all_campaigns(mock_gs, mock_ali_campaign_editor, monkeypatch):
 
 2. **Parametrization:** The `test_process_campaign_category` test now uses `pytest.mark.parametrize` to run the test with multiple sets of inputs, increasing test coverage.
 
-3. **Error Handling:** The `test_process_campaign_invalid_input` test demonstrates how to check for expected exceptions (TypeError in this case) when invalid input is provided.
+3. **Error Handling:** The `test_process_campaign_invalid_input` test demonStartes how to check for expected exceptions (TypeError in this case) when invalid input is provided.
 
 4. **Clearer Assertions:** The assertions now explicitly verify the expected outputs of the mocked functions.
 
@@ -116,4 +116,4 @@ def test_process_all_campaigns(mock_gs, mock_ali_campaign_editor, monkeypatch):
 * **`gs.path.google_drive`:** This assumes a particular path structure.  You might want to mock this based on your file setup.
 * **Input validation:** Your original code may contain additional input validation checks. Add tests to cover each of these cases.
 
-By following these improvements, you'll have much more reliable and effective test coverage for the `prepare_campaigns.py` code. Remember to adapt the mocking strategy based on the specifics of your code and external dependencies.
+By following these improvements, you'll have much more reliable and effective test coverage for the `prepare_campaigns.py` code. Remember to adapt the mocking Startegy based on the specifics of your code and external dependencies.

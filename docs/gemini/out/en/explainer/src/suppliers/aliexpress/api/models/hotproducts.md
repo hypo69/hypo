@@ -58,7 +58,7 @@ graph LR
 
 **Explanation of Dependencies:**
 
-* **`from .product import Product`**: This imports the `Product` class from a file named `product.py` located within the same directory (`./product.py`).  Crucially, the `.` indicates a relative import, which means `product.py` is part of the `aliexpress` api model folder structure.  This demonstrates a clear dependency relationship within the `aliexpress` API model package.
+* **`from .product import Product`**: This imports the `Product` class from a file named `product.py` located within the same directory (`./product.py`).  Crucially, the `.` indicates a relative import, which means `product.py` is part of the `aliexpress` api model folder structure.  This demonStartes a clear dependency relationship within the `aliexpress` API model package.
 * **`from typing import List`**: This imports the `List` type from the Python standard library's `typing` module. This is used for type hinting and is critical for code clarity and maintainability within this project.
 
 
@@ -82,4 +82,4 @@ graph LR
 
 **Relationship with other parts of the project:**
 
-The `HotProductsResponse` class relies on the `Product` class, demonstrating a clear dependency.  The `Product` class, not present in this code snippet, would likely define attributes representing product data such as ID, name, price, etc.  This structure implies a deeper project structure, where `Product` is defined elsewhere, possibly in the same folder or a nested subfolder. The `HotProductsResponse` class acts as a container for data retrieved from AliExpress, and its role is to structure and present that data in a reusable format within the project.
+The `HotProductsResponse` class relies on the `Product` class, demonStarting a clear dependency.  The `Product` class, not present in this code snippet, would likely define attributes representing product data such as ID, name, price, etc.  This structure implies a deeper project structure, where `Product` is defined elsewhere, possibly in the same folder or a nested subfolder. The `HotProductsResponse` class acts as a container for data retrieved from AliExpress, and its role is to structure and present that data in a reusable format within the project.

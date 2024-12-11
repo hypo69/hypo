@@ -149,7 +149,7 @@ pip install pytest packaging
 Run the tests using `pytest`.
 
 
-This improved version addresses the issues and provides a comprehensive testing strategy for the Python code. Remember to adapt the test scenarios based on the specific expected behavior of your code. Remember to install the required package:
+This improved version addresses the issues and provides a comprehensive testing Startegy for the Python code. Remember to adapt the test scenarios based on the specific expected behavior of your code. Remember to install the required package:
 
 
 ```bash

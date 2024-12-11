@@ -95,7 +95,7 @@ def test_handle_message(mock_update, mock_context):
 
 4. **Specific Assertions:** The tests now include assertions to verify the expected behavior (e.g., checking if `send_message` was called with the correct arguments, if files were downloaded). *Critically*, these assertions ensure that the actual output of the functions is verified rather than just checking for existence.  The tests now verify the method arguments are passed correctly.
 
-5. **Edge Case (FileNotFoundError):** A test `test_send_pdf_file_not_found` now demonstrates handling a non-existent file, showcasing exception testing with `pytest.raises`.  This is a crucial test for robust code.
+5. **Edge Case (FileNotFoundError):** A test `test_send_pdf_file_not_found` now demonStartes handling a non-existent file, showcasing exception testing with `pytest.raises`.  This is a crucial test for robust code.
 
 6. **Clearer Test Names:** The test names are more descriptive.
 

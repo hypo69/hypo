@@ -126,9 +126,9 @@ def test_get_categories_no_categories(api_instance):
 
 1. **Mocking:** The code now uses `unittest.mock.Mock` to mock dependencies like `api_request` and `parse_products`.  This is *crucial* for unit testing; you don't want to make actual API calls in your tests.  The `Mock` objects allow you to control their return values and raise exceptions as needed.
 
-2. **Clearer Test Cases:**  The test cases are now more focused and demonstrate how to check for different scenarios: valid inputs, empty results, and exceptions.
+2. **Clearer Test Cases:**  The test cases are now more focused and demonStarte how to check for different scenarios: valid inputs, empty results, and exceptions.
 
-3. **`pytest.raises` for Exceptions:**  The code demonstrates how to use `pytest.raises` to assert that the expected exceptions (`ProductsNotFoudException`, `InvalidTrackingIdException`, `CategoriesNotFoudException`) are raised when appropriate.
+3. **`pytest.raises` for Exceptions:**  The code demonStartes how to use `pytest.raises` to assert that the expected exceptions (`ProductsNotFoudException`, `InvalidTrackingIdException`, `CategoriesNotFoudException`) are raised when appropriate.
 
 4. **Fixtures:** The `api_instance` fixture is set up correctly to create a new `AliexpressApi` instance for each test.
 

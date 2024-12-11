@@ -105,7 +105,7 @@ graph LR
 **Imports:**
 
 - `textwrap`, `json`, `copy`, `logging`: Standard Python libraries.  They are used for text manipulation, JSON handling, data copying, and logging, respectively.  These are not directly tied to `tinytroupe` or its architecture in a specific way; they are part of the core Python ecosystem.
-- `tinytroupe.utils`: Internal module for TinyTroupe project, containing utility functions (e.g., input validation).  This demonstrates a clear modular design, promoting code organization and re-usability.  The `JsonSerializableRegistry` is a particular utility class in `tinytroupe.utils`.
+- `tinytroupe.utils`: Internal module for TinyTroupe project, containing utility functions (e.g., input validation).  This demonStartes a clear modular design, promoting code organization and re-usability.  The `JsonSerializableRegistry` is a particular utility class in `tinytroupe.utils`.
 - `tinytroupe.extraction.ArtifactExporter`: Module for handling artifact export, like saving processed documents to various formats (probably image, pdf, etc.).
 - `tinytroupe.enrichment.TinyEnricher`: For enriching content, possibly with AI assistance.
 

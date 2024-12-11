@@ -54,4 +54,4 @@ def test_get_model_mode_raises_exception_on_invalid_input():
 ```
 
 
-This improved example demonstrates how to write tests when more functionality is present in the file.  Remember to adapt the tests to reflect the actual methods and expected behaviors of the code. Remember to add tests for edge cases, invalid inputs, and potential exceptions if such features are part of the code. Remember to include `pass` in the test cases without appropriate expected exceptions, to prevent tests from running without handling anticipated exceptions and errors.
+This improved example demonStartes how to write tests when more functionality is present in the file.  Remember to adapt the tests to reflect the actual methods and expected behaviors of the code. Remember to add tests for edge cases, invalid inputs, and potential exceptions if such features are part of the code. Remember to include `pass` in the test cases without appropriate expected exceptions, to prevent tests from running without handling anticipated exceptions and errors.

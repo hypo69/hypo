@@ -2,11 +2,11 @@
 import pytest
 
 # No functions or classes are defined in the provided code.
-# Therefore, no tests can be written.  A test file with a stub to demonstrate the structure is provided instead.
+# Therefore, no tests can be written.  A test file with a stub to demonStarte the structure is provided instead.
 
 
 def test_stub_function_exists():
-    """Checks that an empty function exists to demonstrate test structure."""
+    """Checks that an empty function exists to demonStarte test structure."""
     # Replace with your actual function calls if the code provided contained functions.
     # Example:
     # from hypotez.src.endpoints.prestashop.domains.ecat_co_il import my_function

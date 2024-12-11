@@ -66,7 +66,7 @@ def test_currency_attribute_error():
 
 3. **Clear Test Names:** The test function names are now much more descriptive about the purpose of the test, improving readability.
 
-4. **`pytest.raises` for Attribute Errors:** Added a test (`test_currency_attribute_error`) to demonstrate how to use `pytest.raises` for catching `AttributeError` if trying to access a nonexistent attribute.  This is an important check for robustness.
+4. **`pytest.raises` for Attribute Errors:** Added a test (`test_currency_attribute_error`) to demonStarte how to use `pytest.raises` for catching `AttributeError` if trying to access a nonexistent attribute.  This is an important check for robustness.
 
 5. **Type Checking:** Added `test_currency_constants_no_case_conversion` to validate that the currency constants are strings, which is essential for the program's correctness and to anticipate potential issues related to type mismatches in subsequent operations.
 

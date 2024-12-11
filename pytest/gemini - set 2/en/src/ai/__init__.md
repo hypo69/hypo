@@ -55,11 +55,11 @@ def example_openai_data():
 
 1. **Targeted Tests:** The previous response lacked specific tests. Now, we test for the existence of the classes themselves, which is a fundamental check.
 
-2. **Placeholder Tests:**  I've added placeholder tests (`test_google_generate_text_valid_input`, etc.) that show the structure needed for testing methods (like `generate_text`).  These placeholders demonstrate how to interact with the objects and add assertions for validation. **Crucially, these are *placeholders* and MUST be updated with the actual methods in your code.**
+2. **Placeholder Tests:**  I've added placeholder tests (`test_google_generate_text_valid_input`, etc.) that show the structure needed for testing methods (like `generate_text`).  These placeholders demonStarte how to interact with the objects and add assertions for validation. **Crucially, these are *placeholders* and MUST be updated with the actual methods in your code.**
 
 3. **Example Fixture:** The `example_google_data` fixture is created to hold the example data for tests.  This is excellent practice to make test data reusable and easier to manage.  You need to add similar fixtures for any other classes or methods you need to test.
 
-4. **Error Handling (pytest.raises):**  The placeholder `test_google_generate_text_invalid_prompt` demonstrates how to use `pytest.raises` to verify that the code correctly handles exceptions.  Modify this test according to *your* specific error handling and exception types.
+4. **Error Handling (pytest.raises):**  The placeholder `test_google_generate_text_invalid_prompt` demonStartes how to use `pytest.raises` to verify that the code correctly handles exceptions.  Modify this test according to *your* specific error handling and exception types.
 
 5. **Clear Comments:** Comments explain the purpose of each test function, which improves readability and maintainability.
 

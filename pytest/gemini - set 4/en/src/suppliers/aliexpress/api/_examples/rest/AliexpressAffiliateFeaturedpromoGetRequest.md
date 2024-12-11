@@ -59,7 +59,7 @@ def test_init_no_parent_call():
 
 3. **`__init__` Test:** A test for the `__init__` method checks if the instance variables are properly initialized with the provided values or default values, if any.
 
-4. **Edge Case/Invalid Input Considerations:** The code lacks explicit input validation.  Therefore, the tests now focus on confirming that the `__init__` method does not raise exceptions or change its behavior when passed valid input arguments and the absence of explicit error handling is demonstrated via this example.
+4. **Edge Case/Invalid Input Considerations:** The code lacks explicit input validation.  Therefore, the tests now focus on confirming that the `__init__` method does not raise exceptions or change its behavior when passed valid input arguments and the absence of explicit error handling is demonStarted via this example.
 
 5. **Missing Parent Call (Crucial):**  A critical test `test_init_no_parent_call` now shows how to catch the `AttributeError` if the `__init__` of the parent class (`RestApi`) isn't properly called in the subclass. This is crucial for inheritance to function correctly.
 

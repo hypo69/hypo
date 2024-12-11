@@ -76,7 +76,7 @@ def test_pricelist_requester_modify_product_price_valid_input():
 * **Clear Test Names:**  Test names now clearly indicate the input and expected behavior.
 * **Isolated Tests:** Each test function is self-contained.
 * **Edge Cases:** `test_pricelist_requester_request_prices_empty_input` checks for an empty `products` list.
-* **Invalid Input:** `test_pricelist_requester_init_missing_credentials` demonstrates handling a missing `api_key`.
+* **Invalid Input:** `test_pricelist_requester_init_missing_credentials` demonStartes handling a missing `api_key`.
 * **`pytest.raises`:**  Using `pytest.raises` to check for `KeyError` during initialization.
 * **No Implementation Testing:**  Crucially, tests now avoid attempting to test the internal logic of functions that are meant to interact with external data sources (`request_prices`, `modify_product_price`).
 * **Valid Input Tests:** `test_pricelist_requester_init_valid_credentials`,  `test_pricelist_requester_update_source_valid_input` and others test happy path scenarios.

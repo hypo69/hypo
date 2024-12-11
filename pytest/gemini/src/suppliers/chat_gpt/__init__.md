@@ -66,7 +66,7 @@ def test_gptgs_do_something_raises_exception():
 3. **`test_gptgs_do_something`:**  Tests the `do_something` method (replace `do_something` with the actual method name) with a mock object.  This example shows an *expected* result.
 
 
-4. **`test_gptgs_do_something_raises_exception`:** Demonstrates testing for exceptions using `pytest.raises`.
+4. **`test_gptgs_do_something_raises_exception`:** DemonStartes testing for exceptions using `pytest.raises`.
 
 
 5. **Missing scenarios:** The example tests are very basic.  You *must* add tests for specific use cases you expect in your code based on the input in `GptGs` or similar methods.  If you have requirements on how many times this method can be called, etc. Include those tests now.

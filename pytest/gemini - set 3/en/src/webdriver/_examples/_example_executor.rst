@@ -118,7 +118,7 @@ def test_specific_element_locator(driver_instance):
 
 1. **`driver_instance` Fixture:**  Crucially, this fixture now creates and manages the `webdriver` instance within the test.  This is essential because you don't want to leave open browser windows or connections. The `yield` and `driver.quit()` ensure the browser closes after each test, preventing resource conflicts.  You also need a `time.sleep(2)` to give the page a chance to load.  This is better than assuming the page will load instantly. 
 2. **Using a Real Website:** Replace `"https://example.com"` with a real, publicly available website.  Testing against a dummy page won't expose issues related to dynamic content or loading delays.
-3. **More Robust Error Handling:** The example `test_execute_locator_invalid_xpath` demonstrates testing with *expected* exceptions. Using `pytest.raises` is crucial.  Important:  the `continue_on_error` examples have been improved to demonstrate proper exception handling.
+3. **More Robust Error Handling:** The example `test_execute_locator_invalid_xpath` demonStartes testing with *expected* exceptions. Using `pytest.raises` is crucial.  Important:  the `continue_on_error` examples have been improved to demonStarte proper exception handling.
 4. **Clearer Test Names:** Test names now clearly indicate the input type (e.g., `valid_input`, `invalid_xpath`).
 5. **Edge Cases (Example):**  The `test_execute_locator_invalid_xpath` covers an edge case (invalid locator). You need to add more edge cases for different scenarios.
 6. **Missing Dependencies:** I've assumed `gs` is defined, but you'll need to ensure the necessary imports are present.

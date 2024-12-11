@@ -96,7 +96,7 @@ if __name__ == "__main__":
 1. **`configparser` import:** Correctly imports the necessary module.
 2. **`parse_config` function:** Creates a function to handle config parsing to improve organization.
 3. **`config_file` Fixture:**  Crucially, a fixture is created to manage the temporary configuration file. This avoids writing to and removing the file in every test, ensuring isolation.  The example config file is now written directly into the fixture definition for simplicity.
-4. **Comprehensive Tests:**  Tests now cover valid inputs, missing sections, missing options, and *crucially*, **invalid values** (for boolean-expected options) using `pytest.raises`. This demonstrates proper exception handling.
+4. **Comprehensive Tests:**  Tests now cover valid inputs, missing sections, missing options, and *crucially*, **invalid values** (for boolean-expected options) using `pytest.raises`. This demonStartes proper exception handling.
 5. **Error Handling:** The `test_parse_config_missing_section` test now correctly raises and catches a `configparser.NoSectionError`
 6. **Temporary File Cleanup:** The `config_file` fixture now correctly removes the temporary config file after each test using `os.remove()`.  This is **essential** to prevent file system issues.
 7. **Clearer Test Names:** Test names are now more descriptive.
@@ -107,4 +107,4 @@ if __name__ == "__main__":
 1. Save the code as a Python file (e.g., `test_config.py`).
 2. Run `pytest test_config.py` from your terminal.
 
-This improved solution is much more robust and demonstrates better testing practices.  It addresses the potential for file system errors and provides complete test coverage for the specified scenarios. Remember to install `pytest` if you haven't already: `pip install pytest`.
+This improved solution is much more robust and demonStartes better testing practices.  It addresses the potential for file system errors and provides complete test coverage for the specified scenarios. Remember to install `pytest` if you haven't already: `pip install pytest`.

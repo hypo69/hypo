@@ -100,7 +100,7 @@ def test_set_campaign_worksheet_error(mock_logger, mocker):
 
 **Important Considerations:**
 
-*   **Mock `gspread` Functions:**  The tests need to mock the `gspread` functions (`update`, `get_worksheet`, `copy_worksheet`, `del_worksheet_by_id`, `worksheets`). The `mocker.patch` examples demonstrate how to do that.
+*   **Mock `gspread` Functions:**  The tests need to mock the `gspread` functions (`update`, `get_worksheet`, `copy_worksheet`, `del_worksheet_by_id`, `worksheets`). The `mocker.patch` examples demonStarte how to do that.
 *   **Data Setup:** In your testing, make sure you are initializing `AliCampaignGoogleSheet` with dummy data (campaign objects, category objects, product objects, etc.). Otherwise, the test cannot verify functionality with real data since it needs a `campaign`, `categories` and `products` to work with.
 *   **Realistic Inputs:**  Provide test cases with a variety of realistic data types.
 

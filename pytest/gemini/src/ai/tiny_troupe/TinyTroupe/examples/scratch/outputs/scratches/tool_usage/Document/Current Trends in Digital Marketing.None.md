@@ -3,7 +3,7 @@ import pytest
 
 # Placeholder for functions from the input code (replace with actual code)
 def example_function_ai(input_data):
-    """Example function demonstrating AI impact on digital marketing."""
+    """Example function demonStarting AI impact on digital marketing."""
     # Placeholder logic
     if input_data == "valid":
         return "AI is impacting marketing positively."
@@ -13,7 +13,7 @@ def example_function_ai(input_data):
         return "Input not recognized."
 
 def example_function_personalized(input_data):
-    """Example function demonstrating personalized content."""
+    """Example function demonStarting personalized content."""
     if input_data == "valid":
         return "Personalized content improves customer satisfaction."
     elif input_data == "invalid":
@@ -69,7 +69,7 @@ def test_example_function_ai_edge_case(input_data):
 
 3. **Exception Handling (`pytest.raises`):**  The tests now correctly use `pytest.raises` to check for `ValueError` exceptions when the input is invalid.
 
-4. **Edge Cases:** A `test_example_function_ai_edge_case` test case has been added, using `pytest.mark.parametrize` to demonstrate how to test different edge cases in a concise manner (e.g. empty string or `None`).
+4. **Edge Cases:** A `test_example_function_ai_edge_case` test case has been added, using `pytest.mark.parametrize` to demonStarte how to test different edge cases in a concise manner (e.g. empty string or `None`).
 
 
 **How to Use:**

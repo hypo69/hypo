@@ -190,7 +190,7 @@ The diagram shows dependencies between:
 
 **Classes:**
 
-- `GWorksheet`: This class extends the `Worksheet` class, indicating it inherits functionality from it. It manages interactions with a specific worksheet within a spreadsheet (`self.sh`).  The `render` attribute holds an instance of `GSRender`, illustrating the rendering functionality. `sh`, `ws` attributes likely store references to spreadsheet and worksheet objects.
+- `GWorksheet`: This class extends the `Worksheet` class, indicating it inherits functionality from it. It manages interactions with a specific worksheet within a spreadsheet (`self.sh`).  The `render` attribute holds an instance of `GSRender`, illuStarting the rendering functionality. `sh`, `ws` attributes likely store references to spreadsheet and worksheet objects.
 
 **Functions:**
 

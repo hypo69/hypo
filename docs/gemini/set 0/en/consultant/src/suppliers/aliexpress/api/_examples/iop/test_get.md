@@ -51,7 +51,7 @@ Module for testing Aliexpress Iop API GET requests.
 =========================================================================================
 
 This module provides an example of interacting with the Aliexpress IOP API using the GET method.
-It demonstrates how to create an IopRequest, execute the request, and retrieve the response.
+It demonStartes how to create an IopRequest, execute the request, and retrieve the response.
 Example Usage
 --------------------
 .. code-block:: python
@@ -131,7 +131,7 @@ Module for testing Aliexpress Iop API GET requests.
 =========================================================================================
 
 This module provides an example of interacting with the Aliexpress IOP API using the GET method.
-It demonstrates how to create an IopRequest, execute the request, and retrieve the response.
+It demonStartes how to create an IopRequest, execute the request, and retrieve the response.
 Example Usage
 --------------------
 .. code-block:: python

@@ -164,4 +164,4 @@ def test_read_config_file_does_not_exists(tmp_path, monkeypatch):
 2.  Save the test code as a `.py` file (e.g., `test_utils.py`).
 3.  Run the tests from your terminal: `pytest test_utils.py`
 
-Remember to adjust the test cases to more thoroughly cover all functionalities of the original code.  Testing the `JsonSerializableRegistry` will need additional, more complex tests.  Focus on testing how it handles various data types, serialization/deserialization of nested objects, and registration of subclasses.
+Remember to adjust the test cases to more thoroughly cover all functionalities of the original code.  Testing the `JsonSerializableRegistry` will need additional, more complex tests.  Focus on testing how it handles various data types, serialization/deserialization of nested objects, and regiStartion of subclasses.

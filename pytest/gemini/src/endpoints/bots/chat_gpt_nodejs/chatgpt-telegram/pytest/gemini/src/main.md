@@ -92,11 +92,11 @@ def test_start_command(mock_ctx):
 **Explanation and Improvements:**
 
 * **Mocking:** The code now extensively uses `unittest.mock.MagicMock` to mock external dependencies like `openai`, `ogg`, `config`, and `ctx.telegram`, which are crucial for isolating the tests and preventing external calls from interfering.
-* **Error Handling:** The `test_voice_message_error` test demonstrates how to use `pytest.raises` to assert that the correct exception is caught and handled when a specific error occurs in the `openai` transcription call.
+* **Error Handling:** The `test_voice_message_error` test demonStartes how to use `pytest.raises` to assert that the correct exception is caught and handled when a specific error occurs in the `openai` transcription call.
 * **Clearer Assertions:** The tests include assertions to validate that the expected functions and methods within the bot code are called correctly, verifying that the responses are generated, and that files are processed as expected.
 * **`mock_ctx` Fixture:** Creates a mock context object which holds the necessary mock objects (like `ctx.message.voice`, `ctx.reply`, etc.) reducing the number of arguments.
 
-* **Completeness:** Added `test_text_message_success` and `test_start_command`, demonstrating how to test other parts of the code.
+* **Completeness:** Added `test_text_message_success` and `test_start_command`, demonStarting how to test other parts of the code.
 
 
 **Before running:**

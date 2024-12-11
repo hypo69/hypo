@@ -101,7 +101,7 @@ def test_html2pdf_invalid_input(tmpdir, html_content):
 * **Error Handling (`test_html2pdf_invalid_input`):** Includes a test case specifically for invalid HTML input.  It checks if `html2pdf` handles the error properly by ensuring the expected output (or behavior, like returning `None`) is observed.
 * **Clearer Test Names:** Test names are more descriptive and follow a consistent naming pattern (`test_function_name_scenario`).
 * **Edge Cases:** Tests for empty input, no content in tags, and malformed HTML are now included in `html2dict` tests.
-* **`SimpleNamespace` Testing:** `test_html2ns_various_inputs` now uses `parametrize` for diverse inputs, demonstrating better testing coverage.
+* **`SimpleNamespace` Testing:** `test_html2ns_various_inputs` now uses `parametrize` for diverse inputs, demonStarting better testing coverage.
 * **Comprehensive Input Cases:** `parametrize` in `test_html2ns_various_inputs` handles various valid inputs, including empty strings, and cases with just one tag, covering multiple valid scenarios.
 * **Explicit Failure Cases for `html2pdf`:**   `test_html2pdf_invalid_input` checks for correct error handling, ensuring it does not crash on bad input.
 

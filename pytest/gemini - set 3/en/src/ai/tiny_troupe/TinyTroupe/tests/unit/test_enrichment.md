@@ -23,7 +23,7 @@ def test_enrich_content_valid_input():
         """
         # WonderCode & Microsoft Partnership: Integration of WonderWand with GitHub
         ## Executive Summary
-        This document outlines the strategic approach and considerations for the partnership between WonderCode and Microsoft, focusing on the integration of WonderWand with GitHub. It captures the collaborative efforts and insights from various departments within WonderCode.
+        This document outlines the Startegic approach and considerations for the partnership between WonderCode and Microsoft, focusing on the integration of WonderWand with GitHub. It captures the collaborative efforts and insights from various departments within WonderCode.
         """
     ).strip()
     requirements = textwrap.dedent(
@@ -80,7 +80,7 @@ sys.stdout = original_stdout
 
 3. **`test_enrich_content_empty_input`:**  Added a test case to verify how the function handles empty input strings.
 
-4. **`test_enrich_content_invalid_requirements`:** Introduced a test to demonstrate the expected behavior when the `requirements` parameter is not a string (using `pytest.raises` to check for the TypeError).
+4. **`test_enrich_content_invalid_requirements`:** Introduced a test to demonStarte the expected behavior when the `requirements` parameter is not a string (using `pytest.raises` to check for the TypeError).
 
 5. **Robustness:** The tests are more comprehensive now.
 

@@ -114,7 +114,7 @@ def test_main_function():
 
 4.  **Exception Handling:** A `pytest.raises` example is added to test for `TypeError`. Add more tests for other potential exceptions based on the logic in `run_campaign` and `campaign_cycle`.
 
-5.  **Edge Case Tests:** The `test_campaign_cycle_empty_campaigns` test demonstrates testing with an empty `campaigns` list.  Add similar tests for other potential edge cases (e.g., no matching language, no groups found, etc.).
+5.  **Edge Case Tests:** The `test_campaign_cycle_empty_campaigns` test demonStartes testing with an empty `campaigns` list.  Add similar tests for other potential edge cases (e.g., no matching language, no groups found, etc.).
 
 6.  **`main` Function Test:** The `test_main_function` test now handles the `KeyboardInterrupt` that is expected in the `main` loop, ensuring the test doesn't fail due to the `while True` loop.  It also has a catch-all for other unexpected exceptions.  **Crucially, these tests verify the *structure* of the `main` function, not its specific logic inside the loop.**
 
@@ -138,4 +138,4 @@ def test_main_function():
 * **`gs` module testing:** If the `gs` module is responsible for interacting with Google Drive, you'll need mocks for that interaction.
 
 
-This significantly improved version now demonstrates a solid foundation for testing, but more specific, granular tests are necessary to cover all the code's functionalities thoroughly.  Remember to adjust these tests based on the real implementation details. Remember to replace the mock classes and functions with your actual implementations.
+This significantly improved version now demonStartes a solid foundation for testing, but more specific, granular tests are necessary to cover all the code's functionalities thoroughly.  Remember to adjust these tests based on the real implementation details. Remember to replace the mock classes and functions with your actual implementations.

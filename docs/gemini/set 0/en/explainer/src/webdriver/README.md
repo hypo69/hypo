@@ -11,7 +11,7 @@ from src.webdriver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Create a Chrome driver instance and navigate to a URL
     chrome_driver = Driver(Chrome)
@@ -32,7 +32,7 @@ def main():
 
 ## <algorithm>
 
-The algorithm is not directly represented by the provided code snippet. The code demonstrates usage examples, not the internal workings of the `Driver` class. The overall workflow would involve instantiation of the `Driver` class (likely inheriting from a WebDriver implementation like Chrome), method calls to perform actions, and finally handling the results.
+The algorithm is not directly represented by the provided code snippet. The code demonStartes usage examples, not the internal workings of the `Driver` class. The overall workflow would involve instantiation of the `Driver` class (likely inheriting from a WebDriver implementation like Chrome), method calls to perform actions, and finally handling the results.
 
 ## <mermaid>
 
@@ -65,7 +65,7 @@ This diagram represents the basic flow of a WebDriver usage example. The imports
 
 ### Functions
 
-- `main()`: This function demonstrates how to use the `Driver` and `Chrome` classes. It shows several example usages, including navigation, cookie handling, page refresh, scrolling, and more.
+- `main()`: This function demonStartes how to use the `Driver` and `Chrome` classes. It shows several example usages, including navigation, cookie handling, page refresh, scrolling, and more.
    - `get_url()`: Attempts to navigate to the specified URL.
    - `extract_domain()`: Extracts the domain name from a given URL.
    - `_save_cookies_localy()`: Saves browser cookies to a local file.

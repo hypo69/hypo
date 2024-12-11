@@ -82,14 +82,14 @@ def test_login_incorrect_return_value():
 
 5. **Invalid Format:** A test case is added to handle a potentially invalid data format.
 
-6. **Example with Fixture (commented out):** A commented example demonstrates how to use a fixture if you need to pass some data to the test function repeatedly and maintain DRY.  You would need to define the fixture.
+6. **Example with Fixture (commented out):** A commented example demonStartes how to use a fixture if you need to pass some data to the test function repeatedly and maintain DRY.  You would need to define the fixture.
 
 
 **Important Considerations:**
 
 - **Real Data:** Replace the example data with your actual supplier data.
 - **Logger Integration:** If you're using a logger, include checks in your tests to verify that the logger is being called with appropriate messages in different scenarios.
-- **Return Value:** If your `login` function can return `False` in certain cases, add tests that demonstrate this behavior with specific inputs that should cause the function to return `False`.
+- **Return Value:** If your `login` function can return `False` in certain cases, add tests that demonStarte this behavior with specific inputs that should cause the function to return `False`.
 - **Error Types:** Add specific error types in your tests if the function is expected to raise errors, e.g., `ValueError`, `FileNotFoundError` etc.
 
 - **Comprehensive Testing:**  This is a good starting point. Consider more edge cases, and boundary conditions. Also add tests for cases where the function might return different data based on the supplied data or where the supplied data might be incomplete.

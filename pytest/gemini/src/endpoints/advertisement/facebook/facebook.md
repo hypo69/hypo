@@ -98,11 +98,11 @@ def test_upload_media(facebook_instance, mock_driver):
 
 4. **Fixtures for `Facebook` Instance:** The `facebook_instance` fixture utilizes `mock_driver` to produce a `Facebook` object for your tests.
 
-5. **Exception Handling:** The `test_facebook_init_with_invalid_driver` test demonstrates how to use `pytest.raises` to test for expected exceptions (TypeError in this case).  Crucially, you need to define the appropriate exception to expect.
+5. **Exception Handling:** The `test_facebook_init_with_invalid_driver` test demonStartes how to use `pytest.raises` to test for expected exceptions (TypeError in this case).  Crucially, you need to define the appropriate exception to expect.
 
 6. **Complete Example for `upload_media`:** The `test_upload_media` example shows how to mock `upload_media` with a return value.  It's important to adapt the argument structure (e.g., using a list of file paths) to match the expected input of the `upload_media` function within your `Facebook` class.
 
-7. **Edge Case Example (commented out):** The commented-out `test_upload_media_empty_file_path` example demonstrates testing for an empty list of file paths. You will need to determine the appropriate exception to raise if the function expects a non-empty list.
+7. **Edge Case Example (commented out):** The commented-out `test_upload_media_empty_file_path` example demonStartes testing for an empty list of file paths. You will need to determine the appropriate exception to raise if the function expects a non-empty list.
 
 **How to run the tests:**
 

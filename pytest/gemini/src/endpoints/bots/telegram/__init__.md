@@ -69,7 +69,7 @@ def test_mode_value():
 
 **Explanation and Improvements:**
 
-1. **Dummy `TelegramBot` class:**  The provided code doesn't have a `TelegramBot` class; this solution creates a dummy one for demonstration purposes. Replace this with the actual `TelegramBot` class from your `hypotez/src/bots/telegram/bot.py` file.
+1. **Dummy `TelegramBot` class:**  The provided code doesn't have a `TelegramBot` class; this solution creates a dummy one for demonStartion purposes. Replace this with the actual `TelegramBot` class from your `hypotez/src/bots/telegram/bot.py` file.
 
 2. **Comprehensive Test Cases:**  The provided test cases now include:
    - `test_telegram_bot_valid_input`: Testing the `send_message` function with a valid mode ('dev').
@@ -96,4 +96,4 @@ def test_mode_value():
    pytest test_telegram_bot.py
    ```
 
-This improved solution demonstrates a more complete and robust set of test cases for testing the functionality and error handling of your `TelegramBot` class, including edge cases.  Remember to replace the dummy `TelegramBot` class with the actual one from your code. Remember to adapt the tests to your actual `TelegramBot` class methods and functions.
+This improved solution demonStartes a more complete and robust set of test cases for testing the functionality and error handling of your `TelegramBot` class, including edge cases.  Remember to replace the dummy `TelegramBot` class with the actual one from your code. Remember to adapt the tests to your actual `TelegramBot` class methods and functions.

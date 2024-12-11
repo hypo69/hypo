@@ -70,7 +70,7 @@ result = add_numbers(5, 3)  # result will be 8
 
 **Relationship with Other Packages:**
 
-- The `add_numbers` function depends on the `calculate_sum` function within the `src.utils.calculator` module. This dependency demonstrates a clear separation of concerns.  The `add_numbers` function is a client of the `calculate_sum` function, meaning that it relies on the calculator for the addition operation.
+- The `add_numbers` function depends on the `calculate_sum` function within the `src.utils.calculator` module. This dependency demonStartes a clear separation of concerns.  The `add_numbers` function is a client of the `calculate_sum` function, meaning that it relies on the calculator for the addition operation.
 
 **Possible Improvements:**
 

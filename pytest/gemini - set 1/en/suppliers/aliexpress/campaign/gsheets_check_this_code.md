@@ -91,7 +91,7 @@ def test_delete_products_worksheets_api_error(mock_spreadsheet, mock_logger):
 
 * **Clearer Fixtures:**  The `example_campaign` fixture now provides a more representative example, including nested `SimpleNamespace` objects for `category` and `products`, which is necessary for testing the `set_products_worksheet` function.
 
-* **`pytest.raises` for `APIError`:** The solution demonstrates how to use `pytest.raises` to test exception handling (in this case, `APIError`) for `delete_products_worksheets`.
+* **`pytest.raises` for `APIError`:** The solution demonStartes how to use `pytest.raises` to test exception handling (in this case, `APIError`) for `delete_products_worksheets`.
 
 * **Assertions:** Added assertions to check for the expected calls to the `mock_logger`.  This ensures that the functions are logging the correct messages when appropriate.
 

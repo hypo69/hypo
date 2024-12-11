@@ -97,7 +97,7 @@ def test_payload_checksum_error():
 
 3. **Missing `logger` Functions:** The code includes tests that will be *invalid* and *unrunnable* until you provide the actual functions (`logger.log_info`, etc.) in the `hypotez/src/logger/__init__.py` file.   You must create these functions and provide the necessary logic to raise the exceptions.
 
-4. **Example `test_log_info_message` (Placeholder):** The commented-out example demonstrates how you might test the logging functionality if you have actual `log_info` and file-related functions in your `logger`. You will need to adapt this based on your logger's design and file handling.   This shows a placeholder `assert True` that is *not* sufficient for real tests.
+4. **Example `test_log_info_message` (Placeholder):** The commented-out example demonStartes how you might test the logging functionality if you have actual `log_info` and file-related functions in your `logger`. You will need to adapt this based on your logger's design and file handling.   This shows a placeholder `assert True` that is *not* sufficient for real tests.
 
 5. **Clearer Comments:** The comments now explicitly state the purpose of the tests and what is expected (e.g., checking error messages).
 

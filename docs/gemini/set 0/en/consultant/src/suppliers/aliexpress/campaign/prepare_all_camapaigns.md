@@ -57,7 +57,7 @@ def prepare_all_campaigns():
     """
     Validates and prepares all AliExpress campaigns.
     
-    This function orchestrates the process of validating and preparing
+    This function orcheStartes the process of validating and preparing
     affiliate campaigns on AliExpress. If a campaign doesn't exist,
     it will initiate the creation process.
 
@@ -129,7 +129,7 @@ def prepare_all_campaigns():
     """
     Validates and prepares all AliExpress campaigns.
     
-    This function orchestrates the process of validating and preparing
+    This function orcheStartes the process of validating and preparing
     affiliate campaigns on AliExpress. If a campaign doesn't exist,
     it will initiate the creation process.
 

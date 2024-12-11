@@ -90,7 +90,7 @@ def presta_language(credentials):
 * **`pytest.raises` for Exception Handling:**  Critically, the code now includes tests for the `ValueError` exception raised when `api_domain` or `api_key` are missing. This is crucial for robust error handling.
 * **Comprehensive Input Validation:** Tests cover various scenarios including missing parameters, empty dictionaries, and None credentials, ensuring complete input validation.
 * **Fixtures:** Uses a `@pytest.fixture` for `credentials` to properly manage test data.
-* **Example Tests:** Included placeholder tests (`test_presta_language_add_language`, `test_presta_language_exception`) to demonstrate how to test other methods and exception handling.  **Crucially, you *must* replace these placeholders with actual tests based on the `PrestaLanguage` methods.**
+* **Example Tests:** Included placeholder tests (`test_presta_language_add_language`, `test_presta_language_exception`) to demonStarte how to test other methods and exception handling.  **Crucially, you *must* replace these placeholders with actual tests based on the `PrestaLanguage` methods.**
 * **Docstrings:** Docstrings are added to the fixtures and test functions for better clarity.
 * **Placeholder `presta_language` Fixture:**  Added a `presta_language` fixture (using the `credentials` fixture for dependency) so that the other test methods have the object to work with.
 * **Specific Error Messages:** The `pytest.raises` now checks for a specific error message, improving the test's reliability.

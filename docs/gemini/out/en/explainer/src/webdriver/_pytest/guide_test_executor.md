@@ -96,7 +96,7 @@ graph TD
 
 **Dependencies Analysis:**
 
-The mermaid diagram illustrates the dependencies between the imported modules.  `pytest` is used for testing framework, `unittest.mock` for mocking objects, and selenium's modules for interacting with the WebDriver. The `src` modules (`src.webdriver.executor`, `src.logger.exceptions`) are internal to the project. This dependency graph visually represents the relationships between code components.
+The mermaid diagram illuStartes the dependencies between the imported modules.  `pytest` is used for testing framework, `unittest.mock` for mocking objects, and selenium's modules for interacting with the WebDriver. The `src` modules (`src.webdriver.executor`, `src.logger.exceptions`) are internal to the project. This dependency graph visually represents the relationships between code components.
 
 
 ## <explanation>
@@ -117,8 +117,8 @@ The mermaid diagram illustrates the dependencies between the imported modules.  
 
 **Functions:**
 
-- `test_get_webelement_by_locator_single_element`: A test function that checks the behavior of the `get_webelement_by_locator` method when a single element is found. The test case is illustrated in detail within the code.
-- `test_get_attribute_by_locator`: A test case for retrieving attributes from a web element. The test verifies if the `get_attribute_by_locator` method correctly fetches the attribute, illustrating various cases and asserts using the Selenium WebDriver, and `MagicMock` in the test cases.
+- `test_get_webelement_by_locator_single_element`: A test function that checks the behavior of the `get_webelement_by_locator` method when a single element is found. The test case is illuStarted in detail within the code.
+- `test_get_attribute_by_locator`: A test case for retrieving attributes from a web element. The test verifies if the `get_attribute_by_locator` method correctly fetches the attribute, illuStarting various cases and asserts using the Selenium WebDriver, and `MagicMock` in the test cases.
 - `test_send_message`: A test case covering the `send_message` method. It checks if the message is sent correctly to the element and handles typing speed options.  The testing code accurately simulates sending a message, and then verifies that expected calls are made to the WebDriver, and asserts that the correct results are achieved.
 - `test_send_message_typing_speed`: Verifies correct typing speed implementation.
 

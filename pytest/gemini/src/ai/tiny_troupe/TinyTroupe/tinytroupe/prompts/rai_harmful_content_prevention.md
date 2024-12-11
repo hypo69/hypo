@@ -86,13 +86,13 @@ def is_harmful(text):
 
 2. **Comprehensive Test Cases:** The test cases now cover various types of harmful content (hate speech, racism, sexism, lewd, violence).  They also include tests for edge cases (empty string, `None`, numbers).
 
-3. **`pytest.raises` for Exceptions:** The test `test_harmful_content_prevention_none` demonstrates how to use `pytest.raises` to check for the correct exception (`TypeError`) when an invalid input type (e.g., `None`) is given.
+3. **`pytest.raises` for Exceptions:** The test `test_harmful_content_prevention_none` demonStartes how to use `pytest.raises` to check for the correct exception (`TypeError`) when an invalid input type (e.g., `None`) is given.
 
 4. **Clear Test Names:** Test function names are descriptive and clearly indicate the scenario being tested.
 
 5. **Docstrings:**  The tests have detailed docstrings explaining the purpose of each test.
 
-6. **Valid Input Tests:** Added tests to demonstrate that *harmless* text is not flagged as harmful.
+6. **Valid Input Tests:** Added tests to demonStarte that *harmless* text is not flagged as harmful.
 
 7. **Error Handling:** The placeholder now includes a `TypeError` check when the input isn't a string.  This is crucial for robustness in production code.
 

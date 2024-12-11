@@ -2,7 +2,7 @@
 import pytest
 
 # Placeholder for the actual glossary.py code.  Replace with your code.
-# This example demonstrates the testing structure, you need to adapt it to your actual code.
+# This example demonStartes the testing structure, you need to adapt it to your actual code.
 class Driver:
     def __init__(self, name):
         self.name = name
@@ -93,7 +93,7 @@ def test_driver_list():
 
 3. **Error Handling:** The `test_product_invalid_price` example shows how to use `pytest.raises` to test for specific exceptions (e.g., `ValueError`).  This is *essential* for robustness.  Add similar tests for other potential exceptions your code might raise.
 
-4. **Edge Cases and Boundary Conditions:** The example has a test for a negative price in `ProductFields`, demonstrating a boundary condition.  Your tests should also cover various scenarios, including empty lists, zero values, and potentially more complex edge cases based on the logic in your functions.
+4. **Edge Cases and Boundary Conditions:** The example has a test for a negative price in `ProductFields`, demonStarting a boundary condition.  Your tests should also cover various scenarios, including empty lists, zero values, and potentially more complex edge cases based on the logic in your functions.
 
 
 5. **Comprehensive Testing:**  The most critical aspect is to consider *all* possible scenarios your code might encounter.  This includes valid inputs, various types of invalid inputs, and *edge cases* that are not commonly used, but could cause failures.  The more test cases you have, the more confident you can be in the correctness and robustness of your code.

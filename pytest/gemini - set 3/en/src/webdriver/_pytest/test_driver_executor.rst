@@ -106,7 +106,7 @@ def test_execute_locator_invalid_event(execute_locator, driver):
 
 * **Robust Error Handling:** Uses `pytest.raises` for exception testing, making the tests more comprehensive. This includes checking for both expected and unexpected exceptions.  Instead of just asserting `False`, use `pytest.raises` to validate that the correct exception type is raised with the appropriate message.
 * **Clearer Assertions:**  Uses more specific assertions, verifying element types (e.g., `assert isinstance(element, WebElement)`).
-* **Realistic Locators:** The example now uses `ID` and the original XPATH is kept for demonstration (replace with the actual locator if needed). Crucially, tests are written to handle failures when the locator isn't valid or the element doesn't exist.
+* **Realistic Locators:** The example now uses `ID` and the original XPATH is kept for demonStartion (replace with the actual locator if needed). Crucially, tests are written to handle failures when the locator isn't valid or the element doesn't exist.
 * **Fixture Improvements:** The `driver` fixture is crucial for setting up and tearing down the WebDriver. The `execute_locator` fixture correctly accepts the `driver` as an argument.
 * **Example Page Adaptation:**  You **MUST** adapt the selectors (`"//h1"`, `"//input[@id='search']"`, etc.) in the tests to accurately match elements on the specific web page you're testing. If a locator is not valid for the page, it won't find the element.
 * **Data-Driven Tests (Optional):** For more complex tests, consider using parameterized tests to reduce test code duplication.

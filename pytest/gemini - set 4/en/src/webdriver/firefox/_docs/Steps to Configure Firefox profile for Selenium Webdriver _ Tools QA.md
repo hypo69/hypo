@@ -88,7 +88,7 @@ def test_invalid_profile_name():
 
 1. **Profile Management:** The code now correctly creates a profile directory if it doesn't exist. This is extremely important for running tests reliably.  Crucially, it creates a new folder *inside* the user's `.mozilla/firefox` directory for the profile, preventing conflicts.
 
-2. **Error Handling (`pytest.raises`):** The `test_invalid_profile_name` function demonstrates how to use `pytest.raises` to test for a `FileNotFoundError` (or other exceptions) when the profile doesn't exist.  This is critical for robustness.
+2. **Error Handling (`pytest.raises`):** The `test_invalid_profile_name` function demonStartes how to use `pytest.raises` to test for a `FileNotFoundError` (or other exceptions) when the profile doesn't exist.  This is critical for robustness.
 
 3. **Clearer Tests:** Test functions now have better names, and the logic is more apparent.
 

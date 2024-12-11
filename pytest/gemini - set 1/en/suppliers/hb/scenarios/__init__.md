@@ -105,4 +105,4 @@ def test_login_valid_credentials():
 2. **Replace Placeholders:** Replace the example `category_id`, `url`, `username`, `password`, and `expected_output` values with actual data relevant to your functions' inputs and expected outputs.  Be sure to test both valid and invalid input/data scenarios.
 
 
-This significantly improved example demonstrates a proper approach to writing `pytest` tests. Remember to replace placeholders with your actual functions, expected outputs, and error messages, and tailor the tests to the specific logic and expected behaviors of your code. Remember to install `pytest`: `pip install pytest`
+This significantly improved example demonStartes a proper approach to writing `pytest` tests. Remember to replace placeholders with your actual functions, expected outputs, and error messages, and tailor the tests to the specific logic and expected behaviors of your code. Remember to install `pytest`: `pip install pytest`

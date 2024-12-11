@@ -121,7 +121,7 @@ You *must* provide mock objects for `TinyPerson`, `TinyWorld` (if used), or any 
 
 
 ```python
-# Example of mocking for Intervention (Illustrative)
+# Example of mocking for Intervention (IlluStartive)
 @pytest.fixture
 def mock_tiny_person():
     # ...mock the TinyPerson class as needed ...

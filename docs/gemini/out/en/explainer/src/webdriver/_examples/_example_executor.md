@@ -111,7 +111,7 @@ The code's workflow can be described as follows:
 
 3. **Locator Setup**: Creates an instance of the `ExecuteLocator` class, passing the WebDriver instance.
 
-4. **Locator Examples**: Executes multiple examples showcasing the use of the `ExecuteLocator` methods, demonstrating various scenarios:
+4. **Locator Examples**: Executes multiple examples showcasing the use of the `ExecuteLocator` methods, demonStarting various scenarios:
     * Simple locator (XPATH, text extraction).
     * Complex locator (multiple elements, nested locators, events).
     * Error handling (try-except block for `ExecuteLocatorException`).
@@ -169,18 +169,18 @@ graph TD
 
 **Classes:**
 
-* `ExecuteLocator`: This class is not fully defined within the provided snippet. It likely contains methods to locate web elements using different strategies, such as `execute_locator`, `send_message`, and `evaluate_locator`. Methods are designed to interact with the provided `driver` object for control.
+* `ExecuteLocator`: This class is not fully defined within the provided snippet. It likely contains methods to locate web elements using different Startegies, such as `execute_locator`, `send_message`, and `evaluate_locator`. Methods are designed to interact with the provided `driver` object for control.
 
 
 **Functions:**
 
-* `main()`: The entry point of the program. It orchestrates the creation of a WebDriver instance, sets up the `ExecuteLocator`, runs several test cases, and closes the WebDriver session.
+* `main()`: The entry point of the program. It orcheStartes the creation of a WebDriver instance, sets up the `ExecuteLocator`, runs several test cases, and closes the WebDriver session.
 
 **Variables:**
 
 * `driver`: An instance of the Selenium WebDriver (e.g., ChromeDriver). Used to interact with the web browser.
 * `locator`: An instance of the custom `ExecuteLocator` class. Used for executing locator commands.
-* `simple_locator`, `complex_locator`, `message_locator`, `multi_locator`, `attribute_locator`, `test_locator`: Dictionaries defining locator strategies to interact with the webpage.
+* `simple_locator`, `complex_locator`, `message_locator`, `multi_locator`, `attribute_locator`, `test_locator`: Dictionaries defining locator Startegies to interact with the webpage.
 
 **Potential Errors/Improvements:**
 

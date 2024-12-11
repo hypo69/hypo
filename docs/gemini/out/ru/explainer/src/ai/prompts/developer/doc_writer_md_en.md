@@ -35,7 +35,7 @@ The provided code is a *prompt* instructing on how to document code using Markdo
 **Possible Improvements:**
 
 * The prompt could be more concise by focusing on specific markdown syntax and formatting examples rather than providing lengthy prose descriptions for each documentation level.  This would improve its applicability for use in code.
-* It should include more practical examples of how to document code (including actual code blocks) to illustrate the usage of markdown and python syntax.
+* It should include more practical examples of how to document code (including actual code blocks) to illuStarte the usage of markdown and python syntax.
 
 
 **Relationships with other parts of the project (since there's no code to analyze):**

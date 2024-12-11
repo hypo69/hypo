@@ -37,7 +37,7 @@ TinyTroupe IS NOT intended for:
 ## How was TinyTroupe evaluated? What metrics are used to measure performance?
 
 TinyTroupe was evaluated through various use cases, part of which are provided as examples in the library. It is suitable to use under those scenarios to the extent that
-the demonstrations show. Anything beyond that remains research and experimental work. Extensive unit and scenario testing are also part of the library.
+the demonStartions show. Anything beyond that remains research and experimental work. Extensive unit and scenario testing are also part of the library.
 
 
 ## What are the limitations of TinyTroupe? How can users minimize the impact of TinyTroupe’s limitations when using the system?
@@ -130,13 +130,13 @@ TinyTroupe is NOT intended for:
 """
 Explanation of evaluation methods and metrics.
 """
-TinyTroupe was evaluated using various use cases documented within the library.  The evaluation's effectiveness is limited to demonstrated scenarios.  Unit and scenario testing are integral to its development.
+TinyTroupe was evaluated using various use cases documented within the library.  The evaluation's effectiveness is limited to demonStarted scenarios.  Unit and scenario testing are integral to its development.
 
 
 ## What are the limitations of TinyTroupe? How can users minimize the impact of TinyTroupe’s limitations when using the system?
 
 """
-Discussion of TinyTroupe's limitations and mitigation strategies.
+Discussion of TinyTroupe's limitations and mitigation Startegies.
 """
 TinyTroupe's accuracy in replicating human behavior is not established.  Theoretically, it could generate malicious outputs, but this has not been observed.  Its primary use case for generating malicious outputs is validation of other AI systems against such outputs.
 
@@ -241,13 +241,13 @@ TinyTroupe is NOT intended for:
 """
 Explanation of evaluation methods and metrics.
 """
-TinyTroupe was evaluated using various use cases documented within the library.  The evaluation's effectiveness is limited to demonstrated scenarios.  Unit and scenario testing are integral to its development.
+TinyTroupe was evaluated using various use cases documented within the library.  The evaluation's effectiveness is limited to demonStarted scenarios.  Unit and scenario testing are integral to its development.
 
 
 ## What are the limitations of TinyTroupe? How can users minimize the impact of TinyTroupe’s limitations when using the system?
 
 """
-Discussion of TinyTroupe's limitations and mitigation strategies.
+Discussion of TinyTroupe's limitations and mitigation Startegies.
 """
 TinyTroupe's accuracy in replicating human behavior is not established.  Theoretically, it could generate malicious outputs, but this has not been observed.  Its primary use case for generating malicious outputs is validation of other AI systems against such outputs.
 

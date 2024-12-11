@@ -106,9 +106,9 @@ def test_read_text_file_directory(tmpdir):
 * **`temp_file` Fixture:**  Crucially, a `pytest` fixture `temp_file` is introduced to create and manage temporary files. This avoids cluttering tests with file creation and removal logic.  Using `tmpdir` ensures the files are in a temporary directory that gets cleaned up automatically after the tests.
 * **More Comprehensive Tests:** Tests now cover saving strings, lists of strings (crucial for file writing!), and dictionaries (using `json.dump`).
 * **Error Handling:**  The `test_save_text_file_invalid_path` test checks for correct behavior when saving to a nonexistent path (returning `False`).
-* **Append Mode:**  `test_save_text_file_append_mode` demonstrates handling of append mode (`'a'`).
+* **Append Mode:**  `test_save_text_file_append_mode` demonStartes handling of append mode (`'a'`).
 * **Non-existent File:** `test_read_text_file_nonexistent_file` checks the proper handling of a non-existent file path.
-* **Directory Handling:** The `test_read_text_file_directory` test demonstrates reading files from a directory and handling the return type as a list of strings.
+* **Directory Handling:** The `test_read_text_file_directory` test demonStartes reading files from a directory and handling the return type as a list of strings.
 
 **How to Run:**
 

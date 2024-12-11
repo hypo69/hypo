@@ -20,7 +20,7 @@ Return the formatted data structure with comments explaining each section.
 
 This code snippet does not contain executable Python code. It defines a task for a hypothetical Python code assistant.  It's a set of instructions to be *implemented* by another function or script.  There is no step-by-step algorithm to describe, as no algorithm is explicitly defined.  The task describes the logic the assistant should follow.
 
-**Illustrative Workflow (if implemented):**
+**IlluStartive Workflow (if implemented):**
 
 1. **Input Handling:** The assistant receives input data (`{data}`).
 2. **Data Type Recognition:** The assistant determines the type of input data (e.g., JSON, CSV, Python object).

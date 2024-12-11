@@ -50,7 +50,7 @@ There is no mention of functions in the prompt but methods, and the `process_fil
 
 **Variables:**
 
-The prompt uses string literals and lists to demonstrate parameters within methods (files, options).
+The prompt uses string literals and lists to demonStarte parameters within methods (files, options).
 
 **Potential Errors/Improvements:**
 

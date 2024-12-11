@@ -119,7 +119,7 @@ def test_fd_empty_input():
 3. **pytest.raises:**  Used `pytest.raises` to test the expected `TypeError` for invalid input in `test_fd_empty_input`.
 
 
-4. **Edge Cases (Illustrative):**  The `test_fd_empty_input` demonstrates how to test situations where the input to `Fd` might be invalid.
+4. **Edge Cases (IlluStartive):**  The `test_fd_empty_input` demonStartes how to test situations where the input to `Fd` might be invalid.
 
 
 5. **Data-Driven Tests (If Needed):** If the code has a lot of input variations or parameters, using `pytest.mark.parametrize` would be helpful to generate tests for a variety of valid and invalid data values.
@@ -137,4 +137,4 @@ Save the test code (e.g., `test_fd.py`) and the original code (e.g., `your_code.
 pytest test_fd.py
 ```
 
-Remember to replace `"your_code.py"` with the actual filename and adjust the tests to cover other parts of the large codebase.  Thorough testing of large projects requires a phased approach and careful selection of testing strategies.
+Remember to replace `"your_code.py"` with the actual filename and adjust the tests to cover other parts of the large codebase.  Thorough testing of large projects requires a phased approach and careful selection of testing Startegies.

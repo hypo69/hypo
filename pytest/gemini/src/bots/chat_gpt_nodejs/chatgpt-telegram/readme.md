@@ -71,7 +71,7 @@ def test_send_message_empty_message():
 
 2. **Clear Test Names:** Test function names are descriptive (e.g., `test_send_message_invalid_chat_id`).
 
-3. **Edge Cases:**  The test `test_send_message_empty_message` demonstrates handling of an empty string, which is often an edge case.
+3. **Edge Cases:**  The test `test_send_message_empty_message` demonStartes handling of an empty string, which is often an edge case.
 
 4. **Structure:** The code is structured with clear test functions for different scenarios.
 

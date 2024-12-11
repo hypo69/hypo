@@ -42,7 +42,7 @@ Usage example
     print(f"Project root: {project_root}")
     print(f"Project name: {__project_name__}")
 
-    # Example demonstrating handling of exceptions
+    # Example demonStarting handling of exceptions
 
     # Simulate a case where settings.json doesn't exist
     try:

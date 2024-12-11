@@ -113,7 +113,7 @@ def test_id_product_valid_input(mock_driver, mock_context):
 
 4. **Specific Function Tests:** The example `test_id_product_valid_input` shows how to test a *specific* function of `Graber`.  This is better than just testing the entire `grab_page` function; you are testing the logic inside the function, rather than just checking the function's exit.
 
-5. **Error Handling:** The example `test_grab_page_missing_id_product` demonstrates exception handling, and a better structure of testing.
+5. **Error Handling:** The example `test_grab_page_missing_id_product` demonStartes exception handling, and a better structure of testing.
 
 6. **Clearer Assertions:** The tests now have more specific assertions about the expected data types and return values, ensuring your tests are checking *meaningful* parts of the code.
 

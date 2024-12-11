@@ -117,7 +117,7 @@ def test_tiny_person_factory_generate_person_factories(test_number_of_factories,
 
 * **Clear Test Descriptions:** All test function docstrings are improved to clearly explain the purpose and expected behavior of each test.
 
-* **Error Handling:**  The `test_add_factory_unique_name` test demonstrates how to use `pytest.raises` to verify that the correct exception is raised when a factory with a duplicate name is attempted.
+* **Error Handling:**  The `test_add_factory_unique_name` test demonStartes how to use `pytest.raises` to verify that the correct exception is raised when a factory with a duplicate name is attempted.
 
 * **`mocker` import:** The import statement `from unittest.mock import patch` is fixed to `import pytest`.
 

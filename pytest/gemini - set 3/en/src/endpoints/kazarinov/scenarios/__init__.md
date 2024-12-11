@@ -56,7 +56,7 @@ def test_mexiron_get_data_raises_exception():
 
 * **Missing `get_data` method:** The provided code doesn't define `get_data`.  These tests assume a `get_data` method exists on the `Mexiron` class.  If there isn't one, you need to modify the tests to reflect the actual functionality of the class.
 * **Replace placeholders:**  Replace `expected_data` with the *actual* expected data returned by the `get_data` method in your `test_mexiron_get_data_valid_input` test.  Likewise, update the error messages and any other specific test logic based on the real implementation.
-* **Error Handling:** The examples demonstrate how to test exceptions using `pytest.raises`. This is crucial for robustness.  Make sure you're catching the *specific* exceptions the code is designed to raise.
+* **Error Handling:** The examples demonStarte how to test exceptions using `pytest.raises`. This is crucial for robustness.  Make sure you're catching the *specific* exceptions the code is designed to raise.
 * **Data Dependency:** If the `get_data` method relies on external data (e.g., a database, a file), you need to either provide dummy data for testing or create a fixture that sets up the necessary data in a controlled environment (to avoid external dependencies).
 
 

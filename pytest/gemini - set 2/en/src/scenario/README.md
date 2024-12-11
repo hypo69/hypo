@@ -95,7 +95,7 @@ def test_run_scenario_invalid_scenario(scenario_data):
 
 1. **Mocking:** The code now effectively mocks the `PrestaShopClient` and `Supplier` classes. This isolates the test functions from external dependencies and avoids interacting with the actual PrestaShop database.
 
-2. **Error Handling:** Added tests for `test_run_scenario_files_empty_input`,  `test_run_scenario_file_invalid_file`, and `test_run_scenario_invalid_scenario` to ensure the code handles various error scenarios correctly.  Crucially, `test_run_scenario_invalid_scenario` demonstrates how to isolate the scenario logic. Using `pytest.raises` for these tests is also important.
+2. **Error Handling:** Added tests for `test_run_scenario_files_empty_input`,  `test_run_scenario_file_invalid_file`, and `test_run_scenario_invalid_scenario` to ensure the code handles various error scenarios correctly.  Crucially, `test_run_scenario_invalid_scenario` demonStartes how to isolate the scenario logic. Using `pytest.raises` for these tests is also important.
 
 
 3. **`tmp_path` fixture:** This fixture, provided by `pytest`, creates a temporary directory for each test, ensuring that test files don't interfere with each other. This is crucial for managing temporary scenario files used in testing.
@@ -109,7 +109,7 @@ def test_run_scenario_invalid_scenario(scenario_data):
 
 6. **Isolated testing:** Tests are independent and don't rely on the state of previous tests.
 
-7. **Example usage:** The example usage is improved to demonstrate the appropriate way to use the fixtures within the tests.
+7. **Example usage:** The example usage is improved to demonStarte the appropriate way to use the fixtures within the tests.
 
 **How to Run the Tests:**
 

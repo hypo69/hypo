@@ -130,7 +130,7 @@ graph TD
 *   `logger`: A logger from a custom package, essential for recording events and errors throughout the application's execution flow.
 *   `pprint`: A utility for pretty-printing data, typically used for debugging.
 *   `json`: A standard library for working with JSON data, as JSON is a common format for API responses.
-*   `ApiRequestException`, `ApiRequestResponseException`: Custom exceptions for API request and response errors, reflecting a well-defined error handling strategy within the project.  This hierarchy is likely part of an error handling mechanism in a package or module.
+*   `ApiRequestException`, `ApiRequestResponseException`: Custom exceptions for API request and response errors, reflecting a well-defined error handling Startegy within the project.  This hierarchy is likely part of an error handling mechanism in a package or module.
 
 
 **Classes:**

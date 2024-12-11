@@ -111,7 +111,7 @@ def test_settings_file_not_found(mock_open, tmp_path):
 * **Docstrings:** Added comprehensive docstrings to fixtures and test functions, clearly explaining the purpose and expected behavior.
 * **Correct Imports:** Corrected import statements to use `hypotez.src...`.
 
-This improved solution provides much better coverage and more reliable tests for the `get_project_root` function, demonstrating the proper use of pytest fixtures and mocking for reliable testing. Remember to install the required packages (`pytest`, `pathlib`, `packaging`).
+This improved solution provides much better coverage and more reliable tests for the `get_project_root` function, demonStarting the proper use of pytest fixtures and mocking for reliable testing. Remember to install the required packages (`pytest`, `pathlib`, `packaging`).
 
 
 ```bash

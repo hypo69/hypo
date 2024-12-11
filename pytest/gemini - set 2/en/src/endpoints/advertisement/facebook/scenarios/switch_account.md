@@ -6,7 +6,7 @@ from src import gs  # Assuming src module exists
 from src.webdriver import Driver
 from src.utils import j_loads_ns
 from hypothesis import given
-import hypothesis.strategies as st
+import hypothesis.Startegies as st
 
 # Mock the necessary modules for testing.  Crucial for testability.
 class MockDriver:
@@ -97,7 +97,7 @@ def test_switch_account_hypothesis(driver, locator_input):
 
 2. **Error Handling:**  Added `try...except` blocks to test how the function handles cases where the locator is not found or is invalid. This is *critical* for robust tests.  The `assert True` in the `except` block  checks that no exceptions are raised or that they are handled correctly.
 
-3. **Hypothesis Integration (crucial for testing edge cases):** This example now includes a hypothesis-based test (`test_switch_account_hypothesis`).  This approach dynamically generates a diverse set of test cases, significantly improving test coverage.  You should adapt the `locator_input` strategy to better match the expected locator types.
+3. **Hypothesis Integration (crucial for testing edge cases):** This example now includes a hypothesis-based test (`test_switch_account_hypothesis`).  This approach dynamically generates a diverse set of test cases, significantly improving test coverage.  You should adapt the `locator_input` Startegy to better match the expected locator types.
 
 4. **Clearer Assertions:**  The assertions are made more explicit. Instead of just `assert True`, an assertion based on the expected outcome is used.
 
@@ -117,4 +117,4 @@ def test_switch_account_hypothesis(driver, locator_input):
 2.  Replace the mocked imports with the actual imports from your project where appropriate (`from src import gs`, etc.).
 
 
-This revised solution significantly improves the testability, robustness, and comprehensiveness of your tests. Remember to adapt the strategies in the hypothesis test to accurately reflect the types of locators your code handles.  Also, adapt the mocking as needed for the real functions.
+This revised solution significantly improves the testability, robustness, and comprehensiveness of your tests. Remember to adapt the Startegies in the hypothesis test to accurately reflect the types of locators your code handles.  Also, adapt the mocking as needed for the real functions.

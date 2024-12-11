@@ -96,7 +96,7 @@ def test_ai_model_manager_exception():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Code:** The code now includes placeholder functions (`some_ai_function`) and a class (`AIModelManager`) to demonstrate how to write tests.  Replace these with the actual functions and classes from your `src.ai` module.
+1. **Placeholder Code:** The code now includes placeholder functions (`some_ai_function`) and a class (`AIModelManager`) to demonStarte how to write tests.  Replace these with the actual functions and classes from your `src.ai` module.
 
 2. **Clear Test Names:** Test function names are descriptive (e.g., `test_some_ai_function_valid_input`).
 

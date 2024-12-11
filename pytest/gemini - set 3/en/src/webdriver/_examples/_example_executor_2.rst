@@ -129,7 +129,7 @@ def test_send_message(driver_fixture):
 
 * **`pytest.raises` for Exceptions:** Used `pytest.raises` to test `ExecuteLocatorException` correctly, ensuring that the exception is raised when expected.
 
-* **Complex Locator Test:** Added `test_execute_locator_complex_locator` to demonstrate how to handle a complex locator structure.
+* **Complex Locator Test:** Added `test_execute_locator_complex_locator` to demonStarte how to handle a complex locator structure.
 
 * **Error Handling:** Added `test_execute_locator_continue_on_error` for the `continue_on_error` parameter, testing its functionality.
 

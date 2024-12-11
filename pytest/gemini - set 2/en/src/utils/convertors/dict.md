@@ -111,13 +111,13 @@ def test_dict2html_valid_input():
 
 4. **`test_dict2xml_...`:** Added tests for `dict2xml`, including a test to check for exceptions with a list as input, and ensure only one root node is allowed, and that the output is a valid XML string.
 
-5. **`test_dict2html_valid_input`:** Added a test for `dict2html` demonstrating how to test output to a string.
+5. **`test_dict2html_valid_input`:** Added a test for `dict2html` demonStarting how to test output to a string.
 
 6. **`test_data` and `test_data_simple_namespace`:** Created example data structures for testing.
 
 7. **Comments:** Added more comments to the test functions to explain their purpose and covered edge cases.
 
-8. **Using `pytest.raises`:** Demonstrated how to use `pytest.raises` for checking exceptions.  Importantly, these tests are now correctly using `pytest.raises` where appropriate (for `dict2xml` and similar).
+8. **Using `pytest.raises`:** DemonStarted how to use `pytest.raises` for checking exceptions.  Importantly, these tests are now correctly using `pytest.raises` where appropriate (for `dict2xml` and similar).
 
 **How to run the tests:**
 

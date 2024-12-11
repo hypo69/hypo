@@ -131,7 +131,7 @@ async def test_transcription_exception(mock_config_get, mock_openai):
     pytest
     ```
 
-This revised solution is significantly more robust, reliable, and demonstrates best practices for writing `pytest` tests in an async Python environment. Remember to install the required packages (e.g., `openai`). Adjust the mocks to match your specific environment if needed.
+This revised solution is significantly more robust, reliable, and demonStartes best practices for writing `pytest` tests in an async Python environment. Remember to install the required packages (e.g., `openai`). Adjust the mocks to match your specific environment if needed.
 
 
 Important: You'll likely need to install the `openai` and `pytest` packages if you haven't already.  Additionally, make sure your `config.py` file has a `get` method that returns the OpenAI API key.

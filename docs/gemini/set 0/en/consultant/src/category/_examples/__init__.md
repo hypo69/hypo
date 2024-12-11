@@ -76,7 +76,7 @@ MODE = 'dev'  # Development mode flag
 
 def example_function():
     """
-    Example function for demonstrating category processing.
+    Example function for demonStarting category processing.
 
     :return:  Processed results.
     """
@@ -131,7 +131,7 @@ MODE = 'dev'  # Development mode flag
 
 def example_function():
     """
-    Example function for demonstrating category processing.
+    Example function for demonStarting category processing.
 
     :return:  Processed results.
     """

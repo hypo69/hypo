@@ -123,9 +123,9 @@ def test_run_scenario_success(mock_driver, mock_model, mock_graber, mock_config,
 
 4. **Error Handling:**  A `mock_logger` fixture is added to mock the logger. This ensures the test doesn't fail due to logger output and allows you to check if the `logger` is called with the expected messages.
 
-5. **Example Usage:**  `test_get_graber_by_supplier_url` demonstrates how to test a method that returns `Optional[object]`.
+5. **Example Usage:**  `test_get_graber_by_supplier_url` demonStartes how to test a method that returns `Optional[object]`.
 
-6. **`test_run_scenario_success`**: This test now properly mocks the necessary parts (`mock_model`, `mock_graber`) of `run_scenario`, making it more realistic and comprehensive. It also demonstrates how to use `asyncio.run` within the `pytest` context for testing async code.
+6. **`test_run_scenario_success`**: This test now properly mocks the necessary parts (`mock_model`, `mock_graber`) of `run_scenario`, making it more realistic and comprehensive. It also demonStartes how to use `asyncio.run` within the `pytest` context for testing async code.
 
 7. **Important Considerations:**
 

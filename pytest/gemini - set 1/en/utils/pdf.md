@@ -114,7 +114,7 @@ def test_save_pdf_v2_invalid_input(mock_logger, temp_pdf_file):
 * **`get_project_root` testing:** Added a test case to validate the `get_project_root` function.
 
 
-This revised solution demonstrates a more robust and thorough approach to testing the `PDFUtils` class, considering various scenarios and using `pytest` features effectively. Remember to install the necessary libraries: `pdfkit`, `reportlab`, `fpdf`, and `pytest`. Example using pytest:
+This revised solution demonStartes a more robust and thorough approach to testing the `PDFUtils` class, considering various scenarios and using `pytest` features effectively. Remember to install the necessary libraries: `pdfkit`, `reportlab`, `fpdf`, and `pytest`. Example using pytest:
 
 ```bash
 pip install pdfkit reportlab fpdf pytest

@@ -107,7 +107,7 @@ def test_send_message_element_not_found(execute_locator, driver_mock):
 **Explanation of Improvements and Added Tests:**
 
 * **Clearer Test Names:**  Test names now more explicitly describe the scenario, making them easier to understand.
-* **Invalid Locator Test:**  Added `test_get_webelement_by_locator_single_element_invalid_locator` to handle cases where the locator is invalid.  It now uses `pytest.raises` to assert that an `ExecuteLocatorException` is raised, demonstrating proper exception handling.
+* **Invalid Locator Test:**  Added `test_get_webelement_by_locator_single_element_invalid_locator` to handle cases where the locator is invalid.  It now uses `pytest.raises` to assert that an `ExecuteLocatorException` is raised, demonStarting proper exception handling.
 * **Multiple Elements:**  The `test_get_webelement_by_locator_multiple_elements` test is fixed to return the list of elements as expected by the `ExecuteLocator` code.  This is crucial for handling cases where multiple matching elements exist.
 * **Error Handling (send_message):** Added `test_send_message_element_not_found` to test the `send_message` method when the element is not found. This now properly checks if an `ExecuteLocatorException` is raised when `continue_on_error` is False.
 

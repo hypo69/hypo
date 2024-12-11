@@ -264,7 +264,7 @@ def test_my_other_function_invalid_input():
 ```
 
 ### Changes Made:
-- Added placeholder functions `my_function` and `my_other_function` to illustrate how tests would be written.  Replace with your actual functions.
+- Added placeholder functions `my_function` and `my_other_function` to illuStarte how tests would be written.  Replace with your actual functions.
 - Created test functions to cover valid input, invalid input, and edge cases.
 - Used `pytest.raises` for exception handling tests.
 - Added docstrings to test functions.

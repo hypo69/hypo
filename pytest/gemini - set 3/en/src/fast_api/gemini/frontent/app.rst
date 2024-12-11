@@ -95,7 +95,7 @@ async def test_send_message_api_error():
 
 3. **Asynchronous Tests:** The tests are now asynchronous using `async def` and `await`. This is necessary to correctly handle the asynchronous operations in the original JavaScript code.
 
-4. **Error Handling:**  The `test_send_message_api_error` demonstrates how to test for errors returned from the API.
+4. **Error Handling:**  The `test_send_message_api_error` demonStartes how to test for errors returned from the API.
 
 5. **Clearer Assertions:** Assertions are now more focused on checking the expected state changes after the `sendMessage` call.
 

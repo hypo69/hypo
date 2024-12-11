@@ -60,7 +60,7 @@ def test_invalid_version_type(invalid_version):
 
 2. **Comprehensive Checks:** The tests cover more aspects: verifying the type of returned values, checking for empty strings/dictionaries, ensuring the `MODE` variable has the correct value.  Crucially, the tests now include checks for the expected *type* of the output of `__version__`.
 
-3. **Edge Cases and Invalid Inputs (Important):** A parameterized test (`test_invalid_version_type`) demonstrates how to handle cases with incorrect input types for `__version__`.  This is a *crucial* addition, as it verifies that your code handles potential errors gracefully. Adapt this example to other functions if applicable.
+3. **Edge Cases and Invalid Inputs (Important):** A parameterized test (`test_invalid_version_type`) demonStartes how to handle cases with incorrect input types for `__version__`.  This is a *crucial* addition, as it verifies that your code handles potential errors gracefully. Adapt this example to other functions if applicable.
 
 4. **Docstrings:** Included docstrings to explain the purpose of each test case, which enhances readability and maintainability.
 

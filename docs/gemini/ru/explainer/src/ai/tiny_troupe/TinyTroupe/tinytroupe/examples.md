@@ -107,4 +107,4 @@ The diagram shows a simple call stack, highlighting the dependency on the `TinyP
 
 **Relationship with other parts of the project:**
 
-The code likely interacts with other modules in the `tinytroupe` package to provide the `TinyPerson` class and potentially use this data later, especially with the methods not shown here. The examples demonstrate how to create, customize, and potentially interact with agents defined in the library.  Further context on usage and interdependencies with the broader project's design is needed for a more complete analysis.
+The code likely interacts with other modules in the `tinytroupe` package to provide the `TinyPerson` class and potentially use this data later, especially with the methods not shown here. The examples demonStarte how to create, customize, and potentially interact with agents defined in the library.  Further context on usage and interdependencies with the broader project's design is needed for a more complete analysis.

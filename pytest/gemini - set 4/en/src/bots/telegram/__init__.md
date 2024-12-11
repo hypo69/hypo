@@ -101,4 +101,4 @@ def test_send_message_invalid_chatid_type(example_bot):
 
 Remember to run `pytest` to execute these tests.  If you have a `__init__.py` file and `bot.py`, you need to arrange the files in a test directory, like `test_telegram_bot.py` that imports the necessary files from `hypotez/src/bots/telegram`.  The structure is crucial for `pytest` to discover and run your tests.
 
-This improved example provides a much stronger and more comprehensive testing strategy for your `TelegramBot`. Remember to add tests for every method and potential scenarios you expect your bot to handle.
+This improved example provides a much stronger and more comprehensive testing Startegy for your `TelegramBot`. Remember to add tests for every method and potential scenarios you expect your bot to handle.

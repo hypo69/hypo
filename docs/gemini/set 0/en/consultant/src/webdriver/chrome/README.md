@@ -74,7 +74,7 @@ Module for interacting with WebDriver and Chrome DevTools Protocol.
 =================================================================
 
 This module provides an example of using DevTools Protocol
-through WebDriver for Chrome.  It demonstrates how to
+through WebDriver for Chrome.  It demonStartes how to
 control and interact with web pages beyond standard WebDriver
 capabilities.
 
@@ -164,7 +164,7 @@ Module for interacting with WebDriver and Chrome DevTools Protocol.
 =================================================================
 
 This module provides an example of using DevTools Protocol
-through WebDriver for Chrome.  It demonstrates how to
+through WebDriver for Chrome.  It demonStartes how to
 control and interact with web pages beyond standard WebDriver
 capabilities.
 

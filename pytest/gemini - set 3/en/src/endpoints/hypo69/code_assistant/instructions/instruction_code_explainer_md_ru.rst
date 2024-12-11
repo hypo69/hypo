@@ -61,7 +61,7 @@ def test_example_function_none_input():
 
 **Explanation:**
 
-The provided Python code was incomplete; therefore, the above example code demonstrates test cases for a hypothetical `example_function`.  You must replace this example with the actual Python code you want tested.
+The provided Python code was incomplete; therefore, the above example code demonStartes test cases for a hypothetical `example_function`.  You must replace this example with the actual Python code you want tested.
 
 **Important Considerations for Real Code Tests:**
 

@@ -15,7 +15,7 @@ Execution steps
 
 4. **Code Comments:** Use Markdown to document individual code sections within functions or methods. Explain the logic, decisions, or temporary solutions used in the code. Keep comments in blocks, rather than inline, for better readability and organization.  Avoid overly simplistic comments that don't add significant information.
 
-5. **Exception Documentation:** For classes, methods, and functions, document exceptions (`# Exception: ExceptionName`). Specify the exceptions that might be raised, the conditions under which they occur, and their parameters. Include an example demonstrating the exception handling.
+5. **Exception Documentation:** For classes, methods, and functions, document exceptions (`# Exception: ExceptionName`). Specify the exceptions that might be raised, the conditions under which they occur, and their parameters. Include an example demonStarting the exception handling.
 
 Usage example
 -------------------------
@@ -25,7 +25,7 @@ How to document a Python module
 
 Description
 -------------------------
-This example demonstrates the structure for documenting a Python module.
+This example demonStartes the structure for documenting a Python module.
 
 Execution steps
 -------------------------

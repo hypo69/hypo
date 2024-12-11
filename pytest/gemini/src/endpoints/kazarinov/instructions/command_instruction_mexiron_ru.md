@@ -95,7 +95,7 @@ def test_empty_input():
 
 2. **Clearer Test Cases:** The `test_valid_input` now checks the structure of the result for a successful response. It's important to verify that the function is not only returning a string but also a valid JSON structure.
 
-3. **`pytest.raises` (Example):**  Demonstrates a test case for handling invalid input. This would be important for testing scenarios where the input JSON might not have the necessary structure, or the keys might not exist.
+3. **`pytest.raises` (Example):**  DemonStartes a test case for handling invalid input. This would be important for testing scenarios where the input JSON might not have the necessary structure, or the keys might not exist.
 
 4. **Fixture for Valid Input:** A `valid_input_json` fixture provides a well-formed JSON string, simplifying the test setup and making the tests more organized.
 

@@ -75,7 +75,7 @@ def test_get_list_products_in_category_empty_response():
 
 **Explanation and Improvements:**
 
-1. **Mocking:** The crucial addition is mocking the `Graber` class.  Real-world tests shouldn't rely on external dependencies (like network requests) for their execution.  Using `pytest.mock` to create mock objects is highly recommended.  This example demonstrates mock implementations to test cases with empty or invalid data.
+1. **Mocking:** The crucial addition is mocking the `Graber` class.  Real-world tests shouldn't rely on external dependencies (like network requests) for their execution.  Using `pytest.mock` to create mock objects is highly recommended.  This example demonStartes mock implementations to test cases with empty or invalid data.
 
 2. **Specific Assertions:**  Instead of just checking the type of the return value, add more specific assertions about the expected structure of the data.  What kind of data do `get_list_categories_from_site` and `get_list_products_in_category` return? Are they lists of dictionaries?  Add assertions to check these details.
 

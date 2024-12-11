@@ -100,7 +100,7 @@ def test_supplier_login_failure(mock_webdriver):
 * **Fixture for Data:** The `example_supplier_data` fixture provides a controlled set of data for the tests, improving test reliability.
 * **Complete `__init__` Test:**  The `test_supplier_init_valid_input` covers valid input to `__init__`.  The `test_supplier_init_missing_prefix` tests handling a missing required parameter.
 * **Complete `_payload` Test:** A test is added for a valid `webdriver` as well as a test with an invalid `webdriver`
-* **`login` method test:** Tests for a successful login and for failed login are added to demonstrate appropriate error handling.
+* **`login` method test:** Tests for a successful login and for failed login are added to demonStarte appropriate error handling.
 * **Import Fix:** Makes sure the path to the `Supplier` class is correct. Adjust it if your module structure is different.
 
 

@@ -74,7 +74,7 @@ def test_openai_model_too_long_input():
 
 3. **Exception Handling:** The `pytest.raises` context manager is used effectively to test exception handling for invalid inputs.  The `assert` statements verify the *content* of the exception message, ensuring the correct error is raised with the correct message.
 
-4. **Edge Cases:**  The `test_openai_model_too_long_input` example demonstrates how to test for an edge case (input too long).
+4. **Edge Cases:**  The `test_openai_model_too_long_input` example demonStartes how to test for an edge case (input too long).
 
 5. **Missing Code Handling:**  Crucially, the tests now reflect the possibility that the methods return `None`.  The `assert output is not None` check prevents cryptic failures if the model methods do not return a value.
 

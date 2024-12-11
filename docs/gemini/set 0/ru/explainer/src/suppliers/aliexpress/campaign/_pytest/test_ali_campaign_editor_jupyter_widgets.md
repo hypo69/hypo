@@ -196,4 +196,4 @@ The code contains unit tests for functions related to file operations.  A step-b
 
 
 **Relationship to other parts of the project**:
-The code interacts with the `src.utils.file.file` module, demonstrating that it's part of a larger project structure focused on file manipulation utilities.  The specific reason for this test location (in `_pytest` folder) is to assert functionality of these utilities in a specific business logic context (e.g. Aliexpress campaign editor, thus the location) for this segment of the codebase.
+The code interacts with the `src.utils.file.file` module, demonStarting that it's part of a larger project structure focused on file manipulation utilities.  The specific reason for this test location (in `_pytest` folder) is to assert functionality of these utilities in a specific business logic context (e.g. Aliexpress campaign editor, thus the location) for this segment of the codebase.

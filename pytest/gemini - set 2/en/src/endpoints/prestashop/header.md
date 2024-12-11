@@ -84,7 +84,7 @@ def test_file_content(dummy_files: Path, file_to_check, expected_content):
 
 2. **Clearer Test Names:** Test names are more descriptive, indicating the specific scenario.
 
-3. **`pytest.raises` (Important):** The example now demonstrates how to use `pytest.raises` to test exception handling for file not found.
+3. **`pytest.raises` (Important):** The example now demonStartes how to use `pytest.raises` to test exception handling for file not found.
 
 
 4. **Parameterization (Helpful):**  The `@pytest.mark.parametrize` decorator is used to run the `test_file_content` test with multiple file names and expected content in a clean, DRY manner.

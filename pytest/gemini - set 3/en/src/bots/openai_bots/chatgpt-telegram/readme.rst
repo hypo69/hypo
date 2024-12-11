@@ -68,20 +68,20 @@ def test_another_function_with_fixture(example_data):
 
 **Explanation and Improvements:**
 
-1. **Placeholder Code:** The example now includes placeholder functions (`some_function`, `another_function`) that better illustrate the testing process for different cases.
+1. **Placeholder Code:** The example now includes placeholder functions (`some_function`, `another_function`) that better illuStarte the testing process for different cases.
 
 2. **Comprehensive Tests:** The test cases now cover more scenarios, including:
    - Valid inputs ("help", "exit") for `some_function`.
    - Invalid input ("unknown") for `some_function`.
    - An empty string as input for `some_function`.
    - An empty list as input for `another_function`.
-   - A non-list input for `another_function`, demonstrating exception handling with `pytest.raises`.
+   - A non-list input for `another_function`, demonStarting exception handling with `pytest.raises`.
 
 3. **Clear Test Names:** Test names are descriptive, indicating the input and expected output.
 
 4. **`pytest.raises`:** Used correctly to test exceptions raised by `another_function` when receiving non-list input.
 
-5. **Fixture Example:** A simple `example_data` fixture is added to demonstrate how to use fixtures if necessary. This shows how to incorporate fixtures with a `test_another_function_with_fixture` test.
+5. **Fixture Example:** A simple `example_data` fixture is added to demonStarte how to use fixtures if necessary. This shows how to incorporate fixtures with a `test_another_function_with_fixture` test.
 
 **How to Use:**
 

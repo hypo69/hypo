@@ -22,7 +22,7 @@ def test_get_helicone_token(monkeypatch):
     """
     Tests the helicone_token retrieval function (example).
 
-    This example demonstrates mocking a function to avoid external dependencies
+    This example demonStartes mocking a function to avoid external dependencies
     in tests.  Replace with the actual function and data in your code.
     """
     # Mock the function that retrieves the token, for testing purposes
@@ -76,11 +76,11 @@ def test_function_using_config(example_config):
 
 1. **No Input Code:** The provided input code was empty.  The example tests assume there are functions in the `helicone.py` file, such as `get_helicone_token`  or  `process_invalid_input`.  Replace these placeholder functions and add tests for the actual functions your code contains.
 
-2. **Mocking (`monkeypatch`):** The `test_get_helicone_token` function demonstrates how to mock external functions or API calls using `monkeypatch`. This is crucial for testing code that depends on external resources (like an API) without relying on the actual API.  This makes the tests faster and more reliable.
+2. **Mocking (`monkeypatch`):** The `test_get_helicone_token` function demonStartes how to mock external functions or API calls using `monkeypatch`. This is crucial for testing code that depends on external resources (like an API) without relying on the actual API.  This makes the tests faster and more reliable.
 
 3. **Exception Handling:**  The `test_invalid_helicone_input` example shows how to use `pytest.raises` to check if a function raises the expected exception with invalid input. Replace the placeholder with your actual code.
 
-4. **Fixtures:**  The `example_config` fixture demonstrates how to provide test data to your tests. If your functions take configuration parameters, create appropriate fixtures for them.
+4. **Fixtures:**  The `example_config` fixture demonStartes how to provide test data to your tests. If your functions take configuration parameters, create appropriate fixtures for them.
 
 5. **Specific Tests:** The key is to write specific tests for the functions and methods defined in the `helicone.py` file, thoroughly testing valid, invalid, and boundary inputs.
 

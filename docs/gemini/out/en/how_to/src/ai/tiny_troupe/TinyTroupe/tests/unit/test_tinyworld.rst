@@ -28,7 +28,7 @@ Execution steps
 7. **Testing `TinyWorld.encode_complete_state` and `TinyWorld.decode_complete_state`:** The `encode_complete_state` method is used to serialize the state of the TinyWorld. A modified copy of the world is created (`world_2`). The `decode_complete_state` method is used to reconstruct the world state from the encoded data. Assertions verify that the reconstructed `TinyWorld` (`world_2`) is identical to the original in terms of name and the number of agents.
 
 
-8. **Error handling (implicitly):** The code includes assertions to check for `None` values and for properties matching expected values. This demonstrates error handling where incorrect values or missing data would fail the test.
+8. **Error handling (implicitly):** The code includes assertions to check for `None` values and for properties matching expected values. This demonStartes error handling where incorrect values or missing data would fail the test.
 
 
 Usage example
@@ -50,7 +50,7 @@ Usage example
         setup(world)
         return world
     
-    # Example usage within a test function (demonstrating how to create the needed TinyWorld and use functions from the test suite)
+    # Example usage within a test function (demonStarting how to create the needed TinyWorld and use functions from the test suite)
     def test_broadcast_example(focus_group_world):
       # ... other test setup ...
       focus_group_world.broadcast("""Some message""")

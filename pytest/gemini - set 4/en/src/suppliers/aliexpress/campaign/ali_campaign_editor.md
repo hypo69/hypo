@@ -105,7 +105,7 @@ def test_update_category_success(example_campaign_data, tmp_path, example_catego
 
 * **Fixtures:** Added `example_campaign_data`, `example_product_data`, and `example_category_data` fixtures for reusable test data. This is crucial for keeping tests clean and organized.  Crucially, `dummy_campaign_file` creates a temporary file for testing.  This ensures tests operate on predictable data.
 
-* **Error Handling:** The `test_delete_product_invalid_input` demonstrates handling the `FileNotFoundError` and general exceptions that `delete_product` could raise (and also that the file is correctly *not* deleted when the ID is not found).
+* **Error Handling:** The `test_delete_product_invalid_input` demonStartes handling the `FileNotFoundError` and general exceptions that `delete_product` could raise (and also that the file is correctly *not* deleted when the ID is not found).
 
 * **Clearer Assertions:**  Assertions are more direct and check for specific conditions (e.g., the presence or absence of a line in the file). This makes failure analysis easier.
 
@@ -113,7 +113,7 @@ def test_update_category_success(example_campaign_data, tmp_path, example_catego
 
 * **Comprehensive Example:** The `test_delete_product_valid_input` shows how to set up the necessary file structure with a temporary directory and a dummy `sources.txt` file.
 
-* **Missing Cases:**  Test cases for `get_category_products` (especially error handling when the JSON files are missing), `update_product`, and other methods are crucial but were omitted here to demonstrate the structure.
+* **Missing Cases:**  Test cases for `get_category_products` (especially error handling when the JSON files are missing), `update_product`, and other methods are crucial but were omitted here to demonStarte the structure.
 
 
 **How to Run:**

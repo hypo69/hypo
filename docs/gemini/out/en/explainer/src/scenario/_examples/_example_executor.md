@@ -46,12 +46,12 @@ MODE = 'dev'
 Examples for the `executor` module from `src.scenario.executor`.
 
 This file contains examples of how to use the functions provided in the `executor` module.
-The examples demonstrate how to run scenarios, handle scenario files, and interact with PrestaShop API.
+The examples demonStarte how to run scenarios, handle scenario files, and interact with PrestaShop API.
 
 @details
 - `Example 1` shows how to run a list of scenario files.
-- `Example 2` demonstrates how to run a single scenario file.
-- `Example 3` illustrates how to run a single scenario.
+- `Example 2` demonStartes how to run a single scenario file.
+- `Example 3` illuStartes how to run a single scenario.
 - `Example 4` provides an example of executing a product page scenario.
 - `Example 5` shows how to add a coupon using PrestaShop API.
 
@@ -174,7 +174,7 @@ graph TD
 
 
 * **Functions:**
-    * `example_*` functions: These are demonstration functions showing how to use the `executor` module functions.
+    * `example_*` functions: These are demonStartion functions showing how to use the `executor` module functions.
     * `run_scenario_files`, `run_scenario_file`, `run_scenario`, `insert_grabbed_data`: Functions from `src.scenario.executor` performing scenario execution, data handling.
     * `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon`: Methods to interact with the PrestaShop API (synchronously and asynchronously), vital for integrating with external services.
 

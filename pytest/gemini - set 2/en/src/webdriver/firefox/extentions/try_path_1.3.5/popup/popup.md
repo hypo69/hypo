@@ -145,4 +145,4 @@ def test_showError():
     ```
 
 
-This significantly improved example demonstrates a correct approach to testing JavaScript code using `pytest` and `js2py`. Remember to adapt the mocks and assertions to the specific logic of your JavaScript functions. Remember to implement assertions in each test to check the actual outputs against the expected results based on valid and invalid inputs.
+This significantly improved example demonStartes a correct approach to testing JavaScript code using `pytest` and `js2py`. Remember to adapt the mocks and assertions to the specific logic of your JavaScript functions. Remember to implement assertions in each test to check the actual outputs against the expected results based on valid and invalid inputs.

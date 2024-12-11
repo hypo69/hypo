@@ -91,10 +91,10 @@ def test_gworksheet_creation(example_spreadsheet):
 
 3. **Specific Assertions:** The `assert` statements now check for the correct *types* and *values* returned by the functions/methods (instead of just `assert True`).
 
-4. **Edge Case/Exception Handling:**  The example includes a `test_gspreadsheet_creation_invalid_id` demonstrating how to use `pytest.raises` to test for exceptions.  Crucially, the error message is checked, making the test more robust.
+4. **Edge Case/Exception Handling:**  The example includes a `test_gspreadsheet_creation_invalid_id` demonStarting how to use `pytest.raises` to test for exceptions.  Crucially, the error message is checked, making the test more robust.
 
 
-5. **Placeholder Tests (Crucial):**  I've added placeholder test functions for `GSRenderr` and added a placeholder function example to illustrate how to handle other functions in the code.   **You absolutely need to fill these placeholders with real tests based on *what methods and properties are defined* in the classes and functions of the provided `bberyakov` code**.
+5. **Placeholder Tests (Crucial):**  I've added placeholder test functions for `GSRenderr` and added a placeholder function example to illuStarte how to handle other functions in the code.   **You absolutely need to fill these placeholders with real tests based on *what methods and properties are defined* in the classes and functions of the provided `bberyakov` code**.
 
 
 **How to Use:**

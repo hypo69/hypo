@@ -80,9 +80,9 @@ def test_process_user_input_empty_input():
 
 1. **Placeholder Code:** The code now includes placeholder functions (`get_chat_id`, `process_user_input`) for testing.  **Crucially, replace these with the actual functions from your `chatgpt-telegram` code.**
 
-2. **Comprehensive Test Cases:** The tests cover valid input, missing keys, and empty inputs for `get_chat_id`, demonstrating different error scenarios.  Test cases are provided for `process_user_input` for valid inputs ("hello", "bye") and invalid input, as well as empty input.
+2. **Comprehensive Test Cases:** The tests cover valid input, missing keys, and empty inputs for `get_chat_id`, demonStarting different error scenarios.  Test cases are provided for `process_user_input` for valid inputs ("hello", "bye") and invalid input, as well as empty input.
 
-3. **pytest Fixtures:** A `@pytest.fixture` called `example_update` provides sample data for the `get_chat_id` tests, demonstrating how to create and use fixtures. **Adapt this to your actual data structures.**
+3. **pytest Fixtures:** A `@pytest.fixture` called `example_update` provides sample data for the `get_chat_id` tests, demonStarting how to create and use fixtures. **Adapt this to your actual data structures.**
 
 4. **Clear Test Names:** Test names are descriptive, making the purpose of each test clear.
 

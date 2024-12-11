@@ -145,7 +145,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The `mermaid` diagram illustrates the key imports and their relationship to the `SpreadSheet` class. The `SpreadSheet` class relies on various libraries for core functionality (e.g., accessing Google Sheets, handling files, logging, and data manipulation).
+The `mermaid` diagram illuStartes the key imports and their relationship to the `SpreadSheet` class. The `SpreadSheet` class relies on various libraries for core functionality (e.g., accessing Google Sheets, handling files, logging, and data manipulation).
 
 
 ## <explanation>

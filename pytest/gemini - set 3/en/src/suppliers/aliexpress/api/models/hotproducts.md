@@ -90,7 +90,7 @@ def test_hotproducts_response_product_type(example_response):
    - `products` attribute not being a list.
    - **Crucially**, it verifies that all items in the `products` list are indeed instances of the `Product` class.
 
-4. **`pytest.raises` for Exceptions:** Uses `pytest.raises` to check for specific exceptions (`TypeError`, `ValueError`) when invalid data is provided, demonstrating proper exception handling.
+4. **`pytest.raises` for Exceptions:** Uses `pytest.raises` to check for specific exceptions (`TypeError`, `ValueError`) when invalid data is provided, demonStarting proper exception handling.
 
 
 **How to run the tests:**

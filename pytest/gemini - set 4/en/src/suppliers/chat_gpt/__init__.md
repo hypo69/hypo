@@ -18,7 +18,7 @@ def test_gsheet_import():
 
 The provided code snippet only defines a global variable `MODE`.  There are no functions or classes to test.  The provided example tests cover the critical aspect of checking if the variable `MODE` has the expected value.  Crucially, it imports the module to verify the existence.
 
-* **`test_mode_value`:** This test directly accesses the `MODE` variable from the `hypotez.src.suppliers.chat_gpt` module using `from ... import MODE`. This demonstrates how to test a simple global variable.  Importantly, it asserts that the value is indeed 'dev', as expected.
+* **`test_mode_value`:** This test directly accesses the `MODE` variable from the `hypotez.src.suppliers.chat_gpt` module using `from ... import MODE`. This demonStartes how to test a simple global variable.  Importantly, it asserts that the value is indeed 'dev', as expected.
 
 
 * **`test_gsheet_import`:**  This test addresses the potential import error. It attempts to import `GptGs`.   Crucially, instead of an assertion on the *content* of the class, this test validates the *ability* to import it successfully. This is often as important as, or even more important than, verifying the internal logic of the class. This test will pass if the `GptGs` class exists in the `hypotez.src.suppliers.chat_gpt` module. If it doesn't exist, an import error occurs, and the test will fail, providing useful information in the test report.  This `assert True` is a placeholder, and would change based on how you plan to ensure that the class exists (e.g. validating a specific attribute of `GptGs`).
@@ -54,7 +54,7 @@ def test_gpt_gs_method(gpt_gs_instance):
     assert isinstance(result, list), "Method should return a list"
 ```
 
-The hypothetical example above illustrates how you would create a fixture for use in more detailed tests.  You'd need a more comprehensive example for the class for these tests to be meaningful.
+The hypothetical example above illuStartes how you would create a fixture for use in more detailed tests.  You'd need a more comprehensive example for the class for these tests to be meaningful.
 
 
 Remember to replace the placeholder comments with accurate test assertions based on the actual logic of your code.

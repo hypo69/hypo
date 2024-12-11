@@ -68,13 +68,13 @@ def test_graber_missing_method():
 
 3. **Clear Test Names:** Test function names are descriptive (e.g., `test_graber_get_product_details_valid_input`).
 
-4. **Valid Input Test:** `test_graber_get_product_details_valid_input` demonstrates a test with valid data.  Crucially, it asserts that the result is not `None` and has a length greater than 0, reflecting an expectation of a non-empty response.
+4. **Valid Input Test:** `test_graber_get_product_details_valid_input` demonStartes a test with valid data.  Crucially, it asserts that the result is not `None` and has a length greater than 0, reflecting an expectation of a non-empty response.
 
 5. **Invalid Input Test:** `test_graber_get_product_details_invalid_product_id` tests with an invalid product ID.  **The crucial part here is the *expected behavior*.** This test needs adjustments based on *how your* `Graber` class handles invalid IDs (e.g., returns `None`, raises an exception, or returns specific error data).
 
-6. **Invalid URL Test:** The `test_graber_get_product_details_invalid_url` and `test_graber_get_product_details_empty_url` tests are *vital* for robustness. They demonstrate testing for invalid or malformed inputs (like an empty or incorrect URL). These tests use `pytest.raises` to check for `ValueError` (you should adjust the exception type if your `Graber` code raises a different exception).
+6. **Invalid URL Test:** The `test_graber_get_product_details_invalid_url` and `test_graber_get_product_details_empty_url` tests are *vital* for robustness. They demonStarte testing for invalid or malformed inputs (like an empty or incorrect URL). These tests use `pytest.raises` to check for `ValueError` (you should adjust the exception type if your `Graber` code raises a different exception).
 
-7. **Missing Method Test:** The `test_graber_missing_method` demonstrates testing if an attribute error is raised when a method doesn't exist. This checks robustness, preventing unexpected behavior if a function is not implemented.
+7. **Missing Method Test:** The `test_graber_missing_method` demonStartes testing if an attribute error is raised when a method doesn't exist. This checks robustness, preventing unexpected behavior if a function is not implemented.
 
 **How to use:**
 

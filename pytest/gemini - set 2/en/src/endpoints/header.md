@@ -110,11 +110,11 @@ def test_README_loading():
 
 **Explanation and Improvements:**
 
-* **Mocking `gs`:**  Crucially, the `gs` module is now mocked using `unittest.mock.patch`. This isolates the test from the external file system operations and prevents side effects, making the tests more reliable.  The `test_settings_loading` and `test_README_loading`  functions demonstrate this approach effectively.
-* **Error Handling:** The `test_settings_loading_file_not_found` test case verifies that `settings` remains `None` when the `settings.json` file is not found.  This demonstrates proper error handling.
+* **Mocking `gs`:**  Crucially, the `gs` module is now mocked using `unittest.mock.patch`. This isolates the test from the external file system operations and prevents side effects, making the tests more reliable.  The `test_settings_loading` and `test_README_loading`  functions demonStarte this approach effectively.
+* **Error Handling:** The `test_settings_loading_file_not_found` test case verifies that `settings` remains `None` when the `settings.json` file is not found.  This demonStartes proper error handling.
 * **Temporary Directory:**  Tests for `set_project_root` now use a temporary directory to avoid cluttering the real file system.
 * **Clearer Test Names:** Test names are more descriptive, improving readability and understanding.
-* **Comprehensive Coverage:** The test suite now covers more scenarios, including cases where marker files are not found, files are in the parent directory, and with invalid marker files, demonstrating broader coverage.
+* **Comprehensive Coverage:** The test suite now covers more scenarios, including cases where marker files are not found, files are in the parent directory, and with invalid marker files, demonStarting broader coverage.
 * **Fixture Removal:** The original `example_data` fixture is not needed as the tests are more focused on verifying the functions' behavior rather than providing fixed input/output pairs.
 
 

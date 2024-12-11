@@ -78,12 +78,12 @@ def test_config_parsing_invalid_section():
 
 1. **Clearer Test Names:** Test names now explicitly state the purpose (e.g., `test_config_parsing_invalid_value`).
 
-2. **Robust Error Handling:** The code now includes `pytest.raises` to test for `KeyError` exceptions when accessing non-existent options or sections, demonstrating robust error handling.  Critically, the invalid_section tests use a known good configuration.
+2. **Robust Error Handling:** The code now includes `pytest.raises` to test for `KeyError` exceptions when accessing non-existent options or sections, demonStarting robust error handling.  Critically, the invalid_section tests use a known good configuration.
 
 3. **Realistic Invalid Input:** The `test_config_parsing_invalid_value` now shows how to test for an *invalid type*, replacing placeholder values with something actually different (like an integer instead of a string) that would cause issues in a real-world situation.
 
 
-4. **Realistic Invalid Section:** The `test_config_parsing_invalid_section`  demonstrates how to test for more complex invalid input in the config file structure. This checks a condition where the section is malformed rather than just missing.
+4. **Realistic Invalid Section:** The `test_config_parsing_invalid_section`  demonStartes how to test for more complex invalid input in the config file structure. This checks a condition where the section is malformed rather than just missing.
 
 
 5. **File Handling:** The code now creates a temporary `config.ini` file, which is good practice in testing, and then removes it.  Using temporary files prevents polluting the test environment with changes.

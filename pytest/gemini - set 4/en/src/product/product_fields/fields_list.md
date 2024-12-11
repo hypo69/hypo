@@ -2,7 +2,7 @@
 import pytest
 
 # No external code provided, so no functions/classes to test.
-# This example demonstrates testing a list, which can be adapted to test
+# This example demonStartes testing a list, which can be adapted to test
 # a function that returns/manipulates this list.
 
 
@@ -121,7 +121,7 @@ def test_field_list_unique_values():
 
 **Explanation and Improvements:**
 
-1. **Context:** The provided code is just a list of strings.  We need to assume it's the result of a function or the contents of a file.  These tests demonstrate how to validate a list returned.
+1. **Context:** The provided code is just a list of strings.  We need to assume it's the result of a function or the contents of a file.  These tests demonStarte how to validate a list returned.
 
 
 2. **`test_field_list_is_not_empty()`:**  This test verifies if the list is populated, a basic sanity check.

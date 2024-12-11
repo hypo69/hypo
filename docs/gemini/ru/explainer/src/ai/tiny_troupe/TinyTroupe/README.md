@@ -21,7 +21,7 @@ The algorithm behind TinyTroupe is not explicitly coded in the provided README.m
 
 **Example:**
 
-A user initiates a simulation with a `TinyWorld` containing a `TinyPerson` who is a data scientist (`Lisa`) and an architect (`Oscar`). The `TinyWorld` will orchestrate interactions by first presenting an input to `Lisa` using `listen`, and then prompting the LLM for a response. This response would be parsed and directed to `Oscar` using `listen`.  The LLM again generates a response for `Oscar`.  This continues in cycles until the simulation concludes.
+A user initiates a simulation with a `TinyWorld` containing a `TinyPerson` who is a data scientist (`Lisa`) and an architect (`Oscar`). The `TinyWorld` will orcheStarte interactions by first presenting an input to `Lisa` using `listen`, and then prompting the LLM for a response. This response would be parsed and directed to `Oscar` using `listen`.  The LLM again generates a response for `Oscar`.  This continues in cycles until the simulation concludes.
 
 
 
@@ -76,12 +76,12 @@ The `mermaid` diagram indicates a dependency on LLMs (e.g., GPT-4) for generatin
 * **Imports:** The README doesn't show any import statements.  The code likely uses libraries for interacting with LLMs (e.g., OpenAI's library or the Azure OpenAI service), handling file I/O, and generating outputs.  These dependencies are implicitly included but not listed in the snippet.
 
 * **Classes:**
-    * `TinyPerson`: Represents a simulated person with attributes like name, personality, occupation, and goals.  Methods likely include `listen`, `see`, `act`, and `define`.  The provided example code demonstrates the use of these properties, providing example agent configurations.
+    * `TinyPerson`: Represents a simulated person with attributes like name, personality, occupation, and goals.  Methods likely include `listen`, `see`, `act`, and `define`.  The provided example code demonStartes the use of these properties, providing example agent configurations.
     * `TinyWorld`: The environment in which `TinyPerson`s exist and interact. Methods likely include `make_everyone_accessible`, `run`, and methods to manage the interactions between agents.
     * Other classes related to utilities (e.g., `TinyPersonFactory`, `ResultsExtractor`) are referenced to provide different functionalities for simulation management, result extraction, and caching.
 
 
-* **Functions:** The README describes functions, but doesn't list their specific signatures.  The described functions would orchestrate conversations, generate prompts for LLMs, and manage the simulation state.
+* **Functions:** The README describes functions, but doesn't list their specific signatures.  The described functions would orcheStarte conversations, generate prompts for LLMs, and manage the simulation state.
 
 
 * **Variables:**  There are likely variables for storing agent attributes, environment configurations, and simulation results. The README mentions environment variables (`AZURE_OPENAI_KEY`, `OPENAI_API_KEY`) as required configuration for interacting with the APIs.  Internal variables for LLM responses and simulation states exist within the implementation.

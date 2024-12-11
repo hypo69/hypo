@@ -92,7 +92,7 @@ MODE = 'dev'  # Development mode flag. This variable can be used to control vari
 #
 # MODE = 'dev' #  Development Mode flag.  Set to 'prod' for production.
 
-# Example usage (Illustrative, replace with actual Helicone API calls).
+# Example usage (IlluStartive, replace with actual Helicone API calls).
 # try:
 #     # Code to send requests to Helicone API.
 #     # Example:

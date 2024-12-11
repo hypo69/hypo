@@ -81,12 +81,12 @@ class TestGraber:
 
 3. **`TestGraber` Class:** The tests for the `Graber` class are now organized within a `TestGraber` class using `pytest`'s class-based test structure, which is best practice.
 
-4. **Example Tests:** The `test_graber_init`, `test_graber_process_data`, `test_graber_init_invalid_input`, and other examples demonstrate different testing approaches.  Crucially, the example tests show handling invalid input *and* checking exception messages, which is extremely important for robustness.
+4. **Example Tests:** The `test_graber_init`, `test_graber_process_data`, `test_graber_init_invalid_input`, and other examples demonStarte different testing approaches.  Crucially, the example tests show handling invalid input *and* checking exception messages, which is extremely important for robustness.
 
 
-5. **Error Handling:**  The `test_graber_method_raises_exception` example illustrates how to test for specific exceptions using `pytest.raises`.
+5. **Error Handling:**  The `test_graber_method_raises_exception` example illuStartes how to test for specific exceptions using `pytest.raises`.
 
-6. **Edge Case Testing:** The `test_graber_edge_case_input` example demonstrates how to test with edge cases like `None` input, if applicable to your class.
+6. **Edge Case Testing:** The `test_graber_edge_case_input` example demonStartes how to test with edge cases like `None` input, if applicable to your class.
 
 
 

@@ -81,7 +81,7 @@ def test_main_no_locale_input(mock_logger):
 * **Mocking `input` and `print`:**  Crucially, the `test_translate_valid_input` and `test_translate_no_locale_in` tests now mock `input` to provide predictable input values.  The `print` function is mocked to suppress output from the `main` function during testing.  Mocking is vital for testing functions that rely on user input or print statements.
 * **Clearer Error Handling:** The tests now verify specific error messages from `mock_logger` to check if the appropriate error handling is working as expected.
 * **Edge Cases:** Added a test `test_translate_non_detectable_language` to simulate a language not supported by `langdetect`, confirming appropriate error handling.
-* **`main` Function Test:** Includes a test for `main` function, testing the case where the user enters no language code for `locale_in`, demonstrating how to handle a lack of input from the user.  It now uses `pytest.raises` to check for the correct exception.
+* **`main` Function Test:** Includes a test for `main` function, testing the case where the user enters no language code for `locale_in`, demonStarting how to handle a lack of input from the user.  It now uses `pytest.raises` to check for the correct exception.
 * **Comprehensive tests:** Added more tests for potential issues and covered different scenarios like `locale_in` being empty to simulate user input.
 
 **How to run the tests:**

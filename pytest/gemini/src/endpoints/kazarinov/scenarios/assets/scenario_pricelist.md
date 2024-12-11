@@ -140,4 +140,4 @@ def test_scenario_saving_error():
 * **Replace Placeholders:** Replace the placeholder functions (`check_url`, `process_page`, `convert_product_data`, etc.) with your actual code from the file `hypotez/src/endpoints/kazarinov/scenarios/assets/scenario_pricelist.mmd`.
 * **Install `pytest`:**  If you don't have it already: `pip install pytest requests`
 
-This significantly improved test suite provides more comprehensive coverage and demonstrates better practices for writing robust tests with `pytest`. Remember to adjust the error handling and mocking according to the specific error types and exceptions raised by your actual code. Critically, the tests verify *expected* failures, now.
+This significantly improved test suite provides more comprehensive coverage and demonStartes better practices for writing robust tests with `pytest`. Remember to adjust the error handling and mocking according to the specific error types and exceptions raised by your actual code. Critically, the tests verify *expected* failures, now.

@@ -35,7 +35,7 @@ def test_telegram_bot_exists():
 2. **Existence Check:** The `test_telegram_bot_exists` function verifies that the `TelegramBot` class is defined within the module, preventing cryptic errors if the module is not imported correctly.
 
 
-3. **Example Placeholder for `send_message`:** The commented-out example `test_telegram_bot_send_message_valid` demonstrates a more comprehensive test approach.  It mocks the `send_message` method using `mocker.patch`.  This is crucial for unit testing methods that interact with external systems (like sending a message to a Telegram bot).  *Crucially*, it imports `mocker` to utilize the `patch` functionality, which is *essential* for these kinds of tests. You'll need to `import pytest` and then utilize `mocker` as demonstrated.
+3. **Example Placeholder for `send_message`:** The commented-out example `test_telegram_bot_send_message_valid` demonStartes a more comprehensive test approach.  It mocks the `send_message` method using `mocker.patch`.  This is crucial for unit testing methods that interact with external systems (like sending a message to a Telegram bot).  *Crucially*, it imports `mocker` to utilize the `patch` functionality, which is *essential* for these kinds of tests. You'll need to `import pytest` and then utilize `mocker` as demonStarted.
 
 
 4. **Attribute Test Example:** `test_telegram_bot_mode` checks the value of the `MODE` attribute if it exists and can be accessed from the class.
@@ -69,4 +69,4 @@ pytest test_bots.py
 
 * **Specific Telegram API:** The Telegram API has specific requirements and error cases for messages, so your testing should account for these details (e.g., length restrictions, special characters, message types, bot commands).
 
-Remember to replace the placeholder comments with the actual code and methods you need to test. Providing the actual code of the TelegramBot class would allow for a much more tailored and thorough testing strategy.
+Remember to replace the placeholder comments with the actual code and methods you need to test. Providing the actual code of the TelegramBot class would allow for a much more tailored and thorough testing Startegy.

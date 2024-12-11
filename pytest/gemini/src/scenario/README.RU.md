@@ -142,9 +142,9 @@ def test_main(settings, tmp_path):
 **Explanation and Improvements:**
 
 * **Error Handling:** Added tests for `FileNotFoundError` and `JSONDecodeError` (using `pytest.raises`) in `run_scenario_file` and `run_scenario_files`.
-* **Empty Input:** Added a test case for `run_scenario_files` with an empty input list, demonstrating handling of a ValueError.
+* **Empty Input:** Added a test case for `run_scenario_files` with an empty input list, demonStarting handling of a ValueError.
 * **Mocking:**  Used `unittest.mock.patch` to mock the `requests.get` function for testing `run_scenario`. This isolates the test from external dependencies (and avoids actual network calls).
-* **Example Scenario:** Added a `test_run_scenario_with_scenario` function which demonstrates how to load and use a scenario from a JSON file using `tmp_path` for temporary files.
+* **Example Scenario:** Added a `test_run_scenario_with_scenario` function which demonStartes how to load and use a scenario from a JSON file using `tmp_path` for temporary files.
 * **Clearer Test Names:** Improved test names for better readability.
 * **Dummy Classes:**  Introduced placeholder `Settings` class and  `get_product_data` to make tests self-contained without needing actual dependencies.
 * **Robust `main` test:**  The `test_main` now uses a temporary file to create a dummy scenario file and calls `run_scenario_files` which helps in testing main function behaviour.

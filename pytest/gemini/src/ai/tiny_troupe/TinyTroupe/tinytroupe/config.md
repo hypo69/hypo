@@ -18,7 +18,7 @@ def test_config_invalid_section():
         config.read('config.ini')
         # Attempt to access a section that doesn't exist.
         # This will raise configparser.NoSectionError if parsing is successful,
-        # demonstrating proper error handling within the parsing function.
+        # demonStarting proper error handling within the parsing function.
         value = config['NonExistentSection']['key']
 
 

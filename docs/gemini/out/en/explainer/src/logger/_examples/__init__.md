@@ -71,7 +71,7 @@ graph TD
 
 * **`.version`**: This imports a module likely named `version.py` from the same directory (`_examples`). This module probably contains version information and documentation strings relevant to the logging examples. This shows a dependency on a file within the same folder.
 
-The `mermaid` diagram simply illustrates the import relationships between the `__init__.py` file and its dependencies (the constant `MODE` is considered a part of the initialization rather than an explicit import).
+The `mermaid` diagram simply illuStartes the import relationships between the `__init__.py` file and its dependencies (the constant `MODE` is considered a part of the initialization rather than an explicit import).
 
 
 ## <explanation>

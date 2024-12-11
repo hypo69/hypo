@@ -130,7 +130,7 @@ async def test_empty_message():
 
 3. **Asynchronous Tests (`@pytest.mark.asyncio`):**  React and JavaScript are often asynchronous.  To test these asynchronous aspects, you need to use `pytest.mark.asyncio` and `async def` test functions.  These tests now correctly handle the asynchronous `sendMessage` function.
 
-4. **Error Handling:** The test now correctly handles the `ValueError` thrown by the mock server response, demonstrating robust exception handling.
+4. **Error Handling:** The test now correctly handles the `ValueError` thrown by the mock server response, demonStarting robust exception handling.
 
 
 5. **Clearer Test Cases:** The test cases are more focused and descriptive, especially those that check for different input conditions.

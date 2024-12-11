@@ -100,7 +100,7 @@ def test_current_story_agent(example_agent):
 * **Edge Case Tests:**  The `test_tiny_story_init_no_parameters_raises_exception` and `test_tiny_story_init_both_parameters_raises_exception` specifically test the exception handling in `__init__`.
 * **Clearer Assertions:** Assertions are more specific, checking for the expected attributes and behaviors of the `TinyStory` object.
 * **Fixture Usage:**  Fixtures are used for `example_environment` and `example_agent`, making the tests more organized and reusable.
-* **Mock `openai_utils`:** The commented-out test demonstrates how to mock `openai_utils` if needed.  Replace the placeholder and include the actual calls if you have the `openai_utils` module defined.
+* **Mock `openai_utils`:** The commented-out test demonStartes how to mock `openai_utils` if needed.  Replace the placeholder and include the actual calls if you have the `openai_utils` module defined.
 
 
 **How to Run:**
@@ -110,4 +110,4 @@ def test_current_story_agent(example_agent):
 3.  Run `pytest test_story.py` from your terminal.
 
 
-This revised solution provides more robust and effective tests, demonstrating best practices for testing Python code with pytest. Remember to adapt or replace the placeholder mocking for `openai_utils` with the actual implementation if available. Remember to install pytest with `pip install pytest`.
+This revised solution provides more robust and effective tests, demonStarting best practices for testing Python code with pytest. Remember to adapt or replace the placeholder mocking for `openai_utils` with the actual implementation if available. Remember to install pytest with `pip install pytest`.

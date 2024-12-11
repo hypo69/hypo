@@ -106,7 +106,7 @@ def test_mode_string(mode):
 
 3. **Clearer Test Logic:** Tests now have better comments to indicate the purpose of each test.
 
-4. **Example Test Structure:** The example `test_dir_root_path` and `test_mode_string` functions demonstrate how to write tests that are suitable for the given `header.py` file.  You must replace these examples with tests for the actual functions from `header.py`.  For example, if there's a function that calculates something based on the `dir_root` path, you would test that function to ensure it correctly constructs the expected path, etc.
+4. **Example Test Structure:** The example `test_dir_root_path` and `test_mode_string` functions demonStarte how to write tests that are suitable for the given `header.py` file.  You must replace these examples with tests for the actual functions from `header.py`.  For example, if there's a function that calculates something based on the `dir_root` path, you would test that function to ensure it correctly constructs the expected path, etc.
 
 5. **Error Handling:** The example shows how to use `pytest.raises` to test for specific exceptions.  This is a critical part of comprehensive testing; you need to verify how the code handles different error conditions.
 

@@ -69,7 +69,7 @@ graph TD
 
 - `from ..errors import ProductIdNotFoundException`: Imports the custom exception `ProductIdNotFoundException`.  The `..` indicates that the `errors` module is located one level up from the current file, within the same package structure (`src.suppliers.aliexpress.api`). This is a standard Python import practice for packages.
 
-- `from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids`: Imports the `extract_prod_ids` function, which presumably handles the logic of extracting product IDs from various formats (e.g., URLs, simple strings). This demonstrates a clear separation of concerns between the `api` and `utils` modules within the `aliexpress` package of the `suppliers` module.
+- `from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids`: Imports the `extract_prod_ids` function, which presumably handles the logic of extracting product IDs from various formats (e.g., URLs, simple strings). This demonStartes a clear separation of concerns between the `api` and `utils` modules within the `aliexpress` package of the `suppliers` module.
 
 
 **Classes:**

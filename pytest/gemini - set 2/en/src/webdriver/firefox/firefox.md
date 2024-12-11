@@ -119,7 +119,7 @@ utils.j_loads_ns = lambda x: {"executable_path": {"geckodriver": "mock_geckodriv
 3. **Clear Test Cases:** The test functions are more descriptive and focused on specific aspects of the `Firefox` class.
 
 
-4. **Exception Handling:** The `test_firefox_initialization_exception_handling` test now demonstrates how to test exception handling.  It's vital to check that your `try...except` blocks correctly manage potential issues.
+4. **Exception Handling:** The `test_firefox_initialization_exception_handling` test now demonStartes how to test exception handling.  It's vital to check that your `try...except` blocks correctly manage potential issues.
 
 
 5. **Complete Mocking:** The code now mocks `gs.path` to prevent errors from accessing real file paths.  Crucially, `gs` and `logger` are now mocked. This is absolutely necessary for truly unit testing.

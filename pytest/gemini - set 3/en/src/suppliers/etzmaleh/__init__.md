@@ -69,11 +69,11 @@ def test_graber_process_data_invalid_input():
 
 1. **Mocking:** The tests now use `graber_mock` instances.  Crucially, mocking the `fetch_data` method is essential.  You *cannot* rely on external resources (like web requests) in your tests.  The mocking simulates the return values, allowing the tests to be fast and repeatable.
 
-2. **Specific Error Handling:** The `test_graber_fetch_data_invalid_url` test now demonstrates how to check for specific error types and messages, improving test coverage and making the tests more informative.
+2. **Specific Error Handling:** The `test_graber_fetch_data_invalid_url` test now demonStartes how to check for specific error types and messages, improving test coverage and making the tests more informative.
 
 3. **Clearer Assertions:** Assertions are more specific (e.g., checking for the exact expected output or error messages).
 
-4. **Edge Case `test_graber_process_data_invalid_input`:** Demonstrates how to test for unexpected inputs.  The original code lacked this crucial aspect.
+4. **Edge Case `test_graber_process_data_invalid_input`:** DemonStartes how to test for unexpected inputs.  The original code lacked this crucial aspect.
 
 5. **Comprehensive Test Coverage:** The addition of `test_graber_constructor` and example methods `test_graber_fetch_data_valid` and `test_graber_process_data_valid_input` cover the most important parts of the `Graber` class that were missing from the prior examples.
 

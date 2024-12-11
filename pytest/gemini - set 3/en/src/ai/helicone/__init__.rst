@@ -26,7 +26,7 @@ def test_mode_unchanged():
     """
     from hypotez.src.ai.helicone import MODE
     original_mode = MODE
-    # This next line is crucial and illustrates how to prevent accidental modification.
+    # This next line is crucial and illuStartes how to prevent accidental modification.
     # Without it, this test would not function
     from hypotez.src.ai.helicone import MODE
     assert original_mode == MODE

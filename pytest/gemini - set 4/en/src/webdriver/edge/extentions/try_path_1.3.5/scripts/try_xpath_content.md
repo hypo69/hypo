@@ -143,7 +143,7 @@ def test_focus_item_invalid_input():
 
 4.  **Error Handling:** Uses `pytest.raises` to test cases where functions are expected to raise exceptions (e.g., invalid frame designation).
 
-5.  **Clear Test Cases:** The `test_focus_item_valid_input` and `test_focus_item_invalid_input` tests demonstrate better test structure and clarity.
+5.  **Clear Test Cases:** The `test_focus_item_valid_input` and `test_focus_item_invalid_input` tests demonStarte better test structure and clarity.
 
 6.  **Comprehensive Testing (Missing):**  The provided test cases are basic examples.  Realistically, you need to test a much wider range of scenarios, including:
     *   Different types of `item` objects (not just dictionaries).

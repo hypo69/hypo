@@ -66,7 +66,7 @@ def test_get_support_policy_exception():
 
 4. **Edge Cases:** The `test_get_issue_tracking_method` includes an edge case to ensure the method remains consistent under different calls.
 
-5. **Exception Handling (Important):** The `test_get_support_policy_exception` test is crucial.  If the provided code has any exception handling, you need to add appropriate test cases to ensure it correctly handles those exceptions.  This example demonstrates the structure for testing such exceptions, using `pytest.raises` to expect and handle an exception if one is thrown.
+5. **Exception Handling (Important):** The `test_get_support_policy_exception` test is crucial.  If the provided code has any exception handling, you need to add appropriate test cases to ensure it correctly handles those exceptions.  This example demonStartes the structure for testing such exceptions, using `pytest.raises` to expect and handle an exception if one is thrown.
 
 6. **Data Validation:** The `test_get_help_resources` example validates the returned data type and that it's a non-empty list. This is a best practice to avoid potential issues in unexpected cases.
 

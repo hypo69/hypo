@@ -136,7 +136,7 @@ if __name__ == "__main__":
 
    Key Features:
    1. Initialization and configuration of the Telegram bot based on a configuration JSON file.
-   2. Registration of commands and message handlers.
+   2. RegiStartion of commands and message handlers.
    3. Routing of text messages based on URLs, enabling processing of OneTab and vendor links.
    4. Utilizing the Mexiron object for parsing product data from vendors and generating price lists.
    5. Generating responses to messages using Google Generative AI.
@@ -257,7 +257,7 @@ if __name__ == "__main__":
 
    Key Features:
    1. Initialization and configuration of the Telegram bot based on a configuration JSON file.
-   2. Registration of commands and message handlers.
+   2. RegiStartion of commands and message handlers.
    3. Routing of text messages based on URLs, enabling processing of OneTab and vendor links.
    4. Utilizing the Mexiron object for parsing product data from vendors and generating price lists.
    5. Generating responses to messages using Google Generative AI.

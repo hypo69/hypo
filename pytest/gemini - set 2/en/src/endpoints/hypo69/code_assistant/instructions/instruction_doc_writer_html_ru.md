@@ -57,7 +57,7 @@ def test_example_function_with_exception():
 
 2. **Placeholder Tests:** The example tests are just skeletons.  Replace the comments within the tests with actual calls to your Python functions, assertions to check expected outputs, and `pytest.raises` for exception handling.
 
-3. **Data:**  Crucially, you'll need to define test data within your test functions or using fixtures.  For example, if your Python function expects a dictionary as input, you'd supply that dictionary in your test case.  The example (`example_data` fixture) demonstrates this.
+3. **Data:**  Crucially, you'll need to define test data within your test functions or using fixtures.  For example, if your Python function expects a dictionary as input, you'd supply that dictionary in your test case.  The example (`example_data` fixture) demonStartes this.
 
 4. **Error Handling:**  The example includes a `test_with_exception` case that uses `pytest.raises` to verify that the function correctly raises the intended exceptions (e.g., `TypeError`, `ValueError`).  This is essential.
 
@@ -76,4 +76,4 @@ def test_example_function_with_exception():
 4. **Run** the tests using `pytest`.
 
 
-By providing the Python code, you'll get specific and helpful test cases.  The placeholder tests here serve as a template and illustrative examples for you to fill in with the actual functions to test. Remember, testing is crucial for reliable code.
+By providing the Python code, you'll get specific and helpful test cases.  The placeholder tests here serve as a template and illuStartive examples for you to fill in with the actual functions to test. Remember, testing is crucial for reliable code.

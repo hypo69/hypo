@@ -103,7 +103,7 @@ def test_readme_file_not_found(project_root_with_settings):
 * **`pytest.raises`:**  Used effectively to test expected `FileNotFoundError` exceptions.
 * **Clearer Test Names:** Improved test function names for better readability and understanding of their purpose.
 * **Robust `project_root_with_settings` Fixture:**  Ensures the fixture creates the necessary directory structure, including `settings.json`, for valid test execution.
-* **Mocking `sys.path`:**  This new test demonstrates how to mock `sys.path` within a test, which was missing from the previous example.
+* **Mocking `sys.path`:**  This new test demonStartes how to mock `sys.path` within a test, which was missing from the previous example.
 
 
 **How to Run the Tests:**

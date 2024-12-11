@@ -21,7 +21,7 @@ def api_request(request, response_name, attemps: int = 1):
     except Exception as error:
         if hasattr(error, 'message'):
             logger.critical(error.message, pprint(error))
-        return  # Or raise the exception, depending on your error handling strategy
+        return  # Or raise the exception, depending on your error handling Startegy
 
     try:
         response = response[response_name]['resp_result']
@@ -117,4 +117,4 @@ def test_api_request_with_mock_logger(mock_logger):
 * **`mock_logger` Fixture:** A `mock_logger` fixture is introduced to verify that the logger is correctly called with the appropriate messages.  This is crucial for testing the logging aspects of the code.
 
 
-This significantly improved solution provides much more robust and comprehensive testing of the `api_request` function, covering various scenarios, including error handling, edge cases, and basic functionality. Remember to adapt the error checking to match your actual error raising strategy within `api_request`.
+This significantly improved solution provides much more robust and comprehensive testing of the `api_request` function, covering various scenarios, including error handling, edge cases, and basic functionality. Remember to adapt the error checking to match your actual error raising Startegy within `api_request`.

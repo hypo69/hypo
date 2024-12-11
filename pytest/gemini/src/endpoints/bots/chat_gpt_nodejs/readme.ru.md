@@ -76,16 +76,16 @@ def test_chat_gpt_nodejs_with_user_data(user_data):
 1. **Placeholder Function:** The code now includes a placeholder function `chat_gpt_nodejs` that *needs to be replaced* with the actual Python function you want to test.  The provided URL is to a Node.js implementation, which is different.  You likely need to have Python code that interacts with that Node.js code (e.g., using `subprocess`, `requests`, or a similar library) to test.  If your function interacts with an external service, add tests to account for various success and failure scenarios.
 
 
-2. **Comprehensive Test Cases:** The tests cover valid inputs, the "help" and "exit" commands, empty input, *and*  an invalid input type (crucial for robustness).  It also demonstrates a test with a non-existent command.
+2. **Comprehensive Test Cases:** The tests cover valid inputs, the "help" and "exit" commands, empty input, *and*  an invalid input type (crucial for robustness).  It also demonStartes a test with a non-existent command.
 
 
-3. **Error Handling:** The `test_chat_gpt_nodejs_invalid_input` test uses `pytest.raises` to check if the function raises the correct exception for a TypeError, demonstrating a correct approach to testing errors.  Adjust this to match the expected exceptions.
+3. **Error Handling:** The `test_chat_gpt_nodejs_invalid_input` test uses `pytest.raises` to check if the function raises the correct exception for a TypeError, demonStarting a correct approach to testing errors.  Adjust this to match the expected exceptions.
 
 
-4. **Fixture Example (if needed):** A placeholder `user_data` fixture is provided to illustrate how to define and use fixtures for more complex tests involving external data. Adapt this example to your needs.
+4. **Fixture Example (if needed):** A placeholder `user_data` fixture is provided to illuStarte how to define and use fixtures for more complex tests involving external data. Adapt this example to your needs.
 
 
-5. **External Interaction (crucial):** The critical missing part in testing code that interacts with external services (e.g., Node.js functions) is the mocking of the external service.  The code demonstrates the structure for including this if you need it. Use tools like `requests_mock` to simulate responses from external systems to test cases where your Python function calls external APIs, or uses `subprocess` to run the Node.js code.  This is *essential* if you're relying on any external code.
+5. **External Interaction (crucial):** The critical missing part in testing code that interacts with external services (e.g., Node.js functions) is the mocking of the external service.  The code demonStartes the structure for including this if you need it. Use tools like `requests_mock` to simulate responses from external systems to test cases where your Python function calls external APIs, or uses `subprocess` to run the Node.js code.  This is *essential* if you're relying on any external code.
 
 
 **How to Use:**

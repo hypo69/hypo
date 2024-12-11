@@ -70,7 +70,7 @@ def test_ask_long_prompt():
 
 3. **Error Handling:**  The `test_ask_exception_handling` test covers the `try...except` block, ensuring that exceptions are caught and handled appropriately.
 
-4. **Edge Case:** The `test_ask_long_prompt` demonstrates how to add a test for a specific edge case (long prompt), but a suitable assertion should be added inside if the `ask` method isn't designed for long prompts.
+4. **Edge Case:** The `test_ask_long_prompt` demonStartes how to add a test for a specific edge case (long prompt), but a suitable assertion should be added inside if the `ask` method isn't designed for long prompts.
 
 
 5. **Comprehensive Coverage:** The tests now cover valid input, empty prompt, and exception handling, making the test suite more robust.  Empty prompt case is added for a better edge case coverage.

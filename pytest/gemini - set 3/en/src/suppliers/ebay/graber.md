@@ -80,7 +80,7 @@ def test_grab_page_exception(graber, monkeypatch):
 
 1. **Mocking:** The code now uses `unittest.mock` to mock the `Driver` and `Context` objects.  This is crucial for testing the `Graber` class without needing a real browser or database interactions.
 
-2. **`pytest.raises`:** Added a test (`test_grab_page_exception`) that uses `pytest.raises` to assert that the function correctly handles an `ExecuteLocatorException`—a critical test case to demonstrate error handling.
+2. **`pytest.raises`:** Added a test (`test_grab_page_exception`) that uses `pytest.raises` to assert that the function correctly handles an `ExecuteLocatorException`—a critical test case to demonStarte error handling.
 
 3. **Asynchronous Handling:** The tests are wrapped in `asyncio.run` to properly run the asynchronous methods within `pytest`.
 

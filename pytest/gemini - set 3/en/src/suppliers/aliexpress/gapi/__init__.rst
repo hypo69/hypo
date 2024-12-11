@@ -34,7 +34,7 @@ def test_details_is_dict():
 # Example tests for handling invalid input (if there are functions accepting user input):
 # Replace with actual functions and input validation if available.
 
-# Example test demonstrating how to test exceptions:
+# Example test demonStarting how to test exceptions:
 #  (replace with actual functions that may raise exceptions if any exist)
 # def test_function_raises_exception_on_invalid_input():
 #     with pytest.raises(ValueError) as excinfo:
@@ -63,13 +63,13 @@ def test_details_is_dict():
 
 2. **Isolated Tests:** Each test is self-contained and doesn't rely on the results of other tests.
 
-3. **Comprehensive Scenarios:** The tests now cover the `MODE`, `__version__`, `__doc__`, and `__details__` attributes.  Critically, the tests check the *types* of these attributes, which is a fundamental aspect of testing.  The example exception handling demonstrates this approach.
+3. **Comprehensive Scenarios:** The tests now cover the `MODE`, `__version__`, `__doc__`, and `__details__` attributes.  Critically, the tests check the *types* of these attributes, which is a fundamental aspect of testing.  The example exception handling demonStartes this approach.
 
 4. **Exception Handling (`pytest.raises`):** The example includes a placeholder for exception testing.  Crucially, it shows how to use `pytest.raises` to check for specific exceptions.  Update the comments and `assert` statements to match your actual functions and exceptions.
 
 5. **Fixture (Example):** A basic fixture example is included (commented out).  Add a fixture if your code has functions that need setup data.
 
-6. **Handling Invalid Input (Example):** The placeholder comments demonstrate how to test functions that might accept user input.  Add tests for user input validation if applicable.
+6. **Handling Invalid Input (Example):** The placeholder comments demonStarte how to test functions that might accept user input.  Add tests for user input validation if applicable.
 
 
 **How to Use:**

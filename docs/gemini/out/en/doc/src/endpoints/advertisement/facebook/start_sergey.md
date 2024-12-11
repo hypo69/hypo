@@ -59,7 +59,7 @@ This module defines functions for launching Facebook advertisement campaigns. It
 
 ### `main`
 
-**Description**: The main function that orchestrates campaign execution, error handling, and logging.
+**Description**: The main function that orcheStartes campaign execution, error handling, and logging.
 
 **Parameters**:
 

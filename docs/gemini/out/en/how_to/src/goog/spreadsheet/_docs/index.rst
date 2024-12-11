@@ -81,7 +81,7 @@ Execution steps
 9. **Handling Errors:**
    - Wrap API calls in `try...except` blocks to catch potential errors and handle them gracefully.
 
-**Usage Example (Illustrative Spreadsheet class):**
+**Usage Example (IlluStartive Spreadsheet class):**
 ```python
 import httplib2
 import apiclient.discovery

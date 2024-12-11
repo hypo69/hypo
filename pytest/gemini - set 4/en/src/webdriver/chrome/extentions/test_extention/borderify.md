@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 # This is a placeholder as the provided JavaScript code doesn't involve Python functions.
-# We'll create dummy functions and tests to demonstrate the structure.
+# We'll create dummy functions and tests to demonStarte the structure.
 
 def set_border_color(driver, color="red"):
     """Sets the border color of the document body using JavaScript."""
@@ -87,7 +87,7 @@ def test_alert_displayed(driver):
 5. **Test Structure:** The test cases now follow the example structure you provided, making them more readable and reusable.
 
 
-6. **Error Handling (Alert):** The `test_alert_displayed` function demonstrates handling of an alert (which would be very common on a webpage that is being tested).  Using `try/except` is critical to deal with potential timeouts.
+6. **Error Handling (Alert):** The `test_alert_displayed` function demonStartes handling of an alert (which would be very common on a webpage that is being tested).  Using `try/except` is critical to deal with potential timeouts.
 
 
 7. **`about:blank`:** The driver now gets a `about:blank` page.  This is critical to avoid issues with unexpected page state during the test.

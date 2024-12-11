@@ -199,7 +199,7 @@ This mermaid diagram shows the class structure. `HeliconeAI` uses `Helicone` and
 
 - **Possible Errors/Improvements:**
     - **Error Handling:** The code lacks error handling.  If the OpenAI API call fails (e.g., rate limiting, invalid API key), the program will crash.  Adding `try...except` blocks to handle potential errors is highly recommended.
-    - **Rate Limiting:**  OpenAI APIs have rate limits. The code should implement strategies to handle these limits, such as backoff mechanisms.
+    - **Rate Limiting:**  OpenAI APIs have rate limits. The code should implement Startegies to handle these limits, such as backoff mechanisms.
     - **Input Validation:** Input parameters (like `prompt` and `target_language`) should be validated for correctness to prevent unexpected behavior.
     - **Logging:** More comprehensive logging (including error details and timestamps) would help debug issues.
 

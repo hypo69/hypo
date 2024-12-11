@@ -29,7 +29,7 @@ This module provides the core classes and functions for TinyTroupe agents. Agent
 **Methods**:
 
 * [`__init__(self, name: str=None, episodic_memory=None, semantic_memory=None, mental_faculties: list=None)`](#tiny-person-init): Creates a new TinyPerson instance.
-* [`_post_init(self, **kwargs)`](#tiny-person-post-init): Called after the `__init__` method, handling default values and agent registration.
+* [`_post_init(self, **kwargs)`](#tiny-person-post-init): Called after the `__init__` method, handling default values and agent regiStartion.
 * [`generate_agent_prompt(self)`](#tiny-person-generate-agent-prompt): Generates the prompt string for the agent based on its configuration.
 * [`reset_prompt(self)`](#tiny-person-reset-prompt): Resets the internal prompt messages for the agent.
 * [`get(self, key)`](#tiny-person-get): Retrieves the value associated with a key in the agent's configuration.

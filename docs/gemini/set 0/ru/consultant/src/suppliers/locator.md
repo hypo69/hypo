@@ -24,7 +24,7 @@
 # - **`attribute`**: The attribute to retrieve from the web element. Examples: `innerText`, `src`, `id`, `href`, etc.
 #   If set to `none/false`, the WebDriver will return the entire web element (`WebElement`).
 #
-# - **`by`**: The strategy used to locate the element:
+# - **`by`**: The Startegy used to locate the element:
 #   - `ID` corresponds to `By.ID`
 #   - `NAME` corresponds to `By.NAME`
 #   - `CLASS_NAME` corresponds to `By.CLASS_NAME`

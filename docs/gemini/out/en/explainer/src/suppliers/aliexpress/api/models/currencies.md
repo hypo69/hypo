@@ -95,7 +95,7 @@ The variables are the currency codes (e.g., `USD`, `GBP`, `CAD`). They are strin
 
 This file likely acts as a data model component for the `aliexpress` supplier module. The currency codes defined in this class are likely utilized in functions within the module. To be clear, the `currencies.py` file exports an interface which provides the standardized list of currencies for this module; that means it is used by other `api` module files.
 
-**Example Usage (Illustrative):**
+**Example Usage (IlluStartive):**
 
 ```python
 from hypotez.src.suppliers.aliexpress.api.models import currencies

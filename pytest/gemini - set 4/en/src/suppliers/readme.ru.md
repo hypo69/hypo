@@ -100,10 +100,10 @@ def test_supplier_run_scenarios():
 **Explanation and Improvements:**
 
 * **Mocking:** The code now uses `unittest.mock` to mock the `Driver` class. This is crucial for testing methods that depend on external resources (like WebDriver) without actually interacting with them. This prevents the tests from failing due to WebDriver issues (e.g., browser not being available) or network problems.
-* **Error Handling:**  Added a test `test_supplier_payload_invalid_webdriver` to demonstrate error handling for an invalid `webdriver` type.
+* **Error Handling:**  Added a test `test_supplier_payload_invalid_webdriver` to demonStarte error handling for an invalid `webdriver` type.
 * **Clearer Test Names:** Test names are more descriptive, improving readability and understanding.
 * **Fixture (not used):** The example structure included fixtures, but in this case no fixture was needed.
-* **Edge Cases:** Added a `test_supplier_payload_driver_object` to show how to pass a `Driver` object instead of a string to the `_payload` method.  It also demonstrates a more robust `webdriver` parameter validation.
+* **Edge Cases:** Added a `test_supplier_payload_driver_object` to show how to pass a `Driver` object instead of a string to the `_payload` method.  It also demonStartes a more robust `webdriver` parameter validation.
 * **Comprehensive Tests:** The tests now cover the `__init__`, `_payload`, `login`, `run_scenario_files`, and `run_scenarios` methods, including edge cases.
 * **Type Hinting:**  Using type hints where appropriate increases code clarity and allows for static analysis.
 
@@ -121,4 +121,4 @@ def test_supplier_run_scenarios():
     pytest test_supplier.py
     ```
 
-This revised solution is more robust, covers a wider range of scenarios, and demonstrates best practices for writing unit tests using the `pytest` framework. Remember to replace the placeholder `Driver` and other mock classes with your actual implementation if available. Remember that the actual tests will have to be adapted to your implementation and the way you interact with the external WebDriver and other resources.
+This revised solution is more robust, covers a wider range of scenarios, and demonStartes best practices for writing unit tests using the `pytest` framework. Remember to replace the placeholder `Driver` and other mock classes with your actual implementation if available. Remember that the actual tests will have to be adapted to your implementation and the way you interact with the external WebDriver and other resources.

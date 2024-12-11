@@ -149,7 +149,7 @@ graph LR
     end
 ```
 
-This diagram illustrates the relationship where `src.endpoints` is a central module acting as an intermediary between various consumer applications (represented by `consumerapp`) and external APIs (`PrestaShop API`, etc.).
+This diagram illuStartes the relationship where `src.endpoints` is a central module acting as an intermediary between various consumer applications (represented by `consumerapp`) and external APIs (`PrestaShop API`, etc.).
 
 
 ## <explanation>
@@ -177,7 +177,7 @@ Variables are likely used within the methods of the classes to store data retrie
 
 * **Detailed Implementation Missing:** The documentation lacks specifics about the implementation of the API calls and data handling.  For example, how errors are handled, what data structures are used, and how authentication is managed.
 * **Testing:**  Testing is critical for ensuring the reliability and accuracy of the API calls. The documentation mentions adding tests, which is an excellent practice, but specific details about how to test these modules aren't provided.
-* **Error Handling:** The documentation should outline the error handling strategies used in the classes.
+* **Error Handling:** The documentation should outline the error handling Startegies used in the classes.
 * **Security:**  API keys or other sensitive data should be handled securely and not hardcoded directly within the code.
 * **Dependencies:**  The documentation should include which external libraries or APIs are used for each service.
 

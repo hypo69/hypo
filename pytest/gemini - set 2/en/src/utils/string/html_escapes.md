@@ -146,7 +146,7 @@ def test_html_escapes_missing_entry():
 
 3. **Clearer Test Names:**  The test names are more descriptive (e.g., `test_html_escapes_invalid_input`).
 
-4. **`pytest.raises` for Exception Handling:** The `test_html_escapes_invalid_input` test case now demonstrates how to use `pytest.raises` to assert that a `KeyError` is raised when trying to access a non-existent key in the dictionary. This significantly strengthens the test suite.
+4. **`pytest.raises` for Exception Handling:** The `test_html_escapes_invalid_input` test case now demonStartes how to use `pytest.raises` to assert that a `KeyError` is raised when trying to access a non-existent key in the dictionary. This significantly strengthens the test suite.
 
 
 5. **Added missing ` ` escape to the dictionary:**  The ` ` (no-break space) escape was missing in the dictionary, which was causing errors.

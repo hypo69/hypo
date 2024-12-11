@@ -92,10 +92,10 @@ def test_process_campaign_unsupported_language():
 2. **Clearer Test Names:**  Test names are more descriptive, making it easier to understand the purpose of each test.
 
 
-3. **Exception Handling:** Added a `test_get_directory_names_invalid_path` test to demonstrate how to test for exceptions. The important part is to use `pytest.raises` to assert that the correct exception is raised.
+3. **Exception Handling:** Added a `test_get_directory_names_invalid_path` test to demonStarte how to test for exceptions. The important part is to use `pytest.raises` to assert that the correct exception is raised.
 
 
-4. **Edge Case (Unsupported Language):** Added `test_process_campaign_unsupported_language` to demonstrate how to test a scenario where the input might trigger an error or a special case.  This depends on the error handling in the original function.
+4. **Edge Case (Unsupported Language):** Added `test_process_campaign_unsupported_language` to demonStarte how to test a scenario where the input might trigger an error or a special case.  This depends on the error handling in the original function.
 
 
 5. **Fixture for `gs.path.google_drive`:** Introduced a `mock_gs_path` fixture to mock `gs.path.google_drive`. This is crucial for testing functions that use external paths.  Adapt as needed if you can't mock this.

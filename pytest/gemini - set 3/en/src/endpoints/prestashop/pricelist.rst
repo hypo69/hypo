@@ -79,7 +79,7 @@ def test_modify_product_price_invalid_price(mock_api_request):
 
 1. **Mocking:** The `mock_api_request` fixture is crucial.  It replaces the actual API call with a mock function, allowing us to control the return value for testing without needing a real API.  This is much better than patching the `request` attribute directly.
 2. **Clear Test Names:** The test names are now more descriptive (e.g., `test_request_prices_valid_input`).
-3. **Edge Cases and Error Handling:**  The tests now cover scenarios like an empty product list (`test_request_prices_empty_input`) and an invalid input type (`test_request_prices_invalid_input_type`) using `pytest.raises`.  This demonstrates proper handling of expected errors.  Also added a test for an invalid price input type.
+3. **Edge Cases and Error Handling:**  The tests now cover scenarios like an empty product list (`test_request_prices_empty_input`) and an invalid input type (`test_request_prices_invalid_input_type`) using `pytest.raises`.  This demonStartes proper handling of expected errors.  Also added a test for an invalid price input type.
 4. **Fixture for `TEST_API_CREDENTIALS`:**  This example now includes  `TEST_API_CREDENTIALS`.
 
 

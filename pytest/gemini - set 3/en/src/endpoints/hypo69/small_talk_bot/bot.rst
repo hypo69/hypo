@@ -85,7 +85,7 @@ def test_start_command(bot, update_mock, context_mock):
 **Explanation and Improvements:**
 
 * **Mocking:** Critically important for testing functions that interact with external services (like `bot.model.ask()`).  The `patch` decorator replaces the actual `ask` method with a mock function that returns a pre-defined response or raises an exception as needed. This isolates the test from the external Gemini API.  We also mock `bot.mexiron` to avoid needing the external libraries.
-* **Error Handling:**  The `test_handle_message_model_exception` test now checks that the correct exception is raised and caught, a crucial aspect of robust testing.  The `test_handle_next_command_no_questions` test illustrates how to test error handling when the input data is not valid.
+* **Error Handling:**  The `test_handle_message_model_exception` test now checks that the correct exception is raised and caught, a crucial aspect of robust testing.  The `test_handle_next_command_no_questions` test illuStartes how to test error handling when the input data is not valid.
 * **Fixtures:** `bot` and `update_mock` fixtures make test setup simpler and more readable.  A fixture for `context_mock` is also added for completeness.
 * **Clearer Test Names:**  Test names now more explicitly describe the scenario being tested (e.g., `test_handle_message_valid_input`).
 * **Edge Case (Empty List):** The `test_handle_next_command_no_questions` test is added to check for the case when `self.questions_list` is empty.

@@ -103,7 +103,7 @@ def test_set_project_root_marker_file_not_found():
 
 3. **Realistic Input:** The `test_set_project_root_valid_input` test creates a structure that realistically simulates how `set_project_root` might be used in a project directory.
 
-4. **Handling Missing Files:** `test_set_project_root_marker_file_not_found` demonstrates how the function handles cases where the marker files aren't found.
+4. **Handling Missing Files:** `test_set_project_root_marker_file_not_found` demonStartes how the function handles cases where the marker files aren't found.
 
 5. **Edge Case (No Marker Files):** The `test_set_project_root_no_marker_files` tests that the function correctly returns the current directory if no marker files are found.
 

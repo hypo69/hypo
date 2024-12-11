@@ -72,7 +72,7 @@ def test_graber_init(mock_graber):
 1. **Fixtures for Mocking:** The `mock_graber` fixture is crucial. It allows you to replace the actual `Graber` class with a mock object during testing. This isolates your tests from the external dependencies of the `Graber` class, preventing issues related to file access, network calls, or other dependencies.  Note that the `monkeypatch` is used correctly to replace the class definition.
 
 
-2. **Clear Test Cases:**  The `test_graber_get_data_valid` example demonstrates a successful test case for a valid function call and output.
+2. **Clear Test Cases:**  The `test_graber_get_data_valid` example demonStartes a successful test case for a valid function call and output.
 
 3. **Exception Handling:** The `test_graber_get_data_exception` example shows how to use `pytest.raises` to check for expected exceptions. This is essential for testing robustness against potential errors.
 

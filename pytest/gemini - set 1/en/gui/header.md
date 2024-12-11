@@ -113,7 +113,7 @@ def test_get_project_root_marker_file_is_a_folder():
 
 2. **Isolated Tests:**  Each test function is now independent, creating temporary directories for testing.  This is crucial for preventing side effects between tests.
 
-3. **Edge Cases:**  The `test_get_project_root_not_found` and `test_get_project_root_marker_file_exists_but_not_a_marker` tests cover the scenario where the marker files aren't found. The `test_get_project_root_nested_structure` example illustrates testing in a more complex directory structure. `test_get_project_root_marker_file_is_a_folder` demonstrates that a folder can be a marker file.
+3. **Edge Cases:**  The `test_get_project_root_not_found` and `test_get_project_root_marker_file_exists_but_not_a_marker` tests cover the scenario where the marker files aren't found. The `test_get_project_root_nested_structure` example illuStartes testing in a more complex directory structure. `test_get_project_root_marker_file_is_a_folder` demonStartes that a folder can be a marker file.
 
 
 4. **Temporary Directories:**  Essential for preventing conflicts between tests and ensuring each test operates in a clean environment.  The temporary directory is properly removed after the tests.

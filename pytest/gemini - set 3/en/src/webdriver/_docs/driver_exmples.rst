@@ -136,13 +136,13 @@ def test_window_focus(chrome_driver_instance):
 
 * **Clearer Assertions:**  The previous responses lacked strong assertions.  Now, tests explicitly check for `True` or `False` return values, correct types, and expected outcomes.  Crucially, the `assert` statements now relate to *specific aspects* of the method's behavior, as opposed to simply checking for existence.
 
-* **Error Handling:** The `test_get_url_invalid` test example demonstrates handling *invalid* inputs.
+* **Error Handling:** The `test_get_url_invalid` test example demonStartes handling *invalid* inputs.
 
 * **Data-Driven Tests:**  A `@pytest.fixture` is introduced to provide the `chrome_driver_instance`. This is crucial for isolating tests.
 
 * **More Comprehensive Tests:** The test suite now covers a wider range of functionalities, including edge cases like invalid URLs and custom user agents.
 
-* **Realistic Assertions (Important):** The `test_save_cookies_localy` and other tests now mention that the assertion strategies depend on the *implementation* details of those specific functions in your `Driver` and `Chrome` classes.  You must replace the placeholder assertions with your actual assertions that verify what `_save_cookies_localy` *should* do.   Simply asserting `True` isn't sufficient in most realistic scenarios.
+* **Realistic Assertions (Important):** The `test_save_cookies_localy` and other tests now mention that the assertion Startegies depend on the *implementation* details of those specific functions in your `Driver` and `Chrome` classes.  You must replace the placeholder assertions with your actual assertions that verify what `_save_cookies_localy` *should* do.   Simply asserting `True` isn't sufficient in most realistic scenarios.
 
 * **Dependencies:** The code now assumes your classes,  `src.webdriver.Driver` and `src.webdriver.Chrome`,  and `selenium` are imported correctly.  Import statements are essential.
 

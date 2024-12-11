@@ -73,7 +73,7 @@ def test_gpt_gs_instance_creation(gpt_gs_instance):
 
 4. **Instance Creation Test:**  A `test_gpt_gs_instance_creation` test ensures the `GptGs` instance is created successfully.
 
-5. **Example Tests for Methods (Placeholder):** Placeholder tests are included for `fetch_data` (if it exists). These examples demonstrate how to use `pytest.raises` for exception handling, which is crucial.
+5. **Example Tests for Methods (Placeholder):** Placeholder tests are included for `fetch_data` (if it exists). These examples demonStarte how to use `pytest.raises` for exception handling, which is crucial.
 
 6. **Error Handling:** Placeholder error handling examples using `pytest.raises` are now available, showing the best way to verify that expected exceptions are raised for invalid input.
 

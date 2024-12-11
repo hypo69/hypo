@@ -102,7 +102,7 @@ def test_id_product(graber: Graber):
 4. **`test_grab_page_valid_input`:** This test now checks if `graber.fields` is correctly initialized as an empty dictionary (or `None`).  This is important as the code initially relied on potentially uninitialized state, making it unreliable.
 
 
-5. **`test_id_product`:** This example test demonstrates how to test a specific function within `Graber`. Replace this with tests for other methods like `name`, `price`, etc. You need to understand how data is *actually* populated in your methods before you can write robust assertions.
+5. **`test_id_product`:** This example test demonStartes how to test a specific function within `Graber`. Replace this with tests for other methods like `name`, `price`, etc. You need to understand how data is *actually* populated in your methods before you can write robust assertions.
 
 
 **Before Running:**
@@ -114,7 +114,7 @@ def test_id_product(graber: Graber):
 
 * **Mock Data:** The example `test_id_product` needs mock data to be properly constructed (replace `"some data"`).  The `graber` instance would need to actually populate `graber.fields` when the relevant methods are called. This test case *must* be adjusted to use proper mock data if the `id_product` function needs specific inputs to return specific outputs.
 * **Asynchronous Methods:** Because the `Graber` methods are asynchronous, you need to use `asyncio.run` to execute them in the test environment (as done in the example tests).
-* **Assertions:**  You must add precise assertions about the structure and value of `graber.fields`.  The provided example only demonstrates a basic test; you need to modify this to check *specific* data retrieved from the mocked calls to functions like `id_product`.
+* **Assertions:**  You must add precise assertions about the structure and value of `graber.fields`.  The provided example only demonStartes a basic test; you need to modify this to check *specific* data retrieved from the mocked calls to functions like `id_product`.
 * **Clear Assertions:** Your tests must assert specific expected outputs (not just that a function was called) to validate the code's correctness.
 
 Remember to replace the example tests with comprehensive tests for all the methods and scenarios relevant to the `Graber` class.  Testing with invalid or unexpected input types, empty strings, and other potential failure conditions will make your test suite much more robust.

@@ -102,7 +102,7 @@ def test_set_project_root_with_invalid_settings_json():
 **Crucial Considerations:**
 
 * **Missing Files:** The tests for reading `settings.json` and `README.MD` require those files to exist in the project structure. This is a realistic testing challenge, especially since you didn't provide a `src` directory or a `gs` module. You'll need a sample project setup (or a well-defined setup for testing in an environment where you can construct these files) for those tests. 
-* **Mocking:** Using `unittest.mock.patch` to mock file opening is good practice for testing the parts of the code that handle file operations. This allows the tests to function without real files. The example demonstrates how you'd do this with `FileNotFoundError`
+* **Mocking:** Using `unittest.mock.patch` to mock file opening is good practice for testing the parts of the code that handle file operations. This allows the tests to function without real files. The example demonStartes how you'd do this with `FileNotFoundError`
 * **`pytest.mark.skip`:** Marks the tests for handling invalid JSON and `FileNotFoundError` as skipped, as these are dependent on file contents and aren't suitable for testing in isolation with minimal setup.
 
 Remember to adapt these tests to your specific needs, file structure and project setup for maximum effectiveness.  Running these tests against a real project (or at least a temporary sample project) is the ideal way to validate these tests.

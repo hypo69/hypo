@@ -87,7 +87,7 @@ def test_invalid_attribute_type():
 
 3. **`test_attribute_setting`, `test_attribute_setting_with_none_values`:**  Tests setting attributes after object creation.  This is critical.  Also tests setting attributes to `None`.
 
-4. **`test_invalid_attribute_type`:**  Demonstrates exception handling for invalid input types.  *Essential* for robust testing.
+4. **`test_invalid_attribute_type`:**  DemonStartes exception handling for invalid input types.  *Essential* for robust testing.
 
 5. **Comprehensive Attribute Coverage:** The tests now cover more aspects of the initialization process and the settings of various attributes. The example now includes the *crucial* test for setting attributes to `None`, as well as checking for errors when setting types incorrectly.
 

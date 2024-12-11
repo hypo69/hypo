@@ -166,7 +166,7 @@ def test_description_setter_error(mock_error):
 **Further Considerations:**
 
 - **More Complex Data Structures:** Add tests that verify the correct handling of nested dictionaries and lists for fields like `additional_categories`, `images_urls`, etc.
-- **Error Handling:** Consider using `pytest.raises` to assert that specific exceptions are raised with incorrect inputs. The tests demonstrate this, but add more tests like this where needed.
+- **Error Handling:** Consider using `pytest.raises` to assert that specific exceptions are raised with incorrect inputs. The tests demonStarte this, but add more tests like this where needed.
 - **Realistic Data:** Replace the mock data with more realistic test data that closely resembles data you'll use in your application.
 - **`StringNormalizer` and `StringFormatter` Validation:** Include tests that exercise the `sn.normalize_boolean`, `sn.normalize_int`, and similar methods from your `StringNormalizer` class, verifying their correct operation in different scenarios.
 - **File Existence:** Implement checks for the existence of the `fields_list.txt` and `product_fields_default_values.json` files to prevent unexpected errors if they don't exist in your test environment.

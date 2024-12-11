@@ -139,4 +139,4 @@ def test_isValidStyleLength_invalid():
 * **Input Validation Tests:** Write more tests to cover various types of inputs, including edge cases (e.g., really long strings for attributes or styles).
 
 
-By incorporating mocking, you'll get much more robust and reliable tests.  This revised solution shows the general strategy and will need further modification and expanded test cases. Remember that the tests will fail if you run them in a browser; they need to be written for a Python testing environment.
+By incorporating mocking, you'll get much more robust and reliable tests.  This revised solution shows the general Startegy and will need further modification and expanded test cases. Remember that the tests will fail if you run them in a browser; they need to be written for a Python testing environment.

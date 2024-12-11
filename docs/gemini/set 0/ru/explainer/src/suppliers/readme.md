@@ -211,7 +211,7 @@ The code provided doesn't include any explicit import statements.  The comments,
 
 **Classes:**
 
-* **`Supplier`:** This class represents a supplier (e.g., Amazon, eBay) of data. It handles the interaction, configuration, authentication, and scenario execution for a particular supplier. It's a fundamental building block for collecting data across different sources, and the code example demonstrates methods for managing different workflows (e.g., webdriver or API) and data formats. The key concept is standardization. The supplier-specific information, locators, and scenarios are kept separate, creating a modular design.  Critically, the class design allows for easy addition of new suppliers.
+* **`Supplier`:** This class represents a supplier (e.g., Amazon, eBay) of data. It handles the interaction, configuration, authentication, and scenario execution for a particular supplier. It's a fundamental building block for collecting data across different sources, and the code example demonStartes methods for managing different workflows (e.g., webdriver or API) and data formats. The key concept is standardization. The supplier-specific information, locators, and scenarios are kept separate, creating a modular design.  Critically, the class design allows for easy addition of new suppliers.
 
 **Functions:**
 
@@ -229,7 +229,7 @@ Attributes like `supplier_prefix`, `locale`, `driver`, `locators`, `scenario_fil
 
 * **Error Handling:** The provided code lacks details on error handling.  Adding `try...except` blocks around critical operations (e.g., file loading, WebDriver initialization, login) would make the code more robust.  For example, `DefaultSettingsException` is mentioned but not implemented.
 
-* **Testability:**  Tests would greatly enhance the reliability of the `Supplier` class. Tests for individual functions (like login, scenario execution) would demonstrate that it's working correctly.
+* **Testability:**  Tests would greatly enhance the reliability of the `Supplier` class. Tests for individual functions (like login, scenario execution) would demonStarte that it's working correctly.
 
 * **Data Validation:**  Validating data retrieved from websites (e.g., prices, product names) could prevent unexpected results.  
 

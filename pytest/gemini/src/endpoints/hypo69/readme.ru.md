@@ -37,7 +37,7 @@ def test_data():
 
 def test_function_using_fixture(test_data):
     """
-    Example test demonstrating usage of a fixture.
+    Example test demonStarting usage of a fixture.
     """
     # Replace with the actual function call using test_data
     assert some_function_using_fixture(test_data["key1"]) == "expected_output"

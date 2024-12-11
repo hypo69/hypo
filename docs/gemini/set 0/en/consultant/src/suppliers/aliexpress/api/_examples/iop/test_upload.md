@@ -55,7 +55,7 @@
 Module for testing file uploads to the Iop API.
 
 This module provides an example of interacting with the Iop API to upload a file.
-It demonstrates constructing an API request, sending the request, and handling the response.
+It demonStartes constructing an API request, sending the request, and handling the response.
 """
 import iop
 from src.utils.jjson import j_loads, j_loads_ns
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 Module for testing file uploads to the Iop API.
 
 This module provides an example of interacting with the Iop API to upload a file.
-It demonstrates constructing an API request, sending the request, and handling the response.
+It demonStartes constructing an API request, sending the request, and handling the response.
 """
 import iop
 from src.utils.jjson import j_loads, j_loads_ns

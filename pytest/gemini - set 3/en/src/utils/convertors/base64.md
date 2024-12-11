@@ -83,7 +83,7 @@ def cleanup(base64_data):
 * **Clearer Test Names:** Test names now explicitly state the input type (e.g., `test_base64_to_tmpfile_invalid_base64`).
 * **`pytest.raises` for Exceptions:**  Correctly uses `pytest.raises` to test exception handling for invalid Base64 and the `FileNotFoundError`. This is crucial for robust testing.
 * **Data Fixtures:** The `base64_data` fixture provides sample data, making tests more organized and reusable.
-* **Edge Cases:** Tests cover empty strings, an invalid file name, and an image file (demonstrating the conversion to a temporary file of different types).
+* **Edge Cases:** Tests cover empty strings, an invalid file name, and an image file (demonStarting the conversion to a temporary file of different types).
 * **Cleanup:** The `cleanup` fixture removes the test image file after the tests to avoid file system issues (crucial for avoiding stale test data).
 * **Empty String Test:** Added a test for an empty string input.
 * **Assert File Not Empty:** Checks the contents are not empty after the decoding. This is a more robust way of verifying the correctness of the base64 decoding.

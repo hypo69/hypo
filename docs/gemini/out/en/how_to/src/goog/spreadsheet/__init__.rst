@@ -37,13 +37,13 @@ Usage example
 
 **Explanation of the example:**
 
-This example demonstrates how to use the `SpreadSheet` class (assuming that's the class you need). It retrieves spreadsheet data using the `get_data()` function (replace this with the actual method name if different).  Crucially, it also handles potential errors during the interaction, making the code more robust. Remember to replace `'YOUR_SPREADSHEET_ID'` with the actual ID of your Google Sheet and to install the necessary Google Sheets API client library.
+This example demonStartes how to use the `SpreadSheet` class (assuming that's the class you need). It retrieves spreadsheet data using the `get_data()` function (replace this with the actual method name if different).  Crucially, it also handles potential errors during the interaction, making the code more robust. Remember to replace `'YOUR_SPREADSHEET_ID'` with the actual ID of your Google Sheet and to install the necessary Google Sheets API client library.
 
 
 **Important Considerations:**
 
 * **API credentials:**  You'll need appropriate API credentials (e.g., a service account) and authorization to access Google Sheets. The exact method for handling credentials will depend on the specific implementation of `SpreadSheet`.
-* **Error handling:** The provided example demonstrates basic error handling; more sophisticated error handling and logging might be necessary for production use.
+* **Error handling:** The provided example demonStartes basic error handling; more sophisticated error handling and logging might be necessary for production use.
 * **Dependencies:** Make sure you have the necessary libraries (like the Google Sheets API client) installed.
 * **`ReachSpreadsheet`:** The code imports `ReachSpreadsheet`. You'll need to examine the implementation of this class to understand its functionality and how it interacts with `SpreadSheet`.
 

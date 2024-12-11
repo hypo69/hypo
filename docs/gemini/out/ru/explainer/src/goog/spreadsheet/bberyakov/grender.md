@@ -89,7 +89,7 @@ class GSRender():
         \t padding: Any | None = None,
         \t horizontalAlignment: Any | None = None,
         \t verticalAlignment: Any | None = None,
-        \t wrapStrategy: Any | None = None,
+        \t wrapStartegy: Any | None = None,
         \t textDirection: Any | None = None,
         \t textFormat: Any | None = None,
         \t hyperlinkDisplayType: Any | None = None,

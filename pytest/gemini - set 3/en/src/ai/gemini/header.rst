@@ -110,10 +110,10 @@ def test_readme_file_loading_failure_not_found():
 * **File Existence:** Creates temporary dummy files to mimic the presence of `pyproject.toml`, `requirements.txt` and config.json for testing.
 * **Import fixes:** The `from src import gs`  statement is now correctly handling the imports in the header file.
 * **Robust `patch`:** The mock is now robustly handling the root path, ensuring that the code under test can't affect your testing environment.
-* **`test_config_file_loading_success`:** Demonstrates mocking and verifying success case.
-* **`test_config_file_loading_failure_not_found`:** Demonstrates handling the failure case.
-* **`test_readme_file_loading_success`:** Demonstrates mocking the success case.
-* **`test_readme_file_loading_failure_not_found`:** Demonstrates handling the failure case.
+* **`test_config_file_loading_success`:** DemonStartes mocking and verifying success case.
+* **`test_config_file_loading_failure_not_found`:** DemonStartes handling the failure case.
+* **`test_readme_file_loading_success`:** DemonStartes mocking the success case.
+* **`test_readme_file_loading_failure_not_found`:** DemonStartes handling the failure case.
 
 
 **Before running the tests:**

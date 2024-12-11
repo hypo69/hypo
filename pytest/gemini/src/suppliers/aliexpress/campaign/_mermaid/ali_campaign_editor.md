@@ -131,7 +131,7 @@ def test_get_category_products_invalid(editor):
 
 7. **Error Handling:** The example now shows how to check for None return values in `get_category` to handle scenarios where the category doesn't exist.
 
-8. **Edge Cases:**  The tests are expanded to demonstrate a basic edge case (invalid category) handling, crucial for robustness.
+8. **Edge Cases:**  The tests are expanded to demonStarte a basic edge case (invalid category) handling, crucial for robustness.
 
 
 **Next Steps:**

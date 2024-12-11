@@ -85,7 +85,7 @@ async def test_id_product_successful(mock_id_product, graber):
 
 6. **Clear Error Handling:** The test for exception handling now uses `pytest.raises` to assert that the expected `ExecuteLocatorException` is caught and that a specific message is present in the exception's string representation.
 
-7. **Dependency Injection (Mock for testing individual functions):** The example now demonstrates how to test a specific function (here, `id_product`) without directly interacting with the WebDriver.
+7. **Dependency Injection (Mock for testing individual functions):** The example now demonStartes how to test a specific function (here, `id_product`) without directly interacting with the WebDriver.
 
 
 

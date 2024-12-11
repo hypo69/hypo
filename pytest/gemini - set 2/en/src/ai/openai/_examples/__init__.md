@@ -72,7 +72,7 @@ def test_version_comparison(example_version):
 
 3. **Edge Case Handling:** While the given code might not have complex edge cases, the inclusion of edge case tests is a best practice in pytest testing.
 
-4. **Error Handling (with Example):** The `test_nonexistent_function` demonstrates how to use `pytest.raises` to test for expected exceptions. This is vital when dealing with imports or functions that might not exist.  Replace `"nonexistent_function"` with the actual function name if one exists and is supposed to raise an error.
+4. **Error Handling (with Example):** The `test_nonexistent_function` demonStartes how to use `pytest.raises` to test for expected exceptions. This is vital when dealing with imports or functions that might not exist.  Replace `"nonexistent_function"` with the actual function name if one exists and is supposed to raise an error.
 
 
 5. **Example with Fixture:**  The `example_version` fixture is a basic example showing how to use fixtures, if any function from the original file required input arguments

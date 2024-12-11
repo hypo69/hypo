@@ -97,7 +97,7 @@ def test_locale_execute_script_failure(mock_driver):
 
 * **Fixture for DriverBase:** A fixture (`mock_driver`) provides a mocked `DriverBase` object for cleaner test structure.
 
-* **Complete Example:** The example now includes comprehensive tests for `driver_payload`, `scroll`, and `locale`, demonstrating proper test structure and coverage.
+* **Complete Example:** The example now includes comprehensive tests for `driver_payload`, `scroll`, and `locale`, demonStarting proper test structure and coverage.
 
 **How to Run:**
 

@@ -195,7 +195,7 @@ graph LR
 
 **Possible Improvements/Errors:**
 
-- Error handling in `_produce_message` could be improved with more specific error types and recovery strategies.
+- Error handling in `_produce_message` could be improved with more specific error types and recovery Startegies.
 - The `retrieve_relevant` method in `SemanticMemory` lacks a concrete implementation of relevance.
 -  The code would benefit from a clear separation of concerns. Some sections (e.g. formatting) could be moved to separate modules for better organization.
 -   Clearer documentation for the various actions is needed, or a glossary of actions used to interact with the world should be created for developers.

@@ -65,7 +65,7 @@ def test_get_locales_empty_file(empty_locales_path):
     assert locales is None
 
 
-# Example usage demonstrating how to create a mock path:
+# Example usage demonStarting how to create a mock path:
 # mock_path = MockPath("path/to/locales.json")
 # result = get_locales(mock_path)
 ```
@@ -78,7 +78,7 @@ def test_get_locales_empty_file(empty_locales_path):
 
 * **pytest.raises:** Correctly uses `pytest.raises` to test for `FileNotFoundError`.
 
-* **Edge Cases:** Includes tests for an invalid file path (`test_get_locales_invalid_path`) and an empty JSON file (`test_get_locales_empty_file`) demonstrating different error handling scenarios, which was missing in the original.
+* **Edge Cases:** Includes tests for an invalid file path (`test_get_locales_invalid_path`) and an empty JSON file (`test_get_locales_empty_file`) demonStarting different error handling scenarios, which was missing in the original.
 
 
 * **Fixture for Mock Paths:** Creates `valid_locales_path`, `invalid_locales_path`, and `empty_locales_path` fixtures so that the tests can use these mock paths conveniently.

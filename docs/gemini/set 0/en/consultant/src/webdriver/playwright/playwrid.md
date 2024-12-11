@@ -62,7 +62,7 @@ class Playwrid(PlaywrightCrawler):
             settings = j_loads_ns(settings_path)
         except Exception as e:
             logger.error(f"Error loading settings from {settings_path}", e)
-            return None # Or raise an exception, depending on error handling strategy
+            return None # Or raise an exception, depending on error handling Startegy
 
         if settings_name:
             custom_settings_path = settings_path.parent / f'{settings_name}.json'

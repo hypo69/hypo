@@ -40,7 +40,7 @@ def test_mode_not_something_else():
 
 1. **Import:** The code now imports the `MODE` variable from the provided file.  Crucially, the path (`hypotez.src.suppliers.ebay.shop`) needs to be replaced with the actual path if it's different.
 
-2. **Placeholder Tests:** The provided code had no functions or classes, so placeholder tests are included to demonstrate the structure and how to use `pytest`.  **These tests are not functional until the actual `shop.py` code is provided.**  Replace the placeholder comments with your actual test cases.
+2. **Placeholder Tests:** The provided code had no functions or classes, so placeholder tests are included to demonStarte the structure and how to use `pytest`.  **These tests are not functional until the actual `shop.py` code is provided.**  Replace the placeholder comments with your actual test cases.
 
 3. **Clear Test Names:** The test function names are descriptive and clearly indicate the test's purpose.
 

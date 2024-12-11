@@ -80,7 +80,7 @@ def test_report_generator_invalid_price():
 
 3. **Edge Cases and Invalid Input:** Tests now include scenarios for empty data (`test_report_generator_empty_data`), missing items (`test_report_generator_missing_items`), and invalid output formats (`test_report_generator_invalid_output_format`). These are essential for comprehensive testing.
 
-4. **Exception Handling:** The `test_report_generator_invalid_price` example demonstrates how to use `pytest.raises` to test for specific exceptions.  Replace the placeholder exception with any exceptions that your actual `ReportGenerator` might raise.
+4. **Exception Handling:** The `test_report_generator_invalid_price` example demonStartes how to use `pytest.raises` to test for specific exceptions.  Replace the placeholder exception with any exceptions that your actual `ReportGenerator` might raise.
 
 5. **Missing `pricelist_generator.py`:** The code provided only had a placeholder. Replace the commented-out example assertions with the correct checks based on your actual implementation. You'll likely need a mocking library (like `unittest.mock`) or a setup to capture the output (e.g., the actual PDF/HTML creation) to properly verify your `ReportGenerator`'s functionality.
 

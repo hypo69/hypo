@@ -5,8 +5,8 @@ import pytest
 # Tests would need to be written for a specific Python code that performs an action.
 
 
-# Example demonstrating how tests would be written if there was Python code
-# (This is purely illustrative and not based on the current input)
+# Example demonStarting how tests would be written if there was Python code
+# (This is purely illuStartive and not based on the current input)
 
 # Example function
 def sum_numbers(a, b):

@@ -95,7 +95,7 @@ def test_to_mp3_exception_handling(ogg_converter, temp_file, mock_ffmpeg):
 
 2. **`tempfile` for Files:**  The code uses `tempfile.NamedTemporaryFile` to create temporary OGG files. This ensures that files used in the tests aren't leftover from previous runs.  Importantly, it cleans up the temporary files using `temp_file.close()` in the `yield` block of the `@pytest.fixture`.
 
-3. **Error Handling:** `test_to_mp3_exception_handling` demonstrates how to test exception handling for the `toMp3` method.  It uses `pytest.raises` to assert that an expected exception (mocked from `ffmpeg.run`) is caught.
+3. **Error Handling:** `test_to_mp3_exception_handling` demonStartes how to test exception handling for the `toMp3` method.  It uses `pytest.raises` to assert that an expected exception (mocked from `ffmpeg.run`) is caught.
 
 4. **Comprehensive Test Cases:** Added `test_create_valid_url` to test the `create` method with a valid URL. Includes tests for invalid inputs (e.g., `test_to_mp3_invalid_input`).
 
@@ -103,7 +103,7 @@ def test_to_mp3_exception_handling(ogg_converter, temp_file, mock_ffmpeg):
 
 6. **`@pytest.fixture` for setup:** The `ogg_converter` fixture now properly initializes and provides a `ogg_converter` instance for all tests to use.
 
-7. **File Removal:** The example for removing files is now included, but requires careful consideration of how `removeFile` is handled in the production code. It's best to mock this in the testing context to isolate the test from the external file system.  Mocking is the best strategy here for test isolation.
+7. **File Removal:** The example for removing files is now included, but requires careful consideration of how `removeFile` is handled in the production code. It's best to mock this in the testing context to isolate the test from the external file system.  Mocking is the best Startegy here for test isolation.
 
 
 **Before running the tests:**

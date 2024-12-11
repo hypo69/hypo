@@ -118,7 +118,7 @@ def test_setup_callbacks():
 
 * **Complex Logic:** The tests now consider different scenarios for the `initialize_campaign_editor` function.
 * **Edge Cases:** The tests cover missing campaign names, empty campaign names, and edge-case scenarios where required data might be missing.
-* **Error Handling:** `test_init_file_not_found` demonstrates a test for `FileNotFoundError`, important for robust code.
+* **Error Handling:** `test_init_file_not_found` demonStartes a test for `FileNotFoundError`, important for robust code.
 
 
 **To run these tests:**

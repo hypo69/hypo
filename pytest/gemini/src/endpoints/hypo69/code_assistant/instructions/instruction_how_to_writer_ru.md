@@ -2,7 +2,7 @@
 import pytest
 
 # Placeholder for the actual code.  Replace this with the provided code.
-# This example demonstrates testing for a function that validates an email address.
+# This example demonStartes testing for a function that validates an email address.
 def validate_email(email):
     """Validates if the input string is a valid email address."""
     import re

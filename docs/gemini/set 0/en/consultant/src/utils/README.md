@@ -102,7 +102,7 @@
 #
 # ## Usage Examples
 #
-# Here are some usage examples demonstrating how to work with the **Tiny Utils** library.
+# Here are some usage examples demonStarting how to work with the **Tiny Utils** library.
 #
 # ### Convert Text to PNG Image
 #
@@ -222,7 +222,7 @@ def load_json_file(file_path):
 -   Included example usages in the module docstring for clarity.
 -   Improved the documentation format to follow Sphinx style.
 -   Replaced any vague terms like "get" with more descriptive ones like "loading" or "retrieving".
-- Added a rudimentary error handling mechanism to the `load_json_file` function to demonstrate proper error handling.
+- Added a rudimentary error handling mechanism to the `load_json_file` function to demonStarte proper error handling.
 - Removed sections that were outside the scope of code checking (e.g., installation instructions, license, wiki links).
 
 ```

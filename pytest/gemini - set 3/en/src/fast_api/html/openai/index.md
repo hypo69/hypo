@@ -95,7 +95,7 @@ def test_train_model_invalid_input(monkeypatch, mocker):
 
 1. **Mocking `$http`:**  The crucial change is using `monkeypatch` and `mocker` from `pytest` to mock the `$http` service. This simulates the external API call without actually making it.  Crucially, this lets us test the *internal* logic of the JavaScript code within the HTML without needing a running server.
 
-2. **Clearer Test Cases:** The tests are now more focused and cover important scenarios (valid, invalid, error cases).  The `test_ask_model_invalid_input` and `test_train_model_invalid_input` cases demonstrate handling of potential errors.
+2. **Clearer Test Cases:** The tests are now more focused and cover important scenarios (valid, invalid, error cases).  The `test_ask_model_invalid_input` and `test_train_model_invalid_input` cases demonStarte handling of potential errors.
 
 3. **Data Setup:**  Mocks are used to set the `ctrl.message`, etc., correctly before calling the functions.
 

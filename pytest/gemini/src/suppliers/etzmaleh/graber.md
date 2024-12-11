@@ -74,7 +74,7 @@ def test_graber_execute_locator_with_exception(driver_mock, graber):
 
 1. **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `Driver` and `logger`.  This is crucial for isolating tests and preventing them from depending on external dependencies.  Mocking `execute_locator` is critical because it handles interactions with the browser.
 
-2. **Error Handling:** A `test_graber_execute_locator_with_exception` test demonstrates how to handle potential errors during the execution. This is vital to ensure the code behaves correctly under various conditions.
+2. **Error Handling:** A `test_graber_execute_locator_with_exception` test demonStartes how to handle potential errors during the execution. This is vital to ensure the code behaves correctly under various conditions.
 
 3. **Clearer Test Cases:** The test cases now have more descriptive names (e.g., `test_graber_init`).
 
@@ -82,7 +82,7 @@ def test_graber_execute_locator_with_exception(driver_mock, graber):
 
 5. **Complete Example:** A complete example `test_graber_init` is provided to show correct usage of assertions and mocks.
 
-6. **Decorator Testing (Placeholder):**  A placeholder `test_close_pop_up_decorator` illustrates how to test the `@close_pop_up` decorator, which needs specific mocking depending on how it's implemented.  You'll need to adapt this with appropriate mocking for any asynchronous operations or exceptions the decorator might use.  Remember to modify the example if your decorator has particular logic.
+6. **Decorator Testing (Placeholder):**  A placeholder `test_close_pop_up_decorator` illuStartes how to test the `@close_pop_up` decorator, which needs specific mocking depending on how it's implemented.  You'll need to adapt this with appropriate mocking for any asynchronous operations or exceptions the decorator might use.  Remember to modify the example if your decorator has particular logic.
 
 7. **Logger Mocking:** The `logger` is mocked to avoid any real logging during the tests.
 

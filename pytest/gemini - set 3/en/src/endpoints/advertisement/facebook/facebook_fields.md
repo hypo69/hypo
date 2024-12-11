@@ -89,4 +89,4 @@ def test_facebook_fields_init(mock_jloads):
 * **Specific Error Match:** The `match` argument in `pytest.raises` helps to ensure a specific type of error (ValueError) and a specific message is raised. This is crucial for diagnosing failures accurately.
 
 
-This revised solution provides a more robust and comprehensive test suite for the `FacebookFields` class, addressing various potential issues and demonstrating good testing practices. Remember to adapt the `mock_data` content within the fixtures to the specific structure of your `facebook_feilds.json` file if needed. Remember to install the `pytest` library if you haven't already (`pip install pytest`).
+This revised solution provides a more robust and comprehensive test suite for the `FacebookFields` class, addressing various potential issues and demonStarting good testing practices. Remember to adapt the `mock_data` content within the fixtures to the specific structure of your `facebook_feilds.json` file if needed. Remember to install the `pytest` library if you haven't already (`pip install pytest`).

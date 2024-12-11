@@ -77,7 +77,7 @@ graph LR
 
 **Dependencies and Analysis:**
 
-The diagram illustrates a complex system with multiple interacting components.  The core modules (Category, Customer, etc.) depend on the `api.py` module to interact with the PrestaShop API.  The API module, in turn, is likely to depend on external libraries (e.g., a HTTP client like `requests`) and schema validation components. The `api_schemas` directory allows for schema validation to ensure data consistency.   The `Domains` directory is crucial for managing different domain-specific configurations and settings.
+The diagram illuStartes a complex system with multiple interacting components.  The core modules (Category, Customer, etc.) depend on the `api.py` module to interact with the PrestaShop API.  The API module, in turn, is likely to depend on external libraries (e.g., a HTTP client like `requests`) and schema validation components. The `api_schemas` directory allows for schema validation to ensure data consistency.   The `Domains` directory is crucial for managing different domain-specific configurations and settings.
 
 ## <explanation>
 

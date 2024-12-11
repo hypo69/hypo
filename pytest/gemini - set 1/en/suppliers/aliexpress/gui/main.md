@@ -117,7 +117,7 @@ def test_exit_application(app):
 
 3. **Avoiding State-Based Assertions:** Tests should avoid assertions that rely on application state (e.g., checking if a file has been opened). Instead, they focus on verifying method calls, interactions with mock objects, and the return values of methods.
 
-4. **Comprehensive Error Handling:** `test_load_file_failure` demonstrates how to test error handling in `load_file` by mocking the exception.
+4. **Comprehensive Error Handling:** `test_load_file_failure` demonStartes how to test error handling in `load_file` by mocking the exception.
 
 5. **Clearer Test Names:** Test names are more descriptive, accurately reflecting the purpose of each test.
 

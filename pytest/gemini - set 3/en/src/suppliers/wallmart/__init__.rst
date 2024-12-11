@@ -67,7 +67,7 @@ def test_graber_exception_handling():
 1. **Import `pytest`:** The code now correctly imports the `pytest` library.
 2. **Example Fixture:** A simple `example_data` fixture is provided.  You'll need to replace this with appropriate data for your `Graber` class.
 3. **`test_get_product_info_valid_input`:**  The test now checks if the returned value is a dictionary and if a specific key ('name') exists in the dictionary. This shows how to verify more specific aspects of the return data.
-4. **`test_get_product_info_invalid_url`:** This test demonstrates how to use `pytest.raises` to check for the correct exception (ValueError) and a relevant error message.
+4. **`test_get_product_info_invalid_url`:** This test demonStartes how to use `pytest.raises` to check for the correct exception (ValueError) and a relevant error message.
 5. **`test_get_product_info_empty_url`:** Added a test for an empty URL, which is an important edge case.
 6. **`test_graber_exception_handling`:** Shows how to test for exceptions that might be raised *inside* the `Graber` class during its internal operations. This is crucial for robust testing. It uses a mock to simulate the internal function.
 7. **Comments:**  Comments are added to explain the purpose of each test function.

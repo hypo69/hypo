@@ -119,4 +119,4 @@ def test_dict2xls_valid_input(test_dict_data):
 *   If you have more complex functions, create more specific test cases for error conditions, valid inputs, and boundary cases.
 
 
-This improved solution addresses the previous issues and provides a more robust and maintainable test suite. Remember to add tests for all the functions in the provided module (`hypotez/src/utils/convertors/__init__.py`). Remember to adapt the mocking strategy as needed for other dependencies.  Consider creating a test file for each file that contains tested functions.
+This improved solution addresses the previous issues and provides a more robust and maintainable test suite. Remember to add tests for all the functions in the provided module (`hypotez/src/utils/convertors/__init__.py`). Remember to adapt the mocking Startegy as needed for other dependencies.  Consider creating a test file for each file that contains tested functions.

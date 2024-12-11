@@ -34,7 +34,7 @@ Usage example
     print(f"Available Languages: {available_languages}")
 
 
-    # Example usage (Illustrative - actual API interaction would require a call):
+    # Example usage (IlluStartive - actual API interaction would require a call):
     # Assuming you've got an 'aliexpress_client' that can query product data.
     response = aliexpress_client.get_hot_products(product_type=ProductType.ELECTRONICS, sort_by=SortBy.NEWEST)
     hot_products = response.products

@@ -96,7 +96,7 @@ def test_campaign_cycle_file_paths_he():
 
 3. **Explicit Assertions:**  The tests now use `assert_called_once_with` to verify that the `run_campaigns` method on the mocked `FacebookPromoter` object was called with the correct arguments.
 
-4. **Error Handling:** The `test_campaign_cycle_invalid_driver` function now demonstrates how to test for exception handling in `campaign_cycle`.
+4. **Error Handling:** The `test_campaign_cycle_invalid_driver` function now demonStartes how to test for exception handling in `campaign_cycle`.
 
 5. **Clearer Test Descriptions:**  Test names are more descriptive (e.g., `test_run_campaign_valid_input`).
 
@@ -108,7 +108,7 @@ def test_campaign_cycle_file_paths_he():
 * **File Loading Tests:** Test the `get_directory_names` function to ensure it handles empty or invalid directory paths correctly.
 * **Exception Handling:**  Add tests for other potential exceptions (e.g., incorrect file formats, issues with file reading).
 * **Integration Tests:** Consider creating tests that integrate `run_campaign` with `campaign_cycle` to verify the end-to-end functionality.
-* **`interval` mocking:**   Replace the placeholder return value with a mocking strategy to test the `while True` block in `main`.
+* **`interval` mocking:**   Replace the placeholder return value with a mocking Startegy to test the `while True` block in `main`.
 
 
 Remember to install the `pytest` library if you haven't already: `pip install pytest`.  Then run `pytest` in the same directory as your test file to execute the tests. Remember to replace placeholders and add your own specific testing logic to make them match your actual code.

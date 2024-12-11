@@ -61,7 +61,7 @@ def test_root_path_edge_cases():
 
 5. **Preservation of Original State:** The `test_root_appending_to_sys_path` test now saves and restores the original `sys.path` to prevent side effects on subsequent tests.
 
-6. **Example Usage (Important):**  To effectively test these functions, you'll need to create a sample directory structure mirroring your project that includes the `hypotez` directory.  The examples in the test cases demonstrate how to change the working directory to facilitate those tests.  **Without a proper directory structure, the tests might not reflect the intended behavior of the code.**
+6. **Example Usage (Important):**  To effectively test these functions, you'll need to create a sample directory structure mirroring your project that includes the `hypotez` directory.  The examples in the test cases demonStarte how to change the working directory to facilitate those tests.  **Without a proper directory structure, the tests might not reflect the intended behavior of the code.**
 
 **How to Run the Tests:**
 

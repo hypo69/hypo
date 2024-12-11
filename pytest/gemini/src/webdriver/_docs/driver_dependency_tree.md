@@ -84,7 +84,7 @@ def test_click_element_not_clickable(driver_instance):
 # ... Add more test functions for other methods like click, get_attribute_by_locator, etc.  ...
 # ...  Include tests for invalid inputs, edge cases, and exceptions. ...
 
-# Example for get_attribute_by_locator (needs a valid locator strategy)
+# Example for get_attribute_by_locator (needs a valid locator Startegy)
 def test_get_attribute_by_locator(driver_instance):
     """Test for getting an attribute by locator."""
     # Assume you've added an element with an attribute 'name' and id 'myElement'
@@ -108,7 +108,7 @@ def test_invalid_locator(driver_instance):
 
 2. **`@pytest.fixture` for Driver:**  The `driver_instance` fixture provides a fresh driver object for each test function, ensuring isolation.
 
-3. **Specific Exception Handling:** The `test_click_element_not_clickable` test demonstrates how to use `pytest.raises` to specifically test for `ElementClickInterceptedException`. This is more robust and informative than just catching a generic exception.
+3. **Specific Exception Handling:** The `test_click_element_not_clickable` test demonStartes how to use `pytest.raises` to specifically test for `ElementClickInterceptedException`. This is more robust and informative than just catching a generic exception.
 
 4. **Clearer Test Names:** Test names now accurately describe the test's purpose, making the test suite easier to understand.
 

@@ -4,7 +4,7 @@ How to Handle Copyright Infringement Requests
 
 Description
 -------------------------
-This code block outlines the response strategy for user requests involving copyrighted material. It instructs the AI to politely refuse requests for copyrighted content, emphasizing the importance of respecting intellectual property rights.
+This code block outlines the response Startegy for user requests involving copyrighted material. It instructs the AI to politely refuse requests for copyrighted content, emphasizing the importance of respecting intellectual property rights.
 
 Execution steps
 -------------------------

@@ -76,7 +76,7 @@ def test_get_list_products_in_category_mock_scroll(scroll_count, direction):
 
 3. **Edge Case Testing:** Added `test_get_list_products_in_category_empty_locator` and `test_get_list_products_in_category_invalid_locator` to cover situations where the locator might not return a list or might be incorrect.
 
-4. **Error Handling:** `test_get_list_products_in_category_non_existent_supplier` demonstrates how to use `pytest.raises` to test for `AttributeError` if `s` is not properly initialized (important for robustness).
+4. **Error Handling:** `test_get_list_products_in_category_non_existent_supplier` demonStartes how to use `pytest.raises` to test for `AttributeError` if `s` is not properly initialized (important for robustness).
 
 5. **Parameterization:** The use of `pytest.mark.parametrize` is helpful to make your tests run multiple times with different inputs, testing different scenarios with a single test function (in this case, `test_get_list_products_in_category_mock_scroll`).
 

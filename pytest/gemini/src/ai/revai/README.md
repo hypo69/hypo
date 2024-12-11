@@ -71,7 +71,7 @@ def test_transcribe_audio_invalid_format(rev_instance):
     assert "Unsupported file format" in str(excinfo.value)
 
 
-# Example to demonstrate API Key handling
+# Example to demonStarte API Key handling
 def test_transcribe_missing_api_key():
     """Checks handling of missing API key."""
     with pytest.raises(Exception) as excinfo:
@@ -88,7 +88,7 @@ def test_transcribe_missing_api_key():
 
 2. **Mock API Interactions (Crucial for Testing):** The `rev_instance` fixture simulates a RevAI client.  **You must implement mocking (or stubbing) to simulate the responses from the RevAI API** for all of your tests.  This is essential because you cannot directly access or manipulate a real API call in a unit test.  The example also includes mocking a successful transcription and failing cases for invalid inputs.
 
-3. **Error Handling and Assertions:** Tests now use `pytest.raises` to check for specific exceptions (e.g., `IOError` for non-existent files) and verify the error messages.  The example test cases demonstrate correct assertions.
+3. **Error Handling and Assertions:** Tests now use `pytest.raises` to check for specific exceptions (e.g., `IOError` for non-existent files) and verify the error messages.  The example test cases demonStarte correct assertions.
 
 4. **Realistic Input:** The example `test_transcribe_audio_valid_input` includes a placeholder for a real audio file.  You'd replace `test_audio.wav` with a properly formatted test audio file.
 

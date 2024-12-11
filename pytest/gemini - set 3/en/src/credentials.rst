@@ -99,7 +99,7 @@ def test_program_settings_init(temp_credentials_file):
 
 5. **Exception Handling (`test_load_credentials_open_kp_exception`):** Added a test case specifically for `_open_kp`'s exception handling, which verifies that it retries and exits when failures persist. This is vital.
 
-6. **Assertions for `_load_credentials`:** Placeholder assertions are provided to demonstrate how to test the loading process for each credential.  Replace these placeholders with actual assertions that confirm the expected values are loaded into the `credentials` attributes.
+6. **Assertions for `_load_credentials`:** Placeholder assertions are provided to demonStarte how to test the loading process for each credential.  Replace these placeholders with actual assertions that confirm the expected values are loaded into the `credentials` attributes.
 
 7. **Comprehensive Test Coverage for `ProgramSettings`:**  It's critical to test the `__init__` method of `ProgramSettings` to verify how it sets up the `path` attribute. 
 
@@ -109,4 +109,4 @@ def test_program_settings_init(temp_credentials_file):
 2.  Modify the `MockPyKeePass` return values to match how your real `PyKeePass` interacts with groups/entries to make your tests accurate.
 3.  Replace placeholder assertions within the test functions with specific assertions for the credential values.  This is your responsibility, based on the expected output from `_open_kp` and subsequent methods in `ProgramSettings`.
 
-Remember to adapt the assertions and mocks to the specifics of your credential loading logic.  This greatly improved example should be much more comprehensive and demonstrate best practices for testing code like this with `pytest` and mocking.
+Remember to adapt the assertions and mocks to the specifics of your credential loading logic.  This greatly improved example should be much more comprehensive and demonStarte best practices for testing code like this with `pytest` and mocking.

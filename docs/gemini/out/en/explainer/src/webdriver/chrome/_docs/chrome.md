@@ -191,7 +191,7 @@ graph LR
 
 - `gs`: The `gs` module is likely used for global settings and paths. This implies a dependency on a configuration management system or global settings module.
 - `src.utils`: The `j_loads` function suggests a custom utility function for loading JSON data.
-- `src.logger`: A logger module is utilized for recording events and errors, illustrating a dependency on a logging system.
+- `src.logger`: A logger module is utilized for recording events and errors, illuStarting a dependency on a logging system.
 
 
 This comprehensive analysis provides a deep understanding of the `chrome.py` code, including its functionality, dependencies, and potential improvements.

@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python code snippet demonstrates how to interact with the AliExpress IOP API to retrieve seller addresses. It creates an IOP client, defines a GET request for seller addresses, and then executes the request. Finally, it prints the response details, including the response type, code, message, request ID, and the full response body.
+This Python code snippet demonStartes how to interact with the AliExpress IOP API to retrieve seller addresses. It creates an IOP client, defines a GET request for seller addresses, and then executes the request. Finally, it prints the response details, including the response type, code, message, request ID, and the full response body.
 
 Execution steps
 -------------------------

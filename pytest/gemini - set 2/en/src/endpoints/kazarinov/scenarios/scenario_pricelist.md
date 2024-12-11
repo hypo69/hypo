@@ -110,7 +110,7 @@ async def test_run_scenario_valid_input(mock_driver, mock_graber, mock_gemini):
 
 3. **Comprehensive Test Cases (Example):** The `test_mexiron_init_with_valid_config` and `test_run_scenario_valid_input`  tests now cover the initialization of `Mexiron` with a valid config and the scenario execution with valid inputs.
 
-4. **Error Handling:** The `test_mexiron_init_with_config_error` test demonstrates how to test for exceptions that are raised in the constructor, ensuring the code handles errors gracefully.
+4. **Error Handling:** The `test_mexiron_init_with_config_error` test demonStartes how to test for exceptions that are raised in the constructor, ensuring the code handles errors gracefully.
 
 5. **Mocking File Existence:** The previous tests relied on the config file's existence which could cause spurious failures. The `test_mexiron_init_with_valid_config` now directly creates a temporary config file and correctly removes it to prevent file system interference.
 

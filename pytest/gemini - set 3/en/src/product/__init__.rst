@@ -79,7 +79,7 @@ def test_product_fields_get_price():
    - Includes tests for valid input, empty input, and invalid input (non-dictionary).
    - A missing key test has been added.
 
-4. **`pytest.raises` for Exception Handling:**  The `test_translate_presta_fields_dict_invalid_input` test demonstrates how to use `pytest.raises` for checking exceptions.
+4. **`pytest.raises` for Exception Handling:**  The `test_translate_presta_fields_dict_invalid_input` test demonStartes how to use `pytest.raises` for checking exceptions.
 
 5. **Comments:** Added comments explaining the purpose of each test.
 

@@ -9,7 +9,7 @@ This Python code defines a Telegram bot.  It handles various types of messages (
 Execution steps
 -------------------------
 1. **Initialization:** The `TelegramBot` class is initialized with a Telegram bot token. This token is used to authenticate the bot with the Telegram API.  The token should be retrieved from a configuration file (e.g., `gs.credentials.telegram.bot.kazarinov`).
-2. **Handler Registration:**  The `register_handlers` method is called to define how the bot responds to different types of messages.  Command handlers (`CommandHandler`) are set up for `/start` and `/help` commands.  Message handlers (`MessageHandler`) are defined for text messages (excluding commands), voice messages, and document messages.
+2. **Handler RegiStartion:**  The `register_handlers` method is called to define how the bot responds to different types of messages.  Command handlers (`CommandHandler`) are set up for `/start` and `/help` commands.  Message handlers (`MessageHandler`) are defined for text messages (excluding commands), voice messages, and document messages.
 3. **Command Handling:**
     * `/start`: Sends a greeting message to the user.
     * `/help`: Displays a list of available commands.

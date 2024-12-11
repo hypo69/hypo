@@ -44,9 +44,9 @@ MODE = 'dev'
 
 
 from .ali_campaign_editor import AliCampaignEditor
-#from .gsheet import AliCampaignGoogleSheet  # Removed for demonstration purposes
+#from .gsheet import AliCampaignGoogleSheet  # Removed for demonStartion purposes
 from .prepare_campaigns import process_campaign, process_campaign_category, process_all_campaigns
-#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets  # Removed for demonstration purposes
+#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets  # Removed for demonStartion purposes
 from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 
 
@@ -105,9 +105,9 @@ MODE = 'dev'
 
 
 from .ali_campaign_editor import AliCampaignEditor
-#from .gsheet import AliCampaignGoogleSheet  # Removed for demonstration purposes
+#from .gsheet import AliCampaignGoogleSheet  # Removed for demonStartion purposes
 from .prepare_campaigns import process_campaign, process_campaign_category, process_all_campaigns
-#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets  # Removed for demonstration purposes
+#from .ali_campaign_editor_jupyter_widgets import JupyterCampaignEditorWidgets  # Removed for demonStartion purposes
 from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 
 

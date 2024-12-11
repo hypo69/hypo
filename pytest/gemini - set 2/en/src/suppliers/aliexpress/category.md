@@ -116,9 +116,9 @@ def test_update_categories_in_scenario_file_invalid_response(mock_get):
 
 3. **Comprehensive Test Coverage:** Added tests for an empty category and a valid case with pagination.  The example in the original `test_get_prod_urls_from_pagination_valid_input` now assumes a starting point of 2 items and verifies the data type correctly.
 
-4. **Error Handling Test:**  `test_update_categories_in_scenario_file_invalid_response` demonstrates how to test for errors during API calls.
+4. **Error Handling Test:**  `test_update_categories_in_scenario_file_invalid_response` demonStartes how to test for errors during API calls.
 
-5. **File Handling:** Demonstrates how to create a temporary file for testing `update_categories_in_scenario_file` (using `tempfile` or creating one under `gs.dir_scenarios`) and clean it up after the test.  This ensures no accidental changes to actual data.
+5. **File Handling:** DemonStartes how to create a temporary file for testing `update_categories_in_scenario_file` (using `tempfile` or creating one under `gs.dir_scenarios`) and clean it up after the test.  This ensures no accidental changes to actual data.
 
 6. **Realistic Mock Data:** The `MockDriver` now has more realistic mock data, reflecting that a successful call may return several product links initially.
 

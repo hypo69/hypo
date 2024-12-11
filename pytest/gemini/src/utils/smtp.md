@@ -116,7 +116,7 @@ def test_receive_invalid_input(mock_logger, mock_env_vars):
 3. **Environment Variables (Fixture):**  The `mock_env_vars` fixture now correctly sets up the necessary environment variables, making the tests more robust.
 4. **Comprehensive `send` Tests:** The `test_send_invalid_input` now correctly tests the case where the receiver is missing from the _connection dictionary
 5. **Comprehensive `receive` Tests:** The `test_receive_valid_input` now uses mocks to create a simulated successful email retrieval scenario.
-6. **Error Handling:**  The `test_receive_invalid_input`  demonstrates the error handling in the `receive` function by testing a connection that should fail, and confirming that `None` is returned,  as expected.
+6. **Error Handling:**  The `test_receive_invalid_input`  demonStartes the error handling in the `receive` function by testing a connection that should fail, and confirming that `None` is returned,  as expected.
 
 **To run these tests:**
 

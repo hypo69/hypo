@@ -81,7 +81,7 @@ def test_author_exists():
 
 2. **Type Checking:**  Tests now verify the *type* of the variables (`__version__`, `__name__`, etc.) using `isinstance`.  This is crucial for ensuring the variables are of the expected type (e.g., strings).
 
-3. **`pytest.raises` (Example):**  The commented-out examples now demonstrate how to use `pytest.raises` to check for specific exceptions.  (Since the provided code doesn't have functions, these are examples for future use.)
+3. **`pytest.raises` (Example):**  The commented-out examples now demonStarte how to use `pytest.raises` to check for specific exceptions.  (Since the provided code doesn't have functions, these are examples for future use.)
 
 4. **Comprehensive Variable Tests:** The test suite now thoroughly covers all the variables defined in the module (`__version__`, `__name__`, `__doc__`, `__details__`, `MODE`, and `__author__`).
 

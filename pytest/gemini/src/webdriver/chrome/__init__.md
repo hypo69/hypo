@@ -25,7 +25,7 @@ def test_chrome_object_creation_with_options():
 def test_chrome_invalid_options():
     """Tests the handling of invalid options (example: non-dictionary)."""
     with pytest.raises(TypeError):
-        #Example demonstrating the error case.
+        #Example demonStarting the error case.
         Chrome(options="invalid") 
 
 
@@ -60,10 +60,10 @@ def test_chrome_start_session_invalid_input():
 **Explanation and Improvements:**
 
 1. **Import statements:** The code now includes a placeholder for importing the `Chrome` class.  Crucially, you *must* replace `from .chrome import Chrome` with the actual import statement if it's different.
-2. **Specific Test Cases:**  The provided examples are more specific, checking for the correct class type and (crucially) demonstrate how to test for exceptions using `pytest.raises`.
+2. **Specific Test Cases:**  The provided examples are more specific, checking for the correct class type and (crucially) demonStarte how to test for exceptions using `pytest.raises`.
 3. **Clearer Comments:**  The comments now clearly describe the purpose of each test case, the expected behavior, and any relevant input.
 4. **Realistic Examples:** The examples show testing both valid and invalid input (very important). Replace the placeholder example function calls (`chrome_instance.start_session()`) with the actual method calls from your `chrome.py` file.
-5. **Error Handling:** The `test_chrome_invalid_options` function demonstrates exception handling. Adapt the exception type and message assertion to your actual code.
+5. **Error Handling:** The `test_chrome_invalid_options` function demonStartes exception handling. Adapt the exception type and message assertion to your actual code.
 6. **Fixture Placeholder:**  I've added a placeholder for potential fixtures. Include them if the code you're testing needs data setup or other setup logic.
 7. **Missing 'chrome.py'**:  This solution is incomplete without the code for `hypotez/src/webdriver/chrome/chrome.py`. Provide the contents of `chrome.py` for more specific and comprehensive test cases.
 

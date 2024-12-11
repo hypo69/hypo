@@ -83,7 +83,7 @@ def test_invalid_parameter(example_valid_data):
 * **Clear Test Names:** Test function names now accurately describe the test scenario (e.g., `test_AliexpressAffiliateProductQueryRequest_init_valid`).
 * **Test Data Functions:** Introduces `example_valid_data()` and `example_empty_data()` to create reusable data, improving code readability and maintainability.
 * **Comprehensive Coverage:** Added tests for both valid and empty/None data for the `__init__` method. Tests for `getapiname` now cover both valid and empty cases.
-* **Error Handling (Important):** Included a test (`test_invalid_parameter`) that demonstrates how to check for `AttributeError` if the `__init__` method is called with an unexpected parameter. This is crucial for robustness.
+* **Error Handling (Important):** Included a test (`test_invalid_parameter`) that demonStartes how to check for `AttributeError` if the `__init__` method is called with an unexpected parameter. This is crucial for robustness.
 * **pytest.raises:** Used `pytest.raises` for the error handling test, which is the correct way to assert for exceptions in `pytest`.
 * **Docstrings:** Added comprehensive docstrings to explain the purpose of each test function.
 
@@ -94,4 +94,4 @@ def test_invalid_parameter(example_valid_data):
 3.  Run the tests from your terminal: `pytest test_aliexpress_request.py`
 
 
-This improved solution provides more robust and comprehensive test coverage, demonstrating best practices for writing `pytest` tests. Remember to adapt the test data and error checking to match the specific behavior and expected outputs of your code. Remember to replace `test_aliexpress_request.py` with the actual filename of your test file if different. Also, the example test data now uses the fixture data functions.
+This improved solution provides more robust and comprehensive test coverage, demonStarting best practices for writing `pytest` tests. Remember to adapt the test data and error checking to match the specific behavior and expected outputs of your code. Remember to replace `test_aliexpress_request.py` with the actual filename of your test file if different. Also, the example test data now uses the fixture data functions.

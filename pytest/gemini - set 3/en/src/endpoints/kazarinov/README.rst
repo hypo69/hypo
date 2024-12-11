@@ -88,7 +88,7 @@ def test_parse_links_mixed_input(valid_links, invalid_link):
 
 4. **`pytest.raises`:** The `test_parse_links_invalid_input` correctly uses `pytest.raises` to verify that a `ValueError` is raised with an appropriate message when encountering an invalid link.
 
-5. **Edge Cases:** The `test_parse_links_empty_input` and `test_parse_links_mixed_input` tests cover cases where the input list is empty, and a mix of valid and invalid links are provided. The `test_parse_links_mixed_input` demonstrates how to use `pytest.raises` for error handling when dealing with potential exceptions in the function.
+5. **Edge Cases:** The `test_parse_links_empty_input` and `test_parse_links_mixed_input` tests cover cases where the input list is empty, and a mix of valid and invalid links are provided. The `test_parse_links_mixed_input` demonStartes how to use `pytest.raises` for error handling when dealing with potential exceptions in the function.
 
 6. **Robust Validation:** The example now includes a more realistic validation step in the `parse_links` method using a regular expression.
 

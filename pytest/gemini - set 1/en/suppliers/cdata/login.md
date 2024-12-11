@@ -97,13 +97,13 @@ def test_login_no_element(mocker):
 
 1. **Mocking:** The crucial addition is mocking the `selenium` webdriver interaction.  This is **essential** for unit tests to run without needing a browser or actual website interaction.  I've mocked the `MockDriver` class to mimic the interaction with the browser and website elements. This also lets you check the internal logic of the function without relying on an external resource like a browser.
 
-2. **Error Handling:** I've added a test (`test_login_invalid_email`) demonstrating how to test for exceptions.  This is vital for checking robust code.
+2. **Error Handling:** I've added a test (`test_login_invalid_email`) demonStarting how to test for exceptions.  This is vital for checking robust code.
 
 3. **Clearer Assertions:** The assertions are now more specific, reflecting the expected output of the `login` function.
 
 4. **Comprehensive Tests:** The tests cover valid input, an invalid email, and a scenario where an element is missing (which can throw an error).
 
-5. **Fixture (Illustrative):**  I've shown a structure for a fixture that could be used if you need to supply data to your tests. In the future, consider writing more tests.
+5. **Fixture (IlluStartive):**  I've shown a structure for a fixture that could be used if you need to supply data to your tests. In the future, consider writing more tests.
 
 **How to Run:**
 

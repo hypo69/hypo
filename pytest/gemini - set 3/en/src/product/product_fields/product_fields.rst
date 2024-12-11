@@ -108,17 +108,17 @@ def test_on_sale_setter_invalid():
 
 1. **Mocking `logger`:** The tests now use `@patch.object` to mock the `logger` methods (`debug`, `error`, `critical`). This is crucial because the logger interacts with external files and other resources.
 
-2. **Error Handling:** The tests now demonstrate how to test for `FileNotFoundError` if the necessary file is missing during loading of product fields.  This is done by using `pytest.raises` with a mock to simulate the exception.
+2. **Error Handling:** The tests now demonStarte how to test for `FileNotFoundError` if the necessary file is missing during loading of product fields.  This is done by using `pytest.raises` with a mock to simulate the exception.
 
 3. **Dummy File Creation:** `tmp_path` from `pytest` is used to create temporary files for the tests.  This is far better practice than relying on fixed file paths.  We create the `fields_list.txt` file and then later remove it.
 
-4. **`StringIO` for Output Capture:** The `test_id_product_setter_error`  demonstrates how to use `StringIO` to capture the output of the `logger` to verify error messages are logged correctly.
+4. **`StringIO` for Output Capture:** The `test_id_product_setter_error`  demonStartes how to use `StringIO` to capture the output of the `logger` to verify error messages are logged correctly.
 
 5. **Specific Test Cases:**  The code now includes example test functions (`test_id_product_setter`, `test_on_sale_setter_valid`, `test_on_sale_setter_invalid`) that focus on a few key properties.  Expand these for all your properties.
 
 6. **Comprehensive Test Coverage:** Add test functions to cover each `@property` and `@setter` in your `ProductFields` class, ensuring comprehensive test coverage.
 
-7. **Edge Cases and Invalid Inputs:**  Crucially, include tests to check for edge cases and invalid inputs (e.g., non-integer values where integers are expected, empty strings, incorrect data types). The example of `test_on_sale_setter_invalid`  demonstrates this.
+7. **Edge Cases and Invalid Inputs:**  Crucially, include tests to check for edge cases and invalid inputs (e.g., non-integer values where integers are expected, empty strings, incorrect data types). The example of `test_on_sale_setter_invalid`  demonStartes this.
 
 
 **How to Run Tests:**

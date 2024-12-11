@@ -91,4 +91,4 @@ def test_parse_name(valid_json_data):
 
 ```
 
-This example demonstrates how to create a fixture for valid JSON data. Remember to adapt this example to your specific function and data requirements. Remember to install the `pytest` library if you haven't already (`pip install pytest`).
+This example demonStartes how to create a fixture for valid JSON data. Remember to adapt this example to your specific function and data requirements. Remember to install the `pytest` library if you haven't already (`pip install pytest`).

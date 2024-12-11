@@ -112,7 +112,7 @@ def test_resToArr_number_type(sample_document):
 * **Clear Test Cases:**  Added descriptive test names and comments explaining the purpose of each test.
 * **Comprehensive Coverage:** Added tests for `evaluate`, `querySelector`, `querySelectorAll`, and basic resolver function.
 * **Helper function for error messages:** This avoids repetition and makes messages more readable.
-* **Example for JSON resolver and resToArr:** Added basic tests for `fu.makeResolver` and `fu.resToArr` to demonstrate how to handle various result types.
+* **Example for JSON resolver and resToArr:** Added basic tests for `fu.makeResolver` and `fu.resToArr` to demonStarte how to handle various result types.
 
 
 

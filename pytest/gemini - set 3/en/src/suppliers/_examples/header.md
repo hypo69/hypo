@@ -85,7 +85,7 @@ def test_sys_path_append_dir_src():
 
 **Explanation and Improvements:**
 
-1. **Error Handling (Crucial):** The original code lacked error handling.  The `test_dir_root_calculation_no_hypotez` test demonstrates how to test for `IndexError` when the `hypotez` directory is not found. This is a critical edge case.
+1. **Error Handling (Crucial):** The original code lacked error handling.  The `test_dir_root_calculation_no_hypotez` test demonStartes how to test for `IndexError` when the `hypotez` directory is not found. This is a critical edge case.
 
 2. **Mocking `os.getcwd`:** The `test_dir_root_calculation` test now mocks `os.getcwd` for more robust testing.  This is vital, as `os.getcwd` returns the current working directory. This prevents the test from modifying the real file system and affecting other tests or the system.
 

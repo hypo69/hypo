@@ -94,7 +94,7 @@ def test_get_attribute_by_locator(execute_locator, driver_mock):
 
 1. **Clearer Test Names:** Test names now explicitly describe the scenario (e.g., `test_get_webelement_by_locator_single_element`).
 
-2. **Explicit Exception Handling:** The `test_get_webelement_by_locator_invalid_locator` example demonstrates how to test for expected exceptions using `pytest.raises`.  Crucially, this checks for *incorrect* input format to the function.
+2. **Explicit Exception Handling:** The `test_get_webelement_by_locator_invalid_locator` example demonStartes how to test for expected exceptions using `pytest.raises`.  Crucially, this checks for *incorrect* input format to the function.
 
 3. **Comprehensive Testing:** The added tests cover scenarios like finding multiple elements, no elements, and invalid locator formats (e.g., passing a string instead of a dictionary).
 

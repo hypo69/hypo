@@ -142,7 +142,7 @@ async def test_main(mock_get_directory_names):
 * **Edge Case Tests:** While the example provides basic edge cases, a more substantial test suite would need more intricate edge case examples (e.g., empty directory names).
 * **Missing `process_campaign` Tests:** The provided example now includes a test for `process_campaign`.
 * **`@pytest.mark.asyncio`:**  The `@pytest.mark.asyncio` decorator was correctly used to mark the tests for asynchronous functions.
-* **Missing Data Fixtures:**   The example demonstrates how to use fixtures to prepare mock data, but it's crucial to provide the actual data structures/objects for these fixtures to work properly.
+* **Missing Data Fixtures:**   The example demonStartes how to use fixtures to prepare mock data, but it's crucial to provide the actual data structures/objects for these fixtures to work properly.
 
 
 

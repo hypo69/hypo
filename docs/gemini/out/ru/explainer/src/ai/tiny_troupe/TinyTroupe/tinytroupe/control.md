@@ -82,7 +82,7 @@ graph LR
     Transaction --> tinytroupe.agent, tinytroupe.environment, tinytroupe.factory
 ```
 
-This mermaid code illustrates the dependencies. The `TinyTroupe` class interacts with other components from the `tinytroupe` package (agents, environments, factories) through the `Transaction` class.  `utils` is used for hashing.
+This mermaid code illuStartes the dependencies. The `TinyTroupe` class interacts with other components from the `tinytroupe` package (agents, environments, factories) through the `Transaction` class.  `utils` is used for hashing.
 
 
 # <explanation>

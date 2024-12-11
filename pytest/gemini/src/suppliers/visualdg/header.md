@@ -132,7 +132,7 @@ def test_settings_load_json_error():
 1. **Test `set_project_root` Thoroughly:**  The tests now cover various scenarios: valid input, marker file in parent, no marker files, invalid marker files. Crucially, they now create temporary directories and files to simulate a project, making the tests more robust and independent.  The cleanup (`.rmdir()`) is crucial to prevent test failures due to leftover files.
 
 
-2. **Exception Handling:** Tests for `FileNotFoundError` and `json.JSONDecodeError` are added to demonstrate proper exception handling. These tests are critical, because they validate the program's ability to gracefully deal with different failure modes.
+2. **Exception Handling:** Tests for `FileNotFoundError` and `json.JSONDecodeError` are added to demonStarte proper exception handling. These tests are critical, because they validate the program's ability to gracefully deal with different failure modes.
 
 
 3. **`pytest.raises`:** The `pytest.raises` function is correctly used to check for exceptions.

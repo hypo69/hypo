@@ -37,7 +37,7 @@ def test_file_encoding():
     try:
         from hypotez.src.ai.myai import MODE
         # The actual check for the encoding.
-        # This example is for illustration and may need adjustment depending on file handling.
+        # This example is for illuStartion and may need adjustment depending on file handling.
         with open("hypotez/src/ai/myai/__init__.py", 'r', encoding='utf-8') as f:
             # Check if there's actual content in the file to prevent false positives.
             assert len(f.read()) > 0, "File is empty."

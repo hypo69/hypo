@@ -91,10 +91,10 @@ def test_send_url_no_active_tab(driver):
 2. **Asynchronous Handling:**  JavaScript's `chrome.tabs.query` and `chrome.runtime.sendMessage` are asynchronous. The `WebDriverWait` is critical for waiting for the asynchronous operations to complete.  This prevents "false negative" tests that incorrectly report success or failure because the test was run too early.
 
 
-3. **Error Handling (Crucial):**  The `test_send_url_failure` now includes a strategy for simulating a failure in the background script. A real world test might involve mocking the response with a known failure case.
+3. **Error Handling (Crucial):**  The `test_send_url_failure` now includes a Startegy for simulating a failure in the background script. A real world test might involve mocking the response with a known failure case.
 
 
-4. **Edge Case (`test_send_url_no_active_tab`):** Added a test to handle the case where there's no active tab, demonstrating proper error handling (Selenium should throw a `NoSuchElementException`).
+4. **Edge Case (`test_send_url_no_active_tab`):** Added a test to handle the case where there's no active tab, demonStarting proper error handling (Selenium should throw a `NoSuchElementException`).
 
 5. **Clear Assertions:** Assertions check that the expected alerts (success or failure) are displayed.
 

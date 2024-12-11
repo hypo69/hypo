@@ -79,7 +79,7 @@ def test_paginator_success(mock_driver, mock_supplier):
     result = paginator(mock_driver, mock_supplier.locators['category'], ["url1"])
     assert result is True
 
-# Example test demonstrating how to mock Driver methods.
+# Example test demonStarting how to mock Driver methods.
 def test_get_list_products_in_category_close_banner(mock_supplier):
   mock_supplier.locators['product']['close_banner'] = 'xpath'
   mock_supplier.driver.execute_locator.return_value = None

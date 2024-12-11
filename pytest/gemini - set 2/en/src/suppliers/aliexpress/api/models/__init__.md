@@ -1,7 +1,7 @@
 ```python
 import pytest
 
-# No code provided to test, so creating dummy classes and functions for demonstration.
+# No code provided to test, so creating dummy classes and functions for demonStartion.
 # Replace these with the actual classes and functions from hypotez/src/suppliers/aliexpress/api/models/__init__.py
 
 
@@ -109,7 +109,7 @@ def test_child_category_creation():
 
 **Explanation and Important Considerations:**
 
-* **Dummy Classes:** The provided code lacked any classes to test.  The solution now includes example classes (`Language`, `Currency`, etc.) to demonstrate test structure and principles.  **Crucially,** replace these example classes with the actual classes from your `aliexpress` module.
+* **Dummy Classes:** The provided code lacked any classes to test.  The solution now includes example classes (`Language`, `Currency`, etc.) to demonStarte test structure and principles.  **Crucially,** replace these example classes with the actual classes from your `aliexpress` module.
 * **Comprehensive Tests:** The tests now cover creation of various model objects (e.g., `Language`, `Currency`, `Product`, `Category`).
 * **Clear Test Names:**  Test names (`test_language_creation`, `test_affiliate_link_creation_no_params`) are descriptive.
 * **Example Assertions:** Each test checks expected attributes of the created object.

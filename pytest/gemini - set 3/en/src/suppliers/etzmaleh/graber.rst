@@ -87,7 +87,7 @@ def test_grab_page_specific_data_failure(graber, driver_mock):
 
 * **Asynchronous Execution:** The tests now use `loop.run_until_complete` to properly execute the asynchronous `graber.grab_page` function within the test loop.
 
-* **Error Handling:** The `test_grab_page_specific_data_failure` test now demonstrates how to use `pytest.raises` to assert that the correct exception is raised when a specific data fetching method fails.
+* **Error Handling:** The `test_grab_page_specific_data_failure` test now demonStartes how to use `pytest.raises` to assert that the correct exception is raised when a specific data fetching method fails.
 
 * **ProductFields Initialization:**  The `graber` fixture now correctly initializes `graber.fields` to a `ProductFields` object.  This is important because `graber.fields` is used in the test to fetch the results.
 

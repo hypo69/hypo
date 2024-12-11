@@ -101,7 +101,7 @@ def test_program_settings_init_no_config():
 
 2. **Clearer Test Function Names:** The test names are more descriptive (e.g., `test_program_settings_init_no_config`).
 
-3. **Edge Cases and Exception Handling:** The `test_program_settings_init_no_config` example demonstrates testing a specific exception (missing `config.json`).  You should add more tests that check for invalid inputs and expected exceptions in the `_load_credentials` and other methods.
+3. **Edge Cases and Exception Handling:** The `test_program_settings_init_no_config` example demonStartes testing a specific exception (missing `config.json`).  You should add more tests that check for invalid inputs and expected exceptions in the `_load_credentials` and other methods.
 
 4. **Parameterization:** Using `pytest.mark.parametrize` allows you to run the same test with multiple input values efficiently.
 

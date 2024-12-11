@@ -105,7 +105,7 @@ def test_doc_loading_success(mock_readme_md):
 
 5. **`pytest.raises`:** Used `pytest.raises` to test exceptions properly.
 
-6. **Example Usage:** Added example fixtures to demonstrate the use of `mock_settings_json` in `test_settings_loading_success`.
+6. **Example Usage:** Added example fixtures to demonStarte the use of `mock_settings_json` in `test_settings_loading_success`.
 
 7. **File Existence Checks:**  The code now checks the existence of the temporary files, ensuring that they are correctly created before attempting to load the settings or doc_str.
 

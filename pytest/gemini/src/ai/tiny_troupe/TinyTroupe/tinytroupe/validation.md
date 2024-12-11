@@ -87,7 +87,7 @@ def test_validate_person_invalid_json(mock_openai_client, mock_logger, mock_tiny
 **Explanation and Improvements:**
 
 * **Mocking:** Critically, the code now uses `unittest.mock` to mock `TinyPerson`, `openai_utils.client`, and `logging`. This isolates the tests and prevents them from interacting with external systems (like the actual OpenAI API or the file system).
-* **Clearer Error Handling:**  The `test_validate_person_failure` test demonstrates how to properly handle a specific case where the `openai_utils.client` might raise an exception.  It uses `pytest.raises` to assert that the expected exception is thrown.
+* **Clearer Error Handling:**  The `test_validate_person_failure` test demonStartes how to properly handle a specific case where the `openai_utils.client` might raise an exception.  It uses `pytest.raises` to assert that the expected exception is thrown.
 * **Edge Case (Empty Response):** `test_validate_person_no_response` covers the crucial scenario where the OpenAI API doesn't return a response.
 * **Successful Validation:** `test_validate_person_success` now has a well-defined successful validation path.
 * **Invalid JSON:** `test_validate_person_invalid_json` addresses a potential issue where the JSON returned from the API might be malformed.

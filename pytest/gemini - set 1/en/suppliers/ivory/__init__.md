@@ -44,7 +44,7 @@ def test_graber_class_exists():
 
 4. **Fixtures (Example):**  The commented-out `graber_instance` fixture and `test_graber_method_example` show how to create a fixture to set up a `Graber` instance if needed for testing methods.  Crucially, this is an example *only*; if there's no relevant class method to test, the commented-out code is not necessary.
 
-5. **Thoroughness:**  The tests are now very basic.  To make them more comprehensive, you would need to understand what the `Graber` class *does* and what its methods are. This example only demonstrates basic `pytest` usage to ensure the module structure exists.
+5. **Thoroughness:**  The tests are now very basic.  To make them more comprehensive, you would need to understand what the `Graber` class *does* and what its methods are. This example only demonStartes basic `pytest` usage to ensure the module structure exists.
 
 **How to Run the Tests:**
 

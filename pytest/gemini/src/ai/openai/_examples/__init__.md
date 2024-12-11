@@ -64,13 +64,13 @@ def test_version_edge_case():
 
 3. **`pytest.raises` for Exceptions:** Added a `test_missing_attribute` example to show how to use `pytest.raises` to test for expected exceptions.  This is important in real-world scenarios.
 
-4. **Edge Cases:** The `test_version_edge_case` example demonstrates how to test for potentially tricky input values.  Replace `"1.0.0"` with the expected version format.
+4. **Edge Cases:** The `test_version_edge_case` example demonStartes how to test for potentially tricky input values.  Replace `"1.0.0"` with the expected version format.
 
 
 5. **Specific Tests for __details__:**  Included tests for the `__details__` attribute, checking that it's a dictionary and has the expected structure and contents. Replace `['name', 'version']` with your actual expected keys.
 
 
-6. **Missing Attribute Check:**  Demonstrates how to use `pytest.raises` to check if an attribute is missing (a common error).  Uncomment and adapt this to your case.
+6. **Missing Attribute Check:**  DemonStartes how to use `pytest.raises` to check if an attribute is missing (a common error).  Uncomment and adapt this to your case.
 
 7. **Empty __doc__ check:** Tests that the docstring is not empty.
 

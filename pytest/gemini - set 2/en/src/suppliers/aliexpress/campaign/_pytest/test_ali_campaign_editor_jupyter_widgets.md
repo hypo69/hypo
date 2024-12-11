@@ -89,7 +89,7 @@ def test_get_directory_names_empty():
 
 **Explanation of Improvements and Added Tests:**
 
-* **Comprehensive Exception Handling:** Added tests specifically checking for `FileNotFoundError` and `IOError` in both `read_text_file` and `save_text_file`, demonstrating robust error handling.
+* **Comprehensive Exception Handling:** Added tests specifically checking for `FileNotFoundError` and `IOError` in both `read_text_file` and `save_text_file`, demonStarting robust error handling.
 * **Edge Cases:** Included tests for empty directories (`test_get_filenames_empty_directory`, `test_get_directory_names_empty`) to cover cases where no files or directories are found. This is crucial for real-world applications.
 * **Clearer Test Names:** Test names now more precisely describe the scenario being tested.
 * **Docstrings:** Docstrings are improved for better readability and understanding of test purpose and parameters.

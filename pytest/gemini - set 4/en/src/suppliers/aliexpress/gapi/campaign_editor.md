@@ -53,7 +53,7 @@ def test_get_data_no_data(spreadsheet):
     sheet_data = spreadsheet_no_data.get_data("Sheet1")
     assert sheet_data is None
 
-# Example test demonstrating how to test a function that imports and potentially uses functions from another module (using header)
+# Example test demonStarting how to test a function that imports and potentially uses functions from another module (using header)
 
 def test_import_header():
   """Tests that the header module can be imported successfully"""
@@ -80,7 +80,7 @@ def test_unimplemented_function():
 
 4. **Test Cases:**  Added `test_mode_value`, `test_get_data_valid_sheet`, `test_get_data_invalid_sheet`, `test_get_data_no_data`, and a `test_import_header`. These cover basic scenarios and important aspects of the assumed code.
 
-5. **Error Handling:** Demonstrated how to use `pytest.raises` for testing exceptions using `test_unimplemented_function`. This is crucial for robust tests.
+5. **Error Handling:** DemonStarted how to use `pytest.raises` for testing exceptions using `test_unimplemented_function`. This is crucial for robust tests.
 
 6. **Clearer Test Descriptions:**  Improved test function docstrings for better understanding of the test's purpose and expected behavior.
 
@@ -94,4 +94,4 @@ def test_unimplemented_function():
 3. **Run the Tests:** Save the code as a `.py` file (e.g., `test_campaign_editor.py`) and run `pytest test_campaign_editor.py` from your terminal.
 
 
-This significantly improved test suite demonstrates a more structured and robust approach to testing Python code using pytest. Remember to add more specific tests based on the actual code in `campaign_editor.py`.  The examples now show how to use fixtures for dependencies and demonstrate proper exception handling.
+This significantly improved test suite demonStartes a more structured and robust approach to testing Python code using pytest. Remember to add more specific tests based on the actual code in `campaign_editor.py`.  The examples now show how to use fixtures for dependencies and demonStarte proper exception handling.

@@ -97,7 +97,7 @@ def teardown_module(module):
 
 * **Fixtures:**  Crucially added `example_docs_dir` and `example_docs_dir_empty` fixtures to create temporary directories with sample `.md` files. This allows for cleaner, isolated tests without cluttering the test functions with file creation.
 * **Clearer Test Names:**  Improved test names (e.g., `test_make_summary_empty_docs`) for better readability and understanding of the test's purpose.
-* **Edge Cases:** Included a test (`test_make_summary_empty_docs`) for an empty directory, demonstrating handling of no `.md` files.
+* **Edge Cases:** Included a test (`test_make_summary_empty_docs`) for an empty directory, demonStarting handling of no `.md` files.
 * **Error Handling:** Added a test (`test_make_summary_exception_handling`) that uses `pytest.raises` to ensure the function correctly handles exceptions.  Crucially, I simulated a possible `FileNotFoundError` to show the correct usage of the `pytest.raises`.  Replace this with a specific expected exception if necessary.
 * **`teardown_module`:** Added a `teardown_module` function to clean up the temporary directories created by the fixtures after all tests are run. This prevents leftover files and potential conflicts in subsequent tests.
 * **Test for `prepare_summary_path`:** Included a test specifically for the `prepare_summary_path` function.

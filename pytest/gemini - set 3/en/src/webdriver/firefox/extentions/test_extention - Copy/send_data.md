@@ -99,7 +99,7 @@ def test_on_page_load_invalid_response(monkeypatch, mock_browser):
 
 1.  **Mocking:** The code now mocks the browser environment (`MockBrowser`) and the `fetch` API using `monkeypatch`. This isolates the test from the actual browser and allows for controlled inputs.
 
-2.  **Error Handling:** The `test_on_page_load_invalid_response` test now demonstrates how to handle the case where the `fetch` call does not return a successful response. It uses `pytest.raises` to assert that the expected exception is thrown.
+2.  **Error Handling:** The `test_on_page_load_invalid_response` test now demonStartes how to handle the case where the `fetch` call does not return a successful response. It uses `pytest.raises` to assert that the expected exception is thrown.
 
 3.  **Clearer Assertions:**  The assertion in `test_on_page_load_valid_input` is now more relevant; it asserts that the code executes without raising exceptions, which is a crucial check.
 

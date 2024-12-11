@@ -38,7 +38,7 @@ def test_details_not_empty():
     assert __details__ != ""
 
 
-# Example test demonstrating a hypothetical function from the file
+# Example test demonStarting a hypothetical function from the file
 # (replace with actual tests if functions exist in the file)
 def test_hypothetical_function():
     """This is a placeholder for tests of hypothetical functions."""
@@ -60,7 +60,7 @@ def test_hypothetical_function():
 2. **Docstring and Details Checks:** Tests are added to verify that `__doc__` and `__details__` are strings and are not empty.
 
 
-3. **Placeholder for Hypothetical Functions:** A `test_hypothetical_function` example demonstrates how to test functions if present in the code.  Replace the placeholder with actual tests for the specific functions found in the `hypotez/src/product/_examples/__init__.py` file if they exist.
+3. **Placeholder for Hypothetical Functions:** A `test_hypothetical_function` example demonStartes how to test functions if present in the code.  Replace the placeholder with actual tests for the specific functions found in the `hypotez/src/product/_examples/__init__.py` file if they exist.
 
 
 4. **Exception Handling (Best Practice):**  While the example code doesn't seem to raise exceptions, testing for potential exceptions (using `pytest.raises`) is essential for robustness. This is included in the example, in case that changes.

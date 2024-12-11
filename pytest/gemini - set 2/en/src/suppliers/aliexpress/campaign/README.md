@@ -98,13 +98,13 @@ def test_create_campaign_invalid_language():
 
 **Explanation and Improvements:**
 
-1. **Placeholders:** The code now includes placeholder functions for the various steps in the campaign creation process.  Crucially, it *demonstrates* how to test these placeholders.  Replace these with your actual code.
+1. **Placeholders:** The code now includes placeholder functions for the various steps in the campaign creation process.  Crucially, it *demonStartes* how to test these placeholders.  Replace these with your actual code.
 
 2. **Clear Test Names:**  Test names are descriptive (e.g., `test_initialize_campaign_valid_input`).
 
 3. **Valid Input Tests:** `test_initialize_campaign_valid_input` shows how to assert on the expected output of the `initialize_campaign` function.
 
-4. **Error Handling (pytest.raises):** `test_create_campaign_missing_input` and `test_create_campaign_invalid_language` illustrate how to use `pytest.raises` to test for exceptions (missing input, invalid language).  **Crucially**, these tests show how to use `str(excinfo.value)` to verify the *type* of error.
+4. **Error Handling (pytest.raises):** `test_create_campaign_missing_input` and `test_create_campaign_invalid_language` illuStarte how to use `pytest.raises` to test for exceptions (missing input, invalid language).  **Crucially**, these tests show how to use `str(excinfo.value)` to verify the *type* of error.
 
 5. **Comprehensive Testing:** Add more test functions to cover the entire campaign creation process.  Think about boundary cases and unexpected inputs for each function.  For example, what happens if `collect_product_data` returns `None` or an empty list?  What if `is_campaign_ready` returns `False` for some reason?  Testing these scenarios is critical.
 
@@ -115,4 +115,4 @@ def test_create_campaign_invalid_language():
 8. **Error messages:** Improve the error messages in your tests (using `assert` statements or `with pytest.raises` as shown).  This helps you identify the source of any problems.
 
 
-Remember to replace the placeholder code with your actual `aliexpress/campaign` code to get fully functional tests. This improved example demonstrates a structure and approach for testing your code effectively using pytest.
+Remember to replace the placeholder code with your actual `aliexpress/campaign` code to get fully functional tests. This improved example demonStartes a structure and approach for testing your code effectively using pytest.

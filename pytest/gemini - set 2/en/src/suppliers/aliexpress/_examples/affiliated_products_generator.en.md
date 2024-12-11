@@ -93,7 +93,7 @@ def test_process_affiliate_products_invalid_url(mock_api):
 
 4. **Edge Case Testing:** `test_process_affiliate_products_empty_input` handles the empty input scenario, which is an important edge case.
 
-5. **Handling Invalid Input (Example):** The commented-out `test_process_affiliate_products_invalid_input_raises_exception` illustrates how to test for exceptions using `pytest.raises`.  This is a placeholder, as no exception-raising code exists in the provided snippet.
+5. **Handling Invalid Input (Example):** The commented-out `test_process_affiliate_products_invalid_input_raises_exception` illuStartes how to test for exceptions using `pytest.raises`.  This is a placeholder, as no exception-raising code exists in the provided snippet.
 
 6. **Return Value Assertion:** Tests now assert on the actual return value of `process_affiliate_products`.  It now checks for correct length and the `product_id`.
 
@@ -114,4 +114,4 @@ def test_process_affiliate_products_invalid_url(mock_api):
 
 **Important Consideration:**
 
-The provided code snippet doesn't contain error handling for invalid product URLs. This is a *major omission* in the original code. You should add proper error handling (and test cases for that error handling) to your `AliAffiliatedProducts` class to avoid unexpected behavior or crashes when processing invalid product data.  My example tests demonstrate how to test for such a situation, but it's not fully applicable without the exception-raising code in the original code.
+The provided code snippet doesn't contain error handling for invalid product URLs. This is a *major omission* in the original code. You should add proper error handling (and test cases for that error handling) to your `AliAffiliatedProducts` class to avoid unexpected behavior or crashes when processing invalid product data.  My example tests demonStarte how to test for such a situation, but it's not fully applicable without the exception-raising code in the original code.

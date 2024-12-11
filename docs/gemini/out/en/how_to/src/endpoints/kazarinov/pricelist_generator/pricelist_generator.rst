@@ -3,7 +3,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python code defines a class `ReportGenerator` for generating HTML and PDF reports based on data from a JSON file.  It utilizes Jinja2 for templating HTML and `pdfkit` for PDF conversion. The code handles loading data, rendering HTML, saving HTML to a file, converting HTML to PDF, and orchestrating the entire report generation process.
+This Python code defines a class `ReportGenerator` for generating HTML and PDF reports based on data from a JSON file.  It utilizes Jinja2 for templating HTML and `pdfkit` for PDF conversion. The code handles loading data, rendering HTML, saving HTML to a file, converting HTML to PDF, and orcheStarting the entire report generation process.
 
 
 Execution steps
@@ -13,7 +13,7 @@ Execution steps
 2. **Define the `ReportGenerator` class:** This class encapsulates the report generation logic.
     * `__init__` method: Initializes the Jinja2 environment and sets the template path.
     * `generate_html` method: Renders an HTML template using Jinja2, taking the data as input and returning the generated HTML string.
-    * `create_report` method: Orchestrates the generation process by:
+    * `create_report` method: OrcheStartes the generation process by:
         * Calling `generate_html` to create the HTML content.
         * Saving the HTML content to a specified HTML file.
         * Using `PDFUtils` (likely a custom class) to convert the HTML content to PDF, saving it to a specified PDF file.  It includes error handling for PDF conversion issues.

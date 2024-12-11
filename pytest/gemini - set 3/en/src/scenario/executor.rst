@@ -148,7 +148,7 @@ def test_execute_PrestaShop_insert_success(mock_execute):
     * **`execute_PrestaShop_insert` success test:** `test_execute_PrestaShop_insert_success`
 
 * **Using `caplog`:** This is crucial for verifying that the correct messages are logged.  
-* **`ProductFields` Mocking:** Demonstrates how to mock the `ProductFields` object for testing the `insert_grabbed_data` function.
+* **`ProductFields` Mocking:** DemonStartes how to mock the `ProductFields` object for testing the `insert_grabbed_data` function.
 
 **How to Run:**
 

@@ -102,7 +102,7 @@ def test_run_scenario_invalid_url(settings_object):
 
 3. **Mock Libraries:**  Import `patch` from `unittest.mock`.  The `with patch` blocks mock out external dependencies like `open` and `json.load`.  This isolates your tests and prevents them from depending on actual file system access or network requests.  Crucially, the `requests` library should be mocked for `run_scenario`, especially in `test_run_scenario_invalid_url`, to ensure the test doesn't actually make network calls.
 
-4. **Clear Test Cases:** The test cases are more focused and cover different aspects (valid input, empty list, missing file, invalid JSON).  The test `test_run_scenario_invalid_url` demonstrates how to test for exceptions in a specific scenario.
+4. **Clear Test Cases:** The test cases are more focused and cover different aspects (valid input, empty list, missing file, invalid JSON).  The test `test_run_scenario_invalid_url` demonStartes how to test for exceptions in a specific scenario.
 
 5. **Exception Handling:** Tests now use `pytest.raises` to verify that expected exceptions (like `FileNotFoundError`, `JSONDecodeError`, `requests.exceptions.RequestException`) are correctly handled.  These are _extremely_ important checks!
 

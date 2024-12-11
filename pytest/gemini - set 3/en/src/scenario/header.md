@@ -91,7 +91,7 @@ def test_set_project_root_invalid_marker_file(marker_files):
 
 1. **Clearer Test Names:**  Test names are more specific and descriptive, following the requirements.
 2. **Robust Test Setup:** The code now creates temporary directories with the necessary marker files. This ensures tests run in isolated environments and doesn't rely on the actual project structure, avoiding potential side effects or failures when other tests are run.
-3. **Error Handling:** The code now includes a test (`test_set_project_root_invalid_marker_file`) to ensure the function handles cases where the marker files don't exist, demonstrating proper exception handling (using `pytest.raises`).
+3. **Error Handling:** The code now includes a test (`test_set_project_root_invalid_marker_file`) to ensure the function handles cases where the marker files don't exist, demonStarting proper exception handling (using `pytest.raises`).
 4. **Parameterization:** `pytest.mark.parametrize` is used to create tests for various potential marker file input values.
 5. **Temporary Directory Cleanup:** Crucial addition to remove the temporary directory after each test. This prevents leftover files and directories from interfering with other tests.
 6. **Realistic Simulation:**  The code simulates the `__file__` location more accurately using a temporary file, making the tests more realistic and portable.

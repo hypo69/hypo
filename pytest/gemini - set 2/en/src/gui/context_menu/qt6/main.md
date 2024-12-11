@@ -118,9 +118,9 @@ def test_context_menu_manager_creation():
 
 1. **Mocking:** The code now heavily uses mocks to isolate the tests from the actual registry operations and PyQt interactions.  This is crucial for reliable testing.  Instead of interacting with the Windows Registry, we create dummy functions that print messages to the console or raise exceptions as needed. We also mock the `gs.path` and other parts that aren't directly part of the functions being tested.  This is significantly safer.
 
-2. **Error Handling:** The `test_remove_context_menu_item_not_found` test demonstrates how to effectively test exceptions using `pytest.raises`.
+2. **Error Handling:** The `test_remove_context_menu_item_not_found` test demonStartes how to effectively test exceptions using `pytest.raises`.
 
-3. **Temp Files:** The `test_add_context_menu_item_file_not_found` test demonstrates proper error handling for the missing file case. A temporary file is created and used to simulate a valid file.
+3. **Temp Files:** The `test_add_context_menu_item_file_not_found` test demonStartes proper error handling for the missing file case. A temporary file is created and used to simulate a valid file.
 
 4. **Clearer Assertions:** The assertions are more specific, focusing on the expected messages and conditions.
 

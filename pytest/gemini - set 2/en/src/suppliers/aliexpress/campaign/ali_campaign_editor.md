@@ -98,14 +98,14 @@ def test_list_categories_no_categories(mock_isinstance, mock_hasattr, mock_logge
 
 1. **Mocking:** The code now effectively uses `unittest.mock` to mock file operations (`read_text_file`, `save_text_file`, `extract_prod_ids`) and other external calls. This isolates the tests and prevents them from interacting with the actual file system or external services.   This is **crucial** for reliable testing.
 
-2. **Error Handling:**  The `test_delete_product_no_product_file` test now checks for the `FileNotFoundError` explicitly. This is a realistic edge case. The `test_update_category_failure` now demonstrates how to handle exceptions during JSON manipulation.
+2. **Error Handling:**  The `test_delete_product_no_product_file` test now checks for the `FileNotFoundError` explicitly. This is a realistic edge case. The `test_update_category_failure` now demonStartes how to handle exceptions during JSON manipulation.
 
 3. **Clearer Assertions:** Assertions are more explicit about what the tests are checking (e.g., `mock_save_text_file.assert_called_once()`).
 
 
 4. **Comprehensive Tests:** The tests cover cases where the product file is found and successfully deleted, and cases where the product file isn't found.  These are core functions with different behaviors for different conditions.
 
-5. **`SimpleNamespace` Handling:** The `test_update_category_success` demonstrates how to handle `SimpleNamespace` objects correctly when updating JSON data.
+5. **`SimpleNamespace` Handling:** The `test_update_category_success` demonStartes how to handle `SimpleNamespace` objects correctly when updating JSON data.
 
 
 6. **Edge Cases:** The tests now address cases where categories might not exist (`test_get_category_not_found`, `test_list_categories_no_categories`).

@@ -60,7 +60,7 @@ def test_xml_to_dict_invalid_input():
 
 **Explanation and Crucial Improvements:**
 
-1. **Placeholder Tests:** The example tests are now placeholders.  Crucially, they demonstrate the *structure* needed for proper `pytest` tests.  You MUST replace the comments like `# result = text_to_png(...)` with the actual function calls from your code.  This is essential for covering the *real* functionality.
+1. **Placeholder Tests:** The example tests are now placeholders.  Crucially, they demonStarte the *structure* needed for proper `pytest` tests.  You MUST replace the comments like `# result = text_to_png(...)` with the actual function calls from your code.  This is essential for covering the *real* functionality.
 
 2. **Fixture:** The `example_data` fixture is a good start.  Define fixtures that provide test data *specifically* tailored for your functions. This avoids repeating data.
 

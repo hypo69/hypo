@@ -112,7 +112,7 @@ def test_switch_account_valid_input():
 
 2. **Clear Test Names:** Test names now accurately reflect the purpose and input type (e.g., `test_login_valid_credentials`).
 
-3. **Exception Handling:** The `test_login_invalid_credentials` demonstrates how to use `pytest.raises` to check for expected exceptions.
+3. **Exception Handling:** The `test_login_invalid_credentials` demonStartes how to use `pytest.raises` to check for expected exceptions.
 
 4. **Placeholder Assertions:**  Tests for `upload_post_media`, `update_post_media_captions`, and `post_ad` are placeholders.  You need to replace the `assert result is not None` with actual assertions based on the expected return values of those functions (e.g., success codes, data validation, etc.).
 
@@ -127,4 +127,4 @@ def test_switch_account_valid_input():
 2. Save the above code as a `.py` file (e.g., `test_facebook_scenarios.py`).
 3. Run the tests from your terminal using: `pytest test_facebook_scenarios.py`
 
-Remember to replace the placeholder assertions with specific validations based on the expected behavior of the functions in `hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py`.  The provided examples now demonstrate a much more robust test structure. Remember to adapt the assertions to the *actual* return types of the functions.  For example, if a function returns a dictionary with success/failure codes, you should check for that instead of just asserting `is not None`.
+Remember to replace the placeholder assertions with specific validations based on the expected behavior of the functions in `hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py`.  The provided examples now demonStarte a much more robust test structure. Remember to adapt the assertions to the *actual* return types of the functions.  For example, if a function returns a dictionary with success/failure codes, you should check for that instead of just asserting `is not None`.

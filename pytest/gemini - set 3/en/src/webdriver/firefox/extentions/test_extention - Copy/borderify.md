@@ -77,7 +77,7 @@ def test_borderify_no_style_property():
 
 3. **Alert Mocking:** The `alert` function is mocked.  A real alert would block the test.  The print simulates the alert's behavior.
 
-4. **Error Handling (Crucial):**  The `test_borderify_no_document_body` and `test_borderify_no_style_property` tests now demonstrate *exception handling*.  They correctly catch the `TypeError` and `AttributeError` that would occur if the JavaScript tries to access properties that don't exist.  This is very important for realistic tests.
+4. **Error Handling (Crucial):**  The `test_borderify_no_document_body` and `test_borderify_no_style_property` tests now demonStarte *exception handling*.  They correctly catch the `TypeError` and `AttributeError` that would occur if the JavaScript tries to access properties that don't exist.  This is very important for realistic tests.
 
 5. **Clearer Assertions:** Assertions are now more specific about what is expected.
 
@@ -98,4 +98,4 @@ def test_borderify_no_style_property():
     ```
 
 
-This improved solution is much more realistic and demonstrates how to properly test JavaScript code within a Python environment using `js2py`. Remember to adapt the assertions and error handling to the specific behavior you expect from the JavaScript code. Remember to replace the mock `alert` behavior with proper handling of the alert if applicable to your test environment.
+This improved solution is much more realistic and demonStartes how to properly test JavaScript code within a Python environment using `js2py`. Remember to adapt the assertions and error handling to the specific behavior you expect from the JavaScript code. Remember to replace the mock `alert` behavior with proper handling of the alert if applicable to your test environment.

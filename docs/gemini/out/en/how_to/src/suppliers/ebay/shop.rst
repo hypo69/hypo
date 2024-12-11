@@ -17,8 +17,8 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # No executable code was found for demonstration in the provided snippet.
-    # To demonstrate usage, you would need the code that utilizes the MODE variable.
+    # No executable code was found for demonStartion in the provided snippet.
+    # To demonStarte usage, you would need the code that utilizes the MODE variable.
     # For example, you might have a section in your code that conditionally uses the 'dev' or 'prod' mode,
     # which would be in a different file than this one.
 

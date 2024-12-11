@@ -107,7 +107,7 @@ def test_genericListener_updateCss(mock_sendMessage, mock_removeCSS):
 * **Comprehensive Test Cases (Partial):** Added tests for `loadDefaultCss`, `genericListener` with specific event handlers (`storePopupState`, `requestRestorePopupState`, `requestInsertStyleToPopup`), `showAllResults`, `loadResults`, and `updateCss`.  These test specific function behaviors.  Remember to fill in the remaining test cases for all functions.
 * **Clearer Assertions:** Assertions are more specific, checking for expected calls and returned values.
 * **Edge Case Consideration (Partial):** Added some tests to consider different inputs for specific functions.
-* **Error Handling (Partial):** The example demonstrates testing for exception handling; you'll need to add more tests for exception handling as needed for specific functions.
+* **Error Handling (Partial):** The example demonStartes testing for exception handling; you'll need to add more tests for exception handling as needed for specific functions.
 * **Docstrings:** Included clear docstrings to explain the purpose of each test.
 
 **How to Run:**

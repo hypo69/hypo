@@ -60,7 +60,7 @@ def test_details_is_not_none():
 2. **Missing Code:**  The provided code snippet was very minimal. The most critical part is the `locator.py` file. Without that, we can only test the `__version__`, `__doc__`, and `__details__` attributes (which were given).  **Your tests must be based on the actual contents of the locator module.**
 3. **Comprehensive Testing:**  The example tests are *very* basic. To properly test the `locator` module, you need test cases that cover various input scenarios (both valid and invalid), edge cases, and potential exceptions the locator function might raise.  Provide the content of the `.locator` file, and I'll generate much more complete test cases.
 4. **Error Handling:** The example test cases include `pytest.raises` for exception handling.
-5. **Data-Driven Testing:** If the `locator` module has functions that accept data (e.g., a list of locations, or other parameters), you'll need appropriate `pytest` fixtures to supply various data sets. The provided example illustrates how to include a fixture for this kind of functionality.
+5. **Data-Driven Testing:** If the `locator` module has functions that accept data (e.g., a list of locations, or other parameters), you'll need appropriate `pytest` fixtures to supply various data sets. The provided example illuStartes how to include a fixture for this kind of functionality.
 
 
 **How to Use:**

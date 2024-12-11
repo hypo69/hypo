@@ -123,7 +123,7 @@ graph TD
 
 **Imports:**
 
-- `math`: Used for potentially calculating things related to ad strategies, but not directly seen here.
+- `math`: Used for potentially calculating things related to ad Startegies, but not directly seen here.
 - `header`: Likely for loading headers (likely for authentication, configurations, and other specific information). It's a critical piece for interfacing with the Facebook API.
 - `time`: Used for the crucial sleep function, controlling the frequency of ad posting.
 - `copy`: Crucial for creating copies of lists; without this, modifications to `campaigns` in the function would affect the original list.
@@ -159,4 +159,4 @@ graph TD
 
 **Relationship with other parts of the project:**
 
-The code relies on a number of custom modules (`src.webdriver.driver`, `src.endpoints.advertisement.facebook`, `src.logger`). This suggests a structured project design with modular components. The `FacebookPromoter` class would likely interact with other components of the project for data acquisition, strategy implementation, and reporting.
+The code relies on a number of custom modules (`src.webdriver.driver`, `src.endpoints.advertisement.facebook`, `src.logger`). This suggests a structured project design with modular components. The `FacebookPromoter` class would likely interact with other components of the project for data acquisition, Startegy implementation, and reporting.

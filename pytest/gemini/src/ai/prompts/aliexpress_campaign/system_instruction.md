@@ -106,7 +106,7 @@ def test_create_campaign_note_invalid_products_titles():
 
 1. **Clear Error Handling:** The code now includes `TypeError` and `ValueError` checks to validate the input types and values.  This is crucial for robust testing.  It raises exceptions when the input is not as expected, making the tests more comprehensive.
 
-2. **Edge Case Testing:**  Added `test_create_campaign_note_long_titles` to demonstrate handling of potentially long product title lists. This tests the truncation logic.
+2. **Edge Case Testing:**  Added `test_create_campaign_note_long_titles` to demonStarte handling of potentially long product title lists. This tests the truncation logic.
 
 3. **Empty Input Test:** `test_create_campaign_note_empty_titles` tests the case where the `products_titles` list is empty. This is essential to make sure your code doesn't crash unexpectedly with empty input.
 

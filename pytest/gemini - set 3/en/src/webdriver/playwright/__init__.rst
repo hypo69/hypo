@@ -70,8 +70,8 @@ class TestPlaywrid:
 * **`TestPlaywrid` Class:**  Organized tests into a class for better structure and readability.
 * **`@pytest.fixture`:** Introduced a `playwrid_instance` fixture to create a `Playwrid` object once per test, reducing overhead and ensuring each test starts with a clean state.  Crucial for testing methods.
 * **Placeholder Assertions:** The code now includes placeholder assertions like `assert isinstance(playwrid_instance, Playwrid)`. Replace these placeholders with the specific assertions necessary to verify the expected behavior of each method.
-* **`pytest.raises` for Exceptions:**  Demonstrates proper usage of `pytest.raises` to check for specific exceptions in the `test_navigate_invalid_url` and `test_take_screenshot_failure` tests, catching invalid URLs or error conditions.
-* **Edge Cases and Valid Inputs:** Includes tests for a valid URL in `test_navigate_valid_url` and an invalid URL in `test_navigate_invalid_url`.  The `test_take_screenshot_failure` test illustrates a potential failure scenario.
+* **`pytest.raises` for Exceptions:**  DemonStartes proper usage of `pytest.raises` to check for specific exceptions in the `test_navigate_invalid_url` and `test_take_screenshot_failure` tests, catching invalid URLs or error conditions.
+* **Edge Cases and Valid Inputs:** Includes tests for a valid URL in `test_navigate_valid_url` and an invalid URL in `test_navigate_invalid_url`.  The `test_take_screenshot_failure` test illuStartes a potential failure scenario.
 * **Clear Comments:** Added comments to explain the purpose of each test function, the expected behavior, and how the test handles specific cases.
 
 

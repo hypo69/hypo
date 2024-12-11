@@ -107,7 +107,7 @@ def test_readme_loading_file_not_found():
 * **Fixtures:**  `mock_settings_file` and `mock_readme_file` fixtures now create dummy `settings.json` and `README.MD` files within a temporary directory using `tmp_path`. This isolates the tests and avoids potential interference with existing files.
 * **Clearer Test Names:** Test names now clearly indicate the scenario being tested (e.g., `test_get_project_root_valid_input`).
 * **Edge Case Handling:** Added a test (`test_get_project_root_marker_file_not_exist`) to check the case where the marker files are not found, ensuring the function returns the correct default.
-* **Mocking `sys.path`:** `test_get_project_root_already_in_path` demonstrates how to mock `sys.path` using `monkeypatch` to test if `get_project_root` correctly handles the case where the root directory is already in `sys.path`.
+* **Mocking `sys.path`:** `test_get_project_root_already_in_path` demonStartes how to mock `sys.path` using `monkeypatch` to test if `get_project_root` correctly handles the case where the root directory is already in `sys.path`.
 * **Import Handling:** The tests now use `__import__` to import the `header` module, which is more robust than directly importing from a file. This is crucial to avoid issues with the test file location compared to the actual module.
 * **Error Handling:** Tests now explicitly check for `FileNotFoundError` and `json.JSONDecodeError` when loading `settings.json` and `README.MD`, confirming the correct error handling within the `header` module.
 * **Comprehensive Coverage:** The tests now cover various cases, including valid inputs, missing files, and nested directories, providing much more confidence in the correctness of the code.

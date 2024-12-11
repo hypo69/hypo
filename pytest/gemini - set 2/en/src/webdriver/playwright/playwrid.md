@@ -90,7 +90,7 @@ def test_playwrid_start_exception(mock_logger, playwrid_instance):
 
 * **Fixtures for Data:**  Crucially, `mock_settings_file` and `custom_settings_file` fixtures now create temporary JSON files. This avoids hardcoding file paths and makes tests more robust (and avoids accidentally modifying existing files).
 * **Mocking `super().run()`:**  The `test_playwrid_start` test now uses `monkeypatch` to mock `super().run()`. This is essential because running the Playwright browser is slow and unnecessary for testing the `Playwrid` class itself.
-* **Comprehensive Exception Handling:** The `test_playwrid_start_exception` test demonstrates exception handling.  It uses `pytest.raises` to check that a `FileNotFoundError` is correctly raised when the settings file is not found. This tests the error handling in the `_load_settings` function.
+* **Comprehensive Exception Handling:** The `test_playwrid_start_exception` test demonStartes exception handling.  It uses `pytest.raises` to check that a `FileNotFoundError` is correctly raised when the settings file is not found. This tests the error handling in the `_load_settings` function.
 * **Clear Test Names:** Test names like `test_playwrid_init_valid_settings` and `test_playwrid_load_settings_no_custom` are more descriptive and easier to understand.
 * **Import Corrections:** The code now imports the correct modules (`hypotez.src`, `crawlee.playwright_crawler`, etc.).
 * **Using `monkeypatch` Correctly:** The `monkeypatch` is used to mock the `PlaywrightCrawler.run` method.

@@ -31,7 +31,7 @@ def test_version_not_none():
 
 
 # Example of adding a test for a hypothetical 'get_version' function if one existed.
-# This test assumes get_version() returns the same value as __version__ for demonstration.
+# This test assumes get_version() returns the same value as __version__ for demonStartion.
 #def test_get_version(get_version):
     #"""Tests the get_version function, assuming it exists."""
     #assert get_version() == __version__, "The returned version doesn't match."
@@ -56,7 +56,7 @@ def test_version_contains_number():
 
 4. **Comprehensive Numeric Check:**  `test_version_contains_number` checks if the version string has at least one digit, further ensuring it's not entirely non-numerical.  This would catch a completely broken version string (e.g., "abc").
 
-5. **Hypothetical Function (Illustrative):** The commented-out `test_get_version` section demonstrates how you would write a test for a hypothetical function (`get_version`) that returns the version string if one existed in the code being tested.
+5. **Hypothetical Function (IlluStartive):** The commented-out `test_get_version` section demonStartes how you would write a test for a hypothetical function (`get_version`) that returns the version string if one existed in the code being tested.
 
 6. **Robustness:** The tests are designed to be more robust in handling different scenarios, including cases where the version string might not conform to the expected format or if other logic is involved.
 

@@ -38,7 +38,7 @@ graph TD
     D --> E[Issue/Query Resolved];
 ```
 
-This mermaid code represents a flow chart illustrating how a user can obtain support for the TinyTroupe project.  There are no dependencies between files/packages involved as this is a README.
+This mermaid code represents a flow chart illuStarting how a user can obtain support for the TinyTroupe project.  There are no dependencies between files/packages involved as this is a README.
 
 ### <explanation>
 

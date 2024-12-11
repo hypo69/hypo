@@ -84,7 +84,7 @@ def test_spreadsheet_get_num_columns(sample_data):
 
 2. **`sample_data` Fixture:** This fixture provides a standardized dataset for testing.  Crucially, it ensures that test cases are consistent.
 
-3. **`pytest.raises`:**  The `test_spreadsheet_get_row_invalid_index` and `test_spreadsheet_get_column_invalid_index` examples demonstrate how to use `pytest.raises` to check for specific exceptions (e.g., `IndexError`).
+3. **`pytest.raises`:**  The `test_spreadsheet_get_row_invalid_index` and `test_spreadsheet_get_column_invalid_index` examples demonStarte how to use `pytest.raises` to check for specific exceptions (e.g., `IndexError`).
 
 4. **Comprehensive Testing:** The examples provide a basic structure.  Add more tests covering:
    - **Error Handling:**  Test for empty spreadsheets, invalid input data types, and other potential errors.

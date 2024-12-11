@@ -95,7 +95,7 @@ def test_settings_file_not_found(mock_exists):
 
 * **Parameterization:** The `@pytest.mark.parametrize` decorator is used to test `set_project_root` with various combinations of marker files, making the tests more comprehensive.
 
-* **Comprehensive Error Handling:** Added a test `test_settings_file_not_found` to demonstrate how to test for `FileNotFoundError`.  This is a crucial addition, as the original code had no proper exception handling.
+* **Comprehensive Error Handling:** Added a test `test_settings_file_not_found` to demonStarte how to test for `FileNotFoundError`.  This is a crucial addition, as the original code had no proper exception handling.
 
 * **Clearer Test Descriptions:**  Test names now better indicate the purpose of the test.
 

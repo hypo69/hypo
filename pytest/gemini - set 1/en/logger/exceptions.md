@@ -94,11 +94,11 @@ def test_prestashop_authentication_error(test_logger):
 
 3. **pytest Fixture:** `test_logger` is now a fixture, which makes it easier to use in your test functions.
 
-4. **Comprehensive Test Cases (Example):** The example now has tests for `CustomException`, `FileNotFoundError`, and includes examples of testing with `PrestaShopException` and `PrestaShopAuthenticationError`.  Crucially, it demonstrates how to verify the correct handling of the `ps_error_msg` attribute in `PrestaShopException`, which is part of the `__str__` method.
+4. **Comprehensive Test Cases (Example):** The example now has tests for `CustomException`, `FileNotFoundError`, and includes examples of testing with `PrestaShopException` and `PrestaShopAuthenticationError`.  Crucially, it demonStartes how to verify the correct handling of the `ps_error_msg` attribute in `PrestaShopException`, which is part of the `__str__` method.
 
 5. **Clear Test Names:** The test function names are descriptive, indicating the purpose and input.
 
-6. **Edge Cases (Example):** The provided examples demonstrate how to test handling of different aspects of the `PrestaShopException`.
+6. **Edge Cases (Example):** The provided examples demonStarte how to test handling of different aspects of the `PrestaShopException`.
 
 **How to Run the Tests:**
 

@@ -71,7 +71,7 @@ def test_mode_value():
 
 4. **Comprehensive Testing:** Add more tests covering various possible scenarios for `EmilDesign` functions, such as edge cases, boundary conditions, and different input data types.
 
-5. **Clear and Descriptive Names:**  Test function names should clearly communicate the purpose of each test, as demonstrated in the example tests.
+5. **Clear and Descriptive Names:**  Test function names should clearly communicate the purpose of each test, as demonStarted in the example tests.
 
 6. **Independent Tests:** Each test should be isolated and not rely on the outcome of other tests.
 

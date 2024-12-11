@@ -65,7 +65,7 @@ The mermaid diagram shows a single file (`crawlee_python/__init__.py`) setting a
 
 * **Project Relationships:**
 
-This `__init__.py` file forms a critical link in the `hypotez` project's structure.  It connects the `crawlee_python` module, potentially with other modules related to web scraping, data processing, and data storage.  The `CrawleePython` class from within this module will be instrumental in the web scraping process. The actual implementation of the crawling strategy and its data handling will exist within `crawlee_python.py`, forming a larger piece of the overall system.
+This `__init__.py` file forms a critical link in the `hypotez` project's structure.  It connects the `crawlee_python` module, potentially with other modules related to web scraping, data processing, and data storage.  The `CrawleePython` class from within this module will be instrumental in the web scraping process. The actual implementation of the crawling Startegy and its data handling will exist within `crawlee_python.py`, forming a larger piece of the overall system.
 
 
 ```

@@ -85,7 +85,7 @@ def test_main_credentials_expired(mock_credentials):
 
 * **Clearer Fixture Names:** `mock_credentials` and `mock_service` are more descriptive than generic names.
 * **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the `googleapiclient.discovery.build` function. This isolates the tests from the external Google Sheets API.  The `mock_sheet` fixture sets up a mock sheet with return values for testing various scenarios.
-* **Specific Error Handling:** The `test_main_http_error` test explicitly checks for `HttpError`, demonstrating how to use `pytest.raises` or mocking in error cases.
+* **Specific Error Handling:** The `test_main_http_error` test explicitly checks for `HttpError`, demonStarting how to use `pytest.raises` or mocking in error cases.
 * **No Data Case:** The `test_main_no_data_found` test handles the case where the spreadsheet has no data, ensuring the code doesn't crash.
 * **Comprehensive Test Coverage:** The tests now cover valid inputs, no credentials file, no data, and potential error conditions.
 

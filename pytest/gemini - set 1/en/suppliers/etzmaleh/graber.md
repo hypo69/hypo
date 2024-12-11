@@ -107,11 +107,11 @@ def test_grab_page_exception_in_fetch(graber: Graber, mock_driver: Driver, monke
 
 2. **Asynchronous Handling:** The `asyncio.run()` function is crucial for running the asynchronous `grab_page` function within the test context.
 
-3. **Error Handling:** The `test_grab_page_exception_in_fetch` test demonstrates how to test for exceptions raised within the asynchronous methods.
+3. **Error Handling:** The `test_grab_page_exception_in_fetch` test demonStartes how to test for exceptions raised within the asynchronous methods.
 
 4. **Clearer Test Names:** Test names are more descriptive to indicate the input and expected behavior.
 
-5. **Comprehensive coverage example:** The `test_grab_page_valid_input` now correctly mocks the internal functions that fetch data, simulating valid input and demonstrating the expected return type (`ProductFields`).
+5. **Comprehensive coverage example:** The `test_grab_page_valid_input` now correctly mocks the internal functions that fetch data, simulating valid input and demonStarting the expected return type (`ProductFields`).
 
 6. **Edge Case Example:** Added `test_grab_page_exception_in_fetch` for error handling.
 

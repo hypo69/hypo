@@ -29,7 +29,7 @@ def test_invalid_icon_resource_syntax():
     # Replace 'parse_ini' with the actual function name.
     # Example: result = parse_ini(data)
     # ... assert statements to check the result would be here, likely catching an error. ...
-    assert False #This example demonstrates catching a potentially incorrect/invalid result.
+    assert False #This example demonStartes catching a potentially incorrect/invalid result.
 
 
 def test_missing_section():

@@ -66,7 +66,7 @@ Usage example
 
     page_lang = "en"
 
-    # Mock functions for demonstration
+    # Mock functions for demonStartion
     def get_translations_from_presta_translations_table(reference):
         return [{"locale": "en", "name": "Product Name (Translation)"}]
 

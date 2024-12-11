@@ -45,7 +45,7 @@ Example Usage
 .. code-block:: python
 
     # Example usage (placeholder)
-    # ... (Example code to demonstrate the usage) ...
+    # ... (Example code to demonStarte the usage) ...
 """
 
 # Function to generate documentation for a code snippet.
@@ -84,7 +84,7 @@ Example Usage
 .. code-block:: python
 
     # Example usage (placeholder). Replace with actual example.
-    # ... (Example code demonstrating usage).  Replace with actual usage. ...
+    # ... (Example code demonStarting usage).  Replace with actual usage. ...
 """
     return documentation
 ```
@@ -115,7 +115,7 @@ Example Usage
 .. code-block:: python
 
     # Example usage (placeholder)
-    # ... (Example code to demonstrate the usage) ...
+    # ... (Example code to demonStarte the usage) ...
 """
 
 from src.logger import logger # Import logger from src.logger
@@ -156,7 +156,7 @@ Example Usage
 .. code-block:: python
 
     # Example usage (placeholder). Replace with actual example.
-    # ... (Example code demonstrating usage).  Replace with actual usage. ...
+    # ... (Example code demonStarting usage).  Replace with actual usage. ...
 """
     return documentation
 ```

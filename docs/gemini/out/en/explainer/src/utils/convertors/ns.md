@@ -174,7 +174,7 @@ graph LR
 
 **Dependencies:**
 
-The diagram shows the imports necessary for the `ns` module. `json` and `csv` are standard libraries for JSON and CSV operations respectively. The `SimpleNamespace` and `Pathlib` imports provide core functionalities related to the SimpleNamespace type and file paths. `Typing` is used for type hinting and `xml2dict` from `src.utils.convertors`, `save_csv_file` from `src.utils.csv`, `save_xls_file` from `src.utils.xls` and `logger` from `src.logger` are custom modules/functions from other parts of the Hypotez project, demonstrating the project's modular structure.
+The diagram shows the imports necessary for the `ns` module. `json` and `csv` are standard libraries for JSON and CSV operations respectively. The `SimpleNamespace` and `Pathlib` imports provide core functionalities related to the SimpleNamespace type and file paths. `Typing` is used for type hinting and `xml2dict` from `src.utils.convertors`, `save_csv_file` from `src.utils.csv`, `save_xls_file` from `src.utils.xls` and `logger` from `src.logger` are custom modules/functions from other parts of the Hypotez project, demonStarting the project's modular structure.
 
 
 ## <explanation>
@@ -198,7 +198,7 @@ None.  The file defines functions, not classes.
 
 * **`ns2dict(ns_obj)`:** Recursively converts a `SimpleNamespace` object to a Python dictionary.  Its inner function `convert` handles nested structures like dictionaries and lists effectively.  This is a crucial function enabling conversion to other formats.
 
-* **`ns2csv(ns_obj, csv_file_path)`:** Converts a `SimpleNamespace` to CSV and saves it to a file.  Uses `save_csv_file` from `src.utils.csv`, demonstrating the use of external utility functions. Includes error handling (`try...except`) for robustness.
+* **`ns2csv(ns_obj, csv_file_path)`:** Converts a `SimpleNamespace` to CSV and saves it to a file.  Uses `save_csv_file` from `src.utils.csv`, demonStarting the use of external utility functions. Includes error handling (`try...except`) for robustness.
 
 
 * **`ns2xml(ns_obj, root_tag="root")`:** Converts a `SimpleNamespace` to XML format, using `xml2dict`. Includes error handling. It takes the root tag as an optional argument.
@@ -223,4 +223,4 @@ None.  The file defines functions, not classes.
 
 **Relationships with other parts of the project:**
 
-The code depends on functions in `src.utils.convertors` (`xml2dict`), `src.utils.csv` (`save_csv_file`) and `src.utils.xls` (`save_xls_file`) and `src.logger`.  This shows a clear modular design that likely facilitates maintainability and reusability across other parts of the application. The code clearly exemplifies a strategy of separate concerns and responsibilities.
+The code depends on functions in `src.utils.convertors` (`xml2dict`), `src.utils.csv` (`save_csv_file`) and `src.utils.xls` (`save_xls_file`) and `src.logger`.  This shows a clear modular design that likely facilitates maintainability and reusability across other parts of the application. The code clearly exemplifies a Startegy of separate concerns and responsibilities.

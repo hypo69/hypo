@@ -83,4 +83,4 @@ def test_get_products_large_limit():
 3. **Implement error handling:**  Use `pytest.raises` to test exception handling for invalid inputs to methods.
 4. **Consider edge cases:**  For example, if a method interacts with external services, validate how the method handles failures or timeouts from those services.
 
-This improved example demonstrates how to write tests based on a more realistic example of a class. Remember to adapt the test functions to accurately reflect the logic and behavior of your actual `PrestaShop` class. Provide the class code for more targeted and complete testing advice.
+This improved example demonStartes how to write tests based on a more realistic example of a class. Remember to adapt the test functions to accurately reflect the logic and behavior of your actual `PrestaShop` class. Provide the class code for more targeted and complete testing advice.

@@ -184,7 +184,7 @@ graph LR
 
 
 * **Classes:**
-    * `CrawleePython`: This class orchestrates the web crawling process.
+    * `CrawleePython`: This class orcheStartes the web crawling process.
         * `__init__`: Initializes the `CrawleePython` instance with parameters controlling the crawl (number of requests, browser type, headless mode).
         * `setup_crawler`: Configures and initiates the `PlaywrightCrawler` instance.
         * `run_crawler`: Executes the crawl using the `PlaywrightCrawler`.

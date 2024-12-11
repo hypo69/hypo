@@ -113,7 +113,7 @@ def test_on_campaign_name_change(editor_widgets,mock_gs_path):
 4.  **Invalid Directory:** The `test_init_invalid_directory` checks the error handling in the initialization.
 5.  **No Campaign Selected:**  `test_initialize_campaign_editor_no_campaign` checks the case where no campaign is selected, ensuring the code doesn't crash or produce unexpected behavior.
 6.  **Category Dropdown Update:** `test_update_category_dropdown` is added to verify the correct update of the category dropdown.
-7. **Handling of dropdown events:** `test_on_campaign_name_change` demonstrates how to test the callback functions associated with dropdown changes.
+7. **Handling of dropdown events:** `test_on_campaign_name_change` demonStartes how to test the callback functions associated with dropdown changes.
 8.  **Clearer Test Names:** Test names are more explicit about the test conditions.
 
 

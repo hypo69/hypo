@@ -110,7 +110,7 @@ def test_chrome_init_exception_handling(mock_chrome_config, mock_environ, monkey
 
 2.  **Clearer Test Names:** Test names like `test_chrome_instance` and `test_chrome_init_with_valid_input` clearly describe the purpose of each test.
 
-3.  **Exception Handling:** The `test_chrome_init_exception_handling` test demonstrates how to use `pytest.raises` to check for specific exceptions (`WebDriverException`) during initialization.
+3.  **Exception Handling:** The `test_chrome_init_exception_handling` test demonStartes how to use `pytest.raises` to check for specific exceptions (`WebDriverException`) during initialization.
 
 4.  **Mocking:** The tests now use `patch` from `unittest.mock` to mock the `WebDriverException` for robust testing.
 

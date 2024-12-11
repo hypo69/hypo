@@ -178,7 +178,7 @@ def test_train_success(mock_openai_client, mock_gs_credentials, mock_gs_path):
 5. **Example Test Cases:** Included basic tests for `__init__`, `list_models`, `ask` (with and without an exception).
 
 
-6. **Error Handling:** The `test_ask_exception` demonstrates how to test exception handling using `with patch`.
+6. **Error Handling:** The `test_ask_exception` demonStartes how to test exception handling using `with patch`.
 
 
 7. **Complete Test Structure:** The code structure is now ready to accept more tests for the remaining functions.  This structure makes it easy to add tests for `describe_image`, `determine_sentiment`, `save_job_id`, etc.

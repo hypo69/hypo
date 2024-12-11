@@ -29,7 +29,7 @@ graph LR
 
 **Dependencies Analysis and Diagram Explanation:**
 
-The mermaid diagram shows a simple structure where `src.endpoints.hypo69` is the module, and it contains the three components: `small_talk_bot`, `code_assistant`, and `psychologist_bot`.  There are no direct dependencies shown because the code is just documentation.  The diagram illustrates the logical grouping of these elements within the `src.endpoints.hypo69` module.
+The mermaid diagram shows a simple structure where `src.endpoints.hypo69` is the module, and it contains the three components: `small_talk_bot`, `code_assistant`, and `psychologist_bot`.  There are no direct dependencies shown because the code is just documentation.  The diagram illuStartes the logical grouping of these elements within the `src.endpoints.hypo69` module.
 
 
 ## <explanation>

@@ -4,7 +4,7 @@ import re
 from typing import Optional
 
 # This is a placeholder.  Replace with the actual code from the input file.
-# This example demonstrates various cases, including docstrings and
+# This example demonStartes various cases, including docstrings and
 # potential exception handling.
 
 

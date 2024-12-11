@@ -57,4 +57,4 @@ def test_gpt_gs_get_data_invalid_sheet():
 ```
 
 
-**Crucially, you need to provide the `gsheet.py` content to create tests that thoroughly check the actual functionality of your `GptGs` class.**  This example demonstrates a test for a hypothetical `get_data` method, and how you'd mock external calls to make the test runnable. Remember to handle potential errors like `ValueError` or `KeyError`. Remember to install the necessary libraries for mocking (e.g., `pytest-mock`).
+**Crucially, you need to provide the `gsheet.py` content to create tests that thoroughly check the actual functionality of your `GptGs` class.**  This example demonStartes a test for a hypothetical `get_data` method, and how you'd mock external calls to make the test runnable. Remember to handle potential errors like `ValueError` or `KeyError`. Remember to install the necessary libraries for mocking (e.g., `pytest-mock`).

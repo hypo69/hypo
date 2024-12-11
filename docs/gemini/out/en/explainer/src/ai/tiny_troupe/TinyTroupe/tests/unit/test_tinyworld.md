@@ -167,7 +167,7 @@ The diagram uses `subgraph` to group elements visually.
 
 **Classes:**
 
-* **`TinyWorld`**:  This class manages the simulation environment. The tests create instances, run them, interact with them (e.g., `broadcast`), and validate results, illustrating its primary functions.  Crucial attributes for a `TinyWorld` might include `name`, `agents`, and methods for running the simulation and handling messages between agents.
+* **`TinyWorld`**:  This class manages the simulation environment. The tests create instances, run them, interact with them (e.g., `broadcast`), and validate results, illuStarting its primary functions.  Crucial attributes for a `TinyWorld` might include `name`, `agents`, and methods for running the simulation and handling messages between agents.
 
 **Functions:**
 

@@ -69,7 +69,7 @@ def test_get_product_id_missing_id():
 * **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to test `ProductIdNotFoundException`.  This is crucial for exception handling.
 * **Parameterization:**  Uses `pytest.mark.parametrize` for better test coverage, particularly for `extract_prod_ids` to handle more valid and invalid inputs.
 * **Robustness:** Includes tests for empty strings and non-numeric inputs.  These are crucial edge cases to ensure the function behaves correctly under various conditions.
-* **Specific Exception Check:**  The `test_get_product_id_missing_id` and `test_get_product_id_invalid_input` tests now check for the *specific* type of `AttributeError` raised, which is more informative for debugging.  This also demonstrates better error handling when no product ID can be found within a URL or an invalid input is provided.  The previous assertion was looking for a string that may or may not appear.
+* **Specific Exception Check:**  The `test_get_product_id_missing_id` and `test_get_product_id_invalid_input` tests now check for the *specific* type of `AttributeError` raised, which is more informative for debugging.  This also demonStartes better error handling when no product ID can be found within a URL or an invalid input is provided.  The previous assertion was looking for a string that may or may not appear.
 * **Correct Usage of `extract_prod_ids`:** The tests now directly call `extract_prod_ids` instead of making assumptions about `get_product_id`'s internal logic. This is necessary as the original implementation of `get_product_id` was calling `extract_prod_ids`. Now the tests explicitly test `extract_prod_ids` using various inputs to ensure its correctness and to confirm the expected outputs.
 
 

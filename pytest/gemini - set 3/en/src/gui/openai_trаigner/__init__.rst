@@ -76,11 +76,11 @@ def test_assistant_main_window_initialize_invalid_input():
 
 3. **`__doc__` and `__details__` test:** Checks that these variables are not empty strings, ensuring the docstrings are correctly populated.
 
-4. **`AssistantMainWindow` test:**  Crucially, this example test demonstrates *trying* to create an instance and *handling potential exceptions*.   This is essential as a constructor could raise errors.
+4. **`AssistantMainWindow` test:**  Crucially, this example test demonStartes *trying* to create an instance and *handling potential exceptions*.   This is essential as a constructor could raise errors.
 
-5. **Example `initialize` method tests:** Added example tests that assume a `initialize` method exists on the class and demonstrate testing valid and invalid input, with exception handling using `pytest.raises`. This shows the structure for testing methods, which you must adapt to the actual methods defined in `main_window.py`.
+5. **Example `initialize` method tests:** Added example tests that assume a `initialize` method exists on the class and demonStarte testing valid and invalid input, with exception handling using `pytest.raises`. This shows the structure for testing methods, which you must adapt to the actual methods defined in `main_window.py`.
 
-6. **Clearer Assertions:** Instead of just `assert True`, which isn't very informative, I demonstrate how to check for specific behavior, or the type of exception raised.
+6. **Clearer Assertions:** Instead of just `assert True`, which isn't very informative, I demonStarte how to check for specific behavior, or the type of exception raised.
 
 **Before Running:**
 

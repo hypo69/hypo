@@ -77,9 +77,9 @@ def test_driver_meta_no_webdriver():
 
 2. **Import Selenium:** The code now imports necessary Selenium classes (Chrome, Firefox, Edge). **Crucially, it assumes these classes are available in your environment.** You need to install the `selenium` package: `pip install selenium`.
 
-3. **Mock or Stub `Driver`:**  Since the actual `Driver` class is not provided, I've added a placeholder `Driver` class with a `driver_payload` method.  In a real-world scenario, you would replace this with the actual `Driver` class and methods.  This placeholder helps to illustrate the testing structure.
+3. **Mock or Stub `Driver`:**  Since the actual `Driver` class is not provided, I've added a placeholder `Driver` class with a `driver_payload` method.  In a real-world scenario, you would replace this with the actual `Driver` class and methods.  This placeholder helps to illuStarte the testing structure.
 
-4. **Exception Handling (`pytest.raises`):** The `test_driver_meta_invalid_webdriver` test demonstrates how to use `pytest.raises` to check for the expected exception (AssertionError in this case) when an invalid `webdriver_cls` is passed.  The `test_driver_meta_no_webdriver` checks for a `TypeError` if no `webdriver_cls` is provided.
+4. **Exception Handling (`pytest.raises`):** The `test_driver_meta_invalid_webdriver` test demonStartes how to use `pytest.raises` to check for the expected exception (AssertionError in this case) when an invalid `webdriver_cls` is passed.  The `test_driver_meta_no_webdriver` checks for a `TypeError` if no `webdriver_cls` is provided.
 
 5. **Edge Cases (Invalid Input):** The `test_driver_meta_invalid_webdriver` test covers the case where an invalid `webdriver_cls` (e.g., an integer) is passed.
 

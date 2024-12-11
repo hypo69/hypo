@@ -85,7 +85,7 @@ def test_log_message_with_multiple_messages(caplog):
 2. **`log_message` Tests:**
    - The crucial addition of a `caplog` fixture and example usage.
    - Tests with different log levels (`INFO`, `DEBUG`).  Crucially,  tests now use `caplog` to capture the logged messages, allowing reliable assertions in the `test_log_message_with_caplog` test.
-3. **Example of `caplog` Fixture:** Demonstrates how to use `pytest.LogCaptureFixture` from pytest to properly capture logged output.  This is necessary to verify the log messages.
+3. **Example of `caplog` Fixture:** DemonStartes how to use `pytest.LogCaptureFixture` from pytest to properly capture logged output.  This is necessary to verify the log messages.
 4. **Placeholder Assertions:** The commented-out assertions in `test_log_message_info` and `test_log_message_debug` were crucial placeholders.  You **must** include assertions to confirm the message was logged using the `caplog` fixture.
 
 **To Run the Tests:**

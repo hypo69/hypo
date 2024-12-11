@@ -111,7 +111,7 @@ def test_makeResolver_invalid_json(document):
 
 5. **Comprehensive Tests:** The example tests now cover `execExpr` with different methods and scenarios, including a test for `NUMBER_TYPE` in `resToArr`. This is important because `ANY_TYPE` is handled differently.
 
-6. **`resolver` Tests:** Added tests for `makeResolver` with both valid JSON and invalid JSON input, demonstrating more nuanced testing.
+6. **`resolver` Tests:** Added tests for `makeResolver` with both valid JSON and invalid JSON input, demonStarting more nuanced testing.
 
 
 **How to run the tests:**

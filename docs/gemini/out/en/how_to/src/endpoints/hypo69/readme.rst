@@ -30,7 +30,7 @@ Usage example
         print(f"An error occurred: {e}")
 
 
-    # Example using the code_assistant (Illustrative)
+    # Example using the code_assistant (IlluStartive)
     try:
         code_assistant = hypo69.code_assistant(training_data="path/to/training_data.json")  # Initialize with training data
         improved_code = code_assistant.improve_code_snippet("def my_function(x):\n   return x + 1") # Improve code snippet

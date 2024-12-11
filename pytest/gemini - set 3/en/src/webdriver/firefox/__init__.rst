@@ -13,7 +13,7 @@ def test_firefox_mode_is_dev():
   assert Firefox.MODE == 'dev'
   
 #  Add more tests if Firefox class has methods or attributes.
-#  Example with a mock Firefox class for demonstration.
+#  Example with a mock Firefox class for demonStartion.
 #  Replace with the actual Firefox class if available
 
 class MockFirefox:
@@ -74,9 +74,9 @@ def test_firefox_mode_custom_value():
 
 4. **`MockFirefox` class:**  Crucially, I've added a `MockFirefox` class.  This is a *very important* practice for testing.  Your original code snippet shows only an import, not a class definition. Without a definition to test methods or data, the tests would be incomplete and failing (since you would be trying to call methods on nothing).
 
-5. **Example tests for methods:** Tests like `test_firefox_instance_creation`, `test_firefox_mode_attribute`, and `test_firefox_mode_default_value` demonstrate testing the instantiation and attributes of the `Firefox` class, assuming the class has a relevant `mode` attribute. Adapt these to test methods from your `firefox.py` file.  Note the `__init__` is tested in the instantiation tests.
+5. **Example tests for methods:** Tests like `test_firefox_instance_creation`, `test_firefox_mode_attribute`, and `test_firefox_mode_default_value` demonStarte testing the instantiation and attributes of the `Firefox` class, assuming the class has a relevant `mode` attribute. Adapt these to test methods from your `firefox.py` file.  Note the `__init__` is tested in the instantiation tests.
 
-6. **Exception Handling (`pytest.raises`):** The commented-out `test_firefox_method_raises_exception` illustrates how to use `pytest.raises` to assert that a method raises a specific exception.  Replace the placeholder with the actual method and exception type from your `firefox.py` file.
+6. **Exception Handling (`pytest.raises`):** The commented-out `test_firefox_method_raises_exception` illuStartes how to use `pytest.raises` to assert that a method raises a specific exception.  Replace the placeholder with the actual method and exception type from your `firefox.py` file.
 
 7. **Fixtures (optional but good practice):** The commented-out `firefox_data` fixture shows how to create data-driven tests, if your tests require various input/output combinations.
 

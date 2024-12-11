@@ -51,5 +51,5 @@ def test_mode_value():
 
 # These tests are important to ensure the module's attributes are well-formed
 # and consistent with what is expected in terms of data types and values.
-# The tests also demonstrate how to use pytest fixtures if needed.
+# The tests also demonStarte how to use pytest fixtures if needed.
 ```

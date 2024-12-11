@@ -125,7 +125,7 @@ def test_add_coupon(product_fields):
 * **Fixtures:**  Crucially, fixtures are now used for `mock_supplier`, `scenario_files`, `scenario_file`, `scenario`, and `product_fields`. This isolates test data from the tests themselves and reduces code duplication.
 * **Specific Assertions:** Replace placeholders like `assert result is True` with *meaningful* assertions based on the expected behavior of the function. For example, if `run_scenario_files` returns a list of successful/failed scenario names, assert on the contents of that list.
 * **Error Handling:**  The tests now include examples of mocking failures within the fixtures (e.g., `mock_supplier.scenario_files = [Path("scenarios/invalid_scenario.json")]`) to check how functions handle errors.  Add assertions (`assert result is False`, etc.) to verify these error conditions.
-* **Comprehensive Examples:** Added tests for `insert_grabbed_data` and `add_coupon`—crucial for demonstrating correct usage.
+* **Comprehensive Examples:** Added tests for `insert_grabbed_data` and `add_coupon`—crucial for demonStarting correct usage.
 * **Missing Imports:** Removed the `from ... import ...` statements.
 * **Clearer Comments:**  Comments are added to explain the purpose of each test case and the input/output expected.
 

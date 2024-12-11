@@ -144,7 +144,7 @@ graph TD
 **Functions:**
 
 - Most functions are clearly documented with docstrings, describing their purpose, arguments, and return values.
-- `extract_results_from_agent`, `extract_results_from_world`:  These functions utilize an LLM (through `openai_utils`) to analyze agent/world interaction history and provide structured extraction results, demonstrating a key integration point with external AI services.
+- `extract_results_from_agent`, `extract_results_from_world`:  These functions utilize an LLM (through `openai_utils`) to analyze agent/world interaction history and provide structured extraction results, demonStarting a key integration point with external AI services.
 - `reduce_agent`, `reduce_agent_to_dataframe`: These functions are crucial for data processing and transforming the LLM output into a structured format suitable for further analysis or storage.
 
 
@@ -158,4 +158,4 @@ graph TD
 
 **Relationships with other parts of the project:**
 
-The code relies heavily on external libraries like OpenAI and Pandas.  It interacts with the `TinyPerson` and `TinyWorld` classes from the `tinytroupe` package, illustrating a clear dependency on classes for representing simulated elements in TinyTroupe. The usage of `utils` modules (like `extract_json`, `dedent`) emphasizes utility functions that simplify data processing.
+The code relies heavily on external libraries like OpenAI and Pandas.  It interacts with the `TinyPerson` and `TinyWorld` classes from the `tinytroupe` package, illuStarting a clear dependency on classes for representing simulated elements in TinyTroupe. The usage of `utils` modules (like `extract_json`, `dedent`) emphasizes utility functions that simplify data processing.

@@ -82,7 +82,7 @@ def test_models_Product_invalid_data():
 
 5. **Edge Cases:** The `test_AliexpressApi_get_product_api_error` covers a scenario where the API call might fail due to network issues or server problems.  This is a more realistic edge case.
 
-6. **Model Tests (if applicable):** The `test_models_Product_creation` and `test_models_Product_invalid_data` test cases demonstrate how to test the `models` module if there's a `Product` class defined in it.
+6. **Model Tests (if applicable):** The `test_models_Product_creation` and `test_models_Product_invalid_data` test cases demonStarte how to test the `models` module if there's a `Product` class defined in it.
 
 7. **Version Testing:** Added `test_AliexpressApi_version_exists`, `test_AliexpressApi_version_is_valid`, `test_AliexpressApi_version_string_is_valid` to ensure the `__version__` attribute is correctly defined and is a valid `Version` object.
 

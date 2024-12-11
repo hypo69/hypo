@@ -109,7 +109,7 @@ def test_dict2xml_with_list(sample_list_of_dicts):
 
 * **Comprehensive Tests:** Added tests covering `dict2ns` with nested dictionaries and lists of dictionaries, which are significant use cases.  `test_dict2ns_list_of_mixed_types` handles a more complex list.
 
-* **PDF Test:** `test_dict2pdf_valid_input` verifies PDF creation.  Critically, `test_dict2pdf_simple_namespace` demonstrates exception handling for incorrect input type.
+* **PDF Test:** `test_dict2pdf_valid_input` verifies PDF creation.  Critically, `test_dict2pdf_simple_namespace` demonStartes exception handling for incorrect input type.
 
 * **XML Test:** `test_dict2xml_valid_input` and `test_dict2xml_single_root` test the core functionality and the critical error handling.  `test_dict2xml_with_list` shows a common usage case.
 

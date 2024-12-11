@@ -84,7 +84,7 @@ def test_graber_method_example(graber_instance):
 
 **Explanation and Improvements:**
 
-1. **Dummy Functions:** The provided code was empty, so I created `dummy_function_1` and `dummy_function_2` with basic functionalities to demonstrate testing.  Replace these with actual functions from `hypotez.src.suppliers.ksp` for real tests.
+1. **Dummy Functions:** The provided code was empty, so I created `dummy_function_1` and `dummy_function_2` with basic functionalities to demonStarte testing.  Replace these with actual functions from `hypotez.src.suppliers.ksp` for real tests.
 
 2. **Comprehensive Test Cases:**  The test cases now cover various scenarios:
    - Valid inputs (`test_dummy_function_1_valid_input`, `test_dummy_function_2_valid_input`).

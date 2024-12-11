@@ -27,7 +27,7 @@ Execution steps
 
 9. **Data Types:** The code specifically defines type hints (`typing.List`, `typing.Dict`, etc.) for various parameters to improve code readability and maintainability.
 
-10. **Usage Example (Illustrative):**  While not a required step, the file includes usage examples in code blocks (using `langdetect`.) This is not critical in understanding the `ProductFields` class itself, but highlights how to use the imported language detection libraries.  You'd replace these examples with code that actually utilizes the getters and setters to populate product data.
+10. **Usage Example (IlluStartive):**  While not a required step, the file includes usage examples in code blocks (using `langdetect`.) This is not critical in understanding the `ProductFields` class itself, but highlights how to use the imported language detection libraries.  You'd replace these examples with code that actually utilizes the getters and setters to populate product data.
 
 
 Usage example

@@ -85,7 +85,7 @@ def test_graber_invalid_input_expected_output():
 
 1. **Placeholder Replacement:** The code now contains placeholder comments (`# Replace with ...`) for the actual method names, input values, expected outputs, and error types.  Crucially, you **must** replace these placeholders with the correct information from your `Graber` class in `.graber.py`.
 
-2. **Specific Exception Handling:** The example `test_graber_invalid_input` demonstrates how to use `pytest.raises` to check for specific exceptions (like `TypeError`) and validate their messages. This is much more robust than just checking for `Exception`.
+2. **Specific Exception Handling:** The example `test_graber_invalid_input` demonStartes how to use `pytest.raises` to check for specific exceptions (like `TypeError`) and validate their messages. This is much more robust than just checking for `Exception`.
 
 3. **Edge Case and Boundary Tests:** The example `test_graber_edge_case_input` shows how to test with inputs that are at the edge of the valid input range or have unusual conditions.
 

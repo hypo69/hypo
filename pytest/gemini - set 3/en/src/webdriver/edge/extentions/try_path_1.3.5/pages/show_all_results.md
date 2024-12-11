@@ -96,9 +96,9 @@ def test_makeInfoText_valid_input(example_results):
 
 * **Assertions:**  The test now includes assertions to verify that the expected updates to the DOM (using the mock) are made.
 
-* **Edge Cases:** The `test_show_all_results_no_context` test demonstrates handling missing or null context data.
+* **Edge Cases:** The `test_show_all_results_no_context` test demonStartes handling missing or null context data.
 
-* **Comprehensive Test Strategy:** This provides a starting point; add more tests for edge cases (empty results, malformed input, error handling, etc.). Test `makeTextDownloadUrl` and `makeConvertedInfoText` functions.
+* **Comprehensive Test Startegy:** This provides a starting point; add more tests for edge cases (empty results, malformed input, error handling, etc.). Test `makeTextDownloadUrl` and `makeConvertedInfoText` functions.
 
 
 **How to Run the Tests:**

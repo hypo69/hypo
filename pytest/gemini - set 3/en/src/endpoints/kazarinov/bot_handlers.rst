@@ -103,7 +103,7 @@ def test_fetch_target_urls_onetab_failure(mock_get):
 
 2. **Clearer Test Cases:** The test cases are now more comprehensive, covering valid and invalid inputs for `handle_url`, including missing data and errors.
 
-3. **Exception Handling:** The `test_handle_url_invalid_input` test case demonstrates how to check for the correct response when an exception is raised. It ensures that the error message is sent, as the original code did.
+3. **Exception Handling:** The `test_handle_url_invalid_input` test case demonStartes how to check for the correct response when an exception is raised. It ensures that the error message is sent, as the original code did.
 
 4. **Error Handling in `fetch_target_urls_onetab`:** The `test_fetch_target_urls_onetab_failure` test correctly checks for `requests.exceptions.RequestException`.
 

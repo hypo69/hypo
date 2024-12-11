@@ -62,19 +62,19 @@ def test_tiny_trouper_creation():
 
 1. **Import `pytest`:** The code now imports the necessary `pytest` module.
 
-2. **Placeholder Class:** The example now includes a `TinyTrouper` class and associated methods. Replace this with the actual classes/functions from your `tiny_troupe` module.  Crucially, this demonstrates how to test a class, not just functions.
+2. **Placeholder Class:** The example now includes a `TinyTrouper` class and associated methods. Replace this with the actual classes/functions from your `tiny_troupe` module.  Crucially, this demonStartes how to test a class, not just functions.
 
-3. **Fixtures:** Demonstrates how to define a fixture (`tiny_trouper`) for creating test objects.  This is essential for testing classes.  If your `tiny_troupe` module doesn't need fixtures, you would remove the fixture definition.
+3. **Fixtures:** DemonStartes how to define a fixture (`tiny_trouper`) for creating test objects.  This is essential for testing classes.  If your `tiny_troupe` module doesn't need fixtures, you would remove the fixture definition.
 
 4. **Clear Test Names:** Test names are descriptive (e.g., `test_tiny_trouper_greeting`).
 
 5. **Valid Input Test:** A test (`test_tiny_trouper_greeting`) checks the correct behavior with valid input.
 
-6. **Invalid Input/Edge Case Test:**  `test_tiny_trouper_greeting_invalid_type` shows how to use `pytest.raises` to assert that an exception of the correct type is raised when the target is not a string.  `test_tiny_trouper_greeting_empty_target` demonstrates handling an empty string as input.
+6. **Invalid Input/Edge Case Test:**  `test_tiny_trouper_greeting_invalid_type` shows how to use `pytest.raises` to assert that an exception of the correct type is raised when the target is not a string.  `test_tiny_trouper_greeting_empty_target` demonStartes handling an empty string as input.
 
 7. **Exception Handling:**  Critically, the example now includes `pytest.raises` to test exception handling.  This is crucial for robust testing.
 
-8. **Object Creation Test:** A test (`test_tiny_trouper_creation`) demonstrates testing the class's initialization (`__init__`).
+8. **Object Creation Test:** A test (`test_tiny_trouper_creation`) demonStartes testing the class's initialization (`__init__`).
 
 9. **Adaptability:** The structure is easily adaptable to different functions/classes and arguments.
 

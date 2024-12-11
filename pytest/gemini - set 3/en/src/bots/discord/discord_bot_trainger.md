@@ -119,7 +119,7 @@ def test_archive_command_exception(mock_ctx):
 3. **Clearer Fixture Definition:** The `mock_ctx` and `mock_attachment` fixtures provide isolated contexts for testing.
 
 
-4. **Specific Error Handling:** The `test_archive_command_exception` demonstrates how to test exception handling within a function.
+4. **Specific Error Handling:** The `test_archive_command_exception` demonStartes how to test exception handling within a function.
 
 
 5. **Comprehensive Test Coverage (Example):**  The examples now cover `test_train_with_attachment`, `test_train_no_attachment`, `test_test_valid_input`, `test_test_invalid_input`, and `test_join_in_voice_channel`.  You need to add similar tests for other commands and methods.

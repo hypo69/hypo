@@ -4,7 +4,7 @@ How to use the TinyStory class for generating story continuations
 
 Description
 -------------------------
-This code defines functions for initiating and continuing stories using the `TinyStory` class within the `tinytroupe` library.  It initializes a `TinyStory` object with a `TinyWorld` and then calls methods to either start a new story (`start_story()`) or continue an existing one (`continue_story()`).  The code also demonstrates how to set requirements for the generated story, and ensures the generated story is semantically coherent with the prior story.
+This code defines functions for initiating and continuing stories using the `TinyStory` class within the `tinytroupe` library.  It initializes a `TinyStory` object with a `TinyWorld` and then calls methods to either start a new story (`start_story()`) or continue an existing one (`continue_story()`).  The code also demonStartes how to set requirements for the generated story, and ensures the generated story is semantically coherent with the prior story.
 
 
 Execution steps
@@ -26,7 +26,7 @@ Execution steps
 5. **Verify the output:** The code uses an `assert` statement to verify that the generated story is semantically coherent.  The `proposition_holds` function (outside of the code block provided) likely determines if the generated text conforms to predefined patterns or criteria using a large language model (LLM).
 
 
-6. **Example Input (for `continue_story`)**: The `test_story_continuation` function demonstrates the use of `continue_story()`. It first broadcasts a story segment to the `TinyWorld` setting the context for the continuation, and then continues the story using the `continue_story` method.
+6. **Example Input (for `continue_story`)**: The `test_story_continuation` function demonStartes the use of `continue_story()`. It first broadcasts a story segment to the `TinyWorld` setting the context for the continuation, and then continues the story using the `continue_story` method.
 
 
 Usage example

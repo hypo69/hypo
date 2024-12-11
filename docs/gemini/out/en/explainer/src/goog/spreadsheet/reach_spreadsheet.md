@@ -160,7 +160,7 @@ The imports provide the necessary libraries for interacting with Google's Sheets
 
 - `htmlColorToJSON(htmlColor)`: Converts an HTML color string (e.g., "#FF0000") to a JSON-compatible dictionary.
 - `test...`: Functions for testing various functionalities of the `ReachSpreadsheet` class.
-- `create_pricelist`, `testCreateTimeManagementReport`:  These functions demonstrate use cases for creating specific spreadsheets with sample data, including formatting options (colors, fonts, etc.)
+- `create_pricelist`, `testCreateTimeManagementReport`:  These functions demonStarte use cases for creating specific spreadsheets with sample data, including formatting options (colors, fonts, etc.)
 
 
 **Potential Errors/Improvements:**

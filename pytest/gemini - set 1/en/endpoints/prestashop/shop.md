@@ -79,7 +79,7 @@ def test_prestashop_shop_init_super_call(mocker):
 * **Comprehensive Coverage:**  Tests cover various initialization scenarios: valid credentials (as `SimpleNamespace` and `dict`), missing `api_domain`, missing `api_key`, and missing keys/values within the credentials dictionary.
 * **Edge Cases:**  The tests now adequately cover cases where either `api_domain` or `api_key` is not provided.
 * **`pytest.raises`:**  Used correctly for exception testing (missing `api_domain` and `api_key`).
-* **Super Call Verification (Crucial):** The `test_prestashop_shop_init_super_call` demonstrates how to verify that the `super().__init__` call is actually made in the derived class. This is a crucial aspect for inheritance correctness.
+* **Super Call Verification (Crucial):** The `test_prestashop_shop_init_super_call` demonStartes how to verify that the `super().__init__` call is actually made in the derived class. This is a crucial aspect for inheritance correctness.
 * **Comments:** Comments are added to explain the purpose of each test.
 
 **How to Run:**

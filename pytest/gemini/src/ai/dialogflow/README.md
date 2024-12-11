@@ -89,9 +89,9 @@ def test_delete_intent(dialogflow_client):
 
 5. **Edge Cases:**  The `test_list_intents` and `test_create_intent` functions now check for appropriate return types and the presence of expected data within the lists, adding more comprehensive tests.
 
-6. **Exception Handling (Example):** A commented-out example (`test_function_raises_exception`) demonstrates how to use `pytest.raises` to check for exceptions. Replace this example with your specific exception handling needs if they exist.
+6. **Exception Handling (Example):** A commented-out example (`test_function_raises_exception`) demonStartes how to use `pytest.raises` to check for exceptions. Replace this example with your specific exception handling needs if they exist.
 
-7. **Valid Input Tests:**  Added a `test_detect_intent_valid_input` to demonstrate checking for valid input and expected response.
+7. **Valid Input Tests:**  Added a `test_detect_intent_valid_input` to demonStarte checking for valid input and expected response.
 
 8. **Invalid/Unexpected Input Tests:**  Added a `test_detect_intent_invalid_input` test to check that your function handles unexpected input in an acceptable way (e.g., by returning a specific error code or not raising an exception).
 

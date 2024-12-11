@@ -79,4 +79,4 @@ def test_another_function():
 3.  **Run the tests:** Execute the test file with `pytest`.  This will discover and run all the test functions you've defined.
 
 
-This revised example demonstrates a significantly improved approach to writing robust and comprehensive `pytest` tests. Remember to adapt it to your specific code. Remember to adapt this to your specific code's functions and error handling.
+This revised example demonStartes a significantly improved approach to writing robust and comprehensive `pytest` tests. Remember to adapt it to your specific code. Remember to adapt this to your specific code's functions and error handling.

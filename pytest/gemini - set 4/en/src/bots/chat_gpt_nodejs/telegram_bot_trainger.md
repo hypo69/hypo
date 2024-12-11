@@ -103,13 +103,13 @@ def test_main_with_token_patch():
 
 **Explanation and Improvements:**
 
-* **Mocking:** The code now heavily uses `unittest.mock` to mock the `Update`, `CallbackContext`, and `Model` classes. This is crucial for isolating the tests and avoiding external dependencies (like Telegram).  I added a `MockModel` class for demonstration.  You should replace this with a proper mock or stub based on how you're testing the `Model` part.
+* **Mocking:** The code now heavily uses `unittest.mock` to mock the `Update`, `CallbackContext`, and `Model` classes. This is crucial for isolating the tests and avoiding external dependencies (like Telegram).  I added a `MockModel` class for demonStartion.  You should replace this with a proper mock or stub based on how you're testing the `Model` part.
 * **`pytest.raises`:** The code now uses `pytest.raises` to test for exceptions where appropriate. I have not added exception testing for invalid inputs or missing resources because they're not realistic without more code.
 * **`MockFile`:**  I've added a `MockFile` class to mock the file handling. This is an improved way of dealing with files for unit testing.
 * **`MockContext`:** The example is more comprehensive now, providing a `MockContext` fixture.
 * **`MockUpdate`:**  Creates a mock `Update` object for testing.
 * **Comprehensive test cases:**  Added test cases for `/start`, `/help`, and `handle_message` (including a call to `send_message` to test interaction).  Crucially, these now correctly use the mocks.  Added  `test_handle_document` with a mock `MockFile`.
-* **`main` function test:** Added `test_main_with_token_patch`. This demonstrates how to test the `main` function, which is often critical for correctly initializing the bot application.  It replaces the static token value with a fixture for better testability.
+* **`main` function test:** Added `test_main_with_token_patch`. This demonStartes how to test the `main` function, which is often critical for correctly initializing the bot application.  It replaces the static token value with a fixture for better testability.
 * **Missing Dependencies:** Tests now mock dependencies like `Model`, `text_to_speech`, etc, allowing the testing of individual functions independently.
 * **Asynchronous Tasks:** The tests now use `loop.run_until_complete` to correctly handle asynchronous tasks. This was the critical missing piece from the previous response.
 

@@ -89,7 +89,7 @@ def test_intervention_1_raises_exception(randomizer):
 
 **Explanation of Improvements and Important Considerations:**
 
-1. **`pytest.raises` for exception handling:** The original `test_randomize` lacked exception handling.  The corrected `test_intervention_1_raises_exception` demonstrates how to use `pytest.raises` to ensure that if intervention_1 isn't implemented, it raises the expected exception, rather than failing silently.
+1. **`pytest.raises` for exception handling:** The original `test_randomize` lacked exception handling.  The corrected `test_intervention_1_raises_exception` demonStartes how to use `pytest.raises` to ensure that if intervention_1 isn't implemented, it raises the expected exception, rather than failing silently.
 
 2. **Fixture for `ABRandomizer`:** The `randomizer` fixture creates a fresh `ABRandomizer` instance for each test.  This is crucial for isolation, preventing unintended side effects from previous tests.
 
@@ -99,10 +99,10 @@ def test_intervention_1_raises_exception(randomizer):
 
 5. **Multiple Calls:**  Added `test_randomize_multiple_calls` and `test_derandomize_multiple_calls` to test the functions with more than one call, ensuring that the randomization doesn't get corrupted or misbehave in an unexpected way.  This is good practice for functions that depend on internal states.
 
-6. **Testing `intervention_1`:** The most important improvement is the inclusion of `test_intervention_1_raises_exception`.  This test demonstrates how to test the *absence* of an implementation (`intervention_1`) by asserting that a suitable error is raised when the function is called.
+6. **Testing `intervention_1`:** The most important improvement is the inclusion of `test_intervention_1_raises_exception`.  This test demonStartes how to test the *absence* of an implementation (`intervention_1`) by asserting that a suitable error is raised when the function is called.
 
 7. **`testing_utils` import:**  Assumed that the import `from testing_utils import *` is correct.  If this is an issue, fix the import.
 
-8. **Comprehensive coverage**: The tests now cover more edge cases, validate more than one call to the functions, and demonstrate correct handling of absent implementations of functions like `intervention_1`.
+8. **Comprehensive coverage**: The tests now cover more edge cases, validate more than one call to the functions, and demonStarte correct handling of absent implementations of functions like `intervention_1`.
 
 This improved set of tests provides more robust coverage and addresses potential issues in the original code, especially by ensuring exception handling and function correctness through multiple calls and varied inputs. Remember to adapt the exception type (e.g., `AttributeError`) if the actual exception expected differs. Remember that `intervention_1` needs a proper implementation to be tested properly.

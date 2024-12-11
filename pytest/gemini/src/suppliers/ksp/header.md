@@ -133,7 +133,7 @@ def test_settings_and_doc_handling_invalid_json(dummy_settings):
    - Missing marker files.
    - Marker file in a parent directory.
    -  Missing `settings.json` file.
-   - Invalid `settings.json` (demonstrates exception handling).
+   - Invalid `settings.json` (demonStartes exception handling).
    - Missing `README.MD` file
 
 4. **Fixture for settings.json:** A `pytest` fixture `dummy_settings` is introduced to create a temporary `settings.json` file with valid data.  This avoids cluttering tests with repeated file creation and deletion.
@@ -142,7 +142,7 @@ def test_settings_and_doc_handling_invalid_json(dummy_settings):
 
 6. **File Handling Improvement:** The tests now use `Path` objects for file operations, which is the recommended approach in modern Python.
 
-7. **Exception Handling:** The `test_settings_and_doc_handling_invalid_json` test demonstrates robust error handling for invalid JSON data in `settings.json`.
+7. **Exception Handling:** The `test_settings_and_doc_handling_invalid_json` test demonStartes robust error handling for invalid JSON data in `settings.json`.
 
 8. **Cleanup in Fixtures:** The fixture `dummy_settings` now correctly deletes the temporary file after the test.
 

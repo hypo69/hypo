@@ -99,7 +99,7 @@ def test_path_append_with_invalid_path():
 
 3. **Isolated Tests:** Each test is isolated and does not rely on the state of previous tests or the actual file system.
 
-4. **Comprehensive Example:** The `test_dir_root_creation` and `test_sys_path_appending` examples demonstrate how to structure tests for the path-related functionality in the provided code.  Critically, they illustrate how to control these parts for testing.
+4. **Comprehensive Example:** The `test_dir_root_creation` and `test_sys_path_appending` examples demonStarte how to structure tests for the path-related functionality in the provided code.  Critically, they illuStarte how to control these parts for testing.
 
 
 **Before Running:**

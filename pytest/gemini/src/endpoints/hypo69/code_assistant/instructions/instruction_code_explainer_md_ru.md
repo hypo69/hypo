@@ -50,7 +50,7 @@ def test_analyze_code_invalid_syntax():
 **Explanation of Test Cases:**
 
 * **`test_analyze_code_valid_input`:** This test checks if the `analyze_code` function returns a string when provided with a valid Python code snippet.  It verifies the basic functionality.
-* **`test_analyze_code_invalid_input`:** This test demonstrates exception handling for incorrect input types. It checks if a `TypeError` is raised when the input is not a string.
+* **`test_analyze_code_invalid_input`:** This test demonStartes exception handling for incorrect input types. It checks if a `TypeError` is raised when the input is not a string.
 * **`test_analyze_code_invalid_syntax`:** This is a crucial test to ensure the function handles invalid Python syntax gracefully.  It uses `pytest.raises` to verify that a `ValueError` is raised with a specific message when invalid syntax is detected.
 
 

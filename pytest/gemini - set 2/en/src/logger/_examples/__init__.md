@@ -72,7 +72,7 @@ def test_details_version_type():
 
 4. **Comprehensive Tests:** The tests cover various aspects, including type checking, presence of data, and edge cases.
 
-5. **Adaptability:** The `test_details_contains_keys` example now demonstrates how you can easily adapt the tests if the structure or content of `__details__` changes.
+5. **Adaptability:** The `test_details_contains_keys` example now demonStartes how you can easily adapt the tests if the structure or content of `__details__` changes.
 
 
 **Crucial Next Steps:**

@@ -158,7 +158,7 @@ def test_isValidStyleLength_invalid():
 
 
 
-**Example of Mocks (Illustrative):**
+**Example of Mocks (IlluStartive):**
 
 ```python
 import pytest

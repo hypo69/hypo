@@ -83,10 +83,10 @@ def test_gworksheet_category(mock_spreadsheet):
 
 * **Mocking:**  Critically, the code now uses `unittest.mock` to mock the `Spreadsheet` and `Worksheet` objects. This isolates the `GWorksheet` class from external dependencies, making the tests more reliable and avoiding real interactions with Google Sheets.
 * **Clearer Assertions:**  Assertions are more specific about expected values (e.g., `ws.ws.title == 'new'`).
-* **Exception Handling:**  The `test_gworksheet_get_exception` function demonstrates how to test for exceptions using `pytest.raises`.
+* **Exception Handling:**  The `test_gworksheet_get_exception` function demonStartes how to test for exceptions using `pytest.raises`.
 * **Edge Case:** The `test_gworksheet_get_nonexistent_worksheet` now handles the case where the worksheet does not exist.
 * **`mock_spreadsheet` Fixture:** The fixture now provides a more comprehensive mock `Spreadsheet` object that mimics expected behavior.
-* **Method Testing (header, category):**  Added test cases for `header` and `category` methods, demonstrating how to verify interactions with the mocked `GSRender`. This is crucial since you are calling methods that are not directly accessing the Spreadsheet object
+* **Method Testing (header, category):**  Added test cases for `header` and `category` methods, demonStarting how to verify interactions with the mocked `GSRender`. This is crucial since you are calling methods that are not directly accessing the Spreadsheet object
 * **Missing Imports:** Added `from unittest.mock import patch, Mock` for the `mock` library.
 
 

@@ -95,7 +95,7 @@ def test_readme_loading(mock_path, mock_open, mock_readme_md):
 
 * **Mocking:**  Crucially, the code now uses `unittest.mock.patch` to mock the `open` function and `gs.path`. This isolates the `header` module's functionality from external file interactions.  The `Path` class itself is mocked to avoid issues with real file system interaction. This is vital for testing code that interacts with files, preventing unintended side effects and ensuring the test environment doesn't affect other tests or the filesystem.
 
-* **Error Handling Tests:** Added a `test_settings_loading` and `test_readme_loading` function that mock the `open` method to check correct handling of `FileNotFoundError` and `json.JSONDecodeError` in the section where the global variables are loaded. This demonstrates better testing of error paths and ensures robustness.
+* **Error Handling Tests:** Added a `test_settings_loading` and `test_readme_loading` function that mock the `open` method to check correct handling of `FileNotFoundError` and `json.JSONDecodeError` in the section where the global variables are loaded. This demonStartes better testing of error paths and ensures robustness.
 
 * **Clearer Test Descriptions:** Test function names are more explicit about the conditions being tested.
 

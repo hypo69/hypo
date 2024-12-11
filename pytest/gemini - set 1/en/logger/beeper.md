@@ -106,7 +106,7 @@ def test_beep_with_string_success(mock_winsound_beep):
 * **Comprehensive Parameterization:**  Added `pytest.mark.parametrize` to test different `BeepLevel` values, and `melody` values for the different levels.
 * **Silent Mode Test:** A complete test for the `silent_mode` decorator ensuring it works as expected, both when silent mode is on and off.
 * **Detailed Error Handling Test:** Includes an example of how to properly test exception handling when mocking a specific function call failure, verifying the output message is produced correctly.
-* **More Comprehensive Level Tests**: Includes tests for various BeepLevels (SUCCESS, INFO, WARNING), demonstrating how to properly test different melodies for different events.
+* **More Comprehensive Level Tests**: Includes tests for various BeepLevels (SUCCESS, INFO, WARNING), demonStarting how to properly test different melodies for different events.
 * **String-Level Test:** A test is included specifically to confirm that a string 'success' value works correctly.
 * **Docstrings:**  Added more thorough docstrings to explain the purpose and parameters of each test function.
 

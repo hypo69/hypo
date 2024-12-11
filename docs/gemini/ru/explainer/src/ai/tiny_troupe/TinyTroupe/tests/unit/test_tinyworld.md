@@ -180,7 +180,7 @@ graph LR
 
 **Classes:**
 
-- `TinyWorld`: Represents an environment or world in which agents interact. Methods like `run` and `broadcast` are key in running the simulation and controlling agent interactions.  `encode_complete_state()` and `decode_complete_state()` are critical for saving and loading the state of the world.  This demonstrates the architecture's ability to persist and restore simulation states.
+- `TinyWorld`: Represents an environment or world in which agents interact. Methods like `run` and `broadcast` are key in running the simulation and controlling agent interactions.  `encode_complete_state()` and `decode_complete_state()` are critical for saving and loading the state of the world.  This demonStartes the architecture's ability to persist and restore simulation states.
 
 **Functions:**
 

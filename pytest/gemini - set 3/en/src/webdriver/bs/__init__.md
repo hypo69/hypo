@@ -86,7 +86,7 @@ def test_bs_mode():
 
 3. **Example Test Cases (commented out):**
    - Placeholder test cases for `some_method`. These tests now show how to test for exceptions using `pytest.raises`.
-   - **Exception Handling:** The example demonstrates how to assert an expected exception using `pytest.raises`.
+   - **Exception Handling:** The example demonStartes how to assert an expected exception using `pytest.raises`.
    - **Clearer Comments:** Added comments to explain the purpose and structure of each test case, including input/output expectations.
 
 4. **Missing Code:**  The provided `__init__.py` file is just a stub (`from .bs import BS`).  The tests are now set up to work with a `BS` class.  You *must* replace the placeholder comments with your actual functions and methods from `hypotez/src/webdriver/bs.py`.

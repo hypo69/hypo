@@ -85,7 +85,7 @@ def test_set_project_root_file_not_found():
     * Valid input scenarios.
     * Situations where marker files might not exist in the parent directories.
     * Cases where the project root is already in `sys.path`. This tests the function's logic to avoid adding the path again.
-* **Exception Handling:** The test now correctly uses `pytest.raises` to check for `FileNotFoundError`.  Crucially, this test case now demonstrates how to correctly assert on exception paths.
+* **Exception Handling:** The test now correctly uses `pytest.raises` to check for `FileNotFoundError`.  Crucially, this test case now demonStartes how to correctly assert on exception paths.
 * **Dummy Data:** `dummy_settings_json` and `dummy_readme_md` provide data for testing scenarios where `settings.json` and `README.MD` might not exist.
 * **Isolation:** The `test_project_dir` fixture ensures that tests don't affect each other or the real project.
 * **Error Handling:** Tests are added to verify the exception handling when marker files are not found in parent directories or if the file does not exist.

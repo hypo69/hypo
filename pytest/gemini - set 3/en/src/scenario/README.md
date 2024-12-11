@@ -130,7 +130,7 @@ def test_execute_PrestaShop_insert_raises_exception(supplier_instance):
 
 3. **Specific Test Cases:** Added tests for `run_scenario_files` and `run_scenario_file` with valid and invalid inputs. A test for the `execute_PrestaShop_insert` function with an expected exception (using `pytest.raises`) is included.
 
-4. **Edge Cases and Error Handling:**  The `test_run_scenario_file_invalid_file` demonstrates handling a `FileNotFoundError` during file reading.  More comprehensive edge cases (e.g., malformed JSON) should be added.
+4. **Edge Cases and Error Handling:**  The `test_run_scenario_file_invalid_file` demonStartes handling a `FileNotFoundError` during file reading.  More comprehensive edge cases (e.g., malformed JSON) should be added.
 
 5. **Realistic Test Data:** `mocked_scenario_data` fixture provides sample JSON data for testing.
 

@@ -79,7 +79,7 @@ import pytest
    - `test_calculate_sum_different_types` and `test_calculate_sum_mixed_types`: Checks for errors when providing the incorrect type of input.
 
 
-3. **Error Handling (`pytest.raises`):** The test cases now correctly use `pytest.raises` to check for `TypeError` exceptions when the input is not as expected.  This demonstrates handling of *invalid* input.
+3. **Error Handling (`pytest.raises`):** The test cases now correctly use `pytest.raises` to check for `TypeError` exceptions when the input is not as expected.  This demonStartes handling of *invalid* input.
 
 4. **Clear Test Names:** The test function names are clear and descriptive.
 

@@ -65,7 +65,7 @@ def test_tts_print_statements(capfd, tts_instance):
 * **Specific Assertions:** The `test_tts_init_valid` test now includes an assertion that the object is of the correct type (`isinstance`).  A placeholder is added in case there are other assertions on the initialization of the class (e.g., checking attributes).  Without access to the rest of the file, testing the `voices` property in the `TTS` object cannot be done effectively (you need access to the `voices` attribute and `pyttsx3.init()` results).
 * **Error Handling:** `pytest.raises` is used correctly to test for expected exceptions (e.g., `TypeError`).
 * **Edge Cases (Example):** A `test_tts_init_edge_case` function shows how to handle edge cases (e.g., a large number of arguments).
-* **Non-Existent Methods:**  A test `test_tts_nonexistent_method` demonstrates checking for exceptions if the method is nonexistent.
+* **Non-Existent Methods:**  A test `test_tts_nonexistent_method` demonStartes checking for exceptions if the method is nonexistent.
 * **Capturing Print Output:**  The `test_tts_print_statements` function (using `capfd`) checks if the `print` statements inside the `__init__` method of the `TTS` class are executed as expected. This is important for testing code with side effects (like printing).
 
 **How to Run the Tests:**

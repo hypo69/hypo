@@ -93,7 +93,7 @@ def test_aliexpress_affiliate_productdetail_get_optional_parameters():
 
 6. **Fixtures (Not Needed):** No fixtures are needed for these simple tests.
 
-7. **Explicit Validation of Optional Parameters:** The addition of `test_aliexpress_affiliate_productdetail_get_optional_parameters` explicitly demonstrates how to validate that optional parameters are correctly set during initialization, rather than just assuming they are.
+7. **Explicit Validation of Optional Parameters:** The addition of `test_aliexpress_affiliate_productdetail_get_optional_parameters` explicitly demonStartes how to validate that optional parameters are correctly set during initialization, rather than just assuming they are.
 
 8. **Documentation:** Comments are added to explain the logic of the test cases.
 

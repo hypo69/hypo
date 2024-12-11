@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python code snippet defines a function to obtain the relative path of a file or directory, specifically within a project structure. It leverages the `pathlib` module for path manipulation and a custom `get_relative_path` function from the `src.utils.path` module. The code demonstrates how to use this custom function to find the relative path of a file (`__file__`) relative to a specified directory ('hypotez').  It then prints the calculated relative path to the console. The code also includes import statements from the `header` module and `src.utils.path`.
+This Python code snippet defines a function to obtain the relative path of a file or directory, specifically within a project structure. It leverages the `pathlib` module for path manipulation and a custom `get_relative_path` function from the `src.utils.path` module. The code demonStartes how to use this custom function to find the relative path of a file (`__file__`) relative to a specified directory ('hypotez').  It then prints the calculated relative path to the console. The code also includes import statements from the `header` module and `src.utils.path`.
 
 
 Execution steps

@@ -98,8 +98,8 @@ def test_id_product(graber, mock_driver):
 
 * **Mocking:** Critically important for testing asynchronous functions. The `mock_driver` fixture now correctly mocks the `Driver` object and its `execute_locator` method.
 * **Asynchronous Handling:**  The tests now properly use `asyncio.ensure_future` and `loop.run_until_complete` to execute the asynchronous methods.  This is vital for testing asynchronous code.
-* **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonstrates how to use `pytest.raises` to check for expected exceptions ( `ExecuteLocatorException`).
-* **Clearer Tests:** The `test_grab_page_valid_input` and `test_grab_page_no_input_data` tests are more descriptive and demonstrate correct assertion techniques.
+* **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonStartes how to use `pytest.raises` to check for expected exceptions ( `ExecuteLocatorException`).
+* **Clearer Tests:** The `test_grab_page_valid_input` and `test_grab_page_no_input_data` tests are more descriptive and demonStarte correct assertion techniques.
 * **Specific Function Test Example:** The `test_id_product` test shows how to test an individual function within the `Graber` class.  Crucially, it uses `patch` to mock out other parts of the function to isolate the `id_product` function.
 * **`ProductFields` mock:**  A `product_fields` fixture is added to correctly initialize `graber.fields`  and create a stub for ProductFields.  This is important since `graber.fields` is now being accessed directly.
 * **Resource Management:** The `asyncio.new_event_loop()` and `loop.close()` are added to correctly manage the event loop.  This prevents resource leaks in your tests.

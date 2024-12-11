@@ -138,6 +138,6 @@ def test_interval_with_timeout_timeout():
 
 * **More Realistic Timeouts:** Replace the hardcoded timeout values (e.g., 1 second) in the tests with more realistic values and/or use an adjustable fixture for these values.
 
-* **Input Validation:** If your functions can receive input that is potentially harmful or that leads to invalid computations, include corresponding tests to demonstrate the function's robustness against this type of input.
+* **Input Validation:** If your functions can receive input that is potentially harmful or that leads to invalid computations, include corresponding tests to demonStarte the function's robustness against this type of input.
 
 By following these suggestions and adding more tests (especially for `get_input` and `input_with_timeout`) you can create a much more comprehensive test suite. Remember to use `pytest.raises` to test exception cases.  Good testing practice involves testing edge cases and unusual situations as well as the expected, common use.

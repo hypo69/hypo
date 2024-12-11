@@ -77,7 +77,7 @@ def test_tiny_person_generate_statement_invalid_input(alice):
 
 **Explanation and Improvements:**
 
-1. **Example `TinyPerson` Class:** Added a simple `TinyPerson` class to demonstrate test cases.  The original code didn't have any classes or functions for testing.
+1. **Example `TinyPerson` Class:** Added a simple `TinyPerson` class to demonStarte test cases.  The original code didn't have any classes or functions for testing.
 
 2. **Example Fixtures:** Created `person_data` and `alice` fixtures to provide data for tests, making the tests more organized and reusable.
 
@@ -108,4 +108,4 @@ def test_tiny_person_generate_statement_invalid_input(alice):
 * **Data:** Design fixtures or test data to create various input scenarios, including valid and invalid cases.
 
 
-Without the actual Python code from `TinyTroupe`, creating comprehensive tests is impossible. This example demonstrates the structure and techniques necessary to write effective `pytest` tests for a Python codebase. Remember to adapt it to the specific structures and functions of the `TinyTroupe` library.
+Without the actual Python code from `TinyTroupe`, creating comprehensive tests is impossible. This example demonStartes the structure and techniques necessary to write effective `pytest` tests for a Python codebase. Remember to adapt it to the specific structures and functions of the `TinyTroupe` library.

@@ -70,7 +70,7 @@ class TestGraber:
 
 2. **`@pytest.mark.parametrize`:** This decorator is used to run the same test function with multiple sets of input values. This significantly reduces code duplication and increases test coverage.  I've added examples of both valid and invalid inputs.
 
-3. **Exception Handling (`pytest.raises`):** The `test_graber_fetch_data_invalid_input` demonstrates how to use `pytest.raises` to assert that the correct exception type is raised when an invalid input is provided.  Critically, an *expected* error message is included in the assertion.  This is very important for robust error handling.
+3. **Exception Handling (`pytest.raises`):** The `test_graber_fetch_data_invalid_input` demonStartes how to use `pytest.raises` to assert that the correct exception type is raised when an invalid input is provided.  Critically, an *expected* error message is included in the assertion.  This is very important for robust error handling.
 
 4. **Clearer Test Descriptions:** Test function names now clearly indicate the test's purpose (e.g., `test_graber_fetch_data_invalid_input`).
 

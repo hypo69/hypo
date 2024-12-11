@@ -66,14 +66,14 @@ def test_login_password_too_long():
 
 **Explanation and Crucial Improvements:**
 
-1. **No Code to Test:** The provided code `login.py` doesn't contain any functions or classes. This example demonstrates test cases for a hypothetical `login_user` function, which you'll need to replace with your actual function.
+1. **No Code to Test:** The provided code `login.py` doesn't contain any functions or classes. This example demonStartes test cases for a hypothetical `login_user` function, which you'll need to replace with your actual function.
 
 2. **Clear Test Function Names:**  The test names accurately reflect the scenario being tested.
 
 3. **Exception Handling:** `pytest.raises` is used correctly to check for `ValueError` exceptions when invalid inputs (empty strings or exceeding length limits) are provided.  Crucially, it asserts the *correct* error message is raised, not just that an exception is raised.
 
 
-4. **Edge Cases and Invalid Input:** The tests cover cases with empty credentials, and usernames/passwords exceeding hypothetical length limits, demonstrating how to handle these edge cases using `pytest.raises`.
+4. **Edge Cases and Invalid Input:** The tests cover cases with empty credentials, and usernames/passwords exceeding hypothetical length limits, demonStarting how to handle these edge cases using `pytest.raises`.
 
 5. **Replace Placeholders:** **The most important step**: You need to replace the placeholder `login.login_user(...)` calls with the actual calls to the functions in your `login.py` file.  Also, replace the placeholder error messages with actual error messages your function is raising.  This example assumes the function raises specific `ValueError` with corresponding messages.
 

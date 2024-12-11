@@ -115,4 +115,4 @@ def test_all_browser_functions(driver_instance):
 4. Run `pytest` in your terminal to execute the tests.
 
 
-This significantly improved solution is more robust, covers more aspects, and demonstrates better testing practices. Remember to adapt the test cases further to handle specific behaviors and error conditions of the `Driver` class you're testing.
+This significantly improved solution is more robust, covers more aspects, and demonStartes better testing practices. Remember to adapt the test cases further to handle specific behaviors and error conditions of the `Driver` class you're testing.

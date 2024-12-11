@@ -23,7 +23,7 @@ Execution steps
 
 5. **Argument Parsing:** The `parse_args` method defines command-line arguments for the user to configure the role, language, models, and directories to process.
 
-6. **Main Function Loop:** The `main` function orchestrates the overall process. It loads configurations from a file, and initializes and executes the `CodeAssistant` for each configuration combination of language and roles. It also includes error handling and a signal handler to gracefully exit on interrupts.
+6. **Main Function Loop:** The `main` function orcheStartes the overall process. It loads configurations from a file, and initializes and executes the `CodeAssistant` for each configuration combination of language and roles. It also includes error handling and a signal handler to gracefully exit on interrupts.
 
 Usage example
 -------------------------

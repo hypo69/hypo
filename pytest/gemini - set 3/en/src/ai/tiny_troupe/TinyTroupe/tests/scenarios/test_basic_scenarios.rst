@@ -94,8 +94,8 @@ def test_scenario_1_invalid_input():
 **Explanation and Improvements:**
 
 * **Clearer Test Function Names:** Function names now explicitly indicate the test purpose (e.g., `test_scenario_1_invalid_input`).
-* **Exception Handling:**  `test_scenario_1_invalid_input` demonstrates how to test exception handling using `pytest.raises`.  This is crucial, as it checks for robustness.  The example uses a `TypeError` but you should replace `create_invalid_agent` with your actual method that might raise an exception.
-* **Placeholder for File Checking:** The code includes placeholders (`# TODO check file creation`) to illustrate how to incorporate file-based assertions using your `testing_utils` module (if one exists).  Crucially, this placeholder should be replaced with actual checks to validate file existence and content.
+* **Exception Handling:**  `test_scenario_1_invalid_input` demonStartes how to test exception handling using `pytest.raises`.  This is crucial, as it checks for robustness.  The example uses a `TypeError` but you should replace `create_invalid_agent` with your actual method that might raise an exception.
+* **Placeholder for File Checking:** The code includes placeholders (`# TODO check file creation`) to illuStarte how to incorporate file-based assertions using your `testing_utils` module (if one exists).  Crucially, this placeholder should be replaced with actual checks to validate file existence and content.
 * **`testing_utils` Placeholder:**  The example now includes `testing_utils` in the import and an example `create_invalid_agent` function (replace the placeholder with your own invalid agent creation if needed). This is critical for testing if your functions use external functions.
 * **Simulation Status Check:** Added a check for `Simulation.STATUS_ENDED` to ensure that the simulation ends successfully.
 

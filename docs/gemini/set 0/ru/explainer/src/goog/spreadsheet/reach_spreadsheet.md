@@ -211,4 +211,4 @@ The `ReachSpreadsheet` class interacts with the `gs`, `utils`, and `logger` modu
 
 **Relationship to Other Parts of the Project**:
 
-The code relies on modules from the `src` directory (`gs`, `utils`, `logger`).  It presumably fits into a larger project that involves managing Google Sheets data. The test functions demonstrate how the `ReachSpreadsheet` class can be used to perform various spreadsheet operations.  A key file (`e-cat-346312-137284f4419e.json`) is required for authentication.
+The code relies on modules from the `src` directory (`gs`, `utils`, `logger`).  It presumably fits into a larger project that involves managing Google Sheets data. The test functions demonStarte how the `ReachSpreadsheet` class can be used to perform various spreadsheet operations.  A key file (`e-cat-346312-137284f4419e.json`) is required for authentication.

@@ -59,7 +59,7 @@ def test_aliexpress_affiliate_product_query_request_invalid_port():
 
 2. **Explicit Assertions:** Instead of relying on implicit assertions, the code now uses `assert` statements to explicitly verify the expected values.  This makes the tests more robust and readable.
 
-3. **Handling Potential Exceptions:** The code now uses `pytest.raises` to test for expected exceptions when invalid data is passed to the constructor.  This is crucial for robustness.  I've added examples for `TypeError` for illustration; replace with the specific exception if one exists in the original code.  Crucially, *you need to understand the expected exception* if you are testing for failure.
+3. **Handling Potential Exceptions:** The code now uses `pytest.raises` to test for expected exceptions when invalid data is passed to the constructor.  This is crucial for robustness.  I've added examples for `TypeError` for illuStartion; replace with the specific exception if one exists in the original code.  Crucially, *you need to understand the expected exception* if you are testing for failure.
 
 4. **Comprehensive Tests:** The provided examples test the `__init__` method (construction), `getapiname`, and setting of attributes.  This is a start.  You need to add tests for all attributes and all possible input scenarios.
 

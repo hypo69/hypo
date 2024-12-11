@@ -91,7 +91,7 @@ def test_get_drive_files_specific_exception(google_drive):
 
 5. **Clearer Assertions:** Assertions are more specific (e.g., checking for the presence of 'name' and 'id' keys in the returned files) for better test coverage.
 
-6. **Example of Using `Mock`:** The example code demonstrates how to create a mock `GoogleDrive` object, making testing easier and more controlled.
+6. **Example of Using `Mock`:** The example code demonStartes how to create a mock `GoogleDrive` object, making testing easier and more controlled.
 
 
 **How to run the tests:**

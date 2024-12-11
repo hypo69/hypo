@@ -93,6 +93,6 @@ def test_base64_to_tmpfile_empty_content(file_name):
 
 * **File Deletion:**  Crucially, `os.remove(tmp_file_path)` is added after each test to clean up the temporary files created. This prevents test failures due to leftover files.
 
-* **Different Extension Test:** Added `test_base64_to_tmpfile_valid_input_with_different_extension` to demonstrate handling files with extensions other than ".txt"
+* **Different Extension Test:** Added `test_base64_to_tmpfile_valid_input_with_different_extension` to demonStarte handling files with extensions other than ".txt"
 
 This revised solution addresses the previous issues and provides a more robust and complete set of tests. Remember to adapt the tests further based on specific requirements or additional error cases you need to cover. Remember to install `pytest` if you haven't already: `pip install pytest`. Then run `pytest` in the directory containing your test file to execute the tests. Remember to adjust imports according to your file structure.

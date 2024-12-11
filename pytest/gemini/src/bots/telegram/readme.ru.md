@@ -111,13 +111,13 @@ def test_handle_message_valid_input(telegram_bot, mock_update, mock_context):
 
 4. **Mocking External Dependencies:** The critical `transcribe_voice` method is now tested with a mock, validating that the function correctly calls the external API if it is mocked.
 
-5. **Fixture for `TelegramBot`:** A `telegram_bot` fixture is created to encapsulate the initialization of the `TelegramBot` object, including handling the registration of handlers. This isolates the bot's setup from test cases.
+5. **Fixture for `TelegramBot`:** A `telegram_bot` fixture is created to encapsulate the initialization of the `TelegramBot` object, including handling the regiStartion of handlers. This isolates the bot's setup from test cases.
 
 6. **Example Assertions (Crucial):**  Placeholders like `pass` are replaced with *actual* assertions. For example, in `test_start_command`, you'd assert that `mock_context.bot.send_message` was called with the expected arguments.  Without these assertions, the tests won't verify anything.
 
 7. **`handle_document_file` (Placeholder):**  The code assumes a `handle_document_file` method exists in your `TelegramBot` class.  If this method isn't defined, you will get an error. You need a corresponding mock or actual implementation.
 
-8. **Specific Error Cases:**  `test_send_pdf_invalid_input` demonstrates how to test for invalid scenarios (e.g., missing file).
+8. **Specific Error Cases:**  `test_send_pdf_invalid_input` demonStartes how to test for invalid scenarios (e.g., missing file).
 
 **How to proceed:**
 

@@ -119,7 +119,7 @@ def test_execute_locator_timeout(driver_instance):
 5. **Placeholder Methods:** The `ExecuteLocator` class methods now have placeholder implementations to avoid errors during testing.  Crucially, the placeholder ensures the method signature is correct and the test correctly calls the method.
 
 
-6. **Comprehensive Test Cases:**  Tests include `test_execute_locator_valid_input`, and `test_execute_locator_invalid_locator` to demonstrate proper handling of valid and invalid input. Added a test for a non-existent locator and a timeout to catch cases where no element can be found.
+6. **Comprehensive Test Cases:**  Tests include `test_execute_locator_valid_input`, and `test_execute_locator_invalid_locator` to demonStarte proper handling of valid and invalid input. Added a test for a non-existent locator and a timeout to catch cases where no element can be found.
 
 
 7. **Focus on Functionalities:** The tests focus on the key functionalities of the `ExecuteLocator` class, like handling different types of locators and potential errors.
@@ -130,7 +130,7 @@ def test_execute_locator_timeout(driver_instance):
 1.  Save the code as `test_executor.py`.
 2.  Run `pytest test_executor.py` from your terminal.
 
-This improved testing strategy is vital for ensuring the robustness and correctness of the `ExecuteLocator` class, especially when dealing with external dependencies like `Selenium WebDriver`. Remember to install the necessary libraries:
+This improved testing Startegy is vital for ensuring the robustness and correctness of the `ExecuteLocator` class, especially when dealing with external dependencies like `Selenium WebDriver`. Remember to install the necessary libraries:
 ```bash
 pip install pytest selenium
 ```

@@ -107,7 +107,7 @@ def example_data():
 
 4. **Data Copying:** The tests now explicitly create copies of the `example_locators` dictionary using `locators = example_locators.copy()`.  This prevents unintended side effects where subsequent tests might rely on the modified dictionary.
 
-5. **Realistic Error Cases:**  The `test_login_invalid_email` and `test_login_empty_password` test examples now illustrate how to test for specific error conditions that the login function *should* handle.
+5. **Realistic Error Cases:**  The `test_login_invalid_email` and `test_login_empty_password` test examples now illuStarte how to test for specific error conditions that the login function *should* handle.
 
 6. **Example Fixture:**  A `@pytest.fixture` called `example_data` is provided (using the example_locators), which you can customize with actual data if needed.
 

@@ -153,4 +153,4 @@ The code relies on:
 *   **`try_xpath_insert.css`**: This CSS file contains styles used in the extension's functionality.  This CSS likely is defined within the project.
 *   **`/pages/show_all_results.html`**:  This is a likely html file that the extension displays results from the content scripts.
 
-The code interacts with browser storage, browser tabs (i.e., creating new tabs), content scripts, and the `tryxpath` module.  It orchestrates the flow of information between these components, enabling the browser extension to function.
+The code interacts with browser storage, browser tabs (i.e., creating new tabs), content scripts, and the `tryxpath` module.  It orcheStartes the flow of information between these components, enabling the browser extension to function.

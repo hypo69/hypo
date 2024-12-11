@@ -86,7 +86,7 @@ def test_kazarinov_process_data_valid():
 3. **Clear Assertions:** Assertions are used to verify the expected behavior of the functions.
 
 
-4. **Error Handling (Crucial):** The provided example code lacks error handling. Real-world code will need it.  My example provides placeholder functions that return reasonable results on valid input and *none* or `False` on error cases. The test cases demonstrate checking for these conditions.
+4. **Error Handling (Crucial):** The provided example code lacks error handling. Real-world code will need it.  My example provides placeholder functions that return reasonable results on valid input and *none* or `False` on error cases. The test cases demonStarte checking for these conditions.
 
 5. **Realistic Data:**  The example data is more realistic.  Test cases now assert the *type* of the returned data (e.g., `assert isinstance(data, dict)`).
 

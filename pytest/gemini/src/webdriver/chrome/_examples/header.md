@@ -79,12 +79,12 @@ def test_syspath_append_multiple_times():
 1. **Mocking `os.getcwd`:** The crucial improvement is mocking `os.getcwd` within the test functions. This allows you to control the return value of `os.getcwd`, which is essential for testing `dir_root` calculation reliably, without depending on the actual current working directory of your system.
 
 
-2. **Exception Handling:** `test_syspath_append_multiple_times` demonstrates how to use `pytest.raises` to check for expected exceptions (e.g., errors when appending the path multiple times)
+2. **Exception Handling:** `test_syspath_append_multiple_times` demonStartes how to use `pytest.raises` to check for expected exceptions (e.g., errors when appending the path multiple times)
 
 3. **Clearer Assertions:** Assertions in tests are made more explicit and informative to easily understand the expected results.
 
 
-4. **Complete Test Cases:** The test suite now provides tests for  `dir_root` calculation,  demonstrating how to handle different scenarios and validate the expected behavior.  You need to add tests for other functions and classes from `src` based on their actual implementation.
+4. **Complete Test Cases:** The test suite now provides tests for  `dir_root` calculation,  demonStarting how to handle different scenarios and validate the expected behavior.  You need to add tests for other functions and classes from `src` based on their actual implementation.
 
 
 **Before running these tests:**

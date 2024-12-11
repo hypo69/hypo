@@ -82,7 +82,7 @@ from src.logger import logger
 *   `j_loads` and `j_loads_ns` are removed completely.
 *   Removed unnecessary comments and directives.
 *   Added basic error handling to prevent crashes on invalid JSON.
-*   Example usage section (commented out) was added to demonstrate the function's usage.
+*   Example usage section (commented out) was added to demonStarte the function's usage.
 *   Added import `from src.logger import logger` for proper logging.
 *   Added type hints.
 

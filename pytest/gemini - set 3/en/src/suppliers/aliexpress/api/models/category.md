@@ -64,7 +64,7 @@ def test_child_category_invalid_category_name():
 
 * **Clear Test Names:**  Test names are now more descriptive (e.g., `test_category_invalid_category_id`).
 * **Specific Error Handling:** Uses `pytest.raises` to verify specific exceptions are raised for invalid inputs (e.g., `TypeError` for non-integer IDs).
-* **Edge Cases (ChildCategory):**  Added a test `test_child_category_missing_parent_category_id` to cover the case where `parent_category_id` is not provided.  This is important as it demonstrates the class's flexibility.
+* **Edge Cases (ChildCategory):**  Added a test `test_child_category_missing_parent_category_id` to cover the case where `parent_category_id` is not provided.  This is important as it demonStartes the class's flexibility.
 * **Comprehensive Coverage:** Tests cover valid creation, invalid integer input, and missing `parent_category_id` for `ChildCategory`
 
 

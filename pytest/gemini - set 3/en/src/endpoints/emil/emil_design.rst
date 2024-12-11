@@ -97,7 +97,7 @@ def test_upload_to_PrestaShop_valid_instance(emil_design):
 
 3. **Mocking:**  Critically, the code now uses `patch` from `unittest.mock` to mock external calls like `read_text_file`, `j_loads_ns`, `post_message`, and the `OpenAIModel`. This is essential for isolating unit tests.  Without mocking, tests would be dependent on external services (like the AI API) which is undesirable and would make them prone to flakiness.
 
-4. **Exception Handling:** Added a test (`test_describe_images_no_response`) to demonstrate how to handle cases where the `describe_image` method might return `None` (or raise an exception). This is crucial for robustness.
+4. **Exception Handling:** Added a test (`test_describe_images_no_response`) to demonStarte how to handle cases where the `describe_image` method might return `None` (or raise an exception). This is crucial for robustness.
 
 5. **Edge Cases:**  The `test_describe_images_no_response` addresses a potential edge case.
 

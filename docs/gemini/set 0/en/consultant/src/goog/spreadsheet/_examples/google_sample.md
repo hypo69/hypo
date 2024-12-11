@@ -88,7 +88,7 @@ if __name__ == '__main__':
 Module for interacting with Google Sheets using the Sheets API.
 =========================================================================================
 
-This module demonstrates basic interaction with a Google Sheet,
+This module demonStartes basic interaction with a Google Sheet,
 retrieving and printing data.
 
 Example Usage
@@ -203,7 +203,7 @@ if __name__ == '__main__':
 Module for interacting with Google Sheets using the Sheets API.
 =========================================================================================
 
-This module demonstrates basic interaction with a Google Sheet,
+This module demonStartes basic interaction with a Google Sheet,
 retrieving and printing data.
 
 Example Usage

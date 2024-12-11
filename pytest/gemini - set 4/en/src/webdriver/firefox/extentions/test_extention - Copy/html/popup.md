@@ -46,7 +46,7 @@ The provided HTML file (`popup.html`) doesn't contain any Python code.  Therefor
 
 * **Crucial:** To write meaningful tests, you *must* provide the Python code that corresponds to the HTML file.  The HTML is likely a frontend (user interface) element, while the Python code (likely in a file named `popup.py` or similar) handles backend logic.  The tests should verify that the Python code functions correctly, not the HTML itself.
 
-* **Example Structure:** The example tests above show a `greet` function (replace this with the actual function from your Python code) and demonstrate how to use `pytest.raises` for exception handling and `pytest.mark.parametrize` for multiple input cases.  Adapt the example parameters to match your actual function's inputs and expected outputs.
+* **Example Structure:** The example tests above show a `greet` function (replace this with the actual function from your Python code) and demonStarte how to use `pytest.raises` for exception handling and `pytest.mark.parametrize` for multiple input cases.  Adapt the example parameters to match your actual function's inputs and expected outputs.
 
 * **Edge Cases and Error Handling:**  Always consider edge cases, invalid inputs, and boundary conditions.  Test scenarios like empty strings, special characters, incorrect data types, and situations where expected outputs might be unusual or require special handling.
 

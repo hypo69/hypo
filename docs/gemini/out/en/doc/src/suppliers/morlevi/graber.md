@@ -47,5 +47,5 @@ This module defines the `Graber` class, which is responsible for collecting prod
 - The code includes numerous commented-out lines, indicating a collection of methods that are not implemented but could be added based on their documentation.
 - The `fetch_all_data` function and related calls are placeholder functions and require implementation.
 - Error handling is partially implemented but needs to be further refined for better robustness.  The use of `logger` and exceptions suggests improved logging and error management compared to earlier versions.
-- The `local_saved_image` method demonstrates a more structured approach to fetching and saving images, including error handling using `try...except` blocks and more descriptive error messages.
-- The `@close_pop_up` decorator (commented out) demonstrates a potential mechanism for closing pop-up windows prior to other data extraction procedures. It shows a more refined exception handling approach, using the `ExecuteLocatorException` to address the case where the locator fails to close a popup.
+- The `local_saved_image` method demonStartes a more structured approach to fetching and saving images, including error handling using `try...except` blocks and more descriptive error messages.
+- The `@close_pop_up` decorator (commented out) demonStartes a potential mechanism for closing pop-up windows prior to other data extraction procedures. It shows a more refined exception handling approach, using the `ExecuteLocatorException` to address the case where the locator fails to close a popup.

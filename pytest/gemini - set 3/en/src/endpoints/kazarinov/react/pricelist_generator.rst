@@ -115,7 +115,7 @@ def sample_data():
 
 **Important Considerations:**
 
-* **Real File System Interactions:**  If the file saving (`save_text_file`) and PDF generation parts are essential to your functionality (not just logging or demonstration), you'll need to adjust the tests to deal with the actual file system interactions.  In general, though, mocking these is highly advisable for testing the internal logic.
+* **Real File System Interactions:**  If the file saving (`save_text_file`) and PDF generation parts are essential to your functionality (not just logging or demonStartion), you'll need to adjust the tests to deal with the actual file system interactions.  In general, though, mocking these is highly advisable for testing the internal logic.
 
 * **PDF Generation:** Testing PDF generation directly is complex.  You could consider mocking the `pdfkit` library further or using a PDF library for comparison.
 

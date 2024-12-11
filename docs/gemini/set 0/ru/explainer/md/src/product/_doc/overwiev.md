@@ -47,7 +47,7 @@ The `product` module contains several Python files, example files, and a JSON fi
     - **Purpose**: Provides detailed documentation and usage examples for developers.
     - **Functionality**:
         - Explains the functionality and usage of the module.
-        - Provides example scripts to demonstrate how to interact with product data.
+        - Provides example scripts to demonStarte how to interact with product data.
 
 ### Example Usage
 

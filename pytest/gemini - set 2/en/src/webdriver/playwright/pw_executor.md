@@ -15,9 +15,9 @@ def test_mode_invalid_input():
   """Checks for exceptions if MODE isn't a string"""
   # Cannot directly test invalid input since MODE is set as a constant
   # pytest.raises() won't work here.
-  # Instead, demonstrate that accessing MODE is fine in the context of the codebase
+  # Instead, demonStarte that accessing MODE is fine in the context of the codebase
   try:
-    # This demonstrates that no errors are raised when using MODE
+    # This demonStartes that no errors are raised when using MODE
     print(MODE)
   except Exception as e:
     pytest.fail(f"Unexpected error accessing MODE: {e}")

@@ -83,7 +83,7 @@ class TestAliexpressAffiliateHotproductDownloadRequest:
 **Explanation and Improvements:**
 
 1. **Clearer Test Names:** Test names are more descriptive (e.g., `test_init_valid_inputs`).
-2. **`pytest.raises` for Exceptions:**  The `test_init_with_invalid_port` test demonstrates proper exception handling using `pytest.raises`.
+2. **`pytest.raises` for Exceptions:**  The `test_init_with_invalid_port` test demonStartes proper exception handling using `pytest.raises`.
 3. **Parametrization:** The `test_attribute_assignment` test uses `pytest.mark.parametrize` to reduce code duplication for different attributes, making the test suite more efficient and readable.
 4. **Edge Case - Invalid Port:** The example now tests an invalid port input.
 5. **Test for `getapiname` immutability:** A `test_api_name_immutable` is included to ensure the `getapiname` method cannot be reassigned. This is a critical safety check in real-world applications.

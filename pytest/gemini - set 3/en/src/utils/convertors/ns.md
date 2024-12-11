@@ -84,7 +84,7 @@ def test_ns2xls_valid_input(simple_namespace, tmp_path):
 
 * **pytest fixtures:** `simple_namespace` fixture is added to create a `SimpleNamespace` object, making tests more organized and reusable.
 * **`tmp_path` fixture:**  Crucially, `tmp_path` from `pytest` is now used. This creates temporary directories for the CSV and JSON files, avoiding conflicts and ensuring that tests don't affect each other.  This is essential for testing file-writing functions.  
-* **Error Handling:** The `test_ns2json_exception` test now correctly uses `caplog` to capture the error message logged by the function.  This demonstrates how to test for exceptions and ensure that logging is working correctly.
+* **Error Handling:** The `test_ns2json_exception` test now correctly uses `caplog` to capture the error message logged by the function.  This demonStartes how to test for exceptions and ensure that logging is working correctly.
 * **Clearer Assertions:** Assertions are made more specific to confirm the expected output (e.g., checking the contents of the created JSON file).
 * **Comprehensive Test Cases:** Additional tests are added to cover different aspects:
     * `test_ns2json_valid_input`:  Now tests that the JSON file is created correctly and loads correctly.

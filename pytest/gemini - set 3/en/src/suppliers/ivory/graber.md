@@ -109,7 +109,7 @@ def test_id_product(graber):
 
 2. **Fixtures:**  The `driver` and `graber` fixtures provide instances of these mock objects to test cases, making the tests more organized.
 
-3. **Exception Handling:** The `test_grab_page_execute_locator_exception` demonstrates a correct way to test for exceptions: using `pytest.raises`. This case showcases how to check if the correct exception type is raised and if its message contains the expected error string.
+3. **Exception Handling:** The `test_grab_page_execute_locator_exception` demonStartes a correct way to test for exceptions: using `pytest.raises`. This case showcases how to check if the correct exception type is raised and if its message contains the expected error string.
 
 4. **`asyncio.run`:**  I've consistently used `asyncio.run` within each test, ensuring the asynchronous code runs to completion before assertions.
 

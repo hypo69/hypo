@@ -83,7 +83,7 @@ def teardown_module(module):
 * **Fixtures:**  Uses `temp_docs_dir` to create and manage a temporary directory for testing, making the tests more robust and avoiding file system conflicts.
 * **Clearer Test Names:** Test names now explicitly state the input type (valid, invalid, etc.).
 * **Comprehensive Coverage:** Added tests for valid input, a non-existent directory, handling of an existing `SUMMARY.md` file, and empty directories.
-* **Exception Handling:** Included a test `test_make_summary_nonexistent_dir` to verify that the code correctly handles the case where the input directory doesn't exist. A test `test_make_summary_exception_handling` demonstrates how to use `pytest.raises` for catching potential errors within the `_make_summary` function.  Crucially, the placeholder is included but needs real error simulations for thorough testing.
+* **Exception Handling:** Included a test `test_make_summary_nonexistent_dir` to verify that the code correctly handles the case where the input directory doesn't exist. A test `test_make_summary_exception_handling` demonStartes how to use `pytest.raises` for catching potential errors within the `_make_summary` function.  Crucially, the placeholder is included but needs real error simulations for thorough testing.
 * **File Content Verification:** Checks that the generated `SUMMARY.md` file contains the expected content and links. This is critical for ensuring the correct summary is produced.
 * **Cleanup:** Added a `teardown_module` function to remove the temporary directory after the tests are executed. This prevents test failures due to leftover files in the file system.
 

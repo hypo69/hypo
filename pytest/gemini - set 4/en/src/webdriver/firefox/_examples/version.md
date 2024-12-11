@@ -12,7 +12,7 @@ def test_version_type():
     """Checks if the __version__ attribute is a string."""
     assert isinstance(__version__, str)
 
-# Example of a test demonstrating an expected error, which is important in testing.
+# Example of a test demonStarting an expected error, which is important in testing.
 # In this case, the code doesn't define any functions or methods, but testing that the attribute exists helps ensure the module is complete and no errors will be thrown during other parts of your code when accessing it.
 
 def test_version_attribute_exists():

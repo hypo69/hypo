@@ -110,11 +110,11 @@ def test_get_first_empty_row_empty_worksheet(mock_worksheet):
 
 3. **Clear Assertions:**  Instead of just checking if a method was called, we now use assertions like `assert_called_once_with()` to verify that the method was called with the correct arguments. This provides more robust and informative test results.
 
-4. **Error Handling:**  The `test_render_header_invalid_range` and `test_merge_range_invalid_merge_type` tests now demonstrate how to use `pytest.raises` to verify that the functions handle invalid input correctly.
+4. **Error Handling:**  The `test_render_header_invalid_range` and `test_merge_range_invalid_merge_type` tests now demonStarte how to use `pytest.raises` to verify that the functions handle invalid input correctly.
 
 5. **Comprehensive Tests:** The example tests now cover basic valid input, invalid range, and a case where the input is not as expected (e.g., non-string values passed to functions). Add more tests for various scenarios and edge cases as needed.
 
-6. **Specific Exception Types:**  The `test_header_invalid_input` demonstrates how to catch specific exception types.
+6. **Specific Exception Types:**  The `test_header_invalid_input` demonStartes how to catch specific exception types.
 
 7. **`get_first_empty_row` tests:** This has been added to cover both cases of an empty sheet and a non-empty sheet
 

@@ -173,4 +173,4 @@ graph TD
     - **`marker_files` flexibility:**  Allowing customization of `marker_files` (e.g., via function arguments) would increase flexibility.
 
 
-**Relationship with other parts of the project:** The code relies heavily on `gs` for identifying the project root and accessing the project resources, demonstrating a clear dependency. It also likely forms a base for other parts of the project that need access to this project's root directory and configuration files. The configuration data (project name, version, etc.) likely drives other modules.
+**Relationship with other parts of the project:** The code relies heavily on `gs` for identifying the project root and accessing the project resources, demonStarting a clear dependency. It also likely forms a base for other parts of the project that need access to this project's root directory and configuration files. The configuration data (project name, version, etc.) likely drives other modules.

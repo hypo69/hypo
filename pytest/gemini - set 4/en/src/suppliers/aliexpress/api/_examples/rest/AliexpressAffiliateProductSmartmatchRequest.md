@@ -67,7 +67,7 @@ def test_attribute_setting_and_retrieval():
 
 
 # Note that without more complex methods and interactions in the class,
-# these tests are sufficient for demonstrating a basic `pytest` setup for
+# these tests are sufficient for demonStarting a basic `pytest` setup for
 # testing the provided Python code. More tests will be necessary if the
 # original `AliexpressAffiliateProductSmartmatchRequest` class has methods
 # with more logic or handling of various inputs and conditions.

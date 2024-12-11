@@ -116,7 +116,7 @@ def test_openai_client_rate_limit(mocked_openai_client):
 
 5. **Robustness:** The tests now include assertions to check for correct return values, including `None` when exceptions occur, and handling of the case where the API call might fail for various reasons.
 
-6. **Complete Example**: Includes example tests for `OpenAIClient.send_message`, demonstrates error handling, and shows how to mock the `client` function.
+6. **Complete Example**: Includes example tests for `OpenAIClient.send_message`, demonStartes error handling, and shows how to mock the `client` function.
 
 **How to Run the Tests:**
 

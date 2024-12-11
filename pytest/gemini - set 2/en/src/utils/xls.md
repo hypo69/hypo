@@ -86,7 +86,7 @@ def test_save_xls_file_invalid_data(mock_logger, tmp_path):
 * **`pytest.mark.parametrize`:** Using `parametrize` for `sheet_name` effectively creates test cases for different sheet handling scenarios (None, string, integer).
 * **Clearer Assertions:**  Assertions are more specific (e.g., checking for `isinstance` and verifying the content of error messages).
 * **Edge Cases for `read_xls_as_dict`:**  Tests for an invalid file (`test_read_xls_as_dict_invalid_file`), and for attempting to read a non-existent sheet (`test_read_xls_as_dict_error_processing_sheet`).
-* **Edge Case for `save_xls_file`:** Includes a test case for invalid data format in `data_to_save` to demonstrate error handling.
+* **Edge Case for `save_xls_file`:** Includes a test case for invalid data format in `data_to_save` to demonStarte error handling.
 * **`tmp_path` Fixture:**  Uses `tmp_path` from `pytest` for creating temporary files, avoiding conflicts and cleanup issues. This is essential for file-based tests.
 * **Fixture for example XLS file:** Creates and returns the sample Excel file within a fixture.
 * **Comprehensive Test Cases:** The test suite now covers a wider range of scenarios, including handling different sheet input types.

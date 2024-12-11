@@ -40,7 +40,7 @@ This module defines the `Graber` class for collecting product fields from the `w
 (No functions defined in the provided code outside of class methods)
 
 
-##  Example Usage (Illustrative):
+##  Example Usage (IlluStartive):
 
 ```python
 # Example of how to use the class

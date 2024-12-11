@@ -95,7 +95,7 @@ def test_set_project_root_marker_file_is_invalid_type(tmp_path):
 
 1.  **Mocking `settings.json`:** The `create_settings_json` function now creates a temporary `settings.json` file for testing, which is critical for isolating tests and avoiding interference between runs. The `settings_file` fixture takes care of cleanup.
 
-2.  **`pytest.raises` for Error Handling:**  The code now includes tests specifically for `FileNotFoundError` and `json.JSONDecodeError` using `pytest.raises`. This demonstrates proper exception handling.
+2.  **`pytest.raises` for Error Handling:**  The code now includes tests specifically for `FileNotFoundError` and `json.JSONDecodeError` using `pytest.raises`. This demonStartes proper exception handling.
 
 3.  **Parameterization (using `@pytest.mark.parametrize`)**: The `test_set_project_root_marker_types` function now uses `@pytest.mark.parametrize` for more concise and readable test cases, covering a variety of inputs. This is a cleaner and more efficient way to test different marker file types.
 

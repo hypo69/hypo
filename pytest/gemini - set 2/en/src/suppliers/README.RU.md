@@ -108,7 +108,7 @@ def supplier_instance():
 
 2. **Clearer Tests:** Test names like `test_supplier_init` and `test_supplier_payload_default` clearly indicate the purpose of each test.
 
-3. **Exception Handling:** A `DefaultSettingsException` is mocked, demonstrating how to test exception handling using `pytest.raises`.
+3. **Exception Handling:** A `DefaultSettingsException` is mocked, demonStarting how to test exception handling using `pytest.raises`.
 
 4. **Edge Cases:** The `test_supplier_payload_default` tests the case where `webdriver` is set to 'default'
 

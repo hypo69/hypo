@@ -109,10 +109,10 @@ def test_id_product_with_exception(graber, driver_mock):
 
 5. **Edge Cases:** A test `test_grab_page_no_input` is added to cover the case of empty input.
 
-6. **Error Handling:** `test_grab_page_with_errors` tests if the `fetch_all_data` function handles errors and raises exceptions correctly. Added `test_id_product_with_exception` to demonstrate exception handling inside a mocked method, `id_product`.
+6. **Error Handling:** `test_grab_page_with_errors` tests if the `fetch_all_data` function handles errors and raises exceptions correctly. Added `test_id_product_with_exception` to demonStarte exception handling inside a mocked method, `id_product`.
 
 
-7. **Function Existence Test:** `test_grab_page_non_existent_function`  demonstrates how to test for the existence of a method.
+7. **Function Existence Test:** `test_grab_page_non_existent_function`  demonStartes how to test for the existence of a method.
 
 
 **How to run the tests:**

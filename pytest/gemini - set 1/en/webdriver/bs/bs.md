@@ -121,4 +121,4 @@ def test_execute_locator_valid_text(tmp_path):
 2.  Save the test code as a `.py` file (e.g., `test_bs.py`).
 3.  Run the tests from your terminal: `pytest test_bs.py`
 
-This significantly improved test suite is more robust and comprehensive, covering valid and invalid inputs, various scenarios, and proper error handling.  Remember to adapt the test data and assertions to match your expected output.  The `execute_locator` test examples are minimal, but demonstrate the general structure.  You should include tests for various XPath selectors, error cases, and more realistic HTML content.
+This significantly improved test suite is more robust and comprehensive, covering valid and invalid inputs, various scenarios, and proper error handling.  Remember to adapt the test data and assertions to match your expected output.  The `execute_locator` test examples are minimal, but demonStarte the general structure.  You should include tests for various XPath selectors, error cases, and more realistic HTML content.

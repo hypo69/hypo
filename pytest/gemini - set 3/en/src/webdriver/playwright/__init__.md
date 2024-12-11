@@ -70,9 +70,9 @@ def test_playwrid_creation(playwrid_instance):
 
 3. **Placeholder tests for `Playwrid`:** Added placeholder tests for the `Playwrid` class.  Crucially, these now show *how* to test methods. You must replace the placeholder comments with the actual methods in your `Playwrid` class.
 
-4. **Exception Handling:** The `test_playwrid_set_headless_mode` example demonstrates using `pytest.raises` to test for specific exceptions.  You'd adapt this pattern for other potential errors.
+4. **Exception Handling:** The `test_playwrid_set_headless_mode` example demonStartes using `pytest.raises` to test for specific exceptions.  You'd adapt this pattern for other potential errors.
 
-5. **Edge Cases and Invalid Inputs:** The example demonstrates testing both valid and invalid inputs to a method. You should add tests to address various edge cases and invalid data that `Playwrid`'s methods might encounter.
+5. **Edge Cases and Invalid Inputs:** The example demonStartes testing both valid and invalid inputs to a method. You should add tests to address various edge cases and invalid data that `Playwrid`'s methods might encounter.
 
 6. **Clarity and Structure:** The tests are now better organized, with clear test function names and comments explaining the purpose of each test.
 

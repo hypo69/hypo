@@ -62,7 +62,7 @@ def test_my_function_with_fixture(sample_data):
 #  Example of using doctest
 def test_doctest_example():
     """
-    Example demonstrating the use of doctests.
+    Example demonStarting the use of doctests.
     >>> my_function('test', 'value')
     {'param': 'test', 'param1': 'value'}
     """

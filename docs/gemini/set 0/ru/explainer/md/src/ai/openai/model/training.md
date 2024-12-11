@@ -168,7 +168,7 @@ graph LR
 - `dynamic_train`: Performs dynamic fine-tuning of the model using previous conversations (stored in a file).
 - `train`: Trains the model on a dataset and returns the training job ID.
 - `save_job_id`: Saves the training job ID with a description to a file.
-- `main`: A function for demonstrating usage of the `OpenAIModel` class, which includes listing available models and assistants, asking a question, performing dynamic training, training the model, and saving the job ID.
+- `main`: A function for demonStarting usage of the `OpenAIModel` class, which includes listing available models and assistants, asking a question, performing dynamic training, training the model, and saving the job ID.
 
 **Variables:**
 
@@ -184,4 +184,4 @@ graph LR
 
 **Interconnections:**
 
-The code clearly shows interdependencies with the `gs` (Google Cloud Storage/similar service) module for file access and credentials, the `src.utils` module for JSON handling, and the OpenAI API for model interactions. The `src.logger` module is crucial for reporting events and errors during the process.  The `main` function acts as the entry point to the application, demonstrating usage of the `OpenAIModel` class.
+The code clearly shows interdependencies with the `gs` (Google Cloud Storage/similar service) module for file access and credentials, the `src.utils` module for JSON handling, and the OpenAI API for model interactions. The `src.logger` module is crucial for reporting events and errors during the process.  The `main` function acts as the entry point to the application, demonStarting usage of the `OpenAIModel` class.

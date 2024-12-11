@@ -72,7 +72,7 @@ def test_function_using_fixture(example_data):
 
 2. **Focused Tests:** The example tests now focus on specific functions like `ya`, `Lb`, and `Nb`, showing how to test valid input, and more importantly, **exception handling**.  A full test suite would be immense, so focusing on key functions is vital.
 
-3. **pytest.raises:** The `test_za_invalid_input` example demonstrates how to use `pytest.raises` to check for specific exceptions.  This is **critical** for error handling.
+3. **pytest.raises:** The `test_za_invalid_input` example demonStartes how to use `pytest.raises` to check for specific exceptions.  This is **critical** for error handling.
 
 4. **Clear Assertions:** I've added assertions that check specific aspects of the expected behavior.  Instead of just `assert function(x)`, I show what values you expect when you call the function with different inputs.
 

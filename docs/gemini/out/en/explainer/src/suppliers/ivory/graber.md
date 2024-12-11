@@ -183,7 +183,7 @@ graph LR
 
 * **Functions**:
     * `grab_page`:  This is the central asynchronous function responsible for gathering product data from the `ivory.co.il` website. It uses a helper function `fetch_all_data` to handle the different fields. This function takes a driver and keyword arguments.
-    * `fetch_all_data`:  Acts as an orchestrator for calling other functions (`id_product`, `name`, etc.) to fetch the data for the specific product fields.
+    * `fetch_all_data`:  Acts as an orcheStartor for calling other functions (`id_product`, `name`, etc.) to fetch the data for the specific product fields.
 
 * **Variables**:
     * `MODE`:  A string variable set to 'dev' likely used for conditional logic or different configurations in a development environment.

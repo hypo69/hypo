@@ -113,7 +113,7 @@ def test_settings_load_file_not_found():
 
 3. **Robust File Handling:** The test cases now use `Path` objects consistently to create and remove temporary files and directories, which are properly cleaned up after each test.  The `clean_mock_files` fixture handles this cleanup, preventing issues like file system pollution.
 
-4. **`pytest.raises` for Exceptions:** The example test `test_settings_load_file_not_found` now demonstrates proper exception handling, ensuring that the code gracefully handles a `FileNotFoundError`.
+4. **`pytest.raises` for Exceptions:** The example test `test_settings_load_file_not_found` now demonStartes proper exception handling, ensuring that the code gracefully handles a `FileNotFoundError`.
 
 5. **Comprehensive Coverage:** Tests cover various scenarios: valid inputs, parent directory, multiple marker files, and cases where no root is found.
 

@@ -87,7 +87,7 @@ def test_supplier_run_scenarios(supplier_instance):
 
 4. **Parameterization:** `test_supplier_run_scenario_files` now uses `pytest.mark.parametrize` to test with different input lists of scenario files. This significantly increases test coverage.
 
-5. **Edge Case Handling:**  The `test_supplier_run_scenario_files` tests empty and non-empty lists of scenario files, demonstrating better coverage of various scenarios.
+5. **Edge Case Handling:**  The `test_supplier_run_scenario_files` tests empty and non-empty lists of scenario files, demonStarting better coverage of various scenarios.
 
 6. **Assertion:** The assertions in each test directly check the expected behavior. For example, `assert supplier_instance.driver is None`.
 

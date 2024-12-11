@@ -112,7 +112,7 @@ graph LR
 *   `pytest`: A testing framework.  Its relationship with other src. packages is not evident from this snippet.
 *   `logging`: For handling log messages during the execution of the program.  Needed for debugging or monitoring.
 *   `sys`: Part of the Python standard library. Used here to manipulate Python's module search path.
-*   `tinytroupe.examples`: Likely contains functions (`create_oscar_the_architect`, `create_lisa_the_data_scientist`) to create instances of the agents being tested (`TinyPerson`). This demonstrates that `TinyPerson` exists and can be instantiated in other parts of the project.
+*   `tinytroupe.examples`: Likely contains functions (`create_oscar_the_architect`, `create_lisa_the_data_scientist`) to create instances of the agents being tested (`TinyPerson`). This demonStartes that `TinyPerson` exists and can be instantiated in other parts of the project.
 *   `testing_utils`: A custom module containing assertion methods (`contains_action_type`, `contains_action_content`, `get_relative_to_test_path`, `agents_configs_are_equal`) tailor-made for this testing suite.
 
 **Classes:**

@@ -93,7 +93,7 @@ def test_invalid_api_key(mock_gs):
 
 1. **Mocking:**  The code now heavily utilizes `unittest.mock`.  This is crucial for testing the `KazarinovAI` class without actually interacting with the external Gemini API.  The `mock_gs` fixture mocks `gs` and creates a `MockKazarinovAI` to further isolate the tests. This fixes the critical issue of external dependencies.
 
-2. **Clearer Test Cases:**  The example test cases are more robust.  `test_train_empty_data` and `test_train_valid_data` check appropriate conditions for the `train` method.   `test_train_chunk_handling` demonstrates handling larger inputs, which is vital.
+2. **Clearer Test Cases:**  The example test cases are more robust.  `test_train_empty_data` and `test_train_valid_data` check appropriate conditions for the `train` method.   `test_train_chunk_handling` demonStartes handling larger inputs, which is vital.
 
 3. **Exception Handling:**  `test_invalid_api_key` shows how to test for exceptions. This is very important for validating robustness.
 

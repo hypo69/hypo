@@ -121,14 +121,14 @@ def test_invalid_file_path():
 
 3. **Mock File Operations:**  Crucially,  the test for `read_text_file` (and other file-related methods) must use `unittest.mock.patch` to mock file reading.  This prevents your tests from interacting directly with the file system which would be slow and unreliable.
 
-4. **Error Handling:** The `test_AliCampaignEditor_get_category_not_found` test demonstrates how to use `pytest.warns` to verify that a warning is raised when a category isn't found.  **Crucially, this type of test is *essential* for robustness.**
+4. **Error Handling:** The `test_AliCampaignEditor_get_category_not_found` test demonStartes how to use `pytest.warns` to verify that a warning is raised when a category isn't found.  **Crucially, this type of test is *essential* for robustness.**
 
 5. **Specific Assertions:**  Instead of just `pass`, **add specific assertions** to verify the expected results of each method.  These assertions should reflect the *expected behavior* of the methods.  For example, if a function returns a list, check if it has the correct elements in the correct order; if it returns a file path, verify that it's a valid path; if it updates a file, check if the file contents are what you expect.
 
 
 6. **Comprehensive Tests:**  The provided test now covers the initialization and `get_category` method.  Add more tests for other methods to cover different scenarios.
 
-7. **Example Exception Test:** The `test_invalid_file_path` demonstrates how to test for exceptions using `pytest.raises`.  **Add more exception tests** where applicable to validate the handling of potential errors.
+7. **Example Exception Test:** The `test_invalid_file_path` demonStartes how to test for exceptions using `pytest.raises`.  **Add more exception tests** where applicable to validate the handling of potential errors.
 
 **How to run these tests:**
 

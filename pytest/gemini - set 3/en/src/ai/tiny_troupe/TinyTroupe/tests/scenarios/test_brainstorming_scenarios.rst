@@ -91,7 +91,7 @@ def test_brainstorming_scenario_empty_input(focus_group_world):
 * **Clearer Test Cases:** `test_brainstorming_scenario_valid_input` and `test_brainstorming_scenario_empty_input` provide more specific test scenarios.
 * **Missing Fixture:** The code now includes a placeholder `@pytest.fixture` for `setup`, and `focus_group_world` which must be replaced with the actual fixture from `testing_utils` to create the proper simulation environment. This is vital for testing.
 * **Realistic Simulation:** The placeholder `world.run(1)` is kept, but the tests now check for appropriate results.
-* **Testing for Empty Input:** `test_brainstorming_scenario_empty_input` demonstrates how to test an edge case with an empty message to the environment.
+* **Testing for Empty Input:** `test_brainstorming_scenario_empty_input` demonStartes how to test an edge case with an empty message to the environment.
 * **Assert that results are meaningful:** Includes an assertion to ensure that `results` is not None and has content.
 * **Import statements:** Corrected import paths to ensure necessary modules are accessible.
 

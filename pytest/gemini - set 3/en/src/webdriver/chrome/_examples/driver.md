@@ -98,7 +98,7 @@ def test_window_focus(chrome_driver):
 
 * **Fixtures:**  A `chrome_driver` fixture is introduced to encapsulate driver creation. This is crucial for keeping tests isolated and avoiding creating multiple drivers.
 * **Valid/Invalid URLs:** Tests now explicitly check for both valid and invalid URLs when calling `get_url`.
-* **Edge Cases:** The `test_scroll_invalid_direction` demonstrates handling an invalid direction for the scroll.
+* **Edge Cases:** The `test_scroll_invalid_direction` demonStartes handling an invalid direction for the scroll.
 * **Clearer Assertions:** Assertions are more specific and descriptive to easily identify failures.
 * **Simulate Page Load:** The `test_find_element_by_css_selector` and `test_current_url` examples now simulate loading a page (`chrome_driver.get_url(...)`) before interacting with elements to be more realistic.
 * **Type checking (important):**  Checks are added for the expected return types (e.g., ensuring the page language is a string) in several tests, making tests more robust and informative.

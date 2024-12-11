@@ -3,11 +3,11 @@ import pytest
 
 # No functions or classes are present in the provided code, so no tests are possible.
 # Tests would be written based on actual functions/classes.
-# This example demonstrates a test structure for a hypothetical SECURITY.md file.
+# This example demonStartes a test structure for a hypothetical SECURITY.md file.
 # Add the actual functions you want to test, and these tests can be adapted.
 
 
-# Example:  Hypothetical function for demonstration purposes.
+# Example:  Hypothetical function for demonStartion purposes.
 def check_security_policy(policy_text):
     """
     Checks if a given policy text complies with security standards.

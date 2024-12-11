@@ -84,7 +84,7 @@ def test_login_return_type(mock_logger):
 
 3. **More Comprehensive Input Types:** Added tests for different input types (integers, `None`) to thoroughly test invalid input scenarios.
 
-4. **Specific Supplier Data:** The example `test_login_valid_input` now uses a simple supplier string to demonstrate how a supplier object might be used.  Critically, I've added tests to cover various scenarios with specific types of supplier objects.
+4. **Specific Supplier Data:** The example `test_login_valid_input` now uses a simple supplier string to demonStarte how a supplier object might be used.  Critically, I've added tests to cover various scenarios with specific types of supplier objects.
 
 5. **Return Type Verification:** Added a test (`test_login_return_type`) to ensure that the `login` function returns a `bool` value, which is crucial.
 
@@ -102,4 +102,4 @@ def test_login_return_type(mock_logger):
 
 
 
-This revised solution is much more comprehensive and demonstrates better testing practices. Remember to adapt the test cases further based on the specific needs and structure of your `login` function and supplier objects. Remember to replace placeholder `supplier_data` with the actual structure of your `Supplier` object.  The critical fix in the return type is what allows these tests to successfully pass and test the function in a meaningful way.
+This revised solution is much more comprehensive and demonStartes better testing practices. Remember to adapt the test cases further based on the specific needs and structure of your `login` function and supplier objects. Remember to replace placeholder `supplier_data` with the actual structure of your `Supplier` object.  The critical fix in the return type is what allows these tests to successfully pass and test the function in a meaningful way.

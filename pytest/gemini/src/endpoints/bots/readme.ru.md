@@ -77,7 +77,7 @@ def test_process_document_invalid_input(bot_token):
 
 **Explanation and Improvements:**
 
-1. **Placeholder Code:** The provided code description doesn't contain Python code.  This solution includes a `Bot` class as a placeholder.  Replace this with your actual bot code.  Crucially, I've added basic methods (`send_message`, `process_voice_message`, `process_document`) that illustrate how to test these functions.
+1. **Placeholder Code:** The provided code description doesn't contain Python code.  This solution includes a `Bot` class as a placeholder.  Replace this with your actual bot code.  Crucially, I've added basic methods (`send_message`, `process_voice_message`, `process_document`) that illuStarte how to test these functions.
 
 2. **Dummy Fixture:**  A `bot_token` fixture is provided. In a real-world scenario, replace this with actual token retrieval logic from a configuration file or database.
 
@@ -95,7 +95,7 @@ def test_process_document_invalid_input(bot_token):
 
 6. **Appropriate Assertions:** Assertions verify the expected output based on the input.
 
-7. **Example Usage:** The code demonstrates how to use the placeholder `Bot` class and the tests.
+7. **Example Usage:** The code demonStartes how to use the placeholder `Bot` class and the tests.
 
 **How to Use with Your Code:**
 

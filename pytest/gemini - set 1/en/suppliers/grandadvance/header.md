@@ -110,7 +110,7 @@ def test_settings_loading_failure(root_path):
 
 6. **Global Variable Handling:**  The `test_settings_loading_success` and `test_settings_loading_failure` functions correctly handle the global variable `settings`, resetting it to `None` before each test.
 
-7. **`pytest.raises`:**  Included a test (`test_get_project_root_invalid_input`) that demonstrates how to use `pytest.raises` to check for a specific exception.
+7. **`pytest.raises`:**  Included a test (`test_get_project_root_invalid_input`) that demonStartes how to use `pytest.raises` to check for a specific exception.
 
 **To run these tests:**
 

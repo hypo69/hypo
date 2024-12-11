@@ -79,7 +79,7 @@ graph LR
     A --> H(__author__);
 ```
 
-This mermaid graph illustrates the assignment of variable values within the `version.py` file. There are no function calls, object instantiations, or other complex logical paths.
+This mermaid graph illuStartes the assignment of variable values within the `version.py` file. There are no function calls, object instantiations, or other complex logical paths.
 
 
 # <explanation>

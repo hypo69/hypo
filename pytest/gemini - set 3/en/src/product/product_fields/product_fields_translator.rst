@@ -83,7 +83,7 @@ def test_translate_presta_fields_dict_error_handling():
 **Important Considerations (Beyond the Tests):**
 
 * **Database Interactions:**  The original code interacts with a database. Mocking this interaction is crucial for writing testable code.  You should *never* interact with a database directly in a unit test.
-* **Error Handling:** The `try...except` block in the original `translate_presta_fields_dict` function is *very* important, but you have to *test* this exception handling.  The test `test_translate_presta_fields_dict_error_handling` demonstrates this correctly.
+* **Error Handling:** The `try...except` block in the original `translate_presta_fields_dict` function is *very* important, but you have to *test* this exception handling.  The test `test_translate_presta_fields_dict_error_handling` demonStartes this correctly.
 * **Global Variables:** The `global record` statement is problematic.  Avoid using global variables within your functions; they can lead to unexpected behaviors and are difficult to manage.
 
 Remember to install `pytest` if you haven't already: `pip install pytest`

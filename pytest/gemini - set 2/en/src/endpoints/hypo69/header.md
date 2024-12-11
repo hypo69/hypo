@@ -115,4 +115,4 @@ This revised solution provides a more robust and maintainable set of tests for t
 
 **Important Consideration for `gs.path.root`:**
 
-The provided code depends on a `gs.path.root` object. This solution focuses on testing `set_project_root` in isolation.  To fully test the entire code block, you would need to mock the `gs` module and the `gs.path.root` object within `test_header.py` to account for its usage within your broader function. Consider if mocking is appropriate in the context of your test-driven development strategy.  If mocking is needed, adjust the testing strategy accordingly.
+The provided code depends on a `gs.path.root` object. This solution focuses on testing `set_project_root` in isolation.  To fully test the entire code block, you would need to mock the `gs` module and the `gs.path.root` object within `test_header.py` to account for its usage within your broader function. Consider if mocking is appropriate in the context of your test-driven development Startegy.  If mocking is needed, adjust the testing Startegy accordingly.

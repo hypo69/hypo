@@ -93,7 +93,7 @@ def teardown_module():
 
 5. **Clear Test Descriptions:** Improved test descriptions to better clarify the purpose of each test.
 
-6. **Valid Input Testing**: Added `test_process_campaign_valid_input`, `test_process_all_campaigns_valid_input` and `test_get_directory_names_valid_input` to demonstrate how to check for correct behavior with valid input.
+6. **Valid Input Testing**: Added `test_process_campaign_valid_input`, `test_process_all_campaigns_valid_input` and `test_get_directory_names_valid_input` to demonStarte how to check for correct behavior with valid input.
 
 7. **Isolated Tests:** All tests are now isolated from each other, ensuring that any potential side effects in one test don't influence others.
 

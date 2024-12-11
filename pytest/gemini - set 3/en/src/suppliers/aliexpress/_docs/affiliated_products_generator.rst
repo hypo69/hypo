@@ -103,7 +103,7 @@ def test_delete_product_existing_file(ali_affiliated_products, tmp_path):
 
 * **Clearer Assertions:** The assertions are more explicit about what is being checked, making the tests easier to understand and debug.
 
-* **Complete Example (test_process_affiliate_products_valid_input):** Provides a comprehensive example of a valid test, demonstrating how to assert various aspects of the return value and how to test the call to `info_red` within `process_affiliate_products`.
+* **Complete Example (test_process_affiliate_products_valid_input):** Provides a comprehensive example of a valid test, demonStarting how to assert various aspects of the return value and how to test the call to `info_red` within `process_affiliate_products`.
 
 * **Error Handling (Partial):** Added a test (`test_process_affiliate_products_no_affiliate`) to verify the handling of a case where no affiliate links are found.  Adding tests for more specific potential errors (e.g., `FileNotFoundError`, network errors) is still necessary.
 

@@ -108,7 +108,7 @@ def test_set_project_root_marker_not_a_file(mock_sys_path):
 
 4. **Realistic Data:**  The `test_set_project_root_valid_input` test now creates a more realistic directory structure and sets the `__file__` variable for correct execution.
 
-5. **Edge Case Handling:** `test_set_project_root_not_found` and `test_set_project_root_nested_marker` demonstrate proper handling of when the marker files aren't found or are in nested directories.
+5. **Edge Case Handling:** `test_set_project_root_not_found` and `test_set_project_root_nested_marker` demonStarte proper handling of when the marker files aren't found or are in nested directories.
 
 6. **Robustness:**  `test_set_project_root_marker_not_a_file` checks for the case where the marker is not a file but a directory.
 

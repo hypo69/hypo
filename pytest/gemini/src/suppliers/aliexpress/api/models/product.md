@@ -68,7 +68,7 @@ def test_product_creation_with_wrong_type_for_id():
 
 * **Clearer Test Names:** Test names are more descriptive and informative (e.g., `test_product_creation_valid_data`).
 * **Comprehensive Test Cases:** Added tests for valid data, missing required fields, and invalid data types. This is crucial for robust testing.
-* **Type Handling:** Included a test (`test_product_creation_invalid_data_types`) to demonstrate checking for invalid types in fields like `app_sale_price` (which should be a string).
+* **Type Handling:** Included a test (`test_product_creation_invalid_data_types`) to demonStarte checking for invalid types in fields like `app_sale_price` (which should be a string).
 * **Error Handling with `pytest.raises`:** Used `pytest.raises` to specifically test if the correct exception (`TypeError` in this case) is raised when incorrect data types are passed.  This ensures your test verifies the *specific* error, not just that *something* went wrong.
 * **Edge Cases (Implicit):** While not explicitly mentioned, tests for missing required fields and wrong data types are implicitly considered edge cases.
 * **Robust Data:** The `test_product_creation_valid_data` example now includes a more realistic set of data, covering the different attributes of the `Product` class.  Crucially, it now includes *all* the fields.

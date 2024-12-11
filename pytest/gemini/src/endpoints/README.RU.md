@@ -1,7 +1,7 @@
 ```python
 import pytest
 from hypothesis import given
-import hypothesis.strategies as st
+import hypothesis.Startegies as st
 
 # Replace with your actual module imports if they exist
 # Example (replace with your actual module):
@@ -98,7 +98,7 @@ def test_update_order_invalid_input_negative_id():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Functions:** The code now includes placeholder functions (`create_product`, `get_order`, `update_order`) to demonstrate the testing structure. Replace these with your actual functions from your `endpoints` module.
+1. **Placeholder Functions:** The code now includes placeholder functions (`create_product`, `get_order`, `update_order`) to demonStarte the testing structure. Replace these with your actual functions from your `endpoints` module.
 
 2. **Clear Test Names:** Test function names are descriptive and informative.
 

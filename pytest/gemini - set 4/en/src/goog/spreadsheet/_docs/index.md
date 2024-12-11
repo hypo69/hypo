@@ -120,7 +120,7 @@ def test_set_values_error(service):
 
 * **Mocking:** To fully test `test_set_column_width` and `test_set_values`, you would need to mock the Google Sheets API calls (`service.spreadsheets().batchUpdate()` and `.values().batchUpdate()`).  This will allow you to control the inputs and expected outputs. This example does not have full test coverage due to the complexity of mocking a spreadsheet update.
 
-* **Error Handling:** Always test for exceptions, as demonstrated in `test_set_values_error`.
+* **Error Handling:** Always test for exceptions, as demonStarted in `test_set_values_error`.
 
 * **Resource Cleanup:**  In a production environment, you'd likely want a test that deletes the test spreadsheet after each test run, using the `spreadsheets().delete()` method, to avoid accumulating test spreadsheets.
 

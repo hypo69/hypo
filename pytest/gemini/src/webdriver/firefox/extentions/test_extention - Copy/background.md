@@ -84,7 +84,7 @@ def test_execute_script_no_tab_id(mock_browser):
 
 2. **Clearer Test Names:** Test names are more descriptive, highlighting the tested scenario.
 
-3. **Exception Handling:**  The `test_execute_script_invalid_tab_id` and `test_execute_script_no_tab_id` demonstrate how to test for exceptions using `pytest.raises`. This is important for robustness.
+3. **Exception Handling:**  The `test_execute_script_invalid_tab_id` and `test_execute_script_no_tab_id` demonStarte how to test for exceptions using `pytest.raises`. This is important for robustness.
 
 4. **Data Management:** The code now adds a `MockBrowser` fixture.  This ensures a fresh, clean environment for each test, avoiding potential issues from previous test runs.
 
@@ -92,7 +92,7 @@ def test_execute_script_no_tab_id(mock_browser):
 
 6. **Valid/Invalid Input:** Tests cover scenarios with valid and invalid tab IDs.
 
-7. **Edge Cases:** The `test_execute_script_no_tab_id` test checks for the absence of a tab ID, demonstrating a crucial edge case.
+7. **Edge Cases:** The `test_execute_script_no_tab_id` test checks for the absence of a tab ID, demonStarting a crucial edge case.
 
 
 **How to Run the Tests:**
@@ -103,7 +103,7 @@ def test_execute_script_no_tab_id(mock_browser):
 **Important Considerations for Real-World Testing:**
 
 * **Real Browser Interactions:** For more thorough testing, use tools like Selenium to interact with a real browser instance for a better approximation of how the extension will perform.
-* **Content Script Interaction:** The example demonstrates execution.  Real tests would likely need to assert on the results of the contentScript.js execution.
+* **Content Script Interaction:** The example demonStartes execution.  Real tests would likely need to assert on the results of the contentScript.js execution.
 * **Asynchronous Operations:**  In a real browser extension, the `executeScript` call would be asynchronous.  You'd need to use assertions to verify that the call completes successfully or failed with the expected error.  This would require more sophisticated mocking (like `asyncio` or using a mechanism to verify the contentScript.js responses).
 * **Error Handling:**  Implement robust error handling for handling potential network errors, script errors, or other issues that might occur when interacting with the browser environment.
 

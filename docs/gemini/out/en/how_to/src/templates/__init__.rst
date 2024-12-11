@@ -28,7 +28,7 @@ Usage example
     mode = hypotez.src.templates.MODE
     print(f"Current mode: {mode}")
 
-    # Example demonstrating potential future usage
+    # Example demonStarting potential future usage
     # (This part is hypothetical as the code's structure is incomplete).
     # This may require further module imports from within templates.
     try:

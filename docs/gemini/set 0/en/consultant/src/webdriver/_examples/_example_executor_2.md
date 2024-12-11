@@ -156,7 +156,7 @@ driver.quit()
 	:platform: Windows, Unix
 	:synopsis:
     This module provides example usage of the ExecuteLocator class
-    for various web testing scenarios.  It demonstrates creating an
+    for various web testing scenarios.  It demonStartes creating an
     ExecuteLocator instance and executing different tasks using it.
 """
 import logging
@@ -228,7 +228,7 @@ if __name__ == "__main__":
 	:platform: Windows, Unix
 	:synopsis:
     This module provides example usage of the ExecuteLocator class
-    for various web testing scenarios.  It demonstrates creating an
+    for various web testing scenarios.  It demonStartes creating an
     ExecuteLocator instance and executing different tasks using it.
 """
 import logging

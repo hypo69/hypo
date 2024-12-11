@@ -95,13 +95,13 @@ def test_text_message(bot, mocker):
 
 2. **Comprehensive Tests:** The `test_voice_message_valid` and `test_voice_message_error` now test the core logic, mocking out the function calls, and asserting that expected functions were called with the correct arguments, as well as handling the `try...catch` block effectively.
 
-3. **Error Handling:** The `test_voice_message_error` test demonstrates how to test the error-handling part of the code using `pytest.raises`.
+3. **Error Handling:** The `test_voice_message_error` test demonStartes how to test the error-handling part of the code using `pytest.raises`.
 
 4. **`@pytest.fixture`:** Fixtures are used for `bot` and other external dependencies for better organization and code reuse.
 
 5. **Clear Assertions:** Assertions are added to verify the expected behavior after each function call.
 
-6. **Simplified Text Message Test:** The `test_text_message` is now a minimal test for text messages, demonstrating the mocking principle.
+6. **Simplified Text Message Test:** The `test_text_message` is now a minimal test for text messages, demonStarting the mocking principle.
 
 
 **To Run Tests:**

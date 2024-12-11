@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
 3. **Edge Cases:** A `test_show_all_results_no_context` test is added to handle the case where the `results.context` is `None`.
 
-4. **Exception Handling:** A `test_show_all_results_exception` test is included to demonstrate handling a situation where `results.context.itemDetail` might be `None`.
+4. **Exception Handling:** A `test_show_all_results_exception` test is included to demonStarte handling a situation where `results.context.itemDetail` might be `None`.
 
 5. **JS2Py Integration:**  The crucial `js2py` library is now used. This is needed because the JavaScript code needs to be parsed and executed to test the `showAllResults` function.
 

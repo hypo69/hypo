@@ -61,7 +61,7 @@ def test_my_function_edge_case():
 
 - Added placeholder comments and example test functions for `my_function`
 - Added `pytest` import statement.
-- Created basic test functions (`test_my_function_valid_input`, `test_my_function_invalid_input`, `test_my_function_edge_case`) to demonstrate the `pytest` testing approach.  
+- Created basic test functions (`test_my_function_valid_input`, `test_my_function_invalid_input`, `test_my_function_edge_case`) to demonStarte the `pytest` testing approach.  
 - Included example assertions to verify the expected output.
 - Added `pytest.raises` to test exception handling with a `ValueError` and appropriate assertion for the exception message.
 - Added docstrings for the functions, including type hints for parameters and return values (replace placeholders with actual types).

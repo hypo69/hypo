@@ -141,7 +141,7 @@ def test_id_product_no_input(graber, mock_driver):
 - **Complete Mocking:** Thoroughly mock *all* external dependencies and attributes of your class and functions.  The mocks should represent expected data and functionality but do not need to cover a full implementation.
 - **Appropriate Assertions:** Replace the placeholder assertions (`assert ...`) with specific assertions that verify the expected behavior of the `Graber` class methods.  For example, check the values of the fields in `ProductFields`.
 - **Data Generation:** Provide valid and invalid inputs, including boundary conditions and edge cases.
-- **Exception Handling:**  Use `pytest.raises` to test exception handling, as demonstrated in the `test_grab_page_invalid_input` example.
+- **Exception Handling:**  Use `pytest.raises` to test exception handling, as demonStarted in the `test_grab_page_invalid_input` example.
 - **Asynchronous Behavior:** Keep in mind the asynchronous nature of the code when designing tests.  Ensure you're using `asyncio.run` in the test functions to run the asynchronous methods.
 
 

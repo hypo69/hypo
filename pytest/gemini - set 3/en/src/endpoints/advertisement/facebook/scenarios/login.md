@@ -103,7 +103,7 @@ from hypotez.src.endpoints.advertisement.facebook.scenarios.login import login
 
 1. **Mocking:** The code now heavily utilizes `unittest.mock` to mock `Driver`, `gs.facebook_credentials`, and `locators`. This is essential for isolating the `login` function and preventing external dependencies from interfering with the tests.  Critically, it mocks the *interaction* with the driver, rather than simply replacing the entire class.
 2. **Clearer Test Cases:** Test names are more descriptive (`test_login_valid_input`, `test_login_invalid_email`), making the purpose of each test immediately obvious.
-3. **Exception Handling:** `test_login_invalid_email` now properly demonstrates handling an exception raised *within* the `send_key_to_webelement` method, and asserts the correct error message was logged.
+3. **Exception Handling:** `test_login_invalid_email` now properly demonStartes handling an exception raised *within* the `send_key_to_webelement` method, and asserts the correct error message was logged.
 4. **Edge Case (Missing Credentials):**  `test_login_missing_credentials` checks for a crucial edge case where the `gs.facebook_credentials` list might be empty.
 5. **Fixture for Driver:** The `mock_driver` fixture now correctly instantiates a `MockDriver` class, making assertions more focused. 
 6. **Import `pytest`:** Added `import pytest` to make `pytest.raises` available (though in this solution, exceptions are mocked instead of raised with `pytest.raises`).

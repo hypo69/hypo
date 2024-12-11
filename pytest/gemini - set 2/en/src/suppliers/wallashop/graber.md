@@ -99,13 +99,13 @@ async def test_id_product_no_input(graber, mock_driver):
 
 2. **`@pytest.mark.asyncio`:**  This decorator is essential for running asynchronous tests with `pytest`.
 
-3. **Error Handling:** The `test_grab_page_exception_handling` test now demonstrates how to handle exceptions raised by `execute_locator`.  It also checks the *content* of the exception message (important).
+3. **Error Handling:** The `test_grab_page_exception_handling` test now demonStartes how to handle exceptions raised by `execute_locator`.  It also checks the *content* of the exception message (important).
 
 4. **`test_grab_page_specific_data_missing`:** The code checks if fields are None for data not fetched in the function - an important edge case.
 
 5. **Fixture `mock_driver`:** This is now correctly used to pass the mock driver to the `graber` fixture and tests.
 
-6. **Additional Tests for `id_product`:** This demonstrates how to test a specific function (id_product) from the `graber` class.
+6. **Additional Tests for `id_product`:** This demonStartes how to test a specific function (id_product) from the `graber` class.
 
 7. **`test_id_product_no_input`:** This edge case test verifies how the function handles missing or empty input.
 

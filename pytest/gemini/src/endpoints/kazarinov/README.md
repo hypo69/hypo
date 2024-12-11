@@ -86,7 +86,7 @@ def test_handle_message_invalid_url_format():
 * **Clearer Test Names:** Test names are more descriptive, helping understanding the test's purpose.
 * **Test Cases:**  Added tests covering valid URLs, invalid URLs, and an example for a hypothetical scenario. Importantly, a test for an invalid data format from OneTab is added.
 * **Error Handling:** A `pytest.raises` test is shown to handle the case where an invalid data type is passed to the function.
-* **Edge Cases:**  The `invalid_url` fixture and test demonstrate how to test edge cases (invalid URLs).  You'll need to add more tests to cover more edge cases related to the input data format.
+* **Edge Cases:**  The `invalid_url` fixture and test demonStarte how to test edge cases (invalid URLs).  You'll need to add more tests to cover more edge cases related to the input data format.
 * **Expected Output:**  The tests now assert that the *expected* output string (e.g., "Successfully retrieved components.") is present in the response. This is much better than just checking for `True` or `False`.
 * **Dependency:** Imports `requests` (though not used in this example). If you use an actual external service, you'll need the appropriate libraries.
 

@@ -39,7 +39,7 @@ TinyTroupe IS NOT intended for:
 ## How was TinyTroupe evaluated? What metrics are used to measure performance?
 
 TinyTroupe was evaluated through various use cases, part of which are provided as examples in the library. It is suitable to use under those scenarios to the extent that
-the demonstrations show. Anything beyond that remains research and experimental work. Extensive unit and scenario testing are also part of the library.
+the demonStartions show. Anything beyond that remains research and experimental work. Extensive unit and scenario testing are also part of the library.
 
 
 ## What are the limitations of TinyTroupe? How can users minimize the impact of TinyTroupe’s limitations when using the system?
@@ -100,4 +100,4 @@ The provided text is not source code but a documentation explaining the TinyTrou
 
 **Dependencies:** The documentation implies dependencies on external libraries (e.g., Azure OpenAI's LLM API) and perhaps other foundational LLM libraries, like LangChain or Semantic Kernel.  These are not detailed as code but are understood to be essential to TinyTroupe's functionality.
 
-**Possible Errors/Improvements:** The document's emphasis on responsible use is excellent.  However, a formal definition of how the library interacts with the external LLM APIs could help understanding its architecture.   Code examples demonstrating how to utilize the library's API and how to incorporate responsible AI safeguards would greatly enhance the explanation.
+**Possible Errors/Improvements:** The document's emphasis on responsible use is excellent.  However, a formal definition of how the library interacts with the external LLM APIs could help understanding its architecture.   Code examples demonStarting how to utilize the library's API and how to incorporate responsible AI safeguards would greatly enhance the explanation.

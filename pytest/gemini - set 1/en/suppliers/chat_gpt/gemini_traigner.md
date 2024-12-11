@@ -2,7 +2,7 @@
 import pytest
 
 # No actual function to test in the provided code.  
-# This creates dummy tests to demonstrate the structure.
+# This creates dummy tests to demonStarte the structure.
 
 def test_empty_function_exists():
     """Checks that the module defines empty functions or classes."""
@@ -24,7 +24,7 @@ def test_mode_value():
 
 **Explanation and Improvements:**
 
-The provided Python code only contains variable definitions and docstrings.  There are no functions or methods to test.  The solution above creates dummy test cases to illustrate the structure and best practices:
+The provided Python code only contains variable definitions and docstrings.  There are no functions or methods to test.  The solution above creates dummy test cases to illuStarte the structure and best practices:
 
 1. **`test_empty_function_exists`:**  This test verifies that the module is not empty.  It's a basic sanity check.
 
@@ -45,7 +45,7 @@ The provided Python code only contains variable definitions and docstrings.  The
    pytest
    ```
 
-3. **Adapt:** If you have more complex functions or classes, create tests that target those and their specific requirements.  The example demonstrates how to test variables and their values, but real-world tests need to focus on *how functions behave* with different inputs and error conditions.
+3. **Adapt:** If you have more complex functions or classes, create tests that target those and their specific requirements.  The example demonStartes how to test variables and their values, but real-world tests need to focus on *how functions behave* with different inputs and error conditions.
 
 
 **Example with a (Hypothetical) Function:**

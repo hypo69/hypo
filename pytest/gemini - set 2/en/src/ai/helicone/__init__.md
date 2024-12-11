@@ -13,7 +13,7 @@ def test_mode_type():
     assert isinstance(MODE, str)
 
 # The following tests are placeholders.  No actual functionality is present to test in the provided code. 
-# These tests demonstrate the structure and approach for testing constants and functions that may exist in the actual code.
+# These tests demonStarte the structure and approach for testing constants and functions that may exist in the actual code.
 
 # Example - Hypothetical function
 def example_function(input_data):

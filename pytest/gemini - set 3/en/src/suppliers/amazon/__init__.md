@@ -103,7 +103,7 @@ def test_get_list_products_in_category_graber_error():
 
 3. **Clearer Test Names:** The test names are more explicit about the scenario being tested.
 
-4. **`pytest.raises` for Exceptions:** The `test_get_list_products_in_category_graber_error` test demonstrates how to use `pytest.raises` to check for expected exceptions.
+4. **`pytest.raises` for Exceptions:** The `test_get_list_products_in_category_graber_error` test demonStartes how to use `pytest.raises` to check for expected exceptions.
 
 5. **Example Fixture:** The `example_data` fixture provides sample data.  Remember to replace this with your actual data source if you have one.
 

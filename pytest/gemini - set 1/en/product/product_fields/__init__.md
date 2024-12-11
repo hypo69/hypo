@@ -23,7 +23,7 @@ def test_translate_presta_fields_dict_returns_dict():
     translated_fields = translate_presta_fields_dict(presta_fields)
     assert isinstance(translated_fields, dict)
 
-# Example test demonstrating testing for correct keys in the dictionary
+# Example test demonStarting testing for correct keys in the dictionary
 def test_translate_presta_fields_dict_contains_expected_keys():
     """Tests that the translated dictionary contains the correct keys."""
     # Replace with actual fields and their expected translations
@@ -32,7 +32,7 @@ def test_translate_presta_fields_dict_contains_expected_keys():
     translated_fields = translate_presta_fields_dict(presta_fields)
     assert set(translated_fields.keys()) == expected_keys
 
-# Example demonstrating testing for potential errors if input is not a dict
+# Example demonStarting testing for potential errors if input is not a dict
 def test_translate_presta_fields_dict_non_dict_input():
     """Tests that the function raises TypeError if the input is not a dictionary."""
     with pytest.raises(TypeError):
@@ -64,9 +64,9 @@ def test_mode_is_development():
 
 5. **Example Usage:**  I added example tests for different aspects.
 
-6. **Comprehensive Testing:** The example tests illustrate checking the type of the returned value, validating keys and values, and handling incorrect input types.  Expand upon these examples with more specific scenarios for your actual code. 
+6. **Comprehensive Testing:** The example tests illuStarte checking the type of the returned value, validating keys and values, and handling incorrect input types.  Expand upon these examples with more specific scenarios for your actual code. 
 
-7. **Global Variable Test:** Added a test `test_mode_is_development` to demonstrate how to test a global variable. This is often necessary for configuration settings.
+7. **Global Variable Test:** Added a test `test_mode_is_development` to demonStarte how to test a global variable. This is often necessary for configuration settings.
 
 **How to Use These Tests:**
 

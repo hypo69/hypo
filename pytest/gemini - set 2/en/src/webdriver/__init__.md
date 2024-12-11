@@ -90,7 +90,7 @@ def test_mode_value():
 
 4. **MODE Variable Test:**  A test verifies that the `MODE` variable is correctly assigned.
 
-5. **Missing Method Tests:**  Crucially, the provided code doesn't define any methods on the `Driver` class or the other classes.  The example `test_driver_start` (commented out) demonstrates how to test methods *when they exist.*  You *must* add tests for actual methods and functionality within each class.
+5. **Missing Method Tests:**  Crucially, the provided code doesn't define any methods on the `Driver` class or the other classes.  The example `test_driver_start` (commented out) demonStartes how to test methods *when they exist.*  You *must* add tests for actual methods and functionality within each class.
 
 6. **Fixtures:**  No fixtures are needed in this example, but you will need them if you have setup/teardown required for your driver instantiation, or if the `Driver` class relies on external data.
 

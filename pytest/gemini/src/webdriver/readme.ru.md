@@ -101,7 +101,7 @@ def test_scroll(driver_instance):
 * **Driver Fixture:** A `driver_instance` fixture is crucial for creating and cleaning up the WebDriver. This ensures each test gets its own driver, preventing issues with state between tests.
 * **Clear Test Names:**  Test names clearly indicate the purpose (e.g., `test_get_url_valid`, `test_find_element_failure`).
 * **Valid and Invalid Inputs:** Tests include cases with valid and invalid URLs.  Crucially, tests for invalid elements (`test_find_element_failure`) are included.
-* **Edge Cases:** The example now includes a test `test_get_url_timeout` simulating an invalid URL, and demonstrating the handling of the time out exception. This is a crucial addition for robustness.
+* **Edge Cases:** The example now includes a test `test_get_url_timeout` simulating an invalid URL, and demonStarting the handling of the time out exception. This is a crucial addition for robustness.
 * **`driver` object:**  Creates a `driver_obj` with `Driver(Chrome, driver=driver)`. This is essential because the `driver` argument is expected by `Driver`'s constructor.
 * **`driver.quit()`:** The `driver.quit()` method is correctly placed within the `driver_instance` fixture.  This is *critical* to clean up the driver and avoid resource leaks.
 * **Example Tests:** Added basic tests for `page_refresh` and `scroll`. You need to add more tests for other methods.

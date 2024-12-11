@@ -77,7 +77,7 @@ def test_init_missing_credentials(mock_prestashop_api):
 
 * **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `PrestaShop` API. This is crucial for testing the `PriceListRequester` class without needing an actual external API. This allows us to control the responses and avoid making real API calls.
 * **Clearer Error Handling:** The tests now include specific error message checks to make sure the correct error is being raised when appropriate (e.g., `ValueError` for empty input, `TypeError` for incorrect input type). This is crucial for robust testing.
-* **Comprehensive Test Coverage:** Tests cover valid input, empty input, invalid input types, and, critically, demonstrates *how* to check for expected errors in the `request_prices` function.
+* **Comprehensive Test Coverage:** Tests cover valid input, empty input, invalid input types, and, critically, demonStartes *how* to check for expected errors in the `request_prices` function.
 * **Missing Credentials:** A test `test_init_missing_credentials` has been added to handle the potential `KeyError` when initializing the `PriceListRequester` with missing credentials.
 * **Fixture Structure:** The fixture for `mock_prestashop_api` is now well-structured, utilizing the `mock_api_credentials` fixture to provide the API credentials correctly.
 * **`assert_called_once_with`:**  Crucial addition.  This verifies that the method *was called with the correct arguments.*   Without this, you don't know if the method was executed at all or with the wrong arguments.

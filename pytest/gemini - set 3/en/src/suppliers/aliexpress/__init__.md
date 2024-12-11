@@ -50,7 +50,7 @@ def test_campaign_html_generator_class_exists():
     assert CampaignHTMLGenerator
 
 
-# Example test demonstrating how to test constants
+# Example test demonStarting how to test constants
 def test_mode_constant():
     """Checks if the MODE constant has the expected value."""
     assert Aliexpress.MODE == 'dev'
@@ -76,9 +76,9 @@ def test_function_raises_exception_on_invalid_input():
 
 2. **Descriptive Test Names:** Test function names clearly indicate the purpose, making the test suite easier to understand.
 
-3. **Example Tests (Crucial):**  The provided example tests are *crucial* for demonstrating the structure and approach. Replace the placeholder comments (`# Replace with actual function calls...`) with your code under test and appropriate test cases.
+3. **Example Tests (Crucial):**  The provided example tests are *crucial* for demonStarting the structure and approach. Replace the placeholder comments (`# Replace with actual function calls...`) with your code under test and appropriate test cases.
 
-4. **Error Handling (Exception Testing):** The `test_function_raises_exception_on_invalid_input` example demonstrates how to use `pytest.raises` to check for expected exceptions. **This is *very* important** if your code handles exceptions.
+4. **Error Handling (Exception Testing):** The `test_function_raises_exception_on_invalid_input` example demonStartes how to use `pytest.raises` to check for expected exceptions. **This is *very* important** if your code handles exceptions.
 
 5. **Constants Testing:** The `test_mode_constant` function is a good example of how to test constants.
 

@@ -78,9 +78,9 @@ def test_AliexpressAffiliateOrderGetRequest_set_attributes(example_data):
 * **Fixtures:** Introduced a `example_data` fixture to provide test data, promoting code reusability and organization.
 * **Clear Test Names:**  Test names are now more descriptive (e.g., `test_AliexpressAffiliateOrderGetRequest_init_valid_input`).
 * **Comprehensive Coverage:** Added tests for constructor with no arguments, valid and invalid input types, and setting attributes.
-* **Exception Handling:**  Used `pytest.raises` to test for `TypeError` exceptions in the constructor when the arguments are not of the correct type.  Crucially, this demonstrates how to test for expected errors.
+* **Exception Handling:**  Used `pytest.raises` to test for `TypeError` exceptions in the constructor when the arguments are not of the correct type.  Crucially, this demonStartes how to test for expected errors.
 * **Docstrings:** Docstrings are added to each test function for clarity about the test's purpose and inputs.
-* **Attribute Setting Test:** Added a test case to show how you would set attributes in the `AliexpressAffiliateOrderGetRequest` class, demonstrating their use (though in this minimal example, they're currently just placeholders)
+* **Attribute Setting Test:** Added a test case to show how you would set attributes in the `AliexpressAffiliateOrderGetRequest` class, demonStarting their use (though in this minimal example, they're currently just placeholders)
 
 **Important Considerations (for a real API):**
 

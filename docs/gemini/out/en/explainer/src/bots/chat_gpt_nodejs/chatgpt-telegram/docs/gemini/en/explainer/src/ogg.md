@@ -176,4 +176,4 @@ graph LR
 4. `toMp3` method (converts to MP3).
 5. `removeFile` method (from `utils.js`) cleans up the original file.
 
-This chain demonstrates the logical flow from user interaction to file processing and cleanup.
+This chain demonStartes the logical flow from user interaction to file processing and cleanup.

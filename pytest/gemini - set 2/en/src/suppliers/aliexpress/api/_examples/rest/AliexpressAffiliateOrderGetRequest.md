@@ -63,7 +63,7 @@ def test_init_invalid_port_type(api_instance):
 
 
 #Important: Without the actual implementations of the methods of AliexpressAffiliateOrderGetRequest, there are no methods
-# that can be tested. These tests are placeholders to illustrate the test structure and are not exhaustive.
+# that can be tested. These tests are placeholders to illuStarte the test structure and are not exhaustive.
 # Further testing would depend on the full implementation.
 
 

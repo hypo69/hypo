@@ -128,8 +128,8 @@ def test_driver_fetch_html_invalid_file(driver_instance, tmp_path):
 
 4. **Exception Handling:** Tests cover cases where functions might raise exceptions (`InvalidArgumentException`, `WebDriverException`).  `pytest.raises` is used appropriately.
 
-5. **Edge Cases:** The provided example tests `test_driver_scroll_invalid_direction` illustrates testing with an invalid direction in `scroll`.
-   The `test_driver_fetch_html_invalid_file` demonstrates testing a non-existent file.
+5. **Edge Cases:** The provided example tests `test_driver_scroll_invalid_direction` illuStartes testing with an invalid direction in `scroll`.
+   The `test_driver_fetch_html_invalid_file` demonStartes testing a non-existent file.
 
 
 6. **Valid Input:** `test_driver_init_valid` checks initialization with a valid WebDriver class.

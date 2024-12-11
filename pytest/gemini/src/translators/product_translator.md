@@ -90,7 +90,7 @@ def test_translate_record(mock_translations_data, from_locale, to_locale):
 
 * **Error Handling:** The `test_get_translations_from_presta_translations_table_invalid_input` uses `pytest.raises` to verify the function handles invalid inputs correctly, as required by the prompt.
 
-* **`insert_new_translation_to_presta_translations_table` Test:** A test case to demonstrate how to test this function with the mocked manager.
+* **`insert_new_translation_to_presta_translations_table` Test:** A test case to demonStarte how to test this function with the mocked manager.
 
 
 * **`translate_record` Test:**

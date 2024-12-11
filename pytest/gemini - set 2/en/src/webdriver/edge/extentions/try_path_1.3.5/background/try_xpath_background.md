@@ -115,7 +115,7 @@ def test_loadOptions():
 
 2. **JavaScript Execution:**  The JavaScript code is now properly loaded and executed using `js2py`. This is crucial because you can't directly test the JavaScript functionality without running it in an environment similar to the browser environment. This ensures that the `tryxpath` object and `fu` object are correctly set up.
 
-3. **Clearer Test Structure:** The example `test_showAllResults` demonstrates a proper test case.  Add more tests for each function (e.g., `test_updateCss_error`, `test_loadDefaultCss`) and the logic they encapsulate.
+3. **Clearer Test Structure:** The example `test_showAllResults` demonStartes a proper test case.  Add more tests for each function (e.g., `test_updateCss_error`, `test_loadDefaultCss`) and the logic they encapsulate.
 
 4. **Assertions:**  Crucial for validating expected behavior (e.g., checking if `browser.tabs.create` was called with the correct URL, checking the values returned from functions).
 

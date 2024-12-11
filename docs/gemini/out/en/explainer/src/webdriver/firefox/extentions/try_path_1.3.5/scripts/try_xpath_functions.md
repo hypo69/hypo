@@ -179,4 +179,4 @@ graph LR
 5.  The processed results are displayed in a table.
    * The `fu.appendDetailRows` function is vital in appending data incrementally and recursively when a large amount of data is being displayed.
 
-This chain demonstrates the flow from user input to table output, highlighting the function's role within a larger UI/query processing framework.
+This chain demonStartes the flow from user input to table output, highlighting the function's role within a larger UI/query processing framework.

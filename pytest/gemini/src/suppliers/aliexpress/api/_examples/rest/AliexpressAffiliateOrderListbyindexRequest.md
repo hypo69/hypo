@@ -79,9 +79,9 @@ def test_set_attribute(api_request):
 
 3. **Invalid Input Testing:** Added crucial tests to check if the `__init__` method correctly handles invalid input types for the `domain` and `port` parameters using `pytest.raises`. This is critical for robustness.
 
-4. **Attribute Assignment Testing:** A test now demonstrates how to check if attribute values are correctly set after assignment.
+4. **Attribute Assignment Testing:** A test now demonStartes how to check if attribute values are correctly set after assignment.
 
-5. **Comprehensive Testing:** The examples are minimal because the provided code is quite basic; this example demonstrates good testing practices.  **Crucially**, to make this truly comprehensive, you would need to test any relevant functionality in the hypothetical base class `RestApi`.
+5. **Comprehensive Testing:** The examples are minimal because the provided code is quite basic; this example demonStartes good testing practices.  **Crucially**, to make this truly comprehensive, you would need to test any relevant functionality in the hypothetical base class `RestApi`.
 
 
 **To make the tests even better:**

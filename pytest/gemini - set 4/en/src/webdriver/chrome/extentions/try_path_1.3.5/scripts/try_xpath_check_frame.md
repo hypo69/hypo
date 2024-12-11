@@ -94,7 +94,7 @@ def test_try_xpath_check_frame_exception(webdriver_instance):
 
 3. **Error Handling:** The Python function now includes a `try...except` block to catch any errors that might arise during the JavaScript execution and raise a meaningful exception in Python.
 
-4. **`pytest.raises` for Exception Testing:** The `test_try_xpath_check_frame_exception` demonstrates how to use `pytest.raises` to specifically check for expected exceptions.
+4. **`pytest.raises` for Exception Testing:** The `test_try_xpath_check_frame_exception` demonStartes how to use `pytest.raises` to specifically check for expected exceptions.
 
 5. **Clearer Assertions:** Assertions are now more explicit and informative, helping in debugging.
 

@@ -131,7 +131,7 @@ graph LR
 
 - **`set_field_value`:** This function is a utility for fetching field values, handling potential errors, and setting the value to the appropriate field in `ProductFields`.
 
-- **`grab_page`:** This async function is the entry point for fetching all product data from a page. It orchestrates the calls to the various other field-fetching functions (e.g., `name`, `price`).
+- **`grab_page`:** This async function is the entry point for fetching all product data from a page. It orcheStartes the calls to the various other field-fetching functions (e.g., `name`, `price`).
 
 - **Individual methods (e.g., `name`, `price`):**  These methods are responsible for fetching the value of a specific product field from the HTML using `execute_locator`.  They are specifically designed for different product attributes (e.g., name, price) and handle error cases during the process. Each has a  `@close_pop_up` decorator.
 

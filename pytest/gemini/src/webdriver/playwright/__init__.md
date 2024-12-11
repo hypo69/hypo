@@ -63,7 +63,7 @@ def test_playwrid_exception():
 
 1. **Placeholder Tests:** The example tests now include `test_playwrid_creation` and `test_playwrid_method_example`.  Crucially, they are *placeholders*. You *must* replace these examples with tests that actually interact with the methods and attributes within the `Playwrid` class that you want to verify.  Without a definition of that class, these are just empty tests.
 
-2. **Exception Handling:** The `test_playwrid_exception` example demonstrates how to use `pytest.raises` to check for specific exceptions. This is crucial for testing robustness. Replace `"nonexistent_method"` with the correct method and expected exception to be raised.
+2. **Exception Handling:** The `test_playwrid_exception` example demonStartes how to use `pytest.raises` to check for specific exceptions. This is crucial for testing robustness. Replace `"nonexistent_method"` with the correct method and expected exception to be raised.
 
 3. **Clearer Comments:** Comments are now more descriptive, highlighting the purpose of each test.
 

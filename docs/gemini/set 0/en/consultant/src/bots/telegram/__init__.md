@@ -57,7 +57,7 @@ from .bot import TelegramBot
 
 - Added missing import statements for `j_loads`, `j_loads_ns`, and `logger` from appropriate locations.  Corrected the import path for `j_loads`, `j_loads_ns` and `logger`.
 - Added comprehensive module-level docstring in reStructuredText (RST) format, explaining the module's purpose and providing example usage.
-- Added detailed docstrings to the `TelegramBot` import to illustrate the import itself.  
+- Added detailed docstrings to the `TelegramBot` import to illuStarte the import itself.  
 - Improved comments and removed redundant comments and unused imports.
 
 

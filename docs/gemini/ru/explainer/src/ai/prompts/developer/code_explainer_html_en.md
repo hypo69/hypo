@@ -52,7 +52,7 @@ No classes are defined in the example code.
 
 
 **Relationship with other packages**:
-The code demonstrates a dependency on the `src.utils.calculator` module.  The function `calculate_sum` is a critical component of how `add_numbers` performs its task.  Understanding the `calculate_sum` function's implementation and potential error handling would complete the understanding of the code's functionality.
+The code demonStartes a dependency on the `src.utils.calculator` module.  The function `calculate_sum` is a critical component of how `add_numbers` performs its task.  Understanding the `calculate_sum` function's implementation and potential error handling would complete the understanding of the code's functionality.
 
 
 **Potential Improvements**:

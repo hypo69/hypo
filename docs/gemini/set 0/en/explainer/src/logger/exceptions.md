@@ -148,7 +148,7 @@ graph LR
 
 - **Functions:**
     - `__init__` method in `CustomException`: This method initializes the custom exception with a message and an optional original exception. It is crucial for properly reporting errors.
-    - `handle_exception` method in `CustomException`:  This method is intended for adding recovery or retry logic, providing a structure for developers to implement error handling and recovery strategies.
+    - `handle_exception` method in `CustomException`:  This method is intended for adding recovery or retry logic, providing a structure for developers to implement error handling and recovery Startegies.
 
 - **Variables:**
     - `MODE`: A variable set to 'dev'. This suggests the code is intended for development environments, and its value could be changed for production to alter behavior.
@@ -161,4 +161,4 @@ graph LR
 
 **Relationship Chain:**
 
-The `logger` in `src.logger` is crucial for proper error handling and communication. This module likely interacts with other parts of the project where errors might be raised. The `CustomException` and other derived classes provide a way to catch errors from various parts of the application and log them using `logger`.  The usage of specific external libraries (Selenium, PyKeePass) demonstrates the project's need to interact with outside services and handles errors arising from these interactions appropriately.
+The `logger` in `src.logger` is crucial for proper error handling and communication. This module likely interacts with other parts of the project where errors might be raised. The `CustomException` and other derived classes provide a way to catch errors from various parts of the application and log them using `logger`.  The usage of specific external libraries (Selenium, PyKeePass) demonStartes the project's need to interact with outside services and handles errors arising from these interactions appropriately.

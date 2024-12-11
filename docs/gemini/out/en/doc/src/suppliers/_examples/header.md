@@ -55,7 +55,7 @@ print(header.dir_root)
 
 
 ```python
-# example to demonstrate how sys.path works after import
+# example to demonStarte how sys.path works after import
 import sys
 print("All paths in sys.path:")
 for path in sys.path:

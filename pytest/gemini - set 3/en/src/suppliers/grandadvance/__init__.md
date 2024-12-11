@@ -68,7 +68,7 @@ def test_dummy_graber_method_error_input():
 
 **Explanation and Improvements:**
 
-1. **Dummy Functions:** The code now includes `dummy_function` and `dummy_graber_method` to demonstrate how to write tests.  **Crucially, replace these with the actual functions and methods from your `grandadvance/__init__.py` file.**
+1. **Dummy Functions:** The code now includes `dummy_function` and `dummy_graber_method` to demonStarte how to write tests.  **Crucially, replace these with the actual functions and methods from your `grandadvance/__init__.py` file.**
 
 2. **Comprehensive Test Cases:** The tests now cover:
    - Valid input ("hello").

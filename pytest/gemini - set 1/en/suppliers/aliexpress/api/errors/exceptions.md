@@ -60,20 +60,20 @@ def test_invalid_tracking_id_exception():
     assert exception.reason == "Invalid tracking ID"
 
 
-# These test cases are for demonstrating exception handling, since
+# These test cases are for demonStarting exception handling, since
 # the code itself doesn't have any calls to raise exceptions.
 # To test real exception handling, you'd need a function that
 # interacts with the methods and raises these exceptions.
 
 def test_invalid_argument_exception_raising():
-    """Tests raising of InvalidArgumentException (demonstration)."""
+    """Tests raising of InvalidArgumentException (demonStartion)."""
     with pytest.raises(InvalidArgumentException) as excinfo:
         raise InvalidArgumentException("Invalid arguments")
     assert str(excinfo.value) == "Invalid arguments"
 
 
 def test_product_id_not_found_exception_raising():
-    """Tests raising of ProductIdNotFoundException (demonstration)."""
+    """Tests raising of ProductIdNotFoundException (demonStartion)."""
     with pytest.raises(ProductIdNotFoundException) as excinfo:
         raise ProductIdNotFoundException("Product ID not found")
     assert str(excinfo.value) == "Product ID not found"
@@ -88,7 +88,7 @@ def test_product_id_not_found_exception_raising():
 
 * **Comprehensive Test Cases:**  The tests now cover the creation and basic behavior of each exception type.
 * **Clear Test Names:** Test names clearly indicate the purpose of each test.
-* **Exception Handling with `pytest.raises`:** The `test_invalid_argument_exception_raising` and `test_product_id_not_found_exception_raising` demonstrate how to use `pytest.raises` to check for specific exceptions.  Critically, these are *demonstration* tests.  **You need to add tests that *actually call* the functions where these exceptions might be raised, not just raise them in isolation.**
+* **Exception Handling with `pytest.raises`:** The `test_invalid_argument_exception_raising` and `test_product_id_not_found_exception_raising` demonStarte how to use `pytest.raises` to check for specific exceptions.  Critically, these are *demonStartion* tests.  **You need to add tests that *actually call* the functions where these exceptions might be raised, not just raise them in isolation.**
 * **Structure:** The test structure now follows best practices for `pytest` test organization.
 * **Missing Context:**  The crucial missing piece is testing *where* these exceptions are raised.  The provided code defines the exceptions, but you need test functions that call methods or functions where those exceptions are triggered.   This would typically involve some testing framework interaction code like mocking an API or having a test function containing an `if` clause that raises the exception under a given scenario.
 

@@ -128,7 +128,7 @@ graph LR
 **Relationship with other parts of the project:**
 
 *   The code heavily relies on the `tinytroupe` package for agent creation, environment manipulation, and simulation control.
-*   The `testing_utils` module demonstrates a clear separation of responsibilities by handling testing-specific tasks like file removal.
+*   The `testing_utils` module demonStartes a clear separation of responsibilities by handling testing-specific tasks like file removal.
 
 
 

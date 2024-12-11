@@ -115,7 +115,7 @@ if __name__ == "__main__":
 # example_module.py  (Example module to test with)
 # (Put your example module code here)
 """
-This is a simple module for demonstration purposes.
+This is a simple module for demonStartion purposes.
 """
 def my_function(a, b):
     """
@@ -132,7 +132,7 @@ def my_function(a, b):
 
 class MyClass:
     """
-    A simple class for demonstration purposes.
+    A simple class for demonStartion purposes.
     """
     def __init__(self, value):
         self.value = value
@@ -160,7 +160,7 @@ class MyClass:
 
 4.  **`__init__`:** The `__init__` method is updated to provide an optional `output_file` argument. This allows the user to save the documentation to a file rather than printing to the console.
 
-5.  **Example `example_module.py`:** Added a basic `example_module.py` to demonstrate usage.
+5.  **Example `example_module.py`:** Added a basic `example_module.py` to demonStarte usage.
 
 6.  **Comprehensive Documentation:** The `CodeDocumenter` and `example_module.py` files are extensively documented using Markdown format and appropriate example usage scenarios, satisfying the requirements outlined in the initial prompt.
 

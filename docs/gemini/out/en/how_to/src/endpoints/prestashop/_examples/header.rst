@@ -35,7 +35,7 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # This is a minimal example demonstrating how the module might be used.
+    # This is a minimal example demonStarting how the module might be used.
     # Replace with specific calls to functions from the imported modules.
 
     import os

@@ -43,12 +43,12 @@ MODE = 'dev'
 Examples for the `executor` module from `src.scenario.executor`.
 
 This file contains examples of how to use the functions provided in the `executor` module.
-The examples demonstrate how to run scenarios, handle scenario files, and interact with PrestaShop API.
+The examples demonStarte how to run scenarios, handle scenario files, and interact with PrestaShop API.
 
 @details
 - `Example 1` shows how to run a list of scenario files.
-- `Example 2` demonstrates how to run a single scenario file.
-- `Example 3` illustrates how to run a single scenario.
+- `Example 2` demonStartes how to run a single scenario file.
+- `Example 3` illuStartes how to run a single scenario.
 - `Example 4` provides an example of executing a product page scenario.
 - `Example 5` shows how to add a coupon using PrestaShop API.
 
@@ -95,7 +95,7 @@ class MockDriver:
 
 # <algorithm>
 
-The code defines several example functions demonstrating the usage of the `executor` module functions.  A `MockSupplier` class is used for testing purposes.  The `MockRelatedModules` class simulates fetching product data and `MockDriver` simulates driver functionality.  Each example function utilizes these functions and classes to execute various scenario types (multiple files, single file, single scenario).
+The code defines several example functions demonStarting the usage of the `executor` module functions.  A `MockSupplier` class is used for testing purposes.  The `MockRelatedModules` class simulates fetching product data and `MockDriver` simulates driver functionality.  Each example function utilizes these functions and classes to execute various scenario types (multiple files, single file, single scenario).
 
 **Example 1 (run_scenario_files):**
 1. Creates a `MockSupplier` instance.
@@ -168,7 +168,7 @@ graph LR
     AI --> AD;
 ```
 
-**Dependencies:** The diagram shows dependencies between the examples and the `run_scenario_files`, `run_scenario_file`, `insert_grabbed_data`, etc., functions, as well as dependencies on the  `MockSupplier`, `MockRelatedModules`, `MockDriver`, and `ProductFields` classes. It illustrates that these example functions are responsible for calling the functions from the `executor` module.  The arrows also represent data flow between parts of the code.
+**Dependencies:** The diagram shows dependencies between the examples and the `run_scenario_files`, `run_scenario_file`, `insert_grabbed_data`, etc., functions, as well as dependencies on the  `MockSupplier`, `MockRelatedModules`, `MockDriver`, and `ProductFields` classes. It illuStartes that these example functions are responsible for calling the functions from the `executor` module.  The arrows also represent data flow between parts of the code.
 
 
 # <explanation>
@@ -190,7 +190,7 @@ graph LR
 
 **Functions:**
 
-- Example functions (`example_run_scenario_files`, `example_run_scenario_file`, etc.):  These functions demonstrate how to use the `executor` functions (`run_scenario_files`, `run_scenario_file`, `run_scenario`, `add_coupon`, etc.) and other functions related to interacting with the PrestaShop API to execute scenarios and manage data. They are the entry points for executing different test cases.
+- Example functions (`example_run_scenario_files`, `example_run_scenario_file`, etc.):  These functions demonStarte how to use the `executor` functions (`run_scenario_files`, `run_scenario_file`, `run_scenario`, `add_coupon`, etc.) and other functions related to interacting with the PrestaShop API to execute scenarios and manage data. They are the entry points for executing different test cases.
 - `run_scenario_files`, `run_scenario_file`, `run_scenarios`, `run_scenario`, `insert_grabbed_data`, `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon`: These functions are likely the core functions of the `executor` module, responsible for running scenarios, handling product data, interacting with the PrestaShop API, and performing other actions. The `run_` functions appear to deal with scenario execution (files, single scenarios, etc.), while the `insert_` and `execute_` functions are specific to PrestaShop interactions.
 
 **Possible Improvements:**

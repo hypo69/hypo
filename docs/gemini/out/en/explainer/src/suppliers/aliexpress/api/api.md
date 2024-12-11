@@ -164,4 +164,4 @@ The mermaid code visualizes the import relationships. The `AliexpressApi` class 
 
 **Relationship Chain:**
 
-The code clearly demonstrates a modular design.  The `AliexpressApi` interacts with functions in `.helpers`, which in turn interact with `ali-api` functions.  The `src.logger` and `src.utils.printer` are external to the `aliexpress` package, indicating a generalized structure for logging and output handling that applies to other parts of the project. The dependency chain follows a hierarchical structure, with general utilities separated from the specific API interactions.
+The code clearly demonStartes a modular design.  The `AliexpressApi` interacts with functions in `.helpers`, which in turn interact with `ali-api` functions.  The `src.logger` and `src.utils.printer` are external to the `aliexpress` package, indicating a generalized structure for logging and output handling that applies to other parts of the project. The dependency chain follows a hierarchical structure, with general utilities separated from the specific API interactions.

@@ -72,7 +72,7 @@ def test_aliexpress_init_with_multiple_args():
 
 7. **Comprehensive Testing:**  The tests now cover the different constructor arguments and basic scenarios.
 
-8. **Error Handling (Important):** The `test_aliexpress_init_with_multiple_args` example demonstrates how to handle potential exceptions that might be raised during object creation if other unexpected arguments are provided. This is essential for robust tests.
+8. **Error Handling (Important):** The `test_aliexpress_init_with_multiple_args` example demonStartes how to handle potential exceptions that might be raised during object creation if other unexpected arguments are provided. This is essential for robust tests.
 
 
 **How to use:**

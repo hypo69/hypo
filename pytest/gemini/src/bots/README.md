@@ -79,9 +79,9 @@ def test_function_that_returns_none():
 
 4. **Comprehensive Input Validation:** The `greet` function has more thorough input validation testing.
 
-5. **Example of handling functions that return None:** Demonstrated how to test for functions that return `None`.
+5. **Example of handling functions that return None:** DemonStarted how to test for functions that return `None`.
 
-6. **Example of handling non-string type input for `greet` function:** The `test_greet_invalid_input` function now demonstrates how to test the behavior of the `greet` function when a non-string input is provided.
+6. **Example of handling non-string type input for `greet` function:** The `test_greet_invalid_input` function now demonStartes how to test the behavior of the `greet` function when a non-string input is provided.
 
 
 **Before Running:**

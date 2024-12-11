@@ -125,7 +125,7 @@ def test_tinyworld_add_agent_invalid_type():
 * **Clearer Test Names:** Test names now better describe the scenario being tested.
 * **Fixtures for Agents and World:**  Fixtures `test_agent1`, `test_agent2`, and `test_world` are used to create and manage test data, making tests more organized and reusable.
 * **Mocking:**  `_step` is mocked in `test_tinyworld_run_valid` to avoid calling the actual `_step` function, which is a best practice in unit tests.  This is crucial since `_step` likely depends on other parts of the system.
-* **Exception Handling:**  `test_tinyworld_add_agent_invalid_type` demonstrates testing for an invalid type, a common edge case.
+* **Exception Handling:**  `test_tinyworld_add_agent_invalid_type` demonStartes testing for an invalid type, a common edge case.
 * **Mock for missing parts:**  Tests now don't rely on the complete system; this approach often increases test speed and helps isolate problems.
 * **More tests for TinySocialNetwork:** Included example tests specifically for `TinySocialNetwork`.
 * **Assertions:**  The tests now include assertions to verify that the expected results are obtained.

@@ -33,7 +33,7 @@ Usage example
     import os
     from hypotez.src.goog.gtranslater.header import set_project_root
 
-    # Create a dummy pyproject.toml file for demonstration
+    # Create a dummy pyproject.toml file for demonStartion
     with open("pyproject.toml", "w") as f:
         f.write("[tool.poetry]\nname = \"my-project\"\nversion = \"0.1.0\"\n")
 

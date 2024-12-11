@@ -172,4 +172,4 @@ pytest test_executor.py
 * **Error Handling:**  In your production code, make sure all potential exceptions are handled properly and logged, especially in the asynchronous `execute_locator` and `get_webelement_by_locator` functions.
 * **More complex tests:** Add tests checking for different conditions in `locator.if_list`, diverse attribute inputs, and variations in `timeout_for_event`.
 
-Remember to adapt these tests to the specific functionalities and error scenarios within your `ExecuteLocator` class.  This enhanced solution provides a more robust testing strategy for your code.
+Remember to adapt these tests to the specific functionalities and error scenarios within your `ExecuteLocator` class.  This enhanced solution provides a more robust testing Startegy for your code.

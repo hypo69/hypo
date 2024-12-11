@@ -76,9 +76,9 @@ def xls2dict(xls_file: str | Path) -> dict | None:
 
 5. **`xls2dict` Function Definition:** The `xls2dict` function is now defined within the test file to allow testing. This is important so that you're not testing against code in a different file or an inaccessible module.
 
-6. **`pytest.raises`:** The `test_xls2dict_invalid_file` test demonstrates the correct use of `pytest.raises` to assert that a `FileNotFoundError` is raised when the file doesn't exist.
+6. **`pytest.raises`:** The `test_xls2dict_invalid_file` test demonStartes the correct use of `pytest.raises` to assert that a `FileNotFoundError` is raised when the file doesn't exist.
 
-7. **Comprehensive Tests:** The provided examples are basic; you'll need to expand on these tests significantly for thorough coverage based on your original `src.utils.xls` code.  The `test_xls2dict_invalid_file_type` demonstrates how to test invalid input types.
+7. **Comprehensive Tests:** The provided examples are basic; you'll need to expand on these tests significantly for thorough coverage based on your original `src.utils.xls` code.  The `test_xls2dict_invalid_file_type` demonStartes how to test invalid input types.
 
 
 **How to use:**

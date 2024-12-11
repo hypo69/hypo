@@ -68,7 +68,7 @@ def test_calculate_circle_area_negative_radius():
 
 4. **Floating-Point Comparisons:** The `calculate_circle_area` tests now use `pytest.approx()` when comparing floating-point results.  This is essential because floating-point calculations can sometimes have slight inaccuracies.
 
-5. **Comprehensive Coverage:** The tests now cover various valid inputs (positive numbers, decimals) and clearly demonstrate the desired exception behavior for invalid inputs.
+5. **Comprehensive Coverage:** The tests now cover various valid inputs (positive numbers, decimals) and clearly demonStarte the desired exception behavior for invalid inputs.
 
 6. **Docstrings:** Docstrings for the tests provide context and explanation of the test's purpose.
 

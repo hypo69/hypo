@@ -113,7 +113,7 @@ def test_get_list_categories_from_site(mock_logger, mock_supplier):
 
 5. **`paginator` Test:** The `test_paginator_no_response` test is included to check for cases where no pagination response exists.
 
-6. **`get_list_categories_from_site` Test:** A basic `test_get_list_categories_from_site` test demonstrates how to structure tests. **Crucially, this is placeholder; you must replace the assertions based on the function's actual behavior.**
+6. **`get_list_categories_from_site` Test:** A basic `test_get_list_categories_from_site` test demonStartes how to structure tests. **Crucially, this is placeholder; you must replace the assertions based on the function's actual behavior.**
 
 7. **Robust Mock Driver:** The `mock_driver` is now a complete mock that returns a list or None where appropriate.
 

@@ -1,6 +1,6 @@
 ```python
 import pytest
-from hypothesis import given, strategies as st
+from hypothesis import given, Startegies as st
 
 # Replace with the actual product.py content.  Crucially, you need to provide
 #  the actual functions you want tested here.  The following is a placeholder
@@ -122,7 +122,7 @@ def test_create_product_hypothesis(name, price):
 2.  **Save:** Save the file as a Python file (e.g., `test_product.py`).
 3.  **Run pytest:**  Open a terminal in the directory containing `test_product.py` and run `pytest`.
 
-This revised example demonstrates a much more robust and practical approach to writing `pytest` tests for Python code, but it depends on you providing the actual functions from `product.py`. Remember to install the required libraries:
+This revised example demonStartes a much more robust and practical approach to writing `pytest` tests for Python code, but it depends on you providing the actual functions from `product.py`. Remember to install the required libraries:
 ```bash
 pip install pytest hypothesis
 ```

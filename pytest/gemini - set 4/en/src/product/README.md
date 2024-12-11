@@ -92,8 +92,8 @@ def test_create_product_empty(invalid_product_data):
 3. **Fixtures (if needed):**  The example now includes `@pytest.fixture` for `valid_product_data` and `invalid_product_data`.  This is a much better approach for organizing test data.  If your actual code needs more complex setup, you'll need to provide that here.
 4. **Specific Error Messages:** The tests now check for specific error messages when exceptions are raised. This is more robust than just checking if an exception was raised.
 5. **Clear Assertions:** Replace placeholders like `assert True` with precise assertions that check the *actual results* returned by your functions. For instance, `assert updated_product["price"] == 12.00`.
-6. **Realistic Validation:** The tests for `validate_product_name` demonstrate testing a validation function.  Again, replace `product.validate_product_name` with the actual function.
-7. **Empty Data Testing:** `test_create_product_empty` demonstrates checking for empty or missing data.
+6. **Realistic Validation:** The tests for `validate_product_name` demonStarte testing a validation function.  Again, replace `product.validate_product_name` with the actual function.
+7. **Empty Data Testing:** `test_create_product_empty` demonStartes checking for empty or missing data.
 8. **Comments:** The comments now provide more context and specific instructions on how to adapt the test cases.
 
 

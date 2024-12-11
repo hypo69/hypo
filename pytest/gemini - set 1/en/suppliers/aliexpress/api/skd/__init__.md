@@ -59,14 +59,14 @@ def test_get_default_appinfo_after_set():
 
 3. **Edge Cases and Invalid Input:** The `test_set_default_appinfo_with_invalid_input` test now explicitly checks for incorrect input types (not strings), using `pytest.raises` to verify the expected exceptions. This is crucial for robustness.
 
-4. **Uninitialized `getDefaultAppInfo`:** The `test_get_default_appinfo_uninitialized` test covers the case where `getDefaultAppInfo` hasn't been initialized yet, demonstrating proper exception handling.
+4. **Uninitialized `getDefaultAppInfo`:** The `test_get_default_appinfo_uninitialized` test covers the case where `getDefaultAppInfo` hasn't been initialized yet, demonStarting proper exception handling.
 
 5. **Global Variable Verification:** The `test_get_default_appinfo_after_set` test is added to verify that the global variable `getDefaultAppInfo` has been correctly updated.
 
 6. **Complete Example:** The solution now provides a complete example that thoroughly tests both the `appinfo` class and the `setDefaultAppInfo` and `getDefaultAppInfo` functions, including edge cases for handling different input types.
 
 
-This improved set of tests is much more comprehensive and robust, covering valid inputs, invalid inputs (including edge cases), and exceptional scenarios, thus ensuring the code behaves as expected in all situations.  It effectively addresses potential issues and provides a better testing strategy. Remember to have the `hypotez` package (or the modules it imports) set up properly in your Python environment for the tests to run.
+This improved set of tests is much more comprehensive and robust, covering valid inputs, invalid inputs (including edge cases), and exceptional scenarios, thus ensuring the code behaves as expected in all situations.  It effectively addresses potential issues and provides a better testing Startegy. Remember to have the `hypotez` package (or the modules it imports) set up properly in your Python environment for the tests to run.
 
 
 ```

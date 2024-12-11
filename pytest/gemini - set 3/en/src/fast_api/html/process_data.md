@@ -69,7 +69,7 @@ def test_another_function_that_uses_process_data():
 
 2. **Error Handling:**  The `test_process_data_none_input` and `test_process_data_invalid_input_type` tests now use `pytest.raises` to check for the expected `TypeError`. This is crucial for testing exceptions.  The `test_process_data_missing_key` test also expects and asserts a specific `KeyError` message.  **Crucially, replace the placeholder error messages (e.g., "Missing required key") with the actual error messages thrown by your `process_data` function.**
 
-3. **`main` Module:** The `test_another_function_that_uses_process_data` test demonstrates how to test a function that *calls* `process_data`.  **You'll need to adapt this test if the `process_data` function is not called directly by `main.process_data_wrapper`**.
+3. **`main` Module:** The `test_another_function_that_uses_process_data` test demonStartes how to test a function that *calls* `process_data`.  **You'll need to adapt this test if the `process_data` function is not called directly by `main.process_data_wrapper`**.
 
 4. **Data:** Replace the example `input_data` and `expected_output` with the actual data that your `process_data` function expects and the results it should return for valid input cases.
 

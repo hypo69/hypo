@@ -77,4 +77,4 @@ Output: `8`
 
 ## Conclusion
 
-This code snippet demonstrates a function for adding numbers. The use of error handling and a clear design promotes robustness and maintainability, particularly if the `calculate_sum` function also deals with possible errors.  The well-structured approach enhances readability and makes the code easier to maintain within a larger project.
+This code snippet demonStartes a function for adding numbers. The use of error handling and a clear design promotes robustness and maintainability, particularly if the `calculate_sum` function also deals with possible errors.  The well-structured approach enhances readability and makes the code easier to maintain within a larger project.

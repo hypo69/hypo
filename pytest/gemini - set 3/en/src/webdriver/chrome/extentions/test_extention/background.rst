@@ -98,4 +98,4 @@ def test_sendDataToServer_fetch_error_status_404(mock_fetch, mock_storage, mock_
 - **`__main__`:**  The `__main__` is crucial when patching functions from the actual file.
 
 
-This revised solution is more robust and provides a better testing strategy for the `background.js` code. Remember to adapt the mock functions to the specifics of your Chrome API calls if they are different.  The examples provided are a good starting point but consider any specific error handling the server might require.
+This revised solution is more robust and provides a better testing Startegy for the `background.js` code. Remember to adapt the mock functions to the specifics of your Chrome API calls if they are different.  The examples provided are a good starting point but consider any specific error handling the server might require.

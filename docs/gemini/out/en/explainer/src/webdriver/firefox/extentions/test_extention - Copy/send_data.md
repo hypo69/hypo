@@ -103,7 +103,7 @@ No classes are defined.
 
 **Functions:**
 
-*   `onPageLoad()`: This function orchestrates the entire process of collecting page information and sending it to the server.
+*   `onPageLoad()`: This function orcheStartes the entire process of collecting page information and sending it to the server.
     *   Arguments: None.
     *   Return value: None (implicitly).
     *   Example:  Triggered when the webpage finishes loading, and proceeds through each step listed in the Algorithm section.

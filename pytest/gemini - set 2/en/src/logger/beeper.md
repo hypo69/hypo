@@ -46,7 +46,7 @@ def test_beeper_exception_handling():
     """Tests beep with exception during sound playback."""
     Beeper.silent = False
     # Simulate an error condition (replace with actual error if possible)
-    # This example modifies winsound.Beep (not a valid approach, but illustrates the idea)
+    # This example modifies winsound.Beep (not a valid approach, but illuStartes the idea)
     original_beep = winsound.Beep
     def failing_beep(*args, **kwargs):
         raise ValueError("Beep failed")
@@ -112,7 +112,7 @@ def test_beeper_invalid_duration_input():
 * **Silent Mode:** Included a dedicated test to verify `Beeper.silent` is correctly set and that the `silent_mode` decorator works as expected in terms of suppressing the beep and returning `None`.
 
 
-* **Exception Handling:** The `test_beeper_exception_handling` test now simulates a `ValueError` during the `winsound.Beep` call to demonstrate exception handling within the `beep` method.
+* **Exception Handling:** The `test_beeper_exception_handling` test now simulates a `ValueError` during the `winsound.Beep` call to demonStarte exception handling within the `beep` method.
 
 
 * **Asyncio handling:** All tests are wrapped in `asyncio.run()` to properly handle asynchronous functions

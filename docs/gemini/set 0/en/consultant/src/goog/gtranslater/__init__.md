@@ -148,7 +148,7 @@ def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
 
 
 def main():
-    """Main function to demonstrate translation functionality."""
+    """Main function to demonStarte translation functionality."""
     try:
         text = input("Enter the text to be translated: ")
         locale_in = input("Enter the source language code (leave blank for auto-detect): ")
@@ -253,7 +253,7 @@ def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
 
 
 def main():
-    """Main function to demonstrate translation functionality."""
+    """Main function to demonStarte translation functionality."""
     try:
         text = input("Enter the text to be translated: ")
         locale_in = input("Enter the source language code (leave blank for auto-detect): ")

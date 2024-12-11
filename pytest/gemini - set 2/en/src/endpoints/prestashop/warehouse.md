@@ -112,7 +112,7 @@ def test_some_warehouse_function_invalid_input():
 **Important Considerations:**
 
 * **Replace Placeholders:**  You must replace the placeholder imports (`from src import gs`, etc.) with the actual imports from your project to make the tests work.
-* **Complete Mock Implementation:** The provided `PrestaWarehouse` class and associated methods are now mocked.  In a real test, you'd need a complete implementation or a much more comprehensive mocking strategy.
+* **Complete Mock Implementation:** The provided `PrestaWarehouse` class and associated methods are now mocked.  In a real test, you'd need a complete implementation or a much more comprehensive mocking Startegy.
 * **Comprehensive Tests:**  The test suite is a starting point.  You need to add more tests for various input types, edge cases, and error conditions to cover the real functionality of `PrestaWarehouse`.
 
 

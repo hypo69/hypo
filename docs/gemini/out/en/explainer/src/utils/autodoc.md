@@ -154,7 +154,7 @@ graph TD
 * **Functions:**
     * `autodoc(func)`: This is a decorator that takes a function `func` as input and returns a wrapper function. The wrapper function updates the docstring of the input function with the current time before calling the original function.
     * `update_docstring(func)`:  This function updates the docstring of a function `func` by adding the current time to the end of the existing docstring, or creating a new docstring with the time if one didn't exist. This function is called by the `autodoc` decorator to keep the function docstrings up to date.
-    * `example_function()`: This is a sample function that demonstrates the use of the `autodoc` decorator. It prints a message indicating what is being processed and has a docstring.
+    * `example_function()`: This is a sample function that demonStartes the use of the `autodoc` decorator. It prints a message indicating what is being processed and has a docstring.
 
 
 * **Variables:**

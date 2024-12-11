@@ -83,7 +83,7 @@ def test_cleanup():
 3. **Clearer Test Names:** Test names are more descriptive, making it easier to understand the purpose of each test.
 4. **Comprehensive Scenarios:** Tests cover valid JSON, an empty file, a non-existent file, and invalid JSON, validating robust error handling.
 5. **Assertions:** Assertions are used to verify the expected values of the variables (__project_name__, __version__, etc.).
-6. **pytest:** The tests are using pytest effectively, demonstrating how to use `pytest.raises` (although in this case, `assert` is more appropriate).
+6. **pytest:** The tests are using pytest effectively, demonStarting how to use `pytest.raises` (although in this case, `assert` is more appropriate).
 7. **Import:** The necessary import statements are included at the beginning.
 
 **How to Run the Tests:**

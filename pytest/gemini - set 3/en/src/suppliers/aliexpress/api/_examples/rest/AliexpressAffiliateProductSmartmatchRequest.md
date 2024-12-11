@@ -73,8 +73,8 @@ def test_init_valid_values():
 
 **Explanation and Improvements:**
 
-* **Comprehensive Test Cases:** The provided tests are basic.  Crucially, the example tests for `test_init_` methods now demonstrate a broader range of scenarios. You need to add more tests for all other attributes to ensure complete coverage.
-* **Type Handling:** Added tests (`test_init_invalid_domain`, `test_init_invalid_port`) to demonstrate type checking and the expected behavior when incorrect types are provided. This is vital for robustness.
+* **Comprehensive Test Cases:** The provided tests are basic.  Crucially, the example tests for `test_init_` methods now demonStarte a broader range of scenarios. You need to add more tests for all other attributes to ensure complete coverage.
+* **Type Handling:** Added tests (`test_init_invalid_domain`, `test_init_invalid_port`) to demonStarte type checking and the expected behavior when incorrect types are provided. This is vital for robustness.
 * **Clearer Test Names:** The test names are more descriptive.
 * **Docstrings:** Docstrings explaining the purpose of each test are essential for readability and maintainability.
 * **`pytest.raises`:**  The example uses `pytest.raises` correctly to check for exceptions.

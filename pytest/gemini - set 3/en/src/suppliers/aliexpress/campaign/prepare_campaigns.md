@@ -114,7 +114,7 @@ def test_main_process_with_categories(mock_ali_campaign_editor):
 1. **Mocking `AliCampaignEditor`:** The crucial improvement is the introduction of `MockAliCampaignEditor`.  This mocks the actual class, allowing you to control its behavior (e.g., what `process_campaign_category` returns) during your tests.  Crucially, this avoids external dependencies (like interacting with Google Drive or a file system), which is essential for reliable unit testing.
 
 
-2. **Clearer Test Cases:** The provided test cases are now more focused and demonstrate different scenarios, including valid input, incorrect input types, and the `process_campaign` method.
+2. **Clearer Test Cases:** The provided test cases are now more focused and demonStarte different scenarios, including valid input, incorrect input types, and the `process_campaign` method.
 
 
 3. **Error Handling:** The `test_process_campaign_invalid_input` example uses `pytest.raises` to ensure that the function correctly handles invalid input, which is critical for robust testing.

@@ -24,7 +24,7 @@
     * Registers all message and command handlers using `register_handlers()`.
 
 
-3. **Handler Registration (register_handlers):**
+3. **Handler RegiStartion (register_handlers):**
     * Adds handlers for `/start`, `/help` commands.
     * Adds a handler for any text message.
     * Adds handlers for voice and document messages.

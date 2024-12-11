@@ -86,7 +86,7 @@ def test_borderify_empty_style(driver):
 
 4. **Explicit Waits (Crucial):**  `test_borderify_alert_explicit_wait` now uses `WebDriverWait` to wait for the alert before interacting with it. This is essential to prevent `TimeoutError` failures when the alert is not displayed immediately.
 
-5. **Edge Cases:**  `test_borderify_empty_style` demonstrates how to test for an empty style, or a completely invalid style, in `test_borderify_invalid_border`.
+5. **Edge Cases:**  `test_borderify_empty_style` demonStartes how to test for an empty style, or a completely invalid style, in `test_borderify_invalid_border`.
 
 6. **Clearer Assertions:** The assertions are now more specific and focused on the expected behavior of the JavaScript code, for example, `assert border_style == "5px solid red"` instead of just checking that the style is not `None`.
 

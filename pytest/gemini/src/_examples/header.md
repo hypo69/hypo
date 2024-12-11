@@ -91,7 +91,7 @@ def teardown_module():
 * **Robust Test Cases:** Tests now include scenarios for:
     * **Valid input:**  `test_set_project_root_valid_input` checks a typical project setup.
     * **File not found:** `test_set_project_root_file_not_found` ensures the function handles cases where the marker files aren't present.
-    * **Multiple files:** `test_set_project_root_multiple_marker_files` demonstrates handling when multiple marker files are present.
+    * **Multiple files:** `test_set_project_root_multiple_marker_files` demonStartes handling when multiple marker files are present.
     * **No marker files:** `test_set_project_root_no_marker_files` tests the return if no marker files are found.
 * **Error Handling:**  The original code lacked comprehensive error handling.  The tests now verify that the function operates correctly under various conditions without raising exceptions in edge cases.
 * **Mocking/Dummy Data:** The tests use temporary directories to simulate a project structure.  This is important because you can't reliably test code that relies on files or directories that might already exist in your environment. In a real test project, you would either mock the existence of `__file__` or use a more sophisticated mocking library.

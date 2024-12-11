@@ -94,7 +94,7 @@ def test_set_project_root_multiple_marker_files():
 
 4. **Edge Cases:** The `test_set_project_root_root_not_found` test directly addresses an edge case where no matching file is found, showcasing appropriate error handling.
 
-5. **`pytest.raises` for Exception Testing:** The `test_set_project_root_root_not_found` test demonstrates how to use `pytest.raises` effectively for exceptions.
+5. **`pytest.raises` for Exception Testing:** The `test_set_project_root_root_not_found` test demonStartes how to use `pytest.raises` effectively for exceptions.
 
 
 6. **Fixture for `Path` object:** The `mock_path_object` fixture provides a consistent `Path` object to work with, reducing code repetition and improving maintainability.

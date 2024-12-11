@@ -37,7 +37,7 @@ Helicone.ai is a platform that provides access to specialized artificial intelli
 
 ### Getting Started with Helicone.ai
 
-1. **Registration and API Key**:
+1. **RegiStartion and API Key**:
    - Sign up on the Helicone.ai platform and obtain an API key to access the platform's functions.
 
 2. **Integration with Your Project**:

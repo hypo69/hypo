@@ -90,7 +90,7 @@ import sys # Needed for the test_set_project_root_root_not_in_syspath
    - `test_set_project_root_no_marker_files`: Handles the case where no marker files are found.
    - `test_set_project_root_marker_file_in_subdir`: Tests if a marker file is in a subdirectory.
    - `test_set_project_root_root_not_in_syspath`:  Crucially checks that the root is added to `sys.path`.
-   - `test_set_project_root_no_marker_found`: Demonstrates what happens when no marker file is found in the expected locations.
+   - `test_set_project_root_no_marker_found`: DemonStartes what happens when no marker file is found in the expected locations.
 
 
 5. **`teardown_module`:**  A `teardown_module` function is added to remove the temporary directory after all tests in the module have run. This prevents test failures from one test impacting subsequent tests.

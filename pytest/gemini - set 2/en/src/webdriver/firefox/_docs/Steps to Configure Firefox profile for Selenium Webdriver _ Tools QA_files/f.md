@@ -170,7 +170,7 @@ def example_data():
    - `MockGlobal`, `MockNavigator`, `MockDocument`, `MockPerformance`, `MockCrypto`, etc.:  These classes mimic the behavior of the actual global objects.  Crucially, they allow you to control the inputs and outputs, making tests repeatable and independent.  You can, for instance, return specific user agents or document structures in the mock.
 
 
-2. **Example Test Cases:**  The example test cases (`test_function1_valid_input`, `test_function1_invalid_input`) are now placeholders.  **You MUST replace these placeholders with tests for your actual functions.** The provided example demonstrates how `pytest.raises` can be used to check for exceptions.
+2. **Example Test Cases:**  The example test cases (`test_function1_valid_input`, `test_function1_invalid_input`) are now placeholders.  **You MUST replace these placeholders with tests for your actual functions.** The provided example demonStartes how `pytest.raises` can be used to check for exceptions.
 
 3. **Error Handling:**  The code already contains some exception handling.  Your tests should verify that the exception handling is correct, checking for the type of exceptions, messages, and any edge case failures.
 

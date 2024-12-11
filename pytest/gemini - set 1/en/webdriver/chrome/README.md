@@ -61,9 +61,9 @@ def test_driver_creation_failure(monkeypatch):
 
 * **Clear Test Cases:**  Test names are more descriptive (e.g., `test_execute_cdp_cmd_enable`).
 
-* **`pytest.raises` for Exceptions:**  `test_execute_cdp_cmd_invalid_command` and `test_execute_cdp_cmd_invalid_url` demonstrate correct exception handling using `pytest.raises`.
+* **`pytest.raises` for Exceptions:**  `test_execute_cdp_cmd_invalid_command` and `test_execute_cdp_cmd_invalid_url` demonStarte correct exception handling using `pytest.raises`.
 
-* **Robust Error Handling:** `test_driver_creation_failure` demonstrates how to test for driver initialization failure using `monkeypatch` (mocking the chromedriver path or creating a fake situation).
+* **Robust Error Handling:** `test_driver_creation_failure` demonStartes how to test for driver initialization failure using `monkeypatch` (mocking the chromedriver path or creating a fake situation).
 
 * **Explicit Assertions:**  `test_execute_cdp_cmd_navigate` now has an assertion to check that the returned URL is correct, enhancing the test's reliability.
 

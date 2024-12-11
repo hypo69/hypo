@@ -77,7 +77,7 @@ graph TD
 
 **Dependencies:**
 
-The `mermaid` code illustrates that `__init__.py` imports components from the `prestashop` and `kazarinov` modules within the `src.endpoints` directory. These dependencies indicate that `prestashop` and `kazarinov` modules, in turn, likely contain their own class definitions (e.g., `PrestaShop`, `PrestaCategory`, etc.) as well as functions and other resources necessary for their operations.  There are no external dependencies.
+The `mermaid` code illuStartes that `__init__.py` imports components from the `prestashop` and `kazarinov` modules within the `src.endpoints` directory. These dependencies indicate that `prestashop` and `kazarinov` modules, in turn, likely contain their own class definitions (e.g., `PrestaShop`, `PrestaCategory`, etc.) as well as functions and other resources necessary for their operations.  There are no external dependencies.
 
 
 ## <explanation>

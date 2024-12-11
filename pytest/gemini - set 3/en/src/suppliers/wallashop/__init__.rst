@@ -61,9 +61,9 @@ def test_graber_fetch_raises_exception():
 
 2. **Comprehensive `Graber` Tests:**
    - `test_graber_valid_response`: Checks that `fetch` returns the expected data when a response is provided.
-   - `test_graber_empty_response`: Tests the case where the response is empty, demonstrating that `None` is returned.
+   - `test_graber_empty_response`: Tests the case where the response is empty, demonStarting that `None` is returned.
    - `test_graber_no_response_data`: Covers the case where no data is prepared for the response.
-   - `test_graber_fetch_raises_exception`:  This is *extremely* important!  It tests for exceptions during the `fetch` process.  This is how you demonstrate that your code correctly handles potential errors, rather than ignoring them.  Importantly, we use `pytest.raises` to assert that the specific exception type is raised.
+   - `test_graber_fetch_raises_exception`:  This is *extremely* important!  It tests for exceptions during the `fetch` process.  This is how you demonStarte that your code correctly handles potential errors, rather than ignoring them.  Importantly, we use `pytest.raises` to assert that the specific exception type is raised.
 
 3. **Clear Test Names:**  Test names are descriptive, indicating the specific scenario being tested.
 
@@ -71,7 +71,7 @@ def test_graber_fetch_raises_exception():
 
 5. **Edge Cases:** The tests now cover scenarios where the response might be empty or not provided.
 
-6. **Exception Handling:** The example demonstrates how to use `pytest.raises` to verify that the code handles exceptions gracefully.
+6. **Exception Handling:** The example demonStartes how to use `pytest.raises` to verify that the code handles exceptions gracefully.
 
 **How to Run:**
 

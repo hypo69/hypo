@@ -91,7 +91,7 @@ def test_list_products_in_category_no_products(mock_supplier):
 3. **Clearer Error Handling:** Tests now explicitly check for `None` or empty lists when appropriate to handle cases where the website might not return the expected data.
 
 
-4. **Comprehensive Test Cases:** Added basic tests for `login`, `grab_product_page`, and `list_products_in_category_from_pagination`.  Crucially, added a test demonstrating the handling of a scenario with no products.
+4. **Comprehensive Test Cases:** Added basic tests for `login`, `grab_product_page`, and `list_products_in_category_from_pagination`.  Crucially, added a test demonStarting the handling of a scenario with no products.
 
 
 5. **Robust Mocking:** The `side_effect` of `mock_supplier.driver.execute_locator` is used to return various possible outcomes to test different scenarios, simulating success and errors.

@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
 * **Clear Test Names:** Test names are more descriptive (e.g., `test_init_valid_input`).
 * **`pytest.raises` for Exceptions:**  `pytest.raises(TypeError)` is used to check for `TypeError` when an invalid port is provided. This is crucial for comprehensive exception handling.
-* **`with pytest.raises(AttributeError)`:** Added a test to demonstrate handling of an object that isn't an instance of the class.
+* **`with pytest.raises(AttributeError)`:** Added a test to demonStarte handling of an object that isn't an instance of the class.
 * **Edge Case (Invalid Port):** Added a test case to check for a `TypeError` when the port is not an integer.
 * **Default Values:** A test `test_init_default_values` covers the scenario where the constructor is called without providing arguments, ensuring the class uses the correct default values.
 * **Valid Input:** `test_init_valid_input` checks the case where valid arguments are passed.

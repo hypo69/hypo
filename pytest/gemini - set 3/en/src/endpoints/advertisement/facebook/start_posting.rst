@@ -99,7 +99,7 @@ def test_loop_iteration(mock_sleep):
 
 5. **Copying Campaigns:** A test (`test_facebook_promoter_run_campaigns_copy_campaigns`) was added to ensure the `copy.copy()` function correctly copies the `campaigns` list.
 
-6. **Loop Testing (Example):** Added a `test_loop_iteration` function demonstrating how to mock `time.sleep` to control loop iterations within a testing environment.  This allows for testing how the `while True` loop behaves.
+6. **Loop Testing (Example):** Added a `test_loop_iteration` function demonStarting how to mock `time.sleep` to control loop iterations within a testing environment.  This allows for testing how the `while True` loop behaves.
 
 7. **Initialization Test:** Added `test_facebook_promoter_initialization` to cover the basic constructor initialization logic.
 

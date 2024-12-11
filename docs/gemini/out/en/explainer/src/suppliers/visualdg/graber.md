@@ -179,7 +179,7 @@ Dependencies Analysis:
 
 
 - **Functions**:
-    - `grab_page`:  Takes a `Driver` object and returns a `ProductFields` object.  This function orchestrates the data extraction process. The `fetch_all_data` function is crucial, calling all the specific data gathering functions.
+    - `grab_page`:  Takes a `Driver` object and returns a `ProductFields` object.  This function orcheStartes the data extraction process. The `fetch_all_data` function is crucial, calling all the specific data gathering functions.
 
 - **Variables**:
     - `MODE`:  A global variable likely used for configuration (development mode, production mode, etc.).

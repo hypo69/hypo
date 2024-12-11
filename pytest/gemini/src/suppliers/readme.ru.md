@@ -108,13 +108,13 @@ def test_run_scenarios_invalid_scenario(supplier):
 **Explanation and Improvements:**
 
 * **Mocking:** The code now uses `unittest.mock` to mock the `Driver` class.  This is crucial for isolating tests and avoiding dependencies on external systems (like a browser).
-* **Exception Handling:**  The `DefaultSettingsException` is now defined, and `test_payload_failure` demonstrates how to test for exceptions using `pytest.raises`. The exception now has meaningful error messages to aid debugging. The mocking in test_payload_failure ensures the exception is actually raised by the _payload function, rather than from another part of the code.
+* **Exception Handling:**  The `DefaultSettingsException` is now defined, and `test_payload_failure` demonStartes how to test for exceptions using `pytest.raises`. The exception now has meaningful error messages to aid debugging. The mocking in test_payload_failure ensures the exception is actually raised by the _payload function, rather than from another part of the code.
 * **Clearer Test Names:** Test names are more descriptive, indicating the input and expected outcome.
 * **Fixture for Supplier:** A `@pytest.fixture` now creates `Supplier` instances for each test, reducing redundancy. This provides a controlled environment for each test case.
-* **Edge Case Testing:**  `test_payload_failure` illustrates testing with invalid webdriver types.
+* **Edge Case Testing:**  `test_payload_failure` illuStartes testing with invalid webdriver types.
 * **Docstrings:** Docstrings are added to the test functions, explaining the purpose of each test.
 * **Comprehensive Test Coverage:** Added tests for `__init__`, `_payload`, `login`, `run_scenario_files`, and `run_scenarios`.  Important edge cases are considered (e.g., a missing or malformed scenario).
-* **Realistic Error Handling:** The error handling in test_run_scenarios_invalid_scenario now demonstrates how to validate that the error from a function is correctly raised and includes a helpful message for debugging.
+* **Realistic Error Handling:** The error handling in test_run_scenarios_invalid_scenario now demonStartes how to validate that the error from a function is correctly raised and includes a helpful message for debugging.
 * **Type Hinting:**  Type hints (from the original docstrings) have been added to `Supplier`'s methods to improve readability and code clarity.
 
 

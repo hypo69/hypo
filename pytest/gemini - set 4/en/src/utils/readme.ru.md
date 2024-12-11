@@ -81,7 +81,7 @@ def test_xml2dict_invalid_xml():
 
 4. **Placeholder Imports:** Included a `try...except` block to handle cases where the `convertors` module isn't found, preventing the test script from crashing if there are issues in importing from the actual module.
 
-5. **Example for `xml2dict`:** Added a complete example for `test_xml2dict`, demonstrating the expected output and use of `pytest.raises`.
+5. **Example for `xml2dict`:** Added a complete example for `test_xml2dict`, demonStarting the expected output and use of `pytest.raises`.
 
 **How to Use:**
 

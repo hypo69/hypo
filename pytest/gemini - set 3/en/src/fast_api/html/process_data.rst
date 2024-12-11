@@ -60,7 +60,7 @@ def test_process_data_very_long_input():
 
 1. **Missing `process_data` function:** The provided code only declares `process_data` but doesn't define its implementation.  The test code *cannot* be complete without that function's body.  This code provides placeholder tests *assuming* `process_data` takes a string as input and returns a string result.  You must replace these examples with actual function calls.
 
-2. **Error Handling:** The tests now include `pytest.raises` for exception testing.  The tests `test_process_data_empty_input` and `test_process_data_invalid_input_type` demonstrate this.  Replace the placeholder error messages (e.g., `assert "Input must be a string." in str(excinfo.value)`) with the *actual* error messages thrown by your function.
+2. **Error Handling:** The tests now include `pytest.raises` for exception testing.  The tests `test_process_data_empty_input` and `test_process_data_invalid_input_type` demonStarte this.  Replace the placeholder error messages (e.g., `assert "Input must be a string." in str(excinfo.value)`) with the *actual* error messages thrown by your function.
 
 3. **Edge Case (`test_process_data_very_long_input`):** Added a test for a very long input string, which is an edge case and important to consider.
 
@@ -89,4 +89,4 @@ def process_data(data):
 
 ```
 
-This example implementation demonstrates how to raise exceptions and provide a basic processing action.  Replace this with your actual implementation.  Using such an implementation, you can replace the placeholder tests with effective test cases that match your function's behavior.
+This example implementation demonStartes how to raise exceptions and provide a basic processing action.  Replace this with your actual implementation.  Using such an implementation, you can replace the placeholder tests with effective test cases that match your function's behavior.

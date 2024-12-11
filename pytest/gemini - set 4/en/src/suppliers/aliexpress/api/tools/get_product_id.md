@@ -108,7 +108,7 @@ def test_get_product_id_with_mocked_extract_prod_ids(input_data, expected):
 
 6. **Correct ValueError:** The test for empty input now uses `pytest.raises(ValueError)` because `extract_prod_ids` may raise `ValueError`.
 
-7. **Handling of Exception Propagation:** The code demonstrates the correct way to handle the possible exception from `extract_prod_ids`, and it is more robust as it doesn't rely on making assumptions about `extract_prod_ids` throwing `ProductIdNotFoundException` only.
+7. **Handling of Exception Propagation:** The code demonStartes the correct way to handle the possible exception from `extract_prod_ids`, and it is more robust as it doesn't rely on making assumptions about `extract_prod_ids` throwing `ProductIdNotFoundException` only.
 
 
 This revised solution is far more robust and accurately tests the core logic of `get_product_id`, ensuring it correctly handles various situations and propagates exceptions as expected. Remember to adjust the expected output or exception types based on the actual behavior of `extract_prod_ids`. Remember to install `pytest` if you haven't already: `pip install pytest`.

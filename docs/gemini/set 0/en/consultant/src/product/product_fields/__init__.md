@@ -81,7 +81,7 @@ def process_product_fields(product_data: dict) -> dict:
         return {}
 
 
-# Example usage (commented out for demonstration purposes)
+# Example usage (commented out for demonStartion purposes)
 # product_file = "path/to/your/product_data.json" # Replace with actual file path
 # product_data = load_product_data(product_file)
 # processed_data = process_product_fields(product_data)
@@ -164,7 +164,7 @@ def process_product_fields(product_data: dict) -> dict:
         return {}
 
 
-# Example usage (commented out for demonstration purposes)
+# Example usage (commented out for demonStartion purposes)
 # product_file = "path/to/your/product_data.json" # Replace with actual file path
 # product_data = load_product_data(product_file)
 # processed_data = process_product_fields(product_data)

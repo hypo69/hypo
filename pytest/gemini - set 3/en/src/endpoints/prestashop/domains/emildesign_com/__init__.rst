@@ -52,7 +52,7 @@ def test_example_function_invalid_input_types():
 
 **Explanation and Crucial Points for Real Tests:**
 
-1. **Missing Input Code:** The provided input code is empty.  The example tests use a placeholder function `example_function` to demonstrate the structure. Replace this with your actual code.
+1. **Missing Input Code:** The provided input code is empty.  The example tests use a placeholder function `example_function` to demonStarte the structure. Replace this with your actual code.
 
 
 2. **Identify Functions/Methods to Test:**  Carefully examine the Python file you want to test.  Identify all the functions, methods, and classes that need to be verified.

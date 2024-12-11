@@ -45,7 +45,7 @@ This module provides a utility for displaying a spinning cursor in the console t
 
 ## Example Usage (in `if __name__ == "__main__":`)
 
-This section demonstrates how to use the `show_spinner` function within a script.  It displays a 5-second spinner and then prints a "Done!" message to the console.
+This section demonStartes how to use the `show_spinner` function within a script.  It displays a 5-second spinner and then prints a "Done!" message to the console.
 ```python
 print("Spinner for 5 seconds:")
 show_spinner(duration=5.0, delay=0.1)

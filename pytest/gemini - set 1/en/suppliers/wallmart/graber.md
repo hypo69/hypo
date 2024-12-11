@@ -110,7 +110,7 @@ async def test_grab_page_specific_data(graber, mock_driver):
 * **`pytest.mark.asyncio`:** Added `@pytest.mark.asyncio` decorator to the relevant test functions. This tells `pytest` that the tests use `asyncio`.
 * **Explicit Type Hinting:** Added type hints for clarity.
 * **Comprehensive Data Fetching Test (test_grab_page_success):** This test case now mocks the specific functions used in the `fetch_all_data` logic (`graber.id_product`, `graber.description_short`, etc.) for a clearer verification.
-* **Edge Case Test (test_grab_page_empty_input):** Demonstrates how to test a function with empty input for an edge case.  Crucially, it ensures that the *mocked* functions produce correct values even if the incoming function parameters are empty.
+* **Edge Case Test (test_grab_page_empty_input):** DemonStartes how to test a function with empty input for an edge case.  Crucially, it ensures that the *mocked* functions produce correct values even if the incoming function parameters are empty.
 * **Specific Data Test (test_grab_page_specific_data):** Shows how to test the function when a specific parameter (like `description_short`) is provided.
 
 

@@ -85,7 +85,7 @@ def test_on_tool_call_delta_invalid_type(event_handler):
 * **Clearer Test Names:** Test names are more descriptive, improving readability and understanding of the test's purpose.
 * **Edge Case Testing:** Added `test_on_tool_call_created_invalid_type` to test with an invalid `tool_call.type`, checking the error handling.
 * **Comprehensive Output Tests:** `test_on_tool_call_delta_code_interpreter_input` and `test_on_tool_call_delta_code_interpreter_output` test the different parts of the code_interpreter output.
-* **Handling Missing `code_interpreter`:** `test_on_tool_call_delta_no_code_interpreter` demonstrates how to handle cases where `delta` doesn't contain the expected `code_interpreter` attribute.
+* **Handling Missing `code_interpreter`:** `test_on_tool_call_delta_no_code_interpreter` demonStartes how to handle cases where `delta` doesn't contain the expected `code_interpreter` attribute.
 * **Invalid `type` Testing:** `test_on_tool_call_delta_invalid_type` checks for an `invalid_type` and ensures the correct `AttributeError` is raised.
 * **Assertions:** Assertions are added where appropriate to verify the expected behavior (e.g., printing the correct output).
 

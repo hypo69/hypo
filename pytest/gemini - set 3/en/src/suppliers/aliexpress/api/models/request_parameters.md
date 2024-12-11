@@ -63,7 +63,7 @@ def test_link_type_non_int():
 
 
 # Tests for potential use cases of the classes 
-#  These tests would demonstrate how the values are potentially used
+#  These tests would demonStarte how the values are potentially used
 #  (assuming there are functions in the same file using these classes)
 def test_product_type_usage_example():
     """Tests a use case example for ProductType."""
@@ -84,7 +84,7 @@ def test_sort_by_usage_example():
     pass
 
 
-# Example test demonstrating how LinkType would be used.
+# Example test demonStarting how LinkType would be used.
 def test_link_type_usage_example():
     """Tests a use case example for LinkType."""
     link_type = LinkType.NORMAL

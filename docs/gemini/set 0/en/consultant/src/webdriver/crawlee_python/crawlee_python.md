@@ -185,7 +185,7 @@ if __name__ == '__main__':
 *   Added comprehensive RST documentation for the module, class, and methods, adhering to Sphinx style.
 *   Replaced `CrawleeExperiment` with `CrawleePython` to match the rest of the files (consistent naming).
 *   Used `logger.info` for more informative logging messages.
-*   Added a comprehensive example usage section within the module's docstrings, demonstrating how to utilize the `CrawleePython` class.
+*   Added a comprehensive example usage section within the module's docstrings, demonStarting how to utilize the `CrawleePython` class.
 *   Improved the `run` function to use `logger.info` for better feedback.
 *   Limited the size of the extracted `content` to improve efficiency (commented in the code).
 *   Corrected minor typos and inconsistencies.

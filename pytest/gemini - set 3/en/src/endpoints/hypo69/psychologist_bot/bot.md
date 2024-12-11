@@ -93,10 +93,10 @@ def test_handle_next_command_empty_questions(psychologist_bot, mock_model):
 4. **Complete Test for `handle_message`:** This test checks both the core functionality (replying with a response from the model) and the creation of the log file.
 
 
-5. **Edge Case Test for `handle_next_command`:** Added a crucial test case for the scenario where the `self.questions_list` is empty. This demonstrates a robust handling of exceptional situations.
+5. **Edge Case Test for `handle_next_command`:** Added a crucial test case for the scenario where the `self.questions_list` is empty. This demonStartes a robust handling of exceptional situations.
 
 
-6. **Error Handling:** While not included in the initial example, error handling in real-world tests is critical. The `test_handle_next_command_empty_questions` demonstrates how to check for errors.
+6. **Error Handling:** While not included in the initial example, error handling in real-world tests is critical. The `test_handle_next_command_empty_questions` demonStartes how to check for errors.
 
 
 7. **Clearer Test Names:** Test names now more explicitly state the purpose of the test (e.g., `test_start_command`, `test_handle_message`).

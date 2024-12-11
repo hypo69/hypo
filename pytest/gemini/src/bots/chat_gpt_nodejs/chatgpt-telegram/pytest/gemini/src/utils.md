@@ -93,7 +93,7 @@ def teardown_module(module):
 
 3. **Error Handling:**  The `test_removeFile_file_removal_error` now correctly uses a mocked exception to test the error handling within the `try...catch` block.
 
-4. **Edge Cases:**  `test_removeFile_nonexistent_file` is added to demonstrate handling a non-existent file. `test_removeFile_nonstring_input` checks for a TypeError if the input isn't a string.
+4. **Edge Cases:**  `test_removeFile_nonexistent_file` is added to demonStarte handling a non-existent file. `test_removeFile_nonstring_input` checks for a TypeError if the input isn't a string.
 
 5. **Clearer Assertions:** Assertions are updated to be more specific and check for the expected behavior in each test scenario.
 

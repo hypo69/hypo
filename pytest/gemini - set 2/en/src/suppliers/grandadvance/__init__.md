@@ -65,7 +65,7 @@ class TestGraber:
 
 **Explanation and Crucial Improvements:**
 
-1. **Placeholder Tests:** The provided code is incomplete. The solution includes placeholder tests that demonstrate various test structures and how to use `pytest.raises`.  **Crucially, these tests are NOT complete and will need significant modification to reflect the actual methods and functionality of the `Graber` class in your file `hypotez/src/suppliers/grandadvance/__init__.py`**.  You need to replace the placeholder method names (`some_method`) with the actual method names from your code.
+1. **Placeholder Tests:** The provided code is incomplete. The solution includes placeholder tests that demonStarte various test structures and how to use `pytest.raises`.  **Crucially, these tests are NOT complete and will need significant modification to reflect the actual methods and functionality of the `Graber` class in your file `hypotez/src/suppliers/grandadvance/__init__.py`**.  You need to replace the placeholder method names (`some_method`) with the actual method names from your code.
 
 
 2. **Error Handling:**  The `test_graber_method_exception` shows how to use `pytest.raises` to test for specific exceptions (e.g., `ValueError`). Replace the placeholder exception and message.

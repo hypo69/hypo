@@ -64,7 +64,7 @@ Module for preparing AliExpress campaigns.
 
 This module provides example functions for preparing AliExpress campaigns, including
 processing single campaign categories, specific campaigns, and all campaigns.
-It demonstrates how to use functions from the `prepare_campaigns` module.
+It demonStartes how to use functions from the `prepare_campaigns` module.
 
 Example Usage
 --------------------
@@ -185,7 +185,7 @@ Module for preparing AliExpress campaigns.
 
 This module provides example functions for preparing AliExpress campaigns, including
 processing single campaign categories, specific campaigns, and all campaigns.
-It demonstrates how to use functions from the `prepare_campaigns` module.
+It demonStartes how to use functions from the `prepare_campaigns` module.
 
 Example Usage
 --------------------

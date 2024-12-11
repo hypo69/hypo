@@ -115,7 +115,7 @@ def test_get_locator_keys():
 
 * **Clearer Test Cases:** Test names are more specific and descriptive.
 
-* **Exception Handling:** The `test_execute_locator_invalid_xpath` and `test_get_webelement_by_locator_invalid` tests now demonstrate how to use `pytest.raises` to check for the expected exceptions (e.g., `NoSuchElementException`).
+* **Exception Handling:** The `test_execute_locator_invalid_xpath` and `test_get_webelement_by_locator_invalid` tests now demonStarte how to use `pytest.raises` to check for the expected exceptions (e.g., `NoSuchElementException`).
 
 * **Valid Input Example:** `test_execute_locator_valid_xpath` now shows how to test a successful retrieval using a valid locator, ensuring the method returns the correct element type (or `None` if appropriate).
 

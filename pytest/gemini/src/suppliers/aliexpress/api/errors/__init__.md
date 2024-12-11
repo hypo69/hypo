@@ -61,7 +61,7 @@ import pytest
 6. **Run tests:** Execute the tests with `pytest`.
 
 
-**Example with actual error class (Illustrative):**
+**Example with actual error class (IlluStartive):**
 
 ```python
 import pytest

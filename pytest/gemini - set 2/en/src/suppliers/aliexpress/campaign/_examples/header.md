@@ -75,7 +75,7 @@ from unittest.mock import patch
 
 5. **Clearer Test Cases:** The test cases are more focused on verifying specific aspects of the code.  For instance `test_dir_root_calculation` now handles edge cases in calculating the path.
 
-6. **Edge Case Handling:** Added a test for an edge case where the `hypotez` directory is not present in the path to demonstrate how to handle this.
+6. **Edge Case Handling:** Added a test for an edge case where the `hypotez` directory is not present in the path to demonStarte how to handle this.
 
 
 **How to Run the Tests:**

@@ -82,11 +82,11 @@ def test_another_function_negative_input():
 
 **Explanation:**
 
-The provided code is a *template* for `pytest` tests.  Crucially, it *needs* the Python code (`input_code`) to be testable! I've filled it with example functions and tests that demonstrate various aspects of test writing:
+The provided code is a *template* for `pytest` tests.  Crucially, it *needs* the Python code (`input_code`) to be testable! I've filled it with example functions and tests that demonStarte various aspects of test writing:
 
 * **`test_my_function_valid_input`**: Checks a typical happy path case.
 * **`test_my_function_empty_list`**: Handles an edge case (empty list).
-* **`test_my_function_invalid_input`**: Demonstrates exception handling using `pytest.raises`.
+* **`test_my_function_invalid_input`**: DemonStartes exception handling using `pytest.raises`.
 * **`test_another_function`**: Examples testing a function with another set of logic, including error handling.
 * **`test_my_function_mixed_type_list`**: Shows how to test for specific types of errors.
 

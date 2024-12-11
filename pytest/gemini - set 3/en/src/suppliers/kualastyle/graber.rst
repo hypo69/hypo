@@ -91,7 +91,7 @@ async def test_grab_page_empty_input(graber, mock_driver):
 async def test_grab_page_missing_function(graber, mock_driver):
     """Test grab_page if some fetch functions are missing."""
     mock_fields = ProductFields()
-    # Mock the asynchronous function for demonstration
+    # Mock the asynchronous function for demonStartion
     for method in [
         'id_product',
         'name',

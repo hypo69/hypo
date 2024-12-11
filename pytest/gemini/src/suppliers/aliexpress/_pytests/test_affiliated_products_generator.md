@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
 **Explanation of Improvements:**
 
-* **More Comprehensive Test Cases:** Added tests for empty input to `check_and_process_affiliate_products` and `process_affiliate_products`, demonstrating handling of different scenarios.
+* **More Comprehensive Test Cases:** Added tests for empty input to `check_and_process_affiliate_products` and `process_affiliate_products`, demonStarting handling of different scenarios.
 * **Edge Case Handling:** Included an invalid URL in `prod_urls` to test the `process_affiliate_products` function's robustness to invalid input. The `ensure_https` side_effect patch now handles the different input types better. This is crucial for real-world applications.
 * **Clearer Assertions:**  More descriptive assertions are used to validate the output of the `process_affiliate_products` function (checking length and content).
 * **Mock Return Values:** The mock for `retrieve_product_details` now returns an empty list in the test case to handle the absence of product details. This is crucial for robustness, as a real-world API might not always return data.

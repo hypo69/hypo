@@ -69,13 +69,13 @@ def test_graber_method_with_fixture(sample_graber_data):
 
 **Explanation and Crucial Improvements:**
 
-1. **Missing Code:** The provided code only contained the file header.  I've added placeholder tests that demonstrate how to write tests for the hypothetical `Graber` class and the `MODE` variable.  Crucially, **you need to replace the placeholder method names, expected outputs, and error messages with the actual details from your `morlevi` code.**
+1. **Missing Code:** The provided code only contained the file header.  I've added placeholder tests that demonStarte how to write tests for the hypothetical `Graber` class and the `MODE` variable.  Crucially, **you need to replace the placeholder method names, expected outputs, and error messages with the actual details from your `morlevi` code.**
 
-2. **Graber Class Tests:**  The `test_graber_initialization`, `test_graber_method_example`, and `test_graber_method_raises_exception` examples illustrate how to test various aspects of the `Graber` class. Remember to use `pytest.raises` to check for expected exceptions and to create instances of `Graber` properly.
+2. **Graber Class Tests:**  The `test_graber_initialization`, `test_graber_method_example`, and `test_graber_method_raises_exception` examples illuStarte how to test various aspects of the `Graber` class. Remember to use `pytest.raises` to check for expected exceptions and to create instances of `Graber` properly.
 
 3. **MODE Tests:** The `test_mode_value` test verifies the correct value of the `MODE` global variable.
 
-4. **Fixtures (Example):** The `sample_graber_data` fixture demonstrates how to create and use fixtures to pass data to your tests, promoting test isolation.
+4. **Fixtures (Example):** The `sample_graber_data` fixture demonStartes how to create and use fixtures to pass data to your tests, promoting test isolation.
 
 
 **How to Use This Template:**

@@ -107,7 +107,7 @@ def test_collectPopupState():
 
 5. **Clearer Test Names:** The test names are more descriptive and indicate the scenario.
 
-6. **Valid Input Testing:** Added `test_sendToActiveTab_valid_message` to demonstrate a test with valid input.
+6. **Valid Input Testing:** Added `test_sendToActiveTab_valid_message` to demonStarte a test with valid input.
 
 7. **Edge Case/Invalid Input Testing:** `test_sendToActiveTab_no_tabs` showcases the edge case where no tabs are found.
 

@@ -99,7 +99,7 @@ def test_llmcall_call(mock_openai_client):
 # Add more test cases covering LLMCall, error handling, edge cases, and other methods
 
 
-# Example test to demonstrate how to handle the case when the API returns None
+# Example test to demonStarte how to handle the case when the API returns None
 def test_openai_client_send_message_none_response(mock_openai_client):
     messages = [{"role": "user", "content": "This should fail"}]
     response = mock_openai_client.send_message(current_messages=messages, model="invalid-model")
@@ -120,13 +120,13 @@ def test_openai_client_send_message_none_response(mock_openai_client):
 4. **Valid Input Test:** The `test_openai_client_send_message_valid_input` now provides a valid input and checks if the return value is not `None`. This is a much better test.
 
 
-5. **Invalid Model Test:** `test_openai_client_send_message_invalid_model` demonstrates testing for invalid input (model name).
+5. **Invalid Model Test:** `test_openai_client_send_message_invalid_model` demonStartes testing for invalid input (model name).
 
-6. **Error Handling Tests:**  Included `test_openai_client_send_message_invalid_request` with a `pytest.raises` to cover the exception handling for `InvalidRequestError` and demonstrate its usage.
+6. **Error Handling Tests:**  Included `test_openai_client_send_message_invalid_request` with a `pytest.raises` to cover the exception handling for `InvalidRequestError` and demonStarte its usage.
 
-7. **`LLMCall` Test:** A new `test_llmcall_call` demonstrates testing the `LLMCall` class. It passes appropriate data and checks the output.
+7. **`LLMCall` Test:** A new `test_llmcall_call` demonStartes testing the `LLMCall` class. It passes appropriate data and checks the output.
 
-8. **Example for None Response:**  Included `test_openai_client_send_message_none_response` to demonstrate how to handle the case where the `send_message` function might return `None`.
+8. **Example for None Response:**  Included `test_openai_client_send_message_none_response` to demonStarte how to handle the case where the `send_message` function might return `None`.
 
 **Important Considerations:**
 

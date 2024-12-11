@@ -108,7 +108,7 @@ def test_window_focus(chrome_driver):
 **Explanation and Improvements:**
 
 * **Fixtures:** A `chrome_driver` fixture is introduced to create a fresh driver instance for each test, isolating them.
-* **Error Handling:** `pytest.raises` is used for the `test_extract_domain_invalid_url` test, asserting that a `ValueError` is raised with invalid input.  Crucially, `test_find_element_invalid_selector` demonstrates how to catch `NoSuchElementException` using a `try...except` block instead of `pytest.raises`, as that's the expected exception type.
+* **Error Handling:** `pytest.raises` is used for the `test_extract_domain_invalid_url` test, asserting that a `ValueError` is raised with invalid input.  Crucially, `test_find_element_invalid_selector` demonStartes how to catch `NoSuchElementException` using a `try...except` block instead of `pytest.raises`, as that's the expected exception type.
 * **Assertions:** More robust assertions are used to check for the expected outcomes of functions. For example, `test_get_url_valid_input` now checks that the result is `True`.
 * **Edge Cases:**  The `test_extract_domain_invalid_url` test specifically checks for an invalid URL, a critical edge case.
 * **Clearer Test Names:** Test names are more descriptive and clearly indicate the purpose of each test.

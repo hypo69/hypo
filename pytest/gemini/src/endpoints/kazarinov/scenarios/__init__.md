@@ -25,7 +25,7 @@ The provided code (`hypotez/src/endpoints/kazarinov/scenarios/__init__.py`) only
 
 * **`test_mode_exists`:**  Checks if the `MODE` constant is defined.  Handles the case where the file might be empty or have no variables at all.
 * **`test_mode_has_value`:** Checks if the `MODE` variable has the expected value, 'dev'.  Again, handles a non-existent or incorrect value.
-* **`test_undefined_variable_not_exist`:**  A crucial addition demonstrating how to test for the *absence* of something.  If you add more variables later, you'd need more tests.
+* **`test_undefined_variable_not_exist`:**  A crucial addition demonStarting how to test for the *absence* of something.  If you add more variables later, you'd need more tests.
 
 
 **Important Considerations for Future Tests:**

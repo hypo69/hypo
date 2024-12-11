@@ -94,7 +94,7 @@ def test_grab_page_exception_handling(graber, driver_mock):
 
 3. **Clearer Test Cases:** The `test_grab_page_valid_input` test is more robust by mocking the internal asynchronous functions that `grab_page` calls.  This is better than just checking the function returns a `ProductFields` object, as it checks the expected interactions happen as well.
 
-4. **Edge Cases and Exceptions:**  `test_grab_page_invalid_input` and `test_grab_page_exception_handling` demonstrate how to test for invalid input and exception handling, making the test suite more comprehensive. 
+4. **Edge Cases and Exceptions:**  `test_grab_page_invalid_input` and `test_grab_page_exception_handling` demonStarte how to test for invalid input and exception handling, making the test suite more comprehensive. 
 
 5. **Fixture for Driver:** The `driver_mock` fixture makes the tests more reusable.
 

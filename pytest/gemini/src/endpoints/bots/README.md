@@ -78,7 +78,7 @@ def test_get_bot_info_none_input():
 
 1. **Import:**  The code now imports the `pytest` library and the necessary module (`src.endpoints.bots`).  **Crucially**, replace `"src.endpoints.bots"` with the *actual* path to your module if it's in a different location.
 
-2. **Placeholder Functions:** I've created example functions (`get_bot_info`, `list_available_bots`) and fixtures for demonstration.  **You MUST replace these with the actual functions and classes from your `src.endpoints.bots` module.**
+2. **Placeholder Functions:** I've created example functions (`get_bot_info`, `list_available_bots`) and fixtures for demonStartion.  **You MUST replace these with the actual functions and classes from your `src.endpoints.bots` module.**
 
 3. **Clear Test Function Names:** The test function names are descriptive (`test_get_bot_info_valid_input`, `test_get_bot_info_invalid_input`).
 

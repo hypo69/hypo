@@ -44,7 +44,7 @@ MODE = 'dev'
 from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
 
     # Create an instance of the Driver class with the Chrome webdriver
     print("Creating a Chrome browser instance...")
@@ -84,7 +84,7 @@ def main():
 
 # <algorithm>
 
-The algorithm demonstrates using a WebDriver (likely Selenium) to interact with different web browsers (Chrome, Firefox, Edge).  The `main` function orchestrates the interaction.
+The algorithm demonStartes using a WebDriver (likely Selenium) to interact with different web browsers (Chrome, Firefox, Edge).  The `main` function orcheStartes the interaction.
 
 1. **Initialize Driver:**  For each browser (Chrome, Firefox, Edge), it creates a `Driver` instance, passing the corresponding browser class (e.g., `Chrome`).
 2. **Navigate to URL:** It calls `chrome_driver.get_url(url)` to load the given URL.  The method likely returns `True` if successful, `False` otherwise.
@@ -130,7 +130,7 @@ The mermaid diagram shows the code's flow. The key dependencies are:
     * `Chrome`, `Firefox`, `Edge`: These are likely subclasses of `Driver` implementing the specific functionality for controlling each browser.  For instance, they would contain the logic to instantiate a specific browser driver (e.g., the ChromeDriver binary), and encapsulate browser-specific interactions.
 
 * **Functions:**
-    * `main()`: This is the entry point of the script.  It demonstrates usage of the driver classes.  Crucially, it creates `Driver` instances for `Chrome`, `Firefox`, and `Edge` browsers, performs actions on the respective web browsers (navigation, extraction, scrolling), and closes them properly.
+    * `main()`: This is the entry point of the script.  It demonStartes usage of the driver classes.  Crucially, it creates `Driver` instances for `Chrome`, `Firefox`, and `Edge` browsers, performs actions on the respective web browsers (navigation, extraction, scrolling), and closes them properly.
 
 * **Variables:**
     * `MODE`: A global variable with the value `'dev'`.  Its purpose is unclear from the code snippet, but it could be used for configuration differences between development and production environments.
@@ -149,4 +149,4 @@ The mermaid diagram shows the code's flow. The key dependencies are:
     * **Browser Initialization:** Consider using more robust methods to initialize drivers. This ensures proper handling of browser dependencies, preventing unexpected behavior.
 
 
-**Relationships to other parts of the project:** The code depends heavily on the `src.webdriver.driver` module for its functionalities, demonstrating a clear modular design. The `_examples` folder suggests this script is part of a larger project demonstrating how to use web driver classes.  The `example.py` file likely serves as a demonstration file to showcase how to use the driver classes, which are likely part of a larger web automation framework.
+**Relationships to other parts of the project:** The code depends heavily on the `src.webdriver.driver` module for its functionalities, demonStarting a clear modular design. The `_examples` folder suggests this script is part of a larger project demonStarting how to use web driver classes.  The `example.py` file likely serves as a demonStartion file to showcase how to use the driver classes, which are likely part of a larger web automation framework.

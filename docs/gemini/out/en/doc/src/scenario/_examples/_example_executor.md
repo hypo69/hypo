@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides example usages for the `executor` module in the `src.scenario` package. It demonstrates how to use functions for running scenarios, handling scenario files, interacting with the PrestaShop API, and more.  The examples cover running lists of scenario files, single scenario files, single scenarios, product page scenarios, coupon addition, and asynchronous PrestaShop insertion.
+This module provides example usages for the `executor` module in the `src.scenario` package. It demonStartes how to use functions for running scenarios, handling scenario files, interacting with the PrestaShop API, and more.  The examples cover running lists of scenario files, single scenario files, single scenarios, product page scenarios, coupon addition, and asynchronous PrestaShop insertion.
 
 
 ## Classes
@@ -45,7 +45,7 @@ This module provides example usages for the `executor` module in the `src.scenar
 
 ### `example_run_scenario_files`
 
-**Description**: Example demonstrating how to run a list of scenario files.
+**Description**: Example demonStarting how to run a list of scenario files.
 
 **Parameters**:
 - `supplier (MockSupplier)`: The supplier object containing the scenario files.
@@ -80,7 +80,7 @@ This module provides example usages for the `executor` module in the `src.scenar
 
 ### `example_insert_grabbed_data`
 
-**Description**: Example demonstrating the insertion of grabbed product data into PrestaShop.
+**Description**: Example demonStarting the insertion of grabbed product data into PrestaShop.
 
 **Parameters**:
 - `product_fields (ProductFields)`: The product data to be inserted.
@@ -128,7 +128,7 @@ This module provides example usages for the `executor` module in the `src.scenar
 
 ## Usage Examples
 
-The `if __name__ == "__main__":` block demonstrates how to call these examples to run the scenario execution functions.
+The `if __name__ == "__main__":` block demonStartes how to call these examples to run the scenario execution functions.
 
 
 ```

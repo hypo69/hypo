@@ -78,7 +78,7 @@ def test_graber_fetch_data_empty_url():
 
 4. **Missing `Graber` Method:**  The example `test_graber_method_example` is a placeholder. You need to replace it with tests for any other methods in the `Graber` class (e.g. `process_data`, `prepare_request`).
 
-5. **Edge Case (`test_graber_fetch_data_empty_url`):** This test demonstrates the best practice of testing boundary conditions (like empty strings or empty data).
+5. **Edge Case (`test_graber_fetch_data_empty_url`):** This test demonStartes the best practice of testing boundary conditions (like empty strings or empty data).
 
 6. **Mock External Resources (Important if applicable):**  If `Graber` interacts with external services (e.g., makes network requests), you must mock those interactions to prevent issues with external dependencies. The commented-out example shows how to use `unittest.mock.patch` for this.
 

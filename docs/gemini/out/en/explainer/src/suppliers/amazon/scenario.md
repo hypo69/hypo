@@ -155,7 +155,7 @@ graph LR
     get_list_products_in_category -- links --> PrestaShopProduct(Implicit)
 ```
 
-**Explanation:** This diagram illustrates the code's dependencies. `src.gs` and `src.logger` are imported, suggesting a relationship with other parts of the project handling database interactions and logging, respectively. The diagram also visualizes the function `get_list_products_in_category` interacting with a `Supplier` object. The `Supplier` class possesses a `driver` (presumably a WebDriver instance for web interaction) and `locators` for locating elements on webpages, which are critical for the function's operation. Implicit dependency on `PrestaShopProduct` class is shown for database checks.
+**Explanation:** This diagram illuStartes the code's dependencies. `src.gs` and `src.logger` are imported, suggesting a relationship with other parts of the project handling database interactions and logging, respectively. The diagram also visualizes the function `get_list_products_in_category` interacting with a `Supplier` object. The `Supplier` class possesses a `driver` (presumably a WebDriver instance for web interaction) and `locators` for locating elements on webpages, which are critical for the function's operation. Implicit dependency on `PrestaShopProduct` class is shown for database checks.
 
 
 ## <explanation>

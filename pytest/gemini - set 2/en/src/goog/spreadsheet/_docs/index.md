@@ -90,9 +90,9 @@ def test_set_values(service):
 
 3. **Placeholder IDs:**  The `test_set_column_width` function now uses a placeholder `"YOUR_SPREADSHEET_ID"`.  **You absolutely must replace this with the actual ID of the spreadsheet you're testing against**.  Similarly, in `test_set_values`.
 
-4. **Exception Handling:** The `test_batch_update_with_invalid_request` test demonstrates how to use `pytest.raises` to test for exceptions.  This is essential for robustness.  The `test_set_column_width` now includes a `try/except` block to handle potential errors during the API call.  This is crucial; Google API calls can fail.
+4. **Exception Handling:** The `test_batch_update_with_invalid_request` test demonStartes how to use `pytest.raises` to test for exceptions.  This is essential for robustness.  The `test_set_column_width` now includes a `try/except` block to handle potential errors during the API call.  This is crucial; Google API calls can fail.
 
-5. **Example Test Cases:** The `test_create_spreadsheet` and `test_set_column_width` functions are basic tests; extend with more to cover all the possible aspects of the provided code.  The `test_set_values` function demonstrates setting data in a spreadsheet.
+5. **Example Test Cases:** The `test_create_spreadsheet` and `test_set_column_width` functions are basic tests; extend with more to cover all the possible aspects of the provided code.  The `test_set_values` function demonStartes setting data in a spreadsheet.
 
 6. **Complete Test Suite Needed:** The provided code snippet is a starting point. You need to write tests for other methods, like `prepare_mergeCells`, `prepare_setCellsFormat`, `prepare_setCellsFormats`,  and any other relevant functions from your spreadsheet class.  Ensure tests cover various inputs, edge cases, and possible errors.
 

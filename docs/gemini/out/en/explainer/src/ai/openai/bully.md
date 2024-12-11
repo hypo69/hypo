@@ -117,7 +117,7 @@ graph TD
 **Imports:**
 
 *   `os`:  Used for interacting with the operating system.  While not directly used here, it's a common import in Python scripts. The import doesn't seem to be used in this script, so it's not necessary and can be removed for clarity.
-*   `src.ai.openai`: This is a critical import. It likely contains the necessary functions to interact with the OpenAI API.  This is part of the project's internal structure; it's essential for proper execution and demonstrates the module's relationship with other parts of the `src` package.
+*   `src.ai.openai`: This is a critical import. It likely contains the necessary functions to interact with the OpenAI API.  This is part of the project's internal structure; it's essential for proper execution and demonStartes the module's relationship with other parts of the `src` package.
 *   `openai`: Import should be fixed to `import openai`.
 
 

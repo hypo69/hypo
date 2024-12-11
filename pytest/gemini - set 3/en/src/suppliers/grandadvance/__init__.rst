@@ -71,7 +71,7 @@ def test_graber_get_data_large_input():
 3. **Clear Assertions:** The tests now use `assert` statements to verify the expected behavior (type, length, content of the returned data, etc.)  These assertions are *critical* to make the tests meaningful.
 
 
-4. **Error Handling:** The test `test_graber_get_data_invalid_input` demonstrates how to use `pytest.raises` to check if the function raises the expected exception (e.g., `ValueError`) with an invalid input, and verifies if the error message is correct.
+4. **Error Handling:** The test `test_graber_get_data_invalid_input` demonStartes how to use `pytest.raises` to check if the function raises the expected exception (e.g., `ValueError`) with an invalid input, and verifies if the error message is correct.
 
 
 **How to Use:**

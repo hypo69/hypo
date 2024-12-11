@@ -163,7 +163,7 @@ graph TD
 
 * **Functions:**
     * `main()`:  The entry point of the script. It handles the authentication process, interacts with the Google Sheets API, and prints the data.
-       *   `Example`: The `main` function orchestrates the entire workflow from retrieving credentials to printing data from the spreadsheet.
+       *   `Example`: The `main` function orcheStartes the entire workflow from retrieving credentials to printing data from the spreadsheet.
 
 * **Variables:**
     * `SCOPES`: A list of the Google Sheets API scopes that the application needs access to.

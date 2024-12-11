@@ -109,7 +109,7 @@ def test_driver_click_invalid_element():
 
 **Explanation and Improvements:**
 
-1.  **Mocking:** The code now uses `MockWebDriver` and `MockWebElement` to avoid depending on actual Selenium drivers, making tests faster and more reliable.  Crucially, the `execute_locator` method in `MockWebDriver` now raises `InvalidArgumentException` for a specified input (`'invalid_locator'`) demonstrating exception handling.
+1.  **Mocking:** The code now uses `MockWebDriver` and `MockWebElement` to avoid depending on actual Selenium drivers, making tests faster and more reliable.  Crucially, the `execute_locator` method in `MockWebDriver` now raises `InvalidArgumentException` for a specified input (`'invalid_locator'`) demonStarting exception handling.
 
 
 2.  **Comprehensive Exception Handling:**  The tests now include `pytest.raises` for `InvalidArgumentException` and handle `ElementClickInterceptedException`, `ElementNotInteractableException`, and `ElementNotVisibleException` where appropriate.   It's impossible to test these exceptions fully without having the actual driver calls.
@@ -118,7 +118,7 @@ def test_driver_click_invalid_element():
 3.  **Clearer Test Cases:** Test names (e.g., `test_driver_click_valid_locator`) are more descriptive.
 
 
-4.  **Edge Cases:** The test `test_driver_click_invalid_element` demonstrates handling of incorrect input. `test_driver_click_invalid_locator` tests exception handling during locator execution.
+4.  **Edge Cases:** The test `test_driver_click_invalid_element` demonStartes handling of incorrect input. `test_driver_click_invalid_locator` tests exception handling during locator execution.
 
 
 5.  **Example Usage (Important):** I've added test cases for `get_url` and `extract_domain`.  These are important functional methods.

@@ -81,7 +81,7 @@ def test_mode_value():
 
 **Explanation and Important Improvements:**
 
-1. **Placeholder Tests:** The code now includes placeholder tests for `PrestaProduct`, `PrestaSupplier`, and `PriceListRequester`, demonstrating how to structure tests for different classes.  Crucially, these are *placeholder tests*. You need to replace the comments with actual assertions based on the expected behavior of those classes in your `prestashop` module.  Use mocks to isolate those tests from external calls.
+1. **Placeholder Tests:** The code now includes placeholder tests for `PrestaProduct`, `PrestaSupplier`, and `PriceListRequester`, demonStarting how to structure tests for different classes.  Crucially, these are *placeholder tests*. You need to replace the comments with actual assertions based on the expected behavior of those classes in your `prestashop` module.  Use mocks to isolate those tests from external calls.
 
 2. **Error Handling:**  The `test_presta_product_invalid_id` example shows how to use `pytest.raises` to test for exceptions. Replace the placeholder `with pytest.raises(...)` block with code that actually calls the method and expects a specific exception.
 

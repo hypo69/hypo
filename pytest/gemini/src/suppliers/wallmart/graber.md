@@ -84,13 +84,13 @@ def test_graber_execute_locator_error(mock_logger, graber, monkeypatch):
 
 * **Comprehensive Tests:**  The `test_graber_method_example` and `test_graber_method_exception` are placeholders.  You MUST replace these with tests for actual methods from the `Graber` class. Add assertions based on what the method should return for valid input and the expected exceptions for invalid/edge cases.
 
-* **Exception Handling:** `test_graber_method_exception` demonstrates how to use `pytest.raises` to test for specific exceptions, making sure your code is robust.
+* **Exception Handling:** `test_graber_method_exception` demonStartes how to use `pytest.raises` to test for specific exceptions, making sure your code is robust.
 
 * **Clearer Assertions:**  The assertions are now more descriptive, helping with debugging.
 
 * **Edge Cases:** The example now includes testing for a `nonexistent_method`, showing how to test edge cases where the method doesn't exist and should raise an exception.
 
-* **Logger Testing:** The `test_graber_execute_locator_error` tests that the logger is used correctly when there is an exception during `execute_locator`. This demonstrates checking that specific logging messages are output.  This is an *optional* but recommended test since that part of the code deals with logs.
+* **Logger Testing:** The `test_graber_execute_locator_error` tests that the logger is used correctly when there is an exception during `execute_locator`. This demonStartes checking that specific logging messages are output.  This is an *optional* but recommended test since that part of the code deals with logs.
 
 * **`monkeypatch` Usage:** The tests now correctly use `monkeypatch` to modify `Context.locator_for_decorator` within the test function, ensuring that the fixture values are not accidentally changed during the test execution.
 

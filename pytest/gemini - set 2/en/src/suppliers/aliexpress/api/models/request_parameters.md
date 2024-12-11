@@ -74,7 +74,7 @@ def test_correct_link_type_assignment():
 * **Clear Test Names:**  Test names are now more descriptive (e.g., `test_product_type_valid_values`).
 * **Exception Handling:**  The `test_invalid_value` tests now use `pytest.raises` to explicitly check for `AttributeError` (or other appropriate exceptions).  This is crucial for robust testing. The examples show how you would test the exception handling with bad data types. 
 * **Comprehensive Coverage:** The tests now cover valid and invalid values for each class.
-* **Example Usage Tests:** Added example tests to demonstrate how the enums could be used in realistic code. This is crucial for integrating these enums into a larger project.
+* **Example Usage Tests:** Added example tests to demonStarte how the enums could be used in realistic code. This is crucial for integrating these enums into a larger project.
 * **Specific Error Type:**  Instead of a generic `Exception`, I've now specified `AttributeError` for testing missing attributes.  This improves test clarity and accuracy. Also, `ValueError` is used to test the expected error type from a wrong input type.
 
 

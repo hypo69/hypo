@@ -113,7 +113,7 @@ async def test_name_function(graber, mock_driver):
 
 6. **Fixture for Graber:** A `@pytest.fixture` now creates a `Graber` instance, and crucially, it mocks the `Driver` object.  This eliminates the need to create a real web driver for each test.
 
-7. **Example Test Cases:**  The provided example test cases cover the initialization (`test_graber_init`), error handling (`test_error_handling`), and the `set_field_value` method.  Crucially, the `test_name_function` demonstrates how to properly use the fixture to avoid real web driver interaction.
+7. **Example Test Cases:**  The provided example test cases cover the initialization (`test_graber_init`), error handling (`test_error_handling`), and the `set_field_value` method.  Crucially, the `test_name_function` demonStartes how to properly use the fixture to avoid real web driver interaction.
 
 8. **`close_pop_up` Decorator Test:** Added test to verify the decorator works as expected.
 

@@ -80,7 +80,7 @@ def test_path_manipulation():
 4. **`test_path_manipulation`:** Tests path combination.
 
 
-5. **Error Handling (Exception Testing):** The example now demonstrates using `pytest.raises` to test if functions correctly handle exceptions, which is crucial for robustness.
+5. **Error Handling (Exception Testing):** The example now demonStartes using `pytest.raises` to test if functions correctly handle exceptions, which is crucial for robustness.
 
 
 6. **Mocking (Optional but often necessary):** For more complex tests (e.g., interacting with external resources), you'll likely need to mock (simulate) parts of your code using libraries like `unittest.mock` or `pytest-mock` to isolate your tests and prevent external dependencies from interfering.

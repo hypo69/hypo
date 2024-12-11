@@ -123,7 +123,7 @@ def test_local_saved_image_no_image_data(grabber):
 -   **Real Driver:**  For production-quality tests, replace the mocks with actual webdriver interactions. You'll likely need to set up a proper `Driver` fixture and use `pytest-asyncio` to run your asynchronous tests correctly.
 -   **File Handling:**  In production, handle file paths (and errors) more robustly when saving images. The mocked file handling is enough for testing the core logic of your graber class, not the file system.  Consider using temporary directories for your test files.
 -   **Error Handling Refinement:** The mock error handling in the tests is a good start, but consider different types of exceptions and edge cases for more thorough coverage.
-- **`id_product` Issue:** The code has a hardcoded call to `id_product` in `local_saved_image`.  You will need to pass `id_product` to `grab_product_page` or the relevant method, and then handle it within that method properly. The comment is there for a reason.  Tests for this are lacking, and addressing this should be part of your test strategy.
+- **`id_product` Issue:** The code has a hardcoded call to `id_product` in `local_saved_image`.  You will need to pass `id_product` to `grab_product_page` or the relevant method, and then handle it within that method properly. The comment is there for a reason.  Tests for this are lacking, and addressing this should be part of your test Startegy.
 
 
-Remember to add tests for other methods in your class as necessary to achieve comprehensive test coverage. This expanded example demonstrates the improved approach using `pytest` for asynchronous and complex Python code.
+Remember to add tests for other methods in your class as necessary to achieve comprehensive test coverage. This expanded example demonStartes the improved approach using `pytest` for asynchronous and complex Python code.

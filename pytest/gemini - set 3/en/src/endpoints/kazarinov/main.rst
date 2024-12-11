@@ -104,7 +104,7 @@ def test_main_asyncio_exception():
 * **File Handling:** The `mock_settings_file` fixture now properly creates, uses, and removes the temporary settings file to isolate tests and prevent file-related issues between tests. The `settings_file_path` fixture is used to provide a path for creating the mock settings file.
 
 
-* **`pytest.raises` usage:** Demonstrates correct use of `pytest.raises` for exception handling. The code now checks for the expected exception message printed by the `logger`
+* **`pytest.raises` usage:** DemonStartes correct use of `pytest.raises` for exception handling. The code now checks for the expected exception message printed by the `logger`
 
 
 * **Robust Fixtures:**  The fixtures provide the necessary data structures and handle file creation/cleanup for better test reliability.

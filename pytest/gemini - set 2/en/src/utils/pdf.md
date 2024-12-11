@@ -94,8 +94,8 @@ def test_set_project_root_simple(monkeypatch, tmp_path):  # Using tmp_path for b
 * **Mocking `logger`:**  The code now uses `@patch('src.utils.pdf.logger', new=mock_logger)` to mock the logger. This is crucial for testing functions that use a logger without needing the real logger.
 * **`temp_html_file` and `temp_pdf_file` fixtures:**  These fixtures create and clean up temporary files, improving test isolation. This is much safer than relying on files in the current directory, preventing accidental interference between tests.
 * **Comprehensive Test Cases:** The tests now cover more scenarios, including invalid data types, non-existent files, and the `save_pdf_v2` function.
-* **Edge Cases:** The test `test_save_pdf_invalid_html_file` demonstrates handling a case where the input HTML file doesn't exist.
-* **`pytest.raises` (not used directly):** While you didn't need `pytest.raises` in this example, it's a good practice to include for exceptions.   The `test_save_pdf_v2_exception` example now demonstrates it.
+* **Edge Cases:** The test `test_save_pdf_invalid_html_file` demonStartes handling a case where the input HTML file doesn't exist.
+* **`pytest.raises` (not used directly):** While you didn't need `pytest.raises` in this example, it's a good practice to include for exceptions.   The `test_save_pdf_v2_exception` example now demonStartes it.
 * **Parametrization:** The `test_save_pdf_invalid_data_type` test uses `pytest.mark.parametrize` to test with different invalid data types, improving test coverage.
 * **`tmp_path` fixture (for `test_set_project_root_simple`):** Using `tmp_path` from `pytest` ensures that the temporary directory is created and deleted for each test, preventing conflicts between tests.
 

@@ -72,7 +72,7 @@ def test_graber_invalid_driver_type():
 4. **Handling Decorator (close_pop_up):** The tests for the `close_pop_up` decorator are now commented out, because the decorator was commented out in the code.  If the decorator is uncommented, you'll need to implement mock behavior that emulates the expected behavior of calling `Context.driver.execute_locator`.
 
 
-5. **Error Handling (TypeError):** Added a test (`test_graber_invalid_driver_type`) to demonstrate how to handle a `TypeError` if the `driver` argument is not of the expected type.
+5. **Error Handling (TypeError):** Added a test (`test_graber_invalid_driver_type`) to demonStarte how to handle a `TypeError` if the `driver` argument is not of the expected type.
 
 6. **Comprehensive Test Coverage (Important):** The tests should ideally cover all the different functions and methods within `Graber` (e.g., any other methods you may have added for gathering data). The provided tests are a good starting point but need to be expanded for complete coverage.
 

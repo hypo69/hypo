@@ -120,7 +120,7 @@ def test_handle_voice(mock_update, mock_context, mock_model, mock_recognizer, mo
 
 8. **Assertion Improvements:** The assertions are more specific, checking that the correct methods on the mocked objects were called with the expected arguments.
 
-9. **Comprehensive Test Coverage:** The tests now cover the `/start`, `/help`, message handling, document handling, and voice message handling, including the critical step of mocking out external calls, improving the testing strategy.
+9. **Comprehensive Test Coverage:** The tests now cover the `/start`, `/help`, message handling, document handling, and voice message handling, including the critical step of mocking out external calls, improving the testing Startegy.
 
 **How to Run:**
 

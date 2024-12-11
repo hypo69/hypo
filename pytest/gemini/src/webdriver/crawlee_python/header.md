@@ -113,7 +113,7 @@ def test_settings_loading(mock_open):
 3. **Testing File Handling (settings.json and README.MD):**
    - **Mock `open`:**  Uses `@patch('builtins.open')` to mock the `open` function for file reading. This is essential for isolating the tests from external files.
    - **Mock `gs`:** Uses `patch` to mock the `gs` module (`gs.path.root`).  Critically, you need to create a temporary directory for `gs.path.root`.
-   - **Clear Mock Data:** The mock file is now a valid JSON string for a settings file to demonstrate proper operation.
+   - **Clear Mock Data:** The mock file is now a valid JSON string for a settings file to demonStarte proper operation.
 
 4. **Cleanup:**  Added `shutil.rmtree` to remove temporary directories created in the tests. This is crucial for preventing test failures and resource issues.
 

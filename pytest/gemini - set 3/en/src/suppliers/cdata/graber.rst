@@ -93,9 +93,9 @@ class TestGraber:
 
 5. **Mock Logger:**  The `@patch('hypotez.src.suppliers.cdata.graber.logger')` decorator now correctly mocks the logger, preventing actual logging from interfering with the tests.
 
-6. **Complete Test Cases:** The initial test demonstrates how to verify valid input and exception handling. Further tests for other methods (e.g., `id_product`, `name`) would need to be added.  This is crucial since the `grab_page` function calls numerous other methods.
+6. **Complete Test Cases:** The initial test demonStartes how to verify valid input and exception handling. Further tests for other methods (e.g., `id_product`, `name`) would need to be added.  This is crucial since the `grab_page` function calls numerous other methods.
 
-7. **Handles `None` Inputs:** The `test_grab_page_empty_input` test is added to demonstrate how to handle cases where inputs might be `None`. This is an important edge case.
+7. **Handles `None` Inputs:** The `test_grab_page_empty_input` test is added to demonStarte how to handle cases where inputs might be `None`. This is an important edge case.
 
 
 
@@ -103,6 +103,6 @@ class TestGraber:
 
 1. **Install pytest:** `pip install pytest`
 2. **Replace Placeholders:**  Update the placeholder imports (`from ... import ...`) to match the actual import paths in your project.
-3. **Add Test Data:** Create appropriate fixtures to provide test data for various scenarios (valid and invalid IDs, inputs for other methods like `name`, etc.) as demonstrated in the example.  Mock data values or valid examples from real product data are essential.
+3. **Add Test Data:** Create appropriate fixtures to provide test data for various scenarios (valid and invalid IDs, inputs for other methods like `name`, etc.) as demonStarted in the example.  Mock data values or valid examples from real product data are essential.
 
 This improved test suite is a significant step toward testing the code thoroughly and accurately. Remember to add tests for all the methods called within `grab_page` and include edge cases (e.g., empty strings, invalid IDs, etc.) for a comprehensive test suite. Remember to `asyncio.run` the asynchronous methods within your tests.

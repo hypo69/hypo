@@ -129,4 +129,4 @@ def test_upload_to_PrestaShop(mock_emil_design):
 * **Real AI Calls:**  For comprehensive testing, consider mocking the OpenAI calls. You can pass various inputs to the mocked `OpenAIModel` to test edge cases.
 
 
-This improved solution provides a robust and complete testing strategy. Remember to adapt it to your specific needs and the complexity of your application. The added error handling (with `try...except` blocks) and more sophisticated mocking would be part of the real-world code.
+This improved solution provides a robust and complete testing Startegy. Remember to adapt it to your specific needs and the complexity of your application. The added error handling (with `try...except` blocks) and more sophisticated mocking would be part of the real-world code.

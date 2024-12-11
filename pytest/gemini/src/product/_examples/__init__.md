@@ -66,7 +66,7 @@ def test_details_values_are_strings():
 
 3. **`__details__` tests:** Tests are added to confirm `__details__` is a dictionary and contains the expected keys (replace `expected_keys` with the actual keys from your `__details__` dictionary if needed).  Crucially, it now verifies that the *values* within the dictionary are strings. This is essential for data validation.
 
-4. **Example Structure:**  Demonstrates how to add tests for other functions if present in the module.  The hypothetical function tests are commented out because there were no functions in the input file.
+4. **Example Structure:**  DemonStartes how to add tests for other functions if present in the module.  The hypothetical function tests are commented out because there were no functions in the input file.
 
 5. **Clearer Comments:**  The comments are more specific about the purpose of each test case.
 

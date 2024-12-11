@@ -111,9 +111,9 @@ def test_execute_locator_no_element(executor_instance):
 
 5. **Data Handling:** Placeholder `locator_data` is included but you should replace this with your actual locator data source.
 
-6. **Thoroughness:** The provided tests now cover valid input for `execute_locator`, `get_webelement_by_locator`, `get_attribute_by_locator`, `send_message`.  They also include a crucial test for error cases where an element isn't found, demonstrating exception handling.
+6. **Thoroughness:** The provided tests now cover valid input for `execute_locator`, `get_webelement_by_locator`, `get_attribute_by_locator`, `send_message`.  They also include a crucial test for error cases where an element isn't found, demonStarting exception handling.
 
-7. **Example Usage:** Replaced placeholder `...` with actual usage to demonstrate how to run a test.
+7. **Example Usage:** Replaced placeholder `...` with actual usage to demonStarte how to run a test.
 
 
 **How to use these tests:**

@@ -49,13 +49,13 @@ def test_gs_edge_cases(input, output):
 
 
 
-#This test demonstrates how to use the @pytest.fixture if a function needs external data
+#This test demonStartes how to use the @pytest.fixture if a function needs external data
 # @pytest.fixture
 # def some_fixture_data():
 #     return 10
 
 # def test_using_fixture(some_fixture_data):
-#     """Demonstrates using a fixture."""
+#     """DemonStartes using a fixture."""
 #     assert some_fixture_data == 10
 
 # This test shows how to use try/except in test cases if the function itself contains try/except blocks 

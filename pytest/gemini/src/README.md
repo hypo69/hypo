@@ -67,7 +67,7 @@ import src  # Assuming the modules are in a 'src' directory
 3. **Example Fixtures:**  Example fixtures are provided, but you need to create actual fixtures with relevant data for your specific tests. The current placeholders are incomplete; you need to replace them with real data.
 
 
-4. **Error Handling:** The example now demonstrates how to use `pytest.raises` to test exceptions.  This is essential for robustness.  You should adapt this to the expected exceptions in your code.
+4. **Error Handling:** The example now demonStartes how to use `pytest.raises` to test exceptions.  This is essential for robustness.  You should adapt this to the expected exceptions in your code.
 
 
 **How to use this template:**

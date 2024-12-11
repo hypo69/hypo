@@ -41,7 +41,7 @@ The code implements a system for processing code files, interacting with an AI m
 **Step 8: Error Handling:**
 * Error handling using `try...except` blocks is crucial to prevent crashes during file reading, model interaction, and saving.
 * Errors are logged using the `logger` module.
-* Skipping files with errors is a good strategy.
+* Skipping files with errors is a good Startegy.
 * The system waits for 20 seconds before processing the next file – this should be configurable/tuned.
 
 

@@ -78,7 +78,7 @@ def test_process_code_with_no_code():
 
 3. **Example Fixtures:** Added a simple `example_data` fixture. This is *crucial* if you need to pass data to your tests. Fixtures are needed for modularity and avoiding code repetition.
 
-4. **Example Tests for CodeAssistant (Important):**  The `test_code_assistant_creation` test verifies that the `CodeAssistant` class can be instantiated.  The `test_process_code_with_valid_data` test shows how to use a fixture and test a method (assuming one exists).  `test_process_code_with_no_code` demonstrates testing for exceptions.
+4. **Example Tests for CodeAssistant (Important):**  The `test_code_assistant_creation` test verifies that the `CodeAssistant` class can be instantiated.  The `test_process_code_with_valid_data` test shows how to use a fixture and test a method (assuming one exists).  `test_process_code_with_no_code` demonStartes testing for exceptions.
 
 
 5. **Missing Code:** The tests are now conditional.  If the `CodeAssistant` class or its methods are not defined, the relevant tests are skipped without error, making the tests robust to a wider range of situations.

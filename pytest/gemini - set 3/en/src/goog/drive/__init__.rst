@@ -55,7 +55,7 @@ def example_data():
 
 5. **Example Test (commented out):**  This example shows how to incorporate testing of a `GoogleDrive` method.  Replace `some_method`, `example_data`, and the assertions with the actual method name and expected behavior.
 
-6. **Example Exception Test (commented out):** This demonstrates how to use `pytest.raises` to test for specific exceptions, including using a `match` argument for more robust exception verification. This is often necessary for robust tests.  **Importantly**, you need to replace the patched function and the expected exception with the actual logic and expected behavior from your code.
+6. **Example Exception Test (commented out):** This demonStartes how to use `pytest.raises` to test for specific exceptions, including using a `match` argument for more robust exception verification. This is often necessary for robust tests.  **Importantly**, you need to replace the patched function and the expected exception with the actual logic and expected behavior from your code.
 
 
 **How to Use and Expand:**

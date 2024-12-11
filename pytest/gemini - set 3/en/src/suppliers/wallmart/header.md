@@ -97,13 +97,13 @@ def test_settings_invalid_json():
 
 2. **Clearer Assertions:** Improved assertions to directly check for the expected return values (Path objects) and the addition of the path to `sys.path`.
 
-3. **Edge Cases:** Added a test for an empty `marker_files` tuple to demonstrate exception handling for invalid input.
+3. **Edge Cases:** Added a test for an empty `marker_files` tuple to demonStarte exception handling for invalid input.
 
-4. **`pytest.raises`:** Added a `test_set_project_root_empty_marker_files` test for demonstrating the use of `pytest.raises` for checking specific exceptions.
+4. **`pytest.raises`:** Added a `test_set_project_root_empty_marker_files` test for demonStarting the use of `pytest.raises` for checking specific exceptions.
 
 5. **Error Handling:**  The test cases now use `pytest.raises` to handle `FileNotFoundError` and `json.JSONDecodeError` in the `test_settings_loading` function, showcasing how to robustly test code that handles exceptions.  Crucially, the `@pytest.mark.skip` marker is used on the `test_settings_loading` function, because this test requires a setup (e.g., `src` directory, `settings.json` file) in your current directory to succeed.
 
-6. **Example Test for Other Functions:**  Added a placeholder `test_settings_loading` test demonstrating how to test functions that read files, including error handling for `FileNotFoundError` and `json.JSONDecodeError`.   Crucially, it now uses a `mock_settings_file` to avoid errors.
+6. **Example Test for Other Functions:**  Added a placeholder `test_settings_loading` test demonStarting how to test functions that read files, including error handling for `FileNotFoundError` and `json.JSONDecodeError`.   Crucially, it now uses a `mock_settings_file` to avoid errors.
 
 
 **How to run the tests:**

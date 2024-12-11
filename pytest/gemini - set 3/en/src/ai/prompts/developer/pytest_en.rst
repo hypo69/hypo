@@ -69,7 +69,7 @@ def test_save_data_to_file_io_error(mock_logger, mock_file):
 1. **Clearer Mocks:**  Instead of patching `module_name.Path.open`,  we directly patch `builtins.open` which is more standard and avoids potential ambiguity. We also patch `module_name.logger` directly.
 
 
-2. **Specific Error Handling:**  The tests now specifically test for `FileNotFoundError` and `IOError`, demonstrating better exception handling.
+2. **Specific Error Handling:**  The tests now specifically test for `FileNotFoundError` and `IOError`, demonStarting better exception handling.
 
 
 3. **Empty Input:** Added a test case for saving an empty string as data, which is a valid edge case.

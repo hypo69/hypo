@@ -99,7 +99,7 @@ async def test_graber_execute_locator_decorator_error_handling(graber, mock_driv
 
 2. **Asyncio Tests:**  Tests for asynchronous functions (`__init__` which might eventually become async) are marked with `@pytest.mark.asyncio` and use `await` correctly.
 
-3. **Error Handling:** The `test_graber_execute_locator_decorator_error_handling` now demonstrates proper error handling, catching exceptions within the decorator and asserting that the logger is called with an error message.  This tests a critical part of the code.
+3. **Error Handling:** The `test_graber_execute_locator_decorator_error_handling` now demonStartes proper error handling, catching exceptions within the decorator and asserting that the logger is called with an error message.  This tests a critical part of the code.
 
 4. **Clearer Tests:** Test names are more specific and descriptive, making the test suite easier to understand.
 

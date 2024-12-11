@@ -115,7 +115,7 @@ def test_set_campaign_worksheet_handles_errors(mock_worksheet, test_campaign, lo
 * **Error Handling:** Tests explicitly check for `APIError` and other potential exceptions raised by the `AliCampaignGoogleSheet` class during file operations.  The `pytest.raises` is used for assertions.
 * **Logger Mocking:** A `TestLogger` class is introduced to capture logs emitted by the code under test. This allows for easy verification of log messages without external dependencies.
 * **Data Objects:** Fixtures like `test_campaign` and `test_categories` are used to provide valid data for tests, which significantly improves readability and maintainability.  This ensures your tests don't rely on data from outside the test scope.
-* **Comprehensive Test Cases:** The example shows tests for `clear`, `set_campaign_worksheet`, and demonstrates the pattern. You should add more tests covering `set_products_worksheet`, `set_categories_worksheet`, and other methods.
+* **Comprehensive Test Cases:** The example shows tests for `clear`, `set_campaign_worksheet`, and demonStartes the pattern. You should add more tests covering `set_products_worksheet`, `set_categories_worksheet`, and other methods.
 * **Realistic Edge Cases:** Consider testing with empty lists, empty categories, categories without the expected attributes, and scenarios where data is missing.
 * **Fixtures:** The code uses fixtures for `mock_spreadsheet`, `mock_worksheet`, `test_campaign`, and `logger_instance` to make the test cases cleaner and reusable.
 

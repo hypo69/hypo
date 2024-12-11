@@ -86,7 +86,7 @@ graph TD
 
 ```
 
-This example demonstrates how to call functions. First, it calls `process_campaign_category` with specific arguments, then it calls `process_campaign` and `process_all_campaigns` which likely perform tasks of preparing campaign data. Then it retrieves campaign data, their names and supported languages.
+This example demonStartes how to call functions. First, it calls `process_campaign_category` with specific arguments, then it calls `process_campaign` and `process_all_campaigns` which likely perform tasks of preparing campaign data. Then it retrieves campaign data, their names and supported languages.
 
 
 # <mermaid>
@@ -122,7 +122,7 @@ graph LR
     * `from ..prepare_campaigns import *`: Imports all functions from the `prepare_campaigns` module within the `src.suppliers.aliexpress.campaign` sub-module.  This imports the logic for processing campaigns. This is a clear indication of a well-structured project, where reusable functions are organized in dedicated modules.  The `..` indicates moving up one directory level in the file structure.
 
 * **Functions (implicit):**
-    * `process_campaign_category`, `process_campaign`, `process_all_campaigns`, `get_directory_names`: These are likely functions within the `prepare_campaigns` module. The code demonstrates how to use them, but the exact logic inside is not shown. This highlights the top-level structure of the program, showing the interaction with a campaign data processing module.
+    * `process_campaign_category`, `process_campaign`, `process_all_campaigns`, `get_directory_names`: These are likely functions within the `prepare_campaigns` module. The code demonStartes how to use them, but the exact logic inside is not shown. This highlights the top-level structure of the program, showing the interaction with a campaign data processing module.
 
 
 * **Variables:**
@@ -133,7 +133,7 @@ graph LR
 
 
 * **Example Usage:**
-    * The code provides example calls to the imported functions `process_campaign_category`, `process_campaign`, and `process_all_campaigns` with different parameters. This demonstrates how to use the functions to perform specific campaign preparations.
+    * The code provides example calls to the imported functions `process_campaign_category`, `process_campaign`, and `process_all_campaigns` with different parameters. This demonStartes how to use the functions to perform specific campaign preparations.
 
 
 * **Possible Errors/Improvements:**

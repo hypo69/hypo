@@ -38,7 +38,7 @@ import pytest
 #     """Test with string containing special characters."""
 #     assert my_function("!@#$%^&*()") == "!@#$%^&*()".upper()
 
-# Example test demonstrating pytest.mark.parametrize for multiple test cases
+# Example test demonStarting pytest.mark.parametrize for multiple test cases
 # def test_add(x, y, expected):
 #     assert x + y == expected
 
@@ -52,7 +52,7 @@ import pytest
 
 1. **No Code to Test:**  The input `desktop.ini` file is a Windows file.  It doesn't contain Python code, so no tests can be generated.
 
-2. **Example Tests:** The code above provides example tests assuming a hypothetical function `my_function`.  This demonstrates how to:
+2. **Example Tests:** The code above provides example tests assuming a hypothetical function `my_function`.  This demonStartes how to:
    - Define fixtures for reusable data.
    - Use `pytest.raises` for exception handling.
    - Write descriptive test function names.

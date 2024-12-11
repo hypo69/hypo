@@ -19,7 +19,7 @@ graph LR
     A[Instruction String] --> B(No Algorithm);
 ```
 
-This is a very basic mermaid diagram.  It shows a single string (A) and the lack of a complex algorithm or data processing (B). There are no dependencies to illustrate since there's no code.
+This is a very basic mermaid diagram.  It shows a single string (A) and the lack of a complex algorithm or data processing (B). There are no dependencies to illuStarte since there's no code.
 
 
 ## <explanation>

@@ -82,9 +82,9 @@ def test_get_translations_from_presta_translations_table_db_error(mock_translati
 
 4. **Handling `None` Input for `i18n`:** Added `test_get_translations_from_presta_translations_table_with_None_i18n` to account for the `None` input for `i18n`.
 
-5. **Invalid Input Testing:** Included `test_get_translations_from_presta_translations_table_with_invalid_product_reference` to test when the product reference is invalid or `None`. It demonstrates an important aspect of handling unexpected input that the function should not raise an exception, but instead return an appropriate, empty result.
+5. **Invalid Input Testing:** Included `test_get_translations_from_presta_translations_table_with_invalid_product_reference` to test when the product reference is invalid or `None`. It demonStartes an important aspect of handling unexpected input that the function should not raise an exception, but instead return an appropriate, empty result.
 
-6. **Exception Handling:** Added `test_get_translations_from_presta_translations_table_db_error` to demonstrate how to test for exceptions raised by the database interaction.  This is a vital aspect of robustness.
+6. **Exception Handling:** Added `test_get_translations_from_presta_translations_table_db_error` to demonStarte how to test for exceptions raised by the database interaction.  This is a vital aspect of robustness.
 
 7. **Assertions:** Assertions now check for the expected behavior of the mock calls, ensuring that the `select_record` method is called with the correct arguments.
 

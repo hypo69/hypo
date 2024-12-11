@@ -196,13 +196,13 @@ graph TD
 
 **Classes:**
 
-- `CrawleePython`: This class orchestrates the web scraping process.
+- `CrawleePython`: This class orcheStartes the web scraping process.
     - `__init__`: Initializes the `CrawleePython` object with parameters like `max_requests`, `headless` (whether to run the browser in headless mode), and `browser_type`.  These will likely influence the `PlaywrightCrawler` setup.
     - `setup_crawler`: Sets up the `PlaywrightCrawler` instance. This is crucial for initializing the browser and creating the crawling context.
     - `run_crawler`: Executes the crawl using the initial URL list.
     - `export_data`: Saves the extracted data to a JSON file.
     - `get_data`: Retrieves the extracted data.
-    - `run`: This is the main method that orchestrates the crawl, data extraction, and saving. It sequentially calls other methods to accomplish the task.
+    - `run`: This is the main method that orcheStartes the crawl, data extraction, and saving. It sequentially calls other methods to accomplish the task.
 
 **Functions:**
 

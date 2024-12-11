@@ -91,7 +91,7 @@ def test_prestashop_shop_super_init_called():
 
 4. **Edge Case and Boundary Condition Testing:**  Testing empty and `None` credentials is a critical boundary condition.
 
-5. **Example of `super()` call test:** Added a `test_prestashop_shop_super_init_called` that demonstrates how to test if the `super().__init__` method is correctly called with the expected arguments.   **Important:** Replace the `DummyPrestaShop` class with the actual `PrestaShop` class if it has an explicit `__init__` that you want to test.  This test just ensures something is happening.
+5. **Example of `super()` call test:** Added a `test_prestashop_shop_super_init_called` that demonStartes how to test if the `super().__init__` method is correctly called with the expected arguments.   **Important:** Replace the `DummyPrestaShop` class with the actual `PrestaShop` class if it has an explicit `__init__` that you want to test.  This test just ensures something is happening.
 
 6. **`isinstance` Check:**  Includes an `assert isinstance(shop, PrestaShopShop)` which verifies the object type is correctly initialized. This is crucial for testing if the class is properly constructed.
 

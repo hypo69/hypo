@@ -25,7 +25,7 @@
     - Contains files related to the PrestaShop API.
     - `__init__.py`: Initializes the API module.
     - `_dot`: Contains DOT files for graph representations.
-    - `_examples`: Provides example scripts demonstrating the usage of the API.
+    - `_examples`: Provides example scripts demonStarting the usage of the API.
     - `api.py`: Contains the main logic for interacting with the PrestaShop API.
     - `version.py`: Manages the version information of the API module.
 

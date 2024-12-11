@@ -111,7 +111,7 @@ def test_passtrough_name(randomizer):
 You must add a function (or several functions) in your code to represent what `intervention_1` does.  Create several test cases (`test_intervention_1_valid_input`, `test_intervention_1_invalid_input`, `test_intervention_1_edge_case` etc.) testing these functions. Use fixtures to provide any required data.  Then, add assertions to verify the correct functionality and error handling of `intervention_1` based on its documented behavior.
 
 
-Example (Illustrative, you need to match the specific requirements of `intervention_1`):
+Example (IlluStartive, you need to match the specific requirements of `intervention_1`):
 
 ```python
 # ... (other tests)

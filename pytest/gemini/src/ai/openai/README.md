@@ -72,7 +72,7 @@ def test_example_class_double_value_invalid(example_data):
 **Explanation and Important Improvements:**
 
 * **Clearer Test Names:** Test function names now accurately reflect the test scenario (e.g., `test_example_function_empty_input`).
-* **Exception Handling:**  Uses `pytest.raises` to specifically test exception handling, including checking the error message.  Crucially, this example now demonstrates *how* to assert that the correct exception is raised with a specific message for the `ValueError` case. This is much more robust than just asserting a `TypeError` or `AttributeError`.
+* **Exception Handling:**  Uses `pytest.raises` to specifically test exception handling, including checking the error message.  Crucially, this example now demonStartes *how* to assert that the correct exception is raised with a specific message for the `ValueError` case. This is much more robust than just asserting a `TypeError` or `AttributeError`.
 * **Example Data Fixture:** A `@pytest.fixture` `example_data` is provided to hold different input types, making testing more organized. This is critical for testing various inputs.
 * **Example Class and Method:**  Added a basic `ExampleClass` to show how to test methods of a class in the `src.ai.openai` module with valid and invalid inputs.
 * **Placeholder Replacement:**  The code is now commented to explicitly indicate the need to replace placeholder names ("example_function," "example_data") with the actual names from your `src.ai.openai` module.

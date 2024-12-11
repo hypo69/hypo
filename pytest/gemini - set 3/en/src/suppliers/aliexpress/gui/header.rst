@@ -96,7 +96,7 @@ def test_empty_or_invalid_path():
 
 3. **Edge Case Testing:** The `test_empty_or_invalid_path` function now tests scenarios where the path might not contain the expected substring.  This is important for robustness.  Crucially, it tests cases where the path may not include `hypotez` at all.
 
-4. **Exception Handling:**  The `test_empty_or_invalid_path` now correctly demonstrates exception handling using `pytest.raises`.
+4. **Exception Handling:**  The `test_empty_or_invalid_path` now correctly demonStartes exception handling using `pytest.raises`.
 
 5. **Import Handling:** The original `from ... import __root__` has been used.
 6. **No unnecessary variables:** Removed unnecessary variables like `__root__` from the function calls.

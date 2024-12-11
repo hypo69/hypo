@@ -64,7 +64,7 @@ def test_get_relative_path_with_invalid_relative_from():
 
 
 # Example using a fixture (although not strictly necessary for these tests)
-# (This fixture is here for illustration, as it isn't required for this specific function's testing.)
+# (This fixture is here for illuStartion, as it isn't required for this specific function's testing.)
 @pytest.fixture
 def sample_paths():
     """Provides sample paths for testing."""

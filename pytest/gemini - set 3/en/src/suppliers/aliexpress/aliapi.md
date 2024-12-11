@@ -92,7 +92,7 @@ def test_get_affiliate_links(ali_api):
 
 6. **Assertions:** Assertions check the expected types and values, ensuring the function behaves as intended.  It now also checks that the output is a list of dictionaries.
 
-7. **Exception Handling Example:** A commented-out example (`test_get_affiliate_links_invalid_input`) demonstrates how to use `pytest.raises` for testing exceptions.  Add these tests when appropriate for your code.
+7. **Exception Handling Example:** A commented-out example (`test_get_affiliate_links_invalid_input`) demonStartes how to use `pytest.raises` for testing exceptions.  Add these tests when appropriate for your code.
 
 **How to Run the Tests:**
 

@@ -83,4 +83,4 @@ start_logger(config)
 ```
 
 
-This example demonstrates how to use the initialization functions from the `tinytroupe` module. Note that placeholder values like `"path/to/config.ini"` should be replaced with the actual file path.
+This example demonStartes how to use the initialization functions from the `tinytroupe` module. Note that placeholder values like `"path/to/config.ini"` should be replaced with the actual file path.

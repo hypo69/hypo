@@ -93,7 +93,7 @@ documentation.
 
 # ## Пример использования API
 #
-# This section demonstrates how to interact with the PrestaShop API.
+# This section demonStartes how to interact with the PrestaShop API.
 
 
 # ### Запрос данных через API
@@ -176,7 +176,7 @@ documentation.
 
 # ## Пример использования API
 #
-# This section demonstrates how to interact with the PrestaShop API.
+# This section demonStartes how to interact with the PrestaShop API.
 
 
 # ### Запрос данных через API

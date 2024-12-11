@@ -81,10 +81,10 @@ def test_module_import(mock_environment):
 1. **Mocking Environment:** The `mock_environment` fixture is *essential*.  The original code heavily relies on modifying `sys.path`, which can cause problems when running tests in a different environment or in isolation.  The fixture creates a temporary directory structure that mimics the intended directory layout, ensuring your tests run correctly without affecting the real filesystem.
 
 
-2. **Error Handling:** The `test_dir_root_invalid_path` test now demonstrates how to check for and handle errors. The `with pytest.raises` block verifies that a `ValueError` is raised when `hypotez` is not present in the current working directory, demonstrating defensive programming.  This is crucial because the original code doesn't handle this edge case.
+2. **Error Handling:** The `test_dir_root_invalid_path` test now demonStartes how to check for and handle errors. The `with pytest.raises` block verifies that a `ValueError` is raised when `hypotez` is not present in the current working directory, demonStarting defensive programming.  This is crucial because the original code doesn't handle this edge case.
 
 
-3. **Import Tests:** The `test_module_import` test is added.  Import errors are a *common* problem when manipulating `sys.path`, and this demonstrates how to verify that imports work as expected.  Crucially, this test *does not* test the functions from `gs` — it only tests the import *mechanism*.
+3. **Import Tests:** The `test_module_import` test is added.  Import errors are a *common* problem when manipulating `sys.path`, and this demonStartes how to verify that imports work as expected.  Crucially, this test *does not* test the functions from `gs` — it only tests the import *mechanism*.
 
 
 4. **Missing Tests:** The code now correctly tests the path manipulation, but the provided example code only shows the *setup*.  You *absolutely must* add tests to verify that your functions like `gs`, `Supplier`, `Product`, etc. are working as expected after the environment is set up correctly.

@@ -71,9 +71,9 @@ def test_graber_fetch_exception(mock_graber):
 
 3. **Testing the `MODE` Constant:** A test verifies that the `MODE` constant is assigned the expected value.
 
-4. **Testing `fetch` (Valid Input):**  The test demonstrates how to use the `mock_graber` fixture to test the `fetch` method with valid input (mocked data).
+4. **Testing `fetch` (Valid Input):**  The test demonStartes how to use the `mock_graber` fixture to test the `fetch` method with valid input (mocked data).
 
-5. **Testing Exception Handling (Crucial):** The `test_graber_fetch_exception` function demonstrates how to use `pytest.raises` to test for expected exceptions.  This is *critical* for robust testing.  Replace `MockError` with the actual exception type `Graber` is expected to raise.
+5. **Testing Exception Handling (Crucial):** The `test_graber_fetch_exception` function demonStartes how to use `pytest.raises` to test for expected exceptions.  This is *critical* for robust testing.  Replace `MockError` with the actual exception type `Graber` is expected to raise.
 
 6. **Complete Tests Required:** The example only shows a minimal set of test cases.  You need to add many more tests:
    - Test different return values from `fetch`.

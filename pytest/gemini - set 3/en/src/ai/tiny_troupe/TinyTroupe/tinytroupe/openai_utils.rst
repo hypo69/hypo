@@ -92,7 +92,7 @@ class MockOpenAIClient(OpenAIClient):
 
 * **Mock Configuration:** A `mock_config` fixture is created to provide a mocked `config` for testing, allowing you to control the configuration values without needing to write a full config file.
 
-* **Comprehensive Error Handling:** Added a test case (`test_send_message_invalid_request`) specifically for handling `InvalidRequestError` to demonstrate exception handling, using `pytest.raises` for clear verification.  The tests now check if the proper error logs are made in different scenarios.
+* **Comprehensive Error Handling:** Added a test case (`test_send_message_invalid_request`) specifically for handling `InvalidRequestError` to demonStarte exception handling, using `pytest.raises` for clear verification.  The tests now check if the proper error logs are made in different scenarios.
 
 
 * **Clearer Tests:** Test names are improved for better readability and indication of the test's purpose.
@@ -101,7 +101,7 @@ class MockOpenAIClient(OpenAIClient):
 * **Complete Example:** Provides a `MockOpenAIClient` class that mocks the necessary OpenAI methods. You'll need to adapt this to your specific needs, mocking any other interactions with the OpenAI API that your `OpenAIClient` might have.
 
 
-* **Token Counting Test:** Added a basic test (`test_count_tokens_valid_input`) for the `_count_tokens` function, demonstrating how to test with a valid input set.
+* **Token Counting Test:** Added a basic test (`test_count_tokens_valid_input`) for the `_count_tokens` function, demonStarting how to test with a valid input set.
 
 * **`client` Function Test:** A test (`test_client_function`) is added to verify that the `client` function returns the expected client instance based on the configured API type. This makes sure the API setup logic works correctly.
 

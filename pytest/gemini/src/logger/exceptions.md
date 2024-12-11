@@ -103,9 +103,9 @@ def test_file_not_found_error_with_pytest_raises(mock_logger):
 
 **Explanation and Improvements:**
 
-* **Comprehensive Test Cases:** The provided example now includes tests for `CustomException`, `FileNotFoundError`, `ProductFieldException`, `PrestaShopException`, and `PrestaShopAuthenticationError`.  Crucially, it demonstrates testing the *creation* of these exceptions correctly and handles the nested exception types (e.g., PrestaShopException has `ps_error_msg`).
+* **Comprehensive Test Cases:** The provided example now includes tests for `CustomException`, `FileNotFoundError`, `ProductFieldException`, `PrestaShopException`, and `PrestaShopAuthenticationError`.  Crucially, it demonStartes testing the *creation* of these exceptions correctly and handles the nested exception types (e.g., PrestaShopException has `ps_error_msg`).
 * **Mocking `logger`:** The `mock_logger` fixture is used to isolate the logger from the tests. This is essential for avoiding side effects like logging to the console while running the tests.
-* **`pytest.raises` for Exception Testing:** The example `test_file_not_found_error_with_pytest_raises` demonstrates the correct way to use `pytest.raises` to test for expected exceptions.  This is essential in the tests for invalid inputs.
+* **`pytest.raises` for Exception Testing:** The example `test_file_not_found_error_with_pytest_raises` demonStartes the correct way to use `pytest.raises` to test for expected exceptions.  This is essential in the tests for invalid inputs.
 * **Clear Test Function Names:** Names like `test_custom_exception_with_original_exception` clearly describe the purpose of each test.
 * **Edge Cases:** Basic example tests are included for various exception conditions, but more elaborate tests for real-world cases are needed.
 * **Comments:** The tests are well-commented, explaining the purpose of each test case.

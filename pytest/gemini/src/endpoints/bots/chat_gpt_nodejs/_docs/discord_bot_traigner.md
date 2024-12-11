@@ -149,7 +149,7 @@ def test_select_dataset_invalid(bot):
 2. **Adapt Tests:**  Adjust the test cases to match the parameters and return values of your functions.
 3. **Import Needed Modules:** Make sure to import any necessary modules from your bot's code.
 
-**Example of using `pytest.raises` (Illustrative):**
+**Example of using `pytest.raises` (IlluStartive):**
 
 ```python
 import pytest

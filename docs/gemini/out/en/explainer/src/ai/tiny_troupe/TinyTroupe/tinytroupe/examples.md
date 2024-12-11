@@ -86,7 +86,7 @@ The only dependency in this example is `tinytroupe.agent`, which is imported. Th
 
 **Functions:**
 
-- `create_oscar_the_architect()`: This function demonstrates how to use the `TinyPerson` class to create a person with specific characteristics.
+- `create_oscar_the_architect()`: This function demonStartes how to use the `TinyPerson` class to create a person with specific characteristics.
 -  `create_lisa_the_data_scientist()`, `create_marcos_the_physician()`, `create_lila_the_linguist()`: Similarly, these functions create different personality profiles, showcasing the flexibility of the API.
 
 **Variables:**
@@ -96,8 +96,8 @@ The only dependency in this example is `tinytroupe.agent`, which is imported. Th
 
 **Potential Errors/Improvements:**
 
-- The code demonstrates the use of the library, but without seeing the `TinyPerson` class implementation, it's unclear how robust the class is. Missing error handling, input validation (e.g., to ensure the correct data types), and defensive programming could be included to increase the reliability of the class.
+- The code demonStartes the use of the library, but without seeing the `TinyPerson` class implementation, it's unclear how robust the class is. Missing error handling, input validation (e.g., to ensure the correct data types), and defensive programming could be included to increase the reliability of the class.
 
 **Relationship to Other Parts of the Project:**
 
-The code in `examples.py` is part of the `tinytroupe` project, demonstrating how to create and interact with `TinyPerson` objects.  It depends on the internal structure and implementation of the `tinytroupe.agent` module and any modules it relies on, which are not visible here.  Further investigation of the `tinytroupe.agent` module is necessary to understand the full context and potential interactions with other parts of the project.
+The code in `examples.py` is part of the `tinytroupe` project, demonStarting how to create and interact with `TinyPerson` objects.  It depends on the internal structure and implementation of the `tinytroupe.agent` module and any modules it relies on, which are not visible here.  Further investigation of the `tinytroupe.agent` module is necessary to understand the full context and potential interactions with other parts of the project.

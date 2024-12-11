@@ -82,7 +82,7 @@ def test_facebook_init_driver_get_url(mock_driver):
 
 1. **Mocking:** The code now uses `pytest.fixture` and mocks the `Driver` object (`mock_driver`). This is crucial because you can't directly interact with a real Facebook browser within a test.  Mocking isolates the test.  Critically, it replaces the actual `login` and `promote_post` method implementations with mocked versions, making the tests much more reliable.
 
-2. **Clearer Test Cases:**  `test_facebook_login_success` and `test_facebook_promote_post_success` now have clearer assertions, checking for the expected return values.  Importantly, `test_facebook_promote_post_failure` demonstrates how to handle expected failures.
+2. **Clearer Test Cases:**  `test_facebook_login_success` and `test_facebook_promote_post_success` now have clearer assertions, checking for the expected return values.  Importantly, `test_facebook_promote_post_failure` demonStartes how to handle expected failures.
 
 3. **Mock Data:** `test_facebook_promote_post_success` and `test_facebook_promote_post_failure` provide mock data (`test_item`) which the mocked functions need to use for the `promote_post` action.
 

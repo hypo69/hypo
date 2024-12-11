@@ -116,7 +116,7 @@ def test_login_missing_locator(mock_driver, mock_logger):
 * **`setup_facebook_credentials` Fixture:** Introduced a fixture to manage setting the `facebook_credentials` within the testing context. This avoids potential side effects between tests.
 * **`mock_logger` Fixture:** Created a `mock_logger` fixture to mock the logger, preventing the logger from interacting with files or the console during the tests. This is cleaner than modifying the global logger.
 * **Edge Cases:** Added tests for missing/empty credentials (`test_login_missing_credentials`) and missing locators (commented example `test_login_missing_locator`).
-* **Exception Handling within Tests:** Demonstrates how to capture and assert on specific exceptions (like `IndexError` and `AttributeError`).
+* **Exception Handling within Tests:** DemonStartes how to capture and assert on specific exceptions (like `IndexError` and `AttributeError`).
 
 
 This revised solution is significantly more robust and complete in its testing coverage. Remember to install `pytest` and `unittest.mock` if you don't have them.  Replace the placeholder imports (`from src import gs`, etc.) with your actual module paths. This will make the tests more effective and less prone to unexpected failures. Remember to adapt the `test_login_missing_locator` test as needed based on the actual error you expect if locators are missing. Remember that for `locators`, if you have complex JSON parsing in your `locators` file loading function, you'd want to mock the parsing itself, likely using `patch` to stub the JSON loading call and control the returned data more directly.

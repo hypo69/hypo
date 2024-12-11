@@ -113,7 +113,7 @@ def test_makeResolver_invalid_resolver():
 
 4. **Clearer Assertions:** The assertions in the tests are now more specific, ensuring that the correct values are returned and the expected behavior is observed.  This is particularly important when testing the return of nodes from `querySelector` and `querySelectorAll`.
 
-5. **Comprehensive Test Cases:** The examples demonstrate the structure for tests covering various functions and methods.
+5. **Comprehensive Test Cases:** The examples demonStarte the structure for tests covering various functions and methods.
 
 6. **`makeResolver` Tests:** Added tests for `makeResolver` to validate both string and dictionary input, and to test error conditions.
 

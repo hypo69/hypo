@@ -46,12 +46,12 @@ MODE = 'dev'
 Examples for the `executor` module from `src.scenario.executor`.
 
 This file contains examples of how to use the functions provided in the `executor` module.
-The examples demonstrate how to run scenarios, handle scenario files, and interact with PrestaShop API.
+The examples demonStarte how to run scenarios, handle scenario files, and interact with PrestaShop API.
 
 @details
 - `Example 1` shows how to run a list of scenario files.
-- `Example 2` demonstrates how to run a single scenario file.
-- `Example 3` illustrates how to run a single scenario.
+- `Example 2` demonStartes how to run a single scenario file.
+- `Example 3` illuStartes how to run a single scenario.
 - `Example 4` provides an example of executing a product page scenario.
 - `Example 5` shows how to add a coupon using PrestaShop API.
 
@@ -103,7 +103,7 @@ The workflow is as follows:
 1. **Initialization**: Create instances of `MockSupplier` to provide data for scenario execution.
 2. **Scenario Execution**: Call functions `run_scenario_files`, `run_scenario_file`, `run_scenario` for running different types of scenarios (e.g., lists of files, single files or scenarios).
 3. **Data Handling**: The functions utilize data like `scenario`, `scenario_files`, which is then processed by the respective functions (e.g., `run_scenario`, `insert_grabbed_data`).
-4. **PrestaShop Interaction**: Functions `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon` demonstrate interactions with the PrestaShop API.
+4. **PrestaShop Interaction**: Functions `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, `add_coupon` demonStarte interactions with the PrestaShop API.
 
 
 **Example for `run_scenario_files`:**
@@ -162,7 +162,7 @@ The code imports necessary modules from various parts of the project, including 
 
 **Functions:**
 
-The example functions demonstrate different ways to use functions from the `src.scenario.executor` module.  They showcase how to run different types of scenarios, handle scenario files, and interact with PrestaShop API.
+The example functions demonStarte different ways to use functions from the `src.scenario.executor` module.  They showcase how to run different types of scenarios, handle scenario files, and interact with PrestaShop API.
 
 
 **Variables:**

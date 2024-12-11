@@ -111,7 +111,7 @@ def test_run_prepared(spreadsheet_instance):
 2. **Fixtures:** A `spreadsheet_instance` fixture is created to simplify test setup. It also ensures the credentials are properly handled and avoid side effects.
 3. **Clearer Test Names:** Test function names are more descriptive (e.g., `test_create_spreadsheet`).
 4. **Exception Handling:** Includes `pytest.raises` to test the exception handling of `SpreadsheetNotSetError` and `SheetNotSetError`.
-5. **Parameterization:** Uses `pytest.mark.parametrize` to run tests with multiple inputs for better coverage.  The `email` parameter now demonstrates the use of test parameters.
+5. **Parameterization:** Uses `pytest.mark.parametrize` to run tests with multiple inputs for better coverage.  The `email` parameter now demonStartes the use of test parameters.
 6. **Data Validation:** Added assertions to check that the expected attributes are set after creating or sharing a spreadsheet.
 
 

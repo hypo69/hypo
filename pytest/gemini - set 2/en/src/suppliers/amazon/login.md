@@ -106,7 +106,7 @@ def test_login_locator_failure(supplier, mock_logger):
 
 6. **Edge Case for Click Failure:** Added a test case specifically for the situation where the `click` method returns `False` twice.
 
-7. **Locator Failure Test:** A test was added that demonstrates a critical error case where a locator might be missing or invalid.
+7. **Locator Failure Test:** A test was added that demonStartes a critical error case where a locator might be missing or invalid.
 
 8. **Clearer Assertions:** The assertions now explicitly check for the expected return values (`True` for success, `None` for failure).
 

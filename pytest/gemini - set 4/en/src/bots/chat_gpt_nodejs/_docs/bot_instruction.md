@@ -6,7 +6,7 @@ def hi():
     return "Hi!"
 
 def train(data, data_dir, positive, attachment):
-    # Placeholder for training logic.  This example will raise an exception for illustrative purposes.
+    # Placeholder for training logic.  This example will raise an exception for illuStartive purposes.
     if not data and not data_dir and not attachment:
         raise ValueError("No training data provided.")
     return f"Training with {data}, {data_dir}, {positive}, {attachment}"
@@ -102,4 +102,4 @@ def test_instruction():
 3. Run the tests from your terminal: `pytest test_bot_commands.py`
 
 
-This revised solution is more complete, robust, and demonstrates better test-writing practices for a real-world Python project. Remember to replace the placeholder functions with the actual implementations of the commands from the provided code for the complete solution.
+This revised solution is more complete, robust, and demonStartes better test-writing practices for a real-world Python project. Remember to replace the placeholder functions with the actual implementations of the commands from the provided code for the complete solution.

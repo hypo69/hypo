@@ -120,7 +120,7 @@ The code depends on several other modules within the `src` package for data hand
 ### Potential Errors and Improvements:
 
 - **Error Handling:** While error logging is present, more specific error handling for file reading, JSON parsing, and Facebook API interactions could enhance robustness.
-- **Rate Limiting:** The random delay is a basic approach to rate limiting.  A more sophisticated approach using a queue or a delay strategy based on server responses would be more efficient and prevent getting banned.
+- **Rate Limiting:** The random delay is a basic approach to rate limiting.  A more sophisticated approach using a queue or a delay Startegy based on server responses would be more efficient and prevent getting banned.
 - **Logging:** More informative logging, especially for errors, could be implemented (e.g., the specific cause of a failure).
 - **Data validation:**  Add validation checks for data types and the existence of required files/data to prevent unexpected behavior.
 - **Code readability:** The code can be improved by using more descriptive variable names and consolidating logic to avoid redundancy.

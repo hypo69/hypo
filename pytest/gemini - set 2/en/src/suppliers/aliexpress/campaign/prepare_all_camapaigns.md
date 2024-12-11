@@ -67,7 +67,7 @@ def test_prepare_all_campaigns_exception_handling(mocker):
 
 3. **Mocking `process_all_campaigns`:** Critically, the code now uses `mocker.patch` to mock the `process_all_campaigns` function.  This is essential because the original code only *calls* the function; it doesn't interact with external resources or data. The provided test case now checks if `process_all_campaigns` is called at all.
 
-4. **Example of Exception Handling Test:** Includes a test case demonstrating how to use `pytest.raises` to catch and assert on exceptions raised within `process_all_campaigns`.
+4. **Example of Exception Handling Test:** Includes a test case demonStarting how to use `pytest.raises` to catch and assert on exceptions raised within `process_all_campaigns`.
 
 5. **Placeholder for Further Tests:** The code includes comments to suggest adding tests for specific behaviors (e.g., creating new campaigns) if relevant in the `prepare_all_campaigns` function.
 

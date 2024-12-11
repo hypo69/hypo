@@ -63,7 +63,7 @@ def test_telegram_bot_invalid_message_type():
 
 2. **Clear Test Names:** Test names are descriptive (e.g., `test_telegram_bot_initialization`, `test_telegram_bot_send_message_invalid_chat_id`).
 
-3. **`pytest.raises` for Exceptions:**  The `test_telegram_bot_send_message_invalid_chat_id` and `test_telegram_bot_send_message_no_message` tests demonstrate how to use `pytest.raises` to check for expected exceptions and inspect the error message.  This is crucial for robust testing.
+3. **`pytest.raises` for Exceptions:**  The `test_telegram_bot_send_message_invalid_chat_id` and `test_telegram_bot_send_message_no_message` tests demonStarte how to use `pytest.raises` to check for expected exceptions and inspect the error message.  This is crucial for robust testing.
 
 4. **Example Tests (Crucial):**  The provided code only imports a class (`TelegramBot`), but doesn't define any methods.  The example tests are based on a *hypothetical* `send_message` method.  You MUST replace this with actual methods from your `TelegramBot` class and write tests that actually use your class methods.
 

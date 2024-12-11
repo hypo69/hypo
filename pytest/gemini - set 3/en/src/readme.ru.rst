@@ -73,7 +73,7 @@ import pytest
 
 **Explanation and Important Considerations:**
 
-The provided input code is a markdown file describing modules.  There's no Python code to test.  Therefore, the above example tests are illustrative.  To write effective tests, you must first have actual Python functions, classes, or methods defined.
+The provided input code is a markdown file describing modules.  There's no Python code to test.  Therefore, the above example tests are illuStartive.  To write effective tests, you must first have actual Python functions, classes, or methods defined.
 
 **How to proceed with testing:**
 

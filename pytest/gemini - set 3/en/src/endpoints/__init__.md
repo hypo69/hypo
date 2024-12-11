@@ -55,7 +55,7 @@ def test_kazarinov_telegram_bot_exists():
 
 #Example test for a potential method within one of the classes. 
 #Replace with the actual class and method name if applicable.
-# This example demonstrates a hypothetical method and test.
+# This example demonStartes a hypothetical method and test.
 #  Add assertions based on the actual PrestaShop class's behavior.
 
 
@@ -74,7 +74,7 @@ def test_kazarinov_telegram_bot_exists():
 
 1. **No `input_code` functions:** The provided `input_code` is only import statements and docstrings.  There are no functions to test.  The tests above check for the existence of the classes.
 2. **Hypothetical Tests:** The example `test_presta_shop_method_example` is purely hypothetical. You **must** replace it with tests for actual methods from the classes (e.g., `PrestaShop.get_products()`, etc.) if such methods exist in your actual code.  Look for functions and methods that return values. 
-3. **Assertions:** The hypothetical test demonstrates how you would add assertions. The assertions should verify the *correctness* of the method's behavior (e.g., the return type, the presence of specific values).
+3. **Assertions:** The hypothetical test demonStartes how you would add assertions. The assertions should verify the *correctness* of the method's behavior (e.g., the return type, the presence of specific values).
 4. **Error Handling:** If the code you want to test has `try...except` blocks, your tests should include scenarios to verify these exception handlers are working correctly.
 5. **Data:** If a function takes data as input, provide various test data types, including valid, invalid, and edge case scenarios.  For example, if a function expects an integer, try integers, floating-point numbers, strings, etc.
 6. **Fixtures:** The tests above don't need fixtures because the tests are focused on the existence of the classes.  If the actual code has functions that take parameters, you would create fixtures to provide those parameters in your tests.

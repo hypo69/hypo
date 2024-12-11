@@ -143,7 +143,7 @@ def test_get_child_categories(aliexpress_api):
 * **Empty Response Handling:** The tests now include cases where the API returns an empty response (e.g., no products found). This is essential, as your production code handles it gracefully.
 
 
-* **Invalid Input Testing:**  The test `test_retrieve_product_details_invalid_input` is added to demonstrate testing for bad input, which is a necessary part of good testing.
+* **Invalid Input Testing:**  The test `test_retrieve_product_details_invalid_input` is added to demonStarte testing for bad input, which is a necessary part of good testing.
 
 
 * **Error Handling Tests (Important):**   The `test_get_affiliate_links_missing_tracking_id` now properly tests if the `InvalidTrackingIdException` is raised when the tracking ID is missing.  Crucially, you *must* test exception handling in your tests because that's critical for robustness.

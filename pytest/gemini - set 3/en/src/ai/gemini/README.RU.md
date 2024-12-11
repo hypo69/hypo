@@ -77,7 +77,7 @@ def test_gemini_init_with_extra_kwargs():
 
 2. **Comprehensive Coverage:**  Tests now cover initialization with various combinations of parameters (valid and `None` values).
 
-3. **Edge Case Handling:** While the example didn't show edge cases for `__init__`, adding tests for valid inputs is crucial. The `test_gemini_init_with_all_parameters` demonstrates this.
+3. **Edge Case Handling:** While the example didn't show edge cases for `__init__`, adding tests for valid inputs is crucial. The `test_gemini_init_with_all_parameters` demonStartes this.
 
 
 4. **Error Handling (Crucial):**  The most significant addition is the placeholder comment: `# Важно:  добавьте тесты для проверки обработки исключений...`.  Real-world code often raises exceptions (e.g., if `api_key` is malformed, if input types are incorrect).  **Thoroughly test exception handling!**  For example, if `api_key` is expected to be a string, you should test cases with incorrect types or invalid formats.

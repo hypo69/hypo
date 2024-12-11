@@ -133,7 +133,7 @@ def test_main_with_campaign_name_and_language_currency(capsys):
 
 * **Edge Cases and Error Handling:** Tests are added to check for scenarios where the input might not be as expected (e.g., `test_process_campaign_category_no_language`).
 
-* **Argument Parsing:**  Testing the `main` function's argument parsing is essential. The provided example (`test_main_with_campaign_name_and_language_currency`) demonstrates how to use `pytest.raises` and `argparse` to test this part.
+* **Argument Parsing:**  Testing the `main` function's argument parsing is essential. The provided example (`test_main_with_campaign_name_and_language_currency`) demonStartes how to use `pytest.raises` and `argparse` to test this part.
 
 * **Example for Argument Parsing:** This code now shows how to test with a specific argument.
 

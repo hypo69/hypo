@@ -8,7 +8,7 @@
 
 ### 1. Blog Post: Latest Trends in Content Marketing
 
-**Objective:** To inform our audience about the latest trends in content marketing and how they can leverage these trends to improve their own strategies.
+**Objective:** To inform our audience about the latest trends in content marketing and how they can leverage these trends to improve their own Startegies.
 
 **Key Points to Cover:**
 - The rise of AI in content creation

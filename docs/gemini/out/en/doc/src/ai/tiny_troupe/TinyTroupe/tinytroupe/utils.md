@@ -9,7 +9,7 @@ This module provides general utilities, convenience functions, and tools for inp
 
 ### `JsonSerializableRegistry`
 
-**Description**: A mixin class that provides JSON serialization, deserialization, and subclass registration for custom classes. This class allows for more controlled serialization of complex objects containing potentially nested data and other custom classes.
+**Description**: A mixin class that provides JSON serialization, deserialization, and subclass regiStartion for custom classes. This class allows for more controlled serialization of complex objects containing potentially nested data and other custom classes.
 
 
 **Methods**

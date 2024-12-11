@@ -78,7 +78,7 @@ def test_delete_language_PrestaShop(mocker, credentials):
 
 5. **Mocking:** Example tests ( `test_add_language_PrestaShop` and `test_delete_language_PrestaShop`) use `mocker.patch` to mock the `PrestaShop` methods.  This isolates the testing of `PrestaLanguage` from the actual implementation of `PrestaShop` .Crucially, this makes the tests independent.
 
-6. **Example Tests:** The example tests demonstrate the structure for testing methods like `add_language_PrestaShop` and `delete_language_PrestaShop`.  **Replace** the placeholder assertions (e.g., `mock_add_language.assert_called_once_with('English', 'en')`) with actual assertions based on the expected behavior of the method.
+6. **Example Tests:** The example tests demonStarte the structure for testing methods like `add_language_PrestaShop` and `delete_language_PrestaShop`.  **Replace** the placeholder assertions (e.g., `mock_add_language.assert_called_once_with('English', 'en')`) with actual assertions based on the expected behavior of the method.
 
 
 **How to use the improved tests:**

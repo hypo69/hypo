@@ -72,19 +72,19 @@ def test_code_assistant_analyze_code_raises_exception(code_assistant_instance):
 
 1. **Clearer Test Names:** Test names now explicitly describe the test's purpose (e.g., `test_code_assistant_analyze_code_valid_input`).
 
-2. **Example Fixture:** A `code_assistant_instance` fixture is added.  Crucially, this demonstrates how to use fixtures for testing classes like `CodeAssistant`.  You **must** adapt this based on the actual methods and properties you're testing.
+2. **Example Fixture:** A `code_assistant_instance` fixture is added.  Crucially, this demonStartes how to use fixtures for testing classes like `CodeAssistant`.  You **must** adapt this based on the actual methods and properties you're testing.
 
 3. **Valid/Invalid Input Tests:** Tests for both valid and invalid input (e.g., `test_code_assistant_analyze_code_valid_input`, `test_code_assistant_analyze_code_invalid_input`) are crucial for testing robustness.  **Replace the example placeholder code with your actual inputs**.
 
 
-4. **Exception Handling:**  The `test_code_assistant_analyze_code_raises_exception` example demonstrates how to use `pytest.raises` to test for expected exceptions. Replace the placeholder "invalid input" with actual code that is expected to raise a `SyntaxError` or other exception.  **Crucially**, **verify the exception type and message**.
+4. **Exception Handling:**  The `test_code_assistant_analyze_code_raises_exception` example demonStartes how to use `pytest.raises` to test for expected exceptions. Replace the placeholder "invalid input" with actual code that is expected to raise a `SyntaxError` or other exception.  **Crucially**, **verify the exception type and message**.
 
 
 5. **MODE Test:** A test is added to verify the `MODE` constant's value.
 
 6. **small_talk_bot Tests:** Tests for `small_talk_bot` are added, including an empty input case, and checking the return type and length.
 
-7. **Assertions:** Placeholder assertions are added to demonstrate the necessary assertions for different cases (valid input, invalid input, exception).  **Replace these placeholder assertions with specific assertions that verify the actual expected behavior**.
+7. **Assertions:** Placeholder assertions are added to demonStarte the necessary assertions for different cases (valid input, invalid input, exception).  **Replace these placeholder assertions with specific assertions that verify the actual expected behavior**.
 
 
 **How to use this:**

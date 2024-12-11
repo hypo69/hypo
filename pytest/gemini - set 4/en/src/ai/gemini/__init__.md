@@ -54,11 +54,11 @@ def test_google_generative_ai_missing_api_key():
    - They use `pytest.raises` for checking exceptions (like missing API keys).
    - They have clear docstrings explaining the test's purpose.
    - The examples show how to check different attributes and methods.
-   - It demonstrates how to write tests for constructor arguments.
+   - It demonStartes how to write tests for constructor arguments.
 
 3. **API Interaction Mocking (Crucial):**  The tests marked with `@pytest.mark.skip` need **significant** changes.  You can't directly call the Google AI API inside your tests because you're simulating them. This requires a mocking library (like `pytest-mock`) to stub out the API call and return simulated results.  **This is essential for writing robust tests that won't depend on external services.**
 
-4. **Error Handling:** Added a test (`test_google_generative_ai_missing_api_key`) to illustrate handling when a required parameter (like an API key) is missing or incorrect.
+4. **Error Handling:** Added a test (`test_google_generative_ai_missing_api_key`) to illuStarte handling when a required parameter (like an API key) is missing or incorrect.
 
 5. **Comprehensive Tests:** The tests need to be expanded based on the methods and data structures used in `GoogleGenerativeAI`  to cover valid inputs, edge cases, and possible exceptions.
 

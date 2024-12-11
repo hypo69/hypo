@@ -69,7 +69,7 @@ def test_get_product_data_empty_id(presta_shop_instance):
 
 1. **Import `pytest`:**  Crucially added `import pytest`.
 
-2. **Example `Product` class:** Created a simplified `Product` class to demonstrate testing. Replace this with your actual PrestaShop module's classes.  This makes the tests executable without needing a full PrestaShop module implementation.
+2. **Example `Product` class:** Created a simplified `Product` class to demonStarte testing. Replace this with your actual PrestaShop module's classes.  This makes the tests executable without needing a full PrestaShop module implementation.
 
 3. **`@pytest.fixture`:** Added `presta_shop_instance` fixture to create an instance of PrestaShop to avoid repeatedly creating objects in each test.
 
@@ -81,7 +81,7 @@ def test_get_product_data_empty_id(presta_shop_instance):
 
 7. **Error Handling:** Now correctly handles the `TypeError` raised when an empty string is passed as a product ID.
 
-8. **Completeness:**  This example now has multiple test cases for different scenarios, demonstrating how to test for valid, invalid, and edge case input.
+8. **Completeness:**  This example now has multiple test cases for different scenarios, demonStarting how to test for valid, invalid, and edge case input.
 
 **How to run the tests:**
 

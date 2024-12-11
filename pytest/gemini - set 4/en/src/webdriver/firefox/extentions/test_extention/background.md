@@ -68,7 +68,7 @@ def test_background_script_listener_invalid_target(mock_browser, mock_tab):
 
 4. **Clear Test Names:** Test names are more descriptive, e.g., `test_background_script_listener_no_tab_id`.
 
-5. **Error Handling:**  The `test_background_script_listener_no_tab_id` test now demonstrates how to check for a `TypeError` (or other relevant exceptions) if the `tab` object doesn't have a `tabId`. This is critical to verify that the code handles invalid data.
+5. **Error Handling:**  The `test_background_script_listener_no_tab_id` test now demonStartes how to check for a `TypeError` (or other relevant exceptions) if the `tab` object doesn't have a `tabId`. This is critical to verify that the code handles invalid data.
 
 6. **Comprehensive Testing:** Includes a test for a missing tab ID.
 
@@ -89,4 +89,4 @@ def test_background_script_listener_invalid_target(mock_browser, mock_tab):
     pytest test_background.py
     ```
 
-This improved test suite is more robust and better demonstrates how to test asynchronous code, edge cases, and error conditions using `pytest` and mocking. Remember to adapt the mocking strategy to match the specific structure of your browser API interactions.  Crucially, if the real browser API returns promises, then you'd need to mock `asyncio` functions to handle asynchronous calls correctly.  If that's the case, let me know, and I can provide a more complete example with await/async implementations.
+This improved test suite is more robust and better demonStartes how to test asynchronous code, edge cases, and error conditions using `pytest` and mocking. Remember to adapt the mocking Startegy to match the specific structure of your browser API interactions.  Crucially, if the real browser API returns promises, then you'd need to mock `asyncio` functions to handle asynchronous calls correctly.  If that's the case, let me know, and I can provide a more complete example with await/async implementations.

@@ -52,7 +52,7 @@ Usage example
 
 * **Clearer Description:** The description now explicitly mentions the use of asynchronous operations and WebDriver, which was implicit in the original code.
 * **Detailed Execution Steps:** The steps now provide more context, describing the purpose of importing various modules, handling exceptions, and the process of data collection.
-* **Comprehensive Usage Example:** The example now includes necessary imports and illustrates how to initialize the `Graber` instance, use the `grab_page` method, and close the browser, providing a practical way to apply the code.
+* **Comprehensive Usage Example:** The example now includes necessary imports and illuStartes how to initialize the `Graber` instance, use the `grab_page` method, and close the browser, providing a practical way to apply the code.
 * **Emphasis on Asynchronous Nature:**  The documentation underscores that the code is asynchronous, which is vital for web scraping.
 * **Error Handling:** The documentation highlights the use of error handling (`try...except`) to manage potential issues during execution, enhancing robustness.
 

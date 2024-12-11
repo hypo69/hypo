@@ -89,7 +89,7 @@ def test_get_product_mocking(mock_api):
 * **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to test for `ValueError` exceptions.
 * **Handles `None` Return:** The `test_get_product_data_nonexistent_input` test checks for a `None` return when the product ID is not found.  This is crucial for robustness.
 * **Example `PrestaShopAPI`:** Created a `PrestaShopAPI` class to show how to mock the API call, which is a better pattern than patching the whole `Product` class.
-* **Mocking Example:** Added a `test_get_product_mocking` test to demonstrate how to mock the API using `@patch`.  This is a better approach than trying to mock the entire class.
+* **Mocking Example:** Added a `test_get_product_mocking` test to demonStarte how to mock the API using `@patch`.  This is a better approach than trying to mock the entire class.
 
 
 **How to Use with Your Code:**

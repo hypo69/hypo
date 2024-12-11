@@ -6,7 +6,7 @@ import pytest
 #  Therefore, there are no functions, methods, or classes to test.
 
 # Placeholder for tests (Replace with actual tests if applicable).
-# Example test, just for demonstration.
+# Example test, just for demonStartion.
 
 def test_empty_file():
     """

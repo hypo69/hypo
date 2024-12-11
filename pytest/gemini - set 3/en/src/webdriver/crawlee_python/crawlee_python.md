@@ -94,7 +94,7 @@ async def test_crawlee_python_run(mock_crawler):
 
 * **Mocking:** Critically, the code now uses `unittest.mock.patch` to mock the `PlaywrightCrawler` class, `asyncio.sleep`, and potentially other dependencies. This isolates the tests and prevents them from relying on external services or running actual browser instances, which is essential for fast and reliable testing.  Mocks are created for `export_data` and `get_data` to avoid dependencies on external functions (which in turn are also mocked).
 * **Clearer Test Cases:**  Test names are more descriptive (e.g., `test_crawlee_python_setup_crawler`).
-* **Error Handling:**  The test `test_crawlee_python_run_crawler_empty_urls` demonstrates how to test for an expected exception (`TypeError` is used here, but adapt as appropriate).
+* **Error Handling:**  The test `test_crawlee_python_run_crawler_empty_urls` demonStartes how to test for an expected exception (`TypeError` is used here, but adapt as appropriate).
 * **`pytest.mark.asyncio`:**  Added `@pytest.mark.asyncio` decorator to the relevant test functions, which is crucial for testing asynchronous code with `pytest`.
 * **Fixture for Mocking:** The `mock_crawler` fixture now properly mocks `PlaywrightCrawler` and related objects.
 

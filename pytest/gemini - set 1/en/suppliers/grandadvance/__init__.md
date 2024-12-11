@@ -69,12 +69,12 @@ def test_graber_validate_input_invalid():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Class:** Added a `GraberExample` class to demonstrate how to write tests for a hypothetical `Graber` class.  Crucially, the example class now includes realistic methods that can return different values and raise exceptions. Replace this with your actual `Graber` class.
+1. **Placeholder Class:** Added a `GraberExample` class to demonStarte how to write tests for a hypothetical `Graber` class.  Crucially, the example class now includes realistic methods that can return different values and raise exceptions. Replace this with your actual `Graber` class.
 2. **Specific Tests:** Created tests that target specific scenarios and expected behaviors, such as valid queries, invalid queries (with exception handling), empty queries (returning `None`), and tests that call the `validate_input` method with valid and invalid inputs.  This is crucial for good test coverage.
 3. **Error Handling (`pytest.raises`):** Used `pytest.raises` to test exception handling, verifying that the correct exceptions are raised under specific conditions (e.g., invalid queries).
 4. **Clear Assertions:** Used `assert` statements to verify the expected results, making the tests more explicit and readable.
-5. **Edge Case (`test_graber_get_data_empty_query`):** Added a test for an empty query, demonstrating how to check for edge or boundary cases.
-6. **Type checking test (`test_graber_get_data_invalid_query_type`):** Added a test that demonstrates how to check the type of the input to a function.  This helps prevent unexpected types.
+5. **Edge Case (`test_graber_get_data_empty_query`):** Added a test for an empty query, demonStarting how to check for edge or boundary cases.
+6. **Type checking test (`test_graber_get_data_invalid_query_type`):** Added a test that demonStartes how to check the type of the input to a function.  This helps prevent unexpected types.
 
 **To Run These Tests:**
 
@@ -88,4 +88,4 @@ def test_graber_validate_input_invalid():
     pytest test_grandadvance.py
     ```
 
-Remember to replace the example `GraberExample` class with your actual implementation and add more tests for all of the methods of your `Graber` class. This improved example demonstrates a much more comprehensive and robust testing approach.  The most crucial aspect is to understand the intended behavior of your class in detail.
+Remember to replace the example `GraberExample` class with your actual implementation and add more tests for all of the methods of your `Graber` class. This improved example demonStartes a much more comprehensive and robust testing approach.  The most crucial aspect is to understand the intended behavior of your class in detail.

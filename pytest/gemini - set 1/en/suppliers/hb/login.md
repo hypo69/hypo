@@ -18,7 +18,7 @@ def test_login_invalid_input_type():
 
 
 # In a real scenario, you'd need to define a Supplier class.  
-# This is a placeholder to demonstrate the TypeError test
+# This is a placeholder to demonStarte the TypeError test
 class Supplier:
     pass
 

@@ -30,7 +30,7 @@ def test_mode_value():
   assert MODE == 'dev'
 
 
-# Example test demonstrating using pytest.raises for potential exceptions:
+# Example test demonStarting using pytest.raises for potential exceptions:
 # (Assuming there are functions that might raise exceptions)
 # def test_function_raises_exception_on_invalid_input():
 #     with pytest.raises(ValueError) as excinfo:

@@ -14,7 +14,7 @@ import pytest
 #     assert hypothetical_script_function()  # Assuming a function returns True if displayed correctly
 
 
-# Example hypothetical Python code (and tests) to illustrate:
+# Example hypothetical Python code (and tests) to illuStarte:
 
 # hypothetical_script.py
 # import webbrowser
@@ -63,7 +63,7 @@ import pytest
 
 * **Example Hypothetical Scenario and Tests:** The example code adds a `display_html_page` function (hypothetical) and shows how you would write a test to ensure that function works.  This is *critical*: you need the Python code that interacts with the HTML to write useful and meaningful tests.
 
-* **Error Handling and Assertions:** The example demonstrates how to use `try...except` for error handling if there's a problem when opening the HTML. This is much better than relying solely on implicit assertions.
+* **Error Handling and Assertions:** The example demonStartes how to use `try...except` for error handling if there's a problem when opening the HTML. This is much better than relying solely on implicit assertions.
 
 
 * **Real-World Testing:** If there was an actual Python script interacting with the HTML page, tests would focus on verifying the expected behavior. For instance, you'd check whether user input is processed correctly, data is sent/received properly, and so on.

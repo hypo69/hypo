@@ -105,7 +105,7 @@ def test_edit_campaign_no_previous_campaign(campaign_name):
 
 * **Fixtures:**  `pytest` fixtures (`campaign_name`, `categories`, `product_urls`) are used for better organization and reuse of test data.
 
-* **Error Handling:**  The `test_create_campaign_invalid_categories` test demonstrates how to check for specific exceptions like `TypeError`.  It's crucial to test error handling in real-world code.
+* **Error Handling:**  The `test_create_campaign_invalid_categories` test demonStartes how to check for specific exceptions like `TypeError`.  It's crucial to test error handling in real-world code.
 
 
 * **Clearer Assertions:** Assertions are now more focused on verifying the creation of expected files and directories.  This ensures that the side effects of the functions (creating files/directories) are tested.

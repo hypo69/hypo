@@ -175,7 +175,7 @@ graph LR
 **Variables:**
 
 - `SCOPES`: A list of scopes defining the access permissions needed to access the Google Sheets API.  Crucially, it uses `'https://www.googleapis.com/auth/spreadsheets.readonly'` for read-only access.
-- `SAMPLE_SPREADSHEET_ID`: The ID of the Google Spreadsheet to access.  A specific spreadsheet is hardcoded here for demonstration purposes.
+- `SAMPLE_SPREADSHEET_ID`: The ID of the Google Spreadsheet to access.  A specific spreadsheet is hardcoded here for demonStartion purposes.
 - `SAMPLE_RANGE_NAME`: Specifies the range of cells to retrieve from the spreadsheet.
 - `ROOT_DIRECTORY`: The absolute path to the current working directory.
 - `path`: The complete path to the `client_secret.json` file. The code constructs this path dynamically, which is good for portability.

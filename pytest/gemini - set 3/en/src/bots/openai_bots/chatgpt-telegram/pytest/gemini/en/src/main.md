@@ -90,7 +90,7 @@ async def test_text_message(mock_telegram, mock_openai):
 
 1. **Mocking:**  Crucially, the code now uses `unittest.mock.patch` to mock external dependencies like `openai`, `ogg`, and `Telegram`. This is essential for unit testing because it isolates the bot logic from external services.
 
-2. **Specific Error Handling:** `test_voice_message_exception` demonstrates how to test for specific exceptions.  It uses `pytest.raises` to verify the correct exception is caught and handles the error using `monkeypatch` for mocking exceptions during testing.
+2. **Specific Error Handling:** `test_voice_message_exception` demonStartes how to test for specific exceptions.  It uses `pytest.raises` to verify the correct exception is caught and handles the error using `monkeypatch` for mocking exceptions during testing.
 
 3. **Clearer Assertions:** Assertions are added to check for specific calls made during testing.  For example, `assert mock_telegram.reply.call_count == 2` verifies that the `reply` function was called twice in the `test_voice_message_success` method.  Replace these placeholder assertions with more concrete checks based on the actual expected behavior if possible.
 

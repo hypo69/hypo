@@ -70,7 +70,7 @@ def test_get_api_key_invalid_encoding():
 
 **Explanation and Improvements:**
 
-1. **Example `get_api_key` Function:**  The provided `README` doesn't contain any Python code.  This example creates a dummy `get_api_key` function to demonstrate how you'd test a function that reads from the credentials file. Replace this with the actual function from your `endpoints/prestashop` file.
+1. **Example `get_api_key` Function:**  The provided `README` doesn't contain any Python code.  This example creates a dummy `get_api_key` function to demonStarte how you'd test a function that reads from the credentials file. Replace this with the actual function from your `endpoints/prestashop` file.
 
 2. **Clear Test Function Names:** The test names are descriptive, indicating the input and expected outcome.
 

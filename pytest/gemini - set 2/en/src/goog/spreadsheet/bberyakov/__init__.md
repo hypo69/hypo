@@ -72,7 +72,7 @@ def test_gsrenderer_init():
 
 2. **Clear Test Names:**  Test names like `test_gspreadsheet_init_valid` are descriptive and explicit about the test's purpose.
 
-3. **Valid and Invalid Input:** The tests cover valid spreadsheet IDs (e.g., `test_gspreadsheet_init_valid`) and, importantly, *invalid* spreadsheet IDs (`test_gspreadsheet_init_invalid_spreadsheet_id`), demonstrating exception handling.
+3. **Valid and Invalid Input:** The tests cover valid spreadsheet IDs (e.g., `test_gspreadsheet_init_valid`) and, importantly, *invalid* spreadsheet IDs (`test_gspreadsheet_init_invalid_spreadsheet_id`), demonStarting exception handling.
 
 4. **Edge Cases:**  `test_gspreadsheet_get_worksheet_invalid_sheet` covers the scenario where the sheet name doesn't exist, testing the correct handling of errors.
 

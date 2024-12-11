@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This code defines functions to create instances of `TinyPerson` objects, each representing a different person with various attributes like age, occupation, routine, and personality traits.  The code demonstrates how to use the `define()`, `define_several()` methods of the `TinyPerson` class to populate these attributes with detailed descriptions and data.  These examples can be modified to create custom agents with specific characteristics.
+This code defines functions to create instances of `TinyPerson` objects, each representing a different person with various attributes like age, occupation, routine, and personality traits.  The code demonStartes how to use the `define()`, `define_several()` methods of the `TinyPerson` class to populate these attributes with detailed descriptions and data.  These examples can be modified to create custom agents with specific characteristics.
 
 
 Execution steps

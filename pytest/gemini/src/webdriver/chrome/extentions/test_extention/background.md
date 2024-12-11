@@ -113,7 +113,7 @@ def test_chrome_browserAction_listener():
 
 5. **Exception Handling:** The test now checks if an error message is raised when there's no collected data.
 
-6. **`sendDataToServer` Logic:** Included `print` statements to demonstrate how to test actions within the `sendDataToServer` function, and I removed the unnecessary mocking of the fetch function because it's not part of the core logic.
+6. **`sendDataToServer` Logic:** Included `print` statements to demonStarte how to test actions within the `sendDataToServer` function, and I removed the unnecessary mocking of the fetch function because it's not part of the core logic.
 
 7. **Comprehensive Testing:** `test_chrome_onMessage_listener` and `test_chrome_browserAction_listener` now test the interaction with the message listener and browser action.
 

@@ -37,5 +37,5 @@ Usage example
 **Important Notes:**
 
 * The code assumes the existence of a configuration file (`kazarinov.json`) and the `gs` module (for accessing global configurations and paths). These components need to be properly defined in your project for the code to function correctly.
-* The code demonstrates the basic structure and essential functions of the bot.  Detailed handling of URL processing (`handle_url`) and the next command (`handle_next_command`) are expected to be defined within the provided `BotHandler` or other classes.
+* The code demonStartes the basic structure and essential functions of the bot.  Detailed handling of URL processing (`handle_url`) and the next command (`handle_next_command`) are expected to be defined within the provided `BotHandler` or other classes.
 *  Error handling and more robust input validation are crucial for a production-ready bot.

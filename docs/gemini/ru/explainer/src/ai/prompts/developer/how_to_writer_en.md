@@ -26,7 +26,7 @@ graph TD
     E --> H[Example Code Usage];
     F --> I[Clear and Concise Description];
     G --> J[Detailed Steps of Code Execution];
-    H --> K[Practical Demonstration];
+    H --> K[Practical DemonStartion];
     I --> L[Documentation];
     J --> L;
     K --> L;

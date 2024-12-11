@@ -1,4 +1,4 @@
-# pytest Testing Strategies
+# pytest Testing Startegies
 
 ## Overview
 
@@ -29,7 +29,7 @@ Use descriptive and meaningful names for test functions. Structure your tests lo
 
 ## Example Test Cases (Conceptual)
 
-This example demonstrates how to test a hypothetical function `save_data_to_file`.
+This example demonStartes how to test a hypothetical function `save_data_to_file`.
 
 ### `test_save_data_to_file`
 
@@ -76,11 +76,11 @@ def test_save_data_to_file(mock_logger, mock_mkdir, mock_file_open, mock_file):
 
 ```
 
-This example demonstrates a more robust test case including:
+This example demonStartes a more robust test case including:
 
-- **Empty data:** Demonstrates that the function correctly handles empty input.
-- **Invalid path:**  Illustrates testing with a non-existent file path.
-- **Using `pytest.raises`:**  Demonstrates how to explicitly check for exceptions using `pytest.raises`.
+- **Empty data:** DemonStartes that the function correctly handles empty input.
+- **Invalid path:**  IlluStartes testing with a non-existent file path.
+- **Using `pytest.raises`:**  DemonStartes how to explicitly check for exceptions using `pytest.raises`.
 - **Specific assertion for empty string write:** Checks that an empty string is correctly written, clarifying expected behaviour.
 
 

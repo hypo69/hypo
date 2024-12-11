@@ -56,7 +56,7 @@ from .graber import Graber
 # Changes Made
 
 *   Added a complete module docstring in reStructuredText (RST) format, explaining the module's purpose, platform compatibility, and synopsis.
-*   Added an example usage section with a code block demonstrating how to use the `Graber` class.
+*   Added an example usage section with a code block demonStarting how to use the `Graber` class.
 *   Added missing `import` statements (like `importlib.util`).
 *   Corrected docstring formatting and style.
 *   Improved comments to be more specific and less vague, using terms like 'retrieval' and 'validation'.

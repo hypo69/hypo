@@ -46,7 +46,7 @@ The `product` module contains several Python files, example files, and a JSON fi
     - **Purpose**: Provides detailed documentation and usage examples for developers.
     - **Functionality**:
         - Explains the functionality and usage of the module.
-        - Provides example scripts to demonstrate how to interact with product data.
+        - Provides example scripts to demonStarte how to interact with product data.
 
 ### Example Usage
 
@@ -131,7 +131,7 @@ The example code imports `Product` from `product.product` and `ProductFields` fr
 - `19.99`: A float representing a new price for a product field.
 
 **Data Flow and Relationships**:
-The example code demonstrates the interaction between `Product` and `ProductFields` classes.  `Product` interacts with `product_fields` through `ProductFields` to update product attributes.
+The example code demonStartes the interaction between `Product` and `ProductFields` classes.  `Product` interacts with `product_fields` through `ProductFields` to update product attributes.
 
 
 **Potential Errors or Areas for Improvement**:

@@ -85,7 +85,7 @@ def test_generate_person_invalid_spec_type(setup):
 
 **Crucial Considerations:**
 
-* **`testing_utils`:**  Make sure the `proposition_holds` function exists and is correctly imported in your test file. The example import has a comment, so you should replace it with the correct path.  Without knowing how `proposition_holds` works, it's hard to make more specific tests.  This function probably calls an external API (e.g., an LLM) and is likely to cause intermittent test failures or slowdowns.  Consider strategies to make those tests more robust and reliable.
+* **`testing_utils`:**  Make sure the `proposition_holds` function exists and is correctly imported in your test file. The example import has a comment, so you should replace it with the correct path.  Without knowing how `proposition_holds` works, it's hard to make more specific tests.  This function probably calls an external API (e.g., an LLM) and is likely to cause intermittent test failures or slowdowns.  Consider Startegies to make those tests more robust and reliable.
 
 * **Mocking external dependencies:**  If `proposition_holds` depends on external services (like LLMs), mocking those dependencies would significantly improve the stability and speed of the tests.  This is highly recommended for production-level testing.
 

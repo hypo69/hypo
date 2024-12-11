@@ -104,7 +104,7 @@ def test_read_csv_as_ns(sample_data, csv_file_path):
 * **File Creation:** The `test_save_csv_file_append` test now creates the file before appending to it to ensure a proper append functionality.
 * **`read_csv_file` test for valid input:** Now includes saving sample data to a temporary file before reading, ensuring the file exists.
 * **`read_csv_file` test for not found:** Added a test for a non-existent file to check the error handling.
-* **`read_csv_as_json` and `read_csv_as_dict` tests:** Included assertions to verify the returned values match the saved data. Also added file path creation for `read_csv_as_json` to demonstrate the functionality of the function.
+* **`read_csv_as_json` and `read_csv_as_dict` tests:** Included assertions to verify the returned values match the saved data. Also added file path creation for `read_csv_as_json` to demonStarte the functionality of the function.
 * **Robustness:** The tests now have more comprehensive coverage for both valid and invalid inputs and edge cases.
 * **Import Statements:** The code correctly imports necessary modules.
 

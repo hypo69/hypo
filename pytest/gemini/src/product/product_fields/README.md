@@ -120,7 +120,7 @@ def test_payload_empty_file(product_fields_instance, monkeypatch):
 
 * **Fixture:** A fixture `product_fields_instance` is defined to create a `ProductFields` object, eliminating repetitive code in test methods.
 
-* **Test for empty file:** The test `test_payload_empty_file` demonstrates how to mock file loading (replace `return_value` with actual expected behavior).  This is vital for checking error handling.
+* **Test for empty file:** The test `test_payload_empty_file` demonStartes how to mock file loading (replace `return_value` with actual expected behavior).  This is vital for checking error handling.
 
 * **Import statements:** Added necessary imports for path, json, logging and types for code clarity and to address potential import issues.
 

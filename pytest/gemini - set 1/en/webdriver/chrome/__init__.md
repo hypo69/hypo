@@ -31,11 +31,11 @@ def test_chrome_object_creation():
 * **Missing Code:** The provided code snippet (`from .chrome import Chrome`) is incomplete; it only imports a function but doesn't define the `Chrome` class.  This prevents comprehensive testing.  To write useful tests, I need the definition of the `Chrome` class (including its methods and attributes).
 * **Missing Context:**  Without the implementation of `Chrome`, I can only write tests for import functionality. Actual tests will require instantiation of the `Chrome` class and assertions on its attributes, methods, etc.
 * **Error Handling:**  If `Chrome` raises exceptions under certain conditions (e.g., invalid arguments), you must test the exception handling using `pytest.raises`.
-* **Fixtures (Illustrative):**  If `Chrome` required external resources or had complex initialization, you'd use fixtures to manage them efficiently and ensure isolation between tests.
+* **Fixtures (IlluStartive):**  If `Chrome` required external resources or had complex initialization, you'd use fixtures to manage them efficiently and ensure isolation between tests.
 
 
 
-**Example with a Simulated `Chrome` Class (for demonstration):**
+**Example with a Simulated `Chrome` Class (for demonStartion):**
 
 ```python
 import pytest

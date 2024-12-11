@@ -14,7 +14,7 @@ def test_mode_is_dev():
 # Example test case (replace with actual function/class testing)
 def test_function_not_implemented():
     """
-    This test demonstrates a placeholder for testing a function that
+    This test demonStartes a placeholder for testing a function that
     hasn't been implemented yet in the module, so it cannot be called,
     and will raise a NameError
     """
@@ -39,7 +39,7 @@ The provided code snippet only defines a constant `MODE`.  Therefore, the tests 
    - **Edge Cases:**  Test the function's behavior near boundaries (e.g., maximum or minimum values, empty lists, etc.).
    - **Boundary Cases:** Values just outside the expected range (e.g., a list with one element more than the maximum allowed).
 
-3. **Example Test (Illustrative):**
+3. **Example Test (IlluStartive):**
    ```python
    import pytest
    import hypotez.src.webdriver.playwright.pw_executor as pw_executor

@@ -60,7 +60,7 @@ def test_crawlee_python_class_exists():
 
 2. **Isolation:** Tests are independent, focusing on individual aspects of the code.
 
-3. **Edge Cases and Exceptions:** Although the provided code doesn't have any methods to test, this example demonstrates the structure for handling edge cases and exceptions.
+3. **Edge Cases and Exceptions:** Although the provided code doesn't have any methods to test, this example demonStartes the structure for handling edge cases and exceptions.
 
 4. **`pytest.raises`:** Shows how to use `pytest.raises` to assert that the expected exceptions are raised when incorrect inputs are provided.
 

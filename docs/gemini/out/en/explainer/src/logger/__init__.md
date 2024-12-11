@@ -58,7 +58,7 @@ graph LR
 
 *   **Imports:**
     *   `from .logger import logger`: Imports the `logger` object, likely a logging handler or instance, from the `logger.py` module within the same directory. This is essential for using logging functionality defined in the package.  
-    *   `from .exceptions import ...`: Imports a set of custom exceptions defined within the `exceptions.py` file, all within the `src.logger` sub-package.  These exceptions are likely specific to the project and help organize errors.   The use of parentheses groups the imports and makes reading easier. This demonstrates a module structure focused on grouping relevant components.
+    *   `from .exceptions import ...`: Imports a set of custom exceptions defined within the `exceptions.py` file, all within the `src.logger` sub-package.  These exceptions are likely specific to the project and help organize errors.   The use of parentheses groups the imports and makes reading easier. This demonStartes a module structure focused on grouping relevant components.
 
 *   **Variables:**
     *   `MODE = 'dev'`: A constant string that likely specifies the current application mode (e.g., 'dev', 'prod'). This is useful for conditional logic and configuration based on the environment.

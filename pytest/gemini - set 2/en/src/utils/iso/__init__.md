@@ -23,11 +23,11 @@ def test_mode_type():
 
 
 # Include a test for an example that MIGHT raise an exception (but will not in the minimal code example provided)
-# Demonstrates how to use pytest.raises and handling errors from missing imports
+# DemonStartes how to use pytest.raises and handling errors from missing imports
 def test_mode_import_error(monkeypatch):
     """
-    Demonstrates handling potential errors from missing imports.
-    In this case, no actual exception is raised because no imports are performed, but the structure is demonstrated.
+    DemonStartes handling potential errors from missing imports.
+    In this case, no actual exception is raised because no imports are performed, but the structure is demonStarted.
     """
     # Simulate that the module is not importable.
     # This test will need to be updated if the module starts importing other modules.

@@ -77,7 +77,7 @@ def test_get_list_categories_from_site_exception_handling():
 
 2. **Comprehensive Test Cases:** The tests now cover various scenarios, including valid inputs, an empty category, and an invalid category, which was missing in the previous attempt.
 
-3. **Exception Handling:** The `test_get_list_categories_from_site_exception_handling` demonstrates how to test for expected exceptions.  *Critically*, you need to *mock* the potential exception-raising behavior. This is demonstrated using the `MockGraberError` class, replacing the actual `Graber` class.  Make sure the mock reflects the type of exception your code might actually throw.
+3. **Exception Handling:** The `test_get_list_categories_from_site_exception_handling` demonStartes how to test for expected exceptions.  *Critically*, you need to *mock* the potential exception-raising behavior. This is demonStarted using the `MockGraberError` class, replacing the actual `Graber` class.  Make sure the mock reflects the type of exception your code might actually throw.
 
 4. **Clearer Assertions:**  The assertions are more explicit (e.g., `assert products == [{"name": "Product 1"}, {"name": "Product 2"}]`) rather than relying on implicit comparison.
 

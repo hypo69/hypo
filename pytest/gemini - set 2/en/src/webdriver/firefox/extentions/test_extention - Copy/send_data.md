@@ -134,7 +134,7 @@ def test_on_page_load_with_error(mock_fetch):
 
 2. **Mocking `fetch`:** The most important change is the introduction of `responses` for mocking the `fetch` API.  This is absolutely necessary for testing asynchronous code.  The `mock_fetch` fixture sets up a mock `fetch` that intercepts the call and returns a predefined response.
 
-3. **Comprehensive Error Handling:** The `test_on_page_load_with_error` test now demonstrates how to handle potential errors during the fetch operation (e.g., network issues, server errors).
+3. **Comprehensive Error Handling:** The `test_on_page_load_with_error` test now demonStartes how to handle potential errors during the fetch operation (e.g., network issues, server errors).
 
 4. **Clearer Assertions:** Instead of just checking for the existence of the request, the tests now verify the URL, method, and status code.  More importantly,  the code has example assertions to check if the correct data was sent.
 
@@ -153,4 +153,4 @@ def test_on_page_load_with_error(mock_fetch):
     pytest test_send_data.py
     ```
 
-Remember to replace placeholder values like `"Test Title"` and `"https://example.com"` with your actual expected values in the tests.  This revised example provides a significantly more robust and reliable way to test your JavaScript code.  Crucially, it demonstrates how to manage asynchronous calls (which is a common source of issues in JavaScript testing).
+Remember to replace placeholder values like `"Test Title"` and `"https://example.com"` with your actual expected values in the tests.  This revised example provides a significantly more robust and reliable way to test your JavaScript code.  Crucially, it demonStartes how to manage asynchronous calls (which is a common source of issues in JavaScript testing).

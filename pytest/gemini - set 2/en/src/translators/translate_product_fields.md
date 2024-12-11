@@ -95,7 +95,7 @@ def test_translate_record_mock():
 * **Mocking `ProductTranslationsManager`:** The `mock_translations_manager` fixture now correctly mocks the `ProductTranslationsManager`.  This is *critical* for testing `get_translations_from_presta_translations_table` without actually interacting with a database.
 * **Clearer Test Cases:** The tests now explicitly check for both successful and failed scenarios (existent/nonexistent product).
 * **Parameterization:**  Using `pytest.mark.parametrize` makes the test more concise and readable.
-* **Exception Handling:** The test `test_get_translations_from_presta_translations_table_with_invalid_credentials` demonstrates how to test for exceptions raised within the function.
+* **Exception Handling:** The test `test_get_translations_from_presta_translations_table_with_invalid_credentials` demonStartes how to test for exceptions raised within the function.
 * **Mock `translate`:**  The `test_translate_record_mock` now correctly uses `patch` to mock the `translate` function, ensuring the actual `translate` function isn't called during the test.  This is *essential* for testing this function in isolation.
 * **Type Hints:** The tests now use the type hints defined in the original code to improve correctness and readability.
 * **Realistic Tests**: The tests now check for different scenarios to test the function in different contexts.

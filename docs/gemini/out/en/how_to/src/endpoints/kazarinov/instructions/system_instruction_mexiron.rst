@@ -11,7 +11,7 @@ Execution steps
 
 2. **Process the Input Data:**  Parse the JSON array of components. Extract relevant information about each component (e.g., processor type, GPU model).
 
-3. **Classify the Build:** Based on the components, determine the build type (e.g., gaming, office, workstation).  Assign probabilities to build types as demonstrated in the example output.
+3. **Classify the Build:** Based on the components, determine the build type (e.g., gaming, office, workstation).  Assign probabilities to build types as demonStarted in the example output.
 
 4. **Generate Titles and Descriptions:** Create a title and detailed description for the build in both Hebrew and Russian. Use accurate and contextually appropriate terminology.
 
@@ -57,7 +57,7 @@ output_data = {
     }
 }
 
-# Print the output (for demonstration)
+# Print the output (for demonStartion)
 import json
 print(json.dumps(output_data, indent=2, ensure_ascii=False))
 ```

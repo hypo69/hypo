@@ -118,4 +118,4 @@ def test_set_campaign_html(mock_save_text_file, tmp_path):
     pytest test_html_generators.py
     ```
 
-This improved solution provides much more robust and reliable tests that demonstrate the correct functionality and behavior of your HTML generation code.  It also shows how to effectively handle file operations when testing by using mocking. Remember to replace `"styles.css"` with the actual file if you are using one, for accurate test output.
+This improved solution provides much more robust and reliable tests that demonStarte the correct functionality and behavior of your HTML generation code.  It also shows how to effectively handle file operations when testing by using mocking. Remember to replace `"styles.css"` with the actual file if you are using one, for accurate test output.

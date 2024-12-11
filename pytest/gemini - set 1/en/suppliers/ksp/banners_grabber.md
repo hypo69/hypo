@@ -44,7 +44,7 @@ The provided `get_banners` function is extremely simplistic.  In a real-world sc
 * **Interact with external resources:** It might fetch banner data from a database, API, or file. This would require tests to verify correct data retrieval and handling of potential network or file I/O errors.
 * **Handle errors:** It should handle potential errors (e.g., connection failures, invalid data formats) by raising exceptions.
 
-**Example of More Realistic Tests (Illustrative):**
+**Example of More Realistic Tests (IlluStartive):**
 
 ```python
 import pytest

@@ -118,21 +118,21 @@ graph TD
     *   `crawlee.playwright_crawler`:  A custom module likely for web scraping with Playwright, including the `PlaywrightCrawler` and `PlaywrightCrawlingContext` classes, providing the crawl functionality.
     *   `src.logger`: This module is for logging information.
 *   **Classes**:
-    *   `CrawleePython`: This class orchestrates the web crawling process.
+    *   `CrawleePython`: This class orcheStartes the web crawling process.
         *   `__init__`: Initializes attributes like `max_requests`, `headless`, `browser_type`, and the crawler instance (`self.crawler`, initially None).
         *   `setup_crawler`: Sets up the `PlaywrightCrawler` and adds a `request_handler`.
         *   `request_handler`: (inner function) Handles each URL by extracting data, enqueuing further links, and pushing data to a central storage.
         *   `run_crawler`: Executes the crawl on the provided URLs.
         *   `export_data`: Saves the extracted data to a JSON file.
         *   `get_data`: Retrieves the collected data.
-        *   `run`: Orchestrates the complete process (setup, crawl, export, data retrieval)
+        *   `run`: OrcheStartes the complete process (setup, crawl, export, data retrieval)
 
 *   **Functions**:
     *   `setup_crawler`: Configures and initiates the `PlaywrightCrawler`.
     *   `run_crawler`: Starts the crawling process with the given URLs.
     *   `export_data`: Saves the gathered data to a file.
     *   `get_data`: Retrieves the gathered data.
-    *   `run`: The main method, orchestrating the crawl setup, execution, and data export.
+    *   `run`: The main method, orcheStarting the crawl setup, execution, and data export.
 
 
 *   **Variables**:

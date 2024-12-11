@@ -126,9 +126,9 @@ def test_get_locator_keys(driver_fixture):
 
 7. **Valid URLs:** Updated `test_get_attribute_by_locator` to use a valid example URL.
 
-8. **Example Test with Interaction:** Created `test_navigate_and_interact` to demonstrate a test that navigates and interacts with elements on a web page. This is crucial for testing more complex scenarios.
+8. **Example Test with Interaction:** Created `test_navigate_and_interact` to demonStarte a test that navigates and interacts with elements on a web page. This is crucial for testing more complex scenarios.
 
-9. **`test_execute_locator_event`:** Added a test to demonstrate `execute_locator`.
+9. **`test_execute_locator_event`:** Added a test to demonStarte `execute_locator`.
 
 10. **`test_get_locator_keys`:** Added a test to check for the existence of the expected locator keys.
 

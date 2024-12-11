@@ -44,11 +44,11 @@ def test_example_function_raises_exception():
 
 **Explanation and Important Considerations:**
 
-1. **No Code Provided:** The input code only defines a module docstring and a constant.  There are no functions or classes to test.  The example tests use placeholders (`assert True`, `assert False`) and comments to illustrate how to structure tests *given* code. **Replace these placeholders with your actual function calls and assertions**.
+1. **No Code Provided:** The input code only defines a module docstring and a constant.  There are no functions or classes to test.  The example tests use placeholders (`assert True`, `assert False`) and comments to illuStarte how to structure tests *given* code. **Replace these placeholders with your actual function calls and assertions**.
 
 2. **Fixture:** The `example_data` fixture is a placeholder. If your code requires any setup data for testing, define a fixture to provide it.
 
-3. **Exception Handling:** The `test_example_function_raises_exception` test demonstrates how to use `pytest.raises` to check for exceptions. Replace the placeholder `TypeError` with the specific exception that your function is expected to raise.
+3. **Exception Handling:** The `test_example_function_raises_exception` test demonStartes how to use `pytest.raises` to check for exceptions. Replace the placeholder `TypeError` with the specific exception that your function is expected to raise.
 
 4. **Test Design:**  Adapt the test names (e.g., `test_function_with_valid_input`, `test_function_with_invalid_input`) to match the functions in your `hypotez/src/suppliers/aliexpress/gui/__init__.py` module.
 

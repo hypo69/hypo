@@ -82,7 +82,7 @@ async def test_id_product_valid_input(graber):
 
 4. **Clearer Test Cases:** Test names (`test_grab_page_valid_input`, `test_grab_page_missing_data`) are more descriptive.
 
-5. **Example of a Test for a Specific Method:**  `test_id_product_valid_input` demonstrates how to test a specific method within the `Graber` class.  The example assumes `id_product` returns a value or modifies `graber.fields` and asserts this value.
+5. **Example of a Test for a Specific Method:**  `test_id_product_valid_input` demonStartes how to test a specific method within the `Graber` class.  The example assumes `id_product` returns a value or modifies `graber.fields` and asserts this value.
 
 **Important Considerations for Real Testing:**
 

@@ -86,7 +86,7 @@ def test_edge_start_driver():
 
 6. **Important Considerations:** The comments highlight the need for more context-specific tests (like driver start failures due to missing dependencies), as well as proper setup and teardown for testing and using `pytest.mark.usefixtures`.
 
-7. **Missing Dependencies Check:** Included a placeholder for checking if the necessary libraries are correctly installed (important edge case testing). This test is a placeholder, but it illustrates the kind of testing needed for a production-quality suite.
+7. **Missing Dependencies Check:** Included a placeholder for checking if the necessary libraries are correctly installed (important edge case testing). This test is a placeholder, but it illuStartes the kind of testing needed for a production-quality suite.
 
 **How to Run:**
 

@@ -97,7 +97,7 @@ def test_firefox_profile_nonexistent(firefox_profile):
 4. **Clearer Assertions:** The assertions are more meaningful. Instead of just checking for a successful launch, these tests now check for elements on a valid website to ensure the driver is functioning correctly and the profile is being used.
 
 
-5. **Realistic Test Cases:**  The example now includes tests to demonstrate how to check for valid and invalid input profiles.
+5. **Realistic Test Cases:**  The example now includes tests to demonStarte how to check for valid and invalid input profiles.
 
 **Before Running:**
 
@@ -113,7 +113,7 @@ Save this code as a `.py` file (e.g., `test_firefox_profile.py`) and run it from
 
 **Important Considerations:**
 
-- **Profile Content:** The code doesn't attempt to modify the profile's content.  To configure proxy settings, you need to do that within the `webdriver.FirefoxProfile` object, as demonstrated in the sample Java code.
+- **Profile Content:** The code doesn't attempt to modify the profile's content.  To configure proxy settings, you need to do that within the `webdriver.FirefoxProfile` object, as demonStarted in the sample Java code.
 - **Profile Cleanup (Optional):**  Consider adding a cleanup step within the fixture to delete the profile directory after the tests are completed, if needed.
 - **HTML Limitations:**  Remember that testing the webpage's HTML itself is beyond the scope of this test set unless you have a specific interaction function or class defined in your code that you want to test based on the profile.
 

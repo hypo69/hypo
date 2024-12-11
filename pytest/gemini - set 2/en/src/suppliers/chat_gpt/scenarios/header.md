@@ -104,7 +104,7 @@ def test_readme_loading_failure(mocked_gs, mocked_gs_path):
 
 7. **Return Values:** The tests now explicitly check the return value of `set_project_root`, and retrieve expected values where appropriate (like `doc_str`).
 
-8. **Example `test_settings_loading_success`:** Demonstrates the use of `mocked_settings` to pass data and how to assert against it.
+8. **Example `test_settings_loading_success`:** DemonStartes the use of `mocked_settings` to pass data and how to assert against it.
 
 **How to run these tests:**
 

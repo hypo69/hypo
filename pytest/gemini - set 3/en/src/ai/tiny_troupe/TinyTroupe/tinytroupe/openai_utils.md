@@ -108,11 +108,11 @@ if __name__ == "__main__":
 
 **Explanation and Improvements:**
 
-1.  **Mocking:** The code now includes `mock_read_config_file` and `mock_getenv` functions to mock the `utils.read_config_file()` and `os.getenv()` calls respectively.  This is *crucial* for writing reliable tests because your tests should not rely on external files or environment variables.  The `patch_functions()` function orchestrates the mocking.
+1.  **Mocking:** The code now includes `mock_read_config_file` and `mock_getenv` functions to mock the `utils.read_config_file()` and `os.getenv()` calls respectively.  This is *crucial* for writing reliable tests because your tests should not rely on external files or environment variables.  The `patch_functions()` function orcheStartes the mocking.
 
 2.  **Error Handling:** The tests now explicitly handle `InvalidRequestError`, `RateLimitError`, and cases where the `_raw_model_call` function might raise an exception after multiple attempts. This is much better than a generic `Exception` catch.
 
-3.  **Max Attempts:** A test `test_send_message_max_attempts` demonstrates handling when the maximum attempts are reached.
+3.  **Max Attempts:** A test `test_send_message_max_attempts` demonStartes handling when the maximum attempts are reached.
 
 4.  **Token Counting:** `test_count_tokens` verifies the token counting logic, a key part of OpenAI API usage.
 

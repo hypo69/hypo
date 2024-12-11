@@ -121,7 +121,7 @@ def test_window_focus(chrome_driver):
 * **Missing `get_url` call:** Added `chrome_driver.get_url("https://www.example.com")` within the `test_page_refresh` and `test_scroll_valid_input` test cases to ensure a valid page is loaded before these operations are performed. This avoids errors.
 * **`test_find_element_invalid_css_selector`:** This new test is very important; it ensures that a `NoSuchElementException` is raised if the selector is invalid.
 * **`test_locale`:**  While we can't predict the actual `locale`,  we now just ensure `locale` attribute isn't `None`.
-* **`test_window_focus`:**  Since `window_focus` doesn't return a value, we need a slightly different strategy.
+* **`test_window_focus`:**  Since `window_focus` doesn't return a value, we need a slightly different Startegy.
 
 **Crucial Considerations (not in the test code itself):**
 

@@ -103,7 +103,7 @@ def test_categorize_no_match(supplier_data, category_rules):
 
 4. **Exception Handling:** `pytest.raises` is used to test for the `ValueError` when the `supplier_data` is invalid.  This is critical for robust tests.
 
-5. **Edge Cases:** Tests cover cases like missing keys, mismatched values, and empty dictionaries in `supplier_data`, demonstrating the handling of various scenarios.
+5. **Edge Cases:** Tests cover cases like missing keys, mismatched values, and empty dictionaries in `supplier_data`, demonStarting the handling of various scenarios.
 
 6. **Comprehensive Tests:**  The tests now cover more situations (empty supplier data, no match) that are likely to arise in real use cases.
 

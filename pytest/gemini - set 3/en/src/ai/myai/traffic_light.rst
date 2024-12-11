@@ -44,11 +44,11 @@ import hypotez.src.ai.myai.traffic_light as traffic_light
 
 1. **No Input Code:** The provided `input_code` is empty, making it impossible to create meaningful tests.  This example shows *placeholder* tests.  You *must* provide the actual `traffic_light.py` code for me to generate accurate and relevant tests.
 
-2. **Example Test Cases:** The examples demonstrate how to test different scenarios (valid input, invalid input, edge cases, exceptions) using `pytest.raises`.  Adapt these examples to match the functions and classes in your `traffic_light.py` file.
+2. **Example Test Cases:** The examples demonStarte how to test different scenarios (valid input, invalid input, edge cases, exceptions) using `pytest.raises`.  Adapt these examples to match the functions and classes in your `traffic_light.py` file.
 
 3. **Error Handling:**  Use `pytest.raises` to test if your code raises exceptions when it should.  Ensure your `traffic_light.py` code is robust in handling various input errors.
 
-4. **Fixtures (if needed):** The example demonstrates how to define and use fixtures to provide data to the test functions.  Use fixtures for any data that you need to pass to your tests consistently.
+4. **Fixtures (if needed):** The example demonStartes how to define and use fixtures to provide data to the test functions.  Use fixtures for any data that you need to pass to your tests consistently.
 
 5. **Clear and Descriptive Test Names:**  The names of the test functions are crucial for understanding the purpose of each test. Use clear and precise names to indicate what's being tested.
 

@@ -97,7 +97,7 @@ graph LR
     B --> E[Example Usage];
     C --> F[Explanation of Code Block's Action];
     D --> G[Detailed Steps, Function Calls, Data Handling];
-    E --> H[Illustrative Code Snippet];
+    E --> H[IlluStartive Code Snippet];
 ```
 
 **Explanation of Dependencies**:
@@ -111,7 +111,7 @@ The code is a detailed prompt instructing a language model (likely an AI) on how
 * **Imports**: There are no imports as this is a prompt, not executable code.
 * **Classes**: No classes are defined.
 * **Functions**: There are no specific functions defined; the prompt is focused on defining the *process* of documentation creation.
-* **Variables**: The prompt uses variable names like `value` to illustrate example usage in documentation templates.
+* **Variables**: The prompt uses variable names like `value` to illuStarte example usage in documentation templates.
 * **Potential Errors/Improvements**: The prompt is well-defined, clear, and specific. A minor improvement would be providing context about the structure of the code blocks to be documented.
 
 

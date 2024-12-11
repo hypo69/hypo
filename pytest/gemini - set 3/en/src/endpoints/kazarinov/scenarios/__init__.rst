@@ -68,7 +68,7 @@ def test_mexiron_mode_default():
 
 2. **Isolated Tests:** Each test function is independent and doesn't rely on the outcome of others.
 
-3. **Edge Case and Exception Handling:**  The example now demonstrates how to test for exception handling using `pytest.raises()`.
+3. **Edge Case and Exception Handling:**  The example now demonStartes how to test for exception handling using `pytest.raises()`.
 
 4. **Example for external Dependencies:** The commented-out section shows how to test functions that interact with external data sources (like files or databases).  **Crucially**, you'll need to *mock* the external dependency to control the data returned by those external sources during your tests.
 

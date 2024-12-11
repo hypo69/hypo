@@ -17,7 +17,7 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # Example usage (Illustrative, not actual code)
+    # Example usage (IlluStartive, not actual code)
 
     product_data = {
         'name': 'Example Product',

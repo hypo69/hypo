@@ -102,7 +102,7 @@ def test_grab_page_no_data(graber, mock_driver):
 
 2. **`@patch` for asyncio:**  The `test_grab_page_error_handling` function uses `@patch` to patch `asyncio` to avoid actual asynchronous calls and making the test predictable.
 
-3. **Error Handling:** The `test_grab_page_error_handling`  test demonstrates how to use `pytest.raises` to check for `ExecuteLocatorException` being raised, as specified in the prompt.
+3. **Error Handling:** The `test_grab_page_error_handling`  test demonStartes how to use `pytest.raises` to check for `ExecuteLocatorException` being raised, as specified in the prompt.
 
 4. **No Data Scenario:** `test_grab_page_no_data` is added to test the case where no data is returned from any of the internal functions, and returns `None` in response.  This is a crucial edge case.
 

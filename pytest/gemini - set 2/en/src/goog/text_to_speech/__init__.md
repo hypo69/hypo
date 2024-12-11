@@ -57,7 +57,7 @@ def test_tts_init():
 2. **`test_tts_init` function:** This test function checks if the `__init__` method initializes correctly. Critically, it includes *robust error handling*.  The `try...except` blocks catch potential exceptions during initialization and voice retrieval, preventing tests from failing unexpectedly and providing informative error messages. This is *essential* for real-world testing.
 
 
-3. **Example of Parameterized Tests (commented):** The commented-out code demonstrates how to use `@pytest.mark.parametrize` for testing multiple inputs to a hypothetical method (if present)
+3. **Example of Parameterized Tests (commented):** The commented-out code demonStartes how to use `@pytest.mark.parametrize` for testing multiple inputs to a hypothetical method (if present)
 
 
 4. **Example Exception Test (commented):** This shows how to test for exceptions raised by the `TTS` class using `pytest.raises`.  If your code raises specific exceptions (e.g., `ValueError`, `TypeError`), adapt the exception type in `with pytest.raises(...)` to match the actual exception raised.

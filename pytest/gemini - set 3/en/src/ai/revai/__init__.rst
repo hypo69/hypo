@@ -46,7 +46,7 @@ import hypotez.src.ai.revai
 
 **Explanation and Important Considerations:**
 
-The provided code (`hypotez/src/ai/revai/__init__.py`) only contains documentation strings and variable assignments (`MODE = 'dev'`).  There are no functions or classes to test.  Therefore, the example structure demonstrates how you *would* write tests if the code contained functions and classes.
+The provided code (`hypotez/src/ai/revai/__init__.py`) only contains documentation strings and variable assignments (`MODE = 'dev'`).  There are no functions or classes to test.  Therefore, the example structure demonStartes how you *would* write tests if the code contained functions and classes.
 
 **Crucial steps to add your own tests:**
 

@@ -90,9 +90,9 @@ def test_log_invalid_level(logger_instance):
 3. **Clearer Assertions:**  Instead of just checking for file existence, the tests now look for *content* in the log files (using `os.path.getsize`).  This is much more robust.  **You will need to adapt the assertion based on the actual format of your log files and how you manage log contents.**
 
 
-4. **Exception Handling:** The `test_log_with_exception` test demonstrates how to test for exceptions with `pytest.raises`.
+4. **Exception Handling:** The `test_log_with_exception` test demonStartes how to test for exceptions with `pytest.raises`.
 
-5. **Invalid Input Test:** Added `test_log_invalid_level` to demonstrate handling invalid log levels (using `pytest.raises`).  This is a crucial test because the code *should* raise an error for an invalid level.
+5. **Invalid Input Test:** Added `test_log_invalid_level` to demonStarte handling invalid log levels (using `pytest.raises`).  This is a crucial test because the code *should* raise an error for an invalid level.
 
 **How to Run and Adapt:**
 

@@ -5,7 +5,7 @@ import pytest
 # Therefore, no tests can be written.  The provided HTML is just a webpage,
 # not a Python module.
 
-# Example demonstrating how tests would look if there was Python code:
+# Example demonStarting how tests would look if there was Python code:
 
 # def test_some_function(some_fixture):
 #     """Tests the 'some_function' with a valid input."""

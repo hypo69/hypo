@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides examples of how to use the `tinytroupe` library to create and define different types of agents.  It showcases the `TinyPerson` class and demonstrates how to define various aspects of an agent, such as age, nationality, occupation, routine, occupation description, personality traits, professional interests, personal interests, skills, and relationships.  The examples include Oscar, the architect; Lisa, the data scientist; Marcos, the physician; and Lila, the linguist.
+This module provides examples of how to use the `tinytroupe` library to create and define different types of agents.  It showcases the `TinyPerson` class and demonStartes how to define various aspects of an agent, such as age, nationality, occupation, routine, occupation description, personality traits, professional interests, personal interests, skills, and relationships.  The examples include Oscar, the architect; Lisa, the data scientist; Marcos, the physician; and Lila, the linguist.
 
 
 ## Classes

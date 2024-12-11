@@ -32,7 +32,7 @@ def test_mode_is_development():
 * **Multiple Input:** If a function accepts multiple parameters, you'd write tests to cover various combinations of valid and invalid data for each parameter.
 
 
-**Example with a More Complex `pw_executor.py` (Illustrative):**
+**Example with a More Complex `pw_executor.py` (IlluStartive):**
 
 ```python
 # hypotez/src/webdriver/playwright/pw_executor.py

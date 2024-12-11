@@ -105,9 +105,9 @@ def test_page_load_no_document(js_code_eval):
 
 3. **Mocking:** The key improvement is mocking the `document`, `window.location`, `fetch`, and using `pytest.raises` to test error handling.  This is crucial as you can't directly control the browser or network response from within a Python test.
 
-4. **Error Handling:** The `test_page_load_invalid_fetch` test demonstrates how to assert on the error response when `fetch` fails.
+4. **Error Handling:** The `test_page_load_invalid_fetch` test demonStartes how to assert on the error response when `fetch` fails.
 
-5. **`test_page_load_no_document`:**  Illustrates how to test for a case where crucial JavaScript objects aren't available, such as a missing `document` object.
+5. **`test_page_load_no_document`:**  IlluStartes how to test for a case where crucial JavaScript objects aren't available, such as a missing `document` object.
 
 6. **Clearer Assertions:**  The assertions are now more focused on expected behavior (e.g., absence of errors).
 

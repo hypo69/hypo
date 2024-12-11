@@ -19,7 +19,7 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # Example demonstrating importing a module from a custom package
+    # Example demonStarting importing a module from a custom package
     from src.logger import logger
 
     # Example usage of a function from src.utils.string (assuming such a module exists)

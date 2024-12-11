@@ -84,7 +84,7 @@ def test_version_is_a_version_object():
 **Explanation and Improvements:**
 
 * **Import statements:**  Import the necessary modules explicitly.
-* **Fixtures:** Added placeholder fixtures (`dummy_category_data`, `dummy_product_data`) to demonstrate how to use fixtures. Replace placeholders with actual data.
+* **Fixtures:** Added placeholder fixtures (`dummy_category_data`, `dummy_product_data`) to demonStarte how to use fixtures. Replace placeholders with actual data.
 * **Expected Values:**  Crucially, added `EXPECTED_PRODUCT_LIST`, `EXPECTED_CATEGORY_LIST`, and `EXPECTED_PRODUCT_PAGE` placeholders. Replace these with the actual expected outputs from your functions.  This is *essential* for meaningful test assertions.  Without these, the tests won't know what the "correct" result should be.
 * **Clear Test Names:**  Used descriptive names.
 * **Edge Cases/Invalid Inputs:** Included tests for invalid inputs (non-integers, invalid usernames/passwords).  Used `pytest.raises` for exception handling.

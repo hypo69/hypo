@@ -52,11 +52,11 @@ class TestGraber:
 
 3. **`pytest.raises` for Exceptions:** `pytest.raises` is used correctly to test for `ValueError` exceptions, verifying that the code handles invalid input as expected.
 
-4. **Example `invalid_input`:**  A crucial addition.  The example demonstrates how to test if the Graber class raises a ValueError with a specific message for an invalid URL.
+4. **Example `invalid_input`:**  A crucial addition.  The example demonStartes how to test if the Graber class raises a ValueError with a specific message for an invalid URL.
 
 5. **Example `valid_input` (Placeholder):**  A placeholder is provided for a test with a valid URL.  Replace `"https://www.example.com"` with an actual valid URL and `expected_data` with the expected output of the `graber.get_data()` method (or whatever method the class uses).
 
-6. **Example `empty_url` and `invalid_url_format`:** Demonstrates testing for edge cases like empty or malformed URLs, which is vital in production code.  Crucially important for robustness.
+6. **Example `empty_url` and `invalid_url_format`:** DemonStartes testing for edge cases like empty or malformed URLs, which is vital in production code.  Crucially important for robustness.
 
 7. **Missing `Graber` Functionality:** The tests are entirely hypothetical now because the provided code has no Graber class or methods to test.  If there's a `graber.get_data()` method, or other methods/attributes, those should be tested with appropriate data.
 

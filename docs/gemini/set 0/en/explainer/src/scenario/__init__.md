@@ -165,12 +165,12 @@ graph LR
 
 ```
 
-**Dependencies Analysis:**  The code imports functions from a `.executor` submodule (`hypotez/src/scenario/executor.py`). These imports suggest the existence of supporting functions for loading, processing and executing scenario data in a structured manner.  This implies that the `executor` module likely contains the core logic for interacting with the `Supplier` object and implementing the scenario logic itself. The diagram demonstrates the usage and interaction between modules, illustrating the flow of data and control between functions.
+**Dependencies Analysis:**  The code imports functions from a `.executor` submodule (`hypotez/src/scenario/executor.py`). These imports suggest the existence of supporting functions for loading, processing and executing scenario data in a structured manner.  This implies that the `executor` module likely contains the core logic for interacting with the `Supplier` object and implementing the scenario logic itself. The diagram demonStartes the usage and interaction between modules, illuStarting the flow of data and control between functions.
 
 
 ## <explanation>
 
-* **Imports:** The line `from .executor import ...` imports functions related to scenario execution from the `executor` module within the same package (`scenario`). This suggests a modular design where the `scenario` module orchestrates the execution process and relies on the `executor` module to perform the actual work. This organization promotes code reusability and maintainability.  The imported functions are likely handling the low-level interactions with the PrestaShop API or other components.
+* **Imports:** The line `from .executor import ...` imports functions related to scenario execution from the `executor` module within the same package (`scenario`). This suggests a modular design where the `scenario` module orcheStartes the execution process and relies on the `executor` module to perform the actual work. This organization promotes code reusability and maintainability.  The imported functions are likely handling the low-level interactions with the PrestaShop API or other components.
 
 * **Classes (implied):** The code mentions a `Supplier` class. This is not defined directly, but implied to exist within the `.executor` module.  This class likely handles the interaction and communication with the specific data source. This class would have attributes for data sources and methods to acquire data.
 
@@ -191,4 +191,4 @@ graph LR
     * **Documentation:** Comments and docstrings could be improved in the executor module to clarify the purpose, arguments, and return values of the functions used for execution.
 
 
-* **Relationships:** The code directly depends on the `hypotez/src/scenario/executor.py` module for performing tasks. The code acts as a higher-level orchestrator, calling functions within the `executor` module to execute individual scenarios. This relationship implies a dependency where changes in the `executor` module might affect the operation of the `scenario` module.
+* **Relationships:** The code directly depends on the `hypotez/src/scenario/executor.py` module for performing tasks. The code acts as a higher-level orcheStartor, calling functions within the `executor` module to execute individual scenarios. This relationship implies a dependency where changes in the `executor` module might affect the operation of the `scenario` module.

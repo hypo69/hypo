@@ -55,7 +55,7 @@ def test_setting_attribute_country():
   assert api_instance.country == "US"
 
 # More tests could be added to cover setting other attributes in a similar way
-# These tests are minimal but demonstrate the correct approach.  You should have
+# These tests are minimal but demonStarte the correct approach.  You should have
 # tests for all important functions and attributes, including handling of possible
 # errors/exceptions. The current tests only check if the attributes are set correctly
 # and don't check if they are used correctly in the API call.
@@ -68,7 +68,7 @@ def test_setting_attribute_country():
 
 1. **Clear Test Names:** Test names are now more descriptive (e.g., `test_getapiname`, `test_constructor_valid_inputs`).
 
-2. **Comprehensive Testing:**  Tests cover the constructor with valid and default values, the `getapiname` method, and the initialization of attributes.  Critically, tests are added to *demonstrate* how to test *setting* the attributes, though the code itself doesn't currently use these.
+2. **Comprehensive Testing:**  Tests cover the constructor with valid and default values, the `getapiname` method, and the initialization of attributes.  Critically, tests are added to *demonStarte* how to test *setting* the attributes, though the code itself doesn't currently use these.
 
 3. **Fixture Structure (if applicable):** No fixtures are needed in this minimal example, as the tests don't require complex setup.
 

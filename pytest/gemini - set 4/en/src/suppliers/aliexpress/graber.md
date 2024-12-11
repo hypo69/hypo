@@ -1,7 +1,7 @@
 ```python
 import pytest
 from hypothesis import given
-from hypothesis import strategies as st
+from hypothesis import Startegies as st
 from unittest.mock import patch
 import asyncio
 
@@ -96,7 +96,7 @@ def test_id_product(graber, driver_mock):
 3. **Asynchronous Operations:** The tests now use `asyncio.get_event_loop()` and `loop.run_until_complete()` to properly handle the asynchronous nature of the `grab_page` method and other functions, as these methods use `async def` which need to be run by an event loop.
 
 
-4. **Exception Handling:** Added a test `test_grab_page_fetch_all_data_exception` to demonstrate the proper approach to testing exceptions raised within the `fetch_all_data` function.
+4. **Exception Handling:** Added a test `test_grab_page_fetch_all_data_exception` to demonStarte the proper approach to testing exceptions raised within the `fetch_all_data` function.
 
 
 5. **Comprehensive Testing:** The example tests are a starting point.  You need to create similar tests for `id_product`, `description_short`, `name`, and other methods called within `fetch_all_data`, covering various valid and invalid input cases.
@@ -118,6 +118,6 @@ def test_id_product(graber, driver_mock):
 
 - **Mock Realistic Data:**  The mocked return values for functions like `id_product`, `name`, `description_short` should be realistic to cover more of the possible behaviours of the system, but don't necessarily need to be actual data, as long as they are valid inputs and outputs in the right format.
 - **Error Scenarios:** Add tests specifically for various error scenarios that might occur within the different functions of the graber file.
-- **Complex Data Structures:** If your functions deal with complex data structures, think carefully about how to represent them in the test data using `hypothesis` or other strategies.
+- **Complex Data Structures:** If your functions deal with complex data structures, think carefully about how to represent them in the test data using `hypothesis` or other Startegies.
 
 Remember to replace the placeholder tests and mocks with your actual tests that specifically cover the logic and the expected behavior of your code. These example tests serve as starting points to guide you. Remember to test each function individually (and their interactions).

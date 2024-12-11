@@ -76,7 +76,7 @@ def test_command_instruction_mexiron_invalid_input_type():
 
 2. **Valid Input Test:** The `test_command_instruction_mexiron_valid_input` now has a meaningful example input. This is essential for ensuring you're testing the function on something similar to what it will receive in the real world.
 
-3. **Invalid Input Test:** The `test_command_instruction_mexiron_invalid_input_type` demonstrates testing for a common error scenario: invalid input type.  This is vital for robustness.  You should add more tests for different forms of invalid input (missing keys, incorrect data types, etc.)
+3. **Invalid Input Test:** The `test_command_instruction_mexiron_invalid_input_type` demonStartes testing for a common error scenario: invalid input type.  This is vital for robustness.  You should add more tests for different forms of invalid input (missing keys, incorrect data types, etc.)
 
 
 **How to use this template with your code:**

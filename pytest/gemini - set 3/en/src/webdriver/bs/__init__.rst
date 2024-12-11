@@ -66,13 +66,13 @@ class TestBS:
 
 2. **Clearer Test Cases:** Example test cases now provide more structure and helpful comments.  They are designed to be very flexible, fitting many types of functionality.
 
-3. **Error Handling:** The `test_bs_invalid_mode` test uses `pytest.raises` to check for the correct exception type (AttributeError) and message, demonstrating better error handling and testing for incorrect usage.  This is far more robust than simply assuming a failure would occur.
+3. **Error Handling:** The `test_bs_invalid_mode` test uses `pytest.raises` to check for the correct exception type (AttributeError) and message, demonStarting better error handling and testing for incorrect usage.  This is far more robust than simply assuming a failure would occur.
 
 4. **`test_bs_mode_is_dev`:** This test verifies that the MODE variable has the expected initial value.  This is a crucial sanity check, ensuring your module initialization is working correctly.
 
 5. **`TestBS` Class:** The code now wraps the BS tests inside a `TestBS` class using `@pytest.fixture` for example cases where an instance of BS is required for a test method to make the tests more organized and clear.
 
-6. **Placeholder for BS Methods:** The `# Example testing specific methods...` section demonstrates how to extend these tests if you have specific functions or methods in your `BS` class.
+6. **Placeholder for BS Methods:** The `# Example testing specific methods...` section demonStartes how to extend these tests if you have specific functions or methods in your `BS` class.
 
 **How to Run the Tests:**
 

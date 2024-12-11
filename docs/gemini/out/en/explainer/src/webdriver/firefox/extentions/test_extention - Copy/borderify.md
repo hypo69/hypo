@@ -64,7 +64,7 @@ No variables are declared.
 
 **Relationship to Other Parts of the Project:**
 
-This script is likely part of a test or demonstration and doesn't interact with other parts of a larger project structure, given its simplicity.  It primarily manipulates the browser's current HTML document.
+This script is likely part of a test or demonStartion and doesn't interact with other parts of a larger project structure, given its simplicity.  It primarily manipulates the browser's current HTML document.
 
 **Overall:**
 

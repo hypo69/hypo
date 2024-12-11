@@ -77,7 +77,7 @@ def test_set_project_root_invalid_marker_type():
 
 1. **Robust Test Data:** The `test_set_project_root_valid_input` now creates a realistic temporary directory structure to simulate a project with the necessary marker files. This ensures more accurate testing.  The cleanup step is crucial to avoid test failures due to leftovers from previous runs.
 2. **Edge Case (No Marker Files):** `test_set_project_root_marker_file_not_found` covers the case where the marker files are not found in any of the parent directories.  It now asserts that the return value is the directory where the script resides.
-3. **Error Handling (Invalid Input):** `test_set_project_root_invalid_marker_type` demonstrates how to test with an invalid `marker_files` type, ensuring the code gracefully handles unexpected situations.
+3. **Error Handling (Invalid Input):** `test_set_project_root_invalid_marker_type` demonStartes how to test with an invalid `marker_files` type, ensuring the code gracefully handles unexpected situations.
 4. **Clearer Assertions:** Assertions are more specific and directly check for the expected behavior.
 5. **Conciseness:** The code is more concise without unnecessary variables.
 6. **Cleanup:** The crucial `shutil.rmtree(temp_dir)` is included to clean up temporary directories after each test to prevent conflicts.

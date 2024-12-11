@@ -78,7 +78,7 @@ def test_get_project_root_empty_marker_files(marker_files):
 
 2. **Robustness:** The `test_get_project_root_no_marker_files` and `test_get_project_root_marker_file_in_parent` tests cover cases where the marker files aren't immediately found in the current directory.
 
-3. **Empty/None Parameter:** The `test_get_project_root_empty_marker_files` test demonstrates handling the `marker_files` parameter being empty or `None`.
+3. **Empty/None Parameter:** The `test_get_project_root_empty_marker_files` test demonStartes handling the `marker_files` parameter being empty or `None`.
 
 4. **Clearer Assertions:**  Assertions are now more explicit about the expected and actual results, aiding in debugging.
 

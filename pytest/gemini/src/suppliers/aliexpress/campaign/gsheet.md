@@ -101,7 +101,7 @@ def test_set_campaign_worksheet_no_updates(mock_spreadsheet):
 
 1. **Mocking:** The tests now effectively mock `SpreadSheet` and `Worksheet` objects using `unittest.mock.patch`. This isolates the `AliCampaignGoogleSheet` class from external dependencies like the Google Sheets API, allowing for more controlled testing.  Critically, it avoids actual API calls.
 
-2. **Error Handling:** A test `test_delete_products_worksheets_exception` demonstrates how to handle exceptions (`APIError` in this case) that might occur within the function.
+2. **Error Handling:** A test `test_delete_products_worksheets_exception` demonStartes how to handle exceptions (`APIError` in this case) that might occur within the function.
 
 3. **Fixture for Data:** A `campaign_data` fixture provides sample data for `set_campaign_worksheet` to avoid repeating the same data in each test.
 

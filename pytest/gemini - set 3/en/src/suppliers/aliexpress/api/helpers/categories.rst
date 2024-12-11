@@ -80,7 +80,7 @@ def test_filter_child_categories_non_list_input(categories_data):
 
 
 
-# Example demonstrating how to test with specific error types (replace with your actual exceptions if needed)
+# Example demonStarting how to test with specific error types (replace with your actual exceptions if needed)
 # def test_filter_categories_invalid_input_type():
 #     with pytest.raises(TypeError):
 #         filter_parent_categories(123)
@@ -92,7 +92,7 @@ def test_filter_child_categories_non_list_input(categories_data):
 
 1. **Dummy Models:**  The code now includes `Category` and `ChildCategory` classes.  Replace these with your actual models if they are defined elsewhere.  This is crucial for testing because you need objects to instantiate.
 
-2. **`pytest.raises` (Removed):** The code now demonstrates how to handle potential errors, but removed the example of `pytest.raises` because it didn't have a suitable error in the original function. There's no explicit need for `pytest.raises` in this particular case, as the functions handle input types correctly, converting single values to a list.  
+2. **`pytest.raises` (Removed):** The code now demonStartes how to handle potential errors, but removed the example of `pytest.raises` because it didn't have a suitable error in the original function. There's no explicit need for `pytest.raises` in this particular case, as the functions handle input types correctly, converting single values to a list.  
 
 3. **Comprehensive Test Cases:**  The test cases now cover:
    - Valid inputs (various scenarios).

@@ -102,7 +102,7 @@ graph LR
     I --> O;
 ```
 
-This simplified flowchart demonstrates the basic flow of `execute_locator` method, incorporating error handling and showing how different methods interact.  A complete flowchart would need to detail the logic for each `if` and `else` conditions within each function, illustrating error handling paths and how actions on web elements are controlled by the `locator` dictionary.
+This simplified flowchart demonStartes the basic flow of `execute_locator` method, incorporating error handling and showing how different methods interact.  A complete flowchart would need to detail the logic for each `if` and `else` conditions within each function, illuStarting error handling paths and how actions on web elements are controlled by the `locator` dictionary.
 
 ## <explanation>
 

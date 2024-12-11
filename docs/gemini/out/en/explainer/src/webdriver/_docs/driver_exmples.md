@@ -9,7 +9,7 @@ from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Create a Chrome driver instance and navigate to a URL
     chrome_driver = Driver(Chrome)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
 ## <algorithm>
 
-This script demonstrates the usage of a `Driver` class (likely for web automation) and specifically the `Chrome` subclass.  The workflow involves creating a driver instance, interacting with it to perform actions, and then printing results.
+This script demonStartes the usage of a `Driver` class (likely for web automation) and specifically the `Chrome` subclass.  The workflow involves creating a driver instance, interacting with it to perform actions, and then printing results.
 
 ```
 +-----------------+      +-----------------+
@@ -148,7 +148,7 @@ graph LR
 
 **Functions:**
 
-* `main()`: The main function demonstrates how to use the `Driver` and `Chrome` classes. It creates instances, calls their methods, and prints the results.  A typical starting point for demonstrating a module's use.
+* `main()`: The main function demonStartes how to use the `Driver` and `Chrome` classes. It creates instances, calls their methods, and prints the results.  A typical starting point for demonStarting a module's use.
 
 * `get_url(url)`: Navigates to the given URL. It likely handles error cases (e.g., page load errors) and returns a boolean indicating success.
 

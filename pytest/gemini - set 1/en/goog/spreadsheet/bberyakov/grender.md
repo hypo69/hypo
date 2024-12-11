@@ -99,7 +99,7 @@ def test_get_first_empty_row_non_empty_worksheet(mock_worksheet):
 - **Mocking:** Uses `unittest.mock.Mock` to create mock objects for `Worksheet` and `Spreadsheet`. This isolates the tests from the actual Google Sheets API and allows for controlled input.  Critically, mock methods are now asserted upon.
 - **Clearer Error Handling:**  Uses `pytest.raises` for exception testing with helpful error messages.
 - **Edge Case Testing:**  The `test_get_first_empty_row` cases explicitly test both empty and non-empty worksheet scenarios.
-- **Type Handling:** The `test_header_invalid_input_type` test case demonstrates how to check for incorrect data types.
+- **Type Handling:** The `test_header_invalid_input_type` test case demonStartes how to check for incorrect data types.
 - **Comprehensive Tests:**  The tests are designed to be more comprehensive, now covering more cases for the methods.
 
 

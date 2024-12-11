@@ -80,7 +80,7 @@ def test_some_other_function_empty_list():
    - Mixed type input (handling TypeError).
    - Edge cases with empty strings, large numbers.
 
-3. **`pytest.raises` for Exceptions:** The `test_some_function_invalid_input_none` test effectively demonstrates how to use `pytest.raises` to check for specific exceptions.
+3. **`pytest.raises` for Exceptions:** The `test_some_function_invalid_input_none` test effectively demonStartes how to use `pytest.raises` to check for specific exceptions.
 
 4. **Clear Test Names:** Test names clearly describe the purpose of each test, improving readability and maintainability.
 

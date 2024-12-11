@@ -133,7 +133,7 @@ graph LR
 
 * **Potential Errors/Improvements:**
     - **Error Handling:** The AJAX call lacks error handling. If the server request fails, no error message is displayed to the user. A `catch` block should be added to the AJAX call to handle potential errors from the server.
-    - **Security:**  The example code doesn't demonstrate any input sanitization or validation. If the server is vulnerable to cross-site scripting (XSS) attacks, user input should be properly sanitized before being used in the HTML output.  The `/ask` endpoint on the backend is responsible for sanitizing the input to prevent XSS or other security issues.
+    - **Security:**  The example code doesn't demonStarte any input sanitization or validation. If the server is vulnerable to cross-site scripting (XSS) attacks, user input should be properly sanitized before being used in the HTML output.  The `/ask` endpoint on the backend is responsible for sanitizing the input to prevent XSS or other security issues.
 
 * **Relationship Chain:**
     The HTML file (`chat.html`) communicates with a backend (`/ask` endpoint, likely a Flask or Django route). The backend is responsible for processing the user input, interacting with the AI model, and returning the response to be displayed in the chat. The `/ask` route potentially calls other functions or classes in a larger project structure (e.g., an AI model).

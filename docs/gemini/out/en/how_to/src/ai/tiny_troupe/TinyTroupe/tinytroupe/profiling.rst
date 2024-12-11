@@ -4,7 +4,7 @@ How to use the profiling functions
 
 Description
 -------------------------
-These functions, `plot_age_distribution` and `plot_interest_distribution`, are designed to create visualizations of agent populations' characteristics.  They extract age and interest data from a list of `TinyPerson` agents and generate histograms and pie charts, respectively, to illustrate the distribution of these attributes.  Crucially, each function returns a Pandas DataFrame containing the raw data used for plotting, allowing for further analysis or customization.
+These functions, `plot_age_distribution` and `plot_interest_distribution`, are designed to create visualizations of agent populations' characteristics.  They extract age and interest data from a list of `TinyPerson` agents and generate histograms and pie charts, respectively, to illuStarte the distribution of these attributes.  Crucially, each function returns a Pandas DataFrame containing the raw data used for plotting, allowing for further analysis or customization.
 
 Execution steps
 -------------------------

@@ -4,7 +4,7 @@ How to use the `campaign` module
 
 Description
 -------------------------
-The `campaign` module manages the creation and publishing of Facebook advertising campaigns. It includes functionality for initializing campaign parameters (name, language, currency), creating directory structures, saving campaign configurations, collecting and saving product data (using `ali` or `html` sources), generating advertising materials, validating the campaign, and publishing it to Facebook.  A flowchart illustrates the process.
+The `campaign` module manages the creation and publishing of Facebook advertising campaigns. It includes functionality for initializing campaign parameters (name, language, currency), creating directory structures, saving campaign configurations, collecting and saving product data (using `ali` or `html` sources), generating advertising materials, validating the campaign, and publishing it to Facebook.  A flowchart illuStartes the process.
 
 Execution steps
 -------------------------

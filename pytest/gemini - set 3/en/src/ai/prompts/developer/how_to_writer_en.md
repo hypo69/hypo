@@ -3,7 +3,7 @@ import pytest
 
 # No code provided, so no tests can be written.  
 # Please provide the Python code you want tested.  
-# This template demonstrates the structure for tests.
+# This template demonStartes the structure for tests.
 
 
 # Example using a dummy function (replace with your actual function)

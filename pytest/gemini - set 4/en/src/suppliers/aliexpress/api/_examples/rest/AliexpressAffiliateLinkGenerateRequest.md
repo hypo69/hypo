@@ -62,11 +62,11 @@ def test_init_with_invalid_port():
 
 **Explanation and Improvements:**
 
-* **`pytest.raises` for Error Handling:** Added `test_init_with_invalid_domain` and `test_init_with_invalid_port` to demonstrate how to check for exceptions using `pytest.raises`.  Crucially, these tests now catch the *expected* errors, which is vital for robustness.
+* **`pytest.raises` for Error Handling:** Added `test_init_with_invalid_domain` and `test_init_with_invalid_port` to demonStarte how to check for exceptions using `pytest.raises`.  Crucially, these tests now catch the *expected* errors, which is vital for robustness.
 * **Clearer Variable Names:** Improved variable names for better readability.
 * **Meaningful Data in Edge Cases:**  Crucially, the example test (`test_init_custom_values`)  now shows how to set *meaningful* values when testing the `__init__` method, instead of random strings. 
 * **Isolation:** Tests are now properly isolated by not relying on the test fixture in `test_init_custom_values` but creating a new instance.
-* **Testing `__init__` Properly:** The previous test for `__init__` only checked default values.  The updated `test_init_custom_values` demonstrates how to set and test the custom values.
+* **Testing `__init__` Properly:** The previous test for `__init__` only checked default values.  The updated `test_init_custom_values` demonStartes how to set and test the custom values.
 * **Comprehensive Testing:** Added `test_getapiname` to test the `getapiname` method.
 * **Docstrings:** Improved docstrings to clarify the purpose of each test.
 

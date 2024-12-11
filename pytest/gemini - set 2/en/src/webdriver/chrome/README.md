@@ -88,7 +88,7 @@ def test_invalid_chromedriver_path(chrome_options):
 
 6. **Robust Page Load Check (`test_execute_cdp_cmd_navigate`):**  The `test_execute_cdp_cmd_navigate` now includes a crucial check for page load success by trying to find an element on the page after the navigation.  This is much better than just asserting `None` for `response` – it verifies that the navigation actually took place.  The `try...except` block handles potential exceptions during page loading and uses `pytest.fail` to give a useful error message if the page didn't load correctly.
 
-7. **`invalid_chromedriver_path` Test:** Added a test specifically to handle the common issue of providing a wrong ChromeDriver path. This test demonstrates a more comprehensive approach to exception handling and error checking.
+7. **`invalid_chromedriver_path` Test:** Added a test specifically to handle the common issue of providing a wrong ChromeDriver path. This test demonStartes a more comprehensive approach to exception handling and error checking.
 
 
 **Before running these tests:**

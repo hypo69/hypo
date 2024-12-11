@@ -28,7 +28,7 @@ def example_function(param1: str, param2: int) -> str:
     return ""
 
 
-# Example usage (not part of the module but demonstrates application)
+# Example usage (not part of the module but demonStartes application)
 # try:
 #     data = j_loads('{"key": "value"}')
 #     # ...
@@ -75,7 +75,7 @@ def example_function(param1: str, param2: int) -> str:
     return ""
 
 
-# Example usage (not part of the module but demonstrates application)
+# Example usage (not part of the module but demonStartes application)
 # try:
 #     data = j_loads('{"key": "value"}')
 #     # ...

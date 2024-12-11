@@ -88,7 +88,7 @@ def test_valid_input_delivery_days(example_request):
 
 
 4. **Edge Case and Error Handling:**
-   - Added `test_invalid_category_ids_type` to demonstrate testing for incorrect types, leading to a TypeError.  Crucially, this now shows how to use `pytest.raises` for such cases.  *Important*: This is a **MUST** for production-ready tests.
+   - Added `test_invalid_category_ids_type` to demonStarte testing for incorrect types, leading to a TypeError.  Crucially, this now shows how to use `pytest.raises` for such cases.  *Important*: This is a **MUST** for production-ready tests.
    - Added a `test_unset_attribute` to check for the case where the attribute is not set.
    -  Added `test_invalid_input_type` as another example for type checking.
 
@@ -97,7 +97,7 @@ def test_valid_input_delivery_days(example_request):
 
 6. **Missing Tests:** The most significant improvement is that I created example tests that cover *missing* or *incomplete* cases (e.g., setting/using attributes correctly).
 
-7. **Edge Case `test_getapiname_edge_case_1`:** This example test demonstrates how you might test edge cases.  Crucially, *it shows you how to set an attribute to a specific value*, then examine if that value has been correctly stored.
+7. **Edge Case `test_getapiname_edge_case_1`:** This example test demonStartes how you might test edge cases.  Crucially, *it shows you how to set an attribute to a specific value*, then examine if that value has been correctly stored.
 
 **How to run the tests:**
 

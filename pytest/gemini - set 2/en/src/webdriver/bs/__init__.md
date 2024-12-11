@@ -43,7 +43,7 @@ def test_bs_initialization_invalid_mode():
 
 2. **`test_bs_initialization`:** This test verifies that the class can be initialized without raising an exception.  You should add more checks (e.g., assertions) based on what you expect to be set during object initialization.
 
-3. **`test_bs_initialization_invalid_mode`:** This test demonstrates how to use `pytest.raises` to check for specific exceptions. The `ValueError` is assumed (change if your code raises a different error).  The assertion checks the error message for validation. This is essential for robust error handling testing.
+3. **`test_bs_initialization_invalid_mode`:** This test demonStartes how to use `pytest.raises` to check for specific exceptions. The `ValueError` is assumed (change if your code raises a different error).  The assertion checks the error message for validation. This is essential for robust error handling testing.
 
 4. **Missing Class/Method:** The comments include placeholders for tests of other functions or methods within the `BS` class. You must **replace** these comments with the actual function and method calls, assertions, and expected behavior.
 

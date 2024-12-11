@@ -100,7 +100,7 @@ def test_sys_path_append():
 
 3. **Edge Case Handling:** The tests now explicitly cover the cases where "hypotez" is not found in the path and where the path is empty, making the test suite more robust.
 
-4. **Error Handling (Important):**  The original code lacked error handling.  The tests now properly handle these cases.  The example now demonstrates how to verify that the `append` operation behaves correctly.
+4. **Error Handling (Important):**  The original code lacked error handling.  The tests now properly handle these cases.  The example now demonStartes how to verify that the `append` operation behaves correctly.
 
 
 5. **Restoration of original state:** The tests now reset the `sys.path` to its initial state after each test run to prevent unintended side effects between test cases (especially important for `sys.path`).

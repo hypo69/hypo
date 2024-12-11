@@ -82,7 +82,7 @@ graph LR
 ### Imports
 
 *   `from packaging.version import Version`: Imports the `Version` class from the `packaging.version` module. This module is likely used for managing and comparing software versions, a common practice in Python projects.  This import suggests version checking or handling related to the OpenAI API or dependencies. This import is a dependency on an external library.
-*   `from .version import __version__, __doc__, __details__`: Imports `__version__`, `__doc__`, and `__details__` from a file named `version.py` (likely located in the same directory as `__init__.py`). These are likely version information, documentation strings, and other metadata fields typically defined for Python packages. This import demonstrates a relationship to a submodule within the same package responsible for versioning.
+*   `from .version import __version__, __doc__, __details__`: Imports `__version__`, `__doc__`, and `__details__` from a file named `version.py` (likely located in the same directory as `__init__.py`). These are likely version information, documentation strings, and other metadata fields typically defined for Python packages. This import demonStartes a relationship to a submodule within the same package responsible for versioning.
 
 
 ### Variables

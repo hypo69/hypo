@@ -88,7 +88,7 @@ def test_aliexpress_api_invalid_product_data(invalid_product):
 
 3. **Comprehensive Scenarios:** The tests now cover valid input, product not found (or no products), and importantly, tests with *invalid input types* (e.g., passing a string instead of an integer as the product ID).
 
-4. **Exception Handling:** The `test_aliexpress_api_invalid_product_data` test now demonstrates using `pytest.raises` to check for `TypeError` when receiving invalid product data.
+4. **Exception Handling:** The `test_aliexpress_api_invalid_product_data` test now demonStartes using `pytest.raises` to check for `TypeError` when receiving invalid product data.
 
 5. **Mock Data:** The test cases now effectively mock the `products` attribute of the `AliexpressApi` class. This is vital; without mocking, you'd be depending on the actual API (which might not be ready or available for testing).
 

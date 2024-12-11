@@ -96,7 +96,7 @@ invalid_json_file = Path("nonexistent_file.json")
 * **Error Handling:**  In a real application, the `j_loads_ns` function should have more robust error handling to catch various JSON parsing errors, not just the empty JSON case.
 * **External Dependencies:**  Testing interaction with external files like JSON is better done with mocking to prevent issues with external files changing during testing.
 * **Data Validation:** The tests for the JSON data should ideally validate that the loaded JSON structure conforms to the expected format, handling malformed or missing fields.
-* **Complex Logic:** For more complex JSON parsing, consider using dedicated JSON validation libraries and schema for a more comprehensive validation strategy.
+* **Complex Logic:** For more complex JSON parsing, consider using dedicated JSON validation libraries and schema for a more comprehensive validation Startegy.
 
 Remember to replace `"mock_file.json"` with the actual filename.  Also, make sure to adapt the fixtures to match the actual structure of your `j_loads_ns` function's expected JSON input. Finally,  you need to add the `invalid_json_file` fixture correctly in a similar way to the other fixtures.
 

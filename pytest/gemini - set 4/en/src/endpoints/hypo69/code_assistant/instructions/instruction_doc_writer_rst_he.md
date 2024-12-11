@@ -86,4 +86,4 @@ def test_generate_rst_docstring_invalid_input():
 - Run the tests from the command line: `pytest test_instruction_doc_writer.py`
 
 
-This significantly improved solution provides a more realistic and robust testing framework. Remember to replace the placeholder code with your actual Python code to get proper test coverage. Remember that the example `generate_rst_docstring` function is for illustration purposes.  Your actual `instruction_doc_writer.py` code will likely need different test cases based on the specifics of its functionality.
+This significantly improved solution provides a more realistic and robust testing framework. Remember to replace the placeholder code with your actual Python code to get proper test coverage. Remember that the example `generate_rst_docstring` function is for illuStartion purposes.  Your actual `instruction_doc_writer.py` code will likely need different test cases based on the specifics of its functionality.

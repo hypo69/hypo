@@ -100,7 +100,7 @@ def test_ask_exception():
 * **Mocking:** Critically important for testing APIs.  The code now uses `MockGoogleGenerativeAI` and `mock_request` to simulate the external dependency (Google Generative AI) and Flask's request handling. This isolates the `ask` function from external calls.
 * **Clear Test Cases:**  Test names like `test_ask_valid_input`, `test_ask_no_prompt`,  etc., make the purpose of each test immediately clear.
 * **Exception Handling:** The `test_ask_error_prompt` and `test_ask_exception` tests now properly use `pytest.raises` to assert that the expected exception is caught. This is crucial for testing error handling.
-* **Invalid JSON Input:** Added `test_ask_invalid_json` to demonstrate handling cases where the input is not valid JSON. This is very common in real-world APIs.
+* **Invalid JSON Input:** Added `test_ask_invalid_json` to demonStarte handling cases where the input is not valid JSON. This is very common in real-world APIs.
 * **Mock Flask App:** Introduced `MockApp` for complete testing environment mocking.  This is essential for `test_ask_invalid_json`.
 
 **How to run the tests:**

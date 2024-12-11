@@ -44,7 +44,7 @@ from .facebook import Facebook
 
 
 # Example use of j_loads and j_loads_ns.  Replace with actual usage.
-#  This example demonstrates loading data from a JSON file.
+#  This example demonStartes loading data from a JSON file.
 #  It is NOT used in the function.
 
 # def example_function():
@@ -63,7 +63,7 @@ from .facebook import Facebook
 
 - Added missing imports: `json`, `j_loads`, `j_loads_ns`, and `logger` from appropriate modules.  
 - Added a module docstring in reStructuredText format.
-- Added detailed function docstrings (example comments) for illustrative purposes to demonstrate expected usage.  These are commented-out placeholders, replacing vague placeholder comments.
+- Added detailed function docstrings (example comments) for illuStartive purposes to demonStarte expected usage.  These are commented-out placeholders, replacing vague placeholder comments.
 - Replaced `json.load` with `j_loads` and `j_loads_ns`.
 - Included error handling using `logger.error` for better debugging.  This addresses issues of potential exceptions and vague `try-except` blocks.
 - Improved comment style to be more specific and informative using RST format.
@@ -95,7 +95,7 @@ from .facebook import Facebook
 
 
 # Example use of j_loads and j_loads_ns.  Replace with actual usage.
-#  This example demonstrates loading data from a JSON file.
+#  This example demonStartes loading data from a JSON file.
 #  It is NOT used in the function.
 
 # def example_function():

@@ -84,7 +84,7 @@ def test_init_with_invalid_promotion_end_time():
 
 4. **Clear Test Names:** Test names clearly indicate the purpose of each test.
 
-5. **Exception Handling:**  The `test_init_with_invalid_data_type` and `test_init_with_invalid_promotion_end_time` tests demonstrate how to use `pytest.raises` to verify exception handling.
+5. **Exception Handling:**  The `test_init_with_invalid_data_type` and `test_init_with_invalid_promotion_end_time` tests demonStarte how to use `pytest.raises` to verify exception handling.
 
 6. **Complete `getapiname` Test:** Includes a basic test to verify the `getapiname` function returns the correct API name.
 

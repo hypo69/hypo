@@ -90,7 +90,7 @@ def test_mount_static_files(client):
 * **`script_output` Fixture:** Creates a fixture to hold the expected output from the `script.py` file.  **Crucially**, this allows you to easily mock or replace the script's output in tests.  This is *essential* for testing the FastAPI code without requiring the external script to be executed or working.
 * **`script_error_output` Fixture:** Added a fixture to handle expected errors from the `script.py` file, vital for comprehensive error handling testing.
 * **Mocking `subprocess.Popen`:**  Uses `mocker.patch` to mock the `Popen` call to simulate errors without running the actual script, making the tests more reliable and faster.  This is *critical* for testing error conditions.
-* **Comprehensive Error Handling:**  The `test_process_data_script_error` test now demonstrates comprehensive error handling and checking the correct error message returned from FastAPI in the case of a non-zero exit code.
+* **Comprehensive Error Handling:**  The `test_process_data_script_error` test now demonStartes comprehensive error handling and checking the correct error message returned from FastAPI in the case of a non-zero exit code.
 * **Clearer Test Names:**  Test names are more descriptive, indicating the specific input and expected behavior.
 * **`pytest.raises` (not used):**  While `pytest.raises` is good for testing exceptions, the existing error handling tests provide better testing coverage of the exception handling code within FastAPI.
 * **Missing Input Tests:** Added specific tests for cases where either `first_name` or `last_name` are missing from the form data.

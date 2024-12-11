@@ -22,7 +22,7 @@ def test_mode_is_dev():
 
 4. **No Fixtures Needed:** The `__init__.py` file doesn't have functions or methods that take arguments, so no fixtures are needed in this case.
 
-5. **Comprehensive Test Strategy:** While the code is very simple, the test is sufficient.  A more complex set of functions or methods would require more involved tests with various input scenarios.
+5. **Comprehensive Test Startegy:** While the code is very simple, the test is sufficient.  A more complex set of functions or methods would require more involved tests with various input scenarios.
 
 **How to Run the Tests:**
 
@@ -45,4 +45,4 @@ def test_mode_is_dev():
 * **External Dependencies:** If the code relied on external APIs, test with various responses and error conditions.
 * **Complex Logic:**  Add tests for more intricate algorithms, data validation, and business logic.
 
-This revised response provides a much more robust and targeted approach to testing the provided initial code. Remember to adapt the testing strategy to the actual complexity of the functions in `hypotez/src/endpoints/prestashop/domains/__init__.py` if it contains more code. Remember to replace the placeholder comment with the actual code from the file if needed.
+This revised response provides a much more robust and targeted approach to testing the provided initial code. Remember to adapt the testing Startegy to the actual complexity of the functions in `hypotez/src/endpoints/prestashop/domains/__init__.py` if it contains more code. Remember to replace the placeholder comment with the actual code from the file if needed.

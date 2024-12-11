@@ -100,4 +100,4 @@ def test_model_selection_mode():
 Remember to replace placeholders like `GoogleGenerativeAI.generate` and `OpenAIModel.generate` with the actual method names in your code. Also, adapt the tests based on the specific functionality and parameters expected in your `GoogleGenerativeAI` and `OpenAIModel` classes.
 
 
-This improved solution addresses the requirements, provides more thorough test coverage, and demonstrates best practices for writing effective `pytest` tests. Remember to adapt it to the specific details of your code. Remember to mock or replace any external dependencies (like calls to OpenAI) in your tests to make them more reliable.
+This improved solution addresses the requirements, provides more thorough test coverage, and demonStartes best practices for writing effective `pytest` tests. Remember to adapt it to the specific details of your code. Remember to mock or replace any external dependencies (like calls to OpenAI) in your tests to make them more reliable.

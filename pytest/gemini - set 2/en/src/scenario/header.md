@@ -116,7 +116,7 @@ def test_set_project_root_marker_file_not_found():
 
 6. **Cleanup:** The code now cleans up temporary files created for testing using `unlink()` and `rmdir()` to avoid leaving behind unwanted files.
 
-This revised solution provides a much more comprehensive and reliable test suite for the `set_project_root` function. Remember to adapt the paths in the test cases (`'./pyproject.toml'`, etc.) to match your actual file structure if you want to run the tests against your real project.  It also demonstrates good practice for testing Python code in a consistent manner, which can be adapted as needed for other similar functions and classes in your project.
+This revised solution provides a much more comprehensive and reliable test suite for the `set_project_root` function. Remember to adapt the paths in the test cases (`'./pyproject.toml'`, etc.) to match your actual file structure if you want to run the tests against your real project.  It also demonStartes good practice for testing Python code in a consistent manner, which can be adapted as needed for other similar functions and classes in your project.
 
 
 **How to run the tests:**

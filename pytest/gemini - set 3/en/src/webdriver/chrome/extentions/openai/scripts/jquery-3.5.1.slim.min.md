@@ -6,7 +6,7 @@ import jquery_3_5_1  # Assuming the jQuery code is in jquery_3_5_1.py
 # Fixture definitions (assuming no need for specific data)
 
 # Tests for core jQuery functionality (no specific functions or classes identified)
-# These are illustrative examples and need adjustment based on the specific functions/classes in the jQuery code
+# These are illuStartive examples and need adjustment based on the specific functions/classes in the jQuery code
 def test_jquery_version():
     """Checks if the jQuery version string is present in the library."""
     version_string = "3.5.1"
@@ -71,9 +71,9 @@ def test_jquery_error_handling():
 **Explanation and Crucial Improvements:**
 
 1. **Import:** The code now imports the jQuery library using `import jquery_3_5_1`.  Crucially, **you need to create a Python file (e.g., `jquery_3_5_1.py`) and put the JavaScript code inside it.**  It's not directly testable as JavaScript. This Python file should contain the JavaScript code *translated into Python (or use libraries to interact with it)*.
-2. **Illustrative Tests:** The example tests are simplified but demonstrate good structure and how to use `pytest.raises`.
+2. **IlluStartive Tests:** The example tests are simplified but demonStarte good structure and how to use `pytest.raises`.
 3. **Focus on jQuery Functions:** Tests are added specifically targeting core jQuery functions (e.g., `extend`, `isEmptyObject`, `each`). You need to match the tests to the *actual* jQuery functions you want to test in the translated Python code.
-4. **Error Handling:**  A test case (`test_jquery_error_handling`) demonstrates how to use `pytest.raises` to test for expected exceptions.  Replace this placeholder with tests related to potential errors from the translated code.
+4. **Error Handling:**  A test case (`test_jquery_error_handling`) demonStartes how to use `pytest.raises` to test for expected exceptions.  Replace this placeholder with tests related to potential errors from the translated code.
 
 **How to actually use this with jQuery code:**
 
@@ -95,7 +95,7 @@ function extend(target, source) { ... }
 """
 
 # ...
-# This example demonstrates JS code translated into a Python function
+# This example demonStartes JS code translated into a Python function
 # Replace with the correct translation
 my_translated_jquery = js2py.eval_js(js_code)
 

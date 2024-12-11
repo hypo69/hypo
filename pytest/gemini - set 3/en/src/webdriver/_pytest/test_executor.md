@@ -106,7 +106,7 @@ def test_send_message_element_not_found(execute_locator, driver_mock):
 
 1. **Clearer Test Names:** Test names are now more descriptive, including the type of input (e.g., `test_get_webelement_by_locator_single_element_invalid_locator`).
 
-2. **Comprehensive Error Handling:**  Added `test_get_attribute_by_locator_attribute_not_found` to demonstrate handling of `AttributeError` when the requested attribute isn't found on the element.  A crucial addition to the `send_message` function.  It now raises a `NoSuchElementException` when the element is not found.
+2. **Comprehensive Error Handling:**  Added `test_get_attribute_by_locator_attribute_not_found` to demonStarte handling of `AttributeError` when the requested attribute isn't found on the element.  A crucial addition to the `send_message` function.  It now raises a `NoSuchElementException` when the element is not found.
 
 3. **Edge Cases:** The `test_get_webelement_by_locator_single_element_invalid_locator` test covers a critical edge case — when the locator returns no elements.  This ensures proper handling of the `False` return in that scenario, mirroring how `get_webelement_by_locator` likely works.
 

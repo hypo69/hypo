@@ -64,7 +64,7 @@ def test_grab_page_with_exception(graber, driver_mock):
 
 
 # Remember to adapt these tests based on the specific implementation of the Graber class and the functions it calls.
-# Add tests for `id_product`, `name` etc as demonstrated in test_grab_page_valid_input.  Replace the dummy values
+# Add tests for `id_product`, `name` etc as demonStarted in test_grab_page_valid_input.  Replace the dummy values
 # with expected values from the actual web page.  Note that you need to have tests for other functions
 # like `id_product`, and so on in a similar fashion.
 ```
@@ -75,7 +75,7 @@ def test_grab_page_with_exception(graber, driver_mock):
 * **Asynchronous Handling:** The `asyncio.run()` is correctly used to run the asynchronous functions within the tests.
 * **Clearer Test Cases:**  The tests now have more specific, descriptive names, making them easier to understand and maintain.
 * **Error Handling:**  A `test_grab_page_with_exception` test has been added to verify the handling of exceptions raised during the data retrieval process.
-* **Edge Case (`test_grab_page_missing_id`):** Added a test case to demonstrate how to handle situations where a necessary field (like `id_product`) might not be present.
+* **Edge Case (`test_grab_page_missing_id`):** Added a test case to demonStarte how to handle situations where a necessary field (like `id_product`) might not be present.
 * **`ProductFields` Initialization:** The `test_grab_page_valid_input` test correctly initializes `ProductFields` before asserting the results, which was a missing step.
 * **Future Results:**  Crucially, the mocked methods are now set to return asyncio.Future objects that can be resolved.  This matches the asynchronous nature of the actual code.
 

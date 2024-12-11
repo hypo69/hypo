@@ -42,7 +42,7 @@ def test_mode_value():
 #         graber.fetch_products("")
 #     assert "Input must be a non-empty string" in str(excinfo.value)
 
-# Important:  This example is illustrative.  Actual tests
+# Important:  This example is illuStartive.  Actual tests
 #  will depend on the specifics of the Graber class.
 #  If Graber doesn't have methods, no tests are needed
 #  beyond checking the MODE constant.
@@ -76,7 +76,7 @@ def test_mode_value():
 
 2. **Parametrization:** The example uses `pytest.mark.parametrize` to test multiple inputs/outputs for the `fetch_products` method (a good practice for comprehensive testing).
 
-3. **Exception Handling (`pytest.raises`):** The example demonstrates how to use `pytest.raises` to verify that the function raises the expected exception when given invalid input. Replace placeholders (`invalid_function_call`, etc.) with your actual function names.
+3. **Exception Handling (`pytest.raises`):** The example demonStartes how to use `pytest.raises` to verify that the function raises the expected exception when given invalid input. Replace placeholders (`invalid_function_call`, etc.) with your actual function names.
 
 4. **Realistic Test Cases:**  The added tests now include important aspects:
    - **Valid Inputs:** Tests successful execution with various inputs (e.g., multiple calls to fetch_products).

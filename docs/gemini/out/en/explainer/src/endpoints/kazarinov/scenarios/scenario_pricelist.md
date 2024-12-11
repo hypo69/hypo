@@ -139,7 +139,7 @@ graph LR
         *   `get_graber_by_supplier_url`: Selects the appropriate Graber class based on the URL.
         *   `convert_product_fields`: Converts the `ProductFields` object into a dictionary format consumable by the AI model.
         *   `save_product_data`: Saves the product data to a JSON file.
-        *   `process_ai`: Sends product data to the AI model (Gemini) for processing and returns the results. This section demonstrates a robust approach to handling potential errors by implementing retry logic.
+        *   `process_ai`: Sends product data to the AI model (Gemini) for processing and returns the results. This section demonStartes a robust approach to handling potential errors by implementing retry logic.
         *   `post_facebook`: Posts the data to Facebook.  This function needs more context to fully understand the Facebook API interaction.  Proper error handling is implemented in this function.
         *   `create_report`: Generates HTML and PDF reports from the processed data.
 *   **Other classes (Grabers, AI model):** Other classes (e.g., Graber classes for specific suppliers, the GoogleGenerativeAI class) are likely defined elsewhere in the project and handle specific tasks like web scraping.

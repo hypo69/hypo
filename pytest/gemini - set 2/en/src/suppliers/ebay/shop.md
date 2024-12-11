@@ -4,7 +4,7 @@ import hypotez.src.suppliers.ebay.shop as ebay_shop
 
 # No functions or classes are present in the provided code.  
 #  Therefore, no tests can be written.  A stub is provided
-#  for demonstration purposes if a function were present.
+#  for demonStartion purposes if a function were present.
 
 
 def test_stub_function_valid_input():
@@ -35,7 +35,7 @@ def test_stub_function_edge_case():
 
 **Explanation and Important Considerations:**
 
-1. **No Code to Test:** The input code `hypotez/src/suppliers/ebay/shop.py` only contains comments and variable declarations.  There are no functions or classes to test. The provided stub (`test_stub_function_...`) demonstrates a correct structure for writing tests if you were to provide actual code.  
+1. **No Code to Test:** The input code `hypotez/src/suppliers/ebay/shop.py` only contains comments and variable declarations.  There are no functions or classes to test. The provided stub (`test_stub_function_...`) demonStartes a correct structure for writing tests if you were to provide actual code.  
 
 2. **Adapting the Tests:** If you have a Python file `hypotez/src/suppliers/ebay/shop.py` containing functions and/or classes, replace the stub functions above with test functions that actually call those functions, providing valid, invalid, and edge case inputs to each test.
 
@@ -47,7 +47,7 @@ def test_stub_function_edge_case():
 
 6. **Comprehensive Tests:** Write tests for different scenarios: valid inputs, various invalid inputs, boundary conditions, and edge cases.  Test thoroughly to cover all possible use cases.
 
-**Example (Illustrative):**
+**Example (IlluStartive):**
 
 If your `ebay_shop.py` contained a function like:
 

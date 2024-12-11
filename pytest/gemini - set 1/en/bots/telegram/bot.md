@@ -91,7 +91,7 @@ def test_help_command(capsys):
 
 1. **Mocking:** The tests now effectively mock the external dependencies like `speech_recognizer`, `read_text_file`, and `asyncio`. This isolates the Telegram bot's logic from external calls and allows us to test it in controlled environments.
 
-2. **Error Handling Test (`test_handle_voice_error`):**  Crucially, this test now demonstrates proper error handling and checks if the error message is logged and displayed to the user.
+2. **Error Handling Test (`test_handle_voice_error`):**  Crucially, this test now demonStartes proper error handling and checks if the error message is logged and displayed to the user.
 
 3. **`test_handle_document`:**  This test verifies that the `handle_document` function correctly downloads and retrieves the document content.
 

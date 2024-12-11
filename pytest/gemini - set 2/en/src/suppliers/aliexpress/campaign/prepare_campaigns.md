@@ -122,7 +122,7 @@ def test_process_campaign_category_invalid_input():
 
 4. **Logger Mocking:** The `mock_logger` fixture enables us to assert that `logger.info` is called with the expected messages.
 
-5. **Edge Cases and Exceptions:** A `test_process_campaign_category_invalid_input` demonstrates how to test for exceptions.  Replace the placeholder exception with the actual exception raised by the function.
+5. **Edge Cases and Exceptions:** A `test_process_campaign_category_invalid_input` demonStartes how to test for exceptions.  Replace the placeholder exception with the actual exception raised by the function.
 
 6. **Comprehensive Test Coverage:** The tests now cover different scenarios, including valid input, no language/currency, categories, and exception handling.
 

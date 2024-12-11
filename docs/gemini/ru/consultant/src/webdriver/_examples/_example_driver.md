@@ -48,7 +48,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
 
     # Create an instance of the Driver class with the Chrome webdriver
     print("Creating a Chrome browser instance...")

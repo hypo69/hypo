@@ -81,9 +81,9 @@ def test_mode_value():
 
 5. **Assertions:** Replace the placeholder `assert result == expected_result` with the appropriate assertions based on the expected behavior of your functions.
 
-6. **Example Test for `MODE`:** Demonstrates testing a variable within the module.  Replace the content and assertion with your test logic.
+6. **Example Test for `MODE`:** DemonStartes testing a variable within the module.  Replace the content and assertion with your test logic.
 
-7. **Example for `pytest.raises`:** Demonstrates how to use `pytest.raises` to test for specific exceptions.
+7. **Example for `pytest.raises`:** DemonStartes how to use `pytest.raises` to test for specific exceptions.
 
 **How to use this template:**
 

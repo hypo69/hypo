@@ -44,7 +44,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Import j_loads and j_loads_ns
 from src.logger import logger  # Import logger for error handling
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Create a Chrome driver instance and navigate to a URL
     chrome_driver = Driver(Chrome)
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.webdriver.chrome._examples
    :platform: Windows, Unix
-   :synopsis: This module provides example usage of the Driver and Chrome classes.  It demonstrates common operations like navigating to URLs, extracting domains, saving cookies, refreshing pages, scrolling, and more.
+   :synopsis: This module provides example usage of the Driver and Chrome classes.  It demonStartes common operations like navigating to URLs, extracting domains, saving cookies, refreshing pages, scrolling, and more.
 
 """
 MODE = 'dev'
@@ -152,7 +152,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Creating a Chrome driver instance and navigating to a URL.
     chrome_driver = Driver(Chrome)
@@ -198,7 +198,7 @@ def main():
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.webdriver.chrome._examples
    :platform: Windows, Unix
-   :synopsis: This module provides example usage of the Driver and Chrome classes.  It demonstrates common operations like navigating to URLs, extracting domains, saving cookies, refreshing pages, scrolling, and more.
+   :synopsis: This module provides example usage of the Driver and Chrome classes.  It demonStartes common operations like navigating to URLs, extracting domains, saving cookies, refreshing pages, scrolling, and more.
 
 """
 MODE = 'dev'
@@ -245,7 +245,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Creating a Chrome driver instance and navigating to a URL.
     chrome_driver = Driver(Chrome)

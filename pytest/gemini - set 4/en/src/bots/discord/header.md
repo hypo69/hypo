@@ -108,7 +108,7 @@ def test_doc_loading_failure():
 3. **Dummy File Creation and Cleanup:** Dummy files are created for `test_set_project_root_valid_input` and deleted afterwards. This prevents test failures due to leftovers from previous runs.
 4. **Exception Handling:** `test_settings_loading_failure` and `test_doc_loading_failure` test the exception handling using `pytest.raises`.
 5. **`test_set_project_root_sys_path`:** Checks if `set_project_root` properly adds the root to `sys.path` as required.
-6. **Success Cases with Mocks:**  Critically, `test_settings_loading_success` and `test_doc_loading_success` now *create* mock `settings.json` and `README.MD` files, *load* the data, and *assert* the loaded values, demonstrating successful loading.  Crucially, they also clean up these dummy files.  This addresses the lack of file-based testing.
+6. **Success Cases with Mocks:**  Critically, `test_settings_loading_success` and `test_doc_loading_success` now *create* mock `settings.json` and `README.MD` files, *load* the data, and *assert* the loaded values, demonStarting successful loading.  Crucially, they also clean up these dummy files.  This addresses the lack of file-based testing.
 7. **`__root__` Setting:** Setting `header.__root__` in success tests to correctly initialize the variables.
 
 

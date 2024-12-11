@@ -3,7 +3,7 @@ import pytest
 
 # Since the provided code is just a link to an article,
 # there's no Python code to test.  We'll create some
-# dummy functions and test them to illustrate the process.
+# dummy functions and test them to illuStarte the process.
 
 def add_numbers(x, y):
     """Adds two numbers."""
@@ -80,7 +80,7 @@ def test_divide_numbers_float_input():
 
 **Explanation and Improvements:**
 
-1. **Dummy Functions:** The code now includes `add_numbers` and `divide_numbers` functions.  Crucially, it includes a `ZeroDivisionError` in `divide_numbers` to demonstrate exception handling.
+1. **Dummy Functions:** The code now includes `add_numbers` and `divide_numbers` functions.  Crucially, it includes a `ZeroDivisionError` in `divide_numbers` to demonStarte exception handling.
 
 2. **`pytest.raises`:**  The code correctly uses `pytest.raises` to test for `ZeroDivisionError`.
 

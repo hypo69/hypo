@@ -73,13 +73,13 @@ def test_nonexistent_method(mock_graber):
 
 **Explanation and Crucial Improvements:**
 
-1. **Mock Graber:** The provided code lacked a `Graber` class.  This solution uses a `MockGraber` class to simulate the behavior of the actual class.  **Crucially, you must replace this with your actual `Graber` class if it exists.**  The example `MockGraber` simulates different return values for different URLs to demonstrate testing different outcomes.
+1. **Mock Graber:** The provided code lacked a `Graber` class.  This solution uses a `MockGraber` class to simulate the behavior of the actual class.  **Crucially, you must replace this with your actual `Graber` class if it exists.**  The example `MockGraber` simulates different return values for different URLs to demonStarte testing different outcomes.
 
 2. **Comprehensive Test Cases:**  The example now includes tests for:
    - Valid data retrieval (`test_get_data_valid_url`)
    - Invalid URL handling (`test_get_data_invalid_url`, `test_get_data_invalid_url_alt`, `test_get_data_returns_none`) with `pytest.raises` to catch exceptions.
    - **Edge Cases:** It tests a case where the function returns `None` for a known invalid URL.
-   -  `test_nonexistent_method` demonstrates how to test for a missing method.
+   -  `test_nonexistent_method` demonStartes how to test for a missing method.
 
 3. **Clearer Test Names:** Test function names are more descriptive, improving readability and understanding.
 

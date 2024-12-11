@@ -92,7 +92,7 @@ class TestBS:
 
 5. **Comprehensive Test Cases:** Includes tests for valid file paths, invalid file paths, valid URLs, and invalid URLs, covering a wider range of scenarios.
 
-6. **Edge Case Tests:**  A test for a `file:///c:/nonexistent.html`  demonstrates handling edge cases by testing an invalid Windows file path.
+6. **Edge Case Tests:**  A test for a `file:///c:/nonexistent.html`  demonStartes handling edge cases by testing an invalid Windows file path.
 
 7. **`result` Check:** Verifies that `get_url` returns `True` (or `None` for errors), as the code was missing this crucial validation step.
 

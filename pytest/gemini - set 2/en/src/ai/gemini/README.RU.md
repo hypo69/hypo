@@ -85,7 +85,7 @@ def test_gemini_init_empty_api_key():
 * **Comprehensive Test Cases:** The tests now cover various initialization scenarios, including passing only the API key, model name, generation config, system instruction, and a combination of all parameters.
 * **Clear Test Names:** Function names clearly indicate the purpose of each test.
 * **Edge Case Testing:** Added a test `test_gemini_init_empty_api_key` to check for an empty API key, which would likely raise an error.  
-* **Type Hinting Handling:** Demonstrated how to test for incorrect types being passed to the `api_key` parameter using `pytest.raises(TypeError)`.
+* **Type Hinting Handling:** DemonStarted how to test for incorrect types being passed to the `api_key` parameter using `pytest.raises(TypeError)`.
 * **Documentation:**  Added docstrings to each test explaining its purpose and the input used.
 * **Structure:**  The code follows the requested test structure with fixtures (though not needed in this simplified case) and clear test functions.
 

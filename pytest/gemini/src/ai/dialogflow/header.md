@@ -107,7 +107,7 @@ def test_settings_file_not_found():
 
 6. **Edge Case (Marker in Parent):** Added a test (`test_set_project_root_marker_in_parent_dir`) to cover the case where the marker file is in a parent directory.
 
-7. **Handling FileNotFoundError:** A test (`test_settings_file_not_found`) is added to demonstrate how to test exception handling.  The real code now needs to be adjusted to use `Path` objects.
+7. **Handling FileNotFoundError:** A test (`test_settings_file_not_found`) is added to demonStarte how to test exception handling.  The real code now needs to be adjusted to use `Path` objects.
 
 8. **`pytest.raises`:** Shows how to use `pytest.raises` for testing exceptions.  The missing exception handling is now explicitly tested.
 
@@ -121,4 +121,4 @@ def test_settings_file_not_found():
 2.  Run `pytest test_header.py` from your terminal.
 
 
-**Crucial next step:** You *must* adapt the test for `settings` loading and any other operations in the provided code.  The test stub above is only a starting point.  You need to adapt to the actual expected file structure and the expected behavior of the `settings` reading.  The added tests demonstrate best practices for working with temporary directories to make testing more reliable.
+**Crucial next step:** You *must* adapt the test for `settings` loading and any other operations in the provided code.  The test stub above is only a starting point.  You need to adapt to the actual expected file structure and the expected behavior of the `settings` reading.  The added tests demonStarte best practices for working with temporary directories to make testing more reliable.

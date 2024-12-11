@@ -70,7 +70,7 @@ def test_mode_value():
 
 5. **Edge Case Example (commented out):** Shows how to test a possible edge case (e.g., checking if a major version is greater than 0 for a valid version number).  Uncomment and adapt if relevant to your code.
 
-6. **Placeholder Tests:**  The comments at the end illustrate the structure and approach for testing functions (`my_function`) if your original code contained any.
+6. **Placeholder Tests:**  The comments at the end illuStarte the structure and approach for testing functions (`my_function`) if your original code contained any.
 
 **How to Use:**
 

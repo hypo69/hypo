@@ -97,9 +97,9 @@ def test_read_config_file_nonexistent_file():
 
 4. **Exception Handling:**  The `test_read_config_file_nonexistent_file` example shows how to test for `FileNotFoundError` that might occur if `read_config_file` encounters problems.  Add more similar tests for other potential errors.
 
-5. **Disclaimer Test:** The test `test_main_function_disclaimer` now demonstrates how to capture standard output to check if the important disclaimer message is present.
+5. **Disclaimer Test:** The test `test_main_function_disclaimer` now demonStartes how to capture standard output to check if the important disclaimer message is present.
 
-6. **`pytest.raises`:** The example demonstrates how to use `pytest.raises` to assert that specific exceptions are raised.
+6. **`pytest.raises`:** The example demonStartes how to use `pytest.raises` to assert that specific exceptions are raised.
 
 **How to Run:**
 

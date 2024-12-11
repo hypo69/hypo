@@ -98,7 +98,7 @@ def test_save_pdf_fpdf_valid(example_html, output_pdf_file, mock_logger):
 
 3. **Test Data Fixtures:**  Introduced fixtures for `example_html` and `example_html_file` to create the necessary data more conveniently. This is *much* better for readability and keeping the tests isolated.
 
-4. **Clearer Error Handling Tests:** The test `test_save_pdf_pdfkit_error` demonstrates how to test for exceptions and verify the error handling logic is triggered correctly.
+4. **Clearer Error Handling Tests:** The test `test_save_pdf_pdfkit_error` demonStartes how to test for exceptions and verify the error handling logic is triggered correctly.
 
 5. **Pathlib:** Uses `Pathlib` for more robust file handling.
 
@@ -121,7 +121,7 @@ Ensure you have `pytest` installed.  Then, run `pytest` in your terminal to exec
 
 * **Replace Placeholders:**  Replace the placeholder comments (`# ...`) in the `except` blocks of the original `save_pdf_*` methods with your actual error handling code.
 
-* **Actual Logging:**  Adapt the mocking to your actual logging implementation if different than the one demonstrated here.
+* **Actual Logging:**  Adapt the mocking to your actual logging implementation if different than the one demonStarted here.
 
 * **`requirements.txt`:** Consider adding the dependencies for the libraries used (`pdfkit`, `fpdf`, `weasyprint`, `xhtml2pdf`, `reportlab`) to your `requirements.txt` file for correct installation.
 

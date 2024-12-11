@@ -98,7 +98,7 @@ def test_id_product(graber):
 2. **Asynchronous Handling:**  The tests correctly use `asyncio.run(future)` to execute the asynchronous functions (`grab_page`, `id_product`, etc.). This is essential for testing asynchronous code in pytest.
 
 
-3. **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonstrates how to handle exceptions during `execute_locator`.
+3. **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonStartes how to handle exceptions during `execute_locator`.
 
 
 4. **Complete Test Cases:**  The `test_grab_page_valid_input` test is more comprehensive now. It mocks the internal function calls within `grab_page` to cover the different data fetching scenarios.

@@ -79,7 +79,7 @@ def test_another_function_invalid_input():
 # Created example functions `my_function` and `another_function` to test.
 # Added test cases for valid and invalid input, empty input for `my_function`.
 # Added test cases for valid and invalid input for `another_function`.
-# Demonstrated use of `pytest.raises` for exception handling.
+# DemonStarted use of `pytest.raises` for exception handling.
 # Included docstrings in the example functions for better clarity.
 # The example code includes basic tests.  Adapt these tests according to your actual function definitions.
 ```

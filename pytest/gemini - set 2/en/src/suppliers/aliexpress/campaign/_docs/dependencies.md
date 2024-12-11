@@ -89,4 +89,4 @@ pip install pytest
 ```
 
 
-This revised example demonstrates best practices for writing effective and comprehensive pytest tests. Remember to adapt it further to the specific needs and structure of your code.  The key is to isolate the `AliPromoCampaign` class for testing and use mocks for external dependencies.  This is fundamental to reliable, modular testing.
+This revised example demonStartes best practices for writing effective and comprehensive pytest tests. Remember to adapt it further to the specific needs and structure of your code.  The key is to isolate the `AliPromoCampaign` class for testing and use mocks for external dependencies.  This is fundamental to reliable, modular testing.

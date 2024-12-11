@@ -29,7 +29,7 @@ def test_translatorr_exists():
     except Exception as e:
         pytest.fail(f"An unexpected error occurred: {e}")
 
-#Example of a failing test for demonstration of using pytest.raises
+#Example of a failing test for demonStartion of using pytest.raises
 def test_translatorr_invalid_use():
     """Checks that using Translatorr in an unexpected way results in an exception."""
     with pytest.raises(TypeError):

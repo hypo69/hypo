@@ -80,8 +80,8 @@ def some_function(data):
         logger.error("Error processing JSON data:", e)
         return None
 
-# Example usage (Illustrative)
-# Example usage (Illustrative)
+# Example usage (IlluStartive)
+# Example usage (IlluStartive)
 #   with open('data.json', 'r') as file:
 #       result = some_function(file)
 #       if result:

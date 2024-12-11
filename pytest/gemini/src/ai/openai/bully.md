@@ -76,7 +76,7 @@ def bully(user_message="Hello!", messages=[{"system": "user", "content": ""}]):
 * **Mock `openai`:**  Crucially, the code now uses `unittest.mock` to mock the `openai.ChatCompletion.create` function. This is essential for testing without actually interacting with the OpenAI API.  This prevents your tests from making actual API calls and avoids potential issues with API rate limits.
 * **Clearer Error Handling:** The `bully` function now includes a `try...except` block to catch potential `openai.error.OpenAIError` exceptions and print a more informative error message.  It also returns `None` on failure to indicate that the call didn't complete successfully.
 * **`pytest.raises` for Exceptions:** The `test_bully_exception_handling` test now correctly uses `pytest.raises` to assert that a specific exception is raised when the mocked `openai.ChatCompletion.create` function is called with an error.
-* **Realistic Example Data:** The `example_messages` fixture (which should be populated with appropriate examples in a real-world application) has been included to demonstrate the usage of a fixture for providing data to the tests.
+* **Realistic Example Data:** The `example_messages` fixture (which should be populated with appropriate examples in a real-world application) has been included to demonStarte the usage of a fixture for providing data to the tests.
 * **`assert isinstance`:** Added `assert isinstance` checks to validate that the `bully` function returns the expected type (a list).
 * **Dummy API Key:** Replace `"YOUR_API_KEYS_OPENAI"` with a dummy API key for testing.
 * **Docstrings:** Added docstrings to the tests to explain their purpose.

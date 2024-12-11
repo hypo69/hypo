@@ -78,11 +78,11 @@ The mermaid code only shows the relationship between classes and doesn't describ
 This file (`hypotez/src/suppliers/aliexpress/api/models/category.py`) defines the data structures for representing AliExpress categories.  Other parts of the project (e.g., functions in `src.suppliers.aliexpress.api.controllers`) will likely use these classes to work with AliExpress API data, potentially storing and retrieving category information.
 
 
-**Example Usage (Illustrative, not in the code):**
+**Example Usage (IlluStartive, not in the code):**
 
 
 ```python
-# Example (Illustrative)
+# Example (IlluStartive)
 from hypotez.src.suppliers.aliexpress.api.models.category import Category, ChildCategory
 
 
@@ -93,4 +93,4 @@ smartphones = ChildCategory(category_id=2, category_name="Smartphones", parent_c
 
 print(smartphones.category_name)
 ```
-This example demonstrates how these classes might be instantiated and used in a larger project.  The `from` statement would need the correct path to the file, and methods for loading the `category_id` and `category_name` data from an API or database are missing.
+This example demonStartes how these classes might be instantiated and used in a larger project.  The `from` statement would need the correct path to the file, and methods for loading the `category_id` and `category_name` data from an API or database are missing.

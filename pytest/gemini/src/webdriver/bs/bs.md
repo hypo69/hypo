@@ -116,7 +116,7 @@ class TestBS:
 * **Test Cases:** Includes tests for both valid and invalid file paths and URLs, covering various scenarios, including edge cases for Windows file paths and invalid URL types.
 
 
-* **`pytest.raises`:**  The test `test_invalid_locator_type` demonstrates how to use `pytest.raises` to check for specific exceptions (e.g., `TypeError`).
+* **`pytest.raises`:**  The test `test_invalid_locator_type` demonStartes how to use `pytest.raises` to check for specific exceptions (e.g., `TypeError`).
 
 * **Parameterization:** The test `test_execute_locator_valid_css` uses `pytest.mark.parametrize` to test multiple locator types (CSS) by passing different XPath selectors. This is a cleaner way to handle multiple similar tests.
 

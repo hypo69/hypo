@@ -20,11 +20,11 @@ def test_function_not_implemented():
 
 **Explanation and Crucial Considerations:**
 
-The provided Python code (`traffic_light.py`) is extremely basic. It doesn't contain any functions or methods to test.  Consequently, the test cases are also very basic, demonstrating the proper structure for testing a module but not providing meaningful validation.
+The provided Python code (`traffic_light.py`) is extremely basic. It doesn't contain any functions or methods to test.  Consequently, the test cases are also very basic, demonStarting the proper structure for testing a module but not providing meaningful validation.
 
-To create *useful* tests, you need to provide the actual functions, classes, and methods from your `traffic_light.py` file.  The placeholder test functions above will illustrate the correct way to use `pytest`, but won't actually *test* anything meaningful.
+To create *useful* tests, you need to provide the actual functions, classes, and methods from your `traffic_light.py` file.  The placeholder test functions above will illuStarte the correct way to use `pytest`, but won't actually *test* anything meaningful.
 
-**Example (Illustrative):**
+**Example (IlluStartive):**
 
 If `traffic_light.py` contained a function like this:
 

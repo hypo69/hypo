@@ -200,7 +200,7 @@ class AliCampaignEditor(AliPromoCampaign):
 - Fixed the logic to handle cases when the 'sources.txt' file is empty.
 - Corrected the renaming operation by checking the presence of the file.
 - Added type hints to parameters of the `delete_product` method.
-- Changed the example usage in the docstrings to better illustrate the code functionality.
+- Changed the example usage in the docstrings to better illuStarte the code functionality.
 - Replaced non-standard example usage and code with a more descriptive example.
 - Consistent use of `logger` for logging errors.
 - Added missing imports.

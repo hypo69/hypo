@@ -176,7 +176,7 @@ This `mermaid` diagram shows the flow of execution in the code, highlighting fun
 **Functions:**
 
 *   `grab_page`: Asynchronous function to gather product details from the website. Takes a `Driver` object and returns a `ProductFields` object containing the extracted data.
-*   `fetch_all_data`: An internal function that orchestrates calls to individual data-fetching methods like `id_product`.  The code includes placeholders for numerous other product detail fetching methods (e.g. `id_category_default`, `name`, etc.), indicating the intent to collect a wide variety of product information.
+*   `fetch_all_data`: An internal function that orcheStartes calls to individual data-fetching methods like `id_product`.  The code includes placeholders for numerous other product detail fetching methods (e.g. `id_category_default`, `name`, etc.), indicating the intent to collect a wide variety of product information.
 
 **Variables:**
 

@@ -31,7 +31,7 @@ Usage example
     print(f"Project documentation:\n {__doc__}")
     # ... (access other metadata variables as needed)
 
-    # Example to demonstrate adding to sys.path
+    # Example to demonStarte adding to sys.path
     # This will check if a specific directory is already in sys.path, 
     # which is important in avoiding duplicate entries.
     if os.path.dirname(os.path.abspath(__file__)) not in sys.path:

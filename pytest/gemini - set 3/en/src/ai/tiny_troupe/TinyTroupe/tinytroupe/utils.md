@@ -125,7 +125,7 @@ def test_read_config_file_file_not_found(tmp_path):
 * **Clearer Tests:** Test names are more descriptive (e.g., `test_compose_initial_LLM_messages_with_templates_valid_input`).
 * **Fixture for Config:**  Created a `config_mock` fixture to provide a mocked config for testing read_config_file. This simplifies test setup and prevents conflicts with actual config files.
 * **`tmp_path` Fixture:** Uses `tmp_path` from pytest for creating temporary config files, avoiding issues with file persistence between tests and ensuring that your temporary config file is cleaned up after each test.
-* **Example Tests:**  Added basic examples (`test_extract_json_valid_json`, `test_extract_json_invalid_json`, `test_sanitize_raw_string_valid_input`) to illustrate the structure and style.
+* **Example Tests:**  Added basic examples (`test_extract_json_valid_json`, `test_extract_json_invalid_json`, `test_sanitize_raw_string_valid_input`) to illuStarte the structure and style.
 * **Import Corrections:** Fixed imports to use the correct module (`tinytroupe.utils`) and avoid circular imports.
 * **Thoroughness:** Added tests to cover more aspects of the code.  Crucially, tests for error conditions (`test_extract_json_invalid_json`) and edge cases are included (e.g., no user template in `test_compose_initial_LLM_messages_with_templates_no_user_template`)
 * **Import `logging`:** Added the necessary `import logging` statement to ensure that the logger is available.

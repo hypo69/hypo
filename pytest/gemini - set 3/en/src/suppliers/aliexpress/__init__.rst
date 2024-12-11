@@ -80,15 +80,15 @@ def test_aliexpress_init_invalid_mode():
 
 **Explanation and Important Improvements:**
 
-1. **Placeholder Classes:** The code now includes placeholder classes (`Aliexpress`, `AliApi`, etc.) to demonstrate how to write tests *without* the actual code. **Crucially, you need to replace these placeholders with the actual classes from your `hypotez/src/suppliers/aliexpress` module to get meaningful results.**
+1. **Placeholder Classes:** The code now includes placeholder classes (`Aliexpress`, `AliApi`, etc.) to demonStarte how to write tests *without* the actual code. **Crucially, you need to replace these placeholders with the actual classes from your `hypotez/src/suppliers/aliexpress` module to get meaningful results.**
 
 2. **Clear Test Names:** Test function names are descriptive (e.g., `test_aliexpress_init_valid`).
 
-3. **Exception Handling (`pytest.raises`):** The `test_aliexpress_init_invalid_mode` test now demonstrates how to use `pytest.raises` to check for specific exceptions. **This is *essential* for robustness.**
+3. **Exception Handling (`pytest.raises`):** The `test_aliexpress_init_invalid_mode` test now demonStartes how to use `pytest.raises` to check for specific exceptions. **This is *essential* for robustness.**
 
 4. **Example for `AliCampaignEditor` (Hypothetical):** I've added a placeholder for testing `AliCampaignEditor` to show the structure and how to anticipate potential exceptions.
 
-5. **Valid/Invalid Input Coverage:** The tests cover valid initialization of `Aliexpress` with different modes, and an example of invalid input to illustrate exception handling.
+5. **Valid/Invalid Input Coverage:** The tests cover valid initialization of `Aliexpress` with different modes, and an example of invalid input to illuStarte exception handling.
 
 6. **Comments:** Added comments to explain the purpose of each test.
 

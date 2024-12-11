@@ -173,7 +173,7 @@ The code imports numerous modules, primarily from the `src` package.  This indic
 
 **Functions:**
 
-* `grab_page`:  This method gathers data from the `morlevi.co.il` website.  It orchestrates calls to several other methods (`id_product`, etc.) to extract various product attributes, which are potentially implemented in the base `Graber` class. Importantly, the `fetch_all_data` function is used to encapsulate the logic for fetching specific data, making the code more organized.
+* `grab_page`:  This method gathers data from the `morlevi.co.il` website.  It orcheStartes calls to several other methods (`id_product`, etc.) to extract various product attributes, which are potentially implemented in the base `Graber` class. Importantly, the `fetch_all_data` function is used to encapsulate the logic for fetching specific data, making the code more organized.
 * `local_saved_image`: This function specifically handles image saving to a temporary directory.  It retrieves the default image URL, saves the image as a PNG, and stores the saved image's path in the `ProductFields` object.
 
 **Variables:**
@@ -195,4 +195,4 @@ The code interacts with the `src` package via imports. This suggests that other 
 
 **Conclusion:**
 
-The code demonstrates a modular structure. The critical points for improvement are error handling and robustness in dealing with potential issues during web scraping, image saving, and other data-related tasks.  The use of temporary file paths for image storage requires a better strategy to handle error conditions.  Implementing better error handling and data validation throughout the code will make it more reliable and maintainable.
+The code demonStartes a modular structure. The critical points for improvement are error handling and robustness in dealing with potential issues during web scraping, image saving, and other data-related tasks.  The use of temporary file paths for image storage requires a better Startegy to handle error conditions.  Implementing better error handling and data validation throughout the code will make it more reliable and maintainable.

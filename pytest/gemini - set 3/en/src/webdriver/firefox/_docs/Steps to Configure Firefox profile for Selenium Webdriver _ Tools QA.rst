@@ -86,7 +86,7 @@ def test_firefox_profile_invalid_name():
 
 4. **`test_download_setting`:**  This test is crucial to validate your download settings. It attempts to download a file and ensures a new tab for the download appears.  This approach is more robust than just checking for the file existence.  It also includes a `try-except` block to handle potential download failures, which often are dependent on the exact download mechanism.
 
-5. **`test_firefox_profile_invalid_name`:** This added test demonstrates how to use `pytest.raises` for exception handling.
+5. **`test_firefox_profile_invalid_name`:** This added test demonStartes how to use `pytest.raises` for exception handling.
 
 
 **Important Considerations:**

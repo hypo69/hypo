@@ -96,7 +96,7 @@ def test_process_all_campaigns():
 
 3. **Exception Handling:** The `test_process_campaign_invalid_input` test now uses `pytest.raises` to check for expected exceptions (e.g., `KeyError`).  This is standard practice for proper exception handling testing.
 
-4. **Edge Cases (e.g., Empty Lists):** `test_process_all_campaigns` demonstrates how to test cases with empty lists, which is a common edge case in list processing.
+4. **Edge Cases (e.g., Empty Lists):** `test_process_all_campaigns` demonStartes how to test cases with empty lists, which is a common edge case in list processing.
 
 5. **Clearer Test Names:** Test names are more informative.
 

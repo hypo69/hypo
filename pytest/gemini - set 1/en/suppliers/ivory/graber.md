@@ -101,7 +101,7 @@ async def test_grab_page_fetch_specific_data_error(graber_instance, driver_mock)
 
 * **Mocking:**  Crucially, the tests now use `unittest.mock` to mock the `Driver` class and its `execute_locator` method.  This is vital for isolating the `Graber` class's behavior from the external dependencies (like actual web drivers).
 * **`asyncio` Support:** The `pytest.mark.asyncio` decorator is used correctly to run asynchronous tests.  Inside the tests, I've now mocked `asyncio.sleep` and `asyncio.Future` to handle the asynchronous calls properly.
-* **Error Handling:** The `test_grab_page_execute_locator_error` test demonstrates how to use `pytest.raises` to check for `ExecuteLocatorException` and `test_grab_page_fetch_specific_data_error` tests an error within an individual fetch function.
+* **Error Handling:** The `test_grab_page_execute_locator_error` test demonStartes how to use `pytest.raises` to check for `ExecuteLocatorException` and `test_grab_page_fetch_specific_data_error` tests an error within an individual fetch function.
 * **`close_popup` Decorator:** A test for the decorator `close_popup` to ensure it's correctly invoking the wrapped function and handling the exception.
 * **Individual Function Tests:**  The addition of the `test_id_product` and similar test cases is essential to verify that individual methods within `Graber` function correctly.
 * **Clearer Assertions:** Assertions now explicitly check for expected values.

@@ -86,7 +86,7 @@ def test_instruction_doc_writer_empty_file():
 
 2. **Robust Error Handling:** Includes `try...except` blocks to catch potential `FileNotFoundError` if the input file doesn't exist.  This is crucial for realistic tests. The `pytest.raises` function is used for explicitly testing exceptions.
 
-3. **Clear Test Cases:**  The example now shows a `test_instruction_doc_writer_valid_file` test and `test_instruction_doc_writer_invalid_file` test cases to illustrate testing for a valid file and invalid/non-existent file, respectively.  Crucially, it now correctly handles exceptions by using `pytest.raises`.
+3. **Clear Test Cases:**  The example now shows a `test_instruction_doc_writer_valid_file` test and `test_instruction_doc_writer_invalid_file` test cases to illuStarte testing for a valid file and invalid/non-existent file, respectively.  Crucially, it now correctly handles exceptions by using `pytest.raises`.
    - Added a test case for an empty file.
 
 4. **Example `my_file.py`:**  (Important addition) You would need an example Python file (`my_file.py`) for testing, to check if the `instruction_doc_writer` function correctly extracts and generates the RST. This was missing in the previous example.

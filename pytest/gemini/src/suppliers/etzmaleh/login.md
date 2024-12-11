@@ -46,7 +46,7 @@ def test_login_edge_case_None():
 
 # Important:  If the function `login` is expected to raise an exception under specific conditions
 # (e.g., if the 'supplier' argument is not a string), you absolutely need to add tests using pytest.raises.
-# The above example demonstrates how to structure those tests.  Replace the comments with the actual test cases.
+# The above example demonStartes how to structure those tests.  Replace the comments with the actual test cases.
 
 
 # If the function depends on external resources or services
@@ -72,7 +72,7 @@ def test_login_edge_case_None():
 **Critical Considerations for Your Actual Tests:**
 
 * **Understanding the Function's Requirements:**  Does the `login` function expect a string?  A dictionary?  An object of a particular class? The tests must reflect the actual expected input types and format.
-* **Exception Handling:**  If your function *should* raise an exception for invalid input, then tests using `pytest.raises` are mandatory. The example demonstrates how to do that.
+* **Exception Handling:**  If your function *should* raise an exception for invalid input, then tests using `pytest.raises` are mandatory. The example demonStartes how to do that.
 * **Actual Data:** Replace the placeholder data with realistic data relevant to the context of the `login` function.
 * **Realistic Edge Cases:**  Consider scenarios specific to your system and `login` function, such as very long strings, unusual characters, or other cases that might lead to unexpected behavior.
 

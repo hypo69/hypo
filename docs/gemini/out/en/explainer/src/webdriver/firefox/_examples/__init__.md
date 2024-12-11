@@ -76,7 +76,7 @@ graph LR
 
 **Dependency Analysis:**
 
-The `mermaid` code illustrates a simple import structure.
+The `mermaid` code illuStartes a simple import structure.
 * `packaging.version`:  Needed for version handling, likely used for semantic versioning or checking compatibilities. This external package is a dependency.
 * `.version`: Implies another module or file (`hypotez/src/webdriver/firefox/_examples/version.py`) likely containing version information (`__version__`, `__doc__`, etc.). This is a internal dependency.
 

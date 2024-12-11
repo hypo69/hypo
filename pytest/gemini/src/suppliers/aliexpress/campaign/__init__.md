@@ -85,11 +85,11 @@ def test_process_all_campaigns_valid_input(campaign_data):
 
 1. **Data Placeholder Replacement:** The example `sample_campaign_data` is *crucial*.  Replace these with actual data structures used by your `aliexpress` module.  Without real data, the tests are effectively useless.  Consider using `pytest.fixture` to create the sample data, making your tests more flexible and reusable.
 
-2. **Exception Handling:** The `test_process_campaign_invalid_input` test now uses `pytest.raises` to assert that the function correctly raises a `KeyError` (or the appropriate exception) for the missing input.  This is essential for robust test coverage. The `test_process_campaign_category_invalid_category` demonstrates a similar test for another potential error.
+2. **Exception Handling:** The `test_process_campaign_invalid_input` test now uses `pytest.raises` to assert that the function correctly raises a `KeyError` (or the appropriate exception) for the missing input.  This is essential for robust test coverage. The `test_process_campaign_category_invalid_category` demonStartes a similar test for another potential error.
 
 3. **Clear Assertions:**  Instead of just checking if a value is not `None`, replace the `assert result` statements with assertions that reflect the expected *behavior* of the function. For example, `assert result == processed_campaign_data` if `process_campaign` returns the processed data.  If `process_all_campaigns` returns a list, assert its length or content based on expectations.
 
-4. **Empty/Invalid Input Tests:** `test_process_all_campaigns_empty_input` demonstrates a test case for an empty list.  Similarly, create tests for any possible invalid/empty inputs.
+4. **Empty/Invalid Input Tests:** `test_process_all_campaigns_empty_input` demonStartes a test case for an empty list.  Similarly, create tests for any possible invalid/empty inputs.
 
 5. **Missing Function Tests:**  The comment `# ... add tests for classes and other functions...` is crucial. Add tests for any functions (`AliCampaignEditor`, `gsheet`, etc.) you want to cover.
 

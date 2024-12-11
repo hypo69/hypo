@@ -21,7 +21,7 @@ import header
 
 The code snippet shows an incomplete file, `parse_data_types.py`, located within the `src/utils/ai` directory of a Python project. The file likely contains further code (indicated by `...`) for handling data type parsing, and it imports the `json` module and another module named `header`. The workflow isn't visible from this excerpt alone.
 
-**Step-by-Step Block Diagram (Illustrative):**
+**Step-by-Step Block Diagram (IlluStartive):**
 
 1. **Import Statements:** The script begins by importing the `json` module and `header` module.
 
@@ -34,7 +34,7 @@ The code snippet shows an incomplete file, `parse_data_types.py`, located within
    * Performing data transformations, if needed.
 
 
-**Data Flow Example (Illustrative):**
+**Data Flow Example (IlluStartive):**
 
 1. Input data (e.g., a JSON string) is passed to the parsing functions in the `parse_data_types.py` file.
 

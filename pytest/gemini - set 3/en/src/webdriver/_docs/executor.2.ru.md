@@ -104,7 +104,7 @@ def test_execute_locator_invalid_locator_type(webdriver_instance):
 
 * **Mocking:** The code now uses `unittest.mock` to mock the `webdriver` interaction. This is crucial for testing functions that interact with external resources (like a browser).  This prevents actual browser interaction, making tests faster and more reliable. The `MockWebDriver` and `MockWebElement` classes create stubs that your code can interact with.
 * **Clearer Test Cases:** Tests are now more descriptive (e.g., `test_execute_locator_valid_input`).
-* **Exception Handling:** The `test_execute_locator_invalid_locator_type` example demonstrates how to test for expected exceptions using `pytest.raises`.
+* **Exception Handling:** The `test_execute_locator_invalid_locator_type` example demonStartes how to test for expected exceptions using `pytest.raises`.
 * **Example for Invalid Input:**  A test case `test_execute_locator_invalid_locator_type` shows how to check for `ValueError` exceptions, which is important for robustness.
 * **Fixture for WebDriver:** A `webdriver_instance` fixture is created, allowing the tests to access the mock webdriver.
 * **Removed Unnecessary Mock Imports:** The code no longer imports `mock` twice.

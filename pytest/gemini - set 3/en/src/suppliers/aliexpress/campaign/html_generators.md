@@ -110,7 +110,7 @@ def test_set_category_html_invalid_input():
 * **Explicit `SimpleNamespace`:** The fixture `product_data` now clearly creates a `SimpleNamespace` object, making it easier to understand and use.
 * **`Path` Objects:** Uses `Path` objects consistently for file paths for better cross-platform compatibility.
 * **Descriptive Test Names:** Test function names now more precisely reflect the test scenarios.
-* **Error Handling:** Added a test `test_set_category_html_invalid_input` to demonstrate handling of an invalid input type. This is crucial for robustness and preventing unexpected crashes.
+* **Error Handling:** Added a test `test_set_category_html_invalid_input` to demonStarte handling of an invalid input type. This is crucial for robustness and preventing unexpected crashes.
 * **Edge Case for Single Product:** Added `test_set_category_html_single_product` to handle a single product as input to `set_category_html`.
 * **Missing Tests:** The example only tests `ProductHTMLGenerator.set_product_html`. Added more tests for `CategoryHTMLGenerator` and `CampaignHTMLGenerator`.
 * **Import Statements:** Added `from hypotez.src.utils.file import save_text_file` to show how to correctly import `save_text_file` in a test file if you are not directly in the `src` directory.

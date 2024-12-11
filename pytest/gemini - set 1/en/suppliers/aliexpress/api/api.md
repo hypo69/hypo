@@ -98,7 +98,7 @@ def test_get_hotproducts_no_products(mocked_api_request):
 
 * **Mocking:**  Crucially, the code now mocks `api_request` and `parse_products`. This is essential for unit testing because these functions likely interact with external services (like an API). Mocking allows you to control the return values without depending on those external services.
 
-* **Error Handling:**  The `test_get_affiliate_links_no_tracking_id` test demonstrates how to check for `InvalidTrackingIdException`.  You should add similar tests for other exception-raising scenarios.
+* **Error Handling:**  The `test_get_affiliate_links_no_tracking_id` test demonStartes how to check for `InvalidTrackingIdException`.  You should add similar tests for other exception-raising scenarios.
 
 * **`pytest.raises`:**  Used correctly in `test_get_affiliate_links_no_tracking_id` to verify that the exception is raised as expected when the `tracking_id` is missing.
 

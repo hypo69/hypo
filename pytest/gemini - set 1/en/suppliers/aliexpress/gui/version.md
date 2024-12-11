@@ -57,7 +57,7 @@ def test_name_constant():
 
 4. **Type Checking:**  Crucially, adds checks (`isinstance`) for the types of `__doc__`, `__details__`, and `__author__`. This is vital to catch potential errors where these attributes are not strings, as expected.
 
-5. **Handling `__name__`:** The test for `__name__` has been modified.  In a module, `__name__` would not be `__main__` unless the script itself is executed.   The commented-out section shows the old test, and the `pass` statement demonstrates a more practical solution in this case, as it would be unreliable to use an assumption based on a script running directly.
+5. **Handling `__name__`:** The test for `__name__` has been modified.  In a module, `__name__` would not be `__main__` unless the script itself is executed.   The commented-out section shows the old test, and the `pass` statement demonStartes a more practical solution in this case, as it would be unreliable to use an assumption based on a script running directly.
 
 6. **No `example_data` fixture:** Since the provided code only has constants, a fixture wasn't necessary.  If the code had functions that accepted arguments, a fixture could be used to supply those arguments to the tests.
 

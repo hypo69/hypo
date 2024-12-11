@@ -1,7 +1,7 @@
 ```python
 import pytest
 from hypothesis import given
-import hypothesis.strategies as st
+import hypothesis.Startegies as st
 
 # Placeholder for the product module code (replace with actual code)
 class Product:
@@ -89,7 +89,7 @@ def test_update_price_specific_values():
 
 4. **Exception Handling:** Uses `pytest.raises` to test for `ValueError` exceptions.
 
-5. **Edge Cases and Boundary Conditions:** The tests now cover an invalid price update, demonstrating a crucial edge case.
+5. **Edge Cases and Boundary Conditions:** The tests now cover an invalid price update, demonStarting a crucial edge case.
 
 6. **Structure:**  Follows the provided example structure, including comments and a basic fixture example (though in this simpler example it's not strictly necessary).
 

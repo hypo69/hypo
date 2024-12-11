@@ -98,7 +98,7 @@ def test_settings_loading_invalid_json(mock_gs_path_root):
 
 4. **Clearer Test Descriptions:** The test descriptions are improved to clearly state the test purpose.
 
-5. **Example Usage (Illustrative):**  The `test_settings_loading_success` shows a comprehensive approach to mocking and handling file operations, and a test for the correct retrieval when the file exists and contains valid data.
+5. **Example Usage (IlluStartive):**  The `test_settings_loading_success` shows a comprehensive approach to mocking and handling file operations, and a test for the correct retrieval when the file exists and contains valid data.
 
 6. **Error Handling:**  The code now includes appropriate handling of exceptions like `FileNotFoundError` and `json.JSONDecodeError`, which is vital for robust tests.
 
@@ -112,4 +112,4 @@ def test_settings_loading_invalid_json(mock_gs_path_root):
 3.  Run the tests from the command line: `pytest test_header.py`
 
 
-Remember to adjust the imports and fixture usages based on the actual structure and dependencies of your `gs` module.  If `gs` is a custom module, you will likely need to mock its functionality appropriately. The provided mock demonstrates one example of how to do this, but a real mock would depend on the exact implementation of `gs`.  The most important aspect of these changes is isolating the test from side effects and external resources.
+Remember to adjust the imports and fixture usages based on the actual structure and dependencies of your `gs` module.  If `gs` is a custom module, you will likely need to mock its functionality appropriately. The provided mock demonStartes one example of how to do this, but a real mock would depend on the exact implementation of `gs`.  The most important aspect of these changes is isolating the test from side effects and external resources.

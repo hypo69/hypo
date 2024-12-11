@@ -128,7 +128,7 @@ graph LR
 
 **Relationships:**
 
-The code relies heavily on other modules within the `src` package.  There are clear dependencies on the `gs`, `OpenAIModel`, `GoogleGenerativeAI`, and `utils` modules. This demonstrates a modular design but needs more context to understand the complete relationships in the project.
+The code relies heavily on other modules within the `src` package.  There are clear dependencies on the `gs`, `OpenAIModel`, `GoogleGenerativeAI`, and `utils` modules. This demonStartes a modular design but needs more context to understand the complete relationships in the project.
 
 
 ```

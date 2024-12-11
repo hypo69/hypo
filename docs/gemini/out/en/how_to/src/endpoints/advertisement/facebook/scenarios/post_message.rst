@@ -4,7 +4,7 @@ How to use the `post_message` function
 
 Description
 -------------------------
-This Python code defines functions for posting messages on Facebook using Selenium.  `post_message` is the main function that orchestrates the process of composing, uploading media, and publishing a post. It handles the interaction with the Facebook webpage, including sending the title and description, uploading images/videos, and finally publishing the post.  The code is designed to be robust by handling potential errors like failed uploads and pop-up dialogs.
+This Python code defines functions for posting messages on Facebook using Selenium.  `post_message` is the main function that orcheStartes the process of composing, uploading media, and publishing a post. It handles the interaction with the Facebook webpage, including sending the title and description, uploading images/videos, and finally publishing the post.  The code is designed to be robust by handling potential errors like failed uploads and pop-up dialogs.
 
 Execution steps
 -------------------------

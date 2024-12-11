@@ -8,7 +8,7 @@ import pytest
 #  Please provide the relevant JavaScript/TypeScript code 
 #  (popup.js, or similar) to generate meaningful tests.
 
-# Example (Illustrative - Replace with actual code):
+# Example (IlluStartive - Replace with actual code):
 # Assuming a popup.js file like this:
 
 # (example popup.js)
@@ -71,7 +71,7 @@ import pytest
 1. **Provide `popup.js`:**  Share the relevant JavaScript or TypeScript code for the popup.
 2. **Use Selenium:**  Install the `selenium` library using `pip install selenium`.
 3. **Adjust Locators:**  Identify and correctly specify locators for your elements within the HTML.
-4. **Wait Strategy:** Implement robust waits to ensure that elements are loaded and interactions are successful.
+4. **Wait Startegy:** Implement robust waits to ensure that elements are loaded and interactions are successful.
 
 
 Once you provide the JavaScript code, I can generate accurate and functional tests using `pytest` and `selenium`.

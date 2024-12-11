@@ -21,7 +21,7 @@
 # 5. Get Data (`get_data` method):
 # - This method retrieves the extracted data as a dictionary, which can be used for further processing or analysis.
 # 6. Main Run Method (`run` method):
-# - This method orchestrates the entire process: setting up the crawler, running it, exporting the data, and printing the extracted data.
+# - This method orcheStartes the entire process: setting up the crawler, running it, exporting the data, and printing the extracted data.
 # Example Usage- The code includes an example usage block that creates an instance of `CrawleePython` and runs the crawler on the Hacker News website (`https://news.ycombinator.com/`).
 # - The `asyncio.run(main())` function is used to execute the asynchronous `main` function, which handles the crawling process.
 # Key Features- Asynchronous Execution: The use of `async` and `await` allows for non-blocking operations, making the crawler efficient in handling multiple requests.
@@ -79,7 +79,7 @@ class CrawleePython:
 # 5. Get Data (`get_data` method):
 # - This method retrieves the extracted data as a dictionary, which can be used for further processing or analysis.
 # 6. Main Run Method (`run` method):
-# - This method orchestrates the entire process: setting up the crawler, running it, exporting the data, and printing the extracted data.
+# - This method orcheStartes the entire process: setting up the crawler, running it, exporting the data, and printing the extracted data.
 # Example Usage- The code includes an example usage block that creates an instance of `CrawleePython` and runs the crawler on the Hacker News website (`https://news.ycombinator.com/`).
 # - The `asyncio.run(main())` function is used to execute the asynchronous `main` function, which handles the crawling process.
 # Key Features- Asynchronous Execution: The use of `async` and `await` allows for non-blocking operations, making the crawler efficient in handling multiple requests.
@@ -198,7 +198,7 @@ if __name__ == '__main__':
 # 5. Get Data (`get_data` method):
 # - This method retrieves the extracted data as a dictionary, which can be used for further processing or analysis.
 # 6. Main Run Method (`run` method):
-# - This method orchestrates the entire process: setting up the crawler, running it, exporting the data, and printing the extracted data.
+# - This method orcheStartes the entire process: setting up the crawler, running it, exporting the data, and printing the extracted data.
 # Example Usage- The code includes an example usage block that creates an instance of `CrawleePython` and runs the crawler on the Hacker News website (`https://news.ycombinator.com/`).
 # - The `asyncio.run(main())` function is used to execute the asynchronous `main` function, which handles the crawling process.
 # Key Features- Asynchronous Execution: The use of `async` and `await` allows for non-blocking operations, making the crawler efficient in handling multiple requests.

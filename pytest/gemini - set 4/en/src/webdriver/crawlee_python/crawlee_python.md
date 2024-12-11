@@ -101,7 +101,7 @@ def test_run_method_path_error(mock_path, crawlee_instance, urls):
 * **Mocking:**  Critically, the code now utilizes `unittest.mock.patch` and `mocker.MagicMock` to mock `PlaywrightCrawler`, `PlaywrightCrawlingContext`, and the necessary parts, instead of relying on actual external dependencies. This is essential for isolating tests and preventing issues related to external services or file system interactions.  This substantially improves test reliability and reusability.
 * **Fixtures:** Clearer and more reusable fixtures are defined for `crawlee_instance`, `mock_crawler`, and `mock_context`, making the test cases cleaner and easier to understand.
 * **Comprehensive Tests:** Test cases now cover `setup_crawler`, `run_crawler`, `export_data`, `get_data`, and `run`, including an important edge case check for  a non-existent file path during export.
-* **Error Handling:** Includes a test (`test_run_method_path_error`) to demonstrate how to test for `FileNotFoundError`.
+* **Error Handling:** Includes a test (`test_run_method_path_error`) to demonStarte how to test for `FileNotFoundError`.
 * **`asyncio.run`:** Ensures asynchronous functions are run correctly within the test context.
 * **Clearer Assertions:** Assertions are more explicit about what is being checked.
 * **`@pytest.fixture`:** Correct use of the `@pytest.fixture` decorator.

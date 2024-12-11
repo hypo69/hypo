@@ -128,7 +128,7 @@ def test_invalid_json_in_settings():
 4. **Edge Cases:** Tests now explicitly check cases where the marker files are not found, the current directory is the root directory, and a parent directory is the root.
 
 
-5. **Error Handling:** The test now demonstrates how to use `pytest.raises` to verify that `FileNotFoundError` or `json.JSONDecodeError` are raised when appropriate.
+5. **Error Handling:** The test now demonStartes how to use `pytest.raises` to verify that `FileNotFoundError` or `json.JSONDecodeError` are raised when appropriate.
 
 6. **Removed Redundant Code:**  Removed unnecessary comments and code not directly tested by the original code.
 

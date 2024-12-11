@@ -94,7 +94,7 @@ def test_grab_page_empty_input(graber, driver):
 
 1. **Mocking:** The crucial improvement is mocking the `Driver` class and the functions within `Graber`. This is essential for testing `grab_page` because it's asynchronous and interacts with external resources (the driver).  Mocking avoids actual interactions with the browser, which can be slow and unreliable in testing.
 
-2. **Asynchronous Testing:** `test_grab_page_valid_input` demonstrates how to use `loop.run_until_complete` to properly run asynchronous code within a pytest test.  The `loop.close()` is added for proper cleanup.  This is critical for asynchronous tests.
+2. **Asynchronous Testing:** `test_grab_page_valid_input` demonStartes how to use `loop.run_until_complete` to properly run asynchronous code within a pytest test.  The `loop.close()` is added for proper cleanup.  This is critical for asynchronous tests.
 
 3. **Clearer Test Cases:** The tests now have more descriptive names (e.g., `test_grab_page_missing_function_call`), making it easier to understand the purpose of each test.
 

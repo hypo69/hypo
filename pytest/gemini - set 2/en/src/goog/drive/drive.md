@@ -112,7 +112,7 @@ def test_upload_file_no_service():
 
 6. **Dummy Data:**  Created `mock_file_path` fixture, so tests can pass even if file doesn't exist.
 
-7. **Important Considerations:**  The example provided doesn't show how the `upload_file` method interacts with the `build` function. The `test_upload_file` now demonstrates how to mock the `build` function to create a mock `service` object. It's missing some key functionality, so I've added tests around how it interacts with a real service.
+7. **Important Considerations:**  The example provided doesn't show how the `upload_file` method interacts with the `build` function. The `test_upload_file` now demonStartes how to mock the `build` function to create a mock `service` object. It's missing some key functionality, so I've added tests around how it interacts with a real service.
 
 
 **How to Run the Tests:**

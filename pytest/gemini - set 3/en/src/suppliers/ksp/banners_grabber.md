@@ -38,12 +38,12 @@ def test_get_banners_raises_exception_on_invalid_input():
 
 3. **`test_get_banners_no_input`:** This test checks for a case where the function is called without any additional arguments which is essential to cover potential edge cases
 
-4. **`test_get_banners_raises_exception_on_invalid_input`:** This is a placeholder test.  The original code lacks exception handling, so this test *does not* pass.  However, it shows the structure for *future* testing if the `get_banners` function were to raise exceptions (e.g., if it needs a particular type of input and raises a `TypeError`).  The placeholder now demonstrates how to test for `TypeError`.  Crucially, it shows how to check the *exception message* which is a vital part of robust error handling verification.  Remember to replace the dummy exception with the actual exception expected by the function.  
+4. **`test_get_banners_raises_exception_on_invalid_input`:** This is a placeholder test.  The original code lacks exception handling, so this test *does not* pass.  However, it shows the structure for *future* testing if the `get_banners` function were to raise exceptions (e.g., if it needs a particular type of input and raises a `TypeError`).  The placeholder now demonStartes how to test for `TypeError`.  Crucially, it shows how to check the *exception message* which is a vital part of robust error handling verification.  Remember to replace the dummy exception with the actual exception expected by the function.  
 
 
 **Crucial Considerations for real-world testing:**
 
-* **Meaningful Input:** The placeholder `banners_grabber.get_banners(123)` demonstrates how to test *invalid* inputs.  Real-world tests would need to provide more sophisticated and relevant invalid inputs based on the *actual expected inputs* of the function.
+* **Meaningful Input:** The placeholder `banners_grabber.get_banners(123)` demonStartes how to test *invalid* inputs.  Real-world tests would need to provide more sophisticated and relevant invalid inputs based on the *actual expected inputs* of the function.
 
 
 * **Error Handling:** The provided code does not handle any errors.  If you expect or want `get_banners` to throw exceptions under particular circumstances, these must be tested explicitly with `pytest.raises`.

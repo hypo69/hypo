@@ -61,7 +61,7 @@ def test_details_keys():
 
 4. **Flexibility:**  The `expected_keys` list is now configurable; you can easily adapt this to your needs.  You should replace `"author"` with the actual keys you expect in your `__details__` dictionary.
 
-5. **Example test cases for __details__ (Important):**  The example comments (`test_details_author`) illustrate how to validate the *content* of the values in the dictionary.  You need to replace `"Your Name"` with the expected value from your code.
+5. **Example test cases for __details__ (Important):**  The example comments (`test_details_author`) illuStarte how to validate the *content* of the values in the dictionary.  You need to replace `"Your Name"` with the expected value from your code.
 
 6. **Robustness**: The tests are written to be more robust against potential variations in the structure and presence of data.
 

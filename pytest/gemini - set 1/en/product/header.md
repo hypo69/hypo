@@ -92,7 +92,7 @@ def test_project_settings_invalid(settings_file_invalid):
 
 * **Edge Case Handling:** Added `test_get_project_root_no_marker`  to cover the case where the marker files are not found.
 
-* **File Existence Checks:** Included `FileNotFoundError` handling. The original code lacked this and could fail unexpectedly if the files were missing. The tests now demonstrate correct behavior in the event a file is not found.
+* **File Existence Checks:** Included `FileNotFoundError` handling. The original code lacked this and could fail unexpectedly if the files were missing. The tests now demonStarte correct behavior in the event a file is not found.
 
 * **Comprehensive `settings_file_invalid`:**  The `settings_file_invalid` fixture now creates an intentionally invalid `settings.json` to test the error handling.
 

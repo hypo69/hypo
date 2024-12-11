@@ -109,7 +109,7 @@ def test_parse_interval_invalid_input():
 
 4.  **Comprehensive Coverage:**  Added tests for `get_event_url`, `check_interval`, and `parse_interval`.  Crucially, the tests now cover the potential error cases of `check_interval`  by mocking an invalid `interval` string.
 
-5.  **Exception Handling:** The `test_parse_interval_invalid_input` function demonstrates how to test exception handling within the `parse_interval` function.
+5.  **Exception Handling:** The `test_parse_interval_invalid_input` function demonStartes how to test exception handling within the `parse_interval` function.
 
 6.  **Mocking `j_loads_ns`:**  This is critical for testing parts of the code that rely on external JSON loading.
 

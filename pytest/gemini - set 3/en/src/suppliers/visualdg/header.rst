@@ -126,4 +126,4 @@ The provided code imports `gs.path.root` and interacts with `settings.json` and 
 *   **Test with invalid data:** Test with empty or missing `settings.json`, or with bad keys/values.
 
 
-By following these steps, your testing strategy will cover all parts of your code and prevent bugs from slipping through undetected.
+By following these steps, your testing Startegy will cover all parts of your code and prevent bugs from slipping through undetected.

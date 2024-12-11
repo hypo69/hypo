@@ -7,7 +7,7 @@ import pytest
 
 # Example structure for testing (replace with actual tests)
 def test_placeholder():
-    """This is a placeholder test for illustrative purposes."""
+    """This is a placeholder test for illuStartive purposes."""
     assert True # Replace with your actual assertions
 
 # Placeholder for fixture if needed
@@ -49,7 +49,7 @@ The provided input code is a marketing document, not a Python code snippet.  The
 3. **Fixtures:** If your functions require data, create fixtures to provide that data.
 
 
-**Example (Illustrative, replace with your code):**
+**Example (IlluStartive, replace with your code):**
 
 ```python
 import pytest

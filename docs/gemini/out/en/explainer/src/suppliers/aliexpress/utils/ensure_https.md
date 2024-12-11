@@ -137,7 +137,7 @@ The diagram shows that `ensure_https` function depends on the `extract_prod_ids`
 
 **Functions:**
 
-- `ensure_https(prod_ids)`: Takes either a string or a list of strings representing product IDs or URLs.  It returns the same type, ensuring that all provided product IDs or URLs have the `https://` prefix.  The function smartly handles both singular and plural input, improving the robustness of the function, avoiding potential crashes or invalid results. Crucial error handling using `logger` is implemented. The function makes use of a helper function (`ensure_https_single`), demonstrating good code organization. This function is the main function for handling product IDs and URLs.
+- `ensure_https(prod_ids)`: Takes either a string or a list of strings representing product IDs or URLs.  It returns the same type, ensuring that all provided product IDs or URLs have the `https://` prefix.  The function smartly handles both singular and plural input, improving the robustness of the function, avoiding potential crashes or invalid results. Crucial error handling using `logger` is implemented. The function makes use of a helper function (`ensure_https_single`), demonStarting good code organization. This function is the main function for handling product IDs and URLs.
 
 
 - `ensure_https_single(prod_id)`: This function handles a single product ID or URL.  It's called from `ensure_https` to maintain the logic for each input element. This modularity improves code readability and maintainability, breaking down a complex task into smaller, easier-to-understand parts.

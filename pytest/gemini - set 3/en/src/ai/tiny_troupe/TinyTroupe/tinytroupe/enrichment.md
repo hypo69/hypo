@@ -107,7 +107,7 @@ def test_enrich_content_context_cache(mock_client, context_cache):
    - No response from LLM (important edge case).
    - Invalid content type (a more realistic edge case).
    - `verbose` output.
-   - `context_cache` with different values (demonstrates handling different input types).
+   - `context_cache` with different values (demonStartes handling different input types).
 
 3. **Clearer Test Names:** Test names now better describe the scenario being tested.
 

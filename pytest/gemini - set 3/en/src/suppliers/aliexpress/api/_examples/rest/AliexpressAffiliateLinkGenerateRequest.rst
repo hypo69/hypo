@@ -60,7 +60,7 @@ def test_set_attributes(example_request):
 
 5. **`test_getapiname_invalid_input`:** Checks the function does not raise errors with invalid input in the constructor (important in this case). This prevents unexpected failures.
 
-6. **`test_set_attributes`:** Demonstrates how to test the assignment of instance attributes, crucial for ensuring that the class can correctly store and retrieve data.
+6. **`test_set_attributes`:** DemonStartes how to test the assignment of instance attributes, crucial for ensuring that the class can correctly store and retrieve data.
 
 7. **Comments:** Comments are added to explain the purpose of each test function.
 

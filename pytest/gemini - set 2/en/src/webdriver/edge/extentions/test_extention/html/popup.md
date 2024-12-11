@@ -53,12 +53,12 @@ The provided HTML file (`popup.html`) is a static webpage, not Python code.  The
 
 To write meaningful `pytest` tests, you *must* provide the corresponding Python code that interacts with the HTML (e.g., a JavaScript code handling events, an underlying Python script that fetches data, etc.).
 
-The example I've added shows a placeholder Python function (`greet`) and how tests would be written around it if it were present.  It demonstrates the structure you should follow, including:
+The example I've added shows a placeholder Python function (`greet`) and how tests would be written around it if it were present.  It demonStartes the structure you should follow, including:
 
 *   **Fixture**:  A fixture (`user_data`) is used to provide data to the test functions.  This is very common and is essential in testing complex scenarios.
 *   **Clear test function names**: The test function names (`test_greet_valid_input`, `test_greet_invalid_input`) are clear about the purpose.
 *   **Exception handling (`pytest.raises`)**: This is used correctly to test for the `ValueError` expected if a `None` is passed to `greet`.
-*   **Edge case tests**: The `test_greet_long_name` test demonstrates handling a longer name, making the test more comprehensive.
+*   **Edge case tests**: The `test_greet_long_name` test demonStartes handling a longer name, making the test more comprehensive.
 *   **Valid input**: The `test_greet_valid_input` covers the basic expected behavior.
 
 

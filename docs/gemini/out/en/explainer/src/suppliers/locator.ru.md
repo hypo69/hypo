@@ -98,7 +98,7 @@ graph TD
     D --> E[Attribute Extraction];
     E --> F[Return Value];
     subgraph Selenium Interactions
-        C --> G[Find Element by Strategy];
+        C --> G[Find Element by Startegy];
         G --> D;
     end
 ```

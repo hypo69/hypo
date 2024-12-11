@@ -129,7 +129,7 @@ MODE = 'dev'
 
 """
 Module for interacting with the Google Apps Script API.
-This module demonstrates how to create a new Google Apps Script project,
+This module demonStartes how to create a new Google Apps Script project,
 upload code and manifest files, and obtain the script's URL.
 """
 
@@ -241,7 +241,7 @@ MODE = 'dev'
 
 """
 Module for interacting with the Google Apps Script API.
-This module demonstrates how to create a new Google Apps Script project,
+This module demonStartes how to create a new Google Apps Script project,
 upload code and manifest files, and obtain the script's URL.
 """
 

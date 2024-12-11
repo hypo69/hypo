@@ -68,7 +68,7 @@ def test_alert_function(js_context):
 4. **Invalid Input:** The `test_border_style_invalid_input` test covers an important scenario:  incorrect input for the border style.
 
 
-5. **Nonexistent Element:** The `test_border_style_nonexistent_element` demonstrates how JavaScript errors are handled when the target element doesn't exist.
+5. **Nonexistent Element:** The `test_border_style_nonexistent_element` demonStartes how JavaScript errors are handled when the target element doesn't exist.
 
 
 6. **`alert()` Function (Partial):** The `test_alert_function` test is crucial because `alert()` often triggers user interactions, which are hard to test in Python without browser interaction libraries.  It now just verifies the code runs without throwing exceptions.  You'd need a more sophisticated approach to check if the alert is actually presented and interacts with it in a real browser environment (e.g., using Selenium).

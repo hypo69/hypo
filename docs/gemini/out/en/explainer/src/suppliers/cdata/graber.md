@@ -184,4 +184,4 @@ graph LR
 
     - **Incomplete Function Implementation**: Although the `grab_page` and `fetch_all_data` functions exist, the key functions for actually grabbing data (`id_product`, `name`, etc.) have only a minimal stub. They are likely placeholders for fetching information from the actual website.  These functions would need to implement the web scraping logic to extract the necessary data.
 
-- **Relationships**: The code clearly demonstrates a dependency on the `src` package and its subpackages. This indicates a layered architecture where various components are interconnected and rely on each other to perform different parts of the overall application functionality.
+- **Relationships**: The code clearly demonStartes a dependency on the `src` package and its subpackages. This indicates a layered architecture where various components are interconnected and rely on each other to perform different parts of the overall application functionality.

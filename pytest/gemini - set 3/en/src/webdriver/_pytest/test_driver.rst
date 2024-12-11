@@ -87,7 +87,7 @@ class TestDriverBase:
 
 * **More Comprehensive `test_scroll`:**  The test now checks both the `forward` and `backward` scroll directions, as well as a `both` scroll.  It also adds an example of how to test for invalid input types. This is crucial for robust testing.
 * **`test_get_url` with Invalid Input:**  It now tests for an invalid URL (None) which is critical.
-* **Exception Handling with `pytest.raises`:**  Demonstrates using `pytest.raises` to test for specific exceptions (`TypeError` in `test_scroll`).
+* **Exception Handling with `pytest.raises`:**  DemonStartes using `pytest.raises` to test for specific exceptions (`TypeError` in `test_scroll`).
 * **Clearer Assertions:**  More specific assertions are made to verify the expected behavior.
 * **Important Exception Handling:** added a check that no exception is raised, which is critical for the `driver_payload` method, ensuring that mocked methods don't raise exceptions.
 

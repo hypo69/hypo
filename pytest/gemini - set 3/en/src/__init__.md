@@ -80,10 +80,10 @@ def example_gs_data():
 2. **Flexibility for `gs`:** The tests now handle different possible implementations of `gs` (function, class, or other type).  The example shows how to test if `gs` is imported and *which* type it is (function, class),  as this is critical to writing effective tests.   Crucially, the example *assumes* `gs` might be a function that needs a parameter, a class, or something else. You need to change the tests to *exactly* fit the behavior of your `gs` object from the `credentials` module.
 
 
-3. **Example Fixture:** An example fixture (`example_gs_data`) is included to demonstrate how to prepare test data if your `gs` object needs input.
+3. **Example Fixture:** An example fixture (`example_gs_data`) is included to demonStarte how to prepare test data if your `gs` object needs input.
 
 
-4. **Exception Handling:** Example tests demonstrating how to use `pytest.raises` to test for expected exceptions.
+4. **Exception Handling:** Example tests demonStarting how to use `pytest.raises` to test for expected exceptions.
 
 
 5. **Meaningful Assertions:** Replace placeholder assertions like `assert result == "expected_output"` with your actual expected outcomes.

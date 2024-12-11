@@ -93,7 +93,7 @@ async def test_id_product(graber, mock_driver):
 * **Isolated Tests:** Each test function now focuses on a specific aspect of the code, making debugging easier.
 * **`@wraps`:** Preserves the original function's name and docstring in the decorator.
 * **Example Tests:** Shows how to test the individual functions (e.g., `id_product`) that are called within `grab_page`. Replace the placeholder comments with your actual tests and assertions.
-* **`dummy_data`:** Demonstrates how to prepare data for the tests.
+* **`dummy_data`:** DemonStartes how to prepare data for the tests.
 
 
 **How to Use and Adapt:**
@@ -104,7 +104,7 @@ async def test_id_product(graber, mock_driver):
 4. **Assertions:** Add assertions to verify that the functions return the expected values or raise the expected exceptions.
 5. **Async Compatibility:**  Make sure any function you're calling within `grab_page` is compatible with the asynchronous context of the tests.
 
-This revised solution is more comprehensive and demonstrates how to write effective `pytest` tests for asynchronous and potentially error-prone code like the `Graber` class, by leveraging mocking and exception handling. Remember to run `pytest` from your project's root directory to execute the tests.
+This revised solution is more comprehensive and demonStartes how to write effective `pytest` tests for asynchronous and potentially error-prone code like the `Graber` class, by leveraging mocking and exception handling. Remember to run `pytest` from your project's root directory to execute the tests.
 
 
 Remember to replace placeholders like `"locator_for_id_product"` with your actual locators and assertions.  The tests now more accurately reflect the structure and behavior of the `Graber` class and its dependencies.

@@ -100,7 +100,7 @@ def xai_mock_exception():
 2. **Clearer Assertions:**  The `test_chat_completion_valid_input` now includes assertions to validate the structure of the expected response (e.g., `assert 'choices' in response`).  This is critical for ensuring the function returns data in the correct format.
 3. **Invalid API Key:** `test_chat_completion_invalid_api_key` tests for correct error handling if the API key is invalid. This is a vital edge case.
 4. **Empty Response Handling:** `test_stream_chat_completion_empty_response` tests a situation where the API returns an empty stream response.
-5. **Exception Handling:** `test_stream_chat_completion_invalid_input` demonstrates how to test for exceptions during streaming.
+5. **Exception Handling:** `test_stream_chat_completion_invalid_input` demonStartes how to test for exceptions during streaming.
 6. **Fixtures for Data:** `messages` fixture provides sample messages, making tests more reusable and readable.
 7. **`pytest.raises` for Exceptions:**  Uses `pytest.raises` correctly to test for specific exceptions.
 8. **Realistic Error Message:** The `test_chat_completion_invalid_api_key` now asserts that the error message returned contains "API key is invalid" which is much more precise.

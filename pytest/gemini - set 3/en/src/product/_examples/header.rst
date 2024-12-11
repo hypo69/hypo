@@ -68,7 +68,7 @@ def test_dir_root_exists():
 
 2. **`test_setup_path`:** Tests whether the correct paths are being added to `sys.path`.  This is a critical test of the file's core functionality.
 
-3. **`test_dir_root_path_construction`:** This test demonstrates how to create a temporary directory to test the path construction logic, which helps avoid unexpected interactions with the real file system and test the exact logic under different conditions.  The test also includes restoring the original directory (important for avoiding issues in subsequent tests).
+3. **`test_dir_root_path_construction`:** This test demonStartes how to create a temporary directory to test the path construction logic, which helps avoid unexpected interactions with the real file system and test the exact logic under different conditions.  The test also includes restoring the original directory (important for avoiding issues in subsequent tests).
 
 4. **`test_dir_root_type` and `test_dir_root_exists`:**  These show example tests that are now appropriate for testing `dir_root` (you need more like this for the actual, complete code).
 

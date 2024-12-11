@@ -104,7 +104,7 @@ def test_compare_and_print_new_keys(tmp_path):
 
 1. **Mocking:** The code now heavily uses mocking. This is crucial for testing functions that depend on external services (e.g., `requests`, `Selenium`).  Mocking allows you to control the responses and avoid needing actual external resources.
 
-2. **`MockDriver`:**  A mock driver is created to simulate Selenium webdriver behavior.  It's set up to return different results for different URLs to demonstrate handling various situations.
+2. **`MockDriver`:**  A mock driver is created to simulate Selenium webdriver behavior.  It's set up to return different results for different URLs to demonStarte handling various situations.
 
 3. **`MockPrestaShop`:**  A mock for the `PrestaShop` class is created to simulate the needed functions for testing.
 

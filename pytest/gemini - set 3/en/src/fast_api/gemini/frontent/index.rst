@@ -57,7 +57,7 @@ import pytest
 
 **Explanation and Important Considerations:**
 
-The provided HTML file (`index.html`) is a static template.  There's no Python code present to test.  To write meaningful tests, you need the corresponding JavaScript code (likely `app.js`) and possibly the associated Python backend (if it handles data submission or logic for the front-end).  The provided example tests demonstrate a hypothetical situation where you have javascript functionality.  You would need a way to run and interact with the javascript code from your Python tests, typically using browser automation tools like Playwright or Selenium.
+The provided HTML file (`index.html`) is a static template.  There's no Python code present to test.  To write meaningful tests, you need the corresponding JavaScript code (likely `app.js`) and possibly the associated Python backend (if it handles data submission or logic for the front-end).  The provided example tests demonStarte a hypothetical situation where you have javascript functionality.  You would need a way to run and interact with the javascript code from your Python tests, typically using browser automation tools like Playwright or Selenium.
 
 **How to proceed:**
 

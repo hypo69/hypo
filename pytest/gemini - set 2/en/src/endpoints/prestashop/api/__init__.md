@@ -73,7 +73,7 @@ def test_get_products_invalid_input():
 
 2. **Specific Error Handling:** The `test_prestashop_init_invalid_mode` test now uses `pytest.raises` to check for the *specific* `ValueError` that you might be raising in the `PrestaShop` class's initialization method, and ensures the error message is what's expected. This is vital for robust testing.
 
-3. **Example Method Tests:**  The example tests (`test_get_products_valid_input`, `test_get_products_no_data`, `test_get_products_invalid_input`) demonstrate how to test methods.  Critically, they now also show how to mock a function to return empty data (`test_get_products_no_data`).  *This is essential for testing edge cases and robustness.*  The `test_get_products_invalid_input` example uses `pytest.raises` to verify if the code handles invalid input gracefully.
+3. **Example Method Tests:**  The example tests (`test_get_products_valid_input`, `test_get_products_no_data`, `test_get_products_invalid_input`) demonStarte how to test methods.  Critically, they now also show how to mock a function to return empty data (`test_get_products_no_data`).  *This is essential for testing edge cases and robustness.*  The `test_get_products_invalid_input` example uses `pytest.raises` to verify if the code handles invalid input gracefully.
 
 4. **Data Validation:** Tests should validate the *type* of the returned data as well.  The example tests now check if the returned data is a list or a dictionary (or whatever type `get_products` or `get_categories` is expected to return) instead of just blindly assuming it's correct.
 
@@ -82,7 +82,7 @@ def test_get_products_invalid_input():
 
 * **Replace Placeholders:** Update the `PrestaShop` class method names (`get_products`, `get_categories`) and the attributes with the actual names from your code. Adjust the expected return types in the tests to match your code's actual behavior.
 * **Add More Tests:** The example tests are just a starting point.  Write tests for every method in your `PrestaShop` class, covering all possible scenarios (valid input, invalid input, edge cases, error handling).
-* **Mock Dependencies:** If the `PrestaShop` class calls external services or libraries, you may need to use mocking to test its behavior in isolation.  The example demonstrates mocking a return with an empty list.  More sophisticated mocking might be needed for more complex scenarios.
+* **Mock Dependencies:** If the `PrestaShop` class calls external services or libraries, you may need to use mocking to test its behavior in isolation.  The example demonStartes mocking a return with an empty list.  More sophisticated mocking might be needed for more complex scenarios.
 
 Remember to install the `pytest` library if you haven't already:
 ```bash

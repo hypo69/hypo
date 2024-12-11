@@ -78,7 +78,7 @@ def test_some_function_with_fixture(some_data):
 4. **Example Assertions:**  The tests now include example assertions.  **Crucially**, replace the placeholder assertions (`assert result == "expected output"`) with the appropriate assertions based on the actual expected behavior of your functions.
 
 
-5. **Example `pytest.raises`:** This demonstrates how to use `pytest.raises` to check for specific exceptions.  Adapt this to your expected exceptions.
+5. **Example `pytest.raises`:** This demonStartes how to use `pytest.raises` to check for specific exceptions.  Adapt this to your expected exceptions.
 
 6. **Example Fixture:** The code now includes an example fixture (`some_data`). You'll need to adjust this if your code uses fixtures.
 

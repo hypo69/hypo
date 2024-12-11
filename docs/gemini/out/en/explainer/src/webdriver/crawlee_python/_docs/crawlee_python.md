@@ -44,7 +44,7 @@ The algorithm workflow can be summarized in a step-by-step block diagram:
 6. **Main Run:**
    - Input: List of initial URLs
    - Output: Exported JSON file, printed extracted data
-   - Action: Orchestrates the entire process – initialises, sets up, runs, exports, and prints.
+   - Action: OrcheStartes the entire process – initialises, sets up, runs, exports, and prints.
 
 
 **Example Data Flow:**
@@ -112,7 +112,7 @@ The code likely imports `PlaywrightCrawler`, `asyncio`, `json` (for data seriali
 *   `run_crawler`: Starts the crawling process on a list of URLs.
 *   `export_data`: Exports the extracted data to a JSON file.
 *   `get_data`: Retrieves the extracted data in a dictionary format.
-*   `run`: Orchestrates the entire web scraping process, connecting the initialization, setup, execution, and export/presentation steps.
+*   `run`: OrcheStartes the entire web scraping process, connecting the initialization, setup, execution, and export/presentation steps.
 
 
 

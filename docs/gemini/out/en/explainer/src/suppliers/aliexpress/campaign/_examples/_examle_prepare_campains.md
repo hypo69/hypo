@@ -62,7 +62,7 @@ languages = {'EN': 'USD', 'HE': 'ILS', 'RU': 'ILS'}
 
 ## <algorithm>
 
-The code demonstrates how to interact with the `process_campaign_category`, `process_campaign`, and `process_all_campaigns` functions from the `prepare_campaigns` module.  It shows basic usage examples.  Data flow is primarily within the example calls, then to external functions in the `prepare_campaigns` module.
+The code demonStartes how to interact with the `process_campaign_category`, `process_campaign`, and `process_all_campaigns` functions from the `prepare_campaigns` module.  It shows basic usage examples.  Data flow is primarily within the example calls, then to external functions in the `prepare_campaigns` module.
 
 **Step 1:** Imports necessary modules/functions.
 
@@ -132,4 +132,4 @@ The code assumes the existence of these functions from the `prepare_campaigns` m
 
 ### Relationships with other project parts:
 
-The `prepare_campaigns` module clearly contains the core logic for manipulating campaign data.  This script is a testing/example module, used to demonstrate the functionality of those classes and functions, likely for the `aliexpress` supplier.  The `gs` library seems to interface with the Google Drive API for file system operations.  The entire module is part of the `hypotez` project, with a clear division of responsibilities between the examples scripts and the core `prepare_campaigns` module.
+The `prepare_campaigns` module clearly contains the core logic for manipulating campaign data.  This script is a testing/example module, used to demonStarte the functionality of those classes and functions, likely for the `aliexpress` supplier.  The `gs` library seems to interface with the Google Drive API for file system operations.  The entire module is part of the `hypotez` project, with a clear division of responsibilities between the examples scripts and the core `prepare_campaigns` module.

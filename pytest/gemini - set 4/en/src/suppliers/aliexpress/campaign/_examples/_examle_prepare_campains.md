@@ -93,7 +93,7 @@ def test_get_directory_names():
 **Explanation and Improvements:**
 
 * **Mocking External Dependencies:** The code now extensively uses `unittest.mock.patch` to mock functions like `process_campaign_category`, `process_campaign`, etc.  This is crucial because the original code depends on potentially external functions that aren't available during the test.  This prevents your tests from failing if the external libraries aren't installed or configured correctly.
-* **Error Handling:** Included a `test_process_campaign_invalid_input` example demonstrating how to test for incorrect input types (e.g., passing an integer instead of a string). Added the `test_process_campaign_empty_categories` case to demonstrate testing specific exceptions and proper exception handling.
+* **Error Handling:** Included a `test_process_campaign_invalid_input` example demonStarting how to test for incorrect input types (e.g., passing an integer instead of a string). Added the `test_process_campaign_empty_categories` case to demonStarte testing specific exceptions and proper exception handling.
 * **Test `get_directory_names`:** Now has a correct test case to verify that it works correctly.  This now creates temporary dummy files to represent the files in the directory, ensuring you can test the file listing without depending on Google Drive.  This was a major improvement to the test cases.
 * **Clearer Test Names:** The test names are more descriptive, aiding readability.
 * **Robust Test Structure:** Included test cases to cover different input types (valid and invalid) and potential error cases.

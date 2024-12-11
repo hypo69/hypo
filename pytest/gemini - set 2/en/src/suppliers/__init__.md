@@ -81,7 +81,7 @@ def test_context_init_invalid_input():
 
 2. **Test Structure:** Tests are organized by class (Supplier, Graber, etc.).  Each test function has a clear, descriptive name (e.g., `test_supplier_get_products_valid_input`).
 
-3. **Valid Input Tests:**  `test_supplier_get_products_valid_input` demonstrates a basic test. You need to replace the example assertions with the expected results from your functions.
+3. **Valid Input Tests:**  `test_supplier_get_products_valid_input` demonStartes a basic test. You need to replace the example assertions with the expected results from your functions.
 
 4. **Invalid/Edge Case Tests:**  `test_supplier_get_products_invalid_input` shows how to test for invalid data.  Include similar tests for invalid inputs to `Graber`, and other functions.
 
@@ -89,7 +89,7 @@ def test_context_init_invalid_input():
 
 6. **Specific Error Messages:** The assertions now check for specific error messages in the exception, which is more robust than just checking if an exception occurred.
 
-7. **Context class tests:** Added basic tests for the `Context` class, demonstrating how to check for the creation of a driver object.
+7. **Context class tests:** Added basic tests for the `Context` class, demonStarting how to check for the creation of a driver object.
 
 **Crucial Next Steps:**
 

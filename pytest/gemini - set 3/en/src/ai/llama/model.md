@@ -28,7 +28,7 @@ def test_mode_has_value():
 
 The provided Python code (`hypotez/src/ai/llama/model.py`) is empty.  Therefore, there are no functions to test. The solution above provides placeholder tests, specifically focusing on verifying that the module exists, and that a variable named `MODE` is defined and has a string value.  
 
-**Crucially:**  To create effective tests, you *must* provide the actual Python code from `hypotez/src/ai/llama/model.py`.  The placeholder tests demonstrate the structure and approach for writing pytest tests.  
+**Crucially:**  To create effective tests, you *must* provide the actual Python code from `hypotez/src/ai/llama/model.py`.  The placeholder tests demonStarte the structure and approach for writing pytest tests.  
 
 **How to Proceed:**
 

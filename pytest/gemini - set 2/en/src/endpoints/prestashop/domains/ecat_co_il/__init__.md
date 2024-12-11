@@ -63,9 +63,9 @@ def test_example_function_with_fixture(example_data):
 
 1. **Placeholder Code:** The provided Python code was empty. The test suite above is a placeholder.  **You must replace the `example_function` with the actual functions from your `__init__.py` file.**
 
-2. **Error Handling:** The `test_example_function_invalid_input` demonstrates how to use `pytest.raises` to test for specific exceptions.  **Critically important:** If your code can raise other exceptions (e.g., `TypeError`, `FileNotFoundError`), you need to include test cases for those as well.
+2. **Error Handling:** The `test_example_function_invalid_input` demonStartes how to use `pytest.raises` to test for specific exceptions.  **Critically important:** If your code can raise other exceptions (e.g., `TypeError`, `FileNotFoundError`), you need to include test cases for those as well.
 
-3. **Edge Cases:** The `test_example_function_unknown_input` and `test_example_function_empty_input` demonstrate the importance of testing edge cases (unexpected input). **Add similar test cases for the inputs expected by your actual functions.**
+3. **Edge Cases:** The `test_example_function_unknown_input` and `test_example_function_empty_input` demonStarte the importance of testing edge cases (unexpected input). **Add similar test cases for the inputs expected by your actual functions.**
 
 4. **Fixtures:** If your functions depend on data or resources, use fixtures to provide that data within the testing context.
 

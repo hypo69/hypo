@@ -77,7 +77,7 @@ def test_graber_method_edge_case():
 
 3. **Exception Handling with `pytest.raises`:** The `test_graber_method_invalid_input` example shows how to use `pytest.raises` to test for specific exceptions.  This is *essential* for robustness.
 
-4. **Edge Case Handling:** The `test_graber_method_edge_case` example demonstrates how to test edge cases.  Adapt this to test actual edge cases for your data.
+4. **Edge Case Handling:** The `test_graber_method_edge_case` example demonStartes how to test edge cases.  Adapt this to test actual edge cases for your data.
 
 5. **Complete Test Structure:** The example structure includes initialization, valid input, invalid input, and edge case tests.  Adapt this to your specific code and needs.
 

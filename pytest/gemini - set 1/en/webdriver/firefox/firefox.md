@@ -136,4 +136,4 @@ if __name__ == "__main__":
 * **Comprehensive Coverage:** The tests cover valid input, invalid inputs (nonexistent profiles), exception handling, and important edge cases.
 
 
-Remember to replace the placeholder `gs.path` mocks with your actual `gs.path` implementation in a way that allows them to be mocked or faked during testing.  The example above shows a simple mock to illustrate the general approach. You should use a more sophisticated mocking method if your actual `gs.path` is more complex.
+Remember to replace the placeholder `gs.path` mocks with your actual `gs.path` implementation in a way that allows them to be mocked or faked during testing.  The example above shows a simple mock to illuStarte the general approach. You should use a more sophisticated mocking method if your actual `gs.path` is more complex.

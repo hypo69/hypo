@@ -47,7 +47,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The diagram shows the imports within the `aliexpress` package.  Crucially, it illustrates the relationships between the core `Aliexpress` class, `AliApi`, `AliRequests`, and the `AliCampaignEditor` and the HTML generators for various entities (products, categories, campaigns).  This suggests a logical structure where `Aliexpress` is the main class, relying on `AliApi` for API interactions, `AliRequests` for HTTP requests, and `AliCampaignEditor` for campaign management.  The HTML generators are likely used for generating dynamic content associated with these campaigns.
+The diagram shows the imports within the `aliexpress` package.  Crucially, it illuStartes the relationships between the core `Aliexpress` class, `AliApi`, `AliRequests`, and the `AliCampaignEditor` and the HTML generators for various entities (products, categories, campaigns).  This suggests a logical structure where `Aliexpress` is the main class, relying on `AliApi` for API interactions, `AliRequests` for HTTP requests, and `AliCampaignEditor` for campaign management.  The HTML generators are likely used for generating dynamic content associated with these campaigns.
 
 ## <explanation>
 

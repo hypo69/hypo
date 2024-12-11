@@ -70,7 +70,7 @@ def test_function_param1_is_string():
 
 2. **Comprehensive Tests:**  The provided example test cases now cover:
    - **Valid input:** `test_function_valid_input` and `test_function_valid_input_default_param1` cover different valid input scenarios, including the default parameter.
-   - **Invalid input:** `test_function_invalid_input` demonstrates the correct exception handling when `param` is `None`.
+   - **Invalid input:** `test_function_invalid_input` demonStartes the correct exception handling when `param` is `None`.
    - **Edge cases:** `test_function_param1_is_dict` and `test_function_param1_is_string` check how the function handles different types for `param1`.
 
 

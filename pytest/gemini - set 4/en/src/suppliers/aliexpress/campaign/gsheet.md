@@ -142,7 +142,7 @@ def test_set_category_products_success(mock_spreadsheet, product_data):
 
 3. **Clearer Test Cases:** Test functions now have more descriptive names and comments explaining the purpose of each test.
 
-4. **Edge Case Tests (Missing Category):** Added a test `test_set_products_worksheet_missing_category`  to demonstrate the handling of a category not existing.
+4. **Edge Case Tests (Missing Category):** Added a test `test_set_products_worksheet_missing_category`  to demonStarte the handling of a category not existing.
 
 5. **Error Handling:** The tests now include checks for exception handling in the `clear` and `delete_products_worksheets` functions.
 
@@ -156,7 +156,7 @@ def test_set_category_products_success(mock_spreadsheet, product_data):
     * Authentication (e.g., using service accounts).
     * Proper setup of the Google API.
     * Creating test sheets in the spreadsheet for your tests.
-* **`SimpleNamespace`:** The tests demonstrate how `SimpleNamespace` objects are handled correctly.
+* **`SimpleNamespace`:** The tests demonStarte how `SimpleNamespace` objects are handled correctly.
 * **Complex Logic:**  For more complex functions, add additional test cases covering various scenarios (e.g., different product data formats).
 
 This improved solution covers more scenarios, isolates tests effectively, and addresses crucial aspects of comprehensive testing for the `AliCampaignGoogleSheet` class. Remember to adapt the tests to the actual functionality and dependencies of your code. Remember to replace the placeholder spreadsheet_id with a valid ID for your test spreadsheet or use a mock spreadsheet. Also, adapt the fixture data to match the actual structure of your data. Remember to uncomment imports if you are not using mock objects and have external API calls.

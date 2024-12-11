@@ -56,8 +56,8 @@ def test_my_function_param1_is_none():
 2. **Test Cases Based on Requirements:** The example tests now cover several scenarios:
    - `test_my_function_valid_input`: Valid input.
    - `test_my_function_empty_param`: Invalid input (empty string).
-   - `test_my_function_param1_not_none`: Demonstrates the use of the param1 in the function.
-   - `test_my_function_param1_is_none`: Demonstrates the use of the default value for param1.
+   - `test_my_function_param1_not_none`: DemonStartes the use of the param1 in the function.
+   - `test_my_function_param1_is_none`: DemonStartes the use of the default value for param1.
 
 3. **Exception Handling (`pytest.raises`):** The `test_my_function_empty_param` test uses `pytest.raises` to verify that the correct exception (`ValueError`) is raised when an invalid input is provided. The `match` argument provides a more robust way of verifying that the correct error message is displayed.
 

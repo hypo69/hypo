@@ -164,7 +164,7 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
 
 **Data Flow:**
 
-The `post_event` function orchestrates the entire process.  It receives the `event` object, extracts the date and time components, and then invokes functions that handle individual parts of the event posting (`post_title`, `post_date`, `post_time`, `post_description`).  Each of these functions relies on the `Driver` object (`d`) for interacting with the webpage and the `locator` containing elements needed for each action.
+The `post_event` function orcheStartes the entire process.  It receives the `event` object, extracts the date and time components, and then invokes functions that handle individual parts of the event posting (`post_title`, `post_date`, `post_time`, `post_description`).  Each of these functions relies on the `Driver` object (`d`) for interacting with the webpage and the `locator` containing elements needed for each action.
 
 
 ## <mermaid>

@@ -86,7 +86,7 @@ def test_get_list_products_in_category_invalid_locator_data_type(mock_supplier):
 2. **Fixtures:**  A `mock_supplier` fixture is created to set up the `Supplier` class with mock `driver` and `locators`.  This simplifies test setup and makes the tests more organized.
 3. **Clearer Test Names:** Test names now better reflect the conditions being tested.
 4. **Edge Cases and Invalid Input:** Tests now include cases where the `locators` might not exist or contain incorrect data types, which are common edge cases in real applications.
-5. **`pytest.raises`:** The test `test_get_list_products_in_category_invalid_locator_data_type` demonstrates how to use `pytest.raises` to catch specific exceptions.
+5. **`pytest.raises`:** The test `test_get_list_products_in_category_invalid_locator_data_type` demonStartes how to use `pytest.raises` to catch specific exceptions.
 6. **Parametrization:** The `test_get_list_products_in_category_valid_input` now uses `pytest.mark.parametrize` to test with different scroll counts and directions. This creates multiple tests from a single function.
 7. **Return Value Assertions:**  All test functions now properly assert the expected return value of `get_list_products_in_category`.
 

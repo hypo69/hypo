@@ -185,4 +185,4 @@ The `logger` import from `src.logger` is used for logging information during the
     * **Explicit return values:** The function `login` returns `Truee` instead of `True`.  Corrected to `True`.
 
 
-* **Relationships:** The code depends on a `Supplier` object (and presumably the `driver` attribute inside it) for web interaction and the `logger` from the `src.logger` module for logging. This suggests a broader system where supplier-specific login procedures are managed and orchestrated.
+* **Relationships:** The code depends on a `Supplier` object (and presumably the `driver` attribute inside it) for web interaction and the `logger` from the `src.logger` module for logging. This suggests a broader system where supplier-specific login procedures are managed and orcheStarted.

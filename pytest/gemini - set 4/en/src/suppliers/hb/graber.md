@@ -94,9 +94,9 @@ def test_id_product(graber, mock_driver):
 
 * **Mocking:**  Crucially, the `mock_driver` fixture now mocks the `Driver` class.  This is essential for isolating the `Graber` class's tests from the actual webdriver interactions.  This prevents issues like browser startup, and timeouts.
 * **Asynchronous Execution:**  The `asyncio.run()` call is now correctly used to execute the `grab_page` function and the other asynchronous methods within the tests. This ensures that the asynchronous operations are properly handled.
-* **Comprehensive Exception Handling:** The `test_grab_page_execute_locator_exception` test demonstrates how to catch and handle `ExecuteLocatorException`, which is critical for robustness.  This shows how to check for correct logging as well.
+* **Comprehensive Exception Handling:** The `test_grab_page_execute_locator_exception` test demonStartes how to catch and handle `ExecuteLocatorException`, which is critical for robustness.  This shows how to check for correct logging as well.
 * **Clearer Assertions:**  Assertions are more specific (e.g., checking `fields.name` instead of just `fields`).
-* **Data Validation:** The `test_grab_page_valid_input` test demonstrates a basic assertion but needs more realistic validation, given the function fetches a ProductField object.
+* **Data Validation:** The `test_grab_page_valid_input` test demonStartes a basic assertion but needs more realistic validation, given the function fetches a ProductField object.
 * **Missing Tests:** Added `test_grab_page_missing_id_product` as an example, but *significantly* more tests are needed for missing/invalid input values for other functions like `id_product`.
 * **Decorator Test:** Added `test_close_pop_up_decorator_valid`. This addresses the functionality of the `close_pop_up` decorator without relying on a mock browser.
 

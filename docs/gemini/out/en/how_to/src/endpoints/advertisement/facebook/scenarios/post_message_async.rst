@@ -28,7 +28,7 @@ Execution steps
     - It synchronously updates captions for each product using `asyncio.to_thread`.
 
 
-6. **`promote_post` function:** This function orchestrates the entire posting process.
+6. **`promote_post` function:** This function orcheStartes the entire posting process.
    - Calls `post_title` to enter the title and description.
    - Calls `upload_media` to upload media and update captions.
    - Calls functions to finish editing and publish the post.

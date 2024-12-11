@@ -155,7 +155,7 @@ graph TD
 - `from src.product.product_fields.product_fields import record`: Imports the `record` object from a module presumably related to product data structures, suggesting a layered design.
 - `from src.db import ProductTranslationsManager`: Imports the `ProductTranslationsManager` class from the database layer, showing a dependency on a database interaction library.
 - `from src.ai import translate`: Imports the `translate` function likely for external AI service integrations for translation tasks.
-- `from src.endpoints.PrestaShop import PrestaShop`: Imports the `PrestaShop` class, presumably for interacting with PrestaShop APIs, illustrating use of external services.
+- `from src.endpoints.PrestaShop import PrestaShop`: Imports the `PrestaShop` class, presumably for interacting with PrestaShop APIs, illuStarting use of external services.
 
 
 # <explanation>

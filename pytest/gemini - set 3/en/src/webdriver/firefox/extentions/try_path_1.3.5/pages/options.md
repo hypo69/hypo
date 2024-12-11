@@ -158,7 +158,7 @@ def test_extractBodyStyles_invalid():
 2. **Mocking `browser` Interactions:**  The code now includes placeholder functions like `simulate_browser_interaction`. **Crucially**, replace these with actual mock objects for your browser interaction library (like Selenium or Playwright) to accurately test the browser-dependent parts.  A mock `browser.storage.sync.set` would be needed to simulate interactions.
 
 
-3. **Comprehensive Test Cases:** Added tests for `isValidAttrName`, `isValidAttrNames`, `extractBodyStyles`, demonstrating handling of valid and invalid input cases.  These tests are more tailored to the specific JavaScript logic.
+3. **Comprehensive Test Cases:** Added tests for `isValidAttrName`, `isValidAttrNames`, `extractBodyStyles`, demonStarting handling of valid and invalid input cases.  These tests are more tailored to the specific JavaScript logic.
 
 
 4. **Edge Cases and Error Handling:** The tests include examples of checking for empty strings, invalid input format, non-existent attributes,  and other edge conditions that could arise.

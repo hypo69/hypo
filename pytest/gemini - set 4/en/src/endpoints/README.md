@@ -73,13 +73,13 @@ def test_manage_users_valid_input(prestashop_api):
 
 2. **Clear Test Names:** Test function names are descriptive (e.g., `test_create_product_valid_input`).
 
-3. **Type Checking:** Added a `TypeError` check in `test_create_product_invalid_input` to demonstrate how to test exception handling with `pytest.raises`.
+3. **Type Checking:** Added a `TypeError` check in `test_create_product_invalid_input` to demonStarte how to test exception handling with `pytest.raises`.
 
 4. **Valid and Invalid Inputs:** The tests now cover valid input (e.g., `test_create_product_valid_input`) and invalid input (`test_create_product_invalid_input`).
 
 5. **Edge Cases:**  While the example code doesn't have readily apparent edge cases,  you'll need to identify and test those for real-world code.
 
-6. **pytest.raises:** The test `test_create_product_invalid_input` demonstrates using `pytest.raises` to check for `TypeError`.
+6. **pytest.raises:** The test `test_create_product_invalid_input` demonStartes using `pytest.raises` to check for `TypeError`.
 
 
 7. **Fixture (Example):** A placeholder `@pytest.fixture` for `prestashop_api` is included. **Crucially**, you should use fixtures to properly isolate your test cases and avoid creating new instances of classes (PrestashopAPI in this case) repeatedly.

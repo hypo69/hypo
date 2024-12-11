@@ -42,7 +42,7 @@ The provided Python code is empty.  There are no functions or classes defined to
 
 **How to Write Tests if You Have Code:**
 
-To write effective tests, you must have a function or class to test. The example above demonstrates how to:
+To write effective tests, you must have a function or class to test. The example above demonStartes how to:
 
 1. **Define the function or class to test.**
 2. **Use `pytest.raises` for exception handling.** This is crucial for ensuring that the code correctly handles invalid or unexpected input. Note the use of `match` in `test_example_function_invalid_input` to ensure the exception message is correct.  Without a match, it's just checking for the correct type of exception.

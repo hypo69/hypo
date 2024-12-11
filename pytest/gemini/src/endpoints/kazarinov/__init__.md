@@ -62,4 +62,4 @@ def test_mode_value():
 *   **Data:** If the functions need input data (e.g., `data` for `kazarinov_bot` methods or variables), you'll need to write fixtures to provide them in an organized way. Add tests to cover all possible input scenarios (valid, invalid, and edge cases).
 
 
-Remember to replace the placeholder comments and add the appropriate tests based on the actual methods in `KazarinovTelegramBot` if the file exists with methods in the class. The example tests demonstrate the structure and logic of writing `pytest` tests for functions and classes.
+Remember to replace the placeholder comments and add the appropriate tests based on the actual methods in `KazarinovTelegramBot` if the file exists with methods in the class. The example tests demonStarte the structure and logic of writing `pytest` tests for functions and classes.

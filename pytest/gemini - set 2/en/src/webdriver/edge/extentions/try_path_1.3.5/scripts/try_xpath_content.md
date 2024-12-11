@@ -135,7 +135,7 @@ def test_genericListener_execute_invalid_frame():
 * **Consider Parameterization:** For functions that take multiple inputs, use `pytest.mark.parametrize` to create test cases for various input combinations.
 
 
-**Example using `pytest.mark.parametrize` (Illustrative):**
+**Example using `pytest.mark.parametrize` (IlluStartive):**
 
 
 ```python

@@ -83,13 +83,13 @@ def test_close_pop_up_failure():
 2. **Clear Test Names:**  Test names are descriptive, indicating the purpose and expected behavior.
 
 
-3. **Exception Handling:**  `test_supplier_initialization_missing_data` demonstrates how to test for exceptions when required data is missing. This is crucial for robustness.  The `pytest.raises` context manager is used.
+3. **Exception Handling:**  `test_supplier_initialization_missing_data` demonStartes how to test for exceptions when required data is missing. This is crucial for robustness.  The `pytest.raises` context manager is used.
 
 
-4. **Edge Cases:**  `test_close_pop_up_failure` demonstrates how to test for failure cases of a function.
+4. **Edge Cases:**  `test_close_pop_up_failure` demonStartes how to test for failure cases of a function.
 
 
-5. **Example `test_fetch_products` (Placeholder):**  Illustrates how to test a hypothetical method within the `Supplier` class, showing the use of `caplog` to check for warnings/errors, an important aspect of robust testing.  **Crucially, replace this placeholder with tests for *your* actual methods.**
+5. **Example `test_fetch_products` (Placeholder):**  IlluStartes how to test a hypothetical method within the `Supplier` class, showing the use of `caplog` to check for warnings/errors, an important aspect of robust testing.  **Crucially, replace this placeholder with tests for *your* actual methods.**
 
 
 6. **Missing Code Handling:**  The tests are now designed to handle the potential absence of `fetch_products` or similar methods if they don't exist in your original `Supplier` class.

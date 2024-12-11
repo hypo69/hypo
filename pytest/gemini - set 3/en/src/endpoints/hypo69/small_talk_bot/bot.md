@@ -98,7 +98,7 @@ def test_handle_next_command(mock_update, mock_context, mock_bot):
 * **Mocking File Operations (`save_text_file`):**  Patches `save_text_file` to avoid actual file writing.  This is crucial for keeping tests isolated and fast.
 
 
-* **Specific Test Cases:** The example `test_start_command` and `test_handle_message` demonstrate how to use the mocks effectively. You should add tests for other methods like `handle_suppliers_response`, `handle_onetab_response`, and potentially error handling.
+* **Specific Test Cases:** The example `test_start_command` and `test_handle_message` demonStarte how to use the mocks effectively. You should add tests for other methods like `handle_suppliers_response`, `handle_onetab_response`, and potentially error handling.
 
 * **Error Handling:** The test for `handle_next_command` includes an example of a `try...except` block to handle potential exceptions within the function, which is vital for robustness and completeness.
 

@@ -70,7 +70,7 @@ def test_grab_page_driver_error(graber, driver_fixture):
 
 1. **Mocking:** The tests now effectively mock the driver and Graber functions (`id_product`, `description_short`, etc.) to prevent them from actually making external calls to the web driver, which would fail these tests to work in a CI pipeline.  This is crucial for unit testing because it isolates the `Graber` class.
 
-2. **Exception Handling:**  `test_grab_page_missing_data` demonstrates how to test for exceptions raised inside the `grab_page` function's asynchronous tasks.  It uses `pytest.raises` to assert that the correct exception type is raised.
+2. **Exception Handling:**  `test_grab_page_missing_data` demonStartes how to test for exceptions raised inside the `grab_page` function's asynchronous tasks.  It uses `pytest.raises` to assert that the correct exception type is raised.
 
 3. **Driver Error Simulation:** `test_grab_page_driver_error` tests the exception handling for issues within the `Driver` class.
 
@@ -85,7 +85,7 @@ def test_grab_page_driver_error(graber, driver_fixture):
 2. Replace the mock functions with calls to the real functions of your Graber class.
 3. Run the tests with `pytest`.
 
-This improved solution is robust, testable, and demonstrates best practices for asynchronous testing with pytest. Remember to adapt the mock functions and assertions according to the actual implementation of the Graber class. Remember to install the necessary libraries (`pytest`, `asyncio`, etc.) if you haven't already.
+This improved solution is robust, testable, and demonStartes best practices for asynchronous testing with pytest. Remember to adapt the mock functions and assertions according to the actual implementation of the Graber class. Remember to install the necessary libraries (`pytest`, `asyncio`, etc.) if you haven't already.
 
 
 ```bash

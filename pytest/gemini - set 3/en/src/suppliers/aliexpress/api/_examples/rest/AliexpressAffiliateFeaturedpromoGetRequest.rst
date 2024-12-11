@@ -48,7 +48,7 @@ def test_init_with_custom_domain_and_port():
 
 3. **Edge Case (Domain and Port):** Added a test to verify proper initialization with custom domain and port values.  This is an important edge case.
 
-4. **Exception Handling (Illustrative):**  An example is included that demonstrates testing exception handling in the base `RestApi` class. The comment indicates that it is illustrative and needs to be adapted based on the actual methods present in the `RestApi` class.
+4. **Exception Handling (IlluStartive):**  An example is included that demonStartes testing exception handling in the base `RestApi` class. The comment indicates that it is illuStartive and needs to be adapted based on the actual methods present in the `RestApi` class.
 
 5. **Robustness:**  Tests are structured to be more robust and maintainable.
 

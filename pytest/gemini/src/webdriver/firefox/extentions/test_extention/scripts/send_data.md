@@ -103,7 +103,7 @@ def test_onPageLoad_error_response():
 
 3. **Capturing Console Output:** A critical improvement is capturing the console output (`console.log`). Testing asynchronous code requires checking that the expected log messages appear, showing that the JavaScript code successfully executed the `fetch`.
 
-4. **Error Handling:** The test `test_onPageLoad_error_response` demonstrates how to handle error responses from `fetch`. It uses `pytest.raises` to assert that the expected error is caught.
+4. **Error Handling:** The test `test_onPageLoad_error_response` demonStartes how to handle error responses from `fetch`. It uses `pytest.raises` to assert that the expected error is caught.
 
 5. **Clearer Tests:** Test names and comments are improved for better readability and understanding.
 

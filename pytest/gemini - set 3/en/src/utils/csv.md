@@ -85,7 +85,7 @@ def test_read_csv_file_failure(mock_logger):
 
 * **Mocking `logger`:**  Critically, the tests now use `@patch('src.logger.logger')` to mock the logger. This prevents actual logging to the console during testing, keeping the tests isolated and focused on the functions under test.
 * **Temporary Files:** The `tmp_path` fixture from `pytest` is used to create temporary files for testing, ensuring that test files are automatically removed after each test, avoiding conflicts.
-* **Error Handling:** Tests for `TypeError`, `ValueError`, and `FileNotFoundError` exceptions are included. This demonstrates the appropriate exception handling within the `save_csv_file` and `read_csv_file` functions.
+* **Error Handling:** Tests for `TypeError`, `ValueError`, and `FileNotFoundError` exceptions are included. This demonStartes the appropriate exception handling within the `save_csv_file` and `read_csv_file` functions.
 * **Edge Cases:** Tests for empty data and cases where the input is not a list of dictionaries.
 * **Clear Test Names:** Test function names are descriptive and clearly indicate the scenario being tested.
 * **`pytest.raises`:** Used correctly to test exception handling.

@@ -152,7 +152,7 @@ def test_facebook_promoter_while_loop_keyboard_interrupt(mock_sleep):
 - **Actual `src` Code:** To fully test the given code, you need the actual implementations of the classes and functions in `src.endpoints.advertisement.facebook`, `src.webdriver`, and `src.logger`. The provided example mocks those components.
 
 
-- **Facebook API Interaction:**  If your code interacts with the Facebook API, you will need to adjust the mocks and testing strategy to handle API calls and responses.
+- **Facebook API Interaction:**  If your code interacts with the Facebook API, you will need to adjust the mocks and testing Startegy to handle API calls and responses.
 
 
 - **External Dependencies:** If your code depends on other external resources (e.g., files, databases), you need to mock or isolate those dependencies in your tests.

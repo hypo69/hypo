@@ -94,7 +94,7 @@ def test_validate_price_invalid(product_data):
    result = product.create_product(product_data)
    assert result == "Product created successfully"  # Example assertion
    ```
-5. **Exception Handling:** The `test_validate_price_invalid` and `test_validate_product_name_invalid` tests demonstrate how to use `pytest.raises` to check for expected exceptions (e.g., ValueError). **Adapt the exception check** based on your specific validation logic.
+5. **Exception Handling:** The `test_validate_price_invalid` and `test_validate_product_name_invalid` tests demonStarte how to use `pytest.raises` to check for expected exceptions (e.g., ValueError). **Adapt the exception check** based on your specific validation logic.
 6. **Missing Functions:** The code provides placeholders for `create_product`, `update_product`, `delete_product`, and validation functions.  **Complete these placeholders** with the actual function names and parameters from your `product` module.
 
 7. **Test Scope:** The example tests assume that your `product` module contains functions for product creation, updates, deletion, and validation. **Create tests for all relevant functions and methods** in your `product` module.

@@ -69,7 +69,7 @@ def test_aliexpress_init_default_locale():
 
 3. **pytest.raises:** Used for testing exceptions raised by `Aliexpress.__init__` with invalid `webdriver` types. This is crucial for robust testing.
 
-4. **TypeError Handling:** Added `test_aliexpress_init_locale_string` to demonstrate how to test for a `TypeError`.
+4. **TypeError Handling:** Added `test_aliexpress_init_locale_string` to demonStarte how to test for a `TypeError`.
 
 5. **Edge Cases:**  The `test_aliexpress_init_invalid_webdriver` test covers an edge case of an unsupported webdriver type.
 

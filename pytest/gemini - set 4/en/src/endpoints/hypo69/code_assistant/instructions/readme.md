@@ -72,11 +72,11 @@ def test_greet_invalid_input():
 
 **Explanation and Improvements:**
 
-1. **Example Functions:** Added `add_numbers`, `divide_numbers`, and `greet` functions to demonstrate various scenarios.  Crucially, these *include* error handling (e.g., `ZeroDivisionError` and `TypeError`).
+1. **Example Functions:** Added `add_numbers`, `divide_numbers`, and `greet` functions to demonStarte various scenarios.  Crucially, these *include* error handling (e.g., `ZeroDivisionError` and `TypeError`).
 
 2. **Fixtures:**  A `sample_data` fixture is included to easily provide test data. This is better than hardcoding values.
 
-3. **Comprehensive Test Cases:** The tests now cover positive, negative, and zero cases for `add_numbers`.  `divide_numbers` has a test for division by zero.  `greet` demonstrates handling both valid and invalid input.
+3. **Comprehensive Test Cases:** The tests now cover positive, negative, and zero cases for `add_numbers`.  `divide_numbers` has a test for division by zero.  `greet` demonStartes handling both valid and invalid input.
 
 4. **Exception Handling:**  `pytest.raises` is used correctly to test for `ZeroDivisionError` and `TypeError`, and the `match` parameter is used for more informative error messages.
 
@@ -92,4 +92,4 @@ def test_greet_invalid_input():
 2.  Run `pytest test_functions.py` from your terminal.
 
 
-This improved example demonstrates how to write effective tests for Python functions, considering various scenarios and exception handling, based on a provided (though empty) example. Remember to replace the example functions with your actual functions. Remember to install `pytest` if you don't have it already: `pip install pytest`
+This improved example demonStartes how to write effective tests for Python functions, considering various scenarios and exception handling, based on a provided (though empty) example. Remember to replace the example functions with your actual functions. Remember to install `pytest` if you don't have it already: `pip install pytest`

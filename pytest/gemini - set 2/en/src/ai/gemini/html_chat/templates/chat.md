@@ -77,7 +77,7 @@ def test_chat_form_submit_invalid_input_type():
 # The next steps are critically important, and crucial to be done correctly
 # to actually test the backend response correctly:
 # 1.  Set up a mock server or a real server to handle the POST request to /ask.
-# 2.  The above tests are merely demonstrating basic structure,
+# 2.  The above tests are merely demonStarting basic structure,
 #     now you need to adjust them to actually validate the
 #     responses from the simulated server.
 

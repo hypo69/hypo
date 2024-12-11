@@ -82,7 +82,7 @@ async def test_grab_page_driver_error(mock_driver):
 
 1. **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `Driver` class and its methods.  This is crucial for testing `Graber` without relying on an actual web driver, which can be slow and flaky.  Crucially, the `mock_driver` fixture ensures the mock is correctly created and cleaned up.
 
-2. **Error Handling:** The `test_grab_page_driver_error` test case demonstrates how to check for exceptions raised within the `grab_page` function.
+2. **Error Handling:** The `test_grab_page_driver_error` test case demonStartes how to check for exceptions raised within the `grab_page` function.
 
 3. **Clearer Assertions:** The example `test_grab_page_valid_input` now shows the type of assertions you need to include.  You must check for the _specific_ result your methods return from the class in question, otherwise you'll just check that _something_ was returned.  Ensure these are accurate according to your `ProductFields` structure.
 
@@ -92,7 +92,7 @@ async def test_grab_page_driver_error(mock_driver):
 
 6. **No Driver Test:** The `test_grab_page_no_driver` test checks for a crucial scenario where no driver is passed to the Graber constructor.
 
-7. **Driver Error Handling:** The `test_grab_page_driver_error` test demonstrates how to handle potential errors within the `Driver.execute_locator` method (and other potential failure points).  Substitute `Exception` with the *specific* error type thrown by your `Driver` methods in case of errors.
+7. **Driver Error Handling:** The `test_grab_page_driver_error` test demonStartes how to handle potential errors within the `Driver.execute_locator` method (and other potential failure points).  Substitute `Exception` with the *specific* error type thrown by your `Driver` methods in case of errors.
 
 8. **`await driver.close()` in fixture:** The `mock_driver` fixture now closes the driver properly to prevent resource leaks during testing.
 

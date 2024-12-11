@@ -189,7 +189,7 @@ graph TD
 * **Classes:** There are no classes explicitly defined in the provided code. This means the functionality is likely realized through functions and data structures.
 
 * **Functions:**
-    * **`run_scenario_files`**: Orchestrates the entire process by sequentially executing scenario files.
+    * **`run_scenario_files`**: OrcheStartes the entire process by sequentially executing scenario files.
     * **`run_scenario_file`**: Reads and processes each scenario file.
     * **`run_scenario`**: Handles the interaction with a single scenario (e.g., fetching data from the website).
     * **`dump_journal`**: Logs and saves the execution results to a file.

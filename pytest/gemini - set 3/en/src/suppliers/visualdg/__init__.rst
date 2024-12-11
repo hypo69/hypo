@@ -45,7 +45,7 @@ def test_mode_constant_type():
 
 
 #If the Graber class has methods/functions requiring specific input,
-# add further tests demonstrating valid and invalid cases.  
+# add further tests demonStarting valid and invalid cases.  
 
 # Example testing methods if the Graber class has methods:
 # def test_graber_method_valid_input(example_graber_instance):
@@ -69,13 +69,13 @@ def test_mode_constant_type():
 
 2. **Valid Input Test:**  The `test_graber_valid_input` test now checks if the `example_graber_instance` is of the correct type. This is a fundamental sanity check.  **Critically:**  Placeholder comments like `# Replace with actual validation of the returned data from Graber` need *your* specific validations.  What does the `Graber` class return? You need assertions that check that.
 
-3. **Invalid Input Test:** The `test_graber_invalid_input` is similar, and it demonstrates how to test for exceptions using `pytest.raises()`.   *Replace `TypeError` and `invalid_input` with the specific exception and input that are expected*.
+3. **Invalid Input Test:** The `test_graber_invalid_input` is similar, and it demonStartes how to test for exceptions using `pytest.raises()`.   *Replace `TypeError` and `invalid_input` with the specific exception and input that are expected*.
 
 4. **Mode Constant Tests:** Tests are added to verify that `MODE` exists and is of the correct type.
 
 5. **Missing Parts:** The most important missing part, highlighted in comments, is the actual testing of methods in the `Graber` class. The example code is just a *template*. The way to structure those tests depends heavily on the methods defined within the `Graber` class.   You need to create tests that call each method and verify the returned values and any exceptions raised, using the actual expected results and inputs for the `Graber` class methods.
 
-6. **Error Handling:** Added a placeholder `test_graber_raises_exception` that demonstrates the pattern for handling errors raised by the `Graber` class.
+6. **Error Handling:** Added a placeholder `test_graber_raises_exception` that demonStartes the pattern for handling errors raised by the `Graber` class.
 
 **How to Adapt:**
 

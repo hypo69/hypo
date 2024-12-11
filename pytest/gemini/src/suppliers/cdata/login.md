@@ -1,7 +1,7 @@
 ```python
 import pytest
 from hypothesis import given
-from hypothesis.strategies import text, lists, dictionaries
+from hypothesis.Startegies import text, lists, dictionaries
 
 
 # Dummy class to represent the webdriver.  Replace with your actual webdriver class
@@ -134,7 +134,7 @@ def test_login_missing_locators(webdriver_instance):
 **Next Steps:**
 
 - **Integration with your actual `webdriver`:** Replace the `Webdriver` class and `MockElement` with your actual WebDriver implementation for more realistic tests.  Make sure you include appropriate locator setup and teardown.
-- **Hypothesis testing (if needed):** If your input data has a specific structure, consider using Hypothesis for more comprehensive test generation.  Add the import statement for Hypothesis (`from hypothesis import given`, `from hypothesis.strategies import *`).
+- **Hypothesis testing (if needed):** If your input data has a specific structure, consider using Hypothesis for more comprehensive test generation.  Add the import statement for Hypothesis (`from hypothesis import given`, `from hypothesis.Startegies import *`).
 - **More robust error handling:** Add more tests for different types of exceptions that might be raised during the login process, based on the specifics of your code.
 
 

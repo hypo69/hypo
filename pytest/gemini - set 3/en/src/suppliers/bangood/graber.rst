@@ -84,9 +84,9 @@ def test_grab_page_execute_locator_exception(graber, mock_driver):
 * **Mocking:**  The code now effectively mocks the `Driver` object using `unittest.mock.MagicMock`.  This is crucial for isolating the tests and avoiding dependencies on actual web drivers.
 * **`@pytest.fixture` for `graber`:** This fixture instantiates `Graber` with the mocked driver, making the tests cleaner and reusable.
 * **Realistic Test Data:** The tests now include a `test_product_fields` object, which is more representative of the data a `ProductFields` object would hold. Replace it with your actual data structure if necessary.
-* **Testing `id_product`:** This demonstrates how to test a specific method within `Graber`. You should add more tests for the other methods in a similar fashion.
+* **Testing `id_product`:** This demonStartes how to test a specific method within `Graber`. You should add more tests for the other methods in a similar fashion.
 * **Comprehensive Edge Case Tests:** The test `test_grab_page_missing_id_product` and `test_grab_page_invalid_input_type` handle missing parameters and incorrect input types.
-* **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonstrates robust exception handling, testing how the code responds to potential errors.
+* **Exception Handling:** The `test_grab_page_execute_locator_exception` test demonStartes robust exception handling, testing how the code responds to potential errors.
 * **Clear Assertions:** Assertions are now more specific, checking for the existence of `graber.fields` and ensuring that the `id_product` field has a specific value (the mocked return).
 * **Missing Imports:** Added the necessary imports (`pytest`, `MagicMock`, `Driver`, `ProductFields`).  Ensure you import these classes correctly from your project structure.
 * **Asynchronous Handling:** The tests now correctly use `asyncio.run` to execute the asynchronous `grab_page` function within the test environment.

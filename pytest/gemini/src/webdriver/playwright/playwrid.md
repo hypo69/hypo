@@ -95,9 +95,9 @@ def test_playwrid_start_failure(mock_playwrid, monkeypatch, caplog):
 * **`temp_settings_file` Fixture:**  Creates a temporary JSON file for settings, significantly improving testability by eliminating reliance on external files.  This is much cleaner than using a fixed path.
 * **`mock_playwrid` Fixture:** Simplifies creating the Playwrid object for testing.
 * **Comprehensive Test Cases:** Added tests for `test_playwrid_valid_initialization`, `test_playwrid_custom_settings`, `test_playwrid_no_custom_settings`, covering different scenarios for initialization and custom settings.
-* **Invalid Input Handling:** A crucial addition is `test_playwrid_invalid_settings_name` to demonstrate exception handling when a custom settings file doesn't exist or has a problematic format.
+* **Invalid Input Handling:** A crucial addition is `test_playwrid_invalid_settings_name` to demonStarte exception handling when a custom settings file doesn't exist or has a problematic format.
 * **Mocking `run`:** Now mocks `PlaywrightCrawler.run` in `test_playwrid_start` and `test_playwrid_start_failure` for isolation.
-* **Error Handling Test:** `test_playwrid_start_failure`  demonstrates error handling during the `start` method, using `pytest.raises` to verify the expected exception.
+* **Error Handling Test:** `test_playwrid_start_failure`  demonStartes error handling during the `start` method, using `pytest.raises` to verify the expected exception.
 * **Clearer Assertions:** Assertions are more focused and descriptive.
 * **Import Fix:** Corrected the import statement to import the `Playwrid` class directly, avoiding potential issues with relative imports.
 

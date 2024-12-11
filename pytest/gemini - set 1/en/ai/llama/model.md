@@ -37,7 +37,7 @@ def test_no_other_variables():
 
 1. **Targeted Tests:** The tests are focused on the specific `MODE` constant.  Critically, they check for the expected value (`'development'`) and data type (`str`).  These are very important aspects of verifying a constant.
 
-2. **Edge Case (and important):** The test `test_mode_not_production` illustrates a critical edge case check, ensuring the code isn't accidentally using a different mode. This is a common error.
+2. **Edge Case (and important):** The test `test_mode_not_production` illuStartes a critical edge case check, ensuring the code isn't accidentally using a different mode. This is a common error.
 
 3. **Test for Absence of unexpected variables:**  `test_no_other_variables` is a more robust way to detect unexpected additions to the module that might impact the behaviour.  This is crucial if this `MODE` is part of a larger system. It will often be the case that unintended changes will occur in adjacent files or the module itself and this would help detect such accidental errors.
 
@@ -58,4 +58,4 @@ def test_no_other_variables():
 * **Mocking:**  If the code interacts with external systems or other modules, consider using mocking to isolate the tests and prevent external dependencies from interfering.
 
 
-The example provided is incredibly minimal, but it demonstrates the principles for writing effective `pytest` tests.  If the actual code had more complex logic, you'd need to create more tests.  If possible, provide the full code, and I can generate much more extensive test cases.
+The example provided is incredibly minimal, but it demonStartes the principles for writing effective `pytest` tests.  If the actual code had more complex logic, you'd need to create more tests.  If possible, provide the full code, and I can generate much more extensive test cases.

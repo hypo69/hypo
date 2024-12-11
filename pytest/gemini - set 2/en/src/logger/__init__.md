@@ -91,10 +91,10 @@ def test_payload_checksum_error_message():
 
 * **Comprehensive Exception Tests:** The tests now include more comprehensive tests for the exception classes.  Crucially, they verify that the `__str__` method of the exceptions is correctly returning the expected message.  The previous tests were missing this vital aspect.
 * **Specific Logger Tests:** The tests for the `logger` object now include basic checks for logging various levels (INFO, WARNING, ERROR). This is essential for verifying that logging functions are working correctly.
-* **Exception Handling Test:**  A new test `test_logger_custom_exception_handling` demonstrates how the logger might handle an exception. The critical part is that it now also calls `logger.exception` on the exception.
+* **Exception Handling Test:**  A new test `test_logger_custom_exception_handling` demonStartes how the logger might handle an exception. The critical part is that it now also calls `logger.exception` on the exception.
 * **Important Note:** The provided logger module only *defines* the exception types. The actual functionality (e.g., whether logging occurs) is *not* tested here. This solution tests the exception classes for the expected strings, but doesn't test whether they're properly logged.  To test proper logging functionality you would need to have a logging mechanism in your `logger` module.
 * **Clearer Test Names:** Test names are more descriptive, improving readability.
-* **Edge Case for Empty Exception Message:** The test `test_logger_no_exception_message` is added to demonstrate handling of situations where the exception object does not provide a message string.
+* **Edge Case for Empty Exception Message:** The test `test_logger_no_exception_message` is added to demonStarte handling of situations where the exception object does not provide a message string.
 
 **How to Use:**
 

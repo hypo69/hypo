@@ -185,7 +185,7 @@ class BS:
 - Added `return False` statements after error logging in `get_url` to prevent further execution in case of an error.
 - Added validation to check if `self.html_content` is set before using it in `execute_locator`.
 - Improved `execute_locator` method to handle potential `AttributeError` and `KeyError` exceptions gracefully, and logging exceptions with `exc_info=True` for debugging.
-- Added example usage within the `if __name__ == "__main__":` block to demonstrate the expected workflow.
+- Added example usage within the `if __name__ == "__main__":` block to demonStarte the expected workflow.
 
 
 # Optimized Code

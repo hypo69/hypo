@@ -98,11 +98,11 @@ def test_upload_to_PrestaShop(emil_design_instance):
 
 3. **More Robust Test Cases:** The test cases now have better coverage by mocking file reading and other crucial elements.
 
-4. **Error Handling:** `test_describe_images_invalid_image_path` demonstrates how to test for exceptions (e.g., `FileNotFoundError`).
+4. **Error Handling:** `test_describe_images_invalid_image_path` demonStartes how to test for exceptions (e.g., `FileNotFoundError`).
 
 5. **Specific Assertions:**  Replace the placeholder comments with assertions that verify the expected behavior (e.g., checking if the correct files were created, if the correct parameters were passed to the `post_message` function). This is where you would write specific checks to see if `describe_images` functions correctly based on the mocked data.
 
-6. **`promote_to_facebook`:**  The test for `promote_to_facebook` is incomplete but demonstrates how to mock the `Driver` and `post_message` classes.
+6. **`promote_to_facebook`:**  The test for `promote_to_facebook` is incomplete but demonStartes how to mock the `Driver` and `post_message` classes.
 
 7. **`upload_to_PrestaShop`:**  Added a placeholder test for `upload_to_PrestaShop`.  Crucially, this needs more sophisticated mocking; you need to mock PrestaShop and the product objects, for example, and then write assertions to test the interactions between them.
 
@@ -127,4 +127,4 @@ def test_upload_to_PrestaShop(emil_design_instance):
 * **Edge Cases**: The most important tests are those that focus on difficult situations, error cases, and boundary conditions (like empty image directories or very large lists of images).
 * **Data-Driven Testing**:  Consider using `pytest.mark.parametrize` to create tests with various data inputs and different scenarios.
 
-Remember to replace the placeholder comments with actual assertions and update the mocks to match the real implementation of the external dependencies and libraries.  Critically, the testing strategy should reflect the code's complexity and the potential ways it might fail or behave unexpectedly.
+Remember to replace the placeholder comments with actual assertions and update the mocks to match the real implementation of the external dependencies and libraries.  Critically, the testing Startegy should reflect the code's complexity and the potential ways it might fail or behave unexpectedly.

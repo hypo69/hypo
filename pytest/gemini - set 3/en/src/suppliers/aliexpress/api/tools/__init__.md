@@ -73,7 +73,7 @@ def test_get_product_id_malformed_url():
 
 1. **Clearer Test Names:**  Test names now explicitly describe the input type (e.g., `test_get_product_id_invalid_url`).
 
-2. **Exception Handling:**  Uses `pytest.raises` for asserting that exceptions are raised with invalid inputs, demonstrating robust error handling.
+2. **Exception Handling:**  Uses `pytest.raises` for asserting that exceptions are raised with invalid inputs, demonStarting robust error handling.
 
 
 3. **Edge Cases:**  Includes tests for empty URLs and URLs missing the item ID to cover important edge cases.

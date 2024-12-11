@@ -113,10 +113,10 @@ class TestAliRequests:
 4. **`mock_cookie_file` Fixture:** This creates a temporary pickle file containing sample cookies for use in the tests.
 
 
-5. **`test_load_webdriver_cookies_file_failure`:**  A new test checks for the `FileNotFoundError` or other exception cases during cookie loading, demonstrating exception handling.
+5. **`test_load_webdriver_cookies_file_failure`:**  A new test checks for the `FileNotFoundError` or other exception cases during cookie loading, demonStarting exception handling.
 
 
-6. **`test_refresh_session_cookies_success`:**  This test demonstrates how to correctly test for the success of loading cookies and getting session IDs.
+6. **`test_refresh_session_cookies_success`:**  This test demonStartes how to correctly test for the success of loading cookies and getting session IDs.
 
 
 7. **`test_make_get_request_success` and `test_make_get_request_failure`:**  These are important tests that use mocking to simulate successful and failed requests.  They correctly handle the return value of `False` to indicate a request failure.

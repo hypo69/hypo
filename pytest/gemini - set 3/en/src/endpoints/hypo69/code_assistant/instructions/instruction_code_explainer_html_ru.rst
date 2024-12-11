@@ -98,9 +98,9 @@ def test_convert_to_int_invalid_input():
 
 3. **Edge Cases:** Includes tests for zero and negative input values in `MyClass`.
 
-4. **Comprehensive Testing:** Added a test case for a function taking a MyClass object as an argument to illustrate a more realistic testing scenario.  The invalid input handling in `process_myclass` is much improved.
+4. **Comprehensive Testing:** Added a test case for a function taking a MyClass object as an argument to illuStarte a more realistic testing scenario.  The invalid input handling in `process_myclass` is much improved.
 
-5. **Example `convert_to_int` function:** Included a test for an example `convert_to_int` function that illustrates correct error handling.
+5. **Example `convert_to_int` function:** Included a test for an example `convert_to_int` function that illuStartes correct error handling.
 
 6. **Realistic Example Code:**  The `MyClass` example is now more robust, including error handling and a `stringify` method, making the test cases more comprehensive.
 

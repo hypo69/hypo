@@ -90,4 +90,4 @@ def test_get_list_products_in_category_invalid_graber_input(mock_graber):
 2.  Make sure you have `pytest` installed (`pip install pytest`).
 3.  Run the tests from your terminal: `pytest test_amazon.py`.
 
-This improved solution provides a robust and reliable testing strategy for the provided code. Remember to replace the mock `Graber` with a more sophisticated fixture if you need to interact with a real API (which is usually avoided for unit testing).  You'll also need to adapt the tests if your `Graber` class has other methods.
+This improved solution provides a robust and reliable testing Startegy for the provided code. Remember to replace the mock `Graber` with a more sophisticated fixture if you need to interact with a real API (which is usually avoided for unit testing).  You'll also need to adapt the tests if your `Graber` class has other methods.

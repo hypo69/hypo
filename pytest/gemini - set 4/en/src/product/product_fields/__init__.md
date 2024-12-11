@@ -78,7 +78,7 @@ def test_translate_presta_fields_dict_invalid_input_type():
 
 1. **Clearer Test Names:** Test names are now more descriptive (e.g., `test_product_fields_missing_field`).
 
-2. **Exception Handling:** Uses `pytest.raises` to test for `KeyError` and `TypeError` in `ProductFields`, demonstrating proper exception handling.  Crucially, it checks for the *specific* exception you expect.
+2. **Exception Handling:** Uses `pytest.raises` to test for `KeyError` and `TypeError` in `ProductFields`, demonStarting proper exception handling.  Crucially, it checks for the *specific* exception you expect.
 
 3. **Valid Input Tests:** Added a `test_product_fields_valid_input` to verify the class initialization with valid data.
 
@@ -87,7 +87,7 @@ def test_translate_presta_fields_dict_invalid_input_type():
    - `test_translate_presta_fields_dict_empty_input`: Covers the empty dictionary case.
    - `test_translate_presta_fields_dict_invalid_input_type`: Tests handling of non-dictionary input (important for robustness).
 
-5. **Edge Case Example:** Included a placeholder for `test_translate_presta_fields_dict_specific_edge_case` to illustrate how you'd add tests for specific edge cases. **You MUST add such tests if there are specific translations you expect.**
+5. **Edge Case Example:** Included a placeholder for `test_translate_presta_fields_dict_specific_edge_case` to illuStarte how you'd add tests for specific edge cases. **You MUST add such tests if there are specific translations you expect.**
 
 
 **Before running these tests:**

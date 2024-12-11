@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
 * **Mocking:** The crucial part is mocking the `logger`, `Supplier`, and `Driver` classes.  This prevents your tests from relying on external dependencies (like a real browser driver) and allows you to control the input and expected output in a predictable way.
 * **Clearer Test Cases:** The test names (`test_login_success`, `test_login_exception`) now more accurately reflect the scenario being tested.
-* **Error Handling:** The `test_login_exception` test demonstrates how to test the exception handling within the `login` function.
+* **Error Handling:** The `test_login_exception` test demonStartes how to test the exception handling within the `login` function.
 * **Multiple Close Buttons:** The `test_login_popup_multiple_buttons` now checks the case where there are multiple close popup buttons.
 * **pytest.main:** The `if __name__ == '__main__':` block now calls `pytest.main(['-v', '--disable-warnings'])` to run the tests in the correct way.
 * **Dependency Injection:**  Critically, I've removed the direct use of `logger` and replaced it with `monkeypatch.setattr("hypotez.src.suppliers.morlevi.logger", logger)`.

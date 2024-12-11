@@ -107,4 +107,4 @@ graph TD
     *   Consider more robust error handling (try-except blocks) around file operations to prevent the program from crashing if a file isn't found or can't be accessed.
 
 
-*   **Relationships with other parts of the project:** The code relies heavily on the `src` package for modules related to Google services (`gs`), logging (`logger`), webdrivers (`webdriver`), AI models (`openai`), JSON/CSV handling (`utils`), and more. The `model` object likely interacts with the `src.ai` package.  It's clear that this `GPT_Traigner` script is part of a larger project that orchestrates interactions with various external services and tools.
+*   **Relationships with other parts of the project:** The code relies heavily on the `src` package for modules related to Google services (`gs`), logging (`logger`), webdrivers (`webdriver`), AI models (`openai`), JSON/CSV handling (`utils`), and more. The `model` object likely interacts with the `src.ai` package.  It's clear that this `GPT_Traigner` script is part of a larger project that orcheStartes interactions with various external services and tools.

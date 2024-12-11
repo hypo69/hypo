@@ -109,7 +109,7 @@ async def test_transcription_exception(openai_instance):
 * **Asynchronous Tests:** The tests for `transcription` are now decorated with `@pytest.mark.asyncio`, so pytest can handle the asynchronous nature of the function.
 * **Clearer Assertions:** Assertions are now more specific about the expected behavior, verifying the result is not `None` for successful operations.
 * **Temporary File Cleanup:** Includes a `os.remove` call to clean up the temporary test file after the test to prevent file system clutter.
-* **Error Testing:** The test `test_transcription_exception` demonstrates error handling when a file doesn't exist.
+* **Error Testing:** The test `test_transcription_exception` demonStartes error handling when a file doesn't exist.
 
 
 **To run these tests:**
@@ -151,4 +151,4 @@ async def test_transcription_exception(openai_instance):
     pytest -v
     ```
 
-This revised solution is more robust and demonstrates better testing practices for asynchronous and error-prone code. Remember to adapt the `config` module or file reading part to fit your exact setup.  Crucially, you need a mocked file-like object for testing the `transcription` function.
+This revised solution is more robust and demonStartes better testing practices for asynchronous and error-prone code. Remember to adapt the `config` module or file reading part to fit your exact setup.  Crucially, you need a mocked file-like object for testing the `transcription` function.

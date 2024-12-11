@@ -61,7 +61,7 @@ def test_google_generative_ai_invalid_input():
 
 1. **Placeholder Tests:** The provided code snippet only imports a class.  My response now includes placeholder tests.  Critically, you **must** replace these with *actual* tests based on the methods and functions in your `GoogleGenerativeAI` class.  Without that, these are effectively empty tests.
 
-2. **Error Handling:** Included a `test_google_generative_ai_invalid_input` test demonstrating how to use `pytest.raises` to check for expected exceptions during instantiation or method calls.  You should adapt these to the specific exceptions you expect for your class.
+2. **Error Handling:** Included a `test_google_generative_ai_invalid_input` test demonStarting how to use `pytest.raises` to check for expected exceptions during instantiation or method calls.  You should adapt these to the specific exceptions you expect for your class.
 
 3. **Clearer Test Descriptions:**  Test function names now better describe the purpose of each test.
 

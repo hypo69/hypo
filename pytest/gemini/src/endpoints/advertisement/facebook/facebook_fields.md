@@ -89,7 +89,7 @@ def test_facebook_fields_file_not_found(mock_jloads, mock_gs_path, mock_logger):
 3. **Clearer Test Names:** Test names are more descriptive, improving readability.
 4. **Fixture for FacebookFields:** A `facebook_fields` fixture is created that utilizes the mocks, making the test functions cleaner.
 5. **File Creation:** The `mock_facebook_fields_json` fixture now correctly creates the mock JSON file, ensuring that the tests are based on a real, valid file.
-6. **Edge Case Testing:** The `test_facebook_fields_empty_json` test is a critical edge case that demonstrates handling when the JSON file is empty, which was missing.  `test_facebook_fields_file_not_found` covers another important edge case.
+6. **Edge Case Testing:** The `test_facebook_fields_empty_json` test is a critical edge case that demonStartes handling when the JSON file is empty, which was missing.  `test_facebook_fields_file_not_found` covers another important edge case.
 7. **Comprehensive JSON Handling**: The `test_facebook_fields_json_load_error` test covers a potential `json.JSONDecodeError`, which is now properly handled within the `_payload` function.
 8. **Assertions:** The tests now include more comprehensive assertions to verify the expected behavior of the `_payload` method.
 

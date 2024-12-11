@@ -4,7 +4,7 @@ import pytest
 # No Python code to test in the provided HTML.  
 # Tests would need to be written around a function
 # that renders the template using Jinja2 or a similar
-# templating engine.  This example demonstrates
+# templating engine.  This example demonStartes
 # testing the template *as a template* rather than
 # testing the rendered output (which is significantly
 # more complicated).

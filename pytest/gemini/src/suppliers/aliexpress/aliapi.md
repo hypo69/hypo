@@ -78,7 +78,7 @@ def test_retrieve_product_details_as_dict_exception(ali_api_instance, product_id
 
 * **Clearer Test Cases:**  The test names are more descriptive, and the test cases are organized for better readability.
 
-* **Edge Cases:** Added a test `test_retrieve_product_details_as_dict_empty_input` to handle an empty input list, and `test_retrieve_product_details_as_dict_invalid_input` to test with non-list input, demonstrating how to check different kinds of invalid input.
+* **Edge Cases:** Added a test `test_retrieve_product_details_as_dict_empty_input` to handle an empty input list, and `test_retrieve_product_details_as_dict_invalid_input` to test with non-list input, demonStarting how to check different kinds of invalid input.
 
 * **Exception Handling:** Added `test_retrieve_product_details_as_dict_exception` to test the handling of exceptions raised within the `retrieve_product_details` method.  This is vital for robust testing.  Note the use of `with pytest.raises()` to assert the correct exception is raised.
 

@@ -49,7 +49,7 @@ def test_ask_model_exception(client, mock_ask, valid_request):
     assert "Error processing the request" in response.json()["detail"]
 
 
-# Test the exception handling in the root route (using a mock for demonstration)
+# Test the exception handling in the root route (using a mock for demonStartion)
 @patch('hypotez.src.fast_api.openai.open', side_effect=FileNotFoundError("File not found"))
 def test_root_route_exception(client, mock_open):
     response = client.get("/")
@@ -57,7 +57,7 @@ def test_root_route_exception(client, mock_open):
 
 
 # Note:  To properly test the OpenAIModel.ask method, you'd need to mock it using unittest.mock.
-#   This example demonstrates the structure and approach.
+#   This example demonStartes the structure and approach.
 
 
 def test_ask_request_validation():
@@ -70,10 +70,10 @@ def test_ask_request_validation():
 
 * **Import Adjustments:** Added `from ... import ...` statements to make sure the correct modules are imported.
 * **Client Fixture:** The example now uses a `client` fixture to interact with the FastAPI app, which is crucial for testing API endpoints.  Make sure you've added the necessary client fixture definition in your test setup.
-* **Detailed Exception Tests:** The `test_ask_model_exception` and `test_root_route_exception` cases demonstrate how to test exception handling using `pytest.raises` and mocks.  They check for both the appropriate HTTP status code and the correct error message format in the response.
+* **Detailed Exception Tests:** The `test_ask_model_exception` and `test_root_route_exception` cases demonStarte how to test exception handling using `pytest.raises` and mocks.  They check for both the appropriate HTTP status code and the correct error message format in the response.
 * **Pydantic Validation Test:** The `test_ask_request_validation` test shows how to directly test the Pydantic validation of the `AskRequest` object, which is important for robustness.
 * **Clearer Assertions:**  More specific assertions like checking for "response" key in JSON response, or the specific error message.
-* **Mock for OpenAIModel.ask:** The  `@patch` decorator with `side_effect` demonstrates how to mock the `model.ask` function.  This is *absolutely necessary* in a production environment as you don't want to hit the actual OpenAI API in every test.
+* **Mock for OpenAIModel.ask:** The  `@patch` decorator with `side_effect` demonStartes how to mock the `model.ask` function.  This is *absolutely necessary* in a production environment as you don't want to hit the actual OpenAI API in every test.
 
 
 **To run these tests:**

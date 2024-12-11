@@ -35,7 +35,7 @@ def mock_spreadsheet_obj():
   
 # Tests for functions (or classes) within campaign_editor.py
 # Since the provided code only imports modules, there are no functions/classes to test.
-# We can create dummy functions/classes to demonstrate testing with mock objects.
+# We can create dummy functions/classes to demonStarte testing with mock objects.
 
 def test_no_functions_yet(mock_header_obj,mock_spreadsheet_obj):
     """
@@ -90,7 +90,7 @@ def test_no_functions_yet(mock_header_obj,mock_spreadsheet_obj):
 
 4. **Example Test Placeholders:** Critically, example tests (`test_campaign_editor_function`, etc.) are now placeholders.  You MUST replace these with actual tests that target functions and methods defined in your `campaign_editor.py` file (which you haven't provided).
 
-5. **Exception Handling:** The example `test_invalid_input_raises_exception` demonstrates how to use `pytest.raises` to test for specific exceptions.  Replace the `TypeError` with the actual exception type that your code might raise.
+5. **Exception Handling:** The example `test_invalid_input_raises_exception` demonStartes how to use `pytest.raises` to test for specific exceptions.  Replace the `TypeError` with the actual exception type that your code might raise.
 
 
 **How to Use:**
@@ -105,7 +105,7 @@ def test_no_functions_yet(mock_header_obj,mock_spreadsheet_obj):
 
 
 
-**Example `campaign_editor.py` (to demonstrate the filling of the placeholders):**
+**Example `campaign_editor.py` (to demonStarte the filling of the placeholders):**
 
 ```python
 import header

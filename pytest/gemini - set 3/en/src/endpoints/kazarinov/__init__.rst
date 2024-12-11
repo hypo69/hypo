@@ -35,7 +35,7 @@ The provided Python code (`hypotez/src/endpoints/kazarinov/__init__.py`) only de
 * **Error Handling:**  If functions raise exceptions under certain conditions, you must use `pytest.raises` to verify they are handled correctly.
 * **Code Coverage:**  The goal is to write tests that cover as much of the codebase as possible to improve the reliability of your application. Aim for comprehensive testing, including edge cases, invalid inputs, and boundary conditions.
 
-**Example Scenario (Illustrative):**
+**Example Scenario (IlluStartive):**
 
 If your `kazarinov_bot.py` file contained a function like this:
 

@@ -108,7 +108,7 @@ def test_settings_loading(mock_gs, tmp_path):
 4. **`sys.path` Reset:** The `@patch("sys.path", new_list=[])` decorator is crucial for ensuring that tests don't leave unexpected artifacts in `sys.path` (resetting sys.path). This is a common best practice in testing.
 
 
-5. **Mock for `settings.json`:** Added a test `test_settings_loading` to demonstrate how to mock the `settings.json` file reading using `unittest.mock.patch`. This approach is essential when dealing with file I/O in your tests. It prevents your tests from interacting with actual files, keeping them isolated and reliable.
+5. **Mock for `settings.json`:** Added a test `test_settings_loading` to demonStarte how to mock the `settings.json` file reading using `unittest.mock.patch`. This approach is essential when dealing with file I/O in your tests. It prevents your tests from interacting with actual files, keeping them isolated and reliable.
 
 
 

@@ -69,9 +69,9 @@ def test_mode_attribute_has_value():
 **Explanation and Improvements:**
 
 * **Clearer Test Names:**  Test names now explicitly state the input type and expected outcome (e.g., `test_translate_presta_fields_dict_valid_input`).
-* **Comprehensive `translate_presta_fields_dict` Tests:**  Covers valid input, empty input, and importantly, `None` input, demonstrating exception handling using `pytest.raises`.
+* **Comprehensive `translate_presta_fields_dict` Tests:**  Covers valid input, empty input, and importantly, `None` input, demonStarting exception handling using `pytest.raises`.
 * **`MODE` Attribute Tests:**  Explicit tests for `MODE` attribute existence and correct value.
-* **Placeholder Tests for `Product` and `ProductFields`:** Demonstrates *how* tests should be structured if the `Product` and `ProductFields` classes were defined.  Crucially, it showcases using `pytest.raises` to verify exception handling for `Product` cases.  Importantly, these placeholder tests are commented out because they need the actual `Product` and `ProductFields` classes to be complete.
+* **Placeholder Tests for `Product` and `ProductFields`:** DemonStartes *how* tests should be structured if the `Product` and `ProductFields` classes were defined.  Crucially, it showcases using `pytest.raises` to verify exception handling for `Product` cases.  Importantly, these placeholder tests are commented out because they need the actual `Product` and `ProductFields` classes to be complete.
 * **Comprehensive Coverage:** The provided tests now cover the core function and address edge cases.
 * **Structure:** Adheres to a consistent testing structure.
 

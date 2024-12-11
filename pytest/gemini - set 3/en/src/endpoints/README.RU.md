@@ -94,7 +94,7 @@ def prestashop_api_without_key():
 
 3.  **Clear Test Names:** The test names are now more descriptive (e.g., `test_create_product_valid_input`).
 
-4.  **Exception Handling:** The `test_create_product_missing_api_key` test demonstrates how to use `pytest.raises` to check for expected exceptions.
+4.  **Exception Handling:** The `test_create_product_missing_api_key` test demonStartes how to use `pytest.raises` to check for expected exceptions.
 
 5. **Comprehensive Tests:**  The tests now cover a variety of scenarios, including valid input, missing `API Key`,  and a case where the product ID doesn't exist (`test_delete_product_non_existing`) making the tests more robust.
 

@@ -83,9 +83,9 @@ def test_chrome_method_raises_exception():
 
 3. **Clearer Test Names:** Test names are more descriptive (e.g., `test_chrome_start_already_running`).
 
-4. **Comprehensive Edge Cases:** Tests now include cases where the Chrome driver is already running or not running, demonstrating exception handling and testing both happy and unhappy paths.
+4. **Comprehensive Edge Cases:** Tests now include cases where the Chrome driver is already running or not running, demonStarting exception handling and testing both happy and unhappy paths.
 
-5. **Example with Argument and Exception Handling:**  It demonstrates testing a method that takes arguments and one that raises exceptions, both of which are vital for complete testing.  Replace `"some_method"` and `"some_argument"` with the actual method name and argument for your class.
+5. **Example with Argument and Exception Handling:**  It demonStartes testing a method that takes arguments and one that raises exceptions, both of which are vital for complete testing.  Replace `"some_method"` and `"some_argument"` with the actual method name and argument for your class.
 
 
 **Before Running:**

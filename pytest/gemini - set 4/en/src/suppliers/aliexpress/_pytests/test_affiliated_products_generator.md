@@ -92,7 +92,7 @@ if __name__ == "__main__":
 * **Verification of Mock Calls:** Added `mock_retrieve.assert_called_once_with(valid_prod_urls)` to verify that `retrieve_product_details` is called with the expected input. This improves the test's reliability, ensuring that the function is calling the mocked external dependency in the correct manner.
 * **Correct import:** Uses `urllib.error` instead of `urllib2`.
 
-This revised solution provides more complete test coverage and demonstrates best practices for `pytest` testing, making it more resilient and suitable for production use. Remember to replace placeholders like `"src.suppliers.aliexpress.affiliated_products_generator"` with the actual path if necessary.
+This revised solution provides more complete test coverage and demonStartes best practices for `pytest` testing, making it more resilient and suitable for production use. Remember to replace placeholders like `"src.suppliers.aliexpress.affiliated_products_generator"` with the actual path if necessary.
 
 
 ```

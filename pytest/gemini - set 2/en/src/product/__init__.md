@@ -83,10 +83,10 @@ def test_product_get_name():
 
 5. **Example `Product` Test:** Included a basic `test_product_creation` test to show how to test the `Product` class.  Crucially, it also includes test data.
 
-6. **Example `Product` Method:**  Added a `test_product_method_calculate_discount` test to illustrate testing a hypothetical method in the Product class. This is a placeholder; replace it with a test of a real method if one exists.
+6. **Example `Product` Method:**  Added a `test_product_method_calculate_discount` test to illuStarte testing a hypothetical method in the Product class. This is a placeholder; replace it with a test of a real method if one exists.
 
 
-7. **Getter Method Example:** Demonstrates how to test a getter method (`test_product_get_name`).
+7. **Getter Method Example:** DemonStartes how to test a getter method (`test_product_get_name`).
 
 
 **To run these tests:**

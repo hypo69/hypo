@@ -96,7 +96,7 @@ def test_ajax_error_handling():
 1. **HTML Content Simulation:** The tests now simulate fetching the HTML content. This is *critical* because the original test was missing this crucial step; you can't directly interact with the HTML elements without fetching the HTML first.  Replace the placeholder with your actual method of getting the HTML content (e.g., if you're using a FastAPI application, fetch it as part of a test request).
 
 
-2. **Mocking AJAX:** The `test_form_submission_valid_input` example now demonstrates how to mock the AJAX call using `unittest.mock` (replace with the appropriate mocking library in your testing environment). This is essential to isolate the tests and prevent external network calls that would introduce instability.  You *must* mock the AJAX call to verify the form submission logic without actually interacting with the external API.  
+2. **Mocking AJAX:** The `test_form_submission_valid_input` example now demonStartes how to mock the AJAX call using `unittest.mock` (replace with the appropriate mocking library in your testing environment). This is essential to isolate the tests and prevent external network calls that would introduce instability.  You *must* mock the AJAX call to verify the form submission logic without actually interacting with the external API.  
 
 
 3. **Specific Assertions:** The test cases now need *specific assertions* regarding the expected behavior. For example, if you're simulating a POST request, verify that the correct data was sent to the API endpoint and the mock response was handled correctly.

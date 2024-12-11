@@ -95,12 +95,12 @@ def test_browser_action_listener_empty_tab_id(mocker):
 
 2. **Clearer Test Names:** Test names are more descriptive (e.g., `test_browser_action_listener_valid_tab_id`).
 
-3. **Exception Handling:**  Tests now demonstrate how to use `pytest.raises` to check for exceptions when the tab ID is invalid (e.g., `None` or empty string).
+3. **Exception Handling:**  Tests now demonStarte how to use `pytest.raises` to check for exceptions when the tab ID is invalid (e.g., `None` or empty string).
 
 4. **Data Handling in Mock:**  The `new_tab` method in `MockBrowser` now correctly handles creating a mock tab with a unique ID using `uuid.uuid4()`. This is important as tab IDs in a real browser are unique.
 
 
-5. **Comprehensive Testing:**  The examples demonstrate testing various cases, including:
+5. **Comprehensive Testing:**  The examples demonStarte testing various cases, including:
    - Valid tab ID.
    - Missing tab ID.
    - Empty string as tab ID.

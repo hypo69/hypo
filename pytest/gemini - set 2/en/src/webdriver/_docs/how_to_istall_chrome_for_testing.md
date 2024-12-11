@@ -2,7 +2,7 @@
 import pytest
 
 # Since no Python code was provided, we'll create dummy functions and classes
-# to demonstrate the testing structure. Replace these with your actual code.
+# to demonStarte the testing structure. Replace these with your actual code.
 
 
 class MyWebDriver:

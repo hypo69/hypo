@@ -95,7 +95,7 @@ def test_story_continuation_no_story_beginning(focus_group_world):
 * **Error Handling:** Added `pytest.raises` to test for exceptions, and more importantly, assertions are added to check the error messages returned.
 
 
-* **Valid Input Test:** Added a test for a valid story continuation, demonstrating the basic usage.
+* **Valid Input Test:** Added a test for a valid story continuation, demonStarting the basic usage.
 
 
 * **Empty Input Test:**  Added a test case specifically for an empty story beginning, expecting a meaningful exception.

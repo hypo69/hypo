@@ -64,7 +64,7 @@ def test_AliexpressAffiliateProductQueryRequest_invalid_port():
 
 2. **`getapiname` Test:** A test case specifically for the `getapiname` method is added, confirming its expected return value.
 
-3. **Attribute Setting Test:** A test `test_AliexpressAffiliateProductQueryRequest_set_attributes` demonstrates how to set attributes after object creation.
+3. **Attribute Setting Test:** A test `test_AliexpressAffiliateProductQueryRequest_set_attributes` demonStartes how to set attributes after object creation.
 
 4. **Invalid Input Test:** `test_AliexpressAffiliateProductQueryRequest_invalid_port` shows how to use `pytest.raises` to check for a specific exception (TypeError in this case).
 

@@ -128,7 +128,7 @@ The `printer.py` module includes functions to send files or formatted data to a 
 
 ## Usage Examples
 
-Here are some usage examples demonstrating how to work with the **Tiny Utils** library.
+Here are some usage examples demonStarting how to work with the **Tiny Utils** library.
 
 ### Convert Text to PNG Image
 

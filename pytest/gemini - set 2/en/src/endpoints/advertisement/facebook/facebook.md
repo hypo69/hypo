@@ -98,7 +98,7 @@ def test_facebook_init_driver_error(mocker):
 
 3. **Clearer Test Names:** Test function names are more descriptive (e.g., `test_login_success`).
 
-4. **Edge Case (test_promote_post_invalid_input):**  An example of testing an invalid input scenario is included.  Importantly, it demonstrates using `pytest.raises` to check for expected exceptions.
+4. **Edge Case (test_promote_post_invalid_input):**  An example of testing an invalid input scenario is included.  Importantly, it demonStartes using `pytest.raises` to check for expected exceptions.
 
 5. **Error Handling (test_facebook_init_driver_error):** A crucial addition that checks for errors during initialization of the `Facebook` object.  Simulates an error from the driver.
 

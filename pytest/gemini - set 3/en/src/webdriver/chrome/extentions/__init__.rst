@@ -67,7 +67,7 @@ def test_version_invalid_format():
 
 2. **Specific Assertions:** Assertions are more specific to the expected outcome (e.g., `isinstance(__version__, str)`).
 
-3. **Edge Case `test_version_invalid_format`:**  Demonstrates testing for invalid input by using `pytest.raises`.
+3. **Edge Case `test_version_invalid_format`:**  DemonStartes testing for invalid input by using `pytest.raises`.
 
 4. **Handling `__details__`:** The test for `__details__` checks for `None` and verifies that it's a `dict` or `dict-like` object.  Crucially, it uses a `try...except` block, which is *essential* to catch any `AttributeError` if `__details__` doesn't have the expected methods.
 

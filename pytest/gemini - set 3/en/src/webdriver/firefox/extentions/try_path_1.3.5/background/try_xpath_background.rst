@@ -119,9 +119,9 @@ def test_showAllResults(mock_browser):
 
 3. **Clearer Test Structure:** The test functions now have better names (`test_storePopupState_valid_message`) and use more descriptive assertions.
 
-4. **Example Tests:**  The provided test examples now illustrate how to interact with the mocked `browser` object to simulate messages and assertions.
+4. **Example Tests:**  The provided test examples now illuStarte how to interact with the mocked `browser` object to simulate messages and assertions.
 
-5. **Edge Cases (Partial):**  The `test_showAllResults` example demonstrates a start of testing a valid input.
+5. **Edge Cases (Partial):**  The `test_showAllResults` example demonStartes a start of testing a valid input.
 
 
 **How to Run:**
@@ -142,7 +142,7 @@ def test_showAllResults(mock_browser):
 
 * **More Comprehensive `browser` Mocking:**  The `MockBrowser` needs more robust mocking to correctly simulate asynchronous operations, error handling, and responses.  The examples show placeholder functions. You need to implement the actual logic for the mock functions according to how your browser API works.
 
-* **Error Handling:** The original JavaScript has error handling (`fu.onError`).  Your tests should also include tests to verify that the error handling logic works as expected when errors are raised.  The example now includes a test for `test_requestRestorePopupState` to illustrate error catching.
+* **Error Handling:** The original JavaScript has error handling (`fu.onError`).  Your tests should also include tests to verify that the error handling logic works as expected when errors are raised.  The example now includes a test for `test_requestRestorePopupState` to illuStarte error catching.
 
 * **Asynchronous Operations:**  Test cases for asynchronous operations (e.g., `loadDefaultCss`) require careful handling of promises and callbacks using the mock browser functions.
 

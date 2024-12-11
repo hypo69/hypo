@@ -81,7 +81,7 @@ def test_init_sets_domain_and_port():
 
 4. **Domain and Port Tests:** `test_init_sets_domain_and_port` checks if the `__init__` correctly handles custom domain and port values.
 
-5. **No Exception Handling Test (Placeholder):**  A placeholder is included for exception handling, demonstrating how to use `pytest.raises` if the class would raise exceptions for invalid parameters.
+5. **No Exception Handling Test (Placeholder):**  A placeholder is included for exception handling, demonStarting how to use `pytest.raises` if the class would raise exceptions for invalid parameters.
 
 
 **Crucial Missing Context:**

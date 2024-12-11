@@ -102,11 +102,11 @@ def test_ask_question_next(mock_randint, app_with_mock):
 
 3. **`test_open_browser`:**  This test directly checks if `webbrowser.open` was called.  It's important to test this, as a failure to open the browser would be a major issue.
 
-4. **`test_ask_question_valid`:** Demonstrates a test for a valid input.
+4. **`test_ask_question_valid`:** DemonStartes a test for a valid input.
 
 5. **`test_ask_question_empty_question`:**  Added a test for an empty question, which is a crucial edge case.
 
-6. **`test_ask_question_next`:** Demonstrates a test case for the "--next" input to verify that the logic of choosing a random question is working as intended. This checks that a response is returned if the user enters `--next`.
+6. **`test_ask_question_next`:** DemonStartes a test case for the "--next" input to verify that the logic of choosing a random question is working as intended. This checks that a response is returned if the user enters `--next`.
 
 7. **Clearer Assertions:** Assertions are now more specific, e.g., checking for the presence of the mock response within the returned text.
 

@@ -105,7 +105,7 @@ def test_j_loads_nonexistent_file(dummy_logger):
 
 * **`tmp_path` Fixture:** Added a `tmp_path` fixture from pytest, enabling you to create and delete temporary files and directories without cluttering your project's actual file system during the tests.
 
-* **Comprehensive Tests:**  Provided a basic example test for `j_dumps`, demonstrating the creation and verification of a JSON file. Also includes tests for an invalid JSON input string as a parameter and a missing file.
+* **Comprehensive Tests:**  Provided a basic example test for `j_dumps`, demonStarting the creation and verification of a JSON file. Also includes tests for an invalid JSON input string as a parameter and a missing file.
 
 * **File Cleanup:** Added `temp_file.unlink()` to cleanup the created temporary file after each test.  This is essential for keeping your test directory clean.
 

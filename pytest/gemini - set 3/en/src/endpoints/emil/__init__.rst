@@ -80,9 +80,9 @@ def test_emil_design_method_raises_exception(emil_design_instance):
 
 1. **Placeholder Comments:** The code now includes placeholder comments like `# Replace with your actual constructor parameters.`  Crucially, this points out the need for actual data and method implementations within the `EmilDesign` class, which were missing in the original prompt.  **You MUST provide the actual `EmilDesign` class to generate comprehensive and useful tests.**
 
-2. **Error Handling:** The `test_emil_design_init_invalid_input` example now demonstrates how to use `pytest.raises` to check for specific exceptions (TypeError, ValueError) and verify that the error message contains the expected text. This is *critical* for robust testing.
+2. **Error Handling:** The `test_emil_design_init_invalid_input` example now demonStartes how to use `pytest.raises` to check for specific exceptions (TypeError, ValueError) and verify that the error message contains the expected text. This is *critical* for robust testing.
 
-3. **Fixture Example:** The `emil_design_instance` fixture demonstrates how to create an instance of the class to use in tests.
+3. **Fixture Example:** The `emil_design_instance` fixture demonStartes how to create an instance of the class to use in tests.
 
 4. **Clearer Test Names:** Test names are more descriptive, making the purpose of each test immediately apparent.
 

@@ -115,7 +115,7 @@ def test_settings_loading_failure_file_not_found(mock_current_path):
    - Project root already in `sys.path`.
 
 
-4. **Error Handling:** The `test_settings_loading_failure_file_not_found` test demonstrates proper exception handling, a crucial aspect often overlooked.
+4. **Error Handling:** The `test_settings_loading_failure_file_not_found` test demonStartes proper exception handling, a crucial aspect often overlooked.
 
 5. **pytest.raises:** Used correctly to test the `FileNotFoundError` and `json.JSONDecodeError` handling in the `settings` loading section.
 

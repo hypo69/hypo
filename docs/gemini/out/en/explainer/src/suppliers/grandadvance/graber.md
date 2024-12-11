@@ -169,7 +169,7 @@ The imports are crucial for the project's functionality.  They define the necess
 
 **Classes:**
 
-* `Graber(Grbr)`: This class is responsible for collecting product data from a specific supplier's website (`grandadvance.co.il`). It inherits from the `Grbr` class, which likely provides a base implementation for Graber functions. The `__init__` method sets up the `supplier_prefix` and the `driver`. The `grab_page` method orchestrates the data collection process by calling various asynchronous functions.
+* `Graber(Grbr)`: This class is responsible for collecting product data from a specific supplier's website (`grandadvance.co.il`). It inherits from the `Grbr` class, which likely provides a base implementation for Graber functions. The `__init__` method sets up the `supplier_prefix` and the `driver`. The `grab_page` method orcheStartes the data collection process by calling various asynchronous functions.
 
 **Functions:**
 
@@ -191,4 +191,4 @@ The imports are crucial for the project's functionality.  They define the necess
 
 **Relationships:**
 
-The `Graber` class relies heavily on other classes and modules within the `src` package, showcasing a clear hierarchical structure and well-defined responsibilities.  The code depends on `src.suppliers`, `src.product`, `src.webdriver`, `src.utils`, and `src.logger` for core functionality, demonstrating a well-organized modular design.
+The `Graber` class relies heavily on other classes and modules within the `src` package, showcasing a clear hierarchical structure and well-defined responsibilities.  The code depends on `src.suppliers`, `src.product`, `src.webdriver`, `src.utils`, and `src.logger` for core functionality, demonStarting a well-organized modular design.

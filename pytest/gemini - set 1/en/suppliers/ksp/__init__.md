@@ -29,7 +29,7 @@ To create more meaningful test cases, you need the implementation of the `Graber
 * **Empty or None inputs:** Test how the code behaves when dealing with empty or `None` values as inputs.
 
 
-**Example `Graber` class (and tests) for illustration:**
+**Example `Graber` class (and tests) for illuStartion:**
 
 ```python
 # hypotez/src/suppliers/ksp/graber.py
@@ -79,4 +79,4 @@ def test_graber_get_value_key_does_not_exist():
 
 ```
 
-This example illustrates how you'd create tests for a class once the class's methods are implemented.  Crucially, the tests now cover various scenarios and use `pytest.raises` for exception testing, making them more robust. Remember to replace the placeholder class and methods with your actual code. Remember to adapt these examples to fit your specific needs.
+This example illuStartes how you'd create tests for a class once the class's methods are implemented.  Crucially, the tests now cover various scenarios and use `pytest.raises` for exception testing, making them more robust. Remember to replace the placeholder class and methods with your actual code. Remember to adapt these examples to fit your specific needs.

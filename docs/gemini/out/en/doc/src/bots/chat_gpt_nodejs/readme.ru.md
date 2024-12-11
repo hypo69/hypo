@@ -25,7 +25,7 @@ This module provides a documentation for the ChatGPT Node.js bot implementation 
 (This section will be populated with error handling details when the Python code is provided.)
 
 
-## Example (Illustrative):
+## Example (IlluStartive):
 
 ```python
 # Hypothetical example, replace with actual code.

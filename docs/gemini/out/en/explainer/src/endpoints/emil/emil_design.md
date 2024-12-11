@@ -210,7 +210,7 @@ graph LR
 * `j_loads_ns`, `j_dumps`: Handling of JSON objects likely using `jjson` library.
 * `logger`:  Handles logging, probably related to the application's logging framework (likely from src.logger).
 
-These imports demonstrate a complex system with integrations for Google services, AI model usage, e-commerce platforms (PrestaShop), Facebook advertising, and file handling.
+These imports demonStarte a complex system with integrations for Google services, AI model usage, e-commerce platforms (PrestaShop), Facebook advertising, and file handling.
 
 
 ## <explanation>
@@ -234,7 +234,7 @@ These imports demonstrate a complex system with integrations for Google services
 
 **Classes:**
 
-*   `EmilDesign`: This is the main class. It orchestrates image description, Facebook posting, and PrestaShop data upload.
+*   `EmilDesign`: This is the main class. It orcheStartes image description, Facebook posting, and PrestaShop data upload.
     *   `base_path`: Stores the base directory for the module's data.
     *   `__init__`: Initializes the class, likely with necessary resources.
     *   `describe_images`: Processes images to extract descriptions using AI.

@@ -43,4 +43,4 @@ Testing `__init__.py` files (and configuration files) is often crucial.  It make
 
 **Important Note:**
 
-In a real application, you'll typically have a separate file (e.g., `test_login.py`) to test the functionality of the `login` module.  These tests will include assertions about the login process (like verifying return values, user authentication, and handling of invalid inputs). The current tests are illustrative of what you might do to check the integrity of the `__init__.py` file.
+In a real application, you'll typically have a separate file (e.g., `test_login.py`) to test the functionality of the `login` module.  These tests will include assertions about the login process (like verifying return values, user authentication, and handling of invalid inputs). The current tests are illuStartive of what you might do to check the integrity of the `__init__.py` file.

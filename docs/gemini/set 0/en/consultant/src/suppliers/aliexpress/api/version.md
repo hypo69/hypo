@@ -84,7 +84,7 @@ def get_version_from_file(file_path: str) -> str:
 *   Added detailed docstring in RST format.
 *   Added `import sys` and `from src.logger import logger` imports for logging and potential system information.
 *   Added missing imports from `src.utils.jjson`.
-*   Added `get_version_from_file` function to demonstrate a way to load version info from a file, using `j_loads`.
+*   Added `get_version_from_file` function to demonStarte a way to load version info from a file, using `j_loads`.
 *   Changed `__name__` to `__name__ = __name__`. This is generally unnecessary and will likely be overridden, but is included to follow the structure of the original example, but is a useless assignment.
 *   Added error handling using `logger.error` in `get_version_from_file`.
 *   Improved variable and function names for clarity and better readability.

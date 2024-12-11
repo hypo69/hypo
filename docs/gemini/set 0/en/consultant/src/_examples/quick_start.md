@@ -70,7 +70,7 @@ MODE = 'dev'
 
 def quick_start_example():
     """
-    Performs a quick start demonstration of hypotez functionalities.
+    Performs a quick start demonStartion of hypotez functionalities.
 
     :raises Exception: If an error occurs during JSON loading or processing.
     """
@@ -145,7 +145,7 @@ MODE = 'dev'
 
 def quick_start_example():
     """
-    Performs a quick start demonstration of hypotez functionalities.
+    Performs a quick start demonStartion of hypotez functionalities.
 
     :raises Exception: If an error occurs during JSON loading or processing.
     """

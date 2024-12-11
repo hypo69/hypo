@@ -2,7 +2,7 @@
 import pytest
 
 # No functions or classes provided in the input code, so no tests can be written.
-#  The following example demonstrates testing a hypothetical function.
+#  The following example demonStartes testing a hypothetical function.
 # Replace this with actual tests based on the provided Python code.
 
 def test_hypothetical_function_valid_input():
@@ -54,7 +54,7 @@ def example_data():
 
 **Explanation and Important Considerations:**
 
-1. **No Code to Test:** The provided text is a document, not Python code.  There's no Python function or class to test.  I've added a placeholder `hypothetical_function` for illustrative purposes.
+1. **No Code to Test:** The provided text is a document, not Python code.  There's no Python function or class to test.  I've added a placeholder `hypothetical_function` for illuStartive purposes.
 
 2. **Replace Placeholders:** The test functions (`test_hypothetical_function_*`) are placeholders.  **You must replace the comments inside these functions with the actual calls to the functions in your code** and the expected outputs or exceptions.
 

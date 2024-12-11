@@ -123,7 +123,7 @@ def test_send_message_exception(execute_locator, driver_mock):
 * **Clearer Test Names:**  Test names now accurately describe the scenario being tested.
 * **Explicit Assertions:**  Direct assertions (e.g., `assert result == element`) replace implicit checks, improving clarity and debugging.
 * **Edge Cases:** The `test_get_webelement_by_locator_no_element` test now explicitly checks for the correct response when no element is found.
-* **Exception Handling:**  A `test_send_message_exception` test case demonstrates how to check for exceptions raised by `send_keys` or other methods in the `ExecuteLocator` class.  It's crucial to test exception handling.
+* **Exception Handling:**  A `test_send_message_exception` test case demonStartes how to check for exceptions raised by `send_keys` or other methods in the `ExecuteLocator` class.  It's crucial to test exception handling.
 * **Return Values:** Tests for `get_webelement_by_locator` ensure correct handling and return values for cases with single or multiple elements, and no elements.
 * **Comprehensive Examples:**   The provided example tests are now more complete, covering potential errors and different scenarios.
 

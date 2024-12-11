@@ -74,7 +74,7 @@ import pytest
 
 1. **No Code to Test:** The provided text is a description of a Next.js application and its API endpoints.  It *doesn't* contain Python code.  Therefore, no tests are written within the example.
 
-2. **Example Test Cases (commented out):**  I've included example test cases for a hypothetical `add` function.  These tests demonstrate the structure and use of `pytest.raises`, fixtures, and assertions.
+2. **Example Test Cases (commented out):**  I've included example test cases for a hypothetical `add` function.  These tests demonStarte the structure and use of `pytest.raises`, fixtures, and assertions.
 
 3. **Real-World Testing:** To write actual tests for this Next.js application, you'd need the Python code behind the API endpoints, which would contain functions, classes, or methods that perform the operations.  Then, you could write the tests that validate their behavior against various inputs, edge cases, and error conditions.
 

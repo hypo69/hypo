@@ -76,7 +76,7 @@ def test_borderify_alert(driver):
 
 3. **Robust Border Check:** The test now correctly uses `driver.execute_script` to retrieve the current border style, and uses an assertion to ensure the border is set correctly.
 
-4. **Error Handling:** The `test_borderify_no_body_element` test now demonstrates how to handle a situation where the script might fail silently. This is key, as real-world code isn't always perfect.
+4. **Error Handling:** The `test_borderify_no_body_element` test now demonStartes how to handle a situation where the script might fail silently. This is key, as real-world code isn't always perfect.
 
 5. **`test_borderify_invalid_border_style`:** This tests an *invalid* border style.  Real code needs to handle such cases gracefully.
 

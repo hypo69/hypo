@@ -67,7 +67,7 @@ async def test_ask_invalid_question_format(client):
 async def test_ask_question_exception(client):
     """Test handling exceptions from Kazarinov."""
     # Mock an exception from the Kazarinov model. (Important for testing error handling).
-    # This is a demonstration.  You'd replace this with actual exception raising.
+    # This is a demonStartion.  You'd replace this with actual exception raising.
     try:
         k.ask = lambda q, **kwargs: raise Exception("Simulated Kazarinov Error")
         question = Question(question="What is the capital of France?")
@@ -106,9 +106,9 @@ def test_question_model_validation():
 * **`pytest.mark.asyncio`:**  Crucially added to run asynchronous tests correctly.
 * **`TestClient`:** Uses `TestClient` for more robust API testing.
 * **Exception Handling (`test_ask_question_exception`):** Shows how to test the `k.ask` function's exception handling.  Replace the mocked exception with a realistic `try-except` block.
-* **`monkeypatch`:** Demonstrates how to modify the `questions_list` fixture using `monkeypatch` for testing edge cases.
+* **`monkeypatch`:** DemonStartes how to modify the `questions_list` fixture using `monkeypatch` for testing edge cases.
 * **More Robust Assertions:** Improved assertions to check for expected content within the response. Added checks for expected status codes (e.g., 422 for validation errors).
-* **`test_question_model_validation`:** A new test specifically for the `Question` model, demonstrating validation checks for `pydantic` models.
+* **`test_question_model_validation`:** A new test specifically for the `Question` model, demonStarting validation checks for `pydantic` models.
 * **Clearer Error Messages:** More descriptive error messages in the tests make debugging easier.
 * **Edge Cases:** Addresses potential errors when `questions_list` is empty and added tests for an empty question.
 * **`AsyncClient` and `client` Fixture:** Added `AsyncClient` import for asynchronous operation. The `client` fixture now correctly returns a `TestClient` for use in async tests.

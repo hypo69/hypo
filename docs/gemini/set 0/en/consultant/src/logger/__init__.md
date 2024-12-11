@@ -73,7 +73,7 @@ from .exceptions import ( ExecuteLocatorException,
 - Added a comprehensive module-level docstring in reStructuredText (RST) format, explaining the module's purpose, example usage, and platform compatibility.
 - Removed unnecessary `platform` information from the docstring.
 - Rewrote the existing comments into informative RST format.
-- Improved example usage in the module docstring to demonstrate logging and custom exception handling.
+- Improved example usage in the module docstring to demonStarte logging and custom exception handling.
 - Removed unnecessary `TODO` placeholders.
 - Corrected use of `src.logger.logger` for error logging throughout the file.
 

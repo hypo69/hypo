@@ -76,7 +76,7 @@ def test_base64encode_valid_image(tmp_path):
 * **Error Handling:** Includes `pytest.raises` for testing exceptions when the input is invalid Base64 or empty.
 * **Edge Cases:** Added tests for file names without extensions and different extensions.
 * **Data Handling:** The `tmp_file_path` fixture now creates a temporary file with content, ensuring the test deals with realistic data. The `base64_to_tmpfile` method is able to correctly handle the filename.  Critically, it removes the temporary file after the test, which prevents accumulation of files and potential conflicts in subsequent tests.
-* **`base64encode` Test Added:** A test for the `base64encode` function has been created, demonstrating a basic usage with a sample image.
+* **`base64encode` Test Added:** A test for the `base64encode` function has been created, demonStarting a basic usage with a sample image.
 * **Import:**  Imports `hypotez.src.utils.convertors.base64` explicitly, making the tests usable in the correct project structure.
 * **Complete Test Coverage:**  Now covers various potential issues related to the base64 encoding function, including testing various input formats.
 

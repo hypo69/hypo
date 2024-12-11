@@ -67,7 +67,7 @@ def test_version_not_int():
 
 4. **Type Checking:**  Checks if the variables are of the expected types (string, dictionary, etc.).
 
-5. **Exception Handling (Example):**  A placeholder `test_version_not_int` is included to demonstrate how to test for exceptions (if the code raises any).
+5. **Exception Handling (Example):**  A placeholder `test_version_not_int` is included to demonStarte how to test for exceptions (if the code raises any).
 
 6. **Docstrings:** Docstrings are added to each test function to explain its purpose and the scenario being tested.
 

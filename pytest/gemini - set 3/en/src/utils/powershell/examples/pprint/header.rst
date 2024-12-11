@@ -80,4 +80,4 @@ This revised solution provides a more comprehensive and robust set of tests for 
 
 * **`os.getcwd()`:** Be mindful that `os.getcwd()` can return a path that might change, potentially leading to different outcomes in your tests. Consider using a more controlled path setup if possible for a more stable test suite.
 * **Error handling:** Add more specific error handling and exception checks (e.g., `FileNotFoundError`, etc.) to the test cases as needed.
-* **Data-driven testing:** For a larger, more complex application, consider data-driven testing strategies.
+* **Data-driven testing:** For a larger, more complex application, consider data-driven testing Startegies.

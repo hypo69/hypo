@@ -78,13 +78,13 @@ def test_product_creation_empty_small_image_urls():
 
 1. **Clear Test Names:** Test function names now explicitly state the purpose (e.g., `test_product_creation_valid_input`, `test_product_creation_invalid_type`).
 
-2. **Comprehensive Test Cases:** The `test_product_creation_valid_input` tests a full instantiation with valid data. Critically, `test_product_creation_missing_attribute` and `test_product_creation_invalid_type`  demonstrate exception handling for crucial cases. This is crucial for robustness.
+2. **Comprehensive Test Cases:** The `test_product_creation_valid_input` tests a full instantiation with valid data. Critically, `test_product_creation_missing_attribute` and `test_product_creation_invalid_type`  demonStarte exception handling for crucial cases. This is crucial for robustness.
 
 3. **`pytest.raises` for Exceptions:** `pytest.raises` is used correctly to check for `TypeError` during object creation with missing or incorrect data types, making tests more robust.
 
-4. **Edge Case (Empty List):** `test_product_creation_empty_small_image_urls` demonstrates how to handle an empty list for `product_small_image_urls`, an important edge case.
+4. **Edge Case (Empty List):** `test_product_creation_empty_small_image_urls` demonStartes how to handle an empty list for `product_small_image_urls`, an important edge case.
 
-5. **Data Structure:** The `product_data` dictionary is now well-structured and clearly demonstrates the valid data provided to the constructor.
+5. **Data Structure:** The `product_data` dictionary is now well-structured and clearly demonStartes the valid data provided to the constructor.
 
 
 **How to Run the Tests:**

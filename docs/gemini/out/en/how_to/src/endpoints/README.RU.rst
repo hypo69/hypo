@@ -8,7 +8,7 @@ The `endpoints` module provides an API for interacting with data consumers.  Eac
 
 Execution steps
 -------------------------
-1. **Understanding the Module Structure:** The `endpoints` module is organized into subdirectories, each dedicated to a specific service (e.g., PrestaShop, advertisement platforms, Emil service, etc.).  These subdirectories contain the necessary classes and functions for interacting with the corresponding service's API. The provided mermaid diagram visually illustrates this structure.
+1. **Understanding the Module Structure:** The `endpoints` module is organized into subdirectories, each dedicated to a specific service (e.g., PrestaShop, advertisement platforms, Emil service, etc.).  These subdirectories contain the necessary classes and functions for interacting with the corresponding service's API. The provided mermaid diagram visually illuStartes this structure.
 
 2. **Identifying the Target Service:** Determine which service you need to interact with (e.g., PrestaShop, advertisement, Emil, etc.).  Refer to the section `Final Consumer Endpoints` and `Description of Modules` for details on the different services and their functionalities.
 

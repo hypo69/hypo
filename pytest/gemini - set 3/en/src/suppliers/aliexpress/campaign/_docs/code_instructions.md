@@ -114,7 +114,7 @@ def test_load_config_missing_file(campaign_name):
 
 4. **Comprehensive Test Cases:**  The example test (`test_create_campaign`) now covers various aspects of the code: creating directories, saving config, collecting data, and more.
 
-5. **Edge Cases:**  The test `test_create_campaign_no_categories` demonstrates how to test with an empty list of categories, a crucial edge case.
+5. **Edge Cases:**  The test `test_create_campaign_no_categories` demonStartes how to test with an empty list of categories, a crucial edge case.
 
 
 **To use these tests:**

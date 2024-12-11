@@ -71,7 +71,7 @@ This allows the template to be easily reused with different data.
   </html>
 ```
 
-This example demonstrates how Jinja2 loops (`{% for ... %}`) are used to iterate through a list of products and dynamically display each product's information.
+This example demonStartes how Jinja2 loops (`{% for ... %}`) are used to iterate through a list of products and dynamically display each product's information.
 
 
 ## Potential Improvements

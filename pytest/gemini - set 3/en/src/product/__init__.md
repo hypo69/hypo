@@ -58,7 +58,7 @@ def test_product_get_price(product_instance):
     assert product_instance.price == 10.0
 
 
-# Example test to demonstrate testing attribute values
+# Example test to demonStarte testing attribute values
 
 def test_product_set_name(product_instance):
     """Tests setting the name of the Product object"""
@@ -81,10 +81,10 @@ def test_product_set_name(product_instance):
 **Explanation and Important Considerations:**
 
 1. **`translate_presta_fields_dict` Tests:**
-   - The provided tests cover a valid input case, an empty input case and a `None` input case for robustness, demonstrating how to use `pytest.raises`.  Crucially, you should add more tests with different kinds of input data to thoroughly cover possible scenarios the function might encounter.
+   - The provided tests cover a valid input case, an empty input case and a `None` input case for robustness, demonStarting how to use `pytest.raises`.  Crucially, you should add more tests with different kinds of input data to thoroughly cover possible scenarios the function might encounter.
 2. **`Product` Class Tests:**
    - **Fixtures:** A fixture (`product_instance`) is defined to create a `Product` object for use in multiple test functions. This improves code organization and reduces repetition.
-   - **Example Tests:** The example tests (`test_product_get_name`, etc.) demonstrate a basic structure. **You must replace these examples with tests that align with the actual methods and attributes of your `Product` class.**  Include tests for cases with empty/missing values as well as any other exceptional conditions for complete coverage.
+   - **Example Tests:** The example tests (`test_product_get_name`, etc.) demonStarte a basic structure. **You must replace these examples with tests that align with the actual methods and attributes of your `Product` class.**  Include tests for cases with empty/missing values as well as any other exceptional conditions for complete coverage.
 
 3. **Error Handling:** The example error handling tests show how to use `pytest.raises` to check if exceptions are thrown with invalid input.  Implement similar tests if your code handles exceptions.
 

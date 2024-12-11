@@ -49,9 +49,9 @@ def test_version_contains_all_digits_and_dots():
 
 2. **Comprehensive Checks:** The tests now check the type of `__version__` and the format (containing only digits and dots). This covers the core validation of the version string.
 
-3. **Edge Cases:** The example `test_version_contains_all_digits_and_dots` demonstrates how to test edge cases. This test was added to show how one would verify version format consistency using pytest.
+3. **Edge Cases:** The example `test_version_contains_all_digits_and_dots` demonStartes how to test edge cases. This test was added to show how one would verify version format consistency using pytest.
 
-4. **Correct Error Handling (Example):** The commented-out example (`test_function_with_invalid_input`) demonstrates how to use `pytest.raises` for exception handling.  If your actual code has a function that might raise exceptions, you'd add a test case like this to validate that it's handling those exceptions correctly.
+4. **Correct Error Handling (Example):** The commented-out example (`test_function_with_invalid_input`) demonStartes how to use `pytest.raises` for exception handling.  If your actual code has a function that might raise exceptions, you'd add a test case like this to validate that it's handling those exceptions correctly.
 
 5. **Docstrings:**  Each test function now has a docstring explaining its purpose.
 

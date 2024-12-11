@@ -111,7 +111,7 @@ def test_kazarinov_ai_ask(mock_kazarinov_ai):
 
 2. **Mock Data:** The `mock_files` fixture in the tests provides sample data to interact with the functions.  This is better than relying on real files or external API calls for testing.
 
-3. **`@pytest.mark.parametrize` (Example):** The commented-out example demonstrates how to use `@pytest.mark.parametrize` for more comprehensive testing with multiple input/output scenarios in a structured manner.  However, there is no valid input_data or expected output in your original code, so it's removed.
+3. **`@pytest.mark.parametrize` (Example):** The commented-out example demonStartes how to use `@pytest.mark.parametrize` for more comprehensive testing with multiple input/output scenarios in a structured manner.  However, there is no valid input_data or expected output in your original code, so it's removed.
 
 
 4. **Clearer Test Functions:**  Test function names now accurately reflect the purpose of the test.

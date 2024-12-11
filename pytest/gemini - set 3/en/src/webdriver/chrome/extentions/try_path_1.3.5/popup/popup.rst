@@ -103,9 +103,9 @@ def test_changeContextVisible_false():
 
 3. **Mocking:**  Crucially, the tests now mock browser API functions like `browser.tabs.query` and `browser.tabs.sendMessage`. This is essential because the JavaScript relies on asynchronous operations, and direct interaction with the browser is inappropriate for testing.  **You will need to use a suitable mocking library (like `unittest.mock` or `pytest-mock`)** to properly replace these with mock implementations in your `test_` functions.
 
-4. **More Comprehensive Test Cases (Example):**  The `test_send_to_active_tab_valid_input` and `test_send_to_active_tab_invalid_input` are better examples of how to structure tests.  They illustrate testing with valid and invalid inputs, respectively.  **Crucially, this example is a *starting point***. You need to write significantly more tests to cover all scenarios and edge cases.
+4. **More Comprehensive Test Cases (Example):**  The `test_send_to_active_tab_valid_input` and `test_send_to_active_tab_invalid_input` are better examples of how to structure tests.  They illuStarte testing with valid and invalid inputs, respectively.  **Crucially, this example is a *starting point***. You need to write significantly more tests to cover all scenarios and edge cases.
 
-5. **Example `test_collectPopupState`:** This test demonstrates how to mock the JavaScript objects.
+5. **Example `test_collectPopupState`:** This test demonStartes how to mock the JavaScript objects.
 
 
 **To run these tests:**

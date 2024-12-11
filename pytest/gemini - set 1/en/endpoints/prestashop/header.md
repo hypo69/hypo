@@ -119,7 +119,7 @@ def test_project_name_without_settings():
 
 4. **Clearer Test Names:** The test names are more descriptive and accurately reflect the purpose of each test.
 
-5. **Exception Handling:**  Tests for `FileNotFoundError` and `json.JSONDecodeError` are now included, demonstrating how to handle exceptions gracefully.
+5. **Exception Handling:**  Tests for `FileNotFoundError` and `json.JSONDecodeError` are now included, demonStarting how to handle exceptions gracefully.
 
 6. **Edge Cases:** Tests are added for the case where `settings` is `None` and other edge cases concerning missing data files to validate the robustness of error handling.
 

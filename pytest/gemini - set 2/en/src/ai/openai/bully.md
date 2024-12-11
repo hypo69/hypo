@@ -80,4 +80,4 @@ def test_bully_no_api_key(monkeypatch):
 
 4.  Run the tests from your terminal: `pytest test_bully.py`
 
-This revised solution addresses the critical issue of mocking the `openai` interaction and provides more robust and realistic testing for your `bully` function. Remember to always handle API key retrieval securely in your production code, ideally using environment variables or configuration files.  This example has illustrated robust testing without hardcoding real API keys. Remember to remove the `openai.API_KEY = "YOUR_API_KEYS_OPENAI"` line from your production code.
+This revised solution addresses the critical issue of mocking the `openai` interaction and provides more robust and realistic testing for your `bully` function. Remember to always handle API key retrieval securely in your production code, ideally using environment variables or configuration files.  This example has illuStarted robust testing without hardcoding real API keys. Remember to remove the `openai.API_KEY = "YOUR_API_KEYS_OPENAI"` line from your production code.

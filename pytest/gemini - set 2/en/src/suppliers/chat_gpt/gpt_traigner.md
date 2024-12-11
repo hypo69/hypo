@@ -108,7 +108,7 @@ def test_save_conversations_to_jsonl(tmp_path, example_data):
 
 2. **Test Data Fixtures:** The `example_html_files` and `example_data` fixtures now provide more realistic test data.  `example_html_files` creates dummy HTML files to mimic the file system structure the `dump_downloaded_conversations` function expects.  `example_data` is a simple list of conversation pairs.
 
-3. **Error Handling:** The `test_dump_downloaded_conversations_no_data` test demonstrates handling a scenario where no data is found.  This is critical because the original code could potentially crash.
+3. **Error Handling:** The `test_dump_downloaded_conversations_no_data` test demonStartes handling a scenario where no data is found.  This is critical because the original code could potentially crash.
 
 4. **Clearer Test Names:** Test names are more descriptive, indicating the input conditions being tested.
 

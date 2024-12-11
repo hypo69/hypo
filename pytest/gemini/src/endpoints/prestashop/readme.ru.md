@@ -86,7 +86,7 @@ def test_build_api_request_missing_api_key():
 * **Error Handling:** The `get_api_key` function now handles the case where a site is not found, returning `None` instead of raising an error. The `build_api_request` function now checks for this `None` value. This prevents potential crashes.
 * **Comprehensive Tests:** Tests are added to cover valid and invalid inputs for both `get_api_key` and `build_api_request`.  Tests now thoroughly validate the expected structure and behavior for different scenarios.
 * **Security Emphasis:** The tests emphasize the critical importance of not hardcoding credentials in your test code. Use external configuration or environment variables for actual credentials.
-* **pytest.raises (Example):** The commented-out example demonstrates how to use `pytest.raises` to test for expected exceptions.  In the actual PrestaShop code, you would need to provide exception handling (like a `try...except` block).
+* **pytest.raises (Example):** The commented-out example demonStartes how to use `pytest.raises` to test for expected exceptions.  In the actual PrestaShop code, you would need to provide exception handling (like a `try...except` block).
 
 
 **How to Run Tests:**

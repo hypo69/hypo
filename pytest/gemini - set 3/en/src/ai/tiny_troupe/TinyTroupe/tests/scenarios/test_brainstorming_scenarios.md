@@ -107,7 +107,7 @@ def test_brainstorming_scenario_invalid_objective(setup, focus_group_world):
 * **Agent interaction:** The tests now simulate agent interaction (`agent.listen_and_act`). This is a placeholder; you should replace it with the actual interaction logic or, more realistically, mock the agent interactions to keep the tests focussed on the core functions you are testing.
 * **Replace placeholders:**  Replace `create_lisa_the_data_scientist` with the actual agent creation logic from your code.
 * **Assertions:** The crucial assertions are now based on content and type. This makes the test significantly more valuable.
-* **Error Handling:** The new tests demonstrate correct error handling for cases where agents are missing or the objective is not valid.
+* **Error Handling:** The new tests demonStarte correct error handling for cases where agents are missing or the objective is not valid.
 
 
 **How to run the tests:**

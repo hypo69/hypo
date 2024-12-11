@@ -4,7 +4,7 @@ How to use the `affiliated_products_generator` module
 
 Description
 -------------------------
-This code demonstrates how to use the `AliAffiliatedProducts` class to collect product data and generate affiliate links from AliExpress.  It shows how to specify campaign details, provide product URLs or IDs, and process them to obtain affiliate product information.  Crucially, it handles potential errors and prints informative messages.
+This code demonStartes how to use the `AliAffiliatedProducts` class to collect product data and generate affiliate links from AliExpress.  It shows how to specify campaign details, provide product URLs or IDs, and process them to obtain affiliate product information.  Crucially, it handles potential errors and prints informative messages.
 
 Execution steps
 -------------------------

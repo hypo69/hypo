@@ -113,7 +113,7 @@ classDiagram
 
 **Dependencies:**
 
-The diagram shows the direct dependencies between `DriverMeta`, `Driver`, and the Selenium WebDriver classes (`Chrome`, `Firefox`, `Edge`).  The crucial aspect is the dynamic instantiation, where `DriverMeta` uses `webdriver_cls` to construct the `Driver` class that inherits from the chosen WebDriver implementation. This demonstrates the core function of the metaclass: configuring class creation based on input parameters.
+The diagram shows the direct dependencies between `DriverMeta`, `Driver`, and the Selenium WebDriver classes (`Chrome`, `Firefox`, `Edge`).  The crucial aspect is the dynamic instantiation, where `DriverMeta` uses `webdriver_cls` to construct the `Driver` class that inherits from the chosen WebDriver implementation. This demonStartes the core function of the metaclass: configuring class creation based on input parameters.
 
 
 

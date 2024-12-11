@@ -89,7 +89,7 @@ def test_derandomize_name_invalid_choice(randomizer_instance):
 
 2. **Clear Test Names:**  Test names are descriptive, like `test_randomize_valid_input`.
 
-3. **Edge Case (and Invalid Input) Tests:** `test_randomize_different_seeds` tests different seeds to highlight deterministic behavior.  `test_derandomize_nonexistent_choice` demonstrates exception handling for missing choices. `test_derandomize_name_invalid_choice` tests for incorrect choices.
+3. **Edge Case (and Invalid Input) Tests:** `test_randomize_different_seeds` tests different seeds to highlight deterministic behavior.  `test_derandomize_nonexistent_choice` demonStartes exception handling for missing choices. `test_derandomize_name_invalid_choice` tests for incorrect choices.
 
 4. **`pytest.raises` for Exceptions:** `test_derandomize_nonexistent_choice` and `test_derandomize_name_invalid_choice` use `pytest.raises` to verify the expected exceptions.
 

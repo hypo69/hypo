@@ -123,7 +123,7 @@ def test_changeContextVisible():
 
 **Important Considerations:**
 
-* **`browser` object:** The `browser` object (or equivalent) used in the JavaScript code is likely a browser extension API. Your testing strategy must use mocks to simulate these interactions.
+* **`browser` object:** The `browser` object (or equivalent) used in the JavaScript code is likely a browser extension API. Your testing Startegy must use mocks to simulate these interactions.
 * **`fu` object:**  You'll need to mock `fu` (presumably, a helper module) and its functions for comprehensive tests.
 
 **How to Run:**

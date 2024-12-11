@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module contains an example of using the `IopClient` and `IopRequest` classes to upload a file using the AliExpress API. It demonstrates how to create a request, add parameters, including file parameters, execute the request, and handle the response.
+This module contains an example of using the `IopClient` and `IopRequest` classes to upload a file using the AliExpress API. It demonStartes how to create a request, add parameters, including file parameters, execute the request, and handle the response.
 
 ## Table of Contents
 

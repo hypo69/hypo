@@ -89,10 +89,10 @@ def test_brainstorming_scenario_no_agents(focus_group_world):
 2. **Clearer Test Names:** Test function names are more descriptive, reflecting the purpose of the test (e.g., `test_brainstorming_scenario_valid_input`).
 
 
-3. **Exception Handling:** `test_brainstorming_scenario_no_agents` demonstrates how to test for exceptions using `pytest.raises`. This is critical for robustness.
+3. **Exception Handling:** `test_brainstorming_scenario_no_agents` demonStartes how to test for exceptions using `pytest.raises`. This is critical for robustness.
 
 
-4. **Stubbing/Mocking (Crucial):** The provided code interacts with external parts of the `tinytroupe` module.  For effective testing, consider mocking those parts of the code. If the  `world.run` method interacts with external resources, that interaction should also be mocked.  The `testing_utils.py` file's contents are not shown, so the assertion strategy must be inferred and needs improvement.
+4. **Stubbing/Mocking (Crucial):** The provided code interacts with external parts of the `tinytroupe` module.  For effective testing, consider mocking those parts of the code. If the  `world.run` method interacts with external resources, that interaction should also be mocked.  The `testing_utils.py` file's contents are not shown, so the assertion Startegy must be inferred and needs improvement.
 
 5. **Robust Assertions:** The crucial addition is robust assertions. The `assert proposition_holds(...)` is not sufficient.  You need *specific* validations about the structure and content of the `results` string, rather than a vague assertion about a proposition.  The example now includes assertions that verify that `results` is a string and is not empty.  You need more specific, structured validation for real testing.
 

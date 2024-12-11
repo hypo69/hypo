@@ -78,7 +78,7 @@ def test_graber_get_data_invalid_input():
 ```
 
 
-**Crucially**:  These example tests demonstrate different approaches (checking constructor arguments, using `pytest.raises` for error conditions, and validating different input and expected output scenarios).  You **must** adapt the tests based on the actual functionality in the `Graber` class.  Provide the class definition to get more complete and accurate test cases. Remember to include the expected exception types, and how the code should handle exceptions.
+**Crucially**:  These example tests demonStarte different approaches (checking constructor arguments, using `pytest.raises` for error conditions, and validating different input and expected output scenarios).  You **must** adapt the tests based on the actual functionality in the `Graber` class.  Provide the class definition to get more complete and accurate test cases. Remember to include the expected exception types, and how the code should handle exceptions.
 
 
-This improved response demonstrates how to create comprehensive tests when you have a class definition to test.  It also shows the vital step of ensuring that the class itself exists first. Remember to replace the example `Graber` class with the actual one from your code.
+This improved response demonStartes how to create comprehensive tests when you have a class definition to test.  It also shows the vital step of ensuring that the class itself exists first. Remember to replace the example `Graber` class with the actual one from your code.

@@ -50,7 +50,7 @@ def test_init_with_invalid_port_type():
 
 **Explanation and Improvements:**
 
-1. **`pytest.raises` for Exceptions:**  The example now includes tests (`test_init_with_invalid_domain_type`, `test_init_with_invalid_port_type`) to demonstrate how to use `pytest.raises` to check for expected `TypeError` if an incorrect data type is passed to the `__init__` method. This is crucial for robustness.
+1. **`pytest.raises` for Exceptions:**  The example now includes tests (`test_init_with_invalid_domain_type`, `test_init_with_invalid_port_type`) to demonStarte how to use `pytest.raises` to check for expected `TypeError` if an incorrect data type is passed to the `__init__` method. This is crucial for robustness.
 
 2. **Clear Test Names:** The test function names are more explicit (e.g., `test_getapiname`).
 

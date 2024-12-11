@@ -96,7 +96,7 @@ def test_get_campaign_invalid_input():
 
 **Explanation and Improvements:**
 
-* **Dummy Functions:** The code now includes dummy functions (`create_campaign`, `update_campaign`, `get_campaign`) to illustrate how to write tests without needing the actual implementation.  Replace these placeholders with the actual functions from your `ali_promo_campaign.py` and other files.
+* **Dummy Functions:** The code now includes dummy functions (`create_campaign`, `update_campaign`, `get_campaign`) to illuStarte how to write tests without needing the actual implementation.  Replace these placeholders with the actual functions from your `ali_promo_campaign.py` and other files.
 * **`@pytest.fixture`:**  A `@pytest.fixture` `example_data` provides sample data for the tests, which is good practice.  Replace the example data with the real data you expect from your functions.
 * **Clear Test Function Names:** Function names like `test_update_campaign_valid_input` make the purpose of the test clear.
 * **Comprehensive Test Cases:** The example tests cover valid input, invalid input (testing for `ValueError`), and the absence of a campaign (`campaign is None`).

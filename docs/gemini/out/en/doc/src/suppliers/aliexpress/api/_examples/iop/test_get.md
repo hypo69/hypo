@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Python file demonstrates the use of the `iop` library to interact with the AliExpress API. It showcases how to create an API request, set parameters, execute the request, and handle the response.
+This Python file demonStartes the use of the `iop` library to interact with the AliExpress API. It showcases how to create an API request, set parameters, execute the request, and handle the response.
 
 
 ## Table of Contents

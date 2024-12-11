@@ -113,4 +113,4 @@ def test_locator_default_image_url():
 2. Save the code above as a Python file (e.g., `test_locators.py`).
 3. Run the tests from your terminal: `pytest test_locators.py`
 
-This improved test suite is more robust, focusing on data integrity and validation rather than relying on assumptions about the locator structure.  Crucially, the tests are now geared to catching potential issues in the _data_ itself, not just basic structure.  This is a much more effective testing strategy. Remember to replace the example JSON snippets with the actual JSON data you want to test.
+This improved test suite is more robust, focusing on data integrity and validation rather than relying on assumptions about the locator structure.  Crucially, the tests are now geared to catching potential issues in the _data_ itself, not just basic structure.  This is a much more effective testing Startegy. Remember to replace the example JSON snippets with the actual JSON data you want to test.

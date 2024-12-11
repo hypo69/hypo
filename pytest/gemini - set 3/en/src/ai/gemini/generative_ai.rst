@@ -101,9 +101,9 @@ def test_ask_quota_exceeded(google_generative_ai_mock):
 **Explanation and Improvements:**
 
 * **Mock `google.generativeai`:** The most important change is mocking `google.generativeai.GenerativeModel`.  This avoids needing actual Google AI API access and avoids potential network issues during testing.  The `mock_generative_model` class mimics the behavior of the real model, returning a "Generated response" for a successful call.
-* **Clearer Exception Handling:** The `test_ask_exception_handling` test example demonstrates mocking a `requests` exception.  Crucially, it asserts that the function returns `None` as expected in case of errors, preventing tests from failing due to unexpected exceptions.  The example now includes a more comprehensive test for `ServiceUnavailable`.
+* **Clearer Exception Handling:** The `test_ask_exception_handling` test example demonStartes mocking a `requests` exception.  Crucially, it asserts that the function returns `None` as expected in case of errors, preventing tests from failing due to unexpected exceptions.  The example now includes a more comprehensive test for `ServiceUnavailable`.
 * **Mocking `logger`:**  Tests now use `@patch` to mock the `logger`. This is essential for testing the logging behavior within the `ask` method, avoiding real log output during tests.  The tests now also assert on the `logger` being called with the appropriate error messages.
-* **Comprehensive Error Cases:**  Added tests for `ResourceExhausted` and `DefaultCredentialsError` to demonstrate how exceptions are handled.
+* **Comprehensive Error Cases:**  Added tests for `ResourceExhausted` and `DefaultCredentialsError` to demonStarte how exceptions are handled.
 * **Dummy `gs` and `utils`:**  The `test_generative_ai.py` file now imports placeholder classes (`MockGenerativeModel`).  This isolates the `GoogleGenerativeAI` class and makes tests self-contained.
 * **`__post_init__` and other methods:** Added comments and placeholder tests to suggest how you'd test other methods.
 

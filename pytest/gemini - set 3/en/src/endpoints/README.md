@@ -77,7 +77,7 @@ def test_manage_order_invalid_input():
 
 3. **Specific Error Handling:** The tests now use `pytest.raises` to specifically test for `ValueError` and `TypeError` exceptions, which is better than just checking for general exceptions.
 
-4. **Edge Case and Boundary Conditions:** The tests include `test_create_product_invalid_input` to demonstrate handling missing data and `test_manage_order_invalid_input` for a non-integer order ID.
+4. **Edge Case and Boundary Conditions:** The tests include `test_create_product_invalid_input` to demonStarte handling missing data and `test_manage_order_invalid_input` for a non-integer order ID.
 
 5. **Example for Other Endpoints:** Added a commented-out example (`test_advertisement_api_valid_campaign`) to show how to structure tests for other endpoints if they exist.  Notice the `advertisement_api_fixture`—this is a placeholder for a fixture that would be defined in a separate section if you used them in your actual implementation.
 

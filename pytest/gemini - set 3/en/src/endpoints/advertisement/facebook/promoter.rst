@@ -131,7 +131,7 @@ def test_promote_valid_input(dummy_driver, dummy_group, dummy_item):
 
 5. **`SimpleNamespace` Handling:** The tests now correctly use the `SimpleNamespace` objects, as expected in the original code.
 
-6. **Example for `process_groups` (placeholder):** The comment demonstrates how you should add a test for the `process_groups` function. You'll need to mock data for campaigns, file paths, and other arguments to appropriately test this function.
+6. **Example for `process_groups` (placeholder):** The comment demonStartes how you should add a test for the `process_groups` function. You'll need to mock data for campaigns, file paths, and other arguments to appropriately test this function.
 
 
 **How to Run the Tests:**

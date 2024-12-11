@@ -99,11 +99,11 @@ def test_payload_method(mocker, edgedriver_path, edge_config_json):
 
 * **Edge Driver Path:**  The `edgedriver_path` fixture makes the path to the edge driver configurable and testable.  You should replace `/path/to/msedgedriver` with the actual path on your system.
 
-* **User Agent Handling:**  The `example_data` fixture and `test_edge_constructor_useragent_input` test demonstrate how to supply a specific user agent for testing.
+* **User Agent Handling:**  The `example_data` fixture and `test_edge_constructor_useragent_input` test demonStarte how to supply a specific user agent for testing.
 
 * **`set_options` Test:**  The test for `set_options` now verifies that the correct options are added to the `EdgeOptions` object.
 
-* **`payload` method test:** Testing the `_payload` method directly is problematic without setting up necessary context (e.g., mocks for the other modules). This test, while incomplete, demonstrates the strategy.  You need to mock the modules called inside `_payload`.
+* **`payload` method test:** Testing the `_payload` method directly is problematic without setting up necessary context (e.g., mocks for the other modules). This test, while incomplete, demonStartes the Startegy.  You need to mock the modules called inside `_payload`.
 
 * **Missing `j_loads_ns` Fixture:** The code references a `j_loads_ns` function that is not defined.  You need to define this function (likely from another module), and provide a test fixture that allows you to control its output for mocking.
 

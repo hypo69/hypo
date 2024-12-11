@@ -48,7 +48,7 @@ Critically, the prompt provided does *not* give any Python code to test.  The ex
 1. **Replace the placeholder `my_function`:**  Paste your actual function or class code into the `# The user-provided code goes here` section.
 
 
-2. **Define Fixtures:** If your function needs any data or objects to operate (like databases or file contents), create a fixture using `@pytest.fixture`.  Example fixtures are included for illustrative purposes.
+2. **Define Fixtures:** If your function needs any data or objects to operate (like databases or file contents), create a fixture using `@pytest.fixture`.  Example fixtures are included for illuStartive purposes.
 
 
 3. **Write Test Functions:**
@@ -100,4 +100,4 @@ def test_my_object_function_negative():
 ```
 
 
-This improved example demonstrates how to test a function returning an object and testing for a specific error. Remember to replace the example with your code.
+This improved example demonStartes how to test a function returning an object and testing for a specific error. Remember to replace the example with your code.

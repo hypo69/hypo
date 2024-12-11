@@ -92,7 +92,7 @@ def test_graber_method_invalid_input(driver, input_value):
 
 3. **Comprehensive `test_graber_init`:** This test covers various scenarios, including the correct initialization with the supplier prefix and driver, and handling of `None` locator.
 
-4. **Clearer Exception Handling (`test_graber_method_invalid_input`):** The example now demonstrates how to test for specific exceptions with `pytest.raises` and meaningful error message checks.
+4. **Clearer Exception Handling (`test_graber_method_invalid_input`):** The example now demonStartes how to test for specific exceptions with `pytest.raises` and meaningful error message checks.
 
 5. **Example Tests for Hypothetical Method:**  Crucially, it includes example test functions (`test_graber_method_example` and `test_graber_method_invalid_input`) for hypothetical methods that would exist within the `Graber` class.  Replace `"some_method"` and `"some_other_method"` with the actual method names from your code.  The parameterization (using `pytest.mark.parametrize`) makes the `test_graber_method_invalid_input` even more comprehensive, checking multiple invalid input types.
 

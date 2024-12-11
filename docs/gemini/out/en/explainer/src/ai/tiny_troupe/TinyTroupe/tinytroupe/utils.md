@@ -127,7 +127,7 @@ graph LR
 - **Circular imports:** The `add_rai_template_variables_if_enabled` function imports `config` from `tinytroupe`.  A more robust solution would be to inject the `config` object instead of importing the entire module. This would avoid issues in case of cyclical dependencies.
 - **Error handling in `extract_json` and `extract_code_block`:**  While the functions handle exceptions, consider adding more descriptive error messages to help with debugging.
 - **`read_config_file`:** Error handling and logging are present but could be strengthened.  Consider raising a more specific exception type (e.g., `ConfigFileNotFoundError`).
-- **`JsonSerializableRegistry` subclass registration:**  The `__init_subclass__` method is a good way to register subclasses. However, consider validating the inputs to `serializable_attributes` to ensure they're lists or similar.
+- **`JsonSerializableRegistry` subclass regiStartion:**  The `__init_subclass__` method is a good way to register subclasses. However, consider validating the inputs to `serializable_attributes` to ensure they're lists or similar.
 
 
 **Relationships:** This module likely interacts with other modules in the `tinytroupe` package, especially those that use LLM model calls, input/output utilities, and those where configuration is used in some fashion.  For example, `compose_initial_LLM_messages_with_templates` is likely used by other parts of the project that handle model interactions.  The `JsonSerializableRegistry` is used for serialization and deserialization of objects, likely objects within the `tinytroupe` package.

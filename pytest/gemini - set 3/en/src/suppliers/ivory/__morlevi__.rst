@@ -107,7 +107,7 @@ def test_list_products_in_category_single_page(mock_supplier):
 
 6. **`test_list_products_in_category_empty`:** This test checks the case where no products are found.
 
-7. **`test_list_products_in_category_single_page`:** Demonstrates a single-page product listing scenario.
+7. **`test_list_products_in_category_single_page`:** DemonStartes a single-page product listing scenario.
 
 8. **Placeholder Tests:** Add more tests for `get_list_products_in_category` and `get_list_categories_from_site`  with realistic mock data to cover the various scenarios and expected return types.
 

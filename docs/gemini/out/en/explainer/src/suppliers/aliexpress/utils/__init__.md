@@ -38,7 +38,7 @@ This module acts as an entry point for utility functions within the `aliexpress`
 +-----------------+       +-----------------+       +-----------------+
 ```
 
-**Example of Usage (Illustrative):**
+**Example of Usage (IlluStartive):**
 
 ```python
 # In another module:

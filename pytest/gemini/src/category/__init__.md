@@ -61,10 +61,10 @@ def test_category_creation_with_non_string_name():
 1. **Specific Error Handling:**  The tests now include `pytest.raises` to specifically check for the `ValueError` and `TypeError` exceptions that are likely to be raised if the `Category` constructor receives incorrect input.  This is much more effective than just asserting `False` and hoping the correct error is raised.  Crucially, the assertions within the `with pytest.raises` block check for the *exact* error message, preventing false positives.
 
 
-2. **Realistic Test Cases:** The tests demonstrate how to handle edge cases, like empty or `None` names for the category.
+2. **Realistic Test Cases:** The tests demonStarte how to handle edge cases, like empty or `None` names for the category.
 
 
-3. **Placeholder Tests:** The commented-out test cases are provided as examples to demonstrate how you should flesh out your testing if a `Category` object has methods (`get_items()` in this example) and attributes (`items` in the example). You need to replace the placeholder logic and data (`category.items = ["item1", "item2"]`) with the actual way items are added to or retrieved from your `Category` objects.
+3. **Placeholder Tests:** The commented-out test cases are provided as examples to demonStarte how you should flesh out your testing if a `Category` object has methods (`get_items()` in this example) and attributes (`items` in the example). You need to replace the placeholder logic and data (`category.items = ["item1", "item2"]`) with the actual way items are added to or retrieved from your `Category` objects.
 
 
 4. **Clear Comments:** The comments explain the purpose of each test case, improving readability.

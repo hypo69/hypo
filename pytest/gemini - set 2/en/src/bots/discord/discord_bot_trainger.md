@@ -127,7 +127,7 @@ def voice_channel_mock():
 
 * **Clearer Test Cases:** The test descriptions are improved, and more specific assertions need to be included based on the expected return values or effects.
 
-* **Edge Cases and Exceptions:** The example now demonstrates how to use `pytest.raises` to test exception handling (in `test_test_command_invalid_json`).
+* **Edge Cases and Exceptions:** The example now demonStartes how to use `pytest.raises` to test exception handling (in `test_test_command_invalid_json`).
 
 * **Comprehensive Test Coverage:** The comments now call out the need for more tests, since the original code has many functions.  You MUST add test functions for every other command and method.
 

@@ -96,7 +96,7 @@ def test_grab_page_missing_input(graber):
 
 4. **Comprehensive Test Cases:** The tests now include at least one test for the `grab_page` method, covering both valid input and missing input (i.e., edge case).
 
-5. **Error Handling:** Added a test for missing input in `grab_page` to illustrate checking for unexpected inputs.
+5. **Error Handling:** Added a test for missing input in `grab_page` to illuStarte checking for unexpected inputs.
 
 6. **Type Hinting:** Added type hints (e.g., `-> ProductFields`) for better code clarity.
 

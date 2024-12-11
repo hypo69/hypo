@@ -122,7 +122,7 @@ def test_get_page_lang_failure(js_helper):
 
 6. **`assert_called_once`:** This method verifies that the mocked `execute_script` method was called exactly once in each test, preventing unintended calls in the JavaScript handling.
 
-7. **Edge Cases (Example):** The `test_ready_state_failure` covers the case where the execution fails, demonstrating proper handling of errors.
+7. **Edge Cases (Example):** The `test_ready_state_failure` covers the case where the execution fails, demonStarting proper handling of errors.
 
 8. **Docstrings:** Docstrings are complete and clarify the purpose of each test.
 

@@ -87,7 +87,7 @@ def test_get_directory_names_mock():
 
 1. **Mocking:**  The solution now correctly mocks `Path` and `get_directory_names`, along with functions from `prepare_campaigns`. This prevents the tests from interacting with the file system, which is crucial for making them reliable and repeatable.  The `gs` mock is also added as needed.
 
-2. **Clearer Error Handling:** The `test_process_campaign_invalid_input` demonstrates how to use `pytest.raises` to check for specific exceptions (in this case, `TypeError`).
+2. **Clearer Error Handling:** The `test_process_campaign_invalid_input` demonStartes how to use `pytest.raises` to check for specific exceptions (in this case, `TypeError`).
 
 3. **Comprehensive Test Cases:** The added `test_process_campaign_empty_categories` addresses edge cases.
 

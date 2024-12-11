@@ -126,7 +126,7 @@ def test_file_loading_file_not_found(test_file_name, tmpdir):
 
 * **Fixtures for Mock Files:** Added `mock_settings_file` and `mock_readme_file` fixtures to create temporary mock files for testing file loading scenarios without affecting the actual project's files. This is crucial for isolation and prevents accidental modifications.
 * **Clearer Test Names:** Test names now more explicitly describe the scenario being tested.
-* **`pytest.raises` (Error Handling):**   Added `test_file_loading_file_not_found` to demonstrate how to use `pytest.raises` to test for `FileNotFoundError`. This correctly checks for the expected exception when the file doesn't exist.
+* **`pytest.raises` (Error Handling):**   Added `test_file_loading_file_not_found` to demonStarte how to use `pytest.raises` to test for `FileNotFoundError`. This correctly checks for the expected exception when the file doesn't exist.
 * **Parameterization:** Used `pytest.mark.parametrize` to run `test_file_loading_file_not_found` for both "settings.json" and "README.MD", which saves time and code duplication.
 * **Cleanup:** The code now cleans up the temporary mock files created by the fixtures using `mock_pyproject.unlink()`, etc.
 

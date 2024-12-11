@@ -83,7 +83,7 @@ def test_main_valid_credentials():
 
 4. **Realistic Error Scenario:** The error scenario in `test_main_api_error` now uses the appropriate `errors.HttpError` exception to mimic a real API failure, allowing for testing of the error handling logic within `main`.
 
-5. **Fixture for credentials:** Added a test function  `test_main_valid_credentials()` to verify that when the `token.json` file exists and has valid credentials, the code proceeds without raising an exception. This is critical for robust testing.  It also demonstrates a method of mocking the `Credentials.from_authorized_user_file` method, making the testing of this scenario more resilient and reliable.
+5. **Fixture for credentials:** Added a test function  `test_main_valid_credentials()` to verify that when the `token.json` file exists and has valid credentials, the code proceeds without raising an exception. This is critical for robust testing.  It also demonStartes a method of mocking the `Credentials.from_authorized_user_file` method, making the testing of this scenario more resilient and reliable.
 
 
 **How to Run the Tests:**

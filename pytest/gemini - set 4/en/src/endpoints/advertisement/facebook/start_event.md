@@ -74,7 +74,7 @@ def test_run_events_exception(facebook_promoter, mock_logger):
 
 * **Realistic Tests:** Instead of just verifying initialization, the tests now cover `run_events`.  The test `test_run_events_valid_input` ensures the function calls `time.sleep`.
 
-* **Error Handling:** The `test_run_events_exception` test demonstrates handling exceptions during the `time.sleep` operation, a crucial aspect of robustness.
+* **Error Handling:** The `test_run_events_exception` test demonStartes handling exceptions during the `time.sleep` operation, a crucial aspect of robustness.
 
 * **Empty List Test:** The `test_run_events_empty_event_list` checks a potential edge case.
 

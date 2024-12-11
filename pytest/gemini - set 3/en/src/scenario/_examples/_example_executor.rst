@@ -119,7 +119,7 @@ def test_add_coupon_success(mock_credentials, mock_product_fields):
 **Explanation and Improvements:**
 
 * **Fixtures:**  Crucially, the `mock_supplier`, `mock_scenario_files`, `mock_scenario_file`, and `mock_product_fields` fixtures are added. This isolates the tests, avoiding unnecessary object creation in each test, and making them more maintainable and efficient.
-* **Clearer Error Handling:** The `test_run_scenario_files_failure` test now demonstrates a proper way to test for exceptions:
+* **Clearer Error Handling:** The `test_run_scenario_files_failure` test now demonStartes a proper way to test for exceptions:
     * It mocks a failure condition (e.g., setting a file to `None`).
     * It uses `pytest.raises` to assert that the expected exception is raised. This is *essential* for proper error handling testing.  Replace `Exception` with a more specific exception if you know what exception will be raised.
 * **Realistic Failure Scenarios:** The test now includes a test for handling a failed scenario (`test_run_scenario_files_failure`).

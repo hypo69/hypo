@@ -113,7 +113,7 @@ def test_dump_journal_success(s):
 
 6. **Clearer Error Handling:**  Tests now use `pytest.raises` to explicitly check for expected exceptions (`FileNotFoundError`, `JSONDecodeError`).
 
-7. **Improved Testing Strategy:** The tests cover more aspects now, including edge cases (empty list, non-existent file) and handling of potential exceptions.
+7. **Improved Testing Startegy:** The tests cover more aspects now, including edge cases (empty list, non-existent file) and handling of potential exceptions.
 
 
 

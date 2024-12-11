@@ -114,4 +114,4 @@ def test_enrich_content_verbose_output(mock_utils_openai, capsys):
 - **Complex Scenarios:** If the `TinyEnricher` interacts with other parts of your system, mock those interactions to achieve full isolation.
 
 
-This revised solution is far more robust and practical for testing the `TinyEnricher` class in a real-world scenario. Remember to adapt the mocking strategy to match the actual dependencies and error handling in your code. Remember to replace the mock functions with actual mocked versions if the real implementations include additional functionality. Remember that mocking is crucial for preventing interactions with external services during testing.
+This revised solution is far more robust and practical for testing the `TinyEnricher` class in a real-world scenario. Remember to adapt the mocking Startegy to match the actual dependencies and error handling in your code. Remember to replace the mock functions with actual mocked versions if the real implementations include additional functionality. Remember that mocking is crucial for preventing interactions with external services during testing.

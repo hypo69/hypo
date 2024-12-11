@@ -3,7 +3,7 @@ import pytest
 import logging
 
 # This is a placeholder, as the provided code doesn't have functions
-# to test.  We'll simulate some functionality for demonstration purposes.
+# to test.  We'll simulate some functionality for demonStartion purposes.
 def simulate_on_installed_listener(event_data):
     """Simulates the chrome.runtime.onInstalled listener."""
     logging.info("OpenAI Model Interface Extension Installed - %s", event_data)
@@ -74,7 +74,7 @@ def test_log_message_on_install(caplog, event_data):
 
 
 
-# Example demonstrating how to verify logging level with pytest.
+# Example demonStarting how to verify logging level with pytest.
 def test_log_level(caplog):
     simulate_on_installed_listener({'reason':'update'})
     assert caplog.record_tuples[0][1] in logging.INFO # Assertions on logged message
@@ -91,7 +91,7 @@ def test_log_level(caplog):
 
 4. **Error Handling:**  The `test_on_installed_listener_error_handling` test checks that your code handles cases where an error might occur, or where the `event_data` is not what is expected. This is a vital part of real-world testing.
 
-5. **Logging Verification:** The `test_log_message_on_install` and `test_log_level` demonstrate how to verify the contents of the log output.  This is critical; you want to ensure that log statements are appropriate for the given input.  The `caplog` fixture is necessary for this.
+5. **Logging Verification:** The `test_log_message_on_install` and `test_log_level` demonStarte how to verify the contents of the log output.  This is critical; you want to ensure that log statements are appropriate for the given input.  The `caplog` fixture is necessary for this.
 
 6. **Clearer Test Names:** Test names clearly indicate the purpose and scenario being tested.
 
@@ -102,4 +102,4 @@ def test_log_level(caplog):
 2. **Install pytest:** If you haven't already, run `pip install pytest`.
 3. **Run the Tests:** Execute the script from your terminal using `pytest`.
 
-This improved example provides a complete and more realistic test suite, demonstrating various testing approaches.  Remember to adapt the specific assertions and error checks to your actual `background.js` code. Remember to properly configure logging (using `logging.basicConfig`) in your original code for the tests to work reliably.
+This improved example provides a complete and more realistic test suite, demonStarting various testing approaches.  Remember to adapt the specific assertions and error checks to your actual `background.js` code. Remember to properly configure logging (using `logging.basicConfig`) in your original code for the tests to work reliably.

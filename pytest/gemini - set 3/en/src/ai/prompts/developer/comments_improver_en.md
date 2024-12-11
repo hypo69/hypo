@@ -67,7 +67,7 @@ def test_divide_numbers_float_input():
 
 **Explanation and Improvements:**
 
-1. **Example Code:**  The provided code was empty. I've added example functions (`add_numbers` and `divide_numbers`) to demonstrate the testing process.  **Crucially, replace this with your actual code.**
+1. **Example Code:**  The provided code was empty. I've added example functions (`add_numbers` and `divide_numbers`) to demonStarte the testing process.  **Crucially, replace this with your actual code.**
 
 2. **Fixtures:** A `valid_numbers` fixture provides reusable test data.  This is a best practice for avoiding repetition.  Use fixtures for any data needed by multiple test cases.
 
@@ -80,7 +80,7 @@ def test_divide_numbers_float_input():
 4. **Clear Assertions:** Assertions clearly show the expected results.
 
 
-5. **Error Handling (`pytest.raises`):** The code now demonstrates how to test for exceptions, including a specific `ZeroDivisionError` case.
+5. **Error Handling (`pytest.raises`):** The code now demonStartes how to test for exceptions, including a specific `ZeroDivisionError` case.
 
 
 6. **Docstrings:**  Clear docstrings improve readability and understanding.

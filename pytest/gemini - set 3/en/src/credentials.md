@@ -98,11 +98,11 @@ def test_now():
 2. **Clearer Assertions:** Assertions are now more explicit, ensuring that the correct values are being assigned and the expected paths are being generated.
 
 
-3. **Edge Case Tests:** Added a test `test_set_project_root_invalid_input` that covers a scenario where the marker files are not found, demonstrating proper handling of no-match cases.
+3. **Edge Case Tests:** Added a test `test_set_project_root_invalid_input` that covers a scenario where the marker files are not found, demonStarting proper handling of no-match cases.
 
 4. **`ProgramSettings` Initialization Test:** A test for `ProgramSettings.__init__` is included to check how the class loads configuration data and constructs paths. Crucial for making sure the class initializes properly under various conditions.
 
-5. **`_open_kp` Test:** Tests the `_open_kp` function with a mocked success case, demonstrating that the function doesn't raise an exception.  This doesn't actually interact with KeePass, avoiding potential errors or security issues.
+5. **`_open_kp` Test:** Tests the `_open_kp` function with a mocked success case, demonStarting that the function doesn't raise an exception.  This doesn't actually interact with KeePass, avoiding potential errors or security issues.
 
 6. **`now` Test:** Added a quick test for the `now()` method to ensure it returns a string of the correct length, indicating the expected format.
 

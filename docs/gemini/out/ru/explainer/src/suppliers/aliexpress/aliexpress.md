@@ -161,7 +161,7 @@ graph LR
 
 **Classes:**
 
-* `Aliexpress`: This is the core class for interacting with AliExpress. It inherits from `Supplier`, `AliRequests`, and `AliApi`, combining their functionalities. The `__init__` method demonstrates the inheritance by calling the parent's `__init__` method to setup common configuration.
+* `Aliexpress`: This is the core class for interacting with AliExpress. It inherits from `Supplier`, `AliRequests`, and `AliApi`, combining their functionalities. The `__init__` method demonStartes the inheritance by calling the parent's `__init__` method to setup common configuration.
     * `webdriver`, `locale`: These arguments allow for flexible configuration of the AliExpress interaction, including different webdriver options and user settings.
 
 

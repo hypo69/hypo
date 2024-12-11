@@ -4,7 +4,7 @@ import hypotez.src.suppliers.ebay.shop as ebay_shop
 
 # No functions or classes are defined in the provided code,
 # so no tests can be written.  Adding placeholder tests
-# to illustrate how to write tests with pytest.
+# to illuStarte how to write tests with pytest.
 
 
 def test_mode_is_dev():
@@ -50,7 +50,7 @@ def test_mode_is_dev():
 
 **Explanation and Crucial Improvements:**
 
-1. **No Code Provided:** The original input code was only docstrings and comments.  Therefore, *no tests could be written that actually tested anything.*  The placeholder tests now use `pytest` syntax and demonstrate *how* to structure the tests for *hypothetical* functions and classes if the actual source code was provided.
+1. **No Code Provided:** The original input code was only docstrings and comments.  Therefore, *no tests could be written that actually tested anything.*  The placeholder tests now use `pytest` syntax and demonStarte *how* to structure the tests for *hypothetical* functions and classes if the actual source code was provided.
 
 
 2. **Clear Test Function Names:** The test names are now descriptive (e.g., `test_mode_is_dev`).

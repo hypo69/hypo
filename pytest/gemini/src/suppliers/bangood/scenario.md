@@ -90,14 +90,14 @@ def test_get_list_categories_from_site(mock_supplier):
 * **Clearer Test Cases:**  Test names are more descriptive (e.g., `test_get_list_products_in_category_empty_locator`).
 * **Edge Case Handling:** Includes tests for empty locators, no product links, and different types of `locators`.
 * **Error Handling:** Checks for `None` return values, which are more realistic than just assuming a list.
-* **`pytest.raises`:** Added `pytest.raises(AttributeError)` for the placeholder `get_list_categories_from_site`.  This demonstrates how to test for expected exceptions.
+* **`pytest.raises`:** Added `pytest.raises(AttributeError)` for the placeholder `get_list_categories_from_site`.  This demonStartes how to test for expected exceptions.
 * **Explicit Assertions:** The assertions are now more explicit about the expected types and values.
 * **`isinstance` checks:** Added checks to ensure the correct types are returned.
 * **Mock `Supplier` class:**  Creates a proper `MockSupplier` class to make mocking more manageable.
 
 **Important Considerations for Further Testing:**
 
-* **`get_list_categories_from_site`:**  You need to implement this function in your original code to write valid test cases. The provided test case uses `pytest.raises` to demonstrate how to test when a function isn't implemented yet or is expected to raise an error.
+* **`get_list_categories_from_site`:**  You need to implement this function in your original code to write valid test cases. The provided test case uses `pytest.raises` to demonStarte how to test when a function isn't implemented yet or is expected to raise an error.
 * **Real-World Error Scenarios:**  Mock more specific error conditions that might occur in the driver interactions or data retrieval.  For example, simulating network errors or timeouts.
 * **Data Validation:**  In production code, add validation to ensure that the URLs fetched in `get_list_products_in_category` are in the correct format and actually point to product pages.
 * **Robust Mocking:**  If your code interacts with external resources (like databases or files), mock these dependencies for better testing.  This also applies if you are using the `logger` module for logging; you likely want to mock it.  This is critical for maintaining test isolation.

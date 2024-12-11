@@ -194,4 +194,4 @@ graph LR
 
 **Relationships with other parts of the project:**
 
-The code relies heavily on functions and classes within the `src` project, demonstrating a cohesive system. `gs`, `AliApi`, `logger`, and other modules are likely part of a larger project framework.
+The code relies heavily on functions and classes within the `src` project, demonStarting a cohesive system. `gs`, `AliApi`, `logger`, and other modules are likely part of a larger project framework.

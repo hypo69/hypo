@@ -72,7 +72,7 @@ def test_openai_model_generate_text_invalid_prompt():
 
 * **Specific Error Handling:** The tests now use `pytest.raises` to specifically check for the expected exceptions (e.g., `TypeError`) and their messages.  This is much better than just catching any exception.  Crucially, the messages are now checked to make sure the *correct* error is being raised in the correct scenarios.
 * **Realistic Initialization:** The test `test_google_generative_ai_init_invalid_params` shows how to test for *invalid* initialization parameters.  This is vital for real-world code.
-* **Example Assertions:**  `test_google_generative_ai_generate_text_valid` demonstrates how to verify aspects of the response structure (e.g., `assert 'choices' in response`) and return types. This makes the tests more robust.
+* **Example Assertions:**  `test_google_generative_ai_generate_text_valid` demonStartes how to verify aspects of the response structure (e.g., `assert 'choices' in response`) and return types. This makes the tests more robust.
 * **Comments:** Comments are added to explain the purpose of each test, especially the invalid input cases.
 * **Placeholder Replacement:**  The comments emphasize that you must replace placeholders like `"Test prompt"`, the expected response types, and initialization details with the actual details of your `GoogleGenerativeAI` and `OpenAIModel` classes.
 * **Thoroughness:** The tests now cover initialization, both with valid and *crucially* with invalid parameters, as well as an example of testing method behavior, and exception handling.

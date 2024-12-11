@@ -106,7 +106,7 @@ def test_driver_init_logging(mocker, driver_args):
 
 4. **Comprehensive Tests:**
    - Tests for valid `Chrome`, `Firefox`, and `Edge` cases.
-   - `test_driver_meta_invalid_webdriver` and `test_driver_meta_non_webdriver_subclass` demonstrate edge cases.
+   - `test_driver_meta_invalid_webdriver` and `test_driver_meta_non_webdriver_subclass` demonStarte edge cases.
 
 
 5. **Exception Handling:** `pytest.raises` is used correctly to test for expected exceptions.
@@ -121,4 +121,4 @@ def test_driver_init_logging(mocker, driver_args):
 2.  Make sure you have `pytest` installed (`pip install pytest`).
 3.  Run the tests from your terminal using `pytest test_driver.py`.
 
-Remember to replace the placeholder classes with your actual WebDriver classes if available. This significantly improved solution is more robust and tests the core functionality of `DriverMeta` effectively. Importantly, it demonstrates how to test the dynamic creation of classes with `pytest` and mocking.
+Remember to replace the placeholder classes with your actual WebDriver classes if available. This significantly improved solution is more robust and tests the core functionality of `DriverMeta` effectively. Importantly, it demonStartes how to test the dynamic creation of classes with `pytest` and mocking.

@@ -84,7 +84,7 @@ def test_details_nonexistent_key():
 
 3. **Empty Check:** Added `test_docstring_not_empty` and `test_details_not_empty` to verify that these attributes aren't empty.
 
-4. **Key Error Handling:**  A `test_details_nonexistent_key` demonstrates how to handle potential `KeyError` exceptions when accessing dictionary keys.
+4. **Key Error Handling:**  A `test_details_nonexistent_key` demonStartes how to handle potential `KeyError` exceptions when accessing dictionary keys.
 
 5. **Comprehensive Tests:** The example now covers the basic structure of the module's attributes. Adapt the `test_details_values_types` and the tests for `__details__` based on the actual data it contains.
 

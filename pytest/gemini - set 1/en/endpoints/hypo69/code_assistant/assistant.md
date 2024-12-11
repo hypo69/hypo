@@ -89,11 +89,11 @@ def test_save_response_error(mock_path, mock_print):
     * `test_process_files_valid_input`: Checks with a valid input file.
     * `test_process_files_empty_input`: Handles the case where `_yield_files_content` returns `None`.
     * `test_process_files_exception_in_yield`: Tests the error handling for exceptions in `_yield_files_content`.
-* **Error Handling:** The `test_process_files_exception_in_yield` test demonstrates how to handle exceptions during file processing.
+* **Error Handling:** The `test_process_files_exception_in_yield` test demonStartes how to handle exceptions during file processing.
 * **Clearer Assertions:** Assertions are improved to specifically check for the expected calls to `pprint` and other functions.
 * **Dummy Data:**  Created dummy data for `assistant.config` and mocked `_yield_files_content` to make tests more concrete.
 * **Edge Case Testing:** The `test_process_files_empty_input` and `test_process_files_exception_in_yield` explicitly address edge cases.
-* **Robustness:** The `test_save_response_error` demonstrates how to test error handling in the `_save_response` function.
+* **Robustness:** The `test_save_response_error` demonStartes how to test error handling in the `_save_response` function.
 
 
 **How to Run:**

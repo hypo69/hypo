@@ -122,8 +122,8 @@ graph LR
 
 **Functions:**
 
-* `update_category(mock_json_path, mock_category)`:  Attempts to update a JSON file (`mock_json_path`) with the specified `mock_category` data.  It demonstrates error handling, as evidenced by the use of `side_effect` in one of the tests.  This highlights the need for robust error management in the production code.
-* `process_campaign_category(mock_campaign_name, mock_category_name, mock_language, mock_currency)`:  Processes campaign categories asynchronously. It interacts with `AliPromoCampaign` and demonstrates error handling through asynchronous nature (`@pytest.mark.asyncio`).
+* `update_category(mock_json_path, mock_category)`:  Attempts to update a JSON file (`mock_json_path`) with the specified `mock_category` data.  It demonStartes error handling, as evidenced by the use of `side_effect` in one of the tests.  This highlights the need for robust error management in the production code.
+* `process_campaign_category(mock_campaign_name, mock_category_name, mock_language, mock_currency)`:  Processes campaign categories asynchronously. It interacts with `AliPromoCampaign` and demonStartes error handling through asynchronous nature (`@pytest.mark.asyncio`).
 * `process_campaign(mock_campaign_name, mock_categories, mock_language, mock_currency, mock_force)`:  Processes a campaign and its categories. It shows how it iterates through categories retrieved via the `get_directory_names` method.
 * `main(mock_campaign_name, mock_categories, mock_language, mock_currency, mock_force)`: The main function, handling overall campaign processing. It is tested using `asyncio`.
 
@@ -140,4 +140,4 @@ graph LR
 
 **Relationship to other parts:**
 
-The tests rely heavily on the `src.suppliers.aliexpress.campaign.prepare_campaigns` module. It's also interacting with `src.utils.jjson`, `src.utils` and potentially other `src` modules (e.g. for logging) through imports. This illustrates a clear modular design approach.
+The tests rely heavily on the `src.suppliers.aliexpress.campaign.prepare_campaigns` module. It's also interacting with `src.utils.jjson`, `src.utils` and potentially other `src` modules (e.g. for logging) through imports. This illuStartes a clear modular design approach.

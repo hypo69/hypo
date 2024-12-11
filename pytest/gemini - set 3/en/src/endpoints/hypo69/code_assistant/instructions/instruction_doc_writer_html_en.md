@@ -70,7 +70,7 @@ def test_my_other_function_param2_zero():
 
 **Explanation and Improvements:**
 
-1. **Dummy Code:**  Added placeholder functions (`my_function`, `my_other_function`) to demonstrate the testing structure.  **Crucially, replace this with your actual Python code.**
+1. **Dummy Code:**  Added placeholder functions (`my_function`, `my_other_function`) to demonStarte the testing structure.  **Crucially, replace this with your actual Python code.**
 
 2. **Clear Test Names:**  Test names (`test_my_function_valid_input`, `test_my_function_invalid_input`) clearly describe the test case.
 

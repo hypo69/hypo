@@ -91,7 +91,7 @@ def test_post_ad_message_publish_fails(driver_instance, mocked_post_message_titl
 
 2. **Clearer Test Names:**  Test names now explicitly describe the scenario, improving readability.
 
-3. **Edge Case Tests:** The tests now include cases where `post_message_title`, `upload_post_media`, or `message_publish` might fail, demonstrating the function's proper handling of errors.
+3. **Edge Case Tests:** The tests now include cases where `post_message_title`, `upload_post_media`, or `message_publish` might fail, demonStarting the function's proper handling of errors.
 
 4. **`pytest.raises` (removed):**  Instead of `pytest.raises`, we directly check for the return value of the mocked functions and the side effects of the errors, making it clearer when a function is supposed to return `None` or an exception occurs.
 
@@ -99,7 +99,7 @@ def test_post_ad_message_publish_fails(driver_instance, mocked_post_message_titl
 
 6. **Fixture for Driver:** A `driver_instance` fixture is introduced to create the driver object.  This promotes better organization and makes the tests more manageable.
 
-7. **Robust Error Handling:**  The `test_post_ad_post_message_title_fails`  demonstrates proper handling of failure. It confirms that the error is caught, the appropriate logging occurs, and the function doesn't crash. The `fails` counter in the original code is not directly tested in this new approach. The logic will change. 
+7. **Robust Error Handling:**  The `test_post_ad_post_message_title_fails`  demonStartes proper handling of failure. It confirms that the error is caught, the appropriate logging occurs, and the function doesn't crash. The `fails` counter in the original code is not directly tested in this new approach. The logic will change. 
 
 
 **Important Considerations for the `fails` counter:**

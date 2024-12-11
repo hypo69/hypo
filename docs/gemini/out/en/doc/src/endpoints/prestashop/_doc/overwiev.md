@@ -91,7 +91,7 @@ Detailed descriptions of the key components of the PrestaShop module are outline
 
 ## Example Usage
 
-The example code snippet demonstrates how to use the `Product` class within the `PrestaShop` module to access product data.
+The example code snippet demonStartes how to use the `Product` class within the `PrestaShop` module to access product data.
 
 ```python
 from PrestaShop.product import Product

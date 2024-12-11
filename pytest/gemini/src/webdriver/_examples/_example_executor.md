@@ -113,11 +113,11 @@ def test_send_message_valid_input(driver_fixture):
 
 4. **Timeout Handling:** Added `timeout` values to locators. This is crucial for real-world testing, ensuring your tests don't hang indefinitely if an element isn't found.
 
-5. **Valid Input Example:**  A `test_execute_locator_valid_input` demonstrates how to check for successful execution and a non-None return value.
+5. **Valid Input Example:**  A `test_execute_locator_valid_input` demonStartes how to check for successful execution and a non-None return value.
 
-6. **Invalid Input Example:** A `test_execute_locator_invalid_selector`  tests with an *invalid* XPath to demonstrate handling of invalid input cases.
+6. **Invalid Input Example:** A `test_execute_locator_invalid_selector`  tests with an *invalid* XPath to demonStarte handling of invalid input cases.
 
-7. **Edge Case (Timeout):** The `test_execute_locator_timeout` example demonstrates testing the timeout scenario.
+7. **Edge Case (Timeout):** The `test_execute_locator_timeout` example demonStartes testing the timeout scenario.
 
 
 **How to Use:**

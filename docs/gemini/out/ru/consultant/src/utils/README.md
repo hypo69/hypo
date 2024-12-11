@@ -102,7 +102,7 @@
 
 # Usage Examples
 
-# Here are some usage examples demonstrating how to work with the Tiny Utils library.
+# Here are some usage examples demonStarting how to work with the Tiny Utils library.
 
 # ### Convert Text to PNG Image
 

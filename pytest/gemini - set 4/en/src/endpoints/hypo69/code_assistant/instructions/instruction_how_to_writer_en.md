@@ -51,16 +51,16 @@ def test_function_raises_exception_with_negative_input():
 
 **Explanation and Improvements for Template:**
 
-1. **Dummy Function:**  Crucially, the provided prompt example showed an empty `input_code`.  This response creates a sample `dummy_function` to illustrate the testing process.  Replace this with the actual Python code you want to test.
+1. **Dummy Function:**  Crucially, the provided prompt example showed an empty `input_code`.  This response creates a sample `dummy_function` to illuStarte the testing process.  Replace this with the actual Python code you want to test.
 
 
 2. **Clear Test Names:** Test function names are descriptive (e.g., `test_dummy_function_valid_input`).
 
 
-3. **Valid, Invalid, and Edge Cases:**  The example tests cover valid input strings ("Hello world"), various invalid strings, an empty string, and a None input.  This demonstrates the importance of testing different input conditions.
+3. **Valid, Invalid, and Edge Cases:**  The example tests cover valid input strings ("Hello world"), various invalid strings, an empty string, and a None input.  This demonStartes the importance of testing different input conditions.
 
 
-4. **`pytest.raises` for Exceptions:**  The example demonstrates how to use `pytest.raises` to test for the `ValueError` that a function *should* raise.  This is very important for robust tests.
+4. **`pytest.raises` for Exceptions:**  The example demonStartes how to use `pytest.raises` to test for the `ValueError` that a function *should* raise.  This is very important for robust tests.
 
 
 5. **Comments:** Comments explain *why* each test is written, helping maintainability.

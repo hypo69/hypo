@@ -57,7 +57,7 @@ import pytest
 
 1. **Missing Code:** The provided input code is just a sample string.  To create meaningful tests, you *must* provide the Python code (`process_text` function, class, etc.) you want to test.
 
-2. **Example Tests:** The example tests above demonstrate the structure, including handling empty input, valid input, invalid input type using `pytest.raises`, and an edge case.  **Crucially, you need to replace the placeholder comments and example function with your actual code.**
+2. **Example Tests:** The example tests above demonStarte the structure, including handling empty input, valid input, invalid input type using `pytest.raises`, and an edge case.  **Crucially, you need to replace the placeholder comments and example function with your actual code.**
 
 3. **Expected Output:** Replace `"processed_text"` in the example tests with the *actual* output your function/class is supposed to produce for each test case.  Without knowing what the function does, the example assertions are incorrect.
 

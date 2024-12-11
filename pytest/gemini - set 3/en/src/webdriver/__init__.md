@@ -116,9 +116,9 @@ def test_driver_invalid_input():
 
 5. **Placeholder Comments:**  Critical: Replace the placeholder comments (`# Add more tests as needed...`) with actual tests for the methods you expect each class to have (`start`, `quit`, `find_element`, etc.)
 
-6. **Comprehensive Testing:**  The tests now cover the initialization of each driver type, demonstrating a more comprehensive approach to ensuring the code works as expected for each module.
+6. **Comprehensive Testing:**  The tests now cover the initialization of each driver type, demonStarting a more comprehensive approach to ensuring the code works as expected for each module.
 
-7. **Actual Driver Usage:** The example `test_driver_start` demonstrates how to call methods of the `Driver` class, which would be an important part of a full test suite.
+7. **Actual Driver Usage:** The example `test_driver_start` demonStartes how to call methods of the `Driver` class, which would be an important part of a full test suite.
 
 
 **To Use These Tests:**

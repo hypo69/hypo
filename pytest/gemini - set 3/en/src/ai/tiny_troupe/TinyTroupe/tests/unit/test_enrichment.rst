@@ -103,7 +103,7 @@ def test_enrich_content_content_type_invalid():
 * **Mock Logging:** The code now uses a `MockLogger` to avoid creating actual log files during testing.  This significantly improves testability.
 * **Mock `testing_utils`:** Mocks the `testing_utils` module since the actual implementation isn't provided. This keeps the test focused on the `TinyEnricher` class.
 * **Comprehensive Test Cases:** Added tests for valid inputs, empty requirements, and an invalid `content_type`.  The tests now check for a minimum output length *and* that the original content exists within the result.
-* **Error Handling:** Demonstrates how to use `pytest.raises` to test for `ValueError` (or other potential exceptions) if the `content_type` is invalid.
+* **Error Handling:** DemonStartes how to use `pytest.raises` to test for `ValueError` (or other potential exceptions) if the `content_type` is invalid.
 * **Clarity and Comments:** Added more descriptive comments to explain the purpose of each test case.
 * **Crucial Assertion:** Added an assertion to verify that the enriched content actually contains the original content, making the test more robust.
 * **Example Fixture (commented out):** Shows how to use a fixture (but is not strictly required for these tests).

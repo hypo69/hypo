@@ -21,7 +21,7 @@ Execution steps
 6. **Yield conversation elements:** The function iterates through the found conversation elements and yields each one.  This allows for processing each conversation element individually without loading the entire file into memory at once.
 
 
-7. **Example usage (demonstration):** The code provides an example of how to use the function to process a specific HTML file (`chat.html`) located within a data directory.
+7. **Example usage (demonStartion):** The code provides an example of how to use the function to process a specific HTML file (`chat.html`) located within a data directory.
 
 
 Usage example

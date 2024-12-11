@@ -107,7 +107,7 @@ The README file describes a Python library named "Tiny Utils".
 * **Organization:** The library is structured into modules (`convertors`, `string`, `file`, `date_time`, `ftp`, `image`, `pdf`, `printer`) for better organization and easier access to specific functionalities.  The `convertors` module is further subdivided (e.g., into `text2png.py`, `xml2dict.py`, etc.).
 * **Installation:** The README instructs users on how to clone the repository and install required dependencies using `pip install -r requirements.txt`.
 * **Modules:** Each module section provides details on the functionalities available within that module. For instance, the `convertors` module contains utilities for converting data between different formats (e.g., XML to dictionary), as seen in the sub-sections detailing specific conversion methods (e.g., `text2png.py`, `xml2dict.py`).  Other modules have similar sections for `string`, `file`, `date_time`, `ftp`, `image`, `pdf`, and `printer` operations.
-* **Usage Examples:** The README provides example code snippets demonstrating how to use specific functions within the library (e.g., converting text to a PNG image).
+* **Usage Examples:** The README provides example code snippets demonStarting how to use specific functions within the library (e.g., converting text to a PNG image).
 * **Documentation:** The README directs users to the project's wiki for further information and examples.
 * **Contributing:**  The README outlines procedures for contributing to the library.
 * **License:** Information regarding the project's license (e.g., MIT License).
@@ -139,4 +139,4 @@ graph LR
 
 ```
 
-The diagram illustrates the library structure, showing how different modules (like `Convertors`, `String Utilities`) relate to the main library `Tiny Utils`.  It also shows how the conversion modules connect to various outputs (e.g., `PNG image`).  Importantly, the diagram is a representation of the library's *structure*; it isn't an algorithm or process flow of code execution.
+The diagram illuStartes the library structure, showing how different modules (like `Convertors`, `String Utilities`) relate to the main library `Tiny Utils`.  It also shows how the conversion modules connect to various outputs (e.g., `PNG image`).  Importantly, the diagram is a representation of the library's *structure*; it isn't an algorithm or process flow of code execution.

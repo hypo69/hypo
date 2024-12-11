@@ -55,7 +55,7 @@ def test_details_contains_expected_keys(key):
 
 1. **Clear Test Names:**  Test names are now more descriptive (e.g., `test_version_is_valid_version_string`).
 
-2. **`pytest.raises` for Exceptions:**  While the original example functions likely did not throw exceptions directly, this example now uses `pytest.raises` for illustrative purposes. This will be useful if your actual code *does* raise exceptions that you want to test for. (The example now includes appropriate `pytest.raises` for the `Version` class).  
+2. **`pytest.raises` for Exceptions:**  While the original example functions likely did not throw exceptions directly, this example now uses `pytest.raises` for illuStartive purposes. This will be useful if your actual code *does* raise exceptions that you want to test for. (The example now includes appropriate `pytest.raises` for the `Version` class).  
 
 3. **Data-Driven Tests (`pytest.mark.parametrize`):** The test `test_details_contains_expected_keys` now uses `@pytest.mark.parametrize` to create multiple tests for each expected key (name, version, description), making the tests more efficient.
 

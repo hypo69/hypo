@@ -125,7 +125,7 @@ def test_main():
 
 6. **Assertions:** The placeholder `assert True` statements need to be replaced with actual assertions that check the expected results.  For example, if a successful response sends a message, you need to check for that message in the `mock_context`.
 
-7. **`test_main`:** This test now uses `patch` to mock the `telegram.ext.Updater`, and this demonstrates how to verify that the main function is calling `Updater` correctly.
+7. **`test_main`:** This test now uses `patch` to mock the `telegram.ext.Updater`, and this demonStartes how to verify that the main function is calling `Updater` correctly.
 
 
 **How to Run:**

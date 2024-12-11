@@ -87,7 +87,7 @@ def test_gemini_init_with_all_params():
 
 3. **Clear Assertions:** Assertions are added to verify that the correct values are assigned to the `Gemini` object's attributes after initialization.  This is crucial for proper testing.
 
-4. **Example Exception Handling (commented out):** A commented-out example demonstrates how to use `pytest.raises` to test exception handling, which is important for robustness.  Uncomment this example and adapt it to the specific exceptions raised by your actual `Gemini` class if necessary.  **Crucially, this is likely to need to be expanded to consider other possible invalid inputs.**
+4. **Example Exception Handling (commented out):** A commented-out example demonStartes how to use `pytest.raises` to test exception handling, which is important for robustness.  Uncomment this example and adapt it to the specific exceptions raised by your actual `Gemini` class if necessary.  **Crucially, this is likely to need to be expanded to consider other possible invalid inputs.**
 
 5. **Docstrings:** The tests include descriptive docstrings to explain the purpose of each test case, making the code more understandable and maintainable.
 

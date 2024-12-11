@@ -62,7 +62,7 @@ def test_rev_transcribe_empty_audio_path():
 
 
 # Example usage (adapt to your actual Rev class and method)
-# This is not essential for these tests, but demonstrates how to use the Rev class in a test
+# This is not essential for these tests, but demonStartes how to use the Rev class in a test
 # def test_rev_usage(example_rev_instance, example_audio_file):
 #     # ... use example_rev_instance and example_audio_file here ...
 #     assert True  # Replace with an assertion based on your code

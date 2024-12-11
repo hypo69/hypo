@@ -131,7 +131,7 @@ def test_save_as_json(results_extractor, tmpdir):
 *   **Edge Cases:** Test with very long interaction histories, empty interaction histories, different types of `extraction_objective` or `situation` strings, and various `fields` and `fields_hints`.
 
 
-* **`ResultsReducer` and `ArtifactExporter` tests:** Similar testing strategies as above can be applied to these classes as well.   Mock the behavior of the `TinyPerson.episodic_memory.retrieve_all()` function to isolate the logic in `reduce_agent` and add tests that cover different scenarios like the presence or absence of data in the episodic memory. Test `ArtifactExporter` with various input types and target formats (txt, json, docx), including testing error handling in the face of invalid inputs.
+* **`ResultsReducer` and `ArtifactExporter` tests:** Similar testing Startegies as above can be applied to these classes as well.   Mock the behavior of the `TinyPerson.episodic_memory.retrieve_all()` function to isolate the logic in `reduce_agent` and add tests that cover different scenarios like the presence or absence of data in the episodic memory. Test `ArtifactExporter` with various input types and target formats (txt, json, docx), including testing error handling in the face of invalid inputs.
 
 
 By addressing these points, you'll achieve much more robust and reliable tests. Remember that a comprehensive set of test cases will require more concrete assumptions about how data would flow through the code paths to mock out API calls and object interactions correctly.

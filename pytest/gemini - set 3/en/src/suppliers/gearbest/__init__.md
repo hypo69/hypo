@@ -76,7 +76,7 @@ def test_process_data_invalid_input(graber_instance):
 
 2. **Assertions:** The placeholder tests have very basic assertions (e.g., `assert data == graber_instance.mock_data`).  **Crucially, these must be replaced with assertions that match the expected behavior of the actual `Graber` class methods.**  This includes verifying the data types, structure, and specific values returned by the methods.
 
-3. **Error Handling (`pytest.raises`):** The `test_process_data_invalid_input` and `test_nonexistent_method` examples demonstrate how to test for exceptions.  **Replace the placeholder error types (e.g., `ValueError`) with the actual exceptions that the `Graber` methods might raise.**
+3. **Error Handling (`pytest.raises`):** The `test_process_data_invalid_input` and `test_nonexistent_method` examples demonStarte how to test for exceptions.  **Replace the placeholder error types (e.g., `ValueError`) with the actual exceptions that the `Graber` methods might raise.**
 
 4. **Realistic Test Data:** The placeholder tests use a simple dictionary.  **Your tests should use more realistic and representative data, simulating real-world scenarios.**
 

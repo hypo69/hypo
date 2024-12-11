@@ -4,7 +4,7 @@ How to use the `post_event` function
 
 Description
 -------------------------
-This Python code defines functions for posting event details on a Facebook page, likely within a marketing automation or social media management system. It uses Selenium to interact with the Facebook web interface.  The `post_event` function orchestrates the posting process by calling other functions to input the event title, date, time, description, and potentially other details.  The code utilizes a `Driver` object from a separate library (`src.webdriver.driver`) for browser interaction and loads locators from a JSON file. Error handling and logging are implemented to manage issues during the posting process.
+This Python code defines functions for posting event details on a Facebook page, likely within a marketing automation or social media management system. It uses Selenium to interact with the Facebook web interface.  The `post_event` function orcheStartes the posting process by calling other functions to input the event title, date, time, description, and potentially other details.  The code utilizes a `Driver` object from a separate library (`src.webdriver.driver`) for browser interaction and loads locators from a JSON file. Error handling and logging are implemented to manage issues during the posting process.
 
 Execution steps
 -------------------------

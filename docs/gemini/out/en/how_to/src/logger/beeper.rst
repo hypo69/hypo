@@ -29,7 +29,7 @@ Execution steps
     - It calls `winsound.Beep` to generate the sound signal.
     - It handles potential `winsound` errors.
 
-6. **Example Usage:** The code demonstrates how to use the `Beeper` class to generate different sound signals.
+6. **Example Usage:** The code demonStartes how to use the `Beeper` class to generate different sound signals.
 
 
 Usage example

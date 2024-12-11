@@ -116,9 +116,9 @@ def test_child_category_creation():
 
 1. **Placeholder Imports:** The code now includes placeholder classes like `Language`, `Currency`, etc.,  **crucially important** because it's impossible to write meaningful tests without the actual class definitions from the `hypotez/src/suppliers/aliexpress/api/models` files. Replace these placeholders with the actual classes from your code.
 
-2. **Comprehensive Test Cases:**  The example tests now cover the `Language`, `Currency`, `ProductType`, `SortBy`, `LinkType`, `AffiliateLink`, `HotProductsResponse`, `Product`, `Category`, and `ChildCategory` classes, demonstrating various test cases (creation, basic assertions, and (crucially) the expected type of exception).
+2. **Comprehensive Test Cases:**  The example tests now cover the `Language`, `Currency`, `ProductType`, `SortBy`, `LinkType`, `AffiliateLink`, `HotProductsResponse`, `Product`, `Category`, and `ChildCategory` classes, demonStarting various test cases (creation, basic assertions, and (crucially) the expected type of exception).
 
-3. **Exception Handling:** The `test_language_invalid_input` demonstrates using `pytest.raises` to test for the correct exception type when invalid input is passed to the constructor.
+3. **Exception Handling:** The `test_language_invalid_input` demonStartes using `pytest.raises` to test for the correct exception type when invalid input is passed to the constructor.
 
 4. **Clear Test Names:** Test function names are descriptive, making it easy to understand the purpose of each test.
 

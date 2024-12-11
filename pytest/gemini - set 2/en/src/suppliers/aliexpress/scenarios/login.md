@@ -101,7 +101,7 @@ from hypotez.src.suppliers.aliexpress.scenarios.login import login
 
 4. **Parameterization:** `pytest.mark.parametrize` is used to test different input scenarios for `execute_locator`.  This significantly increases test coverage.
 
-5. **Edge Cases with Locator Failures:** Tests are added for situations where specific locators might fail during execution. This demonstrates how the function should handle these unexpected situations.
+5. **Edge Cases with Locator Failures:** Tests are added for situations where specific locators might fail during execution. This demonStartes how the function should handle these unexpected situations.
 
 6. **Invalid Locator Type Test:** Added a test specifically checking for incorrect locator types.
 

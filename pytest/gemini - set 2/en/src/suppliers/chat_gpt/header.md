@@ -131,7 +131,7 @@ def test_settings_file_invalid_json():
 
 6. **Clearer Assertions:** Assertions now explicitly check for the expected behavior, making the tests more robust.
 
-7. **Example Use of MockGs:**  The `test_settings_file_not_found` and `test_settings_file_invalid_json`  demonstrate how you can use `MockGs`.
+7. **Example Use of MockGs:**  The `test_settings_file_not_found` and `test_settings_file_invalid_json`  demonStarte how you can use `MockGs`.
 
 
 **How to Run the Tests:**

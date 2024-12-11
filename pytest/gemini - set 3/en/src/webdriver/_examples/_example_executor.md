@@ -131,9 +131,9 @@ def test_send_message_valid_input(locator):
 
 5. **Clearer Test Cases:** The test cases now have more descriptive names and clearer assertions.
 
-6. **Example of `pytest.raises`:**  Added a test to demonstrate exception handling.
+6. **Example of `pytest.raises`:**  Added a test to demonStarte exception handling.
 
-7. **`continue_on_error` handling in `test_execute_locator_with_continue_on_error`:** This test now demonstrates how to use `continue_on_error` and correctly verifies that the expected exception message is found in the error output.
+7. **`continue_on_error` handling in `test_execute_locator_with_continue_on_error`:** This test now demonStartes how to use `continue_on_error` and correctly verifies that the expected exception message is found in the error output.
 
 8. **`test_send_message_valid_input`:** This test verifies that `send_message` returns either `True` or `False` as the result for sending the message, which should be a more accurate reflection of the function's expected return value.
 

@@ -72,7 +72,7 @@ def test_add_numbers_very_small_numbers():
    - Very large numbers
    - Very small numbers
 
-3. **`pytest.raises` for Exceptions:** The `test_add_numbers_invalid_input_type` function demonstrates how to test for exceptions using `pytest.raises`. This is crucial for robust testing.
+3. **`pytest.raises` for Exceptions:** The `test_add_numbers_invalid_input_type` function demonStartes how to test for exceptions using `pytest.raises`. This is crucial for robust testing.
 
 4. **Clear Test Names:**  The test names clearly indicate the purpose of each test, which is essential for readability and maintainability.
 

@@ -45,7 +45,7 @@ The provided JavaScript code (`try_xpath_check_frame.js`) doesn't contain any Py
 
 * **Missing Python Code:** To write `pytest` tests, you need Python code that interacts with the JavaScript functions or objects defined in the JavaScript file.  This Python code could be a wrapper or interface to call the JavaScript code, potentially using libraries like `selenium` (if the JavaScript is part of a web browser automation script).
 * **Mock Functions:** The example shows how to mock `is_content_loaded` (a hypothetical example).  In reality, you'd replace this placeholder with the actual Python function or class.
-* **Error Handling:** The error handling example demonstrates how to use `pytest.raises` to check for expected exceptions if `is_content_loaded` might throw errors.
+* **Error Handling:** The error handling example demonStartes how to use `pytest.raises` to check for expected exceptions if `is_content_loaded` might throw errors.
 * **WebDriver/Selenium Integration:** If the JavaScript is part of a web browser automation script, you'll likely need to use a `pytest` fixture to initialize the `webdriver` instance (e.g., with `selenium`).
 
 

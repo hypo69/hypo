@@ -101,7 +101,7 @@ graph LR
 
 **Dependencies:**
 
-The provided code doesn't use any specific imports or dependencies. The diagram illustrates a high-level API interaction, not an implementation in any particular programming language.  It relies on the `curl` command-line tool for making HTTP requests.
+The provided code doesn't use any specific imports or dependencies. The diagram illuStartes a high-level API interaction, not an implementation in any particular programming language.  It relies on the `curl` command-line tool for making HTTP requests.
 
 
 ## <explanation>

@@ -16,7 +16,7 @@ def test_no_functions_defined():
 
 **Explanation and Important Considerations:**
 
-The provided code (`traffic_light.py`) is empty except for comments.  Therefore, there are no functions or classes to test.  The provided test suite is a placeholder that demonstrates the correct structure for `pytest` tests but cannot be run as-is.
+The provided code (`traffic_light.py`) is empty except for comments.  Therefore, there are no functions or classes to test.  The provided test suite is a placeholder that demonStartes the correct structure for `pytest` tests but cannot be run as-is.
 
 **To create meaningful tests:**
 

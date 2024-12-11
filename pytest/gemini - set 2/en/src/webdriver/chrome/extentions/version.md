@@ -40,7 +40,7 @@ def test_mode_type():
   assert isinstance(version.MODE,str), "Mode is not a string."
 
 
-#Example of a test failing deliberately (for illustration)
+#Example of a test failing deliberately (for illuStartion)
 def test_invalid_version():
     """Test for an invalid version format."""
     with pytest.raises(AssertionError):

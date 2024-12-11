@@ -43,7 +43,7 @@ The provided HTML file (`popup.html`) contains no Python code.  Therefore, there
 
 4. **Implement Tests:** Write `pytest` test functions (as shown in the example) following best practices for clarity, structure, and isolation.
 
-**Example (Illustrative, needs actual Python code):**
+**Example (IlluStartive, needs actual Python code):**
 
 ```python
 import pytest

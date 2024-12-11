@@ -36,7 +36,7 @@ Usage example
         """
         
         #  (This section needs to be replaced with the actual code logic)
-        #  Example of basic filtering and formatting to illustrate the concept.
+        #  Example of basic filtering and formatting to illuStarte the concept.
         
         if not isinstance(broad_context, str) or not broad_context:
             return []

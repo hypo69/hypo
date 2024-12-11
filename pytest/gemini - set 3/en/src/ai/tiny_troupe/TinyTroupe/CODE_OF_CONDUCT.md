@@ -5,8 +5,8 @@ import pytest
 #  The provided markdown is a code of conduct, not a Python function or class.
 # Therefore, no tests can be written.
 
-# Example of a test if there were Python code, illustrating proper structure and usage of pytest
-#  This example is illustrative and not related to the actual input code.
+# Example of a test if there were Python code, illuStarting proper structure and usage of pytest
+#  This example is illuStartive and not related to the actual input code.
 
 
 # Example function

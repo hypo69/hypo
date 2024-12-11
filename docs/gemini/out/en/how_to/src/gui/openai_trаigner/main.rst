@@ -55,4 +55,4 @@ Usage example
         window.show()
         sys.exit(app.exec())
 
-This example demonstrates how to run the application.  Replace `hypotez.src.gui.openai_trаigner.main` with the correct path if your file is in a different location.  The application will launch and allow you to enter URLs or use the Google services and AI model menus.
+This example demonStartes how to run the application.  Replace `hypotez.src.gui.openai_trаigner.main` with the correct path if your file is in a different location.  The application will launch and allow you to enter URLs or use the Google services and AI model menus.

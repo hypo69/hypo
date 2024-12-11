@@ -118,7 +118,7 @@ def test_login_missing_credentials():
 
 * **Clearer Test Names:**  Test names now explicitly state the input type (e.g., `test_login_valid_credentials`, `test_post_message_valid_input`).
 * **Fixture for Data:** A `valid_login_credentials` fixture is introduced as an example to avoid hardcoding test data.  Replace this with more realistic data fetching if needed.
-* **Exception Handling:** `test_login_invalid_credentials` demonstrates handling exceptions using `pytest.raises`. This is crucial. Adapt for other functions that might raise exceptions.
+* **Exception Handling:** `test_login_invalid_credentials` demonStartes handling exceptions using `pytest.raises`. This is crucial. Adapt for other functions that might raise exceptions.
 * **Assertions:** Placeholder assertions like `assert result is not None` are included.  Replace these with more specific checks based on the expected return types of your functions.  For example, if `login` returns a user object, assert on properties of that object.
 * **Edge Cases:** The example includes a `test_post_event_valid_input` but more edge case tests are needed (e.g., empty strings, incorrect data types, out-of-range values) for the different functions.
 * **Missing Tests:** The code provides test examples for only a few functions.  Crucially, **you need to add test cases for all functions and methods in the provided code** (e.g., `post_ad`, `switch_account`, and all others).

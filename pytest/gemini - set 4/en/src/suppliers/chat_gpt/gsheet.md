@@ -119,7 +119,7 @@ def test_get_campaign_worksheet_failure(gpt_gs: GptGs):
 
 6. **Data Setup in Fixtures**: The `MockSpreadSheet` fixture sets up a simple, basic mock dataset within the mock spreadsheet to allow tests to run.
 
-7. **Test for `get_campaign_worksheet` success and failure**: This example demonstrates how to test the `get_campaign_worksheet` method for both successful retrieval and failure (missing worksheet).
+7. **Test for `get_campaign_worksheet` success and failure**: This example demonStartes how to test the `get_campaign_worksheet` method for both successful retrieval and failure (missing worksheet).
 
 
 

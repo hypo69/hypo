@@ -102,7 +102,7 @@ def test_prepare_campaign_failure(campaign_editor, tmp_path):
 
 3. **`tmp_path` Fixture:** This fixture creates a temporary directory for testing to avoid interference with existing files.  Crucial for generating test JSON files.
 
-4. **Valid File Opening:**  `test_open_file_valid` demonstrates opening a valid JSON file, checking for the proper file name display.
+4. **Valid File Opening:**  `test_open_file_valid` demonStartes opening a valid JSON file, checking for the proper file name display.
 
 5. **Invalid File/Nonexistent:** `test_open_file_invalid` and `test_load_file_error` now properly handle cases where the file doesn't exist or contains invalid JSON.
 
@@ -110,7 +110,7 @@ def test_prepare_campaign_failure(campaign_editor, tmp_path):
 
 7. **Widget Creation:** `test_create_widgets_valid` ensures the widgets are created correctly after a valid file is loaded.
 
-8. **Asynchronous Test (`prepare_campaign`):** The `test_prepare_campaign_success` and `test_prepare_campaign_failure` test cases now correctly handle asynchronous operations.  Crucially, `campaign_editor.editor.prepare.return_value` is now a `asyncio.Future` and it's set to succeed in `test_prepare_campaign_success`.  `test_prepare_campaign_failure` demonstrates exception handling for asynchronous operations.
+8. **Asynchronous Test (`prepare_campaign`):** The `test_prepare_campaign_success` and `test_prepare_campaign_failure` test cases now correctly handle asynchronous operations.  Crucially, `campaign_editor.editor.prepare.return_value` is now a `asyncio.Future` and it's set to succeed in `test_prepare_campaign_success`.  `test_prepare_campaign_failure` demonStartes exception handling for asynchronous operations.
 
 9. **`app` teardown:** The app fixture is now correctly cleaned up.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module contains an example of using the `iop` library to interact with a Taobao API.  It demonstrates creating an API request, executing it, and handling the response.  The example focuses on fetching product details using the `/product/item/get` endpoint.
+This module contains an example of using the `iop` library to interact with a Taobao API.  It demonStartes creating an API request, executing it, and handling the response.  The example focuses on fetching product details using the `/product/item/get` endpoint.
 
 ## Imports
 
@@ -45,7 +45,7 @@ This module contains an example of using the `iop` library to interact with a Ta
 
 ## Usage Example
 
-The code demonstrates:
+The code demonStartes:
 
 1. Creating an `IopClient` instance with the API endpoint, app key, and app secret.
 2. Creating an `IopRequest` object specifying the API endpoint (`/product/item/get`) and HTTP method (`GET`).
@@ -56,7 +56,7 @@ The code demonstrates:
 
 ## Response Handling
 
-The example code demonstrates how to access and print the following response attributes:
+The example code demonStartes how to access and print the following response attributes:
 
 - `response.type`: The type of the response (e.g., 'nil', 'ISP', 'ISV', 'SYSTEM').
 - `response.code`: The response code (0 indicates success).

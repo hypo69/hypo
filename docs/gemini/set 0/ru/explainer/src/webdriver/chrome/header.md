@@ -165,4 +165,4 @@ graph LR
     - **Logging:**  Adding logging to the `try...except` blocks will make debugging easier, especially when dealing with potentially missing files.
 
 
-**Relationship with other parts of the project:** This code relies heavily on the `src.gs` module to determine the project root.  It also relies on the existence of `settings.json` and `README.MD` files in the project's `src` directory to load metadata.  This illustrates a common structure where modules (like `gs`) provide utility functions to help other modules operate correctly across various project locations.
+**Relationship with other parts of the project:** This code relies heavily on the `src.gs` module to determine the project root.  It also relies on the existence of `settings.json` and `README.MD` files in the project's `src` directory to load metadata.  This illuStartes a common structure where modules (like `gs`) provide utility functions to help other modules operate correctly across various project locations.

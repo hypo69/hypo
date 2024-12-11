@@ -60,8 +60,8 @@ def test_empty_input_check():
 
 **Explanation and Crucial Improvements:**
 
-* **Placeholder Tests:** The example tests are now *significantly* improved placeholders.  They demonstrate the structure you should use for different test scenarios (valid input, exception handling, empty input).
-* **`pytest.raises`:**  The `test_function_that_raises_exception` example demonstrates how to use `pytest.raises` to check for specific exceptions.
+* **Placeholder Tests:** The example tests are now *significantly* improved placeholders.  They demonStarte the structure you should use for different test scenarios (valid input, exception handling, empty input).
+* **`pytest.raises`:**  The `test_function_that_raises_exception` example demonStartes how to use `pytest.raises` to check for specific exceptions.
 * **Fixtures:** The `example_data` fixture shows how you would supply test data.  Crucially, you need to define fixtures for your functions. If your functions need arguments, the fixture should produce them.
 * **Error Handling:**  The `test_empty_input_check` shows the appropriate way to handle potential errors. It now uses `try...except` to specifically catch `TypeError` and reports failure if an incorrect type of exception is raised.
 

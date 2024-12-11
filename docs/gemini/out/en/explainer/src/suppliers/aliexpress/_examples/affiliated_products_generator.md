@@ -134,7 +134,7 @@ graph TD
 
 **Dependencies Analysis:**
 
-The mermaid diagram illustrates the `AliAffiliatedProducts` class interacting with an AliExpress API, processing the received data, and storing `Product` objects. The specific implementation of `process_affiliate_products` is not shown; however, the dependencies include the `src.suppliers.aliexpress.affiliated_products_generator` module. This structure suggests a modular design within the `hypotez` project, potentially using an API to retrieve and process affiliate product information.
+The mermaid diagram illuStartes the `AliAffiliatedProducts` class interacting with an AliExpress API, processing the received data, and storing `Product` objects. The specific implementation of `process_affiliate_products` is not shown; however, the dependencies include the `src.suppliers.aliexpress.affiliated_products_generator` module. This structure suggests a modular design within the `hypotez` project, potentially using an API to retrieve and process affiliate product information.
 
 
 # <explanation>

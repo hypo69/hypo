@@ -68,7 +68,7 @@ def test_get_list_products_in_category_graber_error(sample_category):
 
 3. **Robust Exception Handling:** Tests now comprehensively cover invalid inputs (e.g., `None` or empty string category) and potential errors from the `Graber` class, including cases where `get_products_in_category` might raise an exception.   `pytest.raises` is correctly used for checking exceptions.
 
-4. **Mocking `Graber`:**  The `test_get_list_products_in_category_graber_error` demonstrates how to test error handling within the `get_list_products_in_category` function if the `Graber` class itself throws an exception, which is much more realistic and useful.
+4. **Mocking `Graber`:**  The `test_get_list_products_in_category_graber_error` demonStartes how to test error handling within the `get_list_products_in_category` function if the `Graber` class itself throws an exception, which is much more realistic and useful.
 
 5. **Placeholder Assertions:** The `test_get_list_products_in_category_valid_input` includes placeholder assertions to check the structure of the `products` list.  *Replace* these with concrete expectations, e.g., checking that the list contains product titles, prices, etc.  This is *essential* for a real-world test.
 

@@ -83,7 +83,7 @@ def test_product_get_category():
 **Explanation and Improvements:**
 
 1. **Import `datetime`:**  Crucial for testing dates correctly.
-2. **Example `Supplier` and `Product` classes:**  The provided code was incomplete. These examples demonstrate how to structure the classes. **Replace these with your actual classes.**
+2. **Example `Supplier` and `Product` classes:**  The provided code was incomplete. These examples demonStarte how to structure the classes. **Replace these with your actual classes.**
 3. **Clear Test Names:**  Descriptive names like `test_get_products_valid_dates` improve readability.
 4. **`pytest.raises` for Exceptions:** Correctly used to test `TypeError` and `ValueError`.
 5. **Valid Data Tests:** Checks for valid data retrieval from `get_products`.

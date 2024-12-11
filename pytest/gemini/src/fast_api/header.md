@@ -115,7 +115,7 @@ def test_readme_retrieval_file_not_found(mock_no_readme_file):
 
 6. **Exception Handling:** The tests now correctly handle `FileNotFoundError` and `json.JSONDecodeError` during file reading.
 
-7. **Edge Cases:** The tests now consider the case where the marker files are in a parent directory, demonstrating a broader range of project structure handling.
+7. **Edge Cases:** The tests now consider the case where the marker files are in a parent directory, demonStarting a broader range of project structure handling.
 
 8. **Correct `__root__` Assignment:** The test ensures that `__root__` is correctly assigned if a marker file is found.
 

@@ -77,7 +77,7 @@ def test_telegram_bot_get_mode(telegram_bot_instance):
 
 4. **Example Tests (Crucial):**  The examples now show how to test the `send_message` method with an assertion that the result matches the expected behavior.
 
-5. **Edge Case Example:**  An example of a test for an invalid mode is added, demonstrating how to use `pytest.raises`.  You should add similar tests for any potential invalid inputs your actual `TelegramBot` might receive.
+5. **Edge Case Example:**  An example of a test for an invalid mode is added, demonStarting how to use `pytest.raises`.  You should add similar tests for any potential invalid inputs your actual `TelegramBot` might receive.
 
 6. **Exception Handling:** The example shows how to test for exceptions using `pytest.raises` which is important for robustness.  The assertion now verifies the *message* in the exception which is better than just checking that any exception was raised.
 

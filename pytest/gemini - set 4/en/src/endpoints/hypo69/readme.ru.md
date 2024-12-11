@@ -39,7 +39,7 @@ The provided input code only contains documentation, not actual Python code.  To
 
 4. **Descriptive names:** Use descriptive names for your test functions, clearly indicating the test's purpose and the input/expected output.
 
-**Example (Illustrative - Replace with your actual code):**
+**Example (IlluStartive - Replace with your actual code):**
 
 ```python
 import pytest

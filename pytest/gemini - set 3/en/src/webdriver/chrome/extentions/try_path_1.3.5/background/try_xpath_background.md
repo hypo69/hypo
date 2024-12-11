@@ -114,7 +114,7 @@ def test_browser_storage_onChanged(mock_browser):
 
 6. **Asyncio Handling:** The `side_effect` for `browser_mock.tabs.sendMessage` is changed to use `asyncio.create_task` to handle async operations properly.
 
-7. **Example Usage (Illustrative):**  The `test_loadDefaultCss` now correctly interacts with the mocked `XMLHttpRequest` to simulate the expected response.
+7. **Example Usage (IlluStartive):**  The `test_loadDefaultCss` now correctly interacts with the mocked `XMLHttpRequest` to simulate the expected response.
 
 **How to run these tests:**
 

@@ -50,7 +50,7 @@ def test_graber_get_data_invalid_input():
 
 
 
-# Example test demonstrating a method of a class that should return None for certain cases.
+# Example test demonStarting a method of a class that should return None for certain cases.
 def test_graber_get_data_nonexistent_data(graber_data):
     """Checks behavior if the desired data does not exist"""
     graber = MockGraber(graber_data)
@@ -88,7 +88,7 @@ def test_graber_get_data_invalid_type_input():
 
 6. **Docstrings:** Added docstrings to the test functions explaining their purpose.
 
-7. **Realistic Tests:** The example tests demonstrate testing for `None` return values (if applicable) and how to correctly handle potential `KeyError` exceptions raised by the `get_data` method when the keys you're searching for don't exist in the input data.
+7. **Realistic Tests:** The example tests demonStarte testing for `None` return values (if applicable) and how to correctly handle potential `KeyError` exceptions raised by the `get_data` method when the keys you're searching for don't exist in the input data.
 
 
 **How to Use:**

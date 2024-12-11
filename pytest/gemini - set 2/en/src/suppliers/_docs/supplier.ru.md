@@ -109,4 +109,4 @@ def test_supplier_run_scenarios():
 1.  Save the test code (e.g., `test_supplier.py`) in the same directory as your `Supplier` class file.
 2.  Run `pytest test_supplier.py` from your terminal.
 
-This revised solution provides a much more robust and realistic set of tests for the `Supplier` class, demonstrating how to handle the `_payload` method's potential failure cases and using mocking effectively. Remember to install the necessary libraries: `pytest`, `selenium`, and the `unittest.mock`.
+This revised solution provides a much more robust and realistic set of tests for the `Supplier` class, demonStarting how to handle the `_payload` method's potential failure cases and using mocking effectively. Remember to install the necessary libraries: `pytest`, `selenium`, and the `unittest.mock`.

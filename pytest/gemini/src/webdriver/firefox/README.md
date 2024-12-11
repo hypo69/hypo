@@ -98,9 +98,9 @@ def test_firefox_payload():
 
 4. **Explicit Assertions:**  Instead of just checking that `browser` is an instance of `Firefox`, specific assertions are made about the contents of `browser.driver`, to verify that the setup was correctly executed.
 
-5. **`_payload` Test:** The `_payload` method test now verifies that no exception is raised, demonstrating basic functionality.
+5. **`_payload` Test:** The `_payload` method test now verifies that no exception is raised, demonStarting basic functionality.
 
-6. **Example test expansion:** Added a test for `test_firefox_init_invalid_proxy` with an important `FileNotFoundError` to demonstrate the robustness of the code.
+6. **Example test expansion:** Added a test for `test_firefox_init_invalid_proxy` with an important `FileNotFoundError` to demonStarte the robustness of the code.
 
 7. **Clearer Comments:** Comments now better explain the purpose and the assertions being made.
 

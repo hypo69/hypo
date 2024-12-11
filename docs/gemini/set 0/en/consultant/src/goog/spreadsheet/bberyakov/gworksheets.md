@@ -83,7 +83,7 @@ class GWorksheet (Worksheet):
                     self.ws = sh.gsh.get()
                 except Exception as e:
                     logger.error("Error getting worksheet", e)
-                    return  # or raise the exception, depending on your error handling strategy
+                    return  # or raise the exception, depending on your error handling Startegy
                     
             else:
                 if ws_title in [ws.title for ws in sh.gsh.worksheets()]:

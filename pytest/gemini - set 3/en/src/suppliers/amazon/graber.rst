@@ -101,7 +101,7 @@ from hypotez.src.suppliers.amazon.graber import Graber
    - Assertions check for the correct return type.
    - `loop.close()` is essential to avoid resource leaks.
 
-5. **Test `grab_page` (invalid input):**  Demonstrates testing a potential `TypeError` when an invalid `driver` is provided.  Replace the example with appropriate exception handling and input validation checks from the actual `Graber` class.
+5. **Test `grab_page` (invalid input):**  DemonStartes testing a potential `TypeError` when an invalid `driver` is provided.  Replace the example with appropriate exception handling and input validation checks from the actual `Graber` class.
 
 
 6. **Test `id_product`:** This is a placeholder test.  You need to replace this with tests for all other relevant asynchronous methods (`id_product`, `description_short`, etc.) of the `Graber` class.  Crucially, you should mock the behavior of these methods within `test_grab_page_valid_input` and elsewhere using the `asyncio.Future` to make the function *await* something to return a value (or raise an exception).  This mocking lets the test run synchronously.
@@ -120,9 +120,9 @@ from hypotez.src.suppliers.amazon.graber import Graber
    Import the class you're testing.
 
 4. **Complete the Mock Classes:**
-   Implement appropriate mocking for all external dependencies and functions you're calling within the `Graber` class, as illustrated in the example.
+   Implement appropriate mocking for all external dependencies and functions you're calling within the `Graber` class, as illuStarted in the example.
 
 5. **Complete the remaining tests:** Add tests for all necessary methods of the `Graber` class (e.g., `id_product`, `name`, `specification`, etc.).  Thoroughly test edge cases and exceptions.
 
 
-This significantly improved answer demonstrates a full testing strategy including mocking, asynchronous handling, and comprehensive test cases for `Graber` class methods. Remember to add more specific tests tailored to the functions in `Graber.py`.
+This significantly improved answer demonStartes a full testing Startegy including mocking, asynchronous handling, and comprehensive test cases for `Graber` class methods. Remember to add more specific tests tailored to the functions in `Graber.py`.

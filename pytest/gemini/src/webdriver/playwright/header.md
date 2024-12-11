@@ -94,7 +94,7 @@ def test_set_project_root_exception_handling(mock_path):
 * **Clearer Test Names:** Test names now explicitly state the scenario (e.g., `test_set_project_root_valid_input`).
 * **Comprehensive Coverage:** Added tests for different cases, including when marker files are not found, in the parent directory, multiple markers are provided, and when the current path is already in `sys.path`.
 * **Edge Cases:**  The `test_set_project_root_marker_not_found` test explicitly checks the case where no marker file is found.
-* **Error Handling:** The `test_set_project_root_exception_handling` test demonstrates how to use `pytest.raises` to verify exception handling. Critically, it correctly uses a mock to simulate the `FileNotFoundError`.
+* **Error Handling:** The `test_set_project_root_exception_handling` test demonStartes how to use `pytest.raises` to verify exception handling. Critically, it correctly uses a mock to simulate the `FileNotFoundError`.
 * **Dummy Files:** Created temporary directory and files to simulate project structures for testing within each test case to ensure isolation.
 * **Mocking `Path`:** The `@patch` decorator with `mock_path` is crucial. This ensures the tests don't affect the real system's file system and are isolated.
 

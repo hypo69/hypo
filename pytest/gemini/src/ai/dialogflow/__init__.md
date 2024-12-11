@@ -4,7 +4,7 @@ import pytest
 # No functions or classes are defined in the provided code.
 # Therefore, no tests can be written.  
 
-# Example tests demonstrating the structure for if there were functions:
+# Example tests demonStarting the structure for if there were functions:
 
 # Assuming a function exists:
 # def my_function(input_param):

@@ -196,4 +196,4 @@ graph LR
                          +------------+
 ```
 
-This diagram shows the dependencies where `customer.py` depends on other `src` packages to function. This diagram illustrates a general structure, and the actual interdependencies within a larger project are more complex.
+This diagram shows the dependencies where `customer.py` depends on other `src` packages to function. This diagram illuStartes a general structure, and the actual interdependencies within a larger project are more complex.

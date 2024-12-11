@@ -130,7 +130,7 @@ def test_dict2xml_invalid_input():
 
 5. **Comprehensive Test Cases:** The code now includes examples of how to test various types and scenarios for `dict2ns`.  Remember to add tests for functions like `dict2xml`, `dict2csv`, and more based on your requirements.
 
-6. **Exception Handling (`pytest.raises`):** A `test_dict2xml_invalid_input` function was added to demonstrate testing for the expected `Exception` raised in `dict2xml` when there's more than one root node.  This is crucial for robust testing.
+6. **Exception Handling (`pytest.raises`):** A `test_dict2xml_invalid_input` function was added to demonStarte testing for the expected `Exception` raised in `dict2xml` when there's more than one root node.  This is crucial for robust testing.
 
 7. **Descriptive Test Names:** Test names are now more informative about the scenario being tested.
 

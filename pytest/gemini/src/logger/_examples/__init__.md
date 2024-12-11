@@ -41,7 +41,7 @@ def test_mode_value():
     assert MODE in ['dev', 'prod']  # or other possible values if applicable
 
 # Example of testing for non-existent attributes (if applicable).  This test
-# might not be relevant in the given code snippet, but demonstrates the concept.
+# might not be relevant in the given code snippet, but demonStartes the concept.
 def test_no_attribute():
     """Tests that there is no attribute that doesn't exist."""
     with pytest.raises(AttributeError):
@@ -71,10 +71,10 @@ def test_version_edge_case():
 
 6. **Mode Test:** Checks for `MODE`'s correct data type and value. Replace `['dev', 'prod']` with actual possible values if needed.
 
-7. **Edge Case Example (Important):**  The `test_version_edge_case` example illustrates how to design tests for specific scenarios that might not be fully covered by the normal test cases (e.g., handling of versions earlier than a specific release).  You'll need to replace the example with the actual edge cases or validation logic in your code.
+7. **Edge Case Example (Important):**  The `test_version_edge_case` example illuStartes how to design tests for specific scenarios that might not be fully covered by the normal test cases (e.g., handling of versions earlier than a specific release).  You'll need to replace the example with the actual edge cases or validation logic in your code.
 
 
-8. **Error Handling:** Uses `pytest.raises` to test for exceptions, a crucial part of robust testing.  The example `test_no_attribute` demonstrates how to handle cases where you expect attributes or values to not exist (or raise exceptions).
+8. **Error Handling:** Uses `pytest.raises` to test for exceptions, a crucial part of robust testing.  The example `test_no_attribute` demonStartes how to handle cases where you expect attributes or values to not exist (or raise exceptions).
 
 
 **How to Run the Tests:**

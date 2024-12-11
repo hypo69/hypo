@@ -80,7 +80,7 @@ def test_logger_imports():
 
 1. **Mocking `logging`:** The code now uses `mock_logger` to create a mock logger instance. This is **absolutely essential** for testing `logger` functions without affecting the actual logging system (which might write to files or the console).  This prevents your tests from unexpectedly writing to files.  The `NullHandler` is very important for avoiding side effects.
 
-2. **Comprehensive Exception Handling:** The `test_logger_raises_typeerror_with_invalid_log_type` test demonstrates how to use `pytest.raises` to check for specific exceptions.  **Crucially**, you should add tests for *every* exception type that the `logger` functions could raise in your actual code.
+2. **Comprehensive Exception Handling:** The `test_logger_raises_typeerror_with_invalid_log_type` test demonStartes how to use `pytest.raises` to check for specific exceptions.  **Crucially**, you should add tests for *every* exception type that the `logger` functions could raise in your actual code.
 
 3. **Clear Test Descriptions:** Test names are more descriptive (e.g., `test_logger_raises_typeerror_with_invalid_log_type`).
 

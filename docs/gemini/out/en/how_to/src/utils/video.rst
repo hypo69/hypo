@@ -26,7 +26,7 @@ Execution steps
 
 9. **`main` function (example):**  Shows how to use `save_video_from_url`. It includes a check on the `result` to confirm success.
 
-10. **Run the example (if applicable):** The `if __name__ == "__main__":` block runs the `main` function to demonstrate usage.
+10. **Run the example (if applicable):** The `if __name__ == "__main__":` block runs the `main` function to demonStarte usage.
 
 Usage example
 -------------------------

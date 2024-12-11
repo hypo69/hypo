@@ -3,7 +3,7 @@
 **1. <input code>**
 
 ```
-# Impact of AI on Digital Marketing Strategies
+# Impact of AI on Digital Marketing Startegies
 
 ## Introduction
 

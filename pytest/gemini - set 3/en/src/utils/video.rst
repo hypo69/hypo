@@ -89,7 +89,7 @@ def test_get_video_data_file_read_error(mock_logger, tmp_path):
 * **Clearer Assertions:** Assertions now explicitly check for `None` return values, ensuring that the functions return the correct values in error situations.
 * **Complete Test Cases:**  Tests for valid input, HTTP errors, network issues, and file handling errors are included, covering most possibilities.
 * **`async def` for `save_video_from_url` futures**: Uses `asyncio.run` appropriately to properly handle the asynchronous function `save_video_from_url`.
-* **Example Usage Comments:** Comments are added to demonstrate how to run the tests using pytest.
+* **Example Usage Comments:** Comments are added to demonStarte how to run the tests using pytest.
 
 
 

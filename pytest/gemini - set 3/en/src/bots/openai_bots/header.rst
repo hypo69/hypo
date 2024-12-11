@@ -125,7 +125,7 @@ def test_settings_loading_failure(tmp_path):
 
 4. **Valid Input Tests:** Added `test_set_project_root_valid_input` to verify correct functionality with valid input data.
 
-5. **Invalid Input Tests:** Added `test_set_project_root_invalid_input` to demonstrate handling of incorrect marker files.
+5. **Invalid Input Tests:** Added `test_set_project_root_invalid_input` to demonStarte handling of incorrect marker files.
 
 6. **No Marker Files Test:** Added `test_set_project_root_no_marker_files` to test the edge case where no marker files are provided, which should return the current directory.
 

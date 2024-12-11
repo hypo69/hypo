@@ -92,7 +92,7 @@ def test_ns2csv_exception(mock_save_csv_file, tmp_path):
 
 4. **Parameterization:** The `test_ns2xml_various_inputs` function uses `pytest.mark.parametrize` for testing with multiple inputs and expected results, streamlining the test cases.
 
-5. **Exception Handling:** A test case (`test_ns2csv_exception`) demonstrates how to test for exceptions raised by `ns2csv`.  The `side_effect` parameter of `patch` simulates raising an error.
+5. **Exception Handling:** A test case (`test_ns2csv_exception`) demonStartes how to test for exceptions raised by `ns2csv`.  The `side_effect` parameter of `patch` simulates raising an error.
 
 6. **Comprehensive Test Cases:** The code includes tests for `ns2dict` with nested structures and lists.  This covers different scenarios beyond simple cases.
 
@@ -117,4 +117,4 @@ def test_ns2csv_exception(mock_save_csv_file, tmp_path):
     ```
 
 
-Remember to adapt the mock functions (`mock_save_csv_file`, etc.) to truly reflect how those functions behave in the real project. The mock functions provided are basic but illustrate the principle. Adjust them to test various functionalities if necessary, including error conditions. Remember to import `Path` from `pathlib`. Also, ensure you have appropriate import statements in `test_ns.py` for the functions and the mock functions from the `hypotez` project.
+Remember to adapt the mock functions (`mock_save_csv_file`, etc.) to truly reflect how those functions behave in the real project. The mock functions provided are basic but illuStarte the principle. Adjust them to test various functionalities if necessary, including error conditions. Remember to import `Path` from `pathlib`. Also, ensure you have appropriate import statements in `test_ns.py` for the functions and the mock functions from the `hypotez` project.

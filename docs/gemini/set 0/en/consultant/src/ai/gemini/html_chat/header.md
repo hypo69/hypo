@@ -105,7 +105,7 @@ sys.path.append(str(__root__))
 - Added error handling using `logger.error` where appropriate.
 - Improved the calculation of the absolute path to the project root directory.
 - Fixed potential issues with incorrect path handling using `os.getcwd`.
-- Added example usage for demonstrating the module functionality.
+- Added example usage for demonStarting the module functionality.
 - Replaced vague words with specific terms in comments.
 
 

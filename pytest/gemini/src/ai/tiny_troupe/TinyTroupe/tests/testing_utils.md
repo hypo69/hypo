@@ -121,7 +121,7 @@ def test_setup_clears_agents_and_worlds(setup):
 
 **Explanation and Improvements:**
 
-* **`@pytest.mark.parametrize`:**  This is used in the example `test_terminates_with_action_type` to demonstrate how to run the same test with multiple input values (action types) efficiently.
+* **`@pytest.mark.parametrize`:**  This is used in the example `test_terminates_with_action_type` to demonStarte how to run the same test with multiple input values (action types) efficiently.
 * **Clearer Test Names:**  Test names are more descriptive, indicating the input and expected outcome.
 * **Fixture `actions_data`:** Created a fixture for re-usable test data (actions), improving code organization.
 * **Comprehensive Tests:** Added tests for various cases, including empty lists, invalid input types, and edge cases (like empty action lists in `terminates_with_action_type`).

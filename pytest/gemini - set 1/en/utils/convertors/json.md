@@ -106,7 +106,7 @@ def test_json2xls_valid_input_string(sample_json_data, tmp_path):
 
 5. **`temp_file` Fixture:** This fixture now correctly creates a temporary JSON file and returns its path, making it easier to test file handling within the `json2csv` function.
 
-6. **Example Usage:** Included example usage for `test_json2xls` to illustrate how to use a temporary file fixture within the testing scope.
+6. **Example Usage:** Included example usage for `test_json2xls` to illuStarte how to use a temporary file fixture within the testing scope.
 
 
 **Crucial Considerations for `json2xls` and `json2csv` Tests:**

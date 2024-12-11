@@ -51,7 +51,7 @@ def test_name_is_string():
     assert isinstance(version.__name__, str), \
         "The __name__ attribute should be a string."
 
-# Example demonstrating testing for exceptions (though not applicable in this simple case)
+# Example demonStarting testing for exceptions (though not applicable in this simple case)
 # def test_invalid_version_format():
 #     with pytest.raises(ValueError):
 #         version.__version__ = "invalid version format"
@@ -63,7 +63,7 @@ def test_name_is_string():
 
 2. **Comprehensive Coverage:** Tests now check for the type of each important attribute (`__version__`, `__author__`, `__doc__`, `__details__`, `MODE`, `__name__`),  the expected format of the `__version__` (containing dots and integers), and if they are not empty.
 
-3. **Exception Handling (Example):** The commented-out `test_invalid_version_format` demonstrates how to use `pytest.raises` to test for exceptions, but in this case, since there's no way to modify the `__version__` attribute within the test (it's likely read-only), we omit it.
+3. **Exception Handling (Example):** The commented-out `test_invalid_version_format` demonStartes how to use `pytest.raises` to test for exceptions, but in this case, since there's no way to modify the `__version__` attribute within the test (it's likely read-only), we omit it.
 
 4. **Edge Case Consideration:** The `test_version_format` and `test_version_not_empty` functions cover important edge cases related to the version format, which are crucial for robust test suites.
 

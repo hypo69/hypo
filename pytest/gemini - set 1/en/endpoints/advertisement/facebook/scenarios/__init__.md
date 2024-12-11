@@ -3,7 +3,7 @@ import pytest
 
 # This code assumes the functions in the provided file are defined elsewhere.
 #  You'll need to include the actual implementation of those functions in a separate file
-#  to run these tests successfully.  The examples below are illustrative.
+#  to run these tests successfully.  The examples below are illuStartive.
 from hypotez.src.endpoints.advertisement.facebook.scenarios import login, switch_account
 
 

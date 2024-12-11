@@ -88,7 +88,7 @@ def test_filter_parent_categories_valid_input():
 
 1. **Mocking `requests`:**  Crucially, the code now mocks the `requests` library using `unittest.mock.patch`.  This is essential for testing `api_request` without actually making network calls. This prevents the tests from depending on an external API, making them reliable and fast.
 
-2. **Explicit Exception Handling:** Added a `test_api_request_failure` test to demonstrate handling exceptions (HTTPError in this case).  This is critical for robust testing.
+2. **Explicit Exception Handling:** Added a `test_api_request_failure` test to demonStarte handling exceptions (HTTPError in this case).  This is critical for robust testing.
 
 3. **Clearer Test Descriptions:** Test function names now better describe the scenario being tested.
 

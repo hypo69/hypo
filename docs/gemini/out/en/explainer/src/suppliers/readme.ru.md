@@ -94,7 +94,7 @@ The provided mermaid diagram shows the interaction flow between components:
 * `webelement`, `executor`, `webdriver`: Represents web elements, the component handling interaction with them and web driver.  
 * `supplier`, `product_fields`, `endpoints`, `scenario`: Represents the central logic handling data extraction.
 
-The diagram illustrates the dependencies between different parts of the system: The `supplier` interacts with the `webdriver` to fetch data, and the `scenario` defines specific actions to be performed.  The relationships clearly show the data flow.
+The diagram illuStartes the dependencies between different parts of the system: The `supplier` interacts with the `webdriver` to fetch data, and the `scenario` defines specific actions to be performed.  The relationships clearly show the data flow.
 
 
 ## <explanation>
@@ -132,4 +132,4 @@ The provided snippet lists the attributes/variables of the class: `supplier_id`,
 
 ### Relationships:
 
-The `Supplier` class relies on the `Driver` class (mentioned in the documentation) for web interaction and `Scenario` (likely in `../scenarios/README.RU.MD`) for defining data extraction actions. The relationships are documented via references. The design suggests that the `Scenario` class interacts with the `Supplier` class to define and manage the steps for data acquisition. The `Supplier` handles the provider-specific aspects and orchestrates the overall data collection process. The `prefixes.md` file likely defines the unique prefixes for each supplier.
+The `Supplier` class relies on the `Driver` class (mentioned in the documentation) for web interaction and `Scenario` (likely in `../scenarios/README.RU.MD`) for defining data extraction actions. The relationships are documented via references. The design suggests that the `Scenario` class interacts with the `Supplier` class to define and manage the steps for data acquisition. The `Supplier` handles the provider-specific aspects and orcheStartes the overall data collection process. The `prefixes.md` file likely defines the unique prefixes for each supplier.

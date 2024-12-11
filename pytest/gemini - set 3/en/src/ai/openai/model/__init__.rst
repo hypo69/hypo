@@ -73,7 +73,7 @@ class TestOpenAIModel:
 
 3. **Placeholder Tests:** The provided example test functions (`test_model_creation`, `test_model_method_valid_input`, etc.) are *placeholders*.  You MUST replace the example method names (`some_method`, `some_attribute`) with the actual names of methods and attributes in your `OpenAIModel` class.  Likewise, adjust the assertions to match the expected behavior of your methods.
 
-4. **Exception Handling:** The `test_model_method_invalid_input` demonstrates how to use `pytest.raises` to test for specific exceptions. This is vital for robust testing.
+4. **Exception Handling:** The `test_model_method_invalid_input` demonStartes how to use `pytest.raises` to test for specific exceptions. This is vital for robust testing.
 
 5. **Edge Case:** The `test_model_method_edge_case` function covers an example edge case (an empty string input).  You need to think about the edge cases specific to your code.
 

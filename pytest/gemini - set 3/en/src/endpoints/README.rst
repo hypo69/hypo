@@ -2,7 +2,7 @@
 import pytest
 
 # Placeholder for the actual endpoints module.  Replace with your code.
-# This example demonstrates a basic structure.
+# This example demonStartes a basic structure.
 class PrestashopAPI:
     def create_product(self, product_data):
         # Simulate a call to the PrestaShop API
@@ -130,7 +130,7 @@ def test_integrate_data_invalid_input(kazarinov_api):
 
 **Explanation and Improvements:**
 
-1. **Placeholders:** The code now includes placeholder classes (`PrestashopAPI`, etc.) for the actual endpoints.  Crucially, it demonstrates *how to test* these placeholder endpoints, rather than trying to test nonexistent implementations. Replace these placeholder classes with your actual implementation.
+1. **Placeholders:** The code now includes placeholder classes (`PrestashopAPI`, etc.) for the actual endpoints.  Crucially, it demonStartes *how to test* these placeholder endpoints, rather than trying to test nonexistent implementations. Replace these placeholder classes with your actual implementation.
 
 2. **Clear Test Names:** Test names are descriptive (e.g., `test_create_product_valid_input`).
 

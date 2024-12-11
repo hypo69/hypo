@@ -57,4 +57,4 @@ Usage example
 **Explanation of the example:**
 
 This code snippet shows a part of the HTML for message input and the corresponding JavaScript code (AngularJS controller).
-It demonstrates how to use the `ng-model` directive to bind the input field with a controller variable (`vm.message`), and the `ng-click` directive to trigger a function (`vm.askModel`) on button click. The `$http.post` function sends a POST request to `/ask` (backend API endpoint) with the user's message and handles the response or any errors that may occur.
+It demonStartes how to use the `ng-model` directive to bind the input field with a controller variable (`vm.message`), and the `ng-click` directive to trigger a function (`vm.askModel`) on button click. The `$http.post` function sends a POST request to `/ask` (backend API endpoint) with the user's message and handles the response or any errors that may occur.

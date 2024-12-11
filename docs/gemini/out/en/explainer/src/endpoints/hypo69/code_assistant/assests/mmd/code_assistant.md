@@ -48,7 +48,7 @@ graph TD
 
 ## <algorithm>
 
-The code describes the workflow of a code assistant application, likely for processing files and generating responses.  The diagram illustrates a cyclical process with several key stages:
+The code describes the workflow of a code assistant application, likely for processing files and generating responses.  The diagram illuStartes a cyclical process with several key stages:
 
 **1. Initialization:**
 * CodeAssistant object is instantiated (A).
@@ -128,7 +128,7 @@ Dependencies: The mermaid code itself does not import anything.  It's a tool for
 **Imports:**  No imports are explicitly shown in the `mmd` code.  The implied imports would include modules for file processing, configuration loading, model interaction (Gemini and OpenAI libraries), and potentially signal handling (`signal`).  These would be from within the `src` package, implying a modular architecture.
 
 **Classes:**
-* `CodeAssistant`: This is the main application class, responsible for orchestrating the entire workflow.
+* `CodeAssistant`: This is the main application class, responsible for orcheStarting the entire workflow.
 * `GeminiModel`: likely a class for interacting with the Gemini AI model.
 * `OpenAIModel`: Likely a class for interacting with the OpenAI model.
 * The `alt` block in the graph defines a conditional branch (representing error handling) indicating a potential error during Gemini Model processing

@@ -69,7 +69,7 @@ def test_mode_variable():
 2. **Specific Test Cases:** The test cases are now more specific, covering initialization, adding functions, and checking for appropriate types (in case of `add_function`).
 
 
-3. **Exception Handling:**  `test_supplier_add_function_invalid_input` and `test_supplier_add_function_with_invalid_function` now demonstrate handling different types of incorrect input.  This is a key aspect of robust testing.
+3. **Exception Handling:**  `test_supplier_add_function_invalid_input` and `test_supplier_add_function_with_invalid_function` now demonStarte handling different types of incorrect input.  This is a key aspect of robust testing.
 
 
 4. **Clear Assertions:** The assertions are more explicit about what's being checked.

@@ -78,7 +78,7 @@ def test_set_project_root_settings_json_invalid_json(tmp_path):
 * **`tmp_path` Fixture:**  Using `tmp_path` from `pytest` creates temporary directories for each test, ensuring isolation and preventing interference between tests.
 
 
-* **Comprehensive Test Cases:** The tests now include cases for valid input, missing marker files, marker files in parent directories, and most importantly, exception handling for `FileNotFoundError` and `json.JSONDecodeError`. This demonstrates a thorough test suite.
+* **Comprehensive Test Cases:** The tests now include cases for valid input, missing marker files, marker files in parent directories, and most importantly, exception handling for `FileNotFoundError` and `json.JSONDecodeError`. This demonStartes a thorough test suite.
 
 * **Correct `assert` Statements:** Asserts are updated to compare against the expected paths.  
 

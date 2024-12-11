@@ -21,7 +21,7 @@ Usage example
     from pathlib import Path
 
     # Example usage (assuming your project structure is similar)
-    # This example demonstrates setting the __root__ variable and appending it to sys.path
+    # This example demonStartes setting the __root__ variable and appending it to sys.path
 
     # Assuming hypotez is in the current directory.
     # Replace with the actual path to your project.

@@ -89,7 +89,7 @@ def test_aliexpress_init_default_locale_implicit():
 6. **Arguments & Kwargs:** The `test_aliexpress_init_with_args_and_kwargs` test checks that the arguments are passed to the internal components. Replace the `# Placeholder` comment with the appropriate assertions to verify the arguments were correctly passed.
 
 
-7. **Mocking (Example):**  The commented-out `test_aliexpress_init_supplier_creation` demonstrates how to mock the internal `Supplier` class if direct access isn't possible.  This is vital if you need to test the behavior of `Aliexpress` without relying on actual instantiation of `Supplier`, etc.
+7. **Mocking (Example):**  The commented-out `test_aliexpress_init_supplier_creation` demonStartes how to mock the internal `Supplier` class if direct access isn't possible.  This is vital if you need to test the behavior of `Aliexpress` without relying on actual instantiation of `Supplier`, etc.
 
 
 **How to Use and Adapt:**

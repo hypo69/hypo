@@ -105,7 +105,7 @@ def test_send_url_button_click_failure():
 
 4. **Two Test Cases:** The code now includes tests for both success and failure scenarios, making it more robust.
 
-5. **Error Handling (Crucial):**  The original code doesn't handle the case where sending the URL fails.  Our test demonstrates checking for a 'failed' response, ensuring the code has a fallback.
+5. **Error Handling (Crucial):**  The original code doesn't handle the case where sending the URL fails.  Our test demonStartes checking for a 'failed' response, ensuring the code has a fallback.
 
 6. **Fixture considerations**:  If `active_tab_url` was frequently used or came from a different source, a fixture would be beneficial.  However, it is not critical for this simplified example.
 

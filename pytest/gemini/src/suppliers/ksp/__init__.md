@@ -77,7 +77,7 @@ def test_graber_get_data_exception():
 3. **Example Fixture:**  A `pytest` fixture (`example_data`) is provided as a placeholder.  You *must* replace this with actual test data if the `Graber` class needs initialization parameters.
 
 
-4. **Error Handling and `pytest.raises`:** The tests now correctly use `pytest.raises` to test for exceptions, including specific types like `ValueError` and `TypeError`. This is essential for robust testing. The tests demonstrate how to handle exceptions raised during the `requests.get` call (network issues, etc.)
+4. **Error Handling and `pytest.raises`:** The tests now correctly use `pytest.raises` to test for exceptions, including specific types like `ValueError` and `TypeError`. This is essential for robust testing. The tests demonStarte how to handle exceptions raised during the `requests.get` call (network issues, etc.)
 
 5. **`monkeypatch`:**  This is very important for testing code that interacts with external libraries like `requests`. Using `monkeypatch.setattr` lets you replace the actual `requests.get` function with a mock version that returns expected data or raises exceptions, allowing you to control the inputs and outputs of `requests.get` within your tests.
 

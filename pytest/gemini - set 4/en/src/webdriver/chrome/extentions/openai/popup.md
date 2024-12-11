@@ -85,7 +85,7 @@ def test_trainModel_valid_input():
 
 5. **Selenium or Similar:** To fully test the HTML and the way Angular handles the UI (changing the displayed content), you need to use a browser automation tool like Selenium. You'll need Selenium to interact with the DOM, select elements, input data, and validate the results shown on the page.
 
-**Crucially:** The provided HTML is AngularJS, requiring additional steps and tools to interact with the AngularJS components.  This example demonstrates basic testing of JavaScript functions; you will need a much more robust testing approach for a full-featured AngularJS application.
+**Crucially:** The provided HTML is AngularJS, requiring additional steps and tools to interact with the AngularJS components.  This example demonStartes basic testing of JavaScript functions; you will need a much more robust testing approach for a full-featured AngularJS application.
 
 
 **How to Run the Tests:**
@@ -104,4 +104,4 @@ def test_trainModel_valid_input():
    ```
 
 
-This revised solution addresses the limitations and provides a more appropriate and complete test framework. Remember to adjust the tests to accurately reflect the actual functionality of your JavaScript code.  Real AngularJS or JavaScript applications are more complex and will need considerably more sophisticated testing frameworks and strategies, potentially involving UI interaction or browser automation. Remember to also account for the specifics of AJAX calls or API interactions, where needed.
+This revised solution addresses the limitations and provides a more appropriate and complete test framework. Remember to adjust the tests to accurately reflect the actual functionality of your JavaScript code.  Real AngularJS or JavaScript applications are more complex and will need considerably more sophisticated testing frameworks and Startegies, potentially involving UI interaction or browser automation. Remember to also account for the specifics of AJAX calls or API interactions, where needed.

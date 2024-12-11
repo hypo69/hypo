@@ -72,7 +72,7 @@ def test_login_long_password():
 
 3. **Example Values:**  Crucially, the example values (`"your_username"`, `"your_password"`) are placeholders.  **You MUST replace these with actual, *valid* credentials**  for the *first* test and appropriate *invalid* ones for others to run correctly.
 
-4. **Realistic Input Validation:**  The tests now demonstrate that invalid input causes `ValueError`. This mimics how real-world API functions often validate input parameters.
+4. **Realistic Input Validation:**  The tests now demonStarte that invalid input causes `ValueError`. This mimics how real-world API functions often validate input parameters.
 
 5. **Edge Cases:** The test cases now include scenarios like empty inputs and excessively long inputs, which are essential edge cases to consider.
 

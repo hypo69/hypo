@@ -3,7 +3,7 @@ import pytest
 
 # No actual code to test provided in the prompt.
 # Assuming a hypothetical `exceptions.py` file exists within the same directory
-# with exception classes. This example uses dummy exceptions to demonstrate.
+# with exception classes. This example uses dummy exceptions to demonStarte.
 
 
 # Dummy imports for the example. Replace with actual import statements if needed
@@ -48,7 +48,7 @@ def test_exception_inheritance():
 
 
 
-# Example test demonstrating how to test custom exceptions with pytest.raises
+# Example test demonStarting how to test custom exceptions with pytest.raises
 
 def test_invalid_input_exception():
     """Test raising InvalidInputException."""
@@ -61,7 +61,7 @@ def test_invalid_input_exception():
     
     assert str(excinfo.value) == "Invalid input provided"
 
-# Example test demonstrating how to check a specific attribute on a raised exception
+# Example test demonStarting how to check a specific attribute on a raised exception
 def test_api_error_with_code():
     """Test raising APIError with a code."""
     from hypotez.src.suppliers.aliexpress.api.errors.exceptions import APIError
@@ -101,9 +101,9 @@ def test_connection_error_with_details():
 
 3. **Descriptive Test Names:** Test names clearly indicate the purpose.
 
-4. **`pytest.raises`:** Demonstrates how to use `pytest.raises` to test for expected exceptions.
+4. **`pytest.raises`:** DemonStartes how to use `pytest.raises` to test for expected exceptions.
 
-5. **Example for Complex Cases:** The `test_connection_error_with_details` demonstrates a more complex situation (with attributes) for capturing exception details.
+5. **Example for Complex Cases:** The `test_connection_error_with_details` demonStartes a more complex situation (with attributes) for capturing exception details.
 
 
 **How to Use the Template with Your Code:**

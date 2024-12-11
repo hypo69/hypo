@@ -90,7 +90,7 @@ graph LR
 
 **Explanation of the Mermaid Diagram:**
 
-The diagram shows a simple structure of the README file and its relation to the topics.  It demonstrates the general organization but doesn't represent any flow of data or execution. The `curl API Request` box represents the example usage for accessing the APIs described within the file. The links represent the described dependencies in the context of the information provided by the README.
+The diagram shows a simple structure of the README file and its relation to the topics.  It demonStartes the general organization but doesn't represent any flow of data or execution. The `curl API Request` box represents the example usage for accessing the APIs described within the file. The links represent the described dependencies in the context of the information provided by the README.
 
 # <explanation>
 

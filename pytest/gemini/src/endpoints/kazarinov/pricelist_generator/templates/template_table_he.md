@@ -4,7 +4,7 @@ import pytest
 # No Python code to test, only HTML.
 # Therefore, no tests can be written to verify functionality.
 
-# Placeholder tests demonstrating structure.  These tests are not related
+# Placeholder tests demonStarting structure.  These tests are not related
 # to the provided HTML.
 
 def test_example_function_valid_input():

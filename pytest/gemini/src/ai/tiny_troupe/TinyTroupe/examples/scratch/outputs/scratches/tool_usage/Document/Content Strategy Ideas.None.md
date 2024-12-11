@@ -55,9 +55,9 @@ def test_calculate_sum_invalid_list_element():
 
 **Explanation and Important Considerations:**
 
-The provided input code is a document outlining content strategy ideas, not Python code.  Therefore, no testable functions or classes are present.  
+The provided input code is a document outlining content Startegy ideas, not Python code.  Therefore, no testable functions or classes are present.  
 
-The example I've included demonstrates how you would structure `pytest` tests for a function like `calculate_sum` in Python.  Replace this example with the actual function from your provided Python file to generate appropriate test cases.
+The example I've included demonStartes how you would structure `pytest` tests for a function like `calculate_sum` in Python.  Replace this example with the actual function from your provided Python file to generate appropriate test cases.
 
 **Crucial Steps if You Have Python Code:**
 

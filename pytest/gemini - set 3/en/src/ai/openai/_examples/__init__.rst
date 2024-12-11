@@ -74,10 +74,10 @@ def test_function_does_not_raise_exception_with_valid_input():
 
 2. **Explicit Error Handling:** The `test_version_is_valid_format` test now correctly uses `pytest.fail` to give a meaningful error message if the version format is invalid.  This is crucial for robust error handling.
 
-3. **Edge Case and Type Checking:** The `test_details_contains_specific_key` example demonstrates how to check if a dictionary contains specific keys and their types.  Adapting this to your specific `__details__` structure is essential.
+3. **Edge Case and Type Checking:** The `test_details_contains_specific_key` example demonStartes how to check if a dictionary contains specific keys and their types.  Adapting this to your specific `__details__` structure is essential.
 
 
-4. **Example for Exception Handling:**  The `test_function_does_not_raise_exception_with_valid_input` function demonstrates how to test for exceptions (and how to replace with your actual code).
+4. **Example for Exception Handling:**  The `test_function_does_not_raise_exception_with_valid_input` function demonStartes how to test for exceptions (and how to replace with your actual code).
 
 5. **Flexibility:** The comments are now placeholders for you to replace with your actual functions, expected results, and the specific details of `__details__` if it's more complex.  You must add tests for those functions!
 

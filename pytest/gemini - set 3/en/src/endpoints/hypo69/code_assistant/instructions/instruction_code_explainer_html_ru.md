@@ -62,7 +62,7 @@ def test_my_function_invalid_input_type_mixed_list():
 
 1. **Clear Test Function Names:**  The test function names (e.g., `test_my_function_valid_input`, `test_my_function_empty_list`) clearly describe the test case.
 
-2. **Specific Error Handling:** The tests now include specific tests for `TypeError` and `ValueError`, illustrating appropriate use of `pytest.raises`.  Crucially, they check that the *correct* error message is raised.
+2. **Specific Error Handling:** The tests now include specific tests for `TypeError` and `ValueError`, illuStarting appropriate use of `pytest.raises`.  Crucially, they check that the *correct* error message is raised.
 
 3. **Edge Cases:** The test `test_my_function_empty_list` handles an empty list as an edge case.
 

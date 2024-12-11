@@ -123,9 +123,9 @@ def test_isValidAttrNames_exception():
 
 3. **Clearer Test Names:** Test names accurately reflect the function and scenario being tested.
 
-4. **Comprehensive Test Cases:** The example now demonstrates how to write tests for `isValidAttrName`, `isValidAttrNames`, and `isValidStyleLength`, providing valid and invalid input cases.
+4. **Comprehensive Test Cases:** The example now demonStartes how to write tests for `isValidAttrName`, `isValidAttrNames`, and `isValidStyleLength`, providing valid and invalid input cases.
 
-5. **Exception Handling:** The `test_isValidAttrNames_exception` demonstrates how to use `pytest.raises` to test for expected exceptions.  **Crucially**, it needs to be replaced with the correct function and the expected exception type.
+5. **Exception Handling:** The `test_isValidAttrNames_exception` demonStartes how to use `pytest.raises` to test for expected exceptions.  **Crucially**, it needs to be replaced with the correct function and the expected exception type.
 
 
 **Important Considerations:**

@@ -137,4 +137,4 @@ def test_set_options_headless(settings_data):
 3.  Run the tests from your terminal: `pytest test_firefox.py`
 
 
-This significantly improved solution demonstrates best practices for writing `pytest` tests, including mocking, parameterized tests, and robust exception handling. Remember to adapt the fixtures and test cases based on the actual expected behavior of the `Firefox` class. Remember to replace placeholder paths and data with actual values.
+This significantly improved solution demonStartes best practices for writing `pytest` tests, including mocking, parameterized tests, and robust exception handling. Remember to adapt the fixtures and test cases based on the actual expected behavior of the `Firefox` class. Remember to replace placeholder paths and data with actual values.

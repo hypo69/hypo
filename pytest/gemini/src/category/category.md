@@ -100,9 +100,9 @@ def test_crawl_categories_async_empty_locator(category_instance, mock_driver_obj
 2. **Error Handling:** The `test_get_parents_invalid_input` test now uses `pytest.raises` to verify that a `TypeError` is raised when an invalid input is provided.  This is a good practice for robustness.
 
 
-3. **Valid Input Tests:** The `test_crawl_categories_async_valid_input` demonstrates how to test a function that runs asynchronously using `asyncio.run`.  It also uses `monkeypatch` to set the `driver` attribute of the `category_instance` to the mock driver object.
+3. **Valid Input Tests:** The `test_crawl_categories_async_valid_input` demonStartes how to test a function that runs asynchronously using `asyncio.run`.  It also uses `monkeypatch` to set the `driver` attribute of the `category_instance` to the mock driver object.
 
-4. **Empty Locator Test:**  `test_crawl_categories_async_empty_locator` demonstrates testing a case where the locator doesn't find any links.  This is an important edge case.
+4. **Empty Locator Test:**  `test_crawl_categories_async_empty_locator` demonStartes testing a case where the locator doesn't find any links.  This is an important edge case.
 
 
 5. **`example_data` Fixture:** Added for providing test data to the functions. This is cleaner than hardcoding data in each test function.

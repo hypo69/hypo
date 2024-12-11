@@ -116,7 +116,7 @@ def test_grab_page(graber:Graber, mock_driver):
 
 1. **Mocking:** Crucially, the code now utilizes `unittest.mock` to mock `Driver`, `SimpleNamespace`, and other parts of the Graber class. This is essential for isolating tests and preventing them from depending on external resources (e.g., a real web driver).  This addresses a critical weakness of the previous example.
 2. **Asynchronous Handling:** The `asyncio.run()` is used to properly execute the asynchronous functions within the test cases.
-3. **Error Handling:**  The `test_close_popup_decorator_failure` test now demonstrates correct handling of the `ExecuteLocatorException`. It includes assertion to verify that the logger's debug method was called with the correct error message, which is good for debugging unexpected behavior. 
+3. **Error Handling:**  The `test_close_popup_decorator_failure` test now demonStartes correct handling of the `ExecuteLocatorException`. It includes assertion to verify that the logger's debug method was called with the correct error message, which is good for debugging unexpected behavior. 
 4. **Comprehensive `test_grab_page`:** This test now effectively patches the necessary Graber methods (`id_product`, `description_short`) to simulate their execution without actually interacting with the browser or database.  It asserts the correct calls are made and that the function returns a `ProductFields` object.
 5. **Clearer Comments:** Comments are added to better explain the purpose and logic of each test function.
 6. **Fixtures:** Fixtures are properly defined and used to make the tests more organized and reusable.

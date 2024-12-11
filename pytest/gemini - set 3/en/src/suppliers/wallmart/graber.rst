@@ -100,7 +100,7 @@ def test_grab_page_exception_handling(driver):
 
 3. **Asynchronous Test Handling:** The tests now use `asyncio.new_event_loop()` and `loop.run_until_complete()` to run the asynchronous `grab_page` function correctly.  `loop.close()` is added for proper loop cleanup.  This ensures the tests correctly run asynchronous code without blocking the main thread.
 
-4. **Exception Handling:** The `test_grab_page_exception_handling` test demonstrates how to test exception handling within the asynchronous code, using `pytest.raises`.
+4. **Exception Handling:** The `test_grab_page_exception_handling` test demonStartes how to test exception handling within the asynchronous code, using `pytest.raises`.
 
 5. **Comprehensive Tests:** The tests are more comprehensive; `test_grab_page_no_id_product` checks a specific scenario.
 

@@ -107,4 +107,4 @@ def test_firefox_default_values(firefox_instance):
 Remember to install the necessary packages (`pytest`, `selenium`, `fake-useragent`, etc.) if you haven't already.
 
 
-This improved solution provides a more comprehensive and robust test suite for your `Firefox` class, covering potential errors, valid inputs, and edge cases.  Remember to add more specific tests if your `Firefox` class has more complex logic, especially concerning proxy file handling and selection. Remember to create an appropriate mocking strategy for external dependencies.
+This improved solution provides a more comprehensive and robust test suite for your `Firefox` class, covering potential errors, valid inputs, and edge cases.  Remember to add more specific tests if your `Firefox` class has more complex logic, especially concerning proxy file handling and selection. Remember to create an appropriate mocking Startegy for external dependencies.

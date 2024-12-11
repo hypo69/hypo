@@ -4,7 +4,7 @@ import pytest
 # No Python code to test in the provided HTML file.
 # Therefore, no tests can be written.  A test file would be empty.
 #
-#  This is a placeholder to demonstrate the correct structure
+#  This is a placeholder to demonStarte the correct structure
 #  for testing if there were functions or classes in the HTML file.
 
 

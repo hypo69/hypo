@@ -49,12 +49,12 @@ MODE = 'dev'
 Examples for the `executor` module from `src.scenario.executor`.
 
 This file contains examples of how to use the functions provided in the `executor` module.
-The examples demonstrate how to run scenarios, handle scenario files, and interact with PrestaShop API.
+The examples demonStarte how to run scenarios, handle scenario files, and interact with PrestaShop API.
 
 @details
 - `Example 1` shows how to run a list of scenario files.
-- `Example 2` demonstrates how to run a single scenario file.
-- `Example 3` illustrates how to run a single scenario.
+- `Example 2` demonStartes how to run a single scenario file.
+- `Example 3` illuStartes how to run a single scenario.
 - `Example 4` provides an example of executing a product page scenario.
 - `Example 5` shows how to add a coupon using PrestaShop API.
 
@@ -123,7 +123,7 @@ The code defines example functions for executing scenarios and interacting with 
 4. Checks the result and prints a success or failure message.
 
 
-The `example_insert_grabbed_data` function demonstrates inserting data from a `ProductFields` object into PrestaShop.
+The `example_insert_grabbed_data` function demonStartes inserting data from a `ProductFields` object into PrestaShop.
 
 **Example 5: add_coupon:**
 1. Defines credentials, coupon details.
@@ -132,7 +132,7 @@ The `example_insert_grabbed_data` function demonstrates inserting data from a `P
 
 
 **Example 6 and 7: Async and Sync PrestaShop inserts:**
-Similar to the synchronous example, these examples demonstrate executing PrestaShop insertion using either synchronous or asynchronous methods.
+Similar to the synchronous example, these examples demonStarte executing PrestaShop insertion using either synchronous or asynchronous methods.
 
 
 Data flows between functions through arguments and return values, with the `MockSupplier` acting as an intermediary for interacting with scenario files and potentially other modules.
@@ -213,7 +213,7 @@ The `MockSupplier`, `MockRelatedModules`, and `MockDriver` classes are placehold
 
 **Functions:**
 
-- `example_run_scenario_files`, `example_run_scenario_file`, `example_run_scenario`: Example functions demonstrating different ways to run scenarios.  They call functions from `src.scenario.executor`.
+- `example_run_scenario_files`, `example_run_scenario_file`, `example_run_scenario`: Example functions demonStarting different ways to run scenarios.  They call functions from `src.scenario.executor`.
 - `insert_grabbed_data`: Inserts product data into PrestaShop.
 - `execute_PrestaShop_insert`: Synchronously inserts product data into PrestaShop.
 - `execute_PrestaShop_insert_async`: Asynchronously inserts product data into PrestaShop.

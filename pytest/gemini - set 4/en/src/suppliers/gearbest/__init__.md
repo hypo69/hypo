@@ -95,10 +95,10 @@ class TestGraber:
 6. **Comprehensive Invalid Input Tests:** Tests now include more variations of invalid inputs (e.g., empty string, `None`, integers as headers).
 
 
-7. **Example `Graber` Tests:**  The example tests for the `Graber` class now demonstrate how to use `pytest.raises` to handle potential exceptions and are much more comprehensive in testing a variety of inputs and edge cases, and include parameterization.
+7. **Example `Graber` Tests:**  The example tests for the `Graber` class now demonStarte how to use `pytest.raises` to handle potential exceptions and are much more comprehensive in testing a variety of inputs and edge cases, and include parameterization.
 
 
-8. **Example of fixtures:** Demonstrates how to include fixtures if needed, along with an example test that uses it.  *Important* You *must* delete the example fixtures and tests or include placeholder functions for them based on the real functions and data.
+8. **Example of fixtures:** DemonStartes how to include fixtures if needed, along with an example test that uses it.  *Important* You *must* delete the example fixtures and tests or include placeholder functions for them based on the real functions and data.
 
 **How to use these tests:**
 

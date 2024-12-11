@@ -120,7 +120,7 @@ def test_configure_logger_invalid_log_path():
 
 2. **Mocking `Logger`:** The provided `Logger` class is mocked for testing. The stub functions now return `pass` as appropriate.  Replace these stubs with your actual Logger's code once you have it.
 
-3. **Error Handling:** Added a test `test_configure_logger_invalid_log_path` to demonstrate handling a file that doesn't exist. It uses `pytest.raises` to assert the expected exception.
+3. **Error Handling:** Added a test `test_configure_logger_invalid_log_path` to demonStarte handling a file that doesn't exist. It uses `pytest.raises` to assert the expected exception.
 
 4. **Clear Test Names:** Test function names are descriptive (e.g., `test_configure_logger_valid_input`).
 

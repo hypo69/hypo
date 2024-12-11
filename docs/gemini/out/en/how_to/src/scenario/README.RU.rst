@@ -4,7 +4,7 @@ How to use the `src.scenario` module
 
 Description
 -------------------------
-The `src.scenario` module automates interactions with suppliers using scenarios defined in JSON files. It extracts and processes product data from supplier websites and synchronizes this information with a database (e.g., PrestaShop).  The module handles reading scenarios, interacting with websites, processing data, logging execution, and orchestrating the entire process.
+The `src.scenario` module automates interactions with suppliers using scenarios defined in JSON files. It extracts and processes product data from supplier websites and synchronizes this information with a database (e.g., PrestaShop).  The module handles reading scenarios, interacting with websites, processing data, logging execution, and orcheStarting the entire process.
 
 Execution steps
 -------------------------
@@ -34,7 +34,7 @@ Execution steps
 7. **Update the execution journal:** The `dump_journal` function records all the steps and results, both successes and failures, into a journal file.
 
 
-8. **Run the main function:**  The `main` function provides an entry point for running the scenario process. It orchestrates the loading of the configuration and the scenario files.
+8. **Run the main function:**  The `main` function provides an entry point for running the scenario process. It orcheStartes the loading of the configuration and the scenario files.
 
 
 Usage example

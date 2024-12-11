@@ -81,7 +81,7 @@ def test_relative_paths():
 
 2. **Robust `test_dir_root_calculation`:**  Instead of just verifying the type, it now verifies that the directory exists, making the test more robust.
 
-3. **`test_dir_root_hypotez_not_found`:** This new test is crucial. It checks for the case where the `hypotez` directory doesn't exist, demonstrating exception handling.
+3. **`test_dir_root_hypotez_not_found`:** This new test is crucial. It checks for the case where the `hypotez` directory doesn't exist, demonStarting exception handling.
 
 4. **`test_sys_path_append_dir_root`:** This test checks that the code successfully adds the directory to the Python path (`sys.path`) by making a call to a path that should exist if the path is properly appended. It also verifies that the append was successful, by comparing the path length after the append.
 

@@ -159,9 +159,9 @@ The `mermaid` diagram visually represents the dependencies between modules and c
 
 - `PsychologistTelgrambot(TelegramBot)`: Inherits from `TelegramBot` to utilize Telegram bot functionalities. It's a specific bot for a psychologist.
     - `token`, `d`, `model`, `system_instruction`, `questions_list`: Attributes for authentication, driver instance, AI model, instruction text, question list.  These are initialized in `__post_init__`.
-    - `__post_init__`: This method is crucial in initializing the bot; it sets up the token, driver, model, prompts, and registers handlers, demonstrating the initialization sequence for the specific chatbot behavior.
+    - `__post_init__`: This method is crucial in initializing the bot; it sets up the token, driver, model, prompts, and registers handlers, demonStarting the initialization sequence for the specific chatbot behavior.
     - `register_handlers`: Method used to set up the event handler for various messages.
-    - `start`, `handle_message`, `handle_voice`, `handle_document`, `handle_suppliers_response`, `handle_onetab_response`, `handle_next_command`, etc.: Methods that handle bot commands and incoming messages. These demonstrate the specific behavior expected of this Telegram bot.
+    - `start`, `handle_message`, `handle_voice`, `handle_document`, `handle_suppliers_response`, `handle_onetab_response`, `handle_next_command`, etc.: Methods that handle bot commands and incoming messages. These demonStarte the specific behavior expected of this Telegram bot.
 
 
 **Functions:**

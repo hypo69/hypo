@@ -44,7 +44,7 @@ import pytest
 
 1. **No Testable Python Code:** The provided HTML file (`template.html`) is for rendering, not for execution.  There's no Python code to test directly within the HTML.  To write tests, you need Python functions that process data and generate the HTML.
 
-2. **Hypothetical Test Cases (Example):** The example shows *possible* tests you'd write if you had Python functions to handle the product data and template rendering. It demonstrates how you might use `pytest` fixtures to provide test data and verify the output of those functions.  You would use a templating engine (like Jinja2) to render the template with the data.
+2. **Hypothetical Test Cases (Example):** The example shows *possible* tests you'd write if you had Python functions to handle the product data and template rendering. It demonStartes how you might use `pytest` fixtures to provide test data and verify the output of those functions.  You would use a templating engine (like Jinja2) to render the template with the data.
 
 
 3. **Focus on Data Handling:** If you have Python code generating the `products` list, `price`, and `currency` variables, then you test *that* Python code.  The example shows how to test if the correct data is used to generate the expected HTML output.

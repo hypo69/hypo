@@ -88,7 +88,7 @@ def test_extract_author_non_dict_input():
 * **Clear Test Names:** Test names are descriptive, making it easy to understand the purpose of each test.
 * **Specific Assertions:**  Uses `assert` statements to verify the expected results, which is the best practice for pytest.
 * **Correct Handling of `None` and Empty Data:**  Tests for cases where the input data might be `None` or contain no author information, which are essential for robust error handling.
-* **`pytest.raises` (Example):** A commented-out example demonstrates how to use `pytest.raises` for exception handling if your functions raise exceptions.
+* **`pytest.raises` (Example):** A commented-out example demonStartes how to use `pytest.raises` for exception handling if your functions raise exceptions.
 
 **How to Use:**
 

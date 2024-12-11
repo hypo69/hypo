@@ -77,7 +77,7 @@ def test_greet_invalid_input():
 
 **Explanation and Improvements:**
 
-1. **Example Functions:**  Crucially, I've added example functions (`add`, `divide`, `greet`) to demonstrate how to write tests.  Replace these with the actual functions from your code.
+1. **Example Functions:**  Crucially, I've added example functions (`add`, `divide`, `greet`) to demonStarte how to write tests.  Replace these with the actual functions from your code.
 
 2. **Comprehensive Test Cases:**  The tests now cover:
    - Positive numbers

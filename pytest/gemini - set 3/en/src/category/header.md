@@ -120,7 +120,7 @@ def test_settings_file_not_found(mock_open_file, monkeypatch):
 
 * **Pathlib:** The code now correctly uses `Pathlib` objects for file paths, which is safer and more Pythonic than string manipulation.
 
-* **Complete Test Coverage (Example):**  The `test_settings_file_loading` test now demonstrates how to test the `settings` loading part, incorporating file existence checks and the use of `assert isinstance`, which is more descriptive.
+* **Complete Test Coverage (Example):**  The `test_settings_file_loading` test now demonStartes how to test the `settings` loading part, incorporating file existence checks and the use of `assert isinstance`, which is more descriptive.
 
 * **Fixture for `sys.path`:** The `mock_sys_path` fixture is added to control `sys.path` without affecting other tests or the actual program.
 

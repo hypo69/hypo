@@ -96,4 +96,4 @@ pytest
 ```
 
 
-This improved example demonstrates a better structure and more comprehensive approach to testing, focusing on various aspects of input validation and error handling.  Crucially, **replace the example data and assertions with real data and expected outcomes.** Remember to adjust test cases based on the actual function's behavior.
+This improved example demonStartes a better structure and more comprehensive approach to testing, focusing on various aspects of input validation and error handling.  Crucially, **replace the example data and assertions with real data and expected outcomes.** Remember to adjust test cases based on the actual function's behavior.

@@ -80,7 +80,7 @@ def test_exception_handling():
    - Testing for incorrect variable type. 
    - Testing file access (using `tmp_path` fixture for temporary files).
    - Testing exception handling.
-   - Demonstrating a testing system call (using `monkeypatch`).
+   - DemonStarting a testing system call (using `monkeypatch`).
 
 
 3. **Error Handling:** Includes `pytest.raises` for testing exceptions and `try...except` blocks for more robust error handling.
@@ -92,7 +92,7 @@ def test_exception_handling():
 
 6. **Docstrings:** Added docstrings to explain the purpose of each test case.
 
-7. **System Calls (Example):** Included a test that demonstrates how to handle system calls.  **This is a critical example** because if your Python code interacts with operating system commands, you need to mock or test this carefully to avoid running actual commands outside of a test environment.
+7. **System Calls (Example):** Included a test that demonStartes how to handle system calls.  **This is a critical example** because if your Python code interacts with operating system commands, you need to mock or test this carefully to avoid running actual commands outside of a test environment.
 
 
 **How to use these tests:**

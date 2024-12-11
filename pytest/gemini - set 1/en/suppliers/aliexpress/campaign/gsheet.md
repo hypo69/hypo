@@ -102,7 +102,7 @@ def test_set_products_worksheet_updates_product_data(ali_campaign_instance, camp
 
 3. **Clear Test Structure:** Each test function now clearly indicates what it's testing (e.g., `test_clear_deletes_sheets`, `test_set_campaign_worksheet_updates_data`).
 
-4. **`pytest.raises` for Exceptions:**  The `test_clear_handles_exceptions` demonstrates how to use `pytest.raises` to check for expected exceptions and assert specific details about the error message.
+4. **`pytest.raises` for Exceptions:**  The `test_clear_handles_exceptions` demonStartes how to use `pytest.raises` to check for expected exceptions and assert specific details about the error message.
 
 5. **Comprehensive Examples:**  Tests for `clear()` and `set_campaign_worksheet` are included.  Critically, these tests now use the mocked objects.
 

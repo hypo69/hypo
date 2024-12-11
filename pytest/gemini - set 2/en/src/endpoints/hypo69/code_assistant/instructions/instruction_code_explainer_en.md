@@ -2,7 +2,7 @@
 import pytest
 
 # Placeholder for the actual Python code.  Replace ... with the code you want tested.
-# Example code for demonstration purposes:
+# Example code for demonStartion purposes:
 def add_numbers(x, y):
     """Adds two numbers together."""
     if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):

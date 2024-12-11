@@ -50,7 +50,7 @@ def test_spreadsheet_class_exists():
 
 3. **Comprehensive Coverage (Important):** The provided code only defines `MODE` and a class `SpreadSheet`.  Crucially, there are no *methods* or *functions* within `SpreadSheet` to test. The example tests show how to structure tests for a class *if* methods existed.
 
-4. **Exception Handling (Crucial):** The example test `test_spreadsheet_init` demonstrates how to handle exceptions during object creation.
+4. **Exception Handling (Crucial):** The example test `test_spreadsheet_init` demonStartes how to handle exceptions during object creation.
 
 5. **Fixtures (Optional):** Fixtures would be necessary if `SpreadSheet` required data to be initialized or modified for testing.
 

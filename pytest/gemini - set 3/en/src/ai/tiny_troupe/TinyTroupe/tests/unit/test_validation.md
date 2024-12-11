@@ -94,7 +94,7 @@ def test_validate_person_invalid_expectations(setup):
 
 4. **Comprehensive Invalid Input Test:** Added a `test_validate_person_invalid_expectations` case to explicitly check how the function handles completely inappropriate expectations.
 
-5. **Example Fixture Inclusion (commented out):** Demonstrates how to integrate a fixture if needed, and shows the placeholder.
+5. **Example Fixture Inclusion (commented out):** DemonStartes how to integrate a fixture if needed, and shows the placeholder.
 
 6. **Import Fixes:** Adjusted imports to properly locate `testing_utils` (you'll need to have it in your `hypotez/src/ai/tiny_troupe/tests/unit` directory) and any other necessary modules.  **Crucially, the `sys.path.append` lines are now dynamically set, based on the `File location` which is a valuable improvement.**
 

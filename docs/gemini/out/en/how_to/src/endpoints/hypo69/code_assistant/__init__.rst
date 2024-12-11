@@ -28,5 +28,5 @@ Usage example
     # Example usage, assuming CodeAssistant constructor is defined:
     assistant = CodeAssistant()
     #  The rest of the code will depend on what CodeAssistant does, 
-    # this is just an example to demonstrate usage of the import.
+    # this is just an example to demonStarte usage of the import.
     # ... (further code interacting with assistant object)

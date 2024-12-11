@@ -92,7 +92,7 @@ def test_prestawarehouse_some_method_called(mock_everything):
 
 2. **Comprehensive Tests:** The `test_prestawarehouse_inheritance` test checks the inheritance relationship. `test_prestawarehouse_init` now verifies the initialization of the class and the initial attributes.
 
-3. **Example Usage of Mock for Method Calls:** `test_prestawarehouse_some_method_called` demonstrates how to utilize the mocked `some_method` within `PrestaWarehouse` to test its behavior when calling that method. This correctly isolates the testing to the methods of interest in `PrestaWarehouse`.
+3. **Example Usage of Mock for Method Calls:** `test_prestawarehouse_some_method_called` demonStartes how to utilize the mocked `some_method` within `PrestaWarehouse` to test its behavior when calling that method. This correctly isolates the testing to the methods of interest in `PrestaWarehouse`.
 
 4. **Clearer Test Names:**  The test names are more descriptive and explicitly indicate the tested behavior.
 
@@ -101,7 +101,7 @@ def test_prestawarehouse_some_method_called(mock_everything):
 **Crucially, this revised solution:**
 
 * **Tests the Core Logic:**  It focuses on testing the key aspects of `PrestaWarehouse` by mocking external dependencies, which is a correct, realistic approach to handling the problem.
-* **Demonstrates Testability:** This shows how to test without needing the external services or modules, and verifying the internal function behavior.
+* **DemonStartes Testability:** This shows how to test without needing the external services or modules, and verifying the internal function behavior.
 * **Handles Potential Complexity:**  Mocking helps to manage dependency issues that would arise when testing the methods of `PrestaWarehouse` that call other external dependencies.
 
 

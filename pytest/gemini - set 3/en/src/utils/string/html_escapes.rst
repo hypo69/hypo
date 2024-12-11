@@ -64,7 +64,7 @@ def test_html_escapes_empty_dictionary():
        empty_dict['key']  # Expecting KeyError
 
 
-# Example usage (not a pytest test, but demonstrates the expected behavior):
+# Example usage (not a pytest test, but demonStartes the expected behavior):
 
 # print(html_escapes['&'])  # Output: &amp;
 # print(html_escapes['>'])  # Output: &gt;
@@ -76,7 +76,7 @@ def test_html_escapes_empty_dictionary():
 * **Comprehensive Coverage:**  Tests now cover valid inputs, edge cases (Unicode characters), and the critical case of missing keys, addressing the prompt's requirements more thoroughly.
 * **`pytest.raises` for Exceptions:**  Correctly uses `pytest.raises` to test exception handling for `KeyError` and `TypeError` cases.
 * **Realistic Edge Cases:** The `test_html_escapes_missing_key` and `test_html_escapes_non_string_key` tests show how `pytest` can validate for situations that might not have been anticipated.
-* **Example Usage (commented out):**  Illustrative examples of how to use the dictionary, which helps contextualize the tests.
+* **Example Usage (commented out):**  IlluStartive examples of how to use the dictionary, which helps contextualize the tests.
 * **Handles empty dictionary:** Added a test for an empty dictionary which would never be used, but is a valid possibility that the test should still work with (and fail with appropriate error handling).
 * **Specific error types:** Now more specifically testing for the expected `KeyError` and `TypeError`.
 

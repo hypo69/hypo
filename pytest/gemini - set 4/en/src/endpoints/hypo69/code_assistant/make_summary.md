@@ -95,8 +95,8 @@ def teardown_module(module):
 **Explanation and Improvements:**
 
 * **Fixtures:**  Crucially, the code now uses `pytest` fixtures (`sample_docs_dir`, `sample_docs_dir_empty`) to create temporary directories with sample `.md` files.  This isolates the tests and avoids cluttering the test environment.
-* **Error Handling:**  The tests now include a `test_make_summary_invalid_input_no_directory` case, demonstrating error handling for a non-existent directory.  It uses `mocker` to patch the `print` function so we can test the error message is being printed.
-* **Edge Cases:** `test_make_summary_empty_directory` and `test__make_summary_existing_summary_file` demonstrate edge cases (empty directory and existing file).
+* **Error Handling:**  The tests now include a `test_make_summary_invalid_input_no_directory` case, demonStarting error handling for a non-existent directory.  It uses `mocker` to patch the `print` function so we can test the error message is being printed.
+* **Edge Cases:** `test_make_summary_empty_directory` and `test__make_summary_existing_summary_file` demonStarte edge cases (empty directory and existing file).
 * **Comprehensive Testing:** The tests cover a wider range of scenarios (valid input, empty directory, existing file) and validate the functionality.
 * **Clearer Assertions:** The tests now use assertions like `assert summary_file.exists()` to directly verify the file creation and content rather than relying solely on print statements.
 * **Teardown:**  A `teardown_module` function is added to remove temporary directories after the tests, ensuring a clean test environment.

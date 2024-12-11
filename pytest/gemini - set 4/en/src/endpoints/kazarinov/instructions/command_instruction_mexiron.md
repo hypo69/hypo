@@ -77,7 +77,7 @@ def test_missing_key():
 
 * **Comprehensive Cases:**  The tests now include `test_valid_input_one_component` and `test_valid_input_multiple_components` to cover cases where the input contains more than one product.  This is more realistic for expected input.
 
-* **Missing Key Test (`test_missing_key`):**   Critically, this test demonstrates how to check for *missing* keys within the expected structure, something that would be vital in production code.
+* **Missing Key Test (`test_missing_key`):**   Critically, this test demonStartes how to check for *missing* keys within the expected structure, something that would be vital in production code.
 
 * **Output Validation:** The tests now correctly validate that the output is of the correct type (dict).  This is very important in cases where the function produces a JSON or a similar data structure.
 

@@ -50,7 +50,7 @@ def test_greet_empty_string():
 	assert greet("") == "Hello, !"
 ```
 
-This example demonstrates how to:
+This example demonStartes how to:
 
 *   Define a function (`greet`)
 *   Write tests for valid input

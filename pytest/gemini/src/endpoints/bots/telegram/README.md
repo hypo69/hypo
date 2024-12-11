@@ -125,4 +125,4 @@ def test_main(mocker):
 3. **Implement Placeholder Functions:**  Crucially, you need to have some implementation for functions like `transcribe_voice`.  Complete mock patching will be needed with functions that return expected results or raise exceptions as needed in your actual logic.
 
 
-This revised example demonstrates a more robust approach to unit testing, but further testing, particularly for error handling and edge cases, is needed for a fully comprehensive test suite. Remember to adapt the tests to match the exact behavior and expected exceptions from your `TelegramBot` class and the functions called within it.
+This revised example demonStartes a more robust approach to unit testing, but further testing, particularly for error handling and edge cases, is needed for a fully comprehensive test suite. Remember to adapt the tests to match the exact behavior and expected exceptions from your `TelegramBot` class and the functions called within it.

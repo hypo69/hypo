@@ -113,7 +113,7 @@ import sys
 
 5. **Error Handling:** The tests verify that the functions handle `FileNotFoundError` and `json.JSONDecodeError` correctly in the section of code relating to settings.json and README.md.
 
-6. **`monkeypatch` (added for example, crucial for testing file interaction):** This fixture is crucial for testing code that interacts with files.  It allows you to mock file existence, contents, and more to test different scenarios.  The example commented-out test `test_settings_loading_with_file_error` demonstrates how to use `monkeypatch`. **YOU MUST ADAPT THIS FOR YOUR `settings` loading testing** as you don't use `Path` properly in your existing code and require additional checks.
+6. **`monkeypatch` (added for example, crucial for testing file interaction):** This fixture is crucial for testing code that interacts with files.  It allows you to mock file existence, contents, and more to test different scenarios.  The example commented-out test `test_settings_loading_with_file_error` demonStartes how to use `monkeypatch`. **YOU MUST ADAPT THIS FOR YOUR `settings` loading testing** as you don't use `Path` properly in your existing code and require additional checks.
 
 
 **Important Considerations and Next Steps:**

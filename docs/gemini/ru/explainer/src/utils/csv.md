@@ -183,4 +183,4 @@ graph TD
     *   Adding unit tests for all functions would significantly improve code quality.
 
 
-* **Relationships:** The code interacts with the `src.logger` module, demonstrating integration into a larger project that likely includes other utilities or components. The `save_csv_file` function is critical for storing processed data, while `read_csv_file` serves to retrieve it. The conversion functions `read_csv_as_json` and `read_csv_as_dict` represent a common operation in data processing pipelines.  This code is intended to be reusable, hence the clear use of parameters and explicit error handling.
+* **Relationships:** The code interacts with the `src.logger` module, demonStarting integration into a larger project that likely includes other utilities or components. The `save_csv_file` function is critical for storing processed data, while `read_csv_file` serves to retrieve it. The conversion functions `read_csv_as_json` and `read_csv_as_dict` represent a common operation in data processing pipelines.  This code is intended to be reusable, hence the clear use of parameters and explicit error handling.

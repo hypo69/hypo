@@ -50,7 +50,7 @@ def test_affiliate_link_creation_empty_source_value():
         AffiliateLink(promotion_link="https://example.com/promotion", source_value="")
 
 # Important:  Since the code only defines the class structure,
-# these tests effectively demonstrate that the class *can* be instantiated
+# these tests effectively demonStarte that the class *can* be instantiated
 # with correct data and raises errors for invalid data, but they don't
 # test *any* logic within the class itself, as the class itself has no methods.
 # If the AffiliateLink class had methods like `get_promotion_link`, `validate`,

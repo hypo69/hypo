@@ -77,7 +77,7 @@ def test_make_api_call_invalid_input():
 * **Clear Test Names:** Test names are descriptive and explain the purpose of each test.
 * **`pytest.raises`:** The example `test_make_api_call_invalid_input` uses `pytest.raises` to test for expected exceptions.  Adapt this pattern as needed for your specific error handling.
 * **Edge Cases:** Tests are added to cover scenarios where the API might return no data (e.g., empty list of products).
-* **`cache_clear`:**  The `test_make_api_call_missing_api_key` example now demonstrates how to clear any cached API results to ensure each test is isolated. This prevents spurious results due to cache usage.  *Important: Adapt this technique to the way your `get_api_key` function is used.*
+* **`cache_clear`:**  The `test_make_api_call_missing_api_key` example now demonStartes how to clear any cached API results to ensure each test is isolated. This prevents spurious results due to cache usage.  *Important: Adapt this technique to the way your `get_api_key` function is used.*
 
 
 **Important:**

@@ -93,7 +93,7 @@ Vid=
 
 4. **Missing Module Placeholder:** The crucial line `from your_module import parse_desktop_ini` is included.  **You absolutely must replace `your_module` with the actual name of the Python module containing the `parse_desktop_ini` function.**  Without the actual code to parse `desktop.ini`, you cannot run the tests.
 
-5. **Empty/Missing Section Handling:** Tests `test_desktop_ini_parse_empty_section` and `test_desktop_ini_parse_missing_section` demonstrate handling of these edge cases, expecting empty dictionaries in appropriate circumstances.
+5. **Empty/Missing Section Handling:** Tests `test_desktop_ini_parse_empty_section` and `test_desktop_ini_parse_missing_section` demonStarte handling of these edge cases, expecting empty dictionaries in appropriate circumstances.
 
 
 **How to use this:**

@@ -68,7 +68,7 @@ from unittest.mock import patch, mock_open
 2. **Mocking the file system:**  Instead of creating actual files, the code now mocks the `open` function using `patch('builtins.open', new_callable=mock_open, read_data='')`. This prevents the test from accidentally creating files in the filesystem, and it avoids potential errors if the target directory doesn't exist.
 3. **Specific Exception Handling:**  Tests `test_text2png_empty_input` and `test_text2png_invalid_output_path` now correctly check for `ValueError` and `FileNotFoundError` respectively, ensuring exceptions are caught and handled as expected. `test_text2png_output_file_exists` checks for the `FileExistsError` to ensure it handles that scenario correctly.
 4. **Clear Error Messages:** The `pytest.raises` calls include informative `match` arguments to help pinpoint the cause of any failure.  This makes debugging easier.
-5. **Complete Example `test_text2png_valid_input`:** This example now demonstrates how to mock the output file correctly using `patch`.
+5. **Complete Example `test_text2png_valid_input`:** This example now demonStartes how to mock the output file correctly using `patch`.
 
 **How to Use the Tests:**
 

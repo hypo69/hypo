@@ -4,7 +4,7 @@ How to use the `AliAffiliatedProducts` class
 
 Description
 -------------------------
-This code demonstrates how to use the `AliAffiliatedProducts` class to generate affiliate links for products from AliExpress.  It takes a list of product URLs or IDs, retrieves affiliate links and associated image/video paths, and prints the results.  The code handles setting up campaign parameters like name, category, language, and currency.
+This code demonStartes how to use the `AliAffiliatedProducts` class to generate affiliate links for products from AliExpress.  It takes a list of product URLs or IDs, retrieves affiliate links and associated image/video paths, and prints the results.  The code handles setting up campaign parameters like name, category, language, and currency.
 
 
 Execution steps

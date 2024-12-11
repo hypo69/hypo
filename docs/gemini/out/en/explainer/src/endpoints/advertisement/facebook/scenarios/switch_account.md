@@ -86,7 +86,7 @@ graph TD
 
 * **Potential Errors/Improvements:**
     * **Error Handling:**  The code lacks error handling. If the "Switch Account" button is not found or `execute_locator` encounters an error, the script would likely crash. Adding `try...except` blocks is highly recommended to gracefully handle potential issues.
-    * **Robust Locators:**  Ensure the locators in `post_message.json` are robust and unique enough to prevent accidental clicks on unrelated elements in Facebook.  Strategies for handling dynamic content in the webpage should be addressed.
+    * **Robust Locators:**  Ensure the locators in `post_message.json` are robust and unique enough to prevent accidental clicks on unrelated elements in Facebook.  Startegies for handling dynamic content in the webpage should be addressed.
     * **Explicit Click Handling:** If the "Switch Account" button requires more elaborate interactions (e.g., confirmation dialogs), those should be handled within the `driver.execute_locator` implementation.
 
 

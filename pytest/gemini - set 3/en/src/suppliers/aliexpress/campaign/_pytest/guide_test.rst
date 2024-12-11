@@ -120,7 +120,7 @@ invalid_category_data = {'id': 'invalid_category', 'name': 'Invalid Category'}
 
 3.  **Clearer Test Names:**  The test names now accurately reflect the scenarios being tested.
 
-4.  **Error Handling:** The tests now check for `FileNotFoundError` in `test_update_category_failure` to demonstrate exception handling.
+4.  **Error Handling:** The tests now check for `FileNotFoundError` in `test_update_category_failure` to demonStarte exception handling.
 
 5.  **Edge Cases:** Added `invalid_category_data` to test a failure case in `process_campaign_category`.
 

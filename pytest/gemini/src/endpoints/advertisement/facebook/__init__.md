@@ -82,13 +82,13 @@ def test_mode_value():
 
 2. **Exception Handling:** Added `pytest.raises` to test for `TypeError` when `get_event_url` receives incorrect input types or is called without required arguments. This is crucial for robust testing.
 
-3. **Fixture:** An example `facebook_instance` fixture is added to demonstrate how to create and use fixtures if needed.  Replace this with a fixture that provides appropriate test data, if needed by the `Facebook` class.
+3. **Fixture:** An example `facebook_instance` fixture is added to demonStarte how to create and use fixtures if needed.  Replace this with a fixture that provides appropriate test data, if needed by the `Facebook` class.
 
-4. **Comprehensive Testing:** The provided example tests now cover creation of `FacebookPromoter` and `get_event_url` with valid and invalid inputs, demonstrating different approaches.
+4. **Comprehensive Testing:** The provided example tests now cover creation of `FacebookPromoter` and `get_event_url` with valid and invalid inputs, demonStarting different approaches.
 
 5. **MODE Testing**: Added a test to verify the `MODE` constant's value.
 
-6. **Edge Case Example:** The example demonstrates how to test a function with edge cases, like empty lists.
+6. **Edge Case Example:** The example demonStartes how to test a function with edge cases, like empty lists.
 
 **Crucially Important:**
 

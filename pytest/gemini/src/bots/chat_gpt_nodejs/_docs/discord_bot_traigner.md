@@ -94,13 +94,13 @@ def test_select_dataset_command():
 
 3. **JSON Handling:** The `test` method now attempts to parse the input as JSON and handles potential `json.JSONDecodeError`. This is a significant improvement for robustness.
 
-4. **Edge Case (Invalid JSON):** Added a test `test_invalid_json_test` to demonstrate how to handle invalid JSON input, preventing unexpected crashes.
+4. **Edge Case (Invalid JSON):** Added a test `test_invalid_json_test` to demonStarte how to handle invalid JSON input, preventing unexpected crashes.
 
 5. **Valid JSON Test:** `test_valid_json_test` ensures that valid JSON input is properly parsed and processed.
 
 6. **Q&A Tests:** Added tests for the `ask` command, including both valid and invalid questions, ensuring that the bot responds appropriately.
 
-7. **Additional Command Tests:** Added tests for the `archive` and `select_dataset` commands, demonstrating proper interaction with these functions.
+7. **Additional Command Tests:** Added tests for the `archive` and `select_dataset` commands, demonStarting proper interaction with these functions.
 
 8. **No Unnecessary Fixtures:** Fixtures are only needed for complex setup.  Here, the mock object is simple enough to be instantiated directly in each test function.
 

@@ -75,7 +75,7 @@ def test_init_missing_credentials(input_credentials, caplog):
 * **Clearer Test Cases:** The test names are more descriptive (`test_get_parent_categories_list_valid_input`, `test_get_parent_categories_list_recursive`, etc.).
 * **Edge Case Handling:** Added tests for cases where the category doesn't exist (`test_get_parent_categories_list_no_category`) and an empty category ID is passed (`test_get_parent_categories_list_empty_id`).
 * **Recursive Call Handling:** The `test_get_parent_categories_list_recursive` test verifies the function handles recursive calls correctly.
-* **Error Handling:** The test cases for missing credentials (`test_init_missing_credentials`) are now more robust and demonstrate that the expected ValueError is raised when needed, using `pytest.raises`.
+* **Error Handling:** The test cases for missing credentials (`test_init_missing_credentials`) are now more robust and demonStarte that the expected ValueError is raised when needed, using `pytest.raises`.
 * **Logging Mock:** We now patch the logger itself for better isolation in the tests and also validate that `mock_logger.debug` and `mock_logger.error` were called as expected.
 * **Parameterization:**  The `test_init_missing_credentials` function now uses parameterization (`pytest.mark.parametrize`) to test with `None` and an empty dictionary as input credentials, improving test coverage.
 

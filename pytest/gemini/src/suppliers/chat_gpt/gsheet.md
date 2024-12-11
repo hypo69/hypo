@@ -104,7 +104,7 @@ def test_set_category_worksheet_success(mock_logger):
 * **Clearer Error Handling:**  The tests now explicitly check for specific error messages (e.g., "Worksheet 'campaign' not found.") in `pytest.raises` to ensure that the correct exceptions are being handled.
 * **Success Assertions:** Added assertions to verify the absence of errors in successful cases.
 * **Comprehensive Test Cases:** Added tests for `test_clear_success`, `test_clear_failure`, `test_update_chat_worksheet_success`, `test_update_chat_worksheet_failure`, `test_get_campaign_worksheet_success`, and `test_get_campaign_worksheet_failure` covering different scenarios.  Crucially, these tests now mock the gspread functions and make sure errors are handled correctly.
-* **Missing Tests:** The example demonstrates the structure and shows how to address the missing test cases. You *must* add tests for `set_categories_worksheet`, `get_categories_worksheet`, and other functions using the same approach (using `@patch` and making appropriate assertions).
+* **Missing Tests:** The example demonStartes the structure and shows how to address the missing test cases. You *must* add tests for `set_categories_worksheet`, `get_categories_worksheet`, and other functions using the same approach (using `@patch` and making appropriate assertions).
 * **Realistic Data:** The test data now uses `SimpleNamespace` to represent the expected data structure more closely to the function's input, which is crucial for testing.
 
 
@@ -123,4 +123,4 @@ Remember to install the necessary libraries:
 pip install pytest gspread
 ```
 
-This significantly improved solution demonstrates best practices for robust `pytest` testing. Now, you can expand on this framework to create a complete test suite for your `GptGs` class.
+This significantly improved solution demonStartes best practices for robust `pytest` testing. Now, you can expand on this framework to create a complete test suite for your `GptGs` class.

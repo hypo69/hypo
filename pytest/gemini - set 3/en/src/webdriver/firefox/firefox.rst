@@ -134,7 +134,7 @@ def test_firefox_profile_directory(mock_gs, mock_settings, tmp_path):
 6. **Parameterization (Optional):** Added `@pytest.mark.parametrize` to `test_firefox_user_agent` to test different user agent scenarios more efficiently.
 
 
-7. **Example using resource path:** The `test_firefox_executable_path` demonstrates how to use the `mock_gs` fixture to access files.
+7. **Example using resource path:** The `test_firefox_executable_path` demonStartes how to use the `mock_gs` fixture to access files.
 
 
 8. **More comprehensive test cases:** The test suite includes `test_firefox_initialization_valid`, `test_firefox_initialization_invalid_profile_name`, `test_firefox_initialization_exception`, addressing initialization scenarios.
@@ -150,7 +150,7 @@ def test_firefox_profile_directory(mock_gs, mock_settings, tmp_path):
     pip install pytest
     ```
 
-2.  **Replace Placeholders:**  Update `mock_gs.path.root` to a suitable test directory if needed, and add placeholder paths like "geckodriver.exe" and "firefox.exe" to a directory that will be used for the test cases. These placeholders are for illustrative purposes.
+2.  **Replace Placeholders:**  Update `mock_gs.path.root` to a suitable test directory if needed, and add placeholder paths like "geckodriver.exe" and "firefox.exe" to a directory that will be used for the test cases. These placeholders are for illuStartive purposes.
 
 
 3.  **Run the tests:**
@@ -158,4 +158,4 @@ def test_firefox_profile_directory(mock_gs, mock_settings, tmp_path):
     pytest test_firefox.py
     ```
 
-This revised solution addresses potential issues with the original test suite, and it emphasizes a more robust and reliable testing strategy using mocking.  Remember to adjust file paths as needed. Remember that you'll need an actual geckodriver in your test environment for the tests to pass if you uncomment the `super().__init__` call.
+This revised solution addresses potential issues with the original test suite, and it emphasizes a more robust and reliable testing Startegy using mocking.  Remember to adjust file paths as needed. Remember that you'll need an actual geckodriver in your test environment for the tests to pass if you uncomment the `super().__init__` call.

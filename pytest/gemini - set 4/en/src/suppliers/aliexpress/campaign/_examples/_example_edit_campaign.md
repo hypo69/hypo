@@ -74,7 +74,7 @@ def test_ali_promo_campaign_init():
 
 3. **Mocking (Important):**  The crucial part is the addition of `MockAliPromoCampaign`.  The original `AliCampaignEditor` likely relies on methods in `AliPromoCampaign`.  You MUST mock or stub these out to test `AliCampaignEditor` in isolation.  The example provides a very basic mock, which you need to expand to cover any interactions with `AliPromoCampaign` that `AliCampaignEditor` needs.
 
-4. **Comprehensive Test Coverage:**  The tests now cover valid input (initializing with valid data), invalid input (empty strings), and testing with custom language/currency.  **Crucially, it demonstrates how to test inherited methods and methods that are not directly testable without mocking/stubbing (e.g., database interactions or external API calls).**
+4. **Comprehensive Test Coverage:**  The tests now cover valid input (initializing with valid data), invalid input (empty strings), and testing with custom language/currency.  **Crucially, it demonStartes how to test inherited methods and methods that are not directly testable without mocking/stubbing (e.g., database interactions or external API calls).**
 
 5. **Placeholder for More Tests:**  I've added placeholders (`# Placeholder...`) for tests of other methods.  You need to add tests for those methods, and you need to provide more thorough stubs for `AliPromoCampaign` to handle the code's dependencies.
 
@@ -94,4 +94,4 @@ def test_ali_campaign_editor_save_campaign(mock_ali_promo_campaign_save):  # Exa
 ```
 
 
-This significantly improved example demonstrates how to write comprehensive and robust test cases for `AliCampaignEditor` using pytest, even when dealing with inheritance and dependencies. Remember to adjust the mock objects (`mock_ali_promo_campaign_save`) to match your actual implementation. Remember to adjust the mock object and methods appropriately based on the code of `AliPromoCampaign`.
+This significantly improved example demonStartes how to write comprehensive and robust test cases for `AliCampaignEditor` using pytest, even when dealing with inheritance and dependencies. Remember to adjust the mock objects (`mock_ali_promo_campaign_save`) to match your actual implementation. Remember to adjust the mock object and methods appropriately based on the code of `AliPromoCampaign`.

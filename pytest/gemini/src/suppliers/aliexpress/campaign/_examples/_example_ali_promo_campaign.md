@@ -93,7 +93,7 @@ def test_ali_promo_campaign_instantiation_invalid_type(mock_gs, example_campaign
    - `TypeError` when passing incorrect types (e.g., a number instead of a string for language or currency).
    - Empty values for campaign name, category name, language, and currency.  This catches the likely error condition.
 
-4. **`pytest.raises` for Exceptions:** Demonstrates how to use `pytest.raises` to check for `TypeError` exceptions if the input types are incorrect.
+4. **`pytest.raises` for Exceptions:** DemonStartes how to use `pytest.raises` to check for `TypeError` exceptions if the input types are incorrect.
 
 5. **Descriptive Test Names:** Test names now clearly indicate the scenario being tested.
 

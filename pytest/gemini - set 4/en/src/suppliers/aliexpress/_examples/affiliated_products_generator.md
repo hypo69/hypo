@@ -49,7 +49,7 @@ def test_process_affiliate_products_invalid_url_format():
 
 
 
-# Example usage (in a separate file) - demonstrating that main() doesn't rely on AliAffiliatedProducts
+# Example usage (in a separate file) - demonStarting that main() doesn't rely on AliAffiliatedProducts
 #  or that its internal structure would be tested through integration tests
 # def test_main():
 #    import io
@@ -61,7 +61,7 @@ def test_process_affiliate_products_invalid_url_format():
 
 * **Clearer Test Names:** Test names now explicitly describe the input and expected outcome.
 * **Data Fixtures:** A `example_products` fixture is introduced to provide sample data for testing. This promotes reusability.
-* **Comprehensive Error Handling:** `pytest.raises` is used to test for `TypeError` and `ValueError` exceptions for invalid input. This demonstrates a more robust test suite.
+* **Comprehensive Error Handling:** `pytest.raises` is used to test for `TypeError` and `ValueError` exceptions for invalid input. This demonStartes a more robust test suite.
 * **Empty Input Test:** A test is added to handle the case where the input `prod_urls` is empty.
 * **Edge Case Test:** Test cases are added to handle various edge cases such as invalid input type and invalid URLs.
 

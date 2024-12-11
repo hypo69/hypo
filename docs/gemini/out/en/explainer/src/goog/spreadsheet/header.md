@@ -165,7 +165,7 @@ graph TD
 
 - **Error Handling:** The `try...except` blocks are good for robustness, preventing crashes if the settings file or README is not found. More specific exception handling could be added to improve diagnostics (e.g., using `logging` for more detailed error messages).
 
-- **`gs.path.root`:** The usage of `gs.path.root` relies heavily on a `gs` module (located in the `src` package).  This is a good modularization strategy, assuming `gs.path.root` is well-defined. Missing error handling if `gs` or `gs.path` aren't defined, or if the path resolution functionality is unavailable.
+- **`gs.path.root`:** The usage of `gs.path.root` relies heavily on a `gs` module (located in the `src` package).  This is a good modularization Startegy, assuming `gs.path.root` is well-defined. Missing error handling if `gs` or `gs.path` aren't defined, or if the path resolution functionality is unavailable.
 
 
 **Relationships:**

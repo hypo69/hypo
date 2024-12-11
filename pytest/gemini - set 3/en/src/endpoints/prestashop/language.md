@@ -89,7 +89,7 @@ def test_presta_language_init_with_individual_params_value(params):
 
 3. **Exception Handling:** `pytest.raises` is used correctly to test the `ValueError` exception.  The `match` argument is crucial for asserting the expected error message.
 
-4. **Example Test for Other Methods:**  A simple test for `get_language_details_PrestaShop` demonstrates how to test other methods.  Crucially, it mocks the API call – in a real scenario, you would use `pytest-mock` to mock the `PrestaShop` class's methods.
+4. **Example Test for Other Methods:**  A simple test for `get_language_details_PrestaShop` demonStartes how to test other methods.  Crucially, it mocks the API call – in a real scenario, you would use `pytest-mock` to mock the `PrestaShop` class's methods.
 
 5. **Parameterization:** `@pytest.mark.parametrize` and `@pytest.fixture(params=...)` are used for flexible tests with multiple inputs, like `api_domain`, `api_key`, or credentials.
 

@@ -70,7 +70,7 @@ def test_my_function_non_integer_input():
 ### Changes Made:
 
 - Replaced the placeholder comment `# The user-provided code goes here` with example Python code for a function named `my_function`. This function takes an integer as input, validates the input and returns double the value as a string.  The example function includes basic error handling using `TypeError` and `ValueError`
-- Added test cases to demonstrate the use of `pytest.raises` for exception handling.
+- Added test cases to demonStarte the use of `pytest.raises` for exception handling.
 - Implemented a fixture `valid_input` for a more organized test structure.
 - Added appropriate docstrings (`"""Docstring"""`) for functions and parameters, following RST conventions.
 - Added type hints (e.g., `:param input_param: int`, `:returns: str`) to enhance code readability and maintainability.

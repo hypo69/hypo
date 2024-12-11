@@ -49,7 +49,7 @@ This module provides a class for generating HTML and PDF reports for Mekhiron da
 
 ### `main(mexiron: str, lang: str) -> bool`
 
-**Description**: This function orchestrates the entire process of report generation.  It loads data, generates HTML, and creates the PDF document.
+**Description**: This function orcheStartes the entire process of report generation.  It loads data, generates HTML, and creates the PDF document.
 
 **Parameters**:
 
@@ -73,7 +73,7 @@ lang = 'ru'
 main(mexiron, lang)
 ```
 
-This example demonstrates how to use the `main` function to generate a report for a given Mekhiron and language.  Ensure the necessary input JSON file (e.g., `ru.json`) exists in the designated directory.
+This example demonStartes how to use the `main` function to generate a report for a given Mekhiron and language.  Ensure the necessary input JSON file (e.g., `ru.json`) exists in the designated directory.
 
 
 ```

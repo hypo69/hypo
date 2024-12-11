@@ -4529,12 +4529,12 @@
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\module-importer\src\module-importer.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\.eslintrc.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\src\index.js" />
-    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\src\merge-strategy.js" />
+    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\src\merge-Startegy.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\src\object-schema.js" />
-    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\src\validation-strategy.js" />
-    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\tests\merge-strategy.js" />
+    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\src\validation-Startegy.js" />
+    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\tests\merge-Startegy.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\tests\object-schema.js" />
-    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\tests\validation-strategy.js" />
+    <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40humanwhocodes\object-schema\tests\validation-Startegy.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40nodelib\fs.scandir\out\adapters\fs.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40nodelib\fs.scandir\out\constants.js" />
     <Content Include="docs\doxygen\_stylesheets\doxygen-awesome-css\node_modules\%40nodelib\fs.scandir\out\index.js" />

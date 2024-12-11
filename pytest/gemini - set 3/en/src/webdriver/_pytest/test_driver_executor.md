@@ -112,7 +112,7 @@ def test_invalid_locator(execute_locator, driver):
 * **Clearer Assertions:** Replaced `assert element` with `assert element is not None` for robust checking.  Also, the `assert element.text == ...` is now more specific and easier to debug.  Added assertions about the expected result
 
 
-* **Realistic Locators:** Changed the `test_send_message` and other similar tests to use more realistic locator strategies and selectors that are likely to be present on `example.com`.
+* **Realistic Locators:** Changed the `test_send_message` and other similar tests to use more realistic locator Startegies and selectors that are likely to be present on `example.com`.
 
 
 * **Robust Error Handling:** Using `pytest.raises` for `ExecuteLocatorException` with a match string helps pinpoint the exact reason for the failure, which makes debugging a lot easier.  Using `try...except` is generally better than letting the exception be caught by the framework, since this often results in pytest failing to catch the exception, in turn masking the cause of the failure.
@@ -138,4 +138,4 @@ def test_invalid_locator(execute_locator, driver):
 4.  Run pytest from your terminal: `pytest hypotez/src/webdriver/_pytest/test_driver_executor.py`
 
 
-These improvements create more robust and reliable tests, addressing potential issues and providing more insightful error messages for debugging. Remember to adjust locator strategies and expected values based on the actual elements and attributes present on the target web page. Remember to replace placeholder values like `"http://example.com"` and `"https://www.wikipedia.org/"` with appropriate actual values for your testing context.
+These improvements create more robust and reliable tests, addressing potential issues and providing more insightful error messages for debugging. Remember to adjust locator Startegies and expected values based on the actual elements and attributes present on the target web page. Remember to replace placeholder values like `"http://example.com"` and `"https://www.wikipedia.org/"` with appropriate actual values for your testing context.

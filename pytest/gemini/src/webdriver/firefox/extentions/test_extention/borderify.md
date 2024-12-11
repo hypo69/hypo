@@ -42,7 +42,7 @@ def driver():
     yield driver
     driver.quit()
 
-# Example test demonstrating how to handle the alert
+# Example test demonStarting how to handle the alert
 def test_alert_appears(driver):
     """Tests if the alert box appears."""
     driver.get("about:blank")  

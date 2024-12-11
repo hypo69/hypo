@@ -125,7 +125,7 @@ def sendDataToServer(url):
 
 4. **`pytest.raises` for Error Testing:**  Correctly uses `pytest.raises` to verify exceptions are caught and handled.
 
-5. **Stubbing `fetch`:**  The `test_sendDataToServer_fetch_error` test now correctly uses a mock to simulate an error during the fetch, demonstrating the proper exception handling.
+5. **Stubbing `fetch`:**  The `test_sendDataToServer_fetch_error` test now correctly uses a mock to simulate an error during the fetch, demonStarting the proper exception handling.
 
 6. **`assert` statements:** The asserts now check for the expected behavior in the correct places in the tests.
 

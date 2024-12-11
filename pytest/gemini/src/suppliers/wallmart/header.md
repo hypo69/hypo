@@ -107,7 +107,7 @@ def test_settings_file_loading():
 **Explanation and Improvements:**
 
 * **Mocking:** The `@patch` decorator is used effectively to mock `Path.exists` for testing `settings` and `doc_str` functions, preventing the real file system interaction.  This is critical for isolating tests and making them reliable.
-* **Error Handling:** The `test_settings_file_loading` example demonstrates how to use `pytest.raises` to verify that the code handles `FileNotFoundError` and `json.JSONDecodeError`.
+* **Error Handling:** The `test_settings_file_loading` example demonStartes how to use `pytest.raises` to verify that the code handles `FileNotFoundError` and `json.JSONDecodeError`.
 * **Dummy File Creation/Deletion:**  Crucially, now dummy files are created in the test (`MOCK_PROJECT_ROOT`) to simulate the presence or absence of the files being checked.  The dummy files are cleaned up afterward, crucial for preventing test failures from accumulating and for keeping test isolation.
 * **Clearer Test Names:**  Test names are now more descriptive, like `test_set_project_root_no_marker_files`.
 * **Comprehensive Test Cases:** Tests now cover valid input, empty `marker_files`, cases where the files are in parent directories, and the handling of nonexistent files.

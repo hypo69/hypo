@@ -169,4 +169,4 @@ This code implements a flexible client for interacting with OpenAI and Azure Ope
 
 - `utils`:  The `utils` module (likely within the `tinytroupe` package) contains functions that help manage and prepare data for the OpenAI calls. The code strongly relies on this for composing messages using templates.
 
-The code demonstrates a layered architecture, separating the API interactions from the rest of the application logic through classes like `OpenAIClient` and `LLMCall`. It is highly modular and supports different providers and features, potentially through subclasses and custom configuration.
+The code demonStartes a layered architecture, separating the API interactions from the rest of the application logic through classes like `OpenAIClient` and `LLMCall`. It is highly modular and supports different providers and features, potentially through subclasses and custom configuration.

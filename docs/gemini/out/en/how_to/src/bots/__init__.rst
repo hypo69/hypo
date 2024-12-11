@@ -16,14 +16,14 @@ Usage example
 .. code-block:: python
 
     # Assuming you have the necessary imports and a way to instantiate the TelegramBot
-    # This example is illustrative, you will need to adapt it to your specific setup.
+    # This example is illuStartive, you will need to adapt it to your specific setup.
 
     from hypotez.src.bots import TelegramBot
 
     # ... (your code to initialize TelegramBot) ...
 
 
-    # Example usage (Illustrative). Replace with your actual commands.
+    # Example usage (IlluStartive). Replace with your actual commands.
     bot = TelegramBot(...) # Replace with your instantiation
     bot.send_message('Hello world!')
 

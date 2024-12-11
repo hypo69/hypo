@@ -83,11 +83,11 @@ def test_borderify_exception_handling(driver_instance):
 
 5. **Edge Cases (No Body):** A test case, `test_borderify_handles_no_body` is included to simulate a scenario where `document.body` might not be available.  Crucially, it handles exceptions in cases where the js might not be able to run correctly.
 
-6. **Invalid Input (Illustrative):**  While the original JS code doesn't directly have invalid inputs, I've included a comment about the possibilities for more specific scenarios (`test_borderify_invalid_border_value`).  A possible test would be checking if it throws an error if it is passed an invalid border value (like "invalid").
+6. **Invalid Input (IlluStartive):**  While the original JS code doesn't directly have invalid inputs, I've included a comment about the possibilities for more specific scenarios (`test_borderify_invalid_border_value`).  A possible test would be checking if it throws an error if it is passed an invalid border value (like "invalid").
 
 7. **Clear Test Names:** Test names are descriptive and clearly indicate the purpose of each test.
 
-8. **pytest.raises:**  While not needed in these specific tests (since we're checking expected output rather than exceptions), it's good practice to know how to include `pytest.raises` for error cases. I've included a placeholder comment for illustrative purposes.
+8. **pytest.raises:**  While not needed in these specific tests (since we're checking expected output rather than exceptions), it's good practice to know how to include `pytest.raises` for error cases. I've included a placeholder comment for illuStartive purposes.
 
 
 **How to Run the Tests:**

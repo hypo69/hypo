@@ -2,7 +2,7 @@
 import pytest
 
 # No external code provided, so no functions to test.
-# This example demonstrates testing with a list of strings.
+# This example demonStartes testing with a list of strings.
 
 
 def test_field_list_length():

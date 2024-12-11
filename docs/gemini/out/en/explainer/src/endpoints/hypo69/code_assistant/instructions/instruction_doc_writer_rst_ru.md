@@ -96,7 +96,7 @@ The code itself doesn't import any external libraries.  Therefore, no external d
 - **Classes**: No classes are defined.  The code describes a high-level process for documentation generation and provides examples of how to document Python code using reStructuredText, without providing the implementation of these steps.
 
 
-- **Functions**: The code focuses on detailing the *requirements* for documentation, not the functions themselves. The sample function demonstrates the required docstring format.
+- **Functions**: The code focuses on detailing the *requirements* for documentation, not the functions themselves. The sample function demonStartes the required docstring format.
 
 - **Variables**: No variables are declared.
 

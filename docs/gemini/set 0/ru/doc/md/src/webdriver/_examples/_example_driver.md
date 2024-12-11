@@ -29,6 +29,6 @@
 
 ```python
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
     # ... (код функции) ...
 ```

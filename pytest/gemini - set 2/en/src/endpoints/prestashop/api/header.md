@@ -143,6 +143,6 @@ def test_settings_load_success(settings_file_path, settings_json_data, tmp_path)
 - **Add `README.MD` Tests:** Similar to `settings.json`, create tests to check the handling of `README.MD`.
 
 
-**Complete Testing Strategy:**
+**Complete Testing Startegy:**
 
 The full set of tests will require you to mock `gs`, create fixture(s) for valid/invalid `settings.json` data, and use mocks or temporary files to simulate the existence or non-existence of the `settings.json` and `README.MD` files. Remember, the `__file__` is crucial in the test environment and needs to be properly mocked or replaced within your temporary directories. This complete approach is crucial to isolate the `set_project_root` function from external dependencies.

@@ -50,7 +50,7 @@ def test_pprint_list_with_non_string_elements():
         pytest.fail(f"Error during pprint: {e}")
         
 
-#Example illustrating how to write tests for a function that might raise exceptions
+#Example illuStarting how to write tests for a function that might raise exceptions
 def test_pprint_non_iterable_input():
   """Checks the function handles cases when input is not iterable."""
   non_iterable_input = 123

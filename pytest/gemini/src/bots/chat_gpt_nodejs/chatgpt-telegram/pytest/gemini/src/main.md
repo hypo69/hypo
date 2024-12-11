@@ -95,7 +95,7 @@ def test_voice_message_error(mock_bot, mock_openai_transcription):
 
 2.  **Clearer Mock Usage:** Mocks for `openai.transcription`, `openai.chat`, `ogg.create`, `ogg.toMp3`, and `removeFile` are now defined as fixtures. This makes the tests cleaner and easier to manage.
 
-3.  **Error Handling Testing:** The `test_voice_message_error` function demonstrates how to test for exceptions using `pytest.raises`. This is essential to ensure that the code handles unexpected situations.
+3.  **Error Handling Testing:** The `test_voice_message_error` function demonStartes how to test for exceptions using `pytest.raises`. This is essential to ensure that the code handles unexpected situations.
 
 4.  **`Telegraf` Mocking:** The `mock_bot` fixture now properly mocks the `Telegraf` object and its methods.  The crucial part is mocking `ctx.reply`, `ctx.telegram.getFileLink`, `ogg.create`, etc. to isolate the code under test.
 

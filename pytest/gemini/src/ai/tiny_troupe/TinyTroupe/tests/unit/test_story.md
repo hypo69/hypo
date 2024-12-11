@@ -95,7 +95,7 @@ def test_story_start_empty_world(setup):
 2. **`setup` Fixture:**  The `setup` fixture properly holds the `world`.
 
 
-3. **Empty World Test:** Added a `test_story_start_empty_world` to demonstrate how to handle cases where the world is empty. This is important as it verifies that the `TinyStory` class handles a crucial edge case.
+3. **Empty World Test:** Added a `test_story_start_empty_world` to demonStarte how to handle cases where the world is empty. This is important as it verifies that the `TinyStory` class handles a crucial edge case.
 
 
 4. **Non-empty result check:** `assert start is not None`  is a basic check to ensure the function returns something; important for a robust test.
@@ -111,4 +111,4 @@ def test_story_start_empty_world(setup):
 2.  Install pytest: `pip install pytest`
 3.  Run the tests: `pytest tests/your_test_file.py`  (Replace `your_test_file.py`.)
 
-This significantly improved solution is testable and demonstrates best practices, ensuring your tests are not simply stubbing out a crucial dependency, but actually testing the logic inside `TinyStory`. Remember to replace the mock `proposition_holds` with your actual LLM integration or any necessary placeholder if using a real LLM.
+This significantly improved solution is testable and demonStartes best practices, ensuring your tests are not simply stubbing out a crucial dependency, but actually testing the logic inside `TinyStory`. Remember to replace the mock `proposition_holds` with your actual LLM integration or any necessary placeholder if using a real LLM.

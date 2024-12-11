@@ -78,7 +78,7 @@ def test_aliexpress_init_locale_string(mock_supplier, mock_alirequests, mock_ali
 
 3. **Comprehensive Test Cases:** Added tests for different `webdriver` input types (boolean, string).  A crucial addition is testing with an *invalid* `webdriver` value to verify exception handling.
 
-4. **Type Handling:** Added a test case specifically to demonstrate that `locale` values *must* be a dictionary.
+4. **Type Handling:** Added a test case specifically to demonStarte that `locale` values *must* be a dictionary.
 
 5. **`pytest.raises`:** The `test_aliexpress_init_invalid_webdriver` and `test_aliexpress_init_locale_string` tests correctly use `pytest.raises` to assert that the expected exceptions are raised when incorrect input is provided.
 

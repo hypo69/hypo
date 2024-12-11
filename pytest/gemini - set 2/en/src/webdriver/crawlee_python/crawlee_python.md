@@ -108,7 +108,7 @@ async def test_run_invalid_urls(crawlee_instance, mock_gs_path):
 * **Comprehensive testing:** Added tests for different scenarios like valid URLs, empty URL lists, and invalid file paths.
 * **`setup_crawler` test:** Added a test for `setup_crawler` to verify the `crawler` attribute is set.
 * **`run_crawler` test with empty urls:**  Includes a test case for an empty list of URLs to check for correct error handling.
-* **`run_crawler` test with valid URLs:** Demonstrates correct call to `run_crawler`.
+* **`run_crawler` test with valid URLs:** DemonStartes correct call to `run_crawler`.
 * **`run` method tests:** Includes tests for the `run` method to verify the complete flow of setting up, running, exporting, and getting data.
 * **Comments and Docstrings:** Added clear comments explaining the purpose of each test case.
 * **Removed redundant `main` function:**  The example usage `if __name__ == '__main__':` was removed because it's not necessary for testing.
@@ -126,4 +126,4 @@ async def test_run_invalid_urls(crawlee_instance, mock_gs_path):
     pytest test_crawlee_python.py
     ```
 
-Remember to replace `"src"` with the actual path to your `src` module.  This revised solution is much more robust and demonstrates better testing practices.  It's important to mock external dependencies to isolate your tests and ensure they don't rely on external factors like file system access or network calls.  This is crucial for writing reliable tests.
+Remember to replace `"src"` with the actual path to your `src` module.  This revised solution is much more robust and demonStartes better testing practices.  It's important to mock external dependencies to isolate your tests and ensure they don't rely on external factors like file system access or network calls.  This is crucial for writing reliable tests.

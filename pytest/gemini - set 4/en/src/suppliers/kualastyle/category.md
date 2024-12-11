@@ -125,7 +125,7 @@ def test_get_list_products_in_category_pagination(supplier_data, logger_mock):
 
 * **Mocking:** The code now uses mock classes (`Supplier`, `Driver`, `MockLogger`) to isolate the tests from the external dependencies.  This is crucial for unit testing.  Replace these mocks with actual imports if you have those classes available.
 * **Clearer Test Cases:** The test names are more descriptive (e.g., `test_get_list_products_in_category_valid_input`).
-* **Edge Cases:** Tests now cover cases like an empty list of product links and a single link, demonstrating the `if isinstance` checks.  Crucially, it now tests the behavior if `paginator` returns `False`.
+* **Edge Cases:** Tests now cover cases like an empty list of product links and a single link, demonStarting the `if isinstance` checks.  Crucially, it now tests the behavior if `paginator` returns `False`.
 * **Exception Handling (Important):**  The original code lacked explicit exception handling. The tests are not checking exceptions yet, but robust tests *must* consider that possibility in production code.
 * **Data Setup:** Test fixtures (`supplier_data`, `logger_mock`) properly set up the necessary mock data for each test.
 * **Correct Assertion:** The asserts now check for the expected data types (`list`, `str`), and correct length to validate the function is handling various situations.

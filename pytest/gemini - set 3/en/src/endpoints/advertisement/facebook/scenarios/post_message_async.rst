@@ -153,4 +153,4 @@ def test_update_images_captions_valid(mock_driver, category, products):
 * **`Driver` class:** The `Driver` class is important for testing these functions.   Make sure `Driver` class is properly mocked in your test to isolate your tests from actual WebDriver interaction.
 * **Asynchronous Operations:** The `update_images_captions` function is asynchronous; you will need to adjust your test to correctly run the async operation and check the outcome.
 
-This improved solution provides a more robust and comprehensive testing strategy for your code.  Remember to install `pytest` if you haven't already: `pip install pytest`.
+This improved solution provides a more robust and comprehensive testing Startegy for your code.  Remember to install `pytest` if you haven't already: `pip install pytest`.

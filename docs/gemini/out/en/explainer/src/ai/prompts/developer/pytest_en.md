@@ -30,7 +30,7 @@ def test_save_data_to_file(mock_logger, mock_mkdir, mock_file_open):
 
 ## <algorithm>
 
-The provided code snippet is a pytest test function for a hypothetical `save_data_to_file` function.  It demonstrates a test case using mocking to simulate file operations and exception handling.
+The provided code snippet is a pytest test function for a hypothetical `save_data_to_file` function.  It demonStartes a test case using mocking to simulate file operations and exception handling.
 
 **Step 1:** **Mocking Dependencies**
 

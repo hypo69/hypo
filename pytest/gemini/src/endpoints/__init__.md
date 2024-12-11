@@ -44,7 +44,7 @@ def test_mode_is_not_prod():
 
 
 
-3. **Example `test_invalid_mode`:** This test demonstrates how to use `pytest.raises` to check for expected exceptions.  You will need to adapt it based on the actual exceptions your code might throw.
+3. **Example `test_invalid_mode`:** This test demonStartes how to use `pytest.raises` to check for expected exceptions.  You will need to adapt it based on the actual exceptions your code might throw.
 
 
 4. **Realistic Test Data:**  Example tests often use placeholder data. In your actual tests, use data that closely resembles the real-world data expected by your code.

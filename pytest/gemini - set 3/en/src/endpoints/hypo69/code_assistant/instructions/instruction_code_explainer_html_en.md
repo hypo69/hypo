@@ -73,4 +73,4 @@ def test_subtract_numbers_invalid_input_type():
 1. Save the above code as a Python file (e.g., `test_calculations.py`).
 2. Run `pytest test_calculations.py` from your terminal.
 
-**Crucial Note:** Replace the example `add_numbers` and `subtract_numbers` functions with your actual functions to create effective tests for your code.  This example demonstrates the structure and techniques—focus on the relevant aspects of *your* code. Remember to replace placeholders like `# Replace this with your actual Python code` to match your context.  Thoroughly test edge cases that are specific to your code's logic.
+**Crucial Note:** Replace the example `add_numbers` and `subtract_numbers` functions with your actual functions to create effective tests for your code.  This example demonStartes the structure and techniques—focus on the relevant aspects of *your* code. Remember to replace placeholders like `# Replace this with your actual Python code` to match your context.  Thoroughly test edge cases that are specific to your code's logic.

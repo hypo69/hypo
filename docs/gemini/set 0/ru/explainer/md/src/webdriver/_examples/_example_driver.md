@@ -46,7 +46,7 @@ MODE = 'dev'
 from src.webdriver import Driver, Chrome, Firefox, Edge
 
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
 
     # Create an instance of the Driver class with the Chrome webdriver
     print("Creating a Chrome browser instance...")
@@ -82,7 +82,7 @@ def main():
         print("Chrome browser closed.")
 
 
-    # ... (rest of the code is similar, demonstrating usage with Firefox and Edge)
+    # ... (rest of the code is similar, demonStarting usage with Firefox and Edge)
 
 if __name__ == "__main__":
     main()
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
 # <algorithm>
 
-The algorithm demonstrates using a `Driver` class to interact with different web browsers (Chrome, Firefox, Edge).
+The algorithm demonStartes using a `Driver` class to interact with different web browsers (Chrome, Firefox, Edge).
 
 1. **Initialization:** The `main` function creates instances of the `Driver` class for each browser type (Chrome, Firefox, Edge).
 

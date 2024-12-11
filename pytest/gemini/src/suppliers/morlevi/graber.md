@@ -99,7 +99,7 @@ def test_local_saved_image_save_png_exception(graber):
 
 4. **Parameterization (`pytest.mark.parametrize`):**  The `test_local_saved_image_mocked_image` test now uses `pytest.mark.parametrize` to test with different input values, making it more comprehensive and readable.  This is a significant improvement for testing functions with different possible inputs.
 
-5. **Exception Handling:** The `test_local_saved_image_exception` test demonstrates handling potential exceptions during the `execute_locator` and `save_png` calls. This is important for testing robustness.
+5. **Exception Handling:** The `test_local_saved_image_exception` test demonStartes handling potential exceptions during the `execute_locator` and `save_png` calls. This is important for testing robustness.
 
 6. **`side_effect` for Exception Mocking:** The `test_local_saved_image_save_png_exception` example correctly uses `side_effect` to mock a function that raises an exception.
 

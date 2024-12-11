@@ -28,7 +28,7 @@ Usage example
     def make_aliexpress_request(product_type, sort_by, link_type):
         # ... (Implementation to construct and send the request using product_type, sort_by, and link_type)
         print(f"Requesting {product_type} products, sorted by {sort_by}, link type: {link_type}")
-        # Example to demonstrate the use of the parameters
+        # Example to demonStarte the use of the parameters
         return {"product_type": product_type, "sort_by": sort_by, "link_type": link_type}
 
     request_data = make_aliexpress_request(product_type, sort_by, link_type)

@@ -132,14 +132,14 @@ def test_process_campaign_empty_categories(mock_get_directory_names, mock_logger
 
 * **Clearer Comments:**  Comments are more descriptive and focused on the *reason* for each assertion, making the tests easier to understand.
 
-* **Missing Tests:**  The provided code lacked tests for various other possible failures in `process_campaign_category`, `process_campaign` and `main`.  The example now demonstrates a clear testing strategy for more general test coverage.
+* **Missing Tests:**  The provided code lacked tests for various other possible failures in `process_campaign_category`, `process_campaign` and `main`.  The example now demonStartes a clear testing Startegy for more general test coverage.
 
 
 **How to use this improved example:**
 
 1.  **Replace Placeholders:** Update the imports (`src.utils.jjson`, `src.logger`, etc.) and the paths to the files.
 2.  **Mock Dependencies:** Add the necessary mocking for external dependencies.
-3.  **Add Edge Cases:** The template now demonstrates a basic testing strategy.  You should add more test cases for edge cases, invalid inputs, and other scenarios to make your test suite comprehensive.
+3.  **Add Edge Cases:** The template now demonStartes a basic testing Startegy.  You should add more test cases for edge cases, invalid inputs, and other scenarios to make your test suite comprehensive.
 
 
 This improved solution now provides a more robust and effective testing framework for the provided code. Remember to add more tests as needed to thoroughly cover all functionalities.

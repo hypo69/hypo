@@ -112,12 +112,12 @@ def test_navigate_and_interact(driver_instance):
 * **Clearer Assertions:** The assertions are more specific and meaningful, reflecting the expected outcomes of each test case.
 
 
-* **Example `test_navigate_and_interact`:**  This test now shows a placeholder, illustrating how to use the `driver_instance` and make assertions on the page interactions.  Crucially, it demonstrates the important step of replacing the placeholder URL and locators with actual values.
+* **Example `test_navigate_and_interact`:**  This test now shows a placeholder, illuStarting how to use the `driver_instance` and make assertions on the page interactions.  Crucially, it demonStartes the important step of replacing the placeholder URL and locators with actual values.
 
 
 * **Import Correction:** Corrected import of `ExecuteLocatorException` from the correct module.
 
-* **Robustness:** Added a `test_invalid_locator` to demonstrate the handling of invalid locators using `pytest.raises`. This is critical for testing exception handling.
+* **Robustness:** Added a `test_invalid_locator` to demonStarte the handling of invalid locators using `pytest.raises`. This is critical for testing exception handling.
 
 
 **To Run the Tests:**

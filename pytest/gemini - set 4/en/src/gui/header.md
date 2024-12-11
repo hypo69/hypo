@@ -103,7 +103,7 @@ def test_set_project_root_invalid_marker_type(mock_project_root):
 
 4. **Clearer Test Descriptions:** Test names now more clearly indicate the scenario being tested.
 
-5. **Using `pytest.raises`:**  The tests now demonstrate how to use `pytest.raises` to test for specific exceptions:
+5. **Using `pytest.raises`:**  The tests now demonStarte how to use `pytest.raises` to test for specific exceptions:
 
 6. **`sys.path` Verification:**  Checks that the root directory is added to `sys.path`.
 

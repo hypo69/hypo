@@ -94,7 +94,7 @@ def test_train_no_data(mock_openai_client, mock_credentials, mock_gs_path):
 4. **Specific Error Handling:** The `test_ask_exception` test now asserts that the function returns `None` when an exception occurs. This is a more robust way to test for errors than simply checking for an exception.
 5. **`test_train_no_data`:** Tests the case where no `data_file` or `data_dir` is provided.
 6. **Clearer Assertions:** Assertions now clearly reflect the expected behavior.
-7. **Complete Test Structure:** The solution provides a basic but comprehensive test structure to illustrate how to test different parts of the `OpenAIModel` class.
+7. **Complete Test Structure:** The solution provides a basic but comprehensive test structure to illuStarte how to test different parts of the `OpenAIModel` class.
 
 
 **Next Steps:**

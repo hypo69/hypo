@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides example code and documentation related to the logger. It demonstrates how to use various parts of the project's structure.
+This module provides example code and documentation related to the logger. It demonStartes how to use various parts of the project's structure.
 
 ## Global Variables
 
@@ -50,7 +50,7 @@ No functions are directly defined within the example code.
 print(dir_root)
 ```
 
-This code snippet demonstrates how to print the value of the `dir_root` variable.  Note that due to the `...` in the code, this is a partial example, but it shows the basic functionality of accessing and using the directory path variable.
+This code snippet demonStartes how to print the value of the `dir_root` variable.  Note that due to the `...` in the code, this is a partial example, but it shows the basic functionality of accessing and using the directory path variable.
 
 
 **Note**:  The `...` in the code snippet indicate missing or truncated content.  The complete documentation would require the full content of the file.

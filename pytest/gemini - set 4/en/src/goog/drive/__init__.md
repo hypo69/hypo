@@ -65,7 +65,7 @@ def test_module_import(mock_get_mode):
 1. **Import necessary modules:**  Includes `pytest` and `unittest.mock` (for patching).
 2. **`GoogleDrive` class:**  Crucially, a placeholder `GoogleDrive` class is provided.  **Replace this with the actual class from your `hypotez/src/goog/drive/__init__.py` file** for accurate testing.
 3. **Clear Test Function Names:**  Function names like `test_get_mode_valid_input`, `test_get_mode_invalid_input` are self-explanatory.
-4. **Edge Cases and Invalid Input:**  The `test_get_mode_invalid_input` and `test_google_drive_init_input` test cases demonstrate handling of invalid inputs (different data type for the mode).
+4. **Edge Cases and Invalid Input:**  The `test_get_mode_invalid_input` and `test_google_drive_init_input` test cases demonStarte handling of invalid inputs (different data type for the mode).
 5. **Exception Handling (pytest.raises):**  `pytest.raises` is correctly used in `test_get_mode_invalid_input` to verify that the expected exception is raised for invalid input.
 6. **Patching `__init__`:** The `@patch` decorator is used to test the initialization of the GoogleDrive class (e.g., to check arguments passed)
 7. **Import Verification:** The `test_module_import` tests the actual import of the `GoogleDrive` class to ensure there's no unexpected issue.  This should be your first test (or be included in a broader set).
@@ -93,4 +93,4 @@ class GoogleDrive:
         return self.mode
 ```
 
-This improved example is more complete and demonstrates good testing practices using `pytest`, patching, and exception handling. Remember to adapt the tests according to the actual structure and behavior of your code. Remember to add the actual import for `GoogleDrive`.
+This improved example is more complete and demonStartes good testing practices using `pytest`, patching, and exception handling. Remember to adapt the tests according to the actual structure and behavior of your code. Remember to add the actual import for `GoogleDrive`.

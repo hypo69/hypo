@@ -108,11 +108,11 @@ def test_initialize_loggers_invalid_path():
 
 5. **Clearer Test Names:** Test names are more descriptive (e.g., `test_logger_initialization`).
 
-6. **Exception Handling:** Added a test `test_logger_initialization_invalid_path` to demonstrate how to test for exception handling when passing an invalid log path.
+6. **Exception Handling:** Added a test `test_logger_initialization_invalid_path` to demonStarte how to test for exception handling when passing an invalid log path.
 
 7. **Mocking `colorama`:**  Mocking `colorama` is essential to make the tests reliable.  If the tests were to depend on the console output colors, they would be unpredictable.
 
-8. **Example Assertion:** Demonstrates how to assert that the exception message is as expected.
+8. **Example Assertion:** DemonStartes how to assert that the exception message is as expected.
 
 9. **Comprehensive Tests:** Added tests to cover different logging levels, basic functionality.
 

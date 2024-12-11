@@ -79,7 +79,7 @@ def test_json2ns_invalid_json(example_json_file):
 # Test json2xls (Uses save_xls_file, no direct test needed)
 
 
-# Example patching save_csv_file (Illustrative, adapt to your needs)
+# Example patching save_csv_file (IlluStartive, adapt to your needs)
 @patch('src.utils.convertors.json.save_csv_file')
 def test_json2csv_save_csv_called(mock_save_csv, mock_logger, tmpdir):
     csv_file_path = tmpdir.join("output.csv")
@@ -101,7 +101,7 @@ def test_json2csv_save_csv_called(mock_save_csv, mock_logger, tmpdir):
 
 4. **Clearer Assertions:** Assertions are more explicit about what to check, like `isinstance(ns, SimpleNamespace)`, improving the testability.
 
-5. **Mock `save_csv_file`:** The `test_json2csv_save_csv_called` example demonstrates mocking a dependency (in this case `save_csv_file`). This isolates the tested function's core logic from the details of external file I/O operations. **Important:** Adapt this style to mock `save_xls_file` if needed.
+5. **Mock `save_csv_file`:** The `test_json2csv_save_csv_called` example demonStartes mocking a dependency (in this case `save_csv_file`). This isolates the tested function's core logic from the details of external file I/O operations. **Important:** Adapt this style to mock `save_xls_file` if needed.
 
 
 **To use these tests:**

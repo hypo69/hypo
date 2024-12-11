@@ -133,10 +133,10 @@ def test_id_product(graber, product_fields):
 
 4. **Clearer Test Cases:**  Test cases now include specific assertions based on mocked return values.  e.g., `assert result.id_product == "expected_result"`
 
-5. **Edge Case `test_grab_page_no_data`:** This test is added to demonstrate a critical edge case—what happens when input data is missing/empty.
+5. **Edge Case `test_grab_page_no_data`:** This test is added to demonStarte a critical edge case—what happens when input data is missing/empty.
 
 
-6. **Exception Handling Test (`test_grab_page_exception`):**  Demonstrates how to test exception handling using `pytest.raises`.
+6. **Exception Handling Test (`test_grab_page_exception`):**  DemonStartes how to test exception handling using `pytest.raises`.
 
 7. **Specific Method Testing (`test_id_product`):** Shows how to test a specific method from the `Graber` class, including setting up a mock for it.
 
@@ -155,4 +155,4 @@ def test_id_product(graber, product_fields):
    pytest hypotez/src/suppliers/visualdg/graber_test.py  # Adjust the path if needed
    ```
 
-This revised solution provides a much more robust and complete set of tests, addressing the key issues and demonstrating best practices for `pytest` testing. Remember to add more tests for other functions and edge cases as needed.  Critically, ensure your `Graber` class returns the correct data types and handles exceptions appropriately.  The mocking approach allows for focusing on the specific logic of the `Graber` class while avoiding external dependencies.
+This revised solution provides a much more robust and complete set of tests, addressing the key issues and demonStarting best practices for `pytest` testing. Remember to add more tests for other functions and edge cases as needed.  Critically, ensure your `Graber` class returns the correct data types and handles exceptions appropriately.  The mocking approach allows for focusing on the specific logic of the `Graber` class while avoiding external dependencies.

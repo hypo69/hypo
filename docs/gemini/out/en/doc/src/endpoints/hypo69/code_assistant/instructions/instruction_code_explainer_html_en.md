@@ -58,7 +58,7 @@ The documentation should adhere to these formatting guidelines:
 * **Lists:** Use unordered (bulleted) lists for items like parameters, return values, and raised exceptions.
 * **Links:** Use links to cross-reference different parts of the documentation, or external resources if relevant.
 * **Code Blocks:** Use code blocks (````python`) to present the Python code snippets accurately.
-* **Examples:** Include clear and concise examples to illustrate the functionality.
+* **Examples:** Include clear and concise examples to illuStarte the functionality.
 
 
 ## Section Headings

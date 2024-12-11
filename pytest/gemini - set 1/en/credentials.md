@@ -115,7 +115,7 @@ def test_now_property():
 
 6. **Error Handling:** Test cases should explicitly check that exceptions are raised when appropriate (e.g., when the KeePass database is not found or password is incorrect). Use `pytest.raises` for such tests.
 
-7. **`now` Property Test:** The `test_now_property` example demonstrates testing the `now` method by checking the length of the returned string.  You'd want similar checks to validate the format.
+7. **`now` Property Test:** The `test_now_property` example demonStartes testing the `now` method by checking the length of the returned string.  You'd want similar checks to validate the format.
 
 8. **File Paths:**  Always create `Path` objects consistently throughout the code and tests.
 

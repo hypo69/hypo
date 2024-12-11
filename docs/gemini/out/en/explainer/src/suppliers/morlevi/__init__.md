@@ -46,7 +46,7 @@ graph LR
 
 **Dependencies and Explanation:**
 
-The mermaid diagram illustrates a simple dependency. The `morlevi` package imports `Graber` from the sub-package `graber`.  The `graber` package likely contains a `.py` file defining the `Graber` class. The diagram shows the `Graber` class and its potential methods and attributes.  A more detailed diagram would be needed to illustrate the class's structure if that information were available.
+The mermaid diagram illuStartes a simple dependency. The `morlevi` package imports `Graber` from the sub-package `graber`.  The `graber` package likely contains a `.py` file defining the `Graber` class. The diagram shows the `Graber` class and its potential methods and attributes.  A more detailed diagram would be needed to illuStarte the class's structure if that information were available.
 
 # <explanation>
 

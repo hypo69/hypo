@@ -130,7 +130,7 @@ def test_wait_valid_delay(driver_instance):
 * **Mocking:** Shows how to mock `driver.get` to simulate a `WebDriverException` in the test for improved isolation, preventing the actual browser from being used. 
 * **Error Handling:** The tests now more robustly handle potential errors (e.g., `NoSuchElementException`, invalid input).
 * **Edge Cases:** Added a test for `test_scroll_invalid_direction` to check for invalid `direction` inputs.
-* **Example of `monkeypatch`:** Illustrates how to use `monkeypatch` to simulate exceptions during driver interactions.
+* **Example of `monkeypatch`:** IlluStartes how to use `monkeypatch` to simulate exceptions during driver interactions.
 * **Explicit `assert` Statements:** Makes the assertions more explicit about what is being tested.
 * **`driver_instance` Fixture:**  Provides an instance of the `Driver` class to reduce redundant code.
 * **Dummy HTML File:**  A test for `fetch_html` with a valid local file now includes a creation of a temporary file to create the file for testing.

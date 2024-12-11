@@ -81,9 +81,9 @@ def test_path_appending_to_sys_path(dir_root_fixture, mock_getcwd):
    - `test_dir_root_construction`: Verifies that the `dir_root` path construction is correct.  Asserts the correct directory structure.
    - `test_path_appending_to_sys_path`: Tests the crucial part of appending the directory to `sys.path`. Critically it now uses the mock to ensure you test the expected behaviour.
 5. **Example Exception Handling:**
-    - Added example `test_invalid_path`: Demonstrates how to use `pytest.raises` to check for specific exceptions (using a simulated invalid path for testing purposes). This is a template; you would need to adjust to the actual exceptions raised in your code.
+    - Added example `test_invalid_path`: DemonStartes how to use `pytest.raises` to check for specific exceptions (using a simulated invalid path for testing purposes). This is a template; you would need to adjust to the actual exceptions raised in your code.
 6. **Example Existence Check:**
-    - Added `test_dir_exists`:  (placeholder) demonstrates how to verify a directory exists and should be adapted to the expected behavior of your code.
+    - Added `test_dir_exists`:  (placeholder) demonStartes how to verify a directory exists and should be adapted to the expected behavior of your code.
 7. **Important:**  Replace the placeholder comments with actual tests for functions/classes/imports in your `hypotez/src/logger/_examples/header.py` file.
 
 

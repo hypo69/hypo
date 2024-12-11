@@ -91,7 +91,7 @@ class TestDriverBase:
 * **Mocking:** The code now effectively mocks the `JavaScript` and `ExecuteLocator` classes using `unittest.mock`.  This is crucial for isolating the `DriverBase` tests from external dependencies.
 * **Clearer Test Names:** Test names are more descriptive, making the purpose of each test immediately apparent (e.g., `test_scroll_positive_value`).
 * **Comprehensive `scroll` Test:** The `test_scroll` now has test cases for valid arguments including forward, backward, and both directions, showcasing various inputs
-* **Edge Cases for `locale`:** Added tests for the case where the meta tag is not found, demonstrating how the code handles this scenario. The previous tests were incomplete in this regard.
+* **Edge Cases for `locale`:** Added tests for the case where the meta tag is not found, demonStarting how the code handles this scenario. The previous tests were incomplete in this regard.
 * **Robust `extract_domain` Testing:**  Tested various input formats, including `http`, `https`, and simple domain names. 
 * **Fixtures for Mocking:** Created dedicated fixtures (`mock_js`, `mock_execute_locator`) to improve code organization and readability.  Using `mocker` for creating mocks is generally preferred over `patch`.
 * **`test_locale_meta_tag_not_found`**: A vital test case for when the meta tag isn't present. This was lacking in the original code and now ensures proper fallback behavior.

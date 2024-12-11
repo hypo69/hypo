@@ -84,7 +84,7 @@ with open("test_config.ini", "w") as configfile:
 **Explanation and Improvements:**
 
 * **Mocking:** The code now uses `unittest.mock` to mock external modules and file operations (`os`, `configparser`, `rich`). This is crucial for testing functions that rely on external dependencies without interacting with the real files or libraries, making the tests independent and repeatable.  Crucially, the `MockUtils` class mocks the `tinytroupe.utils` functions.
-* **Error Handling:**  `test_read_config_file_invalid` now correctly catches the `configparser.Error` that would be raised when a config file is not found or invalid, demonstrating proper exception handling.  Also the appropriate error `FileNotFoundError` is caught
+* **Error Handling:**  `test_read_config_file_invalid` now correctly catches the `configparser.Error` that would be raised when a config file is not found or invalid, demonStarting proper exception handling.  Also the appropriate error `FileNotFoundError` is caught
 * **Clearer Test Names:** Test names are more descriptive (e.g., `test_read_config_file_valid`).
 * **Test Data:** A dummy `test_config.ini` file is created and used for the valid config test, ensuring the test has relevant data to work with.
 * **Valid Config Test:** A test case has been added to `test_read_config_file_valid` to ensure it handles a valid config file correctly.

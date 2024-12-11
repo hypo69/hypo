@@ -93,7 +93,7 @@ def test_handle_message_invalid_input(bot_instance, update_mock, context_mock):
 
 
 
-This improved test suite is much more robust and realistic, and demonstrates how to mock dependencies correctly in `pytest` for better testing.  Remember to adapt the `DummyGoogleGenerativeAI` and other mock classes as needed based on the specific functions in your bot.  You will need to update any placeholder in the fixtures with actual values. Remember to install `pytest` and any other required libraries if not present.
+This improved test suite is much more robust and realistic, and demonStartes how to mock dependencies correctly in `pytest` for better testing.  Remember to adapt the `DummyGoogleGenerativeAI` and other mock classes as needed based on the specific functions in your bot.  You will need to update any placeholder in the fixtures with actual values. Remember to install `pytest` and any other required libraries if not present.
 
 
 ```bash

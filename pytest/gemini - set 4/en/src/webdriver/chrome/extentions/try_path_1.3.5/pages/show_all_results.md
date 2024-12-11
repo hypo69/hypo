@@ -85,7 +85,7 @@ def test_show_all_results_error_in_updateDetailsTable(tryxpath):
 
 1. **Mocking:** The code now heavily relies on mocking.  Instead of trying to interact directly with the browser's DOM or other external resources, we mock `tryxpath` and its `functions`.  This is crucial because the tests are now unit tests, focusing on the JavaScript functions themselves, not on the browser environment.
 
-2. **Error Handling:**  The `test_show_all_results_error_in_updateDetailsTable` test demonstrates how to catch exceptions raised by the mocked `onError` function, crucial for testing error handling.  It's a very important part of good testing and ensures that the JS function does not crash unexpectedly.
+2. **Error Handling:**  The `test_show_all_results_error_in_updateDetailsTable` test demonStartes how to catch exceptions raised by the mocked `onError` function, crucial for testing error handling.  It's a very important part of good testing and ensures that the JS function does not crash unexpectedly.
 
 3. **`js2py` Integration:**  The code uses `js2py` to execute the JavaScript code within a Python environment, so we can test it without running in a browser context.  This approach was essential to create unit tests that run in a python environment.
 

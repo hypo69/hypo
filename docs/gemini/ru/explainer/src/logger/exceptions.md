@@ -86,7 +86,7 @@ The code defines a hierarchy of custom exception classes for handling various er
 
 The algorithm is primarily object-oriented, defining exception classes and handling specific error scenarios. Each custom exception class inherits from a base class (either `CustomException` or another standard Python exception) to extend its functionality.
 
-Example Usage (Illustrative):
+Example Usage (IlluStartive):
 
 ```python
 try:
@@ -168,7 +168,7 @@ graph LR
     * `MODE`: A variable with the value 'dev' likely used for conditional logging or other configuration.
 
 * **Possible Errors/Improvements**:
-    * The `handle_exception` method currently just logs the exception. It should be expanded to include more robust error handling strategies, like retries, alternative actions, or escalation mechanisms.
+    * The `handle_exception` method currently just logs the exception. It should be expanded to include more robust error handling Startegies, like retries, alternative actions, or escalation mechanisms.
     * More specific error handling could be added for file operations (e.g., exceptions specific to writing, reading, or deleting files).
     * Using exceptions for logging is a bit awkward (logging and exceptions are different roles). The code should use the logging module to log errors for monitoring, and exceptions to signal that something cannot be completed.
 

@@ -92,7 +92,7 @@ def test_product_ids_empty_list(api_instance):
 4. **Missing Attribute Tests:** Placeholder comments for testing other attributes like `app_signature`, `country`, etc.  **You MUST add these tests to cover the complete functionality of the `AliexpressAffiliateProductdetailGetRequest` class.**
 
 
-5. **Example for `product_ids`:**  Added tests for checking an empty list and invalid types.  This is a crucial example to demonstrate how to test with various inputs. **Expand these examples to cover edge cases for all attributes like lists, dictionaries, string/numeric data types and empty/invalid values for the parameters.**
+5. **Example for `product_ids`:**  Added tests for checking an empty list and invalid types.  This is a crucial example to demonStarte how to test with various inputs. **Expand these examples to cover edge cases for all attributes like lists, dictionaries, string/numeric data types and empty/invalid values for the parameters.**
 
 6. **Robustness:**  The tests now include checks for the proper handling of various data types (strings, numbers, lists) and edge cases (empty lists) to ensure the code's robustness.
 

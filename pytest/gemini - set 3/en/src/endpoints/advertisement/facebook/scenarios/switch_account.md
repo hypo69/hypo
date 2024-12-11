@@ -81,7 +81,7 @@ def test_switch_account_raises_exception_on_invalid_driver():
 * **Locator Fixture:** A `locator` fixture is introduced to load the locators in a testable way, decoupling the test from the real file location and handling potential issues with the `j_loads_ns` function. This is extremely important!
 * **Clearer Test Cases:** Test names are more descriptive.
 * **Edge Case and Invalid Input:** A test case for an invalid locator is added.  This is important to show that your function doesn't crash in unexpected circumstances.  This assumes the actual `execute_locator` method will handle the case where the locator is not found.  Testing this is critical to understanding the robustness of your code.
-* **Exception Handling:** The code includes a test `test_switch_account_raises_exception_on_invalid_driver` that demonstrates how to use `pytest.raises` to check for expected exceptions. Update with the correct exception type if needed.
+* **Exception Handling:** The code includes a test `test_switch_account_raises_exception_on_invalid_driver` that demonStartes how to use `pytest.raises` to check for expected exceptions. Update with the correct exception type if needed.
 * **Robustness:** The test `test_switch_account_locator_not_found` now creates a mock driver that returns `False` when a locator is not found. This more accurately tests the scenario where the locator is missing, so you're confident your code handles it gracefully.
 * **Dummy Imports:** Added placeholder `from selenium.webdriver.common.by import By` to address potential `ImportError`s when running the tests. Replace these with actual imports if needed.
 

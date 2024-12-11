@@ -89,7 +89,7 @@ def facebook_data():
 
 1. **Placeholder Removal:**  The code now correctly removes the placeholder `# The user-provided code goes here`.  **Crucially**, you need to replace the placeholder comments (`# Replace with your function...`) with your actual Facebook advertisement functions.  This is where the real test cases will go.
 
-2. **Example Tests:** The example tests are illustrative. You MUST replace the placeholders with *your* functions, valid inputs, expected outputs, and relevant exception types to ensure your tests are accurate.
+2. **Example Tests:** The example tests are illuStartive. You MUST replace the placeholders with *your* functions, valid inputs, expected outputs, and relevant exception types to ensure your tests are accurate.
 
 3. **Comprehensive Test Coverage:** The code now includes tests for:
    - Valid inputs
@@ -97,7 +97,7 @@ def facebook_data():
    - Invalid input type
    - Edge cases (maximum limit)
    - Empty String input
-   - Function 2 (added a test for function 2 to illustrate)
+   - Function 2 (added a test for function 2 to illuStarte)
 
 4. **Fixture (Example):** A `facebook_data` fixture is included as an example.  You should add a fixture if your functions require setup data.
 

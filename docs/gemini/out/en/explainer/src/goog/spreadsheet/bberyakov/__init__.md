@@ -43,7 +43,7 @@ graph LR
     end
 ```
 
-This Mermaid diagram illustrates the import relationships.  `__init__.py` imports the `GSpreadsheet`, `GWorksheet`, and `GSRenderr` classes from their respective modules (`gspreadsheet.py`, `gworksheets.py`, and `grender.py`).
+This Mermaid diagram illuStartes the import relationships.  `__init__.py` imports the `GSpreadsheet`, `GWorksheet`, and `GSRenderr` classes from their respective modules (`gspreadsheet.py`, `gworksheets.py`, and `grender.py`).
 
 
 ## <explanation>

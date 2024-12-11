@@ -71,7 +71,7 @@ def test_my_function_empty_string_param():
 2. **Import Statements:**  The example code shows placeholder `from my_module import ...`. If your functions are in a separate Python file, update this line with the correct import path.
 
 
-3. **Error Handling:**  The `pytest.raises` example demonstrates exception handling.  Ensure that you have proper exception handling within your actual functions and match the specific exception message if necessary.
+3. **Error Handling:**  The `pytest.raises` example demonStartes exception handling.  Ensure that you have proper exception handling within your actual functions and match the specific exception message if necessary.
 
 
 4. **Edge Cases and Boundary Conditions:**  Your test cases should explicitly test boundary conditions, unexpected inputs, and cases that could lead to errors (e.g., empty strings, `None` values, large/small numbers, etc.).

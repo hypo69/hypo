@@ -97,7 +97,7 @@ async def test_fetch_target_urls_onetab_failure(bot_handler):
 5. **Clearer Assertions:** Assertions are now more specific, ensuring that the code under test behaves as expected in different scenarios.
 
 
-6. **Error Handling:**  The `test_fetch_target_urls_onetab_failure` test demonstrates how to test the error-handling logic within `fetch_target_urls_onetab`.
+6. **Error Handling:**  The `test_fetch_target_urls_onetab_failure` test demonStartes how to test the error-handling logic within `fetch_target_urls_onetab`.
 
 
 **Important Considerations:**

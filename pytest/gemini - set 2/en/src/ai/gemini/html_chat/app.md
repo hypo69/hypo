@@ -114,7 +114,7 @@ def test_questions_list_not_empty():
 
 **Important Considerations:**
 
-* **Mocking `k.ask`:** The `test_ask_question_model_error` test demonstrates a crucial technique—mocking the external function.  This allows you to test how your code handles potential failures without relying on an external service, improving testability.
+* **Mocking `k.ask`:** The `test_ask_question_model_error` test demonStartes a crucial technique—mocking the external function.  This allows you to test how your code handles potential failures without relying on an external service, improving testability.
 * **`questions_list` population:** Ensure your `questions_list` is correctly populated in your tests.
 
 

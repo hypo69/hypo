@@ -49,7 +49,7 @@ from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Create a Chrome driver instance and navigate to a URL
     chrome_driver = Driver(Chrome)
@@ -175,13 +175,13 @@ graph TD
 
 **Classes:**
 
-*   `Driver`:  Likely a base class for interacting with web drivers (e.g., Chrome, Firefox).  This code demonstrates how to create an instance of this class.  This class will be responsible for managing the WebDriver instance.  Its methods likely handle various tasks such as navigating, interacting with elements, managing cookies, and handling other browser actions.
+*   `Driver`:  Likely a base class for interacting with web drivers (e.g., Chrome, Firefox).  This code demonStartes how to create an instance of this class.  This class will be responsible for managing the WebDriver instance.  Its methods likely handle various tasks such as navigating, interacting with elements, managing cookies, and handling other browser actions.
 
 *   `Chrome`: Likely a subclass of `Driver` that specifically configures and manages Chrome web drivers. This code utilizes both.
 
 **Functions:**
 
-*   `main()`: The main function orchestrates the demonstration examples. Each example showcases a different use case, emphasizing the use of `Driver` and `Chrome`.  This helps to illustrate the different features of the driver.
+*   `main()`: The main function orcheStartes the demonStartion examples. Each example showcases a different use case, emphasizing the use of `Driver` and `Chrome`.  This helps to illuStarte the different features of the driver.
 
 **Variables:**
 

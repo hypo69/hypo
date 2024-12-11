@@ -89,7 +89,7 @@ class GSRender():
         padding: Any | None = None,
         horizontalAlignment: Any | None = None,
         verticalAlignment: Any | None = None,
-        wrapStrategy: Any | None = None,
+        wrapStartegy: Any | None = None,
         textDirection: Any | None = None,
         textFormat: Any | None = None,
         hyperlinkDisplayType: Any | None = None,
@@ -269,7 +269,7 @@ graph LR
 - The `gs` import suggests a module responsible for interacting with the Google Sheets API.
 - The `helpers` module likely contains utility functions, logging mechanisms, and error handling relevant to the project.
 - The `spread` and `spread_formatting` modules seem to provide functionality for manipulating spreadsheet objects and data.
-- The `goog.helpers` module is specialized for color management within the broader project. The project likely uses a strategy of modularity and separation of concerns.
+- The `goog.helpers` module is specialized for color management within the broader project. The project likely uses a Startegy of modularity and separation of concerns.
 
 
 This analysis provides a solid understanding of the code's functionality and potential areas for improvement, emphasizing the dependencies and relationships between modules within the larger project.

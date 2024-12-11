@@ -31,7 +31,7 @@ def test_details_not_empty():
     """Checks if __details__ is not empty."""
     assert __details__
 
-# Example test demonstrating checking keys within a dictionary (if applicable)
+# Example test demonStarting checking keys within a dictionary (if applicable)
 def test_details_contains_keys():
     """Check if __details__ contains expected keys."""
     # Replace with specific keys you expect to be in __details__

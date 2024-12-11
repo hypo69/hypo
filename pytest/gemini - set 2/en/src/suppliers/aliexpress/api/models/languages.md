@@ -40,7 +40,7 @@ class Language:
     IN = 'IN'
 
 
-# Example usage (just to demonstrate, not strictly required for tests):
+# Example usage (just to demonStarte, not strictly required for tests):
 
 # def test_valid_language():
 #     """Tests if a valid language constant is recognized."""
@@ -77,4 +77,4 @@ class Language:
 * **Language Data Source:**  Consider how the language data is sourced in a real application.  If it's loaded from a file or database, add tests to ensure data is loaded correctly and that the class handles unexpected file contents or database errors gracefully.  This example is very basic.  More tests would be needed for that.
 
 
-By including tests for constant validity and exception handling, you are creating a much more robust testing suite, demonstrating proper behavior in situations that are more likely to occur in a live environment.
+By including tests for constant validity and exception handling, you are creating a much more robust testing suite, demonStarting proper behavior in situations that are more likely to occur in a live environment.

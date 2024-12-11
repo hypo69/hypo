@@ -65,7 +65,7 @@ def example_data():
 
 2. **Specific Exception Handling:** The tests now use `pytest.raises` to check for specific exceptions (e.g., `KeyError`, `TypeError`, `ValueError`).  This is far more robust than just checking for any exception.  The assertions within the `with` block check for the *expected* error message, not just that an exception was raised.
 
-3. **Clearer Assertions:**  Replace the placeholder `assert result is not None` with *meaningful* assertions about the expected return value of `SomeClass.process_data()`.  This is essential for demonstrating the function's correct operation.
+3. **Clearer Assertions:**  Replace the placeholder `assert result is not None` with *meaningful* assertions about the expected return value of `SomeClass.process_data()`.  This is essential for demonStarting the function's correct operation.
 
 4. **Edge Cases:**  The tests now include examples of invalid input (empty dictionary, wrong type, missing key).  **Critically**, these tests are essential to prevent unexpected behavior in production.
 

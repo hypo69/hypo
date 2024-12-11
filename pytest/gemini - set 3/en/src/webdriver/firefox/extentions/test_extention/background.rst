@@ -71,9 +71,9 @@ def test_no_files_array(mocked_browser):
 
 2. **Clearer Test Names:** Test names like `test_browser_action_listener_valid_input` are more descriptive.
 
-3. **Valid Input Test:** `test_browser_action_listener_valid_input` now demonstrates how to use the mock to verify if the listener is called and correctly passes the tab. This is crucial, as there are no browser interactions to check directly.
+3. **Valid Input Test:** `test_browser_action_listener_valid_input` now demonStartes how to use the mock to verify if the listener is called and correctly passes the tab. This is crucial, as there are no browser interactions to check directly.
 
-4. **Error Handling:** `test_no_tab_id` and `test_no_files_array` demonstrate how to use `pytest.raises` to test for expected exceptions when the input data is incorrect. This is essential for robust testing.
+4. **Error Handling:** `test_no_tab_id` and `test_no_files_array` demonStarte how to use `pytest.raises` to test for expected exceptions when the input data is incorrect. This is essential for robust testing.
 
 5. **Fixture:** The `mocked_browser` fixture provides a consistent mock environment for all the test functions, making the tests more organized and reusable.
 

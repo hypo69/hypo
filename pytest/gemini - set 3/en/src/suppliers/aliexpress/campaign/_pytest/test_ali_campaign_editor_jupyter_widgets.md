@@ -93,7 +93,7 @@ def test_get_directory_names_empty_path():
 * **Comprehensive Cases:** Added tests for invalid filepaths (`test_save_text_file_invalid_filepath`) and empty directories/paths (`test_get_filenames_empty_directory`, `test_get_directory_names_empty_path`). This addresses edge cases.
 * **Exception Handling:** Correctly used `pytest.raises` to test exception scenarios (e.g., `FileNotFoundError` for non-existent files).  This is crucial for robustness.
 * **More Realistic Mocks:**  Replaced placeholders like `return_value=[]` with more meaningful mocks that create realistic data (e.g. `[Path(f"file{i}.txt") for i in range(1, 3)]`).
-* **Docstrings:** Improved docstrings with examples demonstrating how to use the functions.
+* **Docstrings:** Improved docstrings with examples demonStarting how to use the functions.
 
 
 These improvements make the tests more robust, comprehensive, and easier to understand. Remember to install the `pytest` library if you haven't already: `pip install pytest`.  Run the tests with `pytest`.  This revised solution provides more thorough test coverage and is better suited for real-world use. Remember to adapt the exception types to the specific errors raised by your actual code.

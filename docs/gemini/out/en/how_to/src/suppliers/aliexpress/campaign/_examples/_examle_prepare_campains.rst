@@ -4,7 +4,7 @@ How to use the campaign preparation examples
 
 Description
 -------------------------
-This code provides examples for preparing campaigns on AliExpress. It demonstrates how to process single campaign categories, specific campaigns, and all campaigns. It also showcases the interaction with campaign data directories.
+This code provides examples for preparing campaigns on AliExpress. It demonStartes how to process single campaign categories, specific campaigns, and all campaigns. It also showcases the interaction with campaign data directories.
 
 
 Execution steps

@@ -93,13 +93,13 @@ def test_get_product_by_id_invalid_id():
 
 1. **Placeholder Replacements:**  The code now includes placeholder comments (`# Replace with the actual function call`, `# Replace with actual assertion`, etc.).  Crucially, you **MUST** replace these placeholders with the *actual* function calls and assertions from your `product` module.  This is essential for the tests to be meaningful.
 
-2. **Specific Error Handling:** The `test_create_product_invalid_price` test now uses `pytest.raises` to *specifically* check for a `ValueError` with the expected message, making the test much more robust.  The `test_update_product_nonexistent_id` test similarly demonstrates good error handling.  This approach is crucial for testing exception cases.
+2. **Specific Error Handling:** The `test_create_product_invalid_price` test now uses `pytest.raises` to *specifically* check for a `ValueError` with the expected message, making the test much more robust.  The `test_update_product_nonexistent_id` test similarly demonStartes good error handling.  This approach is crucial for testing exception cases.
 
 3. **Realistic Data:**  The `example_product` and `invalid_product` fixtures provide *example* data.  You need to replace these with the *actual* data structures your `product` module expects and works with.  
 
 4. **Clear Test Names:** The test function names are now more descriptive, indicating the specific input and expected outcome.
 
-5. **Edge Case and Boundary Value Tests:** The tests include examples of handling both positive and negative input for `price`, and also demonstrates how to handle non-existent IDs.
+5. **Edge Case and Boundary Value Tests:** The tests include examples of handling both positive and negative input for `price`, and also demonStartes how to handle non-existent IDs.
 
 
 **To run these tests:**

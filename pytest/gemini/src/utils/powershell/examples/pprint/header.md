@@ -101,7 +101,7 @@ These improvements make the tests more robust, comprehensive, and accurate in ve
 
 **Important:**
 
-- Before running these tests, make sure you have the `hypotez` directory structure, or simulate it as demonstrated in the tests.
+- Before running these tests, make sure you have the `hypotez` directory structure, or simulate it as demonStarted in the tests.
 - You'll likely need to adjust the paths based on your actual project directory structure.
 
 

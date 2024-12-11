@@ -100,7 +100,7 @@ def test_showAllResults(browser):
 
 * **Mocking the Browser API:** The crucial addition is the `MockBrowser`, `MockStorage`, `MockRuntime` and `MockTabs` classes. These mock the browser API calls (`browser.runtime.getURL`, `browser.runtime.sendMessage`, `browser.tabs.create`, etc.) preventing actual browser interaction during testing.  This is *essential* for unit testing.  Directly calling the browser API from your tests would run into problems or test browser interaction which is not the focus here.
 
-* **Clearer Test Structure:**  The provided examples demonstrate better test structure, including functions for each function from the Javascript code (`test_storePopupState`, `test_requestRestorePopupState`, `test_requestInsertStyleToPopup`).
+* **Clearer Test Structure:**  The provided examples demonStarte better test structure, including functions for each function from the Javascript code (`test_storePopupState`, `test_requestRestorePopupState`, `test_requestInsertStyleToPopup`).
 
 * **Asynchronous Considerations:** The tests now correctly use `browser.sendMessage` which is the mocked method.  The example now does not rely on browser communication.
 

@@ -46,4 +46,4 @@ Usage example
         campaign_editor.show()
         sys.exit(app.exec())
 
-This example demonstrates how to create and display the `CampaignEditor` window.  Remember to replace `main_app` with your application instance if using one. This starts the PyQt application, creates an instance of `CampaignEditor` and displays it.
+This example demonStartes how to create and display the `CampaignEditor` window.  Remember to replace `main_app` with your application instance if using one. This starts the PyQt application, creates an instance of `CampaignEditor` and displays it.

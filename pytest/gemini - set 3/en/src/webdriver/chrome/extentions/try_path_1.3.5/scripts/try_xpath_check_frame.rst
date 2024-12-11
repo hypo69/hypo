@@ -77,7 +77,7 @@ import pytest
 
 2. **Need a Python Wrapper:**  To test this JavaScript code, you'll need to create a Python wrapper that interacts with it (e.g., using `js2py`, `selenium`, or similar tools). This Python code would need to be used in a `pytest` test environment.
 
-3. **Example `test_is_content_loaded` (Illustrative):**  The commented-out example (`test_is_content_loaded`) shows how tests *might* be structured *if* `tryxpath.isContentLoaded` were a Python function.   You would adapt these examples to your specific Python wrapper.
+3. **Example `test_is_content_loaded` (IlluStartive):**  The commented-out example (`test_is_content_loaded`) shows how tests *might* be structured *if* `tryxpath.isContentLoaded` were a Python function.   You would adapt these examples to your specific Python wrapper.
 
 
 4. **Error Handling:** JavaScript errors could be raised and caught differently in your Python wrapper. The example shows how a `TypeError` or `AttributeError` might be handled when `tryxpath.isContentLoaded` is used improperly.  The examples are generic; you'll need specifics about your JavaScript and Python wrapper.

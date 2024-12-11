@@ -85,7 +85,7 @@ def test_save_product_invalid_data(mocker, campaign):
 
 **Key Improvements and Explanations:**
 
-* **Exception Handling:** Added a `test_initialize_campaign` test case to demonstrate exception handling.  Crucially, it checks for the expected `ValueError` and uses a `match` argument in `pytest.raises` for more informative error messages. This approach is critical; similar tests should be written for `save_product` and any other function that might raise exceptions.
+* **Exception Handling:** Added a `test_initialize_campaign` test case to demonStarte exception handling.  Crucially, it checks for the expected `ValueError` and uses a `match` argument in `pytest.raises` for more informative error messages. This approach is critical; similar tests should be written for `save_product` and any other function that might raise exceptions.
 
 * **Clearer Error Messages:**  The `match` argument in `pytest.raises` ensures you get specific error messages if an exception is raised. This helps pinpoint the problem more easily.
 
@@ -95,7 +95,7 @@ def test_save_product_invalid_data(mocker, campaign):
 
 * **Missing Files:** Added tests (e.g., `test_get_category_products_no_json_files`) to cover cases where data files may be missing or empty. This is vital for robustness.
 
-* **Invalid Data:** The example `test_save_product_invalid_data` demonstrates how to test for exceptions when the input data is not as expected (e.g., missing attributes).
+* **Invalid Data:** The example `test_save_product_invalid_data` demonStartes how to test for exceptions when the input data is not as expected (e.g., missing attributes).
 
 
 **How to proceed:**

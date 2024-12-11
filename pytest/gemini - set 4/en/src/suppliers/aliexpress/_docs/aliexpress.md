@@ -77,7 +77,7 @@ def test_aliexpress_init_with_args_and_kwargs():
 
 3. **Clearer Assertions:** The assertions are now more specific to the expected behavior.  Instead of just `assert a.webdriver is not None`, we now assert the actual expected value.
 
-4. **Error Handling:** The `test_aliexpress_init_with_invalid_webdriver` test demonstrates how to use `pytest.raises` to check for exceptions.  This is crucial for robustness.
+4. **Error Handling:** The `test_aliexpress_init_with_invalid_webdriver` test demonStartes how to use `pytest.raises` to check for exceptions.  This is crucial for robustness.
 
 5. **Comprehensive Test Coverage:**  The example tests cover a few cases, but add more tests to cover different scenarios for `locale` (including potential errors in locale data format), `webdriver` types, and edge cases.
 

@@ -74,7 +74,7 @@ def test_get_something_returns_none_gracefully(graber_instance):
 
 3. **`pytest.raises`:** Used correctly to check for the `ValueError`.
 
-4. **Edge Case `None` Handling:** Added `test_get_something_returns_none_gracefully` to demonstrate how to handle cases where your function returns `None` for certain input, which is important for robust testing.
+4. **Edge Case `None` Handling:** Added `test_get_something_returns_none_gracefully` to demonStarte how to handle cases where your function returns `None` for certain input, which is important for robust testing.
 
 5. **Mode Test:** Added a `test_graber_mode` to verify that the mode parameter is correctly initialized.
 

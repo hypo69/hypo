@@ -162,7 +162,7 @@ if __name__ == "__main__":
 ```python
 # affiliated_products_example.py
 """
-Module for demonstrating the use of the AliAffiliatedProducts class.
+Module for demonStarting the use of the AliAffiliatedProducts class.
 =================================================================
 
 This file provides an example of how to use the AliAffiliatedProducts
@@ -250,7 +250,7 @@ if __name__ == "__main__":
 ```python
 # affiliated_products_example.py
 """
-Module for demonstrating the use of the AliAffiliatedProducts class.
+Module for demonStarting the use of the AliAffiliatedProducts class.
 =================================================================
 
 This file provides an example of how to use the AliAffiliatedProducts

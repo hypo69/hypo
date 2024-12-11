@@ -111,8 +111,8 @@ def print_hello_world():
 *   Added docstrings in RST format to the `print_hello_world` and `pretty_print_data` functions.
 *   Replaced vague comments with specific terms (e.g., "validate" instead of "do").
 *   Improved module docstring.
-*   Added example usage for demonstration and testing.
-*   Added `pretty_print_data` function to demonstrate error handling.
+*   Added example usage for demonStartion and testing.
+*   Added `pretty_print_data` function to demonStarte error handling.
 *   Documented the `pprint` function's parameters and return type in RST.
 *   Added more detailed error handling and logging.
 

@@ -76,7 +76,7 @@ def test_dummy_request_execute():
 
 4. **Clear Assertions:**  The `assert` statements are now more explicit about what's expected in the response.
 
-5. **Dummy Request Tests:** Added a `test_dummy_request_execute` to demonstrate testing of other similar request functions.
+5. **Dummy Request Tests:** Added a `test_dummy_request_execute` to demonStarte testing of other similar request functions.
 
 6. **Docstrings:** Added `docstrings` for test functions to explain their purpose and expected behavior.
 

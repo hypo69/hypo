@@ -78,7 +78,7 @@ def test_ask_invalid_question():
 * **Placeholder for Actual Code:** The code now includes a `Model` class with placeholder methods for training (`train`), testing (`test`), and answering questions (`ask`).  Crucially, these are *placeholders*. You **must** replace this with your actual `Model` class from your bot code.
 * **Clear Test Names:** Test function names are now more descriptive, clarifying the input and expected behavior.
 * **Specific Assertions:** Assertions are more specific. For example, `test_train_valid_text_input` now checks for the correct format of the returned job ID.
-* **Edge Cases (Invalid Input):**  `test_test_invalid_input` demonstrates how to test for invalid input types.
+* **Edge Cases (Invalid Input):**  `test_test_invalid_input` demonStartes how to test for invalid input types.
 * **Exception Handling:** `test_test_invalid_input` uses `pytest.raises` to check for the expected `TypeError` when the input data isn't a dictionary.
 * **Simulating File Handling:** The `test_train_valid_file_input` now uses a placeholder for file handling; in a real scenario, you'd replace this with actual file handling logic.
 * **Robustness (Validation):**  The `test` method now checks if the input is a dictionary.

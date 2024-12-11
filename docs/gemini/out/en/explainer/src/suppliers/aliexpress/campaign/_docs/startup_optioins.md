@@ -126,7 +126,7 @@ graph TD
 - `update_category(json_path: Path, category: SimpleNamespace) -> bool`: Updates a JSON file with campaign category data. Takes the file path and the category object, converts `SimpleNamespace` to a dictionary, writes the updated data back to the file, and returns `True` for success or `False` for failure.
 - `process_campaign_category(...)`: Processes a single campaign category. Creates a `AliPromoCampaign` object and updates its JSON file.
 - `process_campaign(...)`: Processes an entire campaign by handling categories.
-- `main(...)`: The main asynchronous function that orchestrates the campaign preparation. Accepts campaign parameters and handles asynchronous processing of categories.  Uses `asyncio.gather` for concurrent processing.
+- `main(...)`: The main asynchronous function that orcheStartes the campaign preparation. Accepts campaign parameters and handles asynchronous processing of categories.  Uses `asyncio.gather` for concurrent processing.
 
 
 ### Variables:

@@ -62,11 +62,11 @@ def test_compatibility_with_specific_version(specific_version="1.0.0"):
 
 **Explanation and Important Considerations:**
 
-1. **Placeholder:**  The provided code has no functions or classes to test. The example tests are general and illustrate how to write tests for `__version__`, `__doc__` and `__details__` attributes. **Replace** the empty placeholder with the actual code from your `aliexpress/gui/__init__.py` file.
+1. **Placeholder:**  The provided code has no functions or classes to test. The example tests are general and illuStarte how to write tests for `__version__`, `__doc__` and `__details__` attributes. **Replace** the empty placeholder with the actual code from your `aliexpress/gui/__init__.py` file.
 
 2. **Specific Tests:**  The example test cases are basic checks for data types and emptiness.  **Crucially**, you need to write tests that verify the **functionality** of the code in your `aliexpress/gui/__init__.py` file.  Add tests for any methods, functions, or classes you want to validate.
 
-3. **Versioning:**  The test `test_version_is_valid_version` attempts to parse the version string. It's important to test that your version string is in a valid format. `packaging.version` is used for this purpose.  Also, in real-world applications, you often have logic to test compatibility with other versions or packages. The example `test_compatibility_with_specific_version` demonstrates this kind of test.
+3. **Versioning:**  The test `test_version_is_valid_version` attempts to parse the version string. It's important to test that your version string is in a valid format. `packaging.version` is used for this purpose.  Also, in real-world applications, you often have logic to test compatibility with other versions or packages. The example `test_compatibility_with_specific_version` demonStartes this kind of test.
 
 4. **Edge Cases:** You should add tests to check for unexpected input, boundary values, or special conditions that your code might encounter.  This is crucial for robust testing.
 

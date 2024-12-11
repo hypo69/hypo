@@ -96,7 +96,7 @@ def test_translate_with_googletrans_exception(mock_logger):
 
 3. **Edge Cases:** Added tests for empty input, invalid input language, and scenarios where translation might fail.
 
-4. **`pytest.raises`:**  The `test_translate_with_googletrans_exception` now demonstrates how to use `pytest.raises` (though it's currently marked as skipped since an actual `Translator` object is needed) . This approach is correct, clean, and expected.
+4. **`pytest.raises`:**  The `test_translate_with_googletrans_exception` now demonStartes how to use `pytest.raises` (though it's currently marked as skipped since an actual `Translator` object is needed) . This approach is correct, clean, and expected.
 
 5. **`mock_logger` Fixture:**  The `mock_logger` fixture is a crucial improvement for testing functions using a logger.  It provides a controlled environment for these tests.
 

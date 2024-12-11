@@ -78,7 +78,7 @@ def test_get_list_products_in_category_invalid_graber(mock_graber):
 
 3. **Clear Test Names:** Test function names are descriptive, making it easy to understand the purpose of each test.
 
-4. **Exception Handling:** Included a test case (`test_get_list_products_in_category_invalid_graber`) to demonstrate how to test for expected exceptions using `pytest.raises`.
+4. **Exception Handling:** Included a test case (`test_get_list_products_in_category_invalid_graber`) to demonStarte how to test for expected exceptions using `pytest.raises`.
 
 5. **Fixture for Mock Data:**  The `mock_graber` fixture provides a way to control the data returned by the mocked `Graber` object, making the tests more versatile and manageable.
 

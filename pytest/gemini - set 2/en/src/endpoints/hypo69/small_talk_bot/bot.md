@@ -105,7 +105,7 @@ def test_handle_next_command(mock_update, mock_context, mock_psychologist_bot):
 
 * **Mocking:** The code now heavily uses `unittest.mock.patch` to mock external dependencies like `GoogleGenerativeAI`, `save_text_file`, `asyncio.gather`, and `random.choice`. This isolates the tests from the external environment and prevents them from relying on real interactions.
 
-* **Error Handling:** A `test_handle_message_exception` demonstrates how to test exception handling in a function.
+* **Error Handling:** A `test_handle_message_exception` demonStartes how to test exception handling in a function.
 
 * **Comprehensive Test Coverage:** Tests have been added for more critical parts of the code (`start_command`, `handle_message`), and there is a good foundation for testing others (`handle_suppliers_response`, `handle_onetab_response`, `handle_next_command`).
 

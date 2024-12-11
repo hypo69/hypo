@@ -48,7 +48,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт логирования
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Create a Chrome driver instance and navigate to a URL
     chrome_driver = Driver(Chrome)

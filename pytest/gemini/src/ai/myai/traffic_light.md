@@ -38,7 +38,7 @@ The provided Python code (`traffic_light.py`) is entirely empty except for comme
    - **Edge cases:** Are there boundary conditions or limits to input values? Consider minimum, maximum, and intermediate values.
    - **Exceptional situations:** If the code handles specific exceptions, test those cases.
 
-4. **Example (Illustrative, requires actual code):**
+4. **Example (IlluStartive, requires actual code):**
 
 ```python
 # Example assuming traffic_light.py has a function like this:

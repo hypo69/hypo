@@ -54,7 +54,7 @@ def test_close_pop_up_exception(logger_mock):
     logger_mock.warning.assert_called_once_with("Не закрыл попап")
 
 
-# Example demonstrating how to test for specific locator types (e.g., if the locator is a dictionary)
+# Example demonStarting how to test for specific locator types (e.g., if the locator is a dictionary)
 # This test would need to be added if locators are more complex.
 # @patch('hypotez.src.suppliers.kualastyle.login.logger', new_callable=Mock)
 # def test_close_pop_up_with_complex_locator(logger_mock):

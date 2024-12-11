@@ -80,7 +80,7 @@ def test_attribute_values(example_data):
 
 3. **Comprehensive Attribute Testing (test_attribute_values):** Added test to verify that all attributes are correctly set and accessed after initialization with valid input.
 
-4. **Invalid Input Handling:**  Tests `test_init_invalid_promotion_start_time`, `test_init_missing_domain`, and `test_init_invalid_port_type` demonstrate how to test for different error conditions within the `__init__` method.  This is crucial for robustness.
+4. **Invalid Input Handling:**  Tests `test_init_invalid_promotion_start_time`, `test_init_missing_domain`, and `test_init_invalid_port_type` demonStarte how to test for different error conditions within the `__init__` method.  This is crucial for robustness.
 
 5. **Fixture for Example Data (`example_data`):**  A fixture is used to provide test data, making tests more organized and reusable.
 

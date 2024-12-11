@@ -81,7 +81,7 @@ def test_product_valid_initialisation():
 2. **`test_product_type_hints`:**  This test validates the type hints.  It checks if the `product_small_image_urls` is a list containing strings and `first_level_category_id` is an integer.  This is extremely important, as it enforces the expected data types within the class.  **Critically**, you should add more type checks to cover all other expected types (e.g., strings, floats).
 
 
-3. **`test_product_valid_initialisation`:** This test now demonstrates how to initialize a `Product` instance with example values.  You **must** provide realistic data to check if the data is correctly assigned. The examples verify a few attributes; you should add more to thoroughly cover each attribute.
+3. **`test_product_valid_initialisation`:** This test now demonStartes how to initialize a `Product` instance with example values.  You **must** provide realistic data to check if the data is correctly assigned. The examples verify a few attributes; you should add more to thoroughly cover each attribute.
 
 
 **How to Use with pytest:**
@@ -98,4 +98,4 @@ def test_product_valid_initialisation():
 *   **Error Handling:** If the `Product` class raises exceptions for invalid input (e.g., non-numeric values for `first_level_category_id`), include `pytest.raises` to test the exception handling mechanisms.
 
 
-This expanded test suite provides a far more thorough and useful testing strategy. Remember to adapt the tests based on the actual expected behavior and possible issues within the `Product` class. Remember to fill in the placeholder values with your actual test data.
+This expanded test suite provides a far more thorough and useful testing Startegy. Remember to adapt the tests based on the actual expected behavior and possible issues within the `Product` class. Remember to fill in the placeholder values with your actual test data.

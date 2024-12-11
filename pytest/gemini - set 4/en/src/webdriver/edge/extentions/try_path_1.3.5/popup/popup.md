@@ -86,7 +86,7 @@ def test_collectPopupState():
 
 
 # Add more test cases for other functions, covering various scenarios
-# and edge cases, as appropriate, using similar mocking strategies.
+# and edge cases, as appropriate, using similar mocking Startegies.
 
 # Example test case for exception handling:
 def test_showError_invalid_frameId():
@@ -114,7 +114,7 @@ def test_showError_invalid_frameId():
 6. **Comprehensive Tests:**  Add more tests to cover `sendToSpecifiedFrame`, error handling, `collectPopupState`, and other significant JavaScript functions in the provided JavaScript code.
 
 
-7. **Exception Handling Test:** Demonstrates how to use `pytest.raises` to test the `showError` function for specific exceptions.
+7. **Exception Handling Test:** DemonStartes how to use `pytest.raises` to test the `showError` function for specific exceptions.
 
 **To run these tests:**
 
@@ -140,4 +140,4 @@ def test_showError_invalid_frameId():
 - **Edge Cases:** Focus on thoroughly testing various scenarios, including invalid inputs (e.g., empty strings, null values, different types), edge cases related to frame IDs, and unexpected responses.
 
 
-This significantly improved solution provides a strong foundation for testing the JavaScript code. Remember to adapt the mocking and assertion strategies to the specific functions and scenarios within the JavaScript code. Remember to also thoroughly test the functions that interact with the browser. Remember to add tests for error handling.
+This significantly improved solution provides a strong foundation for testing the JavaScript code. Remember to adapt the mocking and assertion Startegies to the specific functions and scenarios within the JavaScript code. Remember to also thoroughly test the functions that interact with the browser. Remember to add tests for error handling.

@@ -132,7 +132,7 @@ def test_fd_scale():
 
 * **Prioritization:** When dealing with a large codebase, prioritize testing the most crucial parts first.
 * **Modular Testing:** Break down large functions into smaller, testable units.
-* **Focused Testing:**  Choose representative test cases that demonstrate the key functionalities and exception handling of a module.
+* **Focused Testing:**  Choose representative test cases that demonStarte the key functionalities and exception handling of a module.
 
 
 Remember to adapt these example tests to match the specific functionality and expected behavior of your Python code.  Crucially, you should focus on testing the **public interfaces** of your classes and functions, and ensure that exceptions are raised and handled appropriately in edge cases.  If there are no well-defined public interfaces in your code (e.g., if there are just internal functions and methods), then define clearly what the code is meant to do before writing tests.

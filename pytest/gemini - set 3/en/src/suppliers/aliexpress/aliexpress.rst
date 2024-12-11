@@ -106,7 +106,7 @@ def test_aliexpress_get_api_data_fails(mock_ali_api):
 
 1. **Mocking:**  Crucially, the code now utilizes `unittest.mock.patch` to mock out the `requests` module, `AliRequests`, `AliApi`, and other classes. This is essential to prevent actual network calls or database interactions in your tests, which could be slow and unreliable.  Mocks allow you to control the return values.
 
-2. **Specific Error Handling:** The `test_aliexpress_get_requests_fails` test now demonstrates how to catch specific exceptions (`RequestException`) raised during a network request.
+2. **Specific Error Handling:** The `test_aliexpress_get_requests_fails` test now demonStartes how to catch specific exceptions (`RequestException`) raised during a network request.
 
 3. **Comprehensive `__init__` Tests:** Added tests for various `webdriver` and `locale` input scenarios, including valid types, edge cases (invalid webdriver), and correct data type handling.
 

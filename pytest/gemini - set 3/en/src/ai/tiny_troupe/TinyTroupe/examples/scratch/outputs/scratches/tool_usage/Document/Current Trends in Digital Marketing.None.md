@@ -4,7 +4,7 @@ import pytest
 # No functions or classes provided in the input code.  
 # Therefore, no tests can be written.  
 # A test suite would depend on the Python code that is not part of the prompt.
-# Demonstrating a placeholder with a simple example:
+# DemonStarting a placeholder with a simple example:
 
 def test_example_addition():
     """Testing a simple addition function (replace with your actual function)."""
@@ -18,7 +18,7 @@ def test_example_addition_zero():
     """Testing with zero."""
     assert 0 + 0 == 0
 
-#  The example above demonstrates a basic test structure.
+#  The example above demonStartes a basic test structure.
 #  To create comprehensive tests for the given markdown document,
 #  you need the actual Python code, defining functions, classes, or methods
 #  that these tests will target.
@@ -48,7 +48,7 @@ The provided input code is a markdown document describing AI in digital marketin
 
 7. **Fixtures (if needed):** If your functions need specific data or resources, create fixtures to provide those.
 
-**Example (Illustrative, Needs Python Code):**
+**Example (IlluStartive, Needs Python Code):**
 
 ```python
 import pytest

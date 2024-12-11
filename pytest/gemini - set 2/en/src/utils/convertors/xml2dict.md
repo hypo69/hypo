@@ -96,7 +96,7 @@ def test_xml2dict_invalid_xml(invalid_xml_data):
 
 3. **Comprehensive Test Cases:** The tests now cover various scenarios: valid XML, XML with children, attributes, nested children, duplicate children, and namespace.
 
-4. **Exception Handling (important):**  A `test_xml2dict_invalid_xml` function is added to demonstrate how to test for `ET.ParseError` when the input XML is invalid.  This is vital for robust testing.
+4. **Exception Handling (important):**  A `test_xml2dict_invalid_xml` function is added to demonStarte how to test for `ET.ParseError` when the input XML is invalid.  This is vital for robust testing.
 
 5. **`pytest.raises` for Exceptions:**  Used effectively to verify the correct handling of the `ET.ParseError`.
 

@@ -47,7 +47,7 @@ MODE = 'dev'
 from src.webdriver import Driver, Chrome, Firefox, Edge
 
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
 
     # Create an instance of the Driver class with the Chrome webdriver
     print("Creating a Chrome browser instance...")
@@ -87,7 +87,7 @@ def main():
 
 # <algorithm>
 
-The algorithm demonstrates using a webdriver (Chrome, Firefox, Edge) to interact with a web page.  It follows these steps:
+The algorithm demonStartes using a webdriver (Chrome, Firefox, Edge) to interact with a web page.  It follows these steps:
 
 1. **Initialization:** The `main` function creates instances of `Driver` with different browser types (Chrome, Firefox, Edge).
 
@@ -151,7 +151,7 @@ The diagram shows the `Driver`, `Chrome`, `Firefox`, and `Edge` classes as compo
     * `Chrome`, `Firefox`, `Edge`: These classes provide specific browser interactions through their methods.  For example, `Chrome.webdriver` likely contains Selenium methods to control a Chrome instance.  There is likely a deeper inheritance structure for handling different types of tasks.
 
 - **Functions:**
-    * `main()`: This is the entry point of the script.  It demonstrates how to use the `Driver` class with different web browsers, creating instances, handling navigation, scrolling, cookie saving, and closing browsers within `try...finally` blocks, ensuring all operations complete.
+    * `main()`: This is the entry point of the script.  It demonStartes how to use the `Driver` class with different web browsers, creating instances, handling navigation, scrolling, cookie saving, and closing browsers within `try...finally` blocks, ensuring all operations complete.
 
 - **Variables:**
     * `url`: Stores the URL to navigate to.  A string value.
@@ -166,4 +166,4 @@ The diagram shows the `Driver`, `Chrome`, `Firefox`, and `Edge` classes as compo
 
 **Relationship to Other Parts of the Project:**
 
-The `src.webdriver` package likely contains the core implementation for handling web drivers in the project.   The code in `_example_driver.py` is a demonstration showcasing the use of these functionalities, providing a way for users to interact with web-browser functionalities through the driver. This code is likely part of a larger testing or automation framework, where these drivers are integrated into larger scripts to automate web interactions, tasks, or testing.
+The `src.webdriver` package likely contains the core implementation for handling web drivers in the project.   The code in `_example_driver.py` is a demonStartion showcasing the use of these functionalities, providing a way for users to interact with web-browser functionalities through the driver. This code is likely part of a larger testing or automation framework, where these drivers are integrated into larger scripts to automate web interactions, tasks, or testing.

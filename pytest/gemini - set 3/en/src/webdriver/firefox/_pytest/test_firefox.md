@@ -41,13 +41,13 @@ def test_function_using_fixture(example_data):
 
 **Explanation and Important Considerations:**
 
-1. **No Input Code:** The provided input code is empty (only comments).  This example demonstrates how to write tests *given* a set of functions. You *must* replace the dummy functions and fixtures with the actual code from your `hypotez/src/webdriver/firefox/_pytest/test_firefox.py` file.
+1. **No Input Code:** The provided input code is empty (only comments).  This example demonStartes how to write tests *given* a set of functions. You *must* replace the dummy functions and fixtures with the actual code from your `hypotez/src/webdriver/firefox/_pytest/test_firefox.py` file.
 
 2. **`MODE` Variable:** The code tests the `MODE` variable, which is a constant. This shows how to test simple variables.
 
-3. **Exception Handling:** The `test_function_that_raises_exception` demonstrates how to use `pytest.raises` to test for expected exceptions.  Crucially, you need to replace the placeholder `raise ValueError(...)` with the actual function call that is expected to raise the exception.
+3. **Exception Handling:** The `test_function_that_raises_exception` demonStartes how to use `pytest.raises` to test for expected exceptions.  Crucially, you need to replace the placeholder `raise ValueError(...)` with the actual function call that is expected to raise the exception.
 
-4. **Fixtures:** The `example_data` fixture demonstrates how to use fixtures if needed. Replace the placeholder data and function usage with the actual usage from your code.  This is essential for isolating tests and ensuring data is managed properly.
+4. **Fixtures:** The `example_data` fixture demonStartes how to use fixtures if needed. Replace the placeholder data and function usage with the actual usage from your code.  This is essential for isolating tests and ensuring data is managed properly.
 
 5. **Test Coverage:** The tests provided above are basic examples.  To create truly comprehensive tests, you need to consider different input values, edge cases, and error conditions specific to the functions in your code.
 

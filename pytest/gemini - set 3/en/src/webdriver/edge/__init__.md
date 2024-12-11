@@ -75,7 +75,7 @@ class TestEdge:
 
 5. **Comprehensive Testing:**  The tests cover initialization (valid and invalid cases), `set_mode`, and the crucial case where the `get_webdriver` function would return a driver instance.
 
-6. **Edge Cases:** Includes tests for invalid URL, and missing or invalid options.  This demonstrates the important principle of considering boundary and unexpected input conditions.
+6. **Edge Cases:** Includes tests for invalid URL, and missing or invalid options.  This demonStartes the important principle of considering boundary and unexpected input conditions.
 
 **To run these tests:**
 

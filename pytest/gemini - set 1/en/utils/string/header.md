@@ -102,7 +102,7 @@ def test_settings_loading_failure_file_not_found(tmp_path):
 * **`valid_project_root` fixture:** Created a fixture to properly structure the project directory with required files and a `header.py` file inside, making the `get_project_root` test much more robust.
 * **Clearer Test Names:** Improved test names to better reflect the test case.
 * **Edge Cases:** Added tests for cases where the marker files are not present, or if the files are incorrect. This now tests the case when no marker files exist, which was missing before.
-* **Exception Handling:** The original code had exceptions, but the tests didn't directly test how exceptions were handled. Now `test_settings_loading_failure_file_not_found` demonstrates handling `FileNotFoundError`.
+* **Exception Handling:** The original code had exceptions, but the tests didn't directly test how exceptions were handled. Now `test_settings_loading_failure_file_not_found` demonStartes handling `FileNotFoundError`.
 * **Correct File Path handling:** The tests now account for the fact that `get_project_root()` will return the path to the directory containing the marker files.
 * **Explicit `assert` statements:** Included `assert` statements to verify the expected results.
 * **`tmp_path` fixture:** Used pytest's `tmp_path` fixture to create temporary directories for the tests.

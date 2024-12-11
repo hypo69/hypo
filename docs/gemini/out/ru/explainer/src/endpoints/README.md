@@ -150,6 +150,6 @@ The README describes the `endpoints` module, which is a part of a larger project
 
 **Возможные ошибки/улучшения:** The README lacks detail on the actual implementation.  Critically, there is no code!  Without the code,  it's impossible to assess specific errors or suggest improvements.
 
-**Взаимосвязи:** The mermaid diagram visualizes the relationship between `src.endpoints` and its submodules. This illustrates that the endpoints module is a central point of integration for various services and data consumers.
+**Взаимосвязи:** The mermaid diagram visualizes the relationship between `src.endpoints` and its submodules. This illuStartes that the endpoints module is a central point of integration for various services and data consumers.
 
 **Заключение:**  The provided README is a good overview of the module's purpose and structure.  However, without the actual code, a comprehensive analysis is not possible. The lack of code means we cannot determine the correctness of the API design or the implementation specifics.

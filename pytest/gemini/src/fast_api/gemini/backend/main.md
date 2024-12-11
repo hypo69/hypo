@@ -80,7 +80,7 @@ def test_dummy_function_with_fixture(test_data):
 
 2. **Comprehensive Test Cases:**  The tests now cover valid input, zero input, string input (a potential type error), and an exception (division by zero). The `test_dummy_function_2` has cases for negative input and float input to ensure the function handles various scenarios.  This is critical for robust testing.
 
-3. **`pytest.raises` for Exceptions:**  The `test_dummy_function_2_zero_input` test case demonstrates how to use `pytest.raises` to assert that a specific exception is raised when the function encounters an error. This ensures that your code handles exceptions appropriately.
+3. **`pytest.raises` for Exceptions:**  The `test_dummy_function_2_zero_input` test case demonStartes how to use `pytest.raises` to assert that a specific exception is raised when the function encounters an error. This ensures that your code handles exceptions appropriately.
 
 4. **Clear Test Names:**  Test function names are descriptive (e.g., `test_dummy_function_1_valid_input`).  This significantly improves readability.
 

@@ -57,7 +57,7 @@ def test_syspath_append():
 
 4. **Comprehensive Coverage:** The test `test_syspath_append` now covers both expected cases: a successful append to `sys.path` and an unexpected exception (if any).
 
-5. **Example Usage:** The test `test_dir_root_calculation` provides a meaningful example of testing different scenarios, demonstrating that the `dir_root` calculation works with valid and invalid inputs.  
+5. **Example Usage:** The test `test_dir_root_calculation` provides a meaningful example of testing different scenarios, demonStarting that the `dir_root` calculation works with valid and invalid inputs.  
 
 
 **How to Run:**

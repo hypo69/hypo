@@ -51,7 +51,7 @@ except KeyboardInterrupt:
     * Creates an instance of `FacebookPromoter` with the driver, list of files, and a flag to handle videos (no_video).
 
 2. **Campaign Execution**:
-    * Calls the `run_campaigns` method on the `promoter` object, passing the `campaigns` list. This method likely orchestrates the posting process.
+    * Calls the `run_campaigns` method on the `promoter` object, passing the `campaigns` list. This method likely orcheStartes the posting process.
 
 
 3. **Error Handling**:
@@ -106,7 +106,7 @@ The diagram shows `header`, `Driver`, `Chrome`, `FacebookPromoter`, and `logger`
 
 * `get_url()`: Navigates the browser to a given URL.
 
-* `run_campaigns()`: This is a crucial method in `FacebookPromoter`. It orchestrates the execution of the campaigns. It probably takes a list of campaign names and carries out the posting process for each campaign.  Missing details about the exact implementation are crucial for a thorough understanding.
+* `run_campaigns()`: This is a crucial method in `FacebookPromoter`. It orcheStartes the execution of the campaigns. It probably takes a list of campaign names and carries out the posting process for each campaign.  Missing details about the exact implementation are crucial for a thorough understanding.
 
 
 **Variables:**

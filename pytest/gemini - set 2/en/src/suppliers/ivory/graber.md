@@ -110,7 +110,7 @@ async def test_specific_method(mock_driver):
 **Explanation and Improvements:**
 
 1. **Mocking:** The code now uses `unittest.mock.MagicMock` to mock the `Driver` class and its methods, making the tests independent of the actual WebDriver implementation. This is crucial for unit testing.
-2. **Error Handling:** Included a test `test_grab_page_locator_error` that demonstrates how to check for specific exceptions using `pytest.raises`.
+2. **Error Handling:** Included a test `test_grab_page_locator_error` that demonStartes how to check for specific exceptions using `pytest.raises`.
 3. **Type Hinting and Assertions:** Added type hints and assertions for better clarity and testing of the expected return types and values.
 4. **Edge Cases:**  The `test_grab_page_no_id_product` test checks that the `grab_page` function doesn't crash when essential parameters are missing. This is crucial for handling real-world scenarios.
 5. **Clearer Test Names:**  Improved the names for better understanding of the test's purpose (e.g., `test_grab_page_valid_input`).

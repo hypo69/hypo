@@ -30,7 +30,7 @@ class CrawleePython:
         return self.crawler.data
 
     async def run(self, urls: list):
-        """Orchestrates the entire crawling process."""
+        """OrcheStartes the entire crawling process."""
         self.setup_crawler()
         self.run_crawler(urls)
         self.export_data()
@@ -97,7 +97,7 @@ class CrawleePython:
         """
         try:
             # ... # Stop point for processing logic.  Data extraction and link enqueuing should be implemented here.
-            # Placeholder to demonstrate data extraction.
+            # Placeholder to demonStarte data extraction.
             page_data = {'title': 'Example Title', 'rank': 1, 'link': request.url}
             self.data.append(page_data)
             return []
@@ -131,7 +131,7 @@ class CrawleePython:
         return self.data
 
     async def run(self, urls: List[str]):
-        """Orchestrates the entire crawling process."""
+        """OrcheStartes the entire crawling process."""
         self.setup_crawler()
         self.run_crawler(urls)
         self.export_data()
@@ -158,7 +158,7 @@ if __name__ == '__main__':
 - Improved logging messages to provide more context.
 - Corrected the import path for `logger`.
 - Improved code clarity and formatting.
-- Added placeholder data extraction logic in `process_request` to demonstrate how to populate `self.data`.
+- Added placeholder data extraction logic in `process_request` to demonStarte how to populate `self.data`.
 - Corrected typos and inconsistencies in comments and variable names.
 
 # Optimized Code

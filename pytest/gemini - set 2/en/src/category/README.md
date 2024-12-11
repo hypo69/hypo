@@ -100,4 +100,4 @@ def test_supplier_get_products_non_list():
 2.  **Save:** Save the code above as a Python file (e.g., `test_category.py`).
 3.  **Run pytest:** Open your terminal, navigate to the directory containing `test_category.py`, and run `pytest test_category.py`.
 
-This revised solution provides a much more robust and useful set of tests for your category module. Remember to adapt the test cases based on the specifics of your `Product` and `Supplier` classes. Remember to adjust the expected types if the actual classes return different datatypes than demonstrated here. Remember to consider all possible data that your code might receive, and include testing to see how your code reacts to erroneous or unexpected input.
+This revised solution provides a much more robust and useful set of tests for your category module. Remember to adapt the test cases based on the specifics of your `Product` and `Supplier` classes. Remember to adjust the expected types if the actual classes return different datatypes than demonStarted here. Remember to consider all possible data that your code might receive, and include testing to see how your code reacts to erroneous or unexpected input.

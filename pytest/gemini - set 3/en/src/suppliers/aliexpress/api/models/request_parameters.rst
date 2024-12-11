@@ -59,7 +59,7 @@ def test_link_type_incorrect_type():
 
 
 
-# Example tests demonstrating how to test class attributes in a more general way.
+# Example tests demonStarting how to test class attributes in a more general way.
 # Using strings as an example since there is no other way to test an enum value
 
 def test_product_type_has_all():
@@ -78,6 +78,6 @@ def test_product_type_has_tmall():
 
 
 
-# These tests are included to demonstrate testing for the presence and type of attributes, rather than just values. 
+# These tests are included to demonStarte testing for the presence and type of attributes, rather than just values. 
 # However, given the simple nature of the code, this level of detail may not always be strictly necessary
 ```

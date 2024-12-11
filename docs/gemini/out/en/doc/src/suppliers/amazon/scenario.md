@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module defines the scenario for collecting product data from Amazon category pages.  It outlines the steps for retrieving a list of categories, products within those categories, and ultimately processing individual product pages.  The module leverages a web driver (`driver`) and locators (`locators`) for interacting with the Amazon website.  Critical functionalities include `get_list_products_in_category` for extracting product URLs from category pages and supporting asynchronous processing.  The module also demonstrates handling potential errors and logging informative messages.
+This module defines the scenario for collecting product data from Amazon category pages.  It outlines the steps for retrieving a list of categories, products within those categories, and ultimately processing individual product pages.  The module leverages a web driver (`driver`) and locators (`locators`) for interacting with the Amazon website.  Critical functionalities include `get_list_products_in_category` for extracting product URLs from category pages and supporting asynchronous processing.  The module also demonStartes handling potential errors and logging informative messages.
 
 
 ## Functions

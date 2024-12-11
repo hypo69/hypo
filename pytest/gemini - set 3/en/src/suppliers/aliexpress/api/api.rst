@@ -123,8 +123,8 @@ def test_get_affiliate_links_success(mock_api_data):
 2. **Example Fixtures:**  The `mock_api_data` fixture now returns a mock object. Replace the example data with realistic data.
 3. **`pytest.raises`:**  Correctly used to test exceptions (e.g., `test_retrieve_product_details_exception`).
 4. **Mocking `api_request`:**  The `patch` decorator now mocks the `api_request` function which is called inside the `AliexpressApi` methods.  This is essential for controlling the responses.
-5. **Clearer Test Cases:**  The tests now demonstrate how to mock the API response to test both success and failure scenarios.
-6. **Handling `None` Response:**  The `test_retrieve_product_details_empty` case now demonstrates how to handle the case where the API response returns no products.
+5. **Clearer Test Cases:**  The tests now demonStarte how to mock the API response to test both success and failure scenarios.
+6. **Handling `None` Response:**  The `test_retrieve_product_details_empty` case now demonStartes how to handle the case where the API response returns no products.
 7. **Separate Error Handling:**  Error handling (using `try...except` blocks) is done within the `AliexpressApi` methods.  The tests should verify that the exceptions are raised and handled appropriately.
 
 **How to run the tests:**

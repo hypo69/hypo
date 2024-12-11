@@ -75,9 +75,9 @@ def test_firefox_get_mode():
 
 * **File Structure:** The code assumes the `Firefox` class is defined within the `hypotez/src/webdriver/firefox/__init__.py` file as shown in the prompt.  If the class is in a different location, adjust the import accordingly.
 
-* **`assert` Statements:**  The `test_firefox_initialization` test demonstrates adding assertions (e.g., checking the value of `firefox_instance.mode`).  This is very important to verify the initialization worked correctly.  Modify the assertions based on the methods and attributes of your `Firefox` class.
+* **`assert` Statements:**  The `test_firefox_initialization` test demonStartes adding assertions (e.g., checking the value of `firefox_instance.mode`).  This is very important to verify the initialization worked correctly.  Modify the assertions based on the methods and attributes of your `Firefox` class.
 
 
 * **Edge Cases:** The `test_firefox_initialization_invalid_mode` test covers an edge case. You may need to add more tests covering different invalid inputs or scenarios of your `Firefox` class or methods.
 
-This improved response is more suitable for a real-world scenario and demonstrates better exception handling and testing strategies. Remember to replace the placeholder comments with your actual code and methods of your `Firefox` class. Remember to provide any needed fixtures if they are required for your tests.
+This improved response is more suitable for a real-world scenario and demonStartes better exception handling and testing Startegies. Remember to replace the placeholder comments with your actual code and methods of your `Firefox` class. Remember to provide any needed fixtures if they are required for your tests.

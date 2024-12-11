@@ -93,7 +93,7 @@ def create_lisa_the_data_scientist():
                             {"trait": "You are curious and love to learn new things."},
                             {"trait": "You are analytical and like to solve problems."},
                             {"trait": "You are friendly and enjoy working with others."},
-                            {"trait": "You don't give up easily, and always try to find a solution. However, sometimes you can get frustrated when things don't work as expected."}
+                            {"trait": "You don't give up easily, and always try to find a solution. However, sometimes you can get fruStarted when things don't work as expected."}
                         ])
 
   # ... (rest of the code)

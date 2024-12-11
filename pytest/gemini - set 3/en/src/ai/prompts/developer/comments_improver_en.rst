@@ -70,11 +70,11 @@ def test_divide_numbers_zero_denominator(numbers):
 
 2. **Comprehensive Test Cases:**
    - `test_add_numbers_valid_input`: Tests with both integer and float inputs.
-   - `test_add_numbers_invalid_input`: Demonstrates `pytest.raises` for checking TypeError. Critically, it tests both arguments being invalid.
+   - `test_add_numbers_invalid_input`: DemonStartes `pytest.raises` for checking TypeError. Critically, it tests both arguments being invalid.
    - `test_add_numbers_zero_input`: Tests cases involving zero.
    - `test_add_numbers_negative_input`: Tests with negative numbers.
 
-3. **`divide_numbers` function and fixture:** Added a `divide_numbers` function demonstrating a more complex scenario that needs a fixture.
+3. **`divide_numbers` function and fixture:** Added a `divide_numbers` function demonStarting a more complex scenario that needs a fixture.
    - `@pytest.fixture`: Creates a `numbers` fixture.
    - `test_divide_numbers_valid_input`: Uses the fixture to apply multiple valid cases efficiently.
    - `test_divide_numbers_zero_denominator`: Uses `pytest.raises` to catch the ZeroDivisionError, with a message assertion for clarity.
@@ -90,4 +90,4 @@ def test_divide_numbers_zero_denominator(numbers):
 3. Run `pytest` in your terminal to execute the tests.
 
 
-This significantly improved example demonstrates how to write comprehensive tests for error handling, valid input, and edge cases using `pytest`.  Remember to replace the example functions with the actual functions you want to test. Remember to also add tests for any other functions or classes present in the code you are testing.  This is a more complete and robust test suite.
+This significantly improved example demonStartes how to write comprehensive tests for error handling, valid input, and edge cases using `pytest`.  Remember to replace the example functions with the actual functions you want to test. Remember to also add tests for any other functions or classes present in the code you are testing.  This is a more complete and robust test suite.

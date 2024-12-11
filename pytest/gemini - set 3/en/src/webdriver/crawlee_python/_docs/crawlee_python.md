@@ -87,12 +87,12 @@ def test_get_data(example_data):
 2. **`@pytest.fixture` for example data:**  Provides sample data for tests.
 3. **`test_crawlee_python_invalid_url`:**  Tests handling of an invalid URL (important edge case). It now uses `pytest.raises` for simulating exceptions. A `side_effect` is used in the patch to ensure the correct behavior.
 4. **`test_crawlee_python_empty_urls`:** Tests the case where the list of URLs is empty.
-5. **`test_export_data` (async):**   A crucial addition. This demonstrates how to write an async test, which is essential for checking the behavior of asynchronous code.
+5. **`test_export_data` (async):**   A crucial addition. This demonStartes how to write an async test, which is essential for checking the behavior of asynchronous code.
     * Uses `tmp_path` fixture from `pytest` to create temporary files, which is best practice for testing files.
     * `@pytest.mark.asyncio` is required for async tests to run.
 6. **`test_get_data`:** Verifies the `get_data` method.
 7. **Mocking with `@patch`:**  Crucially, it now utilizes `@patch` to mock the `PlaywrightCrawler.crawl` function. This isolates the tests from external dependencies, making them more reliable.  The return value is set to the expected output.
-8. **Error Handling:** The `test_crawlee_python_invalid_url` now demonstrates proper exception handling. This is vital for production-ready tests.
+8. **Error Handling:** The `test_crawlee_python_invalid_url` now demonStartes proper exception handling. This is vital for production-ready tests.
 9. **Clearer Assertions:** Assertions are more specific (e.g., checking for the presence of "Exception" in the error message).
 
 

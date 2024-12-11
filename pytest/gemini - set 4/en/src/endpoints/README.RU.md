@@ -67,8 +67,8 @@ def test_get_orders_nonexistent_order():
 * **Clear Test Names:**  Test names are descriptive and follow the format `test_<function_name>_<scenario>`.
 * **Error Handling:** The tests now include `pytest.raises` for exception testing (e.g., `test_create_product_invalid_input`) and checking for expected behavior in error scenarios (`test_get_orders_nonexistent_order`).
 * **Edge Cases:** The `test_get_orders_nonexistent_order` covers the case where an order ID is not found.
-* **Valid Input:**  `test_create_product_valid_input` and `test_get_orders_valid_input` demonstrate how to assert on expected outputs from the API calls.
-* **Invalid Input:** `test_create_product_invalid_input` and `test_get_orders_invalid_input` demonstrates the appropriate usage of `pytest.raises` to check for exceptions.  Critically important for robustness.
+* **Valid Input:**  `test_create_product_valid_input` and `test_get_orders_valid_input` demonStarte how to assert on expected outputs from the API calls.
+* **Invalid Input:** `test_create_product_invalid_input` and `test_get_orders_invalid_input` demonStartes the appropriate usage of `pytest.raises` to check for exceptions.  Critically important for robustness.
 
 **How to Use:**
 
@@ -86,4 +86,4 @@ def test_get_orders_nonexistent_order():
 * **Data Validation:**  Your tests should validate that the data returned from your APIs is in the correct format and contains the expected fields.
 
 
-This improved example demonstrates a better structure and approach for testing the `endpoints` module, making it more comprehensive and maintainable. Remember to adjust the tests based on the specifics of your code. Remember to add more tests, especially for various invalid inputs and boundary conditions. Remember to follow PEP 8 style for your tests.
+This improved example demonStartes a better structure and approach for testing the `endpoints` module, making it more comprehensive and maintainable. Remember to adjust the tests based on the specifics of your code. Remember to add more tests, especially for various invalid inputs and boundary conditions. Remember to follow PEP 8 style for your tests.

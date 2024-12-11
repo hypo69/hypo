@@ -57,7 +57,7 @@ def test_onInstalled_listener_called_correctly():
 
 2. **Assertion:** The test now *asserts* that the mocked `console.log` was indeed called, verifying the listener's action.
 
-3. **Exception Handling:** `test_onInstalled_listener_no_exceptions` demonstrates a test for exception handling—an important best practice. This test now ensures no exceptions are raised during the listener's execution.
+3. **Exception Handling:** `test_onInstalled_listener_no_exceptions` demonStartes a test for exception handling—an important best practice. This test now ensures no exceptions are raised during the listener's execution.
 
 4. **Correctness:** `test_onInstalled_listener_called_correctly` checks that the listener was called and that the correct message was logged. This is more comprehensive than just verifying that the function was defined.
 

@@ -40,12 +40,12 @@ def test_browser_action_onClicked_listener_no_tab_id(mocker):
 
 2. **Clearer Test Names:** Test names are more descriptive, explicitly stating the input scenario.
 
-3. **Valid Input Test:** `test_browser_action_onClicked_listener_valid_input` demonstrates how to mock the `browser.browserAction.onClicked` event and assert that `browser.scripting.executeScript` is called with the expected parameters.
+3. **Valid Input Test:** `test_browser_action_onClicked_listener_valid_input` demonStartes how to mock the `browser.browserAction.onClicked` event and assert that `browser.scripting.executeScript` is called with the expected parameters.
 
 4. **Invalid Input Test:**  `test_browser_action_onClicked_listener_no_tab_id` is added to test a scenario where the input `tab` object might not have the necessary `id` property.  This is an important edge case to handle. The important improvement here is using `pytest.raises` to verify that a `KeyError` is raised, indicating correct exception handling.  This is more robust than just checking if the `executeScript` call happened.
 
 
-5. **Error Handling:** The test now includes error handling to demonstrate correct behavior when invalid input is provided.
+5. **Error Handling:** The test now includes error handling to demonStarte correct behavior when invalid input is provided.
 
 **How to run the tests:**
 
@@ -69,4 +69,4 @@ def test_browser_action_onClicked_listener_no_tab_id(mocker):
 
 * **Asynchronous Operations:** If the `executeScript` call were asynchronous, the tests would need to incorporate some form of asynchronous assertion (e.g., using `asyncio` or appropriate tools).  In this simplified example, `executeScript` is not explicitly shown as asynchronous.
 
-This revised example provides a more comprehensive and robust approach to testing your extension's background script. Remember to adapt the mocking and assertion strategies based on the complexity of the functions and interactions in your code. Remember to add more tests for more edge cases.
+This revised example provides a more comprehensive and robust approach to testing your extension's background script. Remember to adapt the mocking and assertion Startegies based on the complexity of the functions and interactions in your code. Remember to add more tests for more edge cases.

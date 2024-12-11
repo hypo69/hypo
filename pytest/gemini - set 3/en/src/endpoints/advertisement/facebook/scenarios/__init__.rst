@@ -99,7 +99,7 @@ def test_switch_account():
 
 * **Fixtures:** Added `valid_login_credentials`, `valid_post_message_data`, and `valid_media_data` fixtures for reusable test data.  Crucially, **replace placeholder values** (e.g., `"path/to/media.jpg"`) with actual valid data or appropriate file paths for your testing environment.
 * **Clearer Assertions:**  Instead of just `assert result`, use more specific assertions based on the expected return values of the functions being tested.  This is vital for comprehensive testing.  For example, if `login` returns a boolean indicating success, assert that boolean.
-* **Error Handling (Exception Testing):** Added `test_login_invalid_credentials` to demonstrate testing for exceptions using `pytest.raises`.
+* **Error Handling (Exception Testing):** Added `test_login_invalid_credentials` to demonStarte testing for exceptions using `pytest.raises`.
 * **More Test Cases:** Included examples for `post_message_title`, `upload_post_media`, `update_post_media_captions`, and `message_publish` to show how to test other related functions.  You need to adapt these examples to the actual expected behavior of those functions.
 * **Comments:** Included comments explaining the purpose of each test function.
 * **Missing Function Tests:** Added placeholders for tests on `post_event`, `post_ad`, and `switch_account` as examples.  You should add more specific tests based on the implementation details of those functions.
@@ -123,7 +123,7 @@ def test_switch_account():
 **Important Considerations for Realistic Testing:**
 
 * **Mocking:** For functions that interact with external services (e.g., Facebook API calls), use `unittest.mock` or `pytest-mock` to mock the external dependencies. This is essential for isolating your tests and avoiding external service calls during testing.
-* **Data Generation:** Create a robust data generation strategy.  Use `faker` or a similar library to generate realistic data for your tests, particularly for testing boundary conditions and unexpected inputs.
+* **Data Generation:** Create a robust data generation Startegy.  Use `faker` or a similar library to generate realistic data for your tests, particularly for testing boundary conditions and unexpected inputs.
 * **Error Handling:** Thoroughly test error handling in all functions, including potential exceptions, invalid input, and edge cases (e.g., empty strings, null values).
 * **File Handling:** If your code interacts with files, use temporary files to avoid interfering with your real files.
 

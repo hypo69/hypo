@@ -31,7 +31,7 @@ def test_docstring_type():
 
 
 # Example of testing for potential exceptions (if any function has exceptions)
-# This example is using a dummy function to illustrate the concept.
+# This example is using a dummy function to illuStarte the concept.
 # Replace with actual function calls if there are relevant exceptions.
 def test_handling_non_existent_function():
     """Tests for appropriate handling of exceptions."""
@@ -61,10 +61,10 @@ def test_version_comparison(example_version):
 
 3. **Edge Case Handling:** Tests for `MODE` validate that it is a valid string value from a predefined list of acceptable modes.  This prevents unexpected behavior from non-valid inputs.
 
-4. **Error Handling:**  The `test_handling_nonexistent_function` demonstrates how to use `pytest.raises` to test for exceptions that might be raised by a function in the tested module. This placeholder example should be replaced by tests for actual exception scenarios if appropriate for the actual code.
+4. **Error Handling:**  The `test_handling_nonexistent_function` demonStartes how to use `pytest.raises` to test for exceptions that might be raised by a function in the tested module. This placeholder example should be replaced by tests for actual exception scenarios if appropriate for the actual code.
 
 
-5. **Fixtures:** The `example_version` fixture demonstrates how to use fixtures for supplying test data that can be reused across multiple test functions.
+5. **Fixtures:** The `example_version` fixture demonStartes how to use fixtures for supplying test data that can be reused across multiple test functions.
 
 6. **Clear Test Names:** Test names are descriptive and clearly indicate the purpose of each test case.
 

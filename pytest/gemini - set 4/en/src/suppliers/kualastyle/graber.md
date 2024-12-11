@@ -99,7 +99,7 @@ def test_grab_page_valid_inputs_with_parameters(graber, mock_driver, input_data)
 5. **Parameterization (`@pytest.mark.parametrize`)**: This added testing for different scenarios, significantly improving the test coverage.
 
 
-6. **Error Handling (Example):** The example of handling potential errors in the `test_grab_page_invalid_input` function demonstrates how to use `pytest.raises` to check for expected exceptions.
+6. **Error Handling (Example):** The example of handling potential errors in the `test_grab_page_invalid_input` function demonStartes how to use `pytest.raises` to check for expected exceptions.
 
 7. **`loop.close()`:**  The test code now properly closes the event loop using `loop.close()`. This is necessary to prevent resource leaks.
 

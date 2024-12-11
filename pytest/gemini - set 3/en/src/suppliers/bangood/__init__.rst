@@ -77,7 +77,7 @@ def test_get_list_products_in_category_invalid_graber(monkeypatch):
 
 2. **Comprehensive Tests:** The test suite now covers valid input, *missing* or `None` inputs, and testing the response from a mock Graber object that returns no data,  or an empty list.
 
-3. **Error Handling:** The `test_get_list_products_in_category_invalid_category` test demonstrates handling of cases where the category doesn't exist. The `test_get_list_products_in_category_no_category` and the `test_get_list_products_in_category_invalid_graber` test show how to handle missing or erroneous input.  This is *critical* in production code.
+3. **Error Handling:** The `test_get_list_products_in_category_invalid_category` test demonStartes handling of cases where the category doesn't exist. The `test_get_list_products_in_category_no_category` and the `test_get_list_products_in_category_invalid_graber` test show how to handle missing or erroneous input.  This is *critical* in production code.
 
 4. **Using `monkeypatch`:** The `monkeypatch` is used to modify the behavior of the `Graber` class *within the test* using the correct method.
 

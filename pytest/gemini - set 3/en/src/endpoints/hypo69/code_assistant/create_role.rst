@@ -114,7 +114,7 @@ def test_create_system_prompt_valid(prompt_path):
 
 3. **Error Handling:** The `try...except` blocks are crucial for testing error conditions. The tests now check for `FileNotFoundError` and `json.JSONDecodeError`, which are common problems with file handling.
 
-4. **Realistic Test Cases:** The example test cases are more realistic. `test_add_role_to_roles_list_file_not_found` demonstrates how to test for file creation or existence failures.
+4. **Realistic Test Cases:** The example test cases are more realistic. `test_add_role_to_roles_list_file_not_found` demonStartes how to test for file creation or existence failures.
 
 5. **Cleanup:** The `test_add_role_to_roles_list_file_not_found` now includes a cleanup step (`os.remove(roles_list_path)`) so that subsequent tests are not affected by the previous ones.  This is a very good practice for managing the test environment.
 

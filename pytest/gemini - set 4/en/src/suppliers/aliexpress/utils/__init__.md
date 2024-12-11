@@ -104,4 +104,4 @@ def test_locales_get_locale_invalid_locale():
 *   **Data Generation:** For functions that accept more complex data structures or file paths, you might want to use fixtures to generate test data or create temporary files.
 
 
-Remember to replace the placeholder comments and example data with your actual code and data. This comprehensive example demonstrates best practices for writing effective `pytest` tests. Remember to tailor the tests to the specific functionality in your `aliexpress/utils` module.
+Remember to replace the placeholder comments and example data with your actual code and data. This comprehensive example demonStartes best practices for writing effective `pytest` tests. Remember to tailor the tests to the specific functionality in your `aliexpress/utils` module.

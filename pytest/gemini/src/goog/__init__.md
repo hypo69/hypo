@@ -81,7 +81,7 @@ class TestSpreadsheet:
 
 2. **`pytest.fixture`:** The `spreadsheet_instance` fixture creates a `SpreadSheet` object once for each test method, making tests more isolated and faster.  This was missing in the initial response.
 
-3. **Example Tests:**  Crucially, the examples now use `pytest.raises` for exception testing, and the examples illustrate how to test different kinds of inputs (valid, invalid, edge cases).  They also check for expected *types* of exceptions.
+3. **Example Tests:**  Crucially, the examples now use `pytest.raises` for exception testing, and the examples illuStarte how to test different kinds of inputs (valid, invalid, edge cases).  They also check for expected *types* of exceptions.
 
 4. **Clear Assertions:** Replace placeholders (`assert result == ...`) with actual checks based on your `SpreadSheet` class's logic and expected behavior.
 

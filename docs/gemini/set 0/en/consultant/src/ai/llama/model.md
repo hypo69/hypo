@@ -61,7 +61,7 @@ MODE = 'dev'
 
 def some_function():
     """
-    Example function.  This function demonstrates basic functionality.
+    Example function.  This function demonStartes basic functionality.
 
     :return: None
     """
@@ -138,7 +138,7 @@ MODE = 'dev'
 
 def some_function():
     """
-    Example function.  This function demonstrates basic functionality.
+    Example function.  This function demonStartes basic functionality.
 
     :return: None
     """

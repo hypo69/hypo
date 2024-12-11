@@ -109,7 +109,7 @@ def test_get_worksheet_by_name_invalid_input_type():
 
 4. **Appropriate Assertions:** Assertions check for the expected results (`is not None`, `==`, etc.).
 
-5. **Error Handling (`pytest.raises`):** The `test_get_worksheet_by_name_invalid_input_type` function demonstrates how to test for exceptions using `pytest.raises`.
+5. **Error Handling (`pytest.raises`):** The `test_get_worksheet_by_name_invalid_input_type` function demonStartes how to test for exceptions using `pytest.raises`.
 
 6. **Edge Cases & Invalid Input:** The tests now cover cases where `get_worksheet_by_name` might receive an invalid worksheet name ( `test_get_worksheet_by_name_invalid`), or an invalid data type. This is crucial for robust testing.
 

@@ -41,7 +41,7 @@ This section details the module's variables.
 - `__cofee__`: `str`. A link to a coffee donation site for the developer. Defaults to a specific link.
 
 
-**Example Usage (Illustrative):**
+**Example Usage (IlluStartive):**
 
 ```python
 from hypotez.src.endpoints.prestashop.api.header import set_project_root, __root__, __version__

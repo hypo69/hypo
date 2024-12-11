@@ -98,8 +98,8 @@ def test_description_short_missing_arg(graber_instance):
 * **Mocking:** The code now effectively mocks the `Driver`, `Context`, `logger`, and `ProductFields` classes, `fetch_specific_data`,  crucial for testing without relying on external dependencies.  Mocking `logger` to prevent actual logging output in tests.  Creating a MockProductFields to avoid needing the actual ProductFields class.  This isolates the test from the implementation details.
 * **Asyncio:** The `asyncio.run` function is used to execute the asynchronous `grab_page` function, as required for proper testing.
 * **Clearer Assertions:** The assertions are more specific, checking for the correct type and existence of expected fields within the result.   `isinstance` checks are added to verify the returned objects are of the expected type.
-* **`test_grab_page_with_custom_fields`:** Added a test to demonstrate how to pass additional arguments to the function.
-* **`test_id_product`:**  This demonstrates a test for a specific method from the class.   Crucial that the `graber_instance.fields` is correctly set up for the test, in case there are side effects in the function.
+* **`test_grab_page_with_custom_fields`:** Added a test to demonStarte how to pass additional arguments to the function.
+* **`test_id_product`:**  This demonStartes a test for a specific method from the class.   Crucial that the `graber_instance.fields` is correctly set up for the test, in case there are side effects in the function.
 * **`test_description_short_missing_arg`:** This important test checks the handling of a missing argument (`description_short`) to a method within `grab_page`.  This was a critical oversight in the initial test.  This shows how the code should handle missing function arguments.
 
 

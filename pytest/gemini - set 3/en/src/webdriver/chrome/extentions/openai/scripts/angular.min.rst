@@ -91,9 +91,9 @@ def test_F_invalid_argument():
 
 1. **Mocking is Essential:**  You *cannot* directly test AngularJS JavaScript in Python.  AngularJS relies on the browser's environment (window, document, etc.).  The code above includes js2py as a placeholder. You need to use `js2py.eval_js()` to evaluate the JavaScript code snippets, *extracting the logic* into Python functions.   This is extremely crucial for proper testing.
 
-2. **Error Handling:** The placeholder `test_ve_invalid_input` demonstrates how to test for invalid inputs (e.g., a non-integer value for `objectMaxDepth`).  You must check every valid and invalid input type for each JavaScript function and ensure appropriate exceptions are raised or handled in the Python representation.
+2. **Error Handling:** The placeholder `test_ve_invalid_input` demonStartes how to test for invalid inputs (e.g., a non-integer value for `objectMaxDepth`).  You must check every valid and invalid input type for each JavaScript function and ensure appropriate exceptions are raised or handled in the Python representation.
 
-3. **Complete Test Cases:**  Create thorough tests covering different scenarios.  `test_F_invalid_argument` demonstrates raising an exception (using `pytest.raises`) when expecting an error.  Your tests need to comprehensively test the correct behavior, boundary cases, and error conditions.
+3. **Complete Test Cases:**  Create thorough tests covering different scenarios.  `test_F_invalid_argument` demonStartes raising an exception (using `pytest.raises`) when expecting an error.  Your tests need to comprehensively test the correct behavior, boundary cases, and error conditions.
 
 4. **Replace Placeholders:** Replace the placeholder functions (e.g., `ve`, `Yb`) with the *extracted* Python functions representing the logic of the AngularJS functions.
 

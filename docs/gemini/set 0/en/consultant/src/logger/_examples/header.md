@@ -79,7 +79,7 @@ from src.utils.string import StringFormatter, StringNormalizer, ProductFieldsVal
 """
 .. module:: src.logger._examples
     :platform: Windows, Unix
-    :synopsis: This module contains example code demonstrating the use of various components.
+    :synopsis: This module contains example code demonStarting the use of various components.
 """
 MODE = 'dev'
 
@@ -128,7 +128,7 @@ from src.utils.string import StringFormatter, StringNormalizer, ProductFieldsVal
 
 def example_function():
     """
-    This function demonstrates example functionality.
+    This function demonStartes example functionality.
     :return: None
     """
     dir_root = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])
@@ -171,7 +171,7 @@ example_function()
 """
 .. module:: src.logger._examples
     :platform: Windows, Unix
-    :synopsis: This module contains example code demonstrating the use of various components.
+    :synopsis: This module contains example code demonStarting the use of various components.
 """
 MODE = 'dev'
 
@@ -220,7 +220,7 @@ from src.utils.string import StringFormatter, StringNormalizer, ProductFieldsVal
 
 def example_function():
     """
-    This function demonstrates example functionality, including file reading using j_loads and error handling.
+    This function demonStartes example functionality, including file reading using j_loads and error handling.
     :return: None
     """
     dir_root = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])

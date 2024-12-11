@@ -84,7 +84,7 @@ def test_chrome_webdriver_exception(chrome_instance):
 * **Mock `json.load`:**  The `test_chrome_config_exception` now uses `monkeypatch` to mock the `json.load` function to raise a `JSONDecodeError`, simulating an invalid `chrome.json` file.
 * **Invalid User Agent Test:** Added a test to confirm the correct exception handling when an invalid user agent is passed.
 * **`chrome_instance` Fixture:** A fixture is used to create a `Chrome` instance for each test, promoting isolation and avoiding potential side effects.
-* **Edge Case (Invalid URL):** A test for an invalid URL is added to demonstrate handling a case where the URL might not be valid and no exception is expected.
+* **Edge Case (Invalid URL):** A test for an invalid URL is added to demonStarte handling a case where the URL might not be valid and no exception is expected.
 * **WebDriverException Test:** A test case handling a potential `WebDriverException` is added.  This is essential as the `Chrome` class might need to handle such exceptions.
 * **`quit()` Test:** A test is included to check the `quit()` method of the `Chrome` instance and ensure the driver is properly closed.
 

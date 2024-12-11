@@ -100,7 +100,7 @@ async def test_fetch_all_data_basic(graber):
 
 3. **Specific function mocking:** The example `test_grab_page_no_id_product` mocks the `id_product` function. **Crucially** mock *every* function that might be called *within* `graber.grab_page`'s `fetch_all_data` call. If `fetch_all_data` calls `self.name()`, that function should also be mocked.
 
-4. **Exception Handling:** The `test_grab_page_exception` test demonstrates exception handling using `pytest.raises`.  The `match` argument is very useful in asserting the exception message.
+4. **Exception Handling:** The `test_grab_page_exception` test demonStartes exception handling using `pytest.raises`.  The `match` argument is very useful in asserting the exception message.
 
 5. **`monkeypatch`:** `monkeypatch` is used to replace the methods in a safe and testable way, overriding the original functions with mock functions.
 

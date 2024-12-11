@@ -112,7 +112,7 @@ def test_evaluate_locator_valid_input(driver_fixture):
 
 4. **`pytest.raises` for Exceptions:** The `test_execute_locator_invalid_locator` now correctly uses `pytest.raises` to check for the expected `ExecuteLocatorException`.
 
-5. **Simplified Example Locators:** Complex locators like `complex_locator` are simplified for demonstration purposes and testing. Replace these with realistic locators from the application.
+5. **Simplified Example Locators:** Complex locators like `complex_locator` are simplified for demonStartion purposes and testing. Replace these with realistic locators from the application.
 
 6. **`continue_on_error` Test:** The `test_execute_locator_continue_on_error` test now correctly handles the `continue_on_error` scenario.
 
@@ -134,4 +134,4 @@ def test_evaluate_locator_valid_input(driver_fixture):
 - **Provide `gs` and `src` paths:** Replace the placeholder `gs['chrome_driver_path']` with the actual path to your Chrome WebDriver executable.
 
 
-This improved example demonstrates a much better approach to writing robust and maintainable tests for the `ExecuteLocator` class. Remember to adapt these examples to the specifics of your application. Remember to replace the simplified locators with actual ones.
+This improved example demonStartes a much better approach to writing robust and maintainable tests for the `ExecuteLocator` class. Remember to adapt these examples to the specifics of your application. Remember to replace the simplified locators with actual ones.

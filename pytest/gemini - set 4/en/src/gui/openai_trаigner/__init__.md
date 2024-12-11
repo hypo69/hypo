@@ -67,11 +67,11 @@ def test_version_is_version_object():
 
 2. **Clear Test Function Names:** The tests have descriptive names that clearly state the purpose of each test.
 
-3. **Test Cases:** The provided example now demonstrates how to check for the existence of attributes in a class (`AssistantMainWindow` in the example) and test their type.  Crucially,  it demonstrates the usage of `pytest.raises` for exception handling.
+3. **Test Cases:** The provided example now demonStartes how to check for the existence of attributes in a class (`AssistantMainWindow` in the example) and test their type.  Crucially,  it demonStartes the usage of `pytest.raises` for exception handling.
 
-4. **Fixture (Example):** The example demonstrates how to create a fixture if needed. **Replace the placeholder with actual initialization logic for `AssistantMainWindow` if required**.  Fixtures are essential for setting up test data or objects when testing.
+4. **Fixture (Example):** The example demonStartes how to create a fixture if needed. **Replace the placeholder with actual initialization logic for `AssistantMainWindow` if required**.  Fixtures are essential for setting up test data or objects when testing.
 
-5. **Missing Code:**  The provided code snippet is incomplete.  To create comprehensive tests, you need to include the actual contents of the `main_window.py` file. The example tests demonstrate how to build tests *after* you have the actual code.  Without the actual code, the examples are theoretical, and the tests should reflect the behavior of the functions, methods, or classes defined there.
+5. **Missing Code:**  The provided code snippet is incomplete.  To create comprehensive tests, you need to include the actual contents of the `main_window.py` file. The example tests demonStarte how to build tests *after* you have the actual code.  Without the actual code, the examples are theoretical, and the tests should reflect the behavior of the functions, methods, or classes defined there.
 
 6. **Error Handling:** Add more tests for potential exceptions that might be raised by the `main_window` methods. This will improve the robustness of your tests.
 

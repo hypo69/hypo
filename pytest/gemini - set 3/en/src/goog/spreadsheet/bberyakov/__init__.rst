@@ -96,7 +96,7 @@ def test_gsrender_invalid_input():
 
 3. **Exception Handling:** `pytest.raises` is used to test for expected exceptions (`test_gsrender_missing_method`, `test_gsrender_invalid_input`).  Crucially, these examples test for the correct exception *type* and *message*.
 
-4. **Missing Functionality:** The code now has placeholder tests (`test_gsrender_missing_method`, `test_gsrender_invalid_input`) to illustrate testing for missing attributes/methods and testing methods expecting exceptions. You MUST replace the placeholder with actual testing of your `GSRenderr` methods.
+4. **Missing Functionality:** The code now has placeholder tests (`test_gsrender_missing_method`, `test_gsrender_invalid_input`) to illuStarte testing for missing attributes/methods and testing methods expecting exceptions. You MUST replace the placeholder with actual testing of your `GSRenderr` methods.
 
 
 **How to Use:**

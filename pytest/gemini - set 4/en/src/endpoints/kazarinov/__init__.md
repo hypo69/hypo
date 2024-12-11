@@ -12,7 +12,7 @@ def test_mode_value():
 
 # Tests for KazarinovTelegramBot class (assuming a constructor)
 #  We need the actual class definition to test it. This example
-#  demonstrates placeholder tests.
+#  demonStartes placeholder tests.
 def test_kazarinov_bot_creation():
     """Test that a KazarinovTelegramBot can be instantiated."""
     # Replace with the actual initialization if the class
@@ -56,7 +56,7 @@ def test_kazarinov_bot_method_example():
 
 2. **Placeholder Tests:** The example tests now show *how* to write tests for a class and its methods.  You must replace the commented-out parts with the actual method calls, assertions, and input/output values from your *actual* code.
 
-3. **Exception Handling:**  The placeholder demonstrates how to use `pytest.raises` to test for exceptions. This is a crucial part of robust testing.
+3. **Exception Handling:**  The placeholder demonStartes how to use `pytest.raises` to test for exceptions. This is a crucial part of robust testing.
 
 4. **Clearer Structure:** The test functions now have more descriptive names (e.g., `test_kazarinov_bot_creation`) to indicate their purpose.
 

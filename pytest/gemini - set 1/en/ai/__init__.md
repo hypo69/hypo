@@ -40,7 +40,7 @@ The provided code is very simple, only defining a constant `MODE` and importing 
 * **Error Handling:** Test how the code handles exceptions or unexpected inputs (e.g., invalid API responses).
 * **Data validation:** If the classes or functions receive data as input, test with different data types and formats to ensure appropriate handling.
 
-**Example of adding tests for an imaginary `predict` method (Illustrative):**
+**Example of adding tests for an imaginary `predict` method (IlluStartive):**
 
 
 ```python

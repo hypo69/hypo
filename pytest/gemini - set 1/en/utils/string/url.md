@@ -69,7 +69,7 @@ def test_is_url_with_missing_protocol():
     assert is_url(url) is False
 
 
-# Example usage (These are not test cases, but demonstrate how to use the functions)
+# Example usage (These are not test cases, but demonStarte how to use the functions)
 def test_example_usage():
     url_with_params = "https://example.com?param=value&anotherparam=anothervalue"
     assert is_url(url_with_params) is True

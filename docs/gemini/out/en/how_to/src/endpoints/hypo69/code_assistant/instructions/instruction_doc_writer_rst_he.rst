@@ -20,7 +20,7 @@ Execution steps
       - **Parameters:** Detail each parameter, including data types (e.g., `str`, `int`, `Optional[int]`), descriptions, and default values (if any).
       - **Return Value:** Clearly define the type and description of the returned value.
       - **Exceptions/Errors:** Document any potential exceptions with detailed explanations of when they occur. Use a standard format for exceptions, ensuring consistent language (e.g., "Raises").
-      - **Example Usage:** Provide concise and relevant examples to demonstrate the function's/class's usage, showcasing a typical call and output.
+      - **Example Usage:** Provide concise and relevant examples to demonStarte the function's/class's usage, showcasing a typical call and output.
    - **Formatting:** Adhere to reStructuredText (RST) formatting for code blocks, headers, and descriptions. Employ `.. code-block:: python` for examples. Use RST syntax to structure the document effectively. This includes heading levels (1-4 using `=`, `-`, `~`, `^` respectively).
    - **Maintain Consistency:**  Use the same formatting conventions consistently throughout the documentation.
 
@@ -89,4 +89,4 @@ Usage example
 Important Considerations:
 - Ensure that the input code is properly formatted for analysis.
 - Employ clear and concise language to describe code functionalities.
-- Always provide clear examples to illustrate the usage of each code block.
+- Always provide clear examples to illuStarte the usage of each code block.

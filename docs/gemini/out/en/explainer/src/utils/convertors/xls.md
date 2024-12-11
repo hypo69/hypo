@@ -66,7 +66,7 @@ graph TD
 
 *   **Imports:**
     *   `from pathlib import Path`: Imports the `Path` class from the `pathlib` module. This allows the code to work with file paths in a more object-oriented and platform-independent manner.  This is a good practice for Python code.
-    *   `from src.utils.xls import read_xls_as_dict, save_xls_file`: Imports two functions, `read_xls_as_dict` and `save_xls_file`, from a module likely named `xls.py` within the `src/utils` package.  This demonstrates modularity in the codebase, where functions related to Excel file handling are isolated. The `src.` prefix points to the root package where your code is structured.
+    *   `from src.utils.xls import read_xls_as_dict, save_xls_file`: Imports two functions, `read_xls_as_dict` and `save_xls_file`, from a module likely named `xls.py` within the `src/utils` package.  This demonStartes modularity in the codebase, where functions related to Excel file handling are isolated. The `src.` prefix points to the root package where your code is structured.
 
 
 *   **Functions:**

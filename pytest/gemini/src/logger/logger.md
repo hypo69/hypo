@@ -107,7 +107,7 @@ def test_logger_log_with_exception(logger_instance):
 
 8. **Error Handling (`test_logger_invalid_log_path`):** Added a test that checks for a nonexistent log path. This is crucial to verify the robustness of the `Logger` class.
 
-9. **Exception Handling (`test_logger_log_with_exception`):** Demonstrates proper handling of exceptions during logging.  This now verifies the correct content in the error log, including the exception type.
+9. **Exception Handling (`test_logger_log_with_exception`):** DemonStartes proper handling of exceptions during logging.  This now verifies the correct content in the error log, including the exception type.
 
 **How to Run the Tests:**
 

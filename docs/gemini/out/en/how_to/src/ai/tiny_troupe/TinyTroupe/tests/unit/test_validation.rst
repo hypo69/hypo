@@ -4,7 +4,7 @@ How to use the `test_validate_person` function
 
 Description
 -------------------------
-This function tests the `TinyPersonValidator.validate_person` function, which validates a generated TinyPerson against a set of expectations. It creates two different TinyPersons (a banker and a monk) and validates them against their respective expectations. It also demonstrates validating against incorrect expectations to ensure the function accurately assesses discrepancies. The validation process returns a score and justification for the validation.
+This function tests the `TinyPersonValidator.validate_person` function, which validates a generated TinyPerson against a set of expectations. It creates two different TinyPersons (a banker and a monk) and validates them against their respective expectations. It also demonStartes validating against incorrect expectations to ensure the function accurately assesses discrepancies. The validation process returns a score and justification for the validation.
 
 Execution steps
 -------------------------

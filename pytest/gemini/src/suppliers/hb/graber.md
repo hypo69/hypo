@@ -98,11 +98,11 @@ def test_collect_data_raises_exception(graber_instance):
 
 * **Clearer Test Names:**  Test names now better reflect the purpose of the test.
 * **Mocking:** The code now uses `unittest.mock.Mock` to mock the `Driver` object and the logger.  This is crucial for testing Graber without depending on actual web interactions.  This is now done in a way that's more robust than in the previous response.
-* **Robust `collect_data` Testing:**  Tests `collect_data` with valid inputs, an empty return, and an exception to illustrate error handling.  **Crucially, this example needs to be adapted to the actual `collect_data` function** to test the specific data returned or handling of particular edge cases.
+* **Robust `collect_data` Testing:**  Tests `collect_data` with valid inputs, an empty return, and an exception to illuStarte error handling.  **Crucially, this example needs to be adapted to the actual `collect_data` function** to test the specific data returned or handling of particular edge cases.
 * **Context Handling Tests:** `test_graber_init_with_context` is added to check that the Context is properly initialized as expected.
 * **`pytest.raises` for Exceptions:** The test `test_collect_data_raises_exception` shows the proper use of `pytest.raises` to check for specific exceptions. **Replace this with your actual exceptions**
 * **Fixtures:**  The code uses fixtures (`driver_instance`, `graber_instance`) to create and manage the objects being tested, improving organization and reusability.
-* **Mock `close_pop_up` decorator (Example):** I've commented out the decorator test, but provided the *type* of test to illustrate how you should adapt if you actually have a decorator function you need to test within `Graber` (which is highly probable).  You'll need to mock `execute_locator` in that situation.
+* **Mock `close_pop_up` decorator (Example):** I've commented out the decorator test, but provided the *type* of test to illuStarte how you should adapt if you actually have a decorator function you need to test within `Graber` (which is highly probable).  You'll need to mock `execute_locator` in that situation.
 * **`logger` Mocking:** The `logger` is mocked. This is good practice since you don't want tests to actually log messages.
 
 
@@ -112,7 +112,7 @@ def test_collect_data_raises_exception(graber_instance):
 2.  **Adapt Error Handling:**  Add tests for any specific exceptions that your code might raise and handle them with `pytest.raises`.
 3.  **Add More Tests:**  Expand the test suite to cover all other critical functions and paths within your `Graber` class.
 
-This improved response provides a more complete and effective testing strategy for your Python code. Remember to adapt the specific tests to the methods and behaviors of your `Graber` class. Remember to install `pytest`:
+This improved response provides a more complete and effective testing Startegy for your Python code. Remember to adapt the specific tests to the methods and behaviors of your `Graber` class. Remember to install `pytest`:
 ```bash
 pip install pytest
 ```

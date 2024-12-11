@@ -22,7 +22,7 @@ Execution steps
 
    - **Exception Handling (`ex`):** Use the `ex` prefix consistently in exception handling.
 
-   - **Usage Examples:** Include a `Usage Example` section demonstrating how to utilize the code in a practical context.  Employ the `.. code-block:: python` directive for code examples.
+   - **Usage Examples:** Include a `Usage Example` section demonStarting how to utilize the code in a practical context.  Employ the `.. code-block:: python` directive for code examples.
 
    - **Table of Contents:**  Include a Table of Contents (`.. toctree::`) in the main `index.rst` file to link to the documentation of each module.
 
@@ -34,7 +34,7 @@ Execution steps
     ```rst
     .. autofunction:: module_name.function_name
     ```
-    - Include explicit examples of class and function documentation to demonstrate the required docstrings.
+    - Include explicit examples of class and function documentation to demonStarte the required docstrings.
 
     - Carefully document all exceptions with precise information.
 

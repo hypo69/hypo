@@ -67,7 +67,7 @@ def test_mode_default():
 
 **Explanation and Improvements:**
 
-1. **Dummy Functions:** The code now includes dummy functions (`some_function`) to demonstrate testing.  **Crucially, replace these with the actual functions from your `hypotez/src/webdriver/__init__.py` file.**
+1. **Dummy Functions:** The code now includes dummy functions (`some_function`) to demonStarte testing.  **Crucially, replace these with the actual functions from your `hypotez/src/webdriver/__init__.py` file.**
 
 2. **Comprehensive Test Cases:** The tests cover various scenarios (valid input, invalid input, edge cases, zero input, negative input).
 
@@ -75,7 +75,7 @@ def test_mode_default():
 
 4. **Clear Test Names:** Test function names are descriptive, making the purpose of each test clear.
 
-5. **Fixture Example (Illustrative):** The example for a fixture is now a more realistic example; though no fixtures are present in the example code.
+5. **Fixture Example (IlluStartive):** The example for a fixture is now a more realistic example; though no fixtures are present in the example code.
 
 6. **Global Variable Test (MODE):** A test is included to verify the value of the `MODE` variable.  **Important:** This assumes you want to test this variable's existence and value.
 

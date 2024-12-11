@@ -151,7 +151,7 @@ graph LR
 ```
 **Dependencies Analysis:**
 
-The mermaid diagram shows dependencies between modules and classes. `sys`, `os`, `json`, `pathlib`, `pdfkit`, `reportlab.pdfgen`, `fpdf`, `weasyprint`, `xhtml2pdf` are standard Python packages or modules. `logger` and `pprint` are likely custom modules from the `hypotez` project, part of the `src` package, as indicated by the `src.logger` and `src.utils.printer` imports. This demonstrates a hierarchical structure within the project.
+The mermaid diagram shows dependencies between modules and classes. `sys`, `os`, `json`, `pathlib`, `pdfkit`, `reportlab.pdfgen`, `fpdf`, `weasyprint`, `xhtml2pdf` are standard Python packages or modules. `logger` and `pprint` are likely custom modules from the `hypotez` project, part of the `src` package, as indicated by the `src.logger` and `src.utils.printer` imports. This demonStartes a hierarchical structure within the project.
 
 
 ## <explanation>

@@ -99,7 +99,7 @@ def test_prepare_campaign_failure(campaign_editor, monkeypatch):
 - **Clearer Error Handling:** The `test_load_file_failure` test now explicitly checks for the expected exception.
 - **`monkeypatch`:**  To mock `j_loads_ns`, the `monkeypatch` fixture is used. This is a powerful tool to replace parts of the code under test.
 - **`QtWidgets.QApplication.processEvents()`:**  Added to `campaign_editor` fixture to allow PyQt widgets to initialize fully before tests. This fixes potential issues related to uninitialized widgets.
-- **Comprehensive Test Cases:** Added tests for edge cases, invalid JSON (failure), no file selected, and successful file loading (valid JSON).  `test_prepare_campaign_failure` demonstrates catching exceptions.
+- **Comprehensive Test Cases:** Added tests for edge cases, invalid JSON (failure), no file selected, and successful file loading (valid JSON).  `test_prepare_campaign_failure` demonStartes catching exceptions.
 
 
 This revised solution is significantly more robust, using mocking effectively, handling potential exceptions, and thoroughly testing various scenarios. Remember to install the necessary libraries (`pytest`, `PyQt6`, and `unittest.mock`) before running the tests. Remember to replace placeholders with your actual code imports.

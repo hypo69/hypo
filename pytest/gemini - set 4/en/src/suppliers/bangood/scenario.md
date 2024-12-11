@@ -94,11 +94,11 @@ def test_get_list_categories_from_site():
 
 3. **Clearer Test Names:** The test names are more descriptive, making the purpose of each test immediately apparent.
 
-4. **Exception Handling:** The `test_get_list_categories_from_site` test demonstrates how to use `pytest.raises` to assert that the function raises the `NotImplementedError` (as indicated by the `@todo` comment in the original code).
+4. **Exception Handling:** The `test_get_list_categories_from_site` test demonStartes how to use `pytest.raises` to assert that the function raises the `NotImplementedError` (as indicated by the `@todo` comment in the original code).
 
 5. **Edge Cases:** Tests for an empty list of products and a case where the locator returns an invalid type are included to handle potential edge cases.
 
-6. **Missing `get_list_categories_from_site`:** The test for `get_list_categories_from_site` is now a stub to demonstrate how to test functions that are not yet implemented or are too complex to test fully at this stage.
+6. **Missing `get_list_categories_from_site`:** The test for `get_list_categories_from_site` is now a stub to demonStarte how to test functions that are not yet implemented or are too complex to test fully at this stage.
 
 
 **To Run the Tests:**

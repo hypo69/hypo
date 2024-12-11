@@ -82,7 +82,7 @@ def test_execute_invalid_frame_designation():
 
 **Explanation and Important Considerations:**
 
-1. **Mocking:** The provided JavaScript code interacts with the `browser` object (presumably for browser extensions).  Directly testing these interactions requires mocking `browser.runtime.sendMessage`, `browser.storage.onChanged`, and potentially other browser APIs.  The example tests demonstrate how to mock a simple case.   A robust test suite would extensively mock the `browser` API.
+1. **Mocking:** The provided JavaScript code interacts with the `browser` object (presumably for browser extensions).  Directly testing these interactions requires mocking `browser.runtime.sendMessage`, `browser.storage.onChanged`, and potentially other browser APIs.  The example tests demonStarte how to mock a simple case.   A robust test suite would extensively mock the `browser` API.
 
 2. **`js2py`:** The code uses `js2py` to convert the JavaScript code into Python, which is necessary for testing.
 

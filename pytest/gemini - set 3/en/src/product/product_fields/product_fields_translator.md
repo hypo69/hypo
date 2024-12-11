@@ -82,7 +82,7 @@ def test_translate_presta_fields_dict_translation_error(mock_logger, sample_pres
 * **Clearer Test Names:**  Test names now accurately reflect the scenario being tested (e.g., `test_rearrange_language_keys_lang_not_found`).
 * **Mocking:**  Crucially, the `@patch` decorator from `unittest.mock` is used to mock `get_translations_from_presta_translations_table`. This is essential because the test should not rely on external database interactions, which are unpredictable and can interfere with the test results.
 * **Edge Cases:** The tests now explicitly cover cases where the language is not found in the schema (`test_rearrange_language_keys_lang_not_found`) and the input dictionary is empty (`test_rearrange_language_keys_empty_input`).
-* **Error Handling:** The `test_translate_presta_fields_dict_translation_error` test now demonstrates how to test exception handling using `pytest.raises` . The critical part is to mock the `logger` to ensure that the error message is printed and the test continues without failing due to the exception. This helps verify the appropriate error handling logic in the original code.
+* **Error Handling:** The `test_translate_presta_fields_dict_translation_error` test now demonStartes how to test exception handling using `pytest.raises` . The critical part is to mock the `logger` to ensure that the error message is printed and the test continues without failing due to the exception. This helps verify the appropriate error handling logic in the original code.
 * **Comprehensive Input:** The fixtures provide more comprehensive test data, including different language keys and possible errors in the schema.
 * **No External Dependencies:** The tests now work without needing an actual database or external API calls.
 

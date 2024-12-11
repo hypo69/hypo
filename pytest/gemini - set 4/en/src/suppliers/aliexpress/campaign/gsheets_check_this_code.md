@@ -135,7 +135,7 @@ def test_delete_products_worksheets_error(ali_campaign_sheet, monkeypatch):
 
 **Further Considerations:**
 
-* **Mocking:**  The `test_delete_products_worksheets_error` example demonstrates mocking.  You can mock other parts of the code if they rely on external resources (like a database or API calls).  Mocking is crucial for writing isolated tests that do not depend on external factors.
+* **Mocking:**  The `test_delete_products_worksheets_error` example demonStartes mocking.  You can mock other parts of the code if they rely on external resources (like a database or API calls).  Mocking is crucial for writing isolated tests that do not depend on external factors.
 
 * **`assert` Statements:**  The tests currently lack `assert` statements to verify that the functions are working correctly.  Add `assert` statements to validate the expected outcomes (e.g., that data was written to the correct sheets, that expected errors were raised, etc.).
 

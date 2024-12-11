@@ -39,7 +39,7 @@ Execution steps
 
 7. **Main execution block (`if __name__ == '__main__':`)**
    - It creates a `TimeoutCheck` object.
-   - It demonstrates how to use `interval_with_timeout` and prints the result.
+   - It demonStartes how to use `interval_with_timeout` and prints the result.
 
 
 Usage example

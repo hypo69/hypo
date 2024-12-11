@@ -17,7 +17,7 @@ The overall algorithm can be summarized as:
 
 1. **Define Persona (TinyPerson):** Specify the personality, traits, interests, and goals of an agent using Python code.
 2. **Create Environment (TinyWorld):** Define the environment where the agents interact.
-3. **Orchestrate Interaction:** Initiate conversation, actions, or interactions between the agents within the defined environment.
+3. **OrcheStarte Interaction:** Initiate conversation, actions, or interactions between the agents within the defined environment.
 4. **Collect and Process Results:** Extract results and observations from the interactions between agents and the world.
 5. **Analysis & Insights:** Analyze the results to extract desired insights or generate reports.
 
@@ -27,7 +27,7 @@ The overall algorithm can be summarized as:
 ```mermaid
 graph TD
     A[Define Persona (TinyPerson)] --> B{Create Environment (TinyWorld)};
-    B --> C[Orchestrate Interaction];
+    B --> C[OrcheStarte Interaction];
     C --> D{Collect and Process Results};
     D --> E[Analysis & Insights];
 ```
@@ -63,4 +63,4 @@ The README highlights the need for further development, including API stabilizat
 The README mentions several related libraries, such as Autogen and Crew AI, suggesting a potential link to other multiagent systems and AI-based projects.  The overall project likely connects to other components of a larger research or business framework, but specific relationships aren't described in the README.
 
 
-**Note:** The examples and code snippets in the README provide an example of how to create `TinyPersons`.  They are, however, intended to be illustrative rather than complete, functional code units, suitable for inclusion in a more complete analysis.
+**Note:** The examples and code snippets in the README provide an example of how to create `TinyPersons`.  They are, however, intended to be illuStartive rather than complete, functional code units, suitable for inclusion in a more complete analysis.

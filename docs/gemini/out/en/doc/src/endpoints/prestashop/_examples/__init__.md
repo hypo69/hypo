@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module contains example code related to PrestaShop endpoints.  It likely serves as a demonstration or testing ground for various functionalities. The module initializes a `MODE` variable to 'dev'.
+This module contains example code related to PrestaShop endpoints.  It likely serves as a demonStartion or testing ground for various functionalities. The module initializes a `MODE` variable to 'dev'.
 
 
 ## Variables

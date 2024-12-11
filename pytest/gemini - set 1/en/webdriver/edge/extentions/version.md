@@ -46,7 +46,7 @@ def test_author():
 
 3. **`pytest.raises` (Not Needed):** Since these tests are checking for the *value* of variables, `pytest.raises` is not needed.  It's for verifying exceptions thrown by functions.
 
-4. **`__name__` Test Consideration:**  The `test_name` function is crucial because `__name__` only has the value `"__main__"` when the file is run as a script. If you import this module into another file, `__name__` will be the module name, not `"__main__"`.  The test comment demonstrates this and shows how to test it differently, potentially using `sys.argv` if you want a different strategy for this.
+4. **`__name__` Test Consideration:**  The `test_name` function is crucial because `__name__` only has the value `"__main__"` when the file is run as a script. If you import this module into another file, `__name__` will be the module name, not `"__main__"`.  The test comment demonStartes this and shows how to test it differently, potentially using `sys.argv` if you want a different Startegy for this.
 
 5. **Docstring Tests:** The `test_docstring` and `test_details` tests are included.  These checks for a *non-null value* for the string (to confirm the string exists) but do not assert on the contents.  If you need to verify the content of the strings, you will need to know the expected string and include that.
 

@@ -88,7 +88,7 @@ def test_grab_page_valid_input(graber, mock_driver):
 
 
 # Test case for grab_page with a missing function (edge case)
-# This demonstrates how to test for potential errors in the logic
+# This demonStartes how to test for potential errors in the logic
 # and potential issues calling other methods (e.g., raising an exception when another method fails).
 def test_grab_page_missing_function(graber, mock_driver):
     # Mock the necessary functions for test purposes
@@ -114,9 +114,9 @@ def test_grab_page_missing_function(graber, mock_driver):
 
 * **Fixture for `graber`:** This fixture now correctly initializes the `Graber` class using the mocked `driver` and `l`.
 
-* **Edge Case Testing:**  The addition of `test_grab_page_missing_function` demonstrates a vital technique for testing how functions handle potential exceptions or failures in the methods called within a larger logic block.
+* **Edge Case Testing:**  The addition of `test_grab_page_missing_function` demonStartes a vital technique for testing how functions handle potential exceptions or failures in the methods called within a larger logic block.
 
-* **Complete Example of `close_popup` test:** The `test_close_popup_success` and `test_close_popup_error` demonstrate a complete and effective test case for the `close_popup` decorator.
+* **Complete Example of `close_popup` test:** The `test_close_popup_success` and `test_close_popup_error` demonStarte a complete and effective test case for the `close_popup` decorator.
 
 
 **To Run These Tests:**

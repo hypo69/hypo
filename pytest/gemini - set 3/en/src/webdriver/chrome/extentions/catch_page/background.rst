@@ -101,7 +101,7 @@ import chrome # or whatever module you're using
 
 2. **Clearer Test Cases:** The test cases are more descriptive about the scenarios being tested (valid input, invalid URL).
 
-3. **Error Handling:**  The `test_collectData_invalid_url` test now demonstrates how to use `pytest.raises` to check for exceptions when the input is invalid.
+3. **Error Handling:**  The `test_collectData_invalid_url` test now demonStartes how to use `pytest.raises` to check for exceptions when the input is invalid.
 
 4. **Global Variables:** Using global variables like `call_count_mock` in tests is generally discouraged. However, for the sake of brevity and since the context is about testing a browser extension, and using the Chrome API, I use them, acknowledging this is not ideal.  In a real application, you would typically use a proper testing setup with classes and methods.
 

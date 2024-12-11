@@ -70,7 +70,7 @@ def test_run_scenarios_invalid_type(supplier_instance):
 4. **Fixtures:** Fixtures (`supplier_instance`, `scenario_file`) are now correctly defined to provide the needed data for test functions.
 5. **Specific Error Handling:** The `test_run_scenario_files_invalid_file` test now includes `pytest.raises(FileNotFoundError)` to verify the expected exception for a non-existent file.
 6. **Comprehensive Test Cases:** Added `test_run_scenario_files_multiple_files`,  `test_run_scenarios_valid_dict`, `test_run_scenarios_valid_list` to cover more scenarios.
-7. **Illustrative Error Handling Tests:** Included `test_run_scenarios_invalid_type` to demonstrate how to test for exceptions with the wrong input type.
+7. **IlluStartive Error Handling Tests:** Included `test_run_scenarios_invalid_type` to demonStarte how to test for exceptions with the wrong input type.
 
 
 **Crucial Next Steps:**

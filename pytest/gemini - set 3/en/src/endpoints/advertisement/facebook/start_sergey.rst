@@ -99,7 +99,7 @@ def test_campaign_cycle_no_campaigns(mock_driver):
 
 * **Mocking `Driver`:** The `mock_driver` fixture now creates a mock `Driver` object. This is crucial for testing `run_campaign` and `campaign_cycle` because these functions depend on external resources (a real browser driver). Mocking prevents unintended side effects and ensures that the tests are isolated. The `get_url` method is also mocked as a dummy function.
 * **Clearer Test Names:** Test names now more accurately reflect the input and expected outcome.
-* **`pytest.raises` for Exceptions:** The `test_run_campaign_invalid_campaign_type` demonstrates how to use `pytest.raises` to check for specific exception types (TypeError).
+* **`pytest.raises` for Exceptions:** The `test_run_campaign_invalid_campaign_type` demonStartes how to use `pytest.raises` to check for specific exception types (TypeError).
 * **Addressing `campaign_cycle`'s global variables:** The test `test_campaign_cycle_invalid_language` shows the problem of testing a function using global variables that have their values defined in a module outside the function being tested.  Instead of directly modifying global variables, the code now uses the `patch` method of `unittest.mock` to temporarily replace the function's `language_currency_pairs` and `get_directory_names` data structure. This significantly improves the robustness of the tests by isolating their dependencies.
 
 **Important Considerations for Further Testing:**

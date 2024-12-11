@@ -1,7 +1,7 @@
 ```python
 import pytest
 from hypothesis import given
-from hypothesis.strategies import integers, lists, text
+from hypothesis.Startegies import integers, lists, text
 import os
 from unittest.mock import patch
 from types import SimpleNamespace

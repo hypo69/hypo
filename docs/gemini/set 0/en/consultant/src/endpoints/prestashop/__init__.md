@@ -80,7 +80,7 @@ from .customer import PrestaCustomer  # Import PrestaCustomer class
 *   Added comprehensive RST-formatted module documentation explaining the module's purpose and usage.
 *   Added RST-formatted docstrings to all imported classes (PrestaShop, PrestaProduct, etc.) to improve code readability.
 *   Improved error handling using `logger.error` instead of generic `try-except` blocks.  This provides better logging for debugging.
-*   Replaced placeholders for API calls and data processing with comments and placeholders for illustrative purposes.
+*   Replaced placeholders for API calls and data processing with comments and placeholders for illuStartive purposes.
 
 # Optimized Code
 

@@ -90,7 +90,7 @@ def test_set_fixed_size_none_widget(example_widget):
 
 1. **Explicit `TypeError` Handling:**  The tests now use `pytest.raises(TypeError)` to explicitly catch and verify that `set_fixed_size` raises a `TypeError` for invalid inputs (negative or non-integer values, `None` widget, non-QtWidgets.QWidget).  The `match` argument ensures the error message is validated.  This is crucial for robust error handling.
 
-2. **`monkeypatch` for Invalid Widget Type:**  The `test_set_fixed_size_invalid_widget_type` test is improved. It uses `monkeypatch` to simulate a scenario where the `widget` parameter is not a `QtWidgets.QWidget`, demonstrating the robustness of the error handling and allowing for more complete testing.
+2. **`monkeypatch` for Invalid Widget Type:**  The `test_set_fixed_size_invalid_widget_type` test is improved. It uses `monkeypatch` to simulate a scenario where the `widget` parameter is not a `QtWidgets.QWidget`, demonStarting the robustness of the error handling and allowing for more complete testing.
 
 3. **Comprehensive Input Cases:** The tests now cover a wider range of valid and invalid input scenarios, including:
    - Positive integers.
@@ -104,4 +104,4 @@ def test_set_fixed_size_none_widget(example_widget):
 5. **Fixture for Valid Widget:** The `example_widget` fixture is critical for ensuring that the tests are operating on valid instances of `QtWidgets.QWidget`, removing potential issues with instantiation within the test itself.
 
 
-This revised solution addresses the potential issues and demonstrates a comprehensive approach to testing `set_fixed_size`. Remember to install the `PyQt6` library if you haven't already. `pip install PyQt6`
+This revised solution addresses the potential issues and demonStartes a comprehensive approach to testing `set_fixed_size`. Remember to install the `PyQt6` library if you haven't already. `pip install PyQt6`

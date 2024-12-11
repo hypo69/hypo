@@ -78,7 +78,7 @@ def example_data():
 
 2. **Isolation:** Each test function is independent, focused on a single aspect of the code.
 
-3. **Scenario Coverage:** The examples in `test_playwrid_method1` and `test_playwrid_method1_invalid_input` demonstrate how to handle valid input and *invalid or unexpected inputs* (using `pytest.raises` for exceptions).  **Crucially,** the example comments are **placeholders**.  You **must** replace them with your actual Playwrid method names and the expected outcomes.
+3. **Scenario Coverage:** The examples in `test_playwrid_method1` and `test_playwrid_method1_invalid_input` demonStarte how to handle valid input and *invalid or unexpected inputs* (using `pytest.raises` for exceptions).  **Crucially,** the example comments are **placeholders**.  You **must** replace them with your actual Playwrid method names and the expected outcomes.
 
 4. **Exception Handling:** The `test_playwrid_method1_invalid_input` example shows how to test for exceptions using `pytest.raises`. This is vital for robust test cases.
 

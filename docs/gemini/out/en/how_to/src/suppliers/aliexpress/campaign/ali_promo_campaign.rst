@@ -49,7 +49,7 @@ asyncio.run(main())
 
 **Explanation of the example:**
 
-This example demonstrates how to create an instance of `AliPromoCampaign` with a specific campaign name, language, and currency. Then it showcases how to call asynchronous methods `process_category_products` and `process_ai_category` for a category.  Crucially, it demonstrates how to then call the `generate_output` method to save the results in a directory.  You need to replace `"path/to/your/output/directory"` with the actual path to save your results.
+This example demonStartes how to create an instance of `AliPromoCampaign` with a specific campaign name, language, and currency. Then it showcases how to call asynchronous methods `process_category_products` and `process_ai_category` for a category.  Crucially, it demonStartes how to then call the `generate_output` method to save the results in a directory.  You need to replace `"path/to/your/output/directory"` with the actual path to save your results.
 
 
 **Important Considerations:**

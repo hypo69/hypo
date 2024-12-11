@@ -175,7 +175,7 @@ graph LR
 
 **Dependencies and Analysis:**
 
-The mermaid code illustrates the following dependencies:
+The mermaid code illuStartes the following dependencies:
 
 - `datetime`: Used for getting the current time (`datetime.now().time()`).
 - `threading`: Used for creating and managing threads.

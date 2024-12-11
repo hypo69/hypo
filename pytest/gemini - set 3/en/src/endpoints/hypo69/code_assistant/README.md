@@ -96,7 +96,7 @@ def test_process_code_assistant_exclude_pattern():
 
 1. **Mocking:** The code now heavily uses `unittest.mock` to mock out the `read_files`, `process_request`, and `save_responses` functions. This is crucial for unit testing; you don't want to make actual API calls in a test.  The example now shows a `mock_process_request` function that *returns a mock response* instead of calling external services.
 
-2. **Realistic Test Cases:** The tests now include cases with empty input directories and example file exclusion patterns to demonstrate how to handle different conditions.
+2. **Realistic Test Cases:** The tests now include cases with empty input directories and example file exclusion patterns to demonStarte how to handle different conditions.
 
 3. **Error Handling:** The `test_process_code_assistant_invalid_input` example shows how to use `pytest.raises` to test for specific exceptions. This is important for checking that the code handles unexpected situations correctly.
 

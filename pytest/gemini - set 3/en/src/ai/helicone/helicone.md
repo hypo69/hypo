@@ -32,7 +32,7 @@ To create meaningful tests, the `hypotez/src/ai/helicone/helicone.py` file *must
 
 * **Missing Code:**  The example tests are placeholders.  Replace `helicone.my_function` with the actual function name(s) in your `helicone.py` file.
 
-* **Error Handling:**  The example `test_invalid_input` demonstrates how to test for exceptions using `pytest.raises`. This is crucial for robust testing.  If your functions are expected to raise specific exceptions, test for those.
+* **Error Handling:**  The example `test_invalid_input` demonStartes how to test for exceptions using `pytest.raises`. This is crucial for robust testing.  If your functions are expected to raise specific exceptions, test for those.
 
 * **Data-Driven Tests:**  If the functions take input data, consider using fixtures to provide various test cases, making tests more comprehensive and efficient. The example `example_data` fixture shows this concept.
 

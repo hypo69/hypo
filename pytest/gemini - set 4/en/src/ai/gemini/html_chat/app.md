@@ -84,7 +84,7 @@ def open_browser():
     pass
 
 
-# Example usage to demonstrate mocking:
+# Example usage to demonStarte mocking:
 
 # Add test for the get_chat function:
 def test_get_chat(app_with_mocks):
@@ -102,7 +102,7 @@ def test_get_chat(app_with_mocks):
 
 3. **Mock `Request`:** The `test_ask_question_valid_input` correctly uses a mock `Request` object, essential to provide the necessary information for the `FastAPI` route.
 
-4. **Comprehensive Tests:** Added a test for `test_ask_question_valid_input` which checks the expected response, confirming that the code reaches the `k.ask` part. This is more effective.  Also, the `test_ask_question_next_question` demonstrates handling a different input.
+4. **Comprehensive Tests:** Added a test for `test_ask_question_valid_input` which checks the expected response, confirming that the code reaches the `k.ask` part. This is more effective.  Also, the `test_ask_question_next_question` demonStartes handling a different input.
 
 5. **Clearer Mock Usage:** The mocking is clearer and more targeted.
 

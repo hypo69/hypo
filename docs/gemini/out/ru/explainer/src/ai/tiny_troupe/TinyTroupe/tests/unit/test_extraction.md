@@ -195,7 +195,7 @@ graph LR
 - The `concepts` list is very long. Consider whether this list could be loaded from a file to reduce code size and improve readability.
 - The `Normalizer` class is not fully shown.  A more detailed look at its implementation is needed to fully understand the normalization process.
 - The `testing_utils` module is not defined.
-- The `export` method in `ArtifactExporter` does not have a clear error handling strategy if the export process fails.
+- The `export` method in `ArtifactExporter` does not have a clear error handling Startegy if the export process fails.
 - The `normalize` method could throw exceptions to provide more informative errors in case of unexpected situations.
 - The tests for `ArtifactExporter` could be improved to assert specific details about the exported files' format (e.g., ensuring correct headers in the .docx file).
 

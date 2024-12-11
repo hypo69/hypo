@@ -9,7 +9,7 @@ Execution steps
 -------------------------
 1. **Provide the original code:** The first step is to present the original code block without any modifications.
 
-2. **Algorithm Flowchart:**  Create a step-by-step description of the algorithm as a flowchart.  This should visually illustrate the flow of data between functions or classes. Label variables and illustrate how they change during execution.  This helps to uncover the logic and identify critical paths in the code.
+2. **Algorithm Flowchart:**  Create a step-by-step description of the algorithm as a flowchart.  This should visually illuStarte the flow of data between functions or classes. Label variables and illuStarte how they change during execution.  This helps to uncover the logic and identify critical paths in the code.
 
 3. **Detailed Explanation:**
     * **Imports:** Identify all import statements and explain their purpose.  For example, if the code imports `math`, specify that it's used for mathematical functions.  Describe how the imports interact with other modules.

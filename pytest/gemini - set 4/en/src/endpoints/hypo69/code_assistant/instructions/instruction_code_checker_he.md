@@ -86,7 +86,7 @@ def test_load_json_file_invalid_json():
 * **File Cleanup:** Added a `finally` block to remove the temporary test files created within the tests.  This prevents file buildup.
 * **Import Statements:** Corrected the import statement to include the necessary modules for `j_loads`.
 * **Comments and Docstrings:** Added more comments and docstrings following the reStructuredText (RST) guidelines as requested.
-* **`TODO` markers:**  While no actual `TODO`s are present in this improved code, this format and example is shown to demonstrate proper comments about tasks that could be included.
+* **`TODO` markers:**  While no actual `TODO`s are present in this improved code, this format and example is shown to demonStarte proper comments about tasks that could be included.
 
 **To run these tests:**
 

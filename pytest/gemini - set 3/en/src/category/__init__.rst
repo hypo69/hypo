@@ -54,11 +54,11 @@ def test_category_invalid_name_length():
 
 2. **Specific Error Handling:**  Instead of a generic `AssertionError`, the `pytest.raises` context manager is used to check for `TypeError` and `ValueError` exceptions, making the tests more robust. The error messages are now asserted as well to provide more informative failure reasons.
 
-3. **Edge Cases:**  Tests are now included to handle empty names, and the type of the name parameter, demonstrating a robust approach to checking different input conditions.
+3. **Edge Cases:**  Tests are now included to handle empty names, and the type of the name parameter, demonStarting a robust approach to checking different input conditions.
 
 4. **No Unnecessary Fixtures:** Since the example code was extremely minimal, no fixtures were needed.
 
-5. **Comprehensive Example:** The provided code assumes a `Category` class with a constructor (initializer) that takes the name as an argument.  It demonstrates how to write tests for the constructor using edge cases for name type and invalid length.
+5. **Comprehensive Example:** The provided code assumes a `Category` class with a constructor (initializer) that takes the name as an argument.  It demonStartes how to write tests for the constructor using edge cases for name type and invalid length.
 
 **Crucial Considerations for Completing the Tests:**
 

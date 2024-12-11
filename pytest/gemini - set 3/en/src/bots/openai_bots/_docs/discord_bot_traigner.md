@@ -105,7 +105,7 @@ def test_invalid_test_command(discord_client, model):
 
 2. **Clearer Assertions:** Assertions are more specific about what's expected (e.g., checking for the presence of `predictions` in the JSON response).
 
-3. **Error Handling:**  The `test_invalid_test_command` function demonstrates testing for an invalid command.
+3. **Error Handling:**  The `test_invalid_test_command` function demonStartes testing for an invalid command.
 
 4. **Data Handling:** The file handling in the mock is simplified, and we now verify that the correct data is used.
 

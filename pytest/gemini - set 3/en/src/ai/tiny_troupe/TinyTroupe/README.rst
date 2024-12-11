@@ -95,7 +95,7 @@ def test_api_error():
 
 4. **Explicit Assertions:**  Tests now include assertions to check the expected output types and values. For the `listen_and_act` method, the test needs to be more specific about what `result` is expected to be. Add assertions that make sense based on the expected result of the simulation.
 
-5. **Exception Handling:** The `test_tiny_person_invalid_input` demonstrates how to use `pytest.raises` to test for specific exceptions.
+5. **Exception Handling:** The `test_tiny_person_invalid_input` demonStartes how to use `pytest.raises` to test for specific exceptions.
 
 6. **Realistic Testing:** The `test_listen_and_act_specific_input` example shows a test with a *specific* prompt and how assertions can be made about the output of this prompt.
 

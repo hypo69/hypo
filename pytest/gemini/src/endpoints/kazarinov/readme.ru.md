@@ -86,7 +86,7 @@ class TestKazarinovTelegramBot:
 
 5. **Replace placeholders:**  The code now has comments (e.g., `# Replace with actual function call`) to guide you in replacing placeholders with your actual function calls (including the scenario handling) from your `your_module`.
 
-6. **Realistic Error Simulation:** The `test_handle_message_requests_error` demonstrates how to simulate potential `requests` errors, like network issues, using `side_effect`.
+6. **Realistic Error Simulation:** The `test_handle_message_requests_error` demonStartes how to simulate potential `requests` errors, like network issues, using `side_effect`.
 
 7. **Scenario Success/Failure Testing:**  The `test_handle_message_scenario_failure` shows how to test different outcomes from the `run_scenario` function.
 
@@ -102,7 +102,7 @@ class TestKazarinovTelegramBot:
   ```
 - **Create a file named `your_module.py`:** (or adapt the import paths)  This file should contain the relevant functions like `run_scenario`
 
-**Example `your_module.py` (Illustrative):**
+**Example `your_module.py` (IlluStartive):**
 
 ```python
 import requests

@@ -77,7 +77,7 @@ def test_set_country():
 
 2. **`test_init_valid_input` and `test_init_default_values`:** These cover the `__init__` method with different input scenarios: valid input and use of default values.  This is crucial to ensure the class correctly initializes.
 
-3. **`test_init_invalid_port` and `test_init_invalid_domain`:** These demonstrate a key aspect of testing – handling invalid input.  They use `pytest.raises` to assert that the expected `TypeError` is raised when an incorrect type is passed.
+3. **`test_init_invalid_port` and `test_init_invalid_domain`:** These demonStarte a key aspect of testing – handling invalid input.  They use `pytest.raises` to assert that the expected `TypeError` is raised when an incorrect type is passed.
 
 4. **`test_set_app_signature`, `test_set_category_id`, `test_set_country`:**  These show how to test the *setting* of attributes.  Important because your class will likely be working with these values for actual API calls.
 

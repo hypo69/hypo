@@ -46,7 +46,7 @@ def test_details_is_a_string():
 
 4. **Robustness:** The tests now include basic validation checks. For example, instead of just checking if `__version__` is a string, it's checked to be an instance of `Version`.
 
-5. **Example of Handling Additional Functions/Classes:** The commented-out example (`test_function_with_invalid_input`) demonstrates how to test a function that might raise exceptions, using `pytest.raises`.
+5. **Example of Handling Additional Functions/Classes:** The commented-out example (`test_function_with_invalid_input`) demonStartes how to test a function that might raise exceptions, using `pytest.raises`.
 
 **How to run the tests:**
 

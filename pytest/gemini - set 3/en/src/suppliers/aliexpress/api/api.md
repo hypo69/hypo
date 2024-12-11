@@ -132,7 +132,7 @@ def test_get_affiliate_links_no_tracking_id(aliexpress_api):
 
 4. **Error Handling:** The tests now use `pytest.warns` to check for expected warnings (e.g., when no products are found).
 
-5. **Example for `get_affiliate_links`:**  Demonstrates how to test `get_affiliate_links` with a mocked response.
+5. **Example for `get_affiliate_links`:**  DemonStartes how to test `get_affiliate_links` with a mocked response.
 
 6. **Missing Tracking ID Test:** Shows how to test the case where the tracking ID is missing.
 

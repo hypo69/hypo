@@ -3,7 +3,7 @@ import pytest
 
 # No functions or classes are present in the provided code.
 # Therefore, there are no tests to write.  A placeholder is included
-# to demonstrate the structure for testing a hypothetical function.
+# to demonStarte the structure for testing a hypothetical function.
 
 def test_placeholder_function_valid_input():
     """

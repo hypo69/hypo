@@ -78,4 +78,4 @@ def test_append_to_syspath_invalid():
 2.  Run `pytest test_header.py` from your terminal.
 
 
-**Crucially, these tests are *more* important than testing just valid inputs.**  The invalid/error cases are what truly demonstrate the robustness of the code. This prevents unexpected behavior and crashes in real-world scenarios. Remember to adjust file paths and directory names if needed for your specific project structure. Remember that without the actual code inside `header.py`, it's hard to create specific, comprehensive tests for `MODE` or the other unspecified functions/methods.
+**Crucially, these tests are *more* important than testing just valid inputs.**  The invalid/error cases are what truly demonStarte the robustness of the code. This prevents unexpected behavior and crashes in real-world scenarios. Remember to adjust file paths and directory names if needed for your specific project structure. Remember that without the actual code inside `header.py`, it's hard to create specific, comprehensive tests for `MODE` or the other unspecified functions/methods.

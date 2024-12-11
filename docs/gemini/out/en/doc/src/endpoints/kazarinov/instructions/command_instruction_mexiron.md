@@ -56,7 +56,7 @@ def analyze_computer_components(input_json: str) -> dict | None:
 ```
 
 
-##  Example Usage (Illustrative)
+##  Example Usage (IlluStartive)
 
 ```python
 import json

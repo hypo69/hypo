@@ -70,7 +70,7 @@ Execution Steps
 2. Create a step-by-step guide:
     - Describe the function of the code block.
     - Detail the execution steps.
-    - Provide a working example to illustrate usage.
+    - Provide a working example to illuStarte usage.
 3. Formatting: Adhere to reStructuredText (RST) formatting conventions.
     - Use proper headers to separate sections.
     - Employ clear and concise language in descriptions.
@@ -112,7 +112,7 @@ print(documentation_text)
 * Created a function `generate_documentation_instructions` to encapsulate the documentation.
 * Added a docstring to the `generate_documentation_instructions` function, including parameters and return values.
 * Improved the RST structure of the documentation (more clear section headers).
-* Added an example function to illustrate usage and appropriate docstring style.
+* Added an example function to illuStarte usage and appropriate docstring style.
 * Included example usage of the function in the module docstring.
 * Replaced vague terms with more specific terminology in the instructions.
 * Removed unnecessary comments and clarified the remaining comments.
@@ -157,7 +157,7 @@ Execution Steps
 2. Create a step-by-step guide:
     - Describe the function of the code block.
     - Detail the execution steps.
-    - Provide a working example to illustrate usage.
+    - Provide a working example to illuStarte usage.
 3. Formatting: Adhere to reStructuredText (RST) formatting conventions.
     - Use proper headers to separate sections.
     - Employ clear and concise language in descriptions.

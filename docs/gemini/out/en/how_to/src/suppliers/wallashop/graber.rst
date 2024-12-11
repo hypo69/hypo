@@ -11,7 +11,7 @@ Execution steps
 -------------------------
 1. **Initialization:** Create an instance of the `Graber` class, passing a `Driver` object to it.  This likely represents the web driver connection to the WallaShop site.
 
-2. **Data Extraction:** Call the `grab_page` method, passing the `Driver` instance.  This method orchestrates the extraction of data for the product.
+2. **Data Extraction:** Call the `grab_page` method, passing the `Driver` instance.  This method orcheStartes the extraction of data for the product.
 
 3. **Data Handling:** Within the `grab_page` function, a `fetch_all_data` function is defined to collect all the product fields. It calls individual functions (`id_product`, `name`, etc.) to fetch specific data points for each field, making the code organized and easier to expand.
 

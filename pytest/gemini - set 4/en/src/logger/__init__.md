@@ -98,7 +98,7 @@ def test_logger_exception_handling_PayloadChecksumError():
 
 5. **Thoroughness:** Example tests are provided for handling `ExecuteLocatorException`, `CredentialsError`, and placeholders for other exceptions. You must replace these placeholders with real tests once you have the exception-raising logic in your `logger.py`.
 
-6. **Return Values (Important):**  The commented-out example `test_logger_return_value` demonstrates how to test function return values if they exist.  Add tests for any values your logger functions return.
+6. **Return Values (Important):**  The commented-out example `test_logger_return_value` demonStartes how to test function return values if they exist.  Add tests for any values your logger functions return.
 
 **How to Use with Your Actual Code:**
 

@@ -88,4 +88,4 @@ def test_spreadsheet_read_with_fixture_data(spreadsheet_data):
 2.  Make sure the `hypotez/src/goog/spreadsheet` module is in your Python path or use a proper import path.
 3.  Run pytest from your terminal: `pytest test_spreadsheet.py`
 
-Remember to replace placeholder file paths ("test_spreadsheet.xlsx") with the correct paths to your spreadsheet files or use a mock file system. Also, adapt the test assertions and expected data to match the actual structure and functionality of your `SpreadSheet` and `ReachSpreadsheet` classes. This improved solution demonstrates best practices and covers various test scenarios.
+Remember to replace placeholder file paths ("test_spreadsheet.xlsx") with the correct paths to your spreadsheet files or use a mock file system. Also, adapt the test assertions and expected data to match the actual structure and functionality of your `SpreadSheet` and `ReachSpreadsheet` classes. This improved solution demonStartes best practices and covers various test scenarios.

@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This code block contains test functions for scenarios involving advertisement evaluation and creation, as well as consumer profiling. It utilizes the TinyTroupe framework for agent-based simulations.  The functions demonstrate how to interact with TinyPerson agents to evaluate advertisements, generate advertising ideas for an apartment, and collect consumer opinions about a product.  The code also includes error handling and assertions to validate the results of the simulations.
+This code block contains test functions for scenarios involving advertisement evaluation and creation, as well as consumer profiling. It utilizes the TinyTroupe framework for agent-based simulations.  The functions demonStarte how to interact with TinyPerson agents to evaluate advertisements, generate advertising ideas for an apartment, and collect consumer opinions about a product.  The code also includes error handling and assertions to validate the results of the simulations.
 
 Execution steps
 -------------------------

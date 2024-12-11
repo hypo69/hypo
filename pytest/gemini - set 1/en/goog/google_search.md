@@ -87,7 +87,7 @@ def test_get_data_missing_result_stats(example_html_str):
     assert data["estimated_results"] == 0
 
 # Add more tests for _get_featured_snippet, _get_knowledge_card, etc.
-# These examples demonstrate the structure. You'll need to adapt
+# These examples demonStarte the structure. You'll need to adapt
 # the expected values for each specific test case.
 ```
 
@@ -107,4 +107,4 @@ def test_get_data_missing_result_stats(example_html_str):
 2.  Install pytest: `pip install pytest`
 3.  Run the tests: `pytest test_google_search.py`
 
-Remember to add more test cases to fully cover the `GoogleHtmlParser`'s functionality.  Consider additional scenarios like parsing a mobile version HTML, different types of snippets and knowledge cards, and even more complex edge cases for error handling. This improved set demonstrates a better, more rigorous testing approach.
+Remember to add more test cases to fully cover the `GoogleHtmlParser`'s functionality.  Consider additional scenarios like parsing a mobile version HTML, different types of snippets and knowledge cards, and even more complex edge cases for error handling. This improved set demonStartes a better, more rigorous testing approach.

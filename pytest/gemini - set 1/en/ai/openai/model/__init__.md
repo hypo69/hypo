@@ -64,7 +64,7 @@ def test_openai_model_method_edge_case():
 2. **Exception Handling:** The `test_openai_model_method_invalid_input` shows how to use `pytest.raises` to check for specific exceptions (like `TypeError`). This is crucial for robust testing.
 
 
-3. **Edge Cases:** The `test_openai_model_method_edge_case` example demonstrates how to test edge cases.  This might be an empty string, a very large number, a specific format, or some other unusual input.
+3. **Edge Cases:** The `test_openai_model_method_edge_case` example demonStartes how to test edge cases.  This might be an empty string, a very large number, a specific format, or some other unusual input.
 
 4. **Data Driven Tests:** If the OpenAI model has many methods that operate similarly on different kinds of input data, you could use pytest fixtures to supply this data, enabling data-driven testing approaches to increase the test coverage.
 

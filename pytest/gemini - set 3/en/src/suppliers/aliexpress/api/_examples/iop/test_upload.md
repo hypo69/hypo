@@ -88,17 +88,17 @@ def test_upload_error_handling(mock_client, mock_request):
 
 1. **Mocking:** The code now heavily uses mocking to avoid depending on external APIs or file systems for testing.  `MockIopClient` and `MockIopRequest` simulate the behavior of the actual classes, allowing us to control inputs and outputs. This is crucial for unit testing.
 
-2. **Error Handling:** `test_upload_invalid_input` now correctly demonstrates how to test for an expected exception (`FileNotFoundError`).  The code now specifically handles the case where the file doesn't exist.
+2. **Error Handling:** `test_upload_invalid_input` now correctly demonStartes how to test for an expected exception (`FileNotFoundError`).  The code now specifically handles the case where the file doesn't exist.
 
 3. **Clearer Test Names:** Test names are more descriptive (e.g., `test_upload_valid_input`, `test_upload_invalid_input`).
 
-4. **Fixture for Request:** A `mock_request` fixture is created to help set up the request object more reliably and to avoid errors related to file paths. It also demonstrates how to handle file content for the `file_bytes` parameter.
+4. **Fixture for Request:** A `mock_request` fixture is created to help set up the request object more reliably and to avoid errors related to file paths. It also demonStartes how to handle file content for the `file_bytes` parameter.
 
 5. **File Handling:** The example shows how to use a temporary directory (`tmp_path`) within the fixture so that the file is created and deleted.  Critically, the `open()` call is corrected to `open(mock_request.file_params, "rb").read()` so the file is opened in binary read mode, which is likely correct for the file bytes parameter.
 
 6. **Edge Cases:** `test_upload_invalid_input` now correctly tests the case of an invalid file name.
 
-7. **Robust Error Testing:** `test_upload_error_handling` demonstrates how to use `pytest.raises` to check for specific exceptions (`FileNotFoundError`).
+7. **Robust Error Testing:** `test_upload_error_handling` demonStartes how to use `pytest.raises` to check for specific exceptions (`FileNotFoundError`).
 
 8. **Complete Mock:** Added `mock_request` for more comprehensive mocking. This provides a much more complete and maintainable solution.
 

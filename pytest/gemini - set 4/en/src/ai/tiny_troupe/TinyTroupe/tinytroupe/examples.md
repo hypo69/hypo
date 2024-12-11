@@ -98,7 +98,7 @@ def create_lila_the_linguist():
 
 1. **Comprehensive Test Coverage:** The tests now cover the creation of each example character (`oscar`, `lisa`, `marcos`, `lila`), validating the existence of the `TinyPerson` object, the correctness of the name, age, nationality, occupation, and (crucially) the retrieval of the detailed occupation description. 
 
-2. **`define_several` Testing:** The `_test_define_several` helper function is critical for robust testing of the `define_several` method.  The example test `test_oscar_personality_traits` demonstrates how to use this function to verify the proper retrieval of the lists of data.
+2. **`define_several` Testing:** The `_test_define_several` helper function is critical for robust testing of the `define_several` method.  The example test `test_oscar_personality_traits` demonStartes how to use this function to verify the proper retrieval of the lists of data.
 
 3. **Clear Test Names:** Test function names clearly indicate their purpose.
 

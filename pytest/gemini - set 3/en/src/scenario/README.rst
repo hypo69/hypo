@@ -124,9 +124,9 @@ def test_run_scenario_url_error(supplier_mock, tmp_path):
 
 3. **Clearer Test Names:** Test function names are now more descriptive, like `test_run_scenario_files_valid_input` for better understanding of their purpose.
 
-4. **Exception Handling:** The `test_run_scenario_invalid_input` demonstrates how to test for specific exceptions (`TypeError` in this example). You need to adapt this to the actual exceptions your `run_scenario` function might raise.  Importantly, `test_run_scenario_url_error` shows a test for a specific expected error (`Exception` in this case) during URL retrieval.
+4. **Exception Handling:** The `test_run_scenario_invalid_input` demonStartes how to test for specific exceptions (`TypeError` in this example). You need to adapt this to the actual exceptions your `run_scenario` function might raise.  Importantly, `test_run_scenario_url_error` shows a test for a specific expected error (`Exception` in this case) during URL retrieval.
 
-5. **Edge Case Testing:** The `test_run_scenario_file_missing_file` demonstrates how to test for `FileNotFoundError`.  You should add more tests around potential issues like incorrect file types, corrupted JSON files, and empty JSON files in your `scenario.json` files.
+5. **Edge Case Testing:** The `test_run_scenario_file_missing_file` demonStartes how to test for `FileNotFoundError`.  You should add more tests around potential issues like incorrect file types, corrupted JSON files, and empty JSON files in your `scenario.json` files.
 
 6. **Comprehensive Testing:** You need many more tests!  The example tests are only a starting point.  Test various scenarios, empty inputs, malformed JSON data (missing keys, wrong types), and different types of possible exceptions from other functions called within `run_scenario`, `run_scenario_file`, and `run_scenario_files`.
 

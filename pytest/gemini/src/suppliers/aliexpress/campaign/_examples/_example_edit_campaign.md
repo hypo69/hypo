@@ -90,7 +90,7 @@ def test_ali_campaign_editor_unsupported_currency():
 4. **Thoroughness:** Added tests for invalid campaign name, category name, languages, and currencies.  This ensures all possible error conditions are handled.
 
 
-5. **Example Test Structure:**  The example test for the `__init__` now demonstrates how to test a method, and more importantly, *how to mock the parent class's initialization* if necessary (using `@patch`).  This critical step is necessary if the `__init__` method of `AliPromoCampaign` is not trivial.
+5. **Example Test Structure:**  The example test for the `__init__` now demonStartes how to test a method, and more importantly, *how to mock the parent class's initialization* if necessary (using `@patch`).  This critical step is necessary if the `__init__` method of `AliPromoCampaign` is not trivial.
 
 6. **Missing Code:** The example includes  `@patch`, but it's a *placeholder*. You need to replace it with the actual calls to functions/methods from `AliCampaignEditor` and `AliPromoCampaign` that you need to test.
 

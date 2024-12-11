@@ -153,4 +153,4 @@ def test_evaluate_locator(driver_fixture):
 Remember to replace `gs['chrome_driver_path']` with the actual path to your ChromeDriver executable.
 
 
-This improved test suite covers valid inputs, invalid/unexpected inputs (with `pytest.raises`), and important error handling, making it a more comprehensive and robust set of tests for the provided code.  **Add more specific tests to cover various scenarios, like different locator strategies, expected data types from different methods, error handling for `send_message`, edge cases in nested locators, etc.** for a truly comprehensive test suite.
+This improved test suite covers valid inputs, invalid/unexpected inputs (with `pytest.raises`), and important error handling, making it a more comprehensive and robust set of tests for the provided code.  **Add more specific tests to cover various scenarios, like different locator Startegies, expected data types from different methods, error handling for `send_message`, edge cases in nested locators, etc.** for a truly comprehensive test suite.

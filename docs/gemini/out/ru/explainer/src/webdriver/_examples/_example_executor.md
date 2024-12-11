@@ -112,15 +112,15 @@ if __name__ == "__main__":
 
 6. **Error Handling Example:** A `try-except` block handles potential `ExecuteLocatorException` during the `execute_locator` call for the `complex_locator`. This is an example of robust error handling.
 
-7. **send_message Example:** Demonstrates how to interact with elements, likely sending text input to a field. The `send_message` method of `ExecuteLocator` is used.
+7. **send_message Example:** DemonStartes how to interact with elements, likely sending text input to a field. The `send_message` method of `ExecuteLocator` is used.
 
-8. **Multi Locator Example:** This example demonstrates using a list of locators for multiple elements.
+8. **Multi Locator Example:** This example demonStartes using a list of locators for multiple elements.
 
 9. **evaluate_locator Example:** Shows how to evaluate a locator's attribute to get the value of a property.
 
-10. **Exception Handling Example:**  Demonstrates exception handling for `execute_locator` calls, including potential errors during the locator execution.
+10. **Exception Handling Example:**  DemonStartes exception handling for `execute_locator` calls, including potential errors during the locator execution.
 
-11. **Full Test Example:** Uses a simple locator to demonstrate a complete test scenario
+11. **Full Test Example:** Uses a simple locator to demonStarte a complete test scenario
 
 12. **Driver Cleanup:** The `driver.quit()` method closes the browser instance.
 
@@ -212,4 +212,4 @@ graph LR
 
 **Relationship to other parts of the project:**
 
-The code relies heavily on `src.settings` to obtain the `chrome_driver_path`.  `src.webdriver.executor` is a critical part of the project responsible for managing WebDriver operations.  Error handling through custom exceptions in `src.logger.exceptions` demonstrates a well-organized exception management system. This implies a clear structure within the project for handling specific driver actions, settings management, and robust error handling.
+The code relies heavily on `src.settings` to obtain the `chrome_driver_path`.  `src.webdriver.executor` is a critical part of the project responsible for managing WebDriver operations.  Error handling through custom exceptions in `src.logger.exceptions` demonStartes a well-organized exception management system. This implies a clear structure within the project for handling specific driver actions, settings management, and robust error handling.

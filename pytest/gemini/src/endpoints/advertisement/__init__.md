@@ -77,7 +77,7 @@ def test_get_ads_with_fixture(facebook_instance):
 
 3. **Exception Handling:** `pytest.raises` is used correctly to check for `ValueError` (or other expected exceptions) in `test_get_ads_invalid_input` and `test_get_ads_api_error`.
 
-4. **Edge Cases:** `test_get_ads_empty_response` demonstrates an important edge case: an empty response from the API.
+4. **Edge Cases:** `test_get_ads_empty_response` demonStartes an important edge case: an empty response from the API.
 
 5. **Mocking (Crucial):** The code now includes comments about using mocking (with `unittest.mock` or similar) to simulate the `Facebook` API calls.  **You MUST mock the `Facebook` API calls** if your code interacts with external dependencies like Facebook's API.  **Without mocking, your tests will be extremely unreliable, failing due to external factors.**  Otherwise, these tests are testing the internal logic of the `Facebook` class.   These are stubs; you will have to implement `some_params` and the `invalid_params`.
 

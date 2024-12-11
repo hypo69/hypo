@@ -212,7 +212,7 @@ graph LR
         - `upload_file`: Placeholder for the file upload functionality.  Needs implementation using the authenticated service object.
 
 - **Functions:**
-    - `main`: Demonstrates basic usage of the `GoogleDriveHandler` class. It retrieves credentials, builds the Drive API service, lists files, and prints their names and IDs.
+    - `main`: DemonStartes basic usage of the `GoogleDriveHandler` class. It retrieves credentials, builds the Drive API service, lists files, and prints their names and IDs.
     - `_create_credentials`: Fetches/generates authentication credentials for interacting with the Google Drive API.
 
 - **Variables:**

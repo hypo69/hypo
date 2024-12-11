@@ -112,7 +112,7 @@ def test_invalid_input_exception():
 
 6. **Checking for Browser Opening:** The `test_open_browser` test now uses `mock.patch` to simulate browser opening without actually opening a browser, making the test independent of external resources.
 
-7. **Exception Handling Test:** A placeholder test `test_invalid_input_exception` is included to demonstrate how to test exception handling.  You need to replace the placeholder code and exception type with the actual logic and the expected exception.
+7. **Exception Handling Test:** A placeholder test `test_invalid_input_exception` is included to demonStarte how to test exception handling.  You need to replace the placeholder code and exception type with the actual logic and the expected exception.
 
 8. **Verification of Question List:**  The `test_question_list_not_empty` test now makes sure `questions_list` is populated. (This assumes that `gs` and `Path` are correctly imported and `questions_list` is populated within `app.py`).
 

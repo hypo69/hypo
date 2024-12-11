@@ -61,7 +61,7 @@ import pytest
 3. **Fixtures:** The example includes a `api_credentials` fixture.  If your code needs to read the credentials from a file or database, you'll need a fixture to handle that securely and appropriately.
 
 
-4. **Error Handling:** The examples demonstrate using `pytest.raises` to test that exceptions are raised when necessary (e.g., invalid API keys, endpoints).  This is crucial for robust testing.
+4. **Error Handling:** The examples demonStarte using `pytest.raises` to test that exceptions are raised when necessary (e.g., invalid API keys, endpoints).  This is crucial for robust testing.
 
 
 5. **Assertions:**  Replace the placeholder `assert response is not None` with specific assertions about the structure and contents of the `response`. For example, if the API call returns a JSON response, you might assert the presence of specific keys and values.

@@ -117,7 +117,7 @@ def test_handle_next_command_error(mock_update, mock_context, mock_bot, mocker):
 
 * **Clearer Test Cases:** Test functions now have more descriptive names (e.g., `test_handle_message_valid_input`, `test_handle_message_invalid_input`).
 
-* **Edge Case Testing:** Added `test_handle_message_invalid_input` to demonstrate how to test handling empty or None input, and a more general test for various invalid inputs using `pytest.mark.parametrize`.
+* **Edge Case Testing:** Added `test_handle_message_invalid_input` to demonStarte how to test handling empty or None input, and a more general test for various invalid inputs using `pytest.mark.parametrize`.
 
 * **Error Handling:**  Included `test_handle_next_command_error` to verify the error handling logic in `handle_next_command`.
 

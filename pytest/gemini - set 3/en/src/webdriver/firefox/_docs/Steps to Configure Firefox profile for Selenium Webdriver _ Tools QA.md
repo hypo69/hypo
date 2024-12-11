@@ -93,7 +93,7 @@ def test_headless_mode(firefox_profile):
    - `test_navigate_to_url`:  Tests a simple navigation to a URL and ensures no error occurs.
    - `test_element_presence`: Tests if a specific element exists on the page after navigation.
    - `test_invalid_profile_name`: Tests with an invalid profile name (commented, but useful for exceptional cases)
-   - `test_headless_mode`:  Illustrates how to use headless mode.  Error handling is critical for these edge cases, and this is included.
+   - `test_headless_mode`:  IlluStartes how to use headless mode.  Error handling is critical for these edge cases, and this is included.
 
 4. **Error Handling:**  The `test_element_presence` test now includes a `try...except` block to catch potential errors during element location and handle them more gracefully by using `pytest.fail` to report the specific error.  This is best practice and was lacking in the original response example.
 

@@ -28,7 +28,7 @@ This module contains the `AliAffiliatedProducts` class for generating affiliate 
 
 ### `main`
 
-**Description**: This function demonstrates how to use the `AliAffiliatedProducts` class. It sets up parameters for a campaign and calls `process_affiliate_products` to get affiliate product information. It prints the results or a message if no products are found.
+**Description**: This function demonStartes how to use the `AliAffiliatedProducts` class. It sets up parameters for a campaign and calls `process_affiliate_products` to get affiliate product information. It prints the results or a message if no products are found.
 
 **Parameters**:
 - None

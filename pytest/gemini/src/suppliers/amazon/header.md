@@ -108,7 +108,7 @@ def test_settings_json_loading_failure(mock_gs):
 **Explanation and Improvements:**
 
 1. **Mocking:** The tests now use `unittest.mock.patch` to mock the `gs` module and `settings.json` file. This is crucial because `gs` and `settings.json` are external dependencies that these tests need to control.  This way, the tests don't rely on external files existing.
-2. **Error Handling:**  The `test_settings_json_loading_failure` demonstrates how to test for `FileNotFoundError` using `pytest.raises`.
+2. **Error Handling:**  The `test_settings_json_loading_failure` demonStartes how to test for `FileNotFoundError` using `pytest.raises`.
 3. **File Creation/Deletion:** The tests now create and delete temporary files and directories to ensure that they don't interfere with other tests or the file system. This is extremely important for avoiding test flakiness.
 4. **Clearer Assertions:** The tests use more explicit assertions (`assert actual_root == expected_root`) for easier debugging and verification.
 5. **Comprehensive Coverage:** The tests cover valid input, cases where the marker file is in a parent directory, no marker files found, and non-existent file cases.

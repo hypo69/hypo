@@ -60,7 +60,7 @@ def test_crawlee_python_init_invalid_mode():
 
 2. **Exception Handling:** Uses `pytest.raises` to test for `ValueError` if `CrawleePython` has specific exception handling for invalid modes.  Crucially, it checks the *content* of the exception message.
 
-3. **Dummy Tests:** The example tests now correctly demonstrate how to write tests for a class.  Importantly, they account for the fact that the provided Python code only defined a variable `MODE`, and not a class.  You need to adapt these example tests to the actual methods and classes in your `CrawleePython` file.
+3. **Dummy Tests:** The example tests now correctly demonStarte how to write tests for a class.  Importantly, they account for the fact that the provided Python code only defined a variable `MODE`, and not a class.  You need to adapt these example tests to the actual methods and classes in your `CrawleePython` file.
 
 
 4. **Structure:** The structure follows the example provided.  It shows how to create test functions, which are essential for writing isolated, independent tests.

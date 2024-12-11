@@ -92,7 +92,7 @@ def test_run(crawler_instance, test_urls, mock_crawler):
 
 **Explanation and Improvements:**
 
-1. **Mocking `PlaywrightCrawler`:** The crucial addition is mocking the `PlaywrightCrawler` class. This avoids the need for an actual browser and allows you to control the crawler's behavior during testing. The `mock_crawler` fixture now returns a mock object that mimics the `PlaywrightCrawler`'s behavior, allowing us to assert the expected behavior of the `CrawleePython` class without running the actual Playwright crawler. This is a far more effective and reliable testing strategy.
+1. **Mocking `PlaywrightCrawler`:** The crucial addition is mocking the `PlaywrightCrawler` class. This avoids the need for an actual browser and allows you to control the crawler's behavior during testing. The `mock_crawler` fixture now returns a mock object that mimics the `PlaywrightCrawler`'s behavior, allowing us to assert the expected behavior of the `CrawleePython` class without running the actual Playwright crawler. This is a far more effective and reliable testing Startegy.
 
 2. **Comprehensive Test Cases:**  The provided test cases now cover `setup_crawler`, `run_crawler`, `export_data`, and `get_data`, providing a more comprehensive test suite.
 

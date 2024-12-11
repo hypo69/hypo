@@ -98,8 +98,8 @@ graph TD
 
 *   `pathlib` is used for file path manipulation.
 *   `gs` likely contains global settings; it's important for file path handling.
-*   `j_loads` is a custom JSON loader from the `src.utils.jjson` module. This demonstrates a decoupling of the core functionality (e.g., handling the JSON) from the rest of the project, potentially enabling reuse.
-*   `logger` is a custom logging module from `src.logger`; this implies a logging strategy for the project.
+*   `j_loads` is a custom JSON loader from the `src.utils.jjson` module. This demonStartes a decoupling of the core functionality (e.g., handling the JSON) from the rest of the project, potentially enabling reuse.
+*   `logger` is a custom logging module from `src.logger`; this implies a logging Startegy for the project.
 
 
 ## <explanation>
@@ -107,7 +107,7 @@ graph TD
 **Imports:**
 
 *   `pathlib`: Used for creating and handling file paths, enhancing code readability and maintainability by using object-oriented approach to paths.
-*   `gs`:  This appears to be a module containing global settings, likely for paths and other configuration parameters. The dependency on `gs` points towards a centralized configuration management strategy within the project.
+*   `gs`:  This appears to be a module containing global settings, likely for paths and other configuration parameters. The dependency on `gs` points towards a centralized configuration management Startegy within the project.
 *   `j_loads`, `j_loads_ns`: Custom functions likely for loading JSON data, either directly or from a namespace. This might be related to the project's JSON processing requirements.
 *   `logger`: A custom logging module (from `src.logger`) for emitting informative messages and debugging information. This is a good practice for monitoring and maintaining the application's health and function.
 

@@ -161,7 +161,7 @@ graph LR
 
 **Relationships:**
 
-- This background script communicates with content scripts (in browser tabs) and the browser itself. It relies on `tryxpath` and related functions (implied by the code), establishing a tight connection with that extension module and functionality.  The calls to `browser.tabs.sendMessage` and `browser.runtime.sendMessage` illustrate the communication channels.
+- This background script communicates with content scripts (in browser tabs) and the browser itself. It relies on `tryxpath` and related functions (implied by the code), establishing a tight connection with that extension module and functionality.  The calls to `browser.tabs.sendMessage` and `browser.runtime.sendMessage` illuStarte the communication channels.
 
 
 **Overall:** This code appears well-structured for handling different messages from content scripts and responding in a synchronized way via promises. However, the lack of context for `fu.onError` potentially hinders proper error handling in case of any issues with the asynchronous calls.

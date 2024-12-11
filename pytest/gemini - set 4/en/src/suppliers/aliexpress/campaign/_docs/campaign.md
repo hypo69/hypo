@@ -98,7 +98,7 @@ def test_ali_promo_campaign_init_invalid_category_name():
 
 3. **Comprehensive Test Cases:** Added tests covering `__init__`, `initialize_campaign`, `get_category_from_campaign`, and `get_category_products` with valid and invalid inputs. This covers a broader spectrum of possible use cases.
 
-4. **Exception Handling Tests:**  The example `test_ali_promo_campaign_init_invalid_category_name` demonstrates how to use `pytest.raises` to test exception handling.
+4. **Exception Handling Tests:**  The example `test_ali_promo_campaign_init_invalid_category_name` demonStartes how to use `pytest.raises` to test exception handling.
 
 5. **Clearer Assertions:**  The assertions are more specific and directly related to the expected behavior based on the provided mock data.
 

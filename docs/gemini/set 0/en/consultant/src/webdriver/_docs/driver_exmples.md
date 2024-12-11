@@ -7,7 +7,7 @@ from src.webdriver import Driver, Chrome
 from selenium.webdriver.common.by import By
 
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
 
     # Example 1: Create a Chrome driver instance and navigate to a URL
     chrome_driver = Driver(Chrome)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
 ```python
 """
-Module for demonstrating usage examples of the `Driver` and `Chrome` classes.
+Module for demonStarting usage examples of the `Driver` and `Chrome` classes.
 ===========================================================================
 
 This module provides examples on how to use the `Driver` and `Chrome` classes
@@ -86,7 +86,7 @@ from src.logger import logger
 
 def main():
     """
-    Main function to demonstrate various usage examples
+    Main function to demonStarte various usage examples
     of the `Driver` and `Chrome` classes.
     """
 
@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
 ```python
 """
-Module for demonstrating usage examples of the `Driver` and `Chrome` classes.
+Module for demonStarting usage examples of the `Driver` and `Chrome` classes.
 ===========================================================================
 
 This module provides examples on how to use the `Driver` and `Chrome` classes
@@ -224,7 +224,7 @@ from src.logger import logger
 
 def main():
     """
-    Main function to demonstrate various usage examples
+    Main function to demonStarte various usage examples
     of the `Driver` and `Chrome` classes.
     """
 

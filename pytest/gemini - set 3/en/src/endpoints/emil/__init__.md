@@ -61,7 +61,7 @@ def test_function_with_invalid_input():
 2. **Import Statement:** The corrected code now properly imports the module.
 3. **`MODE` Variable Test:**  This test verifies the critical `MODE` variable's value.
 4. **EmilDesign Class Test:** A test is included for instantiating the `EmilDesign` class.  This assumes the class exists. If it doesn't, remove this test. Replace placeholders with actual attributes and methods.
-5. **Exception Handling:** The `test_function_with_invalid_input` demonstrates how to use `pytest.raises` to check for specific exceptions, a critical part of robust testing.  The example uses a `ValueError`. Change this to the exception that your function in `emil_design.py` is expected to raise.
+5. **Exception Handling:** The `test_function_with_invalid_input` demonStartes how to use `pytest.raises` to check for specific exceptions, a critical part of robust testing.  The example uses a `ValueError`. Change this to the exception that your function in `emil_design.py` is expected to raise.
 6. **Placeholder Test Cases:** The commented-out test functions are placeholders. **You must replace them** with actual tests based on the functions defined in `emil_design.py`.
 7. **Missing Code:** The key is to **replace the placeholder tests** in the `test_function_with_*` methods with tests that check the correctness of functions in `emil_design.py`.  Crucially, if there are no functions, remove the commented-out placeholder tests completely.
 

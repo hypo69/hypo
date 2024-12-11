@@ -23,6 +23,6 @@ Usage example
     drive_service = GoogleDrive()
 
     # Call methods of the GoogleDrive object to interact with Google Drive.
-    # Example (Illustrative, needs actual implementation from the 'drive' module):
+    # Example (IlluStartive, needs actual implementation from the 'drive' module):
     # files_list = drive_service.list_files()
     # print(files_list)

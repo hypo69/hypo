@@ -51,7 +51,7 @@ The provided JavaScript code is not usable for Python testing.  To create meanin
    - **Boundary conditions:**  Check inputs at the limits of the function's acceptable parameters.
 4. **Use fixtures:** If your function relies on specific data (e.g., configuration, database connections, or test data), create fixtures to provide that data consistently across tests.
 
-**Example (Illustrative):**
+**Example (IlluStartive):**
 
 ```python
 import pytest

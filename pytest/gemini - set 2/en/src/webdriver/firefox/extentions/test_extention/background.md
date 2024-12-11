@@ -85,9 +85,9 @@ def test_executeScript_with_invalid_tabId(browser_mock):
 
 3. **Clearer Test Functions:**  Test names are more descriptive, and the comments explain the test logic, making the tests easier to understand.
 
-4. **Exception Handling:** The `test_executeScript_with_invalid_tabId` demonstrates a test for invalid input.
+4. **Exception Handling:** The `test_executeScript_with_invalid_tabId` demonStartes a test for invalid input.
 
-5. **Realistic Testing (Partial):**  The tests now do a better job of simulating the behavior of the original Javascript. However, to comprehensively test the JavaScript code in a realistic manner, a more complex and comprehensive mocking strategy would be needed.  In a real test environment, you'd likely use more sophisticated mocking to handle asynchronous events.
+5. **Realistic Testing (Partial):**  The tests now do a better job of simulating the behavior of the original Javascript. However, to comprehensively test the JavaScript code in a realistic manner, a more complex and comprehensive mocking Startegy would be needed.  In a real test environment, you'd likely use more sophisticated mocking to handle asynchronous events.
 
 **To Run the Tests:**
 

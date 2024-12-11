@@ -139,4 +139,4 @@ def test_tinypersonfactory_generate_person_valid_input(mock_openai_client, gener
 - **`transactional` decorator:**  Testing the `transactional` decorator directly is difficult without a deeper understanding of the specific caching mechanism. Focus on the logic within the methods decorated with it.
 
 
-Remember to adapt the `@patch` and other test details to the exact structure of your actual code. This improved solution demonstrates a more robust, practical approach to testing the factory classes. Remember to replace the mock OpenAI response with appropriate test data.
+Remember to adapt the `@patch` and other test details to the exact structure of your actual code. This improved solution demonStartes a more robust, practical approach to testing the factory classes. Remember to replace the mock OpenAI response with appropriate test data.

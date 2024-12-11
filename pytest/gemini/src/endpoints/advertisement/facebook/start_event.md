@@ -75,11 +75,11 @@ def test_run_events_empty_events(facebook_promoter, mock_logger):
 
 1. **Mocking:** The code now effectively mocks the `Driver` and `logger` objects using `unittest.mock`.  This is crucial for isolating the test and preventing unexpected interactions with the external libraries (e.g., WebDriver or external file access).
 
-2. **`pytest.raises` for Exceptions:**  The `test_run_events_keyboard_interrupt` test case demonstrates proper use of `pytest.raises` to catch and verify the expected `KeyboardInterrupt` exception.
+2. **`pytest.raises` for Exceptions:**  The `test_run_events_keyboard_interrupt` test case demonStartes proper use of `pytest.raises` to catch and verify the expected `KeyboardInterrupt` exception.
 
 3. **`monkeypatch` for global variables:** The code patches the logger functions using `monkeypatch`.  This is vital to control the mocking of the logger.
 
-4. **Robust Error Handling:** The `test_facebook_promoter_invalid_filenames` test demonstrates how to check for `FileNotFoundError` or similar exceptions that might arise during file operations.
+4. **Robust Error Handling:** The `test_facebook_promoter_invalid_filenames` test demonStartes how to check for `FileNotFoundError` or similar exceptions that might arise during file operations.
 
 
 5. **Fixture for Promoter:**  A `facebook_promoter` fixture is introduced to avoid re-creating the `FacebookPromoter` object in each test, improving efficiency.

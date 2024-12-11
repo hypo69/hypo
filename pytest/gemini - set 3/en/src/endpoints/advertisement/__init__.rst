@@ -59,9 +59,9 @@ def facebook_instance():
 
 3. **Empty Input Test:** Added `test_facebook_get_ads_empty_input` to test an edge case where the input is empty.  **Replace the placeholder call with how your `Facebook` class handles empty data**.
 
-4. **Invalid Input Test:** `test_facebook_get_ads_invalid_input` demonstrates handling invalid input with `pytest.raises`.  It's critical to verify that the correct exception is raised with the correct message for bad input.  **This is paramount to robust testing**.
+4. **Invalid Input Test:** `test_facebook_get_ads_invalid_input` demonStartes handling invalid input with `pytest.raises`.  It's critical to verify that the correct exception is raised with the correct message for bad input.  **This is paramount to robust testing**.
 
-5. **No Data Test:** `test_facebook_get_ads_no_data` is added to handle a scenario where the Facebook API might not return any data. This demonstrates the expected behavior in such situations (returning an empty list) without failing.
+5. **No Data Test:** `test_facebook_get_ads_no_data` is added to handle a scenario where the Facebook API might not return any data. This demonStartes the expected behavior in such situations (returning an empty list) without failing.
 
 6. **Fixture (Optional but Recommended):** The `facebook_instance` fixture is included.  This isolates the `Facebook` object creation from each test. If your `Facebook` class has a complicated initialization, this is extremely important.
 

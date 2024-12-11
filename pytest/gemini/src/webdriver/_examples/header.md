@@ -98,7 +98,7 @@ def test_empty_directory():
 3. **`test_sys_path_append`:**  Crucially, it restores `sys.path` after the test to prevent side effects on other tests.  This is vital in a testing context.
 
 
-4. **`test_nonexistent_directory` and `test_empty_directory`:** These tests now demonstrate exception handling using `pytest.raises`.  Crucially, `test_empty_directory` shows what happens when the target path is in an empty directory.  Both use the `FileNotFoundError` and `IndexError` appropriately.
+4. **`test_nonexistent_directory` and `test_empty_directory`:** These tests now demonStarte exception handling using `pytest.raises`.  Crucially, `test_empty_directory` shows what happens when the target path is in an empty directory.  Both use the `FileNotFoundError` and `IndexError` appropriately.
 
 
 5. **Cleanup:** Added cleanup code (`shutil.rmtree()`) to remove temporary directories after each test. This prevents directory clutter and ensures tests run independently.

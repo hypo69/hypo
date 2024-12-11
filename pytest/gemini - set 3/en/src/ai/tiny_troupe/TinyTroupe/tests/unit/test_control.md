@@ -89,7 +89,7 @@ def test_begin_checkpoint_end_with_factory_invalid_factory_name(setup):
 
 4. **Exception Handling:** `pytest.raises` is used to test for specific exceptions.  I added an example of how to test for `FileExistsError`. You should add more checks for different exceptions (e.g., if `control.begin` encounters a problem).
 
-5. **Edge Cases:**  The example adds a test for invalid factory names demonstrating a proper use of `pytest.raises`.  Crucially, you should add more tests for edge cases relevant to the functions under test, such as invalid arguments, empty inputs, boundary values, and unusual data types.
+5. **Edge Cases:**  The example adds a test for invalid factory names demonStarting a proper use of `pytest.raises`.  Crucially, you should add more tests for edge cases relevant to the functions under test, such as invalid arguments, empty inputs, boundary values, and unusual data types.
 
 6. **Clearer Comments:** Comments explaining the test logic are now included.
 

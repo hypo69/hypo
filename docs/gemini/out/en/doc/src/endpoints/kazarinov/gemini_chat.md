@@ -95,4 +95,4 @@ There are no additional functions beyond the class methods in this file.
 - The code utilizes external libraries like `header`, `time`, `json`, `random`, `typing`, `pathlib`, `gs`, `OpenAIModel`, `GoogleGenerativeAI`, `get_filenames`, `read_text_file`, `recursively_read_text_files`, `recursively_get_filepath`, `j_dumps`, `pprint`, and `logger`.  Their specific functionality is not documented here, assuming they are well-documented elsewhere.
 - The code includes significant logic for handling data chunking during training (`train` method).
 - The `chat` function implements a simple command-line interface for interacting with the AI.
-- The `dialog` method demonstrates a more interactive approach involving question shuffling.
+- The `dialog` method demonStartes a more interactive approach involving question shuffling.

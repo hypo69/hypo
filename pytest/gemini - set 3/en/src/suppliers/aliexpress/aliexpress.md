@@ -80,7 +80,7 @@ def test_aliexpress_init_invalid_webdriver():
 
 * **Clearer Test Names:** Test names are now more descriptive, reflecting the specific scenarios they cover.
 
-* **Exception Handling:** The `test_aliexpress_init_invalid_locale` and `test_aliexpress_init_invalid_webdriver` functions now demonstrate how to use `pytest.raises` to verify that the correct exceptions are raised when invalid input is provided.
+* **Exception Handling:** The `test_aliexpress_init_invalid_locale` and `test_aliexpress_init_invalid_webdriver` functions now demonStarte how to use `pytest.raises` to verify that the correct exceptions are raised when invalid input is provided.
 
 * **Fixture Organization:** Fixtures are defined separately for `mock_supplier`, `mock_alirequests`, and `mock_aliapi`, improving code organization.
 

@@ -81,7 +81,7 @@ def test_get_category_products_with_json_files(mocker, campaign):
 
 **Explanation of Improvements and Key Considerations:**
 
-* **Error Handling:** Added `test_initialize_campaign_invalid_json` to demonstrate exception handling.  Crucially, the `side_effect` parameter on `mocker.patch` now lets you simulate exceptions during JSON loading.  This is important for real-world robustness.  This pattern is replicated in other functions (`test_get_category_products`) to catch potential `FileNotFoundError` or other errors during file operations.
+* **Error Handling:** Added `test_initialize_campaign_invalid_json` to demonStarte exception handling.  Crucially, the `side_effect` parameter on `mocker.patch` now lets you simulate exceptions during JSON loading.  This is important for real-world robustness.  This pattern is replicated in other functions (`test_get_category_products`) to catch potential `FileNotFoundError` or other errors during file operations.
 * **Comprehensive Testing:** The existing test cases are good starting points, but the improvements add more thorough testing by covering different potential issues.
 * **Clearer Test Names:**  Test names are informative, indicating the input and expected behavior.
 * **Isolated Tests:** Each test function operates on a defined scope of the system under test (in this case the `AliPromoCampaign` class), so modifications to one function don't interfere with others.

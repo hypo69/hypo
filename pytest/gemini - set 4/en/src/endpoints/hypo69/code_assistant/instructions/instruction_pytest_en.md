@@ -72,7 +72,7 @@ def test_divide_numbers_float():
 
 6. **Float Test:** An additional test (`test_divide_numbers_float`) verifies the function's handling of floating-point inputs.
 
-This improved solution demonstrates best practices for writing `pytest` tests, including comprehensive coverage, clear test names, and robust exception handling. Remember to replace the example functions (`add_numbers`, `subtract_numbers`, `divide_numbers`) with the actual functions you want to test. Remember to run `pytest` in your terminal to execute the tests.
+This improved solution demonStartes best practices for writing `pytest` tests, including comprehensive coverage, clear test names, and robust exception handling. Remember to replace the example functions (`add_numbers`, `subtract_numbers`, `divide_numbers`) with the actual functions you want to test. Remember to run `pytest` in your terminal to execute the tests.
 
 
 **How to Run:**

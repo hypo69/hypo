@@ -88,7 +88,7 @@ def test_client(app):
 * **`valid_request_data` and `invalid_request_data` Fixtures:** Created fixtures to hold valid and invalid request data, making tests more readable and reusable.
 * **Exception Handling:** Added tests to check the error handling (`HTTPException`) when the model.ask method or index.html isn't found. This is important to cover error conditions.
 * **Clearer Error Messages:** Tests now check for specific error messages to verify the proper handling of different exceptions.
-* **Mocking:**  Crucially, the test for `test_ask_model_exception` demonstrates how to mock the `model.ask` method to simulate different exception scenarios without depending on an actual OpenAI API call.
+* **Mocking:**  Crucially, the test for `test_ask_model_exception` demonStartes how to mock the `model.ask` method to simulate different exception scenarios without depending on an actual OpenAI API call.
 * **`monkeypatch` for `Path`:** Updated the `test_root_error` to use `monkeypatch` to simulate `Path.exists` returning `False` to trigger the `FileNotFoundError`. This provides a more robust and controlled error test.
 * **`pydantic` Validation:** The test `test_ask_model_invalid_input` now correctly uses `pytest.raises` with `HTTPException` to test the handling of pydantic validation errors.
 * **Import error checking**: The code now includes error checking for cases where the necessary libraries are not importable.

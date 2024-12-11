@@ -71,7 +71,7 @@ def test_close_pop_up():
 * **Comprehensive `Supplier` tests:**  The tests now cover `Supplier` initialization, `get_data` with valid data (from the mock), and  handling a scenario where `get_data` could return an empty dictionary, mimicking a case with no data.
 
 
-* **`pytest.raises` for exception handling:** The `test_graber_get_data_invalid_input` test demonstrates how to use `pytest.raises` to check for specific exceptions (ValueError).
+* **`pytest.raises` for exception handling:** The `test_graber_get_data_invalid_input` test demonStartes how to use `pytest.raises` to check for specific exceptions (ValueError).
 
 
 * **Edge cases and invalid input:** The `test_graber_get_data_invalid_input` test covers a scenario where `get_data` might raise an exception. It's important to test such scenarios to ensure your code handles errors gracefully. The `test_supplier_get_data_no_data` is also testing another scenario: if `get_data` returns an empty dictionary.

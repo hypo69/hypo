@@ -69,7 +69,7 @@ def test_get_parent_categories_list_recursive_call(mock_logger):
 * **Error Handling:** The test `test_get_parent_categories_list_invalid_input` now properly checks for the expected exception if the category doesn't exist (the original code just returned `None`).
 * **Clearer Test Cases:** Test names are more descriptive (e.g., `test_get_parent_categories_list_valid_input`).
 * **Root Case:** A dedicated test (`test_get_parent_categories_list_root_category`) is added to verify the logic when the category is a root category.
-* **Edge Case (Empty Input):** The test `test_get_parent_categories_list_empty_input` correctly handles the case where `id_category` is None, demonstrating error handling for missing input.
+* **Edge Case (Empty Input):** The test `test_get_parent_categories_list_empty_input` correctly handles the case where `id_category` is None, demonStarting error handling for missing input.
 * **Logger Patching:** The `@patch` decorator now correctly patches the logger for proper testing, preventing actual logs from interfering.
 
 

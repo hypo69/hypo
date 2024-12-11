@@ -2,7 +2,7 @@
 
 ## Overview
 
-This script demonstrates a basic usage of the Google Sheets API. It retrieves data from a specified spreadsheet and prints the values of the first and last columns.  It handles authentication using OAuth 2.0 and manages credentials for future use.
+This script demonStartes a basic usage of the Google Sheets API. It retrieves data from a specified spreadsheet and prints the values of the first and last columns.  It handles authentication using OAuth 2.0 and manages credentials for future use.
 
 
 ## Table of Contents
@@ -42,7 +42,7 @@ This script demonstrates a basic usage of the Google Sheets API. It retrieves da
 ## Main Function (`main`)
 
 ### `main`
-**Description**: This function is the entry point of the script and orchestrates the data retrieval and printing process.
+**Description**: This function is the entry point of the script and orcheStartes the data retrieval and printing process.
 
 **Functionality**:
 * Initializes credentials.

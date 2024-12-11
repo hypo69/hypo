@@ -110,7 +110,7 @@ async def test_close_popup_decorator(mock_driver):
 **Explanation and Improvements:**
 
 * **Mocking:** The tests now heavily use `unittest.mock.patch` to mock the asynchronous functions (`id_product`, `description_short`, etc.) and the `execute_locator` method of `MockDriver`.  This is crucial for testing asynchronous code without relying on external dependencies or network calls.
-* **`pytest.raises` for exceptions:** A test is added (`test_grab_page_execute_locator_failure`) to demonstrate the use of `pytest.raises` for exception handling, ensuring the `ExecuteLocatorException` is caught correctly.
+* **`pytest.raises` for exceptions:** A test is added (`test_grab_page_execute_locator_failure`) to demonStarte the use of `pytest.raises` for exception handling, ensuring the `ExecuteLocatorException` is caught correctly.
 * **Clearer Mock Data:** The `MockProductFields` class provides a dummy object for returning from the mocked functions.
 * **Global `d` Handling:** The `test_grab_page_valid_input` function is corrected and now correctly mocks the global `d` variable. This makes the test more robust by preventing it from affecting other tests.
 * **Complete AsyncIO Tests:** The `pytest.mark.asyncio` decorator is used to correctly handle the asynchronous nature of `grab_page`.

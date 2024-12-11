@@ -76,11 +76,11 @@ def test_graber_init_no_url():
 2.  **`test_mode_value`:** A simple test to verify the `MODE` constant.
 3.  **`example_graber_data` Fixture:** A fixture is created for providing example data for `Graber` tests, crucial if `Graber` needs input.  This example uses a simple dictionary.  **Replace this with appropriate data for your Graber class.**.
 4.  **`test_graber_init`:** Tests a valid Graber initialization.  **Important**:  The assertion here will depend on the *actual* internal state/attributes of `Graber`. 
-5.  **`test_graber_init_invalid_url`:**  Demonstrates testing invalid input by raising a ValueError and checking the exception message.
+5.  **`test_graber_init_invalid_url`:**  DemonStartes testing invalid input by raising a ValueError and checking the exception message.
 6.  **`test_graber_init_no_url`:** Tests missing the required `url` argument.
 7. **Comments & Clarity:**  Added more comments and made the test descriptions more descriptive, clarifying the purpose of each test.
-8. **Robust Exception Handling:** Added basic tests for exception handling within `Graber` methods (e.g., `test_graber_fetch_data_exception`).  *Crucially*, this demonstrates how to use `pytest.raises` to check expected exceptions.
-9. **Mock Dependencies (`monkeypatch`)**: Demonstrates how to use `monkeypatch` to mock external dependencies (e.g., `requests`) during testing.  This is very important for isolating tests from external services and ensuring they run reliably.  **Replace the example with your actual dependencies if Graber uses requests or similar libraries.**
+8. **Robust Exception Handling:** Added basic tests for exception handling within `Graber` methods (e.g., `test_graber_fetch_data_exception`).  *Crucially*, this demonStartes how to use `pytest.raises` to check expected exceptions.
+9. **Mock Dependencies (`monkeypatch`)**: DemonStartes how to use `monkeypatch` to mock external dependencies (e.g., `requests`) during testing.  This is very important for isolating tests from external services and ensuring they run reliably.  **Replace the example with your actual dependencies if Graber uses requests or similar libraries.**
 
 
 **How to Use and Extend:**

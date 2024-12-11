@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides functions for running scenarios, handling scenario files, and interacting with the PrestaShop API.  It includes examples demonstrating how to use these functions to execute scenarios, process files, and work with products.  The module utilizes asynchronous operations (`async` functions) where applicable for improved performance.
+This module provides functions for running scenarios, handling scenario files, and interacting with the PrestaShop API.  It includes examples demonStarting how to use these functions to execute scenarios, process files, and work with products.  The module utilizes asynchronous operations (`async` functions) where applicable for improved performance.
 
 ## Table of Contents
 

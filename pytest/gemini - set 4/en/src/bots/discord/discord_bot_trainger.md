@@ -103,7 +103,7 @@ def test_test_command_invalid_json(mock_ctx, mock_model):
 
 3. **Specific Assertion for Attachment:** Added `mock_attachment.save.assert_called_once()` to verify the `attachment.save` method was called in `test_train_command_with_attachment`.
 
-4. **Error Handling:** Included a test `test_test_command_invalid_json` to demonstrate how to test the `JSONDecodeError` that could be raised within `test` command and using `pytest.raises`.
+4. **Error Handling:** Included a test `test_test_command_invalid_json` to demonStarte how to test the `JSONDecodeError` that could be raised within `test` command and using `pytest.raises`.
 
 
 5. **Complete Command Tests:** Added example test cases for `hi`, `join` commands and others with proper mocks and assertions.

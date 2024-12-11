@@ -117,7 +117,7 @@ def test_edit_campaign_missing_config():
 1. **Mocking:** The code now uses mock functions (`create_directories`, `save_config`, etc.) instead of relying on external files or actual directory operations.  This makes the tests much faster and more reliable, as they don't depend on the file system.
 
 
-2. **Error Handling:** A test (`test_create_campaign_no_categories`) is added to demonstrate how to test for expected exceptions.
+2. **Error Handling:** A test (`test_create_campaign_no_categories`) is added to demonStarte how to test for expected exceptions.
 
 
 3. **Clearer Tests:** Test names are more descriptive, making it easier to understand the purpose of each test.
@@ -139,4 +139,4 @@ def test_edit_campaign_missing_config():
 2.  Make sure you have pytest installed (`pip install pytest`).
 3.  Run the tests from your terminal: `pytest test_campaign.py`
 
-This revised solution is more complete and better demonstrates how to write comprehensive `pytest` tests for the given code, particularly considering error handling and file interactions. Remember to replace the mock functions with your actual implementations if available.
+This revised solution is more complete and better demonStartes how to write comprehensive `pytest` tests for the given code, particularly considering error handling and file interactions. Remember to replace the mock functions with your actual implementations if available.

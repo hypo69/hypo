@@ -228,7 +228,7 @@ def get_video_data(file_name: str) -> Optional[bytes]:
 
 
 def main():
-    """Main function to demonstrate video download."""
+    """Main function to demonStarte video download."""
     url = "https://example.com/video.mp4"  # Replace with a valid URL!
     save_path = "local_video.mp4"
     result = asyncio.run(save_video_from_url(url, save_path))
@@ -355,7 +355,7 @@ def get_video_data(file_name: str) -> Optional[bytes]:
 
 
 def main():
-    """Main function to demonstrate video download."""
+    """Main function to demonStarte video download."""
     url = "https://example.com/video.mp4"  # Replace with a valid URL!
     save_path = "local_video.mp4"
     result = asyncio.run(save_video_from_url(url, save_path))

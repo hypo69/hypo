@@ -134,15 +134,15 @@ graph LR
 ### Classes
 
 * **`LLMCall`**: A helper class for managing LLM calls. It takes system and user templates, along with model parameters, to structure the messages and call the API. `__init__` initializes with names, and `call` constructs messages, sends the requests, and extracts output.
-* **`OpenAIClient`**:  The main client class for interacting with the OpenAI API. It handles caching of API calls, crucial for avoiding excessive requests and maintaining performance. The `send_message` method orchestrates API calls, including error handling and retry mechanisms. This is a crucial component, using the `OpenAI` library to interact with the OpenAI APIs.
-* **`AzureClient`**: A subclass of `OpenAIClient` specifically for interacting with the Azure OpenAI Service. This demonstrates the code's adaptability to different API providers.
+* **`OpenAIClient`**:  The main client class for interacting with the OpenAI API. It handles caching of API calls, crucial for avoiding excessive requests and maintaining performance. The `send_message` method orcheStartes API calls, including error handling and retry mechanisms. This is a crucial component, using the `OpenAI` library to interact with the OpenAI APIs.
+* **`AzureClient`**: A subclass of `OpenAIClient` specifically for interacting with the Azure OpenAI Service. This demonStartes the code's adaptability to different API providers.
 * **`InvalidRequestError`**, **`NonTerminalError`**: Custom exception classes for handling specific error scenarios, crucial for maintaining proper error handling and controlling the retry mechanism.
 
 ### Functions
 
 * **`client()`**: Returns the appropriate client (`OpenAIClient` or `AzureClient`) based on the configured `API_TYPE` in the `config.ini` file, allowing for flexible API switching.
 * **`force_api_type()`**, **`force_api_cache()`**, **`force_default_value()`**: Allow for overriding the default configurations or clients at runtime, which might be helpful during testing or debugging.
-* **`register_client()`**, **`_get_client_for_api_type()`**: Functions to manage client registration for different APIs, enhancing flexibility in adding new services.
+* **`register_client()`**, **`_get_client_for_api_type()`**: Functions to manage client regiStartion for different APIs, enhancing flexibility in adding new services.
 * **`_raw_model_call()`**:  Handles the actual API call using `OpenAI` or `AzureOpenAI` client.
 * **`_raw_model_response_extractor`**:  Extracts the response content from the API response. This is important to correctly handle the API response format.
 * **`_count_tokens()`**:  Calculates the number of tokens in a message.  The token count mechanism is crucial for managing the message size before sending it to the API.

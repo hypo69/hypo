@@ -129,7 +129,7 @@ def test_getSpecifiedFrameId_non_manual_input():
 
 **Further Important Considerations:**
 
-* **Comprehensive Mocking:** You need a more robust mocking strategy for simulating the browser environment. A dedicated testing framework (e.g., `unittest` with `mock` or a framework like `pytest-mock`) is strongly recommended.
+* **Comprehensive Mocking:** You need a more robust mocking Startegy for simulating the browser environment. A dedicated testing framework (e.g., `unittest` with `mock` or a framework like `pytest-mock`) is strongly recommended.
 * **Error Handling and Input Validation:**  Thoroughly test exception handling within the JavaScript functions (e.g., the `try...catch` blocks).
 
 

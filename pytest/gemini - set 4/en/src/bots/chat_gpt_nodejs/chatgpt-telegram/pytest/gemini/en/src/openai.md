@@ -106,7 +106,7 @@ def test_constructor_valid_api_key(openai_instance):
 * **File Cleanup:** Added a `finally` block to remove the temporary test file after the test.
 * **Valid Input Test:** Includes a `test_chat_valid_input` to ensure the function returns a valid object (not just `None`)
 * **Empty Input Test:** added a test to verify behavior when provided with empty messages.
-* **Invalid Input Test:** Added `test_chat_invalid_messages` to demonstrate handling of incorrect input type.
+* **Invalid Input Test:** Added `test_chat_invalid_messages` to demonStarte handling of incorrect input type.
 * **`pytest.raises`:**  Correctly uses `pytest.raises` for exception testing.
 * **Import Statements:** Imports necessary modules and from the right place.
 * **Clearer Comments:** Explains the purpose of each test function more concisely.

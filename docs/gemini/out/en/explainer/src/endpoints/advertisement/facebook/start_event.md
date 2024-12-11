@@ -138,7 +138,7 @@ graph LR
 
 **Functions:**
 
-- `run_events`: This method within `FacebookPromoter` is the core function that orchestrates posting events to Facebook groups.  It takes the list of event names and group file paths as arguments. (Not directly implemented in this script).
+- `run_events`: This method within `FacebookPromoter` is the core function that orcheStartes posting events to Facebook groups.  It takes the list of event names and group file paths as arguments. (Not directly implemented in this script).
 - `get_url`: Function in the `Driver` class to navigate the webdriver to a given URL.
 
 **Variables:**

@@ -189,7 +189,7 @@ graph TD
 
 **Classes:**
 
-* `Graber(Grbr)`: This class inherits from `Grbr` (likely a base Graber class) and specializes in gathering product data from `kualastyle.co.il`. The `__init__` method initializes the `supplier_prefix` and the `driver`.  Critically, `Context.locator_for_decorator` is set to `None`, indicating no specific decorator logic is applied in this particular supplier. The `grab_page` method orchestrates the data retrieval process.
+* `Graber(Grbr)`: This class inherits from `Grbr` (likely a base Graber class) and specializes in gathering product data from `kualastyle.co.il`. The `__init__` method initializes the `supplier_prefix` and the `driver`.  Critically, `Context.locator_for_decorator` is set to `None`, indicating no specific decorator logic is applied in this particular supplier. The `grab_page` method orcheStartes the data retrieval process.
 
 
 **Functions:**

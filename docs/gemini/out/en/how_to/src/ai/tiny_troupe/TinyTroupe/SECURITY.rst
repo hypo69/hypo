@@ -16,7 +16,7 @@ Execution steps
 
 4. **Document Reproduction Steps:** Detail the precise steps required to reproduce the vulnerability. Include any special configurations needed.
 
-5. **Provide Proof-of-Concept (Optional but Recommended):** If possible, provide a proof-of-concept or exploit code demonstrating the vulnerability.
+5. **Provide Proof-of-Concept (Optional but Recommended):** If possible, provide a proof-of-concept or exploit code demonStarting the vulnerability.
 
 6. **Describe Impact and Exploitation:** Explain how an attacker might exploit the vulnerability and the potential impact of the issue.
 

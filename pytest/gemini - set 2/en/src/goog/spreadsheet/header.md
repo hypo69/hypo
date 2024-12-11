@@ -122,7 +122,7 @@ def test_settings_file_json_decode_error(mock_gs_path):
 * **Clearer Test Names:** Test names are more descriptive.
 * **Edge Case Testing:** Tests `set_project_root` with cases where marker files are in different levels of parent directories or when no marker files exist.
 * **Comprehensive `set_project_root` Tests:** Includes tests for various scenarios, including cases where files don't exist.
-* **Robust Error Handling:** Handles `FileNotFoundError` and `json.JSONDecodeError` during the file loading process to demonstrate the proper error handling.
+* **Robust Error Handling:** Handles `FileNotFoundError` and `json.JSONDecodeError` during the file loading process to demonStarte the proper error handling.
 
 **How to Run:**
 
@@ -137,4 +137,4 @@ def test_settings_file_json_decode_error(mock_gs_path):
     ```
 
 
-This revised solution is much more robust and reliable, demonstrating best practices for writing `pytest` tests, particularly when dealing with file I/O and exception handling.  It uses the `tmp_path` fixture from `pytest` for creating temporary files and directories, which is a much better approach than trying to work with the real file system within a test. Remember to replace `gs` with the actual module path if it's different.
+This revised solution is much more robust and reliable, demonStarting best practices for writing `pytest` tests, particularly when dealing with file I/O and exception handling.  It uses the `tmp_path` fixture from `pytest` for creating temporary files and directories, which is a much better approach than trying to work with the real file system within a test. Remember to replace `gs` with the actual module path if it's different.

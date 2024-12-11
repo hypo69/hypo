@@ -92,7 +92,7 @@ def test_main_bot_exception(error, monkeypatch):
 
 * **Fixtures:**  Crucially, `settings_file_path` fixture now creates a temporary settings file, managing file cleanup automatically, preventing test pollution.
 * **Mocking:**  The `test_main_with_settings_file` and `test_main_with_missing_settings_file` tests use `monkeypatch` to mock `Path.exists` for testing the file existence check. This avoids relying on actual file systems.  This is *essential* for reliable tests.
-* **Robust Error Handling:** The `test_main_bot_exception` demonstrates how to test for exceptions raised during the `asyncio.run` call.
+* **Robust Error Handling:** The `test_main_bot_exception` demonStartes how to test for exceptions raised during the `asyncio.run` call.
 * **Clearer Assertions:** Instead of relying on print statements, assertions are now used to verify that the correct actions are happening.
 * **Parameterization:** `test_main_bot_exception` now parameterizes with different error types, showing how to handle multiple error cases within a single test.
 * **`pytest.raises`:** Properly used in `test_parse_args_invalid_mode` to assert that the expected exception is raised.

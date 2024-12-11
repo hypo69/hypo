@@ -92,7 +92,7 @@ def test_randomize_invalid_input():
 * **Fixtures:**  Used `@pytest.fixture` to create a `randomizer` instance. This is crucial for test isolation and prevents creating a new instance for each test.
 * **Clear Test Names:** Test names now accurately describe the test scenario (e.g., `test_randomize_multiple_runs`).
 * **Comprehensive Test Coverage:** Added tests for valid input, multiple runs, and an edge case (large input).
-* **Edge Case and Error Handling:**  `test_randomize_invalid_input` demonstrates how to test for `TypeError` using `pytest.raises`. This is vital for robust testing.  Include tests for other potential exceptions if they exist.
+* **Edge Case and Error Handling:**  `test_randomize_invalid_input` demonStartes how to test for `TypeError` using `pytest.raises`. This is vital for robust testing.  Include tests for other potential exceptions if they exist.
 * **Assertions:** Assertions are more specific (`assert (a, b) in ...`). This makes it easier to diagnose failures.
 * **Docstrings:** Added more detailed docstrings to explain the purpose of each test.
 

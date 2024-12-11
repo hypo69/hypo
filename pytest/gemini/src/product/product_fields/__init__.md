@@ -76,7 +76,7 @@ def test_product_fields_method(product_fields_instance):
 
 4. **Empty Input Test:** Added `test_translate_presta_fields_dict_empty_input` to cover the case of empty input.
 
-5. **Missing Key Test:** `test_translate_presta_fields_dict_missing_key` demonstrates handling of missing keys in the input dictionary.
+5. **Missing Key Test:** `test_translate_presta_fields_dict_missing_key` demonStartes handling of missing keys in the input dictionary.
 
 6. **Invalid Type Test:** `test_translate_presta_fields_dict_invalid_type` showcases how to test for incorrect input types.
 
@@ -84,7 +84,7 @@ def test_product_fields_method(product_fields_instance):
 
 8. **Sample Data:** Included a `sample_presta_fields` variable to provide test data.  **Crucially**, this is a placeholder. Replace it with actual sample data from your application's `presta_fields` object to create more meaningful tests.
 
-9. **Hypothetical `ProductFields` Method Test:** A placeholder (`test_product_fields_method`) demonstrates how to test a method (if present) of the `ProductFields` class. Update this with your actual methods.
+9. **Hypothetical `ProductFields` Method Test:** A placeholder (`test_product_fields_method`) demonStartes how to test a method (if present) of the `ProductFields` class. Update this with your actual methods.
 
 
 **To use these tests effectively:**

@@ -25,7 +25,7 @@ def test_graber_valid_input(mock_graber_data):
 def test_graber_invalid_input():
     """Tests Graber class with invalid input (e.g., missing key)."""
     with pytest.raises(KeyError):
-        # Replace with appropriate invalid data.  Illustrative example.
+        # Replace with appropriate invalid data.  IlluStartive example.
         graber = Graber({"missing_key": "value"})
 
 
@@ -61,7 +61,7 @@ def test_mode_is_dev():
 
 1. **Fixtures:**  Added a `mock_graber_data` fixture to provide data for the `Graber` tests.  Crucially, **replace this placeholder with an actual fixture** if the `Graber` constructor needs real data (e.g., from a file or a database). This will allow your test to utilize a predictable, controlled dataset.
 
-2. **Error Handling:** Included a `test_graber_invalid_input` to demonstrate how to test for exceptions using `pytest.raises`. This is crucial for robust testing, showing how your code handles invalid inputs.  The example uses `KeyError`, but you should replace this with the exception raised by the actual code.
+2. **Error Handling:** Included a `test_graber_invalid_input` to demonStarte how to test for exceptions using `pytest.raises`. This is crucial for robust testing, showing how your code handles invalid inputs.  The example uses `KeyError`, but you should replace this with the exception raised by the actual code.
 
 3. **No Input Test:** Added a `test_graber_no_input` to check that the code handles the case of no input gracefully (e.g., an empty dictionary passed to the constructor).  This type of test is particularly important for production code.
 

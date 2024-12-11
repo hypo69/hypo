@@ -107,7 +107,7 @@ def test_collect_data_invalid_action():
 3. **Fixtures:** The `mock_message` fixture is crucial for creating consistent and controlled test messages.
 
 
-4. **Error Handling:** The `test_collect_data_fetch_error` test now demonstrates how to test error cases using `pytest.raises`.
+4. **Error Handling:** The `test_collect_data_fetch_error` test now demonStartes how to test error cases using `pytest.raises`.
 
 
 5. **Clearer Test Cases:** The test cases have been updated to be more concise and focused on testing specific aspects of the code.
@@ -137,4 +137,4 @@ def test_collect_data_invalid_action():
 *   **Complex Logic:**  For more complex logic (like error handling within `fetch`), you need to update the mocks and assertions to reflect the expected outcomes of those sections of code.
 
 
-This significantly improved solution demonstrates how to effectively test asynchronous code (and code that uses `chrome` APIs) using pytest and mocks. Remember to update the assertions to verify the actual functionality.
+This significantly improved solution demonStartes how to effectively test asynchronous code (and code that uses `chrome` APIs) using pytest and mocks. Remember to update the assertions to verify the actual functionality.

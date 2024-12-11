@@ -66,7 +66,7 @@ def test_example_function_float_input():
 
 1. **Import `pytest`:**  The code now correctly imports the `pytest` library.
 
-2. **Placeholder `BaseClassExample`:** I've created a placeholder `BaseClassExample` class with a simple `example_function` to demonstrate how to write tests *given the input code snippet*.  Crucially, you **must replace** this placeholder with the actual class and methods from your `base.py` file.  The previous response lacked this crucial step.
+2. **Placeholder `BaseClassExample`:** I've created a placeholder `BaseClassExample` class with a simple `example_function` to demonStarte how to write tests *given the input code snippet*.  Crucially, you **must replace** this placeholder with the actual class and methods from your `base.py` file.  The previous response lacked this crucial step.
 
 3. **Comprehensive Test Cases:**  The tests now cover various scenarios:
    - Valid input (positive integer)
@@ -79,7 +79,7 @@ def test_example_function_float_input():
 
 5. **Docstrings:**  Docstrings are included for better understanding of each test case.
 
-6. **Error Handling (`pytest.raises`):**  The `test_example_function_invalid_input` test demonstrates how to check for expected exceptions using `pytest.raises`.
+6. **Error Handling (`pytest.raises`):**  The `test_example_function_invalid_input` test demonStartes how to check for expected exceptions using `pytest.raises`.
 
 7. **Adherence to Example Structure:** The code now follows the example structure provided in the prompt.
 

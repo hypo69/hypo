@@ -40,5 +40,5 @@ Usage example
     # response = request.execute() # This is where the API call is performed.
     # print(response)  # Process the API response
 
-    #  Important:  The provided example does not demonstrate how to handle
+    #  Important:  The provided example does not demonStarte how to handle
     # the actual API call, since the complete `RestApi` implementation is missing.

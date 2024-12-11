@@ -2,7 +2,7 @@
 import pytest
 
 # No Python code provided in the input, so no tests can be written.
-#  This example demonstrates how to write tests assuming some code exists.
+#  This example demonStartes how to write tests assuming some code exists.
 
 # Example code (replace with your actual code)
 def validate_issue_title(title):

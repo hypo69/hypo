@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides a quickstart example for interacting with the Google Apps Script API. It demonstrates how to create a new Apps Script project, upload code files (JavaScript and manifest), and retrieve the project's URL.
+This module provides a quickstart example for interacting with the Google Apps Script API. It demonStartes how to create a new Apps Script project, upload code files (JavaScript and manifest), and retrieve the project's URL.
 
 
 ## Classes
@@ -14,7 +14,7 @@ This module provides a quickstart example for interacting with the Google Apps S
 
 ### `main`
 
-**Description**: This function orchestrates the interaction with the Google Apps Script API. It handles authentication, creating a project, uploading files, and logging the project's URL.
+**Description**: This function orcheStartes the interaction with the Google Apps Script API. It handles authentication, creating a project, uploading files, and logging the project's URL.
 
 **Parameters**:
   None.

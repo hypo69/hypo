@@ -82,7 +82,7 @@ supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
 ```markdown
 ## <algorithm>
 
-The `Supplier` class orchestrates data fetching from various suppliers.
+The `Supplier` class orcheStartes data fetching from various suppliers.
 
 **1. Initialization (Supplier Object Creation):**
    * Input: `supplier_prefix`, `locale`, `webdriver`.

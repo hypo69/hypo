@@ -96,11 +96,11 @@ def test_collectPopupState():
 
 2. **Mocking `browser`:**  The critical part is the `mock_browser` fixture. It replaces the browser object with mock objects.  Crucially, these mock objects provide the interface to assert *what* the JavaScript functions *would* call on the browser, without actually interacting with the browser.  This is essential for unit testing JavaScript functions in a Python environment.
 
-3. **Test Function Structure:** The example test (`test_send_to_active_tab`) demonstrates how to use the fixture to create a mock browser and assert if the `sendToActiveTab` function successfully called the `browser.tabs.sendMessage` method.
+3. **Test Function Structure:** The example test (`test_send_to_active_tab`) demonStartes how to use the fixture to create a mock browser and assert if the `sendToActiveTab` function successfully called the `browser.tabs.sendMessage` method.
 
 4. **Error Handling (`pytest.raises`)**: The `test_sendToActiveTab_invalid_msg` example shows how to use `pytest.raises` to verify that the code handles an invalid message as expected.
 
-5. **Example `collectPopupState` test**: This example demonstrates how to create mock elements with the values you expect and then test whether `collectPopupState` correctly retrieves those values.
+5. **Example `collectPopupState` test**: This example demonStartes how to create mock elements with the values you expect and then test whether `collectPopupState` correctly retrieves those values.
 
 6. **Comments:** The comments are still very important to explain what each test case is checking.
 

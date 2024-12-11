@@ -96,9 +96,9 @@ def test_AliCampaignEditor_update_product(mock_campaign_data, mock_product_data)
 2. **Mock Data:** Created `sample_campaign_data` and `sample_product_data` to hold example data for testing.  Crucial for isolating tests.
 3. **Fixtures:** Introduced `mock_campaign_data` and `mock_product_data` fixtures to provide data easily.
 4. **Clear Test Names:**  Test names (e.g., `test_AliCampaignEditor_init`) are descriptive and indicate what is being tested.
-5. **Edge Cases and Invalid Input:** Added `test_AliCampaignEditor_delete_product_not_found` to demonstrate checking for a non-existent product, which is vital.
+5. **Edge Cases and Invalid Input:** Added `test_AliCampaignEditor_delete_product_not_found` to demonStarte checking for a non-existent product, which is vital.
 6. **Exception Handling with `pytest.raises`:** The code now uses `pytest.raises` to properly test exception handling, catching `ValueError` for non-existent products.   Added a test specifically for `FileNotFoundError`.
-7. **Example Test `test_AliCampaignEditor_update_product`:**  Demonstrates testing a method that modifies internal data (which needs proper mock and setup to work correctly).
+7. **Example Test `test_AliCampaignEditor_update_product`:**  DemonStartes testing a method that modifies internal data (which needs proper mock and setup to work correctly).
 8. **File Handling Considerations:**  The code now needs to be adapted to include suitable mocks or stubs for file reading/writing operations so the tests don't depend on actual file system interaction during the testing phase. This is very important for the methods involving file access.
 
 **How to Use and Adapt:**

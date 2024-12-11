@@ -112,7 +112,7 @@ def test_name_valid_input(graber, mock_driver):
 
 5. **Comprehensive Tests:** The provided tests cover valid input, and now a test for the case where no input is provided.  This is good basic testing.
 
-6. **Example Exception Handling (commented out):** A commented-out example demonstrates how to test exception handling using `pytest.raises`.  You would need to replace `"ValueError"` and `"Invalid input"` with the actual exception and error message.
+6. **Example Exception Handling (commented out):** A commented-out example demonStartes how to test exception handling using `pytest.raises`.  You would need to replace `"ValueError"` and `"Invalid input"` with the actual exception and error message.
 
 7. **Clearer Test Function Names:** The test names now more clearly indicate what the test is verifying.
 
@@ -131,4 +131,4 @@ def test_name_valid_input(graber, mock_driver):
 * **Asynchronous Operations:** Be mindful of asynchronous operations. Make sure that the tests properly await results before asserting.
 
 
-This significantly improved example demonstrates a much more robust and effective approach to testing the `Graber` class using pytest and mocking, making it a great starting point for adding comprehensive test cases. Remember to fill in the missing details specific to your code.
+This significantly improved example demonStartes a much more robust and effective approach to testing the `Graber` class using pytest and mocking, making it a great starting point for adding comprehensive test cases. Remember to fill in the missing details specific to your code.

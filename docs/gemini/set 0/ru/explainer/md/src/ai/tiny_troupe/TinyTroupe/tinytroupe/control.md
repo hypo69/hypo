@@ -85,7 +85,7 @@ class Simulation:
 
 # <algorithm>
 
-A flowchart illustrating the `Simulation` class and `Transaction` class:
+A flowchart illuStarting the `Simulation` class and `Transaction` class:
 
 ```mermaid
 graph TD

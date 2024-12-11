@@ -97,9 +97,9 @@ def test_post_event_title():
 
 3. **Fixtures:** Added `valid_login_credentials` and `invalid_login_credentials` fixtures for better test organization and readability.  Crucially, added `valid_post_data` and `invalid_post_data` fixtures to prepare for testing of `post_message` function.
 
-4. **Example Tests:** The example tests for `post_message` now demonstrate how to test both valid and invalid input cases.
+4. **Example Tests:** The example tests for `post_message` now demonStarte how to test both valid and invalid input cases.
 
-5. **Comprehensive Coverage:** The provided example demonstrates the structure to expand tests for all functions.
+5. **Comprehensive Coverage:** The provided example demonStartes the structure to expand tests for all functions.
 
 6. **Realistic Assertions:**  The asserts check for `None` or meaningful output in the case of successful function calls.
 

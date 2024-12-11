@@ -75,15 +75,15 @@ def test_graber_get_data_empty_input():
 
 2. **`test_graber_*` functions:**  Created test functions that follow the naming convention, now reflecting the `Graber` class (crucial for organization).
 
-3. **Mocking `get_data`:**  The critical change!  Instead of relying on external eBay APIs, you _mock_ the `get_data` method. This isolates the tests from external dependencies, making them fast and reliable.  The example demonstrates how to mock the return value with different scenarios.
+3. **Mocking `get_data`:**  The critical change!  Instead of relying on external eBay APIs, you _mock_ the `get_data` method. This isolates the tests from external dependencies, making them fast and reliable.  The example demonStartes how to mock the return value with different scenarios.
 
-4. **Exception Handling (`pytest.raises`):**  Demonstrates how to use `pytest.raises` to check for exceptions like `KeyError` that might be raised by `get_data`.  This is crucial for robust testing.
+4. **Exception Handling (`pytest.raises`):**  DemonStartes how to use `pytest.raises` to check for exceptions like `KeyError` that might be raised by `get_data`.  This is crucial for robust testing.
 
 5. **Meaningful Assertions:**  Added more specific assertions to check for the presence of expected keys and values in the mock data, reflecting that `mock_data` is *not* a randomly generated object but is representative of the data to be expected.
 
 6. **Edge Case (`test_graber_get_data_empty_input`):**  Added a test for an empty list result.  Empty inputs can have very different handling compared to `None` or an exception.
 
-7. **`graber = Graber(...)`:**  Instantiation of the class is essential to demonstrate use within a test.
+7. **`graber = Graber(...)`:**  Instantiation of the class is essential to demonStarte use within a test.
 
 8. **`def mock_get_data():`:** A crucial function to mock the data retrieved from external resources.
 

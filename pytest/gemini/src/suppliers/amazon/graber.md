@@ -76,13 +76,13 @@ async def test_graber_method_with_decorator(mock_driver):
 
 2. **Asynchronous Tests (`@pytest.mark.asyncio`):**  The code likely uses `async` and `await`, so the tests need to be asynchronous using `@pytest.mark.asyncio` and `await` calls.
 
-3. **Incomplete but Valid Mock Test Case for `close_pop_up`:** The test `test_graber_method_with_decorator` now demonstrates how to test the effect of the `close_pop_up` decorator.  It sets up a mock for the `execute_locator` method.  Crucially, it verifies that the `execute_locator` method (part of the mocked driver) is actually called.  This verifies the decorator is executed.
+3. **Incomplete but Valid Mock Test Case for `close_pop_up`:** The test `test_graber_method_with_decorator` now demonStartes how to test the effect of the `close_pop_up` decorator.  It sets up a mock for the `execute_locator` method.  Crucially, it verifies that the `execute_locator` method (part of the mocked driver) is actually called.  This verifies the decorator is executed.
 
 4. **Mock `logger`:** A mock logger is provided so debug messages do not clutter the output. This is important for test clarity and efficiency.
 
 5. **Specific Test for `__init__`:** The `test_graber_init` test verifies the constructor's behavior regarding `supplier_prefix`, `driver`, and setting `locator_for_decorator`.
 
-6. **Error Handling (Incomplete):**  Error handling was mentioned in the original prompt; an example test demonstrating how to catch an exception with `pytest.raises` is now included. This section is missing, as the actual exceptions and expected responses are not available.
+6. **Error Handling (Incomplete):**  Error handling was mentioned in the original prompt; an example test demonStarting how to catch an exception with `pytest.raises` is now included. This section is missing, as the actual exceptions and expected responses are not available.
 
 
 **To complete the tests:**

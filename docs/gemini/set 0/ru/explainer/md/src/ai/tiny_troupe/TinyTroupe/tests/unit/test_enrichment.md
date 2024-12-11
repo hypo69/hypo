@@ -18,8 +18,8 @@ def test_enrich_content():
     """
     # WonderCode & Microsoft Partnership: Integration of WonderWand with GitHub
     ## Executive Summary
-    This document outlines the strategic approach and considerations for the partnership between WonderCode and Microsoft, focusing on the integration of WonderWand with GitHub. It captures the collaborative efforts and insights from various departments within WonderCode.
-    ## Business Strategy
+    This document outlines the Startegic approach and considerations for the partnership between WonderCode and Microsoft, focusing on the integration of WonderWand with GitHub. It captures the collaborative efforts and insights from various departments within WonderCode.
+    ## Business Startegy
     # ... (много строк)
     ## Financial Planning
     # ...

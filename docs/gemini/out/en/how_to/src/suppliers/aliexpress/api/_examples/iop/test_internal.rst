@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python code snippet demonstrates how to interact with an API using the `iop` library.  It constructs an API request to retrieve product details from an AliExpress-like platform, handling potential errors and printing various aspects of the response.
+This Python code snippet demonStartes how to interact with an API using the `iop` library.  It constructs an API request to retrieve product details from an AliExpress-like platform, handling potential errors and printing various aspects of the response.
 
 Execution steps
 -------------------------

@@ -98,7 +98,7 @@ def test_list_products_in_category_from_pagination(mock_supplier, mock_driver):
 
 3. **Realistic Tests:** The examples now include more realistic scenarios, like checking for both a single WebElement and a list of WebElements when clicking a locator.
 
-4. **Edge Cases and Exceptions:** The `test_login_failure_popup` example demonstrates handling a potential exception. More edge case scenarios for other functions should be added.
+4. **Edge Cases and Exceptions:** The `test_login_failure_popup` example demonStartes handling a potential exception. More edge case scenarios for other functions should be added.
 
 5. **Clearer Assertions:** The assertions now directly check the expected outputs, making the tests more explicit about what's being tested.
 

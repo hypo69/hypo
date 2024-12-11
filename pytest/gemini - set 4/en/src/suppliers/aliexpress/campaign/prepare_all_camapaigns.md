@@ -61,7 +61,7 @@ def test_prepare_all_campaigns_failure(mock_process_all_campaigns):
 
 1. **Mocking `process_all_campaigns`:** The code now uses `unittest.mock.patch` to mock the `process_all_campaigns` function.  This is crucial.  Instead of calling the actual function, we now control the return value or the possible exceptions to isolate our testing of `prepare_all_campaigns`.
 
-2. **Comprehensive Error Handling:**  The `test_prepare_all_campaigns_failure` test now demonstrates how to check for exceptions properly using `pytest.raises`.
+2. **Comprehensive Error Handling:**  The `test_prepare_all_campaigns_failure` test now demonStartes how to check for exceptions properly using `pytest.raises`.
 
 3. **Clearer Test Names:** Test names are more descriptive, indicating the input and expected outcome.
 

@@ -66,7 +66,7 @@ def test_grab_page_execute_locator_exception(graber, mock_driver):
 
 2. **`asyncio.run`:** The `asyncio.run` function is essential to run the asynchronous methods within pytest.
 
-3. **Error Handling (crucial):** Added a test `test_grab_page_execute_locator_exception`.  This is a *very important* test, as it shows how to handle exceptions that might be raised during the asynchronous execution.  Using `pytest.raises` is correct for this.  This test also demonstrates how to mock the logger.
+3. **Error Handling (crucial):** Added a test `test_grab_page_execute_locator_exception`.  This is a *very important* test, as it shows how to handle exceptions that might be raised during the asynchronous execution.  Using `pytest.raises` is correct for this.  This test also demonStartes how to mock the logger.
 
 4. **Realistic Mock:** The `test_grab_page_valid_input` test now provides a realistic test case. It mocks `fetch_all_data` and ensures that it returns something that matches the expected type (e.g. ProductFields) 
 
@@ -74,7 +74,7 @@ def test_grab_page_execute_locator_exception(graber, mock_driver):
 
 6. **Import Fixes:**  Corrected import statements to explicitly import `ProductFields`, `Driver`, etc. from the correct module.
 
-7. **Missing `id_product` Test (Edge Case):** A test `test_grab_page_missing_id_product` demonstrates how to test that the code handles missing or invalid input in a relevant way.
+7. **Missing `id_product` Test (Edge Case):** A test `test_grab_page_missing_id_product` demonStartes how to test that the code handles missing or invalid input in a relevant way.
 
 
 

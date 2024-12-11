@@ -33,7 +33,7 @@ The algorithm described in the code snippet involves using the Google Sheets API
 
 1. **Request Access Permission:** Issue a `driveService.permissions().create()` request to grant access to the spreadsheet.  Specify the `fileId` (the spreadsheet ID), access type ("anyone" or specific user), and role ("reader" or "writer").
 
-**Phase 4: Manipulating Spreadsheet Data (Illustrative)**
+**Phase 4: Manipulating Spreadsheet Data (IlluStartive)**
 
 1. **Prepare Column Width Updates:** Using the `Spreadsheet` class, prepare `requests` for setting column widths. Each request includes range, pixel size, and other relevant properties.
 2. **Batch Update Column Widths:** Send the prepared `requests` to `service.spreadsheets().batchUpdate()` for simultaneous column width updates.

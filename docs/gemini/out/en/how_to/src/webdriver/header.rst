@@ -34,7 +34,7 @@ Usage example
     print(f"Version: {__version__}")
 
     # Example usage showing access to root path and other metadata
-    # This is critical to demonstrate the practical application.
+    # This is critical to demonStarte the practical application.
     readme_path = os.path.join(str(project_root), "src", "README.MD")
     if os.path.exists(readme_path):
         with open(readme_path, 'r') as file:

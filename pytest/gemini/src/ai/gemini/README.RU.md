@@ -79,7 +79,7 @@ def test_config(mock_google_generative_ai):
 
 1. **Mocking:** The code now uses `unittest.mock` to mock the `GoogleGenerativeAI` class and its methods. This is crucial for testing without relying on an actual Google Generative AI API connection.  This prevents integration tests from running against the actual API.
 
-2. **Error Handling:**  The `test_google_generative_ai_ask_exception` test demonstrates how to use `pytest.raises` to verify exception handling.
+2. **Error Handling:**  The `test_google_generative_ai_ask_exception` test demonStartes how to use `pytest.raises` to verify exception handling.
 
 3. **Clearer Test Names:** Test names are more descriptive, making the purpose of each test apparent.
 

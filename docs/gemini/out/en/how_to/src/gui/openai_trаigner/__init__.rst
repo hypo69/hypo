@@ -20,7 +20,7 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # (Example demonstrating how to access the AssistantMainWindow)
+    # (Example demonStarting how to access the AssistantMainWindow)
 
     # Import the AssistantMainWindow from the module
     from hypotez.src.gui.openai_trаigner import AssistantMainWindow

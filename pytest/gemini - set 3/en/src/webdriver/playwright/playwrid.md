@@ -59,7 +59,7 @@ def test_playwrid_start_success(mock_logger, mock_run):
 **Explanation and Improvements:**
 
 * **Mocking:** Critically important for testing internal functions like `_load_settings` and `_set_launch_options` without relying on external files or the network.  This prevents flaky tests due to file changes or external dependencies.
-* **Exception Handling:** The `test_playwrid_start_with_exception` test now correctly demonstrates exception handling within the `start` method, verifying the `logger` is used as intended.
+* **Exception Handling:** The `test_playwrid_start_with_exception` test now correctly demonStartes exception handling within the `start` method, verifying the `logger` is used as intended.
 * **Clearer Assertions:**  Assertions are more specific, ensuring the correct values are set for `browser.playwright_launch_options`.
 * **Comprehensive Scenarios:** Tests now cover valid input (with and without custom settings), and a crucial edge case: handling exceptions during the `super().run()` call.  This is essential for robustness.
 * **pytest Fixtures:** Uses `@pytest.fixture` properly.

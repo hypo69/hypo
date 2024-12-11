@@ -97,7 +97,7 @@ class TestGSpreadsheet:
 
 * **Exception Handling:** Added tests for `test_get_by_id_invalid_id` to verify the exception handling for invalid spreadsheet IDs, a critical aspect of real-world code.
 
-* **Empty List Check:** Added `test_get_all_spreadsheets_for_current_account_empty` to explicitly check for an empty list of spreadsheets, demonstrating a complete case.
+* **Empty List Check:** Added `test_get_all_spreadsheets_for_current_account_empty` to explicitly check for an empty list of spreadsheets, demonStarting a complete case.
 
 * **Mocking `print`:** Used `@patch` with `mock_print` to capture and assert that the print statement is actually happening, which is useful because the tests can now be run without any side effects outside of the test suite.
 

@@ -21,7 +21,7 @@ Usage example
     # This is a placeholder, as the actual functionality is not defined.
     # To use this module, you would need to add the necessary functions and logic.
 
-    # Example (Illustrative only - Replace with appropriate import statements):
+    # Example (IlluStartive only - Replace with appropriate import statements):
     import sys
     sys.path.append('path/to/your/hypotez/src/ai/myai')  # Adjust path as needed
     import traffic_light  # Assuming your module is named 'traffic_light'

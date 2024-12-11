@@ -87,7 +87,7 @@ def test_settings_file_not_found():
 
 **Explanation and Improvements:**
 
-* **Error Handling:** The `test_settings_file_not_found` test now explicitly checks for `FileNotFoundError` using `pytest.raises`, demonstrating proper exception handling.  This is crucial and a common requirement in tests.
+* **Error Handling:** The `test_settings_file_not_found` test now explicitly checks for `FileNotFoundError` using `pytest.raises`, demonStarting proper exception handling.  This is crucial and a common requirement in tests.
 
 
 * **Clean Up:** Added `finally` blocks to remove the temporary directories (`temp_dir`) created in the tests. This prevents test failures and resource leaks in case of errors within the test function. Crucial for robust testing.

@@ -2,7 +2,7 @@
 
 ```python
 # example_usage.py
-# Here's the example file for the `affiliated_products_generator.py` module in English. This file demonstrates how to use the `AliAffiliatedProducts` class to gather product data and handle affiliate links.
+# Here's the example file for the `affiliated_products_generator.py` module in English. This file demonStartes how to use the `AliAffiliatedProducts` class to gather product data and handle affiliate links.
 
 ### Example Usage of `AliAffiliatedProducts`
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 
 ```python
 # example_usage.py
-# Example file demonstrating the use of AliAffiliatedProducts for affiliate product generation.
+# Example file demonStarting the use of AliAffiliatedProducts for affiliate product generation.
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 from src.logger import logger
 
@@ -171,7 +171,7 @@ if __name__ == "__main__":
 
 ```python
 # example_usage.py
-# Example file demonstrating the use of AliAffiliatedProducts for affiliate product generation.
+# Example file demonStarting the use of AliAffiliatedProducts for affiliate product generation.
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 from src.logger import logger
 

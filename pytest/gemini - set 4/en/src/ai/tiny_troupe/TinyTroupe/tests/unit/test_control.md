@@ -104,7 +104,7 @@ def test_begin_checkpoint_end_with_factory_valid_input(setup):
 
 3. **Clearer Test Names:**  The test names now better reflect the purpose of each test case.
 
-4. **Exception Handling:** The `test_begin_checkpoint_end_with_world_empty_world` test demonstrates how to test for expected exceptions. This is essential to verify robust error handling.  Add `pytest.raises` for other potential exceptions (e.g., if an agent's method returns an error).
+4. **Exception Handling:** The `test_begin_checkpoint_end_with_world_empty_world` test demonStartes how to test for expected exceptions. This is essential to verify robust error handling.  Add `pytest.raises` for other potential exceptions (e.g., if an agent's method returns an error).
 
 5. **Test `control._aux_simulation_to_repeat` (crucial):** The `test_begin_checkpoint_end_with_factory` test now attempts to call the private `control._aux_simulation_to_repeat` function. Because it's private, you'll have to assess what you can test. If you can call it, then add appropriate assertions. If you can't, focus testing the exposed functions (e.g., `control.begin`, `control.checkpoint`).
 

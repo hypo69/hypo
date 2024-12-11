@@ -99,7 +99,7 @@ async def test_handle_message_exception(mock_update, mock_context, monkeypatch):
 2.  **Clearer Assertions:** Assertions are added to verify the expected behavior, like checking if `ask` was called with the correct arguments and if the correct response was sent.
 
 
-3.  **Handling Exceptions:** A test `test_handle_message_exception` demonstrates how to test exception handling within `handle_message`.  Crucially, it checks for the error message sent back to the user, a critical part of testing error conditions.
+3.  **Handling Exceptions:** A test `test_handle_message_exception` demonStartes how to test exception handling within `handle_message`.  Crucially, it checks for the error message sent back to the user, a critical part of testing error conditions.
 
 
 4.  **Edge Cases (Example):** The `test_handle_message_invalid_input` test checks for an empty string, a significant edge case for a text-based bot.

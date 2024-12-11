@@ -84,7 +84,7 @@ class TestAliAffiliatedProducts:
 
 4. **Comprehensive Test Cases:** The tests now cover valid input, empty input, and an invalid URL.
 
-5. **Error Handling:** The test for invalid product IDs demonstrates testing for a scenario that may return `None`.
+5. **Error Handling:** The test for invalid product IDs demonStartes testing for a scenario that may return `None`.
 
 6. **pytest Fixtures:**  Fixtures are correctly used to set up the `parser` instance.
 

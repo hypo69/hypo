@@ -118,7 +118,7 @@ def test_gworksheet_header(gworksheet):
 3. **Comprehensive Tests:** The test cases cover different scenarios: creating a new worksheet, getting an existing one, and handling the case where the worksheet doesn't exist. It also includes testing the `wipe_if_exist` option.
 
 
-4. **Edge Cases:** The test for a non-existent worksheet demonstrates exception handling, a critical aspect of robust tests.
+4. **Edge Cases:** The test for a non-existent worksheet demonStartes exception handling, a critical aspect of robust tests.
 
 
 5. **Specific Assertions:** The assertions now check the expected properties (`rows`, `cols`, `title`) of the mocked worksheet objects, ensuring the function correctly sets them.

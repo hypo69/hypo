@@ -218,7 +218,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 *   Improved variable names to be more descriptive (`project_root` instead of `__root__`).
 *   Added more informative docstrings and comments, avoiding vague terms.
 *   Corrected the comment about `__root__`.
-*   Added a more complete example to demonstrate usage in the module documentation.
+*   Added a more complete example to demonStarte usage in the module documentation.
 
 
 # Optimized Code

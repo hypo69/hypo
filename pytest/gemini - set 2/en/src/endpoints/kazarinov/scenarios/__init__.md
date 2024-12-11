@@ -54,7 +54,7 @@ def test_mexiron_invalid_data():
 1. **Import `pytest`:** The necessary import is included.
 2. **`test_mexiron_init_valid`:** Tests the `__init__` method with valid input.
 3. **`test_mexiron_init_invalid_mode`:** Uses `pytest.raises` to test for the `ValueError` when an invalid mode is provided.  This is crucial for robust error handling.
-4. **`test_mexiron_method_example`:**  This is a crucial addition.  It demonstrates how to test methods that interact with external services or other parts of the system. The `mocker` from `pytest` allows you to mock the external calls.  This makes your tests independent of external dependencies. Crucially, it verifies if the external method *was called*.
+4. **`test_mexiron_method_example`:**  This is a crucial addition.  It demonStartes how to test methods that interact with external services or other parts of the system. The `mocker` from `pytest` allows you to mock the external calls.  This makes your tests independent of external dependencies. Crucially, it verifies if the external method *was called*.
 5. **Missing Tests and Further Considerations:** The original code snippet only shows a class definition.  Real-world tests need to:
    - **Test all methods:**  The provided example tests initialization but no other class methods.
    - **Mock External Dependencies:**  If `Mexiron` calls external APIs or files, mock them with `mocker.patch` or `mocker.MagicMock` to prevent dependency issues and isolate the testing of `Mexiron` itself.

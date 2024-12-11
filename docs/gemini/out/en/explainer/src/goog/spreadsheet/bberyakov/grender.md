@@ -104,7 +104,7 @@ graph LR
 
 ### Functions:
 
-* **`render_header`:** Takes a `Worksheet`, title, and range as input to apply formatting to the header row.  It demonstrates conditional formatting based on cell values.
+* **`render_header`:** Takes a `Worksheet`, title, and range as input to apply formatting to the header row.  It demonStartes conditional formatting based on cell values.
 * **`merge_range`:** Merges cells within a specific range (`range`) according to the merge type (`merge_type`) within the given worksheet.
 * **`set_worksheet_direction`:** Sets the direction of a worksheet to right-to-left.  It interacts with the `Spreadsheet` class for applying the change.
 * **`header`:** Appends a header row, handling both string and list inputs.

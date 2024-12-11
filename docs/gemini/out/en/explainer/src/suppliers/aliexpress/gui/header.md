@@ -81,7 +81,7 @@ graph LR
 
 **Diagram Explanation:**
 
-The diagram illustrates the single step involved: calculating the project root path (`__root__`) from the current working directory (`os.getcwd()`) and appending it to the Python path (`sys.path`) to allow import of modules from within the project.
+The diagram illuStartes the single step involved: calculating the project root path (`__root__`) from the current working directory (`os.getcwd()`) and appending it to the Python path (`sys.path`) to allow import of modules from within the project.
 
 
 ## <explanation>

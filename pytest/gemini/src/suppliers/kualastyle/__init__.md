@@ -75,7 +75,7 @@ def example_file_data():
 3. **Placeholder Tests for `Graber`:** Included example test cases for `Graber`.  Critically, you MUST replace the placeholder methods (`extract_data`, `extract_data_from_nonexistent_file`) with the actual methods from the `graber.py` file.
 
 
-4. **Error Handling:** Demonstrated how to use `pytest.raises` to test for `ValueError` and `FileNotFoundError` exceptions, which is crucial for robust testing.
+4. **Error Handling:** DemonStarted how to use `pytest.raises` to test for `ValueError` and `FileNotFoundError` exceptions, which is crucial for robust testing.
 
 
 5. **Edge Cases and File Formats (parameterization):** Added tests for different file types (using `pytest.mark.parametrize`) and error handling to show how to include more comprehensive test coverage.

@@ -126,7 +126,7 @@ def test_get_grabber_invalid_url():
 1.  **Mocking:**  Crucially, the code now uses `unittest.mock` to mock the external dependencies (e.g., `FacebookAPI`, `Grabber`, etc.).  This is essential for testing isolated units without relying on external services or files.  The `MagicMock` is a good starting point to handle the scenario execution's steps.
 
 
-2.  **Clearer Test Cases:** Test functions like `test_run_scenario_success` and `test_run_scenario_failure` are added to demonstrate correct handling of success and failure in `run_scenario`.  Also, testing `get_grabber` for valid and invalid URLs is included.
+2.  **Clearer Test Cases:** Test functions like `test_run_scenario_success` and `test_run_scenario_failure` are added to demonStarte correct handling of success and failure in `run_scenario`.  Also, testing `get_grabber` for valid and invalid URLs is included.
 
 
 3.  **Error Handling:**  `pytest.raises` is used to check for expected exceptions (e.g., `ValueError` for invalid URLs), making the tests more robust.

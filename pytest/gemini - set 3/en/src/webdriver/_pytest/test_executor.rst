@@ -119,7 +119,7 @@ def test_send_message_typing_speed(execute_locator, driver_mock):
 
 **Improvements and Explanation:**
 
-* **More Comprehensive Tests:** Added `test_get_webelement_by_locator_single_element_no_element` to explicitly test the case where no element is found, a crucial edge case.  Also added a `test_send_message_invalid_locator` to demonstrate handling a potentially invalid locator.
+* **More Comprehensive Tests:** Added `test_get_webelement_by_locator_single_element_no_element` to explicitly test the case where no element is found, a crucial edge case.  Also added a `test_send_message_invalid_locator` to demonStarte handling a potentially invalid locator.
 
 * **Clearer Comments:** Comments now more precisely describe the purpose of each test case, clarifying the expected input and output behavior.
 

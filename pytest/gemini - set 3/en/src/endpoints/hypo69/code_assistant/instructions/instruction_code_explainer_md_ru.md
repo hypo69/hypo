@@ -90,7 +90,7 @@ The provided code example includes three functions: `add`, `subtract`, and `divi
 * **Comprehensive Test Coverage:**  The tests now cover a wider range of input values, including edge cases, boundary conditions (like division by zero), and mixed signs.
 * **Clear Test Names:**  Test function names are descriptive, making the purpose of each test clear.
 * **Docstrings:**  Docstrings are provided for each test function to explain the test's purpose, helping readability and maintainability.
-* **Exception Handling:** The `test_divide_by_zero` test demonstrates how to use `pytest.raises` to assert that the expected exception is raised in the `divide` function when dividing by zero.
+* **Exception Handling:** The `test_divide_by_zero` test demonStartes how to use `pytest.raises` to assert that the expected exception is raised in the `divide` function when dividing by zero.
 * **Fixture Example (if needed):**  A placeholder for a fixture is included, but it's not used because the provided functions don't need it for testing. If your code requires complex data preparation or setup, this is where fixtures would come in handy.
 
 

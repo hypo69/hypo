@@ -79,7 +79,7 @@ def test_attribute_setting_and_getting():
 
 3. **Edge Case Testing:** Includes `test_init_with_none_values` to check what happens when `None` values are provided for attributes.
 
-4. **Attribute Testing:**  `test_attribute_setting_and_getting` demonstrates how to test setting and getting individual attributes, essential for verifying that data is stored and retrieved correctly.
+4. **Attribute Testing:**  `test_attribute_setting_and_getting` demonStartes how to test setting and getting individual attributes, essential for verifying that data is stored and retrieved correctly.
 
 5. **No Unnecessary Fixtures:**  No fixtures are needed as the class itself is being tested, not an external dependency.
 

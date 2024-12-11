@@ -90,7 +90,7 @@ def test_unexpected_error_creation_no_message():
 **Crucially:** This solution assumes you have an `exceptions.py` file within the specified directory that contains the `exceptions` classes (e.g., `InvalidRequestError`, `InvalidResponseError`).  If that file doesn't exist or the classes aren't defined, the tests will fail with `ImportError`.  You'll need to provide the content of `exceptions.py` for a complete, runnable test suite.
 
 
-**Example `exceptions.py` (Illustrative):**
+**Example `exceptions.py` (IlluStartive):**
 
 
 ```python

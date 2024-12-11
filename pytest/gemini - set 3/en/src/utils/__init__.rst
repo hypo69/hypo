@@ -102,9 +102,9 @@ def teardown_module(module):
 * **Specific Exception Handling:**  `test_csv2dict_invalid_csv` now uses `pytest.raises` to specifically test for `csv.Error`, which is more targeted than a generic exception.
 * **Data Validation:** The assertions in `test_csv2dict_valid` now precisely check the expected output format.
 * **File Cleanup:**  The `teardown_module` function ensures that the temporary test file is deleted after the tests, preventing conflicts.
-* **Comprehensive Test Coverage:**  The tests now cover `save_text_file`, `csv2dict`,  `read_csv_as_dict`, and `read_csv_file`, demonstrating a more thorough approach.
+* **Comprehensive Test Coverage:**  The tests now cover `save_text_file`, `csv2dict`,  `read_csv_as_dict`, and `read_csv_file`, demonStarting a more thorough approach.
 * **Test Design:** The test functions have meaningful names, clearly describing the scenario being tested, e.g., `test_csv2dict_valid`.
-* **Example Output:** Example assertions and expected outputs are provided to illustrate how to correctly test the functionality of `csv2dict` and related functions.
+* **Example Output:** Example assertions and expected outputs are provided to illuStarte how to correctly test the functionality of `csv2dict` and related functions.
 
 
 **To Run the Tests:**

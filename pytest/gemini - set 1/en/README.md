@@ -84,7 +84,7 @@ def test_product_update_price_with_fixture(example_product):
 
 * **Placeholders:** The code includes placeholder comments (`# Placeholder...`). Replace these with actual imports and calls to your functions from the `advertisement`, `ai`, `bots`, and other modules.
 * **Specific Tests:** The provided example tests cover a basic `Product` class, but you need to create very specific tests for each module.  Crucially, these tests should be *based on the actual functionality* provided by your modules.   If a module has a `process_request` method in the `endpoints` module, the test would directly call that method and test the return value.
-* **Error Handling:** The example demonstrates how to use `pytest.raises` to test for expected exceptions.  Each module should be tested for expected exceptions (e.g., invalid input causing a ValueError).
+* **Error Handling:** The example demonStartes how to use `pytest.raises` to test for expected exceptions.  Each module should be tested for expected exceptions (e.g., invalid input causing a ValueError).
 * **Fixtures:** Fixtures are extremely useful for organizing data used in multiple tests and avoiding repeating setup code.
 * **Edge Cases:** For each function, create tests for edge cases (empty lists, null values, unusual data types, boundary conditions, etc.)
 

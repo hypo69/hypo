@@ -98,7 +98,7 @@ def test_exception_handling_invalid_audio_format(mock_bot, mock_channel):
 
 2. **Specific Test Cases:** The example test cases are more concrete.  The `test_send_message` example shows how to use a mocked `channel` to test the message sending functionality. It's vital to assert that the expected methods are actually called and with the correct arguments.
 
-3. **Exception Handling:** The `test_exception_handling_invalid_audio_format` example demonstrates how to test exception handling. Using `pytest.raises` allows you to verify that the expected exception is raised with the correct type and message when invalid input is provided.
+3. **Exception Handling:** The `test_exception_handling_invalid_audio_format` example demonStartes how to test exception handling. Using `pytest.raises` allows you to verify that the expected exception is raised with the correct type and message when invalid input is provided.
 
 4. **Clearer Comments:** Added comments to the test functions explaining the purpose and the logic being tested, making the tests more understandable.
 

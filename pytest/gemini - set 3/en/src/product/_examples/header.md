@@ -73,7 +73,7 @@ def test_sys_path_append_duplicate():
 # def mock_getcwd():
 #     # This would be a more complex fixture for mocking.
 #     # If os.getcwd returns a different string, tests might fail.
-#     # This is a simple example to illustrate fixtures
+#     # This is a simple example to illuStarte fixtures
 #     return "/tmp/hypotez"
 
 

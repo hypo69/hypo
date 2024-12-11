@@ -47,7 +47,7 @@ def test_details_type():
     assert isinstance(__details__, str)
 
 
-# Example test demonstrating how to handle potential missing attributes:
+# Example test demonStarting how to handle potential missing attributes:
 # The original code might not have these attributes, so it's important to handle them
 def test_missing_attributes():
     """Test for cases where attributes might not exist."""

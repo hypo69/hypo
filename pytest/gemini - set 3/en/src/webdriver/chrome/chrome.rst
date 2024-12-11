@@ -97,7 +97,7 @@ def test_chrome_init_error_handling(mock_logger, mock_j_loads_ns):
 1. **Mocking:** Crucially, the code now uses `unittest.mock.patch` to mock `j_loads_ns` and `gs.path`.  This is vital for isolating the `Chrome` class's behavior from the external dependencies, avoiding actual file interactions. This makes the tests more robust and predictable.  Mock the logger (`mock_logger`) for similar reasons.
 
 
-2. **Error Handling:** The `test_chrome_init_error_handling` function now demonstrates proper exception handling with `pytest.raises`. It mimics an error during initialization and verifies that the appropriate exception is caught and the logger is used.  Also added `test_chrome_init_with_no_config_file` which handles a missing config file. This is critical for real-world robustness.
+2. **Error Handling:** The `test_chrome_init_error_handling` function now demonStartes proper exception handling with `pytest.raises`. It mimics an error during initialization and verifies that the appropriate exception is caught and the logger is used.  Also added `test_chrome_init_with_no_config_file` which handles a missing config file. This is critical for real-world robustness.
 
 
 3. **Clearer Test Cases:** The test names are more descriptive (e.g., `test_chrome_instance_creation`), improving readability and understanding.  Tests are more isolated than previously

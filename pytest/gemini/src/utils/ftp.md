@@ -115,7 +115,7 @@ def mock_ftp_session(success, err=None):
 
 2. **Error Handling:** The tests now explicitly check for error cases in both the `write` and `read` functions. They use `pytest.raises` to verify that exceptions are caught and handled correctly.  This is important for testing robust error conditions.
 
-3. **Clearer Assertions:**  More descriptive assertions are used to verify the correct behavior of the functions. For instance, in `test_write_valid_input`, an assertion checks that the `storbinary` method on the mocked session was called, demonstrating successful file transfer.  Similarly, assertions check for the absence of errors by checking if `mock_logger.error` was called.
+3. **Clearer Assertions:**  More descriptive assertions are used to verify the correct behavior of the functions. For instance, in `test_write_valid_input`, an assertion checks that the `storbinary` method on the mocked session was called, demonStarting successful file transfer.  Similarly, assertions check for the absence of errors by checking if `mock_logger.error` was called.
 
 4. **Dummy File Creation:** The `test_write_valid_input` now creates a temporary test file for testing file transfer. This approach ensures the test is running on an actual file, not just placeholder values. This temporary file is cleaned up after the test. The `test_read_valid_input` does the same for reading.
 
@@ -138,4 +138,4 @@ def mock_ftp_session(success, err=None):
     pytest test_ftp.py
     ```
 
-This revised solution is more robust, comprehensive, and realistic in its approach to testing the `ftp` module.  It demonstrates a better understanding of testing best practices, especially by using mocks and thoroughly checking for expected behavior and exceptions. Remember to adjust file paths and error conditions to match your actual file system and FTP server setup. Remember to replace `"test_file.txt"` with the appropriate name, if different.
+This revised solution is more robust, comprehensive, and realistic in its approach to testing the `ftp` module.  It demonStartes a better understanding of testing best practices, especially by using mocks and thoroughly checking for expected behavior and exceptions. Remember to adjust file paths and error conditions to match your actual file system and FTP server setup. Remember to replace `"test_file.txt"` with the appropriate name, if different.

@@ -50,7 +50,7 @@ The provided HTML file (`popup.html`) is purely HTML and doesn't contain any Pyt
 
 * **JavaScript and Interactions:**  The actual functionality of an extension often resides in JavaScript.  To test the JavaScript components in the `popup.html`, you would need a testing framework to execute JavaScript code (like the browser's dev tools or Playwright).  You'd also need to understand how the Python code interacts with the JavaScript code.
 
-* **Example Addition:** The example code I included demonstrates how you would create test functions using `pytest` for a hypothetical Python function.  Adapt this structure (tests and the function) when you have the Python code part of your extension.
+* **Example Addition:** The example code I included demonStartes how you would create test functions using `pytest` for a hypothetical Python function.  Adapt this structure (tests and the function) when you have the Python code part of your extension.
 
 
 If you have the Python code that's being used *by* or *with* the JavaScript of the extension, please provide that code, and I can generate appropriate, targeted `pytest` tests.

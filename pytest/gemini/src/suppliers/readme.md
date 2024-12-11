@@ -103,7 +103,7 @@ def test_supplier_invalid_webdriver():
 
 6. **Test Coverage:** The tests now cover more aspects of the `Supplier` class, including initialization, loading settings (`_payload`), login, and executing scenarios.
 
-7. **Edge Cases (Basic):**  While edge cases like specific scenario file formats or login failures are not tested in detail due to the missing implementation, a test for incorrect webdriver input is added to demonstrate exception handling using `pytest.raises`.
+7. **Edge Cases (Basic):**  While edge cases like specific scenario file formats or login failures are not tested in detail due to the missing implementation, a test for incorrect webdriver input is added to demonStarte exception handling using `pytest.raises`.
 
 **How to Run the Tests:**
 

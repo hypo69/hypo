@@ -16,7 +16,7 @@ def test_mode_is_dev():
 #     with pytest.raises(AttributeError):
 #         non_existent_function()
 
-# Example test case demonstrating a test for exception handling
+# Example test case demonStarting a test for exception handling
 # def test_function_with_exception():
 #     try:
 #         # Your code that might raise an exception
@@ -63,8 +63,8 @@ def test_mode_is_dev():
 
 2. **Comprehensive Test Cases (Example):**  The example tests are now more realistic and show how to handle different scenarios:
    - `test_mode_is_dev`: Checks if the `MODE` variable is initialized correctly, a fundamental test.
-   - `test_non_existent_function`:  Demonstrates how to test for exceptions when dealing with non-existent functions.
-   - `test_function_with_exception`: Demonstrates a test for exception handling. You would replace the `raise ValueError` with your actual function that might raise exceptions.
+   - `test_non_existent_function`:  DemonStartes how to test for exceptions when dealing with non-existent functions.
+   - `test_function_with_exception`: DemonStartes a test for exception handling. You would replace the `raise ValueError` with your actual function that might raise exceptions.
    - `test_function_edge_case`, `test_function_valid_input`, `test_function_invalid_input`:  These are placeholders to guide you in writing tests for your functions (replace with actual function calls, inputs, and expected outputs).
 
 3. **`pytest.raises`:** The code now correctly uses `pytest.raises` to test for exceptions.

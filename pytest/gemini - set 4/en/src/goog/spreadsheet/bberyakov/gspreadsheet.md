@@ -76,7 +76,7 @@ def test_get_all_spreadsheets_for_current_account(spreadsheet_instance):
 **Explanation and Improvements:**
 
 * **Mocking:**  Crucially, the tests now use `unittest.mock.patch` to mock the `service_account` function and the `openall`, `create`, and `open_by_key` methods. This isolates the tests from the external Google Sheets API, preventing real API calls and avoiding issues with needing credentials or the existence of test spreadsheets.  This significantly improves testability.
-* **Error Handling:** The `test_get_by_title_raises_exception` demonstrates how to test exception handling.  It's a best practice to anticipate potential issues (e.g., file not found, API errors) and test their handling.
+* **Error Handling:** The `test_get_by_title_raises_exception` demonStartes how to test exception handling.  It's a best practice to anticipate potential issues (e.g., file not found, API errors) and test their handling.
 * **Fixture for Instance:** The `spreadsheet_instance` fixture is now more robust, providing an initialized `GSpreadsheet` object for all test methods. This ensures that test methods have a consistent starting state.
 * **Clearer Assertions:** The assertions are more specific (e.g., checking for `isinstance` of the expected types).
 * **Realistic Test Data:** The `spreadsheets.json` is a placeholder, you'll need to create a dummy `spreadsheets.json` file with some valid JSON data if the `get_project_spreadsheets_dict` function expects that file to be present. This now accurately represents the intended use of the function.

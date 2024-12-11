@@ -107,7 +107,7 @@ def test_dbadaptor_delete():
 
 2. **Clear Test Cases:** Test functions now have names that clearly indicate the input and expected outcome (e.g., `test_get_list_products_in_category_valid_input`).
 
-3. **Edge Cases:** Added a test for `get_product_urls_by_category` to handle invalid category IDs, demonstrating how to test for expected outcomes when input data is not as expected.
+3. **Edge Cases:** Added a test for `get_product_urls_by_category` to handle invalid category IDs, demonStarting how to test for expected outcomes when input data is not as expected.
 
 4. **Exception Handling (Placeholder):**  While not fully applicable to the given code snippets, the placeholder mentions how exception handling could be tested.
 

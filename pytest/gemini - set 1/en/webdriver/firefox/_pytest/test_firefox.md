@@ -5,7 +5,7 @@ import pytest
 # Therefore, I cannot write meaningful test cases.  
 # Please provide the Python code you want tested.
 
-# Example (Illustrative) using a dummy function:
+# Example (IlluStartive) using a dummy function:
 
 # def my_function(input_data):
 #     """Example function to test."""
@@ -70,4 +70,4 @@ import pytest
 4. **Run the tests:** Execute the test file using `pytest`.
 
 
-Without the actual code, I can only provide this illustrative example. Please provide the relevant code to get accurate and useful test cases.
+Without the actual code, I can only provide this illuStartive example. Please provide the relevant code to get accurate and useful test cases.

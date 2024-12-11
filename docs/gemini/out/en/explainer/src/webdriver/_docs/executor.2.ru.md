@@ -16,7 +16,7 @@ This document describes the functionality of several functions within the `execu
 ## <algorithm>
 
 (Diagram is best represented visually)
-Illustrative step-by-step algorithm for `execute_locator` (others follow a similar pattern):
+IlluStartive step-by-step algorithm for `execute_locator` (others follow a similar pattern):
 
 1. **Input:** Locator (`locator`), optional message (`message`), typing speed (`typing_speed`), and continue-on-error flag (`continue_on_error`).
 2. **Locate Element:** Use the `locator` to find the web element in the current web page.
@@ -72,8 +72,8 @@ The mermaid diagram shows a general flow, but the `executor` likely depends on o
 
 * **Potential Errors/Improvements:**
     * **Error Handling:** The provided docstrings mention `continue_on_error`, but detailed error handling (with specific exceptions) isn't described. Robust error handling with logging or specific exceptions is crucial for real-world applications.
-    * **Locator Strategy:** The functions rely on a `locator` dictionary. The documentation needs to specify the expected structure of the `locator` (e.g., which keys are required for different locator types).
-    * **Real-World Examples:** The examples are high-level. Real implementations need to demonstrate more specific examples of what `locator` data can look like, and how `execute_locator` would handle different possible locators and operations.
+    * **Locator Startegy:** The functions rely on a `locator` dictionary. The documentation needs to specify the expected structure of the `locator` (e.g., which keys are required for different locator types).
+    * **Real-World Examples:** The examples are high-level. Real implementations need to demonStarte more specific examples of what `locator` data can look like, and how `execute_locator` would handle different possible locators and operations.
 
 
 This framework appears to be built on top of a WebDriver API (such as Selenium) and provides a higher-level interface for performing actions on web elements based on locators.

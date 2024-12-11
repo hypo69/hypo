@@ -183,7 +183,7 @@ class Supplier:
 - Introduced error handling using `logger.error` for loading settings.
 - Added `_initialize_webdriver` method to encapsulate webdriver initialization logic.
 - Added placeholder code for `_payload`, `login`, `run_scenario_files`, and `run_scenarios` with comments and proper return types.
-- Example import added and commented to make the code more illustrative.
+- Example import added and commented to make the code more illuStartive.
 - Corrected the docstring format to be more readable and informative.
 - Improved comments and explanations to be more specific and accurate.
 - Replaced vague terms with precise actions (e.g., "loading" instead of "get").

@@ -58,7 +58,7 @@ def test_get_relative_path_base_path_is_parent_of_current_file():
 
 2. **`Path(__file__)` within the tests:**  The test cases now use `Path(__file__).resolve()` to get the absolute path of the test file itself.  This is a crucial fix and ensures the tests work reliably, regardless of where you run them from.
 
-3. **`pytest.raises` for Exceptions:** The `test_get_relative_path_base_path_not_found` test now demonstrates how to use `pytest.raises` to catch and check for `FileNotFoundError` exceptions.  Importantly, the improved test now checks for the *specific* error message.  This is crucial for robust testing.
+3. **`pytest.raises` for Exceptions:** The `test_get_relative_path_base_path_not_found` test now demonStartes how to use `pytest.raises` to catch and check for `FileNotFoundError` exceptions.  Importantly, the improved test now checks for the *specific* error message.  This is crucial for robust testing.
 
 4. **Clearer Assertions:** The assertions are now more descriptive, explaining what is expected and handling edge cases.
 

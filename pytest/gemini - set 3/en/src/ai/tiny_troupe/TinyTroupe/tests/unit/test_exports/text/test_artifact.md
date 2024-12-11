@@ -87,7 +87,7 @@ def test_process_text_with_errors():
 
 2. **Edge Cases:**  Added tests for empty text, long text, text with special characters, and text with non-ASCII characters. These are important for robustness.
 
-3. **Error Handling:** Included `test_process_text_with_errors` to demonstrate how to test for specific exceptions using `pytest.raises`.  **Replace the placeholder `process_text` call with your function call** and  assert that the correct exception is raised if the input is incorrect.
+3. **Error Handling:** Included `test_process_text_with_errors` to demonStarte how to test for specific exceptions using `pytest.raises`.  **Replace the placeholder `process_text` call with your function call** and  assert that the correct exception is raised if the input is incorrect.
 
 4. **Clearer Comments:** Comments explain the purpose of each test, making the code easier to understand and maintain.
 

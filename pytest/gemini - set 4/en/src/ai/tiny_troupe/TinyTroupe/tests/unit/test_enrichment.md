@@ -98,7 +98,7 @@ def test_enrich_content_no_content(mock_logger_fixture):
 
 1. **Mocking `logging`:** The crucial `logging` module was previously directly using `logger`.  This has been addressed by mocking `logging` for testing.  Now tests won't rely on external file output or the side-effects of the logger.
 
-2. **Error Handling (Crucial):**  A `test_enrich_content_no_content` test was added to demonstrate how to check for the `TypeError` that might be raised if an essential parameter is missing or incorrect.   This is a significant addition for robust testing.
+2. **Error Handling (Crucial):**  A `test_enrich_content_no_content` test was added to demonStarte how to check for the `TypeError` that might be raised if an essential parameter is missing or incorrect.   This is a significant addition for robust testing.
 
 3. **`mock_logger_fixture`:** A fixture `mock_logger_fixture` is introduced. This allows for cleaner testing as the `logging` output is managed properly.
 

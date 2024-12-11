@@ -16,7 +16,7 @@ Usage example
 -------------------------
 .. code-block:: python
 
-    # This is a demonstration of potential usage but is not executable because the imports are commented out
+    # This is a demonStartion of potential usage but is not executable because the imports are commented out
     # in the original code.  To use, uncomment the relevant import statements.
 
     # Example (assuming the imports are uncommented):

@@ -90,7 +90,7 @@ def test_keepass_exception(mock_logger):
 
 2. **Specific Assertion for `mock_logger`:**  The test `test_custom_exception_logging` now checks if `mock_logger.error` was called with the expected message.  Similarly, `test_custom_exception_with_original_exception` verifies both `error` and `debug` calls.  This is much more robust than simply asserting the exception was raised.
 
-3. **`test_invalid_input_custom_exception`:** This demonstrates a test for invalid input (passing a non-string message).  This is important for robustness.
+3. **`test_invalid_input_custom_exception`:** This demonStartes a test for invalid input (passing a non-string message).  This is important for robustness.
 
 4. **Comprehensive Exception Coverage:** Tests have been added for `FileNotFoundError`, `ProductFieldException`, and a simple example `PrestaShopException`.
 

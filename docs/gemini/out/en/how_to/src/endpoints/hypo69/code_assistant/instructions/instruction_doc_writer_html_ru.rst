@@ -32,7 +32,7 @@ Execution steps
    * **Format Python Code Snippets:** Use the `.. code-block:: python` format for Python code examples within the HTML file.
 
 
-5. **Example (Illustrative):**
+5. **Example (IlluStartive):**
 
    ```html
    <h1>My Math Module</h1>

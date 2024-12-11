@@ -102,7 +102,7 @@ def test_main():
 
 1. **Mocking:** The code now uses `mocker.MagicMock()` to mock the `OpenAI` client, making the tests independent of the actual OpenAI API. This is crucial for avoiding external dependencies and ensuring fast, reliable tests.  Importantly, it mocks the expected return of the `chat.completions.create` method.
 
-2. **Error Handling:** Added tests specifically for error cases (e.g., `test_list_models_error`, `test_train_error`), demonstrating proper error handling within the `OpenAIModel` methods.
+2. **Error Handling:** Added tests specifically for error cases (e.g., `test_list_models_error`, `test_train_error`), demonStarting proper error handling within the `OpenAIModel` methods.
 
 3. **Clearer Assertions:** Assertions are more specific and focused on verifying the expected behavior.  For example, `assert job_id == "12345"` instead of vague assertions.
 
@@ -118,7 +118,7 @@ def test_main():
 
 2.  **Run tests:** Navigate to the directory containing your tests, and run `pytest`.
 
-3.  **Adapt fixtures:** Replace the placeholder `example_data` and `mock_openai_client` fixture with your actual data and mocking strategies.
+3.  **Adapt fixtures:** Replace the placeholder `example_data` and `mock_openai_client` fixture with your actual data and mocking Startegies.
 
 4.  **Add tests for other methods:** Extend the test suite to cover all relevant functions and methods in your `training.py` file, including edge cases, invalid inputs, and error scenarios.
 

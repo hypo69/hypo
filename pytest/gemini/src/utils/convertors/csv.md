@@ -89,7 +89,7 @@ def test_csv_to_json_invalid_file(tmpdir):
 * **Clearer Test Names:** Test names are more descriptive and indicate the test scenario.
 * **`pytest.raises` for Exceptions:** Correctly used to test `FileNotFoundError` for invalid file paths.
 * **Valid Input Testing:**  Verifies the correct output format and contents for valid CSV data.
-* **Edge Case Testing (Empty File):** A new test specifically handles an empty CSV file, demonstrating robust error handling.
+* **Edge Case Testing (Empty File):** A new test specifically handles an empty CSV file, demonStarting robust error handling.
 * **Testing `csv_to_json`:**  This test now correctly creates a temporary JSON file to check that JSON is written correctly to disk and verifies that the function handles writing correctly. Includes a test with an invalid file to test exception handling.
 * **Robustness:** The tests now cover more aspects of the provided functions, including invalid file paths, empty files, and the actual JSON conversion.
 

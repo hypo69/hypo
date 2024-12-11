@@ -29,7 +29,7 @@ import pytest
 
 **Explanation and Important Considerations:**
 
-1. **Missing Code:** The provided code only defines a `MODE` constant.  To write meaningful tests, you need to provide the `Mexiron` class from `scenario_pricelist.py` (or any other relevant functions or classes).  The example above is a placeholder that demonstrates the basic structure of test functions.
+1. **Missing Code:** The provided code only defines a `MODE` constant.  To write meaningful tests, you need to provide the `Mexiron` class from `scenario_pricelist.py` (or any other relevant functions or classes).  The example above is a placeholder that demonStartes the basic structure of test functions.
 
 2. **Import Statements:** Make sure the import statements are correct to access the code you want to test.
 

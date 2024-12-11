@@ -116,7 +116,7 @@ def pytest_sessionfinish(session, exitstatus):
 * **File Cleanup:** Included `pytest_sessionfinish` to remove the temporary log file.  This is crucial for test runs not clobbering previous runs.
 * **Fixtures:**  Introduced `test_logger_fixture` to encapsulate and reuse the logger instance, improving code organization.
 * **Comprehensive testing:** The tests now cover `info`, `error`, `warning`, `critical`, and `exception` logging levels.
-* **Edge case (ValueError):** Added a test specifically for exceptions, demonstrating correct logging of exception details.
+* **Edge case (ValueError):** Added a test specifically for exceptions, demonStarting correct logging of exception details.
 
 
 **To run the tests:**

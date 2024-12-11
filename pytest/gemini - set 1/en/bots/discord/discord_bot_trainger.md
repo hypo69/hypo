@@ -104,10 +104,10 @@ def test_correct_message_found(mock_discord_client):
 * **Error Handling:**  The `test_train_invalid_input` test now uses `pytest.raises` to verify that the correct exception is raised when an attachment is missing. The `test_archive_fails` example shows how to test for specific error conditions.
 
 
-* **Valid Input:** The `test_train_valid_input` now demonstrates a test case with valid input for `train`.
+* **Valid Input:** The `test_train_valid_input` now demonStartes a test case with valid input for `train`.
 
 
-* **Comprehensive Test Cases:** Added `test_test_valid_json` and `test_test_invalid_json` to demonstrate testing a function that accepts JSON.
+* **Comprehensive Test Cases:** Added `test_test_valid_json` and `test_test_invalid_json` to demonStarte testing a function that accepts JSON.
 
 
 * **Clearer Assertions:**  Assertions are more specific (e.g., checking for the presence of "Correction received").

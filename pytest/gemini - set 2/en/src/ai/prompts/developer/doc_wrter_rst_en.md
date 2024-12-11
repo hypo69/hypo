@@ -71,7 +71,7 @@ def test_process_files_file_not_found():
     assert "File not found" in str(excinfo.value)
 
 
-# Example usage to illustrate expected behavior
+# Example usage to illuStarte expected behavior
 # (This is not part of the testing framework)
 ```
 
@@ -85,7 +85,7 @@ def test_process_files_file_not_found():
 3. **`pytest.raises` for Exceptions:** Correctly uses `pytest.raises` to test the exception handling.
 4. **Clear Test Function Names:**  The test functions are descriptive.
 5. **Isolated Tests:** Each test function is independent.
-6. **Example Usage (Important):**  The example usage section demonstrates what would happen if the code worked, not just what the tests ensure are possible errors.
+6. **Example Usage (Important):**  The example usage section demonStartes what would happen if the code worked, not just what the tests ensure are possible errors.
 
 
 

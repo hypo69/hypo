@@ -8,7 +8,7 @@
 from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
     chrome_driver = Driver(Chrome)
     if chrome_driver.get_url("https://www.example.com"):
         print("Successfully navigated to the URL")

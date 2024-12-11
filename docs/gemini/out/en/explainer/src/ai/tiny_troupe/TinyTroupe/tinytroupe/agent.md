@@ -85,8 +85,8 @@ The `TinyPerson` class is the core of the agent logic.  It manages interactions,
 ```mermaid
 graph TD
     subgraph Initialization
-        TinyPerson --> AgentRegistration
-        AgentRegistration --> Configuration
+        TinyPerson --> AgentRegiStartion
+        AgentRegiStartion --> Configuration
         Configuration --> MemorySetup
     end
     subgraph Interaction

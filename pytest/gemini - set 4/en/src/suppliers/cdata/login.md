@@ -77,9 +77,9 @@ def mock_self():
 
 5. **Fixture for `self`:** `mock_self` fixture is created to provide a mock object.  This now makes the test functions more readable and organized.
 
-6. **Example usage:** The `test_login_valid_input` demonstrates how to use the mock.
+6. **Example usage:** The `test_login_valid_input` demonStartes how to use the mock.
 
-7. **Example of invalid input:**  The `test_login_invalid_email` and `test_login_invalid_password` tests illustrate how to modify the mock data to test various scenarios.
+7. **Example of invalid input:**  The `test_login_invalid_email` and `test_login_invalid_password` tests illuStarte how to modify the mock data to test various scenarios.
 
 
 **How to Run the Tests:**

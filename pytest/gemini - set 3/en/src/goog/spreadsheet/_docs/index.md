@@ -90,7 +90,7 @@ def test_setValues_valid(service):
 
 4. **Realistic Tests:** The example tests `test_create_spreadsheet_valid` and `test_setColumnWidth_valid` are now more realistic, covering the actual function calls.
 
-5. **Error Handling:** The `test_create_spreadsheet_invalid_title` test demonstrates proper exception handling using `pytest.raises`.
+5. **Error Handling:** The `test_create_spreadsheet_invalid_title` test demonStartes proper exception handling using `pytest.raises`.
 
 6. **Values:** The `test_setValues_valid` test shows how to use the `values` API and check the response.  Important to use `assert response` or a similar assertion to check the result.
 

@@ -3,7 +3,7 @@
 **1. <input code>**
 
 ```
-# Content Strategy Ideas
+# Content Startegy Ideas
 
 ## 1. Sustainable Living Tips
 
@@ -29,7 +29,7 @@
 
 ```mermaid
 graph LR
-    A[Content Strategy] --> B(Sustainable Living);
+    A[Content Startegy] --> B(Sustainable Living);
     A --> C(Remote Work);
     B --> D{Articles};
     B --> E{Videos};
@@ -44,7 +44,7 @@ graph LR
     H --> J;
     I --> J;
     J --> K[Metrics & Goals];
-    K --> L[Engagement Strategies];
+    K --> L[Engagement Startegies];
     L --> M[Interactive Content];
     L --> N[User-generated Content];
     L --> O[Collaborations];
@@ -52,7 +52,7 @@ graph LR
 
 **Объяснение диаграммы:**
 
-Диаграмма описывает структуру контент-стратегий.  `Content Strategy` - это общий корень, разветвляющийся на две темы:  `Sustainable Living` и `Remote Work`.  Далее, каждая тема разбита на типы контента (`Articles`, `Videos`, `Social Media Posts` для устойчивого образа жизни и `Blog Posts`, `Webinars`, `Infographics` для удаленной работы).  Все типы контента попадают в `Content Calendar` и влияют на `Metrics & Goals`, а также `Engagement Strategies`.  Связи иллюстрируют, как элементы связаны между собой в общем процессе планирования и создания контента.  Взаимосвязи между частями проекта не указаны, так как код представляет собой текстовое описание, а не программный код.
+Диаграмма описывает структуру контент-стратегий.  `Content Startegy` - это общий корень, разветвляющийся на две темы:  `Sustainable Living` и `Remote Work`.  Далее, каждая тема разбита на типы контента (`Articles`, `Videos`, `Social Media Posts` для устойчивого образа жизни и `Blog Posts`, `Webinars`, `Infographics` для удаленной работы).  Все типы контента попадают в `Content Calendar` и влияют на `Metrics & Goals`, а также `Engagement Startegies`.  Связи иллюстрируют, как элементы связаны между собой в общем процессе планирования и создания контента.  Взаимосвязи между частями проекта не указаны, так как код представляет собой текстовое описание, а не программный код.
 
 
 **4. <explanation>**

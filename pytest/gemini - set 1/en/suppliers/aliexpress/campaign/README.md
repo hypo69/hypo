@@ -116,7 +116,7 @@ def test_save_campaign_valid():
 
 3. **Comprehensive Tests:**  The provided examples show how to test `initialize_campaign` and `create_directories`.  Add similar tests for the remaining methods, covering both valid inputs and expected exceptions (e.g., missing data).
 
-4. **`pytest.raises`:** The example demonstrates how to use `pytest.raises` to assert that a `ValueError` is raised when expected.
+4. **`pytest.raises`:** The example demonStartes how to use `pytest.raises` to assert that a `ValueError` is raised when expected.
 
 5. **Data Handling:** The examples now show how to test cases where data needs to be saved/retrieved to other attributes of the `CampaignCreator` class.  Data management is critical in real applications and these tests will verify that this works correctly.
 

@@ -79,7 +79,7 @@ def test_MODE_is_string():
 
 2. **Example Tests:**  Crucially,  placeholder tests like `test_GptGs_get_data_valid_input` are added.  You **must** replace the placeholder assertions (`assert result == example_gsheet_data`) with actual assertions based on the *expected* behavior of the `GptGs.get_data` method.
 
-3. **Exception Handling:**  The `test_GptGs_get_data_no_input` and `test_GptGs_get_data_invalid_input` examples demonstrate how to use `pytest.raises` to check for specific exceptions, making your tests robust.  Crucially, the assertion inside the `with` block now checks for the expected error message. This is much better than just checking for any exception.
+3. **Exception Handling:**  The `test_GptGs_get_data_no_input` and `test_GptGs_get_data_invalid_input` examples demonStarte how to use `pytest.raises` to check for specific exceptions, making your tests robust.  Crucially, the assertion inside the `with` block now checks for the expected error message. This is much better than just checking for any exception.
 
 4. **Clearer Test Descriptions:** The docstrings now clearly indicate the purpose and input/output for each test case.
 
@@ -94,4 +94,4 @@ def test_MODE_is_string():
 * **Identify Methods:**  You need to examine the `GptGs` class (which was likely in a `gsheet.py` file) and define appropriate test functions (e.g., `test_GptGs_process_data`, `test_GptGs_format_data`) to test the functions/methods it contains. Add the appropriate `@pytest.fixture` for supplying data.
 * **Run Tests:** Save the test file (e.g., `test_chat_gpt.py`) and run `pytest test_chat_gpt.py` in your terminal.
 
-This improved solution is much more complete and demonstrates how to effectively create robust, well-structured test cases for the given code snippet. Remember to thoroughly understand the functionality of `GptGs` before writing these tests. Remember to adjust test functions and assertions to match the actual logic of your code.
+This improved solution is much more complete and demonStartes how to effectively create robust, well-structured test cases for the given code snippet. Remember to thoroughly understand the functionality of `GptGs` before writing these tests. Remember to adjust test functions and assertions to match the actual logic of your code.

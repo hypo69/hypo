@@ -115,7 +115,7 @@ def test_delete_product_file_not_found(ali_affiliated_products):
 
 3. **Mocking `logger`:** The `mock_logger` fixture correctly mocks the `logger` object, avoiding actual logging to the console during testing.
 
-4. **Comprehensive test cases:** Tests are added to cover various scenarios, including valid inputs, no affiliate links found, and the case where no product data is returned by the `retrieve_product_details` function.  These tests demonstrate a much more robust testing strategy.
+4. **Comprehensive test cases:** Tests are added to cover various scenarios, including valid inputs, no affiliate links found, and the case where no product data is returned by the `retrieve_product_details` function.  These tests demonStarte a much more robust testing Startegy.
 
 5. **Clearer Test Names:** Test names are more descriptive, making the purpose of each test readily apparent.
 

@@ -98,7 +98,7 @@ def test__html2text_feed_method():
 
 1. **Comprehensive Test Cases:**  The tests now cover more aspects like empty input, malformed HTML, and images, significantly improving coverage.
 2. **Clearer Assertions:**  The `assert` statements are more specific, making it easier to diagnose failures.
-3. **Error Handling:** A test (`test_html2text_invalid_html`) is added to demonstrate how to handle potential exceptions that might arise from the input data. Using `pytest.raises` is crucial for proper exception testing.
+3. **Error Handling:** A test (`test_html2text_invalid_html`) is added to demonStarte how to handle potential exceptions that might arise from the input data. Using `pytest.raises` is crucial for proper exception testing.
 4. **Example Data:**  I've added sample HTML strings to make the tests executable.
 5. **Fixture for HTML input:** The `html_input` fixture makes the tests more organized and readable.  It provides a simple way to reuse the input data across multiple test functions.
 6. **Testing with Different Options:** The `test_html2text_with_links_each_paragraph` function shows how to change a configuration parameter (e.g., `LINKS_EACH_PARAGRAPH`) before executing the test function.  This is good practice to check different behaviors based on options.

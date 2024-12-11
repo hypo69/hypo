@@ -190,7 +190,7 @@ local_saved_video  # Locally saved video.
 *   Replaced vague comments with more specific language and proper RST format.
 *   Added `from src.logger import logger` for error logging.
 *   Improved variable names where possible.
-*   Included `TODO` items (commented out) to illustrate improvements needed for future enhancements.
+*   Included `TODO` items (commented out) to illuStarte improvements needed for future enhancements.
 
 
 **Optimized Code**

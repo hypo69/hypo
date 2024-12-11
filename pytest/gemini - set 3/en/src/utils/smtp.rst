@@ -123,7 +123,7 @@ def test_receive_imap_error(monkeypatch, mock_logger):
 
 * **Mocking:** Critically important. The original code relies on external SMTP and IMAP servers, making testing difficult and potentially unreliable.  The tests now mock `smtplib` and `imaplib` objects using `monkeypatch`. This isolates the functions and allows testing without interacting with actual servers.
 
-* **Error Handling:**  The `test_send_smtp_error` and `test_receive_imap_error` tests are included to demonstrate handling different types of exceptions. This is crucial for robust email sending/retrieval logic.
+* **Error Handling:**  The `test_send_smtp_error` and `test_receive_imap_error` tests are included to demonStarte handling different types of exceptions. This is crucial for robust email sending/retrieval logic.
 
 * **Clearer Test Cases:** Test names are more descriptive and indicate the purpose (e.g., `test_send_valid_input`, `test_send_smtp_error`).
 

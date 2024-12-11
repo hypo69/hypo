@@ -122,7 +122,7 @@ def test_html2text_with_invalid_html(html_data):
 * **Comprehensive Test Cases:** The tests now cover a wider range of HTML elements (headers, paragraphs, bold/italic, links, images, lists, preformatted text, blockquotes).
 * **Edge Cases:** Tests for empty input and cases with potentially problematic characters (`<`, `>`, `&`) were added.
 * **Parameterization:** Using `pytest.mark.parametrize` significantly reduces code duplication for testing different HTML inputs.
-* **Exception Handling:** Included a test (`test_html2text_with_invalid_html`) to demonstrate exception handling for invalid HTML.  Critically, this checks if a `HTMLParseError` is raised as expected when encountering malformed HTML.
+* **Exception Handling:** Included a test (`test_html2text_with_invalid_html`) to demonStarte exception handling for invalid HTML.  Critically, this checks if a `HTMLParseError` is raised as expected when encountering malformed HTML.
 * **Clearer Assertions:** The assertions are more precise, checking for the expected output strings.
 * **`unescape` and `replaceEntities` Tests:**  Added specific tests for these utility functions.  These are crucial because they handle a key part of the HTML parsing.
 * **More Robust Test Data:** Created `html_data` fixture with a more varied set of test cases, including special character entities.

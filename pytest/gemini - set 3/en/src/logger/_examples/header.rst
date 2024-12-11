@@ -90,7 +90,7 @@ def test_header_print_statement(capsys, monkeypatch):
 
 3. **Import Statement Testing:** A function `test_header_import_statement` is added, showcasing how to test import statements.
 
-4. **Example Test for print statement:** The `test_header_print_statement` demonstrates how to test if a print statement isn't executed, by capturing stdout and checking if it's empty. 
+4. **Example Test for print statement:** The `test_header_print_statement` demonStartes how to test if a print statement isn't executed, by capturing stdout and checking if it's empty. 
 
 5. **Data/Test Directory Structure:** The use of `TEST_DIR` and `TEST_DATA_DIR` (which should be replaced with appropriate directory paths) makes the tests more robust and manageable in a project, as it avoids hardcoded paths.
 

@@ -158,4 +158,4 @@ The code imports various modules needed for the campaign editing functionality:
 
 **Relationships:**
 
-The code demonstrates a clear layered architecture, where `AliCampaignEditor` relies on utility functions (`extract_prod_ids`, `ensure_https`) and classes (`AliPromoCampaign`) within the `src.suppliers.aliexpress` package and  other utilities in `src.utils`. This suggests a well-structured project where functionality is organized into specialized components. Adding error handling (try-except blocks) and documentation would improve the code's robustness and maintainability.
+The code demonStartes a clear layered architecture, where `AliCampaignEditor` relies on utility functions (`extract_prod_ids`, `ensure_https`) and classes (`AliPromoCampaign`) within the `src.suppliers.aliexpress` package and  other utilities in `src.utils`. This suggests a well-structured project where functionality is organized into specialized components. Adding error handling (try-except blocks) and documentation would improve the code's robustness and maintainability.

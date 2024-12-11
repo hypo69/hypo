@@ -77,4 +77,4 @@ response = request.getResponse()
 # ... process the response ...
 ```
 
-**Note**: Replace placeholders like `"your_app_signature"` and `"your_category_id"` with your actual API credentials and values. This example demonstrates a basic usage.  Full implementation requires setting the appropriate parameters, handling potential errors, and processing the response data accordingly. Remember to consult the AliExpress Affiliate API documentation for the most up-to-date details and parameters.
+**Note**: Replace placeholders like `"your_app_signature"` and `"your_category_id"` with your actual API credentials and values. This example demonStartes a basic usage.  Full implementation requires setting the appropriate parameters, handling potential errors, and processing the response data accordingly. Remember to consult the AliExpress Affiliate API documentation for the most up-to-date details and parameters.

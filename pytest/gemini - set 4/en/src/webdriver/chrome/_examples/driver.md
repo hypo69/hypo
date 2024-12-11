@@ -109,7 +109,7 @@ def test_find_element_not_found(chrome_driver_instance):
 
 2. **Clearer Test Cases:** Test names are more descriptive, and test cases now explicitly handle both successful and unsuccessful scenarios (valid and invalid input).
 
-3. **Edge Case Testing:**  Tests include scenarios where the target URL might be invalid or the element not found, demonstrating robustness in the `Driver` class.
+3. **Edge Case Testing:**  Tests include scenarios where the target URL might be invalid or the element not found, demonStarting robustness in the `Driver` class.
 
 4. **Comprehensive Coverage:**  The tests now cover `get_url`, `extract_domain`, `_save_cookies_localy`, `page_refresh`, `scroll`, and `find_element`.
 
@@ -117,7 +117,7 @@ def test_find_element_not_found(chrome_driver_instance):
 
 6. **Return Values:** Tests now correctly assert on the return values of the methods (e.g., `True` for success, `False` for failure, or `None` for non-existence).
 
-7. **Example for `find_element`:** The `test_find_element` example shows how to correctly assert on the text of the returned element if it exists.  The `test_find_element_not_found` demonstrates how to test for when no element is found.
+7. **Example for `find_element`:** The `test_find_element` example shows how to correctly assert on the text of the returned element if it exists.  The `test_find_element_not_found` demonStartes how to test for when no element is found.
 
 **How to Run:**
 

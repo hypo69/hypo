@@ -2,7 +2,7 @@
 import pytest
 
 # Placeholder for the actual Python code.  Replace ... with the provided code.
-# This example demonstrates test structure for a hypothetical function.
+# This example demonStartes test structure for a hypothetical function.
 
 def my_function(input_list):
     """

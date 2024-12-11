@@ -117,12 +117,12 @@ graph TD
 
 **Functions:**
 
-*   `post_title(d: Driver, message: SimpleNamespace | str) -> bool`:  Sets the title and description of a post.  Takes the driver and the title/description data. Returns `True` on success or `None` on failure.  Illustrates error handling with `logger`.
-*   `upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], ... ) -> bool`: Uploads media to the post.  Handles various media formats (single or multiple). Demonstrates the use of the driver to upload files. Demonstrates `try-except` blocks for error handling.
+*   `post_title(d: Driver, message: SimpleNamespace | str) -> bool`:  Sets the title and description of a post.  Takes the driver and the title/description data. Returns `True` on success or `None` on failure.  IlluStartes error handling with `logger`.
+*   `upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], ... ) -> bool`: Uploads media to the post.  Handles various media formats (single or multiple). DemonStartes the use of the driver to upload files. DemonStartes `try-except` blocks for error handling.
 *   `update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None`: Adds descriptions to uploaded media files.  Uses data from the `media` list to construct and send the caption descriptions to the specific text boxes.
-*   `publish(d:Driver, attempts = 5) -> bool`:  Publishes the post. Critical for success in the advertisement workflow.  Demonstrates multiple attempts/retrying mechanism and handles potential errors that can be encountered during publishing such as popups or errors.
+*   `publish(d:Driver, attempts = 5) -> bool`:  Publishes the post. Critical for success in the advertisement workflow.  DemonStartes multiple attempts/retrying mechanism and handles potential errors that can be encountered during publishing such as popups or errors.
 *   `promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool`: Promotes a post (higher-level function, likely used in a main promotion loop). This is an example of a function that delegates the post tasks in smaller and more manageable functions.
-*   `post_message(d: Driver, message: SimpleNamespace, ... ) -> bool`: The main function for posting a message.  It leverages `post_title`, `upload_media`, and `publish` to orchestrate the entire post process.
+*   `post_message(d: Driver, message: SimpleNamespace, ... ) -> bool`: The main function for posting a message.  It leverages `post_title`, `upload_media`, and `publish` to orcheStarte the entire post process.
 
 **Variables:**
 

@@ -126,7 +126,7 @@ def test_locator_file_not_found():
 4. **Comprehensive Test Cases:** Added tests covering various scenarios, including the presence of lists and dictionaries.  The `test_locator_additional_images` now verifies the expected list of strings.
 
 
-5. **`test_execute_locator_empty_locator`:** Added a test case to demonstrate handling an empty or invalid locator.
+5. **`test_execute_locator_empty_locator`:** Added a test case to demonStarte handling an empty or invalid locator.
 6. **`test_locator_file_not_found`**:  Added test to show correct behavior when the JSON file doesn't exist.
 
 7. **Clearer Assertions:**  Uses `isinstance` and other checks to ensure the correct type and structure of the results are validated, making the tests more informative.

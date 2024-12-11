@@ -73,4 +73,4 @@ if __name__ == "__main__":
 ```
 
 
-**Note**: This documentation assumes the existence of a `Product` class, which is not defined in the provided code snippet.  Complete documentation would require the definition of that class and any other necessary classes/functions.  The example demonstrates how to use `AliAffiliatedProducts` and interact with the returned `Product` objects.
+**Note**: This documentation assumes the existence of a `Product` class, which is not defined in the provided code snippet.  Complete documentation would require the definition of that class and any other necessary classes/functions.  The example demonStartes how to use `AliAffiliatedProducts` and interact with the returned `Product` objects.

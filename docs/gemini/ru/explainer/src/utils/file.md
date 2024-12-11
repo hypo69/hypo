@@ -141,7 +141,7 @@ graph LR
 * `fnmatch`: Enables pattern matching on file names.
 * `pathlib`: Offers an object-oriented approach to working with file paths.
 * `typing`: Provides type hints for better code readability and maintainability.
-* `src.logger`: A custom logger, likely a module or package within the `src` directory, responsible for handling logging messages.  This demonstrates a good modular design.
+* `src.logger`: A custom logger, likely a module or package within the `src` directory, responsible for handling logging messages.  This demonStartes a good modular design.
 
 **Classes:**
 

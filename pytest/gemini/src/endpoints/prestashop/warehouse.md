@@ -81,11 +81,11 @@ def test_presta_warehouse_method(mock_prestashop, caplog):
 
 2. **Clearer Test Names:** Test function names are more descriptive, reflecting the specific aspect being tested.
 
-3. **Exception Handling:** The `test_presta_warehouse_invalid_input` demonstrates how to test exception handling using `pytest.raises`. This is essential to verify how the class behaves when confronted with errors.
+3. **Exception Handling:** The `test_presta_warehouse_invalid_input` demonStartes how to test exception handling using `pytest.raises`. This is essential to verify how the class behaves when confronted with errors.
 
 4. **Example for Method Testing:** The `test_presta_warehouse_method` includes an example for testing a method of `PrestaWarehouse`.  Crucially, it also checks the logger, which is critical if you use logging in your code.
 
-5. **Mode Testing:** Included `test_presta_warehouse_mode_setting` to illustrate a simple test case for checking if the `MODE` variable is set correctly.
+5. **Mode Testing:** Included `test_presta_warehouse_mode_setting` to illuStarte a simple test case for checking if the `MODE` variable is set correctly.
 
 6. **Important Imports:** Ensures the necessary modules (`logger`) are imported for testing.
 

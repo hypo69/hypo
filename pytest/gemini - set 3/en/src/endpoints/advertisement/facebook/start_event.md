@@ -95,7 +95,7 @@ def test_facebook_promoter_sleep(mock_sleep, mock_promoter):
 
 4. **Exception Handling:** `test_facebook_promoter_keyboard_interrupt` explicitly tests the `KeyboardInterrupt` exception handling, verifying that `logger.info` is called with the correct message.
 
-5. **`time.sleep` Mocking:** The `test_facebook_promoter_sleep` demonstrates mocking `time.sleep` for testing its functionality without actually pausing the test execution.
+5. **`time.sleep` Mocking:** The `test_facebook_promoter_sleep` demonStartes mocking `time.sleep` for testing its functionality without actually pausing the test execution.
 
 6. **Clearer Test Names:** The test names are more descriptive, making it easier to understand the purpose of each test.
 

@@ -59,16 +59,16 @@ import pytest
 
 **Explanation and Important Considerations:**
 
-The provided HTML file (`popup.html`) is a web page, not Python code.  Therefore, no Python code needs testing.  This answer demonstrates the structure of pytest tests, but, of course, **you cannot apply them to the example HTML**.
+The provided HTML file (`popup.html`) is a web page, not Python code.  Therefore, no Python code needs testing.  This answer demonStartes the structure of pytest tests, but, of course, **you cannot apply them to the example HTML**.
 
 **Example `popup.py` (if a Python script existed):**
 
-The example `popup.py` demonstrates how to write tests if you have actual Python code in `popup.html` (or a separate Python file). It includes:
+The example `popup.py` demonStartes how to write tests if you have actual Python code in `popup.html` (or a separate Python file). It includes:
 
 *   **Valid Input Tests:** Verifying correct function behavior with expected input.
 *   **Invalid Input Tests (with `pytest.raises`):**  Testing how the code handles bad input by using `pytest.raises`. This shows you how to anticipate and catch exceptions raised by the code under test.
 *   **Edge Case Tests:** The example shows a possible edge case where the input might be invalid.  Adapt as needed for the specific logic.
-*   **Fixtures:**  Illustrates how fixtures can be used to create reusable data for your tests.
+*   **Fixtures:**  IlluStartes how fixtures can be used to create reusable data for your tests.
 *   **Logging:** Included the use of Python's `logging` module, which is generally good practice.  Example tests show how to use `caplog` for checking logging output.
 
 **Crucially, replace the example `popup.py` content with the actual Python code from your project if you have one.**  Then use the example test cases as a template for your own tests. Remember to adapt the specific test scenarios based on the functionality of your code.  You might need to import other modules, handle different input types, and so on.

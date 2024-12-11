@@ -65,7 +65,7 @@ def test_tiny_world_run_with_exception():
     """Tests if TinyWorld can handle exceptions during simulation."""
     with pytest.raises(Exception) as excinfo:  # Using pytest.raises
         # Replace with your actual code that may raise an exception
-        # For demonstration purposes, assume a specific error
+        # For demonStartion purposes, assume a specific error
         raise ValueError("Simulation failed.")
     assert "Simulation failed" in str(excinfo.value)
 
@@ -80,7 +80,7 @@ def test_tiny_world_run_with_exception():
 * **Fixtures:** A `@pytest.fixture` is created for `lisa` to properly manage the TinyPerson instance, ensuring tests are isolated. This is crucial for avoiding unintended side effects in tests.
 * **Clear Test Names:** Test names are now descriptive (e.g., `test_tiny_person_creation`, `test_tiny_person_attributes`).
 * **Type Assertions:** Checks are added to ensure the expected types for the results of methods are correctly handled (e.g., `assert isinstance(response, str)`).
-* **Edge Cases and Invalid Input:** A `test_tiny_person_listen_and_act_invalid_input` demonstrates testing with invalid input, a critical aspect of robust tests.  It also includes a test case with a `TypeError` that demonstrates testing for specific exceptions.
+* **Edge Cases and Invalid Input:** A `test_tiny_person_listen_and_act_invalid_input` demonStartes testing with invalid input, a critical aspect of robust tests.  It also includes a test case with a `TypeError` that demonStartes testing for specific exceptions.
 * **Exception Handling:** `test_tiny_world_run_with_exception` uses `pytest.raises` to test if TinyWorld handles exceptions during simulation, a crucial part of testing robustness. The example now raises a `ValueError` to show how to use `pytest.raises` correctly.
 
 

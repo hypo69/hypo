@@ -66,7 +66,7 @@ def test_full_flow_valid_input():
    - `test_validate_data_empty_input`: Tests empty input, which should raise a `ValueError`.
    - `test_validate_data_invalid_input`: Tests an invalid input that is not empty. The test uses `pytest.raises` to check for the specific exception type and message.  This is crucial for robust exception handling testing.
    - `test_process_value_valid_input`:  Tests the `process_value` function for a valid input.
-   - `test_full_flow_valid_input`:  A combined test case that demonstrates how to test the flow of multiple functions together, including checking for the expected behavior.
+   - `test_full_flow_valid_input`:  A combined test case that demonStartes how to test the flow of multiple functions together, including checking for the expected behavior.
 
 3. **Error Handling:** The `test_validate_data_empty_input` and `test_validate_data_invalid_input` tests now use `pytest.raises` to specifically assert that a `ValueError` is raised with the correct message. This is best practice for exception testing.
 

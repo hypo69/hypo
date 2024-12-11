@@ -37,7 +37,7 @@ Usage example
     import os
     from pathlib import Path
 
-    # Create a dummy settings.json for demonstration
+    # Create a dummy settings.json for demonStartion
     settings_data = {
         "project_name": "MyProject",
         "version": "1.0.0",
@@ -47,7 +47,7 @@ Usage example
         json.dump(settings_data, f, indent=4)
 
 
-    # Create a dummy README.MD for demonstration
+    # Create a dummy README.MD for demonStartion
     readme_data = "This is my project's README"
     with open("README.MD", "w") as f:
         f.write(readme_data)

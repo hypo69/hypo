@@ -11,7 +11,7 @@ Execution steps
 -------------------------
 1.  **Module Documentation:**  Use a title to identify the module's purpose.  Explain its function, and include examples of how to use it.  Format examples as `.. code-block:: python` blocks.  Specify platforms and provide a synopsis of the module. Describe functions/methods within the module using RST headings as needed.
 2.  **Class Documentation:**  For each class, provide a description of its purpose and list its attributes and methods. Detail every method's function, parameters, return values, and usage examples.
-3.  **Function/Method Documentation:**  Document each function or method with a clear description of its purpose.  Include detailed information about parameters and return values.  Illustrate usage with `.. code-block:: python` examples.
+3.  **Function/Method Documentation:**  Document each function or method with a clear description of its purpose.  Include detailed information about parameters and return values.  IlluStarte usage with `.. code-block:: python` examples.
 4.  **Comments:**  All code comments should be written in RST format, explaining the code's specific actions.  Use blocks of comments, not line-by-line comments, to describe logic and any design decisions or temporary solutions.
 5.  **Exception Documentation:**  For classes, methods, and functions, specify potential exceptions, their causes, and how to handle them.  Clearly define parameters for the exceptions and provide examples of how to handle these in your code.
 

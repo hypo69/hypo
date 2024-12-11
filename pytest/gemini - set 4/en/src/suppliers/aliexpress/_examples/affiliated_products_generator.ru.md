@@ -105,7 +105,7 @@ def test_main_output(monkeypatch, capsys):
 * **Comprehensive Test Cases:** The tests now cover various scenarios: valid input, empty input, invalid input, cases where products are unavailable, and also the important case where the API call might fail. This gives a much stronger test coverage.
 * **Edge Cases:**  The `test_process_affiliate_products_invalid_input` tests various scenarios with edge cases, making the testing suite more robust.
 * **Failure Handling:**  `test_process_affiliate_products_failure` now tests a scenario where an external call (the mock API) returns nothing, which is a very important test case.
-* **Output Capturing:** The `test_main_output` demonstrates how to test print statements using `capsys` for verifying output.
+* **Output Capturing:** The `test_main_output` demonStartes how to test print statements using `capsys` for verifying output.
 
 
 **How to Use:**

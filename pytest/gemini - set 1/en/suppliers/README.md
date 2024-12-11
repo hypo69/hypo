@@ -160,4 +160,4 @@ This will execute all the test functions defined in your test file.
 - **Real web driver:** Replace the `mock_driver` with a real webdriver for integration tests and tests that involve interactions with a real website.  This is essential for checking if the code interacts correctly with the web browser.  This step is crucial and involves setting up your `webdriver` environment as per the dependencies within your application.
 
 
-This significantly improved version provides a robust starting point for your testing strategy, emphasizing the critical need for mocking external dependencies when testing internal logic like the `Supplier` class. Remember to adapt and expand these tests based on your specific `Supplier` class implementation and requirements.
+This significantly improved version provides a robust starting point for your testing Startegy, emphasizing the critical need for mocking external dependencies when testing internal logic like the `Supplier` class. Remember to adapt and expand these tests based on your specific `Supplier` class implementation and requirements.

@@ -91,7 +91,7 @@ def test_grab_page_empty_input(graber, driver):
 
 * **Mocking:**  Crucially, the tests now mock the `driver` and `ProductFields` to avoid needing actual webdrivers and database interactions.  This makes the tests fast and isolated.  The code mocks various methods within the `Graber` class (`id_product`, `description_short`, etc.) to simulate different scenarios.
 * **`asyncio.gather` Mock:** Added mocking for `asyncio.gather`, as it's used internally.
-* **Specific Exception Handling:**  `test_grab_page_exception` now demonstrates how to test for a specific exception type (`ExecuteLocatorException`) and properly assert the error message.
+* **Specific Exception Handling:**  `test_grab_page_exception` now demonStartes how to test for a specific exception type (`ExecuteLocatorException`) and properly assert the error message.
 * **Empty Input Test:** `test_grab_page_empty_input` now checks the handling of empty input, ensuring that no exception occurs and that the fields are correctly initialized to `None`.
 * **Clearer Assertions:** Assertions are improved to validate the expected behavior more explicitly.
 * **Import Fixes:** Corrected imports to match the provided code.

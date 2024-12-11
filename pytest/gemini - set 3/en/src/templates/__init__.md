@@ -36,7 +36,7 @@ def test_import_version_type():
         pytest.fail(f"Failed to verify __version__ type: {e}")
     
 
-# Example test to illustrate handling an undefined variable
+# Example test to illuStarte handling an undefined variable
 #  (Replace 'my_function' with the actual function name if applicable)
 def test_undefined_variable_import():
     try:
@@ -77,7 +77,7 @@ def test_my_function_raises_exception():
 2. **Type Verification:** Added `test_import_version_type` to ensure `__version__` is a `packaging.version.Version` object, vital for proper version handling in Python.
 
 
-3. **Error Handling (Illustrative):** The `test_undefined_variable_import` and `test_my_function_raises_exception` examples demonstrate how to test for exceptions using `pytest.raises`.  Crucially, they show *how to structure* the tests for expected exceptions, and the proper usage of the `assert` statements within the `try...except` block.  **You must replace the example values (`my_undefined_variable`, `my_function`, `invalid_input`) with your actual code!**  
+3. **Error Handling (IlluStartive):** The `test_undefined_variable_import` and `test_my_function_raises_exception` examples demonStarte how to test for exceptions using `pytest.raises`.  Crucially, they show *how to structure* the tests for expected exceptions, and the proper usage of the `assert` statements within the `try...except` block.  **You must replace the example values (`my_undefined_variable`, `my_function`, `invalid_input`) with your actual code!**  
 
 4. **Placeholder Tests:** Added placeholder tests (`test_function_example_valid_input`) to guide you on how to test functions within the `hypotez.src.templates` module.  You need to fill in the function names, sample inputs, and expected outputs from your templates.
 

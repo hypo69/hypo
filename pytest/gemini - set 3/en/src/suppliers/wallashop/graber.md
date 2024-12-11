@@ -98,7 +98,7 @@ def test_id_product_method_calls(mock_logger, mock_id_product, mocker):
 * **Comprehensive Exception Handling:**  The `test_grab_page_locator_exception` and `test_grab_page_fetch_specific_data_exception` tests cover the important case where `execute_locator` or  a specific data-fetching function might raise exceptions.  This is essential for robustness.
 
 
-* **Specific Method Testing (Example):** `test_id_product_method_calls` demonstrates how to test individual methods within the `Graber` class by mocking the relevant methods and verifying they're called.
+* **Specific Method Testing (Example):** `test_id_product_method_calls` demonStartes how to test individual methods within the `Graber` class by mocking the relevant methods and verifying they're called.
 
 
 * **Clearer Assertions:**  The assertions now verify that the expected values are set correctly within `ProductFields`, improving the test's ability to detect errors.

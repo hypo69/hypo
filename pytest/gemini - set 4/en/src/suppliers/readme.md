@@ -122,7 +122,7 @@ def test__payload_raises_exception():
 
 * **Replace the Mock with Your Actual Class:** The provided `Supplier` class is a mock. Replace it with your actual `Supplier` class if available. This is crucial for the tests to be relevant.
 
-* **Add Actual Exception Handling:** The example `test_payload_raises_exception` illustrates how to test if a specific exception is raised. You should add tests for any exceptions raised by your `Supplier` class.
+* **Add Actual Exception Handling:** The example `test_payload_raises_exception` illuStartes how to test if a specific exception is raised. You should add tests for any exceptions raised by your `Supplier` class.
 
 * **Implement `locators`:**  The `Supplier` class would likely need attributes for `locators`. Your real test code will have to make use of these and properly test them.
 

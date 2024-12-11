@@ -19,7 +19,7 @@ def mock_browser():
     return MockBrowser()
 
 
-def test_browser_action_listener_registration(mock_browser):
+def test_browser_action_listener_regiStartion(mock_browser):
     """Tests that a listener is correctly registered with browser.browserAction.onClicked.addListener."""
     listener = lambda tab: None  # Dummy listener
     mock_browser.browserAction_onClicked_addListener(listener)
@@ -40,7 +40,7 @@ def test_browser_action_listener_execution(mock_browser):
 def test_browser_action_listener_invalid_tab_id(mock_browser):
     """Tests the case where the tab ID is invalid or missing."""
     # In a real scenario, a valid tab ID would be obtained from the browser context. 
-    # In this mock example, an invalid value is used for demonstration purposes.
+    # In this mock example, an invalid value is used for demonStartion purposes.
     listener = lambda tab: mock_browser.scripting_executeScript({'target': {'tabId': tab['id']}, 'files': ["contentScript.js"]})
 
     mock_browser.browserAction_onClicked_addListener(listener)
@@ -77,7 +77,7 @@ def test_browser_action_listener_missing_files(mock_browser):
 1. **Mock Objects:** The code now uses a `MockBrowser` class to simulate the browser API. This is crucial for testing the background script in isolation without relying on the actual browser.
 
 2. **Comprehensive Test Cases:** Added tests for:
-   - Valid listener registration.
+   - Valid listener regiStartion.
    - Listener execution with a valid tab ID.
    - Handling invalid tab IDs (e.g., missing or incorrect type).
    - Empty/invalid `files` array.
@@ -87,7 +87,7 @@ def test_browser_action_listener_missing_files(mock_browser):
 
 4. **Clearer Assertions:** Assertions are improved to specifically check for the expected values.
 
-5. **Realistic Edge Cases:** The `test_browser_action_listener_invalid_tab_id` now demonstrates handling an unexpected input like `None`.
+5. **Realistic Edge Cases:** The `test_browser_action_listener_invalid_tab_id` now demonStartes handling an unexpected input like `None`.
 
 6. **pytest Fixture:** A `mock_browser` fixture is defined to make the tests more organized and reusable.
 

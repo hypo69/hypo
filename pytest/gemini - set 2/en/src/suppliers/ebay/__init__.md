@@ -61,7 +61,7 @@ def test_graber_zero_max_results():
 
 1. **Missing `Graber` class:** The provided code only includes the `MODE` variable and imports the `Graber` class.  Crucially, the `Graber` class itself (its methods and attributes) are missing.  These tests are written *assuming* a `Graber` class exists with appropriate methods (`__init__`, potentially `get_items`, etc.).  You MUST replace the placeholder `pass` statements with actual assertions against the data returned by the methods of your `Graber` class.
 
-2. **`pytest.raises`:** The `test_graber_invalid_url` function now demonstrates how to use `pytest.raises` to check for specific exceptions.  Crucially, it checks the *error message* to validate the exception.
+2. **`pytest.raises`:** The `test_graber_invalid_url` function now demonStartes how to use `pytest.raises` to check for specific exceptions.  Crucially, it checks the *error message* to validate the exception.
 
 3. **Example Data:** The `example_data` fixture is a starting point. Adjust the contents to reflect the data needed by the `Graber` constructor.
 

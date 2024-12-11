@@ -154,4 +154,4 @@ def test_normalize_list(patched_openai_utils):
     pytest test_extraction.py
     ```
 
-Remember to replace the mock functions with actual implementations if you have them and adjust the assertions to match your expected output from the functions.  The mock functions are a placeholder and *must* be changed to work with your actual implementation. Also, add more tests to cover other possible scenarios. This revised solution provides a much more robust and effective testing strategy.
+Remember to replace the mock functions with actual implementations if you have them and adjust the assertions to match your expected output from the functions.  The mock functions are a placeholder and *must* be changed to work with your actual implementation. Also, add more tests to cover other possible scenarios. This revised solution provides a much more robust and effective testing Startegy.

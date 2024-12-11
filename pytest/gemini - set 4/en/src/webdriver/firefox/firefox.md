@@ -131,7 +131,7 @@ def test_firefox_exception_handling(mock_gs_path, tmp_path, firefox_driver):
 2. **Mocking `Path`:**  The code creates paths using `Path`.  The provided tests would not correctly run, you need to create a test file and provide a fake path.
 
 
-3. **Error Handling:**  The original code had basic `try...except` blocks, but comprehensive error handling is key.  The `test_firefox_exception_handling` demonstrates handling `WebDriverException`.  You might want to add more specific exception types based on the actual `Firefox` class.
+3. **Error Handling:**  The original code had basic `try...except` blocks, but comprehensive error handling is key.  The `test_firefox_exception_handling` demonStartes handling `WebDriverException`.  You might want to add more specific exception types based on the actual `Firefox` class.
 
 4. **Clearer Test Names:** Test names now accurately reflect the test conditions.
 

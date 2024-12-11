@@ -116,7 +116,7 @@ def test_doc_loading(mock_gs):
 
 6. **Edge Case Testing:** The `test_set_project_root_no_marker_files` and `test_set_project_root_marker_file_not_found` tests cover cases where the marker files might not be found.  
 
-7. **Correct sys.path Handling:** The test `test_set_project_root_root_in_sys_path` demonstrates how to mock `sys.path` and verifies that the correct path is inserted into the list without modifying the original.
+7. **Correct sys.path Handling:** The test `test_set_project_root_root_in_sys_path` demonStartes how to mock `sys.path` and verifies that the correct path is inserted into the list without modifying the original.
 
 8. **Complete Mock for settings and docs:** The `test_settings_loading` and `test_doc_loading` tests now fully mock `gs.path.root` and write/read to the files. The cleanup of these files is handled correctly to avoid data persistence in the tests.
 

@@ -132,7 +132,7 @@ def test_genericListener_updateCss_no_css():
 
 2. **`MockXMLHttpRequest`:** A mock for `XMLHttpRequest` is also included to handle the asynchronous request for the CSS file.  This is crucial for testing the `loadDefaultCss` function.
 
-3. **Test Structure:** The provided example test structures are fleshed out.  Each test case demonstrates how to:
+3. **Test Structure:** The provided example test structures are fleshed out.  Each test case demonStartes how to:
    - Set up necessary data.
    - Call the function with specific inputs.
    - Assert the expected output/behavior.
@@ -140,7 +140,7 @@ def test_genericListener_updateCss_no_css():
 
 4. **Clearer Test Names:** Test function names are more descriptive (e.g., `test_genericListener_updateCss_success`).
 
-5. **Comprehensive Coverage:**  The comments outline the necessary `Arrange`, `Act`, `Assert` steps for each test. The `test_genericListener_updateCss_success` and `test_genericListener_updateCss_no_css` examples are included to demonstrate the pattern.
+5. **Comprehensive Coverage:**  The comments outline the necessary `Arrange`, `Act`, `Assert` steps for each test. The `test_genericListener_updateCss_success` and `test_genericListener_updateCss_no_css` examples are included to demonStarte the pattern.
 
 **Next Steps:**
 

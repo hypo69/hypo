@@ -283,4 +283,4 @@ class DriverBase:
 (rest of the code with implemented docstrings and error handling, same as above, with added comments)
 ```
 
-**Important:**  The `...` placeholders need to be replaced with the actual code for the specific actions.  The provided examples are illustrative only.  You need to replace the placeholders with the correct logic for each method based on the functionality of the corresponding web driver.  Error handling, in particular, requires understanding the possible exceptions that can occur within each action.
+**Important:**  The `...` placeholders need to be replaced with the actual code for the specific actions.  The provided examples are illuStartive only.  You need to replace the placeholders with the correct logic for each method based on the functionality of the corresponding web driver.  Error handling, in particular, requires understanding the possible exceptions that can occur within each action.

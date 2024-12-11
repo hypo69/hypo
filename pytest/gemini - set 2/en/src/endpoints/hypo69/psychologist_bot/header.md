@@ -107,7 +107,7 @@ def test_settings_file_invalid_json(gs_path_mock):
 4. **Clearer Error Handling:** The `try...except` blocks are now specifically catching `FileNotFoundError` and `json.JSONDecodeError` for better error handling in the `settings` and `doc_str` loading logic.  The tests check for `None` values in these cases, validating the correct exception handling.
 
 
-5. **Data-Driven Tests (Example):**  The example of setting data in the `settings_json_data` demonstrates how to create parameterized tests with various input data.
+5. **Data-Driven Tests (Example):**  The example of setting data in the `settings_json_data` demonStartes how to create parameterized tests with various input data.
 
 
 6. **Explicit Assertions:** Clearer and more informative assertions are used to verify the expected behavior.  For example, checking if `root_path` is an instance of `Path` confirms the function is returning the correct type.

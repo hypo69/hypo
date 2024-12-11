@@ -56,7 +56,7 @@ def test_pprint_non_list():
 3. **Expected Output:** The code now explicitly defines the `expected_output` to make the assertion more readable and maintainable.  The output of the `str()` function on the list is assumed to be the desired representation.
 
 
-4. **`pytest.raises` for Exception Handling:** The example demonstrates how to use `pytest.raises` to check for exceptions.  However, there wasn't code with exceptions in the prompt input.
+4. **`pytest.raises` for Exception Handling:** The example demonStartes how to use `pytest.raises` to check for exceptions.  However, there wasn't code with exceptions in the prompt input.
 
 
 5. **Fixtures:** No fixtures are needed because the input list is a simple argument.
@@ -68,4 +68,4 @@ def test_pprint_non_list():
 2. Install pytest: `pip install pytest`
 3. Run the tests from your terminal: `pytest test_pprint.py`
 
-This revised solution provides more comprehensive test cases based on the given input, covering valid and invalid scenarios, and illustrating proper `pytest` usage. Remember to replace the placeholder comments with the actual function/method/class you want to test if there is more complex code. Remember that if you change the expected output formatting of `str(input_list)` you will need to adapt the test cases.
+This revised solution provides more comprehensive test cases based on the given input, covering valid and invalid scenarios, and illuStarting proper `pytest` usage. Remember to replace the placeholder comments with the actual function/method/class you want to test if there is more complex code. Remember that if you change the expected output formatting of `str(input_list)` you will need to adapt the test cases.

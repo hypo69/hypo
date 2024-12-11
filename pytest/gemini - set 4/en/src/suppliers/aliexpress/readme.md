@@ -68,7 +68,7 @@ def test_aliexpress_init_with_args_and_kwargs():
 
 2. **Specific Tests:** The example tests now directly target the `__init__` method, checking various scenarios.  This is much more effective than general placeholder tests.
 
-3. **Exception Handling:** The `test_aliexpress_init_invalid_webdriver` test demonstrates how to use `pytest.raises` to check for `ValueError` exceptions when an invalid webdriver is passed.
+3. **Exception Handling:** The `test_aliexpress_init_invalid_webdriver` test demonStartes how to use `pytest.raises` to check for `ValueError` exceptions when an invalid webdriver is passed.
 
 4. **Clearer Test Names:**  Test names like `test_aliexpress_init_no_webdriver` clearly indicate the purpose of each test.
 

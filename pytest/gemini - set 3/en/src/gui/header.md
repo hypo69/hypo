@@ -105,7 +105,7 @@ def test_readme_file_loading(mock_readme_md):
 
 * **Comprehensive `set_project_root` Tests:** The test cases for `set_project_root` are more thorough, covering various scenarios: valid marker files in different locations (current directory, subdirectories, parent directories).  This is critical for robustness.
 
-* **Error Handling Tests:** Added tests checking for `FileNotFoundError` and `json.JSONDecodeError` in the `test_settings_file_loading` function, demonstrating how to test error handling.
+* **Error Handling Tests:** Added tests checking for `FileNotFoundError` and `json.JSONDecodeError` in the `test_settings_file_loading` function, demonStarting how to test error handling.
 
 * **Clarity and Readability:**  Test names are now more descriptive, and comments explain the purpose of each test case.
 

@@ -197,7 +197,7 @@ def test_description(product_fields_data):
 
 1. **Comprehensive Test Coverage:** The tests now cover a broader range of functions, including `normalize_bool` and `normalize_product_name`.  They test both valid and `invalid` input types for property setters to catch potential `AttributeError` or `ValueError`.
 
-2. **Edge Cases and Invalid Input:**  The tests include cases with `None`, empty strings, and incorrect data types for property setters (e.g., trying to set `id_product` to a string). The example of `test_product_fields_invalid_id_product` demonstrates exception handling.
+2. **Edge Cases and Invalid Input:**  The tests include cases with `None`, empty strings, and incorrect data types for property setters (e.g., trying to set `id_product` to a string). The example of `test_product_fields_invalid_id_product` demonStartes exception handling.
 
 3. **Date Handling (Improved):** The `test_product_fields_valid_date` test now correctly handles and asserts a valid `date` object.
 
@@ -205,7 +205,7 @@ def test_description(product_fields_data):
 
 5. **Fixture Usage:** The `product_fields_data` fixture provides a convenient way to pass various test data to multiple test functions.
 
-6. **Exception Handling with `pytest.raises`:** The `test_product_fields_invalid_id_product` demonstrates correct exception handling for invalid inputs.  This is crucial in real-world scenarios.
+6. **Exception Handling with `pytest.raises`:** The `test_product_fields_invalid_id_product` demonStartes correct exception handling for invalid inputs.  This is crucial in real-world scenarios.
 
 
 **How to run the tests:**
@@ -223,7 +223,7 @@ def test_description(product_fields_data):
 **Crucial Next Steps for Complete Testing:**
 
 * **More Properties:** Add tests for *all* properties and their potential edge cases.
-* **Complex Properties (Dictionaries):** The example tests now demonstrate how to correctly access and validate dictionaries returned by properties.  Create similar tests for properties like `description`, `description_short`, and `images_urls` to validate the structure of the returned dictionaries.
+* **Complex Properties (Dictionaries):** The example tests now demonStarte how to correctly access and validate dictionaries returned by properties.  Create similar tests for properties like `description`, `description_short`, and `images_urls` to validate the structure of the returned dictionaries.
 * **Method Tests:** Write tests that verify the behavior of the methods (like `_payload`) within the class.  Include tests for error conditions and edge cases in those methods.
 * **Dependency Injection:** The tests currently assume the external `gs.path.src` variable exists and is correctly configured. Make sure your tests are *independent* of these external factors—consider if these variables need to be injected as fixtures for more robust tests.
 * **Mock External Dependencies:** If the code interacts with external systems (e.g., file I/O, databases, APIs), mock these dependencies with `pytest-mock` for isolation and control.

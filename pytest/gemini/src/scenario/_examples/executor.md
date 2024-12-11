@@ -122,7 +122,7 @@ def test_add_coupon():
 * **Assertions:**  The tests now include proper assertions (`assert result is True`, or appropriate ones based on the functions' return values).  This verifies that the functions are returning the expected outcomes.
 * **`pytest.mark.asyncio`:**  The test for `execute_PrestaShop_insert_async` is correctly marked with `@pytest.mark.asyncio` to run it using the `asyncio` event loop.
 * **Clearer Tests:** Test names are more descriptive (e.g., `test_run_scenario_files`).
-* **Handling Potential Exceptions:**  While the example code doesn't explicitly demonstrate error handling, consider adding tests to check for exceptions if the underlying code might raise them (e.g., if scenario files are not found or if the PrestaShop API returns an error).
+* **Handling Potential Exceptions:**  While the example code doesn't explicitly demonStarte error handling, consider adding tests to check for exceptions if the underlying code might raise them (e.g., if scenario files are not found or if the PrestaShop API returns an error).
 
 **Important Considerations:**
 

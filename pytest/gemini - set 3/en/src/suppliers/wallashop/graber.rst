@@ -100,10 +100,10 @@ def test_id_product(graber):
 **Explanation and Improvements:**
 
 * **Mocking:** The code now uses `unittest.mock` to mock the `Driver` and `Context` objects.  This is crucial for isolating the `Graber` class's behavior from external dependencies (like the web driver).  This significantly improves testability.
-* **`grab_page` Test:**  The `test_grab_page_valid_input` now demonstrates how to mock the internal data fetching functions (`id_product`, `description_short`, etc.) within `grab_page` in a testable way. This demonstrates the correct usage of `patch`.
+* **`grab_page` Test:**  The `test_grab_page_valid_input` now demonStartes how to mock the internal data fetching functions (`id_product`, `description_short`, etc.) within `grab_page` in a testable way. This demonStartes the correct usage of `patch`.
 * **Clearer Test Structure:** Tests are organized into separate functions, each focusing on a specific aspect.
 * **Edge Case Tests:** A basic test for handling no input is now included.
-* **Error Handling:**  Included a test demonstrating handling `TypeError` when an incorrect `driver` is provided.
+* **Error Handling:**  Included a test demonStarting handling `TypeError` when an incorrect `driver` is provided.
 * **Completeness:**  The most important part:  You *absolutely need* to add test cases for each individual data fetching method within the `Graber` class (`id_product`, `description_short`, etc.). The provided `Graber` has many such functions, and these are critical for thorough testing.  The example shows how to test `id_product` and the general technique.
 * **`@pytest.fixture` for `Graber`:**  The `graber` fixture is properly defined, making the tests more organized.
 * **Context Mock:** Created a `MockContext` to mock the `Context` object.

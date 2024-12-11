@@ -83,7 +83,7 @@ def test_product_creation_with_missing_field():
 
 2.  **Clear Test Names:** Test names are descriptive (`test_product_creation`, `test_product_creation_with_empty_list`).
 
-3.  **Exception Handling:** `test_product_creation_with_invalid_type` and `test_product_creation_with_missing_field` demonstrate how to use `pytest.raises` to test for expected exceptions (TypeError) when invalid data or missing fields are provided.
+3.  **Exception Handling:** `test_product_creation_with_invalid_type` and `test_product_creation_with_missing_field` demonStarte how to use `pytest.raises` to test for expected exceptions (TypeError) when invalid data or missing fields are provided.
 
 4.  **Edge Case:** `test_product_creation_with_empty_list` checks the handling of an empty list for `product_small_image_urls`.
 

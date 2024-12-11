@@ -80,13 +80,13 @@ def test_mode_has_valid_value():
 
 **Explanation and Crucial Improvements:**
 
-1. **Placeholder Tests:** The provided code snippet lacked the actual code from `locator.py`. The solution now includes placeholder tests (`test_locator_class_exists`, `test_locator_function_exists`, etc.).  Crucially, these placeholders demonstrate the _correct structure_ for writing tests _for your actual code_.  **You must replace these placeholders with tests based on the functions, methods, and classes defined in `hypotez/src/suppliers/hb/locators/locator.py`.**
+1. **Placeholder Tests:** The provided code snippet lacked the actual code from `locator.py`. The solution now includes placeholder tests (`test_locator_class_exists`, `test_locator_function_exists`, etc.).  Crucially, these placeholders demonStarte the _correct structure_ for writing tests _for your actual code_.  **You must replace these placeholders with tests based on the functions, methods, and classes defined in `hypotez/src/suppliers/hb/locators/locator.py`.**
 
 2. **Import Statements:** The test code now correctly imports `__version__`, `__doc__`, `__details__`, and `MODE` from the target module.
 
 3. **Comprehensive Coverage:** The tests now cover basic checks for the existence of `MODE`, its type, and its expected valid values (a crucial improvement).
 
-4. **Error Handling (`pytest.raises`):**  A placeholder (`test_get_locator_data_invalid_input`) demonstrates the use of `pytest.raises` to test expected exceptions. **You need to implement this for appropriate error scenarios in your actual code.**
+4. **Error Handling (`pytest.raises`):**  A placeholder (`test_get_locator_data_invalid_input`) demonStartes the use of `pytest.raises` to test expected exceptions. **You need to implement this for appropriate error scenarios in your actual code.**
 
 
 **To make these tests run:**

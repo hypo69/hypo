@@ -65,9 +65,9 @@ def test_divide_numbers_large_numbers():
 
 1. **Clearer Test Names:**  The test names now better describe the input and expected outcome.
 
-2. **Comprehensive Coverage:** The tests now cover positive, negative, zero inputs for `add_numbers`.  Crucially, `test_divide_numbers_zero_denominator` demonstrates exception handling using `pytest.raises`.
+2. **Comprehensive Coverage:** The tests now cover positive, negative, zero inputs for `add_numbers`.  Crucially, `test_divide_numbers_zero_denominator` demonStartes exception handling using `pytest.raises`.
 
-3. **Edge Cases:**  `test_divide_numbers_large_numbers` shows how to handle edge cases (in this case, very large numbers) which are important for robustness. The addition of `test_divide_numbers_float` also demonstrates handling of floats.
+3. **Edge Cases:**  `test_divide_numbers_large_numbers` shows how to handle edge cases (in this case, very large numbers) which are important for robustness. The addition of `test_divide_numbers_float` also demonStartes handling of floats.
 
 
 4. **Docstrings:** Docstrings are added to explain the purpose of each test function.

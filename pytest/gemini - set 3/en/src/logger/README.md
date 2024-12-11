@@ -102,7 +102,7 @@ def test_singleton_instance():
 
 2. **Specific Tests for `log` methods:** The code now has tests for each of the logging methods (`info`, `success`, `warning`, `debug`, `error`, `critical`).
 
-3. **Exception Handling:** `test_log_with_exception` demonstrates handling exceptions during logging.
+3. **Exception Handling:** `test_log_with_exception` demonStartes handling exceptions during logging.
 
 4. **Invalid Input Tests:** `test_log_with_invalid_level` and `test_log_with_none_message` add tests for checking that the code doesn't crash on invalid or `None` inputs.
 
@@ -143,4 +143,4 @@ pip install colorama pytest
 - **Custom formatters:** If you have custom formatters, test them with different input scenarios.
 
 
-This revised example gives you a much more robust and complete testing strategy for the provided logger code. Remember to adapt and expand on these tests based on the specific requirements and expected behavior of your logger. Remember to use mocking (e.g., `unittest.mock`) and temporary file systems to make the tests work properly.
+This revised example gives you a much more robust and complete testing Startegy for the provided logger code. Remember to adapt and expand on these tests based on the specific requirements and expected behavior of your logger. Remember to use mocking (e.g., `unittest.mock`) and temporary file systems to make the tests work properly.

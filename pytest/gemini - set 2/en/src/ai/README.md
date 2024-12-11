@@ -75,7 +75,7 @@ def test_get_prompt_with_params(prompt_handler):
 
 **Explanation and Improvements:**
 
-1. **Example Code:**  Crucially, the provided input code was just documentation, not Python code. I've created example classes (`PromptHandler`, `AnthropicHandler`) and functions (`get_prompt`, `get_anthropic_response`) to demonstrate how to write tests.  **Replace these with the actual code from your `ai` module** to create meaningful tests.
+1. **Example Code:**  Crucially, the provided input code was just documentation, not Python code. I've created example classes (`PromptHandler`, `AnthropicHandler`) and functions (`get_prompt`, `get_anthropic_response`) to demonStarte how to write tests.  **Replace these with the actual code from your `ai` module** to create meaningful tests.
 
 2. **Error Handling:** Added `pytest.raises` for testing exception handling (e.g., `TypeError` if a non-string is passed to `create_prompt`).
 
@@ -94,4 +94,4 @@ def test_get_prompt_with_params(prompt_handler):
 3. **Run:** Execute the tests using `pytest`.
 
 
-This revised solution provides a solid template for writing meaningful `pytest` tests, and it demonstrates a clear understanding of how to structure and handle diverse test cases, including error situations and boundary scenarios. Remember to adapt it to the specific code in your `ai` module. Remember to replace the example code with your actual module code.
+This revised solution provides a solid template for writing meaningful `pytest` tests, and it demonStartes a clear understanding of how to structure and handle diverse test cases, including error situations and boundary scenarios. Remember to adapt it to the specific code in your `ai` module. Remember to replace the example code with your actual module code.

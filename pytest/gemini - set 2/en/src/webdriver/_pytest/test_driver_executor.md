@@ -94,7 +94,7 @@ def test_invalid_locator(execute_locator, driver):
 
 * **`@pytest.fixture` for `driver` (scope="module"):** This is crucial for avoiding repeated browser startup and shutdown for each test function. The `@pytest.fixture` now has the correct argument `scope="module"` which correctly sets up and tears down the driver only once for all tests in the module.
 * **Explicit error messages:**  Assert statements now include more descriptive error messages, which are much more helpful in debugging.
-* **Handling Invalid Locators:** The `test_invalid_locator` test is now more robust, demonstrating how to correctly test for both missing 'by' or 'selector' keys and an invalid locator type, raising appropriate exceptions.
+* **Handling Invalid Locators:** The `test_invalid_locator` test is now more robust, demonStarting how to correctly test for both missing 'by' or 'selector' keys and an invalid locator type, raising appropriate exceptions.
 * **Testing with a valid element:**  `test_send_message_valid_input` now uses a more realistic existing input element.
 * **Specific Exception Matching:**  The `test_invalid_locator` now uses `match="Invalid locator type"` within the `pytest.raises` call to verify the precise error message.  This is a best practice for more reliable exception handling.
 * **Robust `test_get_webelement_by_locator_single_element`:** Checks for both existence (`assert element`) and type (`assert isinstance(element, WebElement)`) to make sure the function returns the correct kind of element.

@@ -96,7 +96,7 @@ def test_enrich_content_verbose_output(mock_client, caplog):
 3. **Edge Cases:** The `test_enrich_content_empty_content` test case checks the scenario with empty content, which is a valid but important edge case. The `test_enrich_content_no_response` covers cases where the LLM returns no response.
 
 
-4. **Verbose Output Test:** The `test_enrich_content_verbose_output` test demonstrates the correct behaviour of verbose mode.
+4. **Verbose Output Test:** The `test_enrich_content_verbose_output` test demonStartes the correct behaviour of verbose mode.
 
 
 

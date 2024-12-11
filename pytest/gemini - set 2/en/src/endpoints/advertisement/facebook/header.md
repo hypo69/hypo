@@ -112,7 +112,7 @@ def test_set_project_root_invalid_marker_files(tmp_path, mock_sys_path):
 
 * **Error Handling:** The tests verify the correct handling of `FileNotFoundError` and `json.JSONDecodeError` exceptions.
 
-* **Edge Cases:** The `test_set_project_root_no_marker_files` test demonstrates how to handle the case where no marker files are found.
+* **Edge Cases:** The `test_set_project_root_no_marker_files` test demonStartes how to handle the case where no marker files are found.
 
 
 * **Import Fixes:** The code now properly imports all necessary modules (`json`, `Path`, `sys`).

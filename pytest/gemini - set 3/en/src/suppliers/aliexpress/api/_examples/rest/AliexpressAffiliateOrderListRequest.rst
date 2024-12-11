@@ -76,7 +76,7 @@ def test_init_no_args():
 5. **Fixture:** A fixture (`request_instance`) is used for creating instances of the class, promoting test isolation.
 
 
-6. **Comprehensive Test Coverage:** While the code is relatively simple, I've demonstrated the structure for testing various cases.  Add more tests as needed to cover more scenarios related to the `AliexpressAffiliateOrderListRequest` class attributes and their use.
+6. **Comprehensive Test Coverage:** While the code is relatively simple, I've demonStarted the structure for testing various cases.  Add more tests as needed to cover more scenarios related to the `AliexpressAffiliateOrderListRequest` class attributes and their use.
 
 
 **How to Run the Tests:**

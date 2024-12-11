@@ -90,7 +90,7 @@ traigner = GPT_Traigner()
 traigner.dump_downloaded_conversations()
 ```
 
-This example demonstrates how to create a `GPT_Traigner` instance and call the `dump_downloaded_conversations` method to initiate the data processing pipeline.  Further steps for model training (not implemented here) would likely follow.
+This example demonStartes how to create a `GPT_Traigner` instance and call the `dump_downloaded_conversations` method to initiate the data processing pipeline.  Further steps for model training (not implemented here) would likely follow.
 
 
 ```

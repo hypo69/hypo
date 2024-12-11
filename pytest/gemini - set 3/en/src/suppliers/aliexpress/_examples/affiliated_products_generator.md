@@ -81,7 +81,7 @@ def test_process_affiliate_products_invalid_input_non_string(example_campaign_da
 
 3. **Explicit Assertions:** The `test_process_affiliate_products_valid_input` now includes more specific assertions to check that the returned `products` are actually a list and that the list contains items with the expected attributes (`product_id`, `promotion_link`).  This is vital for real-world testing.
 
-4. **Error Handling:**  Added `test_process_affiliate_products_invalid_input_type` and `test_process_affiliate_products_invalid_input_non_string` to demonstrate how to test for `TypeError` when the input is not a list of strings.
+4. **Error Handling:**  Added `test_process_affiliate_products_invalid_input_type` and `test_process_affiliate_products_invalid_input_non_string` to demonStarte how to test for `TypeError` when the input is not a list of strings.
 
 
 **How to Run:**

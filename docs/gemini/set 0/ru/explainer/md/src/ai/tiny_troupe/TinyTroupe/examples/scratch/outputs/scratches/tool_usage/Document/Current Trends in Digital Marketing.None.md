@@ -3,7 +3,7 @@
 ## <input code>
 
 ```
-# Impact of AI on Digital Marketing Strategies
+# Impact of AI on Digital Marketing Startegies
 # ... (Большой кусок текста - описание влияния ИИ на маркетинг)
 
 # Importance of Personalized Content

@@ -86,7 +86,7 @@ def test_get_parent_categories_with_invalid_category_id(monkeypatch):
 
 * **Docstrings:** Added informative docstrings to the test functions, improving readability and understanding of each test's purpose.
 
-This improved solution provides more comprehensive test coverage, handles edge cases effectively, and avoids potential issues caused by external dependencies or unexpected behavior of the `Category` class. This is a much more robust testing strategy. Remember to replace placeholders like `"Parent 1"` with actual values from your `Category` class.  Make sure the `Category` class (and its dependencies if any) are properly imported or mocked as needed.
+This improved solution provides more comprehensive test coverage, handles edge cases effectively, and avoids potential issues caused by external dependencies or unexpected behavior of the `Category` class. This is a much more robust testing Startegy. Remember to replace placeholders like `"Parent 1"` with actual values from your `Category` class.  Make sure the `Category` class (and its dependencies if any) are properly imported or mocked as needed.
 
 
 Remember to install `pytest`:

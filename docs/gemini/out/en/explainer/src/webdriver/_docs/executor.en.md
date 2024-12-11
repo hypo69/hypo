@@ -72,7 +72,7 @@ The `ExecuteLocator` class is designed to execute navigation algorithms and inte
 
 ## <algorithm>
 
-The `ExecuteLocator` class orchestrates actions based on a `locator` dictionary. A step-by-step algorithm is as follows:
+The `ExecuteLocator` class orcheStartes actions based on a `locator` dictionary. A step-by-step algorithm is as follows:
 
 1. **Initialization:** The class is instantiated with a Selenium WebDriver (`driver`).  It initializes `ActionChains` for complex interactions.  
    * **Example:** `executor = ExecuteLocator(driver)`

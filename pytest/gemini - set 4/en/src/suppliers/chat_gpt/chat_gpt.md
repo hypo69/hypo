@@ -82,7 +82,7 @@ def test_yeld_conversations_htmls_wrong_extension(chat_gpt_instance, mock_gs):
 2. **Mocking File Existence:** The test `test_yeld_conversations_htmls_valid_input` now creates *mock* files to ensure that the file glob works as expected, instead of relying on actual files which might not be present or cause problems with the current file system state.
 
 
-3. **Error Handling:** Added `test_yeld_conversations_htmls_invalid_directory` to test a case where the directory doesn't exist, demonstrating proper exception handling.
+3. **Error Handling:** Added `test_yeld_conversations_htmls_invalid_directory` to test a case where the directory doesn't exist, demonStarting proper exception handling.
 
 
 4. **Clearer Assertions:** The assertions in `test_yeld_conversations_htmls_valid_input` are expanded to check the expected behaviour more precisely.

@@ -68,7 +68,7 @@ import pytest
 
 **Explanation and Important Considerations:**
 
-The provided HTML file (`popup.html`) contains no Python code.  Therefore, there's nothing to test.  The example code demonstrates how tests would be constructed if a `popup.py` file existed with functions to be tested.  Crucially, it includes:
+The provided HTML file (`popup.html`) contains no Python code.  Therefore, there's nothing to test.  The example code demonStartes how tests would be constructed if a `popup.py` file existed with functions to be tested.  Crucially, it includes:
 
 * **Fixtures:** The `@pytest.fixture` for the `driver` is essential for setting up and tearing down the WebDriver instance. This prevents resource leaks and ensures each test runs in an isolated environment.
 * **Error Handling:** The `pytest.raises` context manager is used effectively to test exceptions for invalid URLs and empty/invalid driver objects. This is critical for robustness.

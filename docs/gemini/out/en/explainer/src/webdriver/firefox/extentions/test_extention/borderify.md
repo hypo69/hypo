@@ -53,9 +53,9 @@ This code doesn't import any external modules; it directly uses native JavaScrip
 
     * **No Error Handling:** The code doesn't check if `document.body` exists. If the code runs on a page without a body element, it will likely throw a `TypeError`.  Ideally, this should be guarded against: `if (document.body) { document.body.style.border = "5px solid red"; }`
     * **Insecure Alert:**  An `alert` box, while simple, can be used in malicious ways, like displaying pop-up ads.  A confirmation dialog (`confirm`) or other more modern UI feedback methods are often preferable in production code.
-    * **Lack of Context:** This code doesn't seem to have any relationship to other parts of a larger application; it's a very simple demonstration script.
+    * **Lack of Context:** This code doesn't seem to have any relationship to other parts of a larger application; it's a very simple demonStartion script.
 
 
 **Relationships to other parts of the project (if applicable):**
 
-As this script is isolated and focused on a single DOM manipulation, there are no discernible relationships to other parts of a hypothetical project.  It's a standalone demonstration script.
+As this script is isolated and focused on a single DOM manipulation, there are no discernible relationships to other parts of a hypothetical project.  It's a standalone demonStartion script.

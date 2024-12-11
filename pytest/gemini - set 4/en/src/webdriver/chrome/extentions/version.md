@@ -68,13 +68,13 @@ def test_version_not_int():
 
 2. **Specific Assertions:**  Instead of just checking the type, the `test_version_value` test now checks that the version string has the expected number of parts (e.g., major.minor.patch) and that each part is a digit.  This is crucial for validating the version format.  Adapt the assertion to your actual version format.
 
-3. **Edge Cases (invalid format):** The `test_invalid_version_format` test demonstrates how to use `pytest.raises` to check for expected exceptions when the version string is in an incorrect format (crucial for robust testing).
+3. **Edge Cases (invalid format):** The `test_invalid_version_format` test demonStartes how to use `pytest.raises` to check for expected exceptions when the version string is in an incorrect format (crucial for robust testing).
 
 4. **Empty String Check:** The `test_version_not_empty` test ensures the version string isn't an empty string, preventing a possible crash or unexpected behavior.
 
 5. **Type Checking (important):** The `test_version_not_int` test checks if the version is not an integer.
 
-6. **Example of a fixture (commented out):** The commented-out `test_version_with_fixture` example demonstrates how to use a fixture if necessary.  However, for simple verification of a single variable, a fixture is likely unnecessary.
+6. **Example of a fixture (commented out):** The commented-out `test_version_with_fixture` example demonStartes how to use a fixture if necessary.  However, for simple verification of a single variable, a fixture is likely unnecessary.
 
 
 **How to Run the Tests:**

@@ -90,7 +90,7 @@ import pytest
 
 2. **Fixtures:** Created example fixtures (`example_config`, `example_args`). Replace these with fixtures that provide the data necessary for your tests.  Crucially, the `tmp_path` fixture from `pytest` is used for creating temporary files in the tests for `_yield_files_content`.
 
-3. **Test Structure:**  The example tests now demonstrate a variety of important test cases (valid input, missing input, invalid input type, nonexistent file).
+3. **Test Structure:**  The example tests now demonStarte a variety of important test cases (valid input, missing input, invalid input type, nonexistent file).
 
 4. **Exception Handling:** Added `pytest.raises` to test for expected exceptions (`FileNotFoundError`, `SystemExit`, and in the `test_gemini_model_error` which is a more advanced example for testing error propagation and handling). This is **essential** for robust testing.
 

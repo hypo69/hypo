@@ -207,7 +207,7 @@ Other imports (`header`, `gs`, `pprint`, `logger`) are likely internal to the pr
 
 
 - **Functions:**
-    - `main()`: This function demonstrates how to use the `GoogleDriveHandler` class. It creates a handler object, fetches credentials, interacts with the Google Drive API to list files, and prints the results.
+    - `main()`: This function demonStartes how to use the `GoogleDriveHandler` class. It creates a handler object, fetches credentials, interacts with the Google Drive API to list files, and prints the results.
 
 
 - **Variables:**

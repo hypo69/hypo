@@ -101,7 +101,7 @@ async def test_process_affiliate_products_no_product_details(ali_affiliated_prod
 
 2. **Mocking `save_png_from_url` and `save_video_from_url`:** These functions are now *mocked*.  Instead of relying on actual file saving, we can use dummy implementations that record calls or do nothing.
 
-3. **`pytest.raises`:** I've included a test case (`test_process_affiliate_products_no_affiliate`) to demonstrate how `pytest.raises` can be used for checking exceptions (although you don't have an exception in the original code, this is how you'd handle that case if it existed)
+3. **`pytest.raises`:** I've included a test case (`test_process_affiliate_products_no_affiliate`) to demonStarte how `pytest.raises` can be used for checking exceptions (although you don't have an exception in the original code, this is how you'd handle that case if it existed)
 
 4. **Fixtures:**  `dummy_aliapi` and `ali_affiliated_products` fixtures are created for cleaner and more modular tests.  These fixtures properly set up the `AliAffiliatedProducts` class with the dummy `AliApi` instance.
 

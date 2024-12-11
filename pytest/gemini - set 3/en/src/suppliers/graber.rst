@@ -103,9 +103,9 @@ def test_close_pop_up_exception(driver_mock, graber_instance):
 
 * **Mocking:** Crucially, the code now uses `unittest.mock.MagicMock` to mock the `Driver` object.  This isolates the `Graber` class from external dependencies like actual web drivers, allowing you to test its internal logic. The mocking is more robust because it handles the asynchronous nature of `execute_locator`.
 * **Asynchronous Testing:**  The `asyncio.run` function is essential now. You need to run the `async` methods within a `pytest` test function to properly execute them.  Critically, `side_effect` is used to simulate what the `execute_locator` method returns.  Each test now appropriately awaits the result of the `async` methods.
-* **Error Handling:** The test for `test_close_pop_up_exception` demonstrates how to check for exceptions raised within the `@close_pop_up` decorator.  This is crucial for comprehensive testing.
+* **Error Handling:** The test for `test_close_pop_up_exception` demonStartes how to check for exceptions raised within the `@close_pop_up` decorator.  This is crucial for comprehensive testing.
 * **Clearer Test Cases:**  Test function names are more specific, like `test_graber_error_handling`.
-* **Edge Cases:**  Example tests are added to cover cases where the locator might return `None` and cases where the function might expect specific types of input (e.g., a list which should be joined). This demonstrates the handling of potential invalid results.
+* **Edge Cases:**  Example tests are added to cover cases where the locator might return `None` and cases where the function might expect specific types of input (e.g., a list which should be joined). This demonStartes the handling of potential invalid results.
 * **Fixture for Graber Instance:** The `graber_instance` fixture now correctly sets up a `Graber` instance using the mocked driver, making the tests more organized.
 * **`MOCK_LOCATOR`:**  It's crucial to create mock data for the `locator`.
 
@@ -118,4 +118,4 @@ def test_close_pop_up_exception(driver_mock, graber_instance):
 
 3.  **Run the tests:** `pytest`
 
-Remember to adjust the test cases to precisely match the functionality and expected behavior of each method in your `Graber` class, including different types of inputs, error conditions, and edge cases.  The provided examples are illustrative; you need to extend them for thorough testing.
+Remember to adjust the test cases to precisely match the functionality and expected behavior of each method in your `Graber` class, including different types of inputs, error conditions, and edge cases.  The provided examples are illuStartive; you need to extend them for thorough testing.

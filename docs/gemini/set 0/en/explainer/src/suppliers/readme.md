@@ -132,4 +132,4 @@ The `Supplier` class has various attributes, including `supplier_id`, `supplier_
 
 **Relationships with Other Parts:**
 
-The `Supplier` class depends on the `Driver` (for web interaction) and `Scenario` (for defining and executing the actions/operations) classes. The `Supplier` class interacts with the web page (indicated by the `webelement` node) to extract information.   The details of those dependencies and how they are implemented are not given. This `Supplier` class is likely a part of a larger system that orchestrates data scraping from various e-commerce websites to collect relevant product information.
+The `Supplier` class depends on the `Driver` (for web interaction) and `Scenario` (for defining and executing the actions/operations) classes. The `Supplier` class interacts with the web page (indicated by the `webelement` node) to extract information.   The details of those dependencies and how they are implemented are not given. This `Supplier` class is likely a part of a larger system that orcheStartes data scraping from various e-commerce websites to collect relevant product information.

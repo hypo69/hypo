@@ -135,11 +135,11 @@ def test_get_webelement_as_screenshot(mock_driver, locator_data):
 3. **pytest Fixtures:** Fixtures are used (`mock_driver`, `locator_data`) to properly set up the testing environment for each test case.  This promotes test isolation.
 4. **Clearer Test Cases:** The test functions now use meaningful names (e.g., `test_execute_locator_valid_input`, `test_get_webelement_by_locator_timeout`) and provide more detail in the docstrings.
 5. **Handling `NoSuchElementException` (and others):** The tests now explicitly check for the absence of an element.  This is done by testing for the correct return values instead of catching exceptions. The most important part is to test what happens when the element is *not* found!
-6. **Timeout Testing (`test_get_webelement_by_locator_timeout`):** This demonstrates how to test the `timeout` functionality; this test should fail if no element is found after the timeout.
+6. **Timeout Testing (`test_get_webelement_by_locator_timeout`):** This demonStartes how to test the `timeout` functionality; this test should fail if no element is found after the timeout.
 7. **Mocking `screenshot_as_png`:**  The `screenshot_as_png` method is mocked to return an empty byte string (`b''`) as an example. This is important because a real screenshot operation would require handling a file-like object.
 8. **`asyncio.run`:**  Importantly, `asyncio.run` is used to run the asynchronous methods. This is vital for asynchronous functions in `pytest` tests.
 9. **Realistic Error Handling:**  The tests now incorporate a more realistic approach to error handling, using assertions instead of solely relying on `try-except` blocks in the tests. This helps to ensure that you have the correct test cases and assertions, making them more reliable.
-10. **Testing Different Locator Types:** The `test_execute_locator_invalid_locator` and the `test_get_attribute_by_locator` tests now use different locator strategies.  
+10. **Testing Different Locator Types:** The `test_execute_locator_invalid_locator` and the `test_get_attribute_by_locator` tests now use different locator Startegies.  
 11. **`locator_data_dict` fixture:**  Added a fixture to create locator data using a dictionary, enhancing test coverage.
 
 

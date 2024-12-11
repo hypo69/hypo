@@ -187,7 +187,7 @@ print(product.details) # или другие методы работы с про
 # пример использования (код неполный, для демонстрации)
 from scenario import Scenario
 
-scenario = Scenario("UserRegistration")
+scenario = Scenario("UserRegiStartion")
 scenario.run()
 ```
 

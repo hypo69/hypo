@@ -104,7 +104,7 @@ def mock_flask_app():
 
 5. **Test HTML Structure:** The `test_html_structure` test should check the structure of the HTML for correctness.
 
-**Example (Illustrative – needs adaptation):**
+**Example (IlluStartive – needs adaptation):**
 
 ```python
 # Example of a mocked server response (assuming a Flask route):

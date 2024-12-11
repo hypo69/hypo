@@ -61,13 +61,13 @@ def test_graber_fetch_data_exception():
 
 **Explanation and Crucial Improvements:**
 
-1. **Realistic Test Cases:** The provided example now includes more meaningful tests for a `Graber` class.  It demonstrates how to test a function (`fetch_data`), handles different expected return values (empty data, valid data), and is prepared to handle exceptions.  Crucially, it shows *how to mock out the data fetching* to avoid actual network calls or database queries, a necessity for testing this type of functionality properly.
+1. **Realistic Test Cases:** The provided example now includes more meaningful tests for a `Graber` class.  It demonStartes how to test a function (`fetch_data`), handles different expected return values (empty data, valid data), and is prepared to handle exceptions.  Crucially, it shows *how to mock out the data fetching* to avoid actual network calls or database queries, a necessity for testing this type of functionality properly.
 
 2. **Mocking:** The tests now use mocking with the `graber.fetch_data = lambda: mock_data`. This is a crucial element of unit testing.  Real-world applications will likely fetch data from a database, API, or file.  Mocking the function that does this means the tests are completely isolated and aren't affected by external factors like network latency or database connectivity.
 
 3. **Clearer Assertions:** Assertions confirm the expected outputs (mock_data, mock_empty_data in this case).  This is essential for ensuring the test verifies the correct results.
 
-4. **Exception Handling:** The `test_graber_fetch_data_exception` test demonstrates how to use `pytest.raises` to check that the `Graber` class properly handles exceptions during data fetching. This is a best practice for robust testing.
+4. **Exception Handling:** The `test_graber_fetch_data_exception` test demonStartes how to use `pytest.raises` to check that the `Graber` class properly handles exceptions during data fetching. This is a best practice for robust testing.
 
 5. **Stubbed Logic:** The placeholder logic in the test cases (`mock_data`, `mock_empty_data`) must be replaced with actual data that `fetch_data` would return in different scenarios (valid, invalid, empty).  These placeholders help to show the structure of tests while letting you easily change and extend them once you have the specifics of the Graber.
 

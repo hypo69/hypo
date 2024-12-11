@@ -79,13 +79,13 @@ def test_ali_promo_campaign_get_campaigns_sheet_error(monkeypatch):
 
 3. **Exception Handling:** `pytest.raises` is used to test for specific exceptions (e.g., `ValueError`) when invalid data is provided, and to assert against the error message.  This is crucial for robustness.
 
-4. **Edge Cases:** The `test_ali_promo_campaign_get_campaigns_empty` tests an important edge case: when the sheet is empty. `test_ali_promo_campaign_get_campaigns_invalid_data` demonstrates handling invalid data returned from the sheet.
+4. **Edge Cases:** The `test_ali_promo_campaign_get_campaigns_empty` tests an important edge case: when the sheet is empty. `test_ali_promo_campaign_get_campaigns_invalid_data` demonStartes handling invalid data returned from the sheet.
 
 5. **Realistic Data:** The `campaign_data` fixture provides sample campaign data.  Crucially, it allows you to pass realistic but controlled data in your tests.
 
 6. **Fixture for AliPromoCampaign:** A `ali_promo_campaign_instance` fixture is introduced. This allows you to create instances of the class once with the mocked Google Sheet handler for use in multiple tests.
 
-7. **Error Handling:** The `test_ali_promo_campaign_get_campaigns_sheet_error` demonstrates how to test the program's ability to handle exceptions raised by the `GoogleSheetHandler`.
+7. **Error Handling:** The `test_ali_promo_campaign_get_campaigns_sheet_error` demonStartes how to test the program's ability to handle exceptions raised by the `GoogleSheetHandler`.
 
 **Important Considerations (not directly testable in this example):**
 

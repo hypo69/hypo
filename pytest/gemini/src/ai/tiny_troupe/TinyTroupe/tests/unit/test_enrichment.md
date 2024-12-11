@@ -20,7 +20,7 @@ def test_enrich_content_valid_input():
         """
         # WonderCode & Microsoft Partnership: Integration of WonderWand with GitHub
         ## Executive Summary
-        This document outlines the strategic approach and considerations for the partnership between WonderCode and Microsoft, focusing on the integration of WonderWand with GitHub. It captures the collaborative efforts and insights from various departments within WonderCode.
+        This document outlines the Startegic approach and considerations for the partnership between WonderCode and Microsoft, focusing on the integration of WonderWand with GitHub. It captures the collaborative efforts and insights from various departments within WonderCode.
         """
     ).strip()
 
@@ -106,7 +106,7 @@ def test_enrich_content_exception(mock_logging):
 
 * **Clear Test Cases:** Added more descriptive test names (e.g., `test_enrich_content_valid_input`, `test_enrich_content_empty_content`).
 * **Edge Cases:** Included tests for empty content (`test_enrich_content_empty_content`) and a case where the length requirement isn't met (`test_enrich_content_insufficient_length_increase`).
-* **Exception Handling:** The `test_enrich_content_exception` test now uses `pytest.raises` to check if a `ValueError` is raised (you should replace this with the actual expected exception type).  Critically, it demonstrates *how* to mock `logging` to prevent unexpected behavior if the code uses logging inside the `enrich_content` function. This is a best practice in unit testing.
+* **Exception Handling:** The `test_enrich_content_exception` test now uses `pytest.raises` to check if a `ValueError` is raised (you should replace this with the actual expected exception type).  Critically, it demonStartes *how* to mock `logging` to prevent unexpected behavior if the code uses logging inside the `enrich_content` function. This is a best practice in unit testing.
 * **Mocking `TinyEnricher` instantiation:** The `TinyEnricher` instance is created within the test functions.  This ensures that each test is independent and doesn't have unintended side effects.
 * **Reduced Redundancy:** The `textwrap.dedent` code for requirements is now reused where appropriate.
 * **Verbose:** The `verbose=True` flag remains as part of the call in the valid test case, but in cases where it doesn't matter or might interfere, such as the exception test, it can be omitted for simplicity.
@@ -118,4 +118,4 @@ def test_enrich_content_exception(mock_logging):
 
    * **Robust Error Handling:**  In a production environment, add more sophisticated error handling to your `enrich_content` function. This test now mocks logging to prevent side effects and test the exceptions more effectively.
 
-This revised solution is more comprehensive, covers more scenarios, and demonstrates best practices for `pytest` testing. Remember to replace placeholders (like the `testing_utils` import and the exception type) with your actual code. Remember to replace the placeholder for the expected exception with the actual exception raised by your `enrich_content` function.
+This revised solution is more comprehensive, covers more scenarios, and demonStartes best practices for `pytest` testing. Remember to replace placeholders (like the `testing_utils` import and the exception type) with your actual code. Remember to replace the placeholder for the expected exception with the actual exception raised by your `enrich_content` function.

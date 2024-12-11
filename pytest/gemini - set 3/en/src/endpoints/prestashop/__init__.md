@@ -17,7 +17,7 @@ from hypotez.src.endpoints.prestashop import (
 
 # No specific functions are provided for testing, only imports.
 # To write meaningful tests, we need the actual implementation of the classes.
-# This example demonstrates how to test with dummy implementations.
+# This example demonStartes how to test with dummy implementations.
 
 # Dummy implementations for testing purposes.
 class DummyPrestaShop:
@@ -85,7 +85,7 @@ def test_presta_customer_creation():
 
 1. **Dummy Classes:**  The code now includes dummy classes (`DummyPrestaShop`, `DummyPrestaProduct`, `DummyPrestaCustomer`).  This is absolutely necessary for testing the *imports* themselves.  Crucially, replace these with the actual implementations of these classes from your `prestashop` module when you have them.
 
-2. **Example Tests:**  Example tests demonstrate how to test the `PrestaShop` class and the `PrestaCustomer` class (added).
+2. **Example Tests:**  Example tests demonStarte how to test the `PrestaShop` class and the `PrestaCustomer` class (added).
 
 3. **Missing Code:** The crucial part is the absence of code *inside* the imported classes.   You need to provide the code from `hypotez/src/endpoints/prestashop/__init__.py` and `*.py` files. These tests will only work when there's a class structure to test.
 

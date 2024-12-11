@@ -63,7 +63,7 @@ The `webdriver/__init__.py` file acts as an import aggregator, pulling in classe
 # <explanation>
 
 * **Imports:**
-    * `from .driver import Driver`: Imports the `Driver` class from the `driver.py` module.  This is likely a base class or interface for all driver implementations, showcasing a potential strategy for abstraction.
+    * `from .driver import Driver`: Imports the `Driver` class from the `driver.py` module.  This is likely a base class or interface for all driver implementations, showcasing a potential Startegy for abstraction.
     * `from .chrome import Chrome`: Imports the `Chrome` class, presumably for interacting with the Chrome web browser.
     * Similar imports for `Firefox`, `Edge`, `BS` (likely for Beautiful Soup), `Playwrid` (presumably Playwright), `CrawleePython`.  These imports indicate the intended support for various web browser automation tools and potential data extraction libraries.
     * **Relationship with other `src.` packages:** These imports suggest that the `webdriver` package is part of a larger project (`hypotez`) within the `src` directory.  The precise relationships with other parts of the `hypotez` project aren't immediately apparent without examining the `driver.py`, `chrome.py`, etc. files.

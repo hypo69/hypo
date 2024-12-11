@@ -84,9 +84,9 @@ def test_handle_document_exception(mock_update, mock_context):
 **Explanation and Improvements:**
 
 * **Clearer Fixtures:**  The `mock_update` and `mock_context` fixtures are now more focused on creating the necessary mock objects, making the tests more readable and maintainable.  Crucially, `mock_model` is introduced, which mocks the `GoogleGenerativeAI` object and its `chat` method.  This allows for better isolation and easier control over the model's behavior.
-* **More Comprehensive Exception Handling:** The `test_handle_message_exception` and `test_handle_document_exception` tests are added to demonstrate exception handling.
+* **More Comprehensive Exception Handling:** The `test_handle_message_exception` and `test_handle_document_exception` tests are added to demonStarte exception handling.
 * **Valid Input Test:** The `test_handle_message_valid_input` test is more robust as it asserts the correct usage of `reply_text` on the mock `Update.message` object.
-* **Invalid Input Test:** `test_handle_message_invalid_input` now demonstrates a meaningful invalid input case.
+* **Invalid Input Test:** `test_handle_message_invalid_input` now demonStartes a meaningful invalid input case.
 * **Mocking `GoogleGenerativeAI`:** Mocking the `GoogleGenerativeAI` object (`model`) allows you to control the output of the `chat` method, which is critical for testing.
 
 

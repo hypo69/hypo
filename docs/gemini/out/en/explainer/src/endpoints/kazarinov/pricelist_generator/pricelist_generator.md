@@ -183,11 +183,11 @@ graph LR
     *   `template_path`: Stores the path to the HTML template.
     *   `env`: A Jinja2 environment, configured for loading templates.
     *   `generate_html`: Renders the HTML template with given data.
-    *   `create_report`: The core function that orchestrates the generation of HTML and PDF reports. This method handles file saving and error checking.
+    *   `create_report`: The core function that orcheStartes the generation of HTML and PDF reports. This method handles file saving and error checking.
 
 **Functions:**
 
-*   `main`: This function orchestrates the entire process:
+*   `main`: This function orcheStartes the entire process:
     *   Gets the paths for input files.
     *   Loads the JSON data.
     *   Generates and saves the HTML and PDF reports using `ReportGenerator`.
@@ -209,4 +209,4 @@ graph LR
 
 **Relationships with Other Parts of the Project:**
 
-The code relies heavily on other modules in the `src` package for various functionalities, including file handling, template rendering, PDF creation, and logging.  The `gs` module is crucial for providing project-wide settings and paths.   This demonstrates a modular design structure that facilitates code organization and reusability.
+The code relies heavily on other modules in the `src` package for various functionalities, including file handling, template rendering, PDF creation, and logging.  The `gs` module is crucial for providing project-wide settings and paths.   This demonStartes a modular design structure that facilitates code organization and reusability.

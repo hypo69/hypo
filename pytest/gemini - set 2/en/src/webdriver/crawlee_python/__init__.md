@@ -59,7 +59,7 @@ def test_get_mode_edge_case():
 2. **Clear Test Names:** Test names like `test_get_mode_valid_input` and `test_crawlee_python_invalid_mode` clearly indicate the purpose of each test.
 
 
-3. **`pytest.raises` for Exception Handling:** The `test_crawlee_python_invalid_mode` and example test cases demonstrate how to use `pytest.raises` to check for expected exceptions (`ValueError`) when invalid input is provided.
+3. **`pytest.raises` for Exception Handling:** The `test_crawlee_python_invalid_mode` and example test cases demonStarte how to use `pytest.raises` to check for expected exceptions (`ValueError`) when invalid input is provided.
 
 
 4. **Fixtures for Reusability:** The `crawlee_instance` fixture provides a way to create a `CrawleePython` instance once, which is then reused across multiple tests, improving code efficiency and reducing redundancy.

@@ -113,7 +113,7 @@ def test_handle_message_saving_log(mock_bot, mock_update, mock_context):
 * **`monkeypatch` for Attributes:**  The `mock_bot` fixture uses `monkeypatch` to replace `config`, `token` and `model` within `KazarinovTelegramBot` to control the behavior during testing.
 * **`is_url` Test:** The test cases cover both valid and invalid URLs, verifying that `is_url` works correctly.
 * **Edge Cases & Valid Inputs:** Tests are added to cover handling valid URLs, messages that are not URLs, commands, and general text messages.
-* **Error Handling (Implicit):** While not explicitly demonstrating catching exceptions, the `handle_message` function's structure in the code suggests that errors are handled; the test cases check if the appropriate flows are triggered.
+* **Error Handling (Implicit):** While not explicitly demonStarting catching exceptions, the `handle_message` function's structure in the code suggests that errors are handled; the test cases check if the appropriate flows are triggered.
 * **File Handling Test:** The `test_handle_message_saving_log` test is enhanced with mocking of the `save_text_file` function to prevent side effects from creating log files on disk.
 
 
@@ -132,4 +132,4 @@ def test_handle_message_saving_log(mock_bot, mock_update, mock_context):
     pytest test_bot.py
     ```
 
-This improved solution provides a more robust and comprehensive set of tests for the `KazarinovTelegramBot` class, covering various scenarios and using mocking effectively to avoid external dependencies. Remember to adapt imports if your file structure is different. Remember to adapt the file imports if needed. Remember to install any necessary dependencies.  Also, adjust the mocking strategies if your `model` and other external components are different.
+This improved solution provides a more robust and comprehensive set of tests for the `KazarinovTelegramBot` class, covering various scenarios and using mocking effectively to avoid external dependencies. Remember to adapt imports if your file structure is different. Remember to adapt the file imports if needed. Remember to install any necessary dependencies.  Also, adjust the mocking Startegies if your `model` and other external components are different.

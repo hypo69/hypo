@@ -35,7 +35,7 @@ The provided Python code (`hypotez/src/endpoints/prestashop/__init__.py`) only c
 2.  Make sure you have `pytest` installed. If not, run `pip install pytest`.
 3.  Run the tests from your terminal using `pytest test_prestashop.py`.
 
-**Example with hypothetical functions (Illustrative):**
+**Example with hypothetical functions (IlluStartive):**
 
 ```python
 # hypotez/src/endpoints/prestashop/__init__.py
@@ -45,7 +45,7 @@ def get_product_by_id(product_id):
     Retrieves a product by its ID.
     """
     # ... (implementation of the function would be here)
-    # For demonstration, let's assume it raises an exception if invalid
+    # For demonStartion, let's assume it raises an exception if invalid
     if product_id < 0:
         raise ValueError("Product ID cannot be negative")
     return {"id": product_id, "name": f"Product {product_id}"}
@@ -67,4 +67,4 @@ def test_get_product_by_id_invalid():
     assert str(excinfo.value) == "Product ID cannot be negative"
 ```
 
-This example adds a function `get_product_by_id` with a `test_get_product_by_id_valid` test case for a typical use case and `test_get_product_by_id_invalid` to demonstrate error handling using `pytest.raises`.  Remember to adapt the test cases to the actual functionality of your functions, not just the imports.  This is a crucial first step.
+This example adds a function `get_product_by_id` with a `test_get_product_by_id_valid` test case for a typical use case and `test_get_product_by_id_invalid` to demonStarte error handling using `pytest.raises`.  Remember to adapt the test cases to the actual functionality of your functions, not just the imports.  This is a crucial first step.

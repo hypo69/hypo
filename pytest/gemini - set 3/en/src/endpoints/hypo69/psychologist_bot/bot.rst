@@ -104,8 +104,8 @@ def test_handle_next_command_error(mock_update, mock_context):
 * **Mocking:**  Crucially, the tests now use `pytest.mock`'s `patch` to mock the `GoogleGenerativeAI.ask` method.  This isolates the test from the external Gemini API, avoiding actual API calls and potential network issues.  This is _essential_ for reliable unit tests.  The `mock_model` fixture handles this setup.  We also mock `super().start`.
 * **Clearer Test Names:** Test names are more descriptive (e.g., `test_handle_message_with_invalid_input`).
 * **Edge Case (handle_next_command):**  The `test_handle_next_command_error` test now checks for an `IndexError` in `random.choice`, which would happen if `questions_list` is empty.
-* **Error Handling:**  `test_handle_message_with_invalid_input` demonstrates how to test error handling.  A common mistake in tests is failing to handle cases where `ask` might return `None`. I've added a simple mocking example. 
-* **Valid Input Test:** `test_handle_message` demonstrates handling of valid text input.
+* **Error Handling:**  `test_handle_message_with_invalid_input` demonStartes how to test error handling.  A common mistake in tests is failing to handle cases where `ask` might return `None`. I've added a simple mocking example. 
+* **Valid Input Test:** `test_handle_message` demonStartes handling of valid text input.
 * **`mock_update` and `mock_context` fixtures:**  These fixtures provide pre-configured `Update` and `CallbackContext` objects, making the tests more concise and readable.
 * **`mock_telegram_bot` fixture:** This is added so you can use the `PsychologistTelgrambot` instance for testing.
 

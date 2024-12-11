@@ -61,7 +61,7 @@ def load_view_state(file_path: str) -> dict:
         raise
 
 
-# Example usage (commented out for demonstration):
+# Example usage (commented out for demonStartion):
 # view_state_data = load_view_state('view_state.json')
 # if view_state_data:
 #     print(view_state_data['Mode'])
@@ -77,7 +77,7 @@ def load_view_state(file_path: str) -> dict:
 *   Added type hints for function parameters and return values.
 *   Added docstrings for the `load_view_state` function using the RST format, specifying parameters, return values, and potential exceptions.
 *   Added import `from src.logger import logger`.
-*   Added example usage section for demonstration purposes.
+*   Added example usage section for demonStartion purposes.
 
 # Optimized Code
 
@@ -132,7 +132,7 @@ def load_view_state(file_path: str) -> dict:
         raise
 
 
-# Example usage (commented out for demonstration):
+# Example usage (commented out for demonStartion):
 # view_state_data = load_view_state('view_state.json')
 # if view_state_data:
 #     print(view_state_data['Mode'])

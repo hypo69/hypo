@@ -40,7 +40,7 @@ TinyTroupe IS NOT intended for:
 ## How was TinyTroupe evaluated? What metrics are used to measure performance?
 
 TinyTroupe was evaluated through various use cases, part of which are provided as examples in the library. It is suitable to use under those scenarios to the extent that
-the demonstrations show. Anything beyond that remains research and experimental work. Extensive unit and scenario testing are also part of the library.
+the demonStartions show. Anything beyond that remains research and experimental work. Extensive unit and scenario testing are also part of the library.
 
 
 ## What are the limitations of TinyTroupe? How can users minimize the impact of TinyTroupe’s limitations when using the system?

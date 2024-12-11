@@ -71,11 +71,11 @@ def test_mode_constant():
 
 5. **Edge Cases (Example):**  The commented-out test cases would include edge/boundary cases (invalid inputs like `None`, `123`, or non-string inputs).  You would tailor these cases to the functions/methods in your `login.py` file.
 
-6. **Exception Handling:** The code now demonstrates how to use `pytest.raises` for testing exceptions using parameterization.  This is a vital addition.
+6. **Exception Handling:** The code now demonStartes how to use `pytest.raises` for testing exceptions using parameterization.  This is a vital addition.
 
 7. **Fixtures (Example):**  The example uses a `pytest.fixture` to provide test data.
 
-8. **Mocking (Example):** The example illustrates mocking, which is extremely useful when testing functions that depend on other functions/external libraries.
+8. **Mocking (Example):** The example illuStartes mocking, which is extremely useful when testing functions that depend on other functions/external libraries.
 
 **How to Use:**
 

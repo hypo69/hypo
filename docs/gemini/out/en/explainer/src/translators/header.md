@@ -138,7 +138,7 @@ graph LR
 * `json`:  Handles JSON data, needed to parse the project configuration from the `settings.json` file.
 * `packaging.version`:  Used to handle and work with software version numbers in a structured way.
 * `pathlib`:  Used to work with files and directories in a platform-independent way using path objects.  Essential for robust file path handling in this particular project.
-* `src.gs`:  A custom module (`gs`) from the `src` package, likely responsible for providing utilities for path manipulation within the project's structure, including a `.path.root` attribute.  This illustrates a clear dependency and relationship with other `src` packages. This strong dependency shows a cohesive package structure that leverages existing tools for managing and interacting with the project's file system.
+* `src.gs`:  A custom module (`gs`) from the `src` package, likely responsible for providing utilities for path manipulation within the project's structure, including a `.path.root` attribute.  This illuStartes a clear dependency and relationship with other `src` packages. This strong dependency shows a cohesive package structure that leverages existing tools for managing and interacting with the project's file system.
 
 ## <explanation>
 

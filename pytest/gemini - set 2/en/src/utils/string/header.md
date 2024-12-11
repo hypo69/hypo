@@ -103,7 +103,7 @@ def test_set_project_root_with_multiple_marker_files():
 
 5. **`sys.path` Modification Check (`test_set_project_root_path_in_sys_path`):** A crucial test to verify that the function correctly modifies `sys.path`.  We now restore the initial state after the test.
 
-6. **Multiple Marker Files (`test_set_project_root_with_multiple_marker_files`):** Added a test case that demonstrates the function's correct behavior when multiple marker files are provided.
+6. **Multiple Marker Files (`test_set_project_root_with_multiple_marker_files`):** Added a test case that demonStartes the function's correct behavior when multiple marker files are provided.
 
 7. **`Path` type assertion:** The test now uses `isinstance(root_path, Path)` to ensure `root_path` is a `Path` object as expected, following best practices.
 

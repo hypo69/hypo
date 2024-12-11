@@ -110,11 +110,11 @@ def test_translate_record_invalid_locale():
 
 2. **Fixtures:**  Fixtures are used to provide test data and mock objects, promoting better organization.
 
-3. **Comprehensive Test Cases:**  The examples now demonstrate tests for valid and invalid input scenarios, including empty records and the absence of a product reference.
+3. **Comprehensive Test Cases:**  The examples now demonStarte tests for valid and invalid input scenarios, including empty records and the absence of a product reference.
 
 4. **Clearer Assertions:**  Assertions are more specific. For example, instead of just `assert result`, the tests now check the expected data types or specific values.
 
-5. **Exception Handling:** The `test_translate_record_invalid_locale` demonstrates handling potential errors (e.g., invalid locale).  Using `pytest.raises` is the correct way to test for exceptions.  The example shows how to get the error message as well.
+5. **Exception Handling:** The `test_translate_record_invalid_locale` demonStartes handling potential errors (e.g., invalid locale).  Using `pytest.raises` is the correct way to test for exceptions.  The example shows how to get the error message as well.
 
 6. **Edge Cases:** Tests are added to cover empty input and invalid locales.
 

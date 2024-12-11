@@ -3,11 +3,11 @@
 ## <input code>
 
 ```
-# Impact of AI on Digital Marketing Strategies
+# Impact of AI on Digital Marketing Startegies
 
 ## Introduction
 
-Artificial Intelligence (AI) is revolutionizing the digital marketing landscape. From chatbots providing customer service to AI-driven analytics offering deep insights, the integration of AI in marketing strategies is enhancing efficiency and personalization. Marketers can leverage AI to predict consumer behavior, optimize ad targeting, and create more engaging content.
+Artificial Intelligence (AI) is revolutionizing the digital marketing landscape. From chatbots providing customer service to AI-driven analytics offering deep insights, the integration of AI in marketing Startegies is enhancing efficiency and personalization. Marketers can leverage AI to predict consumer behavior, optimize ad targeting, and create more engaging content.
 
 ## The Evolution of AI in Digital Marketing
 
@@ -17,7 +17,7 @@ The early adoption of AI in digital marketing was marked by the use of basic alg
 
 ### Current Trends
 
-Today, AI is being used in a multitude of ways to enhance digital marketing strategies. Some of the most notable trends include:
+Today, AI is being used in a multitude of ways to enhance digital marketing Startegies. Some of the most notable trends include:
 
 1. Chatbots and Virtual Assistants
 2. Predictive Analytics

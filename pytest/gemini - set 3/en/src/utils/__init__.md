@@ -80,7 +80,7 @@ def test_json2xls_valid(tmpdir, json_data):
 **Explanation and Improvements:**
 
 * **Clearer Test Names:** Test names now explicitly state the input type (e.g., `test_csv2dict_valid`).
-* **Error Handling:**  `test_csv2dict_invalid_file` and `test_save_text_file_invalid_filename` demonstrate appropriate exception handling using `pytest.raises`.
+* **Error Handling:**  `test_csv2dict_invalid_file` and `test_save_text_file_invalid_filename` demonStarte appropriate exception handling using `pytest.raises`.
 * **Fixture for Temporary Files:** The `tmp_file` and `tmp_csv` fixtures are crucial for creating temporary files/CSV files within the test environment.  This prevents leftover files and ensures tests are isolated.
 * **Edge Cases:** `test_csv2dict_empty_file` is added to handle an empty file, a significant edge case.
 * **Example Data:** The `json_data` fixture provides sample data for `json2xls` testing.

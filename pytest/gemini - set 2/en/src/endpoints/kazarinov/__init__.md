@@ -66,14 +66,14 @@ def test_bot_method_raises_exception(example_bot):
 
 3. **Placeholder Tests for `KazarinovTelegramBot`:**
    - `test_bot_initialization`: Verifies that the bot instance is correctly created.
-   - `test_bot_send_message_valid`, `test_bot_send_message_invalid_message`: Example tests for a `send_message` method (assuming one exists). These demonstrate how to test valid and invalid inputs and appropriate error handling.  Critically, it shows how to use `pytest.raises` for exception checking.
+   - `test_bot_send_message_valid`, `test_bot_send_message_invalid_message`: Example tests for a `send_message` method (assuming one exists). These demonStarte how to test valid and invalid inputs and appropriate error handling.  Critically, it shows how to use `pytest.raises` for exception checking.
 
 
 4. **Exception Handling:** The `test_bot_send_message_invalid_message` and `test_bot_method_raises_exception` examples show how to use `pytest.raises` to check that specific exceptions are raised when expected.  Crucially, it captures and checks the *exact* error message (using `str(excinfo.value)`).
 
 5. **Comments:** Added comments to explain the purpose of each test case.
 
-6. **Missing Code:**  Crucially, the example tests now demonstrate how to test if a method *raises* the expected exception.  The code example now correctly addresses this common need.
+6. **Missing Code:**  Crucially, the example tests now demonStarte how to test if a method *raises* the expected exception.  The code example now correctly addresses this common need.
 
 **How to Use:**
 

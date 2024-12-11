@@ -75,7 +75,7 @@ MAX_TOKENS=abc
 1. **`test_config_parsing`:** This now correctly parses and validates multiple configuration values.  Crucially, it now tests *multiple* sections and options, showing comprehensive validation of the config file.
 
 
-2. **Exception Handling:**  `test_config_parsing_missing_section`, `test_config_parsing_missing_key`, and `test_config_parsing_invalid_boolean` demonstrate how to test for various exception scenarios that might arise in parsing the config.
+2. **Exception Handling:**  `test_config_parsing_missing_section`, `test_config_parsing_missing_key`, and `test_config_parsing_invalid_boolean` demonStarte how to test for various exception scenarios that might arise in parsing the config.
 
 
 3. **Empty Configuration:** `test_config_parsing_empty_config` shows how to test for an empty config file, which is an important edge case.

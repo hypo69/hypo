@@ -71,7 +71,7 @@ def example_usage(data):
 * Set the level of the logger to `logging.INFO`.
 * Added `init_logger` function to initialize logging.
 * Added `log_error` function for logging errors with details.
-* Added `example_usage` function to demonstrate usage of `j_loads` and error handling with `log_error`.
+* Added `example_usage` function to demonStarte usage of `j_loads` and error handling with `log_error`.
 * Replaced `MODE` variable with actual logging initialization.
 * Added docstrings to functions using RST format.
 * Corrected formatting and added necessary code blocks.

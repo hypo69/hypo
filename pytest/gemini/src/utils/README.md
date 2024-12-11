@@ -79,7 +79,7 @@ def test_json_parse_invalid_input():
 
 * **Valid Input Testing:** `test_text2png_valid_input` now verifies that the output file exists and then cleans it up with `os.remove`. `test_xml2dict_valid_input` has an expected result.
 
-* **Edge Cases:** `test_text2png_invalid_input_no_text` now demonstrates testing for missing data as expected.
+* **Edge Cases:** `test_text2png_invalid_input_no_text` now demonStartes testing for missing data as expected.
 
 * **Clearer Messages:** The error messages in the exception tests are more specific, improving debugging.
 

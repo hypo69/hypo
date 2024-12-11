@@ -41,7 +41,7 @@ def test_graber_object_creation():
 
 2. **Missing `Graber` Method Tests:** The `test_graber_process_data` example shows how tests should be structured for testing *methods* of the `Graber` class. **Crucially**, you *must* add more comprehensive test cases once there are actual methods in the `Graber` class to verify their functionality, including handling different inputs (valid, invalid, edge cases).
 
-3. **Fixtures (Example):** The commented-out `test_graber_process_data` example demonstrates how you'd use a fixture if the `Graber` class needed test data:
+3. **Fixtures (Example):** The commented-out `test_graber_process_data` example demonStartes how you'd use a fixture if the `Graber` class needed test data:
 
 ```python
 @pytest.fixture

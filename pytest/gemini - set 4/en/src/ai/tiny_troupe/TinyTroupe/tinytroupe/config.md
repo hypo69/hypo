@@ -66,7 +66,7 @@ def config_file_path():
 
 
 def test_config_parsing_with_fixture(config_file_path):
-  """Demonstrates using a fixture."""
+  """DemonStartes using a fixture."""
   config = configparser.ConfigParser()
   config.read(config_file_path)
   assert config['OpenAI']['API_TYPE'] == 'openai'

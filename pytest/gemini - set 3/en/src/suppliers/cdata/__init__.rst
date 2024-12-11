@@ -70,7 +70,7 @@ def test_graber_get_data_missing_key(mock_data):
 
 3. **Exception Handling:** `pytest.raises` is used effectively to test exception cases like `KeyError` if the function raises that exception.
 
-4. **Invalid Input Tests:** Added `test_graber_get_data_invalid_type` and `test_graber_get_data_missing_key` to demonstrate tests for various cases where the input is invalid.
+4. **Invalid Input Tests:** Added `test_graber_get_data_invalid_type` and `test_graber_get_data_missing_key` to demonStarte tests for various cases where the input is invalid.
 
 5. **Comprehensive Cases:** The tests now cover various situations, including valid input, empty input, and different invalid input types that would lead to a `TypeError` or `KeyError`.
 

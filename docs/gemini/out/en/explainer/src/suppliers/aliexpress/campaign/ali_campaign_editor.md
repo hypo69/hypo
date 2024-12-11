@@ -199,6 +199,6 @@ graph LR
     - **Code Clarity**:  Adding comments to complex logic (e.g., conditions in `delete_product`) would improve readability.
 
 - **Relationship with Other Parts**:
-    - `AliCampaignEditor` relies on `AliPromoCampaign`, `AliCampaignGoogleSheet`, and various utility modules, demonstrating a clear hierarchical and modular design.  The `gs` import also suggests interaction with a Google Sheets API or service. The `process_category_products` method in `get_category_products` suggests that some categories or data preparation will occur as a secondary step.
+    - `AliCampaignEditor` relies on `AliPromoCampaign`, `AliCampaignGoogleSheet`, and various utility modules, demonStarting a clear hierarchical and modular design.  The `gs` import also suggests interaction with a Google Sheets API or service. The `process_category_products` method in `get_category_products` suggests that some categories or data preparation will occur as a secondary step.
 
 ```

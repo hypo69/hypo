@@ -99,7 +99,7 @@ class TestAliAffiliatedProducts:
 * **Comprehensive Test Cases:** Added tests for various scenarios: valid input, empty input, invalid input (non-list), and a test where no product data is returned.
 * **Clearer Assertions:** More specific assertions are used to check the structure and contents of the `products` list and objects within the list.
 * **Error Handling:**  `pytest.raises` is used for testing `TypeError` when invalid input is given to `process_affiliate_products`
-* **Edge Case:** The `test_process_affiliate_products_no_product_data`  test now demonstrates how to handle situations where no product data is obtained from the data source.  Crucial to test if the code behaves correctly when the actual data retrieval or processing fails.
+* **Edge Case:** The `test_process_affiliate_products_no_product_data`  test now demonStartes how to handle situations where no product data is obtained from the data source.  Crucial to test if the code behaves correctly when the actual data retrieval or processing fails.
 * **Main Function Testing (Important):** The original `main` function relies on printing to `stdout`.  The test `test_main_no_products` mocks the `process_affiliate_products` return to return an empty list. Then it tests for an empty output from `main` without explicitly running `main`. This approach is vital to check how the `if products:` block handles an empty list without needing a complex simulation of print output.
 
 
@@ -110,4 +110,4 @@ class TestAliAffiliatedProducts:
 2.  Save the test code above as a `.py` file (e.g., `test_affiliated_products.py`).
 3.  Run `pytest test_affiliated_products.py` from your terminal.
 
-Remember to replace the placeholder data in the fixture with your actual data source if available.  The placeholder `MockProductParser` demonstrates a mock implementation of data fetching for the `process_affiliate_products` method and also how to test for expected output from the `main` function.  This is more robust than just relying on the output to the console.
+Remember to replace the placeholder data in the fixture with your actual data source if available.  The placeholder `MockProductParser` demonStartes a mock implementation of data fetching for the `process_affiliate_products` method and also how to test for expected output from the `main` function.  This is more robust than just relying on the output to the console.

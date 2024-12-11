@@ -92,7 +92,7 @@ def test_presta_language_get_language_details(prestashop_language):
 
 2. **Fixtures:**  A `credentials` fixture is created to provide consistent data for the `PrestaLanguage` constructor.  A `prestashop_language` fixture leverages the credentials to create instances of `PrestaLanguage` for use in the tests. This is more efficient than recreating the object in each test.
 
-3. **Comprehensive Tests for Initialization:** The code now covers various scenarios for initialization with `credentials`, individual `api_domain` and `api_key`, and the crucial cases of missing or incorrect input types.  Critically, it uses `pytest.raises` to check for the expected `ValueError` when crucial parameters are missing, demonstrating correct error handling.
+3. **Comprehensive Tests for Initialization:** The code now covers various scenarios for initialization with `credentials`, individual `api_domain` and `api_key`, and the crucial cases of missing or incorrect input types.  Critically, it uses `pytest.raises` to check for the expected `ValueError` when crucial parameters are missing, demonStarting correct error handling.
 
 4. **Clear Test Names:** The test names now clearly describe the purpose of each test, making the test suite more readable and maintainable.
 

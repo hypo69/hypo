@@ -75,7 +75,7 @@ def test_prepare_all_campaigns_exception():
 
 4. **Edge Case Handling:** The `test_prepare_all_campaigns_no_campaigns`  tests a situation where `process_all_campaigns` might return no results or an empty list. This handles an important edge case.
 
-5. **Exception Handling:** The `test_prepare_all_campaigns_exception` test demonstrates how to use `pytest.raises` to verify that the function handles exceptions correctly.
+5. **Exception Handling:** The `test_prepare_all_campaigns_exception` test demonStartes how to use `pytest.raises` to verify that the function handles exceptions correctly.
 
 6. **Completeness:** Placeholder comments like `# Replace with your inputs` have been added for cases when `prepare_all_campaigns` would accept inputs.  Add appropriate test cases for these if needed.
 

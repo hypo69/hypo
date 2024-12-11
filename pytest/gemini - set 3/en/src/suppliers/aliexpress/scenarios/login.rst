@@ -89,7 +89,7 @@ def test_login_get_url_fails(supplier):
 
 * **Mocking:** The code now extensively uses `unittest.mock.patch` to mock the `selenium.webdriver` methods like `get`, `execute_locator`. This isolates the `login` function and allows testing various scenarios without needing a real browser or website.
 * **Error Handling:** Tests are written to check for exceptions.  `pytest.raises` is used to verify that the appropriate exceptions are raised when specific conditions (like missing locators) occur.
-* **Realistic Failures:** The `test_login_get_url_fails` example demonstrates how to test when a specific method call fails with an appropriate exception.
+* **Realistic Failures:** The `test_login_get_url_fails` example demonStartes how to test when a specific method call fails with an appropriate exception.
 * **Supplier Fixture:** A `supplier` fixture is created to manage the `Supplier` object and its webdriver for a more organized test setup.  The `with` statement ensures the webdriver is properly closed after each test, preventing resource leaks.
 * **Clearer Test Names:** Test names are more descriptive, indicating the specific condition being tested.
 * **Comprehensive Coverage:**  Tests now cover more scenarios, including cases where different locators might be missing.

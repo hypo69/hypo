@@ -52,7 +52,7 @@ def test_mode_is_dev():
 
 **Explanation and Crucial Improvements:**
 
-1. **No Dummy Functions:** The original provided code was empty.  I've added example test functions (`test_mode_is_dev`, `test_check_login_...`) to demonstrate how to write tests for possible functions. *Crucially, these are only examples* - replace them with the tests necessary for the *actual* functions in your `login.py` file.  
+1. **No Dummy Functions:** The original provided code was empty.  I've added example test functions (`test_mode_is_dev`, `test_check_login_...`) to demonStarte how to write tests for possible functions. *Crucially, these are only examples* - replace them with the tests necessary for the *actual* functions in your `login.py` file.  
 
 2. **`pytest.raises` for Exceptions:**  Crucially, I've shown how to use `pytest.raises` to test for specific exceptions that your functions might raise (e.g., `ValueError` for missing credentials).
 

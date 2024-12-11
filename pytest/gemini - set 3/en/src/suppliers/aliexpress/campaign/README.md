@@ -94,7 +94,7 @@ def test_create_campaign_directories_failure():
 
 4. **Clear Test Names:** The test function names (e.g., `test_initialize_campaign_valid_input`) are clear and descriptive, indicating the specific scenario being tested.
 
-5. **Edge Cases:**  The test `test_initialize_campaign_invalid_name` demonstrates testing for an invalid `campaign_name`. Add similar tests for other functions with potential edge cases.
+5. **Edge Cases:**  The test `test_initialize_campaign_invalid_name` demonStartes testing for an invalid `campaign_name`. Add similar tests for other functions with potential edge cases.
 
 6. **Complete Test Coverage:** You'll need to add test cases for all the steps (initialize, create directories, save configuration, collect data, etc.) with different types of input and expected outputs to achieve complete test coverage.
 

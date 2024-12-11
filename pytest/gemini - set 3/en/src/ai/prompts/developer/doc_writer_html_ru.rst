@@ -100,7 +100,7 @@ def test_process_files_options_parameter():
 
 4. **Clearer Test Cases:** Test names are now more descriptive (e.g., `test_process_files_valid_input`).
 
-5. **Edge Cases:** The `test_process_files_empty_input` and `test_process_files_invalid_file` tests demonstrate handling of empty file lists and missing files, important edge cases.
+5. **Edge Cases:** The `test_process_files_empty_input` and `test_process_files_invalid_file` tests demonStarte handling of empty file lists and missing files, important edge cases.
 
 6. **Comprehensive Tests:** The added test cases cover various scenarios – valid input, empty input, and a crucial error case.
 

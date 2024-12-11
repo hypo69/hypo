@@ -61,7 +61,7 @@ def rai_copyright_infringement_prevention(user_request):
 
 2. **Comprehensive Coverage:** Tests now cover different types of copyrighted material (books, lyrics, recipes, news, WebMD).
 
-3. **Edge Cases:** Added a test for an empty request and an invalid input type (integer) to demonstrate robustness.  This addresses the potential for unexpected user input.
+3. **Edge Cases:** Added a test for an empty request and an invalid input type (integer) to demonStarte robustness.  This addresses the potential for unexpected user input.
 
 4. **Expected Response Consistency:**  The `expected_response` string is now more consistent across all tests, including clarifying examples (e.g.,  "I cannot violate copyright laws").
 

@@ -56,7 +56,7 @@ def test_presta_supplier_init_credentials_as_dict_with_non_string_values():
 
 
 
-# Example test demonstrating using super().__init__()
+# Example test demonStarting using super().__init__()
 # (add more specific tests for the super().__init__ behavior if necessary)
 def test_presta_supplier_super_init_called(credentials):
     """Verify that the super().__init__() method is called during initialization."""
@@ -82,7 +82,7 @@ def test_presta_supplier_super_init_called(credentials):
 * **Fixtures:** Introduced `credentials` fixture to provide reusable test data, making tests cleaner.
 * **Edge Case Testing:** Added tests for cases where `credentials` is a `SimpleNamespace` object and also a `dict` containing values other than strings, as the code may not handle such values correctly.
 * **Comprehensive Validation:** Tests cover both direct initialization and initialization via the `credentials` dictionary, improving coverage.
-* **Mocking:** The example `test_presta_supplier_super_init_called` demonstrates mocking `PrestaShop`'s `__init__` to ensure `super().__init__` is called correctly.  This is a crucial test and should be expanded to verify that specific arguments are passed correctly. 
+* **Mocking:** The example `test_presta_supplier_super_init_called` demonStartes mocking `PrestaShop`'s `__init__` to ensure `super().__init__` is called correctly.  This is a crucial test and should be expanded to verify that specific arguments are passed correctly. 
 * **Docstrings:** Improved docstrings to provide context and expected behavior for each test.
 
 

@@ -85,7 +85,7 @@ def test_run_campaigns_invalid_group_file_paths_type(mock_facebook_promoter, cam
 1. **Mocking:** The code now uses `unittest.mock.patch` to mock `time.sleep` and `d.get_url` for better test isolation. Crucially, it also mocks the `FacebookPromoter.run_campaigns` method itself, preventing any external dependencies from interfering with the tests.
 
 
-2. **Exception Handling:** The `test_run_campaigns_keyboardinterrupt` test now correctly verifies that the `logger.info` function is called when a `KeyboardInterrupt` occurs, demonstrating proper exception handling.
+2. **Exception Handling:** The `test_run_campaigns_keyboardinterrupt` test now correctly verifies that the `logger.info` function is called when a `KeyboardInterrupt` occurs, demonStarting proper exception handling.
 
 
 3. **Edge Cases:** The tests now cover scenarios like empty `campaigns` list (although it's not strictly an *invalid* case), and the crucial edge case of empty `group_file_paths`, which the original code didn't handle.

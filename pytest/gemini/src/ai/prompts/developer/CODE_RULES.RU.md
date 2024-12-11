@@ -3,7 +3,7 @@ import pytest
 from typing import Optional
 
 # The user-provided code goes here
-# (Assuming no code is provided, this example demonstrates testing)
+# (Assuming no code is provided, this example demonStartes testing)
 def calculate_area(length: int, width: int) -> int:
     """
     Calculates the area of a rectangle.

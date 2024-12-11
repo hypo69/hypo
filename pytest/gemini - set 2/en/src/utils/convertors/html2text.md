@@ -108,8 +108,8 @@ def test_html2text_with_incorrect_input():
 * **Fixtures:** Introduced fixtures (`html_data`, `html_with_tags`) to provide reusable HTML data, improving test organization.
 * **Edge Cases:** Tests now include an `test_html2text_empty_input` to cover an empty input.
 * **Entity Handling:** Included `test_html2text_with_entities` to verify handling of HTML entities like `&amp;`, `<`, `>`, and character references.
-* **Exception Handling:**  `test_html2text_with_incorrect_input` demonstrates how to test for exceptions with `pytest.raises`. This is crucial for robustness.
-* **StringIO:** The `test_html2text_file_output_to_stringio` demonstrates using `StringIO` as output for `html2text_file` to capture output without writing to a file.
+* **Exception Handling:**  `test_html2text_with_incorrect_input` demonStartes how to test for exceptions with `pytest.raises`. This is crucial for robustness.
+* **StringIO:** The `test_html2text_file_output_to_stringio` demonStartes using `StringIO` as output for `html2text_file` to capture output without writing to a file.
 * **Google Doc Option:** A test `test_html2text_with_google_doc_option` verifies functionality with the `google_doc` option.
 * **Comprehensive Tests:** The tests now cover a wider range of scenarios, including basic paragraphs, various HTML tags (`h1`, `ul`, `li`, `a`, `img`, `pre`), and entities.
 * **Docstrings:**  All test functions have thorough docstrings describing their purpose and the scenarios they cover.

@@ -150,7 +150,7 @@ graph LR
 
 **Diagram Explanation:**
 
-The diagram represents the flow of execution and data within the popup script.  The major functions and their interactions are illustrated, and the communication with the background script and content scripts is shown.  Crucially, it depicts the data flow of messages and the role of the browser API in handling these interactions.
+The diagram represents the flow of execution and data within the popup script.  The major functions and their interactions are illuStarted, and the communication with the background script and content scripts is shown.  Crucially, it depicts the data flow of messages and the role of the browser API in handling these interactions.
 
 ## <explanation>
 

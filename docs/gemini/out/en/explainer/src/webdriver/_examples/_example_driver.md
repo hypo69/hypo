@@ -47,7 +47,7 @@ MODE = 'dev'
 from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
 
     # Create an instance of the Driver class with the Chrome webdriver
     print("Creating a Chrome browser instance...")
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
 # <algorithm>
 
-The code demonstrates using a web driver (likely Selenium) to interact with different web browsers (Chrome, Firefox, Edge).
+The code demonStartes using a web driver (likely Selenium) to interact with different web browsers (Chrome, Firefox, Edge).
 
 1. **Initialization:** Import necessary classes (Driver, Chrome, Firefox, Edge) from `src.webdriver.driver`. Create instances of `Driver` using different browser types (Chrome, Firefox, Edge).
 2. **Browser Actions:**
@@ -181,4 +181,4 @@ The `src.webdriver.driver` module likely defines the `Driver`, `Chrome`, `Firefo
 
 **Relationship with other project parts:**
 
-The `src.webdriver.driver` module is a crucial part of the project, acting as an interface for interacting with web browsers. The `_examples` folder likely contains various examples demonstrating the use of this driver module within the project, potentially for testing, demonstration purposes, and workflows. Other parts of the project may use this `webdriver` functionality through appropriate imports. The overall project structure suggests a larger framework for automated testing or web interaction tasks.
+The `src.webdriver.driver` module is a crucial part of the project, acting as an interface for interacting with web browsers. The `_examples` folder likely contains various examples demonStarting the use of this driver module within the project, potentially for testing, demonStartion purposes, and workflows. Other parts of the project may use this `webdriver` functionality through appropriate imports. The overall project structure suggests a larger framework for automated testing or web interaction tasks.

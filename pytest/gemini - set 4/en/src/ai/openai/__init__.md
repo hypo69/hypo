@@ -87,7 +87,7 @@ class TestOpenAIModel:
 
 4. **Edge Cases and Invalid Input:** Tests now cover empty input, invalid target language, and long input (to check for potential memory issues).
 
-5. **OpenAIModel Tests (Crucial):**  A `TestOpenAIModel` class is added to test methods within the `OpenAIModel` class.  It demonstrates the structure of how to test a class-based model. Replace the placeholder `generate_response` with the actual method you want to test.  **Crucially**, it's impossible to write valid tests without knowledge of the actual methods, arguments, and behavior of `OpenAIModel`.  This section needs to be tailored to the specific methods in `OpenAIModel`.
+5. **OpenAIModel Tests (Crucial):**  A `TestOpenAIModel` class is added to test methods within the `OpenAIModel` class.  It demonStartes the structure of how to test a class-based model. Replace the placeholder `generate_response` with the actual method you want to test.  **Crucially**, it's impossible to write valid tests without knowledge of the actual methods, arguments, and behavior of `OpenAIModel`.  This section needs to be tailored to the specific methods in `OpenAIModel`.
 
 6. **`assert result is not None`:** This is added to prevent potential `AttributeError` if `translate` or `generate_response` returns `None` in the case of error. This is **very** important to prevent unexpected failures when the function encounters issues.
 

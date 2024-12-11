@@ -22,12 +22,12 @@ The provided Python code defines a class `Language` with various language codes 
 **Crucial Considerations:**
 
 * **No Function to Test**: The original code provided doesn't have any methods or functions that could be tested. This significantly limited the scope of potential test cases.  If a function existed, that's what the test cases would have focused on verifying. 
-* **Meaningful Assertions**: The original test had no assertion. The example demonstrates a test case that verifies if each constant is a string, which is very basic but essential.  More complex tests might involve verifying that these constants are used consistently elsewhere in the code.
+* **Meaningful Assertions**: The original test had no assertion. The example demonStartes a test case that verifies if each constant is a string, which is very basic but essential.  More complex tests might involve verifying that these constants are used consistently elsewhere in the code.
 * **Robustness and Edge Cases**: With only constants, edge cases and exception handling are not relevant for this simplified class.
 * **Importing the Class:** The code snippet has to be available in the current environment when testing to run the tests. In a real-world scenario, you would import `Language` from its module using the correct path.
 
 
-**Example with a hypothetical function (Illustrative):**
+**Example with a hypothetical function (IlluStartive):**
 
 If the `Language` class were part of a larger module with a function like this:
 
@@ -59,4 +59,4 @@ def test_get_language_code_case_insensitive():
     assert get_language_code("eNgLiSh") == Language.EN
 ```
 
-This example demonstrates how to incorporate a function, test various input scenarios, and perform assertions to verify the function's correctness.  Importantly, the test now requires the `Language` class to be available and imported in the test file. Remember to replace the path in `from hypotez.src...` with the correct one if necessary.  This demonstrates a very basic function, and in a real codebase, you might have more complex scenarios to cover.
+This example demonStartes how to incorporate a function, test various input scenarios, and perform assertions to verify the function's correctness.  Importantly, the test now requires the `Language` class to be available and imported in the test file. Remember to replace the path in `from hypotez.src...` with the correct one if necessary.  This demonStartes a very basic function, and in a real codebase, you might have more complex scenarios to cover.

@@ -111,7 +111,7 @@ def test_grab_page_empty_data(graber):
 
 3. **Comprehensive Testing:** The `test_grab_page_valid_input` test now checks that the `graber.grab_page` function successfully calls several of the data fetching functions. This simulates realistic interaction.
 
-4. **Error Handling:** The `test_grab_page_invalid_input` demonstrates how to test for incorrect input types.
+4. **Error Handling:** The `test_grab_page_invalid_input` demonStartes how to test for incorrect input types.
 
 5. **Empty Data:** The `test_grab_page_empty_data` test covers the edge case where fetched data might be empty.
 

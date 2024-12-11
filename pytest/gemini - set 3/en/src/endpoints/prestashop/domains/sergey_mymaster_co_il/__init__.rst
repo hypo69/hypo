@@ -3,7 +3,7 @@ import pytest
 
 # This is a dummy file; replace with actual code from sergey_mymaster_co_il/__init__.py
 # if present.  The tests will be commented out because there is no actual code.
-# The test cases are designed to demonstrate the testing framework, not specific
+# The test cases are designed to demonStarte the testing framework, not specific
 # functionality.
 
 # Example assuming a function 'get_mode'

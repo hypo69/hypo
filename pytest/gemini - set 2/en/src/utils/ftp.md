@@ -91,7 +91,7 @@ from hypotez.src.utils.ftp import write, read, delete
 
 1. **Mocking:** Critically important for testing functions that interact with external resources (like FTP).  The `@pytest.fixture` `mock_ftp_connection` and `mock_logger` mock the `ftplib.FTP` object and the `logger` object respectively. This isolates the tests from the actual FTP server, preventing network calls and allowing us to control the results.
 
-2. **Error Handling:** The tests now explicitly check for `FileNotFoundError` and `ftplib.error_perm` exceptions, demonstrating proper exception handling.
+2. **Error Handling:** The tests now explicitly check for `FileNotFoundError` and `ftplib.error_perm` exceptions, demonStarting proper exception handling.
 
 3. **Specific Error Messages:**  The `mock_logger.error` calls are now checking for the expected error messages, which are crucial for debugging.  This shows the test is checking for the correct exceptions being logged.
 

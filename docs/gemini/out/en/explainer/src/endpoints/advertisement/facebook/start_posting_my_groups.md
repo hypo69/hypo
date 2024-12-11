@@ -95,7 +95,7 @@ graph TD
 *   `copy`: Standard Python module used for creating shallow or deep copies of objects.
 *   `Driver`: From `src.webdriver`, likely handles browser interactions.
 *   `Chrome`: Likely a class or function for specific Chrome browser interaction within `Driver`.
-*   `FacebookPromoter`: From `src.endpoints.advertisement`, orchestrates the campaign promotion process.
+*   `FacebookPromoter`: From `src.endpoints.advertisement`, orcheStartes the campaign promotion process.
 *   `logger`: From `src.logger`, handles logging activities.
 
 ## <explanation>

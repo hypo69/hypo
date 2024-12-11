@@ -96,7 +96,7 @@ def test_create_campaign_data_description_length():
 2. **Clearer Test Names:** The test names are more descriptive, e.g., `test_create_campaign_data_short_titles`.
 3. **Error Handling:** Includes a test (`test_create_campaign_data_empty_list`) to ensure that the `TypeError` is raised when the input `products_titles` is not a list. This is crucial for robustness.
 4. **Description Length Check:** Added a test (`test_create_campaign_data_description_length`) to verify that the `description` length is within the specified limit (1200 characters), handling potential issues with extremely long lists of products.
-5. **Example Data:** The example data is simpler but more illustrative of various possibilities for product titles.
+5. **Example Data:** The example data is simpler but more illuStartive of various possibilities for product titles.
 6. **`pytest.raises`:** The empty list case now uses `pytest.raises` to test exception handling correctly.
 7. **Conciseness:** Improved the structure and comments to make the code easier to read and understand.
 

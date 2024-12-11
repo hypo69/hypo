@@ -158,7 +158,7 @@ graph LR
 **Potential Errors/Improvements:**
 
 *   Error handling is good in the `settings` and `README` loading. Consider using a more descriptive exception type to help with debugging, like `ProjectSettingsError`.
-*   Error Handling: The code uses `...` to skip error handling in `try...except` blocks. This could indicate a missing or incomplete error handling strategy. A better way would be to log an error, or take a corrective action.
+*   Error Handling: The code uses `...` to skip error handling in `try...except` blocks. This could indicate a missing or incomplete error handling Startegy. A better way would be to log an error, or take a corrective action.
 
 **Relationships with Other Parts:**
 

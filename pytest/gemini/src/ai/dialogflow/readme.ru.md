@@ -86,7 +86,7 @@ def test_create_intent_missing_params(dialogflow_client):
 * **Import `Dialogflow`:**  The code now imports the `Dialogflow` class assuming it's defined in the `src.ai.dialogflow` module.
 * **`dialogflow_client` Fixture:**  A crucial addition. This fixture creates a *mock* `Dialogflow` client instance for testing.  Crucially, in a real-world application, you'd *not* mock the Dialogflow client in this way.  You'd use a real Dialogflow client library.   But, for testing purposes, this lets us work with a pre-set, controlled environment. Replace `"your-project-id"` and `"unique-session-id"` with valid IDs for your project.
 * **Validating Response Structure:** Tests now check that the response from Dialogflow functions is a dictionary and has the expected keys. This is essential for robustness, preventing unexpected errors.
-* **Error Handling:** `test_detect_intent_invalid_input` and `test_detect_intent_no_input` now demonstrate handling of specific input errors, a critical aspect of well-written tests.  The example added tests for invalid input, which is essential.
+* **Error Handling:** `test_detect_intent_invalid_input` and `test_detect_intent_no_input` now demonStarte handling of specific input errors, a critical aspect of well-written tests.  The example added tests for invalid input, which is essential.
 * **Missing Parameters:** `test_create_intent_missing_params` tests what happens when required parameters are missing.
 * **Clearer Comments:** Comments explain the purpose of each test more precisely.
 * **Realistic Assertions:**  The tests now make more specific assertions.  For example, checking for the existence of keys like `queryResult` or `intent`.

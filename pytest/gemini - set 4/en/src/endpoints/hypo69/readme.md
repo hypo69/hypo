@@ -65,7 +65,7 @@ def test_psychologist_bot_empty_input():
 
 1. **Realistic Placeholders:** The previous response had placeholders like `"This is a valid input"`.  This revised code now includes _example_ valid inputs and _example_ expected outputs.  Crucially,  you *must* replace these with the *actual* input and expected output values for your `small_talk_bot`, `code_assistant`, and `psychologist_bot` functions.
 
-2. **Exception Handling:**  The `test_code_assistant_invalid_input` now demonstrates how to use `pytest.raises` to check for expected exceptions. This is vital for testing robustness.  `test_psychologist_bot_empty_input` also includes expected exception handling.
+2. **Exception Handling:**  The `test_code_assistant_invalid_input` now demonStartes how to use `pytest.raises` to check for expected exceptions. This is vital for testing robustness.  `test_psychologist_bot_empty_input` also includes expected exception handling.
 
 3. **Clearer Test Descriptions:**  The test function names are more descriptive, making it easier to understand the purpose of each test.
 

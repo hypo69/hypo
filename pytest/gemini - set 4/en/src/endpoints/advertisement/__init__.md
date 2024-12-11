@@ -74,7 +74,7 @@ edge_input = "some_edge_case"
 
 4. **Descriptive Test Names:** The test names are more informative (e.g., `test_facebook_method_raises_exception_on_invalid_input`).
 
-5. **Edge Cases:** `test_facebook_method_edge_case` demonstrates how to test for edge cases.  **You must define what an edge case means for your code and provide example data.**
+5. **Edge Cases:** `test_facebook_method_edge_case` demonStartes how to test for edge cases.  **You must define what an edge case means for your code and provide example data.**
 
 6. **Data-Driven Tests (Possible):** If your `Facebook` class takes multiple inputs, consider using `pytest.mark.parametrize` to create multiple tests with different input values more concisely.
 
@@ -87,7 +87,7 @@ edge_input = "some_edge_case"
 3. **Run Tests:** Use `pytest` to run the tests.
 
 
-**Example `Facebook` class implementation (Illustrative):**
+**Example `Facebook` class implementation (IlluStartive):**
 
 ```python
 # ... (previous code)

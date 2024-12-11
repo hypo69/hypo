@@ -41,7 +41,7 @@ def test_author_type():
 
 
 
-# Example test demonstrating pytest.raises for exception handling (if needed)
+# Example test demonStarting pytest.raises for exception handling (if needed)
 # This example assumes there's a function with potential exceptions to handle.
 # Replace with the actual function if you have exception handling in the code.
 #

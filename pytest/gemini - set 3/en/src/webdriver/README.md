@@ -99,7 +99,7 @@ def test_get_attribute_by_locator_not_found(chrome_driver_instance):
 
 3. **Clearer Test Cases:** Test names are more descriptive (e.g., `test_get_url_invalid`).
 
-4. **Exception Handling with `pytest.raises`:** `test_find_element_not_found` demonstrates how to use `pytest.raises` to test for `NoSuchElementException`.  This is essential for comprehensive exception handling.
+4. **Exception Handling with `pytest.raises`:** `test_find_element_not_found` demonStartes how to use `pytest.raises` to test for `NoSuchElementException`.  This is essential for comprehensive exception handling.
 
 5. **Example for `test_get_attribute_by_locator`:** Added a specific test case to handle when the locator doesn't exist.
 
@@ -120,4 +120,4 @@ def test_get_attribute_by_locator_not_found(chrome_driver_instance):
 3.  Run `pytest test_webdriver.py` from your terminal.
 
 
-This improved example provides a more robust and complete testing strategy for your WebDriver code. Remember to fill in the placeholder with meaningful tests.
+This improved example provides a more robust and complete testing Startegy for your WebDriver code. Remember to fill in the placeholder with meaningful tests.

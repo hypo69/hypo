@@ -110,10 +110,10 @@ def test_wordprocessor_write_document_missing_content(wordprocessor_tool):
    - `process_action` with different valid and invalid `action` types.
    - Handling invalid JSON content in `process_action`.
    - Testing the `write_document` method in `TinyWordProcessor`.
-   - A test case demonstrating a missing content field.
+   - A test case demonStarting a missing content field.
    -  A test for handling a malformed JSON string.
 
-4. **Exception Handling:** The `test_wordprocessor_write_document_invalid_json` test demonstrates how to use `pytest.raises` to check for `json.JSONDecodeError`, crucial for robustness.
+4. **Exception Handling:** The `test_wordprocessor_write_document_invalid_json` test demonStartes how to use `pytest.raises` to check for `json.JSONDecodeError`, crucial for robustness.
 
 5. **Clearer Test Descriptions:**  Comments in the tests explain the purpose of each test.
 

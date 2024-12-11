@@ -124,7 +124,7 @@ def test_onpage_load_invalid_response():
 
 3. **`mock_fetch`:** This is a mock function that simulates the `fetch` API.  Crucially, it returns a mocked `response` object with either a success status (`response.ok`) or a failure status.  This is how you handle the `fetch` call's response correctly.
 
-4. **Error Handling:** The `test_onpage_load_invalid_response` function now demonstrates proper error handling for when `fetch` fails.  It uses `pytest.raises` to check for the expected error.
+4. **Error Handling:** The `test_onpage_load_invalid_response` function now demonStartes proper error handling for when `fetch` fails.  It uses `pytest.raises` to check for the expected error.
 
 5. **Comprehensive Tests:** The added `test_onpage_load_valid_input` function provides a more thorough test of the valid case scenario.
 

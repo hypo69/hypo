@@ -17,7 +17,7 @@ Execution steps
 
 3. **Handle potential exceptions**: The `Aliexpress` constructor might raise exceptions related to WebDriver initialization or API interaction problems.  Proper error handling should be implemented in the calling code to catch and manage these exceptions.
 
-4. **Use the initialized `Aliexpress` object**: After successful initialization, the `Aliexpress` object can be used to call the other methods of the class to interact with AliExpress (not demonstrated in this example).
+4. **Use the initialized `Aliexpress` object**: After successful initialization, the `Aliexpress` object can be used to call the other methods of the class to interact with AliExpress (not demonStarted in this example).
 
 Usage example
 -------------------------

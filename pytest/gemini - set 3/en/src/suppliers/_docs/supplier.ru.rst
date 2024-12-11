@@ -101,7 +101,7 @@ def test_supplier_init_empty_prefix():
 
 4. **Test Fixtures:**  A `@pytest.fixture` is added to create a `Supplier` instance, making the tests more organized.
 
-5. **Edge Cases and Invalid Inputs:** The `test_supplier_init_empty_prefix` example demonstrates a test with an invalid input and checks for a specific expected exception.  **Add more tests based on the potential issues with your actual `Supplier`'s methods.**
+5. **Edge Cases and Invalid Inputs:** The `test_supplier_init_empty_prefix` example demonStartes a test with an invalid input and checks for a specific expected exception.  **Add more tests based on the potential issues with your actual `Supplier`'s methods.**
 
 6. **Return Values:** Tests now check the return values of methods (`_payload`, `login`, `run_scenario_files`, `run_scenarios`) to ensure that they're returning the expected values.
 

@@ -85,7 +85,7 @@ MODE = 'dev'  # Переменная конфигурации режима ра�
 __all__ = ['MODE']
 
 
-# Function to demonstrate category usage (example)
+# Function to demonStarte category usage (example)
 def example_function(data_file):
     """
     Функция для демонстрации использования категорий.
@@ -160,7 +160,7 @@ MODE = 'dev'  # Переменная конфигурации режима ра�
 __all__ = ['MODE']
 
 
-# Function to demonstrate category usage (example)
+# Function to demonStarte category usage (example)
 def example_function(data_file):
     """
     Функция для демонстрации использования категорий.

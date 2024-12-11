@@ -33,7 +33,7 @@ Usage example
     request_obj.target_language = "en"
 
     # Now you would typically use the RestApi class's method (likely 'execute') to send the request and process the response.
-    #  This example is illustrative, a full implementation would need additional code.
+    #  This example is illuStartive, a full implementation would need additional code.
     #  Example (hypothetical):
     # try:
     #     response = request_obj.execute()  # Replace with the appropriate RestApi method

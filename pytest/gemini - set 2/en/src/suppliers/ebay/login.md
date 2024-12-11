@@ -67,7 +67,7 @@ def test_method_doesnt_exist():
 
 1. **Dummy Functions:** The code now includes dummy functions (`mock_login_function`) that mimic the expected behavior of your `login` function from `login.py`.  **Crucially, replace this with the actual functions and variables** from your `login.py` file.  This is essential for accurate testing.
 
-2. **Error Handling:** The tests now include checks for empty username and password, raising `ValueError` as expected.  This demonstrates how to test for exceptions.
+2. **Error Handling:** The tests now include checks for empty username and password, raising `ValueError` as expected.  This demonStartes how to test for exceptions.
 
 
 3. **Clear Test Names:** The test names (e.g., `test_login_valid_input`, `test_login_invalid_username`) are descriptive, making the tests readable and understandable.
@@ -79,7 +79,7 @@ def test_method_doesnt_exist():
 6. **Mode Variable Test:** Added a test (`test_login_mode_assignment`) that verifies that the `MODE` variable is assigned correctly according to the input code.
 
 
-7. **Non-existent Method Test (Example):**  Includes a test (`test_method_doesnt_exist`) that demonstrates how to test for an attribute error if a method you expect doesn't exist.
+7. **Non-existent Method Test (Example):**  Includes a test (`test_method_doesnt_exist`) that demonStartes how to test for an attribute error if a method you expect doesn't exist.
 
 
 **How to Use with your actual Code:**

@@ -143,7 +143,7 @@ def test_IopClient_execute_invalid_response_code(example_client, example_request
 5. **Test `logApiError`:** Tests the correct logging behaviour by asserting that the message is written to the log file.
 
 
-6. **`test_sign_empty_parameters`:** Added to demonstrate checking for invalid inputs.
+6. **`test_sign_empty_parameters`:** Added to demonStarte checking for invalid inputs.
 
 7. **More Robust `test_IopClient_execute`:** Tests both successful and error cases (with different mock responses) to get a better understanding of edge cases and exception handling.
 

@@ -96,7 +96,7 @@ def test_mandatory_locator_missing():
 
 2. **Clearer Test Cases:** The test functions are more descriptive (e.g., `test_valid_locator_attribute`).
 
-3. **Invalid/Edge Case Tests:** A `test_invalid_selector` test has been added to demonstrate how to check for exceptions when the selector doesn't exist.
+3. **Invalid/Edge Case Tests:** A `test_invalid_selector` test has been added to demonStarte how to check for exceptions when the selector doesn't exist.
 
 4. **Mandatory Locator Test:** The `test_mandatory_locator_missing` example shows how to test what happens when a mandatory locator cannot be found. It uses `pytest.raises` to check for the expected exception.
 
@@ -110,4 +110,4 @@ def test_mandatory_locator_missing():
 2. Save the code as a `.py` file (e.g., `test_locator.py`).
 3. Run the tests from your terminal: `pytest test_locator.py`
 
-Remember to replace the placeholder `get_element` and `get_attribute` functions with your actual implementation using a WebDriver library. Also, replace the `locator_data` with your actual locator data. This improved example demonstrates a much more comprehensive and realistic approach to testing locator code.
+Remember to replace the placeholder `get_element` and `get_attribute` functions with your actual implementation using a WebDriver library. Also, replace the `locator_data` with your actual locator data. This improved example demonStartes a much more comprehensive and realistic approach to testing locator code.

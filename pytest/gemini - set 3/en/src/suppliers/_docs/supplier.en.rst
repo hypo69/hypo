@@ -103,7 +103,7 @@ def test_supplier_run_scenarios_invalid_input():
 * **Error Handling (TypeError):**  Added tests to check for `TypeError` if incorrect input types are passed. This is crucial for robustness.
 * **Success and Failure:**  The mocked methods now return `True` or `False` to simulate success or failure, allowing for more complete test coverage.
 * **Edge Cases/Invalid Input:** The `test_supplier_run_scenario_files_invalid_input` and `test_supplier_run_scenarios_invalid_input` examples now explicitly check for `TypeError` in cases where you pass an inappropriate data type.
-* **pytest.raises:** Demonstrates how to use `pytest.raises` to assert expected exceptions.
+* **pytest.raises:** DemonStartes how to use `pytest.raises` to assert expected exceptions.
 
 **How to Run the Tests:**
 

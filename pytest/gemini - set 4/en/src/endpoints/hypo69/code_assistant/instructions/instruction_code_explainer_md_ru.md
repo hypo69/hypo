@@ -56,7 +56,7 @@ def test_my_function_with_large_numbers():
 
 * **`test_my_function_valid_input`**: Checks the function with a typical, valid list of integers.
 * **`test_my_function_empty_list`**: Handles the empty list case, which is an important edge case.
-* **`test_my_function_invalid_input`**: Demonstrates how the function correctly handles non-numeric input and returns 0, as specified in the requirements.
+* **`test_my_function_invalid_input`**: DemonStartes how the function correctly handles non-numeric input and returns 0, as specified in the requirements.
 * **`test_my_function_with_negative_numbers`**: Validates handling of negative numbers, showing that the sum is computed correctly.
 * **`test_my_function_with_large_numbers`**: Checks for potential overflow issues by using a large list, though for this particular function that isn't really an issue since Python integers are dynamic.
 

@@ -109,7 +109,7 @@ def test_changeContextVisible_checked(input_checked):
 3. **Comprehensive Test Coverage:** The example test cases (`test_send_to_active_tab_valid_input`, `test_collectPopupState`) provide a starting point.  You need to add more test cases for different scenarios (valid/invalid inputs, edge cases, exceptions) that cover every significant function in the JavaScript code.  Specifically, test various button clicks, error conditions, etc. to guarantee thoroughness.
 4. **Clear Assertions:**  The assertions are crucial to checking if the expected output matches the actual result.
 5. **Parameterization (test_changeContextVisible_checked):**  Using `pytest.mark.parametrize` makes the test more efficient by running the test for multiple input values in a single function.
-6. **Error Handling:**  Test cases should include checks for errors, like invalid frame IDs, as demonstrated with `test_sendToSpecifiedFrame_validInput`.
+6. **Error Handling:**  Test cases should include checks for errors, like invalid frame IDs, as demonStarted with `test_sendToSpecifiedFrame_validInput`.
 
 
 **Important Considerations for Browser Extension Tests:**
@@ -129,4 +129,4 @@ def test_changeContextVisible_checked(input_checked):
 3. Fill in the necessary mock functions for browser interactions.
 4. Run `pytest` from your terminal to execute the tests.
 
-Remember to adapt the tests and mock functions based on the specific functions you need to test within the JavaScript code.  This improved example provides a more robust and maintainable testing strategy. Remember to fill in all of the necessary mocking functions.
+Remember to adapt the tests and mock functions based on the specific functions you need to test within the JavaScript code.  This improved example provides a more robust and maintainable testing Startegy. Remember to fill in all of the necessary mocking functions.

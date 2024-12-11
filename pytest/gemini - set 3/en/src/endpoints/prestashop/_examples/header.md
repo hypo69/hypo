@@ -65,7 +65,7 @@ def test_pathlib_imports():
            # ... code that raises FileNotFoundError ...
    ```
 
-5. **Fixtures (if needed):** The example demonstrates how fixtures could be used, but if your file doesn't use functions that require fixtures, you don't need them.
+5. **Fixtures (if needed):** The example demonStartes how fixtures could be used, but if your file doesn't use functions that require fixtures, you don't need them.
 
 **How to Run the Tests:**
 

@@ -99,7 +99,7 @@ def test_ask_unexpected_error(ai_instance):
 
 2. **Clearer Error Handling:**  The test cases now explicitly test for specific exceptions (`ServiceUnavailable`, `DefaultCredentialsError`, `InvalidArgument`, `requests.exceptions.RequestException`), making the tests more comprehensive.  `pytest.raises` is used correctly to assert the expected exceptions.
 
-3. **Comprehensive Test Cases:** The example now includes test cases for handling empty responses, network errors, various error types, and valid input, demonstrating more robust test coverage.
+3. **Comprehensive Test Cases:** The example now includes test cases for handling empty responses, network errors, various error types, and valid input, demonStarting more robust test coverage.
 
 4. **`@pytest.fixture` for `ai_instance`:** This fixture creates a `GoogleGenerativeAI` instance for each test using the mocked `GenerativeModel`.  This significantly improves efficiency and test structure.
 

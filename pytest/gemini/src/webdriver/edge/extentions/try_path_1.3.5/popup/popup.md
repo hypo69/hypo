@@ -111,7 +111,7 @@ class MockBrowser:
 * **JavaScript to Python Conversion:** The code now uses `js2py` to convert the JavaScript code into Python. This is crucial for testing the JavaScript functions within a Python environment. Error handling is added to catch potential issues during the conversion.
 * **Mock Browser Objects:** The `MockBrowser` class is essential for unit testing because it mocks browser APIs, particularly `browser.tabs.query` and `browser.tabs.sendMessage`, and `browser.executeScript`.  This isolates the tests from the actual browser and prevents issues like `TypeError: Cannot read properties of undefined (reading 'id')` which can occur when you attempt to call browser functions without the browser context.  This is a *critical* fix.
 * **Clearer Test Functions:** Test function names are more descriptive.
-* **Example Test Cases:**  Added two example tests (`test_sendToActiveTab_valid_input` and `test_sendToSpecifiedFrame_valid_input`) to demonstrate how to test functions that use browser interactions.
+* **Example Test Cases:**  Added two example tests (`test_sendToActiveTab_valid_input` and `test_sendToSpecifiedFrame_valid_input`) to demonStarte how to test functions that use browser interactions.
 * **Mocking DOM elements:**  To test functions like `collectPopupState`, mock the DOM elements (`MockDOMElement`). This crucial step is vital for testing functions dependent on the popup's DOM structure without relying on a real browser.
 * **Error Handling:**  The tests now include `try...except` blocks to catch potential exceptions within the JavaScript functions during testing. This improves robustness and prevents tests from failing unexpectedly if there are errors in the JavaScript.
 

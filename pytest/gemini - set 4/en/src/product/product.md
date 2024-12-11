@@ -68,7 +68,7 @@ def test_get_parent_categories_empty_result():
 
 3. **Exception Handling:** The `test_get_parent_categories_invalid_input` test now correctly uses `pytest.raises` to assert the expected `TypeError`.
 
-4. **Edge Case Testing:** `test_get_parent_categories_empty_result` demonstrates handling an empty return from the mocked `Category.get_parents`. This is a crucial edge case.
+4. **Edge Case Testing:** `test_get_parent_categories_empty_result` demonStartes handling an empty return from the mocked `Category.get_parents`. This is a crucial edge case.
 
 5. **Depth Parameter Test**: Added a test to cover the `dept` parameter.
 

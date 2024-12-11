@@ -56,7 +56,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The mermaid diagram illustrates the dependency structure. `__init__.py` imports `Graber` from the `graber` submodule and `get_list_products_in_category` from the `scenario` submodule. These submodules likely contain the implementation details of interacting with the Amazon API or database related to Amazon product information.
+The mermaid diagram illuStartes the dependency structure. `__init__.py` imports `Graber` from the `graber` submodule and `get_list_products_in_category` from the `scenario` submodule. These submodules likely contain the implementation details of interacting with the Amazon API or database related to Amazon product information.
 
 
 ## <explanation>

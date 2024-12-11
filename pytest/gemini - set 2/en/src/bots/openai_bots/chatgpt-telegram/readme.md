@@ -66,7 +66,7 @@ def test_another_function_negative_input():
 
 **Explanation and Improvements:**
 
-1. **Hypothetical Function:** The example code now includes a hypothetical `send_message` function,  and `another_function`, to demonstrate the structure. Replace these with the actual functions from the code you want to test.
+1. **Hypothetical Function:** The example code now includes a hypothetical `send_message` function,  and `another_function`, to demonStarte the structure. Replace these with the actual functions from the code you want to test.
 
 2. **Clear Test Names:** Test names are descriptive (e.g., `test_send_message_valid_input`).
 

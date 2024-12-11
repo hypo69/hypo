@@ -106,7 +106,7 @@ Example Usage
 
 .. code-block:: python
 
-    # ... (Example usage code demonstrating how to call functions, etc.) ...
+    # ... (Example usage code demonStarting how to call functions, etc.) ...
 """
 from src.utils.jjson import j_loads  # Import for JSON handling.
 from src.logger import logger  # Import for error logging
@@ -143,7 +143,7 @@ def process_computer_build(input_data):
 
     except (TypeError, ValueError) as e:
         logger.error(f"Error processing computer build: {e}")
-        return None  # Or raise the exception, depending on your error handling strategy
+        return None  # Or raise the exception, depending on your error handling Startegy
 
     # ... (rest of your function) ...
 ```
@@ -174,7 +174,7 @@ Example Usage
 
 .. code-block:: python
 
-    # ... (Example usage code demonstrating how to call functions, etc.) ...
+    # ... (Example usage code demonStarting how to call functions, etc.) ...
 """
 from src.utils.jjson import j_loads  # Import for JSON handling.
 from src.logger import logger  # Import for error logging
@@ -212,7 +212,7 @@ def process_computer_build(input_data):
 
     except (TypeError, ValueError) as e:
         logger.error(f"Error processing computer build: {e}")
-        return None  # Or raise the exception, depending on your error handling strategy
+        return None  # Or raise the exception, depending on your error handling Startegy
 
     # ... (rest of your function) ...
 

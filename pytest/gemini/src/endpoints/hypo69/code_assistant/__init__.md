@@ -53,7 +53,7 @@ def test_mode_value():
 
 # Important:  Uncomment and modify the example tests with the actual
 # methods and assertions relevant to the CodeAssistant class.  The
-# placeholder tests are only for illustration. Replace the placeholders
+# placeholder tests are only for illuStartion. Replace the placeholders
 # with specific tests based on the code you want to test.
 ```
 
@@ -65,7 +65,7 @@ def test_mode_value():
 
 3. **`MODE` Test:** Checks the value of the `MODE` constant, which is a meaningful test.
 
-4. **Error Handling Tests (Crucial):** Included example tests demonstrating how to use `pytest.raises` to check for exceptions (like `ValueError` or `TypeError`) raised by your `CodeAssistant` methods.
+4. **Error Handling Tests (Crucial):** Included example tests demonStarting how to use `pytest.raises` to check for exceptions (like `ValueError` or `TypeError`) raised by your `CodeAssistant` methods.
 
 
 **How to Use with Your Code:**

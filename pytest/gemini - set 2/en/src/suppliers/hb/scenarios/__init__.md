@@ -86,7 +86,7 @@ def test_login_invalid_input():
 
 1. **Dummy Data:** The code now includes `DUMMY_CATEGORY` and `DUMMY_PRODUCT_ID` for testing.  Critically,  `@pytest.fixture` provides `dummy_category_list` and `dummy_products_list`  so the test functions don't need to directly interact with the real data source, making them more robust.
 
-2. **Mocking:** The `test_get_list_products_in_category_valid_input` and `test_get_list_categories_from_site_valid_input` demonstrate mocking the actual data fetching parts of the function using `get_products` method and `get_categories` property, which would be critical to testing in a real-world setup without directly querying the database or API.
+2. **Mocking:** The `test_get_list_products_in_category_valid_input` and `test_get_list_categories_from_site_valid_input` demonStarte mocking the actual data fetching parts of the function using `get_products` method and `get_categories` property, which would be critical to testing in a real-world setup without directly querying the database or API.
 
 
 3. **Exception Handling:**  `test_grab_product_page_invalid_input` and `test_login_invalid_input` now use `pytest.raises` to check for specific exceptions, which is crucial for testing error handling.  Note the `ValueError` is a placeholder – you should check for the actual exception raised by your code.  The `test_login_invalid_input` also includes an assertion to confirm the *reason* for the error, which is often how exceptions are checked.
@@ -103,4 +103,4 @@ def test_login_invalid_input():
 3. **Add more tests:**  Write tests for all the other functions and methods in the modules, covering valid and invalid inputs, edge cases, and different possible outputs.
 
 
-Remember to adapt these tests based on the actual function logic and the structure of your code. This improved example is far more comprehensive and demonstrates best practices for writing robust `pytest` tests. Remember to address potential real-world issues, such as network calls or database interactions (if you are dealing with these), using suitable mocking mechanisms.
+Remember to adapt these tests based on the actual function logic and the structure of your code. This improved example is far more comprehensive and demonStartes best practices for writing robust `pytest` tests. Remember to address potential real-world issues, such as network calls or database interactions (if you are dealing with these), using suitable mocking mechanisms.

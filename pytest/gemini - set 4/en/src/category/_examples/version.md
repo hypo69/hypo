@@ -56,7 +56,7 @@ def test_author_type():
 2. **Comprehensive Coverage:** Tests cover the `__version__`, `__doc__`, `__details__`, and `__name__` attributes, ensuring that all the declared variables in the provided code are tested.
 
 
-3. **Edge Cases and Exception Handling:** The `test_version_invalid_input_type` and  `test_version_empty_string` tests demonstrate handling potential errors or invalid data types.  Critically, it now also handles the possibility of empty docstrings or details.
+3. **Edge Cases and Exception Handling:** The `test_version_invalid_input_type` and  `test_version_empty_string` tests demonStarte handling potential errors or invalid data types.  Critically, it now also handles the possibility of empty docstrings or details.
 
 4. **`pytest.raises` for Exceptions:** The tests effectively use `pytest.raises` to catch and validate specific exceptions.
 

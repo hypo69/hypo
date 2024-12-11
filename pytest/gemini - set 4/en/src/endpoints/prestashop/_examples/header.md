@@ -55,7 +55,7 @@ def test_sys_path_append_correctness():
     finally:
         sys.path[:] = original_path
 
-# Example test to demonstrate testing other imports
+# Example test to demonStarte testing other imports
 # ... (Add tests for other functions/classes, like from src import gs etc...) ...
 
 def test_import_gs():
@@ -81,7 +81,7 @@ def test_import_gs():
 
 3. **Clearer Test Names:** Test names are more descriptive, reflecting the specific scenarios they test.
 
-4. **Exception Handling:** The `test_import_gs` example demonstrates how to use `pytest.raises` (not needed here but crucial for testing exceptions).
+4. **Exception Handling:** The `test_import_gs` example demonStartes how to use `pytest.raises` (not needed here but crucial for testing exceptions).
 
 5. **Robustness:** The tests now avoid relying on specific file paths or directory structures.  Mocking `os.getcwd()` makes the tests more flexible and portable.
 

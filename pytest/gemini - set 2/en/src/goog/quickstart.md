@@ -93,7 +93,7 @@ def test_main_http_error():
 
 * **Comprehensive Test Cases:** The tests now cover various scenarios, including valid credentials, missing `token.json`, invalid credentials, and a simulated API error.
 * **Mocking:** Critically important, the code now uses `unittest.mock` to mock the `build` function and other external calls. This isolates the `quickstart.main` function from the external dependencies and allows testing different scenarios without interacting with Google's API.
-* **Error Handling:** The `test_main_http_error` test specifically demonstrates how to use `pytest.raises` to catch and assert on `errors.HttpError`.
+* **Error Handling:** The `test_main_http_error` test specifically demonStartes how to use `pytest.raises` to catch and assert on `errors.HttpError`.
 * **Clearer Assertions:** Assertions are improved to check for the correct behavior, such as the print statements (when no `token.json` is present or when an API error occurs). The assertions are more focused and specific, improving test reliability.
 * **Realistic Error Simulation:** The `MockHttpError` class simulates a real API error, allowing the `test_main_http_error` to test the error handling pathway.
 * **No Unnecessary Imports:** Removed unnecessary imports, making the code cleaner and more focused.

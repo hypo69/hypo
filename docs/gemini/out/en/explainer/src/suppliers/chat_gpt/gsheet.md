@@ -121,7 +121,7 @@ graph TD
 *   **Error Handling:** While the code includes `try...except` blocks, the error handling could be improved by providing more specific exception types and appropriate messages.
 *   **Data Validation:** The code should include checks to validate the data being written to prevent invalid data from being stored in the Google Sheet. This includes checking data types, lengths, and ranges of values.
 *   **Clearer Variable Names:** Some variable names (e.g., `_`) could be more descriptive.
-*   **`time.sleep(10)` in `set_product_worksheet`:** A 10-second delay might be excessive and unnecessary if other processes are running concurrently. Consider a different strategy to ensure smooth operation if the previous operations took a long time.
+*   **`time.sleep(10)` in `set_product_worksheet`:** A 10-second delay might be excessive and unnecessary if other processes are running concurrently. Consider a different Startegy to ensure smooth operation if the previous operations took a long time.
 *   **`SimpleNamespace` Usage:** The repeated use of `_.get` within many methods could lead to nested lookups and increased complexity, potentially hindering maintainability.  Consider using a dataclass or a custom class to better manage the data structure instead of `SimpleNamespace`.
 
 

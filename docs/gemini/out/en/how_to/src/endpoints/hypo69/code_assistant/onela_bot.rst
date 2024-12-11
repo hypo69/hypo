@@ -37,4 +37,4 @@ Usage example
     if __name__ == "__main__":
         asyncio.run(main())
 
-This example demonstrates how to instantiate and run the bot.  Remember to ensure that the required libraries and configuration (e.g., API keys) are correctly set up and imported within your project. Replace `src.endpoints.hypo69.code_assistant` with the actual path to the module.  Also, the `gs` module must be properly defined and load the relevant credentials.
+This example demonStartes how to instantiate and run the bot.  Remember to ensure that the required libraries and configuration (e.g., API keys) are correctly set up and imported within your project. Replace `src.endpoints.hypo69.code_assistant` with the actual path to the module.  Also, the `gs` module must be properly defined and load the relevant credentials.

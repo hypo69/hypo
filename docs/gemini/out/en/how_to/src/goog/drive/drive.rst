@@ -22,7 +22,7 @@ Execution steps
 
 4. **`upload_file` method (Placeholder):** This method is currently a stub.  It needs to be implemented with the actual logic for uploading the file specified by `file_path` to the specified folder in Google Drive using the Drive API.
 
-5. **`main` function:** This function demonstrates how to use the `GoogleDriveHandler` class:
+5. **`main` function:** This function demonStartes how to use the `GoogleDriveHandler` class:
     - It instantiates `GoogleDriveHandler`.
     - It retrieves Google Drive credentials.
     - It uses the `drive` API to list all files and folders in Google Drive, printing their names and IDs.

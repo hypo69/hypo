@@ -70,7 +70,7 @@ def test_graber_context_locator_setting(mock_driver, mock_context, locator_value
 * **Mocking:** The code now utilizes `unittest.mock` to mock the `Driver` and `Context` objects. This is crucial for testing functions that interact with external dependencies (like the WebDriver).  It's now more robust by mocking the `close_pop_up` (if it existed).
 * **Clearer Test Names:** The test names are more descriptive (e.g., `test_graber_init`, `test_graber_init_with_context`, etc.).
 * **Parameterization:** The `test_graber_context_locator_setting` test uses `pytest.mark.parametrize` to test different possible values of `locator_value`, making the test more comprehensive.
-* **Exception Handling:** The `test_graber_init_with_context` now includes a test for passing incorrect `context` data, demonstrating exception handling.
+* **Exception Handling:** The `test_graber_init_with_context` now includes a test for passing incorrect `context` data, demonStarting exception handling.
 * **Robustness:**  The tests now check for various input scenarios, including potential exceptions and different decorator situations, creating a more complete test suite.
 * **Comments and Docstrings:** Added docstrings to explain the purpose and parameters of each test function, enhancing readability.
 

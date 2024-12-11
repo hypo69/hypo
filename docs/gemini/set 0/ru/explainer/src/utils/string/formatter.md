@@ -118,7 +118,7 @@ graph LR
     * `StringFormatter`:  A utility class providing static methods for formatting strings.  The `@staticmethod` decorators indicate that these methods operate on the input directly, without requiring an object instance. This promotes code reusability and reduces complexity.
 
 * **Functions:**
-    *  Each method (`remove_line_breaks`, `remove_htmls`, etc.) performs a specific string manipulation task.  They are well-documented with type hints, explaining the expected input types (e.g., `input_str: str`) and return types (e.g., `str`).  All functions are static, demonstrating good practice for utility functions.
+    *  Each method (`remove_line_breaks`, `remove_htmls`, etc.) performs a specific string manipulation task.  They are well-documented with type hints, explaining the expected input types (e.g., `input_str: str`) and return types (e.g., `str`).  All functions are static, demonStarting good practice for utility functions.
 
 * **Variables:**  The variable `MODE` is a global constant.  Variables within the methods are typically local variables (e.g., `input_str`, `input_html`). The code uses appropriate data types for each variable.
 

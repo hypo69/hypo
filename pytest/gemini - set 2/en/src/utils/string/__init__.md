@@ -70,7 +70,7 @@ def test_string_normalizer_normalize_string():
 
 1. **Import Statements:** Correctly imports the necessary modules.
 
-2. **Example Fixture (commented out):** Demonstrates how to define a fixture if required.  Crucially, remember to use the fixture in your tests if needed.
+2. **Example Fixture (commented out):** DemonStartes how to define a fixture if required.  Crucially, remember to use the fixture in your tests if needed.
 
 3. **Clear Test Function Names:** The test names now clearly describe the purpose of each test.
 

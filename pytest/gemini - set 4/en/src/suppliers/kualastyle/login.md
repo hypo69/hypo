@@ -72,7 +72,7 @@ def test_login_missing_supplier_data(mock_logger):
 
 * **Mocking:** The tests now effectively mock the `driver` and `locators` objects, avoiding actual interactions with the web browser.  Critically, they mock the `execute_locator` method to simulate different outcomes, including exceptions.
 * **`@patch` Decorator:** Correctly uses `@patch` to mock the logger in a way that doesn't interfere with other tests.
-* **Exception Handling:** `test_close_pop_up_exception` demonstrates how to test exception handling, capturing the warning message.
+* **Exception Handling:** `test_close_pop_up_exception` demonStartes how to test exception handling, capturing the warning message.
 * **Missing Locator Test:** `test_close_pop_up_missing_locator` checks for a crucial edge case: what happens if the locator is missing from the locators dictionary. This is a more robust test.
 * **Missing Supplier Data Test:** `test_login_missing_supplier_data` now correctly handles the case where the supplier object is missing or invalid.
 * **Clearer Assertions:** Assertions are more specific and descriptive, making the test failures easier to interpret.

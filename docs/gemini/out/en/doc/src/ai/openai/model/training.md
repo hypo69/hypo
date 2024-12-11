@@ -212,7 +212,7 @@ This module defines the `OpenAIModel` class for interacting with the OpenAI API,
 
 ## main Function
 
-**Description**: Main function for initializing the `OpenAIModel` and demonstrating usage. Includes examples of listing models/assistants, asking questions, dynamic training, training the model, and saving the job ID.
+**Description**: Main function for initializing the `OpenAIModel` and demonStarting usage. Includes examples of listing models/assistants, asking questions, dynamic training, training the model, and saving the job ID.
 
 
 ```

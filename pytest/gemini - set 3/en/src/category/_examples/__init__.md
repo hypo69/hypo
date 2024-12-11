@@ -49,11 +49,11 @@ def test_details_contains_keys():
    - **`__version__` validity:** Checks if it's a `Version` object and its format.
    - **`__doc__` type:** Checks if it's a string.
    - **`__details__` type:** Checks if it's a dictionary.
-   - **Edge case for invalid version string:** This crucial test now demonstrates how to use `pytest.raises` to check if an exception is correctly raised when the `__version__` is invalid.
+   - **Edge case for invalid version string:** This crucial test now demonStartes how to use `pytest.raises` to check if an exception is correctly raised when the `__version__` is invalid.
 
-3. **Explicit Error Handling:**  The `test_invalid_version_raises_exception` function demonstrates robust error handling and exception checking.
+3. **Explicit Error Handling:**  The `test_invalid_version_raises_exception` function demonStartes robust error handling and exception checking.
 
-4. **Details Validation:** The `test_details_contains_keys` function demonstrates how to verify that the `__details__` dictionary contains the expected keys (and their types, if applicable).  Crucially, **you need to replace the placeholder key names** `"author"` and `"author_email"` with the actual keys expected in your `__details__` dictionary.
+4. **Details Validation:** The `test_details_contains_keys` function demonStartes how to verify that the `__details__` dictionary contains the expected keys (and their types, if applicable).  Crucially, **you need to replace the placeholder key names** `"author"` and `"author_email"` with the actual keys expected in your `__details__` dictionary.
 
 5. **Clear and Descriptive Names:**  The test function names clearly indicate the purpose of each test.
 

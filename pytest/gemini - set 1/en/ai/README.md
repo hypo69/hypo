@@ -1,7 +1,7 @@
 ```python
 import pytest
 
-# No actual code provided to test.  This example demonstrates testing
+# No actual code provided to test.  This example demonStartes testing
 # using hypothetical functions from the ai module.  Replace with your
 # actual code to run these tests.
 
@@ -65,7 +65,7 @@ def test_call_anthropic_api_edge_case():
 
 **Explanation and Improvements:**
 
-1. **Hypothetical Functions:** The code now includes example functions (`get_prompt`, `call_anthropic_api`) to demonstrate how to write tests. Replace these with your actual functions from the `ai` module.
+1. **Hypothetical Functions:** The code now includes example functions (`get_prompt`, `call_anthropic_api`) to demonStarte how to write tests. Replace these with your actual functions from the `ai` module.
 
 2. **Clear Test Names:** Test function names like `test_get_prompt_valid_input` are descriptive and easily understandable.
 

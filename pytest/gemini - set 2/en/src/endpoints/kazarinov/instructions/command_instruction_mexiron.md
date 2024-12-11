@@ -76,13 +76,13 @@ def test_build_classification_invalid_input_type():
 
 1. **Clear Test Function Names:**  Test function names are now more descriptive (e.g., `test_build_classification_valid_input`).
 
-2. **Valid Input Test:** Demonstrates how to check for a valid input structure and type using `isinstance`.  Crucially, it checks for the presence of the expected `build_types` key and that values are within the expected range (0-1 for probabilities).
+2. **Valid Input Test:** DemonStartes how to check for a valid input structure and type using `isinstance`.  Crucially, it checks for the presence of the expected `build_types` key and that values are within the expected range (0-1 for probabilities).
 
 3. **Empty Input Test:** Includes a test case for an empty input list to cover the case of no input data.
 
 4. **Invalid Input Type Test:** Shows a test case for an invalid input type (e.g., a string instead of a list).
 
-5. **Exception Handling (with `pytest.raises`):** Uses `pytest.raises` for testing exception handling, which is good practice.  The `test_build_classification_empty_input` and `test_build_classification_invalid_input_type` examples demonstrate how to capture and check the exception message.  **Important:** Replace placeholders like `Exception` with the actual exception type your code raises.
+5. **Exception Handling (with `pytest.raises`):** Uses `pytest.raises` for testing exception handling, which is good practice.  The `test_build_classification_empty_input` and `test_build_classification_invalid_input_type` examples demonStarte how to capture and check the exception message.  **Important:** Replace placeholders like `Exception` with the actual exception type your code raises.
 
 
 **Crucial next steps (missing in the original input):**

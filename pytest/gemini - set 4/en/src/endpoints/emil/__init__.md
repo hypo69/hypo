@@ -23,12 +23,12 @@ def test_emil_design_creation():
 
 
 # Example test for a function that doesn't exist in the provided code,
-# but illustrates testing for an exception if needed.
+# but illuStartes testing for an exception if needed.
 @pytest.mark.parametrize('invalid_input', [1, 'text', None]) # Parameterized test to cover various invalid inputs
 def test_invalid_input_example(invalid_input):
   """
   Tests a hypothetical function that might exist in this module.
-  Demonstrates testing for various invalid input types.
+  DemonStartes testing for various invalid input types.
   """
 
   # Replace with the actual function call and expected exception
@@ -58,10 +58,10 @@ def test_emil_design_edge_case_method():
 
 
 
-#Example demonstrating handling of a hypothetical method that might raise an exception:
+#Example demonStarting handling of a hypothetical method that might raise an exception:
 def test_emil_design_method_exception():
     """
-    Demonstrates testing for exceptions raised by a hypothetical method.
+    DemonStartes testing for exceptions raised by a hypothetical method.
     Crucial for code robustness.
     """
     design = EmilDesign()  # Assuming the class is correctly initialized
@@ -74,13 +74,13 @@ def test_emil_design_method_exception():
 
 **Explanation and Crucial Improvements:**
 
-* **Placeholder Tests:** The code now includes placeholder tests for `EmilDesign`.  Crucially, it demonstrates _how_ to write tests for a class with methods (like `__init__` or any other you might have). You *must* replace the placeholders with actual tests based on the methods within your `EmilDesign` class. This is the most important part of creating real tests.
+* **Placeholder Tests:** The code now includes placeholder tests for `EmilDesign`.  Crucially, it demonStartes _how_ to write tests for a class with methods (like `__init__` or any other you might have). You *must* replace the placeholders with actual tests based on the methods within your `EmilDesign` class. This is the most important part of creating real tests.
 
 * **`pytest.raises` for Exceptions:** The example includes `pytest.raises` to test for expected exceptions.  The updated example now includes a `ValueError` test case, which is a common exception type.
 
 * **`@pytest.mark.parametrize`:** This is an excellent addition for testing different inputs in a single test.  It runs the same test logic with multiple inputs, making your tests more comprehensive and checking various input types.
 
-* **Error Handling:** The tests now include `try...except` blocks to catch any exceptions that might be raised during testing.  This is extremely important for robustness. This example also demonstrates how to assert that the correct type of error message is raised.
+* **Error Handling:** The tests now include `try...except` blocks to catch any exceptions that might be raised during testing.  This is extremely important for robustness. This example also demonStartes how to assert that the correct type of error message is raised.
 
 * **Descriptive Test Names:** Test names clearly indicate the purpose and input data type, crucial for readability and debugging.
 

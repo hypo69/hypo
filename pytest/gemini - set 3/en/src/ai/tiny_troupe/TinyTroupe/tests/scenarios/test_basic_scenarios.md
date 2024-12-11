@@ -68,7 +68,7 @@ def test_scenario_1_no_begin():
 
 2. **`test_scenario_1` Modification:** The test now checks if the temporary directory is created after the checkpoint call.  This is a basic existence check; you need to add more specific tests to verify the actual content of the files if you create specific files in the checkpoints.
 
-3. **`test_scenario_1_no_begin`:** This new test is a significant addition. It demonstrates exception handling for operations like `control.checkpoint()` before `control.begin()` is called.  This is essential to ensure the code behaves correctly in cases where the simulation isn't initiated properly.
+3. **`test_scenario_1_no_begin`:** This new test is a significant addition. It demonStartes exception handling for operations like `control.checkpoint()` before `control.begin()` is called.  This is essential to ensure the code behaves correctly in cases where the simulation isn't initiated properly.
 
 4. **Error Handling:** The `pytest.raises` is used correctly to verify if an exception is raised when `control.checkpoint()` or other methods are called without a prior `control.begin()`.
 

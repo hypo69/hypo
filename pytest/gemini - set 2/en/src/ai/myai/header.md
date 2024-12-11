@@ -98,7 +98,7 @@ def test_set_project_root_root_already_in_path():
 
 7. **`sys.path` handling:**   The test now correctly handles the case where the root directory is already in `sys.path`, and removes the added path to avoid interference with subsequent tests.
 
-8. **Realistic Example:** Demonstrates how to construct and use the absolute path for a file when performing tests, using `Path(__file__).resolve().parent` inside the test function for reliable results across different paths.
+8. **Realistic Example:** DemonStartes how to construct and use the absolute path for a file when performing tests, using `Path(__file__).resolve().parent` inside the test function for reliable results across different paths.
 
 **To run these tests:**
 

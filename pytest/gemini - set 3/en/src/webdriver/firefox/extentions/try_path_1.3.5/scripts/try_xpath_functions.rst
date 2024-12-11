@@ -135,7 +135,7 @@ except (AttributeError, ImportError):
 
 3. **Comprehensive Test Cases:** More tests are added to cover different methods (`evaluate`, `querySelector`, `querySelectorAll`) and various potential input scenarios.
 
-4. **Edge Cases and Exception Handling:**  Tests for invalid contexts and resolver types are included, demonstrating how to catch exceptions using `pytest.raises`.
+4. **Edge Cases and Exception Handling:**  Tests for invalid contexts and resolver types are included, demonStarting how to catch exceptions using `pytest.raises`.
 
 5. **`xpathResult` Handling:** The code now tries to import `xpathResult` and handles the case where it might not be defined. This prevents errors if the `xpathResult` object isn't correctly imported or defined in the JavaScript context.
 

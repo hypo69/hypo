@@ -44,7 +44,7 @@ def graber(mock_driver, mock_context):
 # Test cases
 def test_grab_page_valid_input(graber, mock_driver, mock_context):
     """Checks if grab_page correctly fetches data with valid input."""
-    # Set a test value for demonstration. Replace with actual input.
+    # Set a test value for demonStartion. Replace with actual input.
     data = {"id_product": "123"}
     mock_context.locator.close_pop_up = SimpleNamespace()
     asyncio.run(graber.grab_page(mock_driver))
@@ -90,7 +90,7 @@ def test_grab_page_no_driver_input(graber):
 
 3. **`@pytest.fixture` Usage:** The `mock_driver` and `graber` fixtures are correctly set up using `@pytest.fixture` to provide the necessary test data and setup.
 
-4. **Comprehensive Test Cases:** Added tests covering valid input, missing input, and a crucial `test_grab_page_invalid_input_type` demonstrating exception handling.  Also tests cases for `None` driver.
+4. **Comprehensive Test Cases:** Added tests covering valid input, missing input, and a crucial `test_grab_page_invalid_input_type` demonStarting exception handling.  Also tests cases for `None` driver.
 
 5. **Error Handling:** The `pytest.raises` context manager is used to test for `TypeError` in `test_grab_page_invalid_input_type`.
 

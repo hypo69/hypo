@@ -67,7 +67,7 @@ def sample_prompt():
     return "This is a sample prompt."
 
 
-# Example test demonstrating fixture use (needs an actual function)
+# Example test demonStarting fixture use (needs an actual function)
 def test_anthropic_call_model_with_fixture(sample_prompt):
     """Tests anthropic_call_model with a fixture."""
     result = anthropic_call_model(sample_prompt)
@@ -80,7 +80,7 @@ def test_anthropic_call_model_with_fixture(sample_prompt):
 
 1. **Placeholders:** The code now includes placeholder functions for each submodule (`prompts`, `anthropic`, etc.).  Crucially, it *does not* rely on non-existent functions or modules.  **Replace** these placeholders with the actual functions from your `ai` module.
 
-2. **Specific Test Cases:**  The tests now demonstrate valid and invalid inputs, including using `pytest.raises` for checking exceptions. The `test_dialogflow_parse_text_invalid_input` case is a good example of a meaningful invalid input test.
+2. **Specific Test Cases:**  The tests now demonStarte valid and invalid inputs, including using `pytest.raises` for checking exceptions. The `test_dialogflow_parse_text_invalid_input` case is a good example of a meaningful invalid input test.
 
 
 3. **Clear Test Names:** The test names follow the guidelines for clarity and indicating the test's purpose.

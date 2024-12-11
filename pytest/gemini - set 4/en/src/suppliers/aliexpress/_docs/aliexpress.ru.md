@@ -63,7 +63,7 @@ def test_aliexpress_init_supplier_error():
 
 4. **Exception Handling:**  The `test_aliexpress_init_invalid_webdriver` and `test_aliexpress_init_locale_type_error` tests use `pytest.raises` to verify that the code raises the expected exceptions when given invalid input. This is excellent practice for robustness.
 
-5. **Edge Case:** The `test_aliexpress_init_with_custom_locale` test demonstrates how to test with a custom `locale` argument.
+5. **Edge Case:** The `test_aliexpress_init_with_custom_locale` test demonStartes how to test with a custom `locale` argument.
 
 6. **Comprehensive Tests:** Added `test_aliexpress_init_no_webdriver` to test the default case (no webdriver).
 
@@ -75,4 +75,4 @@ def test_aliexpress_init_supplier_error():
 2. **Implement Suppliers:** Make sure you have a correctly implemented `Supplier` class that is referenced by `Aliexpress`. Ensure that a `Supplier` error is being raised in the scenario in `test_aliexpress_init_supplier_error`. This test is a placeholder.  Fill in the details for your actual error.
 3. **Run the tests:**  Place the test file in the same directory as the file that has the `Aliexpress` class definition or in a directory that is accessible from `pytest`'s search path. Run `pytest` from your terminal.
 
-This improved example demonstrates better testing practices, handling different input scenarios, and robustly checking for expected exceptions, which are critical for comprehensive testing. Remember to adapt the tests according to the structure and error messages specific to your code. Always replace the placeholder error message with the actual error from your `Supplier` class.
+This improved example demonStartes better testing practices, handling different input scenarios, and robustly checking for expected exceptions, which are critical for comprehensive testing. Remember to adapt the tests according to the structure and error messages specific to your code. Always replace the placeholder error message with the actual error from your `Supplier` class.

@@ -95,7 +95,7 @@ def test_set_project_root_empty_marker_files():
 4. **`test_set_project_root_marker_in_parent_dir`:** Added a test to check if the function correctly finds the root when the marker file is in a parent directory.
 5. **`test_set_project_root_marker_files_not_found`:** Handles the case where *no* marker file is found in the directory or its parents.
 6. **`test_set_project_root_empty_marker_files`:** Added a test for an empty `marker_files` tuple, to ensure the function doesn't break.
-7. **Error Handling:** (Placeholder): The original code had `try...except` blocks, but there are no tests demonstrating the handling of exception cases.  Add tests to ensure the correct behavior of those except blocks.
+7. **Error Handling:** (Placeholder): The original code had `try...except` blocks, but there are no tests demonStarting the handling of exception cases.  Add tests to ensure the correct behavior of those except blocks.
 8. **File Existence Checks (crucial!):** Added checks (`(temp_dir / "pyproject.toml").touch()`). These ensures that files are present for the tests to work correctly.
 9. **Import `shutil`:** This line is needed for `shutil.rmtree` to remove the temporary directory.
 

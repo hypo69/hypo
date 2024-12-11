@@ -117,7 +117,7 @@ def test_exit_application(main_app):
 
 1. **Mocking:** The tests now effectively mock `QtWidgets.QFileDialog`, `QtWidgets.QMessageBox`, and any external dependencies to isolate the testing of `MainApp`'s logic.  This prevents unexpected behavior or dependence on external resources (files, network).
 
-2. **Error Handling:** The `test_load_file_error` test now demonstrates correct exception handling by checking if the error message box is displayed when a file loading error occurs.
+2. **Error Handling:** The `test_load_file_error` test now demonStartes correct exception handling by checking if the error message box is displayed when a file loading error occurs.
 
 3. **Multiple Tabs:** The `test_save_file_different_tab` test now checks that the correct saving method is called based on the current tab.
 

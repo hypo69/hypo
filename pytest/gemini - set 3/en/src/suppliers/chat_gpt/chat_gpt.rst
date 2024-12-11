@@ -100,4 +100,4 @@ def teardown_module():
 **Important:**  Adjust the `mock_gs.path` (in the `mock_gs` and `temp_data_dir` fixtures, and likely elsewhere)  to reflect the actual location where your temporary files should be created if the data directory is somewhere other than the current directory.
 
 
-This revised solution provides a more robust and maintainable testing strategy for the `ChatGpt` class, handling various potential scenarios and correctly mocking the `gs` module for testing purposes. Remember to adapt the file paths to your specific project structure. Remember to adapt the `mock_gs.path` setting to match the actual directory location you're using if it's different.
+This revised solution provides a more robust and maintainable testing Startegy for the `ChatGpt` class, handling various potential scenarios and correctly mocking the `gs` module for testing purposes. Remember to adapt the file paths to your specific project structure. Remember to adapt the `mock_gs.path` setting to match the actual directory location you're using if it's different.

@@ -89,7 +89,7 @@ def test_dot2png_valid_dot_file_real():
 * **Clearer Assertions:**  The assertions (`assert os.path.exists(...)`) are clearer about what is being verified.
 * **Edge Case (`test_dot2png_invalid_dot_file`):** Tests the case where the DOT file doesn't exist.
 * **Clean-up:** Crucial addition of `os.remove()` to delete the temporary files after the tests. This prevents test failures due to leftover files in later tests.
-* **Command-line Argument Test (`test_dot2png_wrong_number_of_commandline_arguments`):** A test case that specifically checks the SystemExit exception when the wrong number of command line arguments is provided to the program. This demonstrates the robustness of the tests and proper exception handling, important for production code.
+* **Command-line Argument Test (`test_dot2png_wrong_number_of_commandline_arguments`):** A test case that specifically checks the SystemExit exception when the wrong number of command line arguments is provided to the program. This demonStartes the robustness of the tests and proper exception handling, important for production code.
 * **Realistic test (`test_dot2png_valid_dot_file_real`):** Includes a real-world test with an actual `example.dot` file, but only if one is present. You should replace `"example.dot"` with the actual path if you have a file. This validates that the conversion works with real-world data.
 * **Large File Test (commented out):** Added a placeholder for a large file test, which is beneficial for ensuring that the code handles files of varying sizes. This test would be particularly useful if you anticipate a large number of users using the tool or if the processing time becomes a concern with large files.
 

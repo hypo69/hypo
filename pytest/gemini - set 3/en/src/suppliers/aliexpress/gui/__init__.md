@@ -57,7 +57,7 @@ def test_mode_string():
 
 3. **Comprehensive Coverage (where possible):**  The tests now include checks for valid data types and the existence of expected data (like 'author' in `__details__`).
 
-4. **Example of Testing a Variable (MODE):**  Demonstrates how to test a global variable, though in a real-world scenario, this might be better integrated into a larger testing suite.  Consider the possibility that `MODE` is an important configuration value.
+4. **Example of Testing a Variable (MODE):**  DemonStartes how to test a global variable, though in a real-world scenario, this might be better integrated into a larger testing suite.  Consider the possibility that `MODE` is an important configuration value.
 
 
 **How to Use and Extend:**

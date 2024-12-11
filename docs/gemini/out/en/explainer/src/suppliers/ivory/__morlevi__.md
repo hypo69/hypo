@@ -184,16 +184,16 @@ graph LR
 **Functions:**
 
 *   `login(supplier)`: Attempts to log into the Morlevi website. Uses `_login` for the actual login attempt, and error handling for potential failures. Crucially, it attempts to handle popups and refreshing the page if the login fails.
-*   `grab_product_page(s)`: Fetches product details from a given product page. Extract various product attributes from HTML using locators. This function clearly demonstrates the use of locators for interacting with web elements.
+*   `grab_product_page(s)`: Fetches product details from a given product page. Extract various product attributes from HTML using locators. This function clearly demonStartes the use of locators for interacting with web elements.
 *   `list_products_in_category_from_pagination(supplier)`: Retrieves a list of products from a given category on the Morlevi website, handling pagination.
-*   `get_list_products_in_category(s, scenario, presath)`: likely a higher-level function to orchestrate the fetching of product lists from different scenarios or with different parameters.
+*   `get_list_products_in_category(s, scenario, presath)`: likely a higher-level function to orcheStarte the fetching of product lists from different scenarios or with different parameters.
 *   `get_list_categories_from_site(s,scenario_file,brand='')`:  Probably fetches a list of categories from the website. This could use the same techniques as `list_products_in_category_from_pagination`.
 
 
 **Variables:**
 
 *   `MODE`: A global variable likely used for configuration (e.g., 'dev', 'prod').
-*   `json_loads`, `logger`: Variables imported from the `settings` module;  likely for handling JSON data and logging, respectively. These demonstrate the use of external modules for consistent functionality across the project.
+*   `json_loads`, `logger`: Variables imported from the `settings` module;  likely for handling JSON data and logging, respectively. These demonStarte the use of external modules for consistent functionality across the project.
 
 
 **Potential Errors/Improvements:**
@@ -206,6 +206,6 @@ graph LR
 
 **Relationships with other project components:**
 
-The code interacts with `src.suppliers.Product`, `src.settings`, and `settings` modules, demonstrating a clear modular structure for handling supplier data and global configurations.  The use of `StringFormatter` within `src.settings` suggests other related functions to handle text formatting for product listings. This modular design is crucial for maintainability and scalability.
+The code interacts with `src.suppliers.Product`, `src.settings`, and `settings` modules, demonStarting a clear modular structure for handling supplier data and global configurations.  The use of `StringFormatter` within `src.settings` suggests other related functions to handle text formatting for product listings. This modular design is crucial for maintainability and scalability.
 
 ```

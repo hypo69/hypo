@@ -30,7 +30,7 @@ This module provides a command-line interface (CLI) for a code assistant. It all
 
 ### `main`
 
-**Description**: The main function that orchestrates the code assistant's execution.
+**Description**: The main function that orcheStartes the code assistant's execution.
 
 **Parameters**:
 - None

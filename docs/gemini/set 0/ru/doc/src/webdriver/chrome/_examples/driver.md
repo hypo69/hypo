@@ -46,7 +46,7 @@
 ```python
 ```python
 def main():
-    """ Main function to demonstrate usage examples for Driver and Chrome """
+    """ Main function to demonStarte usage examples for Driver and Chrome """
     # ... (rest of the function) ...
 ```
 ```

@@ -103,7 +103,7 @@ async def test_get_page_return_type(graber: Graber, test_data: TestData):
 
 * **Comprehensive Tests:** The test suite covers `grab_page` (with valid input and exception handling) and the `id_product` method inside `grab_page` (a more specific case).
 
-* **Decorator Test:** Added a test `test_close_popup_decorator` to demonstrate usage of the `close_popup` decorator.  This is important because decorators change the function's structure.
+* **Decorator Test:** Added a test `test_close_popup_decorator` to demonStarte usage of the `close_popup` decorator.  This is important because decorators change the function's structure.
 
 * **`@pytest.fixture` for `Graber`:** Sets up a `Graber` instance with mocked dependencies in `graber` fixture.
 

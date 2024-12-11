@@ -1,10 +1,10 @@
 ```MD
-# Анализ кода: Content Strategy Ideas
+# Анализ кода: Content Startegy Ideas
 
 ## <input code>
 
 ```
-# Content Strategy Ideas
+# Content Startegy Ideas
 
 ## 1. Sustainable Living Tips
 

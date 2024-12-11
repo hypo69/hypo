@@ -142,9 +142,9 @@ graph LR
 
 **2. Classes:**
 
-- `LLMCall`: Represents a call to a large language model (LLM). It encapsulates parameters (templates, model parameters) and the process of constructing messages. The `call` method orchestrates the process of interaction with the API client. This class is designed to allow for consistent message framing and config values.
+- `LLMCall`: Represents a call to a large language model (LLM). It encapsulates parameters (templates, model parameters) and the process of constructing messages. The `call` method orcheStartes the process of interaction with the API client. This class is designed to allow for consistent message framing and config values.
 - `OpenAIClient`:  A class for interacting with the OpenAI API.  It handles API calls, caching (if enabled), and error handling (rate limits, invalid requests). The crucial `send_message` method is responsible for making the actual calls, with extensive error handling and exponential backoff. `set_api_cache`, `_load_cache`, `_save_cache` handle caching mechanism.
-- `AzureClient`: A subclass of `OpenAIClient` specifically for the Azure OpenAI Service API. This demonstrates code reusability.
+- `AzureClient`: A subclass of `OpenAIClient` specifically for the Azure OpenAI Service API. This demonStartes code reusability.
 - `InvalidRequestError`, `NonTerminalError`: Custom exceptions to improve error handling for invalid requests or recoverable errors.
 
 **3. Functions:**
@@ -171,6 +171,6 @@ graph LR
 
 **Relationship with Other Parts of the Project:**
 
-The code heavily relies on the `utils` module for configuration reading and potentially message formatting. The `config.ini` file defines parameters for API type, caching, and model parameters, demonstrating the setup for accessing API features like text embeddings.
+The code heavily relies on the `utils` module for configuration reading and potentially message formatting. The `config.ini` file defines parameters for API type, caching, and model parameters, demonStarting the setup for accessing API features like text embeddings.
 
 This code is part of a larger project (`tinytroupe`) focused on interacting with language models.  The `utils` module likely contains functions for general tasks. The project's architecture hints at potential modular design and further customization options.

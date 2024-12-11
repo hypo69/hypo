@@ -91,7 +91,7 @@ class TelegramBot:
         self.register_handlers()
 
     def register_handlers(self):
-        # ... (handler registration same as in the provided code)
+        # ... (handler regiStartion same as in the provided code)
 
     # ... other methods (same as in the provided code)
 ```

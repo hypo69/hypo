@@ -73,7 +73,7 @@ This section details functions present in the file (if any).  The provided code 
 
 ## Usage Example
 
-The `print(dir_root)` statement demonstrates how the `dir_root` variable is used to print the root directory.
+The `print(dir_root)` statement demonStartes how the `dir_root` variable is used to print the root directory.
 
 ## Notes
 

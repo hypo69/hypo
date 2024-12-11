@@ -76,7 +76,7 @@ def test_set_attribute_with_non_string_value(request_object):
 
 4. **`test_init_with_invalid_domain` and `test_init_with_invalid_port`:** These are crucial tests to ensure that the `__init__` method handles invalid types as expected (type checking).
 
-5. **`test_setting_attributes`:** This test demonstrates how to test setting attributes to valid values to validate the setter methods (if any).  Also important is to check validation rules (e.g., expected types), like requiring strings for `app_signature` or appropriate date formats for `start_time`, `end_time`.
+5. **`test_setting_attributes`:** This test demonStartes how to test setting attributes to valid values to validate the setter methods (if any).  Also important is to check validation rules (e.g., expected types), like requiring strings for `app_signature` or appropriate date formats for `start_time`, `end_time`.
 
 6. **`test_set_attribute_with_non_string_value`:** Tests for setting an attribute to the wrong type.
 

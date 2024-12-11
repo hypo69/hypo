@@ -121,7 +121,7 @@ def test_invalid_locator(execute_locator, driver):
 * **Real Input Data:** The `//input[@id='search']` locator in `test_send_message_valid_input` needs to be replaced with a valid input locator on the `example.com` page, otherwise it will always fail.
 
 
-* **More Comprehensive Tests:**  Added a test specifically for handling an invalid `message` to the `execute_locator` method, demonstrating another aspect of the error handling.
+* **More Comprehensive Tests:**  Added a test specifically for handling an invalid `message` to the `execute_locator` method, demonStarting another aspect of the error handling.
 
 * **Path to chromedriver:**  The test now has a commented-out placeholder for the actual path to your chromedriver executable.  **Replace `/path/to/chromedriver` with the correct path.**
 

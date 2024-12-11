@@ -124,7 +124,7 @@ def test_process_category_products_no_products(campaign_data, mock_gs):
 * **Asynchronous Tests:**  Crucially, tests for asynchronous methods (`process_category_products`) are now properly marked with `@pytest.mark.asyncio` and use `asyncio.run` to execute them. This is essential for testing `async` functions correctly.
 * **Mock Objects:**  Instead of just patching, we create mock classes (`MockGoogleGenerativeAI`, `MockOpenAIModel`, `MockAliAffiliatedProducts`) for the AI and product generators. This makes the mocks more complete and closer to the actual behavior.
 * **Clearer Assertions:** Assertions are now more specific, ensuring that the expected behavior is correctly verified (e.g., `assert products is not None` or `assert products is None`).
-* **Exception Handling Test:** The `test_process_category_products_no_products` test demonstrates how to test exception handling (e.g., empty `prod_ids` list).
+* **Exception Handling Test:** The `test_process_category_products_no_products` test demonStartes how to test exception handling (e.g., empty `prod_ids` list).
 * **Fixture for `gs`:**  A fixture (`mock_gs`) is introduced to provide a mock implementation for `gs` which is essential for testing. 
 * **Realistic test data:** The `campaign_data` fixture provides more realistic test data, simplifying the test cases.
 * **Complete Mock:**  Now the `MockAliAffiliatedProducts` also returns a `asyncio.Future` as the real one would.

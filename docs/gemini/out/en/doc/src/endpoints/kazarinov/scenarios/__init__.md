@@ -34,10 +34,10 @@ This module likely contains classes and functions related to price lists, potent
 (Note: There are no functions defined in the provided code snippet. This section is left blank)
 
 
-**Example Usage (Illustrative):**
+**Example Usage (IlluStartive):**
 
 ```python
-# Example usage (Illustrative, needs actual class methods)
+# Example usage (IlluStartive, needs actual class methods)
 from hypotez.src.endpoints.kazarinov.scenarios import Mexiron
 
 # Assuming a method exists to retrieve data

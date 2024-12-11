@@ -97,7 +97,7 @@ def test_plot_interest_distribution_custom_title_no_show(example_agents):
 4. **No-Data Tests:** Included a test checking that agents without `age` or `interests` throw the appropriate errors.
 
 
-5. **Custom Title and `show=False`:**  Illustrates how to test with custom titles and suppress the plot display using `show=False`.  Critically, `plt.close('all')` is added to avoid potential plot display issues from previous test cases in the `pytest` run.
+5. **Custom Title and `show=False`:**  IlluStartes how to test with custom titles and suppress the plot display using `show=False`.  Critically, `plt.close('all')` is added to avoid potential plot display issues from previous test cases in the `pytest` run.
 
 6. **Data Validation:** Checks the length of the DataFrame to ensure that the correct number of rows is returned, which is very important for the integrity of the results.  
 

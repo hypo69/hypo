@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
 ## <algorithm>
 
-The algorithm demonstrates the usage of the `AliAffiliatedProducts` class to retrieve affiliate product information.
+The algorithm demonStartes the usage of the `AliAffiliatedProducts` class to retrieve affiliate product information.
 
 **Step 1: Initialization**
 
@@ -102,7 +102,7 @@ The provided code snippet imports `AliAffiliatedProducts` from `src.suppliers.al
 
 *   **Classes:** `AliAffiliatedProducts` handles the AliExpress-specific affiliate product retrieval.  It likely has methods to interact with AliExpress APIs (or other data sources), extract product details, generate affiliate links, and save/retrieve images/videos.  A crucial part of the class is the `process_affiliate_products` method, which is the core of the affiliate link generation logic.
 
-*   **Functions:** `main()`. This function acts as an entry point, orchestrating the process of creating an `AliAffiliatedProducts` object, supplying product URLs, processing the data, and displaying the results.
+*   **Functions:** `main()`. This function acts as an entry point, orcheStarting the process of creating an `AliAffiliatedProducts` object, supplying product URLs, processing the data, and displaying the results.
 
 *   **Variables:**
     *   `campaign_name`, `campaign_category`, `language`, `currency`: These string variables define the context of the product search on AliExpress.

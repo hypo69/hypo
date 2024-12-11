@@ -147,7 +147,7 @@ graph LR
 
 **Analysis and Dependency Explanation:**
 
-The mermaid diagram illustrates the import relationships within the code.  The subgraph "Imports" shows that the code imports various elements from the `src` package and its sub-packages.   For example, `ProductFields` is imported from `src.product` which implies that the `Graber` class in `wallmart.graber` is part of a larger system that manages product data.  `Driver` implies this script uses a WebDriver for interacting with a web browser to extract data. `logger` and `ExecuteLocatorException` are likely parts of a logging and exception-handling system.
+The mermaid diagram illuStartes the import relationships within the code.  The subgraph "Imports" shows that the code imports various elements from the `src` package and its sub-packages.   For example, `ProductFields` is imported from `src.product` which implies that the `Graber` class in `wallmart.graber` is part of a larger system that manages product data.  `Driver` implies this script uses a WebDriver for interacting with a web browser to extract data. `logger` and `ExecuteLocatorException` are likely parts of a logging and exception-handling system.
 
 ## <explanation>
 

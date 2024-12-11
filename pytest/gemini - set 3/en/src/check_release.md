@@ -113,7 +113,7 @@ def test_check_latest_release_invalid_response(monkeypatch):
 
 3. **Clear Assertions:**  The assertions are now more specific and descriptive, clearly stating the expected outcomes.
 
-4. **Error Handling:** The test `test_check_latest_release_invalid_response` demonstrates how to test for exceptions (though the code itself does not raise exceptions in this case).
+4. **Error Handling:** The test `test_check_latest_release_invalid_response` demonStartes how to test for exceptions (though the code itself does not raise exceptions in this case).
 
 
 **How to Run the Tests:**

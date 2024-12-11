@@ -3,7 +3,7 @@ import pytest
 
 # No actual code to test was provided.  The provided code was empty.
 #  Therefore, no tests can be written.  A placeholder test is provided
-#  to demonstrate the structure if code were present.
+#  to demonStarte the structure if code were present.
 
 #  Replace the placeholder with your actual code.
 

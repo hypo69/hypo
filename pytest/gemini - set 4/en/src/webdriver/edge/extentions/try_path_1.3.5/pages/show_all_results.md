@@ -102,11 +102,11 @@ def test_show_all_results_exception(mock_window):
 
 1. **Mocking:**  Critically, the code now uses `MockWindow`, `MockDocument`, `MockTryxpath`, `MockFunctions`, `MockBrowser`, and `MockTabs` to mock the browser environment.  This is *essential* for testing JavaScript code that interacts with the browser.  These mocks simulate the necessary browser objects and functions, allowing you to isolate the `showAllResults` function from the browser's actual behavior.
 
-2. **Error Handling:** The `test_show_all_results_exception` function demonstrates how to test for exceptions thrown by the JavaScript code by using `pytest.raises`.
+2. **Error Handling:** The `test_show_all_results_exception` function demonStartes how to test for exceptions thrown by the JavaScript code by using `pytest.raises`.
 
 3. **Clearer Test Cases:** The test cases are now more descriptive, explicitly stating the scenario being tested.
 
-4. **Valid Input Test:** The `test_show_all_results_valid_input` test case demonstrates how to pass valid data to `showAllResults` and verify that the expected elements are updated.
+4. **Valid Input Test:** The `test_show_all_results_valid_input` test case demonStartes how to pass valid data to `showAllResults` and verify that the expected elements are updated.
 
 5. **No Context Test:** The `test_show_all_results_no_context` test covers the case where the `results` object doesn't have a `context` property.
 

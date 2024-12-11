@@ -59,7 +59,7 @@ def test_traffic_light_empty_state():
 
 3. **Descriptive Test Names:**  Test names clearly indicate what each test is verifying (e.g., `test_traffic_light_valid_state`, `test_traffic_light_invalid_state`).
 
-4. **Edge Cases:** The `test_traffic_light_edge_case_state` test demonstrates handling an edge case, which is crucial.  Modify this to match the actual logic of your `traffic_light.py` file.  Also, if there are other edge cases (e.g., special input types), consider those as well.
+4. **Edge Cases:** The `test_traffic_light_edge_case_state` test demonStartes handling an edge case, which is crucial.  Modify this to match the actual logic of your `traffic_light.py` file.  Also, if there are other edge cases (e.g., special input types), consider those as well.
 
 
 5. **Error Handling:**  The `test_traffic_light_invalid_state` and `test_traffic_light_empty_state` tests cover invalid input scenarios, verifying that your code handles unexpected cases robustly.  Replace the example error message with the *exact* error message your function raises.

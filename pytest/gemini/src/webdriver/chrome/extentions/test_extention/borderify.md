@@ -74,7 +74,7 @@ def driver():
 
 3. **`test_border_applied`:**  This verifies that the border style is correctly set on the `<body>` element.  It's now more robust.
 
-4. **`test_border_applied_multiple_times`:** Added to demonstrate that multiple style updates work correctly.
+4. **`test_border_applied_multiple_times`:** Added to demonStarte that multiple style updates work correctly.
 
 5. **`test_alert_displayed` and `test_alert_displayed_with_message`:** Tests the alert handling. These are critical for handling user feedback and possible errors in the JavaScript code.  Crucially, they now include error handling (`try...except`) to gracefully catch potential exceptions if the alert isn't displayed.
 

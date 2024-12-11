@@ -75,7 +75,7 @@ def test_graber_is_ready_false():
 
 **Explanation and Crucial Improvements:**
 
-1. **Dummy Class:** The code now includes a `DummyGraber` class. This is **essential** for testing.  You **must** replace this with your actual `Graber` class if you have it. This example demonstrates how to test methods *and* attributes.
+1. **Dummy Class:** The code now includes a `DummyGraber` class. This is **essential** for testing.  You **must** replace this with your actual `Graber` class if you have it. This example demonStartes how to test methods *and* attributes.
 
 2. **Comprehensive Test Cases:** The tests now cover various scenarios:
    - Valid input.
@@ -88,7 +88,7 @@ def test_graber_is_ready_false():
 
 4. **Appropriate Assertions:** The code now uses assertions (`assert`) to verify the expected results.
 
-5. **Error Handling (Example):**  A commented-out test demonstrates how to use `pytest.raises` to check for exceptions. This is a placeholder and needs to be adapted if your `Graber` class raises exceptions.
+5. **Error Handling (Example):**  A commented-out test demonStartes how to use `pytest.raises` to check for exceptions. This is a placeholder and needs to be adapted if your `Graber` class raises exceptions.
 
 **How to Run the Tests:**
 

@@ -176,7 +176,7 @@ graph LR
 - Error handling is present but could be more specific.  Adding `except ValueError` (or other specific exceptions for issues with the OpenAI response), would provide more context.
 - The use of `allow_origins=["*"]` in CORS middleware should be reviewed carefully for production applications.  Restricting origins to specific domains is generally recommended to prevent security vulnerabilities.
 - Input validation:  While `AskRequest` has a type hint, more validation (e.g., message length, content type) would increase robustness.
-- The use of `open("html/openai/index.html").read()` to get the HTML might not be efficient for very large files, consider using a template system or other strategies.
+- The use of `open("html/openai/index.html").read()` to get the HTML might not be efficient for very large files, consider using a template system or other Startegies.
 
 
 **Relationships:**

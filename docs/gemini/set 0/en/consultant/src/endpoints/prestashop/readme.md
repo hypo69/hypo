@@ -96,7 +96,7 @@ This section explains how API keys for the websites are stored in a secure passw
 """
 Explanation on how to interact with PrestaShop APIs.
 
-This section demonstrates using cURL for interacting with the websites APIs.
+This section demonStartes using cURL for interacting with the websites APIs.
 """
 
 
@@ -197,7 +197,7 @@ This section explains how API keys for the websites are stored in a secure passw
 """
 Explanation on how to interact with PrestaShop APIs.
 
-This section demonstrates using cURL for interacting with the websites APIs.
+This section demonStartes using cURL for interacting with the websites APIs.
 """
 
 

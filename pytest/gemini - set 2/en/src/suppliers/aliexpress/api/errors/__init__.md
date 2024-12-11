@@ -71,7 +71,7 @@ def test_process_request_valid_data():
 
 1. **Placeholder Exceptions:** The original response had placeholder exception classes `InvalidRequestError` and `AuthenticationError`. These are now defined (crucially, inheriting from `Exception` to be valid Python exceptions).  This is *essential* for meaningful exception-handling tests.
 
-2. **Example `process_request` Function:** A dummy function (`process_request`) is added, which demonstrates how to *use* the exceptions.
+2. **Example `process_request` Function:** A dummy function (`process_request`) is added, which demonStartes how to *use* the exceptions.
 
 3. **`pytest.raises` for Exception Handling:** The tests now use `pytest.raises` to check for the expected exceptions. This is the correct and robust way to test exception handling.
 

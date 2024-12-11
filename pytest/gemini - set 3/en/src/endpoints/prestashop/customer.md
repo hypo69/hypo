@@ -47,7 +47,7 @@ def test_presta_customer_init_with_credentials_and_args():
     assert customer.api_key == "test_key"
 
 
-# Example of testing inherited methods (if applicable and demonstrated in the code)
+# Example of testing inherited methods (if applicable and demonStarted in the code)
 # def test_presta_customer_inherited_method(mocker):
 #    # Mock the method from PrestaShop class
 #    mocked_method = mocker.patch("hypotez.src.endpoints.prestashop.api.PrestaShop.some_method")

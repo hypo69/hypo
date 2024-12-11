@@ -128,4 +128,4 @@ def test_get_referrer_failure(mock_driver):
 1.  Save the test code (e.g., `test_js.py`) in the same directory as your `js.py` file.
 2.  Run `pytest test_js.py` from your terminal.
 
-This revised solution is significantly more robust and demonstrates the proper use of `pytest` fixtures and mocks for testing Selenium/JavaScript interactions. Remember to adapt the mock return values to reflect the actual behavior of `execute_script` for `get_referrer` and `get_page_lang`.  The added failure mocking (via `MockWebDriver`) is crucial to correctly test exception handling. Also, remember to add tests for `get_page_lang`.
+This revised solution is significantly more robust and demonStartes the proper use of `pytest` fixtures and mocks for testing Selenium/JavaScript interactions. Remember to adapt the mock return values to reflect the actual behavior of `execute_script` for `get_referrer` and `get_page_lang`.  The added failure mocking (via `MockWebDriver`) is crucial to correctly test exception handling. Also, remember to add tests for `get_page_lang`.

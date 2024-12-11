@@ -210,4 +210,4 @@ The code interacts with several parts of the project, including:
 - `gs`: Provides global settings.
 - `src.logger`: Used for logging.
 
-The `edge.json` file defines essential parameters for the WebDriver initialization, demonstrating dependency between configuration files and the WebDriver. This setup is vital for maintaining configuration and allowing flexibility in the use of different browsers.
+The `edge.json` file defines essential parameters for the WebDriver initialization, demonStarting dependency between configuration files and the WebDriver. This setup is vital for maintaining configuration and allowing flexibility in the use of different browsers.

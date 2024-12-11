@@ -90,17 +90,17 @@ def test_advertisement_create_campaign_valid_input():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Classes:** The code now includes placeholder `PrestashopAPI` and `AdvertisementAPI` classes.  Crucially, it demonstrates *how to write tests for functions that do not yet exist* in the codebase, a common real-world case.  Replace these placeholders with your actual endpoint classes.
+1. **Placeholder Classes:** The code now includes placeholder `PrestashopAPI` and `AdvertisementAPI` classes.  Crucially, it demonStartes *how to write tests for functions that do not yet exist* in the codebase, a common real-world case.  Replace these placeholders with your actual endpoint classes.
 
 2. **Clear Test Names:**  Test names are descriptive, indicating the input type and expected outcome (e.g., `test_prestashop_create_product_valid_input`).
 
-3. **Exception Handling:** The tests now correctly use `pytest.raises` to check for `ValueError` and `TypeError` exceptions, demonstrating robust error handling.
+3. **Exception Handling:** The tests now correctly use `pytest.raises` to check for `ValueError` and `TypeError` exceptions, demonStarting robust error handling.
 
 4. **Input Validation:**  The tests now include checks for valid data types for `product_id` and `product_data` to ensure the API function gracefully handles different kinds of inputs.
 
-5. **Edge Cases:** The `test_prestashop_update_product_invalid_id` demonstrates testing with an invalid input.
+5. **Edge Cases:** The `test_prestashop_update_product_invalid_id` demonStartes testing with an invalid input.
 
-6. **Example Usage:** The `test_prestashop_create_product_valid_input` demonstrates how to assert on the response's structure.
+6. **Example Usage:** The `test_prestashop_create_product_valid_input` demonStartes how to assert on the response's structure.
 
 7. **Complete Example:** A complete, testable example of a class and related test cases.
 

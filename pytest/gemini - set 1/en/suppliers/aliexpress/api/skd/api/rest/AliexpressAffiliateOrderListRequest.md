@@ -82,6 +82,6 @@ class TestAliexpressAffiliateOrderListRequest:
 * **Exception Handling:**  Uses `pytest.raises` to test for `TypeError` when providing incorrect data types for the `port` and `domain` parameters.
 * **`with` statement:**   The `with pytest.raises` block ensures that the expected exception is correctly caught.
 * **`assert` statements:**  The assertions verify the correct values assigned to the attributes.
-* **Example Usage of All Parameters** A test now demonstrates setting all the optional parameters in the constructor.
+* **Example Usage of All Parameters** A test now demonStartes setting all the optional parameters in the constructor.
 
 This improved test suite is more robust and provides better coverage for the `AliexpressAffiliateOrderListRequest` class. Remember to install `pytest` if you haven't already: `pip install pytest`. Then run the tests from your terminal using `pytest`.  If you have the file structure correctly, this should find and run the tests within the same directory.

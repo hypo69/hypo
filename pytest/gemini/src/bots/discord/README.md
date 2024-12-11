@@ -109,7 +109,7 @@ def test_hi_command(mock_client, mock_message):
 
 4. **Placeholder Tests:**  The provided test functions are **placeholders**. You need to replace the `assert True` statements with actual assertions based on the expected behavior of your `discord_bot` functions. For example, if `join_voice_channel` is supposed to return `True`, you'd write `assert discord_bot.join_voice_channel(mock_channel) is True`.
 
-5. **Exception Handling:** The example demonstrates how to use `pytest.raises` for exception handling.
+5. **Exception Handling:** The example demonStartes how to use `pytest.raises` for exception handling.
 
 6. **File Handling (if applicable):** If the bot code interacts with files (e.g., loading training data), you need to mock file handling for testing. Consider using temporary files or mock the file reading/writing functionality.
 

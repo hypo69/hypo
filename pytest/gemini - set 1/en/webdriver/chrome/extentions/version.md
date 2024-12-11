@@ -85,7 +85,7 @@ def test_author_not_empty():
 4. **Edge Case Consideration (example):**  While the provided code doesn't have obvious edge cases, the example shows how to check for a specific format if the version string is important for testing.
 
 
-5. **Exception Handling (example):** The addition of an example test `test_version_raises_exception_if_file_doesnt_exist` illustrates how to use `pytest.raises` for testing exception handling. (This is added as a placeholder; adjust based on your code's potential exceptions).
+5. **Exception Handling (example):** The addition of an example test `test_version_raises_exception_if_file_doesnt_exist` illuStartes how to use `pytest.raises` for testing exception handling. (This is added as a placeholder; adjust based on your code's potential exceptions).
 
 
 

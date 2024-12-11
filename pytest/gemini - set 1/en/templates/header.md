@@ -110,7 +110,7 @@ def test_header_sys_path_append_wrong_path():
 
 3. **Comprehensive `test_header_src_path`:** The original test was incomplete and was missing important steps. The current implementation creates a temporary directory, places the `header.py` file inside, modifies `sys.path` to point to this temporary directory, imports the module, ensures no errors occur, and cleans up the temporary directory.
 
-4. **`test_header_sys_path_append_correct_path`:** Demonstrates how the code works with a correct path. It creates a dummy `credentials.py` file and checks if `gs` is correctly imported and accessible.
+4. **`test_header_sys_path_append_correct_path`:** DemonStartes how the code works with a correct path. It creates a dummy `credentials.py` file and checks if `gs` is correctly imported and accessible.
 
 5. **`test_header_sys_path_append_wrong_path`:** Includes a test case for an incorrect path, verifying the correct exception handling.  Crucially, it raises a `ModuleNotFoundError`.
 

@@ -61,7 +61,7 @@ def test_root_path_calculation_no_hypotez():
 **Explanation and Improvements:**
 
 1. **`test_root_path_calculation`:** This test now directly checks if the calculated root path matches the expected path.  Crucially, it uses `os.getcwd()` to get the current directory, which is essential for accurate testing.  This test will only pass if 'hypotez' exists in the cwd.
-2. **`test_root_path_calculation_no_hypotez`:** This new test demonstrates how to handle cases where 'hypotez' might not be present in the current working directory.  It uses `os.chdir()` to temporarily change the current directory, and the fixture approach to modify variables for a more realistic test scenario. This is vital because the code will fail if 'hypotez' is not found, but this wasn't addressed. It also includes a `finally` block to restore the original directory, preventing unexpected side effects in the test suite. This test case is very important for robust testing.
+2. **`test_root_path_calculation_no_hypotez`:** This new test demonStartes how to handle cases where 'hypotez' might not be present in the current working directory.  It uses `os.chdir()` to temporarily change the current directory, and the fixture approach to modify variables for a more realistic test scenario. This is vital because the code will fail if 'hypotez' is not found, but this wasn't addressed. It also includes a `finally` block to restore the original directory, preventing unexpected side effects in the test suite. This test case is very important for robust testing.
 
 **Important Considerations:**
 

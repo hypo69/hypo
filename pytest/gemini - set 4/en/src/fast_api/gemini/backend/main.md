@@ -3,7 +3,7 @@ import pytest
 import hypotez.src.fast_api.gemini.backend.main as main
 
 # No functions or classes are present in the provided code to test.
-# The following example demonstrates test writing for a hypothetical function.
+# The following example demonStartes test writing for a hypothetical function.
 # Replace this with actual tests based on the content of main.py.
 
 

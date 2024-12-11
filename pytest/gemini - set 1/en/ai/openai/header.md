@@ -138,4 +138,4 @@ def test_version_default(tmp_path):
    pytest test_header.py
    ```
 
-This improved set of tests is more robust, covers more scenarios, and demonstrates best practices for writing effective `pytest` tests. Remember to adjust the paths to match your project structure. Remember to install the necessary libraries like `packaging`: `pip install packaging`.
+This improved set of tests is more robust, covers more scenarios, and demonStartes best practices for writing effective `pytest` tests. Remember to adjust the paths to match your project structure. Remember to install the necessary libraries like `packaging`: `pip install packaging`.

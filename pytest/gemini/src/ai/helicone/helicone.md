@@ -70,7 +70,7 @@ def test_analyze_sentiment_invalid_input(helicone_ai, mock_openai):
 
 2. **Clearer Error Handling:**  The `test_generate_poem_invalid_openai_response` example now uses `pytest.raises` to explicitly test for exceptions. This is much better than just checking for None; it verifies that the expected error is raised when the API call fails.
 
-3. **More Comprehensive Tests:** The provided example now has a valid `test_generate_poem_valid_input` case demonstrating how to set up the mocked response and then check the result. The `test_analyze_sentiment_invalid_input` handles a possible empty response which was not covered before.
+3. **More Comprehensive Tests:** The provided example now has a valid `test_generate_poem_valid_input` case demonStarting how to set up the mocked response and then check the result. The `test_analyze_sentiment_invalid_input` handles a possible empty response which was not covered before.
 
 4. **Fixture for `helicone_ai`:** A `helicone_ai` fixture now uses the mock `openai` client ensuring the mock is accessible within the test functions.
 

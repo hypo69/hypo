@@ -78,7 +78,7 @@ def test_build_api_request_empty_endpoint():
 
 **Explanation and Improvements:**
 
-1. **Placeholder Functions:** The code now includes placeholder functions (`get_api_key`, `build_api_request`) to simulate the actual functions from the provided markdown.  Crucially, these placeholders *demonstrate* how to test the functions, even without the actual code.  Replace these with your real functions.
+1. **Placeholder Functions:** The code now includes placeholder functions (`get_api_key`, `build_api_request`) to simulate the actual functions from the provided markdown.  Crucially, these placeholders *demonStarte* how to test the functions, even without the actual code.  Replace these with your real functions.
 
 2. **Comprehensive Tests:** The tests now cover valid input, missing API key (which is a crucial edge case), and an invalid site URL. This addresses the requirements for edge and invalid cases.
 

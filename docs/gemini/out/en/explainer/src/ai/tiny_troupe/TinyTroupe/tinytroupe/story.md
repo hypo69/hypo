@@ -147,4 +147,4 @@ graph TD
 
 **Relationships:**
 
-The `story.py` module relies heavily on the `agent.py`, `environment.py`, `utils.py`, and `openai_utils.py` modules within the `tinytroupe` package.  This illustrates a strong dependency on other parts of the TinyTroupe project to provide interaction data and utilize the OpenAI API.
+The `story.py` module relies heavily on the `agent.py`, `environment.py`, `utils.py`, and `openai_utils.py` modules within the `tinytroupe` package.  This illuStartes a strong dependency on other parts of the TinyTroupe project to provide interaction data and utilize the OpenAI API.

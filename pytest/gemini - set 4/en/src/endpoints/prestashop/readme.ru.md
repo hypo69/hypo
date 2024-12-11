@@ -56,7 +56,7 @@ def test_get_api_url_missing_key():
   assert auth_header is None
 
 
-#Example usage (not part of the formal tests but illustrates how you might use the data.)
+#Example usage (not part of the formal tests but illuStartes how you might use the data.)
 #Example with valid credentials and API endpoint:
 # url, auth_header = get_api_url("e-cat.co.il", "products")
 # if url and auth_header:
@@ -87,7 +87,7 @@ def test_get_api_url_missing_key():
 
 6. **Correct Base64 Handling:** The example credentials are correctly encoded and decoded.
 
-7. **Example Usage (Illustrative):**  The example usage blocks demonstrate how you can use the functions created.  Crucially, they show how to handle cases where `get_api_url` might return `None` (indicating missing credentials or endpoint).
+7. **Example Usage (IlluStartive):**  The example usage blocks demonStarte how you can use the functions created.  Crucially, they show how to handle cases where `get_api_url` might return `None` (indicating missing credentials or endpoint).
 
 
 **How to Run the Tests:**

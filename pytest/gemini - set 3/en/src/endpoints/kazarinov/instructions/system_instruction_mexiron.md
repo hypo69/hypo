@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
 * **Comprehensive Valid Input Test:** `test_assemble_computer_valid_input` now verifies that the returned result is a valid JSON string and parses it to check the presence of expected keys and the correct number of products in both languages. This ensures the output structure matches the requirements.
 
-* **Missing Data Test:** `test_assemble_computer_missing_data` demonstrates how to test for missing `product_description` or similar issues in the input. This is an edge case crucial for real-world applications.
+* **Missing Data Test:** `test_assemble_computer_missing_data` demonStartes how to test for missing `product_description` or similar issues in the input. This is an edge case crucial for real-world applications.
 
 * **Clearer Assertions:** The assertions are more specific, confirming the expected structure and content of the JSON response.
 

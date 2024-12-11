@@ -93,7 +93,7 @@ def test_on_tool_call_delta_no_output(capsys, tool_call_delta_example):
 
 6. **Thorough Error Handling:**  Tests for cases where no `code_interpreter` data is found or no output exists.
 
-This revised solution is more complete, robust, and demonstrates best practices for writing `pytest` tests, especially in situations where mocking data is necessary. Remember to install the necessary libraries (`pytest`, `unittest.mock`) if you haven't already.
+This revised solution is more complete, robust, and demonStartes best practices for writing `pytest` tests, especially in situations where mocking data is necessary. Remember to install the necessary libraries (`pytest`, `unittest.mock`) if you haven't already.
 
 
 ```bash

@@ -58,9 +58,9 @@ def test_mode_constant():
 
 **Explanation and Crucial Improvements:**
 
-1. **Dummy Code:** The example now includes a `dummy_function` to illustrate how to write tests for Python code.  **Crucially, you must replace this dummy code with the actual code from your `main.py` file.**
+1. **Dummy Code:** The example now includes a `dummy_function` to illuStarte how to write tests for Python code.  **Crucially, you must replace this dummy code with the actual code from your `main.py` file.**
 
-2. **`pytest.raises`:** The `test_dummy_function_invalid_input` demonstrates using `pytest.raises` to assert that a specific exception is raised under certain conditions.  A `match` argument is included to make the assertion more robust (and to check for a specific error message).
+2. **`pytest.raises`:** The `test_dummy_function_invalid_input` demonStartes using `pytest.raises` to assert that a specific exception is raised under certain conditions.  A `match` argument is included to make the assertion more robust (and to check for a specific error message).
 
 3. **Edge Cases and Scenarios:** The `test_dummy_function_unknown_input` shows how to test cases where the input isn't explicitly handled in the function.  **You should add more tests like this for various conditions within your actual code.**
 

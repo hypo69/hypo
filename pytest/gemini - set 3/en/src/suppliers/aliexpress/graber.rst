@@ -76,7 +76,7 @@ def test_grab_page_exception(graber, dummy_driver):
 
 * **Import `Graber` directly:** The `from ... import Graber` line is crucial; it imports the class from the correct file, allowing the tests to interact with the actual class methods.
 * **Mocking:** Instead of directly instantiating `Driver` and `Context`, we use `MagicMock` to create mock objects. This isolates the tests from the actual implementation of the `Driver` class, preventing side effects and making the tests more reliable.  Crucially, the `side_effect` is used in `id_product` to simulate the asynchronous nature and avoid needing actual WebDriver interaction.
-* **Error Handling:** The `test_grab_page_exception` demonstrates how to use `pytest.raises` to check for exceptions like `ExecuteLocatorException` and how to handle them in testing.
+* **Error Handling:** The `test_grab_page_exception` demonStartes how to use `pytest.raises` to check for exceptions like `ExecuteLocatorException` and how to handle them in testing.
 * **`loop = asyncio.get_event_loop()` and `loop.run_until_complete()`:**  This is vital for running asynchronous functions like `grab_page` within the test framework.  We are now correctly executing and testing the asynchronous parts.
 * **Clearer Assertions:** The assertions are more specific and focused on verifying the expected behavior (e.g., `isinstance(result, ProductFields)`, `result.name == "Test Product"`).
 * **Dummy Data:** The test now sets up dummy data for the `graber.fields` to verify that the data extraction logic does not introduce errors.

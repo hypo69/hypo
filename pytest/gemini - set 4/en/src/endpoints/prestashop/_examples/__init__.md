@@ -59,7 +59,7 @@ def test_version_invalid_version_string_raises_exception():
 
 5. **`assert str(__version__).count(".") == 2`:**  This is a crucial addition.  It checks that the version string has the expected format (e.g., major.minor.patch).  Adapt this if the expected format differs.
 
-6. **Exception Handling (Important):**  The `test_version_invalid_version_string_raises_exception` demonstrates how to use `pytest.raises` to check if a function raises the expected exception (e.g., `ValueError`) when given invalid input.  Critically, **replace the placeholder `Exception` with the precise exception type raised by the function if it differs**.  If there are no error conditions, this test is likely unnecessary.
+6. **Exception Handling (Important):**  The `test_version_invalid_version_string_raises_exception` demonStartes how to use `pytest.raises` to check if a function raises the expected exception (e.g., `ValueError`) when given invalid input.  Critically, **replace the placeholder `Exception` with the precise exception type raised by the function if it differs**.  If there are no error conditions, this test is likely unnecessary.
 
 
 7. **Testable Code:**  This example assumes the module defines functions for handling version numbers (which it does, indirectly via the `__version__`). Update the tests if the logic changes.

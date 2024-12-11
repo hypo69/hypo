@@ -77,7 +77,7 @@ def example_mexiron_data():
 
 1. **Specific Error Handling:** The tests now use `pytest.raises` to specifically check for expected exceptions (TypeError, ValueError, KeyError) with helpful assertion messages within the `assert` statements.  This is much more robust than just relying on `except` blocks.
 
-2. **Comprehensive Test Cases:** The examples demonstrate testing for invalid input types, missing parameters, and invalid parameter values—crucial for real-world code.  This is a *starting* point; you need *many* more tests to cover the full range of possible inputs.
+2. **Comprehensive Test Cases:** The examples demonStarte testing for invalid input types, missing parameters, and invalid parameter values—crucial for real-world code.  This is a *starting* point; you need *many* more tests to cover the full range of possible inputs.
 
 3. **Data-Driven Approach (using Fixtures):** The addition of `@pytest.fixture` and `example_mexiron_data` is critical for creating reusable test data. This dramatically improves test maintainability.
 

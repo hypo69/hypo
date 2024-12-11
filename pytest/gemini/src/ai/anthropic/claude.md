@@ -111,7 +111,7 @@ def test_generate_text_empty_response(claude_client):
 
 * **Environment Variable for API Key:** The test code now uses `os.environ.get("ANTHROPIC_API_KEY")`. This is much better practice than hardcoding your API key in the code.  *Critically*, this also helps prevent accidentally committing your API key to version control.
 
-* **Empty Input Handling:** Added tests for empty prompts and inputs for `generate_text` and `analyze_sentiment`, as well as `translate_text`, to demonstrate handling of edge cases.
+* **Empty Input Handling:** Added tests for empty prompts and inputs for `generate_text` and `analyze_sentiment`, as well as `translate_text`, to demonStarte handling of edge cases.
 
 
 * **Clearer Assertions:**  The assertions now explicitly state whether the output should be a string and whether the output should be non-empty. This makes the tests more robust and informative.

@@ -94,7 +94,7 @@ def test_scroll_invalid_direction(successful_get_url):
 2. **Mocking `_save_cookies_localy`:**  Similar mocking is added for `_save_cookies_localy`, which allows testing the saving logic without triggering file I/O.
 
 
-3. **Comprehensive Test Coverage:** The example now demonstrates testing with both success and failure cases for `get_url`, and `scroll`, and includes tests for different browser types (Chrome, Firefox, Edge).
+3. **Comprehensive Test Coverage:** The example now demonStartes testing with both success and failure cases for `get_url`, and `scroll`, and includes tests for different browser types (Chrome, Firefox, Edge).
 
 
 4. **Edge Cases and Invalid Inputs:** Added a `test_extract_domain_invalid_url` test to explicitly check for an invalid URL (empty string in this case). This is vital to ensure that the code handles unexpected inputs correctly and doesn't crash.  The example also shows how to test for an invalid `scroll` direction, using `pytest.raises`.

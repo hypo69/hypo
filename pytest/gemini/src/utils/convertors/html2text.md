@@ -89,7 +89,7 @@ def test_html2text_exception_handling():
       html2text(123) # Attempt to pass non-string input.
 
 
-# Example test demonstrating the use of pytest.raises for exception handling.
+# Example test demonStarting the use of pytest.raises for exception handling.
 def test_html2text_malformed_html():
     """Verify the parser handles malformed HTML gracefully, preventing crashes."""
     malformed_html = "<p>"  # Missing closing tag

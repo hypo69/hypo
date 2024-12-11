@@ -47,7 +47,7 @@ MODE = 'dev'
 from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 
 def main():
-    """ Main function to demonstrate how to use the Driver class with different web browsers."""
+    """ Main function to demonStarte how to use the Driver class with different web browsers."""
 
     # Create an instance of the Driver class with the Chrome webdriver
     print("Creating a Chrome browser instance...")
@@ -91,7 +91,7 @@ def main():
 
 # <algorithm>
 
-The algorithm demonstrates using a webdriver (Chrome, Firefox, Edge) to interact with a webpage.
+The algorithm demonStartes using a webdriver (Chrome, Firefox, Edge) to interact with a webpage.
 
 **Step 1:** Initialize Driver objects
 
@@ -164,7 +164,7 @@ graph TD
 
 **Functions:**
 
-*   `main()`: The entry point of the script.  It creates instances of `Driver` with different browsers, navigates to a URL, extracts the domain, scrolls the page, and saves cookies. It demonstrates the usage and interaction flow.
+*   `main()`: The entry point of the script.  It creates instances of `Driver` with different browsers, navigates to a URL, extracts the domain, scrolls the page, and saves cookies. It demonStartes the usage and interaction flow.
 
 **Variables:**
 

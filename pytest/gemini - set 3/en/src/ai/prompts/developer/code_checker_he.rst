@@ -1,6 +1,6 @@
 ```python
 # The user-provided code goes here.  The prompt doesn't provide any code,
-# so this example demonstrates test writing for a hypothetical function.
+# so this example demonStartes test writing for a hypothetical function.
 
 def calculate_sum(numbers):
     """

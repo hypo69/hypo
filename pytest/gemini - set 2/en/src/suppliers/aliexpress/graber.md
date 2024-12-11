@@ -91,7 +91,7 @@ def test_grab_page_execute_locator_exception(mock_logger, graber, mock_context):
 
 3. **`asyncio.run`:** The `asyncio.run` function is crucial for running asynchronous functions within a `pytest` test.
 
-4. **Comprehensive Test Cases (Edge Case & Error Handling):**  The updated code includes a test case demonstrating exception handling, mocking a situation where a call to `execute_locator` might fail. This checks that your code gracefully handles errors.
+4. **Comprehensive Test Cases (Edge Case & Error Handling):**  The updated code includes a test case demonStarting exception handling, mocking a situation where a call to `execute_locator` might fail. This checks that your code gracefully handles errors.
 
 5. **Clearer Assertions:** The tests now use assertions that directly verify expected behavior, instead of just checking if the function runs without raising an error.
 

@@ -96,7 +96,7 @@ def test_receive_invalid_input(mock_logger):
 * **Mocking:** The tests now use `unittest.mock.patch` to mock the `smtplib.SMTP` and `imaplib.IMAP4_SSL` objects. This is crucial for isolating the tests and avoiding external dependencies.  The mocking prevents actual email sending/receiving.  Critically, it also mocks the logger.
 * **Clearer Test Names:** Test names now more accurately reflect the purpose of each test.
 * **Edge Case and Invalid Input:** Added tests for invalid inputs (empty body in `test_send_invalid_input` and invalid IMAP server in `test_receive_invalid_input`).
-* **Valid Input Test:**  The `test_send_valid_input` test now includes mocks for each SMTP method call, demonstrating successful communication.  The `test_receive_valid_input` includes mocking the entire email retrieval process.
+* **Valid Input Test:**  The `test_send_valid_input` test now includes mocks for each SMTP method call, demonStarting successful communication.  The `test_receive_valid_input` includes mocking the entire email retrieval process.
 * **Error Handling:** The tests now assert that the `send` and `receive` functions return the correct values on error (False or None), and also check that the expected error message was logged using the `mock_logger` assertions.
 * **Fixture for Logger:** Added a `mock_logger` fixture to effectively manage the mocking of the logger within the test functions.
 * **Complete Email Object:**  The `test_receive_valid_input` now correctly creates a complete `email.message` object, which is necessary for the email parsing logic to work correctly.  Importantly, this includes the payload.

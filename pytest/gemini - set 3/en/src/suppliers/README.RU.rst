@@ -95,12 +95,12 @@ def test_supplier_payload_raises_exception(supplier_instance):
 
 3. **Clearer Test Cases:**  Test names now more accurately reflect the tested condition (e.g., `test_supplier_payload_success`).
 
-4. **Edge Case and Error Handling:** The `test_supplier_payload_failure` test demonstrates how to test for failure cases by mocking the WebDriver's return.
+4. **Edge Case and Error Handling:** The `test_supplier_payload_failure` test demonStartes how to test for failure cases by mocking the WebDriver's return.
 
 
 5. **Exception Handling Test:**  `test_supplier_payload_raises_exception` shows how to use `pytest.raises` to verify if the `_payload` method correctly raises a specific exception when `webdriver` initialization fails.
 
-6. **Invalid Input:** `test_supplier_run_scenarios_with_invalid_input` illustrates testing with incorrect input types for `run_scenarios`.
+6. **Invalid Input:** `test_supplier_run_scenarios_with_invalid_input` illuStartes testing with incorrect input types for `run_scenarios`.
 
 
 **How to Run Tests:**

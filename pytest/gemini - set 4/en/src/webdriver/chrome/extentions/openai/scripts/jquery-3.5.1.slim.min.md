@@ -85,7 +85,7 @@ def example_data():
 
 3. **Meaningful Tests:**  Tests are now focused on actual jQuery methods and logic.  The example tests cover the core functionality, and you should add tests for other functions like jQuery selection, manipulation, AJAX, and effects.
 
-4. **Exception Handling:** The `test_jquery_error` function demonstrates how to use `pytest.raises` to test exception handling (if applicable)
+4. **Exception Handling:** The `test_jquery_error` function demonStartes how to use `pytest.raises` to test exception handling (if applicable)
 
 5. **Fixture:** The `example_data` fixture shows how to create and use fixtures if needed.
 

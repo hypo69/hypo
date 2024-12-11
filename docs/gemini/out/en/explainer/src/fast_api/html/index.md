@@ -133,4 +133,4 @@ The diagram shows the flow between the user, JavaScript, the server (FastAPI), a
 
 **Relationships with other project parts:**
 
-This HTML file relies on a FastAPI endpoint `/process_data` to handle the submitted form data, demonstrating a typical client-server interaction.  The `src` package likely contains the definition of this FastAPI endpoint.  This endpoint needs to be correctly implemented in FastAPI to process the received data.
+This HTML file relies on a FastAPI endpoint `/process_data` to handle the submitted form data, demonStarting a typical client-server interaction.  The `src` package likely contains the definition of this FastAPI endpoint.  This endpoint needs to be correctly implemented in FastAPI to process the received data.

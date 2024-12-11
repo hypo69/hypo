@@ -151,7 +151,7 @@ graph TD
     H -- insert async --> J[execute_PrestaShop_insert_async];
 ```
 
-**Explanation of Dependencies:** The `executor` module is imported. This indicates a dependency on a separate module containing the functions for actually running scenarios.  The code relies on the `Supplier` class (implicitly, not directly shown here) to orchestrate the process and likely handle data transfer and context.
+**Explanation of Dependencies:** The `executor` module is imported. This indicates a dependency on a separate module containing the functions for actually running scenarios.  The code relies on the `Supplier` class (implicitly, not directly shown here) to orcheStarte the process and likely handle data transfer and context.
 
 # <explanation>
 

@@ -97,7 +97,7 @@ def test_invalid_input_type():
 * **Type Handling:**  Added `TypeError` checks to ensure that `language`, `category_name`, and `products_titles` are of the correct types.  This is crucial for robust code. It also verifies that all items within the `products_titles` list are strings.  This prevents cryptic errors later on.
 * **Clearer Test Names:** Test names now explicitly describe the scenario being tested (e.g., `test_create_campaign_data_valid_input`, `test_create_campaign_data_long_list`).
 * **Edge Cases:** Added tests for cases with a short list of products and a very long list, ensuring the code handles these scenarios correctly.
-* **Exception Testing:** Demonstrates how to use `pytest.raises` to check for the `TypeError` that the function should raise if input validation fails.
+* **Exception Testing:** DemonStartes how to use `pytest.raises` to check for the `TypeError` that the function should raise if input validation fails.
 * **Docstrings:** Included comprehensive docstrings for the functions, explaining their purpose, arguments, return values, and potential exceptions.
 
 **How to run the tests:**

@@ -105,7 +105,7 @@ graph LR
 
 **Classes:**
 
-* `ProductFields`: This class encapsulates the various product fields, their properties (retrieval), and setters (assignment). It's crucial for structured data handling and validation.  It provides attributes to hold the product data (`presta_fields`) and associated data (`assist_fields_dict`).  It demonstrates a critical pattern of separating data loading (`_load_product_fields_list`, `_payload`) from the actual data access and manipulation.
+* `ProductFields`: This class encapsulates the various product fields, their properties (retrieval), and setters (assignment). It's crucial for structured data handling and validation.  It provides attributes to hold the product data (`presta_fields`) and associated data (`assist_fields_dict`).  It demonStartes a critical pattern of separating data loading (`_load_product_fields_list`, `_payload`) from the actual data access and manipulation.
 
 
 **Functions:**

@@ -10,7 +10,7 @@ Execution steps
 -------------------------
 1. **Initialization**: The `PsychologistTelgrambot` class is instantiated.  It retrieves the Telegram bot token from a configuration (`gs.credentials.telegram.hypo69_psychologist_bot`).
 2. **Driver and Model Setup**: It initializes a `Driver` object (likely for web interaction), and a `GoogleGenerativeAI` model. The system instructions and questions are loaded from specific files in Google Drive.
-3. **Handler Registration**: The bot registers various handlers to handle different types of user input:
+3. **Handler RegiStartion**: The bot registers various handlers to handle different types of user input:
     - `/start` command: Sends a greeting message.
     - `/help` command: (Presumably) implements help functionality (not fully detailed in the code).
     - Text messages: Processes user text input, saving the message to a log file, sending it to the LLM for a response, and then sending the LLM's response back to the user. The response generation leverages historical chat data from a file associated with the user.

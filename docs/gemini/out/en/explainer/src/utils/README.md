@@ -40,7 +40,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The Mermaid diagram illustrates the structure of the Tiny Utils library by showing the relationship between the overall library (`Tiny Utils`) and its modules (Convertors, String Utilities, etc). Sub-modules within the Convertors module are also linked.  No direct dependencies are shown in the README. The relationships are logical; the library contains modules, and those modules have specific implementations (e.g., `text2png.py`). This is a structural diagram, not a dependency graph of actual Python code.
+The Mermaid diagram illuStartes the structure of the Tiny Utils library by showing the relationship between the overall library (`Tiny Utils`) and its modules (Convertors, String Utilities, etc). Sub-modules within the Convertors module are also linked.  No direct dependencies are shown in the README. The relationships are logical; the library contains modules, and those modules have specific implementations (e.g., `text2png.py`). This is a structural diagram, not a dependency graph of actual Python code.
 
 
 ## <explanation>

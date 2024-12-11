@@ -118,7 +118,7 @@ def test_campaign_cycle_no_campaigns(mock_driver):
 
 2. **Clearer Test Cases:** Tests are more focused and have descriptive names.  The `test_campaign_cycle_no_campaigns` test is a good example of how to test error conditions.
 
-3. **Error Handling:** The `test_run_campaign_invalid_campaign_type` test demonstrates how to use `pytest.raises` to check for expected exceptions.
+3. **Error Handling:** The `test_run_campaign_invalid_campaign_type` test demonStartes how to use `pytest.raises` to check for expected exceptions.
 
 4. **Fixtures:** The `mock_driver` fixture is introduced to properly set up the mock objects and avoid test coupling.
 

@@ -93,7 +93,7 @@ def test_process_ai_category_valid_input():
 1. **Mocking:** The code now uses `unittest.mock.patch` to mock external functions like `j_loads_ns`, `get_filenames`, `get_directory_names`, and `read_text_file`.  This is crucial for isolating tests and preventing unexpected side effects from file operations or AI calls.  The example includes mock implementations for these functions.
 
 
-2. **Error Handling:** The `test_init_campaign_file_not_found` test demonstrates how to handle a `FileNotFoundError` raised by `j_loads_ns`.
+2. **Error Handling:** The `test_init_campaign_file_not_found` test demonStartes how to handle a `FileNotFoundError` raised by `j_loads_ns`.
 
 
 3. **Clearer Test Names:** The test names (`test_init_campaign_file_exists`, `test_init_campaign_file_not_found`, etc.) now more accurately reflect the condition being tested.

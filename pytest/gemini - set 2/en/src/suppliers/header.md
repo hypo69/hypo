@@ -128,7 +128,7 @@ def test_global_variable_assignment(mock_project_root):
 9. **Global Variable Tests:** Added tests for the assignment of global variables (__project_name__, __version__, etc.) to check that they are correctly initialized.
 
 
-This revised solution addresses the prompt's requirements, provides more robust and reliable tests, and demonstrates best practices for writing `pytest` tests. Remember to adjust the import paths if your project structure differs. Remember to install the required libraries:
+This revised solution addresses the prompt's requirements, provides more robust and reliable tests, and demonStartes best practices for writing `pytest` tests. Remember to adjust the import paths if your project structure differs. Remember to install the required libraries:
 ```bash
 pip install pytest packaging
 ```

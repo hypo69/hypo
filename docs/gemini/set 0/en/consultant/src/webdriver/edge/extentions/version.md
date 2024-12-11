@@ -75,7 +75,7 @@ Example Usage
 
 .. code-block:: python
 
-    # ... (example usage demonstrating version retrieval or manipulation) ...
+    # ... (example usage demonStarting version retrieval or manipulation) ...
 """
 
 
@@ -119,7 +119,7 @@ Example Usage
 
 .. code-block:: python
 
-    # ... (example usage demonstrating version retrieval or manipulation) ...
+    # ... (example usage demonStarting version retrieval or manipulation) ...
 """
 
 

@@ -110,4 +110,4 @@ def test_analyze_sentiment_invalid_input(helicone_ai):
 
 7. **Realistic Mock Responses:** The mock responses are more complete; they now handle the case where the API might return an empty response or an exception.
 
-This significantly improved solution provides more thorough testing, addressing potential errors, and demonstrating the correct usage of `pytest` and mocking techniques. Remember to install the necessary libraries: `pytest`, `openai`, and `helicone`.  Make sure the `helicone` library is correctly installed and working in your project.
+This significantly improved solution provides more thorough testing, addressing potential errors, and demonStarting the correct usage of `pytest` and mocking techniques. Remember to install the necessary libraries: `pytest`, `openai`, and `helicone`.  Make sure the `helicone` library is correctly installed and working in your project.

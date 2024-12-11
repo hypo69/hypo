@@ -110,7 +110,7 @@ def test_send_message_invalid_assistant():
 
 2. **`js2py`:**  The `js2py` library is used to convert the JavaScript code into Python. This allows us to interact with the JavaScript objects and functions within the Python tests.
 
-3. **Comprehensive Test Cases:** Added `test_load_assistants_success` and `test_send_message_success` demonstrating successful scenarios.  `test_send_message_invalid_assistant` is a crucial edge case.
+3. **Comprehensive Test Cases:** Added `test_load_assistants_success` and `test_send_message_success` demonStarting successful scenarios.  `test_send_message_invalid_assistant` is a crucial edge case.
 
 
 **To run these tests:**
@@ -128,4 +128,4 @@ def test_send_message_invalid_assistant():
     ```
 
 
-This improved solution is significantly better because it isolates the testing logic from the external dependencies (server requests) and demonstrates how to properly handle JavaScript code within Python test cases.  Remember to adapt the mock responses to accurately reflect your expected server behavior for different scenarios. Add more test cases to cover all possible use cases of the functions. Remember to add more comprehensive tests for edge cases, invalid input, and error handling.
+This improved solution is significantly better because it isolates the testing logic from the external dependencies (server requests) and demonStartes how to properly handle JavaScript code within Python test cases.  Remember to adapt the mock responses to accurately reflect your expected server behavior for different scenarios. Add more test cases to cover all possible use cases of the functions. Remember to add more comprehensive tests for edge cases, invalid input, and error handling.

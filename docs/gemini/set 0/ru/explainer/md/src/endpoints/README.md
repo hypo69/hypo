@@ -114,7 +114,7 @@ For questions and suggestions, contact the repository owner or leave comments in
 
 ## 2. <algorithm>
 
-No algorithm is presented in the provided code. The text describes the structure and purpose of the `endpoints` module and its submodules, but lacks specific code examples to illustrate a step-by-step execution flow.
+No algorithm is presented in the provided code. The text describes the structure and purpose of the `endpoints` module and its submodules, but lacks specific code examples to illuStarte a step-by-step execution flow.
 
 
 ## 3. <mermaid>

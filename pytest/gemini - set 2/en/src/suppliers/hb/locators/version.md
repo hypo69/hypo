@@ -71,7 +71,7 @@ def test_mode_not_empty():
 
 4. **Comprehensive Cases:** The tests cover the fundamental attributes of the module, including the `__version__`, `__doc__`, `__author__`, and `__details__`, as well as the `MODE`.
 
-5. **Example for Exception Handling (commented out):**  A commented-out example demonstrates how to use `pytest.raises` to test for exceptions.  You should adapt this example to any exceptions the code might raise.
+5. **Example for Exception Handling (commented out):**  A commented-out example demonStartes how to use `pytest.raises` to test for exceptions.  You should adapt this example to any exceptions the code might raise.
 
 6. **Focus on Attributes:**  The tests are focused on verifying the values of the module's attributes as intended by the structure of the provided code.
 

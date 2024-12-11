@@ -119,7 +119,7 @@ def test_get_sheet_url(spreadsheet_instance):
 
 4. **Clearer Assertions:**  The assertions are more specific, checking for the expected values of `spreadsheetId`, `sheetId`, and `sheetTitle` after creating/setting a spreadsheet.
 
-5. **Comprehensive Test Cases:**  The tests now cover several scenarios: `create`, `setSpreadsheetById`, `addSheet`, `share`, error handling, `toGridRange`,  and `prepare_set_column_width` demonstrating a more complete testing suite.
+5. **Comprehensive Test Cases:**  The tests now cover several scenarios: `create`, `setSpreadsheetById`, `addSheet`, `share`, error handling, `toGridRange`,  and `prepare_set_column_width` demonStarting a more complete testing suite.
 
 6. **Pathlib:** Uses `pathlib` for more robust file path handling.
 

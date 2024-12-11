@@ -2,7 +2,7 @@
 import pytest
 
 # No functions or classes are present in the provided code,
-# so no tests can be written.  A dummy test demonstrating
+# so no tests can be written.  A dummy test demonStarting
 # the correct structure is included.
 
 def test_empty_module_exists():
@@ -29,7 +29,7 @@ The solution provides a **dummy test** that verifies that the module itself exis
 3. **Use appropriate test cases:**  Develop test cases that exercise the code's different paths, including positive and negative cases.
 
 
-**Example of a test with real code (Illustrative):**
+**Example of a test with real code (IlluStartive):**
 
 ```python
 # Example function to test

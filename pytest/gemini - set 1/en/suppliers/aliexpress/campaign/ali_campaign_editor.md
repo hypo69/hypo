@@ -105,7 +105,7 @@ def test_list_categories(editor, tmp_path, mock_logger):
 * **Mocking `logger`:**  Crucially, the code now mocks the `logger` using `unittest.mock`. This is essential for testing functions that use `logger.error`, `logger.success`, etc., without actually writing to a file or console.
 * **`tmp_path` fixture:**  This is a `pytest` fixture that creates a temporary directory for each test.  This isolates tests and prevents them from interfering with each other or the file system.
 * **Clearer test names:** Test names now more precisely reflect the scenario being tested.
-* **Exception Handling:**  The `test_delete_product_nonexistent_file` now demonstrates how to correctly handle a `FileNotFoundError` within the `delete_product` method's exception block.
+* **Exception Handling:**  The `test_delete_product_nonexistent_file` now demonStartes how to correctly handle a `FileNotFoundError` within the `delete_product` method's exception block.
 * **Edge Case Tests:** Added tests for `test_delete_product_from_text_file` and `test_delete_product_no_product_list` covering cases where there isn't a product list, or the product is not found in the text file.
 * **Assertions:**  Tests now use more precise assertions (e.g., checking the contents of files, mocking the logger correctly) to verify expected outcomes.
 * **Robustness:** Added tests for edge cases and scenarios where input data may be missing or invalid.
@@ -126,4 +126,4 @@ def test_list_categories(editor, tmp_path, mock_logger):
     ```
 
 
-Remember to adapt the tests based on the specific logic and behavior of the `AliCampaignEditor` class, ensuring thorough coverage of all possible scenarios. This revised example is a much more robust and complete testing strategy. Remember to replace `...` with the actual implementation of the `super().__init__` call. Also, the import statements for the modules (e.g. `from src import gs`, `from src.utils import pprint`) should be correct and working in your project.
+Remember to adapt the tests based on the specific logic and behavior of the `AliCampaignEditor` class, ensuring thorough coverage of all possible scenarios. This revised example is a much more robust and complete testing Startegy. Remember to replace `...` with the actual implementation of the `super().__init__` call. Also, the import statements for the modules (e.g. `from src import gs`, `from src.utils import pprint`) should be correct and working in your project.

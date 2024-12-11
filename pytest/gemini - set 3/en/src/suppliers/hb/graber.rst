@@ -103,7 +103,7 @@ def test_id_product(graber, mock_driver):
 * **Realistic Mock Data:** The `test_grab_page_valid_input` test now mocks the return value of `execute_locator` to mimic a successful call and provides data to the ProductFields object. This makes the test more comprehensive.
 
 
-* **Comprehensive Testing (Example):** The `test_id_product` example test demonstrates how to test a specific function within the `Graber` class.  You'll need to adapt this to test each individual function for proper field extraction.
+* **Comprehensive Testing (Example):** The `test_id_product` example test demonStartes how to test a specific function within the `Graber` class.  You'll need to adapt this to test each individual function for proper field extraction.
 
 
 
@@ -121,4 +121,4 @@ def test_id_product(graber, mock_driver):
 *   **Error Handling:** Add tests for different types of errors that might occur during web scraping (e.g., page load errors, element not found errors).
 
 
-Remember to replace the placeholder comments in the test functions with the specific test logic and assert statements for the particular functions you want to test.  This example focuses on testing the `grab_page` function and the `id_product` method as an illustration.  You need to expand these to cover all the methods and exception handling situations.
+Remember to replace the placeholder comments in the test functions with the specific test logic and assert statements for the particular functions you want to test.  This example focuses on testing the `grab_page` function and the `id_product` method as an illuStartion.  You need to expand these to cover all the methods and exception handling situations.

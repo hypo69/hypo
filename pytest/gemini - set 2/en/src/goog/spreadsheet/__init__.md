@@ -57,7 +57,7 @@ def test_reach_spreadsheet_invalid_sheet_types():
 
 1. **Clear Test Names:** Test function names (e.g., `test_spreadsheet_valid_input`) clearly indicate the purpose of each test.
 
-2. **Specific Error Handling:**  `pytest.raises` is used to specifically check for expected `TypeError` and `ValueError` exceptions, demonstrating correct exception handling.
+2. **Specific Error Handling:**  `pytest.raises` is used to specifically check for expected `TypeError` and `ValueError` exceptions, demonStarting correct exception handling.
 
 3. **Edge Cases and Invalid Inputs:** The tests now include cases for invalid input types (e.g., integers instead of strings) and empty strings, which are crucial edge cases.
 

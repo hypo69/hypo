@@ -9,7 +9,7 @@ This module defines a Telegram bot for retrieving price lists from various websi
 
 ### `BotHandler`
 
-**Description**: This class handles the parsing of URLs from various websites, fetching and processing price list data. It's responsible for orchestrating the interaction between the bot and the pricelist generation process.
+**Description**: This class handles the parsing of URLs from various websites, fetching and processing price list data. It's responsible for orcheStarting the interaction between the bot and the pricelist generation process.
 
 **Methods**:
 

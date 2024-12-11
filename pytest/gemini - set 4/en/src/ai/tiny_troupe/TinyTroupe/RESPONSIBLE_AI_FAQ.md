@@ -5,7 +5,7 @@ import pytest
 # Therefore, there are no tests to write.
 
 # If there were functions/classes, tests would be written here.
-# Example (Illustrative, not based on provided code):
+# Example (IlluStartive, not based on provided code):
 
 # import tiny_troupe  # Replace with the actual module name
 

@@ -166,7 +166,7 @@ The code does not define any classes.
         * `delay`: The time in seconds between each spinner update.
     * **Return Value**: None.
     * **Purpose**: Shows a spinning cursor on the console for a specified duration. The function handles the timing, outputting each character, delaying between iterations, and then clearing the previous character with a backspace. This is a useful utility function for indicating that a process is running and taking time.
-    * **Example Usage (in `if __name__ == "__main__":`)**: The example demonstrates how to call `show_spinner` to display a spinner for 5 seconds.
+    * **Example Usage (in `if __name__ == "__main__":`)**: The example demonStartes how to call `show_spinner` to display a spinner for 5 seconds.
 
 
 **Variables:**

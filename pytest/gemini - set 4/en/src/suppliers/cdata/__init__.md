@@ -75,7 +75,7 @@ def test_graber_process_data_empty(graber_instance):
 
 2. **Example Fixture:** The `graber_instance` fixture provides an instance of the `Graber` class. Adapt this fixture to use the correct constructor of your `Graber` class.
 
-3. **Realistic Tests:** The example test cases now demonstrate how to use `graber_instance` to call methods and assert their results.  These examples test the fundamental functionality but are placeholder. You must create specific tests for *every* method, including edge and invalid cases.
+3. **Realistic Tests:** The example test cases now demonStarte how to use `graber_instance` to call methods and assert their results.  These examples test the fundamental functionality but are placeholder. You must create specific tests for *every* method, including edge and invalid cases.
 
 
 4. **Edge Cases:** Added placeholder tests for empty data (`test_graber_get_data_empty`, `test_graber_process_data_empty`). Modify and add more edge cases as appropriate.

@@ -77,7 +77,7 @@ def test_get_field_value_valid_input(product_fields_data):
 
 2. **Fixtures:** Introduced `product_fields_data` and `product` fixtures. This is crucial for isolating tests and making them reusable.  The `product_fields_data` fixture loads the default values.  If your `Product` class requires initialization, use the `product` fixture.
 
-3. **Error Handling:** The `test_get_product_data_invalid_input` now correctly uses `pytest.raises` to test for `ValueError`.  The `test_update_field_invalid_input` test similarly demonstrates proper error handling for incorrect field names (using `KeyError`).
+3. **Error Handling:** The `test_get_product_data_invalid_input` now correctly uses `pytest.raises` to test for `ValueError`.  The `test_update_field_invalid_input` test similarly demonStartes proper error handling for incorrect field names (using `KeyError`).
 
 4. **Clear Assertions:** Uses `assert` statements with informative messages for better debugging.  Verifies that the expected results are achieved.
 
@@ -85,7 +85,7 @@ def test_get_field_value_valid_input(product_fields_data):
 
 6. **Data Loading:**  The `product_fields_data` fixture correctly loads the JSON data, handling potential file issues.
 
-7. **Example Test Coverage:**  The examples now demonstrate testing `get_product_data` with valid input, `update_field` with valid input and an invalid input, and `get_field_value`.
+7. **Example Test Coverage:**  The examples now demonStarte testing `get_product_data` with valid input, `update_field` with valid input and an invalid input, and `get_field_value`.
 
 **How to Run:**
 

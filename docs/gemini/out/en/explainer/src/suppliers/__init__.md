@@ -32,7 +32,7 @@ MODE = 'dev'
 
 ## <algorithm>
 
-This `__init__.py` file is a module initializer for the `suppliers` package.  It likely defines the basic structure and imports for interacting with different data suppliers (e.g., Amazon, AliExpress).  However, without the rest of the code, the algorithm cannot be fully illustrated.  A step-by-step algorithm for a complete module would involve:
+This `__init__.py` file is a module initializer for the `suppliers` package.  It likely defines the basic structure and imports for interacting with different data suppliers (e.g., Amazon, AliExpress).  However, without the rest of the code, the algorithm cannot be fully illuStarted.  A step-by-step algorithm for a complete module would involve:
 
 1. Importing necessary classes and functions (e.g., `Supplier`, `Graber`) from related modules within the `suppliers` package.
 2. Defining constants (e.g., `MODE`).

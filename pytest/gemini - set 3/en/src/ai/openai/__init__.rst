@@ -78,7 +78,7 @@ def test_mode_constant():
 **Explanation and Improvements:**
 
 * **Specific Assertions:**  Instead of just checking the type of the return value, the `test_translate_valid_input` example now includes an assertion for the expected *content* of the result.  This is crucial for ensuring the function's output is actually correct. Add similar assertions for other valid cases (e.g., checking the presence of keywords or specific phrases in the translated text).
-* **Error Handling:** The `test_translate_invalid_target_language` demonstrates how to use `pytest.raises` to test for exceptions. It checks that a `ValueError` is raised when an invalid language is passed, as expected.  The `test_translate_none_text`  and `test_openai_model_generate_invalid_prompt` shows correct exception handling. The `try-except` block in `test_openai_model_generate_valid_input` is important.
+* **Error Handling:** The `test_translate_invalid_target_language` demonStartes how to use `pytest.raises` to test for exceptions. It checks that a `ValueError` is raised when an invalid language is passed, as expected.  The `test_translate_none_text`  and `test_openai_model_generate_invalid_prompt` shows correct exception handling. The `try-except` block in `test_openai_model_generate_valid_input` is important.
 * **Edge Cases and Boundary Conditions:**  The `test_translate_empty_text` and `test_translate_none_text` address cases where the input might be empty or None.
 * **Comments:** Added comments to each test case to explain the purpose and the logic.
 * **`OpenAIModel` Tests:** Added placeholder tests for the `OpenAIModel` class.  These are important because a `generate` method or similar would need to be tested.

@@ -126,7 +126,7 @@ class TestHeader:
 4. **Parametrization (Example):** The `test_mode` method now uses `pytest.mark.parametrize` for more efficient test coverage by testing multiple modes.
 
 
-5. **Edge Case Handling (Example):** The `test_mode` method illustrates a way to test edge cases (e.g., different modes).
+5. **Edge Case Handling (Example):** The `test_mode` method illuStartes a way to test edge cases (e.g., different modes).
 
 
 6. **Complete Mock:** Critically, the mock functions are now complete and more accurately reflect the original code's dependencies. This is important for realistic test cases.

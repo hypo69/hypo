@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python script `start_sergey.py` manages the launch of Facebook advertisement campaigns. It defines functions for running campaigns, handling different languages and currencies, and orchestrates the process through a loop.  The script interacts with a Facebook driver, fetches advertisement data from JSON files, and automatically sends ads to specified Facebook groups.
+This Python script `start_sergey.py` manages the launch of Facebook advertisement campaigns. It defines functions for running campaigns, handling different languages and currencies, and orcheStartes the process through a loop.  The script interacts with a Facebook driver, fetches advertisement data from JSON files, and automatically sends ads to specified Facebook groups.
 
 Execution steps
 -------------------------
@@ -14,7 +14,7 @@ Execution steps
 2. **`run_campaign` function:** This function takes a Facebook driver, advertiser name, campaign names, group file paths, language, and currency as input.  It initializes a `FacebookPromoter` object using the provided driver and advertiser name. It then uses this object to execute the specified campaigns using the provided data.
 
 
-3. **`campaign_cycle` function:** This function orchestrates the campaign launch process. It copies and extends lists of file paths based on the language (Russian or Hebrew) for groups and advertisements. It defines language-currency pairs to be used in the campaign.  Iterates through each language-currency pair.  For each language, it chooses appropriate group file paths. It chooses campaigns based on the selected language. It calls the `run_campaign` function for each campaign with the corresponding data.
+3. **`campaign_cycle` function:** This function orcheStartes the campaign launch process. It copies and extends lists of file paths based on the language (Russian or Hebrew) for groups and advertisements. It defines language-currency pairs to be used in the campaign.  Iterates through each language-currency pair.  For each language, it chooses appropriate group file paths. It chooses campaigns based on the selected language. It calls the `run_campaign` function for each campaign with the corresponding data.
 
 
 4. **`main` function:** The `main` function is the entry point of the script. It initializes a Facebook driver, sets a flag for an AliExpress advertising campaign, and enters an infinite loop.  Inside the loop, it checks if a certain interval has passed, calls the `campaign_cycle` function to manage advertisement campaigns, logs the activity using logger, and introduces random delays to avoid overloading the Facebook system. The script continuously runs until interrupted by a keyboard interrupt.

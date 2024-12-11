@@ -61,7 +61,7 @@ class TestFirefox:
 
 2. **Test Cases:** The example test suite includes tests for initialization, `get_mode`, and an example handling of invalid input. The `test_firefox_invalid_input` is a placeholder. You should adapt and add tests based on the actual methods and attributes in your `Firefox` class.  
 
-3. **Error Handling:** `test_firefox_invalid_input` and `test_get_mode_exception` demonstrate the use of `pytest.raises` for testing expected exceptions.  Adjust the `with pytest.raises()` line according to the specific exception that your code should raise.  If the code doesn't explicitly raise an exception for invalid input, your test should fail if the code raises an unexpected exception.
+3. **Error Handling:** `test_firefox_invalid_input` and `test_get_mode_exception` demonStarte the use of `pytest.raises` for testing expected exceptions.  Adjust the `with pytest.raises()` line according to the specific exception that your code should raise.  If the code doesn't explicitly raise an exception for invalid input, your test should fail if the code raises an unexpected exception.
 
 
 4. **Fixtures:**  If any of your `Firefox` class methods require setup (like creating temporary files or network connections), then use pytest fixtures.   This example omits them as the given code doesn't seem to require them, but you should create them if necessary for testing different scenarios with varying inputs or conditions.

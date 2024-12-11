@@ -95,7 +95,7 @@ def test_mode_existence():
 
 3. **Tests for Modules:** The code now includes a basic test to confirm that all modules import correctly. This is crucial for ensuring your project structure is sound and prevents runtime errors due to missing modules.
 
-4. **Error Handling (Example):**  I included a *placeholder* test using `pytest.raises` to illustrate how to test for exceptions.  This demonstrates the correct way to check if a function raises the expected exception with the correct message.
+4. **Error Handling (Example):**  I included a *placeholder* test using `pytest.raises` to illuStarte how to test for exceptions.  This demonStartes the correct way to check if a function raises the expected exception with the correct message.
 
 
 5. **Missing Tests:** The most significant issue is that the example code *doesn't* define any functions or methods that can be tested.  **You will need to add tests *for those functions/methods* if your `aliexpress` module has them.**

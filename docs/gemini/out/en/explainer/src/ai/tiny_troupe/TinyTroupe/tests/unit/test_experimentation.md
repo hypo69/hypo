@@ -132,7 +132,7 @@ graph LR
 
 - `sys`:  Used to manipulate the Python path.  `sys.path.append` lines add the `tinytroupe/` and related directories to Python's module search path, enabling the code to import modules from those locations. This is essential for running tests for code in different directories.
 
-- `testing_utils`:  The `testing_utils` module, presumed to contain functions and classes helpful in unit tests. Its import suggests a structured testing strategy within the project.
+- `testing_utils`:  The `testing_utils` module, presumed to contain functions and classes helpful in unit tests. Its import suggests a structured testing Startegy within the project.
 
 - `tinytroupe.experimentation`: Imports the `ABRandomizer` class, which is likely part of a larger module called `tinytroupe`. This import suggests the presence of a well-defined module structure, facilitating code reuse and maintainability.
 

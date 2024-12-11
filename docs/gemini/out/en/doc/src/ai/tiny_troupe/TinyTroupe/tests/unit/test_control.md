@@ -41,7 +41,7 @@ This module contains unit tests for the `control` module in the TinyTroupe proje
 
 ### `test_begin_checkpoint_end_with_factory`
 
-**Description**: This function tests the simulation lifecycle with a `TinyPersonFactory`. It demonstrates creating simulations with different instances from a factory and comparing their properties.
+**Description**: This function tests the simulation lifecycle with a `TinyPersonFactory`. It demonStartes creating simulations with different instances from a factory and comparing their properties.
 
 **Parameters**:
 

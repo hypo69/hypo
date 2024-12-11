@@ -48,7 +48,7 @@ Unfortunately, a visual flowchart for the entire code is impractical due to its 
 
 1. **Initialization:** Sets a situation context about a focus group to discuss apartment advertisement. Defines apartment description details.
 2. **Broadcast:** Broadcasts the situation and description details to the focus group (`focus_group_world`).
-3. **Task Broadcast:** Broadcasts the task to discuss the best advertisement strategy.
+3. **Task Broadcast:** Broadcasts the task to discuss the best advertisement Startegy.
 4. **Simulation Run:** Runs the simulation for a specified duration (2 time units).
 5. **Result Extraction:** Extracts the focus group's proposed advertisement ideas from the simulation results.
 6. **Verification:** Verifies that the extracted results contain the expected information about the advertisement.

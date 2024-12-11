@@ -120,7 +120,7 @@ def test_name(mock_driver):
 6. **Mock Dependencies:**  The `@patch` decorator is used to mock functions like `id_product`, `name`,  etc., within the `Graber` class to avoid calling the actual implementation during testing, ensuring the tests are isolated.
 
 
-7. **`test_name` Example:**  A complete example for testing a method like `name` is provided, demonstrating how to mock the method's execution to control the test's outcome.
+7. **`test_name` Example:**  A complete example for testing a method like `name` is provided, demonStarting how to mock the method's execution to control the test's outcome.
 
 
 **Key Considerations for Further Testing:**

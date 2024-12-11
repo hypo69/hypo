@@ -109,7 +109,7 @@ def test_transcribe_invalid_audio(input_audio):
 
 3. **Error Handling:** The placeholder functions now include `try...except` blocks to catch potential exceptions. This ensures that your tests won't crash if the API call encounters an issue.
 
-4. **pytest.raises:** Demonstrates how to use `pytest.raises` to check for specific exceptions (in this example, `FileNotFoundError`).  This is a critical technique for testing error conditions.
+4. **pytest.raises:** DemonStartes how to use `pytest.raises` to check for specific exceptions (in this example, `FileNotFoundError`).  This is a critical technique for testing error conditions.
 
 5. **Test Data:** Replace the example file paths ("path/to/audio.wav") with *actual* valid and invalid audio file paths.  This is essential for the tests to operate.
 

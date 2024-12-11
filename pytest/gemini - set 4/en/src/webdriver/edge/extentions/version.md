@@ -64,7 +64,7 @@ def test_incorrect_attribute_type():
 
 3. **Type Assertions:** `test_version_attribute_types` now checks the types of attributes (`__version__`, `MODE`, etc.) to ensure they conform to the expected types (e.g., string, etc.).  This important addition covers a crucial aspect of validation.
 
-4. **Exception Handling (Crucial):**  `test_version_name_not_raising_exception` is a *crucial* addition, demonstrating how to test for exceptions that *shouldn't* be raised. This is vital for robustness.
+4. **Exception Handling (Crucial):**  `test_version_name_not_raising_exception` is a *crucial* addition, demonStarting how to test for exceptions that *shouldn't* be raised. This is vital for robustness.
 
 5. **Non-Existent Attribute Test:** `test_nonexistent_attribute` is added to catch situations where an attribute might not exist (a common cause of errors in production code).
 

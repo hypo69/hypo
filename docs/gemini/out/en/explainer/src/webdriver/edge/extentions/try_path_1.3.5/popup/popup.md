@@ -83,7 +83,7 @@ graph TD
 
 **Explanation of Dependencies:**
 
-The diagram shows a basic interaction.  The exact implementation depends heavily on `tryxpath` and `tryxpath.functions`.  These are likely internal packages or modules that handle the actual XPath evaluation, error handling, and UI updating within the extension. The `browser` object and the `genericListener` demonstrate the extension's communication mechanism with the browser's messaging system for interaction with the content page and the background script.
+The diagram shows a basic interaction.  The exact implementation depends heavily on `tryxpath` and `tryxpath.functions`.  These are likely internal packages or modules that handle the actual XPath evaluation, error handling, and UI updating within the extension. The `browser` object and the `genericListener` demonStarte the extension's communication mechanism with the browser's messaging system for interaction with the content page and the background script.
 
 
 ## <explanation>

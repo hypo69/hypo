@@ -4,7 +4,7 @@ How to use the TinyTroupe control module
 
 Description
 -------------------------
-This code demonstrates how to interact with the TinyTroupe simulation control module. It shows how to initialize, run, checkpoint, and end a TinyTroupe simulation. The code includes tests for different simulation scenarios, including using agents, a world, and a factory.  Crucially, it showcases the use of `Simulation.STATUS_STARTED` and `Simulation.STATUS_STOPPED` to verify the simulation's state during different phases.  It also handles file management (removing and creating the cache file) before and after each simulation run.
+This code demonStartes how to interact with the TinyTroupe simulation control module. It shows how to initialize, run, checkpoint, and end a TinyTroupe simulation. The code includes tests for different simulation scenarios, including using agents, a world, and a factory.  Crucially, it showcases the use of `Simulation.STATUS_STARTED` and `Simulation.STATUS_STOPPED` to verify the simulation's state during different phases.  It also handles file management (removing and creating the cache file) before and after each simulation run.
 
 Execution steps
 -------------------------
@@ -23,7 +23,7 @@ Execution steps
 5. **Add faculties (optional):**  If agents are involved,  `add_mental_faculties` can be used to give them capabilities like processing text using tools like `TinyWordProcessor`.
 
 
-6. **Define agent attributes:** The code demonstrates setting agent properties like `age` and `nationality` using `agent.define()`.
+6. **Define agent attributes:** The code demonStartes setting agent properties like `age` and `nationality` using `agent.define()`.
 
 
 7. **Run simulation (using agents or world):** For running with agents, actions like `agent.listen_and_act()` are used to drive the simulation's logic.  For running with a world, `world.run()` is used with a configurable time period.

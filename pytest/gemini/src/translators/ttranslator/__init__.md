@@ -76,7 +76,7 @@ def test_translator_invalid_input_raises_typeerror():
 
 2. **`pytest.raises`:** Used `pytest.raises` for testing exceptions, ensuring the correct exception type and message are raised in cases like invalid mode.
 
-3. **Edge Cases and Invalid Input:** Added tests for cases where `MODE` is set to something other than 'dev', which demonstrates handling different operational modes. I also added tests to ensure the correct types are passed to the method.
+3. **Edge Cases and Invalid Input:** Added tests for cases where `MODE` is set to something other than 'dev', which demonStartes handling different operational modes. I also added tests to ensure the correct types are passed to the method.
 
 4. **Clear Test Names:**  Test names like `test_translate_text_valid_input`, `test_translator_invalid_mode` are descriptive, indicating the test's purpose.
 

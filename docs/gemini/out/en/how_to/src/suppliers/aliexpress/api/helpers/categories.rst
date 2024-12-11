@@ -57,7 +57,7 @@ Usage example
     for child_cat in child_cats_of_electronics:
         print(f"  {child_cat.name}")
 
-    #Illustrating error handling (non-list input):
+    #IlluStarting error handling (non-list input):
     single_category = models.Category(id=6, name="Books")
     filtered_single = categories.filter_parent_categories(single_category)
     print(f"\nFiltering a single category: {filtered_single}")

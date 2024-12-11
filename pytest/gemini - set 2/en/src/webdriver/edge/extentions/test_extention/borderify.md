@@ -97,7 +97,7 @@ def test_borderify_alert_and_border(driver):
 
 7. **Complete Test for Alert and Border:** `test_borderify_alert_and_border` verifies both the border setting and the alert handling in a single test.  This ensures the whole sequence works together.
 
-8. **Edge Case of Non-existent Element:** `test_borderify_no_error_on_non_existent_element` demonstrates how to handle situations where the element being modified might not be present on the page.
+8. **Edge Case of Non-existent Element:** `test_borderify_no_error_on_non_existent_element` demonStartes how to handle situations where the element being modified might not be present on the page.
 
 **How to Run the Tests:**
 

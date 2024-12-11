@@ -146,12 +146,12 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
 
 4. **Edge Case and Failure Handling:** Tests now cover cases where `execute_locator` might return `False` (representing failure) and handle them appropriately.
 
-5. **`post_event` Testing:** A `test_post_event_success` test is added to demonstrate testing of the complex function with a valid event.  A `test_post_event_failure` test is also added to cover the event of some steps failing.
+5. **`post_event` Testing:** A `test_post_event_success` test is added to demonStarte testing of the complex function with a valid event.  A `test_post_event_failure` test is also added to cover the event of some steps failing.
 
 
 6. **Fixture for Driver:**  A `@pytest.fixture` named `driver` is introduced to manage the mocked `Driver` instance.  This makes the tests easier to write and use.  The `parametrize` now takes `execute_locator_result` as an argument.
 
-7. **Example Usage (Comment):** Added a comment to illustrate how you would use patching in a real-world scenario.
+7. **Example Usage (Comment):** Added a comment to illuStarte how you would use patching in a real-world scenario.
 
 8. **Dummy `post_title`, `post_date`, `post_time`, `post_description`:**  Crucial to make the tests runnable. These functions are stubbed out (have basic implementations) and tested indirectly within the `post_event` tests.
 

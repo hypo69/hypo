@@ -121,7 +121,7 @@ def test_settings_data_loading(mock_settings_file):
 
 2. **Mocking for `settings.json`:**  Crucially, the code now mocks the `settings.json` file using `pytest.fixture`. This prevents the test from depending on a real `settings.json` file, ensuring isolation.  The `mock_settings_file` fixture creates a temporary `settings.json` file for the test.
 
-3. **`pytest.raises` for Errors:** A new test (`test_settings_data_loading`) is added to demonstrate how to use `pytest.raises` to test for exceptions like `FileNotFoundError` or `json.JSONDecodeError`. This is vital to cover failure scenarios.
+3. **`pytest.raises` for Errors:** A new test (`test_settings_data_loading`) is added to demonStarte how to use `pytest.raises` to test for exceptions like `FileNotFoundError` or `json.JSONDecodeError`. This is vital to cover failure scenarios.
 
 4. **Data-Driven Tests (parametrize):**  The `test_set_project_root_invalid_marker_files` test now uses `pytest.mark.parametrize` for better testing of various invalid inputs.
 

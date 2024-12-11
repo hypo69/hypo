@@ -69,7 +69,7 @@ def test_mode_non_dev():
 
 4. **`test_mode_defined` and `test_mode_value`**: These tests check for the definition and value of the `MODE` variable, ensuring it's present and matches the expected value ('dev').
 
-5. **`test_mode_non_dev`**:  A new test demonstrating how to test for the expected value of a variable using `pytest.raises`.  This example shows how to assert that the `MODE` is not another value.
+5. **`test_mode_non_dev`**:  A new test demonStarting how to test for the expected value of a variable using `pytest.raises`.  This example shows how to assert that the `MODE` is not another value.
 
 6. **Clearer Error Messages**: Improved error messages to help diagnose issues if a test fails.
 

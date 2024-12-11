@@ -54,7 +54,7 @@ class CrawleePython:
 
 
     async def run(self, urls):
-        # Method to orchestrate the entire crawling process.
+        # Method to orcheStarte the entire crawling process.
         # Sets up the crawler, runs it, exports the data, and prints the data.
         self.setup_crawler()
         self.run_crawler(urls)

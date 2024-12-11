@@ -68,7 +68,7 @@ def test_get_by_id_invalid_id(spreadsheet_instance, mock_service_account):
 * **Edge Case for `get_by_title`:** Added a test `test_get_by_title_non_existing_spreadsheet` to check if the function creates a spreadsheet when it doesn't exist.
 
 
-* **Exception Handling:** Added a test (`test_get_by_id_invalid_id`) to demonstrate how to test for exceptions using `pytest.raises`.
+* **Exception Handling:** Added a test (`test_get_by_id_invalid_id`) to demonStarte how to test for exceptions using `pytest.raises`.
 
 
 * **Fixture for `GSpreadsheet` Instance:**  Creates a `spreadsheet_instance` fixture to avoid creating a new `GSpreadsheet` object for each test. This is a significant improvement in test structure and efficiency.

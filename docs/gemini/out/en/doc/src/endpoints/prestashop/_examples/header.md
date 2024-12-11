@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides example code for interacting with PrestaShop endpoints. It includes configuration settings, imports necessary modules, and potentially defines functions for various operations.  The example demonstrates integrating with the `hypotez` project's modules, including data structures for products, suppliers, and categories, as well as utility functions for data handling and logging.
+This module provides example code for interacting with PrestaShop endpoints. It includes configuration settings, imports necessary modules, and potentially defines functions for various operations.  The example demonStartes integrating with the `hypotez` project's modules, including data structures for products, suppliers, and categories, as well as utility functions for data handling and logging.
 
 
 ## Configuration
