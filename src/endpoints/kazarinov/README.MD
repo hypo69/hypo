@@ -1,4 +1,18 @@
+```rst
+.. module:: src.endpoints.kazarinov
+	.. synopsys: Kazarinov. PDF Mexiron Creator 
+```
 
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/readme.ru.md'>Русский</A>
+</TD>
+</TR>
+</TABLE>
 
 `KazarinovTelegramBot`
 - https://one-tab.co.il
@@ -9,13 +23,17 @@
 -------- 
 `BotHandler` 
 
-На стороне клиента: 
+Client side (Kazarinov): 
+```mermaid
+flowchart TD
+    Start[Выбор комплектующих для сборки компьютера] --> Combine[Объединение в One-Tab]
+    Combine --> SendToBot{Отправка ссылки One-Tab в Telegram боту}
+    SendToBot -->|hypo69_kazarinov_bot| ProdBot[Telegram бот <code>prod</code>]
+    SendToBot -->|hypo69_test_bot| TestBot[Telegram бот <code>test</code>]
+```
+------------
 
- - выбор комплектующих для сборки компьютера -> объединение в one-tab -> отправка ссыли `one-tab` телеграм боту (`hypo69_kazarinov_bot` - prod or `hypo69_test_bot`) ->  
-
-На стороне кода: 
-
- - `kazarinov_bot.handle_message()` -> `kazarinov.scenarios.run_scenario()`:
+Code side: 
 
 ```mermaid
 flowchart TD
