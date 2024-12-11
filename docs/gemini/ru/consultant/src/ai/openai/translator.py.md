@@ -1,51 +1,56 @@
-# Received Code
+# Улучшенный код
 
 ```python
-## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module::  src.ai.openai
-    :platform: Windows, Unix
-    :synopsis: Модуль для перевода текста с использованием OpenAI API.
-"""
+Модуль для перевода текста с использованием OpenAI API.
+=======================================================
 
+Этот модуль содержит функции для перевода текста с использованием OpenAI API.
+Он предоставляет возможность переводить текст с одного языка на другой,
+используя модель OpenAI.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.ai.openai.translator import translate
+
+    source_text = "Привет, как дела?"
+    source_language = "Russian"
+    target_language = "English"
+    translation = translate(source_text, source_language, target_language)
+    print(f"Translated text: {translation}")
+"""
 MODE = 'dev'
 
 import openai
 from src import gs
 from src.logger.logger import logger
 
+
 openai.api_key = gs.credentials.openai
 
-def translate(text, source_language, target_language):
+def translate(text: str, source_language: str, target_language: str) -> str | None:
     """
-    Перевод текста с использованием OpenAI API.
+    Переводит текст с использованием OpenAI API.
 
-    Этот метод отправляет текст для перевода на указанный язык с помощью модели OpenAI и возвращает переведённый текст.
+    :param text: Текст для перевода.
+    :type text: str
+    :param source_language: Язык исходного текста.
+    :type source_language: str
+    :param target_language: Язык для перевода.
+    :type target_language: str
+    :return: Переведённый текст или None в случае ошибки.
+    :rtype: str | None
 
-    Аргументы:
-        text (str): Текст для перевода.
-        source_language (str): Язык исходного текста.
-        target_language (str): Язык для перевода.
-
-    Возвращает:
-        str: Переведённый текст.  Возвращает None при ошибке.
-
-    Пример использования:
-        >>> source_text = "Привет, как дела?"
-        >>> source_language = "Russian"
-        >>> target_language = "English"
-        >>> translation = translate(source_text, source_language, target_language)
-        >>> if translation:
-        ...     print(f"Translated text: {translation}")
-        ... else:
-        ...     print("Translation failed.")
+    :raises Exception: Если происходит ошибка при обращении к OpenAI API.
     """
-    
-    # Формируем запрос к OpenAI API.
+    # Формирует запрос к OpenAI API
     prompt = (
         f"Translate the following text from {source_language} to {target_language}:\n\n"
         f"{text}\n\n"
@@ -53,152 +58,118 @@ def translate(text, source_language, target_language):
     )
 
     try:
-        # Отправляем запрос к OpenAI API. Используем более подходящую модель.
+        # Отправляет запрос к OpenAI API
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Изменено. Используется подходящая модель.
+            engine="text-davinci-003",  # Указывает используемую модель
             prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
             temperature=0.3
         )
-        # Извлекаем перевод из ответа API.
+
+        # Извлекает перевод из ответа API
         translation = response.choices[0].text.strip()
         return translation
     except Exception as ex:
-        # Логируем ошибку.
-        logger.error("Ошибка перевода", ex)
+        # Логирует ошибку
+        logger.error('Ошибка при переводе', exc_info=ex)
         return None
 ```
 
-# Improved Code
+# Внесённые изменения
+
+1.  **Добавлена документация:**
+    *   Добавлены docstring для модуля и функции `translate` в формате reStructuredText (RST).
+    *   Добавлены описания параметров и возвращаемых значений для функции `translate`.
+    *   Добавлен пример использования модуля в docstring.
+
+2.  **Импорты:**
+    *   Импорты остались без изменений, так как все необходимые импорты присутствуют.
+3.  **Логирование ошибок:**
+    *   Изменен способ логирования ошибок для включения информации об исключении.
+    *   Заменено `logger.error("Error during translation", ex)` на `logger.error('Ошибка при переводе', exc_info=ex)`.
+
+4.  **Типизация:**
+     * Добавлена типизация к функции `translate`
+
+5.  **Удалено лишнее:**
+    *   Удалены лишние комментарии в коде.
+
+# Оптимизированный код
 
 ```python
-## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module::  src.ai.openai
-    :platform: Windows, Unix
-    :synopsis: Модуль для перевода текста с использованием OpenAI API.
-"""
+Модуль для перевода текста с использованием OpenAI API.
+=======================================================
 
+Этот модуль содержит функции для перевода текста с использованием OpenAI API.
+Он предоставляет возможность переводить текст с одного языка на другой,
+используя модель OpenAI.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.ai.openai.translator import translate
+
+    source_text = "Привет, как дела?"
+    source_language = "Russian"
+    target_language = "English"
+    translation = translate(source_text, source_language, target_language)
+    print(f"Translated text: {translation}")
+"""
 MODE = 'dev'
 
 import openai
 from src import gs
 from src.logger.logger import logger
 
-# Устанавливаем ключ API OpenAI.
 openai.api_key = gs.credentials.openai
 
-
-def translate(text: str, source_language: str, target_language: str) -> str:
+def translate(text: str, source_language: str, target_language: str) -> str | None:
     """
-    Переводит текст с одного языка на другой с использованием API OpenAI.
+    Переводит текст с использованием OpenAI API.
 
     :param text: Текст для перевода.
-    :param source_language: Исходный язык.
-    :param target_language: Целевой язык.
-    :return: Переведенный текст или None, если произошла ошибка.
+    :type text: str
+    :param source_language: Язык исходного текста.
+    :type source_language: str
+    :param target_language: Язык для перевода.
+    :type target_language: str
+    :return: Переведённый текст или None в случае ошибки.
+    :rtype: str | None
+
+    :raises Exception: Если происходит ошибка при обращении к OpenAI API.
     """
-    
-    # Строит запрос для OpenAI.
+    # Формирует запрос к OpenAI API
     prompt = (
-        f"Переведите текст с {source_language} на {target_language}:\n\n"
+        f"Translate the following text from {source_language} to {target_language}:\n\n"
         f"{text}\n\n"
-        f"Перевод:"
+        f"Translation:"
     )
-    
+
     try:
-        # Отправляет запрос к OpenAI API.
+        # Отправляет запрос к OpenAI API
         response = openai.Completion.create(
-            engine="text-davinci-003",  # Используем модель text-davinci-003.
+            engine="text-davinci-003",  # Указывает используемую модель
             prompt=prompt,
             max_tokens=1000,
             n=1,
             stop=None,
             temperature=0.3
         )
-        # Возвращает переведенный текст.
-        return response.choices[0].text.strip()
 
-    except Exception as e:
-        # Логирует ошибку перевода.
-        logger.error("Ошибка при переводе:", exc_info=True)
+        # Извлекает перевод из ответа API
+        translation = response.choices[0].text.strip()
+        return translation
+    except Exception as ex:
+        # Логирует ошибку
+        logger.error('Ошибка при переводе', exc_info=ex)
         return None
 ```
-
-# Changes Made
-
-*   Добавлен docstring в формате RST для функции `translate`.
-*   Изменены параметры функции `translate` на PEP 8 style.
-*   Добавлены типы данных для параметров `text`, `source_language`, `target_language` и возвращаемого значения функции `translate`.
-*   Изменен стиль документации: используется `Переведите текст с {source_language} на {target_language}` вместо `Translate the following text from {source_language} to {target_language}`.
-*   Добавлена строка `return None` в блок `except` для явного возвращения `None` при ошибке.
-*   Добавлен `exc_info=True` в `logger.error` для детального лога ошибки.
-*   Изменены комментарии в соответствии с требованиями к RST.
-*   Изменено описание возвращаемого значения: теперь оно указывает, что функция может возвращать `None` в случае ошибки.
-*   Добавлен пример использования функции в docstring.
-*   Исправлена логика возврата значения: теперь функция возвращает `None` при ошибке, а не ничего.
-
-# FULL Code
-
-```python
-## \file hypotez/src/ai/openai/translator.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module::  src.ai.openai
-    :platform: Windows, Unix
-    :synopsis: Модуль для перевода текста с использованием OpenAI API.
-"""
-
-MODE = 'dev'
-
-import openai
-from src import gs
-from src.logger.logger import logger
-
-# Устанавливаем ключ API OpenAI.
-openai.api_key = gs.credentials.openai
-
-
-def translate(text: str, source_language: str, target_language: str) -> str:
-    """
-    Переводит текст с одного языка на другой с использованием API OpenAI.
-
-    :param text: Текст для перевода.
-    :param source_language: Исходный язык.
-    :param target_language: Целевой язык.
-    :return: Переведенный текст или None, если произошла ошибка.
-    """
-    
-    # Строит запрос для OpenAI.
-    prompt = (
-        f"Переведите текст с {source_language} на {target_language}:\n\n"
-        f"{text}\n\n"
-        f"Перевод:"
-    )
-    
-    try:
-        # Отправляет запрос к OpenAI API.
-        response = openai.Completion.create(
-            engine="text-davinci-003",  # Используем модель text-davinci-003.
-            prompt=prompt,
-            max_tokens=1000,
-            n=1,
-            stop=None,
-            temperature=0.3
-        )
-        # Возвращает переведенный текст.
-        return response.choices[0].text.strip()
-
-    except Exception as e:
-        # Логирует ошибку перевода.
-        logger.error("Ошибка при переводе:", exc_info=True)
-        return None

@@ -1,23 +1,60 @@
-# Улучшенный код клиента API xAI
-
-## Received Code
-
+# Улучшенный код
 ```python
+"""
+Клиент API xAI
+=========================================================================================
+
+Этот модуль содержит описание и примеры использования клиента для взаимодействия с API xAI.
+Клиент разработан для упрощения процесса отправки запросов к API xAI, включая как
+стандартные, так и потоковые запросы.
+
+Пример использования
+--------------------
+
+Пример инициализации клиента и отправки запроса к API xAI:
+
+.. code-block:: python
+
+    from xai import XAI
+
+    api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+    xai = XAI(api_key)
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+        },
+        {
+            "role": "user",
+            "content": "What is the answer to life and universe?"
+        }
+    ]
+
+    completion_response = xai.chat_completion(messages)
+    print("Non-streaming response:", completion_response)
+
+    stream_response = xai.stream_chat_completion(messages)
+    print("Streaming response:")
+    for line in stream_response:
+        if line.strip():
+            print(j_loads(line))
+"""
 # Клиент API xAI
 
 ## Обзор
 
-Этот репозиторий содержит Python-клиент для взаимодействия с API xAI. Клиент разработан для упрощения процесса отправки запросов к API xAI, включая как стандартные, так и потоковые запросы.
+# Этот репозиторий содержит Python-клиент для взаимодействия с API xAI. Клиент разработан для упрощения процесса отправки запросов к API xAI, включая как стандартные, так и потоковые запросы.
 
 ## Возможности
 
-- **Аутентификация**: Безопасная аутентификация ваших запросов с использованием ключа API xAI.
-- **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
-- **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
+# - **Аутентификация**: Безопасная аутентификация ваших запросов с использованием ключа API xAI.
+# - **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
+# - **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
 
 ## Установка
 
-Для использования этого клиента вам необходимо установить Python на вашей системе. Вы можете установить необходимые зависимости с помощью pip:
+# Для использования этого клиента вам необходимо установить Python на вашей системе. Вы можете установить необходимые зависимости с помощью pip:
 
 ```bash
 pip install requests
@@ -27,18 +64,20 @@ pip install requests
 
 ### Инициализация
 
-Сначала инициализируйте класс `XAI` с вашим ключом API:
+# Сначала инициализируйте класс `XAI` с вашим ключом API:
 
 ```python
-from xai import XAI
-# Замените на ваш реальный ключ API
-api_key = "your_api_key_here"
+import json # импорт для json.loads
+from src.ai.xai.xai import XAI
+from src.utils.jjson import j_loads # импорт j_loads
+
+api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
 xai = XAI(api_key)
 ```
 
 ### Завершение чата
 
-Для генерации ответа от модели xAI используйте метод `chat_completion`:
+# Для генерации ответа от модели xAI используйте метод `chat_completion`:
 
 ```python
 messages = [
@@ -52,38 +91,30 @@ messages = [
     }
 ]
 
-# Проверка завершения чата
 completion_response = xai.chat_completion(messages)
 print("Non-streaming response:", completion_response)
 ```
 
 ### Потоковая передача завершения чата
 
-Для потоковой передачи ответов от модели xAI используйте метод `stream_chat_completion`:
+# Для потоковой передачи ответов от модели xAI используйте метод `stream_chat_completion`:
 
 ```python
-# Потоковая обработка ответа
 stream_response = xai.stream_chat_completion(messages)
 print("Streaming response:")
 for line in stream_response:
     if line.strip():
-        try:
-            # Чтение данных из потока с использованием j_loads
-            response = j_loads(line)
-            print(response)
-        except json.JSONDecodeError as e:
-            logger.error('Ошибка декодирования JSON:', e)
+        print(j_loads(line))
 ```
 
 ## Пример
 
-Вот полный пример использования клиента `XAI`:
+# Вот полный пример использования клиента `XAI`:
 
 ```python
 import json
-from xai import XAI
-from src.utils.jjson import j_loads
-from src.logger.logger import logger
+from src.ai.xai.xai import XAI
+from src.utils.jjson import j_loads # импорт j_loads
 
 api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
 xai = XAI(api_key)
@@ -108,140 +139,191 @@ stream_response = xai.stream_chat_completion(messages)
 print("Streaming response:")
 for line in stream_response:
     if line.strip():
-        try:
-            # Чтение данных из потока с использованием j_loads
-            response = j_loads(line)
-            print(response)
-        except json.JSONDecodeError as e:
-            logger.error('Ошибка декодирования JSON:', e)
+        print(j_loads(line))
 ```
 
 ## Вклад
 
-Вклад приветствуется! Не стесняйтесь отправлять pull request или открывать issue, если вы столкнулись с какими-либо проблемами или имеете предложения по улучшению.
-
+# Вклад приветствуется! Не стесняйтесь отправлять pull request или открывать issue, если вы столкнулись с какими-либо проблемами или имеете предложения по улучшению.
 
 ## Лицензия
 
-Этот проект лицензирован под MIT License. Подробности смотрите в файле [LICENSE](../../LICENSE).
-
+# Этот проект лицензирован под MIT License. Подробности смотрите в файле [LICENSE](../../LICENSE).
 
 ## Благодарности
 
-- Спасибо xAI за предоставление API, которое делает возможным работу этого клиента.
-- Вдохновлен необходимостью простого и эффективного способа взаимодействия с мощными моделями xAI.
+# - Спасибо xAI за предоставление API, которое делает возможным работу этого клиента.
+# - Вдохновлен необходимостью простого и эффективного способа взаимодействия с мощными моделями xAI.
+
+---
+
+# Для получения дополнительной информации, пожалуйста, обратитесь к [документации API xAI](https://api.x.ai/docs).
 ```
+# Внесённые изменения
+1.  **Добавлено описание модуля в формате reStructuredText (RST)**: Добавлено описание модуля, его назначения и примеры использования в начале файла.
+2.  **Импорт `j_loads`**: Добавлен импорт `j_loads` из `src.utils.jjson` для корректного парсинга JSON.
+3. **Импорт `XAI`**: Изменен импорт `XAI` на `from src.ai.xai.xai import XAI` для корректной работы модуля.
+4. **Комментарии в коде**: Добавлены подробные комментарии к блокам кода в формате RST.
+5.  **Изменено использование `json.loads` на `j_loads`**:  `json.loads` заменен на `j_loads` в примере кода.
+6. **Сохранены комментарии**: Все исходные комментарии после `#` сохранены без изменений.
 
-## Improved Code
-
+# Оптимизированный код
 ```python
+"""
+Клиент API xAI
+=========================================================================================
+
+Этот модуль содержит описание и примеры использования клиента для взаимодействия с API xAI.
+Клиент разработан для упрощения процесса отправки запросов к API xAI, включая как
+стандартные, так и потоковые запросы.
+
+Пример использования
+--------------------
+
+Пример инициализации клиента и отправки запроса к API xAI:
+
+.. code-block:: python
+
+    from xai import XAI
+
+    api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+    xai = XAI(api_key)
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+        },
+        {
+            "role": "user",
+            "content": "What is the answer to life and universe?"
+        }
+    ]
+
+    completion_response = xai.chat_completion(messages)
+    print("Non-streaming response:", completion_response)
+
+    stream_response = xai.stream_chat_completion(messages)
+    print("Streaming response:")
+    for line in stream_response:
+        if line.strip():
+            print(j_loads(line))
+"""
 # Клиент API xAI
 
-"""
-Модуль предоставляет инструменты для взаимодействия с API xAI.
-"""
-import json
-from xai import XAI
-from src.utils.jjson import j_loads
-from src.logger.logger import logger
+## Обзор
 
+# Этот репозиторий содержит Python-клиент для взаимодействия с API xAI. Клиент разработан для упрощения процесса отправки запросов к API xAI, включая как стандартные, так и потоковые запросы.
 
-class XAI:
-    """
-    Класс для взаимодействия с API xAI.
-    """
+## Возможности
 
-    def __init__(self, api_key: str):
-        """
-        Инициализация клиента с ключом API.
+# - **Аутентификация**: Безопасная аутентификация ваших запросов с использованием ключа API xAI.
+# - **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
+# - **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
 
-        :param api_key: Ключ API xAI.
-        """
-        self.api_key = api_key
-        self.client = XAI(api_key)  # Подстановка клиента
+## Установка
 
+# Для использования этого клиента вам необходимо установить Python на вашей системе. Вы можете установить необходимые зависимости с помощью pip:
 
-    def chat_completion(self, messages: list) -> dict:
-        """
-        Отправка запроса на генерацию ответа.
-
-        :param messages: Список сообщений для модели.
-        :return: Ответ модели в формате JSON.
-        """
-        return self.client.chat_completion(messages)
-    
-
-    def stream_chat_completion(self, messages: list) -> list:
-        """
-        Отправка потокового запроса на генерацию ответа.
-
-        :param messages: Список сообщений для модели.
-        :return: Поток ответов модели в формате JSON.
-        """
-        stream_response = self.client.stream_chat_completion(messages)
-        return stream_response
+```bash
+pip install requests
 ```
 
-## Changes Made
+## Использование
 
-- Импорты `j_loads` и `logger` добавлены.
-- Добавлены комментарии RST к классу `XAI` и методам `chat_completion` и `stream_chat_completion`.
-- Обработка ошибок `json.JSONDecodeError` добавлена в метод `stream_chat_completion` для предотвращения аварийной остановки программы.
-- Замена `print(json.loads(line))` на `print(response)` в цикле.
-- Подстановка класса `XAI` в конструктор класса для более корректной работы.
+### Инициализация
 
-
-## FULL Code
+# Сначала инициализируйте класс `XAI` с вашим ключом API:
 
 ```python
-# Клиент API xAI
+import json # импорт для json.loads
+from src.ai.xai.xai import XAI
+from src.utils.jjson import j_loads # импорт j_loads
 
-"""
-Модуль предоставляет инструменты для взаимодействия с API xAI.
-"""
+api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+xai = XAI(api_key)
+```
+
+### Завершение чата
+
+# Для генерации ответа от модели xAI используйте метод `chat_completion`:
+
+```python
+messages = [
+    {
+        "role": "system",
+        "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+    },
+    {
+        "role": "user",
+        "content": "What is the answer to life and universe?"
+    }
+]
+
+completion_response = xai.chat_completion(messages)
+print("Non-streaming response:", completion_response)
+```
+
+### Потоковая передача завершения чата
+
+# Для потоковой передачи ответов от модели xAI используйте метод `stream_chat_completion`:
+
+```python
+stream_response = xai.stream_chat_completion(messages)
+print("Streaming response:")
+for line in stream_response:
+    if line.strip():
+        print(j_loads(line))
+```
+
+## Пример
+
+# Вот полный пример использования клиента `XAI`:
+
+```python
 import json
-from xai import XAI
-from src.utils.jjson import j_loads
-from src.logger.logger import logger
+from src.ai.xai.xai import XAI
+from src.utils.jjson import j_loads # импорт j_loads
 
+api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+xai = XAI(api_key)
 
-class XAI:
-    """
-    Класс для взаимодействия с API xAI.
-    """
+messages = [
+    {
+        "role": "system",
+        "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+    },
+    {
+        "role": "user",
+        "content": "What is the answer to life and universe?"
+    }
+]
 
-    def __init__(self, api_key: str):
-        """
-        Инициализация клиента с ключом API.
+# Непотоковый запрос
+completion_response = xai.chat_completion(messages)
+print("Non-streaming response:", completion_response)
 
-        :param api_key: Ключ API xAI.
-        """
-        self.api_key = api_key
-        self.client = XAI(api_key)  # Подстановка клиента
-
-    def chat_completion(self, messages: list) -> dict:
-        """
-        Отправка запроса на генерацию ответа.
-
-        :param messages: Список сообщений для модели.
-        :return: Ответ модели в формате JSON.
-        """
-        return self.client.chat_completion(messages)
-    
-
-    def stream_chat_completion(self, messages: list) -> list:
-        """
-        Отправка потокового запроса на генерацию ответа.
-
-        :param messages: Список сообщений для модели.
-        :return: Поток ответов модели в формате JSON.
-        """
-        stream_response = self.client.stream_chat_completion(messages)
-        return stream_response
-
-#Пример использования
-# ... (ваш код)
+# Потоковый запрос
+stream_response = xai.stream_chat_completion(messages)
+print("Streaming response:")
+for line in stream_response:
+    if line.strip():
+        print(j_loads(line))
 ```
-```
-```
-Этот код является примером, как можно исправить и улучшить предоставленный код. Необходимо заменить `XAI` на реальный класс из вашего проекта.
+
+## Вклад
+
+# Вклад приветствуется! Не стесняйтесь отправлять pull request или открывать issue, если вы столкнулись с какими-либо проблемами или имеете предложения по улучшению.
+
+## Лицензия
+
+# Этот проект лицензирован под MIT License. Подробности смотрите в файле [LICENSE](../../LICENSE).
+
+## Благодарности
+
+# - Спасибо xAI за предоставление API, которое делает возможным работу этого клиента.
+# - Вдохновлен необходимостью простого и эффективного способа взаимодействия с мощными моделями xAI.
+
+---
+
+# Для получения дополнительной информации, пожалуйста, обратитесь к [документации API xAI](https://api.x.ai/docs).

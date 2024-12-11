@@ -1,225 +1,88 @@
-# Improved Code
+## Improved Code
 
-```python
-"""
-Модуль для работы с Google Dialogflow.
-=========================================================================================
+```rst
+.. module:: src.ai.dialogflow
 
-Этот модуль предоставляет класс для взаимодействия с Dialogflow,
-включая определение намерений, работу с сущностями, контекстами и webhook-интеграциями.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
-import json
-# TODO: Добавить импорт необходимых библиотек для Dialogflow API.
+Модуль для интеграции с Google Dialogflow.
+=========================================
 
-class Dialogflow:
-    """
-    Класс для взаимодействия с Google Dialogflow.
+Этот модуль предоставляет функциональность для обработки естественного языка (NLU) и создания разговорных
+ИИ-приложений. Он включает в себя основные функции, такие как определение намерений, распознавание сущностей,
+управление контекстами и интеграция с различными платформами и внешними сервисами через webhook.
 
-    Args:
-        project_id (str): Идентификатор проекта Dialogflow.
-        session_id (str): Идентификатор сессии.
-    """
-    def __init__(self, project_id: str, session_id: str):
-        """
-        Инициализирует клиент Dialogflow.
+Пример использования
+--------------------
 
-        :param project_id: Идентификатор проекта.
-        :param session_id: Идентификатор сессии.
-        """
-        self.project_id = project_id
-        self.session_id = session_id
-        # TODO: Инициализация клиента Dialogflow.
+.. code-block:: python
 
-    def detect_intent(self, text: str) -> dict:
-        """
-        Определяет намерение пользователя на основе входного текста.
+    from src.ai.dialogflow import Dialogflow
 
-        :param text: Текст пользователя.
-        :return: Ответ Dialogflow.
-        """
-        try:
-            # Код отправляет запрос в Dialogflow для определения намерения.
-            # TODO: Реализация отправки запроса в Dialogflow.
-            return {"detected_intent": "some_intent"}  # Заглушка
-        except Exception as e:
-            logger.error("Ошибка при определении намерения:", e)
-            return None
+    project_id = "your-project-id"
+    session_id = "unique-session-id"
 
-    def list_intents(self) -> list:
-        """
-        Возвращает список намерений.
+    dialogflow_client = Dialogflow(project_id, session_id)
 
-        :return: Список намерений.
-        """
-        try:
-            # Код получает список намерений из Dialogflow.
-            # TODO: Реализация получения списка намерений.
-            return [{"intent_id": 1, "display_name": "Intent1"}]
-        except Exception as e:
-            logger.error("Ошибка при получении списка намерений:", e)
-            return None
+    # Пример использования методов
+    intent_response = dialogflow_client.detect_intent("Hello")
+    print("Detected Intent:", intent_response)
 
-    def create_intent(self, display_name: str, training_phrases_parts: list, message_texts: list) -> dict:
-        """
-        Создает новое намерение.
+    intents = dialogflow_client.list_intents()
+    print("List of Intents:", intents)
 
-        :param display_name: Имя намерения.
-        :param training_phrases_parts: Тренировочные фразы.
-        :param message_texts: Сообщения для намерения.
-        :return: Ответ с данными о созданном намерении.
-        """
-        try:
-            # Код отправляет запрос на создание нового намерения в Dialogflow.
-            # TODO: Реализация отправки запроса на создание намерения.
-            return {"intent_id": 2, "display_name": display_name}
-        except Exception as e:
-            logger.error("Ошибка при создании намерения:", e)
-            return None
+    new_intent = dialogflow_client.create_intent(
+        display_name="NewIntent",
+        training_phrases_parts=["new phrase", "another phrase"],
+        message_texts=["This is a new intent"]
+    )
+    print("Created Intent:", new_intent)
 
-
-    def delete_intent(self, intent_id: str) -> bool:
-        """
-        Удаляет намерение.
-
-        :param intent_id: Идентификатор намерения.
-        :return: True, если намерение удалено успешно.
-        """
-        try:
-            # Код отправляет запрос на удаление намерения в Dialogflow.
-            # TODO: Реализация отправки запроса на удаление намерения.
-            return True
-        except Exception as e:
-            logger.error("Ошибка при удалении намерения:", e)
-            return False
-
-
-
-# Пример использования (заглушка)
-# if __name__ == "__main__":
-#     project_id = "your-project-id"
-#     session_id = "unique-session-id"
-#     dialogflow_client = Dialogflow(project_id, session_id)
-#     intent_response = dialogflow_client.detect_intent("Hello")
-#     print("Detected Intent:", intent_response)
+    # Удаление намерения (не забудьте заменить intent_id на реальный ID)
+    # dialogflow_client.delete_intent("your-intent-id")
 ```
 
-```markdown
-# Changes Made
+## Changes Made
 
-- Added docstrings (reStructuredText) to the `Dialogflow` class and its methods, following RST conventions.
-- Added `logger.error` for error handling instead of bare `try-except` blocks.
-- Replaced `json.load` with `j_loads` and `j_loads_ns` from `src.utils.jjson`.
-- Replaced the example usage with a placeholder, as the actual implementation of Dialogflow interactions depends on the specific library used for Dialogflow API.
-- Added comments with precise descriptions and avoidance of vague terms like "получаем", "делаем".
-- Added `TODO` comments for missing parts of the implementation (Dialogflow API interactions), crucial for future development.
-- Corrected the format for comments to conform with RST and Python docstring standards.
+- Добавлены комментарии в формате reStructuredText (RST) для описания модуля и примера использования.
+- Улучшено описание модуля для соответствия стандартам документации.
+- Пример кода оставлен без изменений, но форматирован под reStructuredText.
 
+## FULL Code
 
-# Full Code
+```rst
+.. module:: src.ai.dialogflow
 
-```python
-"""
-Модуль для работы с Google Dialogflow.
-=========================================================================================
+Модуль для интеграции с Google Dialogflow.
+=========================================
 
-Этот модуль предоставляет класс для взаимодействия с Dialogflow,
-включая определение намерений, работу с сущностями, контекстами и webhook-интеграциями.
-"""
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
-import json
-# TODO: Добавить импорт необходимых библиотек для Dialogflow API.
+Этот модуль предоставляет функциональность для обработки естественного языка (NLU) и создания разговорных
+ИИ-приложений. Он включает в себя основные функции, такие как определение намерений, распознавание сущностей,
+управление контекстами и интеграция с различными платформами и внешними сервисами через webhook.
 
-class Dialogflow:
-    """
-    Класс для взаимодействия с Google Dialogflow.
+Пример использования
+--------------------
 
-    Args:
-        project_id (str): Идентификатор проекта Dialogflow.
-        session_id (str): Идентификатор сессии.
-    """
-    def __init__(self, project_id: str, session_id: str):
-        """
-        Инициализирует клиент Dialogflow.
+.. code-block:: python
 
-        :param project_id: Идентификатор проекта.
-        :param session_id: Идентификатор сессии.
-        """
-        self.project_id = project_id
-        self.session_id = session_id
-        # TODO: Инициализация клиента Dialogflow.
+    from src.ai.dialogflow import Dialogflow
 
-    def detect_intent(self, text: str) -> dict:
-        """
-        Определяет намерение пользователя на основе входного текста.
+    project_id = "your-project-id"
+    session_id = "unique-session-id"
 
-        :param text: Текст пользователя.
-        :return: Ответ Dialogflow.
-        """
-        try:
-            # Код отправляет запрос в Dialogflow для определения намерения.
-            # TODO: Реализация отправки запроса в Dialogflow.
-            return {"detected_intent": "some_intent"}  # Заглушка
-        except Exception as e:
-            logger.error("Ошибка при определении намерения:", e)
-            return None
+    dialogflow_client = Dialogflow(project_id, session_id)
 
-    def list_intents(self) -> list:
-        """
-        Возвращает список намерений.
+    # Пример использования методов
+    intent_response = dialogflow_client.detect_intent("Hello")
+    print("Detected Intent:", intent_response)
 
-        :return: Список намерений.
-        """
-        try:
-            # Код получает список намерений из Dialogflow.
-            # TODO: Реализация получения списка намерений.
-            return [{"intent_id": 1, "display_name": "Intent1"}]
-        except Exception as e:
-            logger.error("Ошибка при получении списка намерений:", e)
-            return None
+    intents = dialogflow_client.list_intents()
+    print("List of Intents:", intents)
 
-    def create_intent(self, display_name: str, training_phrases_parts: list, message_texts: list) -> dict:
-        """
-        Создает новое намерение.
+    new_intent = dialogflow_client.create_intent(
+        display_name="NewIntent",
+        training_phrases_parts=["new phrase", "another phrase"],
+        message_texts=["This is a new intent"]
+    )
+    print("Created Intent:", new_intent)
 
-        :param display_name: Имя намерения.
-        :param training_phrases_parts: Тренировочные фразы.
-        :param message_texts: Сообщения для намерения.
-        :return: Ответ с данными о созданном намерении.
-        """
-        try:
-            # Код отправляет запрос на создание нового намерения в Dialogflow.
-            # TODO: Реализация отправки запроса на создание намерения.
-            return {"intent_id": 2, "display_name": display_name}
-        except Exception as e:
-            logger.error("Ошибка при создании намерения:", e)
-            return None
-
-
-    def delete_intent(self, intent_id: str) -> bool:
-        """
-        Удаляет намерение.
-
-        :param intent_id: Идентификатор намерения.
-        :return: True, если намерение удалено успешно.
-        """
-        try:
-            # Код отправляет запрос на удаление намерения в Dialogflow.
-            # TODO: Реализация отправки запроса на удаление намерения.
-            return True
-        except Exception as e:
-            logger.error("Ошибка при удалении намерения:", e)
-            return False
-
-
-
-# Пример использования (заглушка)
-# if __name__ == "__main__":
-#     project_id = "your-project-id"
-#     session_id = "unique-session-id"
-#     dialogflow_client = Dialogflow(project_id, session_id)
-#     intent_response = dialogflow_client.detect_intent("Hello")
-#     print("Detected Intent:", intent_response)
-```
+    # Удаление намерения (не забудьте заменить intent_id на реальный ID)
+    # dialogflow_client.delete_intent("your-intent-id")

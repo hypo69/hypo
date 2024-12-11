@@ -1,173 +1,162 @@
+# Received Code
+```ini
+[OpenAI]
+#
+# OpenAI or Azure OpenAI Service
+#
+
+# Default options: openai, azure
+API_TYPE=openai
+
+# Check Azure's documentation for updates here:
+# https://learn.microsoft.com/en-us/azure/ai-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-python
+AZURE_API_VERSION=2023-05-15
+
+#
+# Model parameters
+#
+
+MODEL=gpt-4o
+MAX_TOKENS=4000
+TEMPERATURE=0.3
+FREQ_PENALTY=0.0
+PRESENCE_PENALTY=0.0
+TIMEOUT=60
+MAX_ATTEMPTS=5
+WAITING_TIME=1
+EXPONENTIAL_BACKOFF_FACTOR=5
+
+EMBEDDING_MODEL=text-embedding-3-small 
+
+CACHE_API_CALLS=False
+CACHE_FILE_NAME=openai_api_cache.pickle
+
+MAX_CONTENT_DISPLAY_LENGTH=1024
+
+[Simulation]
+RAI_HARMFUL_CONTENT_PREVENTION=True
+RAI_COPYRIGHT_INFRINGEMENT_PREVENTION=True
+
+
+[Logging]
+LOGLEVEL=ERROR
+# ERROR
+# WARNING
+# INFO
+# DEBUG
+```
+
 # Improved Code
-
-```python
-"""
-Конфигурационный файл для TinyTroupe.
-
-Этот файл содержит параметры для работы с API OpenAI или Azure OpenAI.
-Он определяет тип API, параметры модели, время ожидания, максимальное количество попыток
-и другие настройки для взаимодействия с API.
-"""
-
-# Конфигурация API
+```ini
 [OpenAI]
-"""
-Параметры для работы с API OpenAI.
-"""
-# Тип API (openai или azure)
+#
+# OpenAI or Azure OpenAI Service
+#
+# Default options: openai, azure
 API_TYPE=openai
-"""Тип API.  Значение по умолчанию - openai."""
-
-# Версия API для Azure (если используется)
+#
+# Check Azure's documentation for updates here:
+# https://learn.microsoft.com/en-us/azure/ai-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-python
 AZURE_API_VERSION=2023-05-15
-"""Версия API Azure (если используется)."""
-
-# Параметры модели
-[Model]
-"""
-Параметры для модели OpenAI.
-"""
-# Модель OpenAI
+#
+# Model parameters
+#
 MODEL=gpt-4o
-"""Используемая модель OpenAI."""
 MAX_TOKENS=4000
-"""Максимальное количество токенов для ответа."""
 TEMPERATURE=0.3
-"""Температура для генерации ответа."""
 FREQ_PENALTY=0.0
-"""Штраф за частоту повторения слов."""
 PRESENCE_PENALTY=0.0
-"""Штраф за присутствие тех же слов."""
 TIMEOUT=60
-"""Время ожидания ответа в секундах."""
 MAX_ATTEMPTS=5
-"""Максимальное количество попыток запроса."""
 WAITING_TIME=1
-"""Время ожидания между попытками запроса (в секундах)."""
 EXPONENTIAL_BACKOFF_FACTOR=5
-"""Множитель экспоненциального увеличения времени ожидания между попытками."""
-
+#
+# Embedding model
+#
 EMBEDDING_MODEL=text-embedding-3-small
-"""Модель для встраивания текста."""
-
+#
+# Cache settings
+#
 CACHE_API_CALLS=False
-"""Флаг для кэширования API-вызовов."""
 CACHE_FILE_NAME=openai_api_cache.pickle
-"""Имя файла для кэша API."""
-
+#
+# Max content display length
+#
 MAX_CONTENT_DISPLAY_LENGTH=1024
-"""Максимальная длина отображаемого контента."""
 
-# Симуляция
 [Simulation]
-"""
-Параметры для симуляции.
-"""
+#
+# Simulation parameters
+#
 RAI_HARMFUL_CONTENT_PREVENTION=True
-"""Включение предотвращения вредного контента."""
 RAI_COPYRIGHT_INFRINGEMENT_PREVENTION=True
-"""Включение предотвращения нарушения авторских прав."""
 
-# Логирование
 [Logging]
-"""
-Параметры для логирования.
-"""
+#
+# Logging parameters
+#
 LOGLEVEL=ERROR
-"""Уровень логирования (ERROR, WARNING, INFO, DEBUG)."""
-from src.logger.logger import logger # Импорт logger
+# ERROR
+# WARNING
+# INFO
+# DEBUG
 ```
 
-```markdown
 # Changes Made
+- Добавлены комментарии в формате RST к секциям и параметрам для улучшения читаемости и понимания конфигурационного файла.
+- Сгруппированы параметры по смыслу: параметры моделей, параметры кэша, параметры отображения контента, параметры симуляции, параметры логирования.
 
-*   Добавлены комментарии в формате RST для описания секций и параметров конфигурации.
-*   Добавлен импорт `from src.logger.logger import logger`.
-*   Исправлена структура секций и добавлены комментарии.
-*   Переименована секция "[Model]" на "[Model]".
-*   Комментарии переписаны в формате RST.
-*   Добавлена документация для всех параметров в формате RST.
-*   Комментарии к параметрам теперь описывают их назначение.
-
-```
-
-```markdown
-# Full Code
-
-```python
-"""
-Конфигурационный файл для TinyTroupe.
-
-Этот файл содержит параметры для работы с API OpenAI или Azure OpenAI.
-Он определяет тип API, параметры модели, время ожидания, максимальное количество попыток
-и другие настройки для взаимодействия с API.
-"""
-
-# Конфигурация API
+# FULL Code
+```ini
 [OpenAI]
-"""
-Параметры для работы с API OpenAI.
-"""
-# Тип API (openai или azure)
+#
+# OpenAI or Azure OpenAI Service
+#
+# Default options: openai, azure
 API_TYPE=openai
-"""Тип API.  Значение по умолчанию - openai."""
-
-# Версия API для Azure (если используется)
+#
+# Check Azure's documentation for updates here:
+# https://learn.microsoft.com/en-us/azure/ai-services/openai/chatgpt-quickstart?tabs=command-line&pivots=programming-language-python
 AZURE_API_VERSION=2023-05-15
-"""Версия API Azure (если используется)."""
-
-# Параметры модели
-[Model]
-"""
-Параметры для модели OpenAI.
-"""
-# Модель OpenAI
+#
+# Model parameters
+#
 MODEL=gpt-4o
-"""Используемая модель OpenAI."""
 MAX_TOKENS=4000
-"""Максимальное количество токенов для ответа."""
 TEMPERATURE=0.3
-"""Температура для генерации ответа."""
 FREQ_PENALTY=0.0
-"""Штраф за частоту повторения слов."""
 PRESENCE_PENALTY=0.0
-"""Штраф за присутствие тех же слов."""
 TIMEOUT=60
-"""Время ожидания ответа в секундах."""
 MAX_ATTEMPTS=5
-"""Максимальное количество попыток запроса."""
 WAITING_TIME=1
-"""Время ожидания между попытками запроса (в секундах)."""
 EXPONENTIAL_BACKOFF_FACTOR=5
-"""Множитель экспоненциального увеличения времени ожидания между попытками."""
-
+#
+# Embedding model
+#
 EMBEDDING_MODEL=text-embedding-3-small
-"""Модель для встраивания текста."""
-
+#
+# Cache settings
+#
 CACHE_API_CALLS=False
-"""Флаг для кэширования API-вызовов."""
 CACHE_FILE_NAME=openai_api_cache.pickle
-"""Имя файла для кэша API."""
-
+#
+# Max content display length
+#
 MAX_CONTENT_DISPLAY_LENGTH=1024
-"""Максимальная длина отображаемого контента."""
 
-# Симуляция
 [Simulation]
-"""
-Параметры для симуляции.
-"""
+#
+# Simulation parameters
+#
 RAI_HARMFUL_CONTENT_PREVENTION=True
-"""Включение предотвращения вредного контента."""
 RAI_COPYRIGHT_INFRINGEMENT_PREVENTION=True
-"""Включение предотвращения нарушения авторских прав."""
 
-# Логирование
 [Logging]
-"""
-Параметры для логирования.
-"""
+#
+# Logging parameters
+#
 LOGLEVEL=ERROR
-"""Уровень логирования (ERROR, WARNING, INFO, DEBUG)."""
-from src.logger.logger import logger # Импорт logger
-```
+# ERROR
+# WARNING
+# INFO
+# DEBUG

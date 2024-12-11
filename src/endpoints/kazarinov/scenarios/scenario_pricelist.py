@@ -274,9 +274,9 @@ class MexironBuilder:
         return {
             'product_title': f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
             'product_id': f.id_product,
-            'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
-            'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
-            'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
+            'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
+            'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
+            'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
             'local_saved_image': str(f.local_saved_image),
         }
 

@@ -1,8 +1,7 @@
 # Received Code
-
 ```python
 ## \file hypotez/src/webdriver/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -22,77 +21,60 @@ MODE = 'dev'
 # from .bs import BS
 # from .playwright import Playwrid
 # from .crawlee_python import CrawleePython
+
 ```
-
 # Improved Code
-
 ```python
-## \file hypotez/src/webdriver/__init__.py
-# -*- coding: utf-8 -*-\
+"""
+Модуль для управления веб-драйверами.
+=========================================================================================
+
+Этот модуль инициализирует веб-драйверы и предоставляет основные настройки для их использования.
+
+"""
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-.. module:: src.webdriver
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с веб-драйверами.
-"""
-import logging
+# from src.webdriver.driver import Driver # TODO: Раскомментировать при необходимости
+# from src.webdriver.chrome import Chrome # TODO: Раскомментировать при необходимости
+# from src.webdriver.firefox import Firefox # TODO: Раскомментировать при необходимости
+# from src.webdriver.edge import Edge # TODO: Раскомментировать при необходимости
+# from src.webdriver.bs import BS # TODO: Раскомментировать при необходимости
+# from src.webdriver.playwright import Playwrid # TODO: Раскомментировать при необходимости
+# from src.webdriver.crawlee_python import CrawleePython # TODO: Раскомментировать при необходимости
 
+
+#: Режим работы веб-драйвера.
 MODE = 'dev'
-
-# Импортируем необходимые классы из соответствующих файлов
-from .driver import Driver
-from .chrome import Chrome
-from .firefox import Firefox
-from .edge import Edge
-from .bs import BS
-from .playwright import Playwright
-from .crawlee_python import CrawleePython
-from src.logger.logger import logger  # Импорт логгера
-
-
-# TODO: Добавить docstrings для переменных MODE, Driver, Chrome, Firefox, Edge, BS, Playwright, CrawleePython
-# TODO: Рассмотреть возможность использования абстрактного класса для веб-драйверов.
-
 ```
-
 # Changes Made
-
-*   Добавлен импорт `logging`.
-*   Добавлены импорты необходимых классов из соответствующих файлов.
-*   Улучшен docstring для модуля, добавлены ключевые слова :platform: и :synopsis:.
-*   Импортирован логгер `logger` из `src.logger.logger`.
-*   Добавлен комментарий TODO, предлогающий добавить docstrings для переменных и рассмотреть абстрактный класс.
-
+- Добавлены docstring к модулю в формате reStructuredText (RST).
+- Убраны избыточные комментарии в коде.
+- Добавлены комментарии TODO для импортов.
+- Добавлен docstring для переменной `MODE`.
 
 # FULL Code
-
 ```python
-## \file hypotez/src/webdriver/__init__.py
-# -*- coding: utf-8 -*-\
+"""
+Модуль для управления веб-драйверами.
+=========================================================================================
+
+Этот модуль инициализирует веб-драйверы и предоставляет основные настройки для их использования.
+
+"""
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-.. module:: src.webdriver
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с веб-драйверами.
-"""
-import logging
+# from src.webdriver.driver import Driver # TODO: Раскомментировать при необходимости
+# from src.webdriver.chrome import Chrome # TODO: Раскомментировать при необходимости
+# from src.webdriver.firefox import Firefox # TODO: Раскомментировать при необходимости
+# from src.webdriver.edge import Edge # TODO: Раскомментировать при необходимости
+# from src.webdriver.bs import BS # TODO: Раскомментировать при необходимости
+# from src.webdriver.playwright import Playwrid # TODO: Раскомментировать при необходимости
+# from src.webdriver.crawlee_python import CrawleePython # TODO: Раскомментировать при необходимости
 
+
+#: Режим работы веб-драйвера.
 MODE = 'dev'
-
-# Импортируем необходимые классы из соответствующих файлов
-from .driver import Driver
-from .chrome import Chrome
-from .firefox import Firefox
-from .edge import Edge
-from .bs import BS
-from .playwright import Playwright
-from .crawlee_python import CrawleePython
-from src.logger.logger import logger  # Импорт логгера
-
-
-# TODO: Добавить docstrings для переменных MODE, Driver, Chrome, Firefox, Edge, BS, Playwright, CrawleePython
-# TODO: Рассмотреть возможность использования абстрактного класса для веб-драйверов.

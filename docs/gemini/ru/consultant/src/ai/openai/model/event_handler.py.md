@@ -1,184 +1,248 @@
-```MD
-# Received Code
-
+## Улучшенный код
 ```python
-## \file hypotez/src/ai/openai/model/event_handler.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai.model 
-	:platform: Windows, Unix
-	:synopsis:
+Модуль для обработки событий ассистента OpenAI
+=========================================================================================
 
+Этот модуль определяет класс :class:`EventHandler`, который используется для обработки событий,
+генерируемых ассистентом OpenAI, таких как создание текста, дельты текста, вызовы инструментов и их дельты.
+Он использует библиотеку `openai` и `typing_extensions`.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from openai import OpenAI
+    from src.ai.openai.model.event_handler import EventHandler
+
+    client = OpenAI()
+    thread = client.beta.threads.create()
+    message = client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content="What is 1 + 1?",
+    )
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id,
+        assistant_id="asst_...",
+    )
+    stream = client.beta.threads.runs.retrieve_stream(
+        run_id=run.id,
+        thread_id=thread.id,
+        event_handler=EventHandler()
+    )
+    for event in stream:
+        ...
 """
-MODE = 'dev'
-
-
-""" https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
+from typing import Any
 
 from typing_extensions import override
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta.threads import Text, TextDelta
 from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
 
-# First, we create a EventHandler class to define
-# how we want to handle the events in the response stream.
+from src.logger.logger import logger  # импорт логгера
+
+
+MODE = 'dev'
 
 
 class EventHandler(AssistantEventHandler):
-  """Обработчик событий для потоковой передачи данных от OpenAI."""
+  """
+  Класс для обработки событий, генерируемых ассистентом OpenAI.
+
+  Этот класс переопределяет методы `on_text_created`, `on_text_delta`,
+  `on_tool_call_created` и `on_tool_call_delta` для обработки различных типов событий,
+  возникающих во время работы ассистента.
+  """
 
   @override
   def on_text_created(self, text: Text) -> None:
-    print(f'\nassistant > ', end='', flush=True)
+    """
+    Обрабатывает событие создания нового текстового блока.
+
+    :param text: Объект Text, представляющий созданный текстовый блок.
+    :return: None
+    """
+    # Выводит в консоль начало нового текстового блока от ассистента.
+    print('\nassistant > ', end='', flush=True)
 
   @override
-  def on_text_delta(self, delta: TextDelta, snapshot: Text):
+  def on_text_delta(self, delta: TextDelta, snapshot: Text) -> None:
+    """
+    Обрабатывает событие изменения текстового блока.
+
+    :param delta: Объект TextDelta, представляющий изменения в текстовом блоке.
+    :param snapshot: Объект Text, представляющий текущее состояние текстового блока.
+    :return: None
+    """
+    # Выводит в консоль дельту текстового блока от ассистента.
     print(delta.value, end='', flush=True)
 
   @override
-  def on_tool_call_created(self, tool_call: ToolCall):
+  def on_tool_call_created(self, tool_call: ToolCall) -> None:
+    """
+    Обрабатывает событие создания нового вызова инструмента.
+
+    :param tool_call: Объект ToolCall, представляющий созданный вызов инструмента.
+    :return: None
+    """
+    # Выводит в консоль тип вызванного инструмента.
     print(f'\nassistant > {tool_call.type}\n', flush=True)
 
   @override
-  def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
+  def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall) -> None:
+    """
+    Обрабатывает событие изменения вызова инструмента.
+
+    :param delta: Объект ToolCallDelta, представляющий изменения в вызове инструмента.
+    :param snapshot: Объект ToolCall, представляющий текущее состояние вызова инструмента.
+    :return: None
+    """
+    # Проверяет, является ли дельта вызовом code_interpreter и существует ли ввод.
     if delta.type == 'code_interpreter' and delta.code_interpreter:
-      if delta.code_interpreter.input:
-        print(delta.code_interpreter.input, end='', flush=True)
-      if delta.code_interpreter.outputs:
-        print(f'\n\noutput >', flush=True)
-        for output in delta.code_interpreter.outputs:
-          if output.type == 'logs':
-            print(f'\n{output.logs}', flush=True)
+        if delta.code_interpreter.input:
+            # Выводит в консоль ввод code_interpreter.
+            print(delta.code_interpreter.input, end='', flush=True)
+        if delta.code_interpreter.outputs:
+            # Выводит в консоль начало вывода code_interpreter.
+            print('\n\noutput >', flush=True)
+            for output in delta.code_interpreter.outputs:
+                if output.type == 'logs':
+                   # Выводит в консоль логи code_interpreter.
+                   print(f'\n{output.logs}', flush=True)
 ```
+## Внесённые изменения
+1. **Добавлены импорты:**
+   - Добавлен импорт `from src.logger.logger import logger` для логирования.
+   - Добавлен импорт `from typing import Any` для определения типа Any
+2. **Документация:**
+   - Добавлены reStructuredText комментарии к модулю, классу и методам.
+   - Добавлены подробные описания к каждому методу и их параметрам.
+3. **Улучшение кода:**
+   - Добавлены комментарии в коде для пояснения работы каждого блока кода.
+   - Изменены строковые литералы для соответствия стандарту (использование одинарных кавычек).
 
-# Improved Code
-
+## Оптимизированный код
 ```python
-## \file hypotez/src/ai/openai/model/event_handler.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.openai.model 
-	:platform: Windows, Unix
-	:synopsis: Обработчик событий для потоковой передачи данных от OpenAI.
+Модуль для обработки событий ассистента OpenAI
+=========================================================================================
+
+Этот модуль определяет класс :class:`EventHandler`, который используется для обработки событий,
+генерируемых ассистентом OpenAI, таких как создание текста, дельты текста, вызовы инструментов и их дельты.
+Он использует библиотеку `openai` и `typing_extensions`.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from openai import OpenAI
+    from src.ai.openai.model.event_handler import EventHandler
+
+    client = OpenAI()
+    thread = client.beta.threads.create()
+    message = client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content="What is 1 + 1?",
+    )
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id,
+        assistant_id="asst_...",
+    )
+    stream = client.beta.threads.runs.retrieve_stream(
+        run_id=run.id,
+        thread_id=thread.id,
+        event_handler=EventHandler()
+    )
+    for event in stream:
+        ...
 """
-import logging
+from typing import Any
+
 from typing_extensions import override
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta.threads import Text, TextDelta
 from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
-from src.logger.logger import logger  # Импорт логгера
+
+from src.logger.logger import logger  # импорт логгера
+
 
 MODE = 'dev'
 
 
-""" https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
-
-
 class EventHandler(AssistantEventHandler):
-    """Обработчик событий для потоковой передачи данных от OpenAI."""
+  """
+  Класс для обработки событий, генерируемых ассистентом OpenAI.
 
-    @override
-    def on_text_created(self, text: Text) -> None:
-        """Выводит текст созданного сообщения."""
-        print(f'\nassistant > ', end='', flush=True)
+  Этот класс переопределяет методы `on_text_created`, `on_text_delta`,
+  `on_tool_call_created` и `on_tool_call_delta` для обработки различных типов событий,
+  возникающих во время работы ассистента.
+  """
 
-    @override
-    def on_text_delta(self, delta: TextDelta, snapshot: Text):
-        """Выводит изменение текста сообщения."""
-        print(delta.value, end='', flush=True)
+  @override
+  def on_text_created(self, text: Text) -> None:
+    """
+    Обрабатывает событие создания нового текстового блока.
 
-    @override
-    def on_tool_call_created(self, tool_call: ToolCall):
-        """Обрабатывает создание вызова инструмента."""
-        print(f'\nassistant > {tool_call.type}\n', flush=True)
+    :param text: Объект Text, представляющий созданный текстовый блок.
+    :return: None
+    """
+    # Выводит в консоль начало нового текстового блока от ассистента.
+    print('\nassistant > ', end='', flush=True)
 
-    @override
-    def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
-        """Обрабатывает изменение вызова инструмента."""
-        if delta.type == 'code_interpreter' and delta.code_interpreter:
-            if delta.code_interpreter.input:
-                print(delta.code_interpreter.input, end='', flush=True)
-            if delta.code_interpreter.outputs:
-                print(f'\n\noutput >', flush=True)
-                for output in delta.code_interpreter.outputs:
-                    if output.type == 'logs':
-                        print(f'\n{output.logs}', flush=True)
-                    elif output.type == 'error':
-                        logger.error(f'Ошибка от инструмента: {output.error}')
-                    else:
-                        logger.warning(f'Неизвестный тип вывода: {output.type}')
+  @override
+  def on_text_delta(self, delta: TextDelta, snapshot: Text) -> None:
+    """
+    Обрабатывает событие изменения текстового блока.
 
-```
+    :param delta: Объект TextDelta, представляющий изменения в текстовом блоке.
+    :param snapshot: Объект Text, представляющий текущее состояние текстового блока.
+    :return: None
+    """
+    # Выводит в консоль дельту текстового блока от ассистента.
+    print(delta.value, end='', flush=True)
 
-# Changes Made
+  @override
+  def on_tool_call_created(self, tool_call: ToolCall) -> None:
+    """
+    Обрабатывает событие создания нового вызова инструмента.
 
-- Импортирован `logger` из `src.logger.logger`.
-- Добавлены docstring в формате RST для класса `EventHandler` и всех методов.
-- Добавлены логирования ошибок при обработке выводов инструмента, в том числе `logger.error` для ошибок `output.error` и предупреждения `logger.warning` для других типов выводов.
-- Устранены неявные преобразования типов.
+    :param tool_call: Объект ToolCall, представляющий созданный вызов инструмента.
+    :return: None
+    """
+    # Выводит в консоль тип вызванного инструмента.
+    print(f'\nassistant > {tool_call.type}\n', flush=True)
 
-# FULL Code
+  @override
+  def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall) -> None:
+    """
+    Обрабатывает событие изменения вызова инструмента.
 
-```python
-## \file hypotez/src/ai/openai/model/event_handler.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.ai.openai.model 
-	:platform: Windows, Unix
-	:synopsis: Обработчик событий для потоковой передачи данных от OpenAI.
-"""
-import logging
-from typing_extensions import override
-from openai import AssistantEventHandler, OpenAI
-from openai.types.beta.threads import Text, TextDelta
-from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
-from src.logger.logger import logger  # Импорт логгера
-
-MODE = 'dev'
-
-
-""" https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
-
-
-class EventHandler(AssistantEventHandler):
-    """Обработчик событий для потоковой передачи данных от OpenAI."""
-
-    @override
-    def on_text_created(self, text: Text) -> None:
-        """Выводит текст созданного сообщения."""
-        print(f'\nassistant > ', end='', flush=True)
-
-    @override
-    def on_text_delta(self, delta: TextDelta, snapshot: Text):
-        """Выводит изменение текста сообщения."""
-        print(delta.value, end='', flush=True)
-
-    @override
-    def on_tool_call_created(self, tool_call: ToolCall):
-        """Обрабатывает создание вызова инструмента."""
-        print(f'\nassistant > {tool_call.type}\n', flush=True)
-
-    @override
-    def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
-        """Обрабатывает изменение вызова инструмента."""
-        if delta.type == 'code_interpreter' and delta.code_interpreter:
-            if delta.code_interpreter.input:
-                print(delta.code_interpreter.input, end='', flush=True)
-            if delta.code_interpreter.outputs:
-                print(f'\n\noutput >', flush=True)
-                for output in delta.code_interpreter.outputs:
-                    if output.type == 'logs':
-                        print(f'\n{output.logs}', flush=True)
-                    elif output.type == 'error':
-                        logger.error(f'Ошибка от инструмента: {output.error}')
-                    else:
-                        logger.warning(f'Неизвестный тип вывода: {output.type}')
+    :param delta: Объект ToolCallDelta, представляющий изменения в вызове инструмента.
+    :param snapshot: Объект ToolCall, представляющий текущее состояние вызова инструмента.
+    :return: None
+    """
+    # Проверяет, является ли дельта вызовом code_interpreter и существует ли ввод.
+    if delta.type == 'code_interpreter' and delta.code_interpreter:
+        if delta.code_interpreter.input:
+            # Выводит в консоль ввод code_interpreter.
+            print(delta.code_interpreter.input, end='', flush=True)
+        if delta.code_interpreter.outputs:
+            # Выводит в консоль начало вывода code_interpreter.
+            print('\n\noutput >', flush=True)
+            for output in delta.code_interpreter.outputs:
+                if output.type == 'logs':
+                   # Выводит в консоль логи code_interpreter.
+                   print(f'\n{output.logs}', flush=True)

@@ -1,19 +1,19 @@
-# Received Code
-
+## Received Code
 ```python
-## /src/ai/anthropic/claude.py
-# -*- coding: utf-8 -*-\
+## \file /src/ai/anthropic/claude.py
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
 module: src.ai.anthropic.claude
 	:platform: Windows, Unix
-	:synopsis: Модуль для работы с API Anthropic Claude.
+	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
 MODE = 'dev'
 
 # test
+
 
 
 import anthropic
@@ -24,11 +24,11 @@ class ClaudeClient:
 
     def generate_text(self, prompt, max_tokens_to_sample=100):
         """
-        Генерирует текст на основе заданного запроса.
+        Generates text based on the given prompt.
 
-        :param prompt: Запрос для генерации текста.
-        :param max_tokens_to_sample: Максимальное количество токенов для генерации.
-        :return: Сгенерированный текст.
+        :param prompt: The prompt to generate text from.
+        :param max_tokens_to_sample: The maximum number of tokens to generate.
+        :return: The generated text.
         """
         response = self.client.completion(
             prompt=prompt,
@@ -40,10 +40,10 @@ class ClaudeClient:
 
     def analyze_sentiment(self, text):
         """
-        Анализирует тональность заданного текста.
+        Analyzes the sentiment of the given text.
 
-        :param text: Текст для анализа.
-        :return: Результат анализа тональности.
+        :param text: The text to analyze.
+        :return: The sentiment analysis result.
         """
         response = self.client.completion(
             prompt=f"Analyze the sentiment of the following text: {text}",
@@ -55,12 +55,12 @@ class ClaudeClient:
 
     def translate_text(self, text, source_language, target_language):
         """
-        Переводит заданный текст из исходного языка на целевой.
+        Translates the given text from the source language to the target language.
 
-        :param text: Текст для перевода.
-        :param source_language: Код исходного языка.
-        :param target_language: Код целевого языка.
-        :return: Переведенный текст.
+        :param text: The text to translate.
+        :param source_language: The source language code.
+        :param target_language: The target language code.
+        :return: The translated text.
         """
         response = self.client.completion(
             prompt=f"Translate the following text from {source_language} to {target_language}: {text}",
@@ -70,71 +70,76 @@ class ClaudeClient:
         )
         return response['completion']
 
-
 # Пример использования класса
 if __name__ == "__main__":
-    api_key = "your-api-key" # Добавьте свой API ключ
-    try:
-        claude_client = ClaudeClient(api_key)
+    api_key = "your-api-key"
+    claude_client = ClaudeClient(api_key)
 
-        # Пример генерации текста
-        prompt = "Write a short story about a robot learning to love."
-        generated_text = claude_client.generate_text(prompt)
-        print("Generated Text:", generated_text)
+    # Пример генерации текста
+    prompt = "Write a short story about a robot learning to love."
+    generated_text = claude_client.generate_text(prompt)
+    print("Generated Text:", generated_text)
 
-        # Пример анализа тональности
-        text_to_analyze = "I am very happy today!"
-        sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
-        print("Sentiment Analysis:", sentiment_analysis)
+    # Пример анализа тональности
+    text_to_analyze = "I am very happy today!"
+    sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+    print("Sentiment Analysis:", sentiment_analysis)
 
-        # Пример перевода текста
-        text_to_translate = "Hello, how are you?"
-        source_language = "en"
-        target_language = "es"
-        translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
-        print("Translated Text:", translated_text)
-    except Exception as e:
-        import src.logger.logger as logger # Импортируем logger
-        logger.error("Ошибка при работе с API Claude", e)
+    # Пример перевода текста
+    text_to_translate = "Hello, how are you?"
+    source_language = "en"
+    target_language = "es"
+    translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+    print("Translated Text:", translated_text)
 ```
-
-# Improved Code
-
+## Improved Code
 ```python
-## /src/ai/anthropic/claude.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-Модуль для работы с API Anthropic Claude.
-=========================================
+Модуль для взаимодействия с API Anthropic Claude.
+==================================================
 
-Этот модуль предоставляет класс :class:`ClaudeClient` для взаимодействия с API Claude, включая генерацию текста,
-анализ тональности и перевод.
+Этот модуль содержит класс :class:`ClaudeClient`, который позволяет взаимодействовать с API Anthropic Claude
+для генерации текста, анализа тональности и перевода текста.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.ai.anthropic.claude import ClaudeClient
+
+    api_key = "your-api-key"
+    claude_client = ClaudeClient(api_key)
+
+    prompt = "Write a short story about a robot learning to love."
+    generated_text = claude_client.generate_text(prompt)
+    print("Generated Text:", generated_text)
 """
+MODE = 'dev'
+
+# test
+
 import anthropic
-from src.logger.logger import logger  # Импортируем logger
-
+from src.logger.logger import logger # импорт логгера
 
 class ClaudeClient:
     """
-    Класс для работы с API Anthropic Claude.
+    Класс для взаимодействия с API Anthropic Claude.
+
+    :param api_key: Ключ API для доступа к API Anthropic Claude.
     """
     def __init__(self, api_key):
         """
-        Инициализирует клиент Claude.
+        Инициализирует клиент Claude с заданным ключом API.
 
-        :param api_key: API ключ Anthropic Claude.
+        :param api_key: Ключ API для доступа к API Anthropic Claude.
         """
-        try:
-            self.client = anthropic.Client(api_key)
-        except Exception as e:
-            logger.error("Ошибка при инициализации клиента Claude", e)
-            raise  # Передаём исключение дальше, если не удалось инициализировать
+        self.client = anthropic.Client(api_key)
 
-
-    def generate_text(self, prompt, max_tokens_to_sample=100):
+    def generate_text(self, prompt: str, max_tokens_to_sample: int = 100) -> str:
         """
         Генерирует текст на основе заданного запроса.
 
@@ -143,18 +148,20 @@ class ClaudeClient:
         :return: Сгенерированный текст.
         """
         try:
+            # Отправка запроса на генерацию текста в Claude API
             response = self.client.completion(
                 prompt=prompt,
-                model="claude-v1",
+                model='claude-v1',
                 max_tokens_to_sample=max_tokens_to_sample,
-                stop_sequences=["\n\nHuman:"]
+                stop_sequences=['\n\nHuman:']
             )
+            # Возвращаем сгенерированный текст
             return response['completion']
         except Exception as e:
-            logger.error("Ошибка при генерации текста", e)
-            return None  # Возвращаем None при ошибке
+            logger.error(f'Ошибка при генерации текста: {e}')
+            return ''
 
-    def analyze_sentiment(self, text):
+    def analyze_sentiment(self, text: str) -> str:
         """
         Анализирует тональность заданного текста.
 
@@ -162,21 +169,22 @@ class ClaudeClient:
         :return: Результат анализа тональности.
         """
         try:
+            # Отправка запроса на анализ тональности в Claude API
             response = self.client.completion(
-                prompt=f"Analyze the sentiment of the following text: {text}",
-                model="claude-v1",
+                prompt=f'Analyze the sentiment of the following text: {text}',
+                model='claude-v1',
                 max_tokens_to_sample=50,
-                stop_sequences=["\n\nHuman:"]
+                stop_sequences=['\n\nHuman:']
             )
+            # Возвращаем результат анализа тональности
             return response['completion']
         except Exception as e:
-            logger.error("Ошибка при анализе тональности", e)
-            return None
+            logger.error(f'Ошибка при анализе тональности: {e}')
+            return ''
 
-
-    def translate_text(self, text, source_language, target_language):
+    def translate_text(self, text: str, source_language: str, target_language: str) -> str:
         """
-        Переводит заданный текст из исходного языка на целевой.
+        Переводит заданный текст с исходного языка на целевой язык.
 
         :param text: Текст для перевода.
         :param source_language: Код исходного языка.
@@ -184,78 +192,103 @@ class ClaudeClient:
         :return: Переведенный текст.
         """
         try:
+            # Отправка запроса на перевод текста в Claude API
             response = self.client.completion(
-                prompt=f"Translate the following text from {source_language} to {target_language}: {text}",
-                model="claude-v1",
+                prompt=f'Translate the following text from {source_language} to {target_language}: {text}',
+                model='claude-v1',
                 max_tokens_to_sample=100,
-                stop_sequences=["\n\nHuman:"]
+                stop_sequences=['\n\nHuman:']
             )
+            # Возвращаем переведенный текст
             return response['completion']
         except Exception as e:
-            logger.error("Ошибка при переводе текста", e)
-            return None
+            logger.error(f'Ошибка при переводе текста: {e}')
+            return ''
 
 # Пример использования класса
-if __name__ == "__main__":
-    api_key = "your-api-key"  #  Должен быть в .env
-    try:
-        claude_client = ClaudeClient(api_key)
-        # ... (остальной код примера)
-    except Exception as e:
-        logger.error("Ошибка при инициализации клиента Claude", e)
+if __name__ == '__main__':
+    api_key = 'your-api-key'
+    claude_client = ClaudeClient(api_key)
+
+    # Пример генерации текста
+    prompt = 'Write a short story about a robot learning to love.'
+    generated_text = claude_client.generate_text(prompt)
+    print('Generated Text:', generated_text)
+
+    # Пример анализа тональности
+    text_to_analyze = 'I am very happy today!'
+    sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+    print('Sentiment Analysis:', sentiment_analysis)
+
+    # Пример перевода текста
+    text_to_translate = 'Hello, how are you?'
+    source_language = 'en'
+    target_language = 'es'
+    translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+    print('Translated Text:', translated_text)
 ```
+## Changes Made
+1.  **Добавлено описание модуля в формате reStructuredText (RST)**:
+    -   Добавлено подробное описание модуля, включая пример использования.
+2.  **Добавлены docstring к классу и методам в формате reStructuredText (RST)**:
+    -   Добавлены описания для класса `ClaudeClient` и его методов `__init__`, `generate_text`, `analyze_sentiment` и `translate_text` с использованием reStructuredText.
+3.  **Импортирован логгер**:
+    -   Добавлен импорт `from src.logger.logger import logger`.
+4.  **Обработка ошибок с использованием логгера**:
+    -   Изменены блоки `try-except` для использования `logger.error` для логирования ошибок, возвращая пустую строку в случае неудачи.
+5.  **Изменены кавычки**:
+   - Все двойные кавычки `"` заменены на одинарные `'` в строках, где это необходимо.
+6. **Добавлены аннотации типов**:
+    - Добавлены аннотации типов для параметров функций и возвращаемых значений.
 
-# Changes Made
-
-*   Добавлен импорт `from src.logger.logger import logger`.
-*   Добавлена обработка исключений с использованием `logger.error` вместо стандартных `try-except`.
-*   Изменены комментарии на RST-формат.
-*   Добавлен docstring для класса `ClaudeClient` и его методов.
-*   Внесены корректировки для лучшей читабельности.
-*   Добавлено возвращение `None` при возникновении ошибок.
-*   Добавлен `try-except` блок для `__init__`.
-*   Убраны неиспользуемые комментарии.
-*   Добавлены уточняющие комментарии для понимания кода.
-*   Изменены некоторые фразы в комментариях для соответствия RST стилю.
-*   Изменен стиль комментариев.
-
-# FULL Code
-
+## FULL Code
 ```python
-## /src/ai/anthropic/claude.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-Модуль для работы с API Anthropic Claude.
-=========================================
+Модуль для взаимодействия с API Anthropic Claude.
+==================================================
 
-Этот модуль предоставляет класс :class:`ClaudeClient` для взаимодействия с API Claude, включая генерацию текста,
-анализ тональности и перевод.
+Этот модуль содержит класс :class:`ClaudeClient`, который позволяет взаимодействовать с API Anthropic Claude
+для генерации текста, анализа тональности и перевода текста.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.ai.anthropic.claude import ClaudeClient
+
+    api_key = "your-api-key"
+    claude_client = ClaudeClient(api_key)
+
+    prompt = "Write a short story about a robot learning to love."
+    generated_text = claude_client.generate_text(prompt)
+    print("Generated Text:", generated_text)
 """
+MODE = 'dev'
+
+# test
+
 import anthropic
-from src.logger.logger import logger  # Импортируем logger
-
+from src.logger.logger import logger # импорт логгера
 
 class ClaudeClient:
     """
-    Класс для работы с API Anthropic Claude.
+    Класс для взаимодействия с API Anthropic Claude.
+
+    :param api_key: Ключ API для доступа к API Anthropic Claude.
     """
     def __init__(self, api_key):
         """
-        Инициализирует клиент Claude.
+        Инициализирует клиент Claude с заданным ключом API.
 
-        :param api_key: API ключ Anthropic Claude.
+        :param api_key: Ключ API для доступа к API Anthropic Claude.
         """
-        try:
-            self.client = anthropic.Client(api_key)
-        except Exception as e:
-            logger.error("Ошибка при инициализации клиента Claude", e)
-            raise  # Передаём исключение дальше, если не удалось инициализировать
+        self.client = anthropic.Client(api_key)
 
-
-    def generate_text(self, prompt, max_tokens_to_sample=100):
+    def generate_text(self, prompt: str, max_tokens_to_sample: int = 100) -> str:
         """
         Генерирует текст на основе заданного запроса.
 
@@ -264,18 +297,20 @@ class ClaudeClient:
         :return: Сгенерированный текст.
         """
         try:
+            # Отправка запроса на генерацию текста в Claude API
             response = self.client.completion(
                 prompt=prompt,
-                model="claude-v1",
+                model='claude-v1',
                 max_tokens_to_sample=max_tokens_to_sample,
-                stop_sequences=["\n\nHuman:"]
+                stop_sequences=['\n\nHuman:']
             )
+            # Возвращаем сгенерированный текст
             return response['completion']
         except Exception as e:
-            logger.error("Ошибка при генерации текста", e)
-            return None  # Возвращаем None при ошибке
+            logger.error(f'Ошибка при генерации текста: {e}')
+            return ''
 
-    def analyze_sentiment(self, text):
+    def analyze_sentiment(self, text: str) -> str:
         """
         Анализирует тональность заданного текста.
 
@@ -283,21 +318,22 @@ class ClaudeClient:
         :return: Результат анализа тональности.
         """
         try:
+            # Отправка запроса на анализ тональности в Claude API
             response = self.client.completion(
-                prompt=f"Analyze the sentiment of the following text: {text}",
-                model="claude-v1",
+                prompt=f'Analyze the sentiment of the following text: {text}',
+                model='claude-v1',
                 max_tokens_to_sample=50,
-                stop_sequences=["\n\nHuman:"]
+                stop_sequences=['\n\nHuman:']
             )
+            # Возвращаем результат анализа тональности
             return response['completion']
         except Exception as e:
-            logger.error("Ошибка при анализе тональности", e)
-            return None
+            logger.error(f'Ошибка при анализе тональности: {e}')
+            return ''
 
-
-    def translate_text(self, text, source_language, target_language):
+    def translate_text(self, text: str, source_language: str, target_language: str) -> str:
         """
-        Переводит заданный текст из исходного языка на целевой.
+        Переводит заданный текст с исходного языка на целевой язык.
 
         :param text: Текст для перевода.
         :param source_language: Код исходного языка.
@@ -305,38 +341,37 @@ class ClaudeClient:
         :return: Переведенный текст.
         """
         try:
+            # Отправка запроса на перевод текста в Claude API
             response = self.client.completion(
-                prompt=f"Translate the following text from {source_language} to {target_language}: {text}",
-                model="claude-v1",
+                prompt=f'Translate the following text from {source_language} to {target_language}: {text}',
+                model='claude-v1',
                 max_tokens_to_sample=100,
-                stop_sequences=["\n\nHuman:"]
+                stop_sequences=['\n\nHuman:']
             )
+            # Возвращаем переведенный текст
             return response['completion']
         except Exception as e:
-            logger.error("Ошибка при переводе текста", e)
-            return None
+            logger.error(f'Ошибка при переводе текста: {e}')
+            return ''
 
 # Пример использования класса
-if __name__ == "__main__":
-    api_key = "your-api-key"  #  Должен быть в .env
-    try:
-        claude_client = ClaudeClient(api_key)
-        # Пример генерации текста
-        prompt = "Write a short story about a robot learning to love."
-        generated_text = claude_client.generate_text(prompt)
-        print("Generated Text:", generated_text)
+if __name__ == '__main__':
+    api_key = 'your-api-key'
+    claude_client = ClaudeClient(api_key)
 
-        # Пример анализа тональности
-        text_to_analyze = "I am very happy today!"
-        sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
-        print("Sentiment Analysis:", sentiment_analysis)
+    # Пример генерации текста
+    prompt = 'Write a short story about a robot learning to love.'
+    generated_text = claude_client.generate_text(prompt)
+    print('Generated Text:', generated_text)
 
-        # Пример перевода текста
-        text_to_translate = "Hello, how are you?"
-        source_language = "en"
-        target_language = "es"
-        translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
-        print("Translated Text:", translated_text)
-    except Exception as e:
-        logger.error("Ошибка при инициализации клиента Claude", e)
-```
+    # Пример анализа тональности
+    text_to_analyze = 'I am very happy today!'
+    sentiment_analysis = claude_client.analyze_sentiment(text_to_analyze)
+    print('Sentiment Analysis:', sentiment_analysis)
+
+    # Пример перевода текста
+    text_to_translate = 'Hello, how are you?'
+    source_language = 'en'
+    target_language = 'es'
+    translated_text = claude_client.translate_text(text_to_translate, source_language, target_language)
+    print('Translated Text:', translated_text)

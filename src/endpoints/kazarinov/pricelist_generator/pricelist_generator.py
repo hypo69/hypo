@@ -34,6 +34,7 @@ from src.utils.jjson import j_loads
 from src.utils.file import read_text_file, save_text_file    
 from src.utils.pdf import PDFUtils
 from src.utils.convertors.html import html2pdf
+from src.utils.image import random_image
 from src.utils.printer import pprint
 from src.logger.logger import logger
 
@@ -73,26 +74,17 @@ class ReportGenerator:
         Args:
             lang (str): Язык отчёта.
         """
-        # Укажите путь к папке с картинками
-        images_dir:Path = gs.path.external_storage / 'kazarinov' / 
+        _data:dict = data[lang]
 
-        # Получаем список всех файлов в папке
-        files = os.listdir(folder_path)
+        # Обслуживание:
+        service_dict:dict = {
+                            "product_title":"Сервис" if lang == 'ru' else "שירות",
+                            "specification":Path(gs.path.endpoints / 'kazarinov' / 'pricelist_generator' / 'templates' / f'service_as_product_{lang}.html').read_text(encoding='UTF-8').replace('/n','<br>'),
+                            "image_local_saved_path":random_image(gs.path.external_storage / 'kazarinov' / 'converted_images' )
+                            }
+        _data['products'].append(service_dict)
 
-        # Фильтруем только картинки (например, с расширениями .jpg, .png)
-        image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
-        image_files = [f for f in files if os.path.splitext(f)[1].lower() in image_extensions]
-
-        if image_files:
-            # Выбираем случайную картинку
-            random_image = random.choice(image_files)
-            print(f"Случайная картинка: {random_image}")
-        else:
-            print("В папке нет картинок.")
-
-        service_image = 
-        service_text = Path(gs.path.endpoints / 'kazarinov' / 'templates' / f'service_as_product_{lang}.txt')
-        html_content = await self.generate_html(data[lang],lang)
+        html_content = await self.generate_html(_data,lang)
         Path(html_file).write_text(data = html_content, encoding='UTF-8')
         pdf = PDFUtils()
 

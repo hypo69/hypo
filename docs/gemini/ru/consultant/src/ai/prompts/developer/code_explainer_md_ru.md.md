@@ -1,122 +1,174 @@
 # Received Code
+```
+**Prompt**:
+
+Твоя задача - помочь разработчику кода проекта `hypotez` объяснить разработчику как работает код
+### Требования:  
+Проанализируй предоставленный код и объясни его работу.
+ 
+
+### Формат ответа:  
+
+```
+<input code>
+<algorithm>
+<explanation>
+```
+1. **<input code>**:  
+   - Приведи предоставленный код без изменений.  
+
+2. **<algorithm>**:  
+   - Опиши алгоритм работы кода в виде пошаговой блок-схемы.  
+   - Для каждого логического блока приведи пример его работы (если применимо).  
+   - Покажи, как данные перемещаются между функциями, классами или методами.  
+
+3. **<explanation>**:  
+   - Дай подробное описание:  
+     - Импортов: объясни, зачем они нужны, и опиши их связь с другими пакетами, начиная с `src.` (если такие есть).  
+     - Классов: укажи их назначение, атрибуты и методы, а также взаимосвязь с другими компонентами проекта.  
+     - Функций: распиши назначение, аргументы, возвращаемые значения и их примеры.  
+     - Переменных: опиши их типы и использование.  
+   - Построй цепочку взаимосвязей с другими частями проекта (если есть).  
+   - Укажи потенциальные ошибки или области для улучшений, если они есть. 
+---
+
+**Пример вызова**:  
 
 ```python
-# Код для обработки JSON данных
-import json
+from src.utils.calculator import calculate_sum
 
-def process_data(file_path):
-    """Обрабатывает JSON файл.  """
-    try:
-        # Читаем данные из файла
-        with open(file_path, 'r') as f:
-            data = json.load(f)
-        # Обработка данных
-        processed_data = data['some_key']  # Доступ к ключу 'some_key'
-        return processed_data
-    except FileNotFoundError:
-        print(f"Ошибка: Файл {file_path} не найден.")
-        return None
-    except json.JSONDecodeError:
-        print(f"Ошибка: Не удалось декодировать JSON из файла {file_path}.")
-        return None
-    except KeyError as e:
-        print(f"Ошибка: Ключ '{e.args[0]}' не найден в JSON файле.")
-        return None
+def add_numbers(a, b):
+    result = calculate_sum(a, b)
+    return result
 ```
 
+**Ожидаемый ответ**:  
+
+```
+<input code>
+from src.utils.calculator import calculate_sum
+
+def add_numbers(a, b):
+    result = calculate_sum(a, b)
+    return result
+
+<algorithm>
+1. Импортируется функция `calculate_sum` из модуля `src.utils.calculator`.
+2. Определяется функция `add_numbers`, принимающая два аргумента `a` и `b`.
+3. Вызов функции `calculate_sum(a, b)` выполняет сложение `a` и `b`.
+4. Результат функции возвращается вызывающему коду.
+
+Пример:  
+- Входные данные: `a = 3`, `b = 5`.  
+- Алгоритм: `calculate_sum(3, 5)`.  
+- Результат: `8`.  
+
+<explanation>
+**Импорты**:  
+- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum`, которая используется для вычисления суммы. Этот модуль лежит в папке `src.utils`.
+
+**Функция `add_numbers`**:  
+- Назначение: упрощает сложение двух чисел через вызов функции `calculate_sum`.  
+- Аргументы:  
+  - `a` (число): Первое слагаемое.  
+  - `b` (число): Второе слагаемое.  
+- Возвращаемое значение: результат сложения `a` и `b`.  
+
+**Связь с другими пакетами**:  
+- Модуль `src.utils.calculator` может быть частью библиотеки для математических вычислений.  
+- Если `calculate_sum` использует дополнительные модули, это можно уточнить в её документации.
+
+**Возможные улучшения**:  
+- Добавить проверку типов аргументов `a` и `b` для предотвращения ошибок.  
+- Локализовать вызов `calculate_sum` в рамках модуля, если он больше нигде не используется.
+
+Инструкция построена так, чтобы модель анализировала код детально и возвращала полное описание работы каждого элемента.
+```
 # Improved Code
-
-```python
-"""
-Модуль для обработки JSON данных.
-
-Этот модуль содержит функцию для чтения и обработки JSON данных из файла.
-"""
-from src.utils.jjson import j_loads  # Импортируем j_loads для чтения JSON
-from src.logger.logger import logger
-
-
-def process_data(file_path):
-    """Обрабатывает JSON файл и возвращает значение по ключу 'some_key'.
-
-    :param file_path: Путь к файлу JSON.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :raises KeyError: Если ключ 'some_key' отсутствует в JSON.
-    :return: Значение по ключу 'some_key' или None в случае ошибки.
-    :rtype: object
-    """
-    try:
-        # Используем j_loads для чтения JSON, обрабатывая возможные ошибки.
-        with open(file_path, 'r') as f:
-            data = j_loads(f)  # Используем j_loads
-        # Проверяем, что ключ 'some_key' существует
-        if 'some_key' not in data:
-            logger.error(f"Ключ 'some_key' не найден в JSON файле {file_path}.")
-            return None
-        processed_data = data['some_key']  # Доступ к ключу 'some_key'
-        return processed_data
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл {file_path} не найден.", exc_info=True)
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: Не удалось декодировать JSON из файла {file_path}.", exc_info=True)
-        return None
-    except Exception as e:
-        logger.error(f"Произошла непредвиденная ошибка при обработке файла {file_path}.", exc_info=True)
-        return None
 ```
+<input code>
+from src.utils.calculator import calculate_sum
 
+def add_numbers(a, b):
+    """
+    Складывает два числа.
+
+    :param a: Первое число.
+    :type a: int
+    :param b: Второе число.
+    :type b: int
+    :return: Сумма двух чисел.
+    :rtype: int
+    
+    Пример:
+        
+    >>> add_numbers(2, 3)
+    5
+    """
+    # Код исполняет сложение a и b через вызов calculate_sum
+    result = calculate_sum(a, b)
+    # Код возвращает результат
+    return result
+
+<algorithm>
+1.  Импортируется функция ``calculate_sum`` из модуля ``src.utils.calculator``.
+2.  Определяется функция ``add_numbers``, принимающая два аргумента ``a`` и ``b``.
+3.  Вызов функции ``calculate_sum(a, b)`` выполняет сложение ``a`` и ``b``.
+4.  Результат функции возвращается вызывающему коду.
+
+Пример:
+    - Входные данные: ``a = 3``, ``b = 5``.
+    - Алгоритм: ``calculate_sum(3, 5)``.
+    - Результат: ``8``.
+
+<explanation>
+**Импорты**:
+    - ``from src.utils.calculator import calculate_sum``: Импортирует функцию ``calculate_sum``, которая используется для вычисления суммы. Этот модуль расположен в пакете ``src.utils``.
+
+**Функция ``add_numbers``**:
+    - Назначение: Выполняет сложение двух чисел ``a`` и ``b``, используя функцию ``calculate_sum``.
+    - Аргументы:
+        - ``a`` (``int``): Первое слагаемое.
+        - ``b`` (``int``): Второе слагаемое.
+    - Возвращаемое значение:
+        - Сумма ``a`` и ``b`` (``int``).
+
+**Связь с другими пакетами**:
+    - Модуль ``src.utils.calculator`` предоставляет функции для математических вычислений.
+    - Функция ``calculate_sum`` используется для выполнения операции сложения.
+
+**Возможные улучшения**:
+    - Добавить проверку типов для аргументов ``a`` и ``b`` для предотвращения ошибок при использовании неправильных типов данных.
+    - Реализовать обработку исключений для ситуации, если ``calculate_sum`` вернет ошибку.
+```
 # Changes Made
-
-* Заменены все случаи `json.load` на `j_loads` из `src.utils.jjson`.
-* Добавлены комментарии RST для функции `process_data` с описанием параметров, возвращаемого значения и возможных исключений.
-* Добавлена проверка наличия ключа `'some_key'` в словаре `data`.
-* Использование `logger.error` для логгирования ошибок с предоставлением стека вызовов (`exc_info=True`).
-* Обновлены комментарии для обработки возможных исключений (FileNotFoundError, json.JSONDecodeError, KeyError).
-* Добавлен общий обработчик `except Exception` для логгирования других непредвиденных ошибок.
-
+- Добавлены комментарии в формате reStructuredText (RST) для функции ``add_numbers`` с описанием аргументов, возвращаемого значения и примером использования.
+- Добавлены комментарии с описанием логики выполнения кода.
+- Добавлены более подробные описания в разделах `<algorithm>` и `<explanation>`.
+- Уточнено описание импортов, функции и их взаимосвязей.
+- Добавлены предложения по улучшению кода, такие как проверка типов и обработка исключений.
 
 # FULL Code
-
 ```python
-"""
-Модуль для обработки JSON данных.
+from src.utils.calculator import calculate_sum
 
-Этот модуль содержит функцию для чтения и обработки JSON данных из файла.
-"""
-from src.utils.jjson import j_loads  # Импортируем j_loads для чтения JSON
-from src.logger.logger import logger
-
-
-def process_data(file_path):
-    """Обрабатывает JSON файл и возвращает значение по ключу 'some_key'.
-
-    :param file_path: Путь к файлу JSON.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :raises KeyError: Если ключ 'some_key' отсутствует в JSON.
-    :return: Значение по ключу 'some_key' или None в случае ошибки.
-    :rtype: object
+def add_numbers(a, b):
     """
-    try:
-        # Используем j_loads для чтения JSON, обрабатывая возможные ошибки.
-        with open(file_path, 'r') as f:
-            data = j_loads(f)  # Используем j_loads # Изменили на j_loads
-        # Проверяем, что ключ 'some_key' существует
-        if 'some_key' not in data:
-            logger.error(f"Ключ 'some_key' не найден в JSON файле {file_path}.")
-            return None
-        processed_data = data['some_key']  # Доступ к ключу 'some_key'
-        return processed_data
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: Файл {file_path} не найден.", exc_info=True)
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: Не удалось декодировать JSON из файла {file_path}.", exc_info=True)
-        return None
-    except Exception as e:
-        logger.error(f"Произошла непредвиденная ошибка при обработке файла {file_path}.", exc_info=True)
-        return None
+    Складывает два числа.
+
+    :param a: Первое число.
+    :type a: int
+    :param b: Второе число.
+    :type b: int
+    :return: Сумма двух чисел.
+    :rtype: int
+    
+    Пример:
+        
+    >>> add_numbers(2, 3)
+    5
+    """
+    # Код исполняет сложение a и b через вызов calculate_sum
+    result = calculate_sum(a, b)
+    # Код возвращает результат
+    return result

@@ -1,160 +1,266 @@
-# Improved Code
+# Улучшенный код
+
+```rst
+.. module:: src.ai.gemini
+   :synopsis: Модуль интеграции с Google Generative AI.
+
+.. note::
+   Модуль обеспечивает взаимодействие с моделями Google Generative AI,
+   включая отправку запросов, обработку ответов и управление диалогами.
+
+.. attention::
+    Для корректной работы модуля необходима установка `google-generativeai` и других зависимостей.
+```
+[English](https://github.com/hypo69/hypo/tree/master/src/ai/gemini/README.MD)
+# Модуль интеграции Google Generative AI
+
+## Обзор
+
+Класс `GoogleGenerativeAI` предназначен для взаимодействия с моделями Google Generative AI. Этот класс предоставляет методы для отправки запросов, обработки ответов, управления диалогами и интеграции с различными функциональностями ИИ. Он включает в себя надежную обработку ошибок, ведение журнала и настройки конфигурации для обеспечения беспрепятственной работы.
+
+## Основные функции
+
+### `__init__(self, api_key: str, model_name: Optional[str] = None, generation_config: Optional[Dict] = None, system_instruction: Optional[str] = None, **kwargs)`
+
+**Назначение**: Инициализирует класс `GoogleGenerativeAI` с необходимыми конфигурациями.
+
+**Детали**:
+- Устанавливает ключ API, имя модели, конфигурацию генерации и системную инструкцию.
+- Определяет пути для ведения журнала диалогов и хранения истории.
+- Инициализирует модель Google Generative AI.
+
+### `config()`
+
+**Назначение**: Получает конфигурацию из файла настроек.
+
+**Детали**:
+- Читает и разбирает файл конфигурации, расположенный по пути `gs.path.src / 'ai' / 'gemini' / 'generative_ai.json'`.
+
+### `_start_chat(self)`
+
+**Назначение**: Запускает сессию чата с моделью ИИ.
+
+**Детали**:
+- Инициализирует сессию чата с пустой историей.
+
+### `_save_dialogue(self, dialogue: list)`
+
+**Назначение**: Сохраняет диалог в текстовые и JSON файлы.
+
+**Детали**:
+- Добавляет каждое сообщение в диалоге в текстовый файл.
+- Добавляет каждое сообщение в формате JSON в JSON файл.
+
+### `ask(self, q: str, attempts: int = 15) -> Optional[str]`
+
+**Назначение**: Отправляет текстовый запрос модели ИИ и получает ответ.
+
+**Детали**:
+- Обрабатывает несколько попыток в случае ошибок сети или недоступности сервиса.
+- Ведет журнал ошибок и повторяет попытки с экспоненциальной задержкой.
+- Сохраняет диалог в файлы истории.
+
+### `chat(self, q: str) -> str`
+
+**Назначение**: Отправляет сообщение чата модели ИИ и получает ответ.
+
+**Детали**:
+- Использует сессию чата, инициализированную методом `_start_chat`.
+- Ведет журнал ошибок и возвращает текст ответа.
+
+### `describe_image(self, image_path: Path) -> Optional[str]`
+
+**Назначение**: Генерирует текстовое описание изображения.
+
+**Детали**:
+- Кодирует изображение в base64 и отправляет его модели ИИ.
+- Возвращает сгенерированное описание или ведет журнал ошибки, если операция не удалась.
+
+### `upload_file(self, file: str | Path | IOBase, file_name: Optional[str] = None) -> bool`
+
+**Назначение**: Загружает файл в модель ИИ.
+
+**Детали**:
+- Обрабатывает загрузку файла и ведет журнал успеха или неудачи.
+- Предоставляет логику повторных попыток в случае ошибок.
+
+## Обработка ошибок
+
+Класс включает в себя комплексную обработку ошибок для различных сценариев:
+- **Ошибки сети**: Повторяет попытки с экспоненциальной задержкой.
+- **Недоступность сервиса**: Ведет журнал ошибок и повторяет попытки.
+- **Лимиты квот**: Ведет журнал и ждет перед повторной попыткой.
+- **Ошибки аутентификации**: Ведет журнал и прекращает дальнейшие попытки.
+- **Неверный ввод**: Ведет журнал и повторяет попытки с таймаутом.
+- **Ошибки API**: Ведет журнал и прекращает дальнейшие попытки.
+
+## Ведение журнала и история
+
+Все взаимодействия с моделями ИИ ведутся в журнале, и диалоги сохраняются как в текстовых, так и в JSON форматах для последующего анализа. Это обеспечивает отслеживаемость всех операций и возможность их просмотра для отладки или аудита.
+
+## Зависимости
+
+- `google.generativeai`
+- `requests`
+- `grpc`
+- `google.api_core.exceptions`
+- `google.auth.exceptions`
+- `src.logger`
+- `src.utils.printer`
+- `src.utils.file`
+- `src.utils.date_time`
+- `src.utils.convertors.unicode`
+- `src.utils.jjson`
+
+## Пример использования
 
 ```python
-"""
-Модуль для интеграции с Google Generative AI моделями.
-=========================================================================================
-
-Этот модуль содержит класс :class:`GoogleGenerativeAI`, который предоставляет интерфейс для взаимодействия с Google Generative AI моделями.  Он включает в себя обработку запросов, диалогов, управление файлами и логирование.
-"""
-import json
-from pathlib import Path
-from typing import Optional, Dict, List, Any
-from io import IOBase
-from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns
-from src.utils.printer import print_error  # Добавление импорта для печати ошибок
-from google.generativeai import GenerativeAI, types  # Добавление импортов
-
-
-class GoogleGenerativeAI:
-    """Класс для взаимодействия с моделями Google Generative AI."""
-
-    def __init__(self, api_key: str, model_name: Optional[str] = None,
-                 generation_config: Optional[Dict] = None, system_instruction: Optional[str] = None,
-                 **kwargs):
-        """
-        Инициализирует класс с необходимыми конфигурациями.
-
-        :param api_key: Ключ API.
-        :param model_name: Имя модели (опционально).
-        :param generation_config: Конфигурация генерации (опционально).
-        :param system_instruction: Системная инструкция (опционально).
-        :param kwargs: Другие параметры.
-        """
-        self.api_key = api_key
-        self.model_name = model_name
-        self.generation_config = generation_config
-        self.system_instruction = system_instruction
-        self.client = GenerativeAI(api_key=self.api_key, model_name=self.model_name,
-                                   generation_config=self.generation_config,
-                                   system_instruction=self.system_instruction)
-        self.dialogue_history_path = Path("dialogue_history.txt")  # Путь к файлу истории диалогов
-        self.dialogue_history_json_path = Path("dialogue_history.json")  # Путь к JSON файлу истории диалогов
-        self.dialogue_history: List[str] = [] # Инициализация пустой истории
-    # ... (остальной код с изменениями)
-
-    def config(self):
-        """
-        Читает конфигурацию из файла.
-        
-        """
-        try:
-            config_path = Path("gs.path.src") / "ai" / "gemini" / "generative_ai.json" # Определение пути к конфигурационному файлу
-            with open(config_path, 'r') as f:
-                config = j_loads_ns(f)  # чтение и разбор файла
-                # ... (обработка конфигурации)
-        except FileNotFoundError:
-            logger.error("Файл конфигурации не найден.")
-            return
-        except json.JSONDecodeError as e:
-            logger.error("Ошибка при разборе JSON файла:", e)
-            return
-        # ... (остальной код)
-
-    # ... (остальной код)
-
-
-    def ask(self, q: str, attempts: int = 15) -> Optional[str]:
-        """
-        Отправляет запрос модели и получает ответ.
-
-        :param q: Текстовый запрос.
-        :param attempts: Количество попыток.
-        :return: Ответ модели или None.
-        """
-        for attempt in range(attempts):
-            try:
-                response = self.client.ask(prompt=q)
-                return response.text  # Возвращаем текст ответа
-            except Exception as e:
-                logger.error(f"Ошибка при отправке запроса {q}:", e)
-                if attempt < attempts - 1: # Проверка на возможность повтора попыток
-                    logger.info(f"Попытка {attempt + 1} из {attempts}. Ждём {2**(attempt+1)} секунд")
-                    import time
-                    time.sleep(2**(attempt+1))
-                else:
-                    logger.error(f"Превышено максимальное количество попыток: {attempts}")
-                    return None # Возвращаем None если все попытки завершились с ошибкой
-    # ... (остальной код)
-
-
+ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction="Instruction")
+response = ai.ask("Как дела?")
+print(response)
 ```
 
-```markdown
-## Changes Made
+Этот пример инициализирует класс `GoogleGenerativeAI` и отправляет запрос модели ИИ, выводя ответ.
 
-- Добавлена документация RST для класса `GoogleGenerativeAI` и всех методов.
-- Добавлена обработка ошибок с использованием `logger.error`.
-- Исправлены импорты: добавлен `from src.logger.logger import logger`, `from src.utils.printer import print_error` и др.
-- Изменены некоторые имена переменных для соответствия соглашениям кодирования.
-- Добавлена проверка на возможность повтора попыток в методе `ask`.
-- Изменены пути к файлам диалоговой истории.
-- Изменен формат возвращаемого значения в методе ask.
-- Добавлены комментарии в формате RST.
-- Устранены потенциальные ошибки обращения к неинициализированным переменным.
+---
 
-
+Для получения более подробной информации обратитесь к исходному коду и комментариям внутри класса `GoogleGenerativeAI`.
 ```
 
-```markdown
-## FULL Code
+# Внесённые изменения
+
+1.  **Добавлены reStructuredText комментарии к модулю**:
+    *   Добавлен заголовок модуля с использованием `.. module:: src.ai.gemini`.
+    *   Добавлено краткое описание модуля с использованием `:synopsis:`.
+    *   Добавлено примечание с использованием `.. note::` для общего описания модуля.
+    *   Добавлено предостережение с использованием `.. attention::` с информацией о зависимостях.
+2.  **Добавлено описание модуля в начале файла**:
+    *   В начало файла добавлено описание модуля в формате reStructuredText.
+
+# Оптимизированный код
+
+```rst
+.. module:: src.ai.gemini
+   :synopsis: Модуль интеграции с Google Generative AI.
+
+.. note::
+   Модуль обеспечивает взаимодействие с моделями Google Generative AI,
+   включая отправку запросов, обработку ответов и управление диалогами.
+
+.. attention::
+    Для корректной работы модуля необходима установка `google-generativeai` и других зависимостей.
+```
+[English](https://github.com/hypo69/hypo/tree/master/src/ai/gemini/README.MD)
+# Модуль интеграции Google Generative AI
+
+## Обзор
+
+Класс `GoogleGenerativeAI` предназначен для взаимодействия с моделями Google Generative AI. Этот класс предоставляет методы для отправки запросов, обработки ответов, управления диалогами и интеграции с различными функциональностями ИИ. Он включает в себя надежную обработку ошибок, ведение журнала и настройки конфигурации для обеспечения беспрепятственной работы.
+
+## Основные функции
+
+### `__init__(self, api_key: str, model_name: Optional[str] = None, generation_config: Optional[Dict] = None, system_instruction: Optional[str] = None, **kwargs)`
+
+**Назначение**: Инициализирует класс `GoogleGenerativeAI` с необходимыми конфигурациями.
+
+**Детали**:
+- Устанавливает ключ API, имя модели, конфигурацию генерации и системную инструкцию.
+- Определяет пути для ведения журнала диалогов и хранения истории.
+- Инициализирует модель Google Generative AI.
+
+### `config()`
+
+**Назначение**: Получает конфигурацию из файла настроек.
+
+**Детали**:
+- Читает и разбирает файл конфигурации, расположенный по пути `gs.path.src / 'ai' / 'gemini' / 'generative_ai.json'`.
+
+### `_start_chat(self)`
+
+**Назначение**: Запускает сессию чата с моделью ИИ.
+
+**Детали**:
+- Инициализирует сессию чата с пустой историей.
+
+### `_save_dialogue(self, dialogue: list)`
+
+**Назначение**: Сохраняет диалог в текстовые и JSON файлы.
+
+**Детали**:
+- Добавляет каждое сообщение в диалоге в текстовый файл.
+- Добавляет каждое сообщение в формате JSON в JSON файл.
+
+### `ask(self, q: str, attempts: int = 15) -> Optional[str]`
+
+**Назначение**: Отправляет текстовый запрос модели ИИ и получает ответ.
+
+**Детали**:
+- Обрабатывает несколько попыток в случае ошибок сети или недоступности сервиса.
+- Ведет журнал ошибок и повторяет попытки с экспоненциальной задержкой.
+- Сохраняет диалог в файлы истории.
+
+### `chat(self, q: str) -> str`
+
+**Назначение**: Отправляет сообщение чата модели ИИ и получает ответ.
+
+**Детали**:
+- Использует сессию чата, инициализированную методом `_start_chat`.
+- Ведет журнал ошибок и возвращает текст ответа.
+
+### `describe_image(self, image_path: Path) -> Optional[str]`
+
+**Назначение**: Генерирует текстовое описание изображения.
+
+**Детали**:
+- Кодирует изображение в base64 и отправляет его модели ИИ.
+- Возвращает сгенерированное описание или ведет журнал ошибки, если операция не удалась.
+
+### `upload_file(self, file: str | Path | IOBase, file_name: Optional[str] = None) -> bool`
+
+**Назначение**: Загружает файл в модель ИИ.
+
+**Детали**:
+- Обрабатывает загрузку файла и ведет журнал успеха или неудачи.
+- Предоставляет логику повторных попыток в случае ошибок.
+
+## Обработка ошибок
+
+Класс включает в себя комплексную обработку ошибок для различных сценариев:
+- **Ошибки сети**: Повторяет попытки с экспоненциальной задержкой.
+- **Недоступность сервиса**: Ведет журнал ошибок и повторяет попытки.
+- **Лимиты квот**: Ведет журнал и ждет перед повторной попыткой.
+- **Ошибки аутентификации**: Ведет журнал и прекращает дальнейшие попытки.
+- **Неверный ввод**: Ведет журнал и повторяет попытки с таймаутом.
+- **Ошибки API**: Ведет журнал и прекращает дальнейшие попытки.
+
+## Ведение журнала и история
+
+Все взаимодействия с моделями ИИ ведутся в журнале, и диалоги сохраняются как в текстовых, так и в JSON форматах для последующего анализа. Это обеспечивает отслеживаемость всех операций и возможность их просмотра для отладки или аудита.
+
+## Зависимости
+
+- `google.generativeai`
+- `requests`
+- `grpc`
+- `google.api_core.exceptions`
+- `google.auth.exceptions`
+- `src.logger`
+- `src.utils.printer`
+- `src.utils.file`
+- `src.utils.date_time`
+- `src.utils.convertors.unicode`
+- `src.utils.jjson`
+
+## Пример использования
 
 ```python
-"""
-Модуль для интеграции с Google Generative AI моделями.
-=========================================================================================
-
-Этот модуль содержит класс :class:`GoogleGenerativeAI`, который предоставляет интерфейс для взаимодействия с Google Generative AI моделями.  Он включает в себя обработку запросов, диалогов, управление файлами и логирование.
-"""
-import json
-from pathlib import Path
-from typing import Optional, Dict, List, Any
-from io import IOBase
-from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns
-from src.utils.printer import print_error  # Добавление импорта для печати ошибок
-from google.generativeai import GenerativeAI, types  # Добавление импортов
-
-
-class GoogleGenerativeAI:
-    """Класс для взаимодействия с моделями Google Generative AI."""
-
-    def __init__(self, api_key: str, model_name: Optional[str] = None,
-                 generation_config: Optional[Dict] = None, system_instruction: Optional[str] = None,
-                 **kwargs):
-        """
-        Инициализирует класс с необходимыми конфигурациями.
-
-        :param api_key: Ключ API.
-        :param model_name: Имя модели (опционально).
-        :param generation_config: Конфигурация генерации (опционально).
-        :param system_instruction: Системная инструкция (опционально).
-        :param kwargs: Другие параметры.
-        """
-        self.api_key = api_key
-        self.model_name = model_name
-        self.generation_config = generation_config
-        self.system_instruction = system_instruction
-        self.client = GenerativeAI(api_key=self.api_key, model_name=self.model_name,
-                                   generation_config=self.generation_config,
-                                   system_instruction=self.system_instruction)
-        self.dialogue_history_path = Path("dialogue_history.txt")  # Путь к файлу истории диалогов
-        self.dialogue_history_json_path = Path("dialogue_history.json")  # Путь к JSON файлу истории диалогов
-        self.dialogue_history: List[str] = []  # Инициализация пустой истории
-
-
-    # ... (остальной код с изменениями, см. выше)
-
+ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction="Instruction")
+response = ai.ask("Как дела?")
+print(response)
 ```
-**Note:** The rest of the code (methods `config`, `_start_chat`, `_save_dialogue`, `chat`, `describe_image`, `upload_file`) is omitted for brevity but should be implemented following the same principles.  Remember to replace `...` placeholders with the actual code.  Import statements may need to be adjusted based on your project structure.  Also, make sure that the required libraries (`google.generativeai`, `requests`, etc.) are installed.  The `gs.path.src` part of the `config` method path likely needs to be replaced with a proper path to your `src` folder.
+
+Этот пример инициализирует класс `GoogleGenerativeAI` и отправляет запрос модели ИИ, выводя ответ.
+
+---
+
+Для получения более подробной информации обратитесь к исходному коду и комментариям внутри класса `GoogleGenerativeAI`.

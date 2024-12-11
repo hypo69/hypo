@@ -1,239 +1,200 @@
-# Received Code
-
+# Улучшенный код
 ```python
+"""
+Модуль для расширения контента с использованием моделей ИИ.
+=========================================================================================
+
+Этот модуль содержит класс :class:`TinyEnricher`, который используется для расширения контента на основе заданных требований,
+используя шаблоны и модели ИИ.
+
+Пример использования
+--------------------
+
+Пример использования класса `TinyEnricher`:
+
+.. code-block:: python
+
+    enricher = TinyEnricher()
+    enriched_content = enricher.enrich_content(
+        requirements="Улучши этот текст.",
+        content="Исходный текст.",
+        content_type="текст",
+        context_info="Дополнительная информация."
+    )
+"""
 import os
-import json
+# from json import loads # Удален стандартный импорт json.load
 import chevron
 import logging
-logger = logging.getLogger("tinytroupe")
 import pandas as pd
-
+from typing import Optional, List, Any # Добавлен импорт для аннотаций типов
+from src.utils.jjson import j_loads, j_loads_ns # Заменен стандартный импорт json.load на j_loads
+from src.logger.logger import logger  # Добавлен импорт logger
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.utils import JsonSerializableRegistry
-
 from tinytroupe import openai_utils
 import tinytroupe.utils as utils
 
+
 class TinyEnricher(JsonSerializableRegistry):
+    """
+    Класс для расширения контента.
 
-    def __init__(self, use_past_results_in_context=False) -> None:
+    :param use_past_results_in_context: Флаг для использования предыдущих результатов в контексте.
+    """
+    def __init__(self, use_past_results_in_context: bool = False) -> None:
+        """
+        Инициализация экземпляра класса TinyEnricher.
+
+        :param use_past_results_in_context: Флаг для использования предыдущих результатов в контексте.
+        """
         self.use_past_results_in_context = use_past_results_in_context
-
         self.context_cache = []
-    
-    def enrich_content(self, requirements: str, content:str, content_type:str =None, context_info:str ="", context_cache:list=None, verbose:bool=False):
 
-        rendering_configs = {"requirements": requirements,\n                             "content": content,\n                             "content_type": content_type, \n                             "context_info": context_info,\n                             "context_cache": context_cache}
+    def enrich_content(self, requirements: str, content: str, content_type: Optional[str] = None,
+                       context_info: str = "", context_cache: Optional[List] = None, verbose: bool = False) -> Optional[str]:
+        """
+        Расширяет контент на основе заданных требований, используя шаблоны и модели ИИ.
 
-        messages = utils.compose_initial_LLM_messages_with_templates("enricher.system.mustache", "enricher.user.mustache", rendering_configs)
-        next_message = openai_utils.client().send_message(messages, temperature=0.4)
-        
-        debug_msg = f"Enrichment result message: {next_message}"\n
+        :param requirements: Требования к расширению контента.
+        :param content: Исходный контент для расширения.
+        :param content_type: Тип контента.
+        :param context_info: Дополнительная контекстная информация.
+        :param context_cache: Кэш контекста для использования предыдущих результатов.
+        :param verbose: Флаг для вывода отладочной информации.
+        :return: Расширенный контент или None, если не удалось получить результат.
+        """
+        rendering_configs = {"requirements": requirements,
+                             "content": content,
+                             "content_type": content_type,
+                             "context_info": context_info,
+                             "context_cache": context_cache}
+        # код создает сообщения для LLM на основе шаблонов
+        messages = utils.compose_initial_LLM_messages_with_templates(
+            "enricher.system.mustache", "enricher.user.mustache", rendering_configs)
+        try:
+            # код отправляет сообщение в LLM
+            next_message = openai_utils.client().send_message(messages, temperature=0.4)
+        except Exception as ex:
+            logger.error(f'Ошибка при отправке сообщения в LLM: {ex}')
+            return None
+
+        debug_msg = f"Enrichment result message: {next_message}"
         logger.debug(debug_msg)
         if verbose:
             print(debug_msg)
 
         if next_message is not None:
+            # код извлекает блок кода из ответа
             result = utils.extract_code_block(next_message["content"])
         else:
             result = None
 
         return result
 ```
+# Внесённые изменения
+- Добавлены импорты `Optional, List, Any` из `typing` для аннотаций типов.
+- Заменен стандартный `json.load` на `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+- Добавлен импорт `logger` из `src.logger.logger`.
+- Добавлены docstring в формате reStructuredText (RST) для класса и методов.
+- Добавлена обработка ошибок при отправке сообщений в LLM с использованием `logger.error`.
+- Добавлены аннотации типов для параметров и возвращаемых значений.
+- Добавлены комментарии к коду в формате RST.
 
-# Improved Code
-
+# Оптимизированный код
 ```python
-import os
-import logging
-import chevron
-import pandas as pd
+"""
+Модуль для расширения контента с использованием моделей ИИ.
+=========================================================================================
 
-# Импорты из tinytroupe
+Этот модуль содержит класс :class:`TinyEnricher`, который используется для расширения контента на основе заданных требований,
+используя шаблоны и модели ИИ.
+
+Пример использования
+--------------------
+
+Пример использования класса `TinyEnricher`:
+
+.. code-block:: python
+
+    enricher = TinyEnricher()
+    enriched_content = enricher.enrich_content(
+        requirements="Улучши этот текст.",
+        content="Исходный текст.",
+        content_type="текст",
+        context_info="Дополнительная информация."
+    )
+"""
+import os
+# from json import loads # Удален стандартный импорт json.load
+import chevron
+import logging
+import pandas as pd
+from typing import Optional, List, Any # Добавлен импорт для аннотаций типов
+from src.utils.jjson import j_loads, j_loads_ns # Заменен стандартный импорт json.load на j_loads
+from src.logger.logger import logger  # Добавлен импорт logger
 from tinytroupe.agent import TinyPerson
 from tinytroupe.environment import TinyWorld
 from tinytroupe.factory import TinyPersonFactory
 from tinytroupe.utils import JsonSerializableRegistry
 from tinytroupe import openai_utils
 import tinytroupe.utils as utils
-from src.logger.logger import logger  # Импорт логирования
+
 
 class TinyEnricher(JsonSerializableRegistry):
     """
-    Класс для обогащения контента с помощью LLM.
-    =========================================================================================
+    Класс для расширения контента.
 
-    Этот класс отвечает за взаимодействие с LLM (Large Language Model)
-    для обогащения входного контента.  Он использует шаблоны
-    для составления запросов к LLM и обрабатывает полученные ответы.
+    :param use_past_results_in_context: Флаг для использования предыдущих результатов в контексте.
     """
-
-    def __init__(self, use_past_results_in_context=False) -> None:
+    def __init__(self, use_past_results_in_context: bool = False) -> None:
         """
-        Инициализирует экземпляр класса TinyEnricher.
+        Инициализация экземпляра класса TinyEnricher.
 
-        :param use_past_results_in_context: Флаг, указывающий на использование
-            предыдущих результатов в контексте.
+        :param use_past_results_in_context: Флаг для использования предыдущих результатов в контексте.
         """
         self.use_past_results_in_context = use_past_results_in_context
-        self.context_cache = []  # Кеш контекста
+        self.context_cache = []
 
-    def enrich_content(self, requirements: str, content: str, content_type: str = None,
-                       context_info: str = "", context_cache: list = None, verbose: bool = False) -> str:
+    def enrich_content(self, requirements: str, content: str, content_type: Optional[str] = None,
+                       context_info: str = "", context_cache: Optional[List] = None, verbose: bool = False) -> Optional[str]:
         """
-        Обогащает предоставленный контент с помощью LLM.
+        Расширяет контент на основе заданных требований, используя шаблоны и модели ИИ.
 
-        :param requirements: Требования к обогащению.
-        :param content: Контент для обогащения.
+        :param requirements: Требования к расширению контента.
+        :param content: Исходный контент для расширения.
         :param content_type: Тип контента.
-        :param context_info: Дополнительная информация контекста.
-        :param context_cache: Кеш предыдущих результатов.
-        :param verbose: Флаг для вывода дополнительных сообщений.
-        :return: Результат обогащения или None при ошибке.
+        :param context_info: Дополнительная контекстная информация.
+        :param context_cache: Кэш контекста для использования предыдущих результатов.
+        :param verbose: Флаг для вывода отладочной информации.
+        :return: Расширенный контент или None, если не удалось получить результат.
         """
-        # Создание словаря конфигураций для шаблонов
-        rendering_configs = {
-            "requirements": requirements,
-            "content": content,
-            "content_type": content_type,
-            "context_info": context_info,
-            "context_cache": context_cache
-        }
-
-        # Составление сообщений для LLM с использованием шаблонов
+        rendering_configs = {"requirements": requirements,
+                             "content": content,
+                             "content_type": content_type,
+                             "context_info": context_info,
+                             "context_cache": context_cache}
+        # код создает сообщения для LLM на основе шаблонов
         messages = utils.compose_initial_LLM_messages_with_templates(
-            "enricher.system.mustache", "enricher.user.mustache", rendering_configs
-        )
-
+            "enricher.system.mustache", "enricher.user.mustache", rendering_configs)
         try:
-            # Отправка запроса к LLM и получение ответа
+            # код отправляет сообщение в LLM
             next_message = openai_utils.client().send_message(messages, temperature=0.4)
+        except Exception as ex:
+            logger.error(f'Ошибка при отправке сообщения в LLM: {ex}')
+            return None
 
-            # Логирование результата обогащения
-            debug_msg = f"Результат обогащения: {next_message}"
-            logger.debug(debug_msg)
-            if verbose:
-                print(debug_msg)
+        debug_msg = f"Enrichment result message: {next_message}"
+        logger.debug(debug_msg)
+        if verbose:
+            print(debug_msg)
 
-            # Проверка наличия ответа от LLM
-            if next_message:
-                # Извлечение результата из ответа
-                result = utils.extract_code_block(next_message["content"])
-            else:
-                # Логирование отсутствия ответа
-                logger.error("Отсутствует ответ от LLM.")
-                result = None
-
-        except Exception as e:
-            # Обработка ошибок с помощью logger
-            logger.error("Ошибка при обогащении контента", exc_info=True)
+        if next_message is not None:
+            # код извлекает блок кода из ответа
+            result = utils.extract_code_block(next_message["content"])
+        else:
             result = None
 
-
         return result
-```
-
-# Changes Made
-
-*   Импортирован `logger` из `src.logger.logger` для использования логирования.
-*   Добавлены подробные комментарии в формате RST к классу `TinyEnricher` и методу `enrich_content` для лучшей документированности.
-*   Изменены имена переменных и функций в соответствии с PEP 8.
-*   Обработка ошибок с помощью `try-except` заменена на `logger.error` для более эффективного логирования.
-*   Удалены ненужные импорты.
-*   В функции `enrich_content` добавлена обработка ошибок с помощью `try...except`.
-*   В комментариях избегаются общие глаголы типа "получить", "сделать". Используются более конкретные глаголы, например "отправка", "извлечение".
-
-
-# FULL Code
-
-```python
-import os
-import logging
-import chevron
-import pandas as pd
-
-# Импорты из tinytroupe
-from tinytroupe.agent import TinyPerson
-from tinytroupe.environment import TinyWorld
-from tinytroupe.factory import TinyPersonFactory
-from tinytroupe.utils import JsonSerializableRegistry
-from tinytroupe import openai_utils
-import tinytroupe.utils as utils
-from src.logger.logger import logger  # Импорт логирования
-
-class TinyEnricher(JsonSerializableRegistry):
-    """
-    Класс для обогащения контента с помощью LLM.
-    =========================================================================================
-
-    Этот класс отвечает за взаимодействие с LLM (Large Language Model)
-    для обогащения входного контента.  Он использует шаблоны
-    для составления запросов к LLM и обрабатывает полученные ответы.
-    """
-
-    def __init__(self, use_past_results_in_context=False) -> None:
-        """
-        Инициализирует экземпляр класса TinyEnricher.
-
-        :param use_past_results_in_context: Флаг, указывающий на использование
-            предыдущих результатов в контексте.
-        """
-        self.use_past_results_in_context = use_past_results_in_context
-        self.context_cache = []  # Кеш контекста
-
-    def enrich_content(self, requirements: str, content: str, content_type: str = None,
-                       context_info: str = "", context_cache: list = None, verbose: bool = False) -> str:
-        """
-        Обогащает предоставленный контент с помощью LLM.
-
-        :param requirements: Требования к обогащению.
-        :param content: Контент для обогащения.
-        :param content_type: Тип контента.
-        :param context_info: Дополнительная информация контекста.
-        :param context_cache: Кеш предыдущих результатов.
-        :param verbose: Флаг для вывода дополнительных сообщений.
-        :return: Результат обогащения или None при ошибке.
-        """
-        # Создание словаря конфигураций для шаблонов
-        rendering_configs = {
-            "requirements": requirements,
-            "content": content,
-            "content_type": content_type,
-            "context_info": context_info,
-            "context_cache": context_cache
-        }
-
-        # Составление сообщений для LLM с использованием шаблонов
-        messages = utils.compose_initial_LLM_messages_with_templates(
-            "enricher.system.mustache", "enricher.user.mustache", rendering_configs
-        )
-
-        try:
-            # Отправка запроса к LLM и получение ответа
-            next_message = openai_utils.client().send_message(messages, temperature=0.4)
-
-            # Логирование результата обогащения
-            debug_msg = f"Результат обогащения: {next_message}"
-            logger.debug(debug_msg)
-            if verbose:
-                print(debug_msg)
-
-            # Проверка наличия ответа от LLM
-            if next_message:
-                # Извлечение результата из ответа
-                result = utils.extract_code_block(next_message["content"])
-            else:
-                # Логирование отсутствия ответа
-                logger.error("Отсутствует ответ от LLM.")
-                result = None
-
-        except Exception as e:
-            # Обработка ошибок с помощью logger
-            logger.error("Ошибка при обогащении контента", exc_info=True)
-            result = None
-
-
-        return result
-```

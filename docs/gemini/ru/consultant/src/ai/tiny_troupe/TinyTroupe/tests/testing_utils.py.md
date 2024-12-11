@@ -1,5 +1,4 @@
 # Received Code
-
 ```python
 """
 Testing utilities.
@@ -9,7 +8,7 @@ import sys
 from time import sleep
 sys.path.append('../../tinytroupe/')
 sys.path.append('../../')
-sys.path.append('..')
+sys.path.append('../')
 
 import tinytroupe.openai_utils as openai_utils
 from tinytroupe.agent import TinyPerson
@@ -76,89 +75,90 @@ def terminates_with_action_type(actions, action_type):
     
     return actions[-1]["action"]["type"] == action_type
 
+
 def proposition_holds(proposition: str) -> bool:
     """
-    Проверяет истинность заданного утверждения с помощью вызова LLM.
-    Это может использоваться для проверки свойств текста, которые трудно
-    проверить механически, например, "текст содержит несколько идей для продукта".
-
-    :param proposition: Утверждение для проверки.
-    :type proposition: str
-    :raises Exception: Если LLM возвращает неожиданный результат.
-    :return: `True`, если утверждение истинно, `False` в противном случае.
+    Checks if the given proposition is true according to an LLM call.
+    This can be used to check for text properties that are hard to
+    verify mechanically, such as "the text contains some ideas for a product".
     """
 
-    system_prompt = """
-    Проверьте, истинно ли следующее утверждение. Если истинно, напишите "true", в противном случае напишите "false". Ничего больше не пишите!
+    system_prompt = f"""
+    Check whether the following proposition is true or false. If it is
+    true, write "true", otherwise write "false". Don't write anything else!
     """
 
     user_prompt = f"""
-    Утверждение: {proposition}
+    Proposition: {proposition}
     """
 
     messages = [{"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}]
     
-    # вызов LLM
-    try:
-        next_message = openai_utils.client().send_message(messages)
-    except Exception as ex:
-        logger.error("Ошибка при вызове LLM", ex)
-        raise
-    
-    # проверка результата
+    # call the LLM
+    next_message = openai_utils.client().send_message(messages)
+
+    # check the result
     cleaned_message = only_alphanumeric(next_message["content"])
     if cleaned_message.lower().startswith("true"):
         return True
     elif cleaned_message.lower().startswith("false"):
         return False
     else:
-        raise Exception(f"LLM вернул неожиданный результат: {cleaned_message}")
+        raise Exception(f"LLM returned unexpected result: {cleaned_message}")
 
 def only_alphanumeric(string: str):
     """
-    Возвращает строку, содержащую только буквенно-цифровые символы.
+    Returns a string containing only alphanumeric characters.
     """
     return ''.join(c for c in string if c.isalnum())
 
-def create_test_system_user_message(user_prompt, system_prompt="Вы — полезный помощник AI."):
+def create_test_system_user_message(user_prompt, system_prompt="You are a helpful AI assistant."):
     """
-    Создает список, содержащий одно системное сообщение и одно пользовательское сообщение.
+    Creates a list containing one system message and one user message. 
     """
+    
     messages = [{"role": "system", "content": system_prompt}]
+    
     if user_prompt is not None:
         messages.append({"role": "user", "content": user_prompt})
+    
     return messages
 
 def agents_configs_are_equal(agent1, agent2, ignore_name=False):
     """
-    Проверяет, равны ли конфигурации двух агентов.
+    Checks if the configurations of two agents are equal.
     """
+
     ignore_keys = []
     if ignore_name:
         ignore_keys.append("name")
+    
     for key in agent1._configuration.keys():
         if key in ignore_keys:
             continue
+        
         if agent1._configuration[key] != agent2._configuration[key]:
             return False
+    
     return True
-
 ############################################################################################################
 # I/O utilities
 ############################################################################################################
 
 def remove_file_if_exists(file_path):
     """
-    Удаляет файл по указанному пути, если он существует.
+    Removes the file at the given path if it exists.
     """
+    
     if os.path.exists(file_path):
         os.remove(file_path)
 
 def get_relative_to_test_path(path_suffix):
     """
-    Возвращает путь к тестовому файлу с заданным суффиксом.
+    Returns the path to the test file with the given suffix.
     """
+    
     return os.path.join(os.path.dirname(__file__), path_suffix)
 
 
@@ -180,331 +180,559 @@ def setup():
 
     yield
 ```
-
-```markdown
 # Improved Code
-
 ```python
 """
-Модуль для тестирования функций и инструментов TinyTroupe.
+Модуль содержит набор утилит для тестирования агентов и окружений в TinyTroupe.
+=========================================================================================================
 
-Содержит вспомогательные функции для проверки действий, стимулов и других элементов.
-Также содержит фикстуры для создания тестовых сред.
+Модуль предоставляет функции для проверки действий, стимулов, сравнения конфигураций агентов,
+а также для работы с файловой системой в контексте тестов.
+
+Примеры использования
+--------------------
+
+Проверка наличия действия определенного типа:
+
+.. code-block:: python
+
+    actions = [{"action": {"type": "chat", "content": "Hello"}}, {"action": {"type": "think", "content": "I'm thinking"}}]
+    assert contains_action_type(actions, "chat") == True
+
+Проверка наличия стимула определенного содержания:
+
+.. code-block:: python
+
+    stimuli = [{"type": "message", "content": "Important message"}, {"type": "event", "content": "New event"}]
+    assert contains_stimulus_content(stimuli, "important") == True
 """
 import os
 import sys
 from time import sleep
-from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для работы с JSON
+#  Добавляем пути для импорта модулей из проекта
+sys.path.append('../../tinytroupe/')
+sys.path.append('../../')
+sys.path.append('../')
+
+#  Импортируем необходимые модули
+import tinytroupe.openai_utils as openai_utils
 from tinytroupe.agent import TinyPerson
-from tinytroupe.environment import TinyWorld
+from tinytroupe.environment import TinyWorld, TinySocialNetwork
 import pytest
 import importlib
+
 from src.logger.logger import logger
 
-
-# force caching, in order to save on API usage
-# Обновление для использования j_loads_ns
-try:
-    openai_utils.force_api_cache(True, "tests_cache.pickle")
-except Exception as e:
-    logger.error("Ошибка при работе с кэшем API:", e)
-
+#  Включаем кэширование API для экономии ресурсов при тестировании
+openai_utils.force_api_cache(True, "tests_cache.pickle")
 
 def contains_action_type(actions, action_type):
     """
-    Проверяет наличие действия заданного типа в списке действий.
+    Проверяет, содержит ли заданный список действий действие заданного типа.
 
-    :param actions: Список действий.
-    :type actions: list
+    :param actions: Список словарей, представляющих действия.
     :param action_type: Тип действия для поиска.
-    :type action_type: str
-    :return: `True`, если действие найдено, `False` иначе.
+    :return: `True`, если действие заданного типа найдено, `False` в противном случае.
     """
+    
     for action in actions:
+        #  Проверяем, совпадает ли тип текущего действия с искомым типом
         if action["action"]["type"] == action_type:
             return True
+    
     return False
 
-
-def contains_action_content(actions, action_content):
+def contains_action_content(actions:list, action_content: str):
     """
-    Проверяет наличие действия с заданным содержимым в списке действий.
+    Проверяет, содержит ли заданный список действий действие с заданным содержимым.
 
-    :param actions: Список действий.
-    :type actions: list
-    :param action_content: Содержимое действия для поиска.
-    :type action_content: str
-    :return: `True`, если действие найдено, `False` иначе.
+    :param actions: Список словарей, представляющих действия.
+    :param action_content: Содержимое для поиска в действиях.
+    :return: `True`, если действие с заданным содержимым найдено, `False` в противном случае.
     """
+    
     for action in actions:
+        #  Проверяем, содержится ли заданное содержимое в содержимом текущего действия (регистронезависимо)
         if action_content.lower() in action["action"]["content"].lower():
             return True
+    
     return False
-
 
 def contains_stimulus_type(stimuli, stimulus_type):
     """
-    Проверяет наличие стимула заданного типа в списке стимулов.
+    Проверяет, содержит ли заданный список стимулов стимул заданного типа.
 
-    :param stimuli: Список стимулов.
-    :type stimuli: list
+    :param stimuli: Список словарей, представляющих стимулы.
     :param stimulus_type: Тип стимула для поиска.
-    :type stimulus_type: str
-    :return: `True`, если стимул найден, `False` иначе.
+    :return: `True`, если стимул заданного типа найден, `False` в противном случае.
     """
+    
     for stimulus in stimuli:
+        #  Проверяем, совпадает ли тип текущего стимула с искомым типом
         if stimulus["type"] == stimulus_type:
             return True
+    
     return False
-
 
 def contains_stimulus_content(stimuli, stimulus_content):
     """
-    Проверяет наличие стимула с заданным содержимым в списке стимулов.
+    Проверяет, содержит ли заданный список стимулов стимул с заданным содержимым.
 
-    :param stimuli: Список стимулов.
-    :type stimuli: list
-    :param stimulus_content: Содержимое стимула для поиска.
-    :type stimulus_content: str
-    :return: `True`, если стимул найден, `False` иначе.
+    :param stimuli: Список словарей, представляющих стимулы.
+    :param stimulus_content: Содержимое для поиска в стимулах.
+    :return: `True`, если стимул с заданным содержимым найден, `False` в противном случае.
     """
+    
     for stimulus in stimuli:
+         # Проверяем, содержится ли заданное содержимое в содержимом текущего стимула (регистронезависимо)
         if stimulus_content.lower() in stimulus["content"].lower():
             return True
+    
     return False
-
 
 def terminates_with_action_type(actions, action_type):
     """
-    Проверяет, заканчивается ли список действий действием заданного типа.
+    Проверяет, завершается ли заданный список действий действием заданного типа.
 
-    :param actions: Список действий.
-    :type actions: list
-    :param action_type: Тип действия для проверки.
-    :type action_type: str
-    :return: `True`, если список заканчивается действием указанного типа, `False` иначе.
+    :param actions: Список словарей, представляющих действия.
+    :param action_type: Тип действия, которым должен заканчиваться список.
+    :return: `True`, если список действий заканчивается действием заданного типа, `False` в противном случае.
     """
-    if not actions:
+    
+    if len(actions) == 0:
         return False
+    
+    # Проверяем, что тип последнего действия в списке соответствует искомому типу
     return actions[-1]["action"]["type"] == action_type
 
 
-def proposition_holds(proposition):
+def proposition_holds(proposition: str) -> bool:
     """
-    Проверяет истинность утверждения, используя LLM.
+    Проверяет, истинно ли заданное утверждение согласно выводу LLM.
 
-    :param proposition: Утверждение для проверки.
-    :type proposition: str
+    Используется для проверки текстовых свойств, которые сложно проверить механически,
+    например, "текст содержит идеи для продукта".
+
+    :param proposition: Текстовое утверждение для проверки.
+    :return: `True`, если LLM считает утверждение истинным, `False` в противном случае.
     :raises Exception: Если LLM возвращает неожиданный результат.
-    :return: `True` если утверждение истинно, `False` иначе.
     """
-    system_prompt = """Проверьте, истинно ли следующее утверждение. Если истинно, напишите "true", в противном случае напишите "false". Ничего больше не пишите!"""
-    user_prompt = f"Утверждение: {proposition}"
-    messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
 
+    system_prompt = f"""
+    Check whether the following proposition is true or false. If it is
+    true, write "true", otherwise write "false". Don't write anything else!
+    """
+
+    user_prompt = f"""
+    Proposition: {proposition}
+    """
+
+    messages = [{"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}]
+    
     try:
-        response = openai_utils.client().send_message(messages)
-        result = response['content'].lower()
-        if result.startswith('true'):
-            return True
-        elif result.startswith('false'):
-            return False
-        else:
-            raise Exception(f"LLM вернул неожиданный результат: {result}")
+        #  Отправляем запрос LLM
+        next_message = openai_utils.client().send_message(messages)
     except Exception as e:
-        logger.error("Ошибка при проверке утверждения:", e)
-        raise
+        logger.error(f'Ошибка при вызове LLM: {e}')
+        return False
+
+    #  Очищаем ответ от лишних символов
+    cleaned_message = only_alphanumeric(next_message["content"])
+    if cleaned_message.lower().startswith("true"):
+        return True
+    elif cleaned_message.lower().startswith("false"):
+        return False
+    else:
+        #  Логируем ошибку, если LLM возвращает неожиданный результат
+        logger.error(f"LLM returned unexpected result: {cleaned_message}")
+        raise Exception(f"LLM returned unexpected result: {cleaned_message}")
+
+def only_alphanumeric(string: str):
+    """
+    Возвращает строку, содержащую только буквенно-цифровые символы.
+
+    :param string: Исходная строка.
+    :return: Строка, содержащая только буквенно-цифровые символы.
+    """
+    return ''.join(c for c in string if c.isalnum())
+
+def create_test_system_user_message(user_prompt, system_prompt="You are a helpful AI assistant."):
+    """
+    Создает список, содержащий системное и пользовательское сообщения для теста.
+
+    :param user_prompt: Текст пользовательского сообщения.
+    :param system_prompt: Текст системного сообщения (по умолчанию "You are a helpful AI assistant.").
+    :return: Список словарей, представляющих сообщения.
+    """
+    
+    messages = [{"role": "system", "content": system_prompt}]
+    
+    if user_prompt is not None:
+        #  Добавляем пользовательское сообщение, если оно предоставлено
+        messages.append({"role": "user", "content": user_prompt})
+    
+    return messages
+
+def agents_configs_are_equal(agent1, agent2, ignore_name=False):
+    """
+    Проверяет, совпадают ли конфигурации двух агентов.
+
+    :param agent1: Первый агент для сравнения.
+    :param agent2: Второй агент для сравнения.
+    :param ignore_name: Если `True`, имя агента игнорируется при сравнении.
+    :return: `True`, если конфигурации агентов совпадают, `False` в противном случае.
+    """
+
+    ignore_keys = []
+    if ignore_name:
+        #  Добавляем ключ "name" в список игнорируемых ключей, если нужно игнорировать имя агента
+        ignore_keys.append("name")
+    
+    for key in agent1._configuration.keys():
+        if key in ignore_keys:
+            continue
+        
+        #  Сравниваем значения конфигураций по ключам, если значения не совпадают, возвращаем `False`
+        if agent1._configuration[key] != agent2._configuration[key]:
+            return False
+    
+    return True
+############################################################################################################
+# I/O utilities
+############################################################################################################
+
+def remove_file_if_exists(file_path):
+    """
+    Удаляет файл по указанному пути, если он существует.
+
+    :param file_path: Путь к файлу для удаления.
+    """
+    
+    if os.path.exists(file_path):
+        #  Удаляем файл, если он существует
+        os.remove(file_path)
+
+def get_relative_to_test_path(path_suffix):
+    """
+    Возвращает путь к файлу относительно текущего файла с заданным суффиксом.
+
+    :param path_suffix: Суффикс пути к файлу.
+    :return: Полный путь к файлу.
+    """
+    
+    return os.path.join(os.path.dirname(__file__), path_suffix)
 
 
-# ... (other functions remain the same)
-
+############################################################################################################
+# Fixtures
+############################################################################################################
 
 @pytest.fixture(scope="function")
 def focus_group_world():
-    import tinytroupe.examples as examples
-    world = TinyWorld("Focus group", [
-        examples.create_lisa_the_data_scientist(),
-        examples.create_oscar_the_architect(),
-        examples.create_marcos_the_physician()
-    ])
-    return world
+    """
+    Создает фикстуру мира для фокус-группы.
 
+    :return: Объект мира `TinyWorld`.
+    """
+    import tinytroupe.examples as examples   
+    
+    #  Создаем мир с несколькими агентами
+    world = TinyWorld("Focus group", [examples.create_lisa_the_data_scientist(), examples.create_oscar_the_architect(), examples.create_marcos_the_physician()])
+    return world
 
 @pytest.fixture(scope="function")
 def setup():
+    """
+    Создает фикстуру для настройки тестов, очищая агентов и окружения.
+
+    :return: Генератор, который очищает агентов и окружения перед каждым тестом.
+    """
+    #  Очищаем список агентов и окружений
     TinyPerson.clear_agents()
     TinyWorld.clear_environments()
+
     yield
 ```
-
-```markdown
 # Changes Made
+- Добавлены docstring к модулю, функциям и фикстурам в формате reStructuredText.
+- Добавлен импорт `logger` из `src.logger.logger` для логирования ошибок.
+- Добавлена обработка ошибок при вызове LLM с использованием `logger.error`.
+- Заменены общие блоки `try-except` на использование `logger.error` для обработки ошибок.
+- Добавлены комментарии к коду для пояснения его работы.
+- Сохранены существующие комментарии `#`.
+- Добавлены комментарии в стиле RST к каждой функции.
 
-*   Импорты из `src.utils.jjson` заменены на `j_loads` и `j_loads_ns`.
-*   Добавлены docstrings в формате RST ко всем функциям, методам и классам.
-*   В функции `proposition_holds` добавлен обработчик ошибок `try-except` для логирования потенциальных проблем с вызовом LLM.
-*   Комментарии переписаны в формате RST.
-*   В функции `proposition_holds` переписан блок обработки результата LLM, сделав его более читаемым и эффективным.
-*   Добавлена строка `from src.logger.logger import logger` для импорта объекта `logger`.
-*   Изменен способ обращения к `openai_utils.client()` для повышения надёжности.
-*   Удалены устаревшие или ненужные `...` в коде.
-*   Проведён рефакторинг функций для повышения ясности и краткости.
-
-
-```
-
-```python
 # FULL Code
-
 ```python
 """
-Модуль для тестирования функций и инструментов TinyTroupe.
+Модуль содержит набор утилит для тестирования агентов и окружений в TinyTroupe.
+=========================================================================================================
 
-Содержит вспомогательные функции для проверки действий, стимулов и других элементов.
-Также содержит фикстуры для создания тестовых сред.
+Модуль предоставляет функции для проверки действий, стимулов, сравнения конфигураций агентов,
+а также для работы с файловой системой в контексте тестов.
+
+Примеры использования
+--------------------
+
+Проверка наличия действия определенного типа:
+
+.. code-block:: python
+
+    actions = [{"action": {"type": "chat", "content": "Hello"}}, {"action": {"type": "think", "content": "I'm thinking"}}]
+    assert contains_action_type(actions, "chat") == True
+
+Проверка наличия стимула определенного содержания:
+
+.. code-block:: python
+
+    stimuli = [{"type": "message", "content": "Important message"}, {"type": "event", "content": "New event"}]
+    assert contains_stimulus_content(stimuli, "important") == True
 """
 import os
 import sys
 from time import sleep
-from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для работы с JSON
+#  Добавляем пути для импорта модулей из проекта
+sys.path.append('../../tinytroupe/')
+sys.path.append('../../')
+sys.path.append('../')
+
+#  Импортируем необходимые модули
+import tinytroupe.openai_utils as openai_utils
 from tinytroupe.agent import TinyPerson
-from tinytroupe.environment import TinyWorld
+from tinytroupe.environment import TinyWorld, TinySocialNetwork
 import pytest
 import importlib
+
 from src.logger.logger import logger
 
-
-# force caching, in order to save on API usage
-# Обновление для использования j_loads_ns
-try:
-    openai_utils.force_api_cache(True, "tests_cache.pickle")
-except Exception as e:
-    logger.error("Ошибка при работе с кэшем API:", e)
-
+#  Включаем кэширование API для экономии ресурсов при тестировании
+openai_utils.force_api_cache(True, "tests_cache.pickle")
 
 def contains_action_type(actions, action_type):
     """
-    Проверяет наличие действия заданного типа в списке действий.
+    Проверяет, содержит ли заданный список действий действие заданного типа.
 
-    :param actions: Список действий.
-    :type actions: list
+    :param actions: Список словарей, представляющих действия.
     :param action_type: Тип действия для поиска.
-    :type action_type: str
-    :return: `True`, если действие найдено, `False` иначе.
+    :return: `True`, если действие заданного типа найдено, `False` в противном случае.
     """
+    
     for action in actions:
+        #  Проверяем, совпадает ли тип текущего действия с искомым типом
         if action["action"]["type"] == action_type:
             return True
+    
     return False
 
-
-def contains_action_content(actions, action_content):
+def contains_action_content(actions:list, action_content: str):
     """
-    Проверяет наличие действия с заданным содержимым в списке действий.
+    Проверяет, содержит ли заданный список действий действие с заданным содержимым.
 
-    :param actions: Список действий.
-    :type actions: list
-    :param action_content: Содержимое действия для поиска.
-    :type action_content: str
-    :return: `True`, если действие найдено, `False` иначе.
+    :param actions: Список словарей, представляющих действия.
+    :param action_content: Содержимое для поиска в действиях.
+    :return: `True`, если действие с заданным содержимым найдено, `False` в противном случае.
     """
+    
     for action in actions:
+        #  Проверяем, содержится ли заданное содержимое в содержимом текущего действия (регистронезависимо)
         if action_content.lower() in action["action"]["content"].lower():
             return True
+    
     return False
-
 
 def contains_stimulus_type(stimuli, stimulus_type):
     """
-    Проверяет наличие стимула заданного типа в списке стимулов.
+    Проверяет, содержит ли заданный список стимулов стимул заданного типа.
 
-    :param stimuli: Список стимулов.
-    :type stimuli: list
+    :param stimuli: Список словарей, представляющих стимулы.
     :param stimulus_type: Тип стимула для поиска.
-    :type stimulus_type: str
-    :return: `True`, если стимул найден, `False` иначе.
+    :return: `True`, если стимул заданного типа найден, `False` в противном случае.
     """
+    
     for stimulus in stimuli:
+        #  Проверяем, совпадает ли тип текущего стимула с искомым типом
         if stimulus["type"] == stimulus_type:
             return True
+    
     return False
-
 
 def contains_stimulus_content(stimuli, stimulus_content):
     """
-    Проверяет наличие стимула с заданным содержимым в списке стимулов.
+    Проверяет, содержит ли заданный список стимулов стимул с заданным содержимым.
 
-    :param stimuli: Список стимулов.
-    :type stimuli: list
-    :param stimulus_content: Содержимое стимула для поиска.
-    :type stimulus_content: str
-    :return: `True`, если стимул найден, `False` иначе.
+    :param stimuli: Список словарей, представляющих стимулы.
+    :param stimulus_content: Содержимое для поиска в стимулах.
+    :return: `True`, если стимул с заданным содержимым найден, `False` в противном случае.
     """
+    
     for stimulus in stimuli:
+         # Проверяем, содержится ли заданное содержимое в содержимом текущего стимула (регистронезависимо)
         if stimulus_content.lower() in stimulus["content"].lower():
             return True
+    
     return False
-
 
 def terminates_with_action_type(actions, action_type):
     """
-    Проверяет, заканчивается ли список действий действием заданного типа.
+    Проверяет, завершается ли заданный список действий действием заданного типа.
 
-    :param actions: Список действий.
-    :type actions: list
-    :param action_type: Тип действия для проверки.
-    :type action_type: str
-    :return: `True`, если список заканчивается действием указанного типа, `False` иначе.
+    :param actions: Список словарей, представляющих действия.
+    :param action_type: Тип действия, которым должен заканчиваться список.
+    :return: `True`, если список действий заканчивается действием заданного типа, `False` в противном случае.
     """
-    if not actions:
+    
+    if len(actions) == 0:
         return False
+    
+    # Проверяем, что тип последнего действия в списке соответствует искомому типу
     return actions[-1]["action"]["type"] == action_type
 
 
-def proposition_holds(proposition):
+def proposition_holds(proposition: str) -> bool:
     """
-    Проверяет истинность утверждения, используя LLM.
+    Проверяет, истинно ли заданное утверждение согласно выводу LLM.
 
-    :param proposition: Утверждение для проверки.
-    :type proposition: str
+    Используется для проверки текстовых свойств, которые сложно проверить механически,
+    например, "текст содержит идеи для продукта".
+
+    :param proposition: Текстовое утверждение для проверки.
+    :return: `True`, если LLM считает утверждение истинным, `False` в противном случае.
     :raises Exception: Если LLM возвращает неожиданный результат.
-    :return: `True` если утверждение истинно, `False` иначе.
     """
-    system_prompt = """Проверьте, истинно ли следующее утверждение. Если истинно, напишите "true", в противном случае напишите "false". Ничего больше не пишите!"""
-    user_prompt = f"Утверждение: {proposition}"
-    messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
 
+    system_prompt = f"""
+    Check whether the following proposition is true or false. If it is
+    true, write "true", otherwise write "false". Don't write anything else!
+    """
+
+    user_prompt = f"""
+    Proposition: {proposition}
+    """
+
+    messages = [{"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}]
+    
     try:
-        response = openai_utils.client().send_message(messages)
-        result = response['content'].lower()
-        if result.startswith('true'):
-            return True
-        elif result.startswith('false'):
-            return False
-        else:
-            raise Exception(f"LLM вернул неожиданный результат: {result}")
+        #  Отправляем запрос LLM
+        next_message = openai_utils.client().send_message(messages)
     except Exception as e:
-        logger.error("Ошибка при проверке утверждения:", e)
-        raise
+        logger.error(f'Ошибка при вызове LLM: {e}')
+        return False
+
+    #  Очищаем ответ от лишних символов
+    cleaned_message = only_alphanumeric(next_message["content"])
+    if cleaned_message.lower().startswith("true"):
+        return True
+    elif cleaned_message.lower().startswith("false"):
+        return False
+    else:
+        #  Логируем ошибку, если LLM возвращает неожиданный результат
+        logger.error(f"LLM returned unexpected result: {cleaned_message}")
+        raise Exception(f"LLM returned unexpected result: {cleaned_message}")
+
+def only_alphanumeric(string: str):
+    """
+    Возвращает строку, содержащую только буквенно-цифровые символы.
+
+    :param string: Исходная строка.
+    :return: Строка, содержащая только буквенно-цифровые символы.
+    """
+    return ''.join(c for c in string if c.isalnum())
+
+def create_test_system_user_message(user_prompt, system_prompt="You are a helpful AI assistant."):
+    """
+    Создает список, содержащий системное и пользовательское сообщения для теста.
+
+    :param user_prompt: Текст пользовательского сообщения.
+    :param system_prompt: Текст системного сообщения (по умолчанию "You are a helpful AI assistant.").
+    :return: Список словарей, представляющих сообщения.
+    """
+    
+    messages = [{"role": "system", "content": system_prompt}]
+    
+    if user_prompt is not None:
+        #  Добавляем пользовательское сообщение, если оно предоставлено
+        messages.append({"role": "user", "content": user_prompt})
+    
+    return messages
+
+def agents_configs_are_equal(agent1, agent2, ignore_name=False):
+    """
+    Проверяет, совпадают ли конфигурации двух агентов.
+
+    :param agent1: Первый агент для сравнения.
+    :param agent2: Второй агент для сравнения.
+    :param ignore_name: Если `True`, имя агента игнорируется при сравнении.
+    :return: `True`, если конфигурации агентов совпадают, `False` в противном случае.
+    """
+
+    ignore_keys = []
+    if ignore_name:
+        #  Добавляем ключ "name" в список игнорируемых ключей, если нужно игнорировать имя агента
+        ignore_keys.append("name")
+    
+    for key in agent1._configuration.keys():
+        if key in ignore_keys:
+            continue
+        
+        #  Сравниваем значения конфигураций по ключам, если значения не совпадают, возвращаем `False`
+        if agent1._configuration[key] != agent2._configuration[key]:
+            return False
+    
+    return True
+############################################################################################################
+# I/O utilities
+############################################################################################################
+
+def remove_file_if_exists(file_path):
+    """
+    Удаляет файл по указанному пути, если он существует.
+
+    :param file_path: Путь к файлу для удаления.
+    """
+    
+    if os.path.exists(file_path):
+        #  Удаляем файл, если он существует
+        os.remove(file_path)
+
+def get_relative_to_test_path(path_suffix):
+    """
+    Возвращает путь к файлу относительно текущего файла с заданным суффиксом.
+
+    :param path_suffix: Суффикс пути к файлу.
+    :return: Полный путь к файлу.
+    """
+    
+    return os.path.join(os.path.dirname(__file__), path_suffix)
 
 
-# ... (other functions remain the same)
-
+############################################################################################################
+# Fixtures
+############################################################################################################
 
 @pytest.fixture(scope="function")
 def focus_group_world():
-    import tinytroupe.examples as examples
-    world = TinyWorld("Focus group", [
-        examples.create_lisa_the_data_scientist(),
-        examples.create_oscar_the_architect(),
-        examples.create_marcos_the_physician()
-    ])
-    return world
+    """
+    Создает фикстуру мира для фокус-группы.
 
+    :return: Объект мира `TinyWorld`.
+    """
+    import tinytroupe.examples as examples   
+    
+    #  Создаем мир с несколькими агентами
+    world = TinyWorld("Focus group", [examples.create_lisa_the_data_scientist(), examples.create_oscar_the_architect(), examples.create_marcos_the_physician()])
+    return world
 
 @pytest.fixture(scope="function")
 def setup():
+    """
+    Создает фикстуру для настройки тестов, очищая агентов и окружения.
+
+    :return: Генератор, который очищает агентов и окружения перед каждым тестом.
+    """
+    #  Очищаем список агентов и окружений
     TinyPerson.clear_agents()
     TinyWorld.clear_environments()
+
     yield
-```

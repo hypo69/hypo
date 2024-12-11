@@ -1,138 +1,95 @@
-# Received Code
-
+# Улучшенный код
 ```python
-## \file hypotez/src/ai/gradio/gradio.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.gradio 
-    :platform: Windows, Unix
-    :synopsis:
+Модуль для запуска Gradio интерфейса.
+=====================================
 
+Этот модуль содержит пример использования библиотеки Gradio для создания простого веб-интерфейса.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    python gradio.py
 """
-MODE = 'dev'
-#https://www.gradio.app/guides/quickstart
-import gradio as gr
+import gradio as gr # Импорт библиотеки gradio
+from src.logger.logger import logger # Импорт логгера
 
-def greet(name):
+MODE = 'dev' # Установка режима работы
+
+def greet(name: str) -> str:
+    """
+    Функция для создания приветствия.
+
+    :param name: Имя пользователя.
+    :return: Приветственная строка.
+    """
+    # Код возвращает приветствие, используя переданное имя
     return "Hello " + name + "!"
 
-demo = gr.Interface(fn=greet, inputs="text", outputs="text")
-demo.launch()
+# Создание интерфейса Gradio
+try:
+    demo = gr.Interface(fn=greet, inputs="text", outputs="text")
+    # Запуск интерфейса
+    demo.launch()
+except Exception as e:
+    logger.error(f'Произошла ошибка при запуске Gradio интерфейса: {e}')
+    ...
 ```
 
-# Improved Code
+# Внесённые изменения
 
+1.  **Добавлен импорт логгера**: `from src.logger.logger import logger` для логирования ошибок.
+2.  **Добавлена документация**: Документирование модуля и функции `greet` с использованием reStructuredText (RST).
+3.  **Добавлена обработка ошибок**: Использован блок `try-except` для обработки ошибок при запуске Gradio интерфейса и логирование ошибки.
+4.  **Форматирование**: Код отформатирован для соответствия PEP8, включая добавление пробелов после запятых и между операторами.
+5.  **Добавлены комментарии**: Добавлены комментарии, объясняющие назначение каждой части кода.
+6.  **Уточнение типов**: Добавлена аннотация типа для параметра `name` и возвращаемого значения функции `greet`.
+
+# Оптимизированный код
 ```python
-## \file hypotez/src/ai/gradio/gradio.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.ai.gradio
-    :platform: Windows, Unix
-    :synopsis: Модуль для запуска Gradio интерфейса.
+Модуль для запуска Gradio интерфейса.
+=====================================
 
+Этот модуль содержит пример использования библиотеки Gradio для создания простого веб-интерфейса.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    python gradio.py
 """
-import gradio as gr
-from src.logger.logger import logger  # Импорт логгера
+import gradio as gr # Импорт библиотеки gradio
+from src.logger.logger import logger # Импорт логгера
 
-MODE = 'dev'
-
+MODE = 'dev' # Установка режима работы
 
 def greet(name: str) -> str:
     """
-    Возвращает приветствие с именем.
+    Функция для создания приветствия.
 
     :param name: Имя пользователя.
-    :return: Приветственное сообщение.
+    :return: Приветственная строка.
     """
-    try:
-        # Код формирует приветственное сообщение
-        return f"Hello {name}!"
-    except Exception as e:
-        logger.error("Ошибка при формировании приветствия", e)
-        return "Произошла ошибка."
+    # Код возвращает приветствие, используя переданное имя
+    return "Hello " + name + "!"
 
-
-def launch_gradio_interface():
-    """
-    Запускает Gradio интерфейс для приветствия.
-    """
-    try:
-        # Код создаёт интерфейс и запускает его
-        demo = gr.Interface(fn=greet, inputs="text", outputs="text")
-        demo.launch()
-    except Exception as e:
-        logger.error("Ошибка запуска Gradio интерфейса", e)
-
-
-if __name__ == "__main__":
-    launch_gradio_interface()
-```
-
-# Changes Made
-
-*   Импортирован логгер `from src.logger.logger import logger`.
-*   Добавлена функция `launch_gradio_interface()`, которая отвечает за запуск Gradio интерфейса.
-*   Добавлен обработчик ошибок `try...except` для предотвращения аварийного завершения программы.
-*   Функция `greet` теперь имеет аннотации типов и docstring в формате reStructuredText (RST).
-*   Функция `greet` теперь обрабатывает возможные исключения, используя `logger.error`.
-*   Код запускается только при выполнении скрипта напрямую (если его импортировать в другой модуль, код не будет выполняться).
-*   Убрана лишняя строка `#https://www.gradio.app/guides/quickstart`, которая не являлась кодом.
-*   Добавлены docstring с подробным описанием функций в формате reStructuredText (RST).
-*   В комментариях использованы более конкретные формулировки, избегая слов 'получаем', 'делаем'.
-*   Добавлены аннотации типов для аргументов и возвращаемого значения функций.
-
-# FULL Code
-
-```python
-## \file hypotez/src/ai/gradio/gradio.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.ai.gradio
-    :platform: Windows, Unix
-    :synopsis: Модуль для запуска Gradio интерфейса.
-
-"""
-import gradio as gr
-from src.logger.logger import logger  # Импорт логгера
-
-MODE = 'dev'
-
-
-def greet(name: str) -> str:
-    """
-    Возвращает приветствие с именем.
-
-    :param name: Имя пользователя.
-    :return: Приветственное сообщение.
-    """
-    try:
-        # Код формирует приветственное сообщение
-        return f"Hello {name}!"
-    except Exception as e:
-        logger.error("Ошибка при формировании приветствия", e)
-        return "Произошла ошибка."
-
-
-def launch_gradio_interface():
-    """
-    Запускает Gradio интерфейс для приветствия.
-    """
-    try:
-        # Код создаёт интерфейс и запускает его
-        demo = gr.Interface(fn=greet, inputs="text", outputs="text")
-        demo.launch()
-    except Exception as e:
-        logger.error("Ошибка запуска Gradio интерфейса", e)
-
-
-if __name__ == "__main__":
-    launch_gradio_interface()
+# Создание интерфейса Gradio
+try:
+    demo = gr.Interface(fn=greet, inputs="text", outputs="text")
+    # Запуск интерфейса
+    demo.launch()
+except Exception as e:
+    logger.error(f'Произошла ошибка при запуске Gradio интерфейса: {e}')
+    ...

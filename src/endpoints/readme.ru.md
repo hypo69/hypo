@@ -36,28 +36,6 @@
 Модуль `endpoints` включает подмодули для интеграции с различными системами потребителей,  
 обеспечивая взаимодействие с внешними сервисами.  
 
-
-## Структура модуля
-
-
-### Final Consumer Endpoints
-
-
-# 1. **PrestaShop**
-Интеграция с API PrestaShop. Использует стандартные api.
-
-# 2. **bots**
-Подмодуль для управления интеграцией с ботами Telegram и Discord.
-
-
-# 3. **emil**
-Подмодуль для интеграции с клиентом  https://emil-design.com (prestashop + facebook)
-
-
-
-# 4. **kazarinov**
-Подмодуль для интеграции с поставщиком данных Kazarinov. (pricelist creator, facebook promotion)
-
 ## Описание модулей
 
 ### 1. `prestashop`

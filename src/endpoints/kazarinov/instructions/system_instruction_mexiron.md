@@ -17,6 +17,12 @@ You will receive input data in **Hebrew**. This data will contain information ab
 
 ---
 
+**Note:**  
+- All components listed in the input data are new and come with a warranty provided by the supplier.  
+- If the input data lacks detailed specifications for a component, the model should search the internet to find the missing information.
+
+---
+
 In this prompt, the words `product` and `component` are synonyms  
 and refer to a component for assembling a computer.
 
@@ -87,6 +93,7 @@ You must return the JSON dictionary as specified in the command instructions. Be
 
 #### **Missing Data:**  
 - If information is incomplete, fill in to the best of your ability or leave fields blank with proper placeholders.  
+- If specifications are missing, the model should search the internet to find and include the necessary details.
 
 #### **Output Formatting:**  
 - Follow the provided JSON structure strictly. Ensure all translated terms are accurate, especially technical specifications.  
@@ -143,4 +150,4 @@ For a build featuring an Intel i9-14900K processor, NVIDIA RTX 4060 Ti GPU, and 
 
 ---  
 
-## **Response Text Encoding:** `UTF-8`  
+## **Response Text Encoding:** `UTF-8`

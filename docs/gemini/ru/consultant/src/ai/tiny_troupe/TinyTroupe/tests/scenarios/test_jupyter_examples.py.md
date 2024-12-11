@@ -1,186 +1,176 @@
-# Received Code
-
+## Улучшенный код
 ```python
+"""
+Модуль для тестирования выполнения Jupyter Notebooks.
+====================================================
+
+Этот модуль содержит тесты для проверки выполнения Jupyter Notebooks,
+расположенных в указанной директории. Он использует `pytest` для организации
+тестов и `nbformat` и `nbconvert` для работы с Notebooks.
+"""
 import os
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import pytest
-
 import sys
-sys.path.insert(0, '../../tinytroupe/') # ensures that the package is imported from the parent directory, not the Python installation
-sys.path.insert(0, '../../') # ensures that the package is imported from the parent directory, not the Python installation
-sys.path.insert(0, '..') # ensures that the package is imported from the parent directory, not the Python installation
+from src.logger.logger import logger # Import logger
 
-# Set the folder containing the notebooks
-NOTEBOOK_FOLDER = "../examples/"  # Update this path
+# Путь для добавления в sys.path для корректного импорта пакета.
+sys.path.insert(0, '../../tinytroupe/')
+sys.path.insert(0, '../../')
+sys.path.insert(0, '..')
 
-# Set a timeout for long-running notebooks
-TIMEOUT = 600
-
-KERNEL_NAME = "python3" #"py310"
-
-
-def get_notebooks(folder):
-    """Retrieve all Jupyter notebook files from the specified folder."""
-    return [\
-        os.path.join(folder, f)\
-        for f in os.listdir(folder)\
-        if f.endswith(".ipynb") and not ".executed." in f and not ".local." in f\
-    ]
-
-
-@pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
-def test_notebook_execution(notebook_path):
-    """Execute a Jupyter notebook and assert that no exceptions occur."""
-    with open(notebook_path, "r", encoding="utf-8") as nb_file:
-        notebook = nbformat.read(nb_file, as_version=4)
-        print(f"Executing notebook: {notebook_path} with kernel: {KERNEL_NAME}")
-        ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
-
-        try:
-            ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
-            print(f"Notebook {notebook_path} executed successfully.")
-
-        except Exception as e:
-            pytest.fail(f"Notebook {notebook_path} raised an exception: {e}")
-        
-        finally:
-            # save a copy of the executed notebook
-            output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
-            with open(output_path, "w", encoding="utf-8") as out_file:
-                nbformat.write(notebook, out_file)
-            
-            print(f"Executed notebook saved as: {output_path}")
-```
-
-# Improved Code
-
-```python
-import os
-import nbformat
-from nbconvert.preprocessors import ExecutePreprocessor
-import pytest
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling
-from src.logger.logger import logger  # Import logger
-
-
-# Define the notebook folder.  Update this path if needed.
+# Путь к папке с примерами блокнотов
 NOTEBOOK_FOLDER = "../examples/"
 
-# Define a timeout for long-running notebooks.  Adjust as needed.
+# Максимальное время выполнения блокнота в секундах.
 TIMEOUT = 600
 
-# Define the kernel name.  Adjust if necessary.
+# Ядро Jupyter для выполнения блокнота
 KERNEL_NAME = "python3"
 
 
-def get_notebooks(folder):
-    """Получает список путей к Jupyter notebook файлам в указанной папке.
+def get_notebooks(folder: str) -> list:
+    """
+    Возвращает список путей ко всем файлам Jupyter Notebooks в указанной папке.
 
-    :param folder: Путь к папке с Jupyter notebook файлами.
-    :return: Список путей к файлам .ipynb, исключая файлы с суффиксом ".executed." или ".local.".
+    :param folder: Путь к папке с блокнотами.
+    :return: Список путей к блокнотам.
     """
     return [
         os.path.join(folder, f)
         for f in os.listdir(folder)
-        if f.endswith(".ipynb") and not ".executed." in f and not ".local." in f
+        if f.endswith(".ipynb") and ".executed." not in f and ".local." not in f
     ]
 
 
 @pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
-def test_notebook_execution(notebook_path):
-    """Выполняет Jupyter notebook и проверяет отсутствие исключений.
+def test_notebook_execution(notebook_path: str):
+    """
+    Выполняет Jupyter Notebook и проверяет, что не возникает исключений.
 
-    :param notebook_path: Путь к Jupyter notebook файлу.
+    :param notebook_path: Путь к файлу блокнота.
     """
     try:
+        # Открытие файла блокнота для чтения
         with open(notebook_path, "r", encoding="utf-8") as nb_file:
             notebook = nbformat.read(nb_file, as_version=4)
-            print(f"Выполнение ноутбука: {notebook_path} с ядром: {KERNEL_NAME}")
+            print(f"Выполнение блокнота: {notebook_path} с ядром: {KERNEL_NAME}")
+            # Инициализация препроцессора для выполнения
             ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
+            # Выполнение блокнота
             ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
-            print(f"Ноутбук {notebook_path} выполнен успешно.")
+            print(f"Блокнот {notebook_path} успешно выполнен.")
+
     except Exception as e:
-        logger.error(f"Ошибка при выполнении ноутбука {notebook_path}: {e}")
-        pytest.fail(f"Ноутбук {notebook_path} вызвал исключение: {e}")
+        logger.error(f"Блокнот {notebook_path} вызвал исключение: {e}", exc_info=True)
+        pytest.fail(f"Блокнот {notebook_path} вызвал исключение: {e}")
     finally:
+        # Сохранение копии выполненного блокнота
         output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
         try:
             with open(output_path, "w", encoding="utf-8") as out_file:
                 nbformat.write(notebook, out_file)
-            print(f"Выполненный ноутбук сохранён как: {output_path}")
+            print(f"Выполненный блокнот сохранен как: {output_path}")
         except Exception as e:
-            logger.error(f"Ошибка при сохранении выполненного ноутбука {output_path}: {e}")
-
-
+            logger.error(f"Не удалось сохранить блокнот {output_path}: {e}", exc_info=True)
+            pytest.fail(f"Не удалось сохранить блокнот {output_path}: {e}")
 ```
+## Внесённые изменения
 
-# Changes Made
+1.  **Добавлен импорт `logger`**:
+    - Добавлена строка `from src.logger.logger import logger` для импорта модуля логирования.
+2.  **Документация модуля**:
+    - Добавлены docstring для модуля.
+3.  **Документация функций**:
+    - Добавлены docstring для функций `get_notebooks` и `test_notebook_execution` с описанием параметров и возвращаемых значений.
+4.  **Логирование ошибок**:
+    - Заменены стандартные блоки `try-except` на использование `logger.error` для логирования ошибок с `exc_info=True` для получения полной трассировки стека.
+5. **Обработка ошибок при сохранении**:
+    - Добавлен блок `try-except` для обработки возможных ошибок при сохранении выполненного блокнота, с логированием ошибок через `logger.error`.
+6.  **Удалены лишние комментарии**:
+    - Убраны лишние комментарии, которые не несут смысловой нагрузки или дублируют информацию.
 
-*   Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger.logger`.
-*   Функции и переменные переименованы для соответствия стилю кода.
-*   Документированы все функции и методы в формате RST.
-*   Заменены комментарии, используя более конкретную лексику, соответствующую требованиям.
-*   Добавлен `try...except` блок для обработки ошибок сохранения файла.
-*   Логирование ошибок происходит через `logger.error` вместо простого `print`.
-*   Обработка ошибок сохранения файла перенесена в `finally` блок для гарантированной обработки.
-
-# FULL Code
-
+## Оптимизированный код
 ```python
+"""
+Модуль для тестирования выполнения Jupyter Notebooks.
+====================================================
+
+Этот модуль содержит тесты для проверки выполнения Jupyter Notebooks,
+расположенных в указанной директории. Он использует `pytest` для организации
+тестов и `nbformat` и `nbconvert` для работы с Notebooks.
+"""
+# Модуль os обеспечивает взаимодействие с операционной системой, например, для работы с путями к файлам.
 import os
+# Модуль nbformat предназначен для чтения и записи файлов Jupyter Notebook.
 import nbformat
+# Модуль nbconvert.preprocessors содержит инструменты для предобработки блокнотов, в частности, для их выполнения.
 from nbconvert.preprocessors import ExecutePreprocessor
+# Модуль pytest используется для написания и запуска тестов.
 import pytest
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions for JSON handling
-from src.logger.logger import logger  # Import logger
+# Модуль sys предоставляет доступ к некоторым переменным и функциям, которые взаимодействуют с интерпретатором Python.
+import sys
+# Импортируем logger для логирования ошибок
+from src.logger.logger import logger
 
+# Путь для добавления в sys.path для корректного импорта пакета.
+sys.path.insert(0, '../../tinytroupe/')
+sys.path.insert(0, '../../')
+sys.path.insert(0, '..')
 
-# Define the notebook folder.  Update this path if needed.
+# Путь к папке с примерами блокнотов
 NOTEBOOK_FOLDER = "../examples/"
 
-# Define a timeout for long-running notebooks.  Adjust as needed.
+# Максимальное время выполнения блокнота в секундах.
 TIMEOUT = 600
 
-# Define the kernel name.  Adjust if necessary.
+# Ядро Jupyter для выполнения блокнота
 KERNEL_NAME = "python3"
 
 
-def get_notebooks(folder):
-    """Получает список путей к Jupyter notebook файлам в указанной папке.
+def get_notebooks(folder: str) -> list:
+    """
+    Возвращает список путей ко всем файлам Jupyter Notebooks в указанной папке.
 
-    :param folder: Путь к папке с Jupyter notebook файлами.
-    :return: Список путей к файлам .ipynb, исключая файлы с суффиксом ".executed." или ".local.".
+    :param folder: Путь к папке с блокнотами.
+    :return: Список путей к блокнотам.
     """
     return [
         os.path.join(folder, f)
         for f in os.listdir(folder)
-        if f.endswith(".ipynb") and not ".executed." in f and not ".local." in f
+        if f.endswith(".ipynb") and ".executed." not in f and ".local." not in f
     ]
 
 
 @pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
-def test_notebook_execution(notebook_path):
-    """Выполняет Jupyter notebook и проверяет отсутствие исключений.
+def test_notebook_execution(notebook_path: str):
+    """
+    Выполняет Jupyter Notebook и проверяет, что не возникает исключений.
 
-    :param notebook_path: Путь к Jupyter notebook файлу.
+    :param notebook_path: Путь к файлу блокнота.
     """
     try:
+        # Открытие файла блокнота для чтения
         with open(notebook_path, "r", encoding="utf-8") as nb_file:
             notebook = nbformat.read(nb_file, as_version=4)
-            print(f"Выполнение ноутбука: {notebook_path} с ядром: {KERNEL_NAME}")
+            print(f"Выполнение блокнота: {notebook_path} с ядром: {KERNEL_NAME}")
+            # Инициализация препроцессора для выполнения
             ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
+            # Выполнение блокнота
             ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
-            print(f"Ноутбук {notebook_path} выполнен успешно.")
+            print(f"Блокнот {notebook_path} успешно выполнен.")
+
     except Exception as e:
-        logger.error(f"Ошибка при выполнении ноутбука {notebook_path}: {e}")
-        pytest.fail(f"Ноутбук {notebook_path} вызвал исключение: {e}")
+        logger.error(f"Блокнот {notebook_path} вызвал исключение: {e}", exc_info=True)
+        pytest.fail(f"Блокнот {notebook_path} вызвал исключение: {e}")
     finally:
+        # Сохранение копии выполненного блокнота
         output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
         try:
             with open(output_path, "w", encoding="utf-8") as out_file:
                 nbformat.write(notebook, out_file)
-            print(f"Выполненный ноутбук сохранён как: {output_path}")
+            print(f"Выполненный блокнот сохранен как: {output_path}")
         except Exception as e:
-            logger.error(f"Ошибка при сохранении выполненного ноутбука {output_path}: {e}")
+            logger.error(f"Не удалось сохранить блокнот {output_path}: {e}", exc_info=True)
+            pytest.fail(f"Не удалось сохранить блокнот {output_path}: {e}")
