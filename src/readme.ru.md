@@ -115,6 +115,10 @@
 	- **`Model Prompt`**: Specifies how the model should process incoming information and return a response. It is set during model initialization.
 	- **`Command Instruction`**: A small command or instruction sent with each request.
 
+Court Information
+=================
+1. The ellipsis symbol `...` indicates where to set breakpoints when debugging code.
+
 Next
 =====
 [Project Initialization and Setup](https://github.com/hypo69/hypo/blob/master/src/credentials.md)

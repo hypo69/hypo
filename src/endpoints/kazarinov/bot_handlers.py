@@ -129,7 +129,8 @@ class BotHandler:
             response.raise_for_status()
 
             if response.status_code != 200:
-                logger.debug(f'Ошибка response\n{pprint(response)}')
+                logger.debug(f"""Ошибка response
+                {pprint(response)}""")
                 ...
                 return
 

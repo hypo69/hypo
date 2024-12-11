@@ -136,7 +136,7 @@ class GoogleGenerativeAI:
             j_dumps(data=message, file_path=self.history_json_file, mode='+a')
 
 
-    def ask(self, q: str, attempts: int = 15) -> Optional[str]:
+    async def ask(self, q: str, attempts: int = 15) -> Optional[str]:
         """
         метод отправляет текстовый запрос модели и возвращает ответ.
 

@@ -180,7 +180,8 @@ flowchart TD
                 continue
 
             try:
-                await update.message.reply_text(f'Strat parsing: /n{url}')
+                await update.message.reply_text(f"""Strat parsing: 
+                {url}""")
                 f = await graber.grab_page(*required_fields)
                 if gs.host_name == 'Vostro-3888':
                     self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
@@ -320,7 +321,7 @@ flowchart TD
             return {}  # return early if no attempts are left
         model_command = Path(gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
         # Request response from the AI model
-        response = self.model.ask(model_command + '\n' + str(products_list))
+        response = await self.model.ask(model_command + '\n' + str(products_list))
         if not response:
             logger.error(f"Нет ответа от модели")
             ...

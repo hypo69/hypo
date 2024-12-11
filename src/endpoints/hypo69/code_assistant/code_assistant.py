@@ -172,7 +172,7 @@ class CodeAssistant:
             / "translations.json"
         )
 
-    def process_files(self, start_file_number: Optional[int] = 1):
+    async def process_files(self, start_file_number: Optional[int] = 1):
         """компиляция, отправка запроса и сохранение результата.
         ```meramid
                 sequenceDiagram
@@ -264,12 +264,15 @@ class CodeAssistant:
             if file_path and content:
                 # send_file(file_path)
                 content_request = self._create_request(file_path, content)
-                response = self.gemini_model.ask(content_request)
+                response = await self.gemini_model.ask(content_request)
 
                 if response:
                     response = self._remove_outer_quotes(response)
 
-                    self._save_response(file_path, response, "gemini")
+                    if not await self._save_response(file_path, response, "gemini"):
+                        logger.error(f"Файл {file_path} \n НЕ сохранился")
+                        ...
+                        continue
                     pprint(f"Processed file number: {i + 1}", text_color="yellow")
                     ...
                 else:
@@ -373,7 +376,7 @@ class CodeAssistant:
                     )
                     yield None, None
    
-    def _save_response(self, file_path: Path, response: str, model_name: str) -> None:
+    async def _save_response(self, file_path: Path, response: str, model_name: str) -> None:
         """Сохранение ответа модели в файл с добавлением суффикса.
 
         Метод сохраняет ответ модели в файл, добавляя к текущему расширению файла

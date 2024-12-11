@@ -23,6 +23,15 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
 import header
+"""
+.. header.py:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
+"""    
 from src import gs
 from src.endpoints.bots.telegram import TelegramBot
 from src.endpoints.kazarinov.bot_handlers import BotHandler

@@ -1,11 +1,26 @@
 ```rst
 .. module:: src.credentials
 ```
-[Русский](https://github.com/hypo69/hypo/tree/master/src/credentials.ru.md)
-[Up to Parent](https://github.com/hypo69/hypo/tree/master/src/README.MD)
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+
+
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>Русский</A>
+</TD>
+</TABLE>
+
+This document provides an overview of `ProgramSettings` class.
+
+ProgramSettings
+==================
+
 ## Overview
 
-This module contains the `ProgramSettings` class, which implements the Singleton pattern to store global project settings. The class loads and stores credential information (API keys, passwords, etc.) from the `credentials.kdbx` KeePass database file. It also includes the `set_project_root` function to locate the project's root directory.
+ProgramSettings loads and stores credential information (API keys, passwords, etc.) from the `credentials.kdbx` KeePass database file. It also includes the `set_project_root` function to locate the project's root directory.
 
 ## Functions
 
