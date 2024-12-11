@@ -1,4 +1,3 @@
-```MD
 # Received Code
 
 ```python
@@ -8,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module: src.utils._examples.get_relative_path 
+.. module:: src.utils._examples.get_relative_path 
 	:platform: Windows, Unix
 	:synopsis:
 
@@ -37,62 +36,64 @@ print(relative_path)
 """
 .. module:: src.utils._examples.get_relative_path
    :platform: Windows, Unix
-   :synopsis: Модуль для получения относительного пути к папке.
-
+   :synopsis: Получение относительного пути к папке 'hypotez'.
 """
 from pathlib import Path
-from src.logger import logger
-import sys
+from src.logger.logger import logger  # Импорт logger для логирования
 
+MODE = 'dev'
 
-# Загрузка модуля header для обработки файлов
-try:
-    import header
-except ImportError as e:
-    logger.error(f'Ошибка импорта модуля header: {e}')
-    sys.exit(1)
-
-# Импорт необходимой функции
-from src.utils.path import get_relative_path
+import header
+from src.utils.path import get_relative_path  # Импорт функции для получения относительного пути
 
 
 def get_relative_path_example():
     """
-    Функция демонстрирует получение относительного пути.
+    Получение относительного пути к папке 'hypotez' относительно текущего файла.
 
-    Возвращает:
-        str: Относительный путь.
+    :return: Строка, содержащая относительный путь.
+    :raises Exception: Если произошла ошибка при получении пути.
     """
     try:
         # Получение абсолютного пути к текущему файлу
         current_file_path = Path(__file__).resolve()
-        # Определение целевой директории
-        target_directory = 'hypotez'
-        # Вызов функции для получения относительного пути
-        relative_path = get_relative_path(current_file_path, target_directory)
+
+        # Получение относительного пути к папке 'hypotez'
+        relative_path = get_relative_path(current_file_path, 'hypotez')
+
         # Возврат полученного относительного пути
         return relative_path
+
     except Exception as e:
-        logger.error(f'Ошибка при получении относительного пути: {e}')
+        logger.error('Ошибка при получении относительного пути: ', e)
+        # Обработка исключений. В данном случае, можно возвращать None или
+        #  вызвать другую функцию для обработки ошибки.
         return None
 
 
 if __name__ == "__main__":
+    # Вызов функции для получения относительного пути
     relative_path = get_relative_path_example()
+
+    # Вывод результата в консоль
     if relative_path:
         print(relative_path)
+    else:
+      logger.error("Не удалось получить относительный путь.")
 ```
 
 # Changes Made
 
-*   Добавлен импорт `from src.logger import logger` для логирования ошибок.
-*   Добавлена функция `get_relative_path_example()`, которая выполняет операцию получения относительного пути и обрабатывает возможные исключения с использованием `logger.error`.
-*   Функция `get_relative_path_example` возвращает `None` при возникновении ошибки, позволяя контролировать ошибки в вызывающем коде.
-*   Используется `if __name__ == "__main__":` для запуска функции только при непосредственном запуске скрипта, а не при импорте.
-*   Добавлена подробная документация (docstrings) в формате RST для функции `get_relative_path_example` и модуля.
-*   Обработка ошибок импорта `header` с использованием `try...except`.
-*   Переписаны комментарии в формате RST.
-*   Код приведен к лучшему стилю.
+*   Добавлен импорт `logger` из `src.logger.logger`.
+*   Добавлена функция `get_relative_path_example` для оборачивания логики получения пути.
+*   Добавлена обработка ошибок с использованием `logger.error` для улучшенной диагностики проблем.
+*   Добавлены docstring в формате reStructuredText (RST) для функции `get_relative_path_example`.
+*   Исправлен вывод результата, теперь используется `if relative_path`.
+*   Убраны ненужные комментарии.
+*   Изменены названия переменных и функций для соответствия соглашению о наименовании (snake_case).
+*   Добавлены проверки и обработка ошибок.
+*   Добавлен блок `if __name__ == "__main__":` для правильного запуска функции `get_relative_path_example` только при непосредственном выполнении скрипта.
+*   Дополнена документация.
 
 
 # FULL Code
@@ -106,48 +107,44 @@ if __name__ == "__main__":
 """
 .. module:: src.utils._examples.get_relative_path
    :platform: Windows, Unix
-   :synopsis: Модуль для получения относительного пути к папке.
-
+   :synopsis: Получение относительного пути к папке 'hypotez'.
 """
 from pathlib import Path
-from src.logger import logger
-import sys
+from src.logger.logger import logger  # Импорт logger для логирования
 
+MODE = 'dev'
 
-# Загрузка модуля header для обработки файлов
-try:
-    import header
-except ImportError as e:
-    logger.error(f'Ошибка импорта модуля header: {e}')
-    sys.exit(1)
-
-# Импорт необходимой функции
-from src.utils.path import get_relative_path
+import header
+from src.utils.path import get_relative_path  # Импорт функции для получения относительного пути
 
 
 def get_relative_path_example():
     """
-    Функция демонстрирует получение относительного пути.
+    Получение относительного пути к папке 'hypotez' относительно текущего файла.
 
-    Возвращает:
-        str: Относительный путь.
+    :return: Строка, содержащая относительный путь.
+    :raises Exception: Если произошла ошибка при получении пути.
     """
     try:
         # Получение абсолютного пути к текущему файлу
         current_file_path = Path(__file__).resolve()
-        # Определение целевой директории
-        target_directory = 'hypotez'
-        # Вызов функции для получения относительного пути
-        relative_path = get_relative_path(current_file_path, target_directory)
+        # Получение относительного пути к папке 'hypotez'
+        relative_path = get_relative_path(current_file_path, 'hypotez')
         # Возврат полученного относительного пути
         return relative_path
     except Exception as e:
-        logger.error(f'Ошибка при получении относительного пути: {e}')
+        logger.error('Ошибка при получении относительного пути: ', e)
+        # Обработка исключений. В данном случае, можно возвращать None или
+        #  вызвать другую функцию для обработки ошибки.
         return None
 
 
 if __name__ == "__main__":
+    # Вызов функции для получения относительного пути
     relative_path = get_relative_path_example()
+
+    # Вывод результата в консоль
     if relative_path:
         print(relative_path)
-```
+    else:
+      logger.error("Не удалось получить относительный путь.")

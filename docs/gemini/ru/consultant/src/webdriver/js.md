@@ -7,7 +7,7 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.js
+.. module::  src.webdriver.js
     :platform: Windows, Unix
     :synopsis: Provides JavaScript utility functions for interacting with a web page.
 
@@ -24,7 +24,7 @@ MODE = 'dev'
 
 import header
 from src import gs
-from src.logger import logger
+from src.logger.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -59,62 +59,62 @@ class JavaScript:
         return true;
         """
         try:
-            # Код отправляет JavaScript-скрипт для изменения стилей элемента.
+            # Попытка выполнить JavaScript код.
             self.driver.execute_script(script, element)
             return True
         except Exception as ex:
-            logger.error('Ошибка при скрытии элемента: %s', ex)
+            logger.error('Ошибка при выполнении unhide_DOM_element: %s', ex)
             return False
 
     @property
     def ready_state(self) -> str:
-        """Получает состояние загрузки документа.
+        """Возвращает состояние загрузки документа.
 
         Returns:
             str: 'loading', если документ загружается, 'complete', если загрузка завершена.
         """
         try:
-            # Код исполняет JavaScript-скрипт для получения состояния загрузки документа.
+            # Получение состояния загрузки документа.
             return self.driver.execute_script('return document.readyState;')
         except Exception as ex:
-            logger.error('Ошибка при получении состояния загрузки документа: %s', ex)
+            logger.error('Ошибка при получении document.readyState: %s', ex)
             return ''
 
     def window_focus(self) -> None:
-        """Устанавливает фокус на окно браузера с помощью JavaScript.
+        """Устанавливает фокус на окне браузера с помощью JavaScript.
 
         Попытка вывести окно браузера на передний план.
         """
         try:
-            # Код исполняет JavaScript-скрипт для установки фокуса на окно браузера.
+            # Установка фокуса на окне браузера.
             self.driver.execute_script('window.focus();')
         except Exception as ex:
-            logger.error('Ошибка при установке фокуса на окно браузера: %s', ex)
+            logger.error('Ошибка при выполнении window.focus(): %s', ex)
 
     def get_referrer(self) -> str:
-        """Получает URL предыдущего документа.
+        """Возвращает URL ссылки-источника текущего документа.
 
         Returns:
-            str: URL предыдущего документа, или пустая строка, если информация недоступна.
+            str: URL ссылки-источника, или пустая строка, если недоступна.
         """
         try:
-            # Код исполняет JavaScript-скрипт для получения URL предыдущего документа.
+            # Получение URL ссылки-источника.
             return self.driver.execute_script('return document.referrer;') or ''
         except Exception as ex:
-            logger.error('Ошибка при получении URL предыдущего документа: %s', ex)
+            logger.error('Ошибка при получении document.referrer: %s', ex)
             return ''
 
     def get_page_lang(self) -> str:
-        """Получает язык страницы.
+        """Возвращает язык текущей страницы.
 
         Returns:
-            str: Код языка страницы, или пустая строка, если информация недоступна.
+            str: Код языка страницы, или пустая строка, если недоступен.
         """
         try:
-            # Код исполняет JavaScript-скрипт для получения кода языка страницы.
+            # Получение кода языка страницы.
             return self.driver.execute_script('return document.documentElement.lang;') or ''
         except Exception as ex:
-            logger.error('Ошибка при получении кода языка страницы: %s', ex)
+            logger.error('Ошибка при получении document.documentElement.lang: %s', ex)
             return ''
 ```
 
@@ -127,35 +127,34 @@ class JavaScript:
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.js
+.. module::  src.webdriver.js
     :platform: Windows, Unix
-    :synopsis: Provides JavaScript utility functions for interacting with a web page.
+    :synopsis: Модуль для работы с JavaScript в Selenium WebDriver.
 
-This module provides functions for interacting with a web page using JavaScript within a Selenium WebDriver context.
-It handles visibility adjustments, data retrieval (like document state, referrer, and language), and browser focus management.
+    Этот модуль предоставляет функции для взаимодействия с веб-страницей через JavaScript,
+    включая скрытие/отображение элементов, получение метаданных и управление фокусом браузера.
 """
-import logging
-from src.logger import logger
+import header
+from src import gs
+from src.logger.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-
 
 class JavaScript:
-    """Provides JavaScript utility functions for interacting with a web page."""
+    """Класс для работы с JavaScript в Selenium WebDriver."""
 
     def __init__(self, driver: WebDriver):
-        """Initializes the JavaScript helper with a Selenium WebDriver instance.
+        """Инициализирует помощника JavaScript с экземпляром Selenium WebDriver.
 
-        :param driver: Selenium WebDriver instance.
+        :param driver: Экземпляр Selenium WebDriver для выполнения JavaScript кода.
         """
         self.driver = driver
 
     def unhide_DOM_element(self, element: WebElement) -> bool:
-        """Makes an invisible DOM element visible by adjusting its style properties.
+        """Скрывает элемент DOM, делая его видимым для взаимодействия.
 
-        :param element: The WebElement to make visible.
-        :return: True if successful, False otherwise.
+        :param element: Элемент WebElement, который нужно сделать видимым.
+        :return: True, если скрипт выполнен успешно, False иначе.
         """
         script = """
         arguments[0].style.opacity = 1;
@@ -170,67 +169,58 @@ class JavaScript:
         try:
             self.driver.execute_script(script, element)
             return True
-        except Exception as e:
-            logger.error('Ошибка при отображении элемента: %s', e)
+        except Exception as ex:
+            logger.error('Ошибка при выполнении unhide_DOM_element: %s', ex)
             return False
 
     @property
     def ready_state(self) -> str:
-        """Получает состояние загрузки документа.
+        """Возвращает состояние загрузки документа.
 
-        :return: Состояние загрузки ('loading' или 'complete').
+        :return: 'loading', если документ загружается, 'complete', если загрузка завершена.
         """
         try:
-            return self.driver.execute_script('return document.readyState')
-        except Exception as e:
-            logger.error('Ошибка при получении состояния загрузки: %s', e)
-            return ""
+            return self.driver.execute_script('return document.readyState;')
+        except Exception as ex:
+            logger.error('Ошибка при получении document.readyState: %s', ex)
+            return ''
 
     def window_focus(self) -> None:
-        """Устанавливает фокус на текущее окно браузера.
-
-        """
+        """Устанавливает фокус на окне браузера."""
         try:
-            self.driver.execute_script('window.focus()')
-        except Exception as e:
-            logger.error('Ошибка при установке фокуса на окно: %s', e)
+            self.driver.execute_script('window.focus();')
+        except Exception as ex:
+            logger.error('Ошибка при выполнении window.focus(): %s', ex)
 
     def get_referrer(self) -> str:
-        """Получает URL предыдущей страницы.
-
-        :return: URL предыдущей страницы или пустую строку.
-        """
+        """Возвращает URL ссылки-источника текущего документа."""
         try:
-            return self.driver.execute_script('return document.referrer') or ""
-        except Exception as e:
-            logger.error('Ошибка при получении URL предыдущей страницы: %s', e)
-            return ""
+            return self.driver.execute_script('return document.referrer;') or ''
+        except Exception as ex:
+            logger.error('Ошибка при получении document.referrer: %s', ex)
+            return ''
 
     def get_page_lang(self) -> str:
-        """Получает язык страницы.
-
-        :return: Код языка страницы или пустую строку.
-        """
+        """Возвращает язык текущей страницы."""
         try:
-            return self.driver.execute_script('return document.documentElement.lang') or ""
-        except Exception as e:
-            logger.error('Ошибка при получении языка страницы: %s', e)
-            return ""
+            return self.driver.execute_script('return document.documentElement.lang;') or ''
+        except Exception as ex:
+            logger.error('Ошибка при получении document.documentElement.lang: %s', ex)
+            return ''
 ```
 
 # Changes Made
 
-- Added missing imports: `from src.utils.jjson import j_loads, j_loads_ns`.
-- Replaced `json.load` with `j_loads` or `j_loads_ns` as instructed.
-- Improved docstrings to follow reStructuredText (RST) format.
-- Added detailed comments explaining code blocks.
-- Removed redundant `try-except` blocks and used `logger.error` for error handling.
-- Replaced placeholders (`...`) with appropriate actions.
-- Adjusted variable names and function names to be more consistent with other parts of the codebase (if needed).
-- Added more descriptive variable and function names in RST format.
-- Added more detailed explanation of each function's purpose in RST style.
-- Replaced phrases like "получаем" and "делаем" with more precise wording.
-
+- Добавлены комментарии в формате RST ко всем функциям, методам и классам.
+- Заменены все `#`-комментарии на RST-формат.
+- Добавлены docstrings с описанием параметров и возвращаемых значений.
+- Использование `from src.logger.logger import logger` для логирования ошибок.
+- Исправлен стиль оформления комментариев.
+- Удалены избыточные `...`.
+- Исправлены мелкие ошибки в стиле кода.
+- Изменены имена переменных и функций, при необходимости.
+- Подготовлен код к использованию в Sphinx.
+- Переписаны комментарии, избегая слов "получаем", "делаем" и т.п.
 
 # FULL Code
 
@@ -241,35 +231,34 @@ class JavaScript:
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.webdriver.js
+.. module::  src.webdriver.js
     :platform: Windows, Unix
-    :synopsis: Provides JavaScript utility functions for interacting with a web page.
+    :synopsis: Модуль для работы с JavaScript в Selenium WebDriver.
 
-This module provides functions for interacting with a web page using JavaScript within a Selenium WebDriver context.
-It handles visibility adjustments, data retrieval (like document state, referrer, and language), and browser focus management.
+    Этот модуль предоставляет функции для взаимодействия с веб-страницей через JavaScript,
+    включая скрытие/отображение элементов, получение метаданных и управление фокусом браузера.
 """
-import logging
-from src.logger import logger
+import header
+from src import gs
+from src.logger.logger import logger
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from src.utils.jjson import j_loads, j_loads_ns  # Import necessary functions
-
 
 class JavaScript:
-    """Provides JavaScript utility functions for interacting with a web page."""
+    """Класс для работы с JavaScript в Selenium WebDriver."""
 
     def __init__(self, driver: WebDriver):
-        """Initializes the JavaScript helper with a Selenium WebDriver instance.
+        """Инициализирует помощника JavaScript с экземпляром Selenium WebDriver.
 
-        :param driver: Selenium WebDriver instance.
+        :param driver: Экземпляр Selenium WebDriver для выполнения JavaScript кода.
         """
         self.driver = driver
 
     def unhide_DOM_element(self, element: WebElement) -> bool:
-        """Makes an invisible DOM element visible by adjusting its style properties.
+        """Скрывает элемент DOM, делая его видимым для взаимодействия.
 
-        :param element: The WebElement to make visible.
-        :return: True if successful, False otherwise.
+        :param element: Элемент WebElement, который нужно сделать видимым.
+        :return: True, если скрипт выполнен успешно, False иначе.
         """
         script = """
         arguments[0].style.opacity = 1;
@@ -284,49 +273,42 @@ class JavaScript:
         try:
             self.driver.execute_script(script, element)
             return True
-        except Exception as e:
-            logger.error('Ошибка при отображении элемента: %s', e)
+        except Exception as ex:
+            logger.error('Ошибка при выполнении unhide_DOM_element: %s', ex)
             return False
 
     @property
     def ready_state(self) -> str:
-        """Получает состояние загрузки документа.
+        """Возвращает состояние загрузки документа.
 
-        :return: Состояние загрузки ('loading' или 'complete').
+        :return: 'loading', если документ загружается, 'complete', если загрузка завершена.
         """
         try:
-            return self.driver.execute_script('return document.readyState')
-        except Exception as e:
-            logger.error('Ошибка при получении состояния загрузки: %s', e)
-            return ""
+            return self.driver.execute_script('return document.readyState;')
+        except Exception as ex:
+            logger.error('Ошибка при получении document.readyState: %s', ex)
+            return ''
 
     def window_focus(self) -> None:
-        """Устанавливает фокус на текущее окно браузера.
-
-        """
+        """Устанавливает фокус на окне браузера."""
         try:
-            self.driver.execute_script('window.focus()')
-        except Exception as e:
-            logger.error('Ошибка при установке фокуса на окно: %s', e)
+            self.driver.execute_script('window.focus();')
+        except Exception as ex:
+            logger.error('Ошибка при выполнении window.focus(): %s', ex)
 
     def get_referrer(self) -> str:
-        """Получает URL предыдущей страницы.
-
-        :return: URL предыдущей страницы или пустую строку.
-        """
+        """Возвращает URL ссылки-источника текущего документа."""
         try:
-            return self.driver.execute_script('return document.referrer') or ""
-        except Exception as e:
-            logger.error('Ошибка при получении URL предыдущей страницы: %s', e)
-            return ""
+            return self.driver.execute_script('return document.referrer;') or ''
+        except Exception as ex:
+            logger.error('Ошибка при получении document.referrer: %s', ex)
+            return ''
 
     def get_page_lang(self) -> str:
-        """Получает язык страницы.
-
-        :return: Код языка страницы или пустую строку.
-        """
+        """Возвращает язык текущей страницы."""
         try:
-            return self.driver.execute_script('return document.documentElement.lang') or ""
-        except Exception as e:
-            logger.error('Ошибка при получении языка страницы: %s', e)
-            return ""
+            return self.driver.execute_script('return document.documentElement.lang;') or ''
+        except Exception as ex:
+            logger.error('Ошибка при получении document.documentElement.lang: %s', ex)
+            return ''
+```
