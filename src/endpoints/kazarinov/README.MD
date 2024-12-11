@@ -56,4 +56,6 @@ flowchart TD
 
 Next
 =========
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/readme.ru.md'>Scenario Excution</A>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.md'>Kazarinov bot</A>
+<br>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/README.MD'>Scenario Execution</A>

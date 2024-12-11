@@ -27,4 +27,5 @@
   },
   "storage": "external_storage",
   "avaiable_storages": [ "data", "google_drive", "external_storage" ]
+
 }

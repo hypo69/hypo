@@ -77,6 +77,9 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
         """Handle text messages with URL-based routing."""
         q = update.message.text
+        if q == '?':
+            await update.message.reply_photo(gs.path.endpoints / 'kazarinov' / 'assets' / 'user_flowchart.png' )
+            return
         user_id = update.effective_user.id
         if is_url(q):
             await self.handle_url(update, context)

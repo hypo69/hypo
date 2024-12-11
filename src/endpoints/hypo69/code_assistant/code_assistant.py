@@ -74,25 +74,23 @@ class CodeAssistant:
 
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
-        self.role = kwargs.get("role", "doc_writer_rst")
-        self.lang = "en" if self.role == "pytest" else kwargs.get("lang", "EN")
-        self.model = kwargs.get("model", ["gemini"])
-        self.start_dirs = kwargs.get("start_dirs", [".."])
+        self.role:str = kwargs.get("role", "doc_writer_rst")
+        self.lang:str = "en" if self.role == "pytest" else kwargs.get("lang", "ne")
+        self.models_list:list = kwargs.get("model", ["gemini"])
+        self.start_dirs:list = kwargs.get("start_dirs", [".."])
         self.base_path = gs.path.endpoints / "hypo69" / "code_assistant"
         self.config = j_loads_ns(self.base_path / "code_assistant.json")
-        self.gemini_model = None
-        self.openai_model = None
         self._initialize_models(**kwargs)
 
     def _initialize_models(self, **kwargs):
         """Инициализация моделей на основе заданных параметров."""
-        if "gemini" in self.model:
+        if "gemini" in self.models_list:
             self.gemini_model = GoogleGenerativeAI(
-                model_name="gemini-1.5-flash-8b",
+                model_name=self.config.gemini_model_name,
                 api_key=gs.credentials.gemini.onela,
                 **kwargs,
             )
-        if "openai" in self.model:
+        if "openai" in self.models_list:
             self.openai_model = OpenAIModel(
                 model_name="gpt-4o-mini",
                 assistant_id=gs.credentials.openai.assistant_id.code_assistant,
@@ -262,7 +260,7 @@ class CodeAssistant:
             if i < start_file_number: # <- старт с номера файла
                 continue
             if file_path and content:
-                # send_file(file_path)
+                # send_file(file_path) # <- отправить в модель файл
                 content_request = self._create_request(file_path, content)
                 response = await self.gemini_model.ask(content_request)
 
@@ -280,9 +278,7 @@ class CodeAssistant:
                     ...
                     continue
 
-            
-
-            asyncio.run(asyncio.sleep(20)) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
+            await asyncio.sleep(20) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
 
     def _create_request(self, file_path: str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
@@ -426,11 +422,13 @@ class CodeAssistant:
 
             # Выводим сообщение о успешном сохранении файла
             pprint(f'Ответ модели сохранен в: {export_path}', text_color='green')
+            return True
 
         except Exception as ex:
             logger.critical(f'Ошибка сохранения файла: {export_path=}', ex)
             #sys.exit(0)
             ...
+            return False
 
 
     def _remove_outer_quotes(self, response: str) -> str:
@@ -519,7 +517,7 @@ if __name__ == "__main__":
                     # start_dirs = [Path('suppliers'), Path('webdriver')],
                     start_dirs=[".."],
                 )
-                assistant_direct.process_files(start_file_number=1)
+                asyncio.run( assistant_direct.process_files(start_file_number=1))
 
                 # Обновление конфигурации для учёта изменений во время выполнения
                 config: SimpleNamespace = j_loads_ns(config_path)

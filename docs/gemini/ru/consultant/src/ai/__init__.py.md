@@ -1,84 +1,78 @@
-# Received Code
-
+## Улучшенный код
 ```python
-## \file /src/ai/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-module: src.ai
-	:platform: Windows, Unix
-	:synopsis: Модуль интерфейса моделей ИИ.
-	"""
+Модуль для интеграции с различными моделями ИИ.
+================================================
+
+Этот модуль предоставляет интерфейсы для работы с моделями Google Gemini и OpenAI.
+Он включает в себя классы для упрощения взаимодействия с этими моделями.
+
+Пример использования
+--------------------
+
+Пример импорта и использования классов из этого модуля:
+
+.. code-block:: python
+
+   from src.ai import GoogleGenerativeAI, OpenAIModel
+
+   # Пример создания экземпляра класса GoogleGenerativeAI
+   gemini_model = GoogleGenerativeAI(api_key="YOUR_GEMINI_API_KEY")
+
+   # Пример создания экземпляра класса OpenAIModel
+   openai_model = OpenAIModel(api_key="YOUR_OPENAI_API_KEY")
+
+"""
+from src.logger.logger import logger # импорт для логирования
 MODE = 'dev'
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
 ```
 
-# Improved Code
+## Внесённые изменения
+1.  Добавлен импорт `from src.logger.logger import logger` для логирования ошибок.
+2.  Добавлено описание модуля в формате RST.
+3.  Комментарии к модулю переписаны в формате reStructuredText (RST).
+4.  Убраны лишние комментарии в начале файла.
 
+## Оптимизированный код
 ```python
-## \file /src/ai/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с моделями ИИ.
-=========================================================================================
+Модуль для интеграции с различными моделями ИИ.
+================================================
 
-Этот модуль предоставляет интерфейсы для взаимодействия с моделями ИИ,
-такими как Google Gemini и OpenAI.
+Этот модуль предоставляет интерфейсы для работы с моделями Google Gemini и OpenAI.
+Он включает в себя классы для упрощения взаимодействия с этими моделями.
+
+Пример использования
+--------------------
+
+Пример импорта и использования классов из этого модуля:
+
+.. code-block:: python
+
+   from src.ai import GoogleGenerativeAI, OpenAIModel
+
+   # Пример создания экземпляра класса GoogleGenerativeAI
+   gemini_model = GoogleGenerativeAI(api_key="YOUR_GEMINI_API_KEY")
+
+   # Пример создания экземпляра класса OpenAIModel
+   openai_model = OpenAIModel(api_key="YOUR_OPENAI_API_KEY")
+
 """
-import importlib.util
-
+from src.logger.logger import logger # импорт для логирования
 MODE = 'dev'
 
-# Импорты моделей ИИ.  # Обратите внимание на использование from ... import
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
-
-
-# TODO: Добавить обработку ошибок при импорте моделей
-# ...  # Возможно, потребуется дополнительная обработка ошибок при импорте
-```
-
-# Changes Made
-
-*   Добавлены необходимые импорты для работы с Python модулями (в данном случае `importlib.util`).
-*   Комментарии переформатированы в соответствии с RST.
-*   Добавлена полная документация RST для модуля `src.ai` с описанием целей и предназначения.
-*   Исправлен стиль импорта, соблюден стандарт `from module_name import class_name`
-*	Добавлен TODO для потенциальной обработки ошибок при импорте моделей
-
-
-# FULL Code
-
-```python
-## \file /src/ai/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-Модуль для работы с моделями ИИ.
-=========================================================================================
-
-Этот модуль предоставляет интерфейсы для взаимодействия с моделями ИИ,
-такими как Google Gemini и OpenAI.
-"""
-import importlib.util
-
-MODE = 'dev'
-
-# Импорты моделей ИИ.  # Обратите внимание на использование from ... import
-from .gemini import GoogleGenerativeAI
-from .openai import OpenAIModel
-
-
-# TODO: Добавить обработку ошибок при импорте моделей
-# ...  # Возможно, потребуется дополнительная обработка ошибок при импорте
 ```
 ```

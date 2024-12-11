@@ -73,7 +73,26 @@ class ReportGenerator:
         Args:
             lang (str): Язык отчёта.
         """
-        html_content = await self.generate_html(data,lang)
+        # Укажите путь к папке с картинками
+        images_dir:Path = gs.path.external_storage / 'kazarinov' / 
+
+        # Получаем список всех файлов в папке
+        files = os.listdir(folder_path)
+
+        # Фильтруем только картинки (например, с расширениями .jpg, .png)
+        image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
+        image_files = [f for f in files if os.path.splitext(f)[1].lower() in image_extensions]
+
+        if image_files:
+            # Выбираем случайную картинку
+            random_image = random.choice(image_files)
+            print(f"Случайная картинка: {random_image}")
+        else:
+            print("В папке нет картинок.")
+
+        service_image = 
+        service_text = Path(gs.path.endpoints / 'kazarinov' / 'templates' / f'service_as_product_{lang}.txt')
+        html_content = await self.generate_html(data[lang],lang)
         Path(html_file).write_text(data = html_content, encoding='UTF-8')
         pdf = PDFUtils()
 

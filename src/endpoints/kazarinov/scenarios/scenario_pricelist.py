@@ -139,24 +139,6 @@ class MexironBuilder:
             сделать логер перед отрицательным выходом из функции. 
             Важно! модель ошибается. 
 
-        ```mermaid
-flowchart TD
-    A[Start] --> B{URL is from OneTab?}
-    B -->|Yes| C[Get data from OneTab]
-    B -->|No| D[Reply - Try again]
-    C --> E{Data valid?}
-    E -->|No| F[Reply Incorrect data]
-    E -->|Yes| G[Run Mexiron scenario]
-    G --> H{Scenario successful?}
-    H -->|Yes| I[Reply Done! I will send the link to WhatsApp]
-    H -->|No| J[Reply Error running scenario]
-    F --> K[Return]
-    I --> K[Return]
-    D --> K[Return]
-    J --> K[Return]
-
-
-```
         """
         self.update = update
         self.context = context
@@ -175,18 +157,18 @@ flowchart TD
             graber = self.get_graber_by_supplier_url(url) 
             
             if not graber:
-                logger.debug(f"Нет грабера для:\n{url}", None, False)
+                logger.debug(f"Нет грабера для: {url}", None, False)
                 ...
                 continue
 
             try:
-                await update.message.reply_text(f"""Starting parsing: 
+                await update.message.reply_text(f"""Process: 
                 {url}""")
                 f = await graber.grab_page(*required_fields)
                 if gs.host_name == 'Vostro-3888':
                     self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
             except Exception as ex:
-                logger.error(f"Ошибка получения полей товара",ex)
+                logger.error(f"Ошибка получения полей товара",ex, False)
                 ...
                 continue
 
@@ -213,10 +195,10 @@ flowchart TD
         Внимание! модель может ошибаться"""
         await update.message.reply_text(f"AI processing lang = he")
         he = await self.process_ai(products_list,'he')
-
+        await update.message.reply_text("successfull")
         await update.message.reply_text(f"AI processing lang = ru")
         ru = await self.process_ai(products_list,'ru')
-
+        await update.message.reply_text("successfull")
 
         if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
             logger.error(f'Ошибка сохранения словаря `he`', None, False)

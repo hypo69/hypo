@@ -97,7 +97,8 @@
 
 # from .image import (
 #     save_png,
-#     save_png_from_url
+#     save_png_from_url,
+#       random_image,
 # )
 
 # from .jjson import (

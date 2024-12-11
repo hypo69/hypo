@@ -56,3 +56,8 @@ flowchart TD
 
 
 ```
+Далее
+=========
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.ru.md'>Казарионв бот</A>
+<br>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/readme.ru.md'>Испоолнение сценария</A>

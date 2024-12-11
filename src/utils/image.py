@@ -14,6 +14,7 @@ Functions:
     - :func:`save_png_from_url`
     - :func:`save_png`
     - :func:`get_image_data`
+    - :func:`random_image`
 
 .. function:: save_png_from_url(image_url: str, filename: str | Path) -> str | None
 
@@ -51,13 +52,26 @@ Functions:
     Example:
     >>> get_image_data("saved_image.png")
     b'\x89PNG\r\n...'
+
+.. function:: random_image(root_path: str | Path) -> str | None
+
+    Recursively search for a random image in the specified directory and return its path.
+
+    :param root_path: The directory to search for images.
+    :return: The path to a random image or ``None`` if no images are found.
+
+    Example:
+    >>> random_image("path/to/images")
+    'path/to/images/subfolder/random_image.png'
 """
+
 MODE = 'dev'
 import aiohttp
 import aiofiles
 from PIL import Image
 from pathlib import Path
 import asyncio
+import random
 from src.logger.logger import logger
 from src.utils.printer import pprint
 
@@ -153,3 +167,30 @@ def get_image_data(file_name: str | Path) -> bytes | None:
     except Exception as ex:
         logger.error(f"Error reading file {file_path}", ex, exc_info=True)
         return
+
+
+def random_image(root_path: str | Path) -> str | None:
+    """Recursively search for a random image in the specified directory and return its path.
+
+    :param root_path: The directory to search for images.
+    :return: The path to a random image or ``None`` if no images are found.
+
+    :example:
+        >>> random_image("path/to/images")
+        'path/to/images/subfolder/random_image.png'
+    """
+    root_path = Path(root_path)
+    image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
+    image_files = []
+
+    # Recursively search for image files
+    for file_path in root_path.rglob("*"):
+        if file_path.is_file() and file_path.suffix.lower() in image_extensions:
+            image_files.append(file_path)
+
+    if not image_files:
+        logger.warning(f"No images found in {root_path}.")
+        return None
+
+    # Return a random image path
+    return str(random.choice(image_files))

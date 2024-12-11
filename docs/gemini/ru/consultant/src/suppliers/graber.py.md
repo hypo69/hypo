@@ -1,17 +1,14 @@
-# Received Code
-
+## Received Code
 ```python
 from __future__ import annotations
-
 ## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-
 ```rst
-.. module:: src.suppliers
+.. module:: src.suppliers 
 	:platform: Windows, Unix
 	:synopsis:  Базовый класс сбора данных со старницы HTML поставщиков.
     Целевые поля страницы (`название`,`описание`,`спецификация`,`артикул`,`цена`,...) собирает вебдрйвер (class: [`Driver`](../webdriver))
@@ -22,9 +19,9 @@ from __future__ import annotations
 ## Для нестендартной обработки полей товара просто переопределите функцию в своем классе.
 Пример:
 ```python
-s = 'suppler_prefix'
-from src.suppliers import Graber
-locator = j_loads(gs.path.src.suppliers / f'{s}' / 'locators' / 'product.json')
+s = `suppler_prefix`
+from src.suppliers imoprt Graber
+locator = j_loads(gs.path.src.suppliers / f{s} / 'locators' / 'product.json`)
 
 class G(Graber):
 
@@ -32,7 +29,7 @@ class G(Graber):
     async def name(self, value:Optional[Any] = None):
         self.fields.name = <Ваша реализация>
         )
-```
+    ```
 
 """
 MODE = 'dev'
@@ -53,7 +50,7 @@ from src import gs
 
 from src.product.product_fields import ProductFields
 from src.category import Category
-from src.webdriver.driver import Driver  # Необходимый импорт
+# from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png_from_url, save_png
 from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean, normalize_sql_date
@@ -61,239 +58,736 @@ from src.logger.exceptions import ExecuteLocatorException
 #from src.endpoints.prestashop import PrestaShop
 from src.utils.printer import pprint
 from src.logger.logger import logger
-```
-
-# Improved Code
-
-```python
-from __future__ import annotations
-
-## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-
-"""
-Модуль для сбора данных с веб-страниц поставщиков.
-=====================================================
-
-Этот модуль содержит базовый класс :class:`Graber`, который используется для извлечения данных с веб-страниц поставщиков.
-Он предоставляет методы для извлечения различных полей данных, используя веб-драйвер для взаимодействия с сайтом.
-Локаторы полей определены в файлах JSON в папке locators.
-
-.. seealso:: :doc:`../locators`
-"""
-MODE = 'dev'
-
-import datetime
-import os
-import sys
-import asyncio
-from pathlib import Path
-from typing import Optional, Any
-from types import SimpleNamespace
-from typing import Callable
-from langdetect import detect
-from functools import wraps
-
-import header
-from src import gs
-
-from src.product.product_fields import ProductFields
-from src.category import Category
-from src.webdriver.driver import Driver  # Необходимый импорт
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_png_from_url, save_png
-from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean, normalize_sql_date
-from src.logger.exceptions import ExecuteLocatorException
-#from src.endpoints.prestashop import PrestaShop
-from src.utils.printer import pprint
-from src.logger.logger import logger
-
 
 # Глобальные настройки через объект `Context`
 class Context:
     """
     Класс для хранения глобальных настроек.
 
-    :ivar driver: Объект драйвера, используется для управления браузером.
-    :vartype driver: Driver
-    :ivar locator: Пространство имен для локаторов.
+    :ivar driver: Объект драйвера, используется для управления браузером или другим интерфейсом.
+    :vartype driver: 'Driver'
+    :ivar locator: Пространство имен для хранения локаторов.
     :vartype locator: SimpleNamespace
     :ivar supplier_prefix: Префикс поставщика.
     :vartype supplier_prefix: str
     """
-    driver: Driver = None
-    locator: SimpleNamespace = None  # Локаторы для функции
+
+    # Атрибуты класса
+    driver: 'Driver' = None
+    locator_for_decorator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
     supplier_prefix: str = None
 
 
-def close_pop_up(locator: SimpleNamespace = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением функции.
+# Определение декоратора для закрытия всплывающих окон
+# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
+# Общее название декоратора `@close_pop_up` можно изменить 
+# Если декоратор не используется в поставщике - поставь 
+def close_pop_up(value: 'Driver' = None) -> Callable:
+    """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    :param locator: Локатор для закрытия всплывающих окон.
-    :type locator: SimpleNamespace
+    Args:
+        value ('Driver'): Дополнительное значение для декоратора.
 
-    :returns: Декоратор, оборачивающий функцию.
+    Returns:
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            if locator:  # Проверка на наличие локатора
+            if Context.locator_for_decorator:
                 try:
-                    await args[0].driver.execute_locator(locator)  # Await async pop-up close
+                    await Context.driver.execute_locator(Context.locator_for_decorator)  # Await async pop-up close  
+                    ... 
                 except ExecuteLocatorException as ex:
-                    logger.error(f'Ошибка при закрытии всплывающего окна: {ex}')
+                    logger.debug(f'Ошибка выполнения локатора:', ex)
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
 
 
 class Graber:
-    """Базовый класс для сбора данных с веб-страницы."""
+    """Базовый класс сбора данных со страницы для всех поставщиков."""
+    
+    def __init__(self, supplier_prefix: str, driver: 'Driver'):
+        """Инициализация класса Graber.
 
-    def __init__(self, supplier_prefix: str, driver: Driver):
-        """
-        Инициализация класса Graber.
-
-        :param supplier_prefix: Префикс поставщика.
-        :type supplier_prefix: str
-        :param driver: Экземпляр класса Driver.
-        :type driver: Driver
+        Args:
+            supplier_prefix (str): Префикс поставщика.
+            driver ('Driver'): Экземпляр класса Driver.
         """
         self.supplier_prefix = supplier_prefix
-        self.locator = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
+        self.locator: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
         self.driver = driver
         self.fields: ProductFields = ProductFields()
         Context.driver = self.driver
         Context.supplier_prefix = supplier_prefix
 
-    # ... (Остальной код с исправленными комментариями и логированием)
-```
+    async def error(self, field: str):
+        """Обработчик ошибок для полей."""
+        logger.debug(f"Ошибка заполнения поля {field}")
 
-# Changes Made
+    async def set_field_value(
+        self,
+        value: Any,
+        locator_func: Callable[[], Any],
+        field_name: str,
+        default: Any = ''
+    ) -> Any:
+        """Универсальная функция для установки значений полей с обработкой ошибок.
 
-*   Добавлен необходимый импорт `from src.webdriver.driver import Driver`.
-*   Добавлена полная документация RST для класса `Graber` и других элементов кода.
-*   Изменены комментарии, чтобы избежать слов 'получаем', 'делаем' и т.д.
-*   Используется `logger.error` для обработки ошибок.
-*   Улучшена обработка ошибок - теперь используется `try-except` с логированием.
-*   Добавлено более информативное описание аргументов и возвращаемого значения функций.
-*  Изменён декоратор `close_pop_up()`, теперь он принимает локатор в качестве аргумента.  Теперь он проверяет, передали ли локатор.
-* Исправлено использование f-строк в строке self.locator = j_loads_ns(...)
-* Исправлена ошибка передачи значения value в метод `id_product`, теперь `self.fields.id_supplier` вызывается перед назначение значения для `self.fields.id_product`.
+        Args:
+            value (Any): Значение для установки.
+            locator_func (Callable[[], Any]): Функция для получения значения из локатора.
+            field_name (str): Название поля.
+            default (Any): Значение по умолчанию. По умолчанию пустая строка.
 
-
-# FULL Code
-
-```python
-from __future__ import annotations
-
-## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-
-"""
-Модуль для сбора данных с веб-страниц поставщиков.
-=====================================================
-
-Этот модуль содержит базовый класс :class:`Graber`, который используется для извлечения данных с веб-страниц поставщиков.
-Он предоставляет методы для извлечения различных полей данных, используя веб-драйвер для взаимодействия с сайтом.
-Локаторы полей определены в файлах JSON в папке locators.
-
-.. seealso:: :doc:`../locators`
-"""
-MODE = 'dev'
-
-import datetime
-import os
-import sys
-import asyncio
-from pathlib import Path
-from typing import Optional, Any
-from types import SimpleNamespace
-from typing import Callable
-from langdetect import detect
-from functools import wraps
-
-import header
-from src import gs
-
-from src.product.product_fields import ProductFields
-from src.category import Category
-from src.webdriver.driver import Driver
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_png_from_url, save_png
-from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean, normalize_sql_date
-from src.logger.exceptions import ExecuteLocatorException
-#from src.endpoints.prestashop import PrestaShop
-from src.utils.printer import pprint
-from src.logger.logger import logger
-
-
-# Глобальные настройки через объект `Context`
-class Context:
-    """
-    Класс для хранения глобальных настроек.
-
-    :ivar driver: Объект драйвера, используется для управления браузером.
-    :vartype driver: Driver
-    :ivar locator: Пространство имен для локаторов.
-    :vartype locator: SimpleNamespace
-    :ivar supplier_prefix: Префикс поставщика.
-    :vartype supplier_prefix: str
-    """
-    driver: Driver = None
-    locator: SimpleNamespace = None
-    supplier_prefix: str = None
-
-
-def close_pop_up(locator: SimpleNamespace = None) -> Callable:
-    """Создает декоратор для закрытия всплывающих окон перед выполнением функции.
-
-    :param locator: Локатор для закрытия всплывающих окон.
-    :type locator: SimpleNamespace
-
-    :returns: Декоратор, оборачивающий функцию.
-    """
-    def decorator(func: Callable) -> Callable:
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            if locator:
-                try:
-                    await args[0].driver.execute_locator(locator)
-                except ExecuteLocatorException as ex:
-                    logger.error(f'Ошибка при закрытии всплывающего окна: {ex}')
-            return await func(*args, **kwargs)
-        return wrapper
-    return decorator
-
-
-class Graber:
-    """Базовый класс для сбора данных с веб-страницы."""
-
-    def __init__(self, supplier_prefix: str, driver: Driver):
+        Returns:
+            Any: Установленное значение.
         """
-        Инициализация класса Graber.
+        locator_result = await asyncio.to_thread(locator_func)
+        if value:
+            return value
+        if locator_result:
+            return locator_result
+        await self.error(field_name)
+        return default
 
-        :param supplier_prefix: Префикс поставщика.
-        :type supplier_prefix: str
-        :param driver: Экземпляр класса Driver.
-        :type driver: Driver
+
+    async def grab_page(self, *args, **kwards) -> ProductFields:
+        """Асинхронная функция для сбора полей продукта.
+
+        Args:
+            args (tuple): Кортеж с названиями полей для сбора.
+            kwards (dict): Словарь с ключами и значениями для каждого поля.
+
+        Returns:
+            ProductFields: Собранные поля продукта.
         """
-        self.supplier_prefix = supplier_prefix
-        self.locator = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
-        self.driver = driver
-        self.fields: ProductFields = ProductFields()
-        Context.driver = self.driver
-        Context.supplier_prefix = supplier_prefix
-        # ... (Остальной код)
+        async def fetch_all_data(*args, **kwards):
+            # Динамическое вызовы функций для каждого поля из args
+            for filed_name in args:
+                #method_name = method_name.replace('_', '')  # Преобразуем имя поля в метод
+                function = getattr(self, filed_name, None)  # Получаем метод по имени
+                if function:
+                    await function(kwards.get(filed_name, ''))
+
+        # Вызов функции для получения всех данных
+        await fetch_all_data(*args, **kwards)
+        return self.fields
+
+    def error(self, field: str):
+        """Error handler for fields."""
+        logger.debug(f"Ошибка заполнения поля {field}")
 
 
-# ... (Остальной код)
-```
-```
-This is the complete code with improvements.  Remember to replace the placeholder comments with actual implementation.  Import necessary modules and adapt to your project's structure.
+
+    @close_pop_up()
+    async def additional_shipping_cost(self, value:Optional[Any] = None):
+        """Fetch and set additional shipping cost.
+        Args:
+        value (Any): это значение можно передать в словаре kwards чеез ключ {additional_shipping_cost = `value`} при определении класса
+        если `value` был передан - его значение подставляется в поле `ProductFields.additional_shipping_cost`
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.additional_shipping_cost = normalize_string(value or  await self.driver.execute_locator(self.locator.additional_shipping_cost) or '')
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
+            ...
+            return
+
+
+    @close_pop_up()
+    async def delivery_in_stock(self, value:Optional[Any] = None):
+        """Fetch and set delivery in stock status.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {delivery_in_stock = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.delivery_in_stock`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.delivery_in_stock = normalize_string( value or  await self.driver.execute_locator(self.locator.delivery_in_stock) or '' )
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
+            ...
+            return
+
+
+    @close_pop_up()
+    async def active(self, value:Optional[Any] = None):
+        """Fetch and set active status.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {active = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.active`.
+        Принимаемое значениеЬ 1/0
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = normalize_int( value or  await self.driver.execute_locator(self.locator.active) or 1)
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `active`", ex)
+            ...
+            return
+        
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.active}")
+            ...
+            return
+
+        # Записываем результат в поле `active` объекта `ProductFields`
+        self.fields.active = value
+        return True
+
+    @close_pop_up()
+    async def additional_delivery_times(self, value:Optional[Any] = None):
+        """Fetch and set additional delivery times.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {additional_delivery_times = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.additional_delivery_times`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.additional_delivery_times) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `additional_delivery_times`", ex)
+            ...
+            return
+        
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.additional_delivery_times}")
+            ...
+            return
+
+        # Записываем результат в поле `additional_delivery_times` объекта `ProductFields`
+        self.fields.additional_delivery_times = value
+        return True
+
+    @close_pop_up()
+    async def advanced_stock_management(self, value:Optional[Any] = None):
+        """Fetch and set advanced stock management status.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {advanced_stock_management = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.advanced_stock_management`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.advanced_stock_management) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `advanced_stock_management`", ex)
+            ...
+            return
+        
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.advanced_stock_management}")
+            ...
+            return
+
+        # Записываем результат в поле `advanced_stock_management` объекта `ProductFields`
+        self.fields.advanced_stock_management = value
+        return True
+    @close_pop_up()
+    async def affiliate_short_link(self, value:Optional[Any] = None):
+        """Fetch and set affiliate short link.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_short_link = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_short_link`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.affiliate_short_link = value or  await self.driver.execute_locator(self.locator.affiliate_short_link) or ''
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_short_link`", ex)
+            ...
+            return
+
+    @close_pop_up()
+    async def affiliate_summary(self, value:Optional[Any] = None):
+        """Fetch and set affiliate summary.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_summary = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_summary`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.affiliate_summary = normalize_string( value or  await self.driver.execute_locator(self.locator.affiliate_summary) or '' )
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_summary`", ex)
+            ...
+            return
+
+
+    @close_pop_up()
+    async def affiliate_summary_2(self, value:Optional[Any] = None):
+        """Fetch and set affiliate summary 2.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_summary_2 = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_summary_2`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.affiliate_summary_2) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_summary_2`", ex)
+            ...
+            return
+        
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.affiliate_summary_2}")
+            ...
+            return
+
+        # Записываем результат в поле `affiliate_summary_2` объекта `ProductFields`
+        self.fields.affiliate_summary_2 = value
+        return True
+
+    @close_pop_up()
+    async def affiliate_text(self, value:Optional[Any] = None):
+        """Fetch and set affiliate text.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_text = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_text`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.affiliate_text) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_text`", ex)
+            ...
+            return
+        
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.affiliate_text}")
+            ...
+            return
+
+        # Записываем результат в поле `affiliate_text` объекта `ProductFields`
+        self.fields.affiliate_text = value
+        return True
+    @close_pop_up()
+    async def affiliate_image_large(self, value:Optional[Any] = None):
+        """Fetch and set affiliate large image.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_image_large = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_large`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.affiliate_image_large  = value or  await self.driver.execute_locator(self.locator.affiliate_image_large) or ''
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_image_large`", ex)
+            ...
+            return
+
+    @close_pop_up()
+    async def affiliate_image_medium(self, value:Optional[Any] = None):
+        """Fetch and set affiliate medium image.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_image_medium = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_medium`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_medium) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_image_medium`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not locator_result:
+            logger.debug(f"Невалидный результат {locator_result=}")
+            ...
+            return
+
+        # Записываем результат в поле `affiliate_image_medium` объекта `ProductFields`
+        self.fields.affiliate_image_medium = locator_result
+        return True
+
+    @close_pop_up()
+    async def affiliate_image_small(self, value:Optional[Any] = None):
+        """Fetch and set affiliate small image.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {affiliate_image_small = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_small`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_small) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `affiliate_image_small`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not locator_result:
+            logger.debug(f"Невалидный результат {locator_result=}")
+            ...
+            return
+
+        # Записываем результат в поле `affiliate_image_small` объекта `ProductFields`
+        self.fields.affiliate_image_small = locator_result
+        return True
+
+    @close_pop_up()
+    async def available_date(self, value:Optional[Any] = None):
+        """Fetch and set available date.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {available_date = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_date`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            locator_result = value or  await self.driver.execute_locator(self.locator.available_date) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_date`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not locator_result:
+            logger.debug(f"Невалидный результат {locator_result=}")
+            ...
+            return
+
+        # Записываем результат в поле `available_date` объекта `ProductFields`
+        self.fields.available_date = locator_result
+        return True
+    @close_pop_up()
+    async def available_for_order(self, value:Optional[Any] = None):
+        """Fetch and set available for order status.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {available_for_order = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_for_order`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.available_for_order) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_for_order`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.available_for_order}")
+            ...
+            return
+
+        # Записываем результат в поле `available_for_order` объекта `ProductFields`
+        self.fields.available_for_order = value
+        return True
+
+    @close_pop_up()
+    async def available_later(self, value:Optional[Any] = None):
+        """Fetch and set available later status.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {available_later = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_later`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.available_later) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_later`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.available_later}")
+            ...
+            return
+
+        # Записываем результат в поле `available_later` объекта `ProductFields`
+        self.fields.available_later = value
+        return True
+
+    @close_pop_up()
+    async def available_now(self, value:Optional[Any] = None):
+        """Fetch and set available now status.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {available_now = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.available_now`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.available_now) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `available_now`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.available_now}")
+            ...
+            return
+
+        # Записываем результат в поле `available_now` объекта `ProductFields`
+        self.fields.available_now = value
+        return True
+
+    @close_pop_up()
+    async def additional_categories(self, value: str | list = None) -> dict:
+        """Set additional categories.
+
+        Это значение можно передать в словаре kwargs через ключ {additional_categories = `value`} при определении класса.
+        Если `value` было передано, оно подставляется в поле `ProductFields.additional_categories`.
+
+        Args:
+        value (str | list, optional): Строка или список категорий. Если не передано, используется пустое значение.
+
+        Returns:
+        dict: Словарь с ID категорий.
+        """
+        self.fields.additional_categories = value or  ''
+        return {'additional_categories': self.fields.additional_categories}
+
+    @close_pop_up()
+    async def cache_default_attribute(self, value:Optional[Any] = None):
+        """Fetch and set cache default attribute.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {cache_default_attribute = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_default_attribute`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.cache_default_attribute) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `cache_default_attribute`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.cache_default_attribute}")
+            ...
+            return
+
+        # Записываем результат в поле `cache_default_attribute` объекта `ProductFields`
+        self.fields.cache_default_attribute = value
+        return True
+    @close_pop_up()
+    async def cache_has_attachments(self, value:Optional[Any] = None):
+        """Fetch and set cache has attachments status.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {cache_has_attachments = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_has_attachments`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.cache_has_attachments) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `cache_has_attachments`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.cache_has_attachments}")
+            ...
+            return
+
+        # Записываем результат в поле `cache_has_attachments` объекта `ProductFields`
+        self.fields.cache_has_attachments = value
+        return True
+
+    @close_pop_up()
+    async def cache_is_pack(self, value:Optional[Any] = None):
+        """Fetch and set cache is pack status.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {cache_is_pack = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_is_pack`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.cache_is_pack) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `cache_is_pack`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.cache_is_pack}")
+            ...
+            return
+
+        # Записываем результат в поле `cache_is_pack` объекта `ProductFields`
+        self.fields.cache_is_pack = value
+        return True
+
+    @close_pop_up()
+    async def condition(self, value:Optional[Any] = None):
+        """Fetch and set product condition.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {condition = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.condition`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.condition) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `condition`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.condition}")
+            ...
+            return
+
+        # Записываем результат в поле `condition` объекта `ProductFields`
+        self.fields.condition = value
+        return True
+
+    @close_pop_up()
+    async def customizable(self, value:Optional[Any] = None):
+        """Fetch and set customizable status.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {customizable = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.customizable`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            value = value or  await self.driver.execute_locator(self.locator.customizable) or ''
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `customizable`", ex)
+            ...
+            return
+
+        # Проверка валидности `value`
+        if not value:
+            logger.debug(f"Невалидный результат {value=}\nлокатор {self.locator.customizable}")
+            ...
+            return
+
+        # Записываем результат в поле `customizable` объекта `ProductFields`
+        self.fields.customizable = value
+        return True
+    @close_pop_up()
+    async def date_add(self, value:Optional[str | datetime.date] = None):
+        """Fetch and set date added.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {date_add = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.date_add`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.date_add = normalize_sql_date( value or  await self.driver.execute_locator(self.locator.date_add) or gs.now)
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `date_add`", ex)
+            ...
+            return
+
+
+    @close_pop_up()
+    async def date_upd(self, value:Optional[Any] = None):
+        """Fetch and set date updated.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {date_upd = `value`} при определении класса.
+        Если `value` был передан, его значение подставляется в поле `ProductFields.date_upd`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.date_upd = normalize_sql_date( value or  await self.driver.execute_locator(self.locator.date_upd) or gs.now )
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `date_upd`", ex)
+            ...
+            return
+
+
+    @close_pop_up()
+    async def delivery_out_stock(self, value:Optional[Any] = None):
+        """Fetch and set delivery out of stock.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {delivery_out_stock = `value`} при определении класса.
+        Если `value` было передано, его значение подставляется в поле `ProductFields.delivery_out_stock`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.delivery_out_stock = normalize_string( value or  await self.driver.execute_locator(self.locator.delivery_out_stock) or '')
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `delivery_out_stock`", ex)
+            ...
+            return
+        
+
+    @close_pop_up()
+    async def depth(self, value:Optional[Any] = None):
+        """Fetch and set depth.
+
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {depth = `value`} при определении класса.
+        Если `value` было передано, его значение подставляется в поле `ProductFields.depth`.
+        """
+        try:
+            # Получаем значение через execute_locator
+            self.fields.depth = normalize_float( value or  await self.driver.execute_locator(self.locator.depth) or '' )
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `depth`", ex)
+            ...
+            return
+
+    @close_pop_up()
+    async def description(self, value:Optional[Any] = None):
+        """Fetch and set description.
+        
+        Args:
+        value (Any): это значение можно передать в словаре kwargs через ключ {description = `value`} при определении класса.
+        Если `value` было передано, его значение подставляется в поле `ProductFields.description`.
+        """
+        if value:
+            self.fields.description = value
+            return True
+        try:
+            # Получаем значение через execute_locator
+            raw_value = await self.driver.execute_locator(self.locator.description)
+            self.fields.description = normalize_string( raw_value )
+            return True
+        except Exception as ex:
+            logger.error(f"Ошибка получения значения в поле `description` \n {pprint(raw_value)}", ex)
+            ...
+            return
+
+
+    @close_pop_up()
+    async def description_short(self, value:

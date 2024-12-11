@@ -8,11 +8,16 @@
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
 </TD>
 <TD>
-[English](https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD)
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A> \ 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/readme.ru.md'>endpoints</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD'>English</A>
 </TD>
 </TR>
+</TABLE>
 
-hypo69 Module: эндпоинты для разработчика
+**hypo69**: эндпоинты для разработчика
 ==============================================
 
 **small_talk_bot** - бот с чатом модели ии

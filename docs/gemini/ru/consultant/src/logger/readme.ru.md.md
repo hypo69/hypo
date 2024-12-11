@@ -1,248 +1,238 @@
-# Received Code
-
-```python
+# Улучшенный код
+```rst
 .. module:: src.logger
+
+    Модуль предоставляет гибкую систему логирования, поддерживающую логирование в консоль, файлы и в формате JSON.
+    Он использует шаблон проектирования Singleton, чтобы обеспечить использование единственного экземпляра логгера во всем приложении.
+    Логгер поддерживает различные уровни логирования (например, `INFO`, `ERROR`, `DEBUG`) и включает цветное отображение для вывода в консоль.
+    Также доступны настройки форматов вывода и управление логированием в различные файлы.
+    
+    :Классы:
+        - SingletonMeta: Метакласс, реализующий шаблон Singleton для логгера.
+        - JsonFormatter: Кастомный форматтер для вывода логов в формате JSON.
+        - Logger: Основной класс логгера, поддерживающий логирование в консоль, файлы и в формате JSON.
+    
+    :Функции:
+        - __init__
+            Инициализирует экземпляр класса Logger с плейсхолдерами для различных типов логгеров (консоль, файлы и JSON).
+        - _configure_logger(name: str, log_path: str, level: Optional[int] = logging.DEBUG, formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger
+            Настраивает и возвращает экземпляр логгера.
+    
+            :param name: Имя логгера.
+            :param log_path: Путь к файлу логов.
+            :param level: Уровень логирования, например, `logging.DEBUG`. Значение по умолчанию — `logging.DEBUG`.
+            :param formatter: Кастомный форматтер (опционально).
+            :param mode: Режим работы с файлом, например, `'a'` для добавления (значение по умолчанию).
+    
+            :return: Настроенный экземпляр `logging.Logger`.
+        - initialize_loggers(info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '', errors_log_path: Optional[str] = '', json_log_path: Optional[str] = '')
+            Инициализирует логгеры для логирования в консоль и файлы (информация, отладка, ошибки и JSON).
+    
+            :param info_log_path: Путь к файлу логов информации (опционально).
+            :param debug_log_path: Путь к файлу логов отладки (опционально).
+            :param errors_log_path: Путь к файлу логов ошибок (опционально).
+            :param json_log_path: Путь к файлу логов в формате JSON (опционально).
+        - log(level, message, ex=None, exc_info=False, color=None)
+            Логирует сообщение на указанном уровне (например, `INFO`, `DEBUG`, `ERROR`) с возможным исключением и цветовым форматированием.
+    
+            :param level: Уровень логирования (например, `logging.INFO`, `logging.DEBUG`).
+            :param message: Логируемое сообщение.
+            :param ex: Исключение для логирования (опционально).
+            :param exc_info: Включать информацию об исключении (значение по умолчанию — `False`).
+            :param color: Кортеж цветов текста и фона для консольного вывода (опционально).
+        - info
+            Логирует информационное сообщение.
+        - success
+            Логирует сообщение об успешной операции.
+        - warning
+             Логирует предупреждение.
+        - debug
+            Логирует сообщение для отладки.
+        - error
+             Логирует сообщение об ошибке.
+        - critical
+            Логирует критическое сообщение.
+    
+    :Параметры логгера:
+        Класс `Logger` принимает несколько опциональных параметров для настройки поведения логирования.
+    
+        - Уровень: Контролирует, какие сообщения будут записаны. Основные уровни:
+            - logging.DEBUG: Подробная информация для диагностики.
+            - logging.INFO: Общая информация, например, успешные операции.
+            - logging.WARNING: Предупреждения, не требующие немедленного действия.
+            - logging.ERROR: Сообщения об ошибках.
+            - logging.CRITICAL: Критические ошибки, требующие немедленного внимания.
+    
+        - Форматтер: Определяет формат сообщений. По умолчанию используется `'%(asctime)s - %(levelname)s - %(message)s'`. Можно задать кастомный форматтер, например для JSON.
+        - Цвета: Задают цвет текста и фона в консоли. Цвета указываются кортежем:
+            - Цвет текста: Например, `colorama.Fore.RED`.
+            - Цвет фона: Например, `colorama.Back.WHITE`.
+    
+    :Конфигурация для логирования в файл:
+        Для записи сообщений в файл можно указать пути в конфигурации.
+        
+        .. code-block:: python
+    
+            config = {
+                'info_log_path': 'logs/info.log',
+                'debug_log_path': 'logs/debug.log',
+                'errors_log_path': 'logs/errors.log',
+                'json_log_path': 'logs/log.json'
+            }
+    
+    :Примеры использования:
+        - Инициализация логгера:
+        
+        .. code-block:: python
+    
+            logger: Logger = Logger()
+            config = {
+                'info_log_path': 'logs/info.log',
+                'debug_log_path': 'logs/debug.log',
+                'errors_log_path': 'logs/errors.log',
+                'json_log_path': 'logs/log.json'
+            }
+            logger.initialize_loggers(**config)
+        - Логирование сообщений:
+        
+        .. code-block:: python
+    
+            logger.info('Это информационное сообщение')
+            logger.success('Это сообщение об успешной операции')
+            logger.warning('Это предупреждение')
+            logger.debug('Это сообщение для отладки')
+            logger.error('Это сообщение об ошибке')
+            logger.critical('Это критическое сообщение')
+        - Настройка цветов:
+        
+        .. code-block:: python
+    
+            logger.info('Это сообщение будет зеленым', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
+            logger.error('Это сообщение с красным фоном', colors=(colorama.Fore.WHITE, colorama.Back.RED))
+    
+    Модуль `src.logger` предоставляет полноценную систему логирования для Python-приложений.
+    Вы можете настроить логирование в консоль и файлы с различными форматами и цветами, управлять уровнями логирования и обрабатывать исключения.
+    Конфигурация логирования в файлы задается через словарь `config`, что позволяет легко изменять настройки.
 ```
-<TABLE >
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/logger/README.MD'>English</A>
-</TD>
-</TABLE>
 
-Документация для модуля `src.logger`
-=====================================================================================
+# Внесённые изменения
+- Добавлены reStructuredText комментарии к модулю, функциям, классам и параметрам.
+- Улучшено форматирование текста для лучшей читаемости.
+- Добавлены примеры использования в формате reStructuredText.
+- Изменён формат вывода, чтобы соответствовать markdown.
 
-Модуль `src.logger` предоставляет гибкую систему логирования, поддерживающую логирование в консоль, файлы и в формате JSON. Он использует шаблон проектирования Singleton, чтобы обеспечить использование единственного экземпляра логгера во всем приложении. Логгер поддерживает различные уровни логирования (например, `INFO`, `ERROR`, `DEBUG`) и включает цветное отображение для вывода в консоль. Также доступны настройки форматов вывода и управление логированием в различные файлы.
+# Оптимизированный код
+```rst
+.. module:: src.logger
 
----
-
-### Классы:
-- **SingletonMeta**: Метакласс, реализующий шаблон Singleton для логгера.
-- **JsonFormatter**: Кастомный форматтер для вывода логов в формате JSON.
-- **Logger**: Основной класс логгера, поддерживающий логирование в консоль, файлы и в формате JSON.
-
----
-
-### Функции:
-
-#### `__init__`
-Инициализирует экземпляр класса Logger с плейсхолдерами для различных типов логгеров (консоль, файлы и JSON).
-
-#### `_configure_logger(name: str, log_path: str, level: Optional[int] = logging.DEBUG, formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger`
-Настраивает и возвращает экземпляр логгера.
-
-**Параметры:**
-- `name`: Имя логгера.
-- `log_path`: Путь к файлу логов.
-- `level`: Уровень логирования, например, `logging.DEBUG`. Значение по умолчанию — `logging.DEBUG`.
-- `formatter`: Кастомный форматтер (опционально).
-- `mode`: Режим работы с файлом, например, `'a'` для добавления (значение по умолчанию).
-
-**Возвращает**: Настроенный экземпляр `logging.Logger`.
-
-#### `initialize_loggers(info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '', errors_log_path: Optional[str] = '', json_log_path: Optional[str] = '')`
-Инициализирует логгеры для логирования в консоль и файлы (информация, отладка, ошибки и JSON).
-
-**Параметры:**
-- `info_log_path`: Путь к файлу логов информации (опционально).
-- `debug_log_path`: Путь к файлу логов отладки (опционально).
-- `errors_log_path`: Путь к файлу логов ошибок (опционально).
-- `json_log_path`: Путь к файлу логов в формате JSON (опционально).
-
-
-#### `log(level, message, ex=None, exc_info=False, color=None)`
-Логирует сообщение на указанном уровне (например, `INFO`, `DEBUG`, `ERROR`) с возможным исключением и цветовым форматированием.
-# Improved Code
-
-```python
-import logging
-import json
-from typing import Optional
-# ... (Импорты, если необходимо)
-from src.utils.jjson import j_loads, j_loads_ns
-from colorama import Fore, Back  # Добавление импорта для цветного вывода
-from src.logger.logger import logger
-
-
-class Logger:
-    """
-    Класс для логирования.
-    =====================
-
-    Этот класс реализует логгер, который поддерживает
-    логирование в консоль, файлы и в формате JSON.
-    """
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(Logger, cls).__new__(cls)
-        return cls._instance
-
-    def __init__(self):
-        """Инициализирует логгер."""
-        self.loggers = {}
-
-
-    def _configure_logger(self, name: str, log_path: str, level: Optional[int] = logging.DEBUG, formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger:
-        """Настраивает логгер.
-
-        :param name: Имя логгера.
-        :param log_path: Путь к файлу логов.
-        :param level: Уровень логирования.
-        :param formatter: Форматтер.
-        :param mode: Режим открытия файла.
-        :return: Настроенный логгер.
-        """
-        logger_ = logging.getLogger(name)
-        logger_.setLevel(level)
-
-        # ... (Обработка formatter)
-
-        file_handler = logging.FileHandler(log_path, mode=mode)
-        file_handler.setLevel(level)
-        file_handler.setFormatter(formatter)
-        logger_.addHandler(file_handler)
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(level)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        console_handler.setFormatter(formatter)
-        logger_.addHandler(console_handler)
-        return logger_
-
-
-
-    def initialize_loggers(self, info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '', errors_log_path: Optional[str] = '', json_log_path: Optional[str] = ''):
-        """Инициализирует логгеры.
-
-        :param info_log_path: Путь к логу информации.
-        :param debug_log_path: Путь к логу отладки.
-        :param errors_log_path: Путь к логу ошибок.
-        :param json_log_path: Путь к JSON логу.
-        """
-        # Проверка и инициализация логгеров
-        self.loggers["info"] = self._configure_logger("info", info_log_path)
-        self.loggers["debug"] = self._configure_logger("debug", debug_log_path)
-        self.loggers["errors"] = self._configure_logger("errors", errors_log_path)
-        # ... (Инициализация json логгера)
-
-
-    def log(self, level, message, ex=None, exc_info=False, color=None):
-        """Логирует сообщение на указанном уровне."""
-        try:
-            if ex:
-                logger.error(message, exc_info=exc_info, extra={'exception': str(ex)})
-            else:
-                logger.log(level, message)
-                # Обработка цветового форматирования, если нужно
-        except Exception as e:
-            logger.error(f"Ошибка логирования: {e}")
-```
-# Changes Made
-
-- Добавлено импортирование необходимых библиотек: `logging`, `json`, `typing`, `Optional`, `colorama`, `jjson`.
-- Исправлена реализация `Logger` для соответствия принципу Singleton.
-- Добавлен метод `_configure_logger` для настройки логгеров.
-- Метод `initialize_loggers` теперь использует `_configure_logger` для создания и настройки логгеров.
-- Метод `log` теперь использует `logger.error` для логирования ошибок с дополнительной информацией об исключении.
-- Обработка ошибок в `log` теперь перенаправлена на `logger.error`.
-- Добавлены RST комментарии к классу `Logger`, методам `__init__`, `initialize_loggers`, `_configure_logger` и `log`.
-- Избегаются лишние `try-except` блоки.
-- В комментариях используются конкретные формулировки.
-- Добавлены типы данных для параметров.
-- Исправлено логирование исключений.
-- Обработка `json_log_path` - добавлен комментарий.
-
-
-# FULL Code
-
-```python
-import logging
-import json
-from typing import Optional
-# ... (Импорты, если необходимо)
-from src.utils.jjson import j_loads, j_loads_ns
-from colorama import Fore, Back  # Добавление импорта для цветного вывода
-from src.logger.logger import logger
-
-
-class Logger:
-    """
-    Класс для логирования.
-    =====================
-
-    Этот класс реализует логгер, который поддерживает
-    логирование в консоль, файлы и в формате JSON.
-    """
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(Logger, cls).__new__(cls)
-        return cls._instance
-
-    def __init__(self):
-        """Инициализирует логгер."""
-        self.loggers = {}
-
-
-    def _configure_logger(self, name: str, log_path: str, level: Optional[int] = logging.DEBUG, formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger:
-        """Настраивает логгер.
-
-        :param name: Имя логгера.
-        :param log_path: Путь к файлу логов.
-        :param level: Уровень логирования.
-        :param formatter: Форматтер.
-        :param mode: Режим открытия файла.
-        :return: Настроенный логгер.
-        """
-        logger_ = logging.getLogger(name)
-        logger_.setLevel(level)
-
-        # ... (Обработка formatter)
-
-        file_handler = logging.FileHandler(log_path, mode=mode)
-        file_handler.setLevel(level)
-        file_handler.setFormatter(formatter)
-        logger_.addHandler(file_handler)
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(level)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        console_handler.setFormatter(formatter)
-        logger_.addHandler(console_handler)
-        return logger_
-
-
-
-    def initialize_loggers(self, info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '', errors_log_path: Optional[str] = '', json_log_path: Optional[str] = ''):
-        """Инициализирует логгеры.
-
-        :param info_log_path: Путь к логу информации.
-        :param debug_log_path: Путь к логу отладки.
-        :param errors_log_path: Путь к логу ошибок.
-        :param json_log_path: Путь к JSON логу.
-        """
-        # Проверка и инициализация логгеров
-        self.loggers["info"] = self._configure_logger("info", info_log_path)
-        self.loggers["debug"] = self._configure_logger("debug", debug_log_path)
-        self.loggers["errors"] = self._configure_logger("errors", errors_log_path)
-        # ... (Инициализация json логгера)
-
-
-    def log(self, level, message, ex=None, exc_info=False, color=None):
-        """Логирует сообщение на указанном уровне."""
-        try:
-            if ex:
-                logger.error(message, exc_info=exc_info, extra={'exception': str(ex)})
-            else:
-                logger.log(level, message)
-                # Обработка цветового форматирования, если нужно
-        except Exception as e:
-            logger.error(f"Ошибка логирования: {e}")
+    Модуль предоставляет гибкую систему логирования, поддерживающую логирование в консоль, файлы и в формате JSON.
+    Он использует шаблон проектирования Singleton, чтобы обеспечить использование единственного экземпляра логгера во всем приложении.
+    Логгер поддерживает различные уровни логирования (например, `INFO`, `ERROR`, `DEBUG`) и включает цветное отображение для вывода в консоль.
+    Также доступны настройки форматов вывода и управление логированием в различные файлы.
+    
+    :Классы:
+        - SingletonMeta: Метакласс, реализующий шаблон Singleton для логгера.
+        - JsonFormatter: Кастомный форматтер для вывода логов в формате JSON.
+        - Logger: Основной класс логгера, поддерживающий логирование в консоль, файлы и в формате JSON.
+    
+    :Функции:
+        - __init__
+            Инициализирует экземпляр класса Logger с плейсхолдерами для различных типов логгеров (консоль, файлы и JSON).
+        - _configure_logger(name: str, log_path: str, level: Optional[int] = logging.DEBUG, formatter: Optional[logging.Formatter] = None, mode: Optional[str] = 'a') -> logging.Logger
+            Настраивает и возвращает экземпляр логгера.
+    
+            :param name: Имя логгера.
+            :param log_path: Путь к файлу логов.
+            :param level: Уровень логирования, например, `logging.DEBUG`. Значение по умолчанию — `logging.DEBUG`.
+            :param formatter: Кастомный форматтер (опционально).
+            :param mode: Режим работы с файлом, например, `'a'` для добавления (значение по умолчанию).
+    
+            :return: Настроенный экземпляр `logging.Logger`.
+        - initialize_loggers(info_log_path: Optional[str] = '', debug_log_path: Optional[str] = '', errors_log_path: Optional[str] = '', json_log_path: Optional[str] = '')
+            Инициализирует логгеры для логирования в консоль и файлы (информация, отладка, ошибки и JSON).
+    
+            :param info_log_path: Путь к файлу логов информации (опционально).
+            :param debug_log_path: Путь к файлу логов отладки (опционально).
+            :param errors_log_path: Путь к файлу логов ошибок (опционально).
+            :param json_log_path: Путь к файлу логов в формате JSON (опционально).
+        - log(level, message, ex=None, exc_info=False, color=None)
+            Логирует сообщение на указанном уровне (например, `INFO`, `DEBUG`, `ERROR`) с возможным исключением и цветовым форматированием.
+    
+            :param level: Уровень логирования (например, `logging.INFO`, `logging.DEBUG`).
+            :param message: Логируемое сообщение.
+            :param ex: Исключение для логирования (опционально).
+            :param exc_info: Включать информацию об исключении (значение по умолчанию — `False`).
+            :param color: Кортеж цветов текста и фона для консольного вывода (опционально).
+        - info
+            Логирует информационное сообщение.
+        - success
+            Логирует сообщение об успешной операции.
+        - warning
+             Логирует предупреждение.
+        - debug
+            Логирует сообщение для отладки.
+        - error
+             Логирует сообщение об ошибке.
+        - critical
+            Логирует критическое сообщение.
+    
+    :Параметры логгера:
+        Класс `Logger` принимает несколько опциональных параметров для настройки поведения логирования.
+    
+        - Уровень: Контролирует, какие сообщения будут записаны. Основные уровни:
+            - logging.DEBUG: Подробная информация для диагностики.
+            - logging.INFO: Общая информация, например, успешные операции.
+            - logging.WARNING: Предупреждения, не требующие немедленного действия.
+            - logging.ERROR: Сообщения об ошибках.
+            - logging.CRITICAL: Критические ошибки, требующие немедленного внимания.
+    
+        - Форматтер: Определяет формат сообщений. По умолчанию используется `'%(asctime)s - %(levelname)s - %(message)s'`. Можно задать кастомный форматтер, например для JSON.
+        - Цвета: Задают цвет текста и фона в консоли. Цвета указываются кортежем:
+            - Цвет текста: Например, `colorama.Fore.RED`.
+            - Цвет фона: Например, `colorama.Back.WHITE`.
+    
+    :Конфигурация для логирования в файл:
+        Для записи сообщений в файл можно указать пути в конфигурации.
+        
+        .. code-block:: python
+    
+            config = {
+                'info_log_path': 'logs/info.log',
+                'debug_log_path': 'logs/debug.log',
+                'errors_log_path': 'logs/errors.log',
+                'json_log_path': 'logs/log.json'
+            }
+    
+    :Примеры использования:
+        - Инициализация логгера:
+        
+        .. code-block:: python
+    
+            logger: Logger = Logger()
+            config = {
+                'info_log_path': 'logs/info.log',
+                'debug_log_path': 'logs/debug.log',
+                'errors_log_path': 'logs/errors.log',
+                'json_log_path': 'logs/log.json'
+            }
+            logger.initialize_loggers(**config)
+        - Логирование сообщений:
+        
+        .. code-block:: python
+    
+            logger.info('Это информационное сообщение')
+            logger.success('Это сообщение об успешной операции')
+            logger.warning('Это предупреждение')
+            logger.debug('Это сообщение для отладки')
+            logger.error('Это сообщение об ошибке')
+            logger.critical('Это критическое сообщение')
+        - Настройка цветов:
+        
+        .. code-block:: python
+    
+            logger.info('Это сообщение будет зеленым', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
+            logger.error('Это сообщение с красным фоном', colors=(colorama.Fore.WHITE, colorama.Back.RED))
+    
+    Модуль `src.logger` предоставляет полноценную систему логирования для Python-приложений.
+    Вы можете настроить логирование в консоль и файлы с различными форматами и цветами, управлять уровнями логирования и обрабатывать исключения.
+    Конфигурация логирования в файлы задается через словарь `config`, что позволяет легко изменять настройки.
