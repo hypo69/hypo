@@ -23,6 +23,7 @@ MODE = 'dev'
 
 
 import header
+import asyncio
 from dataclasses import dataclass, field
 from src import gs
 import json
@@ -47,7 +48,7 @@ class ReportGenerator:
 
     env: Environment = field(default_factory=lambda: Environment(loader=FileSystemLoader('.')))
 
-    def generate_html(self, data:dict, lang:str ) -> str:
+    async def generate_html(self, data:dict, lang:str ) -> str:
         """
         Генерирует HTML-контент на основе шаблона и данных.
 
@@ -65,22 +66,22 @@ class ReportGenerator:
         return template.render(**data)
 
 
-    def create_report(self, data: dict, lang:str, html_file:str| Path, pdf_file:str |Path) -> None:
+    async def create_report(self, data: dict, lang:str, html_file:str| Path, pdf_file:str |Path) -> bool:
         """
         Полный цикл генерации отчёта.
 
         Args:
             lang (str): Язык отчёта.
         """
-        html_content = self.generate_html(data,lang)
+        html_content = await self.generate_html(data,lang)
         Path(html_file).write_text(data = html_content, encoding='UTF-8')
         pdf = PDFUtils()
 
         if not pdf.save_pdf_pdfkit(html_content,pdf_file):
             logger.error(f"Не скопмилировался PDF")
             ...
-        ...
-
+            return False
+        return True
 
 def main(mexiron:str,lang:str) ->bool:
     base_path:Path =  gs.path.external_storage / 'kazarinov' / 'mexironim' / mexiron
@@ -88,7 +89,7 @@ def main(mexiron:str,lang:str) ->bool:
     html_file:Path =  base_path / f'{mexiron}_{lang}.html' 
     pdf_file:Path = base_path / f'{mexiron}_{lang}.pdf'
     r = ReportGenerator()
-    r.create_report(data, lang, html_file, pdf_file)
+    asyncio.run( r.create_report(data, lang, html_file, pdf_file)   )
 
 if __name__ == "__main__":
     mexiron:str = '24_12_01_03_18_24_269'

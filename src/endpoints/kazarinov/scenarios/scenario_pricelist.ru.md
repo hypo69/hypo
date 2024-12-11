@@ -83,48 +83,87 @@ graph TD
       - `mexiron_name`: Пользовательское имя мехирона.
       - `urls`: URLs страниц продуктов.
     - **Возвращает**: `True`, если сценарий выполнен успешно, иначе `False`.
+    - **Блок-схема**:
+        ```mermaid
+        flowchart TD
+        Start[Start] --> IsOneTab{URL is from OneTab?}
+        IsOneTab -->|Yes| GetDataFromOneTab[Get data from OneTab]
+        IsOneTab -->|No| ReplyTryAgain[Reply - Try again]
+        GetDataFromOneTab --> IsDataValid{Data valid?}
+        IsDataValid -->|No| ReplyIncorrectData[Reply Incorrect data]
+        IsDataValid -->|Yes| RunMexironScenario[Run Mexiron scenario]
+        RunMexironScenario --> IsGraberFound{Graber found?}
+        IsGraberFound -->|Yes| StartParsing[Start parsing: <code>url</code>]
+        IsGraberFound -->|No| LogNoGraber[Log: No graber for <code>url</code>]
+        StartParsing --> IsParsingSuccessful{Parsing successful?}
+        IsParsingSuccessful -->|Yes| ConvertProductFields[Convert product fields]
+        IsParsingSuccessful -->|No| LogParsingFailed[Log: Failed to parse product fields]
+        ConvertProductFields --> IsConversionSuccessful{Conversion successful?}
+        IsConversionSuccessful -->|Yes| SaveProductData[Save product data]
+        IsConversionSuccessful -->|No| LogConversionFailed[Log: Failed to convert product fields]
+        SaveProductData --> IsDataSaved{Data saved?}
+        IsDataSaved -->|Yes| AppendToProductsList[Append to products_list]
+        IsDataSaved -->|No| LogDataNotSaved[Log: Data not saved]
+        AppendToProductsList --> ProcessAIHe[AI processing lang = he]
+        ProcessAIHe --> ProcessAIRu[AI processing lang = ru]
+        ProcessAIRu --> SaveHeJSON{Save JSON for he?}
+        SaveHeJSON -->|Yes| SaveRuJSON[Save JSON for ru]
+        SaveHeJSON -->|No| LogHeJSONError[Log: Error saving he JSON]
+        SaveRuJSON --> IsRuJSONSaved{Save JSON for ru?}
+        IsRuJSONSaved -->|Yes| GenerateReports[Generate reports]
+        IsRuJSONSaved -->|No| LogRuJSONError[Log: Error saving ru JSON]
+        GenerateReports --> IsReportGenerationSuccessful{Report generation successful?}
+        IsReportGenerationSuccessful -->|Yes| SendPDF[Send PDF via Telegram]
+        IsReportGenerationSuccessful -->|No| LogPDFError[Log: Error creating PDF]
+        SendPDF --> ReturnTrue[Return True]
+        LogPDFError --> ReturnTrue[Return True]
+        ReplyIncorrectData --> ReturnTrue[Return True]
+        ReplyTryAgain --> ReturnTrue[Return True]
+        LogNoGraber --> ReturnTrue[Return True]
+        LogParsingFailed --> ReturnTrue[Return True]
+        LogConversionFailed --> ReturnTrue[Return True]
+        LogDataNotSaved --> ReturnTrue[Return True]
+        LogHeJSONError --> ReturnTrue[Return True]
+        LogRuJSONError --> ReturnTrue[Return True]
+        ```
 
-    -  **Блок-схема**:
-    ```mermaid
-    flowchart TD
-        Start[Start] --> CheckURL{URL is from OneTab?}
-        CheckURL -->|Yes| FetchData[Get data from OneTab]
-        CheckURL -->|No| ReplyTryAgain[Reply - Try again]
-        FetchData --> ValidateData{Data valid?}
-        ValidateData -->|No| ReplyIncorrectData[Reply Incorrect data]
-        ValidateData -->|Yes| RunScenario[Run Mexiron scenario]
-        RunScenario --> ScenarioSuccess{Scenario successful?}
-        ScenarioSuccess -->|Yes| ReplyDone[Reply Done! I will send the link to WhatsApp]
-        ScenarioSuccess -->|No| ReplyError[Reply Error running scenario]
-        ReplyIncorrectData --> Return[Return]
-        ReplyDone --> Return[Return]
-        ReplyTryAgain --> Return[Return]
-        ReplyError --> Return[Return]
+        - **Легенда**:
+        1. **Начало (Start)**: Сценарий начинает выполнение. 
 
-    ```
-    Легенда:
-    
-    1.&nbsp;**Start**: Начало выполнения сценария. 
-    
-    2.&nbsp;**CheckURL**: Проверка, является ли URL из OneTab.  
-    
-    3.&nbsp;**FetchData**: Получение данных из OneTab. 
-    
-    4.&nbsp;**ReplyTryAgain**: Ответ "Try again", если URL не из OneTab. 
-    
-    5.&nbsp;**ValidateData**: Проверка валидности данных.
-    
-    6.&nbsp;**ReplyIncorrectData**: Ответ "Incorrect data", если данные не валидны.
-    
-    7.&nbsp;**RunScenario**: Запуск сценария Mexiron.
-    
-    8.&nbsp;**ScenarioSuccess**: Проверка успешности выполнения сценария.
-    
-    9.&nbsp;**ReplyDone**: Ответ "Done! I will send the link to WhatsApp", если сценарий выполнен успешно.
+        2. **Проверка источника URL (IsOneTab)**:
+           - Если URL из OneTab, данные извлекаются из OneTab.
+           - Если URL не из OneTab, пользователю отправляется сообщение "Try again".
+        3. **Проверка валидности данных (IsDataValid)**:
+           - Если данные не валидны, пользователю отправляется сообщение "Incorrect data".
+           - Если данные валидны, запускается сценарий Mexiron.
+        4. **Поиск грабера (IsGraberFound)**:
+           - Если грабер найден, начинается парсинг страницы.
+           - Если грабер не найден, логируется сообщение о том, что грабер отсутствует для данного URL.
+        5. **Парсинг страницы (StartParsing)**:
+           - Если парсинг успешен, данные преобразуются в нужный формат.
+           - Если парсинг не удался, логируется ошибка.
+        6. **Преобразование данных (ConvertProductFields)**:
+           - Если преобразование успешно, данные сохраняются.
+           - Если преобразование не удалось, логируется ошибка.
+        7. **Сохранение данных (SaveProductData)**:
+           - Если данные сохранены, они добавляются в список продуктов.
+           - Если данные не сохранены, логируется ошибка.
+        8. **Обработка через AI (ProcessAIHe, ProcessAIRu)**:
+           - Данные обрабатываются AI для языков `he` (иврит) и `ru` (русский).
+        9. **Сохранение JSON (SaveHeJSON, SaveRuJSON)**:
+           - Результаты обработки сохраняются в формате JSON для каждого языка.
+           - Если сохранение не удалось, логируется ошибка.
+        10. **Генерация отчетов (GenerateReports)**:
+            - Создаются HTML и PDF отчеты для каждого языка.
+            - Если создание отчета не удалось, логируется ошибка.
+        11. **Отправка PDF через Telegram (SendPDF)**:
+            - PDF-файлы отправляются через Telegram.
+            - Если отправка не удалась, логируется ошибка.
+        12. **Завершение (ReturnTrue)**:
+            - Сценарий завершается, возвращая `True`.
 
-    10.&nbsp;**ReplyError**: Ответ "Error running scenario", если сценарий не выполнен.
-
-    11.&nbsp;**Return**: Возврат из функции.
+    #### **Логи ошибок**:
+    - На каждом этапе, где возможны ошибки, добавлены узлы для логирования ошибок (например, `LogNoGraber`, `LogParsingFailed`, `LogHeJSONError` и т.д.).
 
 ----
   - **`get_graber_by_supplier_url(self, url: str)`**:

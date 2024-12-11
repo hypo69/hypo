@@ -180,7 +180,7 @@ flowchart TD
                 continue
 
             try:
-                await update.message.reply_text(f"""Strat parsing: 
+                await update.message.reply_text(f"""Starting parsing: 
                 {url}""")
                 f = await graber.grab_page(*required_fields)
                 if gs.host_name == 'Vostro-3888':
@@ -211,10 +211,10 @@ flowchart TD
         """ список компонентов сборки компьютера уходит в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
-        await update.message.reply_text(f"Start processing AI. lang = he")
+        await update.message.reply_text(f"AI processing lang = he")
         he = await self.process_ai(products_list,'he')
 
-        await update.message.reply_text(f"Start processing AI. lang = he")
+        await update.message.reply_text(f"AI processing lang = ru")
         ru = await self.process_ai(products_list,'ru')
 
 
@@ -226,13 +226,25 @@ flowchart TD
             logger.error(f'Ошибка сохранения словаря `ru`', None, False)
             ...
 
-        if not await self.create_report(he, Path(self.export_path/f'{self.mexiron_name}_he.html'), Path(self.export_path/f'{self.mexiron_name}_he.pdf')):
-            logger.error(f"Ошибка создания PDF: {self.mexiron_name}_he.pdf", None, False)
-            ...
 
-        if not await self.create_report(ru, Path(self.export_path/f'{self.mexiron_name}_ru.html'), Path(self.export_path/f'{self.mexiron_name}_ru.pdf')):
-            logger.error(f"Ошибка создания PDF: {self.mexiron_name}_ru.pdf", None, False)
-        ...
+        generator = ReportGenerator()
+
+        for lang in ['he','ru']:
+            html_file=Path(self.export_path/f'{self.mexiron_name}_{lang}.html')
+            pdf_file =  Path(self.export_path/f'{self.mexiron_name}_{lang}.pdf')
+            if not await generator.create_report(data=he if lang == 'he' else ru, 
+                                                lang=lang, 
+                                                html_file=html_file, 
+                                                pdf_file=pdf_file):
+                logger.error(f"Ошибка создания PDF: {self.mexiron_name}_he.pdf", None, False)
+                ...
+            if pdf_file.exists() and pdf_file.is_file():
+                        # Отправка боту PDF-файл через reply_document()
+                        await self.update.message.reply_document(document=pdf_file)
+            else:
+                logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
+                ...
+
         return True 
 
 
@@ -360,12 +372,21 @@ flowchart TD
 
         return True
 
-    async def create_report(self, data:dict, html_file:Path, pdf_file:Path):
-        """Функция отправляет задание на создание мехирона в форматax `html` и `pdf`"""
+    async def create_report(self, data: dict, html_file: Path, pdf_file: Path):
+        """Функция отправляет задание на создание мехирона в формате `html` и `pdf`.
+        Если мехорон в pdf создался (`generator.create_report()` вернул True) - 
+        отправить его боту
+        """
 
-        generator = ReportGenerator( base_path = self.export_path, timestamp = self.timestamp )
-        ...
-        for lang in ['he','ru']:
-            generator.create_report(lang)
-
+        generator = ReportGenerator()
+    
+        for lang in ['he', 'ru']:
+            if await generator.create_report(data, lang, html_file, pdf_file):
+                # Проверка, существует ли файл и является ли он файлом
+                if pdf_file.exists() and pdf_file.is_file():
+                    # Отправка боту PDF-файл через reply_document()
+                    await self.update.message.reply_document(document=pdf_file)
+                else:
+                    logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
+                    ...
 

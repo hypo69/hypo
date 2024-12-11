@@ -52,6 +52,7 @@ class TelegramBot:
         self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
         self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
         self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
+        self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_log))
 
     async def start(self, update: Update, context: CallbackContext) -> None:
         """Handle the /start command."""
@@ -138,6 +139,12 @@ class TelegramBot:
         self.update = update
         self.context = context
         return self.update.message.text
+
+    async def handle_log(self, update: Update, context: CallbackContext) -> None:
+        """Handle log messages."""
+        log_message = update.message.text
+        logger.info(f"Received log message: {log_message}")
+        await update.message.reply_text("Log received and processed.")
 
 def main() -> None:
     """Start the bot."""

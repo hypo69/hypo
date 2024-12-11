@@ -83,47 +83,100 @@ graph TD
       - `urls`: URLs of product pages.
     - **Returns**: `True` if the scenario runs successfully, otherwise `False`.
 
+
+
     -  **Flowchart**:
-    ```mermaid
-    flowchart TD
-        Start[Start] --> CheckURL{URL is from OneTab?}
-        CheckURL -->|Yes| FetchData[Get data from OneTab]
-        CheckURL -->|No| ReplyTryAgain[Reply - Try again]
-        FetchData --> ValidateData{Data valid?}
-        ValidateData -->|No| ReplyIncorrectData[Reply Incorrect data]
-        ValidateData -->|Yes| RunScenario[Run Mexiron scenario]
-        RunScenario --> ScenarioSuccess{Scenario successful?}
-        ScenarioSuccess -->|Yes| ReplyDone[Reply Done! I will send the link to WhatsApp]
-        ScenarioSuccess -->|No| ReplyError[Reply Error running scenario]
-        ReplyIncorrectData --> Return[Return]
-        ReplyDone --> Return[Return]
-        ReplyTryAgain --> Return[Return]
-        ReplyError --> Return[Return]
+        ```mermaid
+        flowchart TD
+        Start[Start] --> IsOneTab{URL is from OneTab?}
+        IsOneTab -->|Yes| GetDataFromOneTab[Get data from OneTab]
+        IsOneTab -->|No| ReplyTryAgain[Reply - Try again]
+        GetDataFromOneTab --> IsDataValid{Data valid?}
+        IsDataValid -->|No| ReplyIncorrectData[Reply Incorrect data]
+        IsDataValid -->|Yes| RunMexironScenario[Run Mexiron scenario]
+        RunMexironScenario --> IsGraberFound{Graber found?}
+        IsGraberFound -->|Yes| StartParsing[Start parsing: <code>url</code>]
+        IsGraberFound -->|No| LogNoGraber[Log: No graber for <code>url</code>]
+        StartParsing --> IsParsingSuccessful{Parsing successful?}
+        IsParsingSuccessful -->|Yes| ConvertProductFields[Convert product fields]
+        IsParsingSuccessful -->|No| LogParsingFailed[Log: Failed to parse product fields]
+        ConvertProductFields --> IsConversionSuccessful{Conversion successful?}
+        IsConversionSuccessful -->|Yes| SaveProductData[Save product data]
+        IsConversionSuccessful -->|No| LogConversionFailed[Log: Failed to convert product fields]
+        SaveProductData --> IsDataSaved{Data saved?}
+        IsDataSaved -->|Yes| AppendToProductsList[Append to products_list]
+        IsDataSaved -->|No| LogDataNotSaved[Log: Data not saved]
+        AppendToProductsList --> ProcessAIHe[AI processing lang = he]
+        ProcessAIHe --> ProcessAIRu[AI processing lang = ru]
+        ProcessAIRu --> SaveHeJSON{Save JSON for he?}
+        SaveHeJSON -->|Yes| SaveRuJSON[Save JSON for ru]
+        SaveHeJSON -->|No| LogHeJSONError[Log: Error saving he JSON]
+        SaveRuJSON --> IsRuJSONSaved{Save JSON for ru?}
+        IsRuJSONSaved -->|Yes| GenerateReports[Generate reports]
+        IsRuJSONSaved -->|No| LogRuJSONError[Log: Error saving ru JSON]
+        GenerateReports --> IsReportGenerationSuccessful{Report generation successful?}
+        IsReportGenerationSuccessful -->|Yes| SendPDF[Send PDF via Telegram]
+        IsReportGenerationSuccessful -->|No| LogPDFError[Log: Error creating PDF]
+        SendPDF --> ReturnTrue[Return True]
+        LogPDFError --> ReturnTrue[Return True]
+        ReplyIncorrectData --> ReturnTrue[Return True]
+        ReplyTryAgain --> ReturnTrue[Return True]
+        LogNoGraber --> ReturnTrue[Return True]
+        LogParsingFailed --> ReturnTrue[Return True]
+        LogConversionFailed --> ReturnTrue[Return True]
+        LogDataNotSaved --> ReturnTrue[Return True]
+        LogHeJSONError --> ReturnTrue[Return True]
+        LogRuJSONError --> ReturnTrue[Return True]
+        ```
 
-    ```
-    Legend:
-    
-    1.&nbsp;**Start**: Start of scenario execution. 
-    
-    2.&nbsp;**CheckURL**: Checks if the URL is from OneTab.  
-    
-    3.&nbsp;**FetchData**: Fetches data from OneTab. 
-    
-    4.&nbsp;**ReplyTryAgain**: Replies "Try again" if the URL is not from OneTab. 
-    
-    5.&nbsp;**ValidateData**: Validates the data.
-    
-    6.&nbsp;**ReplyIncorrectData**: Replies "Incorrect data" if the data is invalid.
-    
-    7.&nbsp;**RunScenario**: Runs the Mexiron scenario.
-    
-    8.&nbsp;**ScenarioSuccess**: Checks if the scenario ran successfully.
-    
-    9.&nbsp;**ReplyDone**: Replies "Done! I will send the link to WhatsApp" if the scenario is successful.
+        - **Legend**
 
-    10.&nbsp;**ReplyError**: Replies "Error running scenario" if the scenario fails.
+    1. **Start**: The scenario begins execution.
 
-    11.&nbsp;**Return**: Returns from the function.
+    2. **URL Source Check (IsOneTab)**:
+       - If the URL is from OneTab, data is extracted from OneTab.
+       - If the URL is not from OneTab, the user is sent a "Try again" message.
+
+    3. **Data Validity Check (IsDataValid)**:
+       - If the data is invalid, the user is sent an "Incorrect data" message.
+       - If the data is valid, the Mexiron scenario is initiated.
+
+    4. **Grabber Search (IsGraberFound)**:
+       - If a grabber is found, the page parsing begins.
+       - If a grabber is not found, a log message is generated indicating that no grabber is available for the given URL.
+
+    5. **Page Parsing (StartParsing)**:
+       - If parsing is successful, the data is converted into the required format.
+       - If parsing fails, an error is logged.
+
+    6. **Data Conversion (ConvertProductFields)**:
+       - If the conversion is successful, the data is saved.
+       - If the conversion fails, an error is logged.
+
+    7. **Data Saving (SaveProductData)**:
+       - If the data is saved, it is added to the products list.
+       - If the data is not saved, an error is logged.
+
+    8. **AI Processing (ProcessAIHe, ProcessAIRu)**:
+       - The data is processed by AI for the languages `he` (Hebrew) and `ru` (Russian).
+
+    9. **JSON Saving (SaveHeJSON, SaveRuJSON)**:
+       - The processing results are saved in JSON format for each language.
+       - If saving fails, an error is logged.
+
+    10. **Report Generation (GenerateReports)**:
+        - HTML and PDF reports are generated for each language.
+        - If report generation fails, an error is logged.
+
+    11. **PDF Sending via Telegram (SendPDF)**:
+        - PDF files are sent via Telegram.
+        - If sending fails, an error is logged.
+
+    12. **Completion (ReturnTrue)**:
+        - The scenario ends by returning `True`.
+
+#### **Error Logging**:
+- At each stage where errors may occur, nodes are included to log errors (e.g., `LogNoGraber`, `LogParsingFailed`, `LogHeJSONError`, etc.).
 
 ----
   - **`get_graber_by_supplier_url(self, url: str)`**:

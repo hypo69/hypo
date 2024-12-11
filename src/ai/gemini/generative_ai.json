@@ -5,8 +5,9 @@
     "data",
     "google_drive"
   ],
-  "model": "gemini-1.5-flash-8b-exp-0924",
+  "model": "gemini-2.0-flash-exp",
   "model_choices": [
+    "gemini-2.0-flash-exp",
     "gemini-1.5-flash-8b-exp-0924",
     "gemini-1.5-flash"
   ]

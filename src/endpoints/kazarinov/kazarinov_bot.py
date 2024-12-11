@@ -3,10 +3,9 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 """
-Модуль реализует Telegram-бота для проекта Kazarinov
+Telegram-бот для проекта Kazarinov
 ====================================================
-Модуль реализует Telegram-бота, поддерживающего 
-различные сценарии обработки команд и сообщений. Бот взаимодействует 
+Бот взаимодействует 
 с парсером Mexiron и моделью Google Generative AI, поддерживает обработку текстовых сообщений, документов и URL.
 
 .. module:: src.endpoints.kazarinov.kazarinov_bot 
@@ -17,7 +16,7 @@
 MODE = 'dev'
 import asyncio
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Self
 from types import SimpleNamespace
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
@@ -41,6 +40,8 @@ from src.utils.file import recursively_read_text_files, save_text_file
 from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger.logger import logger
+
+
 
 class KazarinovTelegramBot(TelegramBot, BotHandler):
     """Telegram bot with custom behavior for Kazarinov."""
@@ -66,9 +67,10 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
             if mode == 'test'
             else gs.credentials.telegram.hypo69_kazarinov_bot
         )
-
+        
         # Call parent initializers
         TelegramBot.__init__(self, self.token)
+        #self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_log))
         BotHandler.__init__(self, getattr(self.config , 'webdriver_name' ,'firefox') )
 
 
@@ -96,4 +98,5 @@ if __name__ == "__main__":
         kt = KazarinovTelegramBot(mode='test')
     else:
         kt = KazarinovTelegramBot() 
+
     asyncio.run(kt.application.run_polling())
