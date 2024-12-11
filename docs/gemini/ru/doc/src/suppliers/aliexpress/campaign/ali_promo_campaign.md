@@ -2,52 +2,181 @@
 
 ## Обзор
 
-Модуль `ali_promo_campaign.py` предназначен для управления рекламными кампаниями на AliExpress. Он предоставляет возможности загрузки, обработки и генерации данных о кампаниях, категориях и товарах с использованием искусственного интеллекта.  Модуль поддерживает разные языки и валюты, обеспечивая гибкость в настройке кампаний.  Он также предоставляет функциональность для создания и заполнения JSON файлов, обработки данных о категориях и товарах, а также генерации контента с помощью ИИ.
+Модуль `ali_promo_campaign` предназначен для управления рекламными кампаниями на AliExpress. Он предоставляет класс `AliPromoCampaign`, позволяющий загружать данные о кампаниях, обрабатывать категории и товары, а также использовать AI для генерации дополнительных данных. Модуль поддерживает различные языки и валюты.
+
+## Оглавление
+
+- [Модуль `ali_promo_campaign`](#модуль-ali-promo-campaign)
+- [Класс `AliPromoCampaign`](#класс-alipromocampaign)
+    - [Метод `__init__`](#метод-init)
+    - [Метод `process_campaign`](#метод-processcampaign)
+    - [Метод `process_campaign_category`](#метод-processcampaigncategory)
+    - [Метод `process_new_campaign`](#метод-processnewcampaign)
+    - [Метод `process_ai_category`](#метод-processaicategory)
+    - [Метод `process_category_products`](#метод-processcategoryproducts)
+    - [Метод `dump_category_products_files`](#метод-dumpcategoryproductsfiles)
+    - [Метод `set_categories_from_directories`](#метод-setcategoriesfromdirectories)
+    - [Метод `generate_output`](#метод-generateoutput)
+    - [Метод `generate_html`](#метод-generatehtml)
+    - [Метод `generate_html_for_campaign`](#метод-generatehtmlforcampaign)
+
 
 ## Классы
 
 ### `AliPromoCampaign`
 
-**Описание**: Класс `AliPromoCampaign` отвечает за управление рекламной кампанией на AliExpress. Он предоставляет методы для инициализации, обработки кампаний, категорий и товаров, а также для использования ИИ для генерации данных.
+**Описание**: Класс для управления рекламными кампаниями на AliExpress.  Позволяет загружать, обрабатывать и генерировать данные о кампаниях, категориях и товарах.
 
 **Атрибуты**:
 
 - `language`: Язык кампании.
 - `currency`: Валюта кампании.
-- `base_path`: Базовая директория для хранения данных кампании.
+- `base_path`: Базовая директория кампании.
 - `campaign_name`: Название кампании.
-- `campaign`: Объект `SimpleNamespace`, представляющий данные кампании.
-- `campaign_ai`: Объект `SimpleNamespace`, представляющий данные для AI.
-- `gemini`: Объект `GoogleGenerativeAI`, используемый для генерации данных с помощью Gemini.
-- `openai`: Объект `OpenAIModel`, используемый для генерации данных с помощью OpenAI (в коде присутствует, но может быть неактивным).
+- `campaign`: Объект `SimpleNamespace` с данными о кампании (из файла).
+- `campaign_ai`: Объект `SimpleNamespace` с данными о кампании для AI.
+- `gemini`: Модель AI Gemini.
+- `openai`: Модель AI OpenAI.
+
 
 **Методы**:
 
-- `__init__(campaign_name: str, language: Optional[str] = None, currency: Optional[str] = None, model:str = 'openai')`: Инициализирует объект `AliPromoCampaign`.  Загружает данные из JSON файла, если он существует. Иначе, запускает процесс создания новой кампании.
-- `_models_payload()`: Инициализирует модели ИИ (Gemini и OpenAI).
-- `process_campaign()`: Обрабатывает все категории кампании, включая обработку товаров в каждой категории и генерацию данных с помощью ИИ.
-- `process_campaign_category(category_name: str) -> list[SimpleNamespace] | None`: Обрабатывает указанную категорию для всех языков и валют.
-- `process_new_campaign(campaign_name: str, language: Optional[str] = None, currency: Optional[str] = None)`: Создает новую рекламную кампанию.  Создание файла JSON для кампании, обработка категорий и товаров.
-- `process_ai_category(category_name: Optional[str] = None)`: Обрабатывает данные категории с помощью ИИ.  Получает данные из файлов, генерирует запрос для ИИ, обновляет данные в `campaign_ai`.
-- `process_category_products(category_name: str) -> Optional[List[SimpleNamespace]]`: Обрабатывает продукты в указанной категории, используя генератор партнерских ссылок.  Ищет продуктные id в HTML файлах и sources.txt, инициирует запрос к генератору партнерских ссылок.
-- `dump_category_products_files(category_name: str, products: List[SimpleNamespace])`: Сохраняет данные о товарах в JSON файлы.
-- `set_categories_from_directories()`: Устанавливает категории кампании из названий директорий.
-- `generate_output(campaign_name: str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace)`: Сохраняет данные о товарах в различные форматы (JSON, HTML).
-- `generate_html(campaign_name:str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace)`: Создает HTML файлы для каждой категории и для корневого индекса кампании.
-- `generate_html_for_campaign(campaign_name: str)`: Генерирует HTML-страницы для всех категорий рекламной кампании.
+#### `__init__`
 
+```python
+def __init__(
+    self,
+    campaign_name: str,
+    language: Optional[str] = None,
+    currency: Optional[str] = None,
+    model: str = 'openai'
+):
+    """Инициализация объекта AliPromoCampaign для рекламной кампании.
+
+    Args:
+        campaign_name (str): Название кампании.
+        language (Optional[str], optional): Язык кампании. По умолчанию None.
+        currency (Optional[str], optional): Валюта кампании. По умолчанию None.
+        model (str, optional): Выбранная модель AI ('openai' или 'gemini'). По умолчанию 'openai'.
+
+    Returns:
+        SimpleNamespace: Объект, представляющий кампанию.
+
+    Raises:
+        FileNotFoundError: Если файл кампании не найден.
+    """
+    ...
+```
+
+#### `process_campaign`
+
+```python
+def process_campaign(self):
+    """Функция итерируется по категориям рекламной кампании и обрабатывает товары категории через генератор партнерских ссылок.
+    """
+    ...
+```
+
+#### `process_campaign_category`
+
+```python
+def process_campaign_category(self, campaign_name: str, category_name: str, language: str, currency: str) -> list[SimpleNamespace] | None:
+    """Обрабатывает конкретную категорию в рамках кампании для всех языков и валют.
+    """
+    ...
+```
+
+#### `process_new_campaign`
+
+```python
+def process_new_campaign(
+    self,
+    campaign_name: str,
+    language: Optional[str] = None,
+    currency: Optional[str] = None,
+):
+    """Создание новой рекламной кампании.
+    """
+    ...
+```
+
+#### `process_ai_category`
+
+```python
+def process_ai_category(self, category_name: Optional[str] = None):
+    """Обрабатывает категорию с помощью AI.
+    """
+    ...
+```
+
+
+#### `process_category_products`
+
+```python
+def process_category_products(self, category_name: str) -> Optional[List[SimpleNamespace]]:
+    """Обрабатывает товары в определенной категории.
+    """
+    ...
+```
+
+#### `dump_category_products_files`
+
+```python
+def dump_category_products_files(
+    self, category_name: str, products: List[SimpleNamespace]
+):
+    """Сохраняет данные о товарах в JSON файлы.
+    """
+    ...
+```
+
+
+#### `set_categories_from_directories`
+
+```python
+def set_categories_from_directories(self):
+    """Устанавливает категории рекламной кампании из названий директорий.
+    """
+    ...
+```
+
+#### `generate_output`
+
+```python
+async def generate_output(self, campaign_name: str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace):
+    """Сохраняет данные о товарах в различных форматах.
+    """
+    ...
+```
+
+#### `generate_html`
+
+```python
+async def generate_html(self, campaign_name: str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace):
+   """ Создает HTML файлы для категории и корневого индекса.
+    """
+    ...
+
+```
+
+#### `generate_html_for_campaign`
+
+```python
+def generate_html_for_campaign(self, campaign_name: str):
+    """Генерирует HTML-страницы для рекламной кампании.
+    """
+    ...
+```
+
+(Другие методы и атрибуты документируются аналогично)
 
 ## Функции
 
-(Здесь перечислены другие функции, если таковые имеются)
+
+(Документация функций, если они есть, добавляется сюда)
 
 
-## Заметки
+## Примеры
 
-- Код использует `SimpleNamespace` для представления данных.
-- Используется асинхронное программирование (`asyncio`).
-- Имеется обработка ошибок (блоками `try...except`).
-- Присутствует обширная документация внутри кода.
-- Модуль предполагает организацию данных в структуре директорий (например, для категорий и файлов).
-- В коде присутствуют вызовы внешних библиотек (`gs`, `header`, `GoogleGenerativeAI`, `OpenAIModel`, `AliAffiliatedProducts` и др.), которые не представлены в данном документе.  Необходимо документация для этих внешних библиотек для полного понимания функциональности `ali_promo_campaign.py`.
-- Функции `save_promotion_links`, `save_product_titles`, `generate_html` являются асинхронными (предполагается использование `async def`).
+
+(Примеры использования модуля и его методов добавляются сюда)

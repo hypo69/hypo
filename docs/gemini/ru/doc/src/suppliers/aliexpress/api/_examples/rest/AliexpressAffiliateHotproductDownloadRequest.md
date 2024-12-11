@@ -1,28 +1,54 @@
-# Модуль aliexpress/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py
+# Модуль `hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py`
 
 ## Обзор
 
-Модуль `AliexpressAffiliateHotproductDownloadRequest` предоставляет класс для работы с API AliExpress, позволяя загружать данные о горячих товарах. Класс наследуется от `RestApi`.
+Модуль содержит класс `AliexpressAffiliateHotproductDownloadRequest`, представляющий запрос для скачивания популярных товаров на AliExpress. Класс наследуется от базового класса `RestApi` и предоставляет методы для настройки параметров запроса и получения имени API.
 
-## Классы
+## Оглавление
 
-### `AliexpressAffiliateHotproductDownloadRequest`
+- [Модуль `AliexpressAffiliateHotproductDownloadRequest`](#модуль-aliexpressaffiliatehotproductdownloadrequest)
+- [Класс `AliexpressAffiliateHotproductDownloadRequest`](#класс-aliexpressaffiliatehotproductdownloadrequest)
+    - [Метод `__init__`](#метод-init)
+    - [Метод `getapiname`](#метод-getapiname)
 
-**Описание**: Класс `AliexpressAffiliateHotproductDownloadRequest` представляет собой запрос для получения данных о горячих товарах на AliExpress. Он предоставляет методы для настройки параметров запроса и выполнения запроса к API.
 
-**Методы**:
+## Класс `AliexpressAffiliateHotproductDownloadRequest`
 
-- `__init__`: 
-    **Описание**: Конструктор класса. Инициализирует параметры запроса и устанавливает значения по умолчанию для домена и порта API AliExpress.
-    **Параметры**:
-        - `domain` (str, опционально, по умолчанию "api-sg.aliexpress.com"): Домен API AliExpress.
-        - `port` (int, опционально, по умолчанию 80): Порт API AliExpress.
-    **Возвращает**:
-        - Не имеет возвращаемого значения.
+**Описание**:  Класс представляет собой запрос для скачивания популярных товаров с AliExpress.  Он настраивает параметры запроса и предоставляет имя API.
 
-- `getapiname`:
-    **Описание**: Возвращает имя API-метода для запроса.
-    **Параметры**:
-        - Не имеет параметров.
-    **Возвращает**:
-        - str: Имя API-метода ('aliexpress.affiliate.hotproduct.download').
+### Метод `__init__`
+
+**Описание**: Инициализирует объект класса.
+
+**Параметры**:
+
+- `domain` (str, optional): Домен API. По умолчанию `"api-sg.aliexpress.com"`.
+- `port` (int, optional): Порт API. По умолчанию `80`.
+
+**Атрибуты**:
+
+- `app_signature`: Не используется, но доступен для настройки.
+- `category_id`: ID категории товаров.
+- `country`: Страна.
+- `fields`: Поля для возвращаемых данных.
+- `scenario_language_site`: Язык и сайт.
+- `page_no`: Номер страницы.
+- `page_size`: Размер страницы.
+- `target_currency`: Целевая валюта.
+- `target_language`: Целевой язык.
+- `tracking_id`: ID отслеживания.
+
+**Возвращает**:
+
+-  None
+
+
+### Метод `getapiname`
+
+**Описание**: Возвращает имя API.
+
+**Параметры**:
+- Нет
+
+**Возвращает**:
+- str: Имя API - `"aliexpress.affiliate.hotproduct.download"`.

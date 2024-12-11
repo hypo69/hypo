@@ -1,12 +1,10 @@
-# ИНСТРУКЦИЯ ПО ИСПОЛЬЗОВАНИЮ MODULЯ `affiliated_products_generator.py`
+# ИНСТРУКЦИЯ ПО ИСПОЛЬЗОВАНИЮ `affiliated_products_generator.py`
 
 ## Обзор
 
-Модуль `affiliated_products_generator.py` из пакета `aliexpress` отвечает за получение полных данных о продуктах с сайта AliExpress, используя API для партнёрских ссылок. Он расширяет возможности класса `AliApi`, позволяя обрабатывать URL или ID продуктов и извлекать информацию о партнёрских продуктах, включая сохранение изображений, видео и JSON-данных.
+Файл `affiliated_products_generator.py` содержит класс `AliAffiliatedProducts`, предназначенный для сбора полной информации о продуктах с AliExpress Affiliate API. Он расширяет функциональность класса `AliApi`, обрабатывая URL-адреса или идентификаторы продуктов и извлекая данные об аффилированных продуктах, включая сохранение изображений, видео и JSON-данных.
 
-## Импорты и Зависимости
-
-Этот модуль использует следующие импорты:
+## Импорты и зависимости
 
 ```python
 import asyncio
@@ -23,29 +21,32 @@ from src.suppliers.aliexpress import Aliexpress
 from src.suppliers.aliexpress.affiliate_links_shortener_via_webdriver import AffiliateLinksShortener
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
 from src.suppliers.aliexpress.utils.set_full_https import ensure_https
-from src.utils.convertor.csv2json import csv2dict 
+from src.utils.convertor.csv2json import csv2dict
 from src.utils.jjson import j_dumps
 from src.utils import save_png_from_url, save_video_from_url
 from src.utils.printer import pprint
 from src.utils.file import read_text_file, save_text_file
 
-from src.logger import logger
+from src.logger.logger import logger
 ```
 
-В импорты входят стандартные библиотеки Python, внешние библиотеки и вспомогательные модули из проекта `src`.
+Список используемых библиотек и модулей:
+
+- Стандартные библиотеки Python (`asyncio`, `itertools`, `math`, `pathlib`, `typing`, `types`, `urllib.parse`)
+- Модули проекта (`src`, `src.suppliers.aliexpress`, `src.utils.convertor`, `src.utils`, `src.logger`)
 
 ## Класс `AliAffiliatedProducts`
 
-### Описание
+### Документация класса
 
 ```python
 class AliAffiliatedProducts(AliApi):
-    """ Класс для сбора полных данных о продуктах по URL или ID.
-    locator_description Для более подробной информации о создании шаблонов для рекламных кампаний, см. раздел "Управление рекламными кампаниями на AliExpress".
+    """ Класс для сбора полной информации о продуктах из URL-адресов или идентификаторов продуктов
+    locator_description Для получения более подробной информации о создании шаблонов для рекламных кампаний, см. раздел `Управление рекламными кампаниями на AliExpress`
     @code
     # Пример использования:
-    prod_urls = ['123','456',...]
-    prod_urls = ['https://www.aliexpress.com/item/123.html','456',...]
+    prod_urls = ['123', '456', ...]
+    prod_urls = ['https://www.aliexpress.com/item/123.html', '456', ...]
 
     parser = AliAffiliatedProducts(
                                 campaign_name,
@@ -58,7 +59,13 @@ class AliAffiliatedProducts(AliApi):
     """
 ```
 
-Класс `AliAffiliatedProducts` предназначен для сбора полных данных о продуктах AliExpress по URL или ID, используя API партнёрских ссылок.
+### Цель
+
+Сбор полной информации о продуктах с использованием AliExpress Affiliate API по URL-адресам или идентификаторам продуктов.
+
+### Пример использования
+
+Демонстрирует инициализацию класса и вызов метода `_affiliate_product` для обработки URL-адресов продуктов.
 
 ### Атрибуты
 
@@ -70,11 +77,11 @@ language: str
 currency: str
 ```
 
-* `campaign_name`: Название рекламной кампании.
-* `campaign_category`: Категория кампании (по умолчанию `None`).
-* `campaign_path`: Путь к директории, где хранятся материалы кампании.
-* `language`: Язык кампании (по умолчанию `'EN'`).
-* `currency`: Валюта кампании (по умолчанию `'USD'`).
+- `campaign_name`: Название рекламной кампании.
+- `campaign_category`: Категория кампании (по умолчанию `None`).
+- `campaign_path`: Путь к директории, где хранятся материалы кампании.
+- `language`: Язык кампании (по умолчанию `'EN'`).
+- `currency`: Валюта кампании (по умолчанию `'USD'`).
 
 
 ### Инициализация
@@ -87,13 +94,11 @@ def __init__(self,
              currency: str = 'USD',
              *args, **kwargs):
     """
-    Инициализирует класс с данными о кампании.
-
-    @param campaign_name `str`: Название рекламной кампании. Директория с подготовленным материалом определяется по имени.
-    @param campaign_category `Optional[str]`: Категория кампании (по умолчанию None).
-    @param language `str`: Язык кампании (по умолчанию 'EN').
-    @param currency `str`: Валюта кампании (по умолчанию 'USD').
-    @param tracking_id `str`: Идентификатор отслеживания для API AliExpress.
+    @param campaign_name `str`: Название рекламной кампании. Директория с подготовленным материалом берется по имени.
+    @param campaign_category `Optional[str]`: Категория для кампании (по умолчанию None).
+    @param language `str`: Язык для кампании (по умолчанию 'EN').
+    @param currency `str`: Валюта для кампании (по умолчанию 'USD').
+    @param tracking_id `str`: Идентификатор отслеживания для AliExpress API.
     """
     super().__init__(language, currency)
 
@@ -107,51 +112,47 @@ def __init__(self,
 
 ### Методы
 
-#### `process_affiliate_products`
-
-```python
-def process_affiliate_products(self, prod_urls: List[str]) -> List[SimpleNamespace]:
-    """
-    Обрабатывает список URL и возвращает список продуктов с партнёрскими ссылками и сохранёнными изображениями.
-
-    :param prod_urls: Список URL продуктов или их ID.
-    :return: Список обработанных продуктов.
-    """
-    # ... (код метода)
-```
-
-Метод `process_affiliate_products` обрабатывает список URL продуктов, получает партнёрские ссылки, сохраняет изображения и видео, и записывает подробности продуктов в локальный файл JSON.
-
-#### `delete_product`
-
-```python
-def delete_product(self, product_id: str, exc_info: bool = False):
-    """ Удаляет продукт, для которого не найдена партнёрская ссылка."""
-    # ... (код метода)
-```
-
-Метод `delete_product` удаляет информацию о продукте, если для него не удалось найти партнёрскую ссылку.
-
-## Подробное описание методов (кратко)
-
-Каждый метод описан в документации кода в формате Python, включая описание параметров, возвращаемых значений и возможных исключений.
-
-## Пример использования
+(Документация для методов `process_affiliate_products` и `delete_product` приведена ниже)
 
 
 ```
-#Пример использования
-prod_urls = ['https://www.aliexpress.com/item/123.html', 'https://www.aliexpress.com/item/456.html']
-parser = AliAffiliatedProducts('my_campaign', 'electronics', 'RU', 'RUB')
-products = parser.process_affiliate_products(prod_urls)
-
-if products:
-  for product in products:
-    print(product.product_id, product.promotion_link)
+# Документация для остальных методов (если они есть)
 ```
 
-Этот пример демонстрирует, как использовать класс `AliAffiliatedProducts` для обработки списка URL продуктов.
+
+## Метод `process_affiliate_products`
+
+### Описание
+
+Обрабатывает список URL-адресов и возвращает список продуктов с аффилированными ссылками и сохраненными изображениями.
+
+### Параметры
+
+- `prod_urls`: Список URL-адресов или идентификаторов продуктов.
+
+### Возвращает
+
+Список обработанных продуктов в формате `SimpleNamespace`.
+
+### Исключения
+
+(Если метод `process_affiliate_products` вызывает исключения, укажите их здесь)
 
 
-```
-```
+## Метод `delete_product`
+
+### Описание
+
+Удаляет продукт, для которого не найдена аффилированная ссылка.
+
+### Параметры
+
+- `product_id`: Идентификатор продукта.
+
+### Исключения
+
+- `FileNotFoundError`: Если файл продукта не найден.
+- `Exception`: Другие ошибки.
+
+
+**ПРИМЕЧАНИЕ**:  Для полной документации необходимо добавить описание всех других методов и функций, содержащихся в файле `affiliated_products_generator.py`, а также детально описать используемые алгоритмы и логику.

@@ -1,94 +1,72 @@
-# Модуль test_upload.py
+# Модуль test_upload
 
 ## Обзор
 
-Модуль `test_upload.py` содержит пример использования API для загрузки файлов через `iop` библиотеку.  Он демонстрирует создание запроса, добавление параметров и выполнение запроса к API, а также обработку ответа.
-
-## Оглавление
-
-* [Модуль test_upload.py](#модуль-test_uploadpy)
-* [Обзор](#обзор)
-* [Функции](#функции)
-    * [`IopClient`](#iopclient)
-    * [`IopRequest`](#ioprequest)
-    * [`execute`](#execute)
-
+Этот модуль содержит пример использования API для загрузки файлов через IopClient. Он демонстрирует как создавать запрос, добавлять параметры, выполнять запрос и обрабатывать ответ.
 
 ## Функции
 
+### `client.execute`
+
+**Описание**: Выполняет запрос к API через IopClient.
+
+**Параметры**:
+- `request` (IopRequest): Объект запроса.
+- `access_token` (Optional[str], optional): Токен доступа. По умолчанию None.
+
+
+**Возвращает**:
+- `IopResponse`: Объект ответа с результатами запроса.
+
+**Вызывает исключения**:
+- `Exception`: Возникает в случае ошибки при выполнении запроса.
+
+
 ### `IopClient`
 
-**Описание**:  Создает экземпляр клиента для взаимодействия с API.
+**Описание**: Класс для взаимодействия с Iop API.
 
 **Параметры**:
 - `gateway_url` (str): URL шлюза API.
 - `app_key` (str): Ключ приложения.
 - `app_secret` (str): Секрет приложения.
 
-**Возвращает**:
-- `IopClient`: Экземпляр клиента `IopClient`.
+
+**Методы**:
+- `execute(request, access_token=None)`: Выполняет запрос к API.
 
 
 ### `IopRequest`
 
-**Описание**: Создает запрос к API.
+**Описание**: Класс для создания запросов к Iop API.
 
 **Параметры**:
-- `path` (str): Путь к API-методу.
-
-**Возвращает**:
-- `IopRequest`: Экземпляр запроса `IopRequest`.
+- `path` (str): Путь к ресурсу API.
 
 
-### `add_api_param`
-
-**Описание**: Добавляет параметр к запросу.
-
-**Параметры**:
-- `name` (str): Имя параметра.
-- `value` (str | int | ...): Значение параметра.
-
-**Возвращает**:
-- `None`.
-
-
-### `add_file_param`
-
-**Описание**: Добавляет параметр файла к запросу.
-
-**Параметры**:
-- `name` (str): Имя параметра.
-- `value` (bytes): Содержимое файла.
-
-**Возвращает**:
-- `None`.
-
-
-### `execute`
-
-**Описание**: Выполняет запрос к API.
-
-**Параметры**:
-- `request` (IopRequest): Экземпляр запроса.
-- `access_token` (str, optional): Токен доступа. По умолчанию, `None`.
-
-
-**Возвращает**:
-- `IopResponse`: Объект с результатом выполнения запроса. Возвращает `IopResponse` объект, содержащий данные о результате запроса, включая код ошибки, сообщение об ошибке, уникальный идентификатор запроса и тело ответа. Возможные типы ответа `nil`, `ISP`, `ISV`, `SYSTEM`.
-
-
-**Возможные исключения**:
-- `Exception`: Возможные исключения при выполнении запроса.
+**Методы**:
+- `add_api_param(key, value)`: Добавляет параметр к запросу.
+- `add_file_param(key, value)`: Добавляет параметр файла к запросу.  
 
 
 ## Пример использования
 
 ```python
-client = iop.IopClient('https://api.taobao.tw/rest', '${appKey}', '${appSecret}')
+import iop
+
+# Замените на реальные значения
+gateway_url = 'https://api.taobao.tw/rest'
+app_key = '${appKey}'
+app_secret = '${appSecret}'
+
+client = iop.IopClient(gateway_url, app_key, app_secret)
+
 request = iop.IopRequest('/xiaoxuan/mockfileupload')
 request.add_api_param('file_name', 'pom.xml')
 request.add_file_param('file_bytes', open('/Users/xt/Documents/work/tasp/tasp/pom.xml').read())
+
 response = client.execute(request)
+
 print(response.type)
 print(response.code)
 print(response.message)
@@ -96,7 +74,11 @@ print(response.request_id)
 print(response.body)
 ```
 
-**Примечание**:  Этот код требует наличия модуля `iop`.  Значения `'${appKey}'` и `'${appSecret}'` должны быть заменены на фактические значения ключа и секрета приложения. Путь к файлу `/Users/xt/Documents/work/tasp/tasp/pom.xml` также должен быть изменен на корректный путь.
+**Примечания**:
+
+- В примере предполагается, что файл `/Users/xt/Documents/work/tasp/tasp/pom.xml` существует.
+-  Замените `'${appKey}'` и `'${appSecret}'` на ваши реальные значения.
+- Обратите внимание на обработку ошибок (response.type, response.code, response.message). Необходимо добавить соответствующую обработку исключений в реальном коде.
 
 
 ```

@@ -1,14 +1,15 @@
-# Модуль Aliexpress
+# Модуль aliexpress
 
 ## Обзор
 
-Модуль `aliexpress` предоставляет класс `Aliexpress`, интегрирующий функциональность классов `Supplier`, `AliRequests` и `AliApi` для взаимодействия с AliExpress. Он предназначен для задач, связанных с парсингом и взаимодействием с API AliExpress.
+Модуль `aliexpress` предоставляет класс `Aliexpress`, который интегрирует функциональность классов `Supplier`, `AliRequests` и `AliApi` для взаимодействия с AliExpress. Он предназначен для задач, связанных с парсингом и взаимодействием с API AliExpress.
 
 ## Содержание
 
-- [Модуль Aliexpress](#модуль-aliexpress)
-- [Класс Aliexpress](#класс-aliexpress)
-  - [Метод `__init__`](#метод-__init__)
+- [Модуль aliexpress](#module-aliexpress)
+- [Класс Aliexpress](#class-aliexpress)
+  - [Метод `__init__`](#method-__init__)
+
 
 ## Класс Aliexpress
 
@@ -25,9 +26,10 @@ a = Aliexpress()
 # Chrome WebDriver
 a = Aliexpress('chrome')
 
-# Режим запросов
+# Режим работы с requests
 a = Aliexpress(requests=True)
 ```
+
 
 ### Метод `__init__`
 
@@ -36,11 +38,11 @@ a = Aliexpress(requests=True)
 **Параметры**:
 
 - `webdriver` (bool | str, optional): Определяет режим использования WebDriver. Возможные значения:
-  - `False` (по умолчанию): Без WebDriver.
-  - `'chrome'`: Chrome WebDriver.
-  - `'mozilla'`: Mozilla WebDriver.
-  - `'edge'`: Edge WebDriver.
-  - `'default'`: WebDriver по умолчанию.
+    - `False` (по умолчанию): WebDriver не используется.
+    - `'chrome'`: Chrome WebDriver.
+    - `'mozilla'`: Mozilla WebDriver.
+    - `'edge'`: Edge WebDriver.
+    - `'default'`: WebDriver по умолчанию.
 - `locale` (str | dict, optional): Настройки языка и валюты. По умолчанию `{'EN': 'USD'}`.
 - `*args`: Дополнительные позиционные аргументы.
 - `**kwargs`: Дополнительные именованные аргументы.
@@ -56,63 +58,48 @@ a = Aliexpress('chrome')
 ```
 
 **Возвращает**:
-- Не возвращает значение.
+- Не возвращает значения.
 
-**Вызывает исключения**:
-- Возможные исключения, связанные с инициализацией WebDriver или ошибками при взаимодействии с AliExpress.
+**Возможные исключения**:
+- Возможны исключения, связанные с инициализацией WebDriver или ошибками при взаимодействии с AliExpress.
 
 
-## Алгоритм
+```python
+class Aliexpress:
+    """
+    Args:
+        webdriver (bool | str, optional): Determines the WebDriver usage mode. Possible values:
+            - False (default): No WebDriver.
+            - 'chrome': Chrome WebDriver.
+            - 'mozilla': Mozilla WebDriver.
+            - 'edge': Edge WebDriver.
+            - 'default': Default system WebDriver.
+        locale (str | dict, optional): Language and currency settings. Defaults to {'EN': 'USD'}.
+        *args: Additional positional arguments.
+        **kwargs: Additional keyword arguments.
 
-Алгоритм фокусируется на инициализации класса `Aliexpress`.
+    Returns:
+        None: Does not return a value.
 
-**Шаг 1: Инициализация**
+    Raises:
+        WebDriverException: Exception during WebDriver initialization.
+        ConnectionError: Problem connecting to AliExpress.
+        APIError: API-specific error from AliExpress.
+    """
+    def __init__(self, webdriver=False, locale={'EN': 'USD'}, *args, **kwargs):
+        # Обработка исключений
+        try:
+            # Логика инициализации WebDriver
+            if webdriver:
+                # ...
+                pass
 
-```
-Ввод: необязательные параметры (webdriver, locale, *args, **kwargs)
-```
-
-**Шаг 2: Определение типа WebDriver**
-
-```
-Если webdriver равен 'chrome', 'mozilla', 'edge' или 'default' -> Используется указанный/системный WebDriver.
-Если webdriver равен False -> WebDriver не используется.
-```
-
-**Шаг 3: Настройка locale**
-
-```
-Если параметр locale предоставлен (str или dict) -> Устанавливается locale.
-В противном случае -> Используется locale по умолчанию {'EN': 'USD'}.
-```
-
-**Шаг 4: Инициализация внутренних компонентов**
-
-```
-Инициализация экземпляров `Supplier`, `AliRequests` и `AliApi`. Вероятно, это включает настройку соединений, инициализацию структур данных и конфигураций.
-```
-
-**Шаг 5: Присвоение (необязательных) аргументов**
-
-```
-Передача *args и **kwargs внутренним компонентам (`Supplier`, `AliRequests`, `AliApi`).
-```
-
-## Объяснение
-
-* **Импорты**: Директива `.. module:: src.suppliers.aliexpress` в формате reStructuredText указывает, что это часть более крупного проекта. Явные импорты в этом фрагменте отсутствуют.
-
-* **Классы**:
-  - **`Aliexpress`**: Служит основным интерфейсом для работы с AliExpress, обобщает инициализацию, конфигурацию (locale, WebDriver) и функциональность классов `Supplier`, `AliRequests` и `AliApi`.
-
-* **Методы**:
-  - **`__init__`**: Инициализирует объект `Aliexpress`. Обрабатывает необязательные параметры (`webdriver`, `locale`), чтобы настроить поведение (например, взаимодействие с браузером или API). Настраивает внутренние компоненты.
-
-* **Переменные**: Параметры, такие как `webdriver` и `locale`, используются для настройки операций класса `Aliexpress`.
-
-* **Возможные ошибки/улучшения**:
-  - **Обработка ошибок**: Хотя упоминаются исключения во время инициализации, детали о том, как они обрабатываются, отсутствуют. Реализация надежных механизмов обработки ошибок крайне важна для стабильной работы.
-  - **Абстракция**: Модуляризация логики инициализации для `Supplier`, `AliRequests` и `AliApi` повысит поддерживаемость. Использование структурированных кодов ошибок или подробного ведения журнала для каждого компонента упростит отладку.
-
-* **Взаимодействие с другими компонентами проекта**:
-  - Этот модуль (`aliexpress`) зависит от классов `Supplier`, `AliRequests` и `AliApi`. Вероятно, он также использует библиотеки, такие как `requests` (для HTTP-общения) и инструменты WebDriver (для взаимодействия с браузером). Префикс `src` указывает, что он является частью хорошо структурированного пакета, который, вероятно, включает другие модули, взаимодействующие с модулем `aliexpress` или используемые им. Для полного понимания его интеграции потребуется дополнительный контекст.
+            # Логика инициализации locale
+            if locale:
+                # ...
+                pass
+            
+            # Инициализация внутренних компонентов
+            # ... (Supplier, AliRequests, AliApi)
+        except Exception as ex:
+            raise Exception(f"Ошибка инициализации: {ex}") from ex

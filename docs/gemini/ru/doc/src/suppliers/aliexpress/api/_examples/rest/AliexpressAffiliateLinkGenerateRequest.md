@@ -2,44 +2,38 @@
 
 ## Обзор
 
-Модуль содержит класс `AliexpressAffiliateLinkGenerateRequest`, представляющий запрос для генерации аффилиатной ссылки AliExpress.  Класс наследуется от `RestApi`. Он предоставляет методы для инициализации запроса, получения имени API и управления параметрами запроса.
+Модуль `AliexpressAffiliateLinkGenerateRequest` предоставляет класс для генерации ссылок на партнерские программы AliExpress.  Он наследуется от базового класса `RestApi` и используется для взаимодействия с API AliExpress.
 
-## Оглавление
+## Классы
 
-* [Модуль `AliexpressAffiliateLinkGenerateRequest`](#модуль-aliexpressaffiliatelinkgeneraterequest)
-* [Класс `AliexpressAffiliateLinkGenerateRequest`](#класс-aliexpressaffiliatelinkgeneraterequest)
-    * [Метод `__init__`](#метод-init)
-    * [Метод `getapiname`](#метод-getapiname)
+### `AliexpressAffiliateLinkGenerateRequest`
 
+**Описание**: Класс для генерации ссылок на партнерские программы AliExpress.  Обеспечивает взаимодействие с API AliExpress через REST-интерфейс.
 
-## Класс `AliexpressAffiliateLinkGenerateRequest`
+**Методы**:
 
-**Описание**: Класс `AliexpressAffiliateLinkGenerateRequest` представляет запрос для генерации аффилиатной ссылки на AliExpress. Он инициализирует параметры запроса и предоставляет метод для получения имени API.
-
-### Метод `__init__`
-
-**Описание**: Инициализирует объект `AliexpressAffiliateLinkGenerateRequest`.
+- `__init__`
+- `getapiname`
 
 **Параметры**:
-- `domain` (str, опционально): Домен API (по умолчанию "api-sg.aliexpress.com").
-- `port` (int, опционально): Порт API (по умолчанию 80).
+
+- `__init__`
+    - `domain` (str, optional): Домен API. По умолчанию "api-sg.aliexpress.com".
+    - `port` (int, optional): Порт API. По умолчанию 80.
+
+
+**Атрибуты**:
+
+- `app_signature`: Значение подписи приложения.
+- `promotion_link_type`: Тип ссылки для продвижения.
+- `source_values`: Дополнительные значения источника.
+- `tracking_id`: Идентификатор отслеживания.
+
+
+### `getapiname`
+
+**Описание**: Возвращает имя API-метода для генерации ссылок.
 
 **Возвращает**:
-- None
 
-**Вызывает исключения**:
--  Не описаны исключения, которые могут быть вызваны в данном методе.
-
-
-### Метод `getapiname`
-
-**Описание**: Возвращает имя API для данного запроса.
-
-**Параметры**:
-- Нет
-
-**Возвращает**:
-- str: Строковое имя API (`aliexpress.affiliate.link.generate`).
-
-**Вызывает исключения**:
-- Не описаны исключения, которые могут быть вызваны в данном методе.
+- str: Имя API-метода `aliexpress.affiliate.link.generate`.

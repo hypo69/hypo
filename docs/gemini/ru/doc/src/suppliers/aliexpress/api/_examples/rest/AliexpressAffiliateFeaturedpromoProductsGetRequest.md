@@ -2,58 +2,50 @@
 
 ## Обзор
 
-Модуль содержит класс `AliexpressAffiliateFeaturedpromoProductsGetRequest`, представляющий запрос к API AliExpress для получения данных о продуктах с выделенными промоакциями. Класс наследуется от `RestApi` и предоставляет методы для настройки параметров запроса и получения имени API.
-
+Модуль содержит класс `AliexpressAffiliateFeaturedpromoProductsGetRequest`, представляющий запрос к API AliExpress для получения данных о продуктах с акциями.  Класс наследуется от базового класса `RestApi`.
 
 ## Классы
 
 ### `AliexpressAffiliateFeaturedpromoProductsGetRequest`
 
-**Описание**: Класс представляет запрос к API AliExpress для получения данных о продуктах с выделенными промоакциями.
+**Описание**: Класс представляет собой запрос к API AliExpress для получения данных о продуктах с акциями. Он предоставляет методы для инициализации запроса и получения имени API.
+
+**Атрибуты**:
+
+- `app_signature`: Значение для подписи приложения.
+- `category_id`: Идентификатор категории.
+- `country`: Страна.
+- `fields`: Поля.
+- `page_no`: Номер страницы.
+- `page_size`: Размер страницы.
+- `promotion_end_time`: Дата окончания акции.
+- `promotion_name`: Название акции.
+- `promotion_start_time`: Дата начала акции.
+- `sort`: Сортировка.
+- `target_currency`: Целевая валюта.
+- `target_language`: Целевой язык.
+- `tracking_id`: Идентификатор отслеживания.
+
 
 **Методы**:
 
-#### `__init__(self, domain="api-sg.aliexpress.com", port=80)`
+#### `__init__`
 
 **Описание**: Инициализирует объект класса.
 
 **Параметры**:
-- `domain` (str, опционально): Домен API. По умолчанию `"api-sg.aliexpress.com"`.
-- `port` (int, опционально): Порт API. По умолчанию `80`.
+- `domain` (str, optional): Домен API. По умолчанию `api-sg.aliexpress.com`.
+- `port` (int, optional): Порт API. По умолчанию `80`.
 
 **Возвращает**:
 - `None`
 
-
-#### `getapiname(self)`
+#### `getapiname`
 
 **Описание**: Возвращает имя API.
 
 **Параметры**:
-- Нет
+-  Нет
 
 **Возвращает**:
-- str: Имя API `"aliexpress.affiliate.featuredpromo.products.get"`.
-
-
-**Атрибуты**:
-
-- `app_signature`: (тип не указан)
-- `category_id`: (тип не указан)
-- `country`: (тип не указан)
-- `fields`: (тип не указан)
-- `page_no`: (тип не указан)
-- `page_size`: (тип не указан)
-- `promotion_end_time`: (тип не указан)
-- `promotion_name`: (тип не указан)
-- `promotion_start_time`: (тип не указан)
-- `sort`: (тип не указан)
-- `target_currency`: (тип не указан)
-- `target_language`: (тип не указан)
-- `tracking_id`: (тип не указан)
-
-
-## Функции
-
-
-(В данном модуле нет функций, кроме методов класса)
+- str: Имя API  `aliexpress.affiliate.featuredpromo.products.get`.

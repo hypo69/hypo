@@ -1,107 +1,111 @@
-# Модуль playwrid
+# Модуль `hypotez/src/webdriver/playwright/playwrid.py`
 
 ## Обзор
 
-Модуль `playwrid.py` определяет подкласс `PlaywrightCrawler`, называемый `Playwrid`. Он предоставляет дополнительную функциональность, такую как возможность устанавливать пользовательские настройки браузера, профили и параметры запуска с помощью Playwright.  Этот модуль используется для запуска веб-скрапинга с помощью Playwright, обеспечивая гибкость в настройке.
+Этот модуль определяет подкласс `PlaywrightCrawler` под названием `Playwrid`. Он предоставляет дополнительную функциональность, такую как возможность устанавливать пользовательские настройки браузера, профили и параметры запуска с помощью Playwright.  Модуль загружает настройки из файла `playwrid.json` и, при необходимости, из файла с пользовательскими настройками, настроенные на основе заданного имени файла.  Он также позволяет настраивать параметры запуска, в том числе `headless` режим и дополнительные аргументы.
 
-## Оглавление
+## Классы
 
-- [Модуль playwrid](#модуль-playwrid)
-- [Обзор](#обзор)
-- [Класс Playwrid](#класс-playwrid)
-    - [Метод `__init__`](#метод-init)
-    - [Метод `_load_settings`](#метод-load_settings)
-    - [Метод `_set_launch_options`](#метод-set_launch_options)
-    - [Метод `start`](#метод-start)
-    - [Свойство `current_url`](#свойство-current_url)
+### `Playwrid`
 
-## Класс Playwrid
+**Описание**: Подкласс `PlaywrightCrawler`, предоставляющий расширенные возможности.
 
-### Описание
+**Методы**:
 
-Подкласс `PlaywrightCrawler`, предоставляющий дополнительные возможности настройки.
+- `__init__`: Инициализирует Playwright Crawler с указанными параметрами запуска, настройками и пользовательским агентом.
+- `_load_settings`: Загружает настройки для Playwrid Crawler.
+- `_set_launch_options`: Настраивает параметры запуска для Playwright Crawler.
+- `start`: Запускает Playwrid Crawler и переходит к указанному URL.
 
-### Метод `__init__`
 
-```python
-def __init__(self, settings_name: Optional[str] = None, user_agent: Optional[Dict[str, Any]] = None, *args, **kwargs) -> None:
-    """ Инициализирует Playwright Crawler с указанными параметрами запуска, настройками и user agent.
+**Атрибуты**:
 
-    Args:
-        settings_name (Optional[str], optional): Имя файла настроек. По умолчанию None.
-        user_agent (Optional[Dict[str, Any]], optional): Словарь настроек user agent. По умолчанию None.
+- `driver_name`: Наименование драйвера (`'playwrid'`).
+- `context`: Текущий контекст (None по умолчанию).
 
-    Raises:
-        TypeError: Если типы аргументов не соответствуют ожидаемым.
-        Exception: В случае возникновения других ошибок при загрузке настроек или инициализации.
-    """
-```
 
-### Метод `_load_settings`
+#### `__init__`
 
-```python
-def _load_settings(self, settings_name: Optional[str] = None) -> Any:
-    """ Загружает настройки для Playwrid Crawler.
+**Описание**: Инициализирует Playwright Crawler с указанными параметрами запуска, настройками и пользовательским агентом.
 
-    Args:
-        settings_name (Optional[str], optional): Имя файла настроек. По умолчанию None.
+**Параметры**:
 
-    Returns:
-        SimpleNamespace: Объект SimpleNamespace, содержащий настройки.
+- `settings_name` (Optional[str], опционально): Имя файла настроек.
+- `user_agent` (Optional[Dict[str, Any]], опционально): Словарь с настройками пользовательского агента.
 
-    Raises:
-        FileNotFoundError: Если файл настроек не найден.
-        Exception: В случае других ошибок при чтении или разборе файла настроек.
-    """
-```
+**Возвращает**:
 
-### Метод `_set_launch_options`
+- `None`
 
-```python
-def _set_launch_options(self, settings: SimpleNamespace) -> Dict[str, Any]:
-    """ Конфигурирует параметры запуска для Playwright Crawler.
+**Вызывает исключения**:
+- Любые исключения, которые могут возникнуть при загрузке или обработке настроек.
 
-    Args:
-        settings (SimpleNamespace): Объект SimpleNamespace, содержащий настройки запуска.
 
-    Returns:
-        dict: Словарь с параметрами запуска для Playwright.
+#### `_load_settings`
 
-    Raises:
-        TypeError: Если тип `settings` не SimpleNamespace.
-        Exception: В случае других ошибок.
-    """
-```
+**Описание**: Загружает настройки для Playwrid Crawler.
 
-### Метод `start`
+**Параметры**:
 
-```python
-def start(self, url: str) -> None:
-    """ Запускает Playwrid Crawler и переходит к указанному URL.
+- `settings_name` (Optional[str], опционально): Имя файла настроек.
 
-    Args:
-        url (str): URL для перехода.
+**Возвращает**:
 
-    Raises:
-        Exception: В случае возникновения ошибок во время работы с Playwright.
-    """
-```
+- `SimpleNamespace`: Объект `SimpleNamespace` содержащий настройки.
 
-### Свойство `current_url`
 
-```python
-@property
-def current_url():
-    """"""
-    ...
-```
+**Вызывает исключения**:
+- Любые исключения, которые могут возникнуть при чтении файла настроек.
 
-**Описание:** Доступ к текущему URL.  Необходима реализация для возврата текущего URL.
+
+#### `_set_launch_options`
+
+**Описание**: Настраивает параметры запуска для Playwright Crawler.
+
+**Параметры**:
+
+- `settings` (SimpleNamespace): Объект `SimpleNamespace` содержащий настройки запуска.
+
+**Возвращает**:
+
+- `dict`: Словарь с параметрами запуска для Playwright.
+
+
+**Вызывает исключения**:
+- Любые исключения, которые могут возникнуть при обработке настроек запуска.
+
+#### `start`
+
+**Описание**: Запускает Playwrid Crawler и переходит к указанному URL.
+
+**Параметры**:
+
+- `url` (str): URL, к которому нужно перейти.
+
+**Возвращает**:
+
+- `None`
+
+**Вызывает исключения**:
+- `Exception`: Общее исключение, возникающее при работе с Playwright.
 
 
 ## Функции
 
-В этом модуле нет функций, помимо методов класса `Playwrid`.
+(Нет функций в этом модуле)
 
+## Примеры
 
+```python
+if __name__ == "__main__":
+    browser = Playwrid()
+    browser.start("https://www.example.com")
+```
+
+Этот пример демонстрирует использование класса `Playwrid` для запуска браузера и навигации по URL.
+```
+```
+```
+```
+```
 ```

@@ -2,80 +2,69 @@
 
 ## Обзор
 
-Этот модуль предоставляет пример использования API `iop` для получения информации о продукте на платформе `taobao.tw`.  Модуль демонстрирует создание запроса GET, передачу параметров и обработку ответа API.
+Данный модуль содержит пример использования библиотеки `iop` для взаимодействия с API. Он демонстрирует создание запроса, выполнение запроса к API и обработку ответа.
 
 ## Импорты
 
-```python
-import iop
-import time
-```
+- `iop`: Библиотека для работы с API.
+- `time`: Библиотека для работы со временем.
 
-## Классы
+## Переменные
 
-Нет определённых классов в данном файле.
+### `client`
+
+**Описание**: Объект класса `IopClient`, представляющий клиентское подключение к API.
+
+**Инициализация**: `client = iop.IopClient('https://api-pre.taobao.tw/rest', '100240', 'hLeciS15d7UsmXKoND76sBVPpkzepxex')`
+
+**Параметры**:
+- `'https://api-pre.taobao.tw/rest'` (str): URL API-шлюза.
+- `'100240'` (str): Ключ приложения (appkey).
+- `'hLeciS15d7UsmXKoND76sBVPpkzepxex'` (str): Секрет приложения (appSecret).
+
 
 ## Функции
 
-Нет определённых функций в данном файле.
+### `execute_request`
+
+**Описание**: Выполняет запрос к API через `IopClient`.
+
+**Параметры**:
+- `request`: Объект `IopRequest`, содержащий параметры запроса.
+
+**Возвращает**:
+- `response`: Объект `IopResponse`, содержащий ответ от API.
+
+**Обрабатываемые исключения**:
+- Нет описания обработки исключений.
+
 
 ## Пример использования
 
 ```python
-# params 1 : gateway url
-# params 2 : appkey
-# params 3 : appSecret
-client = iop.IopClient(
-    'https://api-pre.taobao.tw/rest', '100240', 'hLeciS15d7UsmXKoND76sBVPpkzepxex'
-)
-# client.log_level = iop.P_LOG_LEVEL_DEBUG
-# create a api request set GET mehotd
-# default http method is POST
+client = iop.IopClient('https://api-pre.taobao.tw/rest', '100240', 'hLeciS15d7UsmXKoND76sBVPpkzepxex')
 request = iop.IopRequest('/product/item/get', 'GET')
-
-# simple type params ,Number ,String
 request.add_api_param('itemId', '157432005')
-request.add_api_param('authDO', '{"sellerId":2000000016002}')
+request.add_api_param('authDO', '{\\"sellerId\\":2000000016002}')
 
 response = client.execute(request)
-#response = client.execute(request,access_token)
-
-# response type nil,ISP,ISV,SYSTEM
-# nil ：no error
-# ISP : API Service Provider Error
-# ISV : API Request Client Error
-# SYSTEM : Iop platform Error
 print(response.type)
-
-# response code, 0 is no error
 print(response.code)
-
-# response error message
 print(response.message)
-
-# response unique id
 print(response.request_id)
-
-# full response
 print(response.body)
-
 print(str(round(time.time())) + '000')
 ```
 
-**Описание:** Данный код демонстрирует пример взаимодействия с API `iop`. Создается клиент `IopClient` с заданными параметрами.  Затем формируется запрос `IopRequest` для получения информации о продукте (`/product/item/get`) с методом GET. Запрос дополняется параметрами `itemId` и `authDO`. Полученный ответ `response` содержит информацию о типе ответа, коде, сообщении об ошибке, идентификаторе запроса и полном ответе. Код также выводит текущее время в формате, совместимом с API.
+**Описание**: Пример демонстрирует:
+1. Инициализацию объекта `IopClient`.
+2. Создание объекта `IopRequest` с методом `GET`.
+3. Добавление параметров к запросу.
+4. Вызов `client.execute(request)` для выполнения запроса.
+5. Вывод типа, кода, сообщения, ID запроса и тела ответа.
+6. Вывод отметки времени.
 
 
-## Обработка ответов
+## Заключение
 
-Модуль обрабатывает ответ API, выводит тип ответа, код ответа, сообщение об ошибке, идентификатор запроса и полное тело ответа.  Важно обработать возможные ошибки, используя поля `response.type`, `response.code` и `response.message`.
-
-
-## Замечания
-
-- Код предполагает, что библиотека `iop` установлена.
-- Используются параметры API `itemId` и `authDO`.
-- Не обрабатываются потенциальные исключения (например, отсутствие подключения к сети).
-- Отсутствует логика обработки ошибок.
-
-
-```
+Данный модуль предоставляет пример использования `IopClient` для отправки запросов и получения ответов от API.  Для корректной работы необходимо правильно задать параметры `appkey` и `appSecret`, а также URL API-шлюза.  Важно обработать возможные ошибки, возвращаемые API (например, неверный код ответа).

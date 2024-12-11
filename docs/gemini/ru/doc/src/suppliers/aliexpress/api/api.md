@@ -2,36 +2,41 @@
 
 ## Обзор
 
-Этот модуль предоставляет обертку для API AliExpress Open Platform. Он позволяет получать информацию о продуктах и аффилированные ссылки из AliExpress с помощью официального API более удобным способом.
+Модуль `hypotez/src/suppliers/aliexpress/api/api.py` предоставляет обертки для работы с API AliExpress Open Platform. Он упрощает получение информации о продуктах, аффилированных ссылках и категориях. Модуль использует типы данных из модулей `models`, `errors` и `helpers` для работы с данными и обработки ошибок.
 
 ## Классы
 
 ### `AliexpressApi`
 
-**Описание**: Класс `AliexpressApi` предоставляет методы для получения информации с AliExpress Open Platform используя ваши API-ключи.
-
-**Параметры конструктора**:
-
-- `key` (str): Ваш API ключ.
-- `secret` (str): Ваш API секрет.
-- `language` (model_Language): Код языка. По умолчанию EN.
-- `currency` (model_Currency): Код валюты. По умолчанию USD.
-- `tracking_id` (str, optional): Идентификатор отслеживания для генерации ссылок. По умолчанию None.
-- `app_signature` (str, optional): Подпись приложения.
-- `**kwargs` (dict, optional): Дополнительные аргументы.
-
+**Описание**: Класс `AliexpressApi` предоставляет методы для работы с AliExpress API, используя предоставленные API-ключ и секрет.
 
 **Методы**:
 
-#### `retrieve_product_details`
+- `retrieve_product_details`
+- `get_affiliate_links`
+- `get_hotproducts`
+- `get_categories`
+- `get_parent_categories`
+- `get_child_categories`
 
-**Описание**: Получает информацию о продуктах по списку ID или ссылкам.
+**Параметры конструктора**:
+
+- `key` (str): API-ключ.
+- `secret` (str): API-секрет.
+- `language` (model_Language): Код языка. По умолчанию EN.
+- `currency` (model_Currency): Код валюты. По умолчанию USD.
+- `tracking_id` (str, optional): Идентификатор отслеживания для генерации ссылок. По умолчанию `None`.
+- `app_signature` (str, optional): Подпись приложения. По умолчанию `None`.
+
+### `retrieve_product_details`
+
+**Описание**: Получает информацию о продуктах по заданным идентификаторам.
 
 **Параметры**:
 
-- `product_ids` (str | list[str]): Один или несколько ID или ссылок на продукты.
-- `fields` (str | list[str], optional): Поля для включения в результаты. По умолчанию все поля.
-- `country` (str, optional): Фильтрует продукты, которые могут быть отправлены в указанную страну. Возвращает цену в соответствии с политикой налогообложения страны.
+- `product_ids` (str | list[str]): Один или несколько идентификаторов продуктов или ссылок.
+- `fields` (str | list[str], optional): Список полей для включения в результаты. По умолчанию все поля.
+- `country` (str, optional): Страна для фильтрации продуктов по доставке.
 
 **Возвращает**:
 
@@ -39,19 +44,20 @@
 
 **Вызывает исключения**:
 
-- `ProductsNotFoudException`: Если продукты не найдены.
-- `InvalidArgumentException`: При некорректном формате входных данных.
-- `ApiRequestException`: При проблемах с выполнением запроса к API.
-- `ApiRequestResponseException`: При проблемах с обработкой ответа API.
+- `ProductsNotFoudException`
+- `InvalidArgumentException`
+- `ApiRequestException`
+- `ApiRequestResponseException`
 
-#### `get_affiliate_links`
+
+### `get_affiliate_links`
 
 **Описание**: Преобразует список ссылок в аффилированные ссылки.
 
 **Параметры**:
 
-- `links` (str | list[str]): Один или несколько ссылок для преобразования.
-- `link_type` (model_LinkType, optional): Тип ссылки (обычная или горячая). По умолчанию NORMAL.
+- `links` (str | list[str]): Одна или несколько ссылок для преобразования.
+- `link_type` (model_LinkType, optional): Тип ссылки (стандартная или горячая ссылка). По умолчанию `model_LinkType.NORMAL`.
 
 **Возвращает**:
 
@@ -59,34 +65,38 @@
 
 **Вызывает исключения**:
 
-- `InvalidArgumentException`: При некорректном формате входных данных.
-- `InvalidTrackingIdException`: Если идентификатор отслеживания не указан.
-- `ProductsNotFoudException`: Если аффилированные ссылки недоступны.
-- `ApiRequestException`: При проблемах с выполнением запроса к API.
-- `ApiRequestResponseException`: При проблемах с обработкой ответа API.
+- `InvalidArgumentException`
+- `InvalidTrackingIdException`
+- `ProductsNotFoudException`
+- `ApiRequestException`
+- `ApiRequestResponseException`
 
 
-#### `get_hotproducts`
+### `get_hotproducts`
 
 **Описание**: Поиск аффилированных продуктов с высокой комиссией.
 
 **Параметры**:
-(см. исходный код для полного списка параметров)
+
+- `category_ids` (str | list[str], optional): Список категорий продуктов.
+- `delivery_days` (int, optional): Ожидаемые дни доставки.
+- `fields` (str | list[str], optional): Список полей для включения в результаты. По умолчанию все поля.
+- ... (много параметров)
 
 **Возвращает**:
 
-- model_HotProductsResponse: Содержит информацию о ответе и список продуктов.
+- model_HotProductsResponse: Объект с информацией о результатах и списком продуктов.
 
 **Вызывает исключения**:
 
-- `ProductsNotFoudException`: Если продукты не найдены.
-- `ApiRequestException`: При проблемах с выполнением запроса к API.
-- `ApiRequestResponseException`: При проблемах с обработкой ответа API.
+- `ProductsNotFoudException`
+- `ApiRequestException`
+- `ApiRequestResponseException`
 
 
-#### `get_categories`
+### `get_categories`
 
-**Описание**: Получает все доступные категории (родительские и дочерние).
+**Описание**: Получение всех доступных категорий (родительских и дочерних).
 
 **Возвращает**:
 
@@ -94,18 +104,18 @@
 
 **Вызывает исключения**:
 
-- `CategoriesNotFoudException`: Если категории не найдены.
-- `ApiRequestException`: При проблемах с выполнением запроса к API.
-- `ApiRequestResponseException`: При проблемах с обработкой ответа API.
+- `CategoriesNotFoudException`
+- `ApiRequestException`
+- `ApiRequestResponseException`
 
 
-#### `get_parent_categories`
+### `get_parent_categories`
 
-**Описание**: Получает все доступные родительские категории.
+**Описание**: Получение всех родительских категорий.
 
 **Параметры**:
 
-- `use_cache` (bool, optional): Использовать кэшированные данные для ускорения. По умолчанию True.
+- `use_cache` (bool): Использовать кэшированные категории. По умолчанию `True`.
 
 **Возвращает**:
 
@@ -113,19 +123,19 @@
 
 **Вызывает исключения**:
 
-- `CategoriesNotFoudException`: Если категории не найдены.
-- `ApiRequestException`: При проблемах с выполнением запроса к API.
-- `ApiRequestResponseException`: При проблемах с обработкой ответа API.
+- `CategoriesNotFoudException`
+- `ApiRequestException`
+- `ApiRequestResponseException`
 
 
-#### `get_child_categories`
+### `get_child_categories`
 
-**Описание**: Получает все дочерние категории для указанной родительской категории.
+**Описание**: Получение дочерних категорий для указанной родительской категории.
 
 **Параметры**:
 
-- `parent_category_id` (int): ID родительской категории.
-- `use_cache` (bool, optional): Использовать кэшированные данные для ускорения. По умолчанию True.
+- `parent_category_id` (int): Идентификатор родительской категории.
+- `use_cache` (bool): Использовать кэшированные категории. По умолчанию `True`.
 
 **Возвращает**:
 
@@ -133,6 +143,19 @@
 
 **Вызывает исключения**:
 
-- `CategoriesNotFoudException`: Если категории не найдены.
-- `ApiRequestException`: При проблемах с выполнением запроса к API.
-- `ApiRequestResponseException`: При проблемах с обработкой ответа API.
+- `CategoriesNotFoudException`
+- `ApiRequestException`
+- `ApiRequestResponseException`
+
+
+## Функции
+
+(Список функций, если они есть в файле, с подробными описаниями)
+
+## Модули
+
+(Список импортированных модулей)
+
+## Исключения
+
+(Список исключений, определённых в этом файле)

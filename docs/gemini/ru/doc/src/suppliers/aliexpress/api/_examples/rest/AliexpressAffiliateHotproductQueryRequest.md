@@ -1,24 +1,44 @@
-# Модуль hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductQueryRequest.py
+# Модуль `hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductQueryRequest.py`
 
 ## Обзор
 
-Модуль `AliexpressAffiliateHotproductQueryRequest` предоставляет класс для отправки запросов к API AliExpress для получения горячих продуктов по партнерским программам.  Этот класс наследуется от базового класса `RestApi` и реализует метод для формирования имени API.
+Модуль содержит класс `AliexpressAffiliateHotproductQueryRequest`, представляющий запрос к API AliExpress для получения информации о популярных продуктах. Класс наследуется от `RestApi` и предоставляет методы для настройки параметров запроса и получения имени API.
 
-## Классы
+## Оглавление
 
-### `AliexpressAffiliateHotproductQueryRequest`
+- [Модуль `AliexpressAffiliateHotproductQueryRequest`](#модуль-aliexpressaffiliatehotproductqueryrequest)
+  - [Класс `AliexpressAffiliateHotproductQueryRequest`](#класс-aliexpressaffiliatehotproductqueryrequest)
+    - [`__init__`](#init)
+    - [`getapiname`](#getapiname)
 
-**Описание**:  Класс для запроса горячих продуктов на AliExpress через API.  Он позволяет указать различные параметры для фильтрации результатов, такие как категории, цены, ключевые слова и т.д.
 
-**Методы**:
+## Класс `AliexpressAffiliateHotproductQueryRequest`
 
-- `__init__(self, domain="api-sg.aliexpress.com", port=80)`:
-    **Описание**: Инициализирует экземпляр класса. Устанавливает значения параметров для подключения к API.
-    **Параметры**:
-        - `domain` (str, опционально): Доменное имя API. По умолчанию `api-sg.aliexpress.com`.
-        - `port` (int, опционально): Порт API. По умолчанию 80.
+**Описание**: Класс `AliexpressAffiliateHotproductQueryRequest` представляет запрос к API AliExpress для получения информации о популярных продуктах. Он наследуется от `RestApi` и предоставляет набор параметров для настройки запроса.
 
-- `getapiname(self)`:
-    **Описание**: Возвращает имя API.
-    **Возвращает**:
-        - str: Имя API `aliexpress.affiliate.hotproduct.query`.
+### `__init__`
+
+**Описание**: Инициализирует объект класса `AliexpressAffiliateHotproductQueryRequest`.
+
+**Параметры**:
+- `domain` (str, optional): Домен API. По умолчанию "api-sg.aliexpress.com".
+- `port` (int, optional): Порт API. По умолчанию 80.
+
+**Возвращает**:
+- `None`: Не возвращает значение.
+
+### `getapiname`
+
+**Описание**: Возвращает имя API.
+
+**Параметры**:
+- Нет
+
+**Возвращает**:
+- str: Имя API (`aliexpress.affiliate.hotproduct.query`).
+
+
+**Примечания**:
+- Дополнительные параметры класса (например, `app_signature`, `category_ids`, и т.д.) задаются при инициализации объекта и используются для формирования запроса к API.
+- Модуль использует соглашение именования параметров, соответствующее стандартам REST API.
+- Требуется библиотека `RestApi` (предполагается, что она импортирована из `..base`).

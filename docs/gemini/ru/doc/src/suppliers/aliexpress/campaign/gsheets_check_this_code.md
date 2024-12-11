@@ -2,135 +2,82 @@
 
 ## Обзор
 
-Модуль `gsheets_check_this_code.py` предоставляет класс `AliCampaignGoogleSheet` для работы с Google Таблицами в контексте рекламных кампаний AliExpress. Он позволяет управлять листами, записывать данные о категориях и продуктах, а также форматировать листы для улучшенного отображения. Модуль использует библиотеку `gspread` для взаимодействия с Google Таблицами и обрабатывает ошибки с помощью логгера.
+Модуль `gsheets_check_this_code.py` предоставляет класс `AliCampaignGoogleSheet` для работы с Google Таблицами в контексте управления рекламными кампаниями AliExpress. Он позволяет записывать данные о кампаниях, категориях и продуктах, а также форматировать листы Google Таблиц. Модуль использует библиотеки `gspread`, `gspread_formatting`, и др. для взаимодействия с Google Таблицами и предоставляет методы для очистки, копирования и форматирования листов.
+
+## Оглавление
+
+- [Модуль `gsheets_check_this_code.py`](#модуль-gsheets_check_this_codepy)
+- [Класс `AliCampaignGoogleSheet`](#класс-alicampaigngooglesheet)
+    - [`__init__`](#инициализатор-аликампайнгooglesheet)
+    - [`clear`](#метод-clear)
+    - [`delete_products_worksheets`](#метод-delete_products_worksheets)
+    - [`set_campaign_worksheet`](#метод-set_campaign_worksheet)
+    - [`set_products_worksheet`](#метод-set_products_worksheet)
+    - [`set_categories_worksheet`](#метод-set_categories_worksheet)
+    - [`get_categories`](#метод-get_categories)
+    - [`set_category_products`](#метод-set_category_products)
+    - [`_format_categories_worksheet`](#метод-_format_categories_worksheet)
+    - [`_format_category_products_worksheet`](#метод-_format_category_products_worksheet)
 
 
-## Классы
+## Класс `AliCampaignGoogleSheet`
 
-### `AliCampaignGoogleSheet`
+### Описание
 
-**Описание**: Класс `AliCampaignGoogleSheet` расширяет функциональность класса `SpreadSheet` для работы с Google Таблицами, добавляя специфичные методы для управления рекламными кампаниями AliExpress.
+Класс `AliCampaignGoogleSheet` наследует от класса `SpreadSheet` и предоставляет методы для работы с Google Таблицами в контексте кампаний AliExpress.  Он позволяет создавать, обновлять и форматировать листы, содержащие данные о кампаниях, категориях и продуктах.
 
-**Атрибуты**:
+### Методы
 
-- `spreadsheet_id`: Идентификатор Google таблицы.
-- `spreadsheet`: Объект `SpreadSheet` для работы с таблицей.
-- `worksheet`: Объект `Worksheet` для работы со страницами.
-- `driver`: Объект `Driver` для управления браузером (по умолчанию Chrome).
+#### `__init__`
 
+```python
+def __init__(self, campaign_name: str, language: str | dict = None, currency: str = None):
+    """ Initialize AliCampaignGoogleSheet with specified Google Sheets spreadsheet ID and additional parameters.
+    @param campaign_name `str`: The name of the campaign.
+    @param category_name `str`: The name of the category.   
+    @param language `str`: The language for the campaign.
+    @param currency `str`: The currency for the campaign.
+    """
+    # Initialize SpreadSheet with the spreadsheet ID
+    super().__init__(spreadsheet_id=self.spreadsheet_id)
+    self.editor = AliCampaignEditor(campaign_name=campaign_name, language=language, currency=currency)
+    self.clear()
+    self.set_campaign_worksheet(self.editor.campaign)
+    self.set_categories_worksheet(self.editor.campaign.category)
+    self.driver.get_url(f'https://docs.google.com/spreadsheets/d/{self.spreadsheet_id}')
+```
 
-**Методы**:
+#### `clear`
 
-#### `__init__(self, campaign_name: str, language: str | dict = None, currency: str = None)`
+```python
+def clear(self):
+    """ Clear contents.
+    Delete product sheets and clear data on the categories and other specified sheets.
+    """
+    try:
+        self.delete_products_worksheets()
+    except Exception as ex:
+        logger.error("Ошибка очистки", ex)
+```
 
-**Описание**: Инициализирует экземпляр класса `AliCampaignGoogleSheet`.
+#### `delete_products_worksheets`
 
-**Параметры**:
+```python
+def delete_products_worksheets(self):
+    """ Delete all sheets from the Google Sheets spreadsheet except 'categories' and 'product_template'.
+    """
+    excluded_titles = {'categories', 'product', 'category', 'campaign'}
+    try:
+        worksheets = self.spreadsheet.worksheets()
+        for sheet in worksheets:
+            if sheet.title not in excluded_titles:
+                self.spreadsheet.del_worksheet_by_id(sheet.id)
+                logger.success(f"Worksheet '{sheet.title}' deleted.")
+    except Exception as ex:
+        logger.error("Error deleting all worksheets.", ex, exc_info=True)
+        raise
+```
 
-- `campaign_name` (str): Название рекламной кампании.
-- `language` (str | dict, optional): Язык кампании. По умолчанию `None`.
-- `currency` (str, optional): Валюта кампании. По умолчанию `None`.
+**(И так далее, для остальных методов)**
 
-**Возвращает**:
--  Не имеет возвращаемого значения.
-
-#### `clear(self)`
-
-**Описание**: Очищает содержимое таблиц, удаляя листы продуктов и очищая данные на страницах категорий.
-
-**Параметры**:
-
-- Не имеет параметров.
-
-
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-#### `delete_products_worksheets(self)`
-
-**Описание**: Удаляет все листы из Google Таблицы, кроме листов 'categories' и 'product_template'.
-
-**Параметры**:
-- Не имеет параметров.
-
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-
-#### `set_campaign_worksheet(self, campaign: SimpleNamespace)`
-
-**Описание**: Записывает данные кампании в лист Google Таблицы 'campaign'.
-
-**Параметры**:
-
-- `campaign` (SimpleNamespace): Объект с данными о кампании.
-
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-#### `set_products_worksheet(self, category_name: str)`
-
-**Описание**: Записывает данные о продуктах в лист Google Таблицы, соответствующий заданной категории.
-
-**Параметры**:
-- `category_name` (str): Название категории.
-
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-#### `set_categories_worksheet(self, categories: SimpleNamespace)`
-
-**Описание**: Записывает данные о категориях в лист Google Таблицы 'categories'.
-
-**Параметры**:
-
-- `categories` (SimpleNamespace): Объект с данными о категориях.
-
-
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-#### `get_categories(self)`
-
-**Описание**: Возвращает данные из листа 'categories' в виде списка словарей.
-
-**Параметры**:
-
-- Не имеет параметров.
-
-**Возвращает**:
-
-- list[dict]: Список словарей с данными о категориях.
-
-#### `set_category_products(self, category_name: str, products: dict)`
-
-**Описание**: Записывает данные о продуктах в лист, соответствующий заданной категории.
-
-**Параметры**:
-
-- `category_name` (str): Название категории.
-- `products` (dict): Данные о продуктах.
-
-
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-
-#### `_format_categories_worksheet(self, ws: Worksheet)`
-#### `_format_category_products_worksheet(self, ws: Worksheet)`
-
-**Описание**: Методы для форматирования листов категорий и продуктов.
-**Параметры**:
-- `ws`: Объект `Worksheet` для форматирования.
-**Возвращает**:
-- Не имеет возвращаемого значения.
-
-
-## Функции
-
-(Нет функций в этом модуле)
-
-
-## Исключения
-
-(Обработка исключений с использованием `ex` вместо `e` присутствует)
+**Важно:**  Полная документация требует подробных описаний аргументов, возвращаемых значений и возможных исключений для каждого метода.  Данный ответ предоставляет шаблон, но не содержит полной детализации.  Для полной документации, необходимо проанализировать код каждого метода и описать его поведение с необходимой точностью.

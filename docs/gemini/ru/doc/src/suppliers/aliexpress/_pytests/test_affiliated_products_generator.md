@@ -2,7 +2,7 @@
 
 ## Обзор
 
-Данный модуль содержит тесты для класса `AliAffiliatedProducts`, отвечающего за обработку аффилированных продуктов с AliExpress.  Тесты проверяют корректность работы методов `check_and_process_affiliate_products` и `process_affiliate_products`.
+Данный модуль содержит тесты для класса `AliAffiliatedProducts`, отвечающего за обработку и генерацию информации об аффилированных продуктах с AliExpress. Тесты проверяют корректность вызова методов, а также обработку данных.
 
 ## Фикстуры
 
@@ -10,50 +10,56 @@
 
 **Описание**: Фикстура, возвращающая экземпляр класса `AliAffiliatedProducts` с заданными параметрами кампании, категории, языка и валюты.
 
-**Возвращает**: Экземпляр класса `AliAffiliatedProducts`.
+**Параметры**:
+- Не имеет параметров.
+
+**Возвращает**:
+- `AliAffiliatedProducts`: Экземпляр класса `AliAffiliatedProducts`.
+
 
 ## Функции
 
 ### `test_check_and_process_affiliate_products`
 
-**Описание**: Тестирует метод `check_and_process_affiliate_products`, проверяя, что он корректно вызывает метод `process_affiliate_products`.
+**Описание**: Тестирует метод `check_and_process_affiliate_products`, проверяя, что он вызывает метод `process_affiliate_products` с корректными аргументами.
 
-**Аргументы**:
-- `ali_affiliated_products`: экземпляр класса `AliAffiliatedProducts`, полученный через фикстуру.
-- `prod_urls` (list): список URL-адресов продуктов.
+**Параметры**:
+- `ali_affiliated_products` (`AliAffiliatedProducts`): Экземпляр класса `AliAffiliatedProducts`, полученный с помощью фикстуры.
+- `prod_urls` (list): Список ссылок на продукты.
 
-**Вызывает**:
-- `process_affiliate_products` (метод `AliAffiliatedProducts`).
+**Возвращает**:
+- Не имеет возвращаемого значения.
 
-**Проверяемые утверждения**:
-- Метод `process_affiliate_products` вызывается ровно один раз с переданным списком `prod_urls`.
-
+**Используемые моки**:
+- `patch.object(ali_affiliated_products, 'process_affiliate_products')`: Мок для метода `process_affiliate_products`, позволяющий проверить его вызов.
 
 ### `test_process_affiliate_products`
 
-**Описание**: Тестирует метод `process_affiliate_products`, проверяя корректность обработки продуктов.
+**Описание**: Тестирует метод `process_affiliate_products`, проверяя обработку продуктов и корректность возвращаемых данных.
 
-**Аргументы**:
-- `ali_affiliated_products`: экземпляр класса `AliAffiliatedProducts`, полученный через фикстуру.
-- `prod_urls` (list): список URL-адресов продуктов.
+**Параметры**:
+- `ali_affiliated_products` (`AliAffiliatedProducts`): Экземпляр класса `AliAffiliatedProducts`, полученный с помощью фикстуры.
+- `prod_urls` (list): Список ссылок на продукты.
 
-**Вызывает**:
-- `retrieve_product_details`:  метод для получения деталей продукта.
-- `ensure_https`: метод, который должен возвращать переданные ему данные.
-- `save_png_from_url`: метод для сохранения изображения.
-- `save_video_from_url`: метод для сохранения видео.
-- `j_dumps`: метод для работы с JSON.
+**Возвращает**:
+- `list`: Список обработанных продуктов.
+
+**Используемые моки**:
+- `patch.object(ali_affiliated_products, 'retrieve_product_details', return_value=mock_product_details)`: Мок для метода `retrieve_product_details`, возвращающий заданный список продуктов.
+- `patch("src.suppliers.aliexpress.affiliated_products_generator.ensure_https", return_value=prod_urls)`: Мок для функции `ensure_https`.
+- `patch("src.suppliers.aliexpress.affiliated_products_generator.save_png_from_url")`: Мок для функции `save_png_from_url`.
+- `patch("src.suppliers.aliexpress.affiliated_products_generator.save_video_from_url")`: Мок для функции `save_video_from_url`.
+- `patch("src.suppliers.aliexpress.affiliated_products_generator.j_dumps", return_value=True)`: Мок для функции `j_dumps`.
+
+**Ассерты**:
+- Проверяет длину списка обработанных продуктов.
+- Проверяет значение `product_id` первого обработанного продукта.
 
 
-**Проверяемые утверждения**:
-- `len(processed_products)` равно 1
-- `processed_products[0].product_id` равно "123"
-- Методы `retrieve_product_details`, `ensure_https`, `save_png_from_url`, `save_video_from_url` и `j_dumps` вызываются с ожидаемыми аргументами.
+##  Зависимости
 
-
-## Модульные тесты
-
-**Описание**: Данный модуль содержит тесты для модуля.
-
-**Выполняется**:
-- При выполнении скрипта с параметром `__name__ == "__main__":`, запускаются тесты модуля `pytest`.
+Модуль использует следующие библиотеки:
+- `pytest`
+- `unittest.mock`
+- `src.suppliers.aliexpress.affiliated_products_generator`
+- `types`

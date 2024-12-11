@@ -2,17 +2,28 @@
 
 ## Обзор
 
-Модуль `AliexpressAffiliateOrderListRequest` предоставляет класс для работы с API AliExpress, позволяя получать список заказов филиалов.
+Модуль `AliexpressAffiliateOrderListRequest` предоставляет класс для работы с API AliExpress, позволяющий получать список заказов аффилированного партнера. Класс наследуется от `RestApi` и содержит методы для инициализации и получения имени API.
 
 ## Классы
 
 ### `AliexpressAffiliateOrderListRequest`
 
-**Описание**: Класс `AliexpressAffiliateOrderListRequest` наследуется от базового класса `RestApi` и предоставляет методы для взаимодействия с API AliExpress для получения списка заказов филиалов.
+**Описание**: Класс `AliexpressAffiliateOrderListRequest` реализует взаимодействие с API AliExpress для получения списка заказов аффилированного партнера.
+
+**Методы**:
+
+- `__init__`
+
+**Описание**: Инициализирует объект `AliexpressAffiliateOrderListRequest`.
+
+**Параметры**:
+
+- `domain` (str, опционально, по умолчанию "api-sg.aliexpress.com"): Домен API AliExpress.
+- `port` (int, опционально, по умолчанию 80): Порт API AliExpress.
 
 **Атрибуты**:
 
-- `app_signature`: Приложение подпись.
+- `app_signature`: Приложение подписи.
 - `end_time`: Конечная дата.
 - `fields`: Поля.
 - `locale_site`: Локаль сайта.
@@ -21,31 +32,17 @@
 - `start_time`: Начальная дата.
 - `status`: Статус.
 
-**Методы**:
 
-#### `__init__`
+- `getapiname`
 
-**Описание**: Конструктор класса.
 
-**Параметры**:
-
-- `domain` (str, опционально, по умолчанию "api-sg.aliexpress.com"): Домен API.
-- `port` (int, опционально, по умолчанию 80): Порт API.
+**Описание**: Возвращает имя API.
 
 **Возвращает**:
-- None
+- str: Имя API, используемое для запроса.
 
-
-#### `getapiname`
-
-**Описание**: Возвращает имя API-метода.
-
-**Параметры**:
-- Нет
-
-**Возвращает**:
-- str: Название API-метода (`aliexpress.affiliate.order.list`).
 
 ## Функции
 
-(В данном модуле функций нет)
+
+Нет функций в этом модуле.

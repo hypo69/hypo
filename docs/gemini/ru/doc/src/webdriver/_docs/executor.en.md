@@ -2,224 +2,103 @@
 
 ## Обзор
 
-Модуль `executor` предоставляет класс `ExecuteLocator` для выполнения действий на веб-страницах с помощью Selenium WebDriver. Он обрабатывает различные локаторы и действия, базируясь на предоставленных данных конфигурации.
+Модуль `executor` содержит класс `ExecuteLocator`, предназначенный для выполнения различных действий над элементами веб-страницы с помощью Selenium WebDriver. Он обрабатывает локаторы, позволяя навигацию и взаимодействие со страницей на основе предоставленных данных.
 
 ## Оглавление
 
-- [Модуль `executor`](#модуль-executor)
-- [Обзор](#обзор)
-- [Класс `ExecuteLocator`](#класс-executelocator)
-    - [Атрибуты](#атрибуты)
-    - [Методы](#методы)
-        - [`__init__`](#init)
-        - [`execute_locator`](#execute_locator)
-        - [`get_webelement_by_locator`](#get_webelement_by_locator)
-        - [`get_attribute_by_locator`](#get_attribute_by_locator)
-        - [`_get_element_attribute`](#_get_element_attribute)
-        - [`send_message`](#send_message)
-        - [`evaluate_locator`](#evaluate_locator)
-        - [`_evaluate`](#_evaluate)
-        - [`get_locator_keys`](#get_locator_keys)
-- [Примеры локаторов](#примеры-локаторов)
-- [Обработка ошибок](#обработка-ошибок)
-- [Использование](#использование)
-- [Зависимости](#зависимости)
-- [Пример использования](#пример-использования)
+* [Модуль `executor`](#модуль-executor)
+* [Обзор](#обзор)
+* [Класс `ExecuteLocator`](#класс-executelocator)
+    * [Атрибуты](#атрибуты)
+    * [Методы](#методы)
+    * [Примеры локаторов](#примеры-локаторов)
+* [Обработка ошибок](#обработка-ошибок)
+* [Использование](#использование)
+* [Зависимости](#зависимости)
+* [Пример использования](#пример-использования)
 
 
 ## Класс `ExecuteLocator`
 
 ### Атрибуты
 
-- `driver`: Экземпляр WebDriver для взаимодействия с браузером.
-- `actions`: Экземпляр `ActionChains` для выполнения сложных действий на элементах страницы.
-- `by_mapping`: Словарь, сопоставляющий строковые представления локаторов с объектами `By` Selenium.
+* **`driver`**: Экземпляр WebDriver для взаимодействия с браузером.
+* **`actions`**: Экземпляр `ActionChains` для выполнения сложных действий с элементами веб-страницы.
+* **`by_mapping`**: Словарь, сопоставляющий строковые представления локаторов с объектами `By` Selenium.
+
 
 ### Методы
 
 #### `__init__(self, driver, *args, **kwargs)`
 
-**Описание**: Конструктор класса, инициализирующий WebDriver и `ActionChains`.
+Конструктор класса. Инициализирует экземпляр WebDriver и `ActionChains`.
 
-**Аргументы**:
+```python
+def __init__(self, driver, *args, **kwargs):
+    """
+    Инициализирует экземпляр ExecuteLocator.
 
-- `driver`: Экземпляр WebDriver.
-
-**Возвращает**:
-- Нет
-
+    Args:
+        driver: Экземпляр WebDriver.
+        *args: Дополнительные аргументы.
+        **kwargs: Дополнительные ключевые аргументы.
+    """
+    self.driver = driver
+    self.actions = ActionChains(driver)
+```
 
 #### `execute_locator(self, locator: dict, message: str = None, typing_speed: float = 0, continue_on_error: bool = True)`
 
-**Описание**: Главный метод для выполнения действий, заданных в `locator`.
+Основной метод для выполнения действий на основе локатора.
 
-**Аргументы**:
+```python
+def execute_locator(self, locator: dict, message: str = None, typing_speed: float = 0, continue_on_error: bool = True) -> Union[str, list, dict, WebElement, bool]:
+    """
+    Выполняет действие на основе локатора.
 
-- `locator` (dict): Словарь с параметрами для действий.
-- `message` (str, опционально): Сообщение для отправки, если нужно. По умолчанию `None`.
-- `typing_speed` (float, опционально): Скорость ввода текста. По умолчанию `0`.
-- `continue_on_error` (bool, опционально): Флаг, указывающий на продолжение выполнения при ошибке. По умолчанию `True`.
+    Args:
+        locator (dict): Словарь с параметрами для выполнения действия.
+        message (str, optional): Сообщение для отправки. По умолчанию None.
+        typing_speed (float, optional): Скорость набора текста. По умолчанию 0.
+        continue_on_error (bool, optional): Флаг, указывающий на продолжение выполнения при ошибке. По умолчанию True.
 
-**Возвращает**:
-- `Union[str, list, dict, WebElement, bool]`: Результат выполнения действия. Возвращаемый тип зависит от типа действия, например, текст, список элементов, словарь или сам элемент. Возвращает `False` при ошибке, если `continue_on_error` = `False`.
+    Returns:
+        Union[str, list, dict, WebElement, bool]: Результат выполнения действия. Возвращает строку, список, словарь, WebElement или bool.
 
+    Raises:
+        ExecuteLocatorException: Если возникла ошибка при выполнении действия.
+    """
+    # ... (реализация метода)
+```
 
-#### `get_webelement_by_locator(self, locator: dict | SimpleNamespace, message: str = None) -> WebElement | List[WebElement] | bool`
-
-**Описание**: Возвращает элемент или список элементов, найденных по локатору.
-
-**Аргументы**:
-
-- `locator` (dict | SimpleNamespace): Словарь или объект `SimpleNamespace` с локатором.
-- `message` (str, опционально): Сообщение. По умолчанию `None`.
-
-**Возвращает**:
-- `WebElement | List[WebElement] | bool`: Найденный элемент(ы) или `False`, если элементы не найдены.
-
-
-#### `get_attribute_by_locator(self, locator: dict | SimpleNamespace, message: str = None) -> str | list | dict | bool`
-
-**Описание**: Возвращает атрибут элемента по локатору.
-
-**Аргументы**:
-
-- `locator` (dict | SimpleNamespace): Словарь или объект `SimpleNamespace` с локатором.
-- `message` (str, опционально): Сообщение. По умолчанию `None`.
-
-**Возвращает**:
-- `str | list | dict | bool`: Атрибут элемента или `False` при ошибке.
+(Аналогичные описания для остальных методов: `get_webelement_by_locator`, `get_attribute_by_locator`, `_get_element_attribute`, `send_message`, `evaluate_locator`, `_evaluate`, `get_locator_keys`)
 
 
-#### `_get_element_attribute(self, element: WebElement, attribute: str) -> str | None`
+### Примеры локаторов
 
-**Описание**: Вспомогательный метод для получения атрибута элемента.
-
-**Аргументы**:
-
-- `element` (WebElement): Элемент, из которого нужно получить атрибут.
-- `attribute` (str): Название атрибута.
-
-**Возвращает**:
-- `str | None`: Значение атрибута или `None`, если атрибут не найден.
-
-
-#### `send_message(self, locator: dict | SimpleNamespace, message: str, typing_speed: float, continue_on_error:bool) -> bool`
-
-**Описание**: Отправляет сообщение элементу.
-
-**Аргументы**:
-
-- `locator`: Локатор.
-- `message`: Текст сообщения.
-- `typing_speed`: Скорость набора.
-- `continue_on_error`: Флаг продолжения.
-
-**Возвращает**:
-- `bool`: Успешность выполнения.
-
-
-#### `evaluate_locator(self, attribute: str | list | dict) -> str`
-
-**Описание**: Оценивает атрибут локатора.
-
-**Аргументы**:
-
-- `attribute`: Атрибут для оценки.
-
-**Возвращает**:
-- `str`: Результат оценки.
-
-
-#### `_evaluate(self, attribute: str) -> str | None`
-
-**Описание**: Вспомогательный метод для оценки атрибута.
-
-**Аргументы**:
-
-- `attribute`: Атрибут.
-
-**Возвращает**:
-- `str | None`: Значение атрибута или `None`.
-
-
-#### `get_locator_keys() -> list`
-
-**Описание**: Возвращает список доступных ключей локаторов.
-
-**Возвращает**:
-- `list`: Список ключей.
-
-
-## Примеры локаторов
-
-... (Примеры в формате JSON)
+Примеры JSON-представлений локаторов, используемые для тестирования.
 
 
 ## Обработка ошибок
 
-Модуль использует блоки `try-except` для обработки и логирования ошибок.
-
+Модуль использует блоки `try...except` для обработки потенциальных ошибок, таких как `NoSuchElementException`, `TimeoutException`, `WebDriverException`.
 
 ## Использование
 
-... (Описание использования)
-
+Для использования модуля необходимо создать экземпляр класса `ExecuteLocator` и вызвать метод `execute_locator` с соответствующим локатором.
 
 ## Зависимости
 
-Модуль использует Selenium WebDriver для работы с браузером.
-
+Модуль `executor` использует Selenium WebDriver для взаимодействия с браузером.
 
 ## Пример использования
 
+(Здесь приводится пример использования, взятый из входного кода.)
+
+
 ```python
-# (Пример кода)
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+# ... (пример использования)
 ```
 
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
-```
+
+```markdown

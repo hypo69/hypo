@@ -1,43 +1,63 @@
-# Модуль `hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductSmartmatchRequest.py`
+# Модуль hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductSmartmatchRequest.py
 
 ## Обзор
 
-Модуль содержит класс `AliexpressAffiliateProductSmartmatchRequest`, который представляет собой запрос к API AliExpress для поиска продуктов по ключевым словам. Класс наследуется от класса `RestApi`.  Он позволяет настраивать различные параметры поиска, такие как ключевые слова, страницу, ID продукта и т.д.
+Модуль `AliexpressAffiliateProductSmartmatchRequest` предоставляет класс для работы с API AliExpress, позволяющий получать информацию о продуктах с помощью функции smartmatch.  Этот класс наследуется от базового класса `RestApi`.
 
-## Оглавление
+## Классы
 
-* [Модуль `AliexpressAffiliateProductSmartmatchRequest`](#модуль-aliexpressaffiliateproductsmartmatchrequest)
-* [Класс `AliexpressAffiliateProductSmartmatchRequest`](#класс-aliexpressaffiliateproductsmartmatchrequest)
+### `AliexpressAffiliateProductSmartmatchRequest`
 
+**Описание**: Класс для работы с API AliExpress, предоставляющий методы для запроса информации о продуктах с использованием smartmatch.
 
-## Класс `AliexpressAffiliateProductSmartmatchRequest`
+**Методы**:
 
-### Описание
+- `__init__`
 
-Класс `AliexpressAffiliateProductSmartmatchRequest` предоставляет методы для формирования запроса к API AliExpress для поиска продуктов по ключевым словам.  Он инициализирует параметры запроса и возвращает имя API-метода.
-
-### Методы
-
-#### `__init__(self, domain="api-sg.aliexpress.com", port=80)`
-
-**Описание**: Конструктор класса. Инициализирует атрибуты класса, принимая домен и порт в качестве параметров.
 
 **Параметры**:
 
-- `domain` (str, опционально "api-sg.aliexpress.com"): Домен API. По умолчанию "api-sg.aliexpress.com".
-- `port` (int, опционально 80): Порт API. По умолчанию 80.
+- `domain` (str, опционально, по умолчанию "api-sg.aliexpress.com"): Домен API.
+- `port` (int, опционально, по умолчанию 80): Порт API.
+
+**Описание метода `__init__`**:
+
+Инициализирует экземпляр класса, вызывая конструктор родительского класса `RestApi` и инициализирует атрибуты:
+
+
+- `app`:  (Не описано).
+- `app_signature`: (Не описано).
+- `country`: (Не описано).
+- `device`: (Не описано).
+- `device_id`: (Не описано).
+- `fields`: (Не описано).
+- `keywords`: (Не описано).
+- `page_no`: (Не описано).
+- `product_id`: (Не описано).
+- `site`: (Не описано).
+- `target_currency`: (Не описано).
+- `target_language`: (Не описано).
+- `tracking_id`: (Не описано).
+- `user`: (Не описано).
+
 
 **Возвращает**:
 -  None
 
 
-#### `getapiname(self)`
+- `getapiname`
 
 **Описание**: Возвращает имя API-метода.
 
-**Параметры**:
-
-- Нет
-
 **Возвращает**:
-- str: Имя API-метода ("aliexpress.affiliate.product.smartmatch").
+- str: Название API-метода (`aliexpress.affiliate.product.smartmatch`).
+
+
+## Функции
+
+
+### Отсутствуют
+
+
+## Исключение
+Отсутствуют описания исключений.
