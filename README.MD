@@ -5,7 +5,7 @@
 [<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] 
 </TD>
 <TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>docs</A>] 
+[<A HREF = 'https://github.com/hypo69/hypo/blob/master/docs/gemini/README.MD'>docs</A>] 
 </TD>
 
 <TD>

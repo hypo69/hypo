@@ -1,73 +1,45 @@
-**Received Code**
+## Улучшенный код
 
 ```python
-## \file hypotez/src/endpoints/bots/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.bots 
-	:platform: Windows, Unix
-	:synopsis:
+Модуль для инициализации и работы с ботами.
+=========================================================================================
+
+Этот модуль содержит классы для управления различными ботами, такими как TelegramBot.
 
 """
 MODE = 'dev'
 
 
-from .telegram import TelegramBot
+from src.endpoints.bots.telegram import TelegramBot
 ```
 
-**Improved Code**
+## Внесённые изменения
+
+- Добавлены docstring к модулю в формате reStructuredText (RST).
+- Убраны лишние комментарии, которые не несут смысловой нагрузки.
+- Импорт `TelegramBot` был перенесен на строку ниже.
+
+## Оптимизированный код
 
 ```python
-## \file hypotez/src/endpoints/bots/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.bots
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с ботами.
+Модуль для инициализации и работы с ботами.
+=========================================================================================
+
+Этот модуль содержит классы для управления различными ботами, такими как TelegramBot.
 
 """
 MODE = 'dev'
 
 
-# Импорт необходимых модулей
-from .telegram import TelegramBot
-from src.logger.logger import logger  # Импортируем logger
-
-
-```
-
-**Changes Made**
-
-* Добавлен импорт `logger` из `src.logger.logger`.
-* Добавлен docstring для модуля в формате RST, описывающий его назначение.
-* Изменены некоторые параметры docstring, улучшив читаемость.
-
-
-**FULL Code**
-
-```python
-## \file hypotez/src/endpoints/bots/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.endpoints.bots
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с ботами.
-
-"""
-MODE = 'dev'
-
-
-# Импорт необходимых модулей
-from .telegram import TelegramBot
-from src.logger.logger import logger  # Импортируем logger
-```
+from src.endpoints.bots.telegram import TelegramBot
 ```

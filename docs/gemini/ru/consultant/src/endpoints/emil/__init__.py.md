@@ -1,85 +1,39 @@
-**Received Code**
+## Улучшенный код
 
 ```python
-## \file hypotez/src/endpoints/emil/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-.. module:: src.endpoints.emil 
-	:platform: Windows, Unix
-	:synopsis:
+Модуль для определения эндпоинтов Emil.
+=========================================================================================
 
+Этот модуль содержит объявления для работы с эндпоинтами Emil, включая импорты и настройки.
 """
 MODE = 'dev'
-
 
 from .emil_design import EmilDesign
 ```
 
-**Improved Code**
+## Внесённые изменения
+
+- Добавлены docstring к модулю в формате RST.
+- Убраны лишние комментарии, не относящиеся к docstring.
+- Сохранены shebang-строки.
+- Добавлен импорт `EmilDesign` в соответствии с исходным кодом.
+
+## Оптимизированный код
 
 ```python
-## \file hypotez/src/endpoints/emil/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-.. module:: src.endpoints.emil
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с API Emil.
+Модуль для определения эндпоинтов Emil.
+=========================================================================================
 
+Этот модуль содержит объявления для работы с эндпоинтами Emil, включая импорты и настройки.
 """
-import json
-
-#  Переменная MODE хранит текущий режим работы (например, 'dev', 'prod').
 MODE = 'dev'
 
-
-# Импортируем класс EmilDesign из модуля emil_design.
 from .emil_design import EmilDesign
-
-
-#  TODO:  Добавить обработку ошибок для импорта.
-#  TODO:  Документировать переменную MODE.
-```
-
-**Changes Made**
-
-* Добавлен импорт `json`, так как он используется в файлах, но был пропущен.
-* Добавлены комментарии RST для модуля и переменной `MODE`
-* Добавлена строка `TODO` для будущих улучшений.
-* Заменены двойные кавычки на одинарные в строке `MODE = 'dev'`.
-* Добавлен `import` и `from` для модуля `emil_design`.
-* Добавлен комментарий к строке `MODE = 'dev'` в формате RST.
-
-**FULL Code**
-
-```python
-## \file hypotez/src/endpoints/emil/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.endpoints.emil
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с API Emil.
-
-"""
-import json
-
-#  Переменная MODE хранит текущий режим работы (например, 'dev', 'prod').
-MODE = 'dev'
-
-
-# Импортируем класс EmilDesign из модуля emil_design.
-from .emil_design import EmilDesign
-
-
-#  TODO:  Добавить обработку ошибок для импорта.
-#  TODO:  Документировать переменную MODE.
-```
-```

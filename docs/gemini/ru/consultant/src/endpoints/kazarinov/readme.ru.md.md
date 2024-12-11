@@ -1,22 +1,55 @@
-# Received Code
+# Улучшенный код
+```rst
+.. module:: src.endpoints.kazarinov
+   :synopsis: Модуль для создания прайс-листа Казаринова и обработки запросов через Telegram бота.
 
-```python
-# KazarinovTelegramBot
-# - https://one-tab.co.il
-# - https://morlevi.co.il
-# - https://grandavance.co.il
-# - https://ivory.co.il
-# - https://ksp.co.il
-# --------
-# BotHandler
+   Этот модуль отвечает за обработку запросов от пользователя через Telegram ботов, 
+   получение данных с сайтов, таких как One-Tab, и запуск сценариев для формирования прайс-листа
+   в формате PDF.
+   
+   Модуль включает в себя описание работы с `KazarinovTelegramBot`, `BotHandler`, 
+   а также описание процесса взаимодействия пользователя с ботом и внутренней логики обработки
+   запросов.
 
-# На стороне клиента:
-#
-# - выбор комплектующих для сборки компьютера -> объединение в one-tab -> отправка ссыли `one-tab` телеграм боту (`hypo69_kazarinov_bot` - prod or `hypo69_test_bot`) ->
-#
-# На стороне кода:
-#
-# - `kazarinov_bot.handle_message()` -> `kazarinov.scenarios.run_scenario()`:
+   :Модули:
+       - kazarinov_bot: Содержит основную логику обработки сообщений от Telegram бота.
+       - scenarios: Содержит сценарии для создания прайс-листов.
+```
+
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/README.MD'>English</A>
+</TD>
+</TR>
+</TABLE>
+
+Создание прайслиста для Казаринова
+========================================
+
+`KazarinovTelegramBot`
+- https://one-tab.co.il
+- https://morlevi.co.il
+- https://grandavance.co.il
+- https://ivory.co.il
+- https://ksp.co.il 
+-------- 
+`BotHandler` 
+
+На стороне клиента: 
+```mermaid
+flowchart TD
+    Start[Выбор комплектующих для сборки компьютера] --> Combine[Объединение в One-Tab]
+    Combine --> SendToBot{Отправка ссылки One-Tab в Telegram боту}
+    SendToBot -->|hypo69_kazarinov_bot| ProdBot[Telegram бот <code>prod</code>]
+    SendToBot -->|hypo69_test_bot| TestBot[Telegram бот <code>test</code>]
+```
+На стороне кода: 
+
+ - `kazarinov_bot.handle_message()` -> `kazarinov.scenarios.run_scenario()`:
 
 ```mermaid
 flowchart TD
@@ -33,166 +66,94 @@ flowchart TD
     I --> K[Return]
     D --> K[Return]
     J --> K[Return]
+
+
+```
+Далее
+=========
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.ru.md'>Казарионв бот</A>
+<br>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/readme.ru.md'>Испоолнение сценария</A>
+```
+# Внесённые изменения
+- Добавлены комментарии в формате reStructuredText (RST) для модуля, включая описание, назначение и ссылки на связанные модули.
+- Описание модуля перенесено в начало документа для соответствия структуре RST.
+- Заменены обычные комментарии на docstring в стиле RST.
+
+# Оптимизированный код
+```rst
+.. module:: src.endpoints.kazarinov
+   :synopsis: Модуль для создания прайс-листа Казаринова и обработки запросов через Telegram бота.
+
+   Этот модуль отвечает за обработку запросов от пользователя через Telegram ботов, 
+   получение данных с сайтов, таких как One-Tab, и запуск сценариев для формирования прайс-листа
+   в формате PDF.
+   
+   Модуль включает в себя описание работы с `KazarinovTelegramBot`, `BotHandler`, 
+   а также описание процесса взаимодействия пользователя с ботом и внутренней логики обработки
+   запросов.
+
+   :Модули:
+       - kazarinov_bot: Содержит основную логику обработки сообщений от Telegram бота.
+       - scenarios: Содержит сценарии для создания прайс-листов.
 ```
 
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/README.MD'>English</A>
+</TD>
+</TR>
+</TABLE>
 
-# Improved Code
+Создание прайслиста для Казаринова
+========================================
 
-```python
-"""
-Модуль для обработки сообщений телеграм-бота, связанного с выбором комплектующих для компьютера.
-====================================================================================================
+`KazarinovTelegramBot`
+- https://one-tab.co.il
+- https://morlevi.co.il
+- https://grandavance.co.il
+- https://ivory.co.il
+- https://ksp.co.il 
+-------- 
+`BotHandler` 
 
-Этот модуль содержит логику обработки сообщений, полученных от пользователя, содержащих URL-адрес
-с комплектующими, выбранными с помощью сервиса OneTab.  Он использует сценарии для дальнейшей
-обработки данных и отправки ссылок в WhatsApp.
-"""
-import logging
-from src.utils.jjson import j_loads
-
-# Импорт необходимых модулей, например, для работы со сценариями
-from src.logger.logger import logger
-# ... (возможно, импорт других модулей)
-
-
-class BotHandler:
-    """Обработчик сообщений бота."""
-
-    def __init__(self):
-        """Инициализация обработчика."""
-        # ... (инициализация дополнительных атрибутов)
-        pass
-
-
-    @staticmethod
-    def handle_message(message):
-        """Обрабатывает сообщение от пользователя."""
-        # Проверка, является ли URL адресом OneTab.
-        # ... (логика проверки)
-        if not is_onetab_url(message['text']):
-            return "Reply - Try again" # Отправка сообщения пользователю
-
-        # Получение данных из OneTab.
-        try:
-            data = get_data_from_onetab(message['text'])  # Возвращает данные или None при ошибке
-        except Exception as e:
-            logger.error("Ошибка при получении данных из OneTab:", exc_info=True)
-            return "Error getting data from OneTab"
-
-        if data is None:  # Проверка на валидность данных
-            return "Incorrect data" # Отправка сообщения пользователю
-
-
-        # Выполнение сценария Mexiron.
-        try:
-            result = run_mexiron_scenario(data)
-        except Exception as e:
-            logger.error("Ошибка при выполнении сценария Mexiron:", exc_info=True)
-            return "Error running scenario"
-
-        if result:
-            return "Done! I will send the link to WhatsApp" # Отправка сообщения пользователю
-        else:
-            return "Error running scenario" # Отправка сообщения пользователю
-
-
-
-# Добавленные функции.  Необходимо определить эти функции в других файлах
-def is_onetab_url(url):
-    # ... (логика проверки URL)
-    return True # пример
-
-def get_data_from_onetab(url):
-    # ... (получение данных с OneTab)
-    return {"components": ["comp1", "comp2"]} # Пример
-
-def run_mexiron_scenario(data):
-    # ... (выполнение сценария Mexiron)
-    return True # Пример
-    
+На стороне клиента: 
+```mermaid
+flowchart TD
+    Start[Выбор комплектующих для сборки компьютера] --> Combine[Объединение в One-Tab]
+    Combine --> SendToBot{Отправка ссылки One-Tab в Telegram боту}
+    SendToBot -->|hypo69_kazarinov_bot| ProdBot[Telegram бот <code>prod</code>]
+    SendToBot -->|hypo69_test_bot| TestBot[Telegram бот <code>test</code>]
 ```
+На стороне кода: 
+
+ - `kazarinov_bot.handle_message()` -> `kazarinov.scenarios.run_scenario()`:
+
+```mermaid
+flowchart TD
+    A[Start] --> B{URL is from OneTab?}
+    B -->|Yes| C[Get data from OneTab]
+    B -->|No| D[Reply - Try again]
+    C --> E{Data valid?}
+    E -->|No| F[Reply Incorrect data]
+    E -->|Yes| G[Run Mexiron scenario]
+    G --> H{Scenario successful?}
+    H -->|Yes| I[Reply Done! I will send the link to WhatsApp]
+    H -->|No| J[Reply Error running scenario]
+    F --> K[Return]
+    I --> K[Return]
+    D --> K[Return]
+    J --> K[Return]
 
 
-# Changes Made
-
-- Добавлены комментарии в формате RST к модулю и функции `handle_message`.
-- Добавлен импорт `logger` из `src.logger.logger`.
-- Обработка ошибок с помощью `logger.error` и исключений `try-except`.
-- Удалены неявные предположения о формате данных.
--  Вместо слов \'получаем\', \'делаем\' и подобных использованы более точные глаголы (проверка, отправка).
-- Добавлены функции `is_onetab_url`, `get_data_from_onetab`, `run_mexiron_scenario` и т.п., для большей читабельности и разделения логики.
-- Введено проверку на валидность данных, полученных из OneTab.
-
-
-# FULL Code
-
-```python
-"""
-Модуль для обработки сообщений телеграм-бота, связанного с выбором комплектующих для компьютера.
-====================================================================================================
-
-Этот модуль содержит логику обработки сообщений, полученных от пользователя, содержащих URL-адрес
-с комплектующими, выбранными с помощью сервиса OneTab.  Он использует сценарии для дальнейшей
-обработки данных и отправки ссылок в WhatsApp.
-"""
-import logging
-from src.utils.jjson import j_loads
-from src.logger.logger import logger
-
-# ... (возможно, импорт других модулей)
-
-
-class BotHandler:
-    """Обработчик сообщений бота."""
-
-    def __init__(self):
-        """Инициализация обработчика."""
-        # ... (инициализация дополнительных атрибутов)
-        pass
-
-
-    @staticmethod
-    def handle_message(message):
-        """Обрабатывает сообщение от пользователя."""
-        # Проверка, является ли URL адресом OneTab.
-        if not is_onetab_url(message['text']):
-            return "Reply - Try again" # Отправка сообщения пользователю
-
-        # Получение данных из OneTab.
-        try:
-            data = get_data_from_onetab(message['text'])  # Возвращает данные или None при ошибке
-        except Exception as e:
-            logger.error("Ошибка при получении данных из OneTab:", exc_info=True)
-            return "Error getting data from OneTab"
-
-        if data is None:  # Проверка на валидность данных
-            return "Incorrect data" # Отправка сообщения пользователю
-
-
-        # Выполнение сценария Mexiron.
-        try:
-            result = run_mexiron_scenario(data)
-        except Exception as e:
-            logger.error("Ошибка при выполнении сценария Mexiron:", exc_info=True)
-            return "Error running scenario"
-
-        if result:
-            return "Done! I will send the link to WhatsApp" # Отправка сообщения пользователю
-        else:
-            return "Error running scenario" # Отправка сообщения пользователю
-
-
-# Добавленные функции.  Необходимо определить эти функции в других файлах
-def is_onetab_url(url):
-    # ... (логика проверки URL)
-    return True # пример
-
-def get_data_from_onetab(url):
-    # ... (получение данных с OneTab)
-    return {"components": ["comp1", "comp2"]} # Пример
-
-def run_mexiron_scenario(data):
-    # ... (выполнение сценария Mexiron)
-    return True # Пример
-
+```
+Далее
+=========
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.ru.md'>Казарионв бот</A>
+<br>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/readme.ru.md'>Испоолнение сценария</A>
 ```
