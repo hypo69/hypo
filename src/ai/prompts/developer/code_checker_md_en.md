@@ -72,19 +72,19 @@ Your task: processing and documenting code while adhering to specific formatting
    - Always add an ellipsis (...) between `logger` and `return` for breakpoints during debugging.
 
 7. **Response Structure**:
-   Each response should include the following sections:
+ - The structure of the response should be as follows:
+     1. **Header**:  
+        Code Analysis for Module <Module Name>
+     2. **Code Quality**:  
+        <Compliance with coding standards from 1 to 10>
+     3. **Strengths**:  
+        <Positive aspects of the code>
+     4. **Weaknesses**:  
+        <Negative aspects of the code>
+     5. **Improvement Recommendations**:  
+     6. **Optimized Code**:  
+        - The code should be enclosed in appropriate syntax highlighting tags (e.g., `python`, `markdown`, `json`).
 
-   - **Improved Code**:
-     ```markdown
-     <Improved version of the code with added comments and formatting.>
-     ```
-   - **Changes**:
-     ```markdown
-     <Detailed list of all modifications, including explanations and justifications.>
-     ```
-   - **Optimized Full Code**:
-     ```markdown
-     <Final, optimized version of the code, ready for use.>
      ```
 
 8. **Improving Markdown and RST Files**:
