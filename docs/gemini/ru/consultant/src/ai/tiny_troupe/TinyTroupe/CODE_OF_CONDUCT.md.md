@@ -1,67 +1,50 @@
-# Received Code
-```# Microsoft Open Source Code of Conduct
+# Анализ кода модуля CODE_OF_CONDUCT
+
+**Качество кода**
+8
+- Плюсы
+    - Код содержит информацию о Кодексе поведения Microsoft Open Source.
+    - Приведены ссылки на соответствующие ресурсы и контактный адрес электронной почты.
+- Минусы
+    - Отсутствует какая-либо документация в формате reStructuredText (RST).
+    - Нет явной структуры и разделения на секции с помощью RST.
+
+**Рекомендации по улучшению**
+
+1.  Добавить описание модуля в формате RST в начале документа.
+2.  Преобразовать существующий текст в соответствии с RST для большей читаемости и структурирования.
+3.  Включить информацию, которая соответствует целям документа (т.е. Кодекс поведения)
+
+**Оптимизированный код**
+
+```markdown
+"""
+Кодекс поведения Microsoft Open Source
+=========================================================================================
+
+Этот документ описывает Кодекс поведения для данного проекта, основанного на Microsoft Open Source Code of Conduct.
+Он предоставляет ссылки на ресурсы и контактную информацию для сообщества.
+
+Пример использования
+--------------------
+
+Этот документ должен быть прочитан и понят всеми участниками проекта.
+
+"""
+
+# Microsoft Open Source Code of Conduct
+# Этот раздел описывает, что проект следует Кодексу поведения Microsoft Open Source.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+
+#  Ссылки на ресурсы.
 
 Resources:
 
 - [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
 - [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-- Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
+
+# Контактная информация
+# Этот раздел указывает контактный адрес электронной почты для связи по вопросам или проблемам.
+Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
 ```
-
-# Improved Code
-```python
-"""
-Модуль, содержащий Кодекс поведения Microsoft Open Source.
-==========================================================
-
-Этот модуль включает в себя информацию о Кодексе поведения Microsoft Open Source,
-а также ссылки на ресурсы и контактную информацию.
-
-Пример использования
---------------------
-
-Данный модуль не требует явного использования в коде. Он предназначен
-для ознакомления с Кодексом поведения участников проекта.
-"""
-# Microsoft Open Source Code of Conduct
-# Этот проект использует Кодекс поведения Microsoft Open Source.
-# Ссылка на документ: https://opensource.microsoft.com/codeofconduct/
-#
-# Ресурсы:
-# Ссылка на Кодекс поведения Microsoft Open Source: https://opensource.microsoft.com/codeofconduct/
-# Ссылка на FAQ по Кодексу поведения: https://opensource.microsoft.com/codeofconduct/faq/
-# Контактный email: opencode@microsoft.com
-# Для вопросов или проблем, свяжитесь: opencode@microsoft.com
-```
-
-# Changes Made
-- Добавлены docstring для модуля в формате reStructuredText (RST).
-- Сохранены все исходные комментарии.
-- Добавлены комментарии к каждой строке, поясняющие ее назначение.
-
-# FULL Code
-```python
-"""
-Модуль, содержащий Кодекс поведения Microsoft Open Source.
-==========================================================
-
-Этот модуль включает в себя информацию о Кодексе поведения Microsoft Open Source,
-а также ссылки на ресурсы и контактную информацию.
-
-Пример использования
---------------------
-
-Данный модуль не требует явного использования в коде. Он предназначен
-для ознакомления с Кодексом поведения участников проекта.
-"""
-# Microsoft Open Source Code of Conduct
-# Этот проект использует Кодекс поведения Microsoft Open Source.
-# Ссылка на документ: https://opensource.microsoft.com/codeofconduct/
-#
-# Ресурсы:
-# Ссылка на Кодекс поведения Microsoft Open Source: https://opensource.microsoft.com/codeofconduct/
-# Ссылка на FAQ по Кодексу поведения: https://opensource.microsoft.com/codeofconduct/faq/
-# Контактный email: opencode@microsoft.com
-# Для вопросов или проблем, свяжитесь: opencode@microsoft.com

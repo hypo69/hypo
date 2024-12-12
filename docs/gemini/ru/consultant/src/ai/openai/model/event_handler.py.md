@@ -1,248 +1,115 @@
-## Улучшенный код
+# Анализ кода модуля `event_handler.py`
+
+**Качество кода**
+
+- **Соответствие требованиям по оформлению кода**: 7/10
+   - **Плюсы**:
+        - Код структурирован, используются `override` для переопределения методов.
+        - Используется `typing_extensions` для `override`.
+        - Присутствует базовая обработка событий от OpenAI.
+        - Код соответствует PEP 8, за исключением отсутствия docstring.
+        - Присутствуют комментарии, хоть и не в формате reStructuredText.
+   - **Минусы**:
+        - Отсутствуют docstring для классов и методов.
+        - Не используется `src.utils.jjson` и `src.logger.logger`.
+        - Код не соответствует полному требованию по оформлению.
+        - Не используется форматирование RST для комментариев.
+        - Отсутствует описание модуля в формате RST.
+        - Отсутствуют импорты из `src.logger.logger`.
+
+**Рекомендации по улучшению**
+
+1.  **Документирование**:
+    - Добавить docstring в формате reStructuredText (RST) для модуля, класса и методов.
+    - Переписать все комментарии в формате RST.
+2.  **Импорты**:
+    - Добавить `from src.logger.logger import logger` для логирования.
+    - Убедиться, что `src.utils.jjson` не требуется в данном модуле.
+3.  **Логирование**:
+    - Использовать `logger.error` для обработки исключений.
+4.  **Форматирование**:
+    - Привести все строки к использованию одинарных кавычек (`'`).
+5.  **Стиль кода**:
+    - Использовать `print` c `f-строками` для более читаемого вывода.
+
+**Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
+"""
+Модуль для обработки событий ассистента OpenAI.
+=====================================================
+
+Этот модуль содержит класс :class:`EventHandler`, который обрабатывает события,
+возникающие при взаимодействии с ассистентом OpenAI, включая создание текста,
+изменение текста и вызовы инструментов.
+
+"""
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-Модуль для обработки событий ассистента OpenAI
-=========================================================================================
 
-Этот модуль определяет класс :class:`EventHandler`, который используется для обработки событий,
-генерируемых ассистентом OpenAI, таких как создание текста, дельты текста, вызовы инструментов и их дельты.
-Он использует библиотеку `openai` и `typing_extensions`.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from openai import OpenAI
-    from src.ai.openai.model.event_handler import EventHandler
-
-    client = OpenAI()
-    thread = client.beta.threads.create()
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content="What is 1 + 1?",
-    )
-    run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id="asst_...",
-    )
-    stream = client.beta.threads.runs.retrieve_stream(
-        run_id=run.id,
-        thread_id=thread.id,
-        event_handler=EventHandler()
-    )
-    for event in stream:
-        ...
-"""
-from typing import Any
+MODE = 'dev'
 
 from typing_extensions import override
 from openai import AssistantEventHandler, OpenAI
 from openai.types.beta.threads import Text, TextDelta
 from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
-
-from src.logger.logger import logger  # импорт логгера
-
-
-MODE = 'dev'
+from src.logger.logger import logger
 
 
 class EventHandler(AssistantEventHandler):
-  """
-  Класс для обработки событий, генерируемых ассистентом OpenAI.
-
-  Этот класс переопределяет методы `on_text_created`, `on_text_delta`,
-  `on_tool_call_created` и `on_tool_call_delta` для обработки различных типов событий,
-  возникающих во время работы ассистента.
-  """
-
-  @override
-  def on_text_created(self, text: Text) -> None:
     """
-    Обрабатывает событие создания нового текстового блока.
+    Обработчик событий ассистента OpenAI.
 
-    :param text: Объект Text, представляющий созданный текстовый блок.
-    :return: None
+    Этот класс переопределяет методы `on_text_created`, `on_text_delta`,
+    `on_tool_call_created` и `on_tool_call_delta` для обработки различных
+    событий от ассистента.
     """
-    # Выводит в консоль начало нового текстового блока от ассистента.
-    print('\nassistant > ', end='', flush=True)
 
-  @override
-  def on_text_delta(self, delta: TextDelta, snapshot: Text) -> None:
-    """
-    Обрабатывает событие изменения текстового блока.
+    @override
+    def on_text_created(self, text: Text) -> None:
+        """
+        Вызывается при создании нового текстового блока.
 
-    :param delta: Объект TextDelta, представляющий изменения в текстовом блоке.
-    :param snapshot: Объект Text, представляющий текущее состояние текстового блока.
-    :return: None
-    """
-    # Выводит в консоль дельту текстового блока от ассистента.
-    print(delta.value, end='', flush=True)
+        :param text: Объект Text, содержащий созданный текст.
+        """
+        print(f"\nassistant > ", end="", flush=True) # Код выводит приглашение для нового текстового блока.
 
-  @override
-  def on_tool_call_created(self, tool_call: ToolCall) -> None:
-    """
-    Обрабатывает событие создания нового вызова инструмента.
 
-    :param tool_call: Объект ToolCall, представляющий созданный вызов инструмента.
-    :return: None
-    """
-    # Выводит в консоль тип вызванного инструмента.
-    print(f'\nassistant > {tool_call.type}\n', flush=True)
+    @override
+    def on_text_delta(self, delta: TextDelta, snapshot: Text):
+        """
+        Вызывается при изменении текстового блока.
 
-  @override
-  def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall) -> None:
-    """
-    Обрабатывает событие изменения вызова инструмента.
+        :param delta: Объект TextDelta, содержащий изменения текста.
+        :param snapshot: Объект Text, содержащий текущий снимок текста.
+        """
+        print(delta.value, end="", flush=True) # Код выводит изменения текстового блока.
 
-    :param delta: Объект ToolCallDelta, представляющий изменения в вызове инструмента.
-    :param snapshot: Объект ToolCall, представляющий текущее состояние вызова инструмента.
-    :return: None
-    """
-    # Проверяет, является ли дельта вызовом code_interpreter и существует ли ввод.
-    if delta.type == 'code_interpreter' and delta.code_interpreter:
-        if delta.code_interpreter.input:
-            # Выводит в консоль ввод code_interpreter.
-            print(delta.code_interpreter.input, end='', flush=True)
-        if delta.code_interpreter.outputs:
-            # Выводит в консоль начало вывода code_interpreter.
-            print('\n\noutput >', flush=True)
-            for output in delta.code_interpreter.outputs:
-                if output.type == 'logs':
-                   # Выводит в консоль логи code_interpreter.
-                   print(f'\n{output.logs}', flush=True)
+    @override
+    def on_tool_call_created(self, tool_call: ToolCall):
+        """
+        Вызывается при создании нового вызова инструмента.
+
+        :param tool_call: Объект ToolCall, содержащий информацию о вызове инструмента.
+        """
+        print(f"\nassistant > {tool_call.type}\n", flush=True)  # Код выводит тип вызванного инструмента.
+
+    @override
+    def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall):
+        """
+        Вызывается при изменении вызова инструмента.
+
+        :param delta: Объект ToolCallDelta, содержащий изменения вызова инструмента.
+        :param snapshot: Объект ToolCall, содержащий текущий снимок вызова инструмента.
+        """
+        if delta.type == 'code_interpreter' and delta.code_interpreter: # Код проверяет, что изменение относится к code_interpreter.
+            if delta.code_interpreter.input: # Код проверяет, что есть ввод от code_interpreter.
+                print(delta.code_interpreter.input, end="", flush=True) # Код выводит ввод от code_interpreter.
+            if delta.code_interpreter.outputs:  # Код проверяет, что есть вывод от code_interpreter.
+                print("\n\noutput >", flush=True) # Код выводит заголовок для вывода.
+                for output in delta.code_interpreter.outputs: # Код перебирает все выводы code_interpreter.
+                    if output.type == 'logs': # Код проверяет, что вывод является логом.
+                        print(f"\n{output.logs}", flush=True) # Код выводит лог.
 ```
-## Внесённые изменения
-1. **Добавлены импорты:**
-   - Добавлен импорт `from src.logger.logger import logger` для логирования.
-   - Добавлен импорт `from typing import Any` для определения типа Any
-2. **Документация:**
-   - Добавлены reStructuredText комментарии к модулю, классу и методам.
-   - Добавлены подробные описания к каждому методу и их параметрам.
-3. **Улучшение кода:**
-   - Добавлены комментарии в коде для пояснения работы каждого блока кода.
-   - Изменены строковые литералы для соответствия стандарту (использование одинарных кавычек).
-
-## Оптимизированный код
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-Модуль для обработки событий ассистента OpenAI
-=========================================================================================
-
-Этот модуль определяет класс :class:`EventHandler`, который используется для обработки событий,
-генерируемых ассистентом OpenAI, таких как создание текста, дельты текста, вызовы инструментов и их дельты.
-Он использует библиотеку `openai` и `typing_extensions`.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from openai import OpenAI
-    from src.ai.openai.model.event_handler import EventHandler
-
-    client = OpenAI()
-    thread = client.beta.threads.create()
-    message = client.beta.threads.messages.create(
-        thread_id=thread.id,
-        role="user",
-        content="What is 1 + 1?",
-    )
-    run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id="asst_...",
-    )
-    stream = client.beta.threads.runs.retrieve_stream(
-        run_id=run.id,
-        thread_id=thread.id,
-        event_handler=EventHandler()
-    )
-    for event in stream:
-        ...
-"""
-from typing import Any
-
-from typing_extensions import override
-from openai import AssistantEventHandler, OpenAI
-from openai.types.beta.threads import Text, TextDelta
-from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
-
-from src.logger.logger import logger  # импорт логгера
-
-
-MODE = 'dev'
-
-
-class EventHandler(AssistantEventHandler):
-  """
-  Класс для обработки событий, генерируемых ассистентом OpenAI.
-
-  Этот класс переопределяет методы `on_text_created`, `on_text_delta`,
-  `on_tool_call_created` и `on_tool_call_delta` для обработки различных типов событий,
-  возникающих во время работы ассистента.
-  """
-
-  @override
-  def on_text_created(self, text: Text) -> None:
-    """
-    Обрабатывает событие создания нового текстового блока.
-
-    :param text: Объект Text, представляющий созданный текстовый блок.
-    :return: None
-    """
-    # Выводит в консоль начало нового текстового блока от ассистента.
-    print('\nassistant > ', end='', flush=True)
-
-  @override
-  def on_text_delta(self, delta: TextDelta, snapshot: Text) -> None:
-    """
-    Обрабатывает событие изменения текстового блока.
-
-    :param delta: Объект TextDelta, представляющий изменения в текстовом блоке.
-    :param snapshot: Объект Text, представляющий текущее состояние текстового блока.
-    :return: None
-    """
-    # Выводит в консоль дельту текстового блока от ассистента.
-    print(delta.value, end='', flush=True)
-
-  @override
-  def on_tool_call_created(self, tool_call: ToolCall) -> None:
-    """
-    Обрабатывает событие создания нового вызова инструмента.
-
-    :param tool_call: Объект ToolCall, представляющий созданный вызов инструмента.
-    :return: None
-    """
-    # Выводит в консоль тип вызванного инструмента.
-    print(f'\nassistant > {tool_call.type}\n', flush=True)
-
-  @override
-  def on_tool_call_delta(self, delta: ToolCallDelta, snapshot: ToolCall) -> None:
-    """
-    Обрабатывает событие изменения вызова инструмента.
-
-    :param delta: Объект ToolCallDelta, представляющий изменения в вызове инструмента.
-    :param snapshot: Объект ToolCall, представляющий текущее состояние вызова инструмента.
-    :return: None
-    """
-    # Проверяет, является ли дельта вызовом code_interpreter и существует ли ввод.
-    if delta.type == 'code_interpreter' and delta.code_interpreter:
-        if delta.code_interpreter.input:
-            # Выводит в консоль ввод code_interpreter.
-            print(delta.code_interpreter.input, end='', flush=True)
-        if delta.code_interpreter.outputs:
-            # Выводит в консоль начало вывода code_interpreter.
-            print('\n\noutput >', flush=True)
-            for output in delta.code_interpreter.outputs:
-                if output.type == 'logs':
-                   # Выводит в консоль логи code_interpreter.
-                   print(f'\n{output.logs}', flush=True)

@@ -1,339 +1,172 @@
-## Improved Code
+# Анализ кода модуля doc_writer_rst_he
 
-```python
-"""
-Модуль для создания документации reStructuredText (RST)
-=========================================================================================
+**Качество кода**
+9
+-  Плюсы
+    - Инструкция четко определяет требования к форматированию документации в reStructuredText (RST).
+    - Приведены примеры оформления для модуля, классов, функций/методов и обработки исключений.
+    - Детализированы требования к комментариям в коде и обработке ошибок.
+-  Минусы
+    - В инструкции нет явных указаний по импорту необходимых модулей, что может привести к ошибкам при интеграции в проект.
+    - Инструкции не включают примеры использования логгера.
+    - Не всегда ясно как обрабатывать `...`.
 
-Этот модуль содержит функции для преобразования текста в формат reStructuredText (RST),
-специально разработанные для документирования кода. Он обеспечивает структурированный
-и читаемый способ представления документации для различных элементов кода, таких как
-модули, классы, функции и методы.
+**Рекомендации по улучшению**
+1. Добавить явное указание на необходимость импорта модулей и использование логгера из `src.logger.logger`.
+2. Включить пример использования логгера при обработке ошибок.
+3. Добавить пояснение по обработке многоточия (`...`).
 
-Пример использования
---------------------
+**Оптимизированный код**
+```markdown
+# Анализ кода модуля doc_writer_rst_he
 
-Пример использования функций для создания документации:
+**Качество кода**
+9
+- Плюсы
+    - Инструкция четко определяет требования к форматированию документации в reStructuredText (RST).
+    - Приведены примеры оформления для модуля, классов, функций/методов и обработки исключений.
+    - Детализированы требования к комментариям в коде и обработке ошибок.
+- Минусы
+    - В инструкции нет явных указаний по импорту необходимых модулей, что может привести к ошибкам при интеграции в проект.
+    - Инструкции не включают примеры использования логгера.
+    - Не всегда ясно как обрабатывать `...`.
 
-.. code-block:: python
+**Рекомендации по улучшению**
+1. Добавить явное указание на необходимость импорта модулей и использование логгера из `src.logger.logger`.
+2. Включить пример использования логгера при обработке ошибок.
+3. Добавить пояснение по обработке многоточия (`...`).
 
-    from src.ai.prompts.developer.doc_writer_rst_he import format_module_doc, format_class_doc, format_function_doc
-
-    module_doc = format_module_doc(
-        "Модуль для работы с ассистентом программиста",
-        "Этот модуль содержит класс :class:`CodeAssistant`...",
-        "python",
-        [("role", "Роль ассистента"), ("lang", "Язык ассистента"), ("model", "Модели ИИ")]
-    )
-
-    class_doc = format_class_doc(
-        "Класс для работы с ассистентом программиста",
-        "Класс :class:`CodeAssistant` используется для работы с моделями ИИ...",
-        [("role", "Роль ассистента"), ("lang", "Язык ассистента"), ("model", "Модели ИИ")],
-        ["process_files", "analyze_code"]
-    )
-
-    function_doc = format_function_doc(
-        "Метод для обработки файлов",
-        "Этот метод предназначен для анализа и обработки файлов...",
-        [("files", "Список файлов для обработки"), ("options", "Дополнительные параметры")],
-        "Результат обработки в виде списка данных"
-    )
-
-    print(module_doc)
-    print(class_doc)
-    print(function_doc)
-"""
-from typing import List, Tuple
-
-
-def format_module_doc(
-    title: str,
-    description: str,
-    lang: str,
-    attributes: List[Tuple[str, str]] = None,
-    methods: List[str] = None,
-) -> str:
-    """
-    Форматирует документацию модуля в формате reStructuredText (RST).
-
-    :param title: Заголовок модуля.
-    :param description: Описание модуля.
-    :param lang: Язык модуля.
-    :param attributes: Список кортежей с именами и описаниями атрибутов.
-    :param methods: Список имен методов модуля.
-    :return: Строка документации в формате RST.
-    """
-    rst_doc = f"{title}\n"
-    rst_doc += f"={'=' * len(title)}\n\n"
-    rst_doc += f"{description}\n\n"
-    rst_doc += "Пример использования\n"
-    rst_doc += "--------------------\n\n"
-    rst_doc += f".. code-block:: {lang}\n\n    ...\n\n"
-
-    if attributes:
-        rst_doc += "Атрибуты:\n"
-        rst_doc += "----------\n"
-        for attr_name, attr_desc in attributes:
-            rst_doc += f"- `{attr_name}`: {attr_desc}\n"
-        rst_doc += "\n"
-
-    if methods:
-        rst_doc += "Методы:\n"
-        rst_doc += "-------\n"
-        for method_name in methods:
-            rst_doc += f"- `{method_name}`\n"
-        rst_doc += "\n"
-    return rst_doc
-
-
-def format_class_doc(
-    title: str,
-    description: str,
-    attributes: List[Tuple[str, str]] = None,
-    methods: List[str] = None,
-) -> str:
-    """
-    Форматирует документацию класса в формате reStructuredText (RST).
-
-    :param title: Заголовок класса.
-    :param description: Описание класса.
-    :param attributes: Список кортежей с именами и описаниями атрибутов.
-    :param methods: Список имен методов класса.
-    :return: Строка документации в формате RST.
-    """
-    rst_doc = f"{title}\n"
-    rst_doc += f"={'=' * len(title)}\n\n"
-    rst_doc += f"{description}\n\n"
-
-    if attributes:
-        rst_doc += "Атрибуты:\n"
-        rst_doc += "----------\n"
-        for attr_name, attr_desc in attributes:
-            rst_doc += f"- `{attr_name}`: {attr_desc}\n"
-        rst_doc += "\n"
-
-    if methods:
-        rst_doc += "Методы:\n"
-        rst_doc += "-------\n"
-        for method_name in methods:
-            rst_doc += f"- `{method_name}`\n"
-        rst_doc += "\n"
-
-    rst_doc += "Пример использования:\n"
-    rst_doc += "---------------------\n\n"
-    rst_doc += ".. code-block:: python\n\n    ...\n\n"
-
-    return rst_doc
-
-
-def format_function_doc(
-    title: str,
-    description: str,
-    params: List[Tuple[str, str]] = None,
-    return_value: str = None,
-) -> str:
-    """
-    Форматирует документацию функции или метода в формате reStructuredText (RST).
-
-    :param title: Заголовок функции или метода.
-    :param description: Описание функции или метода.
-    :param params: Список кортежей с именами и описаниями параметров.
-    :param return_value: Описание возвращаемого значения.
-    :return: Строка документации в формате RST.
-    """
-    rst_doc = f"{title}\n"
-    rst_doc += f"={'=' * len(title)}\n\n"
-    rst_doc += f"{description}\n\n"
-
-    if params:
-        rst_doc += "Параметры:\n"
-        rst_doc += "-----------\n"
-        for param_name, param_desc in params:
-            rst_doc += f"- `{param_name}`: {param_desc}\n"
-        rst_doc += "\n"
-
-    if return_value:
-        rst_doc += "Возвращаемое значение:\n"
-        rst_doc += "----------------------\n"
-        rst_doc += f"- {return_value}\n\n"
-    rst_doc += "Пример использования:\n"
-    rst_doc += "---------------------\n\n"
-    rst_doc += ".. code-block:: python\n\n    ...\n\n"
-
-    return rst_doc
+**Оптимизированный код**
 
 ```
+"prompt": """
+אתה צריך לתעד את הקוד בסגנון הבא. כל ההערות בקוד, כולל תיאורי המודול, מחלקות ופונקציות, צריכות להיות כתובות בפורמט reStructuredText (RST). לכל מודול, מחלקה ופונקציה, עקוב אחרי התבנית הבאה:
 
-## Changes Made
+1. **מודול**:
+    - תיאור המודול צריך להיכתב בכותרת, תוך ציון מטרתו.
+    - ספק דוגמאות לשימוש במודול, אם אפשר. דוגמאות קוד צריכות להיות בתוך בלוק `.. code-block:: python`.
+    - ציין את הפלטפורמות והסינופסיס של המודול.
+    - השתמש בכותרות עבור מאפיינים ושיטות של המודול כשנדרש.
 
-- Добавлены docstring в формате reStructuredText (RST) для функций `format_module_doc`, `format_class_doc` и `format_function_doc`.
-- Добавлено описание модуля.
-- Добавлены примеры использования функций в docstring модуля.
-- Добавлено описание параметров и возвращаемых значений для каждой функции.
-- Изменен порядок блоков в ответе в соответствии с инструкцией.
-
-## FULL Code
-
-```python
-"""
-Модуль для создания документации reStructuredText (RST)
+דוגמה לתיעוד מודול:
+```
+מודול לעבודה עם עוזר תוכנה
 =========================================================================================
 
-Этот модуль содержит функции для преобразования текста в формат reStructuredText (RST),
-специально разработанные для документирования кода. Он обеспечивает структурированный
-и читаемый способ представления документации для различных элементов кода, таких как
-модули, классы, функции и методы.
+מודול זה מכיל את המחלקה :class:`CodeAssistant`, המשמשת לעבודה עם דגמי AI שונים,
+כגון Google Gemini ו-OpenAI, לביצוע משימות עיבוד קוד.
 
-Пример использования
+שימוש לדוגמה
 --------------------
 
-Пример использования функций для создания документации:
+שימוש במחלקה `CodeAssistant`:
 
 .. code-block:: python
 
-    from src.ai.prompts.developer.doc_writer_rst_he import format_module_doc, format_class_doc, format_function_doc
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    assistant.process_files()
+```
 
-    module_doc = format_module_doc(
-        "Модуль для работы с ассистентом программиста",
-        "Этот модуль содержит класс :class:`CodeAssistant`...",
-        "python",
-        [("role", "Роль ассистента"), ("lang", "Язык ассистента"), ("model", "Модели ИИ")]
-    )
+2. **מחלקות**:
+    - כל מחלקה צריכה להיות מתועדת בהתאם למטרתה. כלל תיאור למחלקה, מאפיינים ושיטות שלה.
+    - בחלק המחלקות, ציין את כל השיטות, מטרתן ודוגמאות לשימוש.
+    - לכל שיטה, כלל תיאור של פרמטרים וערכים מוחזרים, ודוגמאות לשימוש.
 
-    class_doc = format_class_doc(
-        "Класс для работы с ассистентом программиста",
-        "Класс :class:`CodeAssistant` используется для работы с моделями ИИ...",
-        [("role", "Роль ассистента"), ("lang", "Язык ассистента"), ("model", "Модели ИИ")],
-        ["process_files", "analyze_code"]
-    )
+דוגמה לתיעוד מחלקה:
+```
+מחלקה לעבודה עם עוזר תוכנה
+=========================================================================================
 
-    function_doc = format_function_doc(
-        "Метод для обработки файлов",
-        "Этот метод предназначен для анализа и обработки файлов...",
-        [("files", "Список файлов для обработки"), ("options", "Дополнительные параметры")],
-        "Результат обработки в виде списка данных"
-    )
+המחלקה :class:`CodeAssistant` משמשת לעבודה עם דגמי AI שונים כמו Google Gemini,
+ומספקת שיטות לניתוח ויצירת תיעוד עבור קוד.
 
-    print(module_doc)
-    print(class_doc)
-    print(function_doc)
+מאפיינים:
+----------
+- `role`: תפקיד העוזר (למשל, 'code_checker').
+- `lang`: השפה בה העוזר יעבוד (למשל, 'ru').
+- `model`: רשימה של דגמי AI בשימוש (למשל, ['gemini']).
+
+שיטות:
+--------
+- `process_files`: שיטה לעיבוד קבצי קוד.
+
+שימוש לדוגמה:
+---------------------
+
+.. code-block:: python
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    assistant.process_files()
+```
+
+3. **פונקציות ושיטות**:
+    - תעד כל פונקציה או שיטה, תוך ציון פרמטרים וערכים מוחזרים.
+    - עבור כל פונקציה, ספק תיאור של מטרתה ודוגמאות לשימוש בפורמט `.. code-block:: python`.
+
+דוגמה לתיעוד שיטה:
+```
+שיטה לעיבוד קבצים
+=========================================================================================
+
+שיטה זו משמשת לניתוח ועיבוד קבצי קוד.
+
+פרמטרים:
+-----------
+- `files`: רשימה של קבצים לעיבוד.
+- `options`: פרמטרים נוספים לשימוש בקביעת עיבוד הקבצים.
+
+ערך מוחזר:
+----------------------
+- מחזיר את תוצאת העיבוד כרשימה של נתונים מעובדים.
+
+שימוש לדוגמה:
+---------------------
+
+.. code-block:: python
+
+    assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+    result = assistant.process_files(files=['file1.py', 'file2.py'], options={})
+```
+
+4. **הערות בקוד**:
+    - כל ההערות בקוד צריכות להיות כתובות בפורמט RST ולציין מה עושה חלק ספציפי בקוד.
+    - השאר הערות בבלוקים, ולא בשורות בודדות. השתמש בהערות כדי להסביר את הלוגיקה ולהסביר החלטות או פתרונות זמניים בקוד.
+    - דוגמה:
+    ```
+    # כאן מתבצע טיפול בשגיאות כדי להמשיך בביצוע אם הקובץ לא נמצא
+    try:
+        process_file(file)
+    except FileNotFoundError as ex:
+        handle_exception(ex)
+    ```
+
+5. **שגיאות (Exceptions)**:
+    - תעד את השגיאות במחלקות, שיטות ופונקציות.
+    - ציין אילו שגיאות עשויות להתעורר ובאילו נסיבות.
+
+דוגמה לתיעוד שגיאה:
+```
+שגיאת קובץ לא נמצא
+=========================================================================================
+
+שגיאה זו מתעוררת כאשר קובץ לא נמצא במהלך העיבוד.
+
+פרמטרים:
+-----------
+- `file`: נתיב הקובץ שלא נמצא.
+
+שימוש לדוגמה:
+---------------------
+
+.. code-block:: python
+
+    try:
+        open(file)
+    except FileNotFoundError as ex:
+        raise FileNotFoundError("הקובץ לא נמצא") from ex
+```
+
+עקוב אחרי ההוראות האלה לתיעוד הקוד שלך. כל ההערות צריכות להיות ברורות, אינפורמטיביות ולעמוד בסטנדרט RST.
 """
-from typing import List, Tuple
-
-
-def format_module_doc(
-    title: str,
-    description: str,
-    lang: str,
-    attributes: List[Tuple[str, str]] = None,
-    methods: List[str] = None,
-) -> str:
-    """
-    Форматирует документацию модуля в формате reStructuredText (RST).
-
-    :param title: Заголовок модуля.
-    :param description: Описание модуля.
-    :param lang: Язык модуля.
-    :param attributes: Список кортежей с именами и описаниями атрибутов.
-    :param methods: Список имен методов модуля.
-    :return: Строка документации в формате RST.
-    """
-    rst_doc = f"{title}\n"
-    rst_doc += f"={'=' * len(title)}\n\n"
-    rst_doc += f"{description}\n\n"
-    rst_doc += "Пример использования\n"
-    rst_doc += "--------------------\n\n"
-    rst_doc += f".. code-block:: {lang}\n\n    ...\n\n"
-
-    if attributes:
-        rst_doc += "Атрибуты:\n"
-        rst_doc += "----------\n"
-        for attr_name, attr_desc in attributes:
-            rst_doc += f"- `{attr_name}`: {attr_desc}\n"
-        rst_doc += "\n"
-
-    if methods:
-        rst_doc += "Методы:\n"
-        rst_doc += "-------\n"
-        for method_name in methods:
-            rst_doc += f"- `{method_name}`\n"
-        rst_doc += "\n"
-    return rst_doc
-
-
-def format_class_doc(
-    title: str,
-    description: str,
-    attributes: List[Tuple[str, str]] = None,
-    methods: List[str] = None,
-) -> str:
-    """
-    Форматирует документацию класса в формате reStructuredText (RST).
-
-    :param title: Заголовок класса.
-    :param description: Описание класса.
-    :param attributes: Список кортежей с именами и описаниями атрибутов.
-    :param methods: Список имен методов класса.
-    :return: Строка документации в формате RST.
-    """
-    rst_doc = f"{title}\n"
-    rst_doc += f"={'=' * len(title)}\n\n"
-    rst_doc += f"{description}\n\n"
-
-    if attributes:
-        rst_doc += "Атрибуты:\n"
-        rst_doc += "----------\n"
-        for attr_name, attr_desc in attributes:
-            rst_doc += f"- `{attr_name}`: {attr_desc}\n"
-        rst_doc += "\n"
-
-    if methods:
-        rst_doc += "Методы:\n"
-        rst_doc += "-------\n"
-        for method_name in methods:
-            rst_doc += f"- `{method_name}`\n"
-        rst_doc += "\n"
-
-    rst_doc += "Пример использования:\n"
-    rst_doc += "---------------------\n\n"
-    rst_doc += ".. code-block:: python\n\n    ...\n\n"
-
-    return rst_doc
-
-
-def format_function_doc(
-    title: str,
-    description: str,
-    params: List[Tuple[str, str]] = None,
-    return_value: str = None,
-) -> str:
-    """
-    Форматирует документацию функции или метода в формате reStructuredText (RST).
-
-    :param title: Заголовок функции или метода.
-    :param description: Описание функции или метода.
-    :param params: Список кортежей с именами и описаниями параметров.
-    :param return_value: Описание возвращаемого значения.
-    :return: Строка документации в формате RST.
-    """
-    rst_doc = f"{title}\n"
-    rst_doc += f"={'=' * len(title)}\n\n"
-    rst_doc += f"{description}\n\n"
-
-    if params:
-        rst_doc += "Параметры:\n"
-        rst_doc += "-----------\n"
-        for param_name, param_desc in params:
-            rst_doc += f"- `{param_name}`: {param_desc}\n"
-        rst_doc += "\n"
-
-    if return_value:
-        rst_doc += "Возвращаемое значение:\n"
-        rst_doc += "----------------------\n"
-        rst_doc += f"- {return_value}\n\n"
-    rst_doc += "Пример использования:\n"
-    rst_doc += "---------------------\n\n"
-    rst_doc += ".. code-block:: python\n\n    ...\n\n"
-
-    return rst_doc
+```
+```

@@ -1,84 +1,95 @@
-# Улучшенный код
+# Анализ кода модуля tinytroupe.control
+
+**Качество кода**
+8
+- Плюсы
+    - Код хорошо структурирован и разделен на логические блоки.
+    - Используется кэширование для оптимизации повторных выполнений.
+    - Реализована поддержка транзакций.
+    - Добавлены механизмы для отслеживания выполнения и состояния симуляции.
+    - Присутствует подробное логирование.
+- Минусы
+    -  Используется `json.load` вместо `j_loads` или `j_loads_ns`.
+    -  В некоторых местах `try-except` используются избыточно.
+    -  Не все функции и методы имеют docstring в формате RST.
+    -  Некоторые переменные и функции не соответствуют стандартам именования.
+
+**Рекомендации по улучшению**
+
+1.  **Использование `j_loads`**: Заменить `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+2.  **Обработка ошибок**: Использовать `logger.error` для обработки ошибок вместо общих `try-except` блоков.
+3.  **Документация**: Добавить docstring в формате RST для всех функций, методов и классов.
+4.  **Импорты**: Добавить недостающие импорты.
+5.  **Форматирование**: Привести код в соответствие со стандартом PEP8, включая пробелы и отступы.
+6.  **Улучшение логирования**: Добавить более информативные сообщения в логи.
+7.  **Избегать избыточных комментариев**: Убрать комментарии которые не несут смысловой нагрузки.
+8.  **Транзакции**:  Использовать явные проверки для статуса транзакции и вызывать исключение в случае несоответствия.
+9.  **Именование**: Привести имена переменных и функций к общему стилю.
+10. **Избегать ненужных комментариев**: Убрать комментарии, которые не несут смысловой нагрузки и не поясняют код.
+
+**Оптимизированный код**
 ```python
 """
 Модуль для управления симуляциями.
-====================================
+=========================================================================================
 
-Этот модуль предоставляет классы и функции для управления симуляциями,
-включая создание, запуск, остановку, сохранение и загрузку состояния симуляций.
-Он также включает механизмы для кэширования и выполнения транзакций.
-
-Основные компоненты:
-
--   :class:`Simulation`: Класс для управления жизненным циклом симуляции.
--   :class:`Transaction`: Класс для управления транзакциями в симуляции.
--   :func:`transactional`: Декоратор для функций, которые должны выполняться в рамках транзакции.
--   Глобальные функции для управления текущей симуляцией.
+Этот модуль предоставляет механизмы для управления симуляциями, включая
+запуск, остановку, кэширование и отслеживание транзакций.
+Он также содержит классы для представления симуляций и транзакций.
 
 Пример использования
 --------------------
 
+Пример использования класса `Simulation`:
+
 .. code-block:: python
 
-    from tinytroupe.control import begin, end, transactional, current_simulation
-    from tinytroupe.agent import TinyPerson
-    
-    begin()
-    
-    @transactional
-    def change_name(person, new_name):
-        person.name = new_name
-
-    person = TinyPerson(name="Alice")
-    change_name(person, "Bob")
-    
-    print(f"Person's new name: {person.name}")
-    
-    end()
-
+    simulation = Simulation(id='test_sim')
+    simulation.begin()
+    # ... действия симуляции ...
+    simulation.end()
 """
-import json
 import os
 import tempfile
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
+from src.logger.logger import logger
 import tinytroupe
 import tinytroupe.utils as utils
-from src.logger.logger import logger  # подключаем логгер
-
-_current_simulations: Dict[str, "Simulation"] = {"default": None}
-_current_simulation_id: str = None
-
+from src.utils.jjson import j_loads
 
 class Simulation:
     """
-    Класс для управления симуляцией.
+    Класс, представляющий симуляцию.
 
-    :ivar str id: Идентификатор симуляции.
-    :ivar list agents: Список агентов в симуляции.
-    :ivar dict name_to_agent: Словарь, отображающий имя агента в экземпляр агента.
-    :ivar list environments: Список окружений в симуляции.
-    :ivar list factories: Список фабрик в симуляции.
-    :ivar dict name_to_factory: Словарь, отображающий имя фабрики в экземпляр фабрики.
-    :ivar dict name_to_environment: Словарь, отображающий имя окружения в экземпляр окружения.
-    :ivar str status: Статус симуляции ("stopped" или "started").
-    :ivar str cache_path: Путь к файлу кэша.
-    :ivar bool auto_checkpoint: Флаг автоматического сохранения после каждой транзакции.
-    :ivar bool has_unsaved_cache_changes: Флаг наличия несохраненных изменений кэша.
-    :ivar bool _under_transaction: Флаг, указывающий, находится ли симуляция в транзакции.
-    :ivar list cached_trace: Список состояний симуляции из кэша.
-    :ivar list execution_trace: Список состояний симуляции во время выполнения.
+    Атрибуты:
+        STATUS_STOPPED (str): Статус остановленной симуляции.
+        STATUS_STARTED (str): Статус запущенной симуляции.
+        id (str): Идентификатор симуляции.
+        agents (list): Список агентов в симуляции.
+        name_to_agent (dict): Словарь для поиска агентов по имени.
+        environments (list): Список окружений в симуляции.
+        factories (list): Список фабрик в симуляции.
+        name_to_factory (dict): Словарь для поиска фабрик по имени.
+        name_to_environment (dict): Словарь для поиска окружений по имени.
+        status (str): Текущий статус симуляции.
+        cache_path (str): Путь к файлу кэша.
+        auto_checkpoint (bool): Флаг автоматического сохранения.
+        has_unsaved_cache_changes (bool): Флаг наличия несохраненных изменений кэша.
+        _under_transaction (bool): Флаг нахождения в транзакции.
+        cached_trace (list): Список состояний симуляции из кэша.
+        execution_trace (list): Список текущих состояний выполнения симуляции.
     """
 
-    STATUS_STOPPED = "stopped"
-    STATUS_STARTED = "started"
+    STATUS_STOPPED = 'stopped'
+    STATUS_STARTED = 'started'
 
-    def __init__(self, id="default", cached_trace: List[Tuple] = None):
+    def __init__(self, id: str = 'default', cached_trace: Optional[List[Tuple]] = None):
         """
-        Инициализирует объект Simulation.
+        Инициализирует объект симуляции.
 
-        :param str id: Идентификатор симуляции.
-        :param list cached_trace: Начальный кэш трассировки.
+        :param id: Идентификатор симуляции, по умолчанию 'default'.
+        :param cached_trace: Список кэшированных состояний, если есть.
         """
         self.id = id
 
@@ -93,8 +104,7 @@ class Simulation:
         self.name_to_environment: Dict[str, Any] = {}  # {environment_name: environment, ...}
         self.status = Simulation.STATUS_STOPPED
 
-        self.cache_path = f"./tinytroupe-cache-{id}.json"  # default cache path
-
+        self.cache_path = f'./tinytroupe-cache-{id}.json'  # default cache path
         # should we always automatically checkpoint at the every transaction?
         self.auto_checkpoint = False
 
@@ -123,13 +133,12 @@ class Simulation:
         # event_output is the output of the event, if any, and state is the actual complete state that resulted.
         self.execution_trace: List[Tuple] = []
 
-    def begin(self, cache_path: str = None, auto_checkpoint: bool = False):
+    def begin(self, cache_path: Optional[str] = None, auto_checkpoint: bool = False):
         """
-        Запускает контролируемую симуляцию.
+        Начинает управляемую симуляцию.
 
-        :param str cache_path: Путь к файлу кэша. Если не указан, используется путь по умолчанию.
-        :param bool auto_checkpoint: Флаг автоматического сохранения в конце каждой транзакции.
-        :raises ValueError: Если симуляция уже запущена.
+        :param cache_path: Путь к файлу кэша, если нужно использовать нестандартный путь.
+        :param auto_checkpoint: Флаг автоматического сохранения состояния.
         """
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
@@ -139,7 +148,7 @@ class Simulation:
         if self.status == Simulation.STATUS_STOPPED:
             self.status = Simulation.STATUS_STARTED
         else:
-            raise ValueError("Simulation is already started.")
+            raise ValueError('Симуляция уже запущена.')
 
         if cache_path is not None:
             self.cache_path = cache_path
@@ -161,15 +170,13 @@ class Simulation:
 
     def end(self):
         """
-        Останавливает контролируемую симуляцию.
-
-        :raises ValueError: Если симуляция уже остановлена.
+        Завершает управляемую симуляцию.
         """
         if self.status == Simulation.STATUS_STARTED:
             self.status = Simulation.STATUS_STOPPED
             self.checkpoint()
         else:
-            raise ValueError("Simulation is already stopped.")
+            raise ValueError('Симуляция уже остановлена.')
 
     def checkpoint(self):
         """
@@ -179,43 +186,41 @@ class Simulation:
         if self.has_unsaved_cache_changes:
             self._save_cache_file(self.cache_path)
         else:
-            logger.debug("No unsaved cache changes to save to file.")
+            logger.debug('Нет несохраненных изменений кэша для сохранения в файл.')
 
-    def add_agent(self, agent):
+    def add_agent(self, agent: Any):
         """
         Добавляет агента в симуляцию.
 
-        :param agent: Экземпляр агента для добавления.
-        :raises ValueError: Если имя агента уже существует.
+        :param agent: Агент для добавления.
         """
         if agent.name in self.name_to_agent:
-            raise ValueError(f"Agent names must be unique, but '{agent.name}' is already defined.")
+            raise ValueError(f'Имена агентов должны быть уникальными, но \'{agent.name}\' уже определено.')
         agent.simulation_id = self.id
         self.agents.append(agent)
         self.name_to_agent[agent.name] = agent
 
-    def add_environment(self, environment):
+    def add_environment(self, environment: Any):
         """
         Добавляет окружение в симуляцию.
 
-        :param environment: Экземпляр окружения для добавления.
-        :raises ValueError: Если имя окружения уже существует.
+        :param environment: Окружение для добавления.
         """
         if environment.name in self.name_to_environment:
-            raise ValueError(f"Environment names must be unique, but '{environment.name}' is already defined.")
+            raise ValueError(
+                f'Имена окружений должны быть уникальными, но \'{environment.name}\' уже определено.')
         environment.simulation_id = self.id
         self.environments.append(environment)
         self.name_to_environment[environment.name] = environment
 
-    def add_factory(self, factory):
+    def add_factory(self, factory: Any):
         """
         Добавляет фабрику в симуляцию.
 
-        :param factory: Экземпляр фабрики для добавления.
-        :raises ValueError: Если имя фабрики уже существует.
+        :param factory: Фабрика для добавления.
         """
         if factory.name in self.name_to_factory:
-            raise ValueError(f"Factory names must be unique, but '{factory.name}' is already defined.")
+            raise ValueError(f'Имена фабрик должны быть уникальными, но \'{factory.name}\' уже определено.')
         factory.simulation_id = self.id
         self.factories.append(factory)
         self.name_to_factory[factory.name] = factory
@@ -225,41 +230,40 @@ class Simulation:
     ###################################################################################################
     def _execution_trace_position(self) -> int:
         """
-        Возвращает текущую позицию в трассе выполнения.
+        Возвращает текущую позицию в трассе выполнения, или -1, если трасса выполнения пуста.
 
-        :return: Индекс текущей позиции или -1, если трасса пуста.
+        :return: Текущая позиция в трассе выполнения.
         """
         return len(self.execution_trace) - 1
 
-    def _function_call_hash(self, function_name, *args, **kwargs) -> str:
+    def _function_call_hash(self, function_name: str, *args: Any, **kwargs: Any) -> str:
         """
         Вычисляет хэш вызова функции.
 
         :param function_name: Имя функции.
-        :param args: Аргументы функции.
-        :param kwargs: Именованные аргументы функции.
-        :return: Хэш вызова функции в виде строки.
+        :param args: Позиционные аргументы.
+        :param kwargs: Именованные аргументы.
+        :return: Хэш вызова функции.
         """
         event = str((function_name, args, kwargs))
         return event
 
     def _skip_execution_with_cache(self):
         """
-        Пропускает текущее выполнение, если есть кэшированное состояние.
-        
-        :raises AssertionError: Если нет кэшированного состояния в текущей позиции.
+        Пропускает текущее выполнение, предполагая, что есть кэшированное состояние на той же позиции.
         """
-        assert len(self.cached_trace) > self._execution_trace_position() + 1, "There's no cached state at the current execution position."
+        assert len(self.cached_trace) > self._execution_trace_position() + 1, \
+            'Нет кэшированного состояния на текущей позиции выполнения.'
 
         self.execution_trace.append(self.cached_trace[self._execution_trace_position() + 1])
 
-    def _is_transaction_event_cached(self, event_hash) -> bool:
+    def _is_transaction_event_cached(self, event_hash: str) -> bool:
         """
-        Проверяет, соответствует ли хэш события кэшированному хэшу.
+        Проверяет, соответствует ли хэш события кэшированному, если таковой имеется.
+        Если соответствующего кэшированного состояния нет, возвращает True.
 
         :param event_hash: Хэш события.
-        :return: True, если хэш события совпадает с кэшированным или если нет кэша, иначе False.
-        :raises ValueError: Если позиция выполнения недопустима.
+        :return: True, если хэш соответствует кэшированному или кэша нет, иначе False.
         """
         # there's cache that could be used
         if len(self.cached_trace) > self._execution_trace_position() + 1:
@@ -279,24 +283,30 @@ class Simulation:
                 return event_hash_match and prev_node_match
 
             else:
-                raise ValueError("Execution trace position is invalid, must be >= -1, but is ", self._execution_trace_position())
+                raise ValueError('Позиция трассы выполнения недопустима, должна быть >= -1, но равна ',
+                                 self._execution_trace_position())
 
         else:  # no cache to use
             return False
 
     def _drop_cached_trace_suffix(self):
         """
-        Удаляет суффикс кэшированной трассы, начиная с текущей позиции выполнения.
+        Удаляет суффикс кэшированной трассы, начиная с текущей позиции трассы выполнения. Это эффективно
+        обновляет кэш до текущего состояния выполнения и начинает построение нового кэша оттуда.
         """
-        self.cached_trace = self.cached_trace[: self._execution_trace_position() + 1]
+        self.cached_trace = self.cached_trace[:self._execution_trace_position() + 1]
 
-    def _add_to_execution_trace(self, state: dict, event_hash: str, event_output):
+    def _add_to_execution_trace(self, state: dict, event_hash: str, event_output: Any):
         """
-        Добавляет состояние в трассу выполнения.
+        Добавляет состояние в список execution_trace и вычисляет соответствующий хэш.
+        Вычисленный хэш сравнивается с хэшем кэшированной трассы на той же позиции,
+        и если они не совпадают, выполнение прерывается. Аналогично, event_hash сравнивается
+        с хэшем события в кэшированной трассе на той же позиции, и если они не совпадают, выполнение
+        прерывается.
 
-        :param state: Состояние симуляции.
+        :param state: Состояние для добавления.
         :param event_hash: Хэш события.
-        :param event_output: Выходные данные события.
+        :param event_output: Выход события.
         """
         # Compute the hash of the previous execution pair, if any
         previous_hash = None
@@ -304,13 +314,13 @@ class Simulation:
         # Create a tuple of (hash, state) and append it to the execution_trace list
         self.execution_trace.append((previous_hash, event_hash, event_output, state))
 
-    def _add_to_cache_trace(self, state: dict, event_hash: str, event_output):
+    def _add_to_cache_trace(self, state: dict, event_hash: str, event_output: Any):
         """
-        Добавляет состояние в кэшированную трассу.
+        Добавляет состояние в список cached_trace и вычисляет соответствующий хэш.
 
-        :param state: Состояние симуляции.
+        :param state: Состояние для добавления.
         :param event_hash: Хэш события.
-        :param event_output: Выходные данные события.
+        :param event_output: Выход события.
         """
         # Compute the hash of the previous cached pair, if any
         previous_hash = None
@@ -324,40 +334,39 @@ class Simulation:
 
     def _load_cache_file(self, cache_path: str):
         """
-        Загружает кэш из файла.
+        Загружает кэш из файла по указанному пути.
 
         :param cache_path: Путь к файлу кэша.
         """
         try:
-            # self.cached_trace = json.load(open(cache_path, "r"))
-            from src.utils.jjson import j_loads
-
-            self.cached_trace = j_loads(open(cache_path, "r"))
+            with open(cache_path, 'r') as f:
+                self.cached_trace = j_loads(f)
         except FileNotFoundError:
-            logger.info(f"Cache file not found on path: {cache_path}.")
+            logger.info(f'Файл кэша не найден по пути: {cache_path}.')
             self.cached_trace = []
 
     def _save_cache_file(self, cache_path: str):
         """
-        Сохраняет кэш в файл.
+        Сохраняет кэш в файл по указанному пути. Всегда перезаписывает.
 
-        :param cache_path: Путь к файлу кэша.
+        :param cache_path: Путь к файлу для сохранения кэша.
         """
         try:
             # Create a temporary file
             with tempfile.NamedTemporaryFile('w', delete=False) as temp:
+                import json
                 json.dump(self.cached_trace, temp, indent=4)
 
             # Replace the original file with the temporary file
             os.replace(temp.name, cache_path)
         except Exception as e:
-            logger.error(f"An error occurred: {e}", exc_info=True)
-
+            logger.error(f'Произошла ошибка при сохранении файла кэша: {e}')
         self.has_unsaved_cache_changes = False
 
     ###################################################################################################
     # Transactional control
     ###################################################################################################
+
     def begin_transaction(self):
         """
         Начинает транзакцию.
@@ -373,15 +382,15 @@ class Simulation:
 
     def is_under_transaction(self) -> bool:
         """
-        Проверяет, находится ли симуляция в транзакции.
+        Проверяет, находится ли агент в транзакции.
 
-        :return: True, если симуляция в транзакции, иначе False.
+        :return: True, если агент находится в транзакции, иначе False.
         """
         return self._under_transaction
 
     def _clear_communications_buffers(self):
         """
-        Очищает буферы обмена сообщениями всех агентов и окружений.
+        Очищает буферы сообщений всех агентов и окружений.
         """
         for agent in self.agents:
             agent.clear_communications_buffer()
@@ -392,69 +401,70 @@ class Simulation:
     ###################################################################################################
     # Simulation state handling
     ###################################################################################################
-    def _encode_simulation_state(self) -> dict:
+
+    def _encode_simulation_state(self) -> Dict:
         """
-        Кодирует текущее состояние симуляции.
+        Кодирует текущее состояние симуляции, включая агентов, окружения и другую
+        соответствующую информацию.
 
         :return: Словарь, представляющий состояние симуляции.
         """
         state = {}
 
         # Encode agents
-        state["agents"] = []
+        state['agents'] = []
         for agent in self.agents:
-            state["agents"].append(agent.encode_complete_state())
+            state['agents'].append(agent.encode_complete_state())
 
         # Encode environments
-        state["environments"] = []
+        state['environments'] = []
         for environment in self.environments:
-            state["environments"].append(environment.encode_complete_state())
+            state['environments'].append(environment.encode_complete_state())
 
         # Encode factories
-        state["factories"] = []
+        state['factories'] = []
         for factory in self.factories:
-            state["factories"].append(factory.encode_complete_state())
+            state['factories'].append(factory.encode_complete_state())
 
         return state
 
-    def _decode_simulation_state(self, state: dict):
+    def _decode_simulation_state(self, state: Dict):
         """
-        Декодирует состояние симуляции.
+        Декодирует заданное состояние симуляции, включая агентов, окружения и другую
+        соответствующую информацию.
 
-        :param state: Словарь, представляющий состояние симуляции.
-        :raises ValueError: Если окружение или агент отсутствуют в симуляции.
+        :param state: Состояние для декодирования.
         """
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
         from tinytroupe.environment import TinyWorld
 
-        logger.debug(f"Decoding simulation state: {state['factories']}")
-        logger.debug(f"Registered factories: {self.name_to_factory}")
-        logger.debug(f"Registered agents: {self.name_to_agent}")
-        logger.debug(f"Registered environments: {self.name_to_environment}")
+        logger.debug(f'Декодирование состояния симуляции: {state["factories"]}')
+        logger.debug(f'Зарегистрированные фабрики: {self.name_to_factory}')
+        logger.debug(f'Зарегистрированные агенты: {self.name_to_agent}')
+        logger.debug(f'Зарегистрированные окружения: {self.name_to_environment}')
 
         # Decode factories
-        for factory_state in state["factories"]:
-            factory = self.name_to_factory[factory_state["name"]]
+        for factory_state in state['factories']:
+            factory = self.name_to_factory[factory_state['name']]
             factory.decode_complete_state(factory_state)
 
         # Decode environments
-        ###self.environments = []
-        for environment_state in state["environments"]:
+        for environment_state in state['environments']:
             try:
-                environment = self.name_to_environment[environment_state["name"]]
+                environment = self.name_to_environment[environment_state['name']]
                 environment.decode_complete_state(environment_state)
                 if TinyWorld.communication_display:
                     environment.pop_and_display_latest_communications()
 
             except Exception as e:
-                raise ValueError(f"Environment {environment_state['name']} is not in the simulation, thus cannot be decoded there.") from e
+                raise ValueError(
+                    f'Окружение {environment_state["name"]} отсутствует в симуляции, поэтому не может быть декодировано.') from e
 
         # Decode agents (if they were not already decoded by the environment)
-        ####self.agents = []
-        for agent_state in state["agents"]:
+        for agent_state in state['agents']:
             try:
-                agent = self.name_to_agent[agent_state["name"]]
+                agent = self.name_to_agent[agent_state['name']]
                 agent.decode_complete_state(agent_state)
 
                 # The agent has not yet been decoded because it is not in any environment. So, decode it.
@@ -462,31 +472,33 @@ class Simulation:
                     if TinyPerson.communication_display:
                         agent.pop_and_display_latest_communications()
             except Exception as e:
-                raise ValueError(f"Agent {agent_state['name']} is not in the simulation, thus cannot be decoded there.") from e
+                raise ValueError(
+                    f'Агент {agent_state["name"]} отсутствует в симуляции, поэтому не может быть декодирован.') from e
 
 
 class Transaction:
     """
-    Класс для управления транзакциями.
+    Класс, представляющий транзакцию.
 
-    :ivar obj_under_transaction: Объект, участвующий в транзакции.
-    :ivar Simulation simulation: Симуляция, в которой выполняется транзакция.
-    :ivar str function_name: Имя функции, выполняемой в транзакции.
-    :ivar function: Функция, выполняемая в транзакции.
-    :ivar tuple args: Позиционные аргументы функции.
-    :ivar dict kwargs: Именованные аргументы функции.
+    Атрибуты:
+        obj_under_transaction (Any): Объект, над которым выполняется транзакция.
+        simulation (Simulation): Объект симуляции.
+        function_name (str): Имя функции, выполняемой в транзакции.
+        function (callable): Функция, выполняемая в транзакции.
+        args (tuple): Позиционные аргументы функции.
+        kwargs (dict): Именованные аргументы функции.
     """
 
-    def __init__(self, obj_under_transaction, simulation, function, *args, **kwargs):
+    def __init__(self, obj_under_transaction: Any, simulation: Optional[Simulation], function: callable, *args: Any,
+                 **kwargs: Any):
         """
-        Инициализирует объект Transaction.
+        Инициализирует объект транзакции.
 
-        :param obj_under_transaction: Объект, участвующий в транзакции.
-        :param Simulation simulation: Симуляция, в которой выполняется транзакция.
+        :param obj_under_transaction: Объект, над которым выполняется транзакция.
+        :param simulation: Объект симуляции.
         :param function: Функция, выполняемая в транзакции.
         :param args: Позиционные аргументы функции.
         :param kwargs: Именованные аргументы функции.
-        :raises ValueError: Если объект уже захвачен другой симуляцией или является недопустимым типом.
         """
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
@@ -506,15 +518,17 @@ class Transaction:
         if simulation is not None:
             if hasattr(obj_under_transaction, 'simulation_id') and obj_under_transaction.simulation_id is not None:
                 if obj_under_transaction.simulation_id != simulation.id:
-                    raise ValueError(f"Object {obj_under_transaction} is already captured by a different simulation (id={obj_under_transaction.simulation_id}), \\\
-                                    and cannot be captured by simulation id={simulation.id}.")
+                    raise ValueError(
+                        f'Объект {obj_under_transaction} уже захвачен другой симуляцией (id={obj_under_transaction.simulation_id}), \\\
+                                    и не может быть захвачен симуляцией id={simulation.id}.')
 
-                logger.debug(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Object {obj_under_transaction} is already captured by simulation {simulation.id}.")
+                logger.debug(
+                    f'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Object {obj_under_transaction} is already captured by simulation {simulation.id}.')
             else:
                 # if is a TinyPerson, add the agent to the simulation
                 if isinstance(obj_under_transaction, TinyPerson):
                     simulation.add_agent(obj_under_transaction)
-                    logger.debug(f">>>>>>>>>>>>>>>>>>>>>>> Added agent {obj_under_transaction} to simulation {simulation.id}.")
+                    logger.debug(f'>>>>>>>>>>>>>>>>>>>>>> Added agent {obj_under_transaction} to simulation {simulation.id}.')
 
                 # if is a TinyWorld, add the environment to the simulation
                 elif isinstance(obj_under_transaction, TinyWorld):
@@ -523,17 +537,17 @@ class Transaction:
                 # if is a TinyFactory, add the factory to the simulation
                 elif isinstance(obj_under_transaction, TinyFactory):
                     simulation.add_factory(obj_under_transaction)
-                    logger.debug(f">>>>>>>>>>>>>>>>>>>>>>> Added factory {obj_under_transaction} to simulation {simulation.id}.")
+                    logger.debug(f'>>>>>>>>>>>>>>>>>>>>>> Added factory {obj_under_transaction} to simulation {simulation.id}.')
 
                 else:
-                    raise ValueError(f"Object {obj_under_transaction} (type = {type(obj_under_transaction)}) is not a TinyPerson or TinyWorld instance, and cannot be captured by the simulation.")
+                    raise ValueError(
+                        f'Объект {obj_under_transaction} (type = {type(obj_under_transaction)}) не является экземпляром TinyPerson или TinyWorld, и не может быть захвачен симуляцией.')
 
-    def execute(self):
+    def execute(self) -> Any:
         """
         Выполняет транзакцию.
 
         :return: Результат выполнения функции.
-        :raises ValueError: Если статус симуляции недействителен.
         """
 
         output = None
@@ -550,7 +564,8 @@ class Transaction:
             # Check if the event hash is in the cache
             if self.simulation._is_transaction_event_cached(event_hash):
                 # Restore the full state and return the cached output
-                logger.info(f"Skipping execution of {self.function_name} with args {self.args} and kwargs {self.kwargs} because it is already cached.")
+                logger.info(
+                    f'Пропуск выполнения {self.function_name} с аргументами {self.args} и kwargs {self.kwargs}, так как оно уже кэшировано.')
 
                 self.simulation._skip_execution_with_cache()
                 state = self.simulation.cached_trace[self.simulation._execution_trace_position()][3]  # state
@@ -586,7 +601,7 @@ class Transaction:
                 else:  # reentrant transactions are just run, but not cached
                     output = self.function(*self.args, **self.kwargs)
         else:
-            raise ValueError(f"Simulation status is invalid at this point: {self.simulation.status}")
+            raise ValueError(f'Недопустимый статус симуляции на данный момент: {self.simulation.status}')
 
         # Checkpoint if needed
         if self.simulation is not None and self.simulation.auto_checkpoint:
@@ -594,13 +609,12 @@ class Transaction:
 
         return output
 
-    def _encode_function_output(self, output) -> dict:
+    def _encode_function_output(self, output: Any) -> Optional[Dict]:
         """
-        Кодирует результат выполнения функции.
+        Кодирует выходные данные функции.
 
-        :param output: Результат выполнения функции.
-        :return: Кодированный результат.
-        :raises ValueError: Если тип вывода не поддерживается.
+        :param output: Выходные данные функции.
+        :return: Словарь с закодированными данными.
         """
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
@@ -611,27 +625,26 @@ class Transaction:
         if output is None:
             return None
         elif isinstance(output, TinyPerson):
-            return {"type": "TinyPersonRef", "name": output.name}
+            return {'type': 'TinyPersonRef', 'name': output.name}
         # if it is a TinyWorld, encode it
         elif isinstance(output, TinyWorld):
-            return {"type": "TinyWorldRef", "name": output.name}
+            return {'type': 'TinyWorldRef', 'name': output.name}
         # if it is a TinyFactory, encode it
         elif isinstance(output, TinyFactory):
-            return {"type": "TinyFactoryRef", "name": output.name}
+            return {'type': 'TinyFactoryRef', 'name': output.name}
         # if it is one of the types supported by JSON, encode it as is
         elif isinstance(output, (int, float, str, bool, list, dict, tuple)):
-            return {"type": "JSON", "value": output}
+            return {'type': 'JSON', 'value': output}
         # otherwise, raise an exception
         else:
-            raise ValueError(f"Unsupported output type: {type(output)}")
+            raise ValueError(f'Неподдерживаемый тип выходных данных: {type(output)}')
 
-    def _decode_function_output(self, encoded_output: dict):
+    def _decode_function_output(self, encoded_output: Optional[Dict]) -> Any:
         """
-        Декодирует результат выполнения функции.
+        Декодирует закодированные выходные данные функции.
 
-        :param encoded_output: Кодированный результат.
-        :return: Декодированный результат.
-        :raises ValueError: Если тип вывода не поддерживается.
+        :param encoded_output: Словарь с закодированными данными.
+        :return: Декодированные выходные данные функции.
         """
         # local import to avoid circular dependencies
         from tinytroupe.agent import TinyPerson
@@ -640,31 +653,33 @@ class Transaction:
 
         if encoded_output is None:
             return None
-        elif encoded_output["type"] == "TinyPersonRef":
-            return TinyPerson.get_agent_by_name(encoded_output["name"])
-        elif encoded_output["type"] == "TinyWorldRef":
-            return TinyWorld.get_environment_by_name(encoded_output["name"])
-        elif encoded_output["type"] == "TinyFactoryRef":
-            return TinyFactory.get_factory_by_name(encoded_output["name"])
-        elif encoded_output["type"] == "JSON":
-            return encoded_output["value"]
+        elif encoded_output['type'] == 'TinyPersonRef':
+            return TinyPerson.get_agent_by_name(encoded_output['name'])
+        elif encoded_output['type'] == 'TinyWorldRef':
+            return TinyWorld.get_environment_by_name(encoded_output['name'])
+        elif encoded_output['type'] == 'TinyFactoryRef':
+            return TinyFactory.get_factory_by_name(encoded_output['name'])
+        elif encoded_output['type'] == 'JSON':
+            return encoded_output['value']
         else:
-            raise ValueError(f"Unsupported output type: {encoded_output['type']}")
+            raise ValueError(f'Неподдерживаемый тип выходных данных: {encoded_output["type"]}')
 
 
-def transactional(func):
+def transactional(func: callable) -> callable:
     """
-    Декоратор, который делает функцию транзакционной.
+    Декоратор, делающий функцию транзакционной для симуляции.
 
     :param func: Функция для декорирования.
-    :return: Функция-обертка.
+    :return: Декорированная функция.
     """
-    def wrapper(*args, **kwargs):
+
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         obj_under_transaction = args[0]
         simulation = current_simulation()
         obj_sim_id = obj_under_transaction.simulation_id if hasattr(obj_under_transaction, 'simulation_id') else None
 
-        logger.debug(f"-----------------------------------------> Transaction: {func.__name__} with args {args[1:]} and kwargs {kwargs} under simulation {obj_sim_id}.")
+        logger.debug(
+            f'-----------------------------------------> Transaction: {func.__name__} с аргументами {args[1:]} и kwargs {kwargs} под симуляцией {obj_sim_id}.')
 
         transaction = Transaction(obj_under_transaction, simulation, func, *args, **kwargs)
         result = transaction.execute()
@@ -675,21 +690,21 @@ def transactional(func):
 
 class SkipTransaction(Exception):
     """
-    Исключение для пропуска транзакции.
+    Исключение, сигнализирующее о пропуске транзакции.
     """
     pass
 
 
 class CacheOutOfSync(Exception):
     """
-    Исключение, которое возникает при рассинхронизации кэша и свежевыполненных элементов.
+    Исключение, возникающее, когда кэшированные и свежевыполненные элементы не синхронизированы.
     """
     pass
 
 
 class ExecutionCached(Exception):
     """
-    Исключение, которое возникает, когда предложенное выполнение уже кэшировано.
+    Исключение, возникающее, когда предложенное выполнение уже кэшировано.
     """
     pass
 
@@ -697,12 +712,17 @@ class ExecutionCached(Exception):
 ###################################################################################################
 # Convenience functions
 ###################################################################################################
+
+_current_simulations: Dict[str, Optional[Simulation]] = {}
+_current_simulation_id: Optional[str] = None
+
+
 def reset():
     """
-    Сбрасывает состояние управления симуляциями.
+    Сбрасывает все состояние управления симуляцией.
     """
     global _current_simulations, _current_simulation_id
-    _current_simulations = {"default": None}
+    _current_simulations = {'default': None}
 
     # TODO Currently, only one simulation can be started at a time. In future versions, this should be
     #      changed to allow multiple simulations to be started at the same time, e.g., for fast
@@ -710,12 +730,12 @@ def reset():
     _current_simulation_id = None
 
 
-def _simulation(id="default") -> "Simulation":
+def _simulation(id: str = 'default') -> Simulation:
     """
-    Возвращает симуляцию по её идентификатору.
+    Возвращает объект симуляции по её id.
 
     :param id: Идентификатор симуляции.
-    :return: Экземпляр симуляции.
+    :return: Объект симуляции.
     """
     global _current_simulations
     if _current_simulations[id] is None:
@@ -724,26 +744,26 @@ def _simulation(id="default") -> "Simulation":
     return _current_simulations[id]
 
 
-def begin(cache_path=None, id="default", auto_checkpoint=False):
+def begin(cache_path: Optional[str] = None, id: str = 'default', auto_checkpoint: bool = False):
     """
-    Запускает симуляцию.
+    Начинает управляемую симуляцию.
 
-    :param cache_path: Путь к файлу кэша.
-    :param id: Идентификатор симуляции.
-    :param auto_checkpoint: Флаг автоматического сохранения в конце каждой транзакции.
-    :raises ValueError: Если симуляция уже запущена.
+    :param cache_path: Путь к файлу кэша, если нужно использовать нестандартный путь.
+    :param id: Идентификатор симуляции, по умолчанию 'default'.
+    :param auto_checkpoint: Флаг автоматического сохранения состояния.
     """
     global _current_simulation_id
     if _current_simulation_id is None:
         _simulation(id).begin(cache_path, auto_checkpoint)
         _current_simulation_id = id
     else:
-        raise ValueError(f"Simulation is already started under id {_current_simulation_id}. Currently only one simulation can be started at a time.")
+        raise ValueError(
+            f'Симуляция уже запущена под id {_current_simulation_id}. В настоящее время одновременно может быть запущена только одна симуляция.')
 
 
-def end(id="default"):
+def end(id: str = 'default'):
     """
-    Останавливает симуляцию.
+    Завершает управляемую симуляцию.
 
     :param id: Идентификатор симуляции.
     """
@@ -752,7 +772,7 @@ def end(id="default"):
     _current_simulation_id = None
 
 
-def checkpoint(id="default"):
+def checkpoint(id: str = 'default'):
     """
     Сохраняет текущее состояние симуляции.
 
@@ -761,54 +781,8 @@ def checkpoint(id="default"):
     _simulation(id).checkpoint()
 
 
-def current_simulation() -> "Simulation":
+def current_simulation() -> Optional[Simulation]:
     """
     Возвращает текущую симуляцию.
 
-    :return: Экземпляр текущей симуляции или None, если симуляция не запущена.
-    """
-    global _current_simulation_id
-    if _current_simulation_id is not None:
-        return _simulation(_current_simulation_id)
-    else:
-        return None
-
-
-reset()  # initialize the control state
-```
-# Внесённые изменения
-1.  Добавлена документация в формате reStructuredText (RST) для модуля, классов, функций и методов.
-2.  Использован `from src.logger.logger import logger` для логирования ошибок.
-3.  Заменён `json.load` на `j_loads` из `src.utils.jjson` для загрузки кэша.
-4.  Добавлены аннотации типов для переменных и параметров функций.
-5.  Удалены избыточные `try-except` блоки и заменены на использование `logger.error` с `exc_info=True`.
-6.  Добавлены более конкретные формулировки в комментариях.
-7.  Добавлены `...` как точки остановки в коде для ручной обработки.
-8.  Исправлена ошибка в `_function_call_hash` - возвращает строку, а не `int`.
-
-# Оптимизированный код
-```python
-"""
-Модуль для управления симуляциями.
-====================================
-
-Этот модуль предоставляет классы и функции для управления симуляциями,
-включая создание, запуск, остановку, сохранение и загрузку состояния симуляций.
-Он также включает механизмы для кэширования и выполнения транзакций.
-
-Основные компоненты:
-
--   :class:`Simulation`: Класс для управления жизненным циклом симуляции.
--   :class:`Transaction`: Класс для управления транзакциями в симуляции.
--   :func:`transactional`: Декоратор для функций, которые должны выполняться в рамках транзакции.
--   Глобальные функции для управления текущей симуляцией.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from tinytroupe.control import begin, end, transactional, current_simulation
-    from tinytroupe.agent import TinyPerson
-    
-    begin()
+    :return: Текущая симуляция или None, если симуляция не

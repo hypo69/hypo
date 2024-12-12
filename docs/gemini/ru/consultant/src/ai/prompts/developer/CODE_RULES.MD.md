@@ -1,252 +1,225 @@
+## Анализ кода модуля CODE_RULES.MD
+
+**Качество кода**
+7
+-  Плюсы
+    -  Документ содержит подробные инструкции по стилю кодирования, что способствует консистентности и улучшению читаемости кода.
+    -  Инструкции охватывают важные аспекты, такие как использование комментариев, документации, форматирования кода, параметров функций, логирования и констант.
+    -  Представлены конкретные примеры для пояснения требований и ожидаемого результата.
+
+-  Минусы
+    -  Некоторые инструкции могут быть более четкими, например, использование `j_loads` и `j_loads_ns`.
+    -  Не хватает явного указания, как обрабатывать случаи, когда требуется рефакторинг значительной части кода, а не только добавление документации и комментариев.
+    -  Отсутствует явное упоминание о необходимости проверки на наличие "мертвого" кода.
+    -  Некоторые термины, такие как "typing" в контексте параметров, могут быть непонятны начинающим разработчикам.
+
+**Рекомендации по улучшению**
+
+1.  **Уточнить инструкции**:
+    *   Добавить явное указание на использование `j_loads` и `j_loads_ns` из `src.utils.jjson` вместо `json.load` для чтения JSON файлов.
+    *   Уточнить требования к именованию переменных и функций, а также соответствию имён импортам из других файлов.
+2.  **Расширить примеры**:
+    *   Добавить пример использования `j_loads` и `j_loads_ns`.
+    *   Привести пример обработки исключений с использованием `logger.error` и `...` для отладки.
+3.  **Улучшить структуру**:
+    *   Разбить инструкцию на более логичные разделы, например, "Основные требования", "Стиль кодирования", "Документирование" и т.д.
+4.  **Добавить проверку "мёртвого" кода**:
+    *   Включить правило по удалению неиспользуемого кода.
+5.  **Сделать терминологию более доступной**:
+    *   Заменить термин "typing" на "аннотации типов" и привести примеры.
+6.  **Уточнить порядок блоков в ответе**:
+    *   Добавить точные требования к заголовку и расположению блоков в ответе (например, "Анализ кода", "Качество кода", "Рекомендации", "Оптимизированный код").
+
+**Оптимизиробанный код**
+
+```markdown
+### Code Rules:
+
+1.  **Общие принципы**
+    -   Используйте единый стиль кодирования для улучшения читаемости и консистентности.
+    -   Все изменения и рекомендации должны соответствовать этому формату.
+
+---
+
+2.  **Комментарии**
+    -   **Комментарии после символа `#`**:
+        -   **Не изменять**: Комментарии после символа `#` должны оставаться неизменными и быть понятными. Не переписывайте и не удаляйте их, даже если они начинаются с кода.
+        -   **Информативные**: Внутренние комментарии должны быть информативными и объяснять следующий блок кода.
+        -   **Формат**: Используйте формат reStructuredText (RST) для всех комментариев и документации.
+        -   **Терминология**: Избегайте использования таких терминов, как \'получаем\', \'делаем\' в комментариях. Вместо этого используйте фразы, такие как \'проверка\', \'отправка\', \'код исполняет ...\'.
+        -   **Пассивные формы**: Предпочитайте пассивные формы: \'копирование\', \'форматирование\', \'создание\' и т.д.
+        -   **Пустые строки**: Если есть пустые строки или `...`, не документируйте их.
+
+    -   **Комментарии после символа `"""`**:
+        -   **Оптимизировать**: Комментарии после символа `"""` могут и должны быть оптимизированы на основе фактического поведения кода.
+
+---
+
+3.  **Документация**
+    -   **Docstring**: Каждая функция, метод и класс должны иметь docstring в стиле Sphinx.
+        -   Пример для функции:
+            ```python
+            def function(param: str, param1: Optional[str | dict] = None) -> dict | None:
+                """
+                Описание функции.
+
+                :param param: Описание параметра `param`.
+                :param param1: (Опционально) Описание параметра `param1`.
+                :return: Описание возвращаемого значения.
+                :raises SomeError: Условия для исключения.
+                """
+            ```
+    -   **Описание модуля**: Добавьте описание модуля в начале каждого файла:
+        ```python
+        """
+        Модуль для работы с ассистентом программиста
+        =========================================================================================
+
+        Описание функциональности модуля.
+
+        Пример использования
+        ---------------------
+
+        .. code-block:: python
+
+            example_usage()
+        """
+        ```
+
+---
+
+4.  **Форматирование кода**
+    -   **Кавычки**: Используйте одинарные кавычки вместо двойных кавычек.
+    -   **Пробелы**: Используйте пробелы вокруг оператора присваивания `=`. Пример:
+        ```python
+        a = 1
+        ```
+    -   **Консистентность**: Используйте пробелы консистентно во всех выражениях и присваиваниях:
+        ```python
+        result = 10 if x > 5 else 20
+        ```
+    -   **Заголовок импорта**: Всегда включайте строку `import header` в начале файла.
+    -   **Отладка**: Добавляйте `...` между `logger` и `return` для отладки, пример:
+        ```python
+        logger.error('Ошибка при выполнении задачи', ex)
+        ...
+        return
+        ```
+    - **Использование `j_loads` и `j_loads_ns`**: Для чтения JSON файлов используйте `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load`.
+
+---
+
+5.  **Параметры функций**
+    -   **Аннотации типов**: Параметры должны иметь явные аннотации типов. Если значение по умолчанию `None`, используйте `Optional`. Пример:
+        ```python
+        def critical(self, message: str, ex: Optional = None, exc_info: Optional[bool] = True):
+        ```
+    -   **Избегать `Union`**: Избегайте использования `Union`.
+
+---
+
+6.  **Pydantic**
+    -   **Валидация**: Используйте Pydantic для валидации данных, если это возможно и уместно.
+    -   **Модели**: Предпочитайте модели Pydantic для классов, обрабатывающих структурированные данные.
+
+---
+
+7.  **Логирование**
+    -   **Логгер**: Используйте `from src.logger.logger import logger` для логирования вместо стандартного `logging`.
+    -   **Пример логирования ошибок**:
+        ```python
+        logger.error('Ошибка при запуске бота: ', ex)
+        ...
+        return
+        ```
+
+---
+
+8.  **Константы**
+    -   **MODE**: Всегда включайте глобальную константу `MODE` в коде, даже если она не используется.
+
+---
+
+9. **Проверка на "мертвый" код**
+    - **Удаление**: Удаляйте неиспользуемый код.
+
+---
+
+### Response Format:
+
+Все ответы должны соответствовать формату Markdown.
+
+Структура ответа должна включать:
+
+-   **Улучшенный код**: Блок с улучшенным кодом, отформатированным и с добавленными комментариями.
+-   **Изменения**: Подробный список изменений и пояснений.
+
+Код должен быть заключен в соответствующие теги подсветки синтаксиса (например, `python`, `markdown`, `json`).
+
+---
+
+### Примеры:
+
+#### Пример 1 (Python Code):
+Input:
+```python
+def add_numbers(a,b):
+    return a+b
+```
+
+Expected response:
+
+### Анализ кода модуля
+
+**Качество кода**
+9
+- Плюсы:
+    - Код соответствует требованиям по оформлению.
+    - Код документирован в стиле RST.
+    - Добавлены аннотации типов.
+
+- Минусы:
+    - Незначительные недочеты в форматировании.
+    - Можно было добавить более подробное описание.
+
+### Рекомендации по улучшению:
+- Уточнить описание функции.
+- Добавить более подробную документацию.
+
 ### Улучшенный код:
 ```python
-"""
-Правила кодирования для ассистента программиста
-=========================================================================================
-
-Этот модуль содержит правила, которым должен следовать ассистент программиста при проверке и улучшении кода.
-Правила включают форматирование кода, документирование, использование логгирования и т.д.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    # Пример использования правил кодирования
-    # (Не применимо, так как это файл с правилами)
-"""
-# import header
-from typing import Optional, Any, Dict, List
-
-# MODE = 'development' # TODO: check if MODE is used
-
-
-class CodeRules:
+def add_numbers(a: int, b: int) -> int:
     """
-    Класс для хранения правил кодирования.
+    Функция, складывающая два числа.
 
-    :ivar general_principles: Общие принципы кодирования.
-    :vartype general_principles: List[str]
-    :ivar comments: Правила для комментариев.
-    :vartype comments: Dict[str, Any]
-    :ivar documentation: Правила для документирования.
-    :vartype documentation: Dict[str, Any]
-    :ivar code_formatting: Правила для форматирования кода.
-    :vartype code_formatting: Dict[str, Any]
-    :ivar function_parameters: Правила для параметров функций.
-    :vartype function_parameters: Dict[str, Any]
-    :ivar pydantic: Правила для Pydantic.
-    :vartype pydantic: Dict[str, Any]
-    :ivar logging: Правила для логгирования.
-    :vartype logging: Dict[str, Any]
-    :ivar constants: Правила для констант.
-    :vartype constants: Dict[str, Any]
-    :ivar response_format: Правила для формата ответа.
-    :vartype response_format: Dict[str, Any]
-    :ivar examples: Примеры кода и ответов.
-    :vartype examples: Dict[str, Any]
+    :param a: Первое число.
+    :type a: int
+    :param b: Второе число.
+    :type b: int
+    :returns: Сумма чисел `a` и `b`.
+    :rtype: int
     """
-    def __init__(self):
-        """
-        Инициализация правил кодирования.
-        """
-        self.general_principles = [
-            'Use a consistent coding style to enhance readability and consistency.',
-            'All changes and recommendations must adhere to this format.',
-        ]
-        self.comments = {
-            'after_hash': {
-                'do_not_modify': 'Comments after the `#` symbol should remain unchanged and be clear. Do not rewrite or delete them, even if they start with code.',
-                'informative': 'Internal comments should be informative and explain the following block of code.',
-                'format': 'Use reStructuredText (RST) format for all comments and documentation.',
-                'terminology': "Avoid using terms like \'get\', \'do\' in comments. Instead, use phrases like \'check\', \'send\', \'code executes ...\'.",
-                'passive_forms': "Prefer passive forms: \'copying\', \'formatting\', \'creating\', etc.",
-                'empty_lines': 'If there are empty lines or `...`, do not document them.',
-            },
-            'after_quotes': {
-                'optimize': 'Comments after the `"""` symbol can and should be optimized based on the actual behavior of the code.',
-            }
-        }
-        self.documentation = {
-            'docstring': 'Each function, method, and class should have a docstring in Sphinx style.',
-            'module_description': 'Add a module description at the beginning of each file:'
-        }
-        self.code_formatting = {
-            'quotes': 'Use single quotes instead of double quotes.',
-            'spaces': 'Use spaces around the assignment operator `=`. Example: `a = 1`',
-            'consistency': 'Apply spaces consistently in all expressions and assignments: `result = 10 if x > 5 else 20`',
-            'import_header': 'Always include the `import header` line at the beginning of the file.',
-            'debugging': 'Add `...` between `logger` and `return` for debugging, example: `logger.error(\'Error while executing task\', ex); ...; return`'
-        }
-        self.function_parameters = {
-            'typing': 'Parameters should be explicitly typed. If the default value is `None`, use `Optional`. Example: `def critical(self, message: str, ex: Optional = None, exc_info: Optional[bool] = True):`',
-            'avoid_union': 'Avoid using `Union`.',
-        }
-        self.pydantic = {
-            'validation': 'Use Pydantic for data validation if possible and appropriate.',
-            'models': 'Prefer Pydantic models for classes handling structured data.',
-        }
-        self.logging = {
-            'logger': 'Use `from src.logger.logger import logger` for logging instead of the standard `logging`.',
-            'error_logging': 'Example: `logger.error(\'Error while starting bot: \', ex); ...; return`',
-        }
-        self.constants = {
-            'mode': 'Always include the global constant `MODE` in the code, even if it is not used.',
-        }
-        self.response_format = {
-            'markdown': 'All responses should follow the Markdown format.',
-            'structure': 'The structure of the response should include:\n\n- **Improved code**: A block with the improved code, formatted and with added comments.\n- **Changes**: A detailed list of modifications and explanations.\n\nCode should be enclosed in appropriate syntax highlighting tags (e.g., `python`, `markdown`, `json`).',
-        }
-        self.examples = {
-            'example1': {
-                'input': '```python\ndef add_numbers(a,b):\n    return a+b\n```',
-                'expected_response': '### Improved code:\n```python\ndef add_numbers(a: int, b: int) -> int:\n    """\n    Function that adds two numbers.\n\n    :param a: The first number.\n    :type a: int\n    :param b: The second number.\n    :type b: int\n    :returns: The sum of numbers `a` and `b`.\n    :rtype: int\n    """\n    return a + b\n```\n\n### Changes:\n- Added RST-style documentation for the function description.\n- Added type annotations for `a` and `b`.\n- Added spaces around `+` and function parameters for better readability.\n\n### Optimized full code:\n```python\ndef add_numbers(a: int, b: int) -> int:\n    """\n    Function that adds two numbers.\n\n    :param a: The first number.\n    :type a: int\n    :param b: The second number.\n    :type b: int\n    :returns: The sum of numbers `a` and `b`.\n    :rtype: int\n    """\n    return a + b\n```',
-            }
-        }
+    return a + b
 ```
-### Внесённые изменения:
-- Добавлены docstring для модуля и класса `CodeRules` в формате RST.
-- Добавлены аннотации типов для переменных в классе `CodeRules`.
-- Все комментарии в коде переписаны в соответствии с RST.
-- Добавлен `import header` с необходимыми импортами.
-- Добавлены docstring для метода `__init__`.
-- Добавлена константа `MODE = 'development'` (закомментирована как `TODO` для проверки ее использования).
 
-### Оптимизированный код:
+### Изменения:
+- Добавлена документация в стиле RST для описания функции.
+- Добавлены аннотации типов для `a` и `b`.
+- Добавлены пробелы вокруг `+` и параметров функции для лучшей читаемости.
+
+### Оптимизированный полный код:
 ```python
-"""
-Правила кодирования для ассистента программиста
-=========================================================================================
-
-Этот модуль содержит правила, которым должен следовать ассистент программиста при проверке и улучшении кода.
-Правила включают форматирование кода, документирование, использование логгирования и т.д.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    # Пример использования правил кодирования
-    # (Не применимо, так как это файл с правилами)
-"""
-# import header
-from typing import Optional, Any, Dict, List
-
-# MODE = 'development' # TODO: check if MODE is used
-
-
-class CodeRules:
+def add_numbers(a: int, b: int) -> int:
     """
-    Класс для хранения правил кодирования.
+    Функция, складывающая два числа.
 
-    :ivar general_principles: Общие принципы кодирования.
-    :vartype general_principles: List[str]
-    :ivar comments: Правила для комментариев.
-    :vartype comments: Dict[str, Any]
-    :ivar documentation: Правила для документирования.
-    :vartype documentation: Dict[str, Any]
-    :ivar code_formatting: Правила для форматирования кода.
-    :vartype code_formatting: Dict[str, Any]
-    :ivar function_parameters: Правила для параметров функций.
-    :vartype function_parameters: Dict[str, Any]
-    :ivar pydantic: Правила для Pydantic.
-    :vartype pydantic: Dict[str, Any]
-    :ivar logging: Правила для логгирования.
-    :vartype logging: Dict[str, Any]
-    :ivar constants: Правила для констант.
-    :vartype constants: Dict[str, Any]
-    :ivar response_format: Правила для формата ответа.
-    :vartype response_format: Dict[str, Any]
-    :ivar examples: Примеры кода и ответов.
-    :vartype examples: Dict[str, Any]
+    :param a: Первое число.
+    :type a: int
+    :param b: Второе число.
+    :type b: int
+    :returns: Сумма чисел `a` и `b`.
+    :rtype: int
     """
-    def __init__(self):
-        """
-        Инициализация правил кодирования.
-        """
-        self.general_principles = [
-            'Use a consistent coding style to enhance readability and consistency.',
-            'All changes and recommendations must adhere to this format.',
-        ]
-        # Правила для комментариев
-        self.comments = {
-            'after_hash': {
-                # Комментарии после `#` символа не должны изменяться и должны быть понятными.
-                'do_not_modify': 'Comments after the `#` symbol should remain unchanged and be clear. Do not rewrite or delete them, even if they start with code.',
-                # Внутренние комментарии должны быть информативными и объяснять следующий блок кода.
-                'informative': 'Internal comments should be informative and explain the following block of code.',
-                # Формат всех комментариев и документации должен соответствовать reStructuredText (RST).
-                'format': 'Use reStructuredText (RST) format for all comments and documentation.',
-                # Избегайте использования таких терминов, как 'get', 'do' в комментариях. Используйте фразы 'check', 'send', 'code executes ...'.
-                'terminology': "Avoid using terms like \'get\', \'do\' in comments. Instead, use phrases like \'check\', \'send\', \'code executes ...\'.",
-                # Предпочтительно использовать пассивные формы: 'copying', 'formatting', 'creating' и т. д.
-                'passive_forms': "Prefer passive forms: \'copying\', \'formatting\', \'creating\', etc.",
-                # Если есть пустые строки или `...`, их не нужно документировать.
-                'empty_lines': 'If there are empty lines or `...`, do not document them.',
-            },
-            'after_quotes': {
-                # Комментарии после `"""` могут и должны быть оптимизированы на основе фактического поведения кода.
-                'optimize': 'Comments after the `"""` symbol can and should be optimized based on the actual behavior of the code.',
-            }
-        }
-        # Правила для документации
-        self.documentation = {
-            # Каждая функция, метод и класс должны иметь docstring в стиле Sphinx.
-            'docstring': 'Each function, method, and class should have a docstring in Sphinx style.',
-             # Добавьте описание модуля в начале каждого файла.
-            'module_description': 'Add a module description at the beginning of each file:'
-        }
-         # Правила для форматирования кода
-        self.code_formatting = {
-            # Используйте одинарные кавычки вместо двойных.
-            'quotes': 'Use single quotes instead of double quotes.',
-            # Используйте пробелы вокруг оператора присваивания `=`. Пример: `a = 1`
-            'spaces': 'Use spaces around the assignment operator `=`. Example: `a = 1`',
-            # Применяйте пробелы последовательно во всех выражениях и присваиваниях: `result = 10 if x > 5 else 20`
-            'consistency': 'Apply spaces consistently in all expressions and assignments: `result = 10 if x > 5 else 20`',
-            # Всегда включайте строку `import header` в начале файла.
-            'import_header': 'Always include the `import header` line at the beginning of the file.',
-             # Добавьте `...` между `logger` и `return` для отладки, пример: `logger.error(\'Error while executing task\', ex); ...; return`
-            'debugging': 'Add `...` between `logger` and `return` for debugging, example: `logger.error(\'Error while executing task\', ex); ...; return`'
-        }
-         # Правила для параметров функций
-        self.function_parameters = {
-            # Параметры должны быть явно типизированы. Если значение по умолчанию `None`, используйте `Optional`. Пример: `def critical(self, message: str, ex: Optional = None, exc_info: Optional[bool] = True):`
-            'typing': 'Parameters should be explicitly typed. If the default value is `None`, use `Optional`. Example: `def critical(self, message: str, ex: Optional = None, exc_info: Optional[bool] = True):`',
-            # Избегайте использования `Union`.
-            'avoid_union': 'Avoid using `Union`.',
-        }
-         # Правила для Pydantic
-        self.pydantic = {
-            # Используйте Pydantic для проверки данных, если это возможно и уместно.
-            'validation': 'Use Pydantic for data validation if possible and appropriate.',
-             # Предпочитайте модели Pydantic для классов, обрабатывающих структурированные данные.
-            'models': 'Prefer Pydantic models for classes handling structured data.',
-        }
-         # Правила для логгирования
-        self.logging = {
-            # Используйте `from src.logger.logger import logger` для логгирования вместо стандартного `logging`.
-            'logger': 'Use `from src.logger.logger import logger` for logging instead of the standard `logging`.',
-             # Пример: `logger.error(\'Error while starting bot: \', ex); ...; return`
-            'error_logging': 'Example: `logger.error(\'Error while starting bot: \', ex); ...; return`',
-        }
-         # Правила для констант
-        self.constants = {
-            # Всегда включайте глобальную константу `MODE` в код, даже если она не используется.
-            'mode': 'Always include the global constant `MODE` in the code, even if it is not used.',
-        }
-        # Правила для формата ответа
-        self.response_format = {
-            # Все ответы должны следовать формату Markdown.
-            'markdown': 'All responses should follow the Markdown format.',
-            # Структура ответа должна включать: \n\n- **Улучшенный код**: Блок с улучшенным кодом, отформатированным и с добавленными комментариями.\n- **Изменения**: Подробный список изменений и объяснений.\n\nКод должен быть заключен в соответствующие теги подсветки синтаксиса (например, `python`, `markdown`, `json`).
-            'structure': 'The structure of the response should include:\n\n- **Improved code**: A block with the improved code, formatted and with added comments.\n- **Changes**: A detailed list of modifications and explanations.\n\nCode should be enclosed in appropriate syntax highlighting tags (e.g., `python`, `markdown`, `json`).',
-        }
-        # Примеры кода и ответов
-        self.examples = {
-            'example1': {
-                'input': '```python\ndef add_numbers(a,b):\n    return a+b\n```',
-                'expected_response': '### Improved code:\n```python\ndef add_numbers(a: int, b: int) -> int:\n    """\n    Function that adds two numbers.\n\n    :param a: The first number.\n    :type a: int\n    :param b: The second number.\n    :type b: int\n    :returns: The sum of numbers `a` and `b`.\n    :rtype: int\n    """\n    return a + b\n```\n\n### Changes:\n- Added RST-style documentation for the function description.\n- Added type annotations for `a` and `b`.\n- Added spaces around `+` and function parameters for better readability.\n\n### Optimized full code:\n```python\ndef add_numbers(a: int, b: int) -> int:\n    """\n    Function that adds two numbers.\n\n    :param a: The first number.\n    :type a: int\n    :param b: The second number.\n    :type b: int\n    :returns: The sum of numbers `a` and `b`.\n    :rtype: int\n    """\n    return a + b\n```',
-            }
-        }
+    return a + b
+```
 ```

@@ -1,39 +1,65 @@
-## Улучшенный код
+# Анализ кода модуля tinytroupe.utils
+
+**Качество кода**
+7
+-   Плюсы
+    *   Код хорошо структурирован и разделен на логические блоки.
+    *   Используются docstring для документирования функций.
+    *   Присутствует обработка ошибок с использованием `try-except`.
+    *   Реализована JSON сериализация и десериализация с поддержкой подклассов.
+    *   Используется `configparser` для чтения конфигурационных файлов.
+-   Минусы
+    *   Не все функции и классы имеют reStructuredText (RST) docstring.
+    *   Не везде используется `logger.error` для логирования ошибок, что приводит к избыточному использованию `try-except`.
+    *   Используется стандартный `json.load` для чтения файлов, вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    *   Некоторые комментарии не соответствуют формату RST.
+    *   Присутствует потенциальная проблема с циклическим импортом в `add_rai_template_variables_if_enabled`.
+
+**Рекомендации по улучшению**
+
+1.  **Документация**:
+    *   Переписать все docstring в формате reStructuredText (RST), включая описания модулей, классов, функций и методов.
+    *   Добавить подробные комментарии к коду, объясняющие логику и назначение каждого блока кода.
+2.  **Импорты**:
+    *   Добавить `from src.logger.logger import logger` для логирования.
+    *   Заменить `import json` и `from json import JSONEncoder` на  `from src.utils.jjson import j_loads` и `from src.utils.jjson import j_dumps`.
+    *   Использовать `Path` из `pathlib` вместо `os.path` там, где это уместно.
+3.  **Обработка ошибок**:
+    *   Заменить `try-except` блоки на использование `logger.error` для логирования ошибок и возврата значений по умолчанию или продолжения выполнения программы.
+4.  **JSON обработка**:
+    *   Заменить стандартный `json.load` на `j_loads` из `src.utils.jjson`.
+    *   Использовать `j_dumps` из `src.utils.jjson` для сериализации.
+5.  **Рефакторинг**:
+    *   Устранить потенциальный циклический импорт в `add_rai_template_variables_if_enabled`, перенеся импорт `config` из `tinytroupe` в начало файла.
+    *   Улучшить читаемость кода, например, разделив длинные строки на несколько строк.
+6. **Комментарии**:
+    *   Переписать комментарии в коде, добавив подробные объяснения на русском языке.
+
+**Оптимизированный код**
 ```python
 """
 Общие утилиты и вспомогательные функции.
 =========================================================================================
 
-Этот модуль предоставляет набор общих утилит и вспомогательных функций,
-используемых в проекте TinyTroupe. Он включает в себя функции для:
-- работы с входными и выходными данными модели,
-- управления моделью,
-- валидации данных,
-- инжиниринга промптов,
-- рендеринга и разметки,
-- ввода/вывода,
-- сериализации JSON,
-- а также другие вспомогательные функции.
+Этот модуль содержит набор общих утилит, которые используются в проекте TinyTroupe.
+Он включает функции для работы с текстовыми шаблонами, JSON, кодом, конфигурационными файлами,
+а также для логирования и сериализации объектов.
 
 Пример использования
 --------------------
 
-Пример использования некоторых функций из этого модуля:
-
 .. code-block:: python
 
-    from tinytroupe.utils import compose_initial_LLM_messages_with_templates, extract_json
-    
+    from tinytroupe.utils import compose_initial_LLM_messages_with_templates
     messages = compose_initial_LLM_messages_with_templates(
-        system_template_name='system_prompt.txt', 
-        user_template_name='user_prompt.txt', 
-        rendering_configs={'variable': 'value'}
+        system_template_name='system_prompt.txt',
+        user_template_name='user_prompt.txt',
+        rendering_configs={'name': 'test'}
     )
-    
-    json_data = extract_json('some text { "key": "value" } some text')
+
+    print(messages)
 """
 import re
-import json
 import os
 import sys
 import hashlib
@@ -46,114 +72,124 @@ from datetime import datetime
 from pathlib import Path
 import configparser
 from typing import Any, TypeVar, Union
-from src.utils.jjson import j_loads, j_loads_ns # импортируем j_loads из src.utils.jjson
-from src.logger.logger import logger # импортируем logger из src.logger.logger
+from src.utils.jjson import j_loads, j_dumps
+from src.logger.logger import logger
+from tinytroupe import config # Избегаем циклического импорта
 
 AgentOrWorld = Union["TinyPerson", "TinyWorld"]
-
-# logger
-# logger = logging.getLogger("tinytroupe") # заменено на импорт из src.logger.logger
-
 
 ################################################################################
 # Model input utilities
 ################################################################################
-def compose_initial_LLM_messages_with_templates(system_template_name:str, user_template_name:str=None, rendering_configs:dict={}) -> list:
+def compose_initial_LLM_messages_with_templates(system_template_name: str, user_template_name: str = None, rendering_configs: dict = {}) -> list:
     """
-    Составляет начальные сообщения для вызова LLM модели, предполагая, что всегда используется системное сообщение
-    (общее описание задачи) и необязательное пользовательское сообщение (конкретное описание задачи).
+    Составляет начальные сообщения для вызова LLM модели, предполагая, что всегда используется
+    системное (общее описание задачи) и опциональное пользовательское сообщение (специфическое описание задачи).
     Эти сообщения составляются с использованием указанных шаблонов и конфигураций рендеринга.
 
     :param system_template_name: Имя файла шаблона системного сообщения.
-    :param user_template_name: Имя файла шаблона пользовательского сообщения (необязательно).
-    :param rendering_configs: Словарь с конфигурациями для рендеринга шаблонов.
-    :return: Список сообщений для LLM.
+    :type system_template_name: str
+    :param user_template_name: Имя файла шаблона пользовательского сообщения (опционально).
+    :type user_template_name: str, optional
+    :param rendering_configs: Словарь с конфигурациями для рендеринга шаблона.
+    :type rendering_configs: dict, optional
+    :return: Список сообщений, готовых для использования в LLM.
+    :rtype: list
     """
-    system_prompt_template_path = os.path.join(os.path.dirname(__file__), f'prompts/{system_template_name}')
-    user_prompt_template_path = os.path.join(os.path.dirname(__file__), f'prompts/{user_template_name}')
+    #  формирование пути к шаблону системного сообщения
+    system_prompt_template_path = Path(__file__).parent / f'prompts/{system_template_name}'
+    # формирование пути к шаблону пользовательского сообщения
+    user_prompt_template_path = Path(__file__).parent / f'prompts/{user_template_name}'
 
     messages = []
 
-    messages.append({"role": "system", 
-                         "content": chevron.render(
-                             open(system_prompt_template_path).read(), 
-                             rendering_configs)})
-    
-    # optionally add a user message
+    # добавление системного сообщения
+    try:
+        # открывает файл шаблона, выполняет рендеринг и добавляет сообщение
+        with open(system_prompt_template_path, 'r') as f:
+            messages.append({"role": "system",
+                         "content": chevron.render(f.read(), rendering_configs)})
+    except Exception as e:
+        logger.error(f"Ошибка при чтении или рендеринге системного шаблона: {system_prompt_template_path}", exc_info=True)
+        return []
+
+    # опциональное добавление пользовательского сообщения
     if user_template_name is not None:
-        messages.append({"role": "user", 
-                            "content": chevron.render(
-                                    open(user_prompt_template_path).read(), 
-                                    rendering_configs)})
+        try:
+            # открывает файл шаблона, выполняет рендеринг и добавляет сообщение
+            with open(user_prompt_template_path, 'r') as f:
+                messages.append({"role": "user",
+                            "content": chevron.render(f.read(), rendering_configs)})
+        except Exception as e:
+            logger.error(f"Ошибка при чтении или рендеринге пользовательского шаблона: {user_prompt_template_path}", exc_info=True)
+            return messages  # Возвращаем только системное сообщение, если пользовательское не удалось добавить.
     return messages
 
 
-################################################################################	
+################################################################################
 # Model output utilities
 ################################################################################
 def extract_json(text: str) -> dict:
     """
-    Извлекает JSON-объект из строки, игнорируя: любой текст до первой открывающей фигурной скобки;
-    и любые открывающие (```json) или закрывающие (```) теги Markdown.
+    Извлекает JSON объект из строки, игнорируя: любой текст перед первой
+    открывающей фигурной скобкой; и любые Markdown открывающие (```json) или закрывающие (```) теги.
 
     :param text: Строка, из которой нужно извлечь JSON.
-    :return: Извлеченный JSON-объект в виде словаря или пустой словарь в случае ошибки.
+    :type text: str
+    :return: Извлеченный JSON объект или пустой словарь в случае ошибки.
+    :rtype: dict
     """
     try:
-        # удаляет любой текст до первой открывающей фигурной или квадратной скобки, используя регулярное выражение.
-        # Оставляет скобки.
+        # удаляет любой текст перед первой открывающей фигурной или квадратной скобкой
         text = re.sub(r'^.*?({|\[)', r'\1', text, flags=re.DOTALL)
 
-        # удаляет любой текст после последней закрывающей фигурной или квадратной скобки, используя регулярное выражение.
-        # Оставляет скобки.
-        text  =  re.sub(r'(}|\])(?!.*(\]|}))', r'\1', text, flags=re.DOTALL)
-        
-        # удаляет недопустимые escape-последовательности, которые иногда появляются.
-        # заменяет \\\' на \'
-        text =  re.sub(r"\\\'", r"\'", text)
+        # удаляет любой текст после последней закрывающей фигурной или квадратной скобки
+        text = re.sub(r'(}|\])(?!.*(\]|}))*.?$', r'\1', text, flags=re.DOTALL)
 
-        # возвращает разобранный JSON-объект
-        return json.loads(text)
-    
-    except Exception as ex:
-        logger.error(f'Ошибка при извлечении JSON: {ex}')
+        # удаляет недопустимые escape последовательности
+        text = re.sub(r"\\\'", "\'", text)
+
+        # возвращает распарсенный JSON объект
+        return j_loads(text)
+    except Exception as e:
+        logger.error(f"Ошибка при извлечении JSON из текста: {text}", exc_info=True)
         return {}
 
 def extract_code_block(text: str) -> str:
     """
-    Извлекает блок кода из строки, игнорируя любой текст до первых открывающих тройных обратных кавычек
-    и любой текст после закрывающих тройных обратных кавычек.
+    Извлекает блок кода из строки, игнорируя любой текст перед первыми
+    открывающими тройными обратными кавычками и любой текст после закрывающих тройных обратных кавычек.
 
     :param text: Строка, из которой нужно извлечь блок кода.
+    :type text: str
     :return: Извлеченный блок кода или пустая строка в случае ошибки.
+    :rtype: str
     """
     try:
-        # удаляет любой текст до первых открывающих тройных обратных кавычек, используя регулярное выражение.
-        # Оставляет кавычки.
+        # удаляет любой текст перед первыми открывающими тройными обратными кавычками
         text = re.sub(r'^.*?(```)', r'\1', text, flags=re.DOTALL)
 
-        # удаляет любой текст после последних закрывающих тройных обратных кавычек, используя регулярное выражение.
-        # Оставляет кавычки.
-        text  =  re.sub(r'(```)(?!.*```).*$', r'\1', text, flags=re.DOTALL)
-        
+        # удаляет любой текст после последней закрывающей тройной обратной кавычки
+        text = re.sub(r'(```)(?!.*```).*$', r'\1', text, flags=re.DOTALL)
+
         return text
-    
-    except Exception as ex:
-        logger.error(f'Ошибка при извлечении блока кода: {ex}')
+    except Exception as e:
+        logger.error(f"Ошибка при извлечении блока кода из текста: {text}", exc_info=True)
         return ""
 
 ################################################################################
 # Model control utilities
-################################################################################    
-def repeat_on_error(retries:int, exceptions:list):
+################################################################################
+def repeat_on_error(retries: int, exceptions: list):
     """
     Декоратор, который повторяет вызов указанной функции, если возникает исключение из указанного списка,
-    до указанного количества попыток. Если количество попыток превышено, вызывается исключение.
-    Если исключение не возникает, функция возвращается нормально.
+    до указанного количества попыток. Если количество попыток превышено, исключение поднимается.
+    Если исключение не возникает, функция возвращает значение нормально.
 
-    :param retries: Количество попыток повторения вызова функции.
+    :param retries: Количество попыток повторения.
+    :type retries: int
     :param exceptions: Список классов исключений, которые нужно перехватывать.
-    :return: Декорированная функция.
+    :type exceptions: list
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -169,19 +205,21 @@ def repeat_on_error(retries:int, exceptions:list):
                         continue
         return wrapper
     return decorator
-   
+
 
 ################################################################################
 # Validation
 ################################################################################
 def check_valid_fields(obj: dict, valid_fields: list) -> None:
     """
-    Проверяет, являются ли поля в указанном словаре допустимыми в соответствии со списком допустимых полей.
-    Если нет, вызывает ValueError.
+    Проверяет, являются ли поля в указанном словаре допустимыми, согласно списку допустимых полей.
+    Если нет, поднимает исключение ValueError.
 
     :param obj: Словарь для проверки.
-    :param valid_fields: Список допустимых ключей.
-    :raises ValueError: Если в словаре есть недопустимые ключи.
+    :type obj: dict
+    :param valid_fields: Список допустимых полей.
+    :type valid_fields: list
+    :raises ValueError: Если найден недопустимый ключ в словаре.
     """
     for key in obj:
         if key not in valid_fields:
@@ -191,99 +229,119 @@ def sanitize_raw_string(value: str) -> str:
     """
     Очищает указанную строку путем:
       - удаления любых недопустимых символов.
-      - проверки, что она не длиннее максимальной длины строки в Python.
+      - гарантирования, что она не длиннее максимальной длины строки Python.
 
-    Это сделано для предосторожности в отношении безопасности, чтобы избежать любых потенциальных проблем со строкой.
+    Это делается для предосторожности и безопасности, чтобы избежать любых потенциальных проблем со строкой.
 
     :param value: Строка для очистки.
+    :type value: str
     :return: Очищенная строка.
+    :rtype: str
     """
-    # удаляет любые недопустимые символы, удостоверяясь, что строка является допустимой UTF-8 строкой
+    # удаляет недопустимые символы, убеждаясь, что это допустимая строка UTF-8
     value = value.encode("utf-8", "ignore").decode("utf-8")
 
-    # проверяет, что она не длиннее максимальной длины строки в Python
+    # гарантирует, что она не длиннее максимальной длины строки Python
     return value[:sys.maxsize]
 
 def sanitize_dict(value: dict) -> dict:
     """
     Очищает указанный словарь путем:
       - удаления любых недопустимых символов.
-      - проверки, что словарь не слишком глубоко вложен.
+      - гарантирования, что словарь не является слишком глубоко вложенным.
 
     :param value: Словарь для очистки.
+    :type value: dict
     :return: Очищенный словарь.
+    :rtype: dict
     """
     # очищает строковое представление словаря
-    tmp_str = sanitize_raw_string(json.dumps(value, ensure_ascii=False))
+    tmp_str = sanitize_raw_string(j_dumps(value, ensure_ascii=False))
 
-    value = json.loads(tmp_str)
+    value = j_loads(tmp_str)
 
-    # проверяет, что словарь не слишком глубоко вложен
+    # гарантирует, что словарь не является слишком глубоко вложенным
     return value
-    
-    
+
+
 ################################################################################
 # Prompt engineering
 ################################################################################
 def add_rai_template_variables_if_enabled(template_variables: dict) -> dict:
     """
-    Добавляет переменные шаблона RAI в указанный словарь, если включены отказы от ответственности RAI.
-    Они могут быть настроены в файле config.ini. Если включено, переменные будут загружать отказы от ответственности RAI
+    Добавляет RAI переменные шаблона в указанный словарь, если включены предупреждения RAI.
+    Они могут быть настроены в файле config.ini. Если включено, переменные загрузят предупреждения RAI
     из соответствующих файлов в каталоге prompts. В противном случае переменные будут установлены в None.
 
     :param template_variables: Словарь переменных шаблона, в который нужно добавить переменные RAI.
+    :type template_variables: dict
     :return: Обновленный словарь переменных шаблона.
+    :rtype: dict
     """
-    from tinytroupe import config # избегает циклического импорта
+
     rai_harmful_content_prevention = config["Simulation"].getboolean(
-        "RAI_HARMFUL_CONTENT_PREVENTION", True 
+        "RAI_HARMFUL_CONTENT_PREVENTION", True
     )
     rai_copyright_infringement_prevention = config["Simulation"].getboolean(
         "RAI_COPYRIGHT_INFRINGEMENT_PREVENTION", True
     )
 
     # Harmful content
-    with open(os.path.join(os.path.dirname(__file__), "prompts/rai_harmful_content_prevention.md"), "r") as f:
-        rai_harmful_content_prevention_content = f.read()
-
+    try:
+       # открывает файл и читает контент
+        with open(Path(__file__).parent / "prompts/rai_harmful_content_prevention.md", "r") as f:
+            rai_harmful_content_prevention_content = f.read()
+    except Exception as e:
+        logger.error("Ошибка при чтении файла rai_harmful_content_prevention.md", exc_info=True)
+        rai_harmful_content_prevention_content = None
     template_variables['rai_harmful_content_prevention'] = rai_harmful_content_prevention_content if rai_harmful_content_prevention else None
 
     # Copyright infringement
-    with open(os.path.join(os.path.dirname(__file__), "prompts/rai_copyright_infringement_prevention.md"), "r") as f:
-        rai_copyright_infringement_prevention_content = f.read()
-
+    try:
+       # открывает файл и читает контент
+        with open(Path(__file__).parent / "prompts/rai_copyright_infringement_prevention.md", "r") as f:
+            rai_copyright_infringement_prevention_content = f.read()
+    except Exception as e:
+        logger.error("Ошибка при чтении файла rai_copyright_infringement_prevention.md", exc_info=True)
+        rai_copyright_infringement_prevention_content = None
     template_variables['rai_copyright_infringement_prevention'] = rai_copyright_infringement_prevention_content if rai_copyright_infringement_prevention else None
 
     return template_variables
 
 ################################################################################
-# Rendering and markup 
+# Rendering and markup
 ################################################################################
-def inject_html_css_style_prefix(html, style_prefix_attributes):
+def inject_html_css_style_prefix(html: str, style_prefix_attributes: str) -> str:
     """
-    Добавляет префикс стиля ко всем атрибутам style в заданной HTML-строке.
+    Вставляет префикс стиля ко всем атрибутам стиля в заданной HTML строке.
 
-    Например, если вы хотите добавить префикс стиля ко всем атрибутам style в HTML-строке
+    Например, если вы хотите добавить префикс стиля ко всем атрибутам стиля в HTML строке
     ``<div style="color: red;">Hello</div>``, вы можете использовать эту функцию следующим образом:
     inject_html_css_style_prefix('<div style="color: red;">Hello</div>', 'font-size: 20px;')
 
-    :param html: HTML-строка для изменения.
-    :param style_prefix_attributes: Строка префикса стиля, которая будет добавлена.
-    :return: HTML-строка с добавленным префиксом стиля.
+    :param html: HTML строка для изменения.
+    :type html: str
+    :param style_prefix_attributes: Строка с префиксом стиля, который нужно добавить.
+    :type style_prefix_attributes: str
+    :return: HTML строка с добавленным префиксом стиля.
+    :rtype: str
     """
     return html.replace('style="', f'style="{style_prefix_attributes};')
 
-def break_text_at_length(text: Union[str, dict], max_length: int=None) -> str:
+def break_text_at_length(text: Union[str, dict], max_length: int = None) -> str:
     """
     Разбивает текст (или JSON) на указанной длине, вставляя строку "(...)" в точке разрыва.
-    Если максимальная длина равна `None`, содержимое возвращается как есть.
+    Если максимальная длина равна `None`, контент возвращается как есть.
 
-    :param text: Строка или словарь JSON для разбиения.
-    :param max_length: Максимальная длина текста перед разрывом.
-    :return: Разбитый текст.
+    :param text: Текст или JSON для разбиения.
+    :type text: Union[str, dict]
+    :param max_length: Максимальная длина текста (опционально).
+    :type max_length: int, optional
+    :return: Разбитый текст или исходный текст, если `max_length` равен None.
+    :rtype: str
     """
     if isinstance(text, dict):
-        text = json.dumps(text, indent=4)
+        text = j_dumps(text, indent=4)
 
     if max_length is None or len(text) <= max_length:
         return text
@@ -292,84 +350,89 @@ def break_text_at_length(text: Union[str, dict], max_length: int=None) -> str:
 
 def pretty_datetime(dt: datetime) -> str:
     """
-    Возвращает строку, представляющую объект datetime в удобном формате.
+    Возвращает красивое строковое представление указанного объекта datetime.
 
-    :param dt: Объект datetime для форматирования.
-    :return: Строка с датой и временем в формате "ГГГГ-ММ-ДД ЧЧ:ММ".
+    :param dt: Объект datetime.
+    :type dt: datetime
+    :return: Строковое представление datetime.
+    :rtype: str
     """
     return dt.strftime("%Y-%m-%d %H:%M")
 
 def dedent(text: str) -> str:
     """
-    Удаляет отступы из указанного текста, удаляя любые начальные пробелы и отступы.
+    Удаляет отступы из указанного текста, удаляя все начальные пробелы и отступы.
 
-    :param text: Текст, из которого нужно удалить отступы.
-    :return: Текст без начальных пробелов и отступов.
+    :param text: Текст для удаления отступов.
+    :type text: str
+    :return: Текст без отступов.
+    :rtype: str
     """
     return textwrap.dedent(text).strip()
+
 
 ################################################################################
 # IO and startup utilities
 ################################################################################
 _config = None
 
-def read_config_file(use_cache=True, verbose=True) -> configparser.ConfigParser:
+def read_config_file(use_cache: bool = True, verbose: bool = True) -> configparser.ConfigParser:
     """
-    Читает файл конфигурации из `config.ini`.
+    Читает конфигурационный файл, используя кеш, если это разрешено.
 
-    Файл конфигурации может располагаться в двух местах:
-    1. В директории модуля (где находится данный файл `utils.py`).
-    2. В рабочей директории программы.
-
-    Сначала загружаются значения по умолчанию из файла в директории модуля.
-    Затем, если существует файл в рабочей директории, он перезаписывает значения по умолчанию.
-
-    :param use_cache: Использовать ли кэшированную конфигурацию (по умолчанию True).
-    :param verbose: Выводить ли отладочные сообщения (по умолчанию True).
-    :return: Объект `configparser.ConfigParser` с загруженной конфигурацией.
-    :raises ValueError: Если не удалось найти файл конфигурации по умолчанию.
+    :param use_cache: Использовать ли кешированную конфигурацию.
+    :type use_cache: bool, optional
+    :param verbose: Выводить ли сообщения в консоль.
+    :type verbose: bool, optional
+    :return: Объект configparser с загруженной конфигурацией.
+    :rtype: configparser.ConfigParser
+    :raises ValueError: Если не удается найти конфигурационный файл.
     """
     global _config
     if use_cache and _config is not None:
-        # если у нас есть кэшированная конфигурация и мы принимаем это, возвращаем ее
+        # если есть кешированная конфигурация и это разрешено, возвращает ее
         return _config
-    
+
     else:
         config = configparser.ConfigParser()
 
-        # Читает значения по умолчанию в директории модуля.
+        # читает значения по умолчанию из каталога модуля
         config_file_path = Path(__file__).parent.absolute() / 'config.ini'
-        print(f"Поиск конфигурации по умолчанию в: {config_file_path}") if verbose else None
+        if verbose:
+            print(f"Поиск файла конфигурации по умолчанию: {config_file_path}")
         if config_file_path.exists():
             config.read(config_file_path)
             _config = config
         else:
-            raise ValueError(f"Не удалось найти конфигурацию по умолчанию в: {config_file_path}")
+            raise ValueError(f"Не удалось найти файл конфигурации по умолчанию: {config_file_path}")
 
-        # Теперь давайте переопределим любое конкретное значение по умолчанию, если есть пользовательская конфигурация .ini.
-        # Попробуйте директорию текущей основной программы
+        # переопределение значений по умолчанию, если есть пользовательская конфигурация
+        # пытается найти в директории текущей программы
         config_file_path = Path.cwd() / "config.ini"
         if config_file_path.exists():
-            print(f"Найдена пользовательская конфигурация в: {config_file_path}") if verbose else None
-            config.read(config_file_path) # это только переопределяет значения, присутствующие в пользовательской конфигурации
+            if verbose:
+                print(f"Найдена пользовательская конфигурация: {config_file_path}")
+            config.read(config_file_path) # переопределяет значения, которые есть в пользовательской конфигурации
             _config = config
             return config
         else:
             if verbose:
-                print(f"Не удалось найти пользовательскую конфигурацию в: {config_file_path}") if verbose else None
-                print("Будут использоваться только значения по умолчанию. ЕСЛИ ЧТО-ТО ПОЙДЕТ НЕ ТАК, ПОПРОБУЙТЕ НАСТРОИТЬ МОДЕЛЬ, ТИП API и т. д.") if verbose else None
-        
+                print(f"Не удалось найти пользовательскую конфигурацию: {config_file_path}")
+                print("Будут использоваться только значения по умолчанию. ЕСЛИ ЧТО-ТО НЕ РАБОТАЕТ, ПОПРОБУЙТЕ НАСТРОИТЬ МОДЕЛЬ, ТИП API и т.д.")
+
         return config
 
-def pretty_print_config(config):
-    """
-    Выводит текущую конфигурацию TinyTroupe в удобном формате.
 
-    :param config: Объект `configparser.ConfigParser` с конфигурацией.
+def pretty_print_config(config: configparser.ConfigParser):
+    """
+    Выводит конфигурацию в консоль в удобочитаемом формате.
+
+    :param config: Объект configparser с конфигурацией.
+    :type config: configparser.ConfigParser
     """
     print()
     print("=================================")
-    print("Текущая конфигурация TinyTroupe")
+    print("Текущая конфигурация TinyTroupe ")
     print("=================================")
     for section in config.sections():
         print(f"[{section}]")
@@ -379,10 +442,10 @@ def pretty_print_config(config):
 
 def start_logger(config: configparser.ConfigParser):
     """
-    Инициализирует логгер TinyTroupe с уровнем логирования, указанным в конфигурации.
-    Уровень логирования по умолчанию INFO.
+    Инициализирует и настраивает логгер.
 
-    :param config: Объект `configparser.ConfigParser` с конфигурацией.
+    :param config: Объект configparser с конфигурацией.
+    :type config: configparser.ConfigParser
     """
     # создает логгер
     logger = logging.getLogger("tinytroupe")
@@ -396,29 +459,36 @@ def start_logger(config: configparser.ConfigParser):
     # создает форматтер
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    # добавляет форматтер в ch
+    # добавляет форматтер в обработчик
     ch.setFormatter(formatter)
 
-    # добавляет ch в логгер
+    # добавляет обработчик в логгер
     logger.addHandler(ch)
+
 
 class JsonSerializableRegistry:
     """
-    Миксин-класс, который предоставляет сериализацию JSON, десериализацию и регистрацию подклассов.
+    Миксин, который предоставляет сериализацию и десериализацию JSON, а также регистрацию подклассов.
+
+    :ivar class_mapping: Словарь, содержащий соответствие имени класса классу.
+    :vartype class_mapping: dict
     """
-    
     class_mapping = {}
 
     def to_json(self, include: list = None, suppress: list = None, file_path: str = None) -> dict:
         """
-        Возвращает JSON-представление объекта.
+        Возвращает JSON представление объекта.
 
-        :param include: Атрибуты для включения в сериализацию (необязательно).
-        :param suppress: Атрибуты для исключения из сериализации (необязательно).
-        :param file_path: Путь к файлу, куда будет записан JSON (необязательно).
-        :return: JSON-представление объекта в виде словаря.
+        :param include: Атрибуты для включения в сериализацию (опционально).
+        :type include: list, optional
+        :param suppress: Атрибуты для исключения из сериализации (опционально).
+        :type suppress: list, optional
+        :param file_path: Путь к файлу, куда будет записан JSON (опционально).
+        :type file_path: str, optional
+        :return: JSON представление объекта.
+        :rtype: dict
         """
-        # Собирает все сериализуемые атрибуты из иерархии классов
+        # сбор всех сериализуемых атрибутов из иерархии классов
         serializable_attrs = set()
         suppress_attrs = set()
         for cls in self.__class__.__mro__:
@@ -426,13 +496,13 @@ class JsonSerializableRegistry:
                 serializable_attrs.update(cls.serializable_attributes)
             if hasattr(cls, 'suppress_attributes_from_serialization') and isinstance(cls.suppress_attributes_from_serialization, list):
                 suppress_attrs.update(cls.suppress_attributes_from_serialization)
-        
-        # Переопределяет атрибуты параметрами метода, если они предоставлены
+
+        # переопределение атрибутов параметрами метода, если они переданы
         if include:
             serializable_attrs = set(include)
         if suppress:
             suppress_attrs.update(suppress)
-        
+
         result = {"json_serializable_class_name": self.__class__.__name__}
         for attr in serializable_attrs if serializable_attrs else self.__dict__:
             if attr not in suppress_attrs:
@@ -445,37 +515,41 @@ class JsonSerializableRegistry:
                     result[attr] = {k: v.to_json() if isinstance(v, JsonSerializableRegistry) else copy.deepcopy(v) for k, v in value.items()}
                 else:
                     result[attr] = copy.deepcopy(value)
-        
+
         if file_path:
-            # создает директории, если они не существуют
-            import os
+            # создает каталоги, если их не существует
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, 'w') as f:
-                json.dump(result, f, indent=4)
-        
+                j_dumps(result, f, indent=4)
+
         return result
 
-    @classmethod
-    def from_json(cls, json_dict_or_path, suppress: list = None, post_init_params: dict = None):
-        """
-        Загружает JSON-представление объекта и создает экземпляр класса.
 
-        :param json_dict_or_path: Словарь JSON, представляющий объект, или путь к файлу, откуда загружать JSON.
-        :param suppress: Атрибуты, которые нужно исключить из загрузки (необязательно).
-        :param post_init_params: Параметры для передачи в метод post_init (необязательно).
+    @classmethod
+    def from_json(cls, json_dict_or_path: Union[dict, str], suppress: list = None, post_init_params: dict = None):
+        """
+        Загружает JSON представление объекта и создает экземпляр класса.
+
+        :param json_dict_or_path: JSON словарь или путь к файлу для загрузки JSON.
+        :type json_dict_or_path: Union[dict, str]
+        :param suppress: Атрибуты для исключения из загрузки (опционально).
+        :type suppress: list, optional
+        :param post_init_params: Параметры для передачи в метод пост-инициализации.
+        :type post_init_params: dict, optional
         :return: Экземпляр класса, заполненный данными из json_dict_or_path.
+        :rtype: JsonSerializableRegistry
         """
         if isinstance(json_dict_or_path, str):
             with open(json_dict_or_path, 'r') as f:
-                json_dict = j_loads(f) # используем j_loads
+                json_dict = j_loads(f.read())
         else:
             json_dict = json_dict_or_path
-        
+
         subclass_name = json_dict.get("json_serializable_class_name")
         target_class = cls.class_mapping.get(subclass_name, cls)
         instance = target_class.__new__(target_class)  # создает экземпляр без вызова __init__
-        
-        # Собирает все сериализуемые атрибуты из иерархии классов
+
+        # сбор всех сериализуемых атрибутов из иерархии классов
         serializable_attrs = set()
         custom_serialization_initializers = {}
         suppress_attrs = set(suppress) if suppress else set()
@@ -486,19 +560,19 @@ class JsonSerializableRegistry:
                 custom_serialization_initializers.update(cls.custom_serialization_initializers)
             if hasattr(cls, 'suppress_attributes_from_serialization') and isinstance(cls.suppress_attributes_from_serialization, list):
                 suppress_attrs.update(cls.suppress_attributes_from_serialization)
-        
-        # Присваивает значения только для сериализуемых атрибутов, если они указаны, в противном случае присваивает все
+
+        # присваивает значения только для сериализуемых атрибутов, если они указаны, иначе присваивает все
         for key in serializable_attrs if serializable_attrs else json_dict:
             if key in json_dict and key not in suppress_attrs:
                 value = json_dict[key]
                 if key in custom_serialization_initializers:
-                    # Использовать пользовательский инициализатор, если он предоставлен
+                    # использует кастомный инициализатор, если он есть
                     setattr(instance, key, custom_serialization_initializers[key](value))
                 elif isinstance(value, dict) and 'json_serializable_class_name' in value:
-                    # Предполагаем, что это другой объект JsonSerializableRegistry
+                    # предположение, что это другой объект JsonSerializableRegistry
                     setattr(instance, key, JsonSerializableRegistry.from_json(value))
                 elif isinstance(value, list):
-                    # Обрабатывает коллекции, рекурсивно десериализует, если элементы являются объектами JsonSerializableRegistry
+                    # обрабатывает коллекции, рекурсивно десериализует элементы, если это объекты JsonSerializableRegistry
                     deserialized_collection = []
                     for item in value:
                         if isinstance(item, dict) and 'json_serializable_class_name' in item:
@@ -508,36 +582,36 @@ class JsonSerializableRegistry:
                     setattr(instance, key, deserialized_collection)
                 else:
                     setattr(instance, key, copy.deepcopy(value))
-        
-        # Вызывает инициализацию после десериализации, если она доступна
+
+        # вызывает пост-десериализационную инициализацию, если она есть
         if hasattr(instance, '_post_deserialization_init') and callable(instance._post_deserialization_init):
             post_init_params = post_init_params if post_init_params else {}
             instance._post_deserialization_init(**post_init_params)
-        
+
         return instance
+
 
     def __init_subclass__(cls, **kwargs):
         """
-        Регистрирует подкласс при его создании, добавляет сериализуемые атрибуты,
-        а также кастомные инициализаторы из родительских классов.
+        Регистрирует подкласс при его создании.
 
-        :param kwargs: Дополнительные аргументы.
+        :param kwargs: Дополнительные именованные аргументы для передачи в родительский метод.
         """
         super().__init_subclass__(**kwargs)
-        # Регистрирует подкласс, используя его имя в качестве ключа
+        # регистрирует подкласс, используя его имя в качестве ключа
         JsonSerializableRegistry.class_mapping[cls.__name__] = cls
-        
-        # Автоматически расширяет сериализуемые атрибуты и пользовательские инициализаторы из родительских классов
+
+        # автоматически расширяет сериализуемые атрибуты и пользовательские инициализаторы из родительских классов
         if hasattr(cls, 'serializable_attributes') and isinstance(cls.serializable_attributes, list):
             for base in cls.__bases__:
                 if hasattr(base, 'serializable_attributes') and isinstance(base.serializable_attributes, list):
                     cls.serializable_attributes = list(set(base.serializable_attributes + cls.serializable_attributes))
-        
+
         if hasattr(cls, 'suppress_attributes_from_serialization') and isinstance(cls.suppress_attributes_from_serialization, list):
             for base in cls.__bases__:
                 if hasattr(base, 'suppress_attributes_from_serialization') and isinstance(base.suppress_attributes_from_serialization, list):
                     cls.suppress_attributes_from_serialization = list(set(base.suppress_attributes_from_serialization + cls.suppress_attributes_from_serialization))
-        
+
         if hasattr(cls, 'custom_serialization_initializers') and isinstance(cls.custom_serialization_initializers, dict):
             for base in cls.__bases__:
                 if hasattr(base, 'custom_serialization_initializers') and isinstance(base.custom_serialization_initializers, dict):
@@ -547,9 +621,10 @@ class JsonSerializableRegistry:
 
     def _post_deserialization_init(self, **kwargs):
         """
-         Выполняет инициализацию после десериализации.
-        
-        :param kwargs: Произвольные ключевые аргументы.
+        Метод пост-десериализации инициализации, который вызывается после десериализации,
+        если у класса есть метод `_post_init`.
+
+        :param kwargs: Дополнительные именованные аргументы.
         """
         # если есть метод _post_init, вызывает его после десериализации
         if hasattr(self, '_post_init'):
@@ -557,11 +632,11 @@ class JsonSerializableRegistry:
 
 def post_init(cls):
     """
-    Декоратор для принудительного вызова метода post-initialization в классе, если он есть.
+    Декоратор для принудительного вызова метода пост-инициализации в классе, если он есть.
     Метод должен называться `_post_init`.
 
-    :param cls: Класс, к которому применяется декоратор.
-    :return: Модифицированный класс.
+    :param cls: Класс для декорирования.
+    :return: Декорированный класс.
     """
     original_init = cls.__init__
 
@@ -576,154 +651,41 @@ def post_init(cls):
 ################################################################################
 # Other
 ################################################################################
-def name_or_empty(named_entity: AgentOrWorld):
+def name_or_empty(named_entity: AgentOrWorld) -> str:
     """
-    Возвращает имя указанного агента или среды, или пустую строку, если агент равен None.
+    Возвращает имя указанного агента или окружения, или пустую строку, если агент равен None.
 
-    :param named_entity: Агент или среда, имя которых нужно получить.
-    :return: Имя агента или среды, или пустая строка.
+    :param named_entity: Агент или окружение.
+    :type named_entity: AgentOrWorld
+    :return: Имя агента или пустая строка.
+    :rtype: str
     """
     if named_entity is None:
         return ""
     else:
         return named_entity.name
 
-def custom_hash(obj):
+def custom_hash(obj: Any) -> str:
     """
-    Возвращает хэш для указанного объекта. Объект сначала преобразуется в строку,
-    чтобы сделать его хэшируемым. Этот метод является детерминированным, в отличие
-    от встроенной функции hash().
+    Возвращает хеш для указанного объекта. Объект сначала преобразуется
+    в строку, чтобы сделать его хешируемым. Этот метод является детерминированным,
+    в отличие от встроенной функции hash().
 
-    :param obj: Объект для вычисления хэша.
-    :return: Хэш объекта.
+    :param obj: Объект для хеширования.
+    :type obj: Any
+    :return: Хеш объекта.
+    :rtype: str
     """
     return hashlib.sha256(str(obj).encode()).hexdigest()
 
 _fresh_id_counter = 0
-def fresh_id():
+def fresh_id() -> int:
     """
-    Возвращает свежий ID для нового объекта. Это полезно для генерации уникальных ID для объектов.
+    Возвращает новый ID для нового объекта. Это полезно для генерации уникальных ID для объектов.
 
     :return: Уникальный ID.
+    :rtype: int
     """
     global _fresh_id_counter
     _fresh_id_counter += 1
     return _fresh_id_counter
-```
-## Внесённые изменения
-*   Добавлены reStructuredText (RST) комментарии ко всем функциям, классам, методам и модулю.
-*   Заменен стандартный импорт `json.load` на `j_loads` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger.logger`.
-*   Добавлена обработка ошибок с помощью `logger.error` вместо общих `try-except`.
-*   Добавлены более подробные комментарии `#` к строкам кода.
-*   Удален лишний комментарий ` # logger` и заменен на импорт
-*   Исправлено регулярное выражение в функции `extract_json` для более точного извлечения JSON.
-*   Удалены неиспользуемые импорты `TypeVar` и `Collection`.
-*   Добавлен комментарий ` # используем j_loads` в `JsonSerializableRegistry.from_json`.
-*   Добавлены пояснения по работе функции `read_config_file`.
-*   Добавлены docstring к методу `__init_subclass__` класса `JsonSerializableRegistry`.
-*   Исправлено регулярное выражение в функции `extract_json` для более точного извлечения JSON.
-## Оптимизированный код
-```python
-"""
-Общие утилиты и вспомогательные функции.
-=========================================================================================
-
-Этот модуль предоставляет набор общих утилит и вспомогательных функций,
-используемых в проекте TinyTroupe. Он включает в себя функции для:
-- работы с входными и выходными данными модели,
-- управления моделью,
-- валидации данных,
-- инжиниринга промптов,
-- рендеринга и разметки,
-- ввода/вывода,
-- сериализации JSON,
-- а также другие вспомогательные функции.
-
-Пример использования
---------------------
-
-Пример использования некоторых функций из этого модуля:
-
-.. code-block:: python
-
-    from tinytroupe.utils import compose_initial_LLM_messages_with_templates, extract_json
-    
-    messages = compose_initial_LLM_messages_with_templates(
-        system_template_name='system_prompt.txt', 
-        user_template_name='user_prompt.txt', 
-        rendering_configs={'variable': 'value'}
-    )
-    
-    json_data = extract_json('some text { "key": "value" } some text')
-"""
-import re
-import json
-import os
-import sys
-import hashlib
-import textwrap
-import logging
-import chevron
-import copy
-from datetime import datetime
-from pathlib import Path
-import configparser
-from typing import Any, Union
-from src.utils.jjson import j_loads, j_loads_ns # импортируем j_loads из src.utils.jjson
-from src.logger.logger import logger # импортируем logger из src.logger.logger
-
-AgentOrWorld = Union["TinyPerson", "TinyWorld"]
-
-# logger
-# logger = logging.getLogger("tinytroupe") # заменено на импорт из src.logger.logger
-
-
-################################################################################
-# Model input utilities
-################################################################################
-def compose_initial_LLM_messages_with_templates(system_template_name:str, user_template_name:str=None, rendering_configs:dict={}) -> list:
-    """
-    Составляет начальные сообщения для вызова LLM модели, предполагая, что всегда используется системное сообщение
-    (общее описание задачи) и необязательное пользовательское сообщение (конкретное описание задачи).
-    Эти сообщения составляются с использованием указанных шаблонов и конфигураций рендеринга.
-
-    :param system_template_name: Имя файла шаблона системного сообщения.
-    :param user_template_name: Имя файла шаблона пользовательского сообщения (необязательно).
-    :param rendering_configs: Словарь с конфигурациями для рендеринга шаблонов.
-    :return: Список сообщений для LLM.
-    """
-    system_prompt_template_path = os.path.join(os.path.dirname(__file__), f'prompts/{system_template_name}')
-    user_prompt_template_path = os.path.join(os.path.dirname(__file__), f'prompts/{user_template_name}')
-
-    messages = []
-
-    messages.append({"role": "system", 
-                         "content": chevron.render(
-                             open(system_prompt_template_path).read(), 
-                             rendering_configs)})
-    
-    # optionally add a user message
-    if user_template_name is not None:
-        messages.append({"role": "user", 
-                            "content": chevron.render(
-                                    open(user_prompt_template_path).read(), 
-                                    rendering_configs)})
-    return messages
-
-
-################################################################################	
-# Model output utilities
-################################################################################
-def extract_json(text: str) -> dict:
-    """
-    Извлекает JSON-объект из строки, игнорируя: любой текст до первой открывающей фигурной скобки;
-    и любые открывающие (```json) или закрывающие (```) теги Markdown.
-
-    :param text: Строка, из которой нужно извлечь JSON.
-    :return: Извлеченный JSON-объект в виде словаря или пустой словарь в случае ошибки.
-    """
-    try:
-        # удаляет любой текст до первой открывающей фигурной или квадратной скобки, используя регулярное выражение.
-        # Оставляет скобки.
-        text = re.sub(r'^.*?({|\[)', r'\1', text, flags=re.
