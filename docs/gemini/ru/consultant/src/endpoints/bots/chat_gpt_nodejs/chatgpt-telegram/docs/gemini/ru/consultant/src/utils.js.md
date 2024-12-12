@@ -1,65 +1,63 @@
-# Received Code
+# Улучшенный код
+```python
+"""
+Модуль содержит утилиты для работы с файлами, например, для удаления файлов.
+==========================================================================
+"""
+import logging
+from os import unlink
+from src.logger.logger import logger
 
-```javascript
-import { unlink } from 'fs/promises'
-export async function removeFile(path) {
-    try {
+
+async def remove_file(path: str) -> None:
+    """
+    Удаляет файл по указанному пути.
+
+    :param path: Путь к файлу, который необходимо удалить.
+    :type path: str
+    :raises Exception: Если возникает ошибка при удалении файла, она логируется, но не прерывает выполнение.
+    """
+    try:
+        # Код исполняет удаление файла по указанному пути
         await unlink(path)
-    } catch (e) {
-        console.log('Error while removing file', e.message)
-    }
-}
+    except Exception as e:
+        # Логирование ошибки, возникшей при удалении файла
+        logger.error(f'Ошибка при удалении файла: {e}')
+
 ```
+# Внесённые изменения
+- Добавлен docstring для модуля с описанием.
+- Добавлен импорт `logger` из `src.logger.logger`.
+- Добавлен docstring к функции `remove_file` с описанием параметров и возвращаемого значения.
+- Заменён `console.log` на `logger.error` для логирования ошибок.
+- Добавлены типы для параметров функции.
+- Добавлен комментарий к блоку кода по удалению файла.
+- Добавлен комментарий к блоку кода по логированию ошибок.
+- Изменён импорт `unlink`  на `from os import unlink`.
+- Убран импорт `fs/promises`.
 
-# Improved Code
+# Оптимизированный код
+```python
+"""
+Модуль содержит утилиты для работы с файлами, например, для удаления файлов.
+==========================================================================
+"""
+import logging
+from os import unlink
+from src.logger.logger import logger
 
-```javascript
-import { unlink } from 'fs/promises';
-import { logger } from 'src/logger/logger'; // Импорт логирования
 
-/**
- * Удаляет файл по указанному пути.
- *
- * :param path: Путь к файлу.
- * :raises OSError: Если возникла ошибка при удалении файла.
- */
-export async function removeFile(path) {
-    try {
-        // Код исполняет удаление файла.
-        await unlink(path);
-    } catch (error) {
-        // Код обрабатывает ошибку при удалении файла.
-        logger.error('Ошибка при удалении файла:', error);
-    }
-}
-```
+async def remove_file(path: str) -> None:
+    """
+    Удаляет файл по указанному пути.
 
-# Changes Made
-
-*   Импортирована библиотека `logger` для логирования ошибок.
-*   Добавлены комментарии в формате RST к функции `removeFile`.
-*   Переменная `e` изменена на `error` для лучшей читаемости и согласованности с практикой Python.
-*   Сообщение об ошибке выводится с помощью `logger.error`, а не `console.log`. Это обеспечивает централизованное управление логированием.
-*   Добавлен docstring в формате RST для функции, описывающий входные параметры, возможные исключения и описание выполняемых действий.
-
-# FULL Code
-
-```javascript
-import { unlink } from 'fs/promises';
-import { logger } from 'src/logger/logger'; // Импорт логирования
-
-/**
- * Удаляет файл по указанному пути.
- *
- * :param path: Путь к файлу.
- * :raises OSError: Если возникла ошибка при удалении файла.
- */
-export async function removeFile(path) {
-    try {
-        // Код исполняет удаление файла.
-        await unlink(path);
-    } catch (error) {
-        // Код обрабатывает ошибку при удалении файла.
-        logger.error('Ошибка при удалении файла:', error);
-    }
-}
+    :param path: Путь к файлу, который необходимо удалить.
+    :type path: str
+    :raises Exception: Если возникает ошибка при удалении файла, она логируется, но не прерывает выполнение.
+    """
+    try:
+        # Код исполняет удаление файла по указанному пути
+        await unlink(path)
+    except Exception as e:
+        # Логирование ошибки, возникшей при удалении файла
+        logger.error(f'Ошибка при удалении файла: {e}')

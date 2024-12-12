@@ -1,91 +1,77 @@
-# Received Code
-
+# Улучшенный код
 ```python
-# Прочитать данные из файла
-# Используется json.load, что требует изменения
-def read_data(file_path):
-    with open(file_path, 'r') as file:
-        data = json.load(file)
-        # ... Дальше обработка данных ...
-    return data
+"""
+Модуль для работы с инструкциями по проверке кода в формате Markdown.
+====================================================================
+Этот модуль предоставляет инструкции для проверки кода, 
+описывая требования к формату, стилю и структуре.
+"""
+from typing import Any
 
-# ... Другие функции ...
-```
+from src.logger.logger import logger
+from src.utils.jjson import j_loads_ns
 
-# Improved Code
 
-```python
-# Прочитать данные из файла с использованием j_loads из src.utils.jjson
-from src.utils.jjson import j_loads
-from src.logger.logger import logger # Импорт для логирования
-
-def read_data(file_path):
+def process_instructions(file_path: str) -> dict:
     """
-    Читает данные из файла.
+    Обрабатывает файл инструкций, проверяет и подготавливает его для дальнейшего использования.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :return: Данные из файла в формате словаря.
-    :rtype: dict
+    :param file_path: Путь к файлу с инструкциями.
+    :return: Словарь с инструкциями.
     """
     try:
-        with open(file_path, 'r') as file:
-            data = j_loads(file.read()) # Использование j_loads
-            # ... Дальнейшая обработка данных ...
-        return data
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: файл не найден {e}")
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: файл не является валидным JSON {e}")
-        return None
+        # Код загружает инструкции из файла, используя j_loads_ns для обработки JSON
+        instructions = j_loads_ns(file_path)
+        
+    except Exception as ex:
+        logger.error(f'Ошибка при чтении файла инструкций: {file_path}', exc_info=ex)
+        return {}
 
-
-# ... Другие функции ...
+    # Код добавляет в инструкции ключи 'output_language' и 'Расположение файла'
+    instructions['output_language'] = 'ru'
+    instructions['Расположение файла'] = file_path
+    return instructions
 ```
+# Внесённые изменения
+- Добавлены импорты `from src.logger.logger import logger` и `from src.utils.jjson import j_loads_ns`.
+- Документирован модуль в формате reStructuredText.
+- Документирована функция `process_instructions` в формате reStructuredText.
+- Заменено использование `json.load` на `j_loads_ns` для загрузки файла.
+- Добавлена обработка ошибок с использованием `logger.error` при чтении файла.
+- Добавлены ключи `output_language` и `Расположение файла` в словарь инструкций.
+- Добавлены комментарии, объясняющие работу кода.
 
-# Changes Made
-
-* Импортирован `logger` из `src.logger.logger` для логирования ошибок.
-* Функция `read_data` теперь использует `j_loads` для чтения данных, что соответствует требованию.
-* Добавлена документация RST для функции `read_data` с использованием спецификаций для параметров, типов, исключений и возвращаемого значения.
-* Обработка ошибок `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error` и возвращением `None` при возникновении ошибки.
-
-
-# FULL Code
-
+# Оптимизированный код
 ```python
-# Прочитать данные из файла с использованием j_loads из src.utils.jjson
-from src.utils.jjson import j_loads
-from src.logger.logger import logger # Импорт для логирования
-import json # Добавлен импорт json
+"""
+Модуль для работы с инструкциями по проверке кода в формате Markdown.
+====================================================================
+Этот модуль предоставляет инструкции для проверки кода, 
+описывая требования к формату, стилю и структуре.
+"""
+from typing import Any
 
-def read_data(file_path):
+from src.logger.logger import logger
+from src.utils.jjson import j_loads_ns
+
+
+def process_instructions(file_path: str) -> dict:
     """
-    Читает данные из файла.
+    Обрабатывает файл инструкций, проверяет и подготавливает его для дальнейшего использования.
 
-    :param file_path: Путь к файлу.
-    :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :return: Данные из файла в формате словаря.
-    :rtype: dict
+    :param file_path: Путь к файлу с инструкциями.
+    :return: Словарь с инструкциями.
     """
     try:
-        with open(file_path, 'r') as file:
-            data = j_loads(file.read()) # Использование j_loads
-            # ... Дальнейшая обработка данных ...
-        return data
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка: файл не найден {e}")
-        return None
-    except json.JSONDecodeError as e:
-        logger.error(f"Ошибка: файл не является валидным JSON {e}")
-        return None
+        # Код загружает инструкции из файла, используя j_loads_ns для обработки JSON
+        instructions = j_loads_ns(file_path)
+    except Exception as ex:
+        # Логирование ошибки при чтении файла
+        logger.error(f'Ошибка при чтении файла инструкций: {file_path}', exc_info=ex)
+        return {}
 
-
-# ... Другие функции ...
-```
+    # Код добавляет в инструкции ключи 'output_language' и 'Расположение файла'
+    instructions['output_language'] = 'ru'
+    instructions['Расположение файла'] = file_path
+    return instructions
 ```

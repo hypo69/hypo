@@ -1,220 +1,217 @@
-```MD
-# Received Code
-
+# Improved Code
 ```python
-## \file /src/endpoints/hypo69/code_assistant/make_summary.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-module: src.endpoints.hypo69.code_assistant.make_summary
-	:platform: Windows, Unix
-	:synopsis: Модуль собирает файл `summary.md` для компиляции средствами `mdbook`
-    Подробнее: https://chatgpt.com/share/6742f054-aaa0-800d-9f84-0ab035a2a2c2
+Модуль для создания файла `SUMMARY.md` для `mdbook`.
+=========================================================================================
+
+Модуль ``make_summary`` предназначен для автоматического создания файла `SUMMARY.md`,
+необходимого для компиляции документации с помощью `mdbook`.
+Функции модуля позволяют рекурсивно обходить директории с исходными файлами
+формата `.md` и генерировать структуру оглавления в формате,
+требуемом `mdbook`.
+
+Пример использования:
+--------------------
+
+.. code-block:: python
+
+    from pathlib import Path
+    from src.endpoints.hypo69.code_assistant.make_summary import make_summary
+
+    docs_dir = Path('путь/к/директории/с/документами')
+    make_summary(docs_dir)
+
 """
 MODE = 'dev'
 
 
 from pathlib import Path
+from src.logger.logger import logger  # Добавлен импорт logger
+
 
 def make_summary(docs_dir: Path) -> None:
     """
-    Создает файл SUMMARY.md, рекурсивно обходя папку.
+    Создает файл `SUMMARY.md`, рекурсивно обходя указанную директорию.
 
-    Args:
-        docs_dir (Path): Путь к исходной директории \'docs\'.
+    :param docs_dir: Путь к исходной директории с документацией.
+    :type docs_dir: Path
+    :return: None
     """
+    # Формирование пути для файла `SUMMARY.md`.
     summary_file = prepare_summary_path(docs_dir)
+    # Создание родительских директорий, если они не существуют.
     summary_file.parent.mkdir(parents=True, exist_ok=True)
-    return _make_summary(docs_dir, summary_file)
+    # Вызов функции для рекурсивного создания структуры.
+    _make_summary(docs_dir, summary_file)
 
 
 def _make_summary(src_dir: Path, summary_file: Path) -> bool:
     """
-    Рекурсивно обходит папку и создает файл SUMMARY.md с главами на основе .md файлов.
+    Рекурсивно обходит директорию и создает файл `SUMMARY.md` на основе `.md` файлов.
 
-    Args:
-        src_dir (Path): Путь к папке с исходниками .md.
-        summary_file (Path): Путь для сохранения файла SUMMARY.md.
+    :param src_dir: Путь к директории с исходными файлами `.md`.
+    :type src_dir: Path
+    :param summary_file: Путь к файлу `SUMMARY.md`, который будет создан.
+    :type summary_file: Path
+    :return: Возвращает `True` в случае успешного создания файла, `False` в случае ошибки.
+    :rtype: bool
     """
     try:
+        # Проверка на существование файла и вывод предупреждения.
         if summary_file.exists():
             print(f"Файл {summary_file} уже существует. Его содержимое будет перезаписано.")
 
+        # Открытие файла для записи с кодировкой UTF-8.
         with summary_file.open('w', encoding='utf-8') as summary:
+            # Запись начального заголовка для `mdbook`.
             summary.write('# Summary\n\n')
 
+            # Обход всех `.md` файлов в директории, включая поддиректории.
             for path in sorted(src_dir.rglob('*.md')):
+                # Пропуск файла `SUMMARY.md`, чтобы избежать рекурсии.
                 if path.name == 'SUMMARY.md':
                     continue
+                # Формирование относительного пути.
                 relative_path = path.relative_to(src_dir.parent)
+                # Запись строки в файл `SUMMARY.md` с форматированием для `mdbook`.
                 summary.write(f'- [{path.stem}]({relative_path.as_posix()})\n')
         return True
     except Exception as ex:
-        logger.error('Ошибка создания файла `summary.md`', ex)
-        return False # Возвращаем False для индикации ошибки
-
-def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
-    """
-    Формирует путь к файлу, заменяя часть пути \'src\' на \'docs\' и добавляя имя файла.
-
-    Args:
-        src_dir (Path): Исходный путь с \'docs\'.
-        file_name (str): Имя файла, который нужно создать. По умолчанию \'SUMMARY.md\'.
-
-    Returns:
-        Path: Новый путь к файлу.
-    """
-    new_dir = Path(str(src_dir).replace('/src', '/docs'))
-    summary_file = new_dir / file_name
-    return summary_file
-```
-
-# Improved Code
-
-```python
-import logging
-from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
-
-# Настройка логирования
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
-
-# Установим уровень подробности логов
-logger.setLevel(logging.DEBUG)
-
-def make_summary(docs_dir: Path) -> None:
-    """
-    Создает файл SUMMARY.md, рекурсивно обходя папку.
-
-    :param docs_dir: Путь к исходной директории \'docs\'.
-    """
-    summary_file = prepare_summary_path(docs_dir)
-    summary_file.parent.mkdir(parents=True, exist_ok=True)
-    success = _make_summary(docs_dir, summary_file)
-    if not success:
-        logger.error(f"Не удалось создать файл {summary_file}")
-
-def _make_summary(src_dir: Path, summary_file: Path) -> bool:
-    """
-    Рекурсивно обходит папку и создает файл SUMMARY.md с главами на основе .md файлов.
-
-    :param src_dir: Путь к папке с исходниками .md.
-    :param summary_file: Путь для сохранения файла SUMMARY.md.
-    :return: True, если файл создан успешно, False в противном случае.
-    """
-    try:
-        if summary_file.exists():
-            logger.warning(f"Файл {summary_file} уже существует. Его содержимое будет перезаписано.")
-
-        with summary_file.open('w', encoding='utf-8') as summary:
-            summary.write('# Summary\n\n')
-
-            for path in sorted(src_dir.rglob('*.md')):
-                if path.name == 'SUMMARY.md':
-                    continue
-                relative_path = path.relative_to(src_dir.parent)
-                summary.write(f'- [{path.stem}]({relative_path.as_posix()})\n')
-        return True
-    except Exception as ex:
-        logger.error('Ошибка создания файла `summary.md`', exc_info=True)  # Добавляем traceback
+        # Логирование ошибки в случае исключения.
+        logger.error(f"Ошибка создания файла `summary.md`", exc_info=ex)
+        ...
         return False
 
+
 def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
     """
-    Формирует путь к файлу, заменяя часть пути \'docs\' на \'docs\' и добавляя имя файла.
+    Формирует путь к файлу `SUMMARY.md` на основе пути к исходной директории.
+    Заменяет часть пути `/src` на `/docs`.
 
-    :param src_dir: Исходный путь с \'docs\'.
-    :param file_name: Имя файла, который нужно создать. По умолчанию \'SUMMARY.md\'.
-    :return: Новый путь к файлу.
+    :param src_dir: Исходный путь с `/src`.
+    :type src_dir: Path
+    :param file_name: Имя файла, который нужно создать. По умолчанию `SUMMARY.md`.
+    :type file_name: str
+    :return: Возвращает новый путь к файлу.
+    :rtype: Path
     """
+    # Замена `/src` на `/docs` в пути к директории.
     new_dir = Path(str(src_dir).replace('/src', '/docs'))
+    # Создание полного пути к файлу `SUMMARY.md`.
     summary_file = new_dir / file_name
     return summary_file
 ```
-
 # Changes Made
-
-*   Импортированы необходимые функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Добавлен импорт `logging`.
-*   Настройка логирования с помощью `logging.basicConfig` и `logger.setLevel`.
-*   Использование `logger.error` для обработки исключений.  Добавлен `exc_info=True` для лучшей отладки.
-*   Изменен возврат функции `_make_summary`, чтобы отразить возможную ошибку.
-*   Добавлена проверка существования файла `summary.md` и вывод предупреждения.
-*   Добавлена обработка ошибок с помощью `logger.error`.
-*   Переписаны docstrings в формате RST.
-*   Изменены имена переменных и функций для соответствия PEP 8.
-*   Убраны ненужные комментарии и улучшена читабельность кода.
-*   Изменен аргумент `src_dir` в функции `make_summary` на `docs_dir`, чтобы отразить использование в папке "docs"
-*   Добавлена логирование  предупреждений и ошибок.
-*   Возвращаемое значение функции `_make_summary` изменено на `bool` для отражения успеха.
-
-
+* Добавлен импорт `logger` из `src.logger.logger`.
+* Добавлены docstrings в формате RST для модуля и всех функций.
+* Изменен вывод ошибок в функции `_make_summary` на использование `logger.error` для логирования.
+* Добавлены типы параметров и возвращаемых значений в docstring для функций.
+* Добавлены комментарии для пояснения основных блоков кода.
 # FULL Code
-
 ```python
-import logging
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+"""
+Модуль для создания файла `SUMMARY.md` для `mdbook`.
+=========================================================================================
+
+Модуль ``make_summary`` предназначен для автоматического создания файла `SUMMARY.md`,
+необходимого для компиляции документации с помощью `mdbook`.
+Функции модуля позволяют рекурсивно обходить директории с исходными файлами
+формата `.md` и генерировать структуру оглавления в формате,
+требуемом `mdbook`.
+
+Пример использования:
+--------------------
+
+.. code-block:: python
+
+    from pathlib import Path
+    from src.endpoints.hypo69.code_assistant.make_summary import make_summary
+
+    docs_dir = Path('путь/к/директории/с/документами')
+    make_summary(docs_dir)
+
+"""
+MODE = 'dev'
+
+
 from pathlib import Path
-from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
-
-# Настройка логирования
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
-
-# Установим уровень подробности логов
-logger.setLevel(logging.DEBUG)
+from src.logger.logger import logger  # Добавлен импорт logger
 
 
 def make_summary(docs_dir: Path) -> None:
     """
-    Создает файл SUMMARY.md, рекурсивно обходя папку.
+    Создает файл `SUMMARY.md`, рекурсивно обходя указанную директорию.
 
-    :param docs_dir: Путь к исходной директории \'docs\'.
+    :param docs_dir: Путь к исходной директории с документацией.
+    :type docs_dir: Path
+    :return: None
     """
+    # Формирование пути для файла `SUMMARY.md`.
     summary_file = prepare_summary_path(docs_dir)
+    # Создание родительских директорий, если они не существуют.
     summary_file.parent.mkdir(parents=True, exist_ok=True)
-    success = _make_summary(docs_dir, summary_file)
-    if not success:
-        logger.error(f"Не удалось создать файл {summary_file}")
+    # Вызов функции для рекурсивного создания структуры.
+    _make_summary(docs_dir, summary_file)
 
 
 def _make_summary(src_dir: Path, summary_file: Path) -> bool:
     """
-    Рекурсивно обходит папку и создает файл SUMMARY.md с главами на основе .md файлов.
+    Рекурсивно обходит директорию и создает файл `SUMMARY.md` на основе `.md` файлов.
 
-    :param src_dir: Путь к папке с исходниками .md.
-    :param summary_file: Путь для сохранения файла SUMMARY.md.
-    :return: True, если файл создан успешно, False в противном случае.
+    :param src_dir: Путь к директории с исходными файлами `.md`.
+    :type src_dir: Path
+    :param summary_file: Путь к файлу `SUMMARY.md`, который будет создан.
+    :type summary_file: Path
+    :return: Возвращает `True` в случае успешного создания файла, `False` в случае ошибки.
+    :rtype: bool
     """
     try:
+        # Проверка на существование файла и вывод предупреждения.
         if summary_file.exists():
-            logger.warning(f"Файл {summary_file} уже существует. Его содержимое будет перезаписано.")
+            print(f"Файл {summary_file} уже существует. Его содержимое будет перезаписано.")
 
+        # Открытие файла для записи с кодировкой UTF-8.
         with summary_file.open('w', encoding='utf-8') as summary:
+            # Запись начального заголовка для `mdbook`.
             summary.write('# Summary\n\n')
 
+            # Обход всех `.md` файлов в директории, включая поддиректории.
             for path in sorted(src_dir.rglob('*.md')):
+                # Пропуск файла `SUMMARY.md`, чтобы избежать рекурсии.
                 if path.name == 'SUMMARY.md':
                     continue
+                # Формирование относительного пути.
                 relative_path = path.relative_to(src_dir.parent)
+                # Запись строки в файл `SUMMARY.md` с форматированием для `mdbook`.
                 summary.write(f'- [{path.stem}]({relative_path.as_posix()})\n')
         return True
     except Exception as ex:
-        logger.error('Ошибка создания файла `summary.md`', exc_info=True)  # Добавляем traceback
+        # Логирование ошибки в случае исключения.
+        logger.error(f"Ошибка создания файла `summary.md`", exc_info=ex)
+        ...
         return False
 
 
 def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
     """
-    Формирует путь к файлу, заменяя часть пути \'docs\' на \'docs\' и добавляя имя файла.
+    Формирует путь к файлу `SUMMARY.md` на основе пути к исходной директории.
+    Заменяет часть пути `/src` на `/docs`.
 
-    :param src_dir: Исходный путь с \'docs\'.
-    :param file_name: Имя файла, который нужно создать. По умолчанию \'SUMMARY.md\'.
-    :return: Новый путь к файлу.
+    :param src_dir: Исходный путь с `/src`.
+    :type src_dir: Path
+    :param file_name: Имя файла, который нужно создать. По умолчанию `SUMMARY.md`.
+    :type file_name: str
+    :return: Возвращает новый путь к файлу.
+    :rtype: Path
     """
+    # Замена `/src` на `/docs` в пути к директории.
     new_dir = Path(str(src_dir).replace('/src', '/docs'))
+    # Создание полного пути к файлу `SUMMARY.md`.
     summary_file = new_dir / file_name
     return summary_file
-```
