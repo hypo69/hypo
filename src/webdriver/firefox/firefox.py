@@ -46,7 +46,7 @@ WebDriver Firefox
 import os
 import random
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 from selenium.webdriver import Firefox as WebDriver
 from selenium.webdriver.firefox.options import Options
@@ -81,6 +81,8 @@ class Firefox(WebDriver):
     :type user_agent: Optional[str]
     :param proxy_file_path: Путь к файлу с прокси.
     :type proxy_file_path: Optional[str]
+    :param options: Список опций для Firefox.
+    :type options: Optional[List[str]]
     """
     driver_name: str = 'firefox'
 
@@ -89,11 +91,12 @@ class Firefox(WebDriver):
                  firefox_version: Optional[str] = None,
                  user_agent: Optional[str] = None,
                  proxy_file_path: Optional[str] = None,
+                 options: Optional[List[str]] = None,
                  *args, **kwargs) -> None:
         #  объявление переменных
         service = None
         profile = None
-        options = None
+        options_obj = None
         #  Загрузка настроек Firefox
         settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json'))
         #  Путь к geckodriver и бинарнику Firefox
@@ -102,24 +105,30 @@ class Firefox(WebDriver):
         #  Инициализация сервиса
         service = Service(geckodriver_path)
         #  Настройка опций Firefox
-        options = Options()
-        #  Добавление аргументов из настроек
+        options_obj = Options()
+        
+        #  Добавление опций из файла настроек
         if hasattr(settings, 'options') and settings.options:
-            for key, value in vars(settings.options).items():
-                options.add_argument(f'--{key}={value}')
+            for option in settings.options:
+                options_obj.add_argument(option)
+
+        #  Добавление опций, переданных при инициализации
+        if options:
+            for option in options:
+                options_obj.add_argument(option)
 
         #  Добавление заголовков из настроек
         if hasattr(settings, 'headers') and settings.headers:
             for key, value in vars(settings.headers).items():
-                 options.add_argument(f'--{key}={value}')
+                 options_obj.add_argument(f'--{key}={value}')
 
         #  Установка пользовательского агента
         user_agent = user_agent or UserAgent().random
-        options.set_preference('general.useragent.override', user_agent)
+        options_obj.set_preference('general.useragent.override', user_agent)
 
         #  Установка прокси, если включены
         if hasattr(settings, 'proxy_enabled') and settings.proxy_enabled:
-            self.set_proxy(options)
+            self.set_proxy(options_obj)
 
         #  Настройка директории профиля
         profile_directory = settings.profile_directory.os if settings.profile_directory.default == 'os' else str(Path(gs.path.src, settings.profile_directory.internal))
@@ -133,7 +142,7 @@ class Firefox(WebDriver):
 
         try:
             logger.info('Запуск Firefox WebDriver')
-            super().__init__(service=service, options=options)
+            super().__init__(service=service, options=options_obj)
             #  Выполнение пользовательских действий после инициализации драйвера
             self._payload()
         except WebDriverException as ex:

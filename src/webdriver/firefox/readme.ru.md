@@ -1,4 +1,4 @@
-```rst
+``````rst
 .. module:: src.webdriver.firefox
 ```
 # Модуль для работы с WebDriver Firefox
@@ -44,7 +44,8 @@ if __name__ == "__main__":
         profile_name=profile_name, 
         geckodriver_version=geckodriver_version, 
         firefox_version=firefox_version,
-        proxy_file_path=proxy_file_path
+        proxy_file_path=proxy_file_path,
+        options=["--kiosk", "--headless"]  # Добавление опций
     )
     browser.get("https://www.example.com")
     browser.quit()
@@ -59,6 +60,7 @@ if __name__ == "__main__":
   - Прокси-настройки
   - Установка пользовательского агента
   - Интеграция с JavaScript и исполнение локаторов
+  - Возможность передавать опции при инициализации
 
 #### Конструктор `__init__`
 
@@ -68,6 +70,7 @@ def __init__(self, profile_name: Optional[str] = None,
              firefox_version: Optional[str] = None,
              user_agent: Optional[str] = None,
              proxy_file_path: Optional[str] = None,
+             options: Optional[List[str]] = None,  # Новый параметр
              *args, **kwargs) -> None:
 ```
 
@@ -76,6 +79,7 @@ def __init__(self, profile_name: Optional[str] = None,
 - **firefox_version**: Версия Firefox.
 - **user_agent**: Пользовательский агент.
 - **proxy_file_path**: Путь к файлу с прокси.
+- **options**: Список опций для Firefox (например, `["--kiosk", "--headless"]`).
 
 #### Метод `set_proxy`
 
@@ -98,6 +102,7 @@ def _payload(self) -> None:
 - **Прокси**: Модуль автоматически выбирает доступный рабочий прокси из файла, который указывается в параметре `proxy_file_path`.
 - **Профиль Firefox**: Вы можете указать путь к кастомному профилю для Firefox.
 - **Пользовательский агент**: Модуль позволяет задать произвольный пользовательский агент для WebDriver.
+- **Опции**: Вы можете передать дополнительные опции для Firefox через параметр `options`.
 
 ## Логирование
 
@@ -105,4 +110,4 @@ def _payload(self) -> None:
 
 ## Лицензия
 
-Этот проект лицензируется под лицензией MIT. Подробности см. в файле LICENSE.
+Этот проект лицензируется под лицензией MIT. Подробности см. в файле [LICENSE](../../LICENCE).

@@ -41,6 +41,7 @@
             margin: 15pt 0;
             width: 100%;
             box-sizing: border-box;
+            page-break-inside: avoid; /* Избегаем разрыва внутри карточки */
         }
         .product-card h3 {
             margin-top: 0; /* Убираем верхний отступ у заголовка */
@@ -70,6 +71,15 @@
             margin-top: 30pt;
             padding: 15pt;
             border-top: 1pt solid #dee2e6;
+        }
+        /* Стили для печати */
+        @media print {
+            .product-card {
+                page-break-after: always; /* Разрыв страницы после каждой карточки */
+            }
+            .product-card:last-child {
+                page-break-after: auto; /* Нет разрыва после последней карточки */
+            }
         }
     </style>
 </head>

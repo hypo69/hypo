@@ -1,13 +1,15 @@
 {
-  "options": [],
+  "options": [
+    "--disable-dev-shm-usage",
+    "--remote-debugging-port=0"
+  ],
   "profiles": {
-
     "os": "%LOCALAPPDATA%\\Microsoft\\Edge\\User Data\\Default",
     "internal": "webdriver\\edge\\profiles\\default"
-
   },
-  "msedgedriver": "webdrivers\\edge\\123.0.2420.97\\msedgedriver.exe" ,
-
+  "executable_path": {
+    "default": "webdrivers\\edge\\123.0.2420.97\\msedgedriver.exe"
+  },
   "headers": {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36 Edg/96.0.1054.62",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",

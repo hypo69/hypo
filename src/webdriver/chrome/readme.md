@@ -1,24 +1,25 @@
 ```rst
 .. module:: src.webdriver.chrome
 ```
-# Chrome WebDriver for Selenium
+# Custom Chrome WebDriver Module for Selenium
 
-This repository provides a custom implementation of the Chrome WebDriver using Selenium. It integrates configuration settings defined in the `chrome.json` file, such as user-agent and browser profile settings, to enable flexible and automated browser interactions.
+This module provides a custom implementation of the Chrome WebDriver using Selenium. It integrates configuration settings defined in the `chrome.json` file, such as user-agent and browser profile settings, to enable flexible and automated browser interactions.
 
 ## Key Features
 
-- **Centralized Configuration**: Configuration is managed through a `chrome.json` file.
-- **Multiple Browser Profiles**: Supports multiple browser profiles, enabling users to configure different settings for testing.
+- **Centralized Configuration**: Configuration is managed via the `chrome.json` file.
+- **Multiple Browser Profiles**: Supports multiple browser profiles, allowing you to configure different settings for testing.
 - **Enhanced Logging and Error Handling**: Provides detailed logs for initialization, configuration issues, and WebDriver errors.
+- **Ability to Pass Custom Options**: Supports passing custom options during WebDriver initialization.
 
-## Prerequisites
+## Requirements
 
-Before using this WebDriver, ensure that the following dependencies are installed:
+Before using this WebDriver, ensure the following dependencies are installed:
 
 - Python 3.x
 - Selenium
 - Fake User Agent
-- WebDriver binary for Chrome (e.g., `chromedriver`)
+- Chrome WebDriver binary (e.g., `chromedriver`)
 
 Install the required Python dependencies:
 
@@ -26,11 +27,11 @@ Install the required Python dependencies:
 pip install selenium fake_useragent
 ```
 
-Additionally, ensure that the `chromedriver` binary is available in your system's `PATH` or specify the path in the configuration.
+Additionally, ensure the `chromedriver` binary is available in your system's `PATH` or specify its path in the configuration.
 
 ## Configuration
 
-The configuration for the Chrome WebDriver is stored in a `chrome.json` file. Below is an example of how to structure the configuration file and its description:
+The configuration for the Chrome WebDriver is stored in the `chrome.json` file. Below is an example structure of the configuration file and its description:
 
 ### Example Configuration (`chrome.json`)
 
@@ -70,52 +71,52 @@ The configuration for the Chrome WebDriver is stored in a `chrome.json` file. Be
 }
 ```
 
-### Configuration Fields
+### Configuration Fields Description
 
 #### 1. `options`
-A dictionary of Chrome options to modify browser behavior:
-- **log-level**: Set the logging level. The value `5` corresponds to the most detailed logging level.
-- **disable-dev-shm-usage**: Disables the use of `/dev/shm` in Docker containers (useful for avoiding errors in containerized environments).
-- **remote-debugging-port**: Sets the port for Chrome’s remote debugging. `0` means a random port will be assigned.
-- **arguments**: A list of command-line arguments to pass to Chrome. Examples include `--kiosk` to run in kiosk mode and `--disable-gpu` to disable GPU acceleration.
+A dictionary of Chrome parameters to modify browser behavior:
+- **log-level**: Sets the logging level. A value of `5` corresponds to the most detailed logging level.
+- **disable-dev-shm-usage**: Disables the use of `/dev/shm` in Docker containers (useful to prevent errors in containerized environments).
+- **remote-debugging-port**: Sets the port for remote debugging in Chrome. A value of `0` means a random port will be assigned.
+- **arguments**: A list of command-line arguments passed to Chrome. Examples: `--kiosk` for kiosk mode and `--disable-gpu` to disable GPU hardware acceleration.
 
 #### 2. `disabled_options`
-Options that are explicitly disabled. In this case, the `headless` mode is disabled, meaning the Chrome browser will run in a visible window rather than in headless mode.
+Options explicitly disabled. In this case, the `headless` mode is disabled, meaning Chrome will run in a visible window rather than headless mode.
 
 #### 3. `profile_directory`
-Paths to Chrome's user data directories for different environments:
+Paths to Chrome user data directories for different environments:
 - **os**: Path to the default user data directory (typically for Windows systems).
-- **internal**: Internal path for the WebDriver's default profile.
-- **testing**: Path to the user data directory specifically set up for testing.
+- **internal**: Internal path for the default WebDriver profile.
+- **testing**: Path to the user data directory specifically configured for testing.
 
 #### 4. `binary_location`
 Paths to various Chrome binaries:
 - **os**: Path to the installed Chrome binary for the operating system.
 - **exe**: Path to the ChromeDriver executable.
-- **binary**: A specific path to a version of Chrome for testing.
-- **chromium**: Path to a Chromium binary that can be used as an alternative to Chrome.
+- **binary**: Specific path to the Chrome binary for testing.
+- **chromium**: Path to the Chromium binary, which can be used as an alternative to Chrome.
 
 #### 5. `headers`
-Custom HTTP headers to use in browser requests:
-- **User-Agent**: Specifies the browser's user-agent string.
-- **Accept**: Specifies the media types the browser is willing to accept.
-- **Accept-Charset**: Specifies the character encoding supported by the browser.
-- **Accept-Encoding**: Specifies the encoding methods accepted (set to `none` to disable).
-- **Accept-Language**: Specifies the preferred languages.
-- **Connection**: Specifies the connection type to be used by the browser (e.g., `keep-alive`).
+Custom HTTP headers used in browser requests:
+- **User-Agent**: Sets the user-agent string for the browser.
+- **Accept**: Sets the types of data the browser is willing to accept.
+- **Accept-Charset**: Sets the character encoding supported by the browser.
+- **Accept-Encoding**: Sets the supported encoding methods (set to `none` to disable).
+- **Accept-Language**: Sets the preferred languages.
+- **Connection**: Sets the connection type the browser should use (e.g., `keep-alive`).
 
 #### 6. `proxy_enabled`
-Boolean value indicating whether a proxy server should be used for the WebDriver. Set to `false` by default.
+A boolean value indicating whether to use a proxy server for the WebDriver. Defaults to `false`.
 
 ## Usage
 
-To use the `Chrome` WebDriver in your project, simply import it and initialize:
+To use the `Chrome` WebDriver in your project, simply import and initialize it:
 
 ```python
 from src.webdriver.chrome import Chrome
 
-# Initialize Chrome WebDriver with user-agent settings
-browser = Chrome(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+# Initialize Chrome WebDriver with user-agent settings and custom options
+browser = Chrome(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)", options=["--headless", "--disable-gpu"])
 
 # Open a website
 browser.get("https://www.example.com")
@@ -124,15 +125,15 @@ browser.get("https://www.example.com")
 browser.quit()
 ```
 
-The `Chrome` class automatically loads settings from the `chrome.json` file and uses them to configure the WebDriver. You can also specify a custom user-agent when initializing the WebDriver.
+The `Chrome` class automatically loads settings from the `chrome.json` file and uses them to configure the WebDriver. You can also specify a custom user-agent and pass additional options during WebDriver initialization.
 
 ### Singleton Pattern
 
-The `Chrome` WebDriver follows the Singleton pattern. This means that only one instance of the `Chrome` WebDriver will be created. If an instance already exists, it will reuse the same instance and open a new window.
+The `Chrome` WebDriver uses the Singleton pattern. This means only one instance of the WebDriver will be created. If an instance already exists, the same instance will be reused, and a new window will be opened.
 
 ## Logging and Debugging
 
-The WebDriver class uses the `logger` from `src.logger` to log errors, warnings, and general information. Any issues during initialization, configuration, or execution will be logged for easy debugging.
+The WebDriver class uses the `logger` from `src.logger` to log errors, warnings, and general information. All issues encountered during initialization, configuration, or execution will be logged for easy debugging.
 
 ### Example Logs
 
@@ -141,4 +142,4 @@ The WebDriver class uses the `logger` from `src.logger` to log errors, warnings,
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](../../LICENSE) file for details.

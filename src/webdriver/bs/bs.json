@@ -1,0 +1,21 @@
+{
+  "default_url": "https://example.com",
+  "default_file_path": "file://path/to/your/file.html",
+  "default_locator": {
+    "by": "ID",
+    "attribute": "element_id",
+    "selector": "//*[@id='element_id']"
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "logs/bs.log"
+  },
+  "proxy": {
+    "enabled": false,
+    "server": "http://proxy.example.com:8080",
+    "username": "user",
+    "password": "password"
+  },
+  "timeout": 10,
+  "encoding": "utf-8"
+}

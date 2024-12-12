@@ -58,7 +58,9 @@ class BotHandler:
         Args:
             webdriver_name (Optional[str]): Название веб-драйвера для запуска.
         """
+        firefox = Firefox(options=["--kiosk", "--headless"])
 
+       
         self.mexiron = MexironBuilder(
             Driver(
                 Firefox if webdriver_name.lower() == 'firefox'

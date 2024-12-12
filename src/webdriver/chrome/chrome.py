@@ -18,6 +18,7 @@ Key Features:
     - Centralized configuration via JSON files.
     - Support for multiple browser profiles.
     - Enhanced logging and error handling.
+    - Ability to pass custom options during initialization.
 
 Example usage
 --------------------
@@ -28,8 +29,8 @@ Example of using the `Chrome` class:
 
     from src.webdriver.chrome import Chrome
 
-    # Initialize Chrome WebDriver with user-agent settings
-    browser = Chrome(user_agent='Mozilla/5.0...')
+    # Initialize Chrome WebDriver with user-agent settings and custom options
+    browser = Chrome(user_agent='Mozilla/5.0...', options=["--headless", "--disable-gpu"])
     browser.get("https://www.example.com")
     browser.quit()
 """
@@ -39,7 +40,7 @@ MODE = 'dev'
 import os
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 from types import SimpleNamespace
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -90,30 +91,45 @@ class Chrome(webdriver.Chrome):
             cls._instance.window_open()  # Open a new window if instance already exists
         return cls._instance
 
-    def __init__(self, user_agent: Optional[str] = None, *args, **kwargs):
+    def __init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs):
         """
         Initializes the Chrome WebDriver with specified options and profile.
 
         :param user_agent: The user-agent string to be used. Defaults to a random user agent.
         :type user_agent: Optional[str]
+        :param options: A list of Chrome options to be passed during initialization.
+        :type options: Optional[List[str]]
         """
         try:
-            # устанавливаем user_agent или генерируем случайный
+            # Set user_agent or generate a random one
             user_agent = user_agent or UserAgent().random
-            # загружаем конфигурации из JSON файла
+            # Load configurations from JSON file
             self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))
 
-            # Проверяем загружена ли конфигурация
+            # Check if the configuration is loaded
             if not self.config:
                 logger.debug('Error in `chrome.json` file.')
                 return
-            # инициализируем параметры
-            options = ChromeOptions()
-            # устанавливаем путь до профиля
-            profile_directory: Path
-            # устанавливаем путь до исполняемого файла
-            executable_path: str
 
+            # Initialize options
+            options_obj = ChromeOptions()
+
+            # Add arguments from the configuration's options
+            if hasattr(self.config, 'options') and self.config.options:
+                for option in self.config.options:
+                    options_obj.add_argument(option)
+
+            # Add custom options passed during initialization
+            if options:
+                for option in options:
+                    options_obj.add_argument(option)
+
+            # Add arguments from the configuration's headers
+            if hasattr(self.config, 'headers') and self.config.headers:
+                for key, value in vars(self.config.headers).items():
+                    options_obj.add_argument(f'--{key}={value}')
+
+            # Normalize paths
             def normalize_path(path: str) -> str:
                 """
                 Replace placeholders with actual environment paths.
@@ -130,27 +146,16 @@ class Chrome(webdriver.Chrome):
                     .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
                 )
 
-            # Добавляем аргументы из настроек options
-            if hasattr(self.config, 'options') and self.config.options:
-                for key, value in vars(self.config.options).items():
-                    options.add_argument(f'--{key}={value}')
-
-            # Добавляем аргументы из настроек headers
-            if hasattr(self.config, 'headers') and self.config.headers:
-                for key, value in vars(self.config.headers).items():
-                    options.add_argument(f'--{key}={value}')
-
-            # Нормализуем пути
             profile_directory = Path(gs.path.root / normalize_path(self.config.profile_directory.testing))
             binary_location = Path(gs.path.root / normalize_path(self.config.binary_location.binary))
 
-            # Проверяем наличие директории профиля и добавляем аргумент
+            # Check if the profile directory exists and add the argument
             if profile_directory:
-                options.add_argument(f'user-data-dir={profile_directory}')
+                options_obj.add_argument(f'user-data-dir={profile_directory}')
 
-             # Устанавливаем путь к исполняемому файлу
-            options.binary_location = str(binary_location)
-            # Инициализируем сервис chrome driver
+            # Set the path to the executable file
+            options_obj.binary_location = str(binary_location)
+            # Initialize the Chrome driver service
             service = ChromeService(executable_path=str(binary_location)) if binary_location else ChromeService()
 
         except Exception as ex:
@@ -158,8 +163,8 @@ class Chrome(webdriver.Chrome):
             return
 
         try:
-            # Инициализируем webdriver
-            super().__init__(options=options, service=service)
+            # Initialize the WebDriver
+            super().__init__(options=options_obj, service=service)
         except WebDriverException as ex:
             logger.critical('Error initializing Chrome WebDriver:', ex)
             return
@@ -192,5 +197,5 @@ class Chrome(webdriver.Chrome):
 
 
 if __name__ == "__main__":
-    driver = Chrome()
+    driver = Chrome(options=["--headless", "--disable-gpu"])
     driver.get(r"https://google.com")

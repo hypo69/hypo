@@ -36,38 +36,54 @@ class Edge(WebDriver):
     """
     driver_name: str = 'edge'
 
-    def __init__(self, user_agent: Optional[dict] = None, *args, **kwargs) -> None:
+    def __init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs) -> None:
         """
         Initializes the Edge WebDriver with the specified user agent and options.
 
-        :param user_agent: Dictionary to specify the user agent. If `None`, a random user agent is generated.
+        :param user_agent: The user-agent string to be used. If `None`, a random user agent is generated.
+        :type user_agent: Optional[str]
+        :param options: A list of Edge options to be passed during initialization.
+        :type options: Optional[List[str]]
         """
         self.user_agent = user_agent or UserAgent().random
-        settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'edge' / 'edge.json'))
+        settings = j_loads_ns(Path(gs.path.src, 'webdriver', 'edge', 'edge.json'))
 
-        options = EdgeOptions()
-        options.add_argument(f'user-agent={self.user_agent}')
+        # Initialize Edge options
+        options_obj = EdgeOptions()
+        options_obj.add_argument(f'user-agent={self.user_agent}')
+
+        # Add custom options passed during initialization
+        if options:
+            for option in options:
+                options_obj.add_argument(option)
+
+        # Add arguments from the configuration's options
+        if hasattr(settings, 'options') and settings.options:
+            for option in settings.options:
+                options_obj.add_argument(option)
+
+        # Add arguments from the configuration's headers
+        if hasattr(settings, 'headers') and settings.headers:
+            for key, value in vars(settings.headers).items():
+                options_obj.add_argument(f'--{key}={value}')
 
         try:
             logger.info('Starting Edge WebDriver')
             edgedriver_path = settings.executable_path.default  # Ensure this is correctly defined in your JSON file
             service = EdgeService(executable_path=str(edgedriver_path))
-            super().__init__(options=options, service=service)
+            super().__init__(options=options_obj, service=service)
             self._payload()
         except WebDriverException as ex:
             logger.critical('Edge WebDriver failed to start:', ex)
-            ...
             return
         except Exception as ex:
             logger.critical('Edge WebDriver crashed. General error:', ex)
-            ...
             return
 
     def _payload(self) -> None:
         """
         Load executors for locators and JavaScript scenarios.
         """
-        ...
         j = JavaScript(self)
         self.get_page_lang = j.get_page_lang
         self.ready_state = j.ready_state
@@ -94,3 +110,8 @@ class Edge(WebDriver):
             for opt in opts:  
                 options.add_argument(opt)  
         return options  
+
+
+if __name__ == "__main__":
+    driver = Edge(options=["--headless", "--disable-gpu"])
+    driver.get("https://www.example.com")

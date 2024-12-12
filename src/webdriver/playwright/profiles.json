@@ -1,7 +1,0 @@
-{
-  "chrome_profiles": {
-    "os": "%LOCALAPPDATA%\\Google\\Chrome\\User Data",
-    "internal": "webdriver\\chrome\\profiles\\User Data",
-    "testing": "%LOCALAPPDATA%\\Google\\Chrome for Testing\\User Data"
-  }
-}

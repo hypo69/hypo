@@ -1,4 +1,5 @@
 ## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
+## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

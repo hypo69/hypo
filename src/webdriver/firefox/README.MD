@@ -44,7 +44,8 @@ if __name__ == "__main__":
         profile_name=profile_name, 
         geckodriver_version=geckodriver_version, 
         firefox_version=firefox_version,
-        proxy_file_path=proxy_file_path
+        proxy_file_path=proxy_file_path,
+        options=["--kiosk", "--headless"]  # Adding options
     )
     browser.get("https://www.example.com")
     browser.quit()
@@ -59,6 +60,7 @@ if __name__ == "__main__":
   - Proxy settings
   - Setting a custom user agent
   - Integration with JavaScript and executing locators
+  - Ability to pass options during initialization
 
 #### `__init__` Constructor
 
@@ -68,6 +70,7 @@ def __init__(self, profile_name: Optional[str] = None,
              firefox_version: Optional[str] = None,
              user_agent: Optional[str] = None,
              proxy_file_path: Optional[str] = None,
+             options: Optional[List[str]] = None,  # New parameter
              *args, **kwargs) -> None:
 ```
 
@@ -76,6 +79,7 @@ def __init__(self, profile_name: Optional[str] = None,
 - **firefox_version**: The version of Firefox.
 - **user_agent**: The user agent string.
 - **proxy_file_path**: The path to the proxy file.
+- **options**: A list of Firefox options (e.g., `["--kiosk", "--headless"]`).
 
 #### `set_proxy` Method
 
@@ -98,6 +102,7 @@ def _payload(self) -> None:
 - **Proxy**: The module automatically selects an available working proxy from the provided file, specified by the `proxy_file_path` parameter.
 - **Firefox Profile**: You can specify a path to a custom Firefox profile.
 - **User Agent**: The module allows you to set a custom user agent for the WebDriver.
+- **Options**: You can pass additional options for Firefox via the `options` parameter.
 
 ## Logging
 
@@ -105,4 +110,4 @@ The module uses `logger` for logging errors and warnings.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the LICENSE(../../LICENCE) file for more details.

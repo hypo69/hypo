@@ -1,0 +1,23 @@
+{
+  "max_requests": 10,
+  "headless": true,
+  "browser_type": "chromium",
+  "options": [
+    "--disable-dev-shm-usage",
+    "--no-sandbox",
+    "--disable-gpu"
+  ],
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+  "proxy": {
+    "enabled": false,
+    "server": "http://proxy.example.com:8080",
+    "username": "user",
+    "password": "password"
+  },
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "timeout": 30000,
+  "ignore_https_errors": false
+}

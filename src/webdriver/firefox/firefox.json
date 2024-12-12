@@ -1,6 +1,6 @@
 {
-  "options": null,
-  "disabled_options": [ "headless" ],
+  "options": [  ],
+  "disabled_options": [ "--kiosk", "--headless"  ],
   "profile_directory": {
     "os": "%LOCALAPPDATA%\\Mozilla\\Firefox\\Profiles\\zojh5u5a.default-release-3",
     "internal": "webdriver\\firefox\\profiles\\95c5aq3n.default-release",
