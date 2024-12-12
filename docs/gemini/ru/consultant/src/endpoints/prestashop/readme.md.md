@@ -1,109 +1,230 @@
 # Улучшенный код
+ 
 
-```python
-"""
-Модуль для работы с API PrestaShop.
-=========================================================================================
+ ```markdown
+ """
+ Документация по структуре и использованию веб-сайтов PrestaShop, а также хранению и использованию ключей API.
+ ==========================================================================================================
+ 
 
-Этот модуль предоставляет функции для взаимодействия с API PrestaShop веб-сайтов.
-Он обрабатывает получение данных с API, используя `j_loads` и `j_loads_ns` из `src.utils.jjson` для парсинга JSON.
-"""
-from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns # Импортируем нужную функцию
-import base64
-import requests
-import os
+ Этот документ содержит описание структуры и использования веб-сайтов PrestaShop, а также информацию о хранении и использовании ключей API для каждого сайта.
+ 
 
+ Раздел "Веб-сайты" содержит список веб-сайтов PrestaShop.
+ 
 
-def get_api_key(website_url: str) -> str:
-    """
-    Получает API ключ для указанного веб-сайта.
+ Раздел "Хранение ключей API" содержит информацию о хранении ключей API в файле `credentials.kdbx`.
+ 
 
-    :param website_url: URL веб-сайта.
-    :return: API ключ в виде строки.
-    :raises Exception: Если ключ не найден или произошла ошибка при его извлечении.
-    """
-    # TODO: Реализовать логику извлечения API ключа из credentials.kdbx.
-    #  Возвращайте значение по умолчанию или используйте logger.error для ошибок.
-    try:
-        # Ищем API ключ в файле credentials.kdbx. Подставить правильный путь к файлу
-        # if not os.path.exists('credentials.kdbx'): # Проверка существования файла
-            # raise FileNotFoundError('Файл credentials.kdbx не найден.')
-        api_key = os.environ.get(f"API_KEY_{website_url.replace('https://', '').replace('.', '_')}") # Читаем из переменных окружения
-        if not api_key:
-            raise ValueError(f"API ключ для {website_url} не найден.")
-        return api_key
-    except FileNotFoundError as e:
-        logger.error(f"Ошибка при чтении файла с API ключами: {e}")
-        return None
-    except ValueError as e:
-        logger.error(f"Ошибка при получении API ключа для {website_url}: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"Произошла ошибка при получении API ключа: {e}")
-        return None
+ Раздел "Пример использования API" содержит примеры запросов к API PrestaShop.
+ 
 
+ Раздел "Рекомендации по безопасности" содержит рекомендации по безопасному хранению и использованию ключей API.
+ 
 
-def fetch_products(website_url: str) -> dict:
-    """
-    Получает список продуктов с указанного веб-сайта.
+ Раздел "Дополнительные ресурсы" содержит ссылки на официальную документацию PrestaShop API.
+ 
 
-    :param website_url: URL веб-сайта.
-    :return: Словарь с данными о продуктах или None в случае ошибки.
-    """
-    try:
-        api_key = get_api_key(website_url)
-        if not api_key:
-            return None
+ """
+ # Managing PrestaShop Websites
+ 
 
-        endpoint = "/api/products"  # Замените на корректный endpoint
-        url = f"{website_url}{endpoint}"
+ # This `README` file explains the structure and usage of your PrestaShop websites, as well as the storage and use of API keys.
+ 
 
-        headers = {
-            "Authorization": f"Basic {base64.b64encode(api_key.encode()).decode()}"
-        }
+ ## Websites
+ 
 
+ # Your PrestaShop websites:
+ # Список веб-сайтов PrestaShop
+ 1. [e-cat.co.il](https://e-cat.co.il)
+ 2. [emil-design.com](https://emil-design.com)
+ 3. [sergey.mymaster.co.il](https://sergey.mymaster.co.il)
+ 
 
-        response = requests.get(url, headers=headers) # Отправка запроса
-        response.raise_for_status() # Обработка ошибок HTTP
-        data = j_loads_ns(response.text) # Разбор JSON ответа, используя j_loads_ns
-        return data
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Ошибка при запросе к API: {e}")
-        return None
-    except Exception as e:
-        logger.error(f"Произошла ошибка при получении данных о продуктах: {e}")
-        return None
-```
+ # Each of these websites uses APIs to interact with various parameters and functions.
+ # Каждый из этих веб-сайтов использует API для взаимодействия с различными параметрами и функциями.
+ 
 
-# Внесённые изменения
+ ## Storing API Keys
+ 
 
-- Импортирован `base64`, `requests` и `os`.
-- Создана функция `get_api_key`, которая получает API ключ из переменных окружения (важно: необходимо правильно настроить переменные окружения для хранения API ключей).
-- Функция `fetch_products` теперь использует `requests` для отправки HTTP запросов.
-- Добавлены обработка ошибок `requests.exceptions.RequestException` и общая обработка ошибок `Exception` для более надежной работы.
-- Улучшена документация функций в формате RST.
-- Добавлены комментарии для пояснения кода.
-- Использование `j_loads_ns` для чтения JSON.
+ # API keys for each website are stored in the `credentials.kdbx` file. This file is a secure password database and contains the following data for each website:
+ # Ключи API для каждого веб-сайта хранятся в файле `credentials.kdbx`. Этот файл является защищенной базой данных паролей и содержит следующие данные для каждого веб-сайта:
+ - Website URL
+ - API Key
+ - Additional metadata (if necessary)
+ 
 
+ # To work with the keys from the file, use a password manager that supports the `.kdbx` format, such as [KeePass](https://keepass.info/) or [KeePassXC](https://keepassxc.org/).
+ # Для работы с ключами из файла используйте менеджер паролей, поддерживающий формат `.kdbx`, например, [KeePass](https://keepass.info/) или [KeePassXC](https://keepassxc.org/).
+ 
 
-# Оптимизированный код
+ ## Example API Usage
+ 
 
-```python
-# ... (код из улучшенного блока)
-```
-```
-```
+ # To connect to the API of one of your websites, follow the template below:
+ # Чтобы подключиться к API одного из ваших веб-сайтов, следуйте шаблону ниже:
+ 
 
+ ### API Request Example
+ 
 
-**ВАЖНО:**
+ # **API Request Template:**
+ # **Шаблон API запроса:**
+ ```bash
+ curl -X GET 'https://<SITE_URL>/api/<endpoint>' \\\
+ -H 'Authorization: Basic <base64(API_KEY)>'
+ ```
+ 
 
-Этот код предполагает, что API ключи хранятся в переменных окружения.  Необходимо правильно настроить переменные окружения, добавив туда API ключи для каждого сайта, например:
+ # **Parameter Explanation:**
+ # **Объяснение параметров:**
+ - `<SITE_URL>` — the website address, e.g., `e-cat.co.il`.
+ - `<endpoint>` — the API endpoint (e.g., `products`, `customers`).
+ - `<API_KEY>` — the API key, encoded in Base64.
+ 
 
-```bash
-export API_KEY_e_cat_co_il="ваш_ключ"
-export API_KEY_emil_design_com="ваш_ключ"
-export API_KEY_sergey_mymaster_co_il="ваш_ключ"
-```
+ ### Example API Call
+ # To fetch a list of products from `e-cat.co.il`:
+ # Для получения списка продуктов с `e-cat.co.il`:
+ ```bash
+ curl -X GET 'https://e-cat.co.il/api/products' \\\
+ -H 'Authorization: Basic <base64(API_KEY)>'
+ ```
+ 
 
-Замените `"ваш_ключ"` на реальные значения API ключей.  Также убедитесь, что  `src.utils.jjson` и `src.logger.logger` корректно импортированы в вашем проекте.  В случае использования `.kdbx`,  необходимо реализовать функцию `get_api_key`, которая будет читать ключи из этого файла.  Обратите внимание, что  `.kdbx`  — это файл защищенный паролем.  В этом случае, реализация функции `get_api_key` потребует добавления функций для работы с менеджером паролей.
+ ## Security Recommendations
+ 
+
+ # - Never share the `credentials.kdbx` file with others.
+ # - Никогда не передавайте файл `credentials.kdbx` другим.
+ - Ensure the file is stored in a secure location accessible only to you.
+ - Regularly update your API keys and database passwords.
+ 
+
+ ## Additional Resources
+ 
+
+ # If you encounter any issues or have questions about connecting to the API, refer to the [official PrestaShop API documentation](https://devdocs.prestashop.com/), which provides information on available endpoints and how to interact with them.
+ # Если у вас возникнут какие-либо проблемы или вопросы по подключению к API, обратитесь к [официальной документации PrestaShop API](https://devdocs.prestashop.com/), в которой содержится информация о доступных конечных точках и способах взаимодействия с ними.
+ ```
+ 
+
+ # Внесённые изменения
+ 
+
+ 1. Добавлены комментарии в формате reStructuredText (RST) для всего документа.
+ 2. Добавлены комментарии к разделам и подразделам для пояснения их назначения.
+ 3. Комментарии переведены на русский язык.
+ 
+
+ # Оптимизированный код
+ ```markdown
+ """
+ Документация по структуре и использованию веб-сайтов PrestaShop, а также хранению и использованию ключей API.
+ ==========================================================================================================
+ 
+
+ Этот документ содержит описание структуры и использования веб-сайтов PrestaShop, а также информацию о хранении и использовании ключей API для каждого сайта.
+ 
+
+ Раздел "Веб-сайты" содержит список веб-сайтов PrestaShop.
+ 
+
+ Раздел "Хранение ключей API" содержит информацию о хранении ключей API в файле `credentials.kdbx`.
+ 
+
+ Раздел "Пример использования API" содержит примеры запросов к API PrestaShop.
+ 
+
+ Раздел "Рекомендации по безопасности" содержит рекомендации по безопасному хранению и использованию ключей API.
+ 
+
+ Раздел "Дополнительные ресурсы" содержит ссылки на официальную документацию PrestaShop API.
+ 
+
+ """
+ # Managing PrestaShop Websites
+ 
+
+ # This `README` file explains the structure and usage of your PrestaShop websites, as well as the storage and use of API keys.
+ 
+
+ ## Websites
+ 
+
+ # Your PrestaShop websites:
+ # Список веб-сайтов PrestaShop
+ 1. [e-cat.co.il](https://e-cat.co.il)
+ 2. [emil-design.com](https://emil-design.com)
+ 3. [sergey.mymaster.co.il](https://sergey.mymaster.co.il)
+ 
+
+ # Each of these websites uses APIs to interact with various parameters and functions.
+ # Каждый из этих веб-сайтов использует API для взаимодействия с различными параметрами и функциями.
+ 
+
+ ## Storing API Keys
+ 
+
+ # API keys for each website are stored in the `credentials.kdbx` file. This file is a secure password database and contains the following data for each website:
+ # Ключи API для каждого веб-сайта хранятся в файле `credentials.kdbx`. Этот файл является защищенной базой данных паролей и содержит следующие данные для каждого веб-сайта:
+ - Website URL
+ - API Key
+ - Additional metadata (if necessary)
+ 
+
+ # To work with the keys from the file, use a password manager that supports the `.kdbx` format, such as [KeePass](https://keepass.info/) or [KeePassXC](https://keepassxc.org/).
+ # Для работы с ключами из файла используйте менеджер паролей, поддерживающий формат `.kdbx`, например, [KeePass](https://keepass.info/) или [KeePassXC](https://keepassxc.org/).
+ 
+
+ ## Example API Usage
+ 
+
+ # To connect to the API of one of your websites, follow the template below:
+ # Чтобы подключиться к API одного из ваших веб-сайтов, следуйте шаблону ниже:
+ 
+
+ ### API Request Example
+ 
+
+ # **API Request Template:**
+ # **Шаблон API запроса:**
+ ```bash
+ curl -X GET 'https://<SITE_URL>/api/<endpoint>' \\\
+ -H 'Authorization: Basic <base64(API_KEY)>'
+ ```
+ 
+
+ # **Parameter Explanation:**
+ # **Объяснение параметров:**
+ - `<SITE_URL>` — the website address, e.g., `e-cat.co.il`.
+ - `<endpoint>` — the API endpoint (e.g., `products`, `customers`).
+ - `<API_KEY>` — the API key, encoded in Base64.
+ 
+
+ ### Example API Call
+ # To fetch a list of products from `e-cat.co.il`:
+ # Для получения списка продуктов с `e-cat.co.il`:
+ ```bash
+ curl -X GET 'https://e-cat.co.il/api/products' \\\
+ -H 'Authorization: Basic <base64(API_KEY)>'
+ ```
+ 
+
+ ## Security Recommendations
+ 
+
+ # - Never share the `credentials.kdbx` file with others.
+ # - Никогда не передавайте файл `credentials.kdbx` другим.
+ - Ensure the file is stored in a secure location accessible only to you.
+ - Regularly update your API keys and database passwords.
+ 
+
+ ## Additional Resources
+ 
+
+ # If you encounter any issues or have questions about connecting to the API, refer to the [official PrestaShop API documentation](https://devdocs.prestashop.com/), which provides information on available endpoints and how to interact with them.
+ # Если у вас возникнут какие-либо проблемы или вопросы по подключению к API, обратитесь к [официальной документации PrestaShop API](https://devdocs.prestashop.com/), в которой содержится информация о доступных конечных точках и способах взаимодействия с ними.
+ ```
