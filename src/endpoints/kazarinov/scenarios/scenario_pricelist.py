@@ -166,7 +166,8 @@ class MexironBuilder:
                 {url}""")
                 f = await graber.grab_page(*required_fields)
                 if gs.host_name == 'Vostro-3888':
-                    self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
+                    ...
+                    #self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
             except Exception as ex:
                 logger.error(f"Ошибка получения полей товара",ex, False)
                 ...
@@ -195,9 +196,11 @@ class MexironBuilder:
         Внимание! модель может ошибаться"""
         await update.message.reply_text(f"AI processing lang = he")
         he = await self.process_ai(products_list,'he')
+        setattr(he,'price',price)
         await update.message.reply_text("successfull")
         await update.message.reply_text(f"AI processing lang = ru")
         ru = await self.process_ai(products_list,'ru')
+        setattr(he,'price',price)
         await update.message.reply_text("successfull")
 
         if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
@@ -269,11 +272,9 @@ class MexironBuilder:
         .. note:: Правила построения полей определяются в `ProductFields`
         """
 
-
-
         return {
             'product_title': f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
-            'product_id': f.id_product,
+            'product_id': f.id_supplier,
             'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
             'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
             'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),

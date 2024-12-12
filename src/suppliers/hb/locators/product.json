@@ -6,7 +6,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "click()",
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": "click()",
     "locator_description": "Закрываю pop-up окно, если оно не появилось - не страшно (`mandatory`:`false`)"
   },
   "id": {
@@ -16,7 +18,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id"
   },
   "id_manufacturer": {
@@ -26,7 +30,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id_manufacturer"
   },
   "id_supplier": {
@@ -36,8 +42,22 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
-    "locator_description": "id_supplier"
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "HB id_supplier"
+  },
+  "id_product": {
+    "attribute": "",
+    "by": "XPATH",
+    "selector": null,
+    "if_list": "first",
+    "use_mouse": false,
+    "mandatory": true,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "HB id_product"
   },
   "id_category_default": {
     "attribute": null,
@@ -46,7 +66,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id_category_default"
   },
   "condition": {
@@ -56,7 +78,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "condition"
   },
   "cache_default_attribute": {
@@ -66,7 +90,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "cache_default_attribute"
   },
   "default_image_url": {
@@ -76,7 +102,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "default_image_url"
   },
   "id_default_combination": {
@@ -86,7 +114,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id_default_combination"
   },
   "id_tax": {
@@ -96,7 +126,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id_tax"
   },
   "position_in_category": {
@@ -106,7 +138,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "position_in_category"
   },
   "type": {
@@ -116,7 +150,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "type"
   },
   "id_shop_default": {
@@ -126,7 +162,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id_shop_default"
   },
   "product_reference_and_volume_and_price_for_100": {
@@ -136,7 +174,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "На сайте кривой HTML, поэтому одним локатором вытескиваю 3 значения, а потом делаю парсинг. Приходит список из четырех объектов: объем, цена за 100 гр, артикул, пустой div"
   },
   "reference": {
@@ -146,7 +186,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "reference Собирается в коде из supplier.supplier_id + f.supplier_reference"
   },
   "supplier_reference": {
@@ -157,7 +199,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "supplier_reference Получаю через локатор product_reference_and_volume_and_price_for_100"
   },
   "additional_images_urls": {
@@ -167,7 +211,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "additional_images_alts": {
     "attribute": null,
@@ -176,7 +222,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "location": {
     "attribute": null,
@@ -185,7 +233,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "location"
   },
   "width": {
@@ -195,7 +245,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "width"
   },
   "height": {
@@ -205,7 +257,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "height"
   },
   "depth": {
@@ -215,7 +269,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "depth"
   },
   "weight": {
@@ -226,7 +282,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "weight"
   },
   "quantity_discount": {
@@ -236,7 +294,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "quantity_discount"
   },
   "ean13": {
@@ -246,7 +306,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "ean13"
   },
   "isbn": {
@@ -256,7 +318,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "isbn"
   },
   "upc": {
@@ -266,7 +330,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "upc"
   },
   "mpn": {
@@ -276,7 +342,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "mpn"
   },
   "cache_is_pack": {
@@ -286,7 +354,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "cache_is_pack"
   },
   "cache_has_attachments": {
@@ -296,7 +366,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "cache_has_attachments"
   },
   "is_virtual": {
@@ -306,7 +378,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "is_virtual"
   },
   "out_of_stock": {
@@ -316,7 +390,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "out_of_stock"
   },
   "state": {
@@ -326,7 +402,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "state"
   },
   "additional_delivery_times": {
@@ -336,7 +414,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "additional_delivery_times"
   },
   "delivery_in_stock": {
@@ -346,7 +426,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "delivery_in_stock (Israel Post)"
   },
   "delivery_out_stock": {
@@ -356,7 +438,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "delivery_out_stock"
   },
   "product_type": {
@@ -366,7 +450,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "product_type"
   },
   "on_sale": {
@@ -376,7 +462,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "on_sale"
   },
   "online_only": {
@@ -386,7 +474,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "online_only"
   },
   "ecotax": {
@@ -396,7 +486,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "ecotax"
   },
   "minimal_quantity": {
@@ -406,7 +498,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "minimal_quantity"
   },
   "low_stock_threshold": {
@@ -416,7 +510,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "low_stock_threshold"
   },
   "low_stock_alert": {
@@ -426,7 +522,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "low_stock_alert"
   },
   "price": {
@@ -436,7 +534,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "price"
   },
   "wholesale_price": {
@@ -446,7 +546,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "wholesale_price"
   },
   "unity": {
@@ -456,7 +558,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "unity"
   },
   "unit_price_ratio": {
@@ -466,7 +570,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "unit_price_ratio"
   },
   "additional_shipping_cost": {
@@ -476,7 +582,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "Стоимость отправки. 30 шек. by: VALUE означает, что я беру значение из attribute"
   },
   "customizable": {
@@ -486,7 +594,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "customizable"
   },
   "text_fields": {
@@ -496,7 +606,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "text_fields"
   },
   "uploadable_files": {
@@ -506,7 +618,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "uploadable_files"
   },
   "active": {
@@ -516,7 +630,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "active"
   },
   "redirect_type": {
@@ -526,7 +642,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "redirect_type"
   },
   "id_type_redirected": {
@@ -536,7 +654,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "id_type_redirected"
   },
   "available_for_order": {
@@ -546,7 +666,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "available_for_order - Если вернулся не пустой локатор - флаг выставляется в 1, иначе 0. Текст на сайте עזל ממלאי"
   },
   "available_date": {
@@ -556,7 +678,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "available_date"
   },
   "show_price": {
@@ -566,7 +690,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "show_price"
   },
   "indexed": {
@@ -576,7 +702,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": ""
   },
   "visibility": {
@@ -586,7 +714,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "visibility"
   },
   "advanced_stock_management": {
@@ -596,7 +726,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "advanced_stock_management"
   },
   "date_add": {
@@ -606,7 +738,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "date_add"
   },
   "date_upd": {
@@ -616,7 +750,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "date_upd"
   },
   "pack_stock_type": {
@@ -626,7 +762,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "pack_stock_type"
   },
   "meta_description": {
@@ -636,7 +774,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "meta_description"
   },
   "meta_keywords": {
@@ -646,7 +786,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "meta_keywords"
   },
   "meta_title": {
@@ -656,7 +798,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "meta_title"
   },
   "link_rewrite": {
@@ -666,7 +810,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "link_rewrite"
   },
   "name": {
@@ -676,7 +822,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "name"
   },
   "description": {
@@ -692,7 +840,9 @@
       "//a[contains(@href, '#tab-description')]",
       "//div[@id = 'tab-description']//p"
     ],
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": [
       "click()",
       null
     ],
@@ -717,7 +867,9 @@
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "Технические характеристики. "
   },
   "description_short": {
@@ -727,7 +879,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "description_short - на сайте HB есть только description. получаю через селектор `description`"
   },
   "affiliate_short_link": {
@@ -737,7 +891,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "Исполняю формулу и отдаю результат через `value`"
   },
   "affiliate_text": {
@@ -747,7 +903,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "affiliate_text"
   },
   "affiliate_summary": {
@@ -757,7 +915,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "affiliate_summary"
   },
   "affiliate_summary_2": {
@@ -767,7 +927,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "affiliate_summary_2"
   },
   "affiliate_image_small": {
@@ -777,7 +939,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "affiliate_image_small"
   },
   "affiliate_image_medium": {
@@ -787,7 +951,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "affiliate_image_medium"
   },
   "affiliate_image_large": {
@@ -797,7 +963,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "affiliate_image_large"
   },
   "ingredients": {
@@ -822,7 +990,9 @@
       true,
       true
     ],
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": [
       "click()",
       null
     ],
@@ -850,7 +1020,9 @@
       true,
       true
     ],
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": [
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": [
       "click()",
       null
     ],
@@ -863,7 +1035,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "specification"
   },
   "available_now": {
@@ -873,7 +1047,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "available_now"
   },
   "available_later": {
@@ -883,7 +1059,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "available_later"
   },
   "quantity": {
@@ -893,7 +1071,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": ""
   },
   "link_to_video": {
@@ -903,7 +1083,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "link_to_video"
   },
   "associations": {
@@ -913,7 +1095,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated associations - Поле используется для добавления картинок, категорий итп. Заполняется в коде"
   },
   "Active (0/1)": {
@@ -923,7 +1107,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Active (0/1) - товар показывается или нет в магазине клиента"
   },
   "Categories (x,y,z...)": {
@@ -933,7 +1119,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Categories (x,y,z...) - дополнительные категории. Поле используется при ручном импорте csv"
   },
   "Price tax excluded": {
@@ -943,7 +1131,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Price tax excluded -  Поле используется при ручном импорте csv . В коде преташоп известен как pex?"
   },
   "Price tax included": {
@@ -953,7 +1143,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Price tax included -  Поле используется при ручном импорте csv"
   },
   "Tax rule ID": {
@@ -963,7 +1155,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Tax rule ID -  Поле используется при ручном импорте csv"
   },
   "Cost price": {
@@ -973,7 +1167,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Cost price -  Поле используется при ручном импорте csv"
   },
   "On sale (0/1)": {
@@ -983,7 +1179,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated On sale (0/1) -  Поле используется при ручном импорте csv"
   },
   "Discount amount": {
@@ -993,7 +1191,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Discount amount -  Поле используется при ручном импорте csv"
   },
   "Discount percent": {
@@ -1003,7 +1203,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Discount amount -  Поле используется при ручном импорте csv"
   },
   "Discount from (yyyy-mm-dd)": {
@@ -1013,7 +1215,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Discount from (yyyy-mm-dd) -  Поле используется при ручном импорте csv"
   },
   "Discount to (yyyy-mm-dd)": {
@@ -1023,7 +1227,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Discount to (yyyy-mm-dd) -  Поле используется при ручном импорте csv"
   },
   "Brand": {
@@ -1033,7 +1239,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Brand -  Поле используется при ручном импорте csv"
   },
   "Low stock level": {
@@ -1043,7 +1251,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Low stock level -  Поле используется при ручном импорте csv"
   },
   "Send me an email when the quantity is under this level": {
@@ -1053,7 +1263,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Send me an email when the quantity is under this level -  Поле используется при ручном импорте csv"
   },
   "Tags (x,y,z...)": {
@@ -1063,7 +1275,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Tags (x,y,z...) -  Поле используется при ручном импорте csv"
   },
   "Label when in stock": {
@@ -1073,7 +1287,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Label when in stock -  Поле используется при ручном импорте csv"
   },
   "Label when backorder allowed": {
@@ -1083,7 +1299,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
     "locator_description": "@deprecated Label when backorder allowed -  Поле используется при ручном импорте csv"
   },
   "Delete existing images (0 = No, 1 = Yes)": {
@@ -1093,7 +1311,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Feature (Name:Value:Position:Customized)": {
     "attribute": null,
@@ -1102,7 +1322,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Available online only (0 = No, 1 = Yes)": {
     "attribute": null,
@@ -1111,7 +1333,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Condition": {
     "attribute": "new",
@@ -1120,7 +1344,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Customizable (0 = No, 1 = Yes)": {
     "attribute": null,
@@ -1129,7 +1355,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Uploadable files (0 = No, 1 = Yes)": {
     "attribute": null,
@@ -1138,7 +1366,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Text fields (0 = No, 1 = Yes)": {
     "attribute": null,
@@ -1147,7 +1377,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Action when out of stock": {
     "attribute": null,
@@ -1156,7 +1388,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Virtual product (0 = No, 1 = Yes)": {
     "attribute": 0,
@@ -1165,7 +1399,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "File URL": {
     "attribute": null,
@@ -1174,7 +1410,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Number of allowed downloads": {
     "attribute": null,
@@ -1183,7 +1421,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Expiration date (yyyy-mm-dd)": {
     "attribute": null,
@@ -1192,7 +1432,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Number of days": {
     "attribute": null,
@@ -1201,7 +1443,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Advanced Stock Management": {
     "attribute": null,
@@ -1210,7 +1454,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Depends on stock": {
     "attribute": null,
@@ -1219,7 +1465,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Warehouse": {
     "attribute": null,
@@ -1228,7 +1476,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Accessories (x,y,z...)": {
     "attribute": null,
@@ -1237,7 +1487,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Open AI Product Description": {
     "attribute": null,
@@ -1246,7 +1498,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Byer protection": {
     "attribute": null,
@@ -1255,7 +1509,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Specification": {
     "attribute": null,
@@ -1264,7 +1520,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Refirbished product description": {
     "attribute": null,
@@ -1273,7 +1531,9 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "Additional shipping details": {
     "attribute": null,
@@ -1282,6 +1542,8 @@
     "if_list": "first",
     "use_mouse": false,
     "mandatory": false,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   }
 }

@@ -22,15 +22,15 @@
     "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
   "id_supplier": {
-    "attribute": null,
-
+    "attribute": 2800,
     "by": "VALUE",
     "selector": null,
-
     "if_list": "first",
     "use_mouse": false,
     "mandatory": true,
-    "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null
   },
   "id_category_default": {
     "attribute": null,

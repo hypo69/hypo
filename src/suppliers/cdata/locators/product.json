@@ -22,9 +22,9 @@
     "timeout":0,"timeout_for_event":"presence_of_element_located","event": null
   },
   "id_supplier": {
-    "attribute": null,
+    "attribute": 2794,
 
-    "by": null,
+    "by": "VALUE",
     "selector": null,
 
     "if_list": "first",

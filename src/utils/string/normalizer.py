@@ -255,3 +255,32 @@ def remove_special_characters(input_str: str | list, chars: list[str] = None) ->
     if isinstance(input_str, list):
         return [re.sub(pattern, '', s) for s in input_str]
     return re.sub(pattern, '', input_str)
+
+def normalize_sku(input_str: str) -> str:
+    """
+    Normalizes the SKU by removing specific Hebrew keywords and any non-alphanumeric characters.
+
+    Args:
+        input_str (str): The input string containing the SKU.
+
+    Returns:
+        str: The normalized SKU string.
+
+    Example:
+        >>> normalize_sku("מקט: 303235")
+        '303235'
+        >>> normalize_sku("מק''ט: 12345")
+        '12345'
+    """
+    try:
+        # Remove Hebrew keywords
+        input_str = re.sub(r'מקט|מק''ט', '', input_str, flags=re.IGNORECASE)
+        
+        # Remove non-alphanumeric characters
+        normalized_sku = re.sub(r'\W+', '', input_str)
+        
+        return normalized_sku
+    except Exception as ex:
+        logger.error(f"Error normalizing SKU: {ex}")
+        return input_str  # Return the original input in case of error
+

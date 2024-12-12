@@ -99,7 +99,10 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 if __name__ == "__main__":
 
     if gs.host_name == 'Vostro-3888':
-        kt = KazarinovTelegramBot(mode='test')
+        
+        mode = 'prod'
+        mode = 'test' # <- commnet to prod
+        kt = KazarinovTelegramBot(mode)
     else:
         kt = KazarinovTelegramBot() 
 

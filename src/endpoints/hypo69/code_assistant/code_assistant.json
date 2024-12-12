@@ -40,10 +40,9 @@
     "*.png",
     "*.jpg",
     "*.jpeg",
-    "*.svg",
-    "*.json"
+    "*.svg"
   ],
-
+  
   "exclude_file_patterns": [
     ".*\\(.*\\).*",
     "___{3,}.*",
@@ -65,6 +64,7 @@
     "*.yml",
     "*.ini",
     "*.cfg",
+    "*.json",
     "Makefile",
     "LICENSE*",
     "CHANGELOG*",

@@ -1,7 +1,7 @@
 {
   "mode": "test",
   "webdriver_name": "firefox",
-  "webdriver_options": []
+  "webdriver_options": [],
   "system_instruction": "system_instruction.txt",
   "questions_list_path": "kazarinov/prompts/train_data/q",
   "url_handlers": {

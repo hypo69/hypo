@@ -29,7 +29,8 @@ class G(Graber):
         self.fields.name = <Ваша реализация>
         )
     ```
-
+              Таблица поставщиков:
+              https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
 """
 MODE = 'dev'
 
@@ -52,7 +53,12 @@ from src.category import Category
 # from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.image import save_png_from_url, save_png
-from src.utils.string.normalizer import normalize_string, normalize_int, normalize_float, normalize_boolean, normalize_sql_date
+from src.utils.string.normalizer import( normalize_string, 
+                                        normalize_int, 
+                                        normalize_float, 
+                                        normalize_boolean, 
+                                        normalize_sql_date, 
+                                        normalize_sku )
 from src.logger.exceptions import ExecuteLocatorException
 #from src.endpoints.prestashop import PrestaShop
 from src.utils.printer import pprint
@@ -856,23 +862,35 @@ class Graber:
         return True
 
     @close_pop_up()
-    async def id_product(self, value:Optional[Any] = None):
+    async def id_product(self, value:Optional[Any] = None) -> bool:
         """Fetch and set product ID.
         
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_product = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_product`.
         """
+        if value:
+            self.fields.id_product = value
+            return True
+
+        if not self.fields.id_supplier:
+            await self.id_supplier()
         try:
             # Получаем значение id_supplier, если оно не передано
-            self.fields.id_supplier = normalize_string( self.fields.id_supplier or await self.driver.execute_locator(self.locator.id_supplier))  
+            raw = await self.driver.execute_locator(self.locator.id_product)
+            if not raw:
+                logger.error(f"SKU not found! ", None, False)
+                ...
+                return
+            sku = normalize_sku(raw) 
+            if not sku:
+                logger.error(f"Invalid SKU ", None, False)
+                ...
+                return
 
-            # Формируем id_product с учетом supplier_prefix
-            self.fields.id_product = value or f"{self.supplier_prefix}{f'-{self.fields.id_supplier}' if self.fields.id_supplier else ''}"
-            if self.fields.id_product: 
-                return True
-            ...
-            return
+            self.fields.id_product = self.id_supplier +'-'+ sku 
+            return True
+
         except Exception as ex:
             logger.error(f"Ошибка значения поля `id_product`", ex)
             ...
@@ -1058,6 +1076,23 @@ class Graber:
     @close_pop_up()
     async def id_supplier(self, value:Optional[Any] = None):
         """Fetch and set supplier ID.
+        Код поставщика из таблицы `suppliers`
+        Обычно подставлятся в локакор
+              "id_supplier": {
+                "attribute": "1234",
+                "by": "VALUE",
+                "selector": "none",
+                "if_list": "first",
+                "use_mouse": false,
+                "mandatory": true,
+                "timeout": 2,
+                "timeout_for_event": "presence_of_element_located",
+                "event": null,
+                "locator_description": "SKU ksp"
+              },
+
+              Таблица поставщиков:
+              https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
         Args:
         value (Any): это значение можно передать в словаре kwargs через ключ {id_supplier = `value`} при определении класса.
         Если `value` было передано, его значение подставляется в поле `ProductFields.id_supplier`.
@@ -2088,8 +2123,8 @@ class Graber:
             return True
 
         try:
-            if not self.fields.id_product:
-                await self.id_product()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
+            if not self.fields.id_supplier:
+                await self.id_supplier()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwargs` функции `grab_product_page(**kwargs)`?
         
             # Получаем результат из локатора как `bytes` или `str`(url)
             raw_image = await self.driver.execute_locator(self.locator.default_image_url)

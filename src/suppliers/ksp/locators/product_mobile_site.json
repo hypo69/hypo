@@ -35,6 +35,18 @@
     "locator_description": "SKU manufacturer"
   },
   "id_supplier": {
+    "attribute": "2787",
+    "by": "VALUE",
+    "selector": null,
+    "if_list": "first",
+    "use_mouse": false,
+    "mandatory": true,
+    "timeout": 2,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "SKU ksp"
+  },
+  "id_product": {
     "attribute": "innerText",
     "by": "XPATH",
     "selector": "//span[contains(text(),'מקט')]",
