@@ -7,7 +7,7 @@
 <a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/README.MD'>Documentation</a> 
 </td>
 <td>
-<a href='https://github.com/hypo69/hypo/blob/master/readme.ru.md'>Русский</a>
+<a href='https://github.com/hypo69/hypo/blob/master/README.RU.MD'>Русский</a>
 </td>
 </tr>
 </table>
