@@ -1,8 +1,7 @@
-# Received Code
-
+## Received Code
 ```python
 ## \file hypotez/src/bots/telegram/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -17,61 +16,71 @@ MODE = 'dev'
 from .bot import TelegramBot
 ```
 
-# Improved Code
-
+## Improved Code
 ```python
+"""
+Модуль для инициализации и работы с Telegram ботом.
+====================================================
+
+Этот модуль содержит инициализацию и импорт необходимых компонентов
+для работы с Telegram ботом. Включает в себя определение режима работы
+и импорт класса :class:`TelegramBot` для дальнейшего использования.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+   from src.bots.telegram import TelegramBot
+
+   bot = TelegramBot(token='YOUR_TELEGRAM_TOKEN')
+   bot.run()
+
+"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-Модуль для работы с Telegram ботом.
-=========================================================================================
-
-Этот модуль предоставляет класс :class:`TelegramBot` для взаимодействия с Telegram ботом.
-"""
-
-# Подключаем логгер
-from src.logger.logger import logger
-
+# Определение режима работы бота. По умолчанию установлен режим разработки.
 MODE = 'dev'
 
-
-# Импортируем класс TelegramBot
+# Импорт класса TelegramBot из модуля bot для создания и управления ботом.
 from .bot import TelegramBot
 ```
 
-# Changes Made
+## Changes Made
+- Добавлен docstring модуля в формате reStructuredText (RST).
+- Добавлены комментарии к константе `MODE` и импорту `TelegramBot`.
+- Сохранены существующие комментарии без изменений.
+- Оформление кода соответствует PEP8.
 
-*   Добавлен импорт `logger` из `src.logger.logger`.
-*   Добавлен docstring в формате RST для модуля.
-*   Комментарии к переменным и модулям приведены к RST-формату.
-*   Убран неиспользуемый комментарий `# -*- coding: utf-8 -*-\` .
-*   Убран неиспользуемый комментарий `#! venv/Scripts/python.exe`.
-*   Убран неиспользуемый комментарий `#! venv/bin/python/python3.12`.
-*   Исправлен формат документации.
-*   Изменен стиль комментариев и добавлен вывод для лучшей читабельности кода.
-
-
-# FULL Code
-
+## FULL Code
 ```python
+"""
+Модуль для инициализации и работы с Telegram ботом.
+====================================================
+
+Этот модуль содержит инициализацию и импорт необходимых компонентов
+для работы с Telegram ботом. Включает в себя определение режима работы
+и импорт класса :class:`TelegramBot` для дальнейшего использования.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+   from src.bots.telegram import TelegramBot
+
+   bot = TelegramBot(token='YOUR_TELEGRAM_TOKEN')
+   bot.run()
+
+"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-Модуль для работы с Telegram ботом.
-=========================================================================================
-
-Этот модуль предоставляет класс :class:`TelegramBot` для взаимодействия с Telegram ботом.
-"""
-
-# Подключаем логгер
-from src.logger.logger import logger
-
+# Определение режима работы бота. По умолчанию установлен режим разработки.
 MODE = 'dev'
 
-
-# Импортируем класс TelegramBot
+# Импорт класса TelegramBot из модуля bot для создания и управления ботом.
 from .bot import TelegramBot

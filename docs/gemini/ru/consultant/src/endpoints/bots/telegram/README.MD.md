@@ -1,6 +1,5 @@
 # Received Code
-
-```python
+```rst
 .. module:: src.endpoints.bots.telegram
 ```
 <TABLE >
@@ -9,7 +8,7 @@
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /\
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> /
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/bots/README.MD'>bots</A>
 </TD>
 <TD>
@@ -18,278 +17,212 @@
 </TABLE>
 
 Telegram Bot
-=============
+=============\
 
-Бот выполняет несколько функций, связанных с обработкой команд, голосовыми сообщениями и взаимодействием с пользователями в Telegram.
+The bot performs several functions related to handling commands, processing voice messages, 
+and interacting with users in Telegram.
 
-Вот краткое описание основных функций и команд, которые реализует этот бот:
+Here is a brief description of the main functions and commands that this bot implements:
 
-### Основные функции и команды бота:
+### Main Functions and Commands of the Bot:
 
-1. **Инициализация бота:**
-   - Бот инициализируется токеном, который используется для аутентификации бота с API Telegram.
+1. **Bot Initialization:**
+   - The bot is initialized with a token, which is used to authenticate the bot with the Telegram API.
 
-2. **Команды:**
-   - `/start`: Отправляет приветственное сообщение пользователю.
-   - `/help`: Предоставляет список доступных команд.
-   - `/sendpdf`: Отправляет PDF-файл пользователю.
+2. **Commands:**
+   - `/start`: Sends a welcome message to the user.
+   - `/help`: Provides a list of available commands.
+   - `/sendpdf`: Sends a PDF file to the user.
 
-3. **Обработка сообщений:**
-   - Бот обрабатывает входящие текстовые сообщения, голосовые сообщения и файлы документов.
-   - Для голосовых сообщений бот транскрибирует аудио (в данный момент это функция-заглушка).
-   - Для файлов документов бот считывает содержимое текстового документа.
+3. **Message Handling:**
+   - The bot processes incoming text messages, voice messages, and document files.
+   - For voice messages, the bot transcribes the audio (currently, this is a placeholder function).
+   - For document files, the bot reads the content of the text document.
 
-4. **Обработка голосовых сообщений:**
-   - Бот загружает файл голосового сообщения, сохраняет его локально и пытается транскрибировать его с помощью сервиса распознавания речи (в данный момент это функция-заглушка).
+4. **Voice Message Handling:**
+   - The bot downloads the voice message file, saves it locally, and attempts to transcribe it using a speech recognition service (currently, this is a placeholder function).
 
-5. **Обработка документов:**
-   - Бот загружает файл документа, сохраняет его локально и считывает содержимое текстового документа.
+5. **Document Handling:**
+   - The bot downloads the document file, saves it locally, and reads the content of the text document.
 
-6. **Обработка текстовых сообщений:**
-   - Бот просто возвращает полученный от пользователя текст.
+6. **Text Message Handling:**
+   - The bot simply returns the text received from the user.
 
-### Основные модули и библиотеки:
-- `python-telegram-bot`: Основная библиотека для создания ботов Telegram.
-- `pathlib`: Для работы с путями к файлам.
-- `tempfile`: Для создания временных файлов.
-- `asyncio`: Для асинхронного выполнения задач.
-- `requests`: Для загрузки файлов.
-- `src.utils.convertors.tts`: Для распознавания речи и преобразования текста в речь.
-- `src.utils.file`: Для чтения текстовых файлов.
+### Main Modules and Libraries:
+- `python-telegram-bot`: The main library for creating Telegram bots.
+- `pathlib`: For working with file paths.
+- `tempfile`: For creating temporary files.
+- `asyncio`: For asynchronous task execution.
+- `requests`: For downloading files.
+- `src.utils.convertors.tts`: For speech recognition and text-to-speech conversion.
+- `src.utils.file`: For reading text files.
 
-### Класс и методы:
-- **Класс TelegramBot:**
-  - `__init__(self, token: str)`: Инициализирует бота токеном и регистрирует обработчики.
-  - `register_handlers(self)`: Регистрирует обработчики команд и сообщений.
-  - `start(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/start`.
-  - `help_command(self, update: Update, context: CallbackContext)`: Обрабатывает команду `/help`.
-  - `send_pdf(self, pdf_file: str | Path)`: Обрабатывает команду `/sendpdf` для отправки PDF-файла.
-  - `handle_voice(self, update: Update, context: CallbackContext)`: Обрабатывает голосовые сообщения и транскрибирует аудио.
-  - `transcribe_voice(self, file_path: Path) -> str`: Транскрибирует голосовые сообщения (функция-заглушка).
-  - `handle_document(self, update: Update, context: CallbackContext) -> str`: Обрабатывает файлы документов и считывает их содержимое.
-  - `handle_message(self, update: Update, context: CallbackContext) -> str`: Обрабатывает текстовые сообщения и возвращает полученный текст.
+### Class and Methods:
+- **TelegramBot Class:**
+  - `__init__(self, token: str)`: Initializes the bot with a token and registers handlers.
+  - `register_handlers(self)`: Registers command and message handlers.
+  - `start(self, update: Update, context: CallbackContext)`: Handles the `/start` command.
+  - `help_command(self, update: Update, context: CallbackContext)`: Handles the `/help` command.
+  - `send_pdf(self, pdf_file: str | Path)`: Handles the `/sendpdf` command to send a PDF file.
+  - `handle_voice(self, update: Update, context: CallbackContext)`: Handles voice messages and transcribes the audio.
+  - `transcribe_voice(self, file_path: Path) -> str`: Transcribes voice messages (placeholder function).
+  - `handle_document(self, update: Update, context: CallbackContext) -> str`: Handles document files and reads their content.
+  - `handle_message(self, update: Update, context: CallbackContext) -> str`: Handles text messages and returns the received text.
 
-### Основная функция:
-- **main()**: Инициализирует бота, регистрирует обработчики команд и сообщений и запускает бота с помощью `run_polling()`.
-
-
+### Main Function:
+- **main()**: Initializes the bot, registers command and message handlers, and starts the bot using `run_polling()`.
 ```
-
-```markdown
 # Improved Code
+```rst
+.. module:: src.endpoints.bots.telegram
 
-```python
-"""
-Модуль для работы Telegram бота.
-================================================================================
-Этот модуль содержит класс :class:`TelegramBot`, который используется для создания и управления ботом Telegram.
-"""
-import asyncio
-from pathlib import Path
-from typing import Any
+   :synopsis: Модуль для реализации Telegram бота.
 
-# Импорты из utils, предположительно
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
-from telegram import Update, Bot
-from telegram.ext import Application, CommandHandler, MessageHandler, Filters, CallbackContext
+.. rubric:: Описание
 
-class TelegramBot:
-    """
-    Класс для управления ботом Telegram.
-    """
-    def __init__(self, token: str):
+   Этот модуль содержит класс `TelegramBot`, который используется для создания и управления Telegram ботом.
+   Бот обрабатывает различные команды, голосовые сообщения и текстовые сообщения, а также отправляет PDF файлы.
+
+..  warning::
+    Модуль использует заглушку для распознавания речи.
+
+..  code-block:: python
+
+    from pathlib import Path
+    from telegram import Update
+    from telegram.ext import CallbackContext
+    from src.logger.logger import logger
+    import asyncio
+    import requests
+    from src.utils.file import read_text_file
+    from src.utils.convertors.tts import speech_to_text
+
+
+.. table:: Основные функции и команды бота
+   :widths: auto
+
+   ===================================  ============================================================================
+   Функция/Команда                      Описание
+   ===================================  ============================================================================
+   **Инициализация бота**               Инициализация бота с токеном для аутентификации с Telegram API.
+   ``/start``                           Отправляет приветственное сообщение пользователю.
+   ``/help``                            Предоставляет список доступных команд.
+   ``/sendpdf``                         Отправляет PDF файл пользователю.
+   **Обработка сообщений**               Обрабатывает входящие текстовые, голосовые сообщения и файлы документов.
+   **Обработка голосовых сообщений**    Скачивает голосовое сообщение, сохраняет его и пытается транскрибировать (заглушка).
+   **Обработка документов**            Скачивает документ, сохраняет его и читает текстовое содержимое.
+   **Обработка текста**                Возвращает полученный от пользователя текст.
+   ===================================  ============================================================================
+
+.. table:: Основные модули и библиотеки
+   :widths: auto
+
+   =========================  ============================================================================
+   Модуль/Библиотека         Описание
+   =========================  ============================================================================
+   ``python-telegram-bot``   Основная библиотека для создания Telegram ботов.
+   ``pathlib``               Для работы с путями к файлам.
+   ``tempfile``              Для создания временных файлов.
+   ``asyncio``               Для асинхронного выполнения задач.
+   ``requests``              Для скачивания файлов.
+   ``src.utils.convertors.tts``   Для распознавания речи и преобразования текста в речь.
+   ``src.utils.file``        Для чтения текстовых файлов.
+   =========================  ============================================================================
+
+.. autoclass:: src.endpoints.bots.telegram.TelegramBot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. code-block:: python
+
+    def main():
         """
-        Инициализирует бота.
+        Инициализация и запуск Telegram бота.
 
-        :param token: Токен бота.
+        Эта функция инициализирует бота с токеном из переменных окружения,
+        регистрирует обработчики команд и сообщений и запускает бота.
         """
-        self.token = token
-        self.bot = Bot(token=token)
-        self.application = Application.builder().token(token).build()
-        self.register_handlers() # Регистрация обработчиков
-
-
-    def register_handlers(self):
-        """
-        Регистрирует обработчики команд и сообщений.
-        """
-        # ... (Обработчики команд и сообщений)
-        # Пример:
-        self.application.add_handler(CommandHandler("start", self.start))
-        self.application.add_handler(MessageHandler(Filters.text, self.handle_message))
-
-
-    async def start(self, update: Update, context: CallbackContext):
-        """
-        Обрабатывает команду /start.
-        """
-        await update.message.reply_text("Привет!")
-
-
-    async def handle_message(self, update: Update, context: CallbackContext):
-        """
-        Обрабатывает текстовые сообщения.
-
-        :param update: Объект Update.
-        :param context: Объект CallbackContext.
-        :return: Обработанное сообщение.
-        """
-        try:
-           text = update.message.text
-           # Отправка текста обратно пользователю.
-           await update.message.reply_text(text)
-
-        except Exception as ex:
-            logger.error('Ошибка при обработке сообщения', ex)
-
-
-    async def run(self):
-        """ Запуск бота. """
-        # Проверка успешности запуска приложения.
-        try:
-            await self.application.run_polling()
-        except Exception as e:
-            logger.error('Ошибка при запуске бота', e)
-        
-
-
-
-def main():
-    """
-    Инициализирует и запускает бота.
-    """
-    # Чтение токена из файла (замените 'token.txt' на реальный файл)
-    try:
-        with open('token.txt', 'r') as f:
-            token = f.read().strip()
-    except FileNotFoundError:
-        logger.error('Файл токена не найден.')
-        return
-
-
-    bot = TelegramBot(token)
-    asyncio.run(bot.run())
-
-
-if __name__ == "__main__":
-    main()
-
+        ...
 ```
-
-```markdown
 # Changes Made
-
-*   Добавлены комментарии в формате RST ко всем функциям, методам и классам.
-*   Используется `from src.logger.logger import logger` для логирования ошибок.
-*   Изменены комментарии, исключено избыточное использование слов "получаем", "делаем".
-*   Добавлены обработчики ошибок с использованием `logger.error` вместо стандартных блоков `try-except`.
-*   Добавлен пример обработчика текстового сообщения `handle_message`.
-*   Добавлена функция `run` для запуска бота.
-*   Добавлена обработка ошибок при запуске бота и чтении токена.
-*   Добавлена проверка существования файла токена.
-*   Добавлен запуск бота с помощью `asyncio.run(bot.run())`.
-
-
-```
-
-```markdown
+- Добавлены импорты `logger`, `asyncio`, `requests`, `speech_to_text`, и `read_text_file`.
+- Добавлено описание модуля в формате reStructuredText (RST).
+- Документированы основные функции и команды в виде таблицы RST.
+- Документированы основные модули и библиотеки в виде таблицы RST.
+- Добавлена документация для класса `TelegramBot` с помощью `:autoclass:`.
+- Добавлена документация для функции `main`.
+- Удалены лишние комментарии, которые дублировали информацию из документации.
+- Все комментарии переписаны в формате RST.
 # FULL Code
+```rst
+.. module:: src.endpoints.bots.telegram
 
-```python
-"""
-Модуль для работы Telegram бота.
-================================================================================
-Этот модуль содержит класс :class:`TelegramBot`, который используется для создания и управления ботом Telegram.
-"""
-import asyncio
-from pathlib import Path
-from typing import Any
+   :synopsis: Модуль для реализации Telegram бота.
 
-# Импорты из utils, предположительно
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
-from telegram import Update, Bot
-from telegram.ext import Application, CommandHandler, MessageHandler, Filters, CallbackContext
+.. rubric:: Описание
 
-class TelegramBot:
-    """
-    Класс для управления ботом Telegram.
-    """
-    def __init__(self, token: str):
+   Этот модуль содержит класс `TelegramBot`, который используется для создания и управления Telegram ботом.
+   Бот обрабатывает различные команды, голосовые сообщения и текстовые сообщения, а также отправляет PDF файлы.
+
+..  warning::
+    Модуль использует заглушку для распознавания речи.
+
+..  code-block:: python
+
+    from pathlib import Path
+    from telegram import Update
+    from telegram.ext import CallbackContext
+    from src.logger.logger import logger
+    import asyncio
+    import requests
+    from src.utils.file import read_text_file
+    from src.utils.convertors.tts import speech_to_text
+
+
+.. table:: Основные функции и команды бота
+   :widths: auto
+
+   ===================================  ============================================================================
+   Функция/Команда                      Описание
+   ===================================  ============================================================================
+   **Инициализация бота**               Инициализация бота с токеном для аутентификации с Telegram API.
+   ``/start``                           Отправляет приветственное сообщение пользователю.
+   ``/help``                            Предоставляет список доступных команд.
+   ``/sendpdf``                         Отправляет PDF файл пользователю.
+   **Обработка сообщений**               Обрабатывает входящие текстовые, голосовые сообщения и файлы документов.
+   **Обработка голосовых сообщений**    Скачивает голосовое сообщение, сохраняет его и пытается транскрибировать (заглушка).
+   **Обработка документов**            Скачивает документ, сохраняет его и читает текстовое содержимое.
+   **Обработка текста**                Возвращает полученный от пользователя текст.
+   ===================================  ============================================================================
+
+.. table:: Основные модули и библиотеки
+   :widths: auto
+
+   =========================  ============================================================================
+   Модуль/Библиотека         Описание
+   =========================  ============================================================================
+   ``python-telegram-bot``   Основная библиотека для создания Telegram ботов.
+   ``pathlib``               Для работы с путями к файлам.
+   ``tempfile``              Для создания временных файлов.
+   ``asyncio``               Для асинхронного выполнения задач.
+   ``requests``              Для скачивания файлов.
+   ``src.utils.convertors.tts``   Для распознавания речи и преобразования текста в речь.
+   ``src.utils.file``        Для чтения текстовых файлов.
+   =========================  ============================================================================
+
+.. autoclass:: src.endpoints.bots.telegram.TelegramBot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. code-block:: python
+
+    def main():
         """
-        Инициализирует бота.
+        Инициализация и запуск Telegram бота.
 
-        :param token: Токен бота.
+        Эта функция инициализирует бота с токеном из переменных окружения,
+        регистрирует обработчики команд и сообщений и запускает бота.
         """
-        self.token = token
-        self.bot = Bot(token=token)
-        self.application = Application.builder().token(token).build()
-        self.register_handlers() # Регистрация обработчиков
-
-
-    def register_handlers(self):
-        """
-        Регистрирует обработчики команд и сообщений.
-        """
-        # ... (Обработчики команд и сообщений)
-        # Пример:
-        self.application.add_handler(CommandHandler("start", self.start))
-        self.application.add_handler(MessageHandler(Filters.text, self.handle_message))
-
-
-    async def start(self, update: Update, context: CallbackContext):
-        """
-        Обрабатывает команду /start.
-        """
-        await update.message.reply_text("Привет!")
-
-
-    async def handle_message(self, update: Update, context: CallbackContext):
-        """
-        Обрабатывает текстовые сообщения.
-
-        :param update: Объект Update.
-        :param context: Объект CallbackContext.
-        :return: Обработанное сообщение.
-        """
-        try:
-           text = update.message.text
-           # Отправка текста обратно пользователю.
-           await update.message.reply_text(text)
-
-        except Exception as ex:
-            logger.error('Ошибка при обработке сообщения', ex)
-
-
-    async def run(self):
-        """ Запуск бота. """
-        # Проверка успешности запуска приложения.
-        try:
-            await self.application.run_polling()
-        except Exception as e:
-            logger.error('Ошибка при запуске бота', e)
-        
-
-
-
-def main():
-    """
-    Инициализирует и запускает бота.
-    """
-    # Чтение токена из файла (замените 'token.txt' на реальный файл)
-    try:
-        with open('token.txt', 'r') as f:
-            token = f.read().strip()
-    except FileNotFoundError:
-        logger.error('Файл токена не найден.')
-        return
-
-
-    bot = TelegramBot(token)
-    asyncio.run(bot.run())
-
-
-if __name__ == "__main__":
-    main()
-```
+        ...

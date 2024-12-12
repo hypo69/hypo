@@ -8,7 +8,7 @@
 <a href='https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>Код</a>
 </td>
 <td>
-<a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/readme.ru.md'>Документация</a> 
+<a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/out/readme.ru.md'>Документация</a> 
 </td>
 <td>
 <a href='https://github.com/hypo69/hypo/blob/master/README.MD'>English</a>

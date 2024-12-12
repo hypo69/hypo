@@ -1,139 +1,106 @@
-# Улучшенный код
-
-```python
-"""
-Модуль содержит инструкции для чат-бота.
-=========================================================================================
-
-Этот модуль определяет доступные команды для чат-бота.
-"""
-from src.utils.jjson import j_loads_ns
-from src.logger.logger import logger
-
-
-# Код исправлен и прокомментирован
-def greet_user():
-    """Приветствует пользователя."""
-    return 'Привет!'
-
-def train_model(data, data_dir, positive, attachment):
-    """Обучает модель."""
-    # TODO: Реализовать логику обучения модели
-    logger.info(f"Обучение модели с данными: {data}, {data_dir}, {positive}, {attachment}")
-    # ... (код для обучения модели)
-
-def test_model(test_data):
-    """Тестирует модель."""
-    try:
-        # Отправка данных на тестирование
-        # Проверка формата входных данных. При необходимости преобразование в нужный формат
-        test_data = j_loads_ns(test_data)
-    except Exception as ex:
-        logger.error("Ошибка при разборе входных данных", ex)
-        # ... (обработка ошибки)
-        return
-
-    # ... (код для тестирования модели)
-    logger.info(f"Тестирование модели с данными: {test_data}")
-
-
-def archive_files(directory):
-    """Архивирует файлы в указанной директории."""
-    # TODO: Реализовать логику архивирования файлов
-    logger.info(f"Архивирование файлов в директории: {directory}")
-    # ... (код для архивирования)
-
-def select_dataset(path_to_dir_positive, positive):
-    """Выбирает набор данных для обучения из указанной директории."""
-    # TODO: Реализовать логику выбора набора данных
-    logger.info(f"Выбор набора данных из директории: {path_to_dir_positive}, positive: {positive}")
-    # ... (код для выбора набора данных)
-    
-def display_instruction():
-    """Отображает инструкцию."""
-    instruction_message = """
-!hi: Приветствует пользователя.
-!train <data> <data_dir> <positive> <attachment>: Обучает модель с предоставленными данными. Используйте data для файла, data_dir для директории или attachment для файла-приложения.
-!test <test_data>: Тестирует модель с предоставленными JSON тестовыми данными.
-!archive <directory>: Архивирует файлы в указанной директории.
-!select_dataset <path_to_dir_positive> <positive>: Выбирает набор данных для обучения из указанной директории.
-!instruction: Отображает это сообщение с инструкцией.
-"""
-    return instruction_message
-
+# Received Code
 ```
+!hi: Greets the user.
+!train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data. Use data for a file, data_dir for a directory, or attachment for a file attachment.
+!test <test_data>: Tests the model with provided JSON test data.
+!archive <directory>: Archives files in the specified directory.
+!select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the specified directory.
+!instruction: Displays this instruction message.
+```
+# Improved Code
+```
+# Команды для бота
+# =========================================================================================
+#
+# Этот документ содержит инструкции для команд, которые может выполнять бот.
+# Каждая команда описана с указанием её синтаксиса и назначения.
+#
 
-# Внесённые изменения
+# !hi: Приветствует пользователя.
+#
+#  Выводит приветствие пользователю.
+!hi: Greets the user.
+# !train <data> <data_dir> <positive> <attachment>: Обучает модель.
+#
+#  Обучает модель, используя данные, предоставленные в виде файла, директории или вложения.
+#
+#   :param data: путь к файлу с данными для обучения.
+#   :param data_dir: путь к директории с данными для обучения.
+#   :param positive: флаг, указывающий на положительные примеры.
+#   :param attachment: вложение с данными для обучения.
+!train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data. Use data for a file, data_dir for a directory, or attachment for a file attachment.
+# !test <test_data>: Тестирует модель.
+#
+#   Тестирует модель с предоставленными JSON тестовыми данными.
+#
+#   :param test_data: JSON данные для тестирования модели.
+!test <test_data>: Tests the model with provided JSON test data.
+# !archive <directory>: Архивирует файлы.
+#
+#   Архивирует файлы из указанной директории.
+#
+#   :param directory: путь к директории для архивации.
+!archive <directory>: Archives files in the specified directory.
+# !select_dataset <path_to_dir_positive> <positive>: Выбирает набор данных.
+#
+#   Выбирает набор данных для обучения из указанной директории.
+#
+#   :param path_to_dir_positive: путь к директории с положительными примерами.
+#   :param positive: флаг, указывающий на положительные примеры.
+!select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the specified directory.
+# !instruction: Отображает инструкцию.
+#
+#   Выводит это сообщение с инструкциями.
+!instruction: Displays this instruction message.
+```
+# Changes Made
+- Добавлены комментарии в формате reStructuredText (RST) для описания каждой команды.
+-  Комментарии содержат описание назначения, параметров и назначения каждой команды.
+- Добавлен заголовок в формате RST для описания модуля.
 
-*   Добавлены комментарии RST для модуля, функций и методов, следуя указанному стилю.
-*   Заменены все `json.load` на `j_loads_ns` из `src.utils.jjson`.
-*   Добавлены логирования с помощью `logger.info` и `logger.error` для отслеживания операций и обработки ошибок.
-*   Улучшен код обработки ошибок, используя `logger.error` для регистрации ошибок.
-*   Изменены комментарии на более конкретные, избегая общих фраз типа "получаем" и "делаем".
-*   Убраны неиспользуемые переменные.
-*   Добавлены `TODO` для нереализованных частей кода.
-*   Добавлен `display_instruction`
+# FULL Code
+```
+# Команды для бота
+# =========================================================================================
+#
+# Этот документ содержит инструкции для команд, которые может выполнять бот.
+# Каждая команда описана с указанием её синтаксиса и назначения.
+#
 
-# Оптимизированный код
-
-```python
-"""
-Модуль содержит инструкции для чат-бота.
-=========================================================================================
-
-Этот модуль определяет доступные команды для чат-бота.
-"""
-from src.utils.jjson import j_loads_ns
-from src.logger.logger import logger
-
-
-# Код исправлен и прокомментирован
-def greet_user():
-    """Приветствует пользователя."""
-    return 'Привет!'
-
-def train_model(data, data_dir, positive, attachment):
-    """Обучает модель."""
-    # TODO: Реализовать логику обучения модели
-    logger.info(f"Обучение модели с данными: {data}, {data_dir}, {positive}, {attachment}")
-    # ... (код для обучения модели)
-
-def test_model(test_data):
-    """Тестирует модель."""
-    try:
-        # Отправка данных на тестирование
-        # Проверка формата входных данных. При необходимости преобразование в нужный формат
-        test_data = j_loads_ns(test_data)
-    except Exception as ex:
-        logger.error("Ошибка при разборе входных данных", ex)
-        # ... (обработка ошибки)
-        return
-
-    # ... (код для тестирования модели)
-    logger.info(f"Тестирование модели с данными: {test_data}")
-
-
-def archive_files(directory):
-    """Архивирует файлы в указанной директории."""
-    # TODO: Реализовать логику архивирования файлов
-    logger.info(f"Архивирование файлов в директории: {directory}")
-    # ... (код для архивирования)
-
-def select_dataset(path_to_dir_positive, positive):
-    """Выбирает набор данных для обучения из указанной директории."""
-    # TODO: Реализовать логику выбора набора данных
-    logger.info(f"Выбор набора данных из директории: {path_to_dir_positive}, positive: {positive}")
-    # ... (код для выбора набора данных)
-    
-def display_instruction():
-    """Отображает инструкцию."""
-    instruction_message = """
-!hi: Приветствует пользователя.
-!train <data> <data_dir> <positive> <attachment>: Обучает модель с предоставленными данными. Используйте data для файла, data_dir для директории или attachment для файла-приложения.
-!test <test_data>: Тестирует модель с предоставленными JSON тестовыми данными.
-!archive <directory>: Архивирует файлы в указанной директории.
-!select_dataset <path_to_dir_positive> <positive>: Выбирает набор данных для обучения из указанной директории.
-!instruction: Отображает это сообщение с инструкцией.
-"""
-    return instruction_message
+# !hi: Приветствует пользователя.
+#
+#  Выводит приветствие пользователю.
+!hi: Greets the user.
+# !train <data> <data_dir> <positive> <attachment>: Обучает модель.
+#
+#  Обучает модель, используя данные, предоставленные в виде файла, директории или вложения.
+#
+#   :param data: путь к файлу с данными для обучения.
+#   :param data_dir: путь к директории с данными для обучения.
+#   :param positive: флаг, указывающий на положительные примеры.
+#   :param attachment: вложение с данными для обучения.
+!train <data> <data_dir> <positive> <attachment>: Trains the model with the provided data. Use data for a file, data_dir for a directory, or attachment for a file attachment.
+# !test <test_data>: Тестирует модель.
+#
+#   Тестирует модель с предоставленными JSON тестовыми данными.
+#
+#   :param test_data: JSON данные для тестирования модели.
+!test <test_data>: Tests the model with provided JSON test data.
+# !archive <directory>: Архивирует файлы.
+#
+#   Архивирует файлы из указанной директории.
+#
+#   :param directory: путь к директории для архивации.
+!archive <directory>: Archives files in the specified directory.
+# !select_dataset <path_to_dir_positive> <positive>: Выбирает набор данных.
+#
+#   Выбирает набор данных для обучения из указанной директории.
+#
+#   :param path_to_dir_positive: путь к директории с положительными примерами.
+#   :param positive: флаг, указывающий на положительные примеры.
+!select_dataset <path_to_dir_positive> <positive>: Selects a dataset for training from the specified directory.
+# !instruction: Отображает инструкцию.
+#
+#   Выводит это сообщение с инструкциями.
+!instruction: Displays this instruction message.
 ```
