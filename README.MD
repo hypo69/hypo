@@ -1,4 +1,19 @@
+<table>
+<tr>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/src/README.MD'>Code</a>
+</td>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/README.MD'>Documentation</a> 
+</td>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/readme.ru.md'>Русский</a>
+</td>
+</tr>
+</table>
 
+Disclamer:
+==============
 **Revolutionizing Workflows with Hypotez: Your AI-Powered Assistant**
 
 In today’s fast-paced world, businesses are constantly seeking ways to streamline operations, save time, and make smarter decisions. Enter **Hypotez** — an AI-powered assistant designed to automate routine tasks, analyze data, and simplify complex workflows across multiple industries. Whether you're in sales, HR, task management, or data analysis, Hypotez is here to transform the way you work.
@@ -114,19 +129,7 @@ Let’s work together to make Hypotez the go-to AI assistant for businesses worl
 **#AI #Automation #BusinessGrowth #Hypotez #Innovation #DataAnalysis #WorkflowOptimization**
 
 
-<table>
-<tr>
-<td>
-<a href='https://github.com/hypo69/hypo/blob/master/src/README.MD'>Code</a>
-</td>
-<td>
-<a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/README.MD'>Documentation</a> 
-</td>
-<td>
-<a href='https://github.com/hypo69/hypo/blob/master/readme.ru.md'>Русский</a>
-</td>
-</tr>
-</table>
+
 
 Hypotez Project
 ======================================================================
