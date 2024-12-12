@@ -1,19 +1,3 @@
-```rst
-.. module:: src.endpoints
-    :synopsis: Endpoints for various customers
-
-.. moduleauthor:: hypo69 <hypo69@davidka.net>
-
-.. note::
-    This module provides API endpoints tailored for different customers.
-
-.. warning::
-    Ensure proper authentication and authorization when using these endpoints.
-
-.. seealso::
-    For more details on how to use these endpoints, refer to the :doc:`API documentation <api_doc>`.
-```
-
 <TABLE >
 <TR>
 <TD>
@@ -31,7 +15,21 @@
 
 Data Consumer Endpoints Module  
 =========================================================================================  
+```rst
+.. module:: src.endpoints
+    :synopsis: Endpoints for various customers
 
+.. moduleauthor:: hypo69 <hypo69@davidka.net>
+
+.. note::
+    This module provides API endpoints tailored for different customers.
+
+.. warning::
+    Ensure proper authentication and authorization when using these endpoints.
+
+.. seealso::
+    For more details on how to use these endpoints, refer to the :doc:`API documentation <api_doc>`.
+```
 The `endpoints` module provides an implementation of APIs for interacting with data consumers.  
 Each subdirectory represents a separate module that implements the API for a specific service.  
 The `endpoints` module includes submodules for integration with various consumer systems,  

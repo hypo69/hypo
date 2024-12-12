@@ -1,8 +1,140 @@
-# Received Code
+# ИНСТРУКЦИЯ
+## Основные требования:
+## Output Language: RU (Русский)
 
+1. **Формат документации**:
+   - Используйте **reStructuredText (RST)** для всех комментариев и docstring.
+   - Всегда используйте одинарные кавычки (`'`) в Python коде.
+
+2. **Сохранение комментариев**:
+   - Все существующие комментарии после `#` должны быть сохранены без изменений.
+   - Блоки кода, которые необходимо изменить, должны быть прокомментированы построчно с использованием символа `#`.
+
+3. **Обработка данных**:
+   - Используйте `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load` для чтения файлов.
+   - Оставляйте любые `...` в коде без изменений как точки остановки.
+
+4. **Анализ структуры**:
+   - Проверьте и добавьте отсутствующие импорты в код.
+   - Приведите в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+
+5. **Рефакторинг и улучшения**:
+   - Добавьте комментарии в формате RST ко всем функциям, методам и классам.
+   - Используйте `from src.logger.logger import logger` для логирования ошибок.
+   - Избегайте избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
+   - В комментариях избегайте слов 'получаем', 'делаем' и подобных. Используйте конкретные формулировки, такие как 'проверка', 'отправка', 'код исполняет ...'.
+
+6. **Шаблон ответа**:
+   - Ответ должен включать три раздела:
+     - **Received Code** — исходный код без изменений.
+     - **Improved Code** — код с добавленными комментариями и исправлениями.
+     - **Changes Made** — подробный список внесённых изменений.
+     - **FULL Code** — полный код с исправлениями.
+   - Ответ не должен начинаться с ` ``` `. Используйте их только для оборачивания блоков кода.
+
+7. **Окончательный код**:
+   - В конце ответа должен быть представлен полный код (исходный с улучшениями) в одном блоке, который можно скопировать и вставить для замены исходного кода.
+   - Все изменённые части кода должны быть прокомментированы построчно с использованием символа `#` в этом блоке.
+
+8. **Примеры кода**:
+   - Включайте примеры документации RST и возможные улучшения в формате `TODO`.
+
+9. **Дополнительная инструкция**:
+   - Все комментарии к модулям, функциям, методам и переменным должны быть переписаны в формате reStructuredText (RST). Это включает:
+     - Описание модуля в начале файла.
+     - Документацию для каждой функции, метода и переменной.
+     - Соблюдение стандартов оформления docstring в Python (например, для Sphinx).
+     - В комментариях после `#` строки должны содержать подробное объяснение следующего за ними блока кода.
+
+     Пример формата документации для модуля:
+
+     ```python
+     """
+     Модуль для работы ассистента программиста
+     =========================================================================================
+
+     Этот модуль содержит класс :class:`CodeAssistant`, который используется для работы с различными моделями ИИ,
+     такими как Google Gemini и OpenAI, для выполнения задач по обработке кода.
+
+     Пример использования
+     --------------------
+
+     Пример использования класса `CodeAssistant`:
+
+     .. code-block:: python
+
+         assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+         assistant.process_files()
+     """
+     ```
+
+     Пример формата документации для функций:
+
+     ```python
+     def example_function(param1: str, param2: int) -> str:
+         """
+         Выполняет примерную задачу.
+
+         :param param1: Описание параметра 1.
+         :param param2: Описание параметра 2.
+         :return: Описание возвращаемого значения.
+         """
+         ...
+     ```
+
+     Пример формата стиля комментариев в коде:
+
+     ```python
+     @close_pop_up()
+     async def specification(self, value: Any = None):
+         """Fetch and set specification.
+
+         Args:
+             value (Any): это значение можно передать в словаре kwargs через ключ {specification = `value`} при определении класса.
+             Если `value` был передан, его значение подставляется в поле `ProductFields.specification`.
+         """
+         try:
+             # код исполняет получение значения через execute_locator
+             value = value or  await self.driver.execute_locator(self.locator.specification) or ''
+         except Exception as ex:
+             logger.error('Ошибка получения значения в поле `specification`', ex)
+             ...
+             return
+
+         # Проверка валидности результата
+         if not value:
+             logger.debug(f'Невалидный результат {value=}\\nлокатор {self.locator.specification}')
+             ...
+             return
+
+         # Если значение - список, код преобразовывает его в строку с разделителем `\n`
+         if isinstance(value, list):
+             value = '\n'.join(map(str, value))
+
+         # Код записывает результат в поле `specification` объекта `ProductFields`
+         self.fields.specification = value
+         return True
+     ```
+
+## Порядок блоков в ответе:
+1. **Улучшенный код**:
+   <код с улучшениями>
+
+2. **Внесённые изменения**:
+   <список изменений>
+
+3. **Оптимизированный код**:
+   <итоговый оптимизированный код>
+
+## Ты даешь ответы на русском языке
+## Формат ответа `.md` (markdown)
+----------------------------
+** КОНЕЦ ИНСТРУКЦИИ **
+```
+### Received Code
 ```python
-## \file hypotez/src/endpoints/prestashop/api/__init__.py
-# -*- coding: utf-8 -*-\
+## \\file hypotez/src/endpoints/prestashop/api/__init__.py
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -16,111 +148,50 @@ MODE = 'dev'
 
 from .api import PrestaShop
 ```
-
-# Improved Code
-
+### Improved Code
 ```python
-## \file hypotez/src/endpoints/prestashop/api/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
+"""
+Модуль для инициализации API Prestashop.
+=====================================================
+
+Этот модуль импортирует и предоставляет доступ к классу :class:`PrestaShop` для взаимодействия с API Prestashop.
 
 """
-.. module:: src.endpoints.prestashop.api
-   :platform: Windows, Unix
-   :synopsis: Модуль предоставляет интерфейс для работы с API Престашоп.
-
-"""
-import logging
-from src.utils.jjson import j_loads, j_loads_ns
-
-# Импортируем logger из src.logger.logger
-from src.logger.logger import logger
+# Импортируем модуль для логирования
+from src.logger.logger import logger # Импортирован logger
 
 MODE = 'dev'
 
-
-# Функция инициализации.
-def init_presta_shop_api(config_file: str):
-    """Инициализирует подключение к API Престашоп.
-
-    :param config_file: Путь к файлу конфигурации.
-    :raises FileNotFoundError: Если файл конфигурации не найден.
-    :raises Exception: При других ошибках.
-
-    """
-    try:
-        # Чтение файла конфигурации с использованием j_loads_ns.
-        config = j_loads_ns(config_file)
-        # ... обработка конфигурации ...
-    except FileNotFoundError as e:
-        logger.error("Ошибка: файл конфигурации не найден", exc_info=True)
-        raise
-    except Exception as e:
-        logger.error("Ошибка при чтении файла конфигурации", exc_info=True)
-        raise
-    
-    # ... дальнейшая инициализация ...
-    return PrestaShop(config)  #Возвращает объект PrestaShop.
-
-
+# Импортируем класс PrestaShop из модуля api
 from .api import PrestaShop
 ```
+### Changes Made
 
-# Changes Made
+- Добавлены docstring к модулю в формате reStructuredText.
+- Добавлен импорт `logger` из `src.logger.logger`.
+- Сохранены shebang и encoding.
+- Сохранены все комментарии `#`.
 
-*   Добавлены импорты `logging`, `j_loads`, `j_loads_ns` из `src.utils.jjson` и `logger` из `src.logger.logger`.
-*   Добавлен комментарий RST для модуля `src.endpoints.prestashop.api`.
-*   Добавлен docstring в стиле RST для функции `init_presta_shop_api`.
-*   Добавлена обработка ошибок с использованием `logger.error` и `raise`.
-*   Заменён `json.load` на `j_loads_ns`.
-*   Изменён стиль комментариев, заменены неявные глаголы типа «получить», «сделать» на более ясные глаголы типа «чтение», «обработка».
-
-
-# FULL Code
-
+### FULL Code
 ```python
-## \file hypotez/src/endpoints/prestashop/api/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
+"""
+Модуль для инициализации API Prestashop.
+=====================================================
+
+Этот модуль импортирует и предоставляет доступ к классу :class:`PrestaShop` для взаимодействия с API Prestashop.
 
 """
-.. module:: src.endpoints.prestashop.api
-   :platform: Windows, Unix
-   :synopsis: Модуль предоставляет интерфейс для работы с API Престашоп.
-
-"""
-import logging
-from src.utils.jjson import j_loads, j_loads_ns
-# Импортируем logger из src.logger.logger
-from src.logger.logger import logger
+# Импортируем модуль для логирования
+from src.logger.logger import logger # Импортирован logger
 
 MODE = 'dev'
 
-
-# Функция инициализации.
-def init_presta_shop_api(config_file: str):
-    """Инициализирует подключение к API Престашоп.
-
-    :param config_file: Путь к файлу конфигурации.
-    :raises FileNotFoundError: Если файл конфигурации не найден.
-    :raises Exception: При других ошибках.
-
-    """
-    try:
-        # Чтение файла конфигурации с использованием j_loads_ns.
-        config = j_loads_ns(config_file)
-        # ... обработка конфигурации ...
-    except FileNotFoundError as e:
-        logger.error("Ошибка: файл конфигурации не найден", exc_info=True)
-        raise
-    except Exception as e:
-        logger.error("Ошибка при чтении файла конфигурации", exc_info=True)
-        raise
-    
-    # ... дальнейшая инициализация ...
-    return PrestaShop(config)  #Возвращает объект PrestaShop.
-
-
+# Импортируем класс PrestaShop из модуля api
 from .api import PrestaShop
+```

@@ -1,142 +1,80 @@
-```MD
-# Received Code
-
+## Улучшенный код
 ```python
-## \file hypotez/src/endpoints/prestashop/domains/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.prestashop.domains 
-	:platform: Windows, Unix
-	:synopsis:
+Модуль для определения режима работы домена Prestashop.
+=========================================================================================
 
+Этот модуль определяет константу `MODE`, которая используется для установки режима работы (например, `dev` для разработки, `prod` для продакшена).
+
+:platform: Windows, Unix
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.endpoints.prestashop.domains import MODE
+
+    if MODE == 'dev':
+        print("Режим разработки")
+    else:
+        print("Режим продакшена")
 """
+from src.logger.logger import logger  # Импорт логгера
+
 MODE = 'dev'
-
 """
-	:platform: Windows, Unix
-	:synopsis:
-
+    :platform: Windows, Unix
+    :synopsis: Переменная, определяющая режим работы приложения.
 """
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.endpoints.prestashop.domains """
-
 ```
 
-# Improved Code
+## Внесённые изменения
 
+1.  **Добавлено описание модуля в формате RST:**
+    *   Добавлен docstring в начале файла с описанием назначения модуля, платформ и примером использования.
+2.  **Добавлен импорт логгера:**
+    *   Добавлен `from src.logger.logger import logger` для логирования.
+3.  **Добавлены docstring к переменной `MODE`:**
+    *   Добавлен docstring к переменной `MODE` для документирования её назначения и платформ.
+4.  **Удалены лишние комментарии и пустые строки:**
+    *   Удалены повторяющиеся и бессмысленные docstring и пустые строки.
+5. **Убраны дублирования.**
+   *   Убрано дублирование `MODE = 'dev'`.
+## Оптимизированный код
 ```python
-## \file hypotez/src/endpoints/prestashop/domains/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.prestashop.domains
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с доменами PrestaShop.
+Модуль для определения режима работы домена Prestashop.
+=========================================================================================
+
+Этот модуль определяет константу `MODE`, которая используется для установки режима работы (например, `dev` для разработки, `prod` для продакшена).
+
+:platform: Windows, Unix
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.endpoints.prestashop.domains import MODE
+
+    if MODE == 'dev':
+        print("Режим разработки")
+    else:
+        print("Режим продакшена")
 """
-from src.utils.jjson import j_loads # Импорт функции для обработки JSON
+from src.logger.logger import logger  # Импорт логгера
 
-MODE = 'dev'  # Переменная для режима работы (dev, prod, ...)
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Константа, определяющая режим работы.
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Дополнительные константы или переменные.
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Пустой блок документации
-"""
-
-
+MODE = 'dev'
 """
     :platform: Windows, Unix
-    :synopsis:  Пустой блок документации
+    :synopsis: Переменная, определяющая режим работы приложения.
 """
-MODE = 'dev'  # Переменная для режима работы (dev, prod, ...)
-#  Константа MODE определяет режим работы (dev, prod и т.д.).
-
-
-```
-
-# Changes Made
-
-*   Добавлены docstrings в формате reStructuredText (RST) для модуля и переменной `MODE`.
-*   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Изменены некоторые строки комментариев для большей ясности.
-*   Убраны лишние пустые блоки документации.
-*   Комментарии к переменной MODE объяснены.
-
-
-# FULL Code
-
-```python
-## \file hypotez/src/endpoints/prestashop/domains/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.endpoints.prestashop.domains
-    :platform: Windows, Unix
-    :synopsis: Модуль для работы с доменами PrestaShop.
-"""
-from src.utils.jjson import j_loads # Импорт функции для обработки JSON
-
-MODE = 'dev'  # Переменная для режима работы (dev, prod, ...)
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Константа, определяющая режим работы.
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Дополнительные константы или переменные.
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Пустой блок документации
-"""
-
-
-"""
-    :platform: Windows, Unix
-    :synopsis:  Пустой блок документации
-"""
-MODE = 'dev'  # Переменная для режима работы (dev, prod, ...)
-#  Константа MODE определяет режим работы (dev, prod и т.д.).

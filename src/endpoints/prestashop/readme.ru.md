@@ -1,6 +1,21 @@
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A> \ 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/readme.ru.md'>endpoints</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/prestashop/README.MD'>English</A>
+</TD>
+</TR>
+</TABLE>
+
 # Управление сайтами на PrestaShop
 
-Данный `README` файл описывает структуру и способ работы с сайтами на платформе PrestaShop, а также хранение и использование ключей API.
+&nbsp;&nbsp;&nbsp;Документ описывает структуру и способ работы с сайтами на платформе PrestaShop, а также хранение и использование ключей API.
 
 ## Сайты
 
@@ -46,8 +61,8 @@ curl -X GET 'https://e-cat.co.il/api/products' \
 
 ## Рекомендации по безопасности
 
-- Никогда не передавайте файл `credentials.kdbx` третьим лицам.
-- Убедитесь, что файл находится в защищенном месте, доступном только вам.
+- Никогда не передавайте файл `credentials.kdbx` третьим лицам. ❗
+- Убедитесь, что файл находится в защищенном месте, доступном только вам. (папка `secrets` в корне проекта исключена из `git`)
 - Регулярно обновляйте ключи API и пароли для базы данных.
 
 ## Дополнительно

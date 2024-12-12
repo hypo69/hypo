@@ -1,4 +1,4 @@
-## Received Code
+## Улучшенный код
 
 ```html
 <!DOCTYPE html>
@@ -80,11 +80,11 @@
         <p class="lead">{{ description }}</p>
 
         <div class="row">
-            {% for product in products %}\n
+            {% for product in products %}
             <div class="product-card">
                 <h3>{{ product.product_title }}</h3>
                 <div class="product-content">
-                    <img src="{{ product.image_local_saved_path }}" 
+                    <img src="{{ product.image_local_saved_path }}"
                          alt="{{ product.product_title }}" />
                     <div class="product-info">
                         <p>{{ product.product_description }}</p>
@@ -96,7 +96,7 @@
         </div>
 
         <div class="footer">
-            <p>Общая стоимость: 
+            <p>Общая стоимость:
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
@@ -106,60 +106,18 @@
 </html>
 ```
 
-## Improved Code
+## Внесённые изменения
+
+1. **Комментарии**:
+    - Добавлены комментарии к стилям CSS для описания их назначения.
+    - Комментарии оставлены без изменения.
+
+## Оптимизированный код
 
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <style>
-        /* ... (стили) ... */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>{{ title }}</h1>
-        <p class="lead">{{ description }}</p>
 
-        <div class="row">
-            {% for product in products %}
-            <div class="product-card">
-                <h3>{{ product.product_title }}</h3>
-                <div class="product-content">
-                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" />
-                    <div class="product-info">
-                        <p>{{ product.product_description }}</p>
-                        <p>{{ product.specification }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="footer">
-            <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
-        </div>
-    </div>
-</body>
-</html>
-```
-
-## Changes Made
-
-- HTML-код был незначительно переформатирован для лучшей читаемости и структурирования.
-- Все комментарии в стилях были сохранены, как и просили.
-- Отсутствующие импорты не были необходимы, так как код представляет собой шаблон HTML.
-- Заменены `{{ }}` в стилях на правильные `{{ }}`.
-
-
-## FULL Code
-
-```html
-<!DOCTYPE html>
-<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,16 +187,19 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>{{ title }}</h1>
         <p class="lead">{{ description }}</p>
+
         <div class="row">
             {% for product in products %}
             <div class="product-card">
                 <h3>{{ product.product_title }}</h3>
                 <div class="product-content">
-                    <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" />
+                    <img src="{{ product.image_local_saved_path }}"
+                         alt="{{ product.product_title }}" />
                     <div class="product-info">
                         <p>{{ product.product_description }}</p>
                         <p>{{ product.specification }}</p>
@@ -247,9 +208,13 @@
             </div>
             {% endfor %}
         </div>
+
         <div class="footer">
-            <p>Общая стоимость: <span class="price-tag">{{ price }} {{ currency }}</span></p>
+            <p>Общая стоимость:
+                <span class="price-tag">{{ price }} {{ currency }}</span>
+            </p>
         </div>
     </div>
 </body>
+
 </html>
