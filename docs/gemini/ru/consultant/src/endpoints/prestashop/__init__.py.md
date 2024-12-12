@@ -1,94 +1,95 @@
-# Received Code
-
+## Улучшенный код
 ```python
-## \file hypotez/src/endpoints/prestashop/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 """
-.. module:: src.endpoints.prestashop 
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-MODE = 'dev'
-
-from .api import PrestaShop
-from .product import PrestaProduct
-from .supplier import PrestaSupplier
-from .category import PrestaCategory
-from .warehouse import PrestaWarehouse
-from .language import PrestaLanguage
-from .shop import PrestaShopShop
-from .pricelist import PriceListRequester
-from .customer import PrestaCustomer
-```
-
-# Improved Code
-
-```python
-## \file hypotez/src/endpoints/prestashop/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-Модуль для работы с API Престашоп.
+Модуль для работы с PrestaShop API.
 =========================================================================================
 
-Этот модуль предоставляет классы для работы с различными ресурсами API Престашоп,
-такими как продукты, поставщики, категории, склады, языки, магазины, прайс-листы и клиенты.
+Этот модуль содержит классы для взаимодействия с различными ресурсами PrestaShop, такими как продукты,
+поставщики, категории и т.д.
+
+Модуль предоставляет интерфейсы для выполнения CRUD операций с данными PrestaShop.
+
+Пример использования
+--------------------
+
+Пример импорта классов из модуля:
+
+.. code-block:: python
+
+    from src.endpoints.prestashop import PrestaShop, PrestaProduct
+
 """
 MODE = 'dev'
 
-# Импорт необходимых классов.
-from .api import PrestaShop
-from .product import PrestaProduct
-from .supplier import PrestaSupplier
-from .category import PrestaCategory
-from .warehouse import PrestaWarehouse
-from .language import PrestaLanguage
-from .shop import PrestaShopShop
-from .pricelist import PriceListRequester
-from .customer import PrestaCustomer
-from src.logger.logger import logger
+from src.endpoints.prestashop.api import PrestaShop
+# импортирует класс для работы с API PrestaShop
+from src.endpoints.prestashop.product import PrestaProduct
+# импортирует класс для работы с продуктами PrestaShop
+from src.endpoints.prestashop.supplier import PrestaSupplier
+# импортирует класс для работы с поставщиками PrestaShop
+from src.endpoints.prestashop.category import PrestaCategory
+# импортирует класс для работы с категориями PrestaShop
+from src.endpoints.prestashop.warehouse import PrestaWarehouse
+# импортирует класс для работы со складами PrestaShop
+from src.endpoints.prestashop.language import PrestaLanguage
+# импортирует класс для работы с языками PrestaShop
+from src.endpoints.prestashop.shop import PrestaShopShop
+# импортирует класс для работы с магазинами PrestaShop
+from src.endpoints.prestashop.pricelist import PriceListRequester
+# импортирует класс для работы с прайс-листами PrestaShop
+from src.endpoints.prestashop.customer import PrestaCustomer
+# импортирует класс для работы с клиентами PrestaShop
 ```
 
-# Changes Made
+## Внесённые изменения
 
-* Добавлена документация RST для модуля `src.endpoints.prestashop`.
-* Добавлен импорт `logger` из `src.logger.logger`.
-* Исправлены ошибки форматирования.
+- Добавлены docstring к модулю в формате RST.
+- Добавлены комментарии к импортам классов с описанием их назначения.
 
-
-# FULL Code
-
+## Оптимизированный код
 ```python
-## \file hypotez/src/endpoints/prestashop/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+# -*- coding: utf-8 -*-
+# ! venv/Scripts/python.exe
+# ! venv/bin/python/python3.12
 """
-Модуль для работы с API Престашоп.
+Модуль для работы с PrestaShop API.
 =========================================================================================
 
-Этот модуль предоставляет классы для работы с различными ресурсами API Престашоп,
-такими как продукты, поставщики, категории, склады, языки, магазины, прайс-листы и клиенты.
+Этот модуль содержит классы для взаимодействия с различными ресурсами PrestaShop, такими как продукты,
+поставщики, категории и т.д.
+
+Модуль предоставляет интерфейсы для выполнения CRUD операций с данными PrestaShop.
+
+Пример использования
+--------------------
+
+Пример импорта классов из модуля:
+
+.. code-block:: python
+
+    from src.endpoints.prestashop import PrestaShop, PrestaProduct
+
 """
 MODE = 'dev'
 
-# Импорт необходимых классов.
-from .api import PrestaShop
-from .product import PrestaProduct
-from .supplier import PrestaSupplier
-from .category import PrestaCategory
-from .warehouse import PrestaWarehouse
-from .language import PrestaLanguage
-from .shop import PrestaShopShop
-from .pricelist import PriceListRequester
-from .customer import PrestaCustomer
-from src.logger.logger import logger
-```
-```
+from src.endpoints.prestashop.api import PrestaShop
+# импортирует класс для работы с API PrestaShop
+from src.endpoints.prestashop.product import PrestaProduct
+# импортирует класс для работы с продуктами PrestaShop
+from src.endpoints.prestashop.supplier import PrestaSupplier
+# импортирует класс для работы с поставщиками PrestaShop
+from src.endpoints.prestashop.category import PrestaCategory
+# импортирует класс для работы с категориями PrestaShop
+from src.endpoints.prestashop.warehouse import PrestaWarehouse
+# импортирует класс для работы со складами PrestaShop
+from src.endpoints.prestashop.language import PrestaLanguage
+# импортирует класс для работы с языками PrestaShop
+from src.endpoints.prestashop.shop import PrestaShopShop
+# импортирует класс для работы с магазинами PrestaShop
+from src.endpoints.prestashop.pricelist import PriceListRequester
+# импортирует класс для работы с прайс-листами PrestaShop
+from src.endpoints.prestashop.customer import PrestaCustomer
+# импортирует класс для работы с клиентами PrestaShop
