@@ -1,81 +1,46 @@
-# Received Code
-
+## Улучшенный код
 ```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.kazarinov.scenarios 
-	:platform: Windows, Unix
-	:synopsis: Модуль сценария для создания прайлиста.
+Модуль сценариев для создания прайс-листа.
+==========================================
+
+Этот модуль содержит сценарии для генерации прайс-листов,
+предназначенные для использования в различных окружениях.
+
+:platform: Windows, Unix
+:synopsis: Модуль сценария для создания прайлиста.
+
 """
+#: Режим работы сценария (dev, prod).
 MODE = 'dev'
 ```
 
-# Improved Code
+## Внесённые изменения
+*   Добавлены reStructuredText комментарии для модуля.
+*   Добавлены подробное описание модуля и его назначения в docstring.
+*   Добавлены комментарии к переменной `MODE`.
+*   Удалены лишние импорты.
 
+## Оптимизированный код
 ```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.kazarinov.scenarios
-   :platform: Windows, Unix
-   :synopsis: Модуль сценариев для создания прайлиста.
+Модуль сценариев для создания прайс-листа.
+==========================================
 
-Этот модуль содержит сценарии для создания прайлиста.
-"""
-import json
-from src.utils.jjson import j_loads  # Импорт необходимой функции для обработки JSON
-from src.logger.logger import logger  # Импорт функции логирования
+Этот модуль содержит сценарии для генерации прайс-листов,
+предназначенные для использования в различных окружениях.
 
-
-MODE = 'dev'
-
-
-# Это переменная, определяющая режим работы.
-# В данном случае это 'dev', что обозначает режим разработки.
-# Возможно, стоит использовать константы для повышения читаемости.
-# TODO: Рассмотреть возможность использования перечислений (Enum) для MODE.
-```
-
-# Changes Made
-
-*   Добавлен импорт `j_loads` из `src.utils.jjson`.
-*   Добавлен импорт `logger` из `src.logger.logger`.
-*   Добавлена документация RST для модуля.
-*   Изменен стиль docstring в соответствии с RST.
-*   Комментарии изменены на более точные и формальные, избегая слов "получаем", "делаем".
-*	Удалена неявная переменная MODE, в которой уже использовался метод dev.
-*	Добавлен TODO для улучшения переменной MODE.
-
-
-# FULL Code
-
-```python
-## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+:platform: Windows, Unix
+:synopsis: Модуль сценария для создания прайлиста.
 
 """
-.. module:: src.endpoints.kazarinov.scenarios
-   :platform: Windows, Unix
-   :synopsis: Модуль сценариев для создания прайлиста.
-
-Этот модуль содержит сценарии для создания прайлиста.
-"""
-import json
-from src.utils.jjson import j_loads  # Импорт необходимой функции для обработки JSON
-from src.logger.logger import logger  # Импорт функции логирования
-
-
-# Это переменная, определяющая режим работы.
-# В данном случае это 'dev', что обозначает режим разработки.
-# Возможно, стоит использовать константы для повышения читаемости.
-# TODO: Рассмотреть возможность использования перечислений (Enum) для MODE.
+#: Режим работы сценария (dev, prod).
 MODE = 'dev'
