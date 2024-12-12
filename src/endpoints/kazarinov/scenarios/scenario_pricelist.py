@@ -179,7 +179,6 @@ class MexironBuilder:
                 continue
 
             product_data = await self.convert_product_fields(f)
-
             if not product_data:
                 logger.debug(f'Failed to convert product fields: {product_data}')
                 ...
@@ -188,6 +187,7 @@ class MexironBuilder:
             if not await self.save_product_data(product_data):
                 logger.error(f"Data not saved! {pprint(product_data)}")
                 ...
+                continue
             products_list.append(product_data)    
 
         # AI processing
@@ -196,11 +196,13 @@ class MexironBuilder:
         Внимание! модель может ошибаться"""
         await update.message.reply_text(f"AI processing lang = he")
         he = await self.process_ai(products_list,'he')
-        setattr(he,'price',price)
+        he['he']['price'] = price
+        he['he']['currency'] = "ש''ח"
         await update.message.reply_text("successfull")
         await update.message.reply_text(f"AI processing lang = ru")
         ru = await self.process_ai(products_list,'ru')
-        setattr(he,'price',price)
+        ru['ru']['price'] = price
+        ru['ru']['currency'] = "шекелей"
         await update.message.reply_text("successfull")
 
         if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
@@ -271,10 +273,12 @@ class MexironBuilder:
 
         .. note:: Правила построения полей определяются в `ProductFields`
         """
-
+        if not f.id_product:
+            return {} # <- сбой при получении полей товара. Такое может произойти если вместо страницы товара попалась страница категории, при невнимательном составлении мехирона из комплектующих
+        ...
         return {
             'product_title': f.name['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"'),
-            'product_id': f.id_supplier,
+            'product_id': f.id_product,
             'description_short': f.description_short['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
             'description': f.description['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),
             'specification': f.specification['language'][0]['value'].strip().replace("'", "\\'").replace('"', '\\"').replace(';','<br>'),

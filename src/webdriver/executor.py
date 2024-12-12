@@ -165,6 +165,10 @@ class ExecuteLocator:
                 locator.by = self.by_mapping.get(locator.by.upper(), locator.by)
                 if locator.attribute:
                     locator.attribute = await self.evaluate_locator(locator.attribute)
+                    """Я могу установить константное или формульное значение в аттрибут локатора и забирать его при условии {'by':'VALUE'}"""
+                    if locator.by == 'VALUE':
+                        return locator.attribute
+
             except Exception as ex:
                 if MODE in ('dev','debug'):
                     logger.debug(f"Locator Error: {locator=}")
@@ -205,7 +209,7 @@ class ExecuteLocator:
 
         if isinstance(attribute, list):
             return await asyncio.gather(*[_evaluate(attr) for attr in attribute])
-        return await _evaluate(attribute)
+        return await _evaluate(str(attribute))
 
     async def get_attribute_by_locator(                                     
         self,

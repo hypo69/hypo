@@ -888,7 +888,7 @@ class Graber:
                 ...
                 return
 
-            self.fields.id_product = self.id_supplier +'-'+ sku 
+            self.fields.id_product = str( self.fields.id_supplier ) +'-'+ sku 
             return True
 
         except Exception as ex:
@@ -1099,7 +1099,7 @@ class Graber:
         """
         try:
             # Получаем значение через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.id_supplier) or ''
+            value = value or  self.locator.id_supplier.attribute
         except Exception as ex:
             logger.error(f"Ошибка получения значения в поле `id_supplier`", ex)
             ...
@@ -1113,6 +1113,7 @@ class Graber:
 
         # Записываем результат в поле `id_supplier` объекта `ProductFields`
         self.fields.id_supplier = value
+        return True
 
 
     @close_pop_up()
@@ -1510,7 +1511,7 @@ class Graber:
             # Получаем значение через execute_locator
             raw_data = await self.driver.execute_locator(self.locator.name)
             if not raw_data:
-                logger.error(f'Нет данных для поля `name`')
+                logger.error(f'Нет данных для поля `name`', None, False)
                 ...
                 return
 

@@ -28,20 +28,15 @@
             width: 90%;
             margin: 0 auto;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            direction: rtl; /* Направление текста справа налево */
-        }
         .product-card {
             background-color: #f8f9fa; /* Светлый фон карточек */
             border: 1pt solid #dee2e6;
             border-radius: 8pt;
             padding: 15pt;
             margin: 15pt 0;
-            width: 100%;
+            display: flex;
+            align-items: flex-start;
             box-sizing: border-box;
-            page-break-inside: avoid; /* Избегаем разрыва внутри карточки */
         }
         .product-card h3 {
             margin-top: 0; /* Убираем верхний отступ у заголовка */
@@ -53,11 +48,9 @@
             border-radius: 5pt;
             background-color: white; /* Белый фон под изображением */
             margin-left: 15pt; /* Отступ слева от изображения */
-            vertical-align: top; /* Выравнивание по верхнему краю */
         }
         .product-info {
             flex: 1; /* Занимает оставшееся пространство */
-            vertical-align: top; /* Выравнивание по верхнему краю */
         }
         .price-tag {
             background-color: #238636;
@@ -72,15 +65,6 @@
             padding: 15pt;
             border-top: 1pt solid #dee2e6;
         }
-        /* Стили для печати */
-        @media print {
-            .product-card {
-                page-break-after: always; /* Разрыв страницы после каждой карточки */
-            }
-            .product-card:last-child {
-                page-break-after: auto; /* Нет разрыва после последней карточки */
-            }
-        }
     </style>
 </head>
 
@@ -89,32 +73,19 @@
         <h1>{{ title }}</h1>
         <p class="lead">{{ description }}</p>
 
-        <table>
-            <tbody>
-                {% for product in products %}
-                <tr class="product-card">
-                    <td>
-                        <h3>{{ product.product_title }}</h3>
-                        <table>
-                            <tr>
-                                <td>
-                                    <img src="{{ product.image_local_saved_path }}" 
-                                         alt="{{ product.product_title }}" />
-                                </td>
-                                <td class="product-info">
-                                    <p>{{ product.product_description }}</p>
-                                    <p>{{ product.specification }}</p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ product.image_local_saved_path }}" alt="{{ product.product_title }}" />
+            <div class="product-info">
+                <h3>{{ product.product_title }}</h3>
+                <p>{{ product.product_description }}</p>
+                <p>{{ product.specification }}</p>
+            </div>
+        </div>
+        {% endfor %}
 
         <div class="footer">
-            <p>מחיר כוךך הכל: 
+            <p>מחיר כולל הכל: 
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html dir="ltr">
 
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            direction: ltr; /* Направление текста слева направо */
         }
         h1 {
             text-align: center;
@@ -30,6 +31,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            direction: ltr; /* Направление текста слева направо */
         }
         .product-card {
             background-color: #f8f9fa; /* Светлый фон карточек */
@@ -40,6 +42,8 @@
             width: 100%;
             box-sizing: border-box;
             page-break-inside: avoid; /* Избегаем разрыва внутри карточки */
+            display: flex;
+            align-items: flex-start; /* Выравнивание по верхнему краю */
         }
         .product-card h3 {
             margin-top: 0; /* Убираем верхний отступ у заголовка */
@@ -93,29 +97,27 @@
                 <tr class="product-card">
                     <td>
                         <h3>{{ product.product_title }}</h3>
-                        <table>
-                            <tr>
-                                <td>
-                                    <img src="{{ product.image_local_saved_path }}" 
-                                         alt="{{ product.product_title }}" />
-                                </td>
-                                <td class="product-info">
-                                    <p>{{ product.product_description }}</p>
-                                    <p>{{ product.specification }}</p>
-                                </td>
-                            </tr>
-                        </table>
+                        <div class="product-card-content">
+                            <img src="{{ product.image_local_saved_path }}" 
+                                 alt="{{ product.product_title }}" />
+                            <div class="product-info">
+                                <p>{{ product.product_description }}</p>
+                                <p>{{ product.specification }}</p>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
+        {% if price %}
         <div class="footer">
-            <p>Общая стоимость: 
+            <p>Общая цена: 
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
+        {% endif %}
     </div>
 </body>
 

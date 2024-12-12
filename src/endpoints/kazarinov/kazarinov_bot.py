@@ -101,7 +101,7 @@ if __name__ == "__main__":
     if gs.host_name == 'Vostro-3888':
         
         mode = 'prod'
-        mode = 'test' # <- commnet to prod
+        #mode = 'test' # <- commnet to prod
         kt = KazarinovTelegramBot(mode)
     else:
         kt = KazarinovTelegramBot() 
