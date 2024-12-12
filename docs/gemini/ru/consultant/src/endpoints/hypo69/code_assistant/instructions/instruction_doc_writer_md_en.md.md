@@ -1,143 +1,276 @@
-#  Улучшенный код
-
-```python
-# Модуль для обработки файлов с помощью ассистента.
-"""
-Модуль для работы с ассистентом программиста.
-=========================================================================================
-
-Этот модуль содержит функции для обработки файлов,
-используя ассистент программиста.
-"""
-import json
-from typing import Any, Dict, List, Optional
-
-from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
-
-
-def process_file(file_path: str) -> Optional[Dict]:
-    """
-    Обрабатывает файл.
-
-    :param file_path: Путь к файлу.
-    :return: Словарь с данными из файла или None, если файл не найден или обработка не удалась.
-    """
-    try:
-        # Чтение файла с помощью j_loads
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = j_loads(file)
-        # Возвращает загруженные данные или None
-        return data
-
-    except FileNotFoundError:
-        logger.error(f'Файл {file_path} не найден.')
-        return None
-    except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка декодирования JSON в файле {file_path}: {ex}', exc_info=True)
-        return None
-    except Exception as ex:
-        logger.error(f'Произошла ошибка при обработке файла {file_path}: {ex}', exc_info=True)
-        return None
-
-
-
-def process_files(file_paths: List[str]) -> List[Optional[Dict]]:
-    """
-    Обрабатывает список файлов.
-
-    :param file_paths: Список путей к файлам.
-    :return: Список словарей с данными из файлов или None, если возникла ошибка.
-    """
-    results = []
-    for file_path in file_paths:
-        result = process_file(file_path)
-        results.append(result)
-    return results
-
-
-# Пример использования
-if __name__ == "__main__":
-    file_paths = ["input.json", "another_input.json"]
-    results = process_files(file_paths)
-    print(results)
-
-
+# Received Code
 ```
+# INSTRUCTION
 
-# Внесённые изменения
+For each input Python file, create developer documentation in `Markdown` format for subsequent use. 
+The documentation must meet the following requirements:
 
-*   Добавлены комментарии в формате RST к функциям `process_file` и `process_files` для улучшения документации.
-*   Используется `j_loads` для чтения JSON-файлов вместо `json.load`.
-*   Добавлена обработка исключений `FileNotFoundError` и `json.JSONDecodeError` с помощью `logger.error`.
-*   Изменён стиль сообщений об ошибках, используя более конкретные формулировки.
-*   Добавлена проверка валидности результата и обработка ошибок.
-*   Оптимизирована обработка списка файлов.
+1. **Documentation Format**:
+   - Use the `Markdown (.md)` standard.
+   - Each file should begin with a header and a brief description of its contents.
+   - For all classes and functions, use the following comment format:
+     ```python
+     def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
+         """
+         Args:
+             param (str): Description of the `param` parameter.
+             param1 (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
 
+         Returns:
+             dict | None: Description of the return value. Returns a dictionary or `None`.
 
-# Оптимизированный код
+         Raises:
+             SomeError: Description of the situation in which the `SomeError` exception is raised.
+         """
+     ```
+   - Use `ex` instead of `e` in exception handling blocks.
 
-```python
-# Модуль для обработки файлов с помощью ассистента.
-"""
-Модуль для работы с ассистентом программиста.
-=========================================================================================
+2. **TOC (Table of Contents)**:
+   - Include a table of contents section at the beginning of each documentation file.
+   - The structure should include links to all major sections of the module documentation.
 
-Этот модуль содержит функции для обработки файлов,
-используя ассистент программиста.
-"""
-import json
-from typing import Any, Dict, List, Optional
+3. **Documentation Formatting**:
+   - Use proper Markdown syntax for all headers, lists, and links.
+   - For documenting classes, functions, and methods, include structured sections with descriptions, parameter details, return values, and raised exceptions. Example:
+     ```markdown
+     ## Functions
 
-from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
+     ### `function_name`
 
+     **Description**: Brief description of the function.
 
-def process_file(file_path: str) -> Optional[Dict]:
-    """
-    Обрабатывает файл.
+     **Parameters**:
+     - `param` (str): Description of the `param` parameter.
+     - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
 
-    :param file_path: Путь к файлу.
-    :return: Словарь с данными из файла или None, если файл не найден или обработка не удалась.
-    """
-    try:
-        # Чтение файла с помощью j_loads
-        with open(file_path, 'r', encoding='utf-8') as file:
-            data = j_loads(file)
-        # Возвращает загруженные данные или None
-        return data
+     **Returns**:
+     - `dict | None`: Description of the return value.
 
-    except FileNotFoundError:
-        logger.error(f'Файл {file_path} не найден.')
-        return None
-    except json.JSONDecodeError as ex:
-        logger.error(f'Ошибка декодирования JSON в файле {file_path}: {ex}', exc_info=True)
-        return None
-    except Exception as ex:
-        logger.error(f'Произошла ошибка при обработке файла {file_path}: {ex}', exc_info=True)
-        return None
+     **Raises**:
+     - `SomeError`: Description of the situation in which the `SomeError` exception is raised.
+     ```
 
+4. **Section Headings**:
+   - Use level 1 headers (`#`), level 2 headers (`##`), level 3 headers (`###`), and level 4 headers (`####`) consistently throughout the file.
 
+5. **Example File**:
+   ```markdown
+   # Module Name
 
-def process_files(file_paths: List[str]) -> List[Optional[Dict]]:
-    """
-    Обрабатывает список файлов.
+   ## Overview
 
-    :param file_paths: Список путей к файлам.
-    :return: Список словарей с данными из файлов или None, если возникла ошибка.
-    """
-    results = []
-    for file_path in file_paths:
-        result = process_file(file_path)
-        results.append(result)
-    return results
+   Brief description of the module's purpose.
 
+   ## Classes
 
-# Пример использования
-if __name__ == "__main__":
-    file_paths = ["input.json", "another_input.json"]
-    results = process_files(file_paths)
-    print(results)
+   ### `ClassName`
 
+   **Description**: Brief description of the class.
 
+   **Methods**:
+   - `method_name`: Brief description of the method.
+
+   ## Functions
+
+   ### `function_name`
+
+   **Description**: Brief description of the function.
+
+   **Parameters**:
+   - `param` (str): Description of the `param` parameter.
+   - `param1` (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+
+   **Returns**:
+   - `dict | None`: Description of the return value.
+
+   **Raises**:
+   - `SomeError`: Description of the situation in which the `SomeError` exception is raised.
+   ```
+
+Generate the corresponding documentation for each input Python file in `Markdown` format.
+## Response format: `.md` (markdown)
+# END OF INSTRUCTION
+```
+# Improved Code
+```
+# ИНСТРУКЦИЯ
+
+# Для каждого входного файла Python создается документация разработчика в формате `Markdown` для последующего использования.
+# Документация должна соответствовать следующим требованиям:
+
+# 1. **Формат документации**:
+#    - Используйте стандарт `Markdown (.md)`.
+#    - Каждый файл должен начинаться с заголовка и краткого описания его содержимого.
+#    - Для всех классов и функций используйте следующий формат комментариев:
+#      ```python
+#      def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
+#          """
+#          Args:
+#              param (str): Description of the `param` parameter.
+#              param1 (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+#
+#          Returns:
+#              dict | None: Description of the return value. Returns a dictionary or `None`.
+#
+#          Raises:
+#              SomeError: Description of the situation in which the `SomeError` exception is raised.
+#          """
+#      ```
+#    - Используйте `ex` вместо `e` в блоках обработки исключений.
+
+# 2. **TOC (Содержание)**:
+#    - Включите раздел содержания в начало каждого файла документации.
+#    - Структура должна включать ссылки на все основные разделы документации модуля.
+
+# 3. **Форматирование документации**:
+#    - Используйте правильный синтаксис Markdown для всех заголовков, списков и ссылок.
+#    - Для документирования классов, функций и методов включайте структурированные разделы с описаниями, деталями параметров, возвращаемыми значениями и возникающими исключениями. Пример:
+#      ```markdown
+#      ## Функции
+#
+#      ### `function_name`
+#
+#      **Описание**: Краткое описание функции.
+#
+#      **Параметры**:
+#      - `param` (str): Описание параметра `param`.
+#      - `param1` (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию `None`.
+#
+#      **Возвращает**:
+#      - `dict | None`: Описание возвращаемого значения.
+#
+#      **Вызывает**:
+#      - `SomeError`: Описание ситуации, в которой возникает исключение `SomeError`.
+#      ```
+
+# 4. **Заголовки разделов**:
+#    - Используйте заголовки уровня 1 (`#`), уровня 2 (`##`), уровня 3 (`###`) и уровня 4 (`####`) последовательно во всем файле.
+
+# 5. **Пример файла**:
+#    ```markdown
+#    # Имя модуля
+#
+#    ## Обзор
+#
+#    Краткое описание назначения модуля.
+#
+#    ## Классы
+#
+#    ### `ClassName`
+#
+#    **Описание**: Краткое описание класса.
+#
+#    **Методы**:
+#    - `method_name`: Краткое описание метода.
+#
+#    ## Функции
+#
+#    ### `function_name`
+#
+#    **Описание**: Краткое описание функции.
+#
+#    **Параметры**:
+#    - `param` (str): Описание параметра `param`.
+#    - `param1` (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию `None`.
+#
+#    **Возвращает**:
+#    - `dict | None`: Описание возвращаемого значения.
+#
+#    **Вызывает**:
+#    - `SomeError`: Описание ситуации, в которой возникает исключение `SomeError`.
+#    ```
+
+# Сгенерируйте соответствующую документацию для каждого входного файла Python в формате `Markdown`.
+# ## Формат ответа: `.md` (markdown)
+# # КОНЕЦ ИНСТРУКЦИИ
+```
+# Changes Made
+- Перевод инструкций на русский язык.
+- Добавлены комментарии для ясности и лучшего понимания каждого пункта инструкции.
+
+# FULL Code
+```
+# ИНСТРУКЦИЯ
+# Для каждого входного файла Python создается документация разработчика в формате `Markdown` для последующего использования.
+# Документация должна соответствовать следующим требованиям:
+# 1. **Формат документации**:
+#    - Используйте стандарт `Markdown (.md)`.
+#    - Каждый файл должен начинаться с заголовка и краткого описания его содержимого.
+#    - Для всех классов и функций используйте следующий формат комментариев:
+#      ```python
+#      def function(param: str, param1: Optional[str | dict | str] = None) -> dict | None:
+#          """
+#          Args:
+#              param (str): Description of the `param` parameter.
+#              param1 (Optional[str | dict | str], optional): Description of the `param1` parameter. Defaults to `None`.
+#
+#          Returns:
+#              dict | None: Description of the return value. Returns a dictionary or `None`.
+#
+#          Raises:
+#              SomeError: Description of the situation in which the `SomeError` exception is raised.
+#          """
+#      ```
+#    - Используйте `ex` вместо `e` в блоках обработки исключений.
+# 2. **TOC (Содержание)**:
+#    - Включите раздел содержания в начало каждого файла документации.
+#    - Структура должна включать ссылки на все основные разделы документации модуля.
+# 3. **Форматирование документации**:
+#    - Используйте правильный синтаксис Markdown для всех заголовков, списков и ссылок.
+#    - Для документирования классов, функций и методов включайте структурированные разделы с описаниями, деталями параметров, возвращаемыми значениями и возникающими исключениями. Пример:
+#      ```markdown
+#      ## Функции
+#
+#      ### `function_name`
+#
+#      **Описание**: Краткое описание функции.
+#
+#      **Параметры**:
+#      - `param` (str): Описание параметра `param`.
+#      - `param1` (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию `None`.
+#
+#      **Возвращает**:
+#      - `dict | None`: Описание возвращаемого значения.
+#
+#      **Вызывает**:
+#      - `SomeError`: Описание ситуации, в которой возникает исключение `SomeError`.
+#      ```
+# 4. **Заголовки разделов**:
+#    - Используйте заголовки уровня 1 (`#`), уровня 2 (`##`), уровня 3 (`###`) и уровня 4 (`####`) последовательно во всем файле.
+# 5. **Пример файла**:
+#    ```markdown
+#    # Имя модуля
+#
+#    ## Обзор
+#
+#    Краткое описание назначения модуля.
+#
+#    ## Классы
+#
+#    ### `ClassName`
+#
+#    **Описание**: Краткое описание класса.
+#
+#    **Методы**:
+#    - `method_name`: Краткое описание метода.
+#
+#    ## Функции
+#
+#    ### `function_name`
+#
+#    **Описание**: Краткое описание функции.
+#
+#    **Параметры**:
+#    - `param` (str): Описание параметра `param`.
+#    - `param1` (Optional[str | dict | str], optional): Описание параметра `param1`. По умолчанию `None`.
+#
+#    **Возвращает**:
+#    - `dict | None`: Описание возвращаемого значения.
+#
+#    **Вызывает**:
+#    - `SomeError`: Описание ситуации, в которой возникает исключение `SomeError`.
+#    ```
+# Сгенерируйте соответствующую документацию для каждого входного файла Python в формате `Markdown`.
+# ## Формат ответа: `.md` (markdown)
+# # КОНЕЦ ИНСТРУКЦИИ
 ```

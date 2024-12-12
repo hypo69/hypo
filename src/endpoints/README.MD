@@ -24,7 +24,7 @@
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md'>Русский</A>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/readme.ru.md'>Русский</A>
 </TD>
 </TR>
 </TABLE>
