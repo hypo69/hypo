@@ -8,7 +8,7 @@
 </TD>
 
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.RU.MD'>Русский</A>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/SECURITY.MD'>English</A>
 </TD>
 </TABLE>
 

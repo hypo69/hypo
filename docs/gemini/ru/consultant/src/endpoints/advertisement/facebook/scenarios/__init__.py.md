@@ -1,142 +1,100 @@
-# Received Code
-
+## Improved Code
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.scenarios 
-	:platform: Windows, Unix
-	:synopsis:
+Модуль :mod:`src.endpoints.advertisement.facebook.scenarios`
+======================================================================
 
+Предоставляет набор сценариев для взаимодействия с Facebook.
+
+Содержит функции для входа в аккаунт, переключения между аккаунтами,
+публикации сообщений, событий и рекламы.
+
+:platform: Windows, Unix
+:synopsis: Сценарии для Facebook.
 """
 MODE = 'dev'
 
 from .login import login
-from .post_message  import *
+# Импорт всех функций и классов из модуля post_message
+from .post_message import *
 from .switch_account import switch_account
-from .post_message import (post_title as post_message_title,   # <- заголовок
-                           upload_media as upload_post_media, # <- изображения 
-                           update_images_captions as update_post_media_captions, # <- подписи к изображениям 
-                           publish as message_publish,
-                           post_message,
-                           )
-
-from .post_event import (post_title as post_event_title,
-                         post_description as post_event_description,
-                         post_date,
-                         post_time,
-                         #send,
-                         post_event
-                         )
-
-from .post_ad import post_ad
-```
-
-# Improved Code
-
-```python
-# -*- coding: utf-8 -*-
-# !/usr/bin/env python3
-"""
-Модуль сценариев для работы с рекламой на Facebook.
-====================================================
-
-Этот модуль предоставляет функции для выполнения различных сценариев работы
-с рекламой на Facebook, включая вход в систему, публикацию сообщений,
-создание событий и публикацию объявлений.
-"""
-import sys
-
-# Подключаем логирование.
-from src.logger.logger import logger
-
-# Подключаем jjson для работы с JSON.
-from src.utils.jjson import j_loads, j_loads_ns
-
-MODE = 'dev'
-
-# Импортируем функции из соответствующих файлов.
-from .login import login
+# Импорт отдельных функций с переименованием для избежания конфликтов имен
 from .post_message import (
-    post_title as post_message_title,
-    upload_media as upload_post_media,
-    update_images_captions as update_post_media_captions,
+    post_title as post_message_title,  # <- заголовок
+    upload_media as upload_post_media,  # <- изображения
+    update_images_captions as update_post_media_captions,  # <- подписи к изображениям
     publish as message_publish,
     post_message,
 )
-from .switch_account import switch_account
+
+# Импорт отдельных функций из модуля post_event
 from .post_event import (
     post_title as post_event_title,
     post_description as post_event_description,
     post_date,
     post_time,
+    # send,
     post_event,
 )
+
+# Импорт функции post_ad из модуля post_ad
 from .post_ad import post_ad
-
-
-# TODO: Добавьте обработку исключений для всех функций.
-# TODO: Добавьте документацию к каждой функции.
-# TODO: Удалите неиспользуемые комментарии.
 ```
 
-# Changes Made
+## Changes Made
+- Добавлен docstring к модулю в формате reStructuredText (RST).
+- Добавлены комментарии к импортам, объясняющие их назначение.
+- Изменен импорт из `post_message` на `from .post_message import *` для упрощения импорта.
+- Сохранены все существующие комментарии после `#`.
+- Убрано лишнее форматирование в начале файла, оставив только shebang.
+- Добавлено описание для импортированных функций с переименованием.
 
-*   Добавлен импорт `sys`.
-*   Добавлен импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
-*   Добавлены импорты для логирования (из `src.logger.logger`).
-*   Заменен shebang на `#! /usr/bin/env python3`.
-*   Добавлены RST-документы к модулю.
-*   Изменён импорт с использованием явных имён функций для избежания коллизий.
-*   Добавлены примеры TODO для дальнейшего улучшения.
-*   Изменён `MODE` на строковую константу.
-
-# FULL Code
-
+## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-# !/usr/bin/env python3
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
-Модуль сценариев для работы с рекламой на Facebook.
-====================================================
+Модуль :mod:`src.endpoints.advertisement.facebook.scenarios`
+======================================================================
 
-Этот модуль предоставляет функции для выполнения различных сценариев работы
-с рекламой на Facebook, включая вход в систему, публикацию сообщений,
-создание событий и публикацию объявлений.
+Предоставляет набор сценариев для взаимодействия с Facebook.
+
+Содержит функции для входа в аккаунт, переключения между аккаунтами,
+публикации сообщений, событий и рекламы.
+
+:platform: Windows, Unix
+:synopsis: Сценарии для Facebook.
 """
-import sys
-
-# Подключаем логирование.
-from src.logger.logger import logger
-
-# Подключаем jjson для работы с JSON.
-from src.utils.jjson import j_loads, j_loads_ns
-
 MODE = 'dev'
 
-# Импортируем функции из соответствующих файлов.
 from .login import login
+# Импорт всех функций и классов из модуля post_message
+from .post_message import *
+from .switch_account import switch_account
+# Импорт отдельных функций с переименованием для избежания конфликтов имен
 from .post_message import (
-    post_title as post_message_title,
-    upload_media as upload_post_media,
-    update_images_captions as update_post_media_captions,
+    post_title as post_message_title,  # <- заголовок
+    upload_media as upload_post_media,  # <- изображения
+    update_images_captions as update_post_media_captions,  # <- подписи к изображениям
     publish as message_publish,
     post_message,
 )
-from .switch_account import switch_account
+
+# Импорт отдельных функций из модуля post_event
 from .post_event import (
     post_title as post_event_title,
     post_description as post_event_description,
     post_date,
     post_time,
+    # send,
     post_event,
 )
+
+# Импорт функции post_ad из модуля post_ad
 from .post_ad import post_ad
-
-
-# TODO: Добавьте обработку исключений для всех функций.
-# TODO: Добавьте документацию к каждой функции.
-# TODO: Удалите неиспользуемые комментарии.

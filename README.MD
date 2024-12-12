@@ -1,25 +1,150 @@
 
-<TABLE >
-<TR>
-<TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] 
-</TD>
-<TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/docs/gemini/README.MD'>docs</A>] 
-</TD>
+**Revolutionizing Workflows with Hypotez: Your AI-Powered Assistant**
 
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.RU.MD'>Русский</A>
-</TD>
-</TABLE>
+In today’s fast-paced world, businesses are constantly seeking ways to streamline operations, save time, and make smarter decisions. Enter **Hypotez** — an AI-powered assistant designed to automate routine tasks, analyze data, and simplify complex workflows across multiple industries. Whether you're in sales, HR, task management, or data analysis, Hypotez is here to transform the way you work.
+
+---
+
+### **What is Hypotez?**
+
+Hypotez is a cutting-edge AI-driven project aimed at creating a universal assistant capable of handling a wide range of tasks. From processing emails and analyzing market trends to automating repetitive workflows, Hypotez is designed to save time, reduce manual effort, and provide actionable insights.
+
+The core idea behind Hypotez is simple: **automate the mundane, so you can focus on what matters most.** By leveraging advanced AI technologies, Hypotez can handle everything from data collection and analysis to customer communication and task management.
+
+---
+
+### **Why Hypotez?**
+
+In a world where time is money, businesses need tools that can keep up with their demands. Hypotez addresses this need by offering:
+
+1. **Automation of Routine Tasks**:  
+   Say goodbye to time-consuming, repetitive tasks. Hypotez automates processes like email processing, report generation, and meeting summaries, freeing up your team to focus on strategic initiatives.
+
+2. **Data-Driven Decision Making**:  
+   With Hypotez, you get access to accurate and fast data analysis. Whether it’s market trends, sales data, or HR metrics, Hypotez provides insights that help you make informed decisions.
+
+3. **Seamless Integration**:  
+   Hypotez integrates with popular platforms like CRM systems, email services, and messaging apps, ensuring a smooth workflow across your organization.
+
+4. **Scalability**:  
+   Whether you're a small business or a large enterprise, Hypotez adapts to your needs. It’s designed to grow with you, offering solutions for various industries and use cases.
+
+---
+
+### **Key Features of Hypotez**
+
+Hypotez isn’t just another tool — it’s a comprehensive solution with a wide range of capabilities:
+
+1. **Smart Assistant for Multiple Industries**:  
+   - **Sales**: Automate customer communication, manage deals, and track sales funnels.  
+   - **HR**: Process resumes, schedule interviews, and manage employee data.  
+   - **Task Management**: Set reminders, track progress, and automate workflows.  
+   - **Data Analysis**: Collect and analyze data from multiple sources to uncover trends and opportunities.  
+
+2. **Advanced Data Analysis Tools**:  
+   - Visualize data for better understanding.  
+   - Generate dynamic reports with custom metrics.  
+
+3. **Information Collection Automation**:  
+   - Extract data from documents, emails, and web pages.  
+   - Simplify working with large datasets.  
+
+4. **Workflow Automation**:  
+   - Create text reports from meetings with key points highlighted.  
+   - Automate message processing and integrate with email and messengers.  
+
+5. **Integration with Platforms**:  
+   - Sync data with systems like PrestaShop.  
+   - Analyze customer behavior to enhance user experience.  
+
+---
+
+### **How Hypotez Can Benefit Your Business**
+
+Hypotez is more than just an assistant — it’s a game-changer for businesses looking to optimize their operations. Here’s how it can help:
+
+- **Save Time and Resources**:  
+   By automating routine tasks, Hypotez reduces the time and effort spent on manual processes, allowing your team to focus on high-value activities.
+
+- **Enhance Productivity**:  
+   With faster data analysis and automated workflows, Hypotez boosts productivity across departments.
+
+- **Improve Decision-Making**:  
+   Access to real-time data and actionable insights helps you make smarter, more informed decisions.
+
+- **Unlock New Opportunities**:  
+   Hypotez’s ability to analyze market trends and customer behavior can uncover new business opportunities and drive growth.
+
+---
+
+### **The Vision Behind Hypotez**
+
+The Hypotez project was born out of a desire to address the challenges faced by businesses in a rapidly evolving digital landscape. My goal is to create a tool that not only simplifies workflows but also empowers businesses to achieve more with less.
+
+I’ve already made significant progress, including:
+
+- **Automating Routine Tasks**: Reducing manual effort and improving efficiency.  
+- **Developing Advanced Data Analysis Tools**: Providing actionable insights for better decision-making.  
+- **Creating User-Friendly Interfaces**: Ensuring seamless interaction with the assistant.  
+
+---
+
+### **What’s Next for Hypotez?**
+
+The journey of Hypotez is just beginning. My next steps include:
+
+- **Expanding Features**: Adding more capabilities to address diverse business needs.  
+- **Building Partnerships**: Collaborating with businesses and investors to bring Hypotez to life.  
+- **Enhancing User Experience**: Continuously improving the interface and functionality based on user feedback.  
+
+---
+
+### **Join the Hypotez Journey**
+
+If you’re passionate about innovation and want to be part of a project that’s set to transform the way businesses operate, I’d love to connect with you. Whether you’re an investor, a developer, or a potential user, your input and support are invaluable.
+
+Let’s work together to make Hypotez the go-to AI assistant for businesses worldwide. Together, we can create a smarter, more efficient future.
+
+---
+
+**Connect with me on LinkedIn** to learn more about Hypotez and how you can get involved. Let’s revolutionize workflows and unlock new possibilities with AI!
+
+---
+
+**#AI #Automation #BusinessGrowth #Hypotez #Innovation #DataAnalysis #WorkflowOptimization**
 
 
-Project Hypotez
-===================
+<table>
+<tr>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/src/README.MD'>Code</a>
+</td>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/README.MD'>Documentation</a> 
+</td>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/readme.ru.md'>Русский</a>
+</td>
+</tr>
+</table>
 
-## Contents
+Hypotez Project
+======================================================================
 
-- [Project Overview](#project-overview)
+## My Tasks and Goals:
+
+### My main goal is to find an investor for the project implementation.
+
+##### What I have already done and can show to an investor:
+- **Automation of routine tasks**, which take a lot of time, to save resources and increase productivity.  
+- **Accurate and fast data analysis**, which helps make more informed decisions.  
+- **Simple interaction with technologies**, adapted to user needs.  
+
+---
+
+## Table of Contents
+
+- [Project Description](#project-description)
 - [Key Features](#key-features)
 - [Required Tools and Software](#required-tools-and-software)
 - [Installation Instructions](#installation-instructions)
@@ -32,101 +157,109 @@ Project Hypotez
   - [Installing Playwright](#installing-playwright)
 - [Configuration](#configuration)
   - [Setting Up Credentials](#setting-up-credentials)
-
 - [Code](https://github.com/hypo69/hypo/blob/master/src/README.MD)
-- [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/out/en/toc.md) (**Not Ready* 😕)
-- [User Scenarios](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD) (**Not Ready* 😕)
-- [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
+- [Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/TOC.MD) ( *In progress* 😕)  
+- [User Scenarios](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD) ( *In progress* 😕) 
+- [Examples](https://github.com/hypo69/hypo/blob/master/examples/README.MD) 
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/README.MD)
 - [Additional Information](#additional-information)
-
-## Project Overview
-
-I am working on the `hypotez` project, aimed at creating a versatile AI assistant. This assistant is designed to handle a wide range of tasks — from managing emails to analyzing market data.
-
-### Goals and Objectives:
-- **Automating routine processes** to save time and boost efficiency.  
-- **Accurate and fast data analysis** to simplify decision-making.  
-- **Seamless interaction with technology**, tailored to user needs.
 
 ---
 
-## Key Directions
+## Project Description
 
-1. **Smart Assistant**: Designed for sales, HR, insurance, and task management.  
-2. **Analysis Tools**: Data visualization and decision support.  
-3. **Automated Information Gathering**: Extracting data from documents, emails, and web pages.
+The *Hypotez* project creates a universal AI-based assistant that can solve a wide range of tasks: from email processing to market data analysis. The main idea is to automate routine processes, make work more efficient, and simplify decision-making.  
+
+The assistant can work in various fields:  
+- **Sales**: Automating customer communication, managing deals.  
+- **HR**: Processing resumes, scheduling meetings.  
+- **Task Management**: Reminders, tracking progress.  
+- **Data Analysis**: Collecting and processing information from various sources.  
+
+It can also gather data from documents, emails, web pages, and even analyze market trends. This not only saves time but also helps find new business opportunities.
 
 ---
 
 ## Key Features
 
-### 1. Workflow Automation Assistant  
-- Generate meeting summaries with key points and sentiment analysis.  
-- Automate message handling and integrate with email services and messengers.
+1. **Smart Assistant**:  
+   - Works in sales, HR, task management, and data analysis.  
+   - Automates routine processes, such as message processing or report creation.  
 
-### 2. Price Lists and Procurement  
-- Keep price lists up to date for internal and external processes.  
-- Automatically match product items from various sources.
+2. **Analysis Tools**:  
+   - Data visualization for better understanding.  
+   - Helps make decisions based on analytics.  
 
-### 3. Market Data Analysis  
-- Monitor market trends relevant to business, with automated report generation.  
-- Identify new opportunities based on analytical data.
+3. **Information Collection Automation**:  
+   - Extracts data from documents, emails, and web pages.  
+   - Simplifies working with large volumes of information.  
 
-### 4. Data Processing and Analysis  
-- Integrate sales and procurement data for pattern analysis.  
-- Prepare performance metric reports.
+---
 
-### 5. Parsing and Web Scraping  
-- Extract structured data from web pages, documents, and emails.  
-- Automate data collection with subsequent processing and filtering.  
-- Integrate data with internal systems for enhanced analytics.
+### More About the Features
 
-### 6. Task Automation  
-- Reduce manual effort by automating data entry and report management.  
-- Integrate with CRM systems for automated workflows.
+1. **Workflow Automation**:  
+   - Creating text reports from meetings with key points highlighted.  
+   - Automatic message processing and integration with email and messengers.  
 
-### 7. Client and Communication Management  
-- Consolidate data from emails and messengers.  
-- Log client interactions and set reminders for tasks.
+2. **Price List and Procurement Management**:  
+   - Keeping price lists up-to-date for internal and external processes.  
+   - Automatic matching of products from different sources.  
 
-### 8. Platform Integration  
-- Synchronize data with PrestaShop and other systems.  
-- Analyze customer behavior to improve user experience.
+3. **Market Data Analysis**:  
+   - Monitoring trends important for business.  
+   - Automatic report generation and finding new opportunities.  
 
-### 9. Sales Funnel Management  
-- Monitor deal stages and forecast sales.  
-- Generate reports on departmental performance.
+4. **Data Processing and Analysis**:  
+   - Integrating sales and procurement data to identify patterns.  
+   - Preparing reports on key performance indicators.  
 
-### 10. Communication and Planning Tools  
-- Integrate with email services to manage communications.  
-- Automatically schedule meetings and task reminders.
+5. **Parsing and Web Scraping**:  
+   - Extracting structured data from web pages, documents, and emails.  
+   - Automating information collection and processing.  
 
-### 11. Analytics and Reporting  
-- Dynamic business process reports with custom metric support.  
-- Tailored data analysis for specific tasks.
+6. **Task Automation**:  
+   - Reducing manual labor by automating data entry and report management.  
+   - Integration with CRM systems for workflow automation.  
 
-### 12. Advanced Automation  
-- Collect data through APIs and complex integrations.  
-- Configure scenarios for automatic document creation.
+7. **Customer Management and Communication**:  
+   - Consolidating data from emails and messengers.  
+   - Logging interactions with customers and reminders for tasks.  
 
-Where to start with the project? [Start here](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/README.MD)
+8. **Integration with Platforms**:  
+   - Synchronizing data with systems like PrestaShop.  
+   - Analyzing customer behavior to improve user experience.  
+
+9. **Sales Funnel Management**:  
+   - Monitoring deal stages and forecasting sales.  
+   - Preparing reports on department performance.  
+
+10. **Communication and Planning Tools**:  
+    - Integration with email services for communication management.  
+    - Automatic meeting creation and task reminders.  
+
+11. **Analytics and Reports**:  
+    - Dynamic reports on business processes with custom metrics support.  
+    - Individual data analysis tailored to specific tasks.  
+
+12. **Advanced Automation**:  
+    - Collecting data through APIs and complex integrations.  
+    - Setting up scenarios for automatic document creation.  
 
 ---
 
 ## Required Tools and Software
 
-- **Python** (version 3.12)  
-- **Chrome/Edge/Firefox** web browsers  
+- **Python** (version 3.12) — the programming language the project is written in.  
+- **Chrome/Edge/Firefox** — popular browsers for working with the web interface.  
 
 ---
 
 ## Installation Instructions
-
+[Skip to Configuration](#configuration)
 ### Checking Python Version
 
-*The project is optimized for version 3.12.*
-
-Run the following command to check your installed Python version:
+The project is optimized for Python version 3.12. To check which version is installed, run the command:
 
 ```bash
 python --version
@@ -138,29 +271,26 @@ or
 python3 --version
 ```
 
-If you have multiple Python versions installed, verify with:
+If you have multiple Python versions, specify the exact version:
 
 ```bash
 python3.12 --version
-python3.13 --version
 ```
 
 ### Installing Python 3.12
 
-#### For Linux
-
-Install Python 3.12 on Ubuntu:
+#### For Linux (Ubuntu):
 
 ```bash
 sudo apt update
 sudo apt install python3.12
 ```
 
-#### For Windows
+#### For Windows:
 
-Download the installer from the [official Python website](https://www.python.org/downloads/release/python-3120/) and run it. (✎ Ensure the **Add Python to PATH** option is selected).
+Download the installer from the [official Python website](https://www.python.org/downloads/release/python-3120/) and follow the instructions. Make sure to select the **Add Python to PATH** option.
 
-#### For macOS
+#### For macOS:
 
 Install Python via Homebrew:
 
@@ -172,16 +302,17 @@ brew install python@3.12
 
 ### Setting Up a Virtual Environment
 
-1. **DEPRECATED** Install `virtualenv` using the following command:
+1. Install `virtualenv`:
    ```bash
    pip install virtualenv
    ```
+
 2. Create a virtual environment:
    ```bash
    python3.12 -m venv venv
    ```
 
-3. Activate the virtual environment:
+3. Activate the environment:
    - On Windows:
      ```bash
      .\venv\Scripts\activate
@@ -193,10 +324,11 @@ brew install python@3.12
 
 ### Installing Dependencies
 
-1. Install the dependencies listed in `requirements.txt`:
-   ```bash
-   pip install -r requirements.txt
-   ```
+Install the required libraries from the `requirements.txt` file:
+
+```bash
+pip install -r requirements.txt
+```
 
 ### Installing npm and web-ext
 
@@ -234,44 +366,21 @@ jupyter labextension install @jupyterlab/toc
 
 ### Setting Up Credentials
 
-Before starting, create a folder named `secrets` in the project root. Copy `credentials.kdbx.example` from the service folder into `secrets`, and remove the `.example` suffix.
+See [SECURITY](https://github.com/hypo69/hypo/blob/master/SECURITY.MD)
 
-Credential structure:
-
-1. **Suppliers > Aliexpress > API**
-   - `api_key`: Aliexpress API key.
-   - `secret`: Secret key.
-   - `tracking_id`: Tracking ID.
-   - `email`: Aliexpress account email.
-   - `password`: Aliexpress account password.
-
-2. **OpenAI**
-   - `api_key`: API key for OpenAI.
-
-3. **Telegram**, **Discord**, **Prestashop**, **SMTP**, **Facebook**, **Google API**, etc.
-
-Ensure all details are entered correctly for optimal assistant performance.
-
-```powershell
-# Define current path
-$currentPath = (Get-Location).Path
-
-# Create the 'secrets' folder
-New-Item -ItemType Directory -Path "$currentPath\secrets"
-
-# Copy example files to 'secrets' folder
-Copy-Item -Path "$currentPath\credentials.kdbx.example" -Destination "$currentPath\secrets\credentials.kdbx"
-Copy-Item -Path "$currentPath\password.txt" -Destination "$currentPath\secrets\password.txt"
-```
+Make sure all data is entered correctly for the assistant to work without issues.
 
 ---
 
-## Next Steps
+## Next Steps:
 
-1. [Developer Documentation](https://github.com/hypo69/hypo/tree/master/docs/gemini/consultant/en) (**Not Ready* 😕)  
-2. [User Documentation](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD) (**Not Ready* 😕)  
-3. [Tests](https://github.com/hypo69/hypo/tree/master/pytest)
+- [Developer Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/consultant/RU) ( **Not ready* 😕)  
+- [User Documentation](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD) ( **Not ready* 😕) 
+- [Examples](https://github.com/hypo69/hypo/blob/master/examples/README.MD) 
+- [Tests](https://github.com/hypo69/hypo/tree/master/pytest/README.MD)
 
 ## Additional Information
 
-[https://davidka.net](https://davidka.net).  
+Where to start exploring the project? [Start here](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD)
+
+[https://davidka.net](https://davidka.net).

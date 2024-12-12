@@ -1,8 +1,7 @@
-**Received Code**
-
+## Received Code
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -29,6 +28,82 @@ from src.utils.jjson import j_loads_ns, pprint
 from src.logger.logger import logger
 
 # Load locators from JSON file.
+locator: SimpleNamespace = j_loads_ns(
+    Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
+)
+
+fails:int = 0
+
+def post_ad(d: Driver, message:SimpleNamespace) -> bool:
+    """ Sends the title of event.
+
+    Args:
+        d (Driver): The driver instance used for interacting with the webpage.
+        event (SimpleNamespace): The event containing the title, data of event and description to be sent.
+
+    Returns:
+        bool: `True` if the title and description were sent successfully, otherwise `None`.
+
+    Examples:
+        >>> driver = Driver(...)
+        >>> event = SimpleNamespace(title="Campaign Title", description="Event Description")
+        >>> post_title(driver, event)
+        True
+    """
+    global fails
+
+    if not post_message_title(d, f"{ message.description}" ):
+        logger.error("Failed to send event title", exc_info=False)
+        fails += 1
+        if fails < 15:
+            print(f"{fails=}")
+            return
+        else:
+            ...
+
+    time.sleep(1)
+    if hasattr(message, 'image_path') and message.image_path:
+        if not upload_post_media(d, media = message.image_path, without_captions = True):
+            return
+
+    if not message_publish(d):
+        return
+    fails = 0
+    return True
+
+```
+## Improved Code
+```python
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+Модуль для публикации рекламных сообщений в группах Facebook.
+===========================================================
+
+Этот модуль содержит функции для автоматизации процесса публикации рекламных объявлений,
+включая отправку текста и загрузку изображений.
+
+:platform: Windows, Unix
+:synopsis: Публикация рекламного сообщения группах фейсбук
+"""
+MODE = 'dev'
+
+import time
+from pathlib import Path
+from types import SimpleNamespace
+# from typing import Dict, List # TODO: not used
+# from urllib.parse import urlencode # TODO: not used
+# from selenium.webdriver.remote.webelement import WebElement # TODO: not used
+
+from src import gs
+from src.webdriver.driver import Driver
+from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
+from src.utils.jjson import j_loads_ns
+from src.logger.logger import logger
+
+# Загрузка локаторов из JSON файла.
 locator: SimpleNamespace = j_loads_ns(
     Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
 )
@@ -37,204 +112,130 @@ fails: int = 0
 
 
 def post_ad(d: Driver, message: SimpleNamespace) -> bool:
-    """ Опубликовать рекламное объявление.
+    """
+    Публикует рекламное объявление, включая текст и изображение, если оно указано.
 
-    Отправляет заголовок сообщения, загружает медиа (если есть),
-    и публикует объявление в Facebook. Обрабатывает возможные ошибки.
+    :param d: Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+    :type d: Driver
+    :param message: Объект SimpleNamespace, содержащий описание сообщения и путь к изображению.
+    :type message: SimpleNamespace
+    :return: True в случае успешной публикации объявления, иначе None.
+    :rtype: bool
 
-    :param d: Экземпляр драйвера Selenium для взаимодействия с браузером.
-    :param message: Объект SimpleNamespace, содержащий данные для объявления (текст, путь к изображению).
-    :return: True, если объявление успешно опубликовано, иначе False.
+    :Example:
+        >>> driver = Driver(...)
+        >>> message = SimpleNamespace(description="Текст объявления", image_path="path/to/image.jpg")
+        >>> post_ad(driver, message)
+        True
     """
     global fails
-
-    # Проверка отправки заголовка объявления.
+    # Код отправляет заголовок сообщения
     if not post_message_title(d, f"{message.description}"):
-        logger.error("Не удалось отправить заголовок объявления", exc_info=True)  # Логирование ошибки
+        logger.error("Не удалось отправить заголовок сообщения", exc_info=False)
         fails += 1
-        if fails >= 15:  # Установление лимита попыток
-            logger.error("Превышено максимальное количество попыток отправки объявления")
-            return False
+        if fails < 15:
+            print(f"{fails=}")
+            return
         else:
-            logger.warning(f"Попытка отправки объявления № {fails} не удалась")
-            return False  # Возврат False, если попытка отправки заголовка не удалась
-
-    time.sleep(1)  # Пауза перед дальнейшими действиями
-
-    # Обработка загрузки медиа (если указан путь).
+            ...
+    # Ожидание 1 секунды
+    time.sleep(1)
+    # Код проверяет наличие атрибута 'image_path' и его значения
     if hasattr(message, 'image_path') and message.image_path:
+        # Код выполняет загрузку медиафайла
         if not upload_post_media(d, media=message.image_path, without_captions=True):
-            return False  # Возврат False, если загрузка медиа не удалась
-
-    # Проверка публикации объявления.
+            return
+    # Код выполняет публикацию сообщения
     if not message_publish(d):
-        return False  # Возврат False, если публикация не удалась
-
+        return
     fails = 0
-    return True  # Возврат True, если все шаги выполнены успешно
-
-
+    return True
 ```
+## Changes Made
+- Добавлены reStructuredText комментарии для модуля и функции `post_ad`.
+- Удалены неиспользуемые импорты `Dict`, `List`, `urlencode` и `WebElement`.
+- Добавлены комментарии к блокам кода с описанием их назначения.
+- Заменено сообщение об ошибке на более информативное.
+- Убраны лишние docstring в функции.
+- Добавлены типы к параметрам.
+- Добавлен пример использования функции.
+- Форматирование кода для соответствия стандарту PEP8.
 
-**Improved Code**
-
+## FULL Code
 ```python
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.endpoints.advertisement.facebook.scenarios 
-	:platform: Windows, Unix
-	:synopsis: Публикация рекламного сообщения группах фейсбук
+Модуль для публикации рекламных сообщений в группах Facebook.
+===========================================================
 
+Этот модуль содержит функции для автоматизации процесса публикации рекламных объявлений,
+включая отправку текста и загрузку изображений.
+
+:platform: Windows, Unix
+:synopsis: Публикация рекламного сообщения группах фейсбук
 """
 MODE = 'dev'
 
-from socket import timeout
 import time
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Dict, List
-from urllib.parse import urlencode
-from selenium.webdriver.remote.webelement import WebElement
+# from typing import Dict, List # TODO: not used
+# from urllib.parse import urlencode # TODO: not used
+# from selenium.webdriver.remote.webelement import WebElement # TODO: not used
 
 from src import gs
 from src.webdriver.driver import Driver
 from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
-from src.utils.jjson import j_loads_ns, pprint
+from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-# Load locators from JSON file.
+# Загрузка локаторов из JSON файла.
 locator: SimpleNamespace = j_loads_ns(
     Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
 )
 
-
-def post_ad(d: Driver, message: SimpleNamespace) -> bool:
-    """ Опубликовать рекламное объявление.
-
-    Отправляет заголовок сообщения, загружает медиа (если есть),
-    и публикует объявление в Facebook. Обрабатывает возможные ошибки.
-
-    :param d: Экземпляр драйвера Selenium для взаимодействия с браузером.
-    :param message: Объект SimpleNamespace, содержащий данные для объявления (текст, путь к изображению).
-    :return: True, если объявление успешно опубликовано, иначе False.
-    """
-    max_attempts = 15
-    attempts = 0
-    while attempts < max_attempts:
-        try:
-          # Отправка заголовка объявления.
-          if not post_message_title(d, f"{message.description}"):
-              logger.error("Не удалось отправить заголовок объявления", exc_info=True)
-              attempts += 1
-              continue
-          
-          time.sleep(1)  # Пауза перед дальнейшими действиями
-
-          # Загрузка медиа (если указан путь).
-          if hasattr(message, 'image_path') and message.image_path:
-              if not upload_post_media(d, media=message.image_path, without_captions=True):
-                  return False
-
-          # Публикация объявления.
-          if not message_publish(d):
-              return False
-          return True
-        except Exception as e:
-          logger.error(f"Ошибка при публикации объявления: {e}", exc_info=True)
-          attempts += 1
-          if attempts >= max_attempts:
-             return False
-
-
-```
-
-**Changes Made**
-
-*   Добавлены RST-документации для функции `post_ad`.
-*   Используется `logger.error` для логирования ошибок с отслеживанием стека вызовов.
-*   Добавлена обработка исключений с помощью `try-except` и логированием.
-*   Вместо глобальной переменной `fails` используется счетчик попыток в функции.
-*   Установлен лимит попыток `max_attempts`.
-*   Изменен логирование, теперь ошибка выводится при каждой не удачной попытке.
-*   Исправлен логический блок для работы с глобальной переменной `fails`, добавлено `continue` для пропуском кода в случае ошибки и продолжение цикла с увеличением счетчика попыток.
-
-
-**FULL Code**
-
-```python
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.endpoints.advertisement.facebook.scenarios 
-	:platform: Windows, Unix
-	:synopsis: Публикация рекламного сообщения группах фейсбук
-
-"""
-MODE = 'dev'
-
-from socket import timeout
-import time
-from pathlib import Path
-from types import SimpleNamespace
-from typing import Dict, List
-from urllib.parse import urlencode
-from selenium.webdriver.remote.webelement import WebElement
-
-from src import gs
-from src.webdriver.driver import Driver
-from src.endpoints.advertisement.facebook.scenarios import post_message_title, upload_post_media, message_publish
-from src.utils.jjson import j_loads_ns, pprint
-from src.logger.logger import logger
-
-# Load locators from JSON file.
-locator: SimpleNamespace = j_loads_ns(
-    Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
-)
+fails: int = 0
 
 
 def post_ad(d: Driver, message: SimpleNamespace) -> bool:
-    """ Опубликовать рекламное объявление.
-
-    Отправляет заголовок сообщения, загружает медиа (если есть),
-    и публикует объявление в Facebook. Обрабатывает возможные ошибки.
-
-    :param d: Экземпляр драйвера Selenium для взаимодействия с браузером.
-    :param message: Объект SimpleNamespace, содержащий данные для объявления (текст, путь к изображению).
-    :return: True, если объявление успешно опубликовано, иначе False.
     """
-    max_attempts = 15
-    attempts = 0
-    while attempts < max_attempts:
-        try:
-          # Отправка заголовка объявления.
-          if not post_message_title(d, f"{message.description}"):
-              logger.error("Не удалось отправить заголовок объявления", exc_info=True)
-              attempts += 1
-              continue
-          
-          time.sleep(1)  # Пауза перед дальнейшими действиями
+    Публикует рекламное объявление, включая текст и изображение, если оно указано.
 
-          # Загрузка медиа (если указан путь).
-          if hasattr(message, 'image_path') and message.image_path:
-              if not upload_post_media(d, media=message.image_path, without_captions=True):
-                  return False
+    :param d: Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
+    :type d: Driver
+    :param message: Объект SimpleNamespace, содержащий описание сообщения и путь к изображению.
+    :type message: SimpleNamespace
+    :return: True в случае успешной публикации объявления, иначе None.
+    :rtype: bool
 
-          # Публикация объявления.
-          if not message_publish(d):
-              return False
-          return True
-        except Exception as e:
-          logger.error(f"Ошибка при публикации объявления: {e}", exc_info=True)
-          attempts += 1
-          if attempts >= max_attempts:
-             return False
-
-
-```
+    :Example:
+        >>> driver = Driver(...)
+        >>> message = SimpleNamespace(description="Текст объявления", image_path="path/to/image.jpg")
+        >>> post_ad(driver, message)
+        True
+    """
+    global fails
+    # Код отправляет заголовок сообщения
+    if not post_message_title(d, f"{message.description}"):
+        logger.error("Не удалось отправить заголовок сообщения", exc_info=False)
+        fails += 1
+        if fails < 15:
+            print(f"{fails=}")
+            return
+        else:
+            ...
+    # Ожидание 1 секунды
+    time.sleep(1)
+    # Код проверяет наличие атрибута 'image_path' и его значения
+    if hasattr(message, 'image_path') and message.image_path:
+        # Код выполняет загрузку медиафайла
+        if not upload_post_media(d, media=message.image_path, without_captions=True):
+            return
+    # Код выполняет публикацию сообщения
+    if not message_publish(d):
+        return
+    fails = 0
+    return True
