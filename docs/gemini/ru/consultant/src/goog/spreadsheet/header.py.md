@@ -1,277 +1,270 @@
-```MD
-# Received Code
+## Улучшенный код
 
 ```python
-## \file hypotez/src/goog/spreadsheet/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.goog.spreadsheet 
-	:platform: Windows, Unix
-	:synopsis:
+Модуль для определения и хранения глобальных параметров проекта.
+==============================================================
+
+Этот модуль отвечает за инициализацию и хранение глобальных параметров проекта, таких как:
+корневой путь, имя проекта, версия, документация, детали, авторские права и строка для пожертвований.
+Он также определяет функцию для поиска корневого каталога проекта.
+
+:var MODE: Режим работы приложения ('dev' или другой).
+:vartype MODE: str
+:var __root__: Корневой путь проекта.
+:vartype __root__: Path
+:var __project_name__: Имя проекта.
+:vartype __project_name__: str
+:var __version__: Версия проекта.
+:vartype __version__: str
+:var __doc__: Документация проекта из файла README.MD.
+:vartype __doc__: str
+:var __details__: Детали проекта (пока не используется).
+:vartype __details__: str
+:var __author__: Автор проекта.
+:vartype __author__: str
+:var __copyright__: Авторские права проекта.
+:vartype __copyright__: str
+:var __cofee__: Строка для пожертвований.
+:vartype __cofee__: str
+
+Пример использования
+--------------------
+
+Импорт переменных:
+
+.. code-block:: python
+
+   from src.goog.spreadsheet.header import __project_name__, __version__, __doc__
 
 """
 MODE = 'dev'
 
 
 import sys
-import json
-from packaging.version import Version
-
+# импортируем Path из pathlib для работы с путями
 from pathlib import Path
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """
-    Finds the root directory of the project starting from the current file's directory,
-    searching upwards and stopping at the first directory containing any of the marker files.
+# импортируем Version из packaging.version для сравнения версий
+from packaging.version import Version
+# импортируем j_loads_ns из src.utils.jjson для безопасной загрузки json
+from src.utils.jjson import j_loads_ns
+# импортируем logger из src.logger.logger для логирования
+from src.logger.logger import logger
 
-    Args:
-        marker_files (tuple): Filenames or directory names to identify the project root.
-    
-    Returns:
-        Path: Path to the root directory if found, otherwise the directory where the script is located.
+
+def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    __root__:Path
-    current_path:Path = Path(__file__).resolve().parent
+    Определяет корневой каталог проекта, начиная с каталога текущего файла.
+
+    Поиск осуществляется вверх по дереву каталогов до первого каталога,
+    содержащего один из файлов-маркеров.
+
+    :param marker_files: Кортеж имен файлов или каталогов, используемых для идентификации корня проекта.
+    :type marker_files: tuple
+    :return: Путь к корневому каталогу проекта. Если корень не найден, возвращается каталог, где находится скрипт.
+    :rtype: Path
+    """
+    __root__: Path
+    current_path: Path = Path(__file__).resolve().parent
     __root__ = current_path
+    # проходим по всем родительским каталогам текущего файла
     for parent in [current_path] + list(current_path.parents):
+        # если в каком-либо каталоге есть файл-маркер, то это корень проекта
         if any((parent / marker).exists() for marker in marker_files):
             __root__ = parent
             break
+    # если путь к корню проекта не добавлен в sys.path, то добавляем
     if __root__ not in sys.path:
         sys.path.insert(0, str(__root__))
     return __root__
 
 
-# Get the root directory of the project
+# Получаем корневой каталог проекта
 __root__ = set_project_root()
-"""__root__ (Path): Path to the root directory of the project"""
+"""__root__ (Path): Путь к корневому каталогу проекта."""
 
 from src import gs
-from src.utils.jjson import j_loads
 
-settings:dict = None
+settings: dict = None
+#  код загружает данные из файла settings.json
 try:
-    # Код пытается загрузить настройки из файла settings.json
-    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
-        settings = j_loads(settings_file) # Использование j_loads для загрузки JSON
+    # используется j_loads_ns для загрузки json
+    settings = j_loads_ns(gs.path.root / 'src' / 'settings.json')
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    # Логирование ошибок при загрузке настроек
-    from src.logger.logger import logger
-    logger.error('Ошибка загрузки настроек из файла settings.json', e)
-    # ...  (Возможная обработка ошибки)
+    logger.error('Не удалось загрузить файл settings.json', exc_info=True)
+    ...
 
-doc_str:str = None
+doc_str: str = None
+# код загружает данные из файла README.MD
 try:
-    # Код пытается загрузить README.MD файл
-    with open(gs.path.root / 'src' / 'README.MD', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'README.MD', 'r', encoding='utf-8') as settings_file:
         doc_str = settings_file.read()
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    # Логирование ошибок при загрузке README.MD
-    from src.logger.logger import logger
-    logger.error('Ошибка загрузки README.MD', e)
-    # ... (Возможная обработка ошибки)
+     logger.error('Не удалось загрузить файл README.MD', exc_info=True)
+     ...
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+"""__project_name__ (str): Имя проекта."""
 __version__: str = settings.get("version", '') if settings else ''
+"""__version__ (str): Версия проекта."""
 __doc__: str = doc_str if doc_str else ''
+"""__doc__ (str): Документация проекта."""
 __details__: str = ''
+"""__details__ (str): Детали проекта."""
 __author__: str = settings.get("author", '') if settings else ''
-__copyright__: str = settings.get("copyright", '') if settings else ''
+"""__author__ (str): Автор проекта."""
+__copyright__: str = settings.get("copyrihgnt", '') if settings else ''
+"""__copyright__ (str): Авторские права проекта."""
 __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+"""__cofee__ (str): Строка для пожертвований."""
+
 ```
 
-# Improved Code
+## Внесённые изменения
+
+1.  **Добавлены импорты**:
+    *   Импортирован `j_loads_ns` из `src.utils.jjson` для загрузки JSON.
+    *   Импортирован `logger` из `src.logger.logger` для логирования.
+2.  **Удалены неиспользуемые импорты**:
+    *   Удален импорт `json`.
+3.  **Изменена загрузка JSON**:
+    *   `json.load` заменен на `j_loads_ns` для загрузки файла `settings.json`.
+    *   Обработка ошибок `FileNotFoundError, json.JSONDecodeError` с помощью `logger.error`.
+4.  **Добавлена обработка ошибок**:
+    *   В блоке `try` для чтения `README.MD` добавлена обработка ошибок `FileNotFoundError, json.JSONDecodeError`  с использованием `logger.error`.
+5.  **Добавлена документация**:
+    *   Добавлены docstring к модулю, всем переменным и функции `set_project_root` в формате reStructuredText (RST).
+6.  **Изменены комментарии**:
+    *   Комментарии после `#`  переписаны с объяснениями кода.
+7.  **Добавлено кодирование при чтении файла**:
+    *  Указано кодирование `utf-8` при чтении файла `README.MD`.
+
+## Оптимизированный код
 
 ```python
-## \file hypotez/src/goog/spreadsheet/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.goog.spreadsheet
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с Google Spreadsheets.
+Модуль для определения и хранения глобальных параметров проекта.
+==============================================================
+
+Этот модуль отвечает за инициализацию и хранение глобальных параметров проекта, таких как:
+корневой путь, имя проекта, версия, документация, детали, авторские права и строка для пожертвований.
+Он также определяет функцию для поиска корневого каталога проекта.
+
+:var MODE: Режим работы приложения ('dev' или другой).
+:vartype MODE: str
+:var __root__: Корневой путь проекта.
+:vartype __root__: Path
+:var __project_name__: Имя проекта.
+:vartype __project_name__: str
+:var __version__: Версия проекта.
+:vartype __version__: str
+:var __doc__: Документация проекта из файла README.MD.
+:vartype __doc__: str
+:var __details__: Детали проекта (пока не используется).
+:vartype __details__: str
+:var __author__: Автор проекта.
+:vartype __author__: str
+:var __copyright__: Авторские права проекта.
+:vartype __copyright__: str
+:var __cofee__: Строка для пожертвований.
+:vartype __cofee__: str
+
+Пример использования
+--------------------
+
+Импорт переменных:
+
+.. code-block:: python
+
+   from src.goog.spreadsheet.header import __project_name__, __version__, __doc__
+
 """
-
-import sys
-import json
-from packaging.version import Version
-from pathlib import Path
-from src.utils.jjson import j_loads
-from src.logger.logger import logger  # Импорт logger
-
-
 MODE = 'dev'
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
-    """
-    Определяет корневой каталог проекта.
-
-    Ищет вверх по дереву каталогов, начиная с текущего,
-    и останавливается на первом каталоге, содержащем один из указанных файлов.
-
-    :param marker_files: Список файлов, по которым определяется корень проекта.
-    :type marker_files: tuple
-    :raises FileNotFoundError: Если ни один из файлов не найден.
-    :return: Корневой каталог проекта.
-    :rtype: Path
-    """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
-    for parent in [current_path] + list(current_path.parents):
-        if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
-            break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
-
-
-# Определение корневого каталога проекта
-PROJECT_ROOT = set_project_root()
-
-def load_settings(settings_file_path: Path) -> dict:
-    """
-    Загружает настройки из файла.
-
-    :param settings_file_path: Путь к файлу настроек.
-    :type settings_file_path: Path
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :return: Загруженные настройки.
-    :rtype: dict
-    """
-    try:
-        with open(settings_file_path, 'r') as f:
-            return j_loads(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка загрузки настроек из файла {settings_file_path}", exc_info=True)
-        return None
-
-
-
-settings = load_settings(PROJECT_ROOT / 'src' / 'settings.json')
-
-doc_str = None
-try:
-    doc_str = open(PROJECT_ROOT / 'src' / 'README.MD', 'r').read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Ошибка загрузки файла README.MD", exc_info=True)
-
-
-__project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
-__version__ = settings.get("version", '') if settings else ''
-__doc__ = doc_str if doc_str else ''
-__details__ = ''
-__author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
-
-```
-
-# Changes Made
-
-- Импортирован `j_loads` из `src.utils.jjson`.
-- Добавлена функция `load_settings` для загрузки настроек, которая обрабатывает исключения с помощью `logger.error`.
-- Изменены пути к файлам, используя `PROJECT_ROOT`.
-- Добавлена функция `set_project_root` для поиска корневого каталога проекта.
-- Комментарии переписаны в формате RST.
-- Используется `logger.error` для обработки исключений.
-- Избегаются слова 'получаем', 'делаем' и им подобные.
-- Изменены имена переменных в соответствии со стилем.
-
-
-# FULL Code
-
-```python
-## \file hypotez/src/goog/spreadsheet/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.goog.spreadsheet
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с Google Spreadsheets.
-"""
-
 import sys
-import json
-from packaging.version import Version
+# импортируем Path из pathlib для работы с путями
 from pathlib import Path
-from src.utils.jjson import j_loads
-from src.logger.logger import logger  # Импорт logger
+# импортируем Version из packaging.version для сравнения версий
+from packaging.version import Version
+# импортируем j_loads_ns из src.utils.jjson для безопасной загрузки json
+from src.utils.jjson import j_loads_ns
+# импортируем logger из src.logger.logger для логирования
+from src.logger.logger import logger
 
 
-MODE = 'dev'
-
-
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневой каталог проекта.
+    Определяет корневой каталог проекта, начиная с каталога текущего файла.
 
-    Ищет вверх по дереву каталогов, начиная с текущего,
-    и останавливается на первом каталоге, содержащем один из указанных файлов.
+    Поиск осуществляется вверх по дереву каталогов до первого каталога,
+    содержащего один из файлов-маркеров.
 
-    :param marker_files: Список файлов, по которым определяется корень проекта.
+    :param marker_files: Кортеж имен файлов или каталогов, используемых для идентификации корня проекта.
     :type marker_files: tuple
-    :raises FileNotFoundError: Если ни один из файлов не найден.
-    :return: Корневой каталог проекта.
+    :return: Путь к корневому каталогу проекта. Если корень не найден, возвращается каталог, где находится скрипт.
     :rtype: Path
     """
-    current_path = Path(__file__).resolve().parent
-    project_root = current_path
+    __root__: Path
+    current_path: Path = Path(__file__).resolve().parent
+    __root__ = current_path
+    # проходим по всем родительским каталогам текущего файла
     for parent in [current_path] + list(current_path.parents):
+        # если в каком-либо каталоге есть файл-маркер, то это корень проекта
         if any((parent / marker).exists() for marker in marker_files):
-            project_root = parent
+            __root__ = parent
             break
-    if project_root not in sys.path:
-        sys.path.insert(0, str(project_root))
-    return project_root
+    # если путь к корню проекта не добавлен в sys.path, то добавляем
+    if __root__ not in sys.path:
+        sys.path.insert(0, str(__root__))
+    return __root__
 
 
-# Определение корневого каталога проекта
-PROJECT_ROOT = set_project_root()
+# Получаем корневой каталог проекта
+__root__ = set_project_root()
+"""__root__ (Path): Путь к корневому каталогу проекта."""
 
-def load_settings(settings_file_path: Path) -> dict:
-    """
-    Загружает настройки из файла.
+from src import gs
 
-    :param settings_file_path: Путь к файлу настроек.
-    :type settings_file_path: Path
-    :raises FileNotFoundError: Если файл не найден.
-    :raises json.JSONDecodeError: Если файл не является валидным JSON.
-    :return: Загруженные настройки.
-    :rtype: dict
-    """
-    try:
-        with open(settings_file_path, 'r') as f:
-            return j_loads(f)
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        logger.error(f"Ошибка загрузки настроек из файла {settings_file_path}", exc_info=True)
-        return None
-
-
-# Загрузка настроек
-settings = load_settings(PROJECT_ROOT / 'src' / 'settings.json')
-
-doc_str = None
+settings: dict = None
+#  код загружает данные из файла settings.json
 try:
-    # Загрузка README.MD
-    doc_str = open(PROJECT_ROOT / 'src' / 'README.MD', 'r').read()
+    # используется j_loads_ns для загрузки json
+    settings = j_loads_ns(gs.path.root / 'src' / 'settings.json')
 except (FileNotFoundError, json.JSONDecodeError) as e:
-    logger.error("Ошибка загрузки файла README.MD", exc_info=True)
+    logger.error('Не удалось загрузить файл settings.json', exc_info=True)
+    ...
+
+doc_str: str = None
+# код загружает данные из файла README.MD
+try:
+    with open(gs.path.root / 'src' / 'README.MD', 'r', encoding='utf-8') as settings_file:
+        doc_str = settings_file.read()
+except (FileNotFoundError, json.JSONDecodeError) as e:
+     logger.error('Не удалось загрузить файл README.MD', exc_info=True)
+     ...
 
 
 __project_name__ = settings.get("project_name", 'hypotez') if settings else 'hypotez'
-__version__ = settings.get("version", '') if settings else ''
-__doc__ = doc_str if doc_str else ''
-__details__ = ''
-__author__ = settings.get("author", '') if settings else ''
-__copyright__ = settings.get("copyright", '') if settings else ''
-__cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+"""__project_name__ (str): Имя проекта."""
+__version__: str = settings.get("version", '') if settings else ''
+"""__version__ (str): Версия проекта."""
+__doc__: str = doc_str if doc_str else ''
+"""__doc__ (str): Документация проекта."""
+__details__: str = ''
+"""__details__ (str): Детали проекта."""
+__author__: str = settings.get("author", '') if settings else ''
+"""__author__ (str): Автор проекта."""
+__copyright__: str = settings.get("copyrihgnt", '') if settings else ''
+"""__copyright__ (str): Авторские права проекта."""
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+"""__cofee__ (str): Строка для пожертвований."""

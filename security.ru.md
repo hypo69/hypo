@@ -1,10 +1,10 @@
 <TABLE >
 <TR>
 <TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A> 
 </TD>
 <TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>docs</A>] 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/docs/gemini/en/README.MD'>docs</A> 
 </TD>
 
 <TD>

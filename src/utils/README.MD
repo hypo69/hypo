@@ -1,3 +1,17 @@
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A>  
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md'>Русский</A>
+</TD>
+</TR>
+</TABLE>
+
 # Tiny Utils
 
 **Tiny Utils** is a utility library providing a collection of lightweight helper functions for various common tasks. This library includes utilities for data format conversion, text and file manipulation, string operations, date-time formatting, image processing, and more. It is organized into several modules for easy access to specific functionalities.
