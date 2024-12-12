@@ -73,9 +73,24 @@
     **Блок-схема**:
 
 ```mermaid
+graph TD
+    Start[Создание экземпляра Supplier] --> Init[Инициализация Supplier]
+    Init --> LoadSettings{Загрузка настроек _payload()}
+    LoadSettings -- Успех --> LoadJSON[Загрузка настроек из JSON]
+    LoadJSON --> SetAttributes[Установка атрибутов Supplier]
+    SetAttributes --> Success{Возврат True}
+    LoadSettings -- Ошибка --> RaiseException[Выброс исключения DefaultSettingsException]
+    Success --> Login[Вход на сайт login()]
+    Login --> CallLogin[Вызов related_modules.login()]
+    Start --> RunScenarioFiles[Запуск файлов сценариев run_scenario_files()]
+    RunScenarioFiles --> CallScenarioFiles[Вызов run_scenario_files из src.scenario]
+    Start --> RunScenarios[Запуск сценариев run_scenarios()]
+    RunScenarios --> CallScenarios[Вызов run_scenarios из src.scenario]
 
-flowchart TD
-   Start[Создание экземпляра<html> <h3>Supplier</h3></html>] --> Init[Инициализация Supplier <html><code>_payload#40;#41;</code></html>]
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style LoadSettings fill:#ccf,stroke:#333,stroke-width:2px
+    style LoadJSON fill:#ccf,stroke:#333,stroke-width:2px
+    style SetAttributes fill:#ccf,stroke:#333,stroke-width:2px
 ```
 
      - ### Легенда:

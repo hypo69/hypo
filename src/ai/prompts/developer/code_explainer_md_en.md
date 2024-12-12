@@ -79,5 +79,56 @@ Example:
 **Possible Improvements**:  
 - Add type checks for the `a` and `b` arguments to prevent errors.  
 - Localize the `calculate_sum` call within the module if it is not reused elsewhere.
+
+
+### Instructions for Creating Mermaid Flowchart Diagrams Using HTML in Node Descriptions
+
+1. **Graph Type:**  
+   - Use `flowchart` (e.g., `flowchart TD` for a top-to-bottom directed graph).  
+   - Other options: `LR` (left-to-right), `BT` (bottom-to-top), `RL` (right-to-left).
+
+2. **Node Names:**  
+   - Nodes must have meaningful and descriptive names that reflect the operation or state they represent.  
+   - Avoid names like `A`, `B`, `C`. Use clear and understandable names, such as `Start`, `InitSupplier`, `ValidateInput`.
+
+3. **Using HTML:**  
+   - Apply HTML tags to style the text in nodes.  
+   - Supported tags include text formatting (e.g., `<b>`, `<i>`, `<h1>`, `<h3>`, `<code>`).  
+   - Use HTML escape codes for special characters when needed:
+     - `(` → `&#40;`  
+     - `)` → `&#41;`  
+     - `'` → `&#39;`  
+     - `"` → `&quot;`  
+     - `:` → `&#58;`
+
+4. **Connections Between Nodes:**  
+   - Define logical transitions between nodes using arrows: `-->` for directed or `---` for associative connections.  
+   - Add text labels to arrows to clarify transition conditions, e.g., `-->|Success|`.
+
+5. **Example:**
+
+```mermaid
+flowchart TD
+    Start[<html>Start of the process<br><b>Create instance</b></html>] 
+        --> InitSupplier[<html>Initialize Supplier<br><code>_payload&#40;params&#41;</code></html>]
+    InitSupplier --> Validate[<html>Validate parameters<br><i>is_valid&#40;params&#41;</i></html>]
+    Validate -->|Validation passed| Success[<html><b>Success</b><br>Creation completed</html>]
+    Validate -->|Error| Error[<html>Error<br><span style="color:red;">Invalid parameters</span></html>]
+```
+
+6. **Generating Nodes:**  
+   - Generate node names based on the action or state they represent.  
+   - Nodes should be concise but informative. Use HTML tags to enhance readability where needed.
+
+7. **Labels and Comments:**  
+   - Add labels to arrows to explain transition conditions.  
+   - Use comments with `%%` to describe complex connections.
+
+8. **Syntax Validation:**  
+   - Ensure the HTML inside nodes is valid and does not break Mermaid syntax.
+
+**Result:** A flowchart with meaningful nodes styled using HTML, clearly representing the logical process or system architecture.
+
+
 ## Response text format: `UTF-8`
 This instruction is designed to ensure the model analyzes the code in detail and provides a comprehensive description of each element's functionality.```
