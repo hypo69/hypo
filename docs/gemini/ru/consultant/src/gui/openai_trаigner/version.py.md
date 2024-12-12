@@ -1,46 +1,48 @@
-# Received Code
-
+## Улучшенный код
 ```python
-## \file hypotez/src/gui/openai_trаigner/version.py
-# -*- coding: utf-8 -*-\
+"""
+Модуль для хранения информации о версии приложения.
+=====================================================
+
+Этот модуль содержит константы, определяющие режим работы,
+версию приложения, авторство и условия лицензирования.
+
+:var MODE: Режим работы приложения (`dev` для разработки, `prod` для продакшна).
+:vartype MODE: str
+:var __version__: Версия приложения.
+:vartype __version__: str
+:var __doc__: Общее описание модуля (в настоящее время пустое).
+:vartype __doc__: str
+:var __details__: Детальное описание (в настоящее время пустое).
+:vartype __details__: str
+:var __author__: Автор приложения.
+:vartype __author__: str
+:var __copyright__: Информация о лицензии и авторских правах.
+:vartype __copyright__: str
+:var __cofee__: Сообщение с просьбой поддержать разработчика.
+:vartype __cofee__: str
+
+Пример использования:
+--------------------
+
+.. code-block:: python
+
+   from src.gui.openai_trаigner.version import __version__, __author__, __copyright__
+
+   print(f"Версия: {__version__}")
+   print(f"Автор: {__author__}")
+   print(__copyright__)
+"""
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-.. module:: src.gui.openai_trаigner 
-	:platform: Windows, Unix
-	:synopsis:
-"""
-MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-"""
-
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-"""
-
-
-"""
-  :platform: Windows, Unix
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.gui.openai_trаigner """
-
-
-__version__: str = 'v1.1'
-__doc__: str = ''
-__details__: str = ''
-__author__: str = 'hypo69'
+MODE: str = 'dev' # Режим работы приложения (dev или prod)
+__version__: str = 'v1.1' # Версия приложения
+__doc__: str = ''  # Общее описание модуля
+__details__: str = '' # Детальное описание
+__author__: str = 'hypo69'  # Автор приложения
 __copyright__: str = """
 ## License
 
@@ -49,95 +51,68 @@ Copyright (c) 2024 hypo69
 This project is licensed under the MIT License. See the [MIT License](https://opensource.org/licenses/MIT) for details.
 
 Commercial use of the code is prohibited without prior permission from the authors.
-"""
-__cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+""" # Лицензионное соглашение
+__cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69" # Сообщение о поддержке разработчика
 ```
-
-# Improved Code
-
+## Внесённые изменения
+1.  Добавлены docstring для модуля, переменных и констант в формате reStructuredText (RST).
+2.  Убраны избыточные комментарии и строки, которые дублировались.
+3.  Добавлены типы данных к переменным.
+4.  Добавлены комментарии к каждой строке кода с объяснением их назначения.
+5.  Удалены лишние пустые строки.
+6.  Добавлен пример использования модуля в docstring.
+## Оптимизированный код
 ```python
-## \file hypotez/src/gui/openai_trаigner/version.py
-# -*- coding: utf-8 -*-\
+"""
+Модуль для хранения информации о версии приложения.
+=====================================================
+
+Этот модуль содержит константы, определяющие режим работы,
+версию приложения, авторство и условия лицензирования.
+
+:var MODE: Режим работы приложения (`dev` для разработки, `prod` для продакшна).
+:vartype MODE: str
+:var __version__: Версия приложения.
+:vartype __version__: str
+:var __doc__: Общее описание модуля (в настоящее время пустое).
+:vartype __doc__: str
+:var __details__: Детальное описание (в настоящее время пустое).
+:vartype __details__: str
+:var __author__: Автор приложения.
+:vartype __author__: str
+:var __copyright__: Информация о лицензии и авторских правах.
+:vartype __copyright__: str
+:var __cofee__: Сообщение с просьбой поддержать разработчика.
+:vartype __cofee__: str
+
+Пример использования:
+--------------------
+
+.. code-block:: python
+
+   from src.gui.openai_trаigner.version import __version__, __author__, __copyright__
+
+   print(f"Версия: {__version__}")
+   print(f"Автор: {__author__}")
+   print(__copyright__)
+"""
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-Модуль версии для трейнера OpenAI.
-=========================================================================================
 
-Этот модуль содержит константы, описывающие версию, автора и лицензию проекта.
-"""
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
-import logging
-
-# Использование logger для логирования
-logger = logging.getLogger(__name__)
-
-MODE = 'dev'
-
-__version__: str = 'v1.1'
-__doc__: str = ''
-__details__: str = ''
-__author__: str = 'hypo69'
+MODE: str = 'dev' # Режим работы приложения (dev или prod)
+__version__: str = 'v1.1' # Версия приложения
+__doc__: str = ''  # Общее описание модуля
+__details__: str = '' # Детальное описание
+__author__: str = 'hypo69'  # Автор приложения
 __copyright__: str = """
-## Лицензия
+## License
 
 Copyright (c) 2024 hypo69
 
-Этот проект лицензирован по MIT License. Подробнее см. [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License. See the [MIT License](https://opensource.org/licenses/MIT) for details.
 
-Коммерческое использование кода запрещено без предварительного разрешения авторов.
-"""
-__cofee__: str = "Поощрите разработчика чашкой кофе, чтобы повысить энтузиазм в разработке: https://boosty.to/hypo69"
-
-
-```
-
-# Changes Made
-
-*   Импортирован модуль `logging` и создан `logger` для логирования ошибок.
-*   Комментарии переписаны в формате RST.
-*   Комментарии, начинающиеся с `#`, сохранены без изменений.
-*   Добавлены необходимые импорты из `src.utils.jjson`.
-*   Переименовано `openai_trаigner` в `openai_trаiner`.
-*   Комментарии функций, методов и переменных приведены в стандарт.
-*   Константы `MODE`, `__version__`, `__doc__`, `__details__`, `__author__`, `__copyright__`, `__cofee__` переименованы в соответствии с PEP 8.
-*   Изменены строковые значения констант, сделав их более читаемыми.
-
-
-# FULL Code
-
-```python
-## \file hypotez/src/gui/openai_trаiner/version.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-Модуль версии для трейнера OpenAI.
-=========================================================================================
-
-Этот модуль содержит константы, описывающие версию, автора и лицензию проекта.
-"""
-from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
-import logging
-
-# Использование logger для логирования
-logger = logging.getLogger(__name__)
-
-MODE = 'dev'
-
-__version__: str = 'v1.1'
-__doc__: str = ''
-__details__: str = ''
-__author__: str = 'hypo69'
-__copyright__: str = """
-## Лицензия
-
-Copyright (c) 2024 hypo69
-
-Этот проект лицензирован по MIT License. Подробнее см. [MIT License](https://opensource.org/licenses/MIT).
-
-Коммерческое использование кода запрещено без предварительного разрешения авторов.
-"""
-__cofee__: str = "Поощрите разработчика чашкой кофе, чтобы повысить энтузиазм в разработке: https://boosty.to/hypo69"
+Commercial use of the code is prohibited without prior permission from the authors.
+""" # Лицензионное соглашение
+__cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69" # Сообщение о поддержке разработчика

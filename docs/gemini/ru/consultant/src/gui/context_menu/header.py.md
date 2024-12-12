@@ -1,258 +1,157 @@
-# Received Code
+## Улучшенный код
 
 ```python
-## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.gui.context_menu
-	:platform: Windows, Unix
-	:synopsis:
-	
+Модуль для настройки контекстного меню в GUI.
+======================================================
+
+Этот модуль инициализирует необходимые пути и переменные окружения для работы GUI,
+включая пути к бинарным файлам GTK, FFmpeg и Graphviz, а также настраивает
+переменную окружения WEASYPRINT_DLL_DIRECTORIES.
+
+:platform: Windows, Unix
 """
-MODE = 'dev'
+import json  # импортирует модуль для работы с JSON
+import sys  # импортирует модуль для работы с системными параметрами
+from pathlib import Path # импортирует модуль для работы с путями
+from src.utils.jjson import j_loads # импортирует функцию для загрузки JSON
+from src.logger.logger import logger # импортирует модуль для логирования
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-	
-"""
+MODE = 'dev' # устанавливает режим разработки
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-	
-"""
+""" Абсолютный путь к модулям и бинарным директориям GTK & FFPMEG """
 
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.gui.context_menu """
-
-
-""" Absolute path to modules and GTK & FFPMEG bin directory """
-
-import json
-import sys
-from pathlib import Path
-
-# Load the project name from settings.json
-# Используется j_loads для загрузки JSON-данных.
-# Импорт utils.jjson необходим для работы с j_loads.
-from src.utils.jjson import j_loads
-
+# Загружает имя проекта из файла settings.json
 try:
-    with open('settings.json', 'r') as settings_file:
+    #  код исполняет загрузку настроек из файла settings.json
+    with open('settings.json', 'r', encoding='utf-8') as settings_file:
         settings = j_loads(settings_file)
-        project_name = settings.get("project_name", "hypotez")
-except FileNotFoundError:
-    logger.error('Файл settings.json не найден.')
+    project_name = settings.get("project_name", "hypotez")
+except FileNotFoundError as e:
+    logger.error(f'Файл настроек не найден settings.json: {e}')
+    sys.exit(1)
+except json.JSONDecodeError as e:
+    logger.error(f'Ошибка декодирования JSON файла настроек: {e}')
+    sys.exit(1)
+except Exception as e:
+    logger.error(f'Непредвиденная ошибка при чтении файла настроек: {e}')
     sys.exit(1)
 
-
-# Define the root path of the project
+# Определяет корневой путь проекта
 __root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
 sys.path.append(str(__root__))
 
-# Paths to bin directories
+# Пути к бинарным директориям
 gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
 ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
 graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
 
-# Update the PATH variable if the paths are missing
-paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
-current_paths = set(Path(p) for p in sys.path)
+# Обновление переменной PATH, если пути отсутствуют
+paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path] # определяет список путей для добавления
+current_paths = set(Path(p) for p in sys.path) # создает множество из существующих путей
 
-for bin_path in paths_to_add:
-    if bin_path not in current_paths:
-        sys.path.insert(0, str(bin_path))
+for bin_path in paths_to_add: #  код исполняет итерацию по путям для добавления
+    if bin_path not in current_paths: # проверка на наличие пути в текущих путях
+        sys.path.insert(0, str(bin_path))  # добавляет путь в начало sys.path
 
-# Set the variable for WeasyPrint
-sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-if sys_path_env_var not in sys.path:
-    sys.path.insert(0, str(gtk_bin_path))
+# Устанавливает переменную для WeasyPrint
+sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES" # устанавливает имя переменной окружения
+if sys_path_env_var not in sys.path: # проверка наличия переменной в путях
+    sys.path.insert(0, str(gtk_bin_path)) # добавляет путь к gtk_bin_path
 
-"""Suppress GTK log output to the console"""
-import warnings
-from src.logger.logger import logger # Импорт логирования
-
-warnings.filterwarnings("ignore", category=UserWarning)
+"""Отключает вывод логов GTK в консоль"""
+import warnings # импортирует модуль для управления предупреждениями
+warnings.filterwarnings("ignore", category=UserWarning) # отключает предупреждения UserWarning
 ```
 
-# Improved Code
+## Внесённые изменения
+
+1.  **Документация модуля:**
+    *   Добавлен docstring в формате RST с описанием назначения модуля.
+    *   Добавлены описания для переменных `MODE`, `__root__`, `gtk_bin_path`, `ffmpeg_bin_path`, `graphviz_bin_path`, `paths_to_add`, `current_paths`, `sys_path_env_var`.
+2.  **Импорты:**
+    *   Добавлены импорты `j_loads` из `src.utils.jjson` и `logger` из `src.logger.logger`.
+3.  **Обработка файла `settings.json`:**
+    *   Используется `j_loads` для загрузки JSON вместо `json.load`.
+    *   Добавлена обработка исключений `FileNotFoundError` и `json.JSONDecodeError`.
+    *   Добавлен логгер для записи ошибок при загрузке файла настроек.
+4.  **Логирование:**
+    *   Добавлены логирование ошибок с помощью `logger.error`.
+5.  **Комментарии:**
+    *   Добавлены подробные комментарии в формате RST к коду.
+    *   Удалены лишние пустые строки и комментарии.
+    *   Удалены лишние комментарии без описания
+    *   Добавлены комментарии перед каждым блоком кода.
+
+## Оптимизированный код
 
 ```python
-## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.gui.context_menu
-	:platform: Windows, Unix
-	:synopsis: Модуль для работы с контекстным меню.
+Модуль для настройки контекстного меню в GUI.
+======================================================
+
+Этот модуль инициализирует необходимые пути и переменные окружения для работы GUI,
+включая пути к бинарным файлам GTK, FFmpeg и Graphviz, а также настраивает
+переменную окружения WEASYPRINT_DLL_DIRECTORIES.
+
+:platform: Windows, Unix
 """
-MODE = 'dev'
+import json  # импортирует модуль для работы с JSON
+import sys  # импортирует модуль для работы с системными параметрами
+from pathlib import Path # импортирует модуль для работы с путями
+from src.utils.jjson import j_loads # импортирует функцию для загрузки JSON
+from src.logger.logger import logger # импортирует модуль для логирования
 
+MODE = 'dev' # устанавливает режим разработки
 
-"""
-  :platform: Windows, Unix
-  :synopsis: Переменная, определяющая режим работы.
-"""
-from src.utils.jjson import j_loads
-from src.logger.logger import logger # Импортируем logger для логирования
+""" Абсолютный путь к модулям и бинарным директориям GTK & FFPMEG """
 
+# Загружает имя проекта из файла settings.json
+try:
+    #  код исполняет загрузку настроек из файла settings.json
+    with open('settings.json', 'r', encoding='utf-8') as settings_file:
+        settings = j_loads(settings_file)
+    project_name = settings.get("project_name", "hypotez")
+except FileNotFoundError as e:
+    logger.error(f'Файл настроек не найден settings.json: {e}')
+    sys.exit(1)
+except json.JSONDecodeError as e:
+    logger.error(f'Ошибка декодирования JSON файла настроек: {e}')
+    sys.exit(1)
+except Exception as e:
+    logger.error(f'Непредвиденная ошибка при чтении файла настроек: {e}')
+    sys.exit(1)
 
-def load_project_name():
-    """Загружает имя проекта из файла settings.json.
+# Определяет корневой путь проекта
+__root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
+sys.path.append(str(__root__))
 
-    Возвращает:
-        str: Имя проекта.
-        Возвращает None в случае ошибки.
-    """
-    try:
-        with open('settings.json', 'r') as settings_file:
-            settings = j_loads(settings_file)
-            project_name = settings.get("project_name", "hypotez")
-            return project_name
-    except FileNotFoundError:
-        logger.error('Файл settings.json не найден.')
-        return None
-    except Exception as e:
-        logger.error(f'Ошибка при загрузке имени проекта: {e}')
-        return None
+# Пути к бинарным директориям
+gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
+ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
+graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
 
+# Обновление переменной PATH, если пути отсутствуют
+paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path] # определяет список путей для добавления
+current_paths = set(Path(p) for p in sys.path) # создает множество из существующих путей
 
-def configure_paths():
-    """Настраивает пути к бинарным файлам GTK, FFmpeg и Graphviz."""
-    project_name = load_project_name()
-    if project_name is None:
-        return # Выход из функции, если имя проекта не получено
+for bin_path in paths_to_add: #  код исполняет итерацию по путям для добавления
+    if bin_path not in current_paths: # проверка на наличие пути в текущих путях
+        sys.path.insert(0, str(bin_path))  # добавляет путь в начало sys.path
 
-    __root__ = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
-    sys.path.append(str(__root__))
+# Устанавливает переменную для WeasyPrint
+sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES" # устанавливает имя переменной окружения
+if sys_path_env_var not in sys.path: # проверка наличия переменной в путях
+    sys.path.insert(0, str(gtk_bin_path)) # добавляет путь к gtk_bin_path
 
-    gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
-    ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
-    graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
-
-
-    paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
-    current_paths = set(Path(p) for p in sys.path)
-
-    for bin_path in paths_to_add:
-        if bin_path not in current_paths:
-            sys.path.insert(0, str(bin_path))
-
-    sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-    if sys_path_env_var not in sys.path:
-        sys.path.insert(0, str(gtk_bin_path))
-
-
-
-configure_paths()
-
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
-```
-
-# Changes Made
-
-*   Используется `j_loads` для загрузки данных из `settings.json`.
-*   Добавлен импорт `from src.utils.jjson import j_loads`.
-*   Добавлен импорт `from src.logger.logger import logger`.
-*   Добавлены обработка исключения `FileNotFoundError` и логирование ошибок при загрузке `settings.json`.
-*   Код разделен на функции `load_project_name` и `configure_paths` для лучшей организации.
-*   Функции и переменные снабжены документацией в формате RST.
-*   Улучшен стиль комментариев.
-*   Избегается ненужное использование стандартных блоков `try-except`.  Ошибка обрабатывается в функции `load_project_name`.
-*   Изменены комментарии для соблюдения требований к RST.
-*   Убран избыточный код.
-*   Пропущена проверка путей bin, т.к. это может зависеть от конкретной конфигурации.
-
-# FULL Code
-
-```python
-## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.gui.context_menu
-	:platform: Windows, Unix
-	:synopsis: Модуль для работы с контекстным меню.
-"""
-MODE = 'dev'
-
-
-"""
-  :platform: Windows, Unix
-  :synopsis: Переменная, определяющая режим работы.
-"""
-from src.utils.jjson import j_loads
-from src.logger.logger import logger # Импортируем logger для логирования
-
-
-def load_project_name():
-    """Загружает имя проекта из файла settings.json.
-
-    Возвращает:
-        str: Имя проекта.
-        Возвращает None в случае ошибки.
-    """
-    try:
-        with open('settings.json', 'r') as settings_file:
-            settings = j_loads(settings_file)
-            project_name = settings.get("project_name", "hypotez")
-            return project_name
-    except FileNotFoundError:
-        logger.error('Файл settings.json не найден.')
-        return None
-    except Exception as e:
-        logger.error(f'Ошибка при загрузке имени проекта: {e}')
-        return None
-
-
-def configure_paths():
-    """Настраивает пути к бинарным файлам GTK, FFmpeg и Graphviz."""
-    project_name = load_project_name()
-    if project_name is None:
-        return # Выход из функции, если имя проекта не получено
-
-    __root__ = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
-    sys.path.append(str(__root__))
-
-    gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
-    ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
-    graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
-
-
-    paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
-    current_paths = set(Path(p) for p in sys.path)
-
-    for bin_path in paths_to_add:
-        if bin_path not in current_paths:
-            sys.path.insert(0, str(bin_path))
-
-    sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-    if sys_path_env_var not in sys.path:
-        sys.path.insert(0, str(gtk_bin_path))
-
-
-
-configure_paths()
-
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
-```
+"""Отключает вывод логов GTK в консоль"""
+import warnings # импортирует модуль для управления предупреждениями
+warnings.filterwarnings("ignore", category=UserWarning) # отключает предупреждения UserWarning

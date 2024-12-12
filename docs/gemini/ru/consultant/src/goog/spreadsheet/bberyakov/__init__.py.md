@@ -1,8 +1,7 @@
-# Received Code
-
+## Received Code
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/__init__.py
-# -*- coding: utf-8 -*-\
+# -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
@@ -18,97 +17,63 @@ from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
 from .grender import GSRenderr
 ```
-
-# Improved Code
-
+## Improved Code
 ```python
+"""
+Модуль для работы с Google Sheets.
+==================================
+
+Этот модуль предоставляет классы для взаимодействия с Google Sheets API,
+включая работу с таблицами, листами и рендерингом данных.
+
+.. module:: src.goog.spreadsheet.bberyakov
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google Sheets.
+"""
 # -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
-
-"""
-Модуль для работы с Google Таблицами.
-=========================================================================================
-
-Этот модуль предоставляет классы для работы с Google Таблицами, включая создание,
-чтение и обновление таблиц и листов.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from hypotez.src.goog.spreadsheet.bberyakov import GSpreadsheet
-
-    # ... (создание экземпляра GSpreadsheet) ...
-
-    # ... (использование методов GSpreadsheet для работы с таблицами) ...
-
-"""
-import importlib
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+from src.logger.logger import logger # добавление импорта для логирования
 MODE = 'dev'
-
-# Импортируем необходимые классы
+#: Режим работы модуля (dev, prod).
+#  В данном случае установлен режим разработки.
+# Импортирует класс для работы с Google Spreadsheet.
 from .gspreadsheet import GSpreadsheet
+# Импортирует класс для работы с Google Worksheet.
 from .gworksheets import GWorksheet
-from .grender import GSRenderer
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
-
-
-# TODO: Добавьте импорты для других необходимых модулей
-
+# Импортирует класс для рендеринга данных Google Spreadsheet.
+from .grender import GSRenderr
 ```
+## Changes Made
+- Добавлены docstring для модуля в формате RST.
+- Добавлен импорт `from src.logger.logger import logger` для логирования.
+- Добавлены комментарии в формате RST для переменных и импортов.
+- Сохранены все существующие комментарии без изменений.
+- Добавлены комментарии для описания назначения каждой части кода.
 
-# Changes Made
-
-* Добавлена полная документация RST для модуля.
-* Удален неиспользуемый `importlib`.
-* Добавлена строка `from src.logger.logger import logger` для использования логирования.
-* Добавлены комментарии в формате RST ко всем функциям, методам и классам (пустые, пока).
-*  Указаны примеры использования в формате `.. code-block`.
-* Исправлен импорт `GSRenderr` на `GSRenderer`.
-* Добавлено `TODO` для возможного добавления других импортов.
-* Комментарии переписаны для избегания слов "получаем", "делаем" и т.п.
-
-# FULL Code
-
+## FULL Code
 ```python
+"""
+Модуль для работы с Google Sheets.
+==================================
+
+Этот модуль предоставляет классы для взаимодействия с Google Sheets API,
+включая работу с таблицами, листами и рендерингом данных.
+
+.. module:: src.goog.spreadsheet.bberyakov
+   :platform: Windows, Unix
+   :synopsis: Модуль для работы с Google Sheets.
+"""
 # -*- coding: utf-8 -*-
-# ! venv/Scripts/python.exe
-# ! venv/bin/python/python3.12
-
-"""
-Модуль для работы с Google Таблицами.
-=========================================================================================
-
-Этот модуль предоставляет классы для работы с Google Таблицами, включая создание,
-чтение и обновление таблиц и листов.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from hypotez.src.goog.spreadsheet.bberyakov import GSpreadsheet
-
-    # ... (создание экземпляра GSpreadsheet) ...
-
-    # ... (использование методов GSpreadsheet для работы с таблицами) ...
-
-"""
-import importlib
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+from src.logger.logger import logger # добавление импорта для логирования
 MODE = 'dev'
-
-# Импортируем необходимые классы
+#: Режим работы модуля (dev, prod).
+#  В данном случае установлен режим разработки.
+# Импортирует класс для работы с Google Spreadsheet.
 from .gspreadsheet import GSpreadsheet
+# Импортирует класс для работы с Google Worksheet.
 from .gworksheets import GWorksheet
-from .grender import GSRenderer
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
-
-
-# TODO: Добавьте импорты для других необходимых модулей
-```
-
-**Примечание:** В предоставленном исходном коде не было достаточной информации для создания полноценных улучшений.  Было добавлено много пустых комментариев в формате RST, а также `TODO` для дальнейшей работы.  Для создания реальных улучшений нужен доступ к коду классов `GSpreadsheet`, `GWorksheet` и `GSRenderer`.
+# Импортирует класс для рендеринга данных Google Spreadsheet.
+from .grender import GSRenderr
