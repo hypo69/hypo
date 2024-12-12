@@ -1,116 +1,65 @@
-## Received Code
+# Анализ кода модуля `get_relative_path.py`
+
+**Качество кода**
+8
+ -  Плюсы
+    - Код выполняет поставленную задачу.
+    - Используется `pathlib` для работы с путями, что является хорошей практикой.
+    - Присутствует определение относительного пути.
+ -  Минусы
+    - Отсутствует docstring для модуля.
+    - Не используется логирование.
+    - Нет явного использования `j_loads` или `j_loads_ns`
+
+**Рекомендации по улучшению**
+1. Добавить docstring для модуля в формате reStructuredText (RST).
+2. Добавить импорт `from src.utils.jjson import j_loads, j_loads_ns` (хотя в данном конкретном файле это не используется, для соответствия инструкции)
+3. Заменить стандартный `print` на логирование с использованием `logger.info`.
+4. Удалить неиспользуемый импорт `import header`.
+5. Добавить проверку существования директории.
+
+**Оптимизированный код**
+
 ```python
-## \file hypotez/src/utils/_examples/get_relative_path.py
+"""
+Модуль для получения относительного пути.
+=========================================
+
+Этот модуль предоставляет функцию для получения относительного пути
+к файлу, начиная от заданной директории.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from pathlib import Path
+    from src.utils.path import get_relative_path
+    from src.logger.logger import logger
+
+    relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')
+    logger.info(f"Относительный путь: {relative_path}")
+"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-"""
-.. module:: src.utils._examples.get_relative_path 
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
 from pathlib import Path
+# Код импортирует необходимые функции из других модулей.
+from src.utils.path import get_relative_path
+# Код импортирует logger для вывода отладочной информации.
+from src.logger.logger import logger
 
+# Код определяет режим работы приложения (dev, prod)
 MODE = 'dev'
 
-import header
-from src.utils.path import get_relative_path
-
-relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')
-print(relative_path)
-```
-
-## Improved Code
-```python
-"""
-Модуль для демонстрации получения относительного пути.
-===========================================================================
-
-Этот модуль показывает пример использования функции `get_relative_path`
-для получения относительного пути от текущего файла до указанной директории.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from pathlib import Path
-    from src.utils.path import get_relative_path
-
-    relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')
-    print(relative_path)
-"""
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-from pathlib import Path # Импортируем модуль pathlib для работы с путями.
-
-from src.logger.logger import logger # Импортируем logger для логирования.
-from src.utils.path import get_relative_path # Импортируем функцию get_relative_path.
-
-MODE = 'dev' # Объявляем константу MODE со значением 'dev'.
-
+# Код получает относительный путь к текущему файлу от директории 'hypotez'
 try:
-    # Вычисляем относительный путь от текущего файла до директории 'hypotez'.
     relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')
-    # Выводим вычисленный относительный путь.
-    print(relative_path)
-except Exception as e:
-    # Логируем ошибку в случае исключения при вычислении пути.
-    logger.error(f'Ошибка при вычислении относительного пути: {e}')
+    # Код выводит относительный путь в лог
+    logger.info(f"Относительный путь: {relative_path}")
+except Exception as ex:
+    # Код обрабатывает возможные ошибки при получении относительного пути и выводит их в лог
+    logger.error(f"Ошибка при получении относительного пути: {ex}")
+    ...
 ```
-
-## Changes Made
-1. **Добавлен docstring модуля**:
-   - Добавлено описание модуля в формате reStructuredText (RST).
-   - Добавлены примеры использования модуля.
-2. **Добавлены импорты**:
-   - Добавлен `from src.logger.logger import logger` для логирования.
-3. **Добавлена обработка исключений**:
-   - Код обернут в `try-except` для обработки возможных ошибок.
-   - Ошибки логируются с помощью `logger.error`.
-4. **Сохранены комментарии**:
-    - Все существующие комментарии `#` сохранены.
-5. **Форматирование кода**:
-   - Код отформатирован для соответствия PEP 8.
-
-## FULL Code
-```python
-"""
-Модуль для демонстрации получения относительного пути.
-===========================================================================
-
-Этот модуль показывает пример использования функции `get_relative_path`
-для получения относительного пути от текущего файла до указанной директории.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from pathlib import Path
-    from src.utils.path import get_relative_path
-
-    relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')
-    print(relative_path)
-"""
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-from pathlib import Path # Импортируем модуль pathlib для работы с путями.
-
-from src.logger.logger import logger # Импортируем logger для логирования.
-from src.utils.path import get_relative_path # Импортируем функцию get_relative_path.
-
-MODE = 'dev' # Объявляем константу MODE со значением 'dev'.
-
-try:
-    # Вычисляем относительный путь от текущего файла до директории 'hypotez'.
-    relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')
-    # Выводим вычисленный относительный путь.
-    print(relative_path)
-except Exception as e:
-    # Логируем ошибку в случае исключения при вычислении пути.
-    logger.error(f'Ошибка при вычислении относительного пути: {e}')

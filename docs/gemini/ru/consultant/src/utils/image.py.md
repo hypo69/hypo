@@ -1,109 +1,158 @@
-## Улучшенный код
+# Анализ кода модуля `image.py`
+
+**Качество кода: 8**
+
+*   **Плюсы:**
+    *   Код хорошо структурирован и разбит на логические функции.
+    *   Используются асинхронные операции для неблокирующего ввода-вывода.
+    *   Присутствуют комментарии и docstring в формате reStructuredText (RST).
+    *   Обработка исключений присутствует, ошибки логируются.
+    *   Используется библиотека `pathlib` для работы с путями.
+*   **Минусы:**
+    *   Не хватает проверки аргументов функций.
+    *   Не все функции имеют примеры использования в docstring (необходимо добавить для `get_image_data`).
+    *   Используется `logger.critical` для ошибок сохранения, что может быть излишним (заменить на `logger.error`).
+    *   В некоторых местах обработка исключений может быть более конкретной.
+    *   В `random_image` можно использовать list comprehension.
+
+**Рекомендации по улучшению**
+
+1.  **Добавить проверку аргументов:**
+    *   В функциях `save_png_from_url`, `save_png`, `get_image_data` и `random_image` добавить проверки на типы и значения аргументов, что позволит избежать ошибок на ранних стадиях.
+2.  **Уточнить обработку ошибок:**
+    *   В `save_png` вместо `logger.critical` использовать `logger.error`, поскольку ошибка не является критичной для всего приложения.
+    *   В `save_png_from_url`, `save_png`, `get_image_data` можно добавить более конкретные исключения для разных типов ошибок, если это необходимо.
+3.  **Улучшить docstring:**
+    *   Добавить пример использования в docstring для функции `get_image_data`.
+4.  **Улучшить функцию `random_image`:**
+    *   Использовать генератор списков (list comprehension) для более краткой записи.
+5. **Добавить блок `if __name__ == '__main__':`**
+    * Добавить блок для тестирования функций, проверки работоспособности.
+6.  **Удалить лишний MODE**
+    * Переменная `MODE` не используется, следует удалить.
+    * Добавить `from typing import Union` и заменить `str | Path` на `Union[str, Path]`
+
+**Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для работы с изображениями.
-=========================================================================================
+.. module:: src.utils.image
+    :platform: Windows, Unix
+    :synopsis: Image Saving Utilities
 
-Этот модуль предоставляет асинхронные функции для загрузки, сохранения и получения данных изображений.
+This module provides asynchronous functions to download, save, and retrieve image data.
 
-Функции:
+Functions:
     - :func:`save_png_from_url`
     - :func:`save_png`
     - :func:`get_image_data`
     - :func:`random_image`
 
-Пример использования
---------------------
+.. function:: save_png_from_url(image_url: str, filename: Union[str, Path]) -> str | None
 
-.. code-block:: python
+    Download an image from a URL and save it locally asynchronously.
 
-    import asyncio
-    from pathlib import Path
-    from src.utils.image import save_png_from_url, save_png, get_image_data, random_image
+    :param image_url: The URL to download the image from.
+    :param filename: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
 
-    async def main():
-        # Загрузка и сохранение изображения по URL
-        image_path = await save_png_from_url("https://example.com/image.png", "local_image.png")
-        if image_path:
-            print(f"Изображение сохранено: {image_path}")
+    :example:
+        >>> asyncio.run(save_png_from_url("https://example.com/image.png", "local_image.png"))
+        'local_image.png'
 
-        # Сохранение изображения из байтов
-        with open("example_image.png", "rb") as f:
-            image_data = f.read()
-        saved_image_path = await save_png(image_data, "saved_image.png")
-        if saved_image_path:
-           print(f"Изображение сохранено: {saved_image_path}")
+.. function:: save_png(image_data: bytes, file_name: Union[str, Path]) -> str | None
 
-        # Получение данных изображения
-        image_data = get_image_data("saved_image.png")
-        if image_data:
-            print(f"Данные изображения: {image_data[:20]}...")
+    Save an image in PNG format asynchronously.
 
-        # Получение случайного изображения
-        random_image_path = random_image("path/to/images")
-        if random_image_path:
-           print(f"Случайное изображение: {random_image_path}")
+    :param image_data: The binary image data.
+    :param file_name: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
 
-    if __name__ == "__main__":
-        asyncio.run(main())
+    :example:
+        >>> with open("example_image.png", "rb") as f:
+        ...     image_data = f.read()
+        >>> asyncio.run(save_png(image_data, "saved_image.png"))
+        'saved_image.png'
 
+.. function:: get_image_data(file_name: Union[str, Path]) -> bytes | None
+
+    Retrieve binary data of a file if it exists.
+
+    :param file_name: The name of the file to read.
+    :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
+
+    :example:
+        >>> get_image_data("saved_image.png")
+        b'\\x89PNG\\r\\n...'
+
+.. function:: random_image(root_path: Union[str, Path]) -> str | None
+
+    Recursively search for a random image in the specified directory and return its path.
+
+    :param root_path: The directory to search for images.
+    :return: The path to a random image or ``None`` if no images are found.
+
+    :example:
+        >>> random_image("path/to/images")
+        'path/to/images/subfolder/random_image.png'
 """
-#  Импортируем необходимые модули
-MODE = 'dev'
-import aiohttp #  используется для асинхронных HTTP запросов
-import aiofiles #  используется для асинхронных файловых операций
-from PIL import Image #  используется для работы с изображениями
-from pathlib import Path #  используется для работы с путями файлов и директорий
-import asyncio #  используется для асинхронного программирования
-import random #  используется для генерации случайных чисел
-from src.logger.logger import logger #  используется для логирования ошибок и отладки
-from src.utils.printer import pprint #  используется для печати отладочной информации
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+import aiohttp
+import aiofiles
+from PIL import Image
+from pathlib import Path
+import asyncio
+import random
+from src.logger.logger import logger
+from typing import Union
 
 
 async def save_png_from_url(
-    image_url: str, filename: str | Path
+    image_url: str, filename: Union[str, Path]
 ) -> str | None:
-    """
-    Загружает изображение по URL и сохраняет его локально в формате PNG асинхронно.
+    """Download an image from a URL and save it locally asynchronously.
 
-    :param image_url: URL изображения для загрузки.
-    :param filename: Имя файла для сохранения изображения.
-    :return: Путь к сохраненному файлу или ``None``, если операция не удалась.
+    :param image_url: The URL to download the image from.
+    :param filename: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
 
     :example:
         >>> asyncio.run(save_png_from_url("https://example.com/image.png", "local_image.png"))
         'local_image.png'
     """
+    # Проверка, что `image_url` является строкой
+    if not isinstance(image_url, str):
+         logger.error(f"Invalid argument type: image_url must be a string, not {type(image_url)}")
+         return None
+    # Проверка, что `filename` является строкой или экземпляром Path
+    if not isinstance(filename, (str, Path)):
+         logger.error(f"Invalid argument type: filename must be a string or Path, not {type(filename)}")
+         return None
+
     try:
-        #  Инициализируем асинхронную сессию для выполнения HTTP запроса
+        # Код исполняет запрос на скачивание изображения по URL
         async with aiohttp.ClientSession() as session:
-            #  Выполняем GET запрос по URL
             async with session.get(image_url) as response:
-                #  Проверяем статус ответа, выбрасывая исключение в случае ошибки
                 response.raise_for_status()
-                #  Читаем данные изображения из ответа
                 image_data = await response.read()
     except Exception as ex:
-        #  Логируем ошибку при загрузке изображения
+        # Логирование ошибки скачивания изображения
         logger.error("Error downloading image", ex, exc_info=True)
-        return None
+        return
 
-    #  Сохраняем полученные данные изображения в файл
+    # Сохранение полученных данных изображения в файл
     return await save_png(image_data, filename)
 
 
-async def save_png(image_data: bytes, file_name: str | Path) -> str | None:
-    """
-    Сохраняет изображение в формате PNG асинхронно.
+async def save_png(image_data: bytes, file_name: Union[str, Path]) -> str | None:
+    """Save an image in PNG format asynchronously.
 
-    :param image_data: Бинарные данные изображения.
-    :param file_name: Имя файла для сохранения изображения.
-    :return: Путь к сохраненному файлу или ``None``, если операция не удалась.
+    :param image_data: The binary image data.
+    :param file_name: The name of the file to save the image to.
+    :return: The path to the saved file or ``None`` if the operation failed.
 
     :example:
         >>> with open("example_image.png", "rb") as f:
@@ -111,335 +160,134 @@ async def save_png(image_data: bytes, file_name: str | Path) -> str | None:
         >>> asyncio.run(save_png(image_data, "saved_image.png"))
         'saved_image.png'
     """
-    #  Преобразуем имя файла в объект Path
+    # Проверка, что `image_data` является байтами
+    if not isinstance(image_data, bytes):
+        logger.error(f"Invalid argument type: image_data must be bytes, not {type(image_data)}")
+        return None
+    # Проверка, что `file_name` является строкой или экземпляром Path
+    if not isinstance(file_name, (str, Path)):
+        logger.error(f"Invalid argument type: file_name must be a string or Path, not {type(file_name)}")
+        return None
+
     file_path = Path(file_name)
 
     try:
-        #  Создаем необходимые директории для файла, если их нет
+        # Создание необходимых директорий
         file_path.parent.mkdir(parents=True, exist_ok=True)
-
-        #  Открываем файл для записи в бинарном режиме асинхронно
+        # Запись файла
         async with aiofiles.open(file_path, "wb") as file:
-            #  Записываем данные изображения в файл
             await file.write(image_data)
 
-        #  Проверяем, был ли создан файл
+        # Проверка, что файл создан
         if not file_path.exists():
             logger.error(f"File {file_path} was not created.")
-            return None
+            return
 
-        #  Открываем изображение с помощью PIL
+        # Открытие и сохранение изображения
         image = Image.open(file_path)
-        #  Сохраняем изображение в формате PNG
         image.save(file_path, "PNG")
 
-        #  Проверяем размер файла после сохранения
+        # Проверка размера файла
         if file_path.stat().st_size == 0:
             logger.error(f"File {file_path} saved, but its size is 0 bytes.")
-            return None
-
+            return
     except Exception as ex:
-        #  Логируем критическую ошибку при сохранении файла
-        logger.critical(f"Failed to save file {file_path}", ex, exc_info=True)
-        return None
+        # Логирование ошибки сохранения файла
+        logger.error(f"Failed to save file {file_path}", ex, exc_info=True)
+        return
 
-    #  Возвращаем путь к сохраненному файлу в виде строки
     return str(file_path)
 
 
-def get_image_data(file_name: str | Path) -> bytes | None:
-    """
-    Получает бинарные данные файла, если он существует.
+def get_image_data(file_name: Union[str, Path]) -> bytes | None:
+    """Retrieve binary data of a file if it exists.
 
-    :param file_name: Имя файла для чтения.
-    :return: Бинарные данные файла или ``None``, если файл не найден или произошла ошибка.
+    :param file_name: The name of the file to read.
+    :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
 
     :example:
         >>> get_image_data("saved_image.png")
         b'\\x89PNG\\r\\n...'
     """
-    #  Преобразуем имя файла в объект Path
+    # Проверка, что `file_name` является строкой или экземпляром Path
+    if not isinstance(file_name, (str, Path)):
+        logger.error(f"Invalid argument type: file_name must be a string or Path, not {type(file_name)}")
+        return None
+
     file_path = Path(file_name)
 
-    #  Проверяем существование файла
+    # Проверка, что файл существует
     if not file_path.exists():
         logger.error(f"File {file_path} does not exist.")
-        return None
+        return
 
     try:
-        #  Открываем файл для чтения в бинарном режиме
+        # Чтение данных из файла
         with open(file_path, "rb") as file:
-            #  Возвращаем бинарные данные файла
             return file.read()
     except Exception as ex:
-        #  Логируем ошибку при чтении файла
+        # Логирование ошибки чтения файла
         logger.error(f"Error reading file {file_path}", ex, exc_info=True)
-        return None
+        return
 
 
-def random_image(root_path: str | Path) -> str | None:
-    """
-    Рекурсивно ищет случайное изображение в указанной директории и возвращает его путь.
+def random_image(root_path: Union[str, Path]) -> str | None:
+    """Recursively search for a random image in the specified directory and return its path.
 
-    :param root_path: Директория для поиска изображений.
-    :return: Путь к случайному изображению или ``None``, если изображения не найдены.
+    :param root_path: The directory to search for images.
+    :return: The path to a random image or ``None`` if no images are found.
 
     :example:
         >>> random_image("path/to/images")
         'path/to/images/subfolder/random_image.png'
     """
-    #  Преобразуем путь к директории в объект Path
+    # Проверка, что `root_path` является строкой или экземпляром Path
+    if not isinstance(root_path, (str, Path)):
+        logger.error(f"Invalid argument type: root_path must be a string or Path, not {type(root_path)}")
+        return None
     root_path = Path(root_path)
-    #  Список расширений файлов изображений
     image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
-    #  Список для хранения путей к файлам изображений
-    image_files = []
-
-    #  Рекурсивно ищем файлы изображений
-    for file_path in root_path.rglob("*"):
-        #  Проверяем, является ли путь файлом и имеет ли расширение изображения
-        if file_path.is_file() and file_path.suffix.lower() in image_extensions:
-            #  Добавляем путь к файлу в список
-            image_files.append(file_path)
-
-    #  Проверяем, найдены ли изображения
+    # Код формирует список файлов изображений
+    image_files = [
+        file_path
+        for file_path in root_path.rglob("*")
+        if file_path.is_file() and file_path.suffix.lower() in image_extensions
+    ]
+    # Проверка наличия файлов
     if not image_files:
         logger.warning(f"No images found in {root_path}.")
         return None
 
-    #  Возвращаем путь к случайному изображению
+    # Возврат случайного пути к изображению
     return str(random.choice(image_files))
+
+if __name__ == '__main__':
+    async def main():
+        # Test save_png_from_url
+        image_url = "https://www.easygifanimator.net/images/samples/video-to-gif-sample.gif"
+        saved_file = await save_png_from_url(image_url, "test_image_from_url.gif")
+        if saved_file:
+            print(f"Image from URL saved to: {saved_file}")
+
+        # Test save_png
+        with open("test_image_from_url.gif", "rb") as f:
+            image_data = f.read()
+        saved_file_png = await save_png(image_data, "test_image.png")
+        if saved_file_png:
+              print(f"Image saved to: {saved_file_png}")
+
+        # Test get_image_data
+        retrieved_data = get_image_data("test_image.png")
+        if retrieved_data:
+           print(f"Image data retrieved successfully. Data size: {len(retrieved_data)}")
+
+
+        # Test random_image
+        random_image_path = random_image(".")
+        if random_image_path:
+          print(f"Random image found at: {random_image_path}")
+        else:
+            print("No images found.")
+
+    asyncio.run(main())
 ```
-
-## Внесённые изменения
-
-1.  **Добавлены импорты:**
-    *   `from src.logger.logger import logger` для логирования.
-    *   `from src.utils.printer import pprint` для печати отладочной информации.
-2.  **Обновлены Docstrings:**
-    *   Добавлены и улучшены описания модулей, функций и параметров в формате reStructuredText (RST).
-    *   Добавлены примеры использования для каждой функции.
-3.  **Изменена обработка ошибок:**
-    *   Убраны лишние `try-except` блоки и заменены на `logger.error` для более эффективной обработки.
-    *   Логирование ошибок вынесено в отдельные блоки.
-4.  **Использование `Path`:**
-    *   Используется `Path` для работы с путями файлов.
-5.  **Улучшен код сохранения изображений:**
-    *   Добавлена проверка размера сохраненного файла.
-    *   Удален лишний импорт `os`
-6.  **Форматирование кода:**
-    *   Применен более читаемый стиль форматирования.
-7.  **Добавлены комментарии к коду:**
-    *   Добавлены подробные комментарии для пояснения работы каждого блока кода.
-
-## Оптимизированный код
-
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-Модуль для работы с изображениями.
-=========================================================================================
-
-Этот модуль предоставляет асинхронные функции для загрузки, сохранения и получения данных изображений.
-
-Функции:
-    - :func:`save_png_from_url`
-    - :func:`save_png`
-    - :func:`get_image_data`
-    - :func:`random_image`
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    import asyncio
-    from pathlib import Path
-    from src.utils.image import save_png_from_url, save_png, get_image_data, random_image
-
-    async def main():
-        # Загрузка и сохранение изображения по URL
-        image_path = await save_png_from_url("https://example.com/image.png", "local_image.png")
-        if image_path:
-            print(f"Изображение сохранено: {image_path}")
-
-        # Сохранение изображения из байтов
-        with open("example_image.png", "rb") as f:
-            image_data = f.read()
-        saved_image_path = await save_png(image_data, "saved_image.png")
-        if saved_image_path:
-           print(f"Изображение сохранено: {saved_image_path}")
-
-        # Получение данных изображения
-        image_data = get_image_data("saved_image.png")
-        if image_data:
-            print(f"Данные изображения: {image_data[:20]}...")
-
-        # Получение случайного изображения
-        random_image_path = random_image("path/to/images")
-        if random_image_path:
-           print(f"Случайное изображение: {random_image_path}")
-
-    if __name__ == "__main__":
-        asyncio.run(main())
-
-"""
-#  Импортируем необходимые модули
-MODE = 'dev'
-import aiohttp #  используется для асинхронных HTTP запросов
-import aiofiles #  используется для асинхронных файловых операций
-from PIL import Image #  используется для работы с изображениями
-from pathlib import Path #  используется для работы с путями файлов и директорий
-import asyncio #  используется для асинхронного программирования
-import random #  используется для генерации случайных чисел
-from src.logger.logger import logger #  используется для логирования ошибок и отладки
-from src.utils.printer import pprint #  используется для печати отладочной информации
-
-
-async def save_png_from_url(
-    image_url: str, filename: str | Path
-) -> str | None:
-    """
-    Загружает изображение по URL и сохраняет его локально в формате PNG асинхронно.
-
-    :param image_url: URL изображения для загрузки.
-    :param filename: Имя файла для сохранения изображения.
-    :return: Путь к сохраненному файлу или ``None``, если операция не удалась.
-
-    :example:
-        >>> asyncio.run(save_png_from_url("https://example.com/image.png", "local_image.png"))
-        'local_image.png'
-    """
-    try:
-        #  Инициализируем асинхронную сессию для выполнения HTTP запроса
-        async with aiohttp.ClientSession() as session:
-            #  Выполняем GET запрос по URL
-            async with session.get(image_url) as response:
-                #  Проверяем статус ответа, выбрасывая исключение в случае ошибки
-                response.raise_for_status()
-                #  Читаем данные изображения из ответа
-                image_data = await response.read()
-    except Exception as ex:
-        #  Логируем ошибку при загрузке изображения
-        logger.error("Error downloading image", ex, exc_info=True)
-        return None
-
-    #  Сохраняем полученные данные изображения в файл
-    return await save_png(image_data, filename)
-
-
-async def save_png(image_data: bytes, file_name: str | Path) -> str | None:
-    """
-    Сохраняет изображение в формате PNG асинхронно.
-
-    :param image_data: Бинарные данные изображения.
-    :param file_name: Имя файла для сохранения изображения.
-    :return: Путь к сохраненному файлу или ``None``, если операция не удалась.
-
-    :example:
-        >>> with open("example_image.png", "rb") as f:
-        ...     image_data = f.read()
-        >>> asyncio.run(save_png(image_data, "saved_image.png"))
-        'saved_image.png'
-    """
-    #  Преобразуем имя файла в объект Path
-    file_path = Path(file_name)
-
-    try:
-        #  Создаем необходимые директории для файла, если их нет
-        file_path.parent.mkdir(parents=True, exist_ok=True)
-
-        #  Открываем файл для записи в бинарном режиме асинхронно
-        async with aiofiles.open(file_path, "wb") as file:
-            #  Записываем данные изображения в файл
-            await file.write(image_data)
-
-        #  Проверяем, был ли создан файл
-        if not file_path.exists():
-            logger.error(f"File {file_path} was not created.")
-            return None
-
-        #  Открываем изображение с помощью PIL
-        image = Image.open(file_path)
-        #  Сохраняем изображение в формате PNG
-        image.save(file_path, "PNG")
-
-        #  Проверяем размер файла после сохранения
-        if file_path.stat().st_size == 0:
-            logger.error(f"File {file_path} saved, but its size is 0 bytes.")
-            return None
-
-    except Exception as ex:
-        #  Логируем критическую ошибку при сохранении файла
-        logger.critical(f"Failed to save file {file_path}", ex, exc_info=True)
-        return None
-
-    #  Возвращаем путь к сохраненному файлу в виде строки
-    return str(file_path)
-
-
-def get_image_data(file_name: str | Path) -> bytes | None:
-    """
-    Получает бинарные данные файла, если он существует.
-
-    :param file_name: Имя файла для чтения.
-    :return: Бинарные данные файла или ``None``, если файл не найден или произошла ошибка.
-
-    :example:
-        >>> get_image_data("saved_image.png")
-        b'\\x89PNG\\r\\n...'
-    """
-    #  Преобразуем имя файла в объект Path
-    file_path = Path(file_name)
-
-    #  Проверяем существование файла
-    if not file_path.exists():
-        logger.error(f"File {file_path} does not exist.")
-        return None
-
-    try:
-        #  Открываем файл для чтения в бинарном режиме
-        with open(file_path, "rb") as file:
-            #  Возвращаем бинарные данные файла
-            return file.read()
-    except Exception as ex:
-        #  Логируем ошибку при чтении файла
-        logger.error(f"Error reading file {file_path}", ex, exc_info=True)
-        return None
-
-
-def random_image(root_path: str | Path) -> str | None:
-    """
-    Рекурсивно ищет случайное изображение в указанной директории и возвращает его путь.
-
-    :param root_path: Директория для поиска изображений.
-    :return: Путь к случайному изображению или ``None``, если изображения не найдены.
-
-    :example:
-        >>> random_image("path/to/images")
-        'path/to/images/subfolder/random_image.png'
-    """
-    #  Преобразуем путь к директории в объект Path
-    root_path = Path(root_path)
-    #  Список расширений файлов изображений
-    image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
-    #  Список для хранения путей к файлам изображений
-    image_files = []
-
-    #  Рекурсивно ищем файлы изображений
-    for file_path in root_path.rglob("*"):
-        #  Проверяем, является ли путь файлом и имеет ли расширение изображения
-        if file_path.is_file() and file_path.suffix.lower() in image_extensions:
-            #  Добавляем путь к файлу в список
-            image_files.append(file_path)
-
-    #  Проверяем, найдены ли изображения
-    if not image_files:
-        logger.warning(f"No images found in {root_path}.")
-        return None
-
-    #  Возвращаем путь к случайному изображению
-    return str(random.choice(image_files))

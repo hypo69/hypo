@@ -1,80 +1,70 @@
-# Улучшенный код
+# Анализ кода модуля `__init__.py`
+
+**Качество кода**
+8
+- Плюсы
+    - Присутствует описание модуля в формате docstring.
+    - Код структурирован и легко читаем.
+    - Импорты соответствуют содержанию модуля.
+- Минусы
+    - Отсутствует подробное описание переменных.
+    - Нет RST комментариев для переменных.
+    - Нет обработки ошибок.
+    - Используется устаревший shebang (`#! venv/Scripts/python.exe`) .
+
+**Рекомендации по улучшению**
+
+1.  Добавить RST комментарии для переменной `MODE` для улучшения документации.
+2.  Удалить устаревшие shebang.
+3.  Добавить логирование ошибок, если это применимо к данному модулю.
+4.  Проверить необходимость переменной `MODE` и, возможно, перенести её в более подходящее место.
+
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
+
 """
-Модуль для работы с продуктами
+Модуль для управления продуктами
 =========================================================================================
 
-Этот модуль содержит классы и функции для работы с продуктами, включая их поля и перевод.
+Этот модуль содержит классы и функции для работы с продуктами, их полями и переводом полей.
 
-Внешние классы и атрибуты:
+Содержит следующие классы и атрибуты:
+
 - :class:`Product`: Методы и атрибуты продукта. Подробное описание в `product.py`.
 - :class:`ProductFields`: Поля продукта. Подробное описание в `product_fields.py`.
-- :data:`record`: Словарь полей продукта в плоском формате (без вложенности).
-- :func:`translate_presta_fields_dict`: Функция, которая переводит многоязычные поля `ProductFields`.
+- :attr:`record`: Словарь полей продукта в плоском формате (без вложенности).
+- :func:`translate_presta_fields_dict`: Функция, переводящая многоязычные поля `ProductFields`.
 
 Пример использования
 --------------------
-
-Пример импорта классов и функций:
 
 .. code-block:: python
 
     from src.product import Product, ProductFields, translate_presta_fields_dict
 
+    # Пример создания экземпляра Product
+    # product = Product(...)
+
+    # Пример доступа к полям продукта
+    # fields = ProductFields()
+    # print(fields.name)
+
+    # Пример перевода полей
+    # translated_fields = translate_presta_fields_dict(fields, 'ru')
+
 """
+from src.logger.logger import logger
+
+#: Режим работы модуля: 'dev' (разработка), 'prod' (продакшен).
 MODE = 'dev'
 
-from .product import Product
-from .product_fields.product_fields import ProductFields
-from .product_fields.product_fields_translator import translate_presta_fields_dict
+try:
+    from .product import Product
+    from .product_fields.product_fields import ProductFields
+    from .product_fields.product_fields_translator import translate_presta_fields_dict
+except ImportError as e:
+    logger.error(f'Ошибка импорта в модуле `__init__.py`: {e}')
+    raise
 ```
-
-# Внесённые изменения
-
-1.  Добавлено описание модуля в формате reStructuredText (RST).
-2.  Добавлены описания для внешних классов и атрибутов в формате RST.
-3.  Добавлен пример использования в формате RST.
-4.  Сохранены все существующие комментарии.
-5.  Импорты оставлены без изменений.
-6.  Переменная `MODE` оставлена без изменений.
-
-# Оптимизированный код
-
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-"""
-Модуль для работы с продуктами
-=========================================================================================
-
-Этот модуль содержит классы и функции для работы с продуктами, включая их поля и перевод.
-
-Внешние классы и атрибуты:
-- :class:`Product`: Методы и атрибуты продукта. Подробное описание в `product.py`.
-- :class:`ProductFields`: Поля продукта. Подробное описание в `product_fields.py`.
-- :data:`record`: Словарь полей продукта в плоском формате (без вложенности).
-- :func:`translate_presta_fields_dict`: Функция, которая переводит многоязычные поля `ProductFields`.
-
-Пример использования
---------------------
-
-Пример импорта классов и функций:
-
-.. code-block:: python
-
-    from src.product import Product, ProductFields, translate_presta_fields_dict
-
-"""
-MODE = 'dev'
-
-# импорт класса Product из модуля product
-from .product import Product
-# импорт класса ProductFields из модуля product_fields.product_fields
-from .product_fields.product_fields import ProductFields
-# импорт функции translate_presta_fields_dict из модуля product_fields.product_fields_translator
-from .product_fields.product_fields_translator import translate_presta_fields_dict

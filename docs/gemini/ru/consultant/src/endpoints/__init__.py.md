@@ -1,42 +1,48 @@
-# Улучшенный код
+# Анализ кода модуля `__init__.py`
+
+**Качество кода**
+8
+- Плюсы
+    - Присутствует docstring для модуля.
+    - Объявлена переменная `MODE`.
+    - Код не содержит критических ошибок.
+- Минусы
+    - Отсутствуют импорты, которые закомментированы.
+    - Отсутствует описание модуля в формате reStructuredText (RST).
+    - Нет явного использования `logger` для логирования ошибок (хотя в данном файле его и не требуется).
+
+**Рекомендации по улучшению**
+
+1.  **Документация:**
+    - Необходимо переписать docstring модуля в формате RST.
+    - Добавить более подробное описание модуля.
+
+2.  **Импорты:**
+    - Раскомментировать импорты и проверить их необходимость или удалить, если они не нужны.
+    - Упорядочить импорты в соответствии с PEP8.
+
+3.  **Логирование:**
+    - Хотя в данном файле нет действий, требующих логирования, рекомендуется добавить импорт `logger` на случай будущего использования.
+
+**Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-"""
-Модуль endpoints
-=================
-
-Этот модуль содержит инициализацию для различных endpoints.
 
 """
+Модуль инициализации endpoints
+=========================================================================================
+
+Этот модуль является точкой входа для всех endpoints приложения.
+Он определяет переменную `MODE`, которая используется для настройки окружения.
+Модуль может импортировать другие модули из поддиректорий для расширения функциональности endpoints.
+"""
+
+from src.logger.logger import logger
+
 MODE = 'dev'
-
-
-# from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
-# from .kazarinov import KazarinovTelegramBot
-```
-
-# Внесённые изменения
-- Добавлен docstring модуля в формате reStructuredText (RST).
-- Сохранены существующие комментарии без изменений.
-- Добавлены отступы для docstring.
--  Комментарии после `#` сохранены без изменений.
-
-# Оптимизированный код
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-"""
-Модуль endpoints
-=================
-
-Этот модуль содержит инициализацию для различных endpoints.
-
-"""
-MODE = 'dev'
-
 
 # from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
 # from .kazarinov import KazarinovTelegramBot

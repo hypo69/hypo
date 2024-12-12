@@ -1,78 +1,61 @@
-## Улучшенный код
+# Анализ кода модуля `__init__`
+
+**Качество кода**
+8
+ -  Плюсы
+    - Код содержит описание модуля в docstring.
+    - Код импортирует необходимые классы из других модулей.
+    - Код устанавливает переменную `MODE`.
+ -  Минусы
+    - Отсутствуют reStructuredText (RST) комментарии.
+    - Отсутствуют комментарии к переменной `MODE`.
+    - Не используется логирование.
+    - Нет пояснений для чего используется `MODE = 'dev'`.
+    - Не описан синтаксис docstring.
+
+**Рекомендации по улучшению**
+
+1.  Добавить reStructuredText (RST) комментарии к модулю, переменной `MODE`, импортам и вообще ко всему коду.
+2.  Добавить пояснение для чего используется `MODE = 'dev'`.
+3.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+4.  Избегать избыточного использования стандартных блоков `try-except`.
+
+**Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для интеграции с различными моделями ИИ.
-================================================
+Модуль для интеграции с различными моделями ИИ
+=========================================================================================
 
-Этот модуль предоставляет интерфейсы для работы с моделями Google Gemini и OpenAI.
-Он включает в себя классы для упрощения взаимодействия с этими моделями.
+Этот модуль обеспечивает интерфейс для работы с различными моделями ИИ,
+такими как Google Gemini и OpenAI.
 
-Пример использования
---------------------
-
-Пример импорта и использования классов из этого модуля:
-
-.. code-block:: python
-
-   from src.ai import GoogleGenerativeAI, OpenAIModel
-
-   # Пример создания экземпляра класса GoogleGenerativeAI
-   gemini_model = GoogleGenerativeAI(api_key="YOUR_GEMINI_API_KEY")
-
-   # Пример создания экземпляра класса OpenAIModel
-   openai_model = OpenAIModel(api_key="YOUR_OPENAI_API_KEY")
-
+:platform: Windows, Unix
+:synopsis: Модуль интерфейса моделей ИИ.
 """
-from src.logger.logger import logger # импорт для логирования
+from src.logger.logger import logger # добавление импорта для логирования
+
+#: Режим работы приложения.
+#: Может принимать значения 'dev' для разработки или 'prod' для продакшена.
 MODE = 'dev'
 
-from .gemini import GoogleGenerativeAI
-from .openai import OpenAIModel
-```
 
-## Внесённые изменения
-1.  Добавлен импорт `from src.logger.logger import logger` для логирования ошибок.
-2.  Добавлено описание модуля в формате RST.
-3.  Комментарии к модулю переписаны в формате reStructuredText (RST).
-4.  Убраны лишние комментарии в начале файла.
+try:
+    # Импорт класса GoogleGenerativeAI из модуля gemini
+    from .gemini import GoogleGenerativeAI
+except ImportError as e:
+    logger.error(f"Не удалось импортировать GoogleGenerativeAI: {e}")
+    GoogleGenerativeAI = None # Если импорт не удался, присваиваем None
 
-## Оптимизированный код
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
 
-"""
-Модуль для интеграции с различными моделями ИИ.
-================================================
-
-Этот модуль предоставляет интерфейсы для работы с моделями Google Gemini и OpenAI.
-Он включает в себя классы для упрощения взаимодействия с этими моделями.
-
-Пример использования
---------------------
-
-Пример импорта и использования классов из этого модуля:
-
-.. code-block:: python
-
-   from src.ai import GoogleGenerativeAI, OpenAIModel
-
-   # Пример создания экземпляра класса GoogleGenerativeAI
-   gemini_model = GoogleGenerativeAI(api_key="YOUR_GEMINI_API_KEY")
-
-   # Пример создания экземпляра класса OpenAIModel
-   openai_model = OpenAIModel(api_key="YOUR_OPENAI_API_KEY")
-
-"""
-from src.logger.logger import logger # импорт для логирования
-MODE = 'dev'
-
-from .gemini import GoogleGenerativeAI
-from .openai import OpenAIModel
-```
+try:
+    # Импорт класса OpenAIModel из модуля openai
+    from .openai import OpenAIModel
+except ImportError as e:
+    logger.error(f"Не удалось импортировать OpenAIModel: {e}")
+    OpenAIModel = None  # Если импорт не удался, присваиваем None
 ```

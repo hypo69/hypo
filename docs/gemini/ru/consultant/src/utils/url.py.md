@@ -1,70 +1,108 @@
-# Улучшенный код
+# Анализ кода модуля `url.py`
+
+**Качество кода**
+9
+- Плюсы
+    - Код хорошо структурирован и легко читается.
+    - Используется `urllib.parse` для парсинга URL и `validators` для проверки валидности URL.
+    - Функция `extract_url_params` корректно извлекает параметры запроса из URL.
+    - Функция `is_url` проверяет, является ли строка валидным URL.
+    - Присутствует блок `if __name__ == "__main__":` для тестирования функциональности модуля.
+    - Код имеет docstring для модуля и функций.
+    - Код соответствует PEP 8.
+- Минусы
+    - Отсутствует логирование ошибок.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Нет обработки исключений в функциях `extract_url_params` и `is_url`.
+    - Не все комментарии соответствуют формату reStructuredText (RST).
+    - Использованы комментарии `#` в теле кода (не docstring), нужно убрать и добавить  в docstring.
+
+**Рекомендации по улучшению**
+1.  Добавить логирование ошибок с использованием `from src.logger.logger import logger`.
+2.  Использовать `try-except` блоки для обработки исключений в функциях `extract_url_params` и `is_url` и логировать ошибки.
+3.  Преобразовать комментарии `#` в docstring в формате RST.
+4.  Удалить  комментарии `#` в теле кода.
+5.  Удалить переменные окружения для запуска интерпретатора `#! venv/Scripts/python.exe` `#! venv/bin/python/python3.12`
+
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
 
 """
-.. module:: src.utils.string.url
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность URL.
+Модуль для работы с URL строками.
+=================================
+
+Этот модуль предоставляет функции для извлечения параметров запроса из URL и проверки валидности URL.
+
+Функции:
+    - :func:`extract_url_params`: Извлекает параметры из строки URL.
+    - :func:`is_url`: Проверяет, является ли строка валидным URL.
+
+Пример использования::
+
+    >>> url = 'https://example.com/path?param1=value1&param2=value2'
+    >>> params = extract_url_params(url)
+    >>> print(params)
+    {'param1': 'value1', 'param2': 'value2'}
+
+    >>> is_url('https://example.com')
+    True
+    >>> is_url('not a url')
+    False
 """
 MODE = 'dev'
 
-
 from urllib.parse import urlparse, parse_qs
 import validators
-from src.logger.logger import logger # импорт логгера
-
+from src.logger.logger import logger
 
 def extract_url_params(url: str) -> dict | None:
     """Извлекает параметры из строки URL.
 
     :param url: Строка URL для парсинга.
     :type url: str
+    :raises ValueError: Если URL не может быть распарсен.
     :return: Словарь параметров запроса и их значений или `None`, если URL не содержит параметров.
     :rtype: dict | None
     """
     try:
-        # Код исполняет парсинг URL
         parsed_url = urlparse(url)
-        # Код исполняет извлечение параметров запроса из URL
         params = parse_qs(parsed_url.query)
-
-        # Проверяем наличие параметров
         if params:
-            # Код преобразует значения параметров
             params = {k: v if len(v) > 1 else v[0] for k, v in params.items()}
             return params
         return None
-    except Exception as ex:
-        logger.error(f'Ошибка при извлечении параметров из URL: {url}', exc_info=ex)
+    except ValueError as e:
+        logger.error(f'Ошибка при парсинге URL: {url}', exc_info=True)
         return None
-
+    except Exception as ex:
+        logger.error(f'Неизвестная ошибка при обработке URL: {url}', exc_info=True)
+        return None
 
 def is_url(text: str) -> bool:
     """Проверяет, является ли переданный текст валидным URL с использованием библиотеки validators.
 
     :param text: Строка для проверки.
     :type text: str
-    :return: `True`, если строка является валидным URL, иначе `False`.
+    :return: `True` если строка является валидным URL, иначе `False`.
     :rtype: bool
     """
-    # Код исполняет проверку валидности URL
-    return validators.url(text)
-
+    try:
+         return validators.url(text)
+    except Exception as ex:
+        logger.error(f'Ошибка при валидации URL: {text}', exc_info=True)
+        return False
 
 if __name__ == "__main__":
-    # Получаем строку URL от пользователя
+    # Запрос ввода URL
     url = input("Введите URL: ")
 
-    # Проверяем валидность URL
+    # Проверка валидности URL
     if is_url(url):
-        # Код исполняет извлечение параметров URL
         params = extract_url_params(url)
 
-        # Выводим параметры
+        # Вывод параметров
         if params:
             print("Параметры URL:")
             for key, value in params.items():
@@ -73,98 +111,4 @@ if __name__ == "__main__":
             print("URL не содержит параметров.")
     else:
         print("Введенная строка не является валидным URL.")
-
 ```
-
-# Внесённые изменения
-
-1.  **Добавлен импорт логгера**:
-    - Добавлен импорт `from src.logger.logger import logger` для логирования ошибок.
-2.  **Документация в формате RST**:
-    - Добавлены docstring в формате RST для функций `extract_url_params` и `is_url`, включая описание параметров и возвращаемых значений.
-    - Добавлены комментарии к модулю в формате RST.
-3.  **Обработка ошибок**:
-    - Добавлен блок `try-except` в функцию `extract_url_params` для отлова возможных исключений при парсинге URL.
-    - Используется `logger.error` для логирования ошибок с информацией об исключении.
-4.  **Комментарии**:
-    - Добавлены комментарии к строкам кода с объяснением их назначения.
-5.  **Изменения в переменных**:
-    -  Переменная `MODE` оставлена без изменений.
-6.  **Сохранение комментариев**:
-   -  Все исходные комментарии после `#` сохранены без изменений.
-
-# Оптимизированный код
-
-```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.utils.string.url
-   :platform: Windows, Unix
-   :synopsis: Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность URL.
-"""
-MODE = 'dev'
-
-
-from urllib.parse import urlparse, parse_qs
-import validators
-from src.logger.logger import logger # импорт логгера
-
-
-def extract_url_params(url: str) -> dict | None:
-    """Извлекает параметры из строки URL.
-
-    :param url: Строка URL для парсинга.
-    :type url: str
-    :return: Словарь параметров запроса и их значений или `None`, если URL не содержит параметров.
-    :rtype: dict | None
-    """
-    try:
-        # Код исполняет парсинг URL
-        parsed_url = urlparse(url)
-        # Код исполняет извлечение параметров запроса из URL
-        params = parse_qs(parsed_url.query)
-
-        # Проверяем наличие параметров
-        if params:
-            # Код преобразует значения параметров
-            params = {k: v if len(v) > 1 else v[0] for k, v in params.items()}
-            return params
-        return None
-    except Exception as ex:
-        logger.error(f'Ошибка при извлечении параметров из URL: {url}', exc_info=ex)
-        return None
-
-
-def is_url(text: str) -> bool:
-    """Проверяет, является ли переданный текст валидным URL с использованием библиотеки validators.
-
-    :param text: Строка для проверки.
-    :type text: str
-    :return: `True`, если строка является валидным URL, иначе `False`.
-    :rtype: bool
-    """
-    # Код исполняет проверку валидности URL
-    return validators.url(text)
-
-
-if __name__ == "__main__":
-    # Получаем строку URL от пользователя
-    url = input("Введите URL: ")
-
-    # Проверяем валидность URL
-    if is_url(url):
-        # Код исполняет извлечение параметров URL
-        params = extract_url_params(url)
-
-        # Выводим параметры
-        if params:
-            print("Параметры URL:")
-            for key, value in params.items():
-                print(f"{key}: {value}")
-        else:
-            print("URL не содержит параметров.")
-    else:
-        print("Введенная строка не является валидным URL.")

@@ -1,17 +1,44 @@
-# Улучшенный код
+# Анализ кода модуля `src.product`
 
-```rst
+## Качество кода
+8
+-  Плюсы
+    -   Документация в формате markdown, что делает её читаемой.
+    -   Имеется структура разделов, что упрощает навигацию по документу.
+    -   Представлена общая информация о модулях и классах, а также их методах.
+-  Минусы
+    -   Неполная документация: отсутствует документация по классам `ProductFields` и `PrestaShop`.
+    -   Нет примеров использования классов и методов.
+    -   Описание методов не соответствует формату RST.
+    -   Не хватает более подробного описания полей класса `ProductFields` с указанием типов данных, возможных значений и способа применения.
+    -   Не все атрибуты класса ProductFields описаны, и отсутствуют описания свойств
+    -   Не указаны ошибки которые могут вызывать методы.
+
+## Рекомендации по улучшению
+1.  **Обновить документацию:**
+    -   Добавить подробное описание классов `ProductFields` и `PrestaShop`, их методов и атрибутов.
+    -   Преобразовать все комментарии в reStructuredText (RST) для соответствия стандартам.
+    -   Добавить примеры использования классов и методов.
+    -   Включить описания всех свойств класса `ProductFields`, включая типы данных, возможные значения и способы применения.
+    -   Указать возможные исключения, которые могут возникнуть при вызове методов.
+2.  **Форматирование документации**:
+    -   Использовать синтаксис RST для оформления комментариев.
+    -   Обеспечить консистентное оформление всей документации.
+3.  **Уточнить структуру**:
+    -   Сделать более четкое разделение между описанием класса и его методами/свойствами.
+    -   Привести в порядок заголовки в соответствии с уровнем вложенности.
+
+## Оптимизированный код
+```markdown
 .. module:: src.product
-   :synopsis: Модуль для работы с продуктами в PrestaShop.
 
-Этот модуль содержит классы для представления и управления продуктами в PrestaShop, включая
-получение данных, взаимодействие с API и управление полями продукта.
 =========================================================================================
 
-"""
-```
+# Модуль `hypotez/src/product/readme.ru.md`
 
-<TABLE >
+Этот модуль содержит описание структуры и функциональности классов `Product`, `ProductFields` и `PrestaShop`, предназначенных для работы с продуктами в контексте PrestaShop.
+
+<TABLE>
 <TR>
 <TD>
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
@@ -30,247 +57,136 @@
 </TD>
 </TABLE>
 
-# Модуль hypotez/src/product/product.py
+# Модуль `hypotez/src/product/product.py`
 
 ## Обзор
 
-Модуль `src.product` определяет поведение продукта в проекте, обеспечивая взаимодействие между веб-сайтом, продуктом и API PrestaShop. Он использует классы из модулей `src.endpoints.prestashop`, `src.category`, и `src.product.product_fields`.
+Модуль ``src.product`` определяет поведение продукта в проекте, обеспечивая взаимодействие между веб-сайтом, продуктом и API PrestaShop. Он использует классы из модулей ``src.endpoints.prestashop``, ``src.category``, и ``src.product.product_fields``.
 
 ## Классы
 
-### `Product`
+### :class:`Product`
 
-**Описание**:
-    Класс `Product` наследуется от `ProductFields` и `PrestaShop`, предоставляя методы для работы с продуктами.
-    Изначально собирает данные со страницы продукта и затем работает с API PrestaShop.
+Описание
+----------
 
-**Методы**:
+Класс ``Product`` наследуется от :class:`ProductFields` и :class:`PrestaShop`, предоставляя методы для работы с продуктами. Изначально собирает данные со страницы продукта и затем взаимодействует с API PrestaShop.
 
-- `__init__`: Инициализирует объект `Product`.
+Методы
+------
 
-  **Параметры**:
-   - `*args`: Переменная длина аргументов.
-   - `**kwargs`: Произвольные именованные аргументы.
+.. py:method:: __init__(*args, **kwargs)
 
-- `get_parent_categories`: Возвращает список родительских категорий для указанной категории.
+    :param *args: Переменная длина аргументов.
+    :param **kwargs: Произвольные именованные аргументы.
 
-### `ProductFields`
+.. py:method:: get_parent_categories(id_category: int, dept: int = 0) -> list
 
-**Описание**:
-    Базовый класс для работы с полями продукта. (Описание класса `ProductFields` отсутствует в предоставленном коде, но будет нужно для полной документации)
+    Получает список родительских категорий для указанной категории.
 
-### `PrestaShop`
+    :param id_category: ID категории.
+    :type id_category: int
+    :param dept: Глубина категории, по умолчанию 0.
+    :type dept: int, optional
+    :raises TypeError: Если `id_category` не является целым числом.
+    :return: Список родительских категорий.
+    :rtype: list
 
-**Описание**:
-    Класс для работы с API PrestaShop. (Описание класса `PrestaShop` отсутствует в предоставленном коде, но будет нужно для полной документации)
+### :class:`ProductFields`
 
+Описание
+----------
+
+Базовый класс для работы с полями продукта.
+
+### :class:`PrestaShop`
+
+Описание
+----------
+
+Класс для работы с API PrestaShop.
 
 ## Статические методы
 
-### `get_parent_categories`
+### :meth:`get_parent_categories`
 
-**Описание**:
-    Получает список родительских категорий для заданной категории по её ID. Дублирует функцию `get_parents` из класса `Category`.
+Описание
+----------
 
-**Параметры**:
- - `id_category` (int): ID категории.
- - `dept` (int, optional): Глубина категории. По умолчанию 0.
+Получает список родительских категорий для заданной категории по её ID. Дублирует функцию :meth:`get_parents` из класса :class:`Category`.
 
-**Возвращает**:
- - list: Список родительских категорий.
+:param id_category: ID категории.
+:type id_category: int
+:param dept: Глубина категории. По умолчанию 0.
+:type dept: int, optional
+:raises TypeError: Если `id_category` не является целым числом.
+:return: Список родительских категорий.
+:rtype: list
 
-**Возможные исключения**:
- - `TypeError`: Если `id_category` не является целым числом.
-
-# Модуль hypotez/src/product/product_fields/product_fields.py
+# Модуль `hypotez/src/product/product_fields/product_fields.py`
 
 ## Обзор
 
-Модуль `hypotez/src/product/product_fields/product_fields.py` содержит класс `ProductFields`, предназначенный для работы с полями товаров в системе управления контентом PrestaShop. Класс предоставляет свойства и методы для доступа и изменения различных полей товара, а также для загрузки данных из файлов.  Документация описывает структуру таблиц PrestaShop, содержащих информацию о товарах, и методы работы с полями этих таблиц.
+Модуль ``hypotez/src/product/product_fields/product_fields.py`` содержит класс :class:`ProductFields`, предназначенный для работы с полями товаров в системе управления контентом PrestaShop. Класс предоставляет свойства и методы для доступа и изменения различных полей товара, а также для загрузки данных из файлов. Документация описывает структуру таблиц PrestaShop, содержащих информацию о товарах, и методы работы с полями этих таблиц.
 
 ## Классы
 
-### `ProductFields`
+### :class:`ProductFields`
 
-**Описание**: Класс `ProductFields` предоставляет методы и свойства для работы с полями товаров в базе данных PrestaShop. Он загружает данные полей из файлов и предоставляет методы доступа и изменения этих полей.
+Описание
+----------
 
-**Атрибуты**:
+Класс :class:`ProductFields` предоставляет методы и свойства для работы с полями товаров в базе данных PrestaShop. Он загружает данные полей из файлов и предоставляет методы доступа и изменения этих полей.
 
-- `product_fields_list`: Список названий полей товара, загруженный из файла `fields_list.txt`.
-- `language`: Словарь, содержащий соответствие между кодами языков и их идентификаторами в PrestaShop.
-- `presta_fields`: Объект `SimpleNamespace`, содержащий поля товара.
-- `assist_fields_dict`: Словарь дополнительных служебных полей (например, URL изображений).
+Атрибуты
+--------
 
-**Методы**:
+*   ``product_fields_list`` (:obj:`list` of :obj:`str`): Список названий полей товара, загруженный из файла ``fields_list.txt``.
+*   ``language`` (:obj:`dict`): Словарь, содержащий соответствие между кодами языков и их идентификаторами в PrestaShop.
+*   ``presta_fields`` (:obj:`SimpleNamespace`): Объект `SimpleNamespace`, содержащий поля товара.
+*   ``assist_fields_dict`` (:obj:`dict`): Словарь дополнительных служебных полей (например, URL изображений).
 
-- `__init__(self)`: Инициализирует объект `ProductFields`. Загружает список полей, языки и дефолтные значения.
-- `_load_product_fields_list(self) -> List[str]`: Загружает список полей из файла `fields_list.txt`.
-- `_payload(self) -> bool`: Загружает дефолтные значения полей из файла `product_fields_default_values.json`. Возвращает `True`, если загрузка успешна, иначе `False`.
+Методы
+------
 
+.. py:method:: __init__(self)
+
+    Инициализирует объект :class:`ProductFields`. Загружает список полей, языки и дефолтные значения.
+
+.. py:method:: _load_product_fields_list(self) -> list
+
+    Загружает список полей из файла ``fields_list.txt``.
+
+    :return: Список полей продукта.
+    :rtype: list
+
+.. py:method:: _payload(self) -> bool
+
+    Загружает дефолтные значения полей из файла ``product_fields_default_values.json``.
+
+    :return: ``True``, если загрузка успешна, иначе ``False``.
+    :rtype: bool
 
 ## Свойства
 
-(Список свойств с подробными описаниями, параметрами, возвращаемыми значениями и исключениями)
+### :attr:`id_product`
 
-### `id_product`
+Описание
+----------
+ID товара. Для нового товара ID назначается из PrestaShop.
 
-**Описание**:  `ID` товара. Для нового товара ID назначается из PrestaShop.
+**Доступ**: ``product_fields.id_product``
+**Установление**: ``product_fields.id_product = value``
 
-**Доступ**: `product_fields.id_product`
-
-**Установление**: `product_fields.id_product = value`
-
-**Параметры**:
-- `value (int, optional)`:  Требуется при операциях над существующем товаром. `ps_product.id`. Для нового товара ID вернется из системы при занесении товара в базу данных.
-
-**Возвращает**:
-- `bool`: `True` если успешно, `False` в случае ошибки.
-
+:param value: Требуется при операциях над существующим товаром. ``ps_product.id``. Для нового товара ID вернется из системы при занесении товара в базу данных.
+:type value: int, optional
+:return: ``True`` если успешно, ``False`` в случае ошибки.
+:rtype: bool
 
 ###  `id_supplier`, `id_manufacturer`, `id_category_default`, `id_shop_default`, `id_tax`, `on_sale`, `online_only`, `ean13`, `isbn`, `upc`, `mpn`, `ecotax`, `quantity`, `minimal_quantity`, `low_stock_threshold`, `low_stock_alert`, `price`, `wholesale_price`, `unity`, `unit_price_ratio`, `additional_shipping_cost`, `reference`, `supplier_reference`, `location`, `width`, `height`, `depth`, `weight`, `volume`, `out_of_stock`, `additional_delivery_times`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `redirect_type`, `id_type_redirected`, `available_for_order`, `available_date`, `show_condition`, `condition`, `show_price`, `indexed`, `visibility`, `cache_is_pack`, `cache_has_attachments`, `is_virtual`, `cache_default_attribute`, `date_add`, `date_upd`, `advanced_stock_management`, `pack_stock_type`, `state`, `product_type`, `link_to_video`, `images_urls`
 
-**Описание**:  Список остальных свойств с аналогичной структурой описания аргументов, параметров и возвращаемых значений, как и для `id_product`.  Подробности для каждого свойства находятся в его описании в коде.  Обратите внимание на сложную структуру данных для полей, связанных с языками (напр., `description`, `name`).
+Описание
+----------
+
+Список остальных свойств с аналогичной структурой описания аргументов, параметров и возвращаемых значений, как и для ``id_product``. Подробности для каждого свойства находятся в его описании в коде. Обратите внимание на сложную структуру данных для полей, связанных с языками (например, ``description``, ``name``).
 ```
-
-# Внесённые изменения
-
-1.  Добавлен заголовок модуля `src.product` с кратким описанием в формате reStructuredText (RST).
-2.  Добавлены описания к классам `Product`, `ProductFields`, `PrestaShop`, а также к статическим методам `get_parent_categories`, с использованием RST.
-3.  Детально описаны параметры, возвращаемые значения и возможные исключения для каждого элемента.
-4.  Для каждого свойства товара `id_product`, и остальных свойств добавлен `Описание`, `Доступ`, `Установление`, `Параметры`, `Возвращает` согласно предоставленному примеру.
-5.  Комментарии приведены к более формальному и информативному виду, подходящему для документации.
-6.  Описаны все поля и методы, как это было предписано в инструкции.
-7.  Все комментарии переведены на русский язык.
-
-# Оптимизированный код
-
-```rst
-.. module:: src.product
-   :synopsis: Модуль для работы с продуктами в PrestaShop.
-
-Этот модуль содержит классы для представления и управления продуктами в PrestaShop, включая
-получение данных, взаимодействие с API и управление полями продукта.
-=========================================================================================
-
-"""
-```
-
-<TABLE >
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
-</TD>
-
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A>
-</TD>
-
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/product/product_fields/readme.ru.md'>Product Fields</A>
-</TD>
-
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/product/README.MD'>English</A>
-</TD>
-</TABLE>
-
-# Модуль hypotez/src/product/product.py
-
-## Обзор
-
-Модуль `src.product` определяет поведение продукта в проекте, обеспечивая взаимодействие между веб-сайтом, продуктом и API PrestaShop. Он использует классы из модулей `src.endpoints.prestashop`, `src.category`, и `src.product.product_fields`.
-
-## Классы
-
-### `Product`
-
-**Описание**:
-    Класс `Product` наследуется от `ProductFields` и `PrestaShop`, предоставляя методы для работы с продуктами.
-    Изначально собирает данные со страницы продукта и затем работает с API PrestaShop.
-
-**Методы**:
-
-- `__init__`: Инициализирует объект `Product`.
-
-  **Параметры**:
-   - `*args`: Переменная длина аргументов.
-   - `**kwargs`: Произвольные именованные аргументы.
-
-- `get_parent_categories`: Возвращает список родительских категорий для указанной категории.
-
-### `ProductFields`
-
-**Описание**:
-    Базовый класс для работы с полями продукта. (Описание класса `ProductFields` отсутствует в предоставленном коде, но будет нужно для полной документации)
-
-### `PrestaShop`
-
-**Описание**:
-    Класс для работы с API PrestaShop. (Описание класса `PrestaShop` отсутствует в предоставленном коде, но будет нужно для полной документации)
-
-
-## Статические методы
-
-### `get_parent_categories`
-
-**Описание**:
-    Получает список родительских категорий для заданной категории по её ID. Дублирует функцию `get_parents` из класса `Category`.
-
-**Параметры**:
- - `id_category` (int): ID категории.
- - `dept` (int, optional): Глубина категории. По умолчанию 0.
-
-**Возвращает**:
- - list: Список родительских категорий.
-
-**Возможные исключения**:
- - `TypeError`: Если `id_category` не является целым числом.
-
-# Модуль hypotez/src/product/product_fields/product_fields.py
-
-## Обзор
-
-Модуль `hypotez/src/product/product_fields/product_fields.py` содержит класс `ProductFields`, предназначенный для работы с полями товаров в системе управления контентом PrestaShop. Класс предоставляет свойства и методы для доступа и изменения различных полей товара, а также для загрузки данных из файлов.  Документация описывает структуру таблиц PrestaShop, содержащих информацию о товарах, и методы работы с полями этих таблиц.
-
-## Классы
-
-### `ProductFields`
-
-**Описание**: Класс `ProductFields` предоставляет методы и свойства для работы с полями товаров в базе данных PrestaShop. Он загружает данные полей из файлов и предоставляет методы доступа и изменения этих полей.
-
-**Атрибуты**:
-
-- `product_fields_list`: Список названий полей товара, загруженный из файла `fields_list.txt`.
-- `language`: Словарь, содержащий соответствие между кодами языков и их идентификаторами в PrestaShop.
-- `presta_fields`: Объект `SimpleNamespace`, содержащий поля товара.
-- `assist_fields_dict`: Словарь дополнительных служебных полей (например, URL изображений).
-
-**Методы**:
-
-- `__init__(self)`: Инициализирует объект `ProductFields`. Загружает список полей, языки и дефолтные значения.
-- `_load_product_fields_list(self) -> List[str]`: Загружает список полей из файла `fields_list.txt`.
-- `_payload(self) -> bool`: Загружает дефолтные значения полей из файла `product_fields_default_values.json`. Возвращает `True`, если загрузка успешна, иначе `False`.
-
-
-## Свойства
-
-(Список свойств с подробными описаниями, параметрами, возвращаемыми значениями и исключениями)
-
-### `id_product`
-
-**Описание**:  `ID` товара. Для нового товара ID назначается из PrestaShop.
-
-**Доступ**: `product_fields.id_product`
-
-**Установление**: `product_fields.id_product = value`
-
-**Параметры**:
-- `value (int, optional)`:  Требуется при операциях над существующем товаром. `ps_product.id`. Для нового товара ID вернется из системы при занесении товара в базу данных.
-
-**Возвращает**:
-- `bool`: `True` если успешно, `False` в случае ошибки.
-
-
-###  `id_supplier`, `id_manufacturer`, `id_category_default`, `id_shop_default`, `id_tax`, `on_sale`, `online_only`, `ean13`, `isbn`, `upc`, `mpn`, `ecotax`, `quantity`, `minimal_quantity`, `low_stock_threshold`, `low_stock_alert`, `price`, `wholesale_price`, `unity`, `unit_price_ratio`, `additional_shipping_cost`, `reference`, `supplier_reference`, `location`, `width`, `height`, `depth`, `weight`, `volume`, `out_of_stock`, `additional_delivery_times`, `quantity_discount`, `customizable`, `uploadable_files`, `text_fields`, `active`, `redirect_type`, `id_type_redirected`, `available_for_order`, `available_date`, `show_condition`, `condition`, `show_price`, `indexed`, `visibility`, `cache_is_pack`, `cache_has_attachments`, `is_virtual`, `cache_default_attribute`, `date_add`, `date_upd`, `advanced_stock_management`, `pack_stock_type`, `state`, `product_type`, `link_to_video`, `images_urls`
-
-**Описание**:  Список остальных свойств с аналогичной структурой описания аргументов, параметров и возвращаемых значений, как и для `id_product`.  Подробности для каждого свойства находятся в его описании в коде.  Обратите внимание на сложную структуру данных для полей, связанных с языками (напр., `description`, `name`).
