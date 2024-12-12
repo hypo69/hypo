@@ -12,11 +12,11 @@
 </tr>
 </table>
 
-Disclamer:
+Introduction:
 ==============
 **Revolutionizing Workflows with Hypotez: Your AI-Powered Assistant**
 
-In today’s fast-paced world, businesses are constantly seeking ways to streamline operations, save time, and make smarter decisions. Enter **Hypotez** — an AI-powered assistant designed to automate routine tasks, analyze data, and simplify complex workflows across multiple industries. Whether you're in sales, HR, task management, or data analysis, Hypotez is here to transform the way you work.
+&nbsp;&nbsp;&nbsp;&nbsp;In today’s fast-paced world, businesses are constantly seeking ways to streamline operations, save time, and make smarter decisions. Enter **Hypotez** — an AI-powered assistant designed to automate routine tasks, analyze data, and simplify complex workflows across multiple industries. Whether you're in sales, HR, task management, or data analysis, Hypotez is here to transform the way you work.
 
 ---
 
