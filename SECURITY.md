@@ -1,4 +1,22 @@
-## Storing Application Settings
+<table>
+<tr>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/src/README.MD'>Code</a>
+</td>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/docs/gemini/out/README.MD'>Documentation</a> 
+</td>
+<td>
+<a href='https://github.com/hypo69/hypo/blob/master/README.RU.MD'>Русский</a>
+</td>
+</tr>
+</table>
+
+Storing Application Settings
+===============================
 
 ### 1. Storing Passwords and Credentials in KeePass
 
@@ -17,7 +35,10 @@ To securely store credentials such as passwords and API keys, use KeePass. Follo
      |   └── <googke api josn kes>.json
      ├── src
      └── ...
-     ```
+
+    - Never share the `credentials.kdbx` file with others. ❗
+    - Ensure the file is stored in a secure location accessible only to you. (The `secrets` folder in the project root is excluded from `git`).
+    - Regularly update your API keys and database passwords.     ```
 
 2. **Create Groups and Entries**:
    - Your database should contain multiple groups to organize credentials. For example:
