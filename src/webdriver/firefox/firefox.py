@@ -4,11 +4,16 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с WebDriver Firefox
+rst```
+.. module:: src.webdriver.firefox
+    :synopsys: Модуль для работы с WebDriver Firefox
+```
+
+WebDriver Firefox
 =========================================================================================
 
-Этот модуль содержит класс :class:`Firefox`, который расширяет функционал стандартного 
-`webdriver.Firefox`. Он предоставляет возможность настройки пользовательского профиля, 
+Этот модуль содержит класс :class:`Firefox`, который расширяет функционал стандартного
+`webdriver.Firefox`. Он предоставляет возможность настройки пользовательского профиля,
 запуска в режиме киоска и установки пользовательских настроек, включая прокси.
 
 Пример использования
@@ -25,8 +30,8 @@
         proxy_file_path = "path/to/proxies.txt"
 
         browser = Firefox(
-            profile_name=profile_name, 
-            geckodriver_version=geckodriver_version, 
+            profile_name=profile_name,
+            geckodriver_version=geckodriver_version,
             firefox_version=firefox_version,
             proxy_file_path=proxy_file_path
         )
@@ -34,12 +39,15 @@
         browser.quit()
 """
 
-MODE = 'dev'
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 import os
 import random
 from pathlib import Path
 from typing import Optional
+
 from selenium.webdriver import Firefox as WebDriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
@@ -47,24 +55,32 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.common.exceptions import WebDriverException
 
 from src import gs
+#  добавление импорта
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from src.webdriver.proxy import download_proxies_list, get_proxies_dict, check_proxy
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 from fake_useragent import UserAgent
-
 import header
+
+MODE = 'dev'
+
 
 class Firefox(WebDriver):
     """
     Расширение для `webdriver.Firefox` с дополнительной функциональностью.
 
     :param profile_name: Имя пользовательского профиля Firefox.
+    :type profile_name: Optional[str]
     :param geckodriver_version: Версия geckodriver.
+    :type geckodriver_version: Optional[str]
     :param firefox_version: Версия Firefox.
+    :type firefox_version: Optional[str]
     :param user_agent: Пользовательский агент в формате строки.
+    :type user_agent: Optional[str]
     :param proxy_file_path: Путь к файлу с прокси.
+    :type proxy_file_path: Optional[str]
     """
     driver_name: str = 'firefox'
 
@@ -74,55 +90,52 @@ class Firefox(WebDriver):
                  user_agent: Optional[str] = None,
                  proxy_file_path: Optional[str] = None,
                  *args, **kwargs) -> None:
+        #  объявление переменных
         service = None
         profile = None
         options = None
-
-        # Загрузка настроек Firefox
+        #  Загрузка настроек Firefox
         settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json'))
-
-        # Путь к geckodriver и бинарнику Firefox
+        #  Путь к geckodriver и бинарнику Firefox
         geckodriver_path: str = str(Path(gs.path.root, settings.executable_path.geckodriver))
         firefox_binary_path: str = str(Path(gs.path.root, settings.executable_path.firefox_binary))
-
-        # Инициализация сервиса
+        #  Инициализация сервиса
         service = Service(geckodriver_path)
-
-        # Настройка опций Firefox
+        #  Настройка опций Firefox
         options = Options()
+        #  Добавление аргументов из настроек
         if hasattr(settings, 'options') and settings.options:
             for key, value in vars(settings.options).items():
                 options.add_argument(f'--{key}={value}')
 
+        #  Добавление заголовков из настроек
         if hasattr(settings, 'headers') and settings.headers:
             for key, value in vars(settings.headers).items():
-                options.add_argument(f'--{key}={value}')
+                 options.add_argument(f'--{key}={value}')
 
-        # Установка пользовательского агента
+        #  Установка пользовательского агента
         user_agent = user_agent or UserAgent().random
         options.set_preference('general.useragent.override', user_agent)
 
+        #  Установка прокси, если включены
         if hasattr(settings, 'proxy_enabled') and settings.proxy_enabled:
             self.set_proxy(options)
 
-        # Настройка профиля
+        #  Настройка директории профиля
         profile_directory = settings.profile_directory.os if settings.profile_directory.default == 'os' else str(Path(gs.path.src, settings.profile_directory.internal))
 
         if profile_name:
             profile_directory = str(Path(profile_directory).parent / profile_name)
-
         if '%LOCALAPPDATA%' in profile_directory:
-            profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
+             profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
 
         profile = FirefoxProfile(profile_directory=profile_directory)
 
         try:
             logger.info('Запуск Firefox WebDriver')
             super().__init__(service=service, options=options)
-
-            # Выполнение пользовательских действий после инициализации драйвера
+            #  Выполнение пользовательских действий после инициализации драйвера
             self._payload()
-
         except WebDriverException as ex:
             logger.critical("""
                 ---------------------------------
@@ -131,35 +144,33 @@ class Firefox(WebDriver):
                     - Обновление Firefox
                     - Отсутствие Firefox на ОС
                 ----------------------------------""", ex)
-            ...
-            return
+            return  # Явный возврат при ошибке
         except Exception as ex:
             logger.critical('Ошибка работы Firefox WebDriver:', ex)
-            ...
-            return
+            return  # Явный возврат при ошибке
 
-    def set_proxy(self,options:Options) -> None:
+    def set_proxy(self, options: Options) -> None:
         """
-        Настройка прокси из словаря, возвращаемого get_proxies_dict
+        Настройка прокси из словаря, возвращаемого get_proxies_dict.
+
+        :param options: Опции Firefox, в которые добавляются настройки прокси.
+        :type options: Options
         """
-        # Настройка прокси из словаря, возвращаемого get_proxies_dict
+        #  Получение словаря прокси
         proxies_dict = get_proxies_dict()
-
-        all_proxies = proxies_dict.get('socks4') + proxies_dict.get('socks5')
-
-        # Попытка найти рабочий прокси
+        #  Создание списка всех прокси
+        all_proxies = proxies_dict.get('socks4', []) + proxies_dict.get('socks5', [])
+        #  Перебор прокси для поиска рабочего
         working_proxy = None
-        for proxy in random.sample(all_proxies, len(all_proxies)):  # перемешиваем прокси, чтобы случайно выбирать
+        for proxy in random.sample(all_proxies, len(all_proxies)):
             if check_proxy(proxy):
                 working_proxy = proxy
                 break
-
-        # Код выбирает случайный прокси из всех доступных типов
+        #  Настройка прокси, если он найден
         if working_proxy:
             proxy = working_proxy
-            protocol = proxy.get('protocol')  # Получение типа протокола (http, socks4, socks5)
-
-            # Настройка прокси в зависимости от протокола
+            protocol = proxy.get('protocol')
+            #  Настройка прокси в зависимости от протокола
             if protocol == 'http':
                 options.set_preference('network.proxy.type', 1)
                 options.set_preference('network.proxy.http', proxy['host'])
@@ -186,23 +197,22 @@ class Firefox(WebDriver):
             logger.warning('Нет доступных прокси в предоставленном файле.')
 
     def _payload(self) -> None:
-        """
-        Load executors for locators and JavaScript scenarios.
-        """
-        ...
-        j = JavaScript(self)
-        self.get_page_lang = j.get_page_lang
-        self.ready_state = j.ready_state
-        self.get_referrer = j.ready_state
-        self.unhide_DOM_element = j.unhide_DOM_element
-        self.window_focus = j.window_focus
+         """
+        Загружает исполнителей для локаторов и JavaScript сценариев.
+         """
+         j = JavaScript(self)
+         self.get_page_lang = j.get_page_lang
+         self.ready_state = j.ready_state
+         self.get_referrer = j.ready_state
+         self.unhide_DOM_element = j.unhide_DOM_element
+         self.window_focus = j.window_focus
 
-        execute_locator = ExecuteLocator(self)
-        self.execute_locator = execute_locator.execute_locator
-        self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
-        self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
-        self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
-        self.send_message = self.send_key_to_webelement = execute_locator.send_message
+         execute_locator = ExecuteLocator(self)
+         self.execute_locator = execute_locator.execute_locator
+         self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
+         self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
+         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
+         self.send_message = self.send_key_to_webelement = execute_locator.send_message
 
 if __name__ == "__main__":
     driver = Firefox()

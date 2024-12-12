@@ -27,17 +27,10 @@ from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-# # Глобальные настройки через отдельный объект
-# class Context:
-#     """Класс для хранения глобальных настроек."""
-#     driver: Driver = None
-#     locator: SimpleNamespace = None
-
-# # Определение декоратора для закрытия всплывающих окон
-# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# # Общее название декоратора `@close_pop_up` можно изменить 
-
-
+#
+#
+#           DECORATOR TEMPLATE. 
+#
 # def close_pop_up(value: Any = None) -> Callable:
 #     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 

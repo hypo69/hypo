@@ -25,16 +25,30 @@ from src.webdriver.driver import Driver
 from src.logger.logger import logger
 
 
-# # Глобальные настройки через отдельный объект
-# class Context:
-#     """Класс для хранения глобальных настроек."""
-#     driver: Driver = None
-#     locator: SimpleNamespace = None
+#
+#
+#           DECORATOR TEMPLATE. 
+#
+# def close_pop_up(value: Any = None) -> Callable:
+#     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-# # Определение декоратора для закрытия всплывающих окон
-# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# # Общее название декоратора `@close_pop_up` можно изменить 
+#     Args:
+#         value (Any): Дополнительное значение для декоратора.
 
+#     Returns:
+#         Callable: Декоратор, оборачивающий функцию.
+#     """
+#     def decorator(func: Callable) -> Callable:
+#         @wraps(func)
+#         async def wrapper(*args, **kwargs):
+#             try:
+#                 # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close  
+#                 ... 
+#             except ExecuteLocatorException as e:
+#                 logger.debug(f'Ошибка выполнения локатора: {e}')
+#             return await func(*args, **kwargs)  # Await the main function
+#         return wrapper
+#     return decorator
 
 # def close_pop_up(value: Any = None) -> Callable:
 #     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.

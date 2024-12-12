@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-Module for Chrome WebDriver
+```rst
+.. module:: src.webdriver.chrome
+    .. synonpsys: Module for Chrome WebDriver
+```
+Chrome WebDriver
 =========================================================================================
 
 This module contains a custom implementation of the Chrome WebDriver using Selenium. It integrates
@@ -53,19 +56,33 @@ from src.logger.logger import logger
 
 
 class Chrome(webdriver.Chrome):
-    """Class for Chrome WebDriver."""
+    """
+    Class for Chrome WebDriver.
+
+    This class extends the Selenium Chrome WebDriver and provides a singleton pattern and custom configurations.
+    """
 
     _instance = None
+    """
+    _instance (Chrome): The single instance of the Chrome WebDriver.
+    """
     driver_name: str = 'chrome'
+    """
+    driver_name (str): The name of the driver ('chrome').
+    """
     config: SimpleNamespace
+    """
+    config (SimpleNamespace): Configuration settings loaded from a JSON file.
+    """
 
     def __new__(cls, *args, **kwargs):
-        """Ensure a single instance of Chrome WebDriver.
+        """
+        Ensure a single instance of Chrome WebDriver.
 
         If an instance already exists, it calls `window_open()`.
 
-        Returns:
-            Chrome: The singleton instance of the Chrome WebDriver.
+        :return: The singleton instance of the Chrome WebDriver.
+        :rtype: Chrome
         """
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -74,81 +91,91 @@ class Chrome(webdriver.Chrome):
         return cls._instance
 
     def __init__(self, user_agent: Optional[str] = None, *args, **kwargs):
-        """Initializes the Chrome WebDriver with specified options and profile.
+        """
+        Initializes the Chrome WebDriver with specified options and profile.
 
-        Args:
-            user_agent (Optional[str]): The user-agent string to be used. Defaults to a random user agent.
+        :param user_agent: The user-agent string to be used. Defaults to a random user agent.
+        :type user_agent: Optional[str]
         """
         try:
+            # устанавливаем user_agent или генерируем случайный
             user_agent = user_agent or UserAgent().random
-            self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))  # Load settings from JSON file
+            # загружаем конфигурации из JSON файла
+            self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))
 
+            # Проверяем загружена ли конфигурация
             if not self.config:
-                logger.debug(f'Error in `chrome.json` file.')
-                ...
+                logger.debug('Error in `chrome.json` file.')
                 return
-
-            options = ChromeOptions()  # Initialize options
-            profile_directory: Path  # Set user data directory
+            # инициализируем параметры
+            options = ChromeOptions()
+            # устанавливаем путь до профиля
+            profile_directory: Path
+            # устанавливаем путь до исполняемого файла
             executable_path: str
 
             def normalize_path(path: str) -> str:
-                """Replace placeholders with actual environment paths.
+                """
+                Replace placeholders with actual environment paths.
 
-                Args:
-                    path (str): The path string with placeholders like %APPDATA% or %LOCALAPPDATA%.
-
-                Returns:
-                    str: The normalized path with environment variables substituted.
+                :param path: The path string with placeholders like %APPDATA% or %LOCALAPPDATA%.
+                :type path: str
+                :return: The normalized path with environment variables substituted.
+                :rtype: str
                 """
                 if not path:
                     return ''
                 return (
                     path.replace('%APPDATA%', os.environ.get('APPDATA', ''))
-                        .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
+                    .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
                 )
 
-            # Add arguments from options settings
+            # Добавляем аргументы из настроек options
             if hasattr(self.config, 'options') and self.config.options:
                 for key, value in vars(self.config.options).items():
                     options.add_argument(f'--{key}={value}')
 
-            # Add arguments from headers settings
+            # Добавляем аргументы из настроек headers
             if hasattr(self.config, 'headers') and self.config.headers:
                 for key, value in vars(self.config.headers).items():
                     options.add_argument(f'--{key}={value}')
 
+            # Нормализуем пути
             profile_directory = Path(gs.path.root / normalize_path(self.config.profile_directory.testing))
             binary_location = Path(gs.path.root / normalize_path(self.config.binary_location.binary))
 
+            # Проверяем наличие директории профиля и добавляем аргумент
             if profile_directory:
                 options.add_argument(f'user-data-dir={profile_directory}')
 
-            # Additional options
+             # Устанавливаем путь к исполняемому файлу
             options.binary_location = str(binary_location)
-
+            # Инициализируем сервис chrome driver
             service = ChromeService(executable_path=str(binary_location)) if binary_location else ChromeService()
 
         except Exception as ex:
             logger.error('Error setting up Chrome WebDriver:', ex)
-            ...
             return
 
         try:
+            # Инициализируем webdriver
             super().__init__(options=options, service=service)
         except WebDriverException as ex:
             logger.critical('Error initializing Chrome WebDriver:', ex)
-            ...
             return
         except Exception as ex:
             logger.critical('Chrome WebDriver crashed. General error:', ex)
-            ...
             return
 
         self._payload()
 
     def _payload(self) -> None:
-        """Load executor for locators and JavaScript scenarios."""
+        """
+        Load executor for locators and JavaScript scenarios.
+
+        This method initializes and assigns the necessary executors for web element interaction and
+        JavaScript execution within the WebDriver.
+        """
         js_executor = JavaScript(self)
         self.get_page_lang = js_executor.get_page_lang
         self.ready_state = js_executor.ready_state
@@ -162,6 +189,7 @@ class Chrome(webdriver.Chrome):
         self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
         self.send_message = self.send_key_to_webelement = execute_locator.send_message
+
 
 if __name__ == "__main__":
     driver = Chrome()

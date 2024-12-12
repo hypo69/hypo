@@ -24,12 +24,10 @@ from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
 from src.logger.logger import logger
 
-
-# # Определение декоратора для закрытия всплывающих окон
-# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# # Общее название декоратора `@close_pop_up` можно изменить 
-
-
+#
+#
+#           DECORATOR TEMPLATE. 
+#
 # def close_pop_up(value: Any = None) -> Callable:
 #     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
@@ -50,6 +48,7 @@ from src.logger.logger import logger
 #             return await func(*args, **kwargs)  # Await the main function
 #         return wrapper
 #     return decorator
+
 
 class Graber(Grbr):
     """Класс для операций захвата Morlevi."""
