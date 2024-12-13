@@ -18,30 +18,6 @@
 </TR>
 </TABLE>
 
-Вот русский перевод файла `README.md` для модуля `code_assistant`, который описывает все скрипты (`code_assistant.py`, `make_summary.py`, `onela_bot.py`, `bot_handlers.py`):
-
----
-
-```rst
-.. module:: src.endpoints.hypo69.code_assistant
-```
-
-<TABLE>
-<TR>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \ 
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> \
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD'>hypo69</A>
-</TD>
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant/README.MD'>English</A>
-</TD>
-</TR>
-</TABLE>
-
 # Модуль `Code Assistant`
 
 ## Обзор
