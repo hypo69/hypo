@@ -15,6 +15,7 @@ import json
 from packaging.version import Version
 
 from pathlib import Path
+import header
 def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,

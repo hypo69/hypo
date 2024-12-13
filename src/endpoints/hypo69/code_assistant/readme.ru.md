@@ -1,67 +1,99 @@
-[Русский](https://github.com/hypo69/hypo/blob/master/endpoints/hypo69/code_assistant/README.RU.MD)
+```rst
+.. module:: src.endpoints.hypo69.code_assistant
+```
+<TABLE >
 <TR>
 <TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] / 
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>code</A>] 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>src</A> \ 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/readme.ru.md'>endpoints</A> \
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md'>hypo69</A>
 
 </TD>
 <TD>
-[<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/ai/README.MD'>docs</A>] 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant/README.MD'>English</A>
 </TD>
-
-<TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>English</A>
-</TD>
+</TR>
 </TABLE>
 
+Вот русский перевод файла `README.md` для модуля `code_assistant`, который описывает все скрипты (`code_assistant.py`, `make_summary.py`, `onela_bot.py`, `bot_handlers.py`):
 
-# Code Assistant: Обучение модели коду проекта
+---
 
-## Описание
+```rst
+.. module:: src.endpoints.hypo69.code_assistant
+```
 
-`Code Assistant` — инструмент для взаимодействия с моделями **Gemini** и **OpenAI** для обработки исходного кода. Он выполняет задачи, такие как создание документации, проверка кода, и генерация тестов на основе кода из указанных файлов.
+<TABLE>
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \ 
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> \
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD'>hypo69</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant/README.MD'>English</A>
+</TD>
+</TR>
+</TABLE>
+
+# Модуль `Code Assistant`
+
+## Обзор
+
+Модуль `Code Assistant` представляет собой набор инструментов для взаимодействия с моделями **Gemini** и **OpenAI** с целью обработки исходного кода проекта. Он выполняет задачи, такие как создание документации, проверка кода и генерация тестов на основе указанных файлов. Также включает скрипты для создания файла `SUMMARY.md` для компиляции документации и Telegram-бота для обработки задач, связанных с кодом.
 
 ## Основные возможности
 
-- **Чтение исходных файлов**: Чтение кода из файлов с расширениями `.py` и `README.MD` из указанных директорий.
-- **Обработка с помощью моделей**: Отправка кода в модели для выполнения задач, таких как создание документации или проверка ошибок.
-- **Генерация результатов**: Ответы моделей сохраняются в указанные директории для каждой роли.
+### `code_assistant.py`
+- **Чтение файлов**: Читает код из файлов с расширениями `.py` и `README.MD` в указанных директориях.
+- **Взаимодействие с моделями**: Отправляет код в модели для выполнения задач, таких как создание документации или проверка ошибок.
+- **Генерация результатов**: Сохраняет ответы моделей в указанные директории для каждой роли.
+
+### `make_summary.py`
+- **Генерация `SUMMARY.md`**: Рекурсивно обходит директорию для создания файла `SUMMARY.md` для компиляции документации.
+- **Фильтрация по языку**: Поддерживает фильтрацию файлов по языку (`ru` или `en`).
+
+### `onela_bot.py` и `bot_handlers.py`
+- **Telegram-бот**: Бот для обработки задач, связанных с кодом, таких как отправка фрагментов кода на проверку или генерация документации.
+- **Обработчики бота**: Содержит обработчики для команд и сообщений бота.
 
 ## Структура проекта
 
 - **Модели**: Используются модели **Gemini** и **OpenAI** для обработки запросов.
-- **Промпты**: Программа читает промпты из файлов в директории `src/ai/prompts/developer/` (например, `doc_writer_en.md`).
-- **Файлы**: Обрабатываются файлы с расширениями `.py` и `README.MD` в указанных стартовых директориях.
+- **Промпты**: Читает промпты из файлов в директории `src/ai/prompts/developer/` (например, `doc_writer_en.md`).
+- **Файлы**: Обрабатываются файлы с расширениями `.py` и `README.MD` в указанных директориях.
 
-## Пример использования
+## Примеры использования
 
 ### Запуск с настройками из JSON:
-
 ```bash
-python assistant.py --settings settings.json
+python code_assistant.py --settings settings.json
 ```
 
 ### Запуск с явным указанием параметров:
-
 ```bash
-python assistant.py --role doc_writer --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
+python code_assistant.py --role doc_writer --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
 ```
 
 ### Пример для роли `code_checker`:
-
 ```bash
-python assistant.py --role code_checker --lang en --models gemini --start_dirs /path/to/dir
+python code_assistant.py --role code_checker --lang en --models gemini --start_dirs /path/to/dir
 ```
 
 ### Пример для модели `openai`:
-
 ```bash
-python assistant.py --role doc_writer --lang en --models openai
+python code_assistant.py --role doc_writer --lang en --models openai
 ```
 
 ## Параметры командной строки
 
-- `--settings`: Путь к JSON файлу с настройками. Загружает параметры из файла.
+- `--settings`: Путь к JSON-файлу с настройками. Загружает параметры из файла.
 - `--role`: Роль модели для выполнения задачи (например, `doc_writer`, `code_checker`).
 - `--lang`: Язык выполнения задачи (например, `ru` или `en`).
 - `--models`: Список моделей для инициализации (например, `gemini`, `openai`).
@@ -69,10 +101,10 @@ python assistant.py --role doc_writer --lang en --models openai
 
 ## Логика работы
 
-1. **Чтение файлов**: Поиск файлов с расширениями `.py` и `README.MD` в указанных стартовых директориях.
-2. **Загрузка промптов**: Загрузка файлов промптов для каждой роли и языка из директории `src/ai/prompts/developer/`.
-3. **Обработка запросов**: Формирование запросов на основе загруженных файлов и отправка их в модели.
-4. **Сохранение ответов**: Ответы от моделей сохраняются в директории, соответствующей роли и модели (например, `docs/raw_rst_from_<model>/<lang>/`).
+1. **Чтение файлов**: Ищет файлы с расширениями `.py` и `README.MD` в указанных директориях.
+2. **Загрузка промптов**: Загружает промпты для каждой роли из директории `src/ai/prompts/developer/`.
+3. **Обработка запросов**: Формирует запросы на основе загруженных файлов и отправляет их в модели.
+4. **Сохранение ответов**: Сохраняет ответы моделей в директории, соответствующие роли и модели (например, `docs/raw_rst_from_<model>/<lang>/`).
 
 ## Исключения
 
@@ -90,12 +122,23 @@ python assistant.py --role doc_writer --lang en --models openai
 - **Gemini API**: Требуется API-ключ для работы с моделью Gemini.
 - **OpenAI API**: Требуется API-ключ для работы с моделью OpenAI.
 
-порядок действий для создания новой роли для модели ии (`gemini`,`openai`,...):
-1. файл `code_assistant.json`:
-добавить новую роль в список ролей     "roles": [
-      "code_checker",
-...] активная роль
-или в `"exclude-roles"` неактивная роль
-2. Добавить роль в файл переводов `translations/translations.json`
-3. Создать системный промпт в `ai/prompts/develpoper`
-4. Создать командную инструкцию в 'instructions/`
+## Создание новой роли для моделей ИИ
+
+1. **Обновление `code_assistant.json`**:
+   - Добавьте новую роль в список ролей:
+     ```json
+     "roles": [
+       "code_checker",
+       ...
+     ]
+     ```
+   - Или исключите её в `"exclude-roles"`.
+
+2. **Добавление роли в переводы**:
+   - Обновите файл `translations/translations.json` с новой ролью.
+
+3. **Создание системного промпта**:
+   - Добавьте новый системный промпт в директорию `ai/prompts/developer/`.
+
+4. **Создание командной инструкции**:
+   - Добавьте новую команду в директорию `instructions/`.

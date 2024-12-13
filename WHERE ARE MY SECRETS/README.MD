@@ -1,4 +1,16 @@
+<TABLE >
+<TR>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>Code Documentation</A>4
+</TD>
+<TD>
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/readme.ru.md'>Документация кода</A>
+</TD>
 
+</TABLE>
 # Service Folder
 
 This is a service folder containing sample files:
@@ -105,8 +117,6 @@ Alternatively, you can perform these operations using the following PowerShell c
 New-Item -ItemType Directory -Path ".\secrets"
 
 # Copy the example file to the 'secrets' folder
-Copy-Item -Path ".\credentials.kdbx.example" -Destination ".\secrets\credentials.kdbx"
+Copy-Item -Path ".\templates\credentials.kdbx.example" -Destination ".\secrets\credentials.kdbx"
 
-# Remove the .example suffix from the credentials file
-Rename-Item -Path ".\secrets\credentials.kdbx.example" -NewName ".\secrets\credentials.kdbx"
 ``` 

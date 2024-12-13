@@ -22,7 +22,7 @@ Introduction:
 
 ### **What is Hypotez?**
 
-Hypotez is a cutting-edge AI-driven project aimed at creating a universal assistant capable of handling a wide range of tasks. From processing emails and analyzing market trends to automating repetitive workflows, Hypotez is designed to save time, reduce manual effort, and provide actionable insights.
+&nbsp;&nbsp;&nbsp;&nbsp;Hypotez is a cutting-edge AI-driven project aimed at creating a universal assistant capable of handling a wide range of tasks. From processing emails and analyzing market trends to automating repetitive workflows, Hypotez is designed to save time, reduce manual effort, and provide actionable insights.
 
 The core idea behind Hypotez is simple: **automate the mundane, so you can focus on what matters most.** By leveraging advanced AI technologies, Hypotez can handle everything from data collection and analysis to customer communication and task management.
 
@@ -30,7 +30,7 @@ The core idea behind Hypotez is simple: **automate the mundane, so you can focus
 
 ### **Why Hypotez?**
 
-In a world where time is money, businesses need tools that can keep up with their demands. Hypotez addresses this need by offering:
+&nbsp;&nbsp;&nbsp;&nbsp;In a world where time is money, businesses need tools that can keep up with their demands. Hypotez addresses this need by offering:
 
 1. **Automation of Routine Tasks**:  
    Say goodbye to time-consuming, repetitive tasks. Hypotez automates processes like email processing, report generation, and meeting summaries, freeing up your team to focus on strategic initiatives.
@@ -48,7 +48,7 @@ In a world where time is money, businesses need tools that can keep up with thei
 
 ### **Key Features of Hypotez**
 
-Hypotez isn’t just another tool — it’s a comprehensive solution with a wide range of capabilities:
+&nbsp;&nbsp;&nbsp;&nbsp;Hypotez isn’t just another tool — it’s a comprehensive solution with a wide range of capabilities:
 
 1. **Smart Assistant for Multiple Industries**:  
    - **Sales**: Automate customer communication, manage deals, and track sales funnels.  
@@ -76,7 +76,7 @@ Hypotez isn’t just another tool — it’s a comprehensive solution with a wid
 
 ### **How Hypotez Can Benefit Your Business**
 
-Hypotez is more than just an assistant — it’s a game-changer for businesses looking to optimize their operations. Here’s how it can help:
+&nbsp;&nbsp;&nbsp;&nbsp;Hypotez is more than just an assistant — it’s a game-changer for businesses looking to optimize their operations. Here’s how it can help:
 
 - **Save Time and Resources**:  
    By automating routine tasks, Hypotez reduces the time and effort spent on manual processes, allowing your team to focus on high-value activities.
@@ -94,7 +94,7 @@ Hypotez is more than just an assistant — it’s a game-changer for businesses 
 
 ### **The Vision Behind Hypotez**
 
-The Hypotez project was born out of a desire to address the challenges faced by businesses in a rapidly evolving digital landscape. My goal is to create a tool that not only simplifies workflows but also empowers businesses to achieve more with less.
+&nbsp;&nbsp;&nbsp;&nbsp;The Hypotez project was born out of a desire to address the challenges faced by businesses in a rapidly evolving digital landscape. My goal is to create a tool that not only simplifies workflows but also empowers businesses to achieve more with less.
 
 I’ve already made significant progress, including:
 
@@ -106,7 +106,7 @@ I’ve already made significant progress, including:
 
 ### **What’s Next for Hypotez?**
 
-The journey of Hypotez is just beginning. My next steps include:
+&nbsp;&nbsp;&nbsp;&nbsp;The journey of Hypotez is just beginning. My next steps include:
 
 - **Expanding Features**: Adding more capabilities to address diverse business needs.  
 - **Building Partnerships**: Collaborating with businesses and investors to bring Hypotez to life.  
@@ -116,7 +116,7 @@ The journey of Hypotez is just beginning. My next steps include:
 
 ### **Join the Hypotez Journey**
 
-If you’re passionate about innovation and want to be part of a project that’s set to transform the way businesses operate, I’d love to connect with you. Whether you’re an investor, a developer, or a potential user, your input and support are invaluable.
+&nbsp;&nbsp;&nbsp;&nbsp;If you’re passionate about innovation and want to be part of a project that’s set to transform the way businesses operate, I’d love to connect with you. Whether you’re an investor, a developer, or a potential user, your input and support are invaluable.
 
 Let’s work together to make Hypotez the go-to AI assistant for businesses worldwide. Together, we can create a smarter, more efficient future.
 
@@ -377,7 +377,7 @@ Make sure all data is entered correctly for the assistant to work without issues
 
 ## Next Steps:
 
-- [Developer Documentation](https://github.com/hypo69/hypo/blob/master/docs/gemini/consultant/RU) ( **Not ready* 😕)  
+- [Developer Documentation](https://github.com/hypo69/hypo/blob/master/src/README.MD) 
 - [User Documentation](https://github.com/hypo69/hypo/blob/master/docs/scenarios/README.MD) ( **Not ready* 😕) 
 - [Examples](https://github.com/hypo69/hypo/blob/master/examples/README.MD) 
 - [Tests](https://github.com/hypo69/hypo/tree/master/pytest/README.MD)
