@@ -172,40 +172,7 @@ class CodeAssistant:
 
     async def process_files(self, start_file_number: Optional[int] = 1):
         """компиляция, отправка запроса и сохранение результата.
-        ```meramid
-                sequenceDiagram
-            participant A as process_files
-            participant B as _yield_files_content
-            participant C as _create_request
-            participant D as Gemini Model
-            participant E as _remove_outer_quotes
-            participant F as _save_response
-            participant G as Console
-            participant H as Logger
-
-            A->>B: Enumerate files (file_path, content)
-            alt No file content or file path
-                A->>A: Continue loop if file_path or content is missing
-            end
-
-            alt File index < start_file_number
-                A->>A: Continue loop if index < start_file_number
-            end
-
-            A->>C: Create request using file_path and content
-            A->>D: Ask Gemini model with content_request
-            alt If response is successful
-                D->>E: Remove outer quotes from response
-                E->>F: Save response to file
-                F->>G: Print "Processed file number" to console
-            else Response failed
-                D->>H: Log "Ошибка ответа модели"
-                A->>A: Return from method
-            end
-
-            A->>A: Sleep for 20 seconds (debug)
-
-            ```
+       
         """
 
 

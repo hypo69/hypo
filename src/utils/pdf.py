@@ -25,6 +25,7 @@ from reportlab.pdfgen import canvas
 from fpdf import FPDF
 from weasyprint import HTML
 from xhtml2pdf import pisa
+from pdfminer.high_level import extract_text
 from src.logger.logger import logger
 from src.utils.printer import pprint
 
@@ -240,3 +241,31 @@ class PDFUtils:
         except Exception as e:
             print(f"Error during PDF generation: {e}")
             return
+
+
+        
+    @staticmethod
+    def pdf_to_html(pdf_file: str | Path, html_file: str | Path) -> bool:
+        """
+        Конвертирует PDF-файл в HTML-файл.
+
+        Args:
+            pdf_file (str | Path): Путь к исходному PDF-файлу.
+            html_file (str | Path): Путь к сохраняемому HTML-файлу.
+
+        Returns:
+            bool: `True`, если конвертация прошла успешно, иначе `False`.
+        """
+        try:
+            # Извлечение текста из PDF
+            text = extract_text(str(pdf_file))
+
+            # Создание HTML-файла
+            with open(html_file, 'w', encoding='utf-8') as file:
+                file.write(f"<html><body>{text}</body></html>")
+
+            print(f"HTML успешно сохранен: {html_file}")
+            return True
+        except Exception as ex:
+            print(f"Ошибка при конвертации PDF в HTML: {ex}")
+            return False
