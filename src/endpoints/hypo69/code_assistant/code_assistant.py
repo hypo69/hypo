@@ -489,3 +489,5 @@ if __name__ == "__main__":
                 # Обновление конфигурации для учёта изменений во время выполнения
                 config: SimpleNamespace = j_loads_ns(config_path)
                 args = config.argparse
+
+
