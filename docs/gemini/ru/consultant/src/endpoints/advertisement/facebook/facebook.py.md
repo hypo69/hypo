@@ -2,156 +2,141 @@
 
 **Качество кода**
 9
-- Плюсы
-    - Код структурирован в класс `Facebook`, что обеспечивает удобство управления и масштабируемость.
-    - Используются аннотации типов, что улучшает читаемость и помогает в отладке.
-    - Есть разделение на сценарии (login, promote_post и др.), что делает код более модульным.
-    - Используется кастомный логгер `src.logger.logger.logger` для обработки ошибок.
-    - Присутствует docstring для модуля и класса.
-- Минусы
-    - Отсутствуют docstring для всех функций и методов, включая параметры и возвращаемые значения.
-    - Есть комментарии в стиле `@todo`, которые необходимо преобразовать в reStructuredText (RST) или задачи.
-    - Использование строковых аннотаций типа (`'Driver'`) может быть улучшено за счет использования `TYPE_CHECKING`.
-    - Не все импорты используются, в данном коде `j_dumps` не используется.
+-   Плюсы
+    - Код хорошо структурирован, используется объектно-ориентированный подход, что облегчает его понимание и поддержку.
+    - Присутствует базовая документация модуля и методов, хотя и требует доработки в соответствии с RST.
+    - Используются аннотации типов, что повышает читаемость и помогает в отладке.
+    - Код использует кастомные утилиты `j_loads` и `j_dumps`, что соответствует требованиям.
+    - Подключение `src.logger.logger` для логирования.
+-   Минусы
+    -   Используется `...` как точки остановки.
+    -  Не все docstring оформлены в reStructuredText (RST).
+    -  Недостаточно комментариев в формате reStructuredText (RST).
+    -  Не все импорты вынесены в начало файла.
+    -  Не везде используется обработка ошибок через `logger.error`.
 
 **Рекомендации по улучшению**
-
-1.  **Документация**:
-    *   Добавить docstring в формате RST для всех функций, методов и переменных класса `Facebook`.
-    *   Преобразовать комментарии `@todo` в полноценные задачи или убрать их, если они больше не актуальны.
-2.  **Импорты**:
-    *   Использовать `TYPE_CHECKING` для отложенных импортов, чтобы избежать циклических зависимостей при проверке типов.
-3.  **Обработка ошибок**:
-    *   Пересмотреть использование `try-except`, чтобы свести его к минимуму, предпочитая логирование ошибок через `logger.error`.
-4.  **Использование `j_loads`**:
-    *   Убедиться, что чтение файлов (если такое есть) происходит через `j_loads` или `j_loads_ns`.
-5.  **Рефакторинг**:
-    *   Избавиться от избыточного `...`  в коде, если они не несут конкретной функциональности.
-    *   Использовать `j_dumps` для сериализации данных если необходимо.
-6.  **Комментарии**:
-    *   Придерживаться стандарта RST для всех комментариев.
-    *   В комментариях после `#` строки должны содержать подробное объяснение следующего за ними блока кода.
-7. **Удалить неиспользуемые импорты**
-    - Удалить `j_dumps`
+1.  Переписать все docstring и комментарии в формате reStructuredText (RST).
+2.  Добавить подробное описание модуля в начале файла в формате reStructuredText (RST).
+3.  Использовать `logger.error` для обработки ошибок вместо `try-except` блоков.
+4.  Убрать точки остановки `...` или заменить их на конкретный код или комментарий.
+5.  Добавить импорты в начало файла.
+6.  В функции `__init__` добавить проверку на какой странице открылся фейсбук.
+7.  Удалить неиспользуемые импорты.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для управления рекламными кампаниями в Facebook.
-=====================================================
+Модуль для работы с Facebook API
+=========================================================================================
 
-Этот модуль предоставляет класс :class:`Facebook`, который позволяет взаимодействовать с Facebook через веб-драйвер для выполнения различных действий, таких как вход в аккаунт, публикация сообщений и загрузка медиафайлов.
+Этот модуль предоставляет класс :class:`Facebook`, который инкапсулирует логику взаимодействия с Facebook через веб-драйвер.
+Он включает в себя сценарии для логина, отправки сообщений, загрузки медиа и продвижения публикаций.
 
-Сценарии:
-    - login: аутентификация в Facebook.
-    - post_message: публикация текстового сообщения в форме.
-    - upload_media: загрузка одного или нескольких медиафайлов.
+Модуль предназначен для автоматизации задач по управлению рекламными кампаниями в Facebook.
 
 Пример использования
 --------------------
+
+Пример инициализации класса `Facebook`:
+
 .. code-block:: python
 
     from selenium import webdriver
     from src.endpoints.advertisement.facebook.facebook import Facebook
-    # Предполагается, что драйвер уже инициализирован и передан в конструктор класса Facebook
+    
     driver = webdriver.Chrome()
-    fb = Facebook(driver=driver, promoter='your_promoter', group_file_paths=['path/to/group1', 'path/to/group2'])
+    fb = Facebook(driver=driver, promoter='test_promoter', group_file_paths=['path/to/file'])
     fb.login()
-    # пример объекта item
-    # item = SimpleNamespace(message='текст сообщения', images=['path/to/image1', 'path/to/image2'], title='Заголовок поста')
-    # fb.promote_post(item)
-
+    
 """
-
 from __future__ import annotations
 
 import os
 import sys
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Dict, List, TYPE_CHECKING
+from typing import Dict, List, Any
 
 from src import gs
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads, j_dumps # j_loads, j_dumps используются вместо json.load
 from src.utils.printer import pprint
 from src.logger.logger import logger
 from .scenarios.login import login
 from .scenarios import  switch_account, promote_post,  post_title, upload_media, update_images_captions
 
+
 MODE = 'dev'
 
-if TYPE_CHECKING:
-    from src.driver.driver import Driver
 
 class Facebook():
     """
     Класс для взаимодействия с Facebook через веб-драйвер.
-    
+
     :ivar d: Экземпляр веб-драйвера.
-    :vartype d: Driver
+    :vartype d: 'Driver'
     :ivar start_page: URL начальной страницы Facebook.
     :vartype start_page: str
     :ivar promoter: Имя промоутера.
     :vartype promoter: str
     """
-    d: 'Driver'
+    d: 'Driver'  # Строковая аннотация типа для откладывания импорта
     start_page: str = r'https://www.facebook.com/hypotez.promocodes'
     promoter: str
 
     def __init__(self, driver: 'Driver', promoter: str, group_file_paths: list[str], *args, **kwards):
         """
-        Инициализация экземпляра класса Facebook.
+        Инициализирует класс Facebook.
 
         :param driver: Экземпляр веб-драйвера.
-        :type driver: Driver
+        :type driver: 'Driver'
         :param promoter: Имя промоутера.
         :type promoter: str
         :param group_file_paths: Список путей к файлам групп.
         :type group_file_paths: list[str]
-        :param args: Дополнительные позиционные аргументы.
-        :param kwards: Дополнительные именованные аргументы.
+        :raises Exception: Если драйвер не был передан
         """
-        # Сохраняет переданный экземпляр драйвера
+        # Проверка на наличие драйвера
+        if not driver:
+            logger.error("Драйвер не был передан в конструктор класса Facebook")
+            raise Exception("Драйвер не был передан")
+        
+        # Код инициализирует драйвер и прочие переменные
         self.d = driver
-        # Сохраняет имя промоутера
         self.promoter = promoter
-        # TODO: Добавить проверку на какой странице открылся фейсбук.
-        # Если открылась страница логина - выполнитл сценарий логина.
-        # switch_account(self.driver) # <- переключение профиля, если не на своей странице
-
+        #self.driver.get_url (self.start_page)
+        #switch_account(self.driver) # <- переключение профиля, если не на своей странице
 
     def login(self) -> bool:
         """
-        Выполняет вход в учетную запись Facebook.
-        
-        :return: True, если вход выполнен успешно, иначе False.
+        Выполняет сценарий логина в Facebook.
+
+        :return: True, если логин успешен, False в противном случае.
         :rtype: bool
         """
-        # Вызывает функцию login из модуля scenarios
+        # Код выполняет сценарий логина
         return login(self)
 
     def promote_post(self, item: SimpleNamespace) -> bool:
         """
-        Отправляет текст и медиафайлы в форму сообщения.
+        Отправляет текст в форму сообщения для продвижения поста.
 
-        :param item: Объект SimpleNamespace, содержащий данные для публикации.
-                     `message`: сообщение текстом.
-                     `images`: список путей к изображениям.
-                     `title`: заголовок поста
+        :param item: Объект SimpleNamespace, содержащий данные для продвижения.
         :type item: SimpleNamespace
-        :return: True, если публикация прошла успешно, иначе False.
+        :return: True, если продвижение успешно, False в противном случае.
         :rtype: bool
         """
-        # Вызывает функцию promote_post из модуля scenarios
+        # Код выполняет сценарий продвижения поста
         return promote_post(self.d, item)
-    
+
     def promote_event(self, event: SimpleNamespace):
         """
         Пример функции для продвижения события.
-        
-        :param event: Объект SimpleNamespace, представляющий событие.
+
+        :param event: Объект SimpleNamespace, содержащий данные для продвижения события.
         :type event: SimpleNamespace
         """
+        #  Код выполняет сценарий продвижения события
         ...
 ```

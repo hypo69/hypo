@@ -3,75 +3,96 @@
 **Качество кода**
 8
 -  Плюсы
-    - Код имеет четкую структуру и предназначен для выполнения определенной задачи - публикации рекламных объявлений в Facebook.
-    - Используется логгер для записи информации о процессе.
-    - Присутствует обработка прерывания от клавиатуры.
+    - Код логически структурирован и выполняет поставленную задачу.
+    - Используется кастомный логгер для вывода информации и ошибок.
+    - Присутствует обработка исключения `KeyboardInterrupt`.
+    - Определены константы `MODE` и списки `filenames`, `campaigns`.
+    - Используется класс `FacebookPromoter` для работы с Facebook.
 -  Минусы
-    - Отсутствуют docstring для модуля, а также для переменных и функций.
-    - Не используется `j_loads` или `j_loads_ns` для загрузки json файлов.
-    - Присутствуют неиспользуемые импорты `header`
-    - Не все ошибки обрабатываются с помощью `logger.error`
+    - Отсутствует подробная документация в формате reStructuredText (RST) для модуля, функций и переменных.
+    - Импорт `header` не используется.
+    - Нет явного импорта `json` или использования `j_loads` / `j_loads_ns` из `src.utils.jjson`.
+    - Не все строки кода прокомментированы.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля, переменных и функций в формате reStructuredText (RST).
-2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения JSON-файлов.
-3.  Удалить неиспользуемый импорт `header`.
-4.  Добавить более детальную обработку ошибок с помощью `logger.error` и `try-except` блоков.
-5.  Уточнить назначение переменных.
-6.  Обеспечить корректное форматирование кода согласно PEP 8.
+1.  Добавить документацию в формате RST для модуля, классов, функций и переменных.
+2.  Удалить неиспользуемый импорт `header`.
+3.  Использовать `j_loads` или `j_loads_ns` для чтения конфигурационных файлов, если это необходимо.
+4.  Добавить более подробные комментарии к коду, особенно к блокам `try-except`.
+5.  Использовать `logger.error` для логирования ошибок вместо общего `except Exception` и `print` (если он есть).
+6.  Переписать комментарии в соответствии с RST.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для запуска рекламной кампании в Facebook (Katia).
+Модуль для запуска рекламных кампаний в Facebook (Katia).
 ========================================================
 
-Этот модуль использует класс :class:`FacebookPromoter` для публикации рекламных объявлений
-в группы Facebook на основе предоставленных файлов конфигурации и списка кампаний.
+Этот модуль инициализирует веб-драйвер, загружает конфигурационные файлы и запускает
+рекламные кампании в Facebook, используя класс :class:`FacebookPromoter`.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.webdriver.driver import Driver, Chrome
+    from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
+    from src.logger.logger import logger
+
+    d = Driver(Chrome)
+    d.get_url("https://facebook.com")
+
+    filenames = ['katia_homepage.json']
+    campaigns = [
+        'sport_and_activity',
+        'bags_backpacks_suitcases',
+        'pain',
+        'brands',
+        'mom_and_baby',
+        'house',
+    ]
+    promoter = FacebookPromoter(d, group_file_paths=filenames, no_video=False)
+
+    try:
+        promoter.run_campaigns(campaigns)
+    except KeyboardInterrupt:
+        logger.info("Campaign promotion interrupted.")
 """
+MODE = 'dev'  #: Режим работы приложения.
 
-MODE = 'dev'
-
-
-#  Удаляем неиспользуемый импорт
-# import header 
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger.logger import logger
-from src.utils.jjson import j_loads # Добавляем импорт для j_loads
+#  Импортирует класс `Driver` и `Chrome` из модуля `src.webdriver.driver`, класс `FacebookPromoter` и логгер
+#  из модуля `src.logger.logger`
 
-
-#  Инициализация веб-драйвера Chrome
-d = Driver(Chrome)
-#  Открытие главной страницы Facebook
+d = Driver(Chrome)  #: Инициализация веб-драйвера Chrome.
 d.get_url(r"https://facebook.com")
+#  Код инициализирует драйвер Chrome и открывает страницу Facebook.
 
-# Список файлов с информацией о группах
-filenames: list = ['katia_homepage.json',]
-#  Список рекламных кампаний для запуска
-campaigns: list = [ 'sport_and_activity',
-                  'bags_backpacks_suitcases',
-                    'pain',
-                    'brands',
-                    'mom_and_baby',
-                    'house',
-                ]
-# Инициализация промоутера Facebook
-promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = False)
+filenames: list = ['katia_homepage.json', ]  #: Список имен файлов конфигурации.
+#  Список файлов, содержащих информацию о группах Facebook
+campaigns: list = [  #: Список названий рекламных кампаний.
+    'sport_and_activity',
+    'bags_backpacks_suitcases',
+    'pain',
+    'brands',
+    'mom_and_baby',
+    'house',
+]
+#  Список рекламных кампаний, которые будут запущены.
+promoter = FacebookPromoter(d, group_file_paths=filenames, no_video=False)
+#  Создание экземпляра класса `FacebookPromoter` с параметрами: драйвер, путь к файлу, откл. видео.
 
 try:
-    #  Запуск рекламных кампаний
+    #  Код запускает рекламные кампании.
     promoter.run_campaigns(campaigns)
 except KeyboardInterrupt:
-    #  Логирование прерывания от клавиатуры
+    #  Код обрабатывает прерывание с клавиатуры.
     logger.info("Campaign promotion interrupted.")
-except Exception as e:
-    #  Логирование любой другой ошибки
-    logger.error(f"An error occurred during campaign promotion: {e}", exc_info=True)
+
 ```

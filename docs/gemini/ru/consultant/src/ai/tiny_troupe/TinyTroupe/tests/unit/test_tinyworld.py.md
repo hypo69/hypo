@@ -1,52 +1,53 @@
 # Анализ кода модуля `test_tinyworld`
 
 **Качество кода**
-8
+7
 - Плюсы
-    - Код разбит на отдельные функции тестирования, что облегчает понимание и поддержку.
-    - Используются фикстуры pytest для подготовки тестовых данных.
-    - Присутствуют ассерты, проверяющие корректность работы кода.
-    - Код покрывает основные сценарии работы с `TinyWorld`.
-
+    - Код содержит тесты для основных функций класса `TinyWorld`.
+    - Используется `pytest` для организации тестов.
+    - Присутствуют проверки на корректность работы основных методов.
 - Минусы
-    - Отсутствуют docstring у функций, что затрудняет понимание их назначения.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
-    - Комментарии не соответствуют стандарту RST.
-    - Используется прямое обращение к `sys.path` для добавления путей, что может быть не оптимально.
+    - Отсутствуют docstring для модуля, функций.
+    - Используется `sys.path.append` для добавления путей, что является не лучшей практикой.
+    - Нет логирования ошибок.
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Использование `assert` без информативных сообщений может затруднить отладку.
 
 **Рекомендации по улучшению**
-1. Добавить docstring в формате RST к каждой тестовой функции для описания её назначения и параметров.
-2. Использовать `from src.logger.logger import logger` для логирования ошибок и отладки, если это необходимо.
-3.  Заменить прямые манипуляции с `sys.path` на более гибкий подход, например, использование `conftest.py` для настройки путей.
-4.  Привести в соответствие имена переменных и импортов с ранее обработанными файлами.
+
+1.  Добавить docstring к модулю и всем тестовым функциям, используя формат reStructuredText (RST).
+2.  Использовать `from src.logger.logger import logger` для логирования ошибок и отладки.
+3.  Убрать `sys.path.append` и настроить пути импорта более корректным способом, например, через `PYTHONPATH` или структуру пакетов.
+4.  Заменить стандартный `assert` на более информативный, с добавлением подробностей, что именно пошло не так.
+5.  Использовать `j_loads` или `j_loads_ns` если это необходимо, в текущем коде это не требуется.
+6.  Добавить проверки на типы данных и корректность форматов сообщений для более надежных тестов.
+7.  Улучшить читаемость кода путем добавления комментариев и разбиения сложных выражений на более простые.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль содержит тесты для проверки функциональности класса TinyWorld.
+Модуль тестирования класса TinyWorld
 =========================================================================================
 
-Этот модуль включает тесты для проверки основных операций класса TinyWorld,
-таких как запуск, широковещательная рассылка, кодирование и декодирование состояний.
+Этот модуль содержит набор тестов для проверки корректности работы класса `TinyWorld`
+и его основных методов, таких как `run`, `broadcast`, `encode_complete_state` и `decode_complete_state`.
 
-Примеры использования
+Пример использования
 --------------------
-Запуск тестов:
 
-.. code-block:: bash
+.. code-block:: python
 
-    pytest test_tinyworld.py
+    pytest tests/unit/test_tinyworld.py
 """
 import pytest
-#from src.logger.logger import logger  # TODO: использовать для логирования
-import logging
-logger = logging.getLogger("tinytroupe")
-
+#from src.utils.jjson import j_loads, j_loads_ns #  нет необходимости, не используется в коде, но может пригодится в будущем
+from src.logger.logger import logger # импортируем логгер
 import sys
-# Пути добавлены через conftest.py
-#sys.path.append('../../tinytroupe/')
-#sys.path.append('../../')
-#sys.path.append('../')
+#sys.path.append('../../tinytroupe/') #  следует избегать использования sys.path.append
+#sys.path.append('../../')#  следует избегать использования sys.path.append
+#sys.path.append('../') #  следует избегать использования sys.path.append
+
 
 from tinytroupe.examples import create_lisa_the_data_scientist, create_oscar_the_architect, create_marcos_the_physician
 from tinytroupe.environment import TinyWorld
@@ -57,94 +58,113 @@ def test_run(setup, focus_group_world):
     Тестирует метод run класса TinyWorld.
 
     :param setup: Фикстура pytest для настройки окружения.
-    :param focus_group_world: Фикстура pytest, представляющая экземпляр TinyWorld с агентами.
+    :param focus_group_world: Фикстура pytest, предоставляющая экземпляр TinyWorld с агентами.
     """
-    # Создание экземпляра TinyWorld без агентов
+    #  создаем пустой мир
     world_1 = TinyWorld("Empty land", [])
-    # Запуск мира на 2 шага
+    #  запускаем мир на 2 итерации
     world_1.run(2)
 
-    # Использование мира с агентами
+    #  создаем мир с агентами
     world_2 = focus_group_world
-    # Отправка сообщения всем агентам
+    #  отправляем сообщение всем агентам
     world_2.broadcast("Discuss ideas for a new AI product you'd love to have.")
-    # Запуск мира на 2 шага
+    #  запускаем мир на 2 итерации
     world_2.run(2)
 
-    # Проверка целостности сообщений в памяти агентов
+    #  проверяем целостность разговора
     for agent in world_2.agents:
         for msg in agent.episodic_memory.retrieve_all():
-            # Проверка, что ни один агент не является целью своего собственного сообщения
+            # проверяем, что в сообщении есть действие и цель, и что цель не является именем агента
             if 'action' in msg['content'] and 'target' in msg['content']['action']:
                 assert msg['content']['action']['target'] != agent.name, f"{agent.name} should not have any messages with itself as the target."
-
+            
             # TODO stimulus integrity check?
+
 
 def test_broadcast(setup, focus_group_world):
     """
     Тестирует метод broadcast класса TinyWorld.
 
     :param setup: Фикстура pytest для настройки окружения.
-    :param focus_group_world: Фикстура pytest, представляющая экземпляр TinyWorld с агентами.
+    :param focus_group_world: Фикстура pytest, предоставляющая экземпляр TinyWorld с агентами.
     """
+    #  получаем мир с агентами
     world = focus_group_world
-    # Отправка сообщения всем агентам
+    #  отправляем сообщение всем агентам
     world.broadcast("""
                 Folks, we need to brainstorm ideas for a new baby product. Something moms have been asking for centuries and never got.
 
                 Please start the discussion now.
                 """)
-
+    
     for agent in focus_group_world.agents:
-        # Проверка, что агенты получили сообщение
-        assert "Folks, we need to brainstorm" in agent.episodic_memory.retrieve_first(1)[0]['content']['stimuli'][0]['content'], f"{agent.name} should have received the message."
+        # проверяем, что агенты получили сообщение
+        messages = agent.episodic_memory.retrieve_first(1)
+        assert messages, f"{agent.name} has no messages." # проверяем, что есть сообщения
+        assert len(messages) > 0, f"{agent.name} has no messages."
+        first_message = messages[0]
+
+        if 'content' not in first_message or 'stimuli' not in first_message['content']:
+             logger.error(f"Incorrect message format for {agent.name}: {first_message}")
+             assert False, f"Incorrect message format for {agent.name}" #  проверяем наличие ключей
+             
+        stimuli = first_message['content']['stimuli']
+        assert len(stimuli) > 0, f"{agent.name} has no stimuli."
+        first_stimulus = stimuli[0]
+
+        assert 'content' in first_stimulus, f"Incorrect stimulus format for {agent.name}: {first_stimulus}" #  проверяем наличие ключа
+        assert "Folks, we need to brainstorm" in first_stimulus['content'], f"{agent.name} should have received the message." # проверяем содержимое сообщения
+
 
 def test_encode_complete_state(setup, focus_group_world):
     """
     Тестирует метод encode_complete_state класса TinyWorld.
 
     :param setup: Фикстура pytest для настройки окружения.
-    :param focus_group_world: Фикстура pytest, представляющая экземпляр TinyWorld с агентами.
+    :param focus_group_world: Фикстура pytest, предоставляющая экземпляр TinyWorld с агентами.
     """
+    #  получаем мир с агентами
     world = focus_group_world
 
-    # Кодирование состояния мира
+    #  кодируем состояние
     state = world.encode_complete_state()
-
-    # Проверка, что состояние не None
+    
+    # проверяем, что состояние не None
     assert state is not None, "The state should not be None."
-    # Проверка имени мира в состоянии
+    # проверяем имя мира
     assert state['name'] == world.name, "The state should have the world name."
-    # Проверка наличия агентов в состоянии
+    # проверяем наличие агентов
     assert state['agents'] is not None, "The state should have the agents."
 
 def test_decode_complete_state(setup, focus_group_world):
     """
-    Тестирует метод decode_complete_state класса TinyWorld.
+    Тестирует методы encode_complete_state и decode_complete_state класса TinyWorld.
 
     :param setup: Фикстура pytest для настройки окружения.
-    :param focus_group_world: Фикстура pytest, представляющая экземпляр TinyWorld с агентами.
+    :param focus_group_world: Фикстура pytest, предоставляющая экземпляр TinyWorld с агентами.
     """
+    # получаем мир с агентами
     world = focus_group_world
 
-    # Сохранение исходного имени и количества агентов
+    # сохраняем имя мира и количество агентов
     name_1 = world.name
     n_agents_1 = len(world.agents)
 
-    # Кодирование состояния мира
+    # кодируем состояние мира
     state = world.encode_complete_state()
-
-    # Изменение состояния мира для проверки декодирования
+    
+    # изменяем мир
     world.name = "New name"
     world.agents = []
 
-    # Декодирование состояния обратно в мир
+    # декодируем состояние в новый мир
     world_2 = world.decode_complete_state(state)
 
-    # Проверка, что декодированный мир не None
+    # проверяем, что новый мир не None
     assert world_2 is not None, "The world should not be None."
-    # Проверка, что имя мира восстановлено
+    #  проверяем имя мира
     assert world_2.name == name_1, "The world should have the same name."
-    # Проверка, что количество агентов восстановлено
+    # проверяем количество агентов
     assert len(world_2.agents) == n_agents_1, "The world should have the same number of agents."
 ```

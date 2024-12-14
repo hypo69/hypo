@@ -1,162 +1,137 @@
 # Анализ кода модуля `main.js`
 
 **Качество кода**
--  Соответствие требованиям по оформлению кода: 7/10
- -  Плюсы
-    - Код в целом структурирован и выполняет поставленные задачи, такие как обработка голосовых и текстовых сообщений через Telegram bot.
-    - Используется асинхронное программирование с `async/await`, что является хорошей практикой для Node.js.
-    - Присутствует обработка ошибок, хотя и не во всех местах.
- -  Минусы
-    -  Отсутствует reStructuredText (RST) документация для функций и модуля.
-    -  Используется стандартный `console.log` и `console.error` для логирования, вместо `logger`.
-    -  Нет обработки ошибок в блоке `text`, что может привести к нежелательному поведению.
-    -  Импорты не соответствуют ранее обработанным файлам.
-    -  Отсутствует `INITIAL_SESSION` константа.
-    -  Отсутствует функция `processTextToChat`.
+6
+-   Плюсы
+    -   Используется `async/await` для асинхронных операций.
+    -   Применяется библиотека `telegraf` для работы с Telegram ботом.
+    -   Используются константы для ролей в `openai`.
+    -   Код разбит на обработчики событий `voice` и `text`.
+-   Минусы
+    -   Отсутствуют комментарии, что затрудняет понимание кода.
+    -   Используются `console.log` и `console.error` вместо `logger`.
+    -   Не обрабатываются ошибки в функциях `processTextToChat`.
+    -   Нет документации в формате RST.
+    -   Используется `JSON.stringify(ctx.message)` для отладки, что не подходит для продакшена.
+    -   Отсутствует константа `INITIAL_SESSION`.
 
 **Рекомендации по улучшению**
-1.  Добавить reStructuredText (RST) документацию для модуля, функций, и переменных.
+
+1.  Добавить reStructuredText (RST) комментарии для всех модулей, функций, методов и переменных.
 2.  Использовать `from src.logger.logger import logger` для логирования ошибок и отладки.
-3.  Обработать ошибки в блоке `text` с помощью `logger.error`.
-4.  Реализовать функцию `processTextToChat` для обработки текстовых сообщений.
-5.  Добавить константу `INITIAL_SESSION`.
-6.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+3.  Заменить `console.log` и `console.error` на `logger.error` и `logger.debug`.
+4.  Реализовать обработку ошибок в функциях `processTextToChat`.
+5.  Добавить проверку на существование константы `INITIAL_SESSION`.
+6.  Удалить `JSON.stringify(ctx.message)` и настроить отладку через `logger.debug`.
+7.  Использовать `j_loads` или `j_loads_ns` для чтения файлов конфигурации, если это требуется.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для запуска Telegram-бота, обрабатывающего голосовые и текстовые сообщения.
-==============================================================================
+Модуль для запуска Telegram-бота, взаимодействующего с OpenAI для обработки голосовых и текстовых сообщений.
+=====================================================================================================
 
-Этот модуль содержит основной код для Telegram-бота, который обрабатывает
-голосовые и текстовые сообщения от пользователей, используя OpenAI API для
-транскрипции голоса в текст и генерации ответов.
+Этот модуль инициализирует и запускает Telegram-бота, который может принимать голосовые и текстовые сообщения
+от пользователей. Голосовые сообщения конвертируются в текст с использованием OpenAI, а затем бот отвечает
+на основе полученного текста. Текстовые сообщения также обрабатываются и бот отвечает на них.
 
 Пример использования
 --------------------
 
-Запуск бота:
-
 .. code-block:: javascript
 
+   // Запуск бота
    node main.js
 """
-import { Telegraf } from 'telegraf'
-import { message } from 'telegraf/filters'
-import { code } from 'telegraf/format'
-import config from 'config'
-# импортируем ogg, openai и removeFile из соответствующих модулей
-from src.endpoints.bots.chat_gpt_nodejs.chatgpt-telegram.src.ogg import ogg
-from src.endpoints.bots.chat_gpt_nodejs.chatgpt-telegram.src.openai import openai
-from src.endpoints.bots.chat_gpt_nodejs.chatgpt-telegram.src.utils import removeFile
-# импортируем logger для логирования
-from src.logger.logger import logger
 
-# задаем начальную сессию
-INITIAL_SESSION = {}
+import { Telegraf } from 'telegraf' # Импорт Telegraf для работы с Telegram Bot API
+import { message } from 'telegraf/filters' # Импорт фильтра для обработки сообщений
+import { code } from 'telegraf/format' # Импорт функции для форматирования кода
+import config from 'config' # Импорт конфигурации
+import { ogg } from './ogg.js' # Импорт модуля для работы с OGG файлами
+import { openai } from './openai.js' # Импорт модуля для работы с OpenAI API
+import { removeFile } from './utils.js' # Импорт модуля для удаления файлов
+from src.logger.logger import logger # Импорт логгера
+# TODO: Добавить импорт INITIAL_SESSION
+# const INITIAL_SESSION = ... # Определение начальной сессии
 
+const bot = new Telegraf(config.get('TELEGRAM_TOKEN')) # Инициализация Telegram бота с использованием токена из конфигурации
 
-# Создаем экземпляр Telegram-бота, используя токен из конфигурации
-bot = new Telegraf(config.get('TELEGRAM_TOKEN'))
+/**
+ * Обработчик команды /start.
+ *
+ * Отправляет JSON представление объекта ctx.message в ответ.
+ *
+ * @param ctx {object} Контекст сообщения от Telegram API.
+ */
+bot.command('start', async(ctx) : {
+    # Код отправляет JSON представление объекта ctx.message в ответ.
+    logger.debug(f'Получено сообщение start: {JSON.stringify(ctx.message)}')
+    await ctx.reply(code(JSON.stringify(ctx.message)))
+})
 
-
-async def start_command(ctx) :
-    """
-    Обрабатывает команду /start.
-
-    Отправляет JSON-представление входящего сообщения в ответ.
-
-    :param ctx: Контекст Telegraf.
-    """
-    #  Отправляем в ответ JSON-представление ctx.message
-    await ctx.reply(JSON.stringify(ctx.message))
-
-
-bot.command('start', start_command)
-
-
-async def voice_message_handler(ctx):
-    """
-    Обрабатывает входящие голосовые сообщения.
-
-    Получает голосовое сообщение, конвертирует его в текст с использованием OpenAI,
-    и отправляет ответ пользователю.
-
-    :param ctx: Контекст Telegraf.
-    """
-    try:
-        #  Отправляем сообщение пользователю о том что запрос принят
+/**
+ * Обработчик голосовых сообщений.
+ *
+ * Конвертирует голосовое сообщение в текст с помощью OpenAI и отправляет ответ.
+ *
+ * @param ctx {object} Контекст сообщения от Telegram API.
+ */
+bot.on(message('voice'), async (ctx) : {
+    try {
+        # Код отправляет сообщение "Сообщение принял. Жду ответ от сервера..."
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера...'))
-        #  Получаем ссылку на файл голосового сообщения
-        link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
-        #  Получаем ID пользователя
-        userId = String(ctx.message.from.id)
-        #  Создаем ogg файл
-        oggPath = await ogg.create(link.href, userId)
-        #  Конвертируем ogg в mp3
-        mp3Path = await ogg.toMp3(oggPath, userId)
-        #  Удаляем ogg файл
+        # Код получает ссылку на файл голосового сообщения
+        const link = await ctx.telegram.getFileLink(ctx.message.voice.file_id)
+        # Код получает ID пользователя
+        const userId = String(ctx.message.from.id)
+        # Код создает OGG файл
+        const oggPath = await ogg.create(link.href, userId)
+        # Код конвертирует OGG в MP3
+        const mp3Path = await ogg.toMp3(oggPath, userId)
+        # Код удаляет OGG файл
         removeFile(oggPath)
-        #  Транскрибируем mp3 в текст
-        text = await openai.transcription(mp3Path)
-        #  Отправляем полученный текст пользователю
+        # Код транскрибирует MP3 файл в текст
+        const text = await openai.transcription(mp3Path)
+        # Код отправляет транскрибированный текст
         await ctx.reply(code(`запрос: ${text}`))
-        #  Формируем массив сообщений для передачи в chat
-        messages = [{ role: openai.roles.USER, content: text }]
-        #  Получаем ответ от openai
-        response = await openai.chat(messages)
-        #  Отправляем ответ пользователю
+        # Код формирует сообщение для OpenAI
+        const messages = [{ role: openai.roles.USER, content: text }]
+        # Код отправляет запрос в OpenAI и получает ответ
+        const response = await openai.chat(messages)
+        # Код отправляет ответ пользователю
         await ctx.reply(response.content)
-    except Exception as e:
-        #  Логируем ошибку при обработке голосового сообщения
-        logger.error('Error while proccessing voice message', e.message)
+    } catch (e) {
+        # Логирование ошибки при обработке голосового сообщения
+        logger.error('Ошибка при обработке голосового сообщения', e)
+    }
+})
 
-bot.on(message('voice'), voice_message_handler)
-
-
-async def process_text_to_chat(ctx, text):
-    """
-     Отправляет текстовое сообщение пользователю.
-
-     Использует OpenAI API для генерации ответа на текстовое сообщение.
-
-     :param ctx: Контекст Telegraf.
-     :param text: Текст сообщения пользователя.
-     """
-    #  Формируем массив сообщений для передачи в chat
-    messages = [{ role: openai.roles.USER, content: text }]
-    #  Получаем ответ от openai
-    response = await openai.chat(messages)
-    #  Отправляем ответ пользователю
-    await ctx.reply(response.content)
-
-
-async def text_message_handler(ctx):
-    """
-    Обрабатывает входящие текстовые сообщения.
-
-     Отправляет текст сообщения в чат и отправляет ответ пользователю.
-
-    :param ctx: Контекст Telegraf.
-    """
-    #  Инициализируем сессию если она не существует
+/**
+ * Обработчик текстовых сообщений.
+ *
+ * Отправляет сообщение в чат и обрабатывает его.
+ *
+ * @param ctx {object} Контекст сообщения от Telegram API.
+ */
+bot.on(message('text'), async (ctx) : {
+    # Инициализация сессии, если она не существует
     ctx.session ??= INITIAL_SESSION
-    try:
-        #  Отправляем пользователю что сообщение принято
+    try {
+        # Код отправляет сообщение "Сообщение принял. Жду ответ от сервера..."
         await ctx.reply(code('Сообщение принял. Жду ответ от сервера...'))
-        #  Обрабатываем текст через функцию processTextToChat
-        await process_text_to_chat(ctx, ctx.message.text)
-    except Exception as e:
-        # Логируем ошибку при обработке текстового сообщения
-        logger.error('Error while voice message', e.message)
+        # Код обрабатывает текстовое сообщение
+        await processTextToChat(ctx, ctx.message.text)
+    } catch (e) {
+         # Логирование ошибки при обработке текстового сообщения
+        logger.error('Ошибка при обработке текстового сообщения', e)
+    }
+})
 
-bot.on(message('text'), text_message_handler)
-
-# Запускаем бота
-bot.launch()
-
-# Обрабатываем сигналы завершения
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
+bot.launch() # Запуск бота
+# Обработчик сигнала SIGINT (Ctrl+C)
+process.once('SIGINT', () : bot.stop('SIGINT'))
+# Обработчик сигнала SIGTERM
+process.once('SIGTERM', () : bot.stop('SIGTERM'))
 ```

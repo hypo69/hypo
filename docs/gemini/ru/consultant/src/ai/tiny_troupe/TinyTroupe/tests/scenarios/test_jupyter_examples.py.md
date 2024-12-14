@@ -1,74 +1,78 @@
 # Анализ кода модуля `test_jupyter_examples.py`
 
 **Качество кода**
-9
+7
 -   Плюсы
-    -   Код хорошо структурирован и читаем.
-    -   Используется параметризация тестов для запуска на нескольких ноутбуках.
-    -   Обработка исключений при выполнении ноутбука.
-    -   Сохранение выполненной копии ноутбука.
-    -   Используются относительные импорты для доступа к модулям пакета.
-
+    -   Код структурирован, разбит на функции.
+    -   Используется параметризация тестов pytest.
+    -   Присутствует обработка исключений при выполнении ноутбуков.
+    -   Сохранение копии выполненного ноутбука.
 -   Минусы
-    -   Отсутствует документация в формате reStructuredText (RST).
+    -   Отсутствует reStructuredText документация.
     -   Используется `print` для логирования, лучше использовать `logger`.
-    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -   Пути импорта не соответствуют стандарту проекта.
+    -   Не используется `j_loads` для чтения файлов.
+    -   Жестко заданные значения `TIMEOUT` и `KERNEL_NAME`.
+    -   Общий `try-except` блок.
 
 **Рекомендации по улучшению**
-1. Добавить документацию в формате RST для модуля и функций.
-2. Заменить `print` на `logger` для логирования.
-3. Использовать `j_loads` или `j_loads_ns` для чтения файлов.
-4. Добавить обработку ошибок с использованием `logger.error`.
-5. Убрать лишние `sys.path.insert(0, ...)` так как они дублируют друг друга.
+
+1.  Добавить reStructuredText документацию для модуля, функций.
+2.  Заменить `print` на логирование с использованием `logger` из `src.logger.logger`.
+3.  Уточнить пути импорта и использовать абсолютные пути.
+4.  Использовать `j_loads` для чтения файлов ноутбуков.
+5.  Перенести `TIMEOUT` и `KERNEL_NAME` в переменные окружения или конфигурационный файл.
+6.  Разделить `try-except` блок на более конкретные блоки, логировать ошибки с помощью `logger.error`.
+7.  Добавить проверку на наличие директории перед ее использованием.
+8.  Использовать f-строки для форматирования логов.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для тестирования Jupyter Notebook
+Модуль для тестирования выполнения Jupyter Notebook.
 =========================================================================================
 
-Этот модуль содержит функции для тестирования выполнения Jupyter Notebook файлов.
-Он использует `pytest` для запуска тестов и `nbformat` и `nbconvert` для работы с ноутбуками.
+Этот модуль содержит функции для поиска и выполнения Jupyter Notebooks
+и проверки их на отсутствие ошибок.
 
 Пример использования
 --------------------
 
-Пример использования:
-    
-    pytest tests/scenarios/test_jupyter_examples.py
+.. code-block:: python
 
-Этот код запускает все тесты, определенные в данном модуле.
+    pytest test_jupyter_examples.py
 """
 import os
+# from src.utils.jjson import j_loads # убрал, так как json не используется
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import pytest
-# from src.utils.jjson import j_loads  # TODO: пока не используется
-from src.logger.logger import logger  # подключаем logger
-import sys
+from src.logger.logger import logger # подключаем логер
 
-# Ensures that the package is imported from the parent directory, not the Python installation
-sys.path.insert(0, '../../')
-sys.path.insert(0, '..') 
+import sys
+sys.path.insert(0, 'src/ai/tiny_troupe/TinyTroupe/') # ensures that the package is imported from the parent directory, not the Python installation
+sys.path.insert(0, 'src/') # ensures that the package is imported from the parent directory, not the Python installation
+sys.path.insert(0, 'src/ai/tiny_troupe/') # ensures that the package is imported from the parent directory, not the Python installation
 
 # Set the folder containing the notebooks
-NOTEBOOK_FOLDER = "../examples/"  # Update this path
-
+NOTEBOOK_FOLDER = "examples"  # Update this path
+if not os.path.exists(NOTEBOOK_FOLDER):
+    logger.error(f"Директория '{NOTEBOOK_FOLDER}' не найдена.")
+    raise FileNotFoundError(f"Директория '{NOTEBOOK_FOLDER}' не найдена.")
 # Set a timeout for long-running notebooks
 TIMEOUT = 600
 
-KERNEL_NAME = "python3"
+KERNEL_NAME = "python3" #"py310"
 
 
-def get_notebooks(folder: str) -> list:
+def get_notebooks(folder: str) -> list[str]:
     """
-    Извлекает все Jupyter notebook файлы из указанной папки.
+    Извлекает все файлы Jupyter notebook из указанной папки.
 
     :param folder: Путь к папке с ноутбуками.
     :return: Список путей к файлам ноутбуков.
     """
-    # код получает список файлов в указанной папке и фильтрует их, оставляя только те, что заканчиваются на .ipynb
-    # и не содержат в названии .executed. или .local.
     return [
         os.path.join(folder, f)
         for f in os.listdir(folder)
@@ -79,47 +83,34 @@ def get_notebooks(folder: str) -> list:
 @pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
 def test_notebook_execution(notebook_path: str):
     """
-    Выполняет Jupyter notebook и проверяет отсутствие ошибок.
+    Выполняет Jupyter notebook и проверяет, что не возникает исключений.
 
     :param notebook_path: Путь к файлу ноутбука.
     """
-    # Код открывает файл ноутбука для чтения
     try:
+        # открываем файл с ноутбуком
         with open(notebook_path, "r", encoding="utf-8") as nb_file:
-            # код читает содержимое файла и преобразует в объект Notebook
+            # Читаем содержимое файла
             notebook = nbformat.read(nb_file, as_version=4)
-            # код выводит сообщение о начале выполнения ноутбука
-            logger.info(f"Executing notebook: {notebook_path} with kernel: {KERNEL_NAME}")
-            # код инициализирует препроцессор для выполнения ноутбука
-            ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
-    except Exception as ex:
-        logger.error(f'Ошибка при открытии файла {notebook_path=}', exc_info=True) # TODO: исправить формат ex
-        pytest.fail(f"Ошибка при открытии файла {notebook_path}: {ex}")
-        return
+        logger.info(f"Выполнение ноутбука: {notebook_path} с ядром: {KERNEL_NAME}")
+        # инициализируем препроцессор
+        ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
 
-    try:
-        # код запускает выполнение ноутбука
+        # Выполняем notebook
         ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
-        # код выводит сообщение об успешном выполнении
-        logger.info(f"Notebook {notebook_path} executed successfully.")
+        logger.info(f"Ноутбук {notebook_path} выполнен успешно.")
 
     except Exception as e:
-        # код перехватывает ошибки во время выполнения
-        logger.error(f"Notebook {notebook_path} raised an exception: {e}", exc_info=True) # TODO: исправить формат e
-        # код сообщает об ошибке
-        pytest.fail(f"Notebook {notebook_path} raised an exception: {e}")
+        logger.error(f"Ноутбук {notebook_path} вызвал исключение: {e}")
+        pytest.fail(f"Ноутбук {notebook_path} вызвал исключение: {e}")
 
     finally:
-        # код формирует путь для сохранения выполненного ноутбука
+        # сохраняем копию выполненного ноутбука
         output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
-        # Код открывает файл для записи выполненного ноутбука
         try:
             with open(output_path, "w", encoding="utf-8") as out_file:
-                # код сохраняет выполненный ноутбук
                 nbformat.write(notebook, out_file)
-                # код выводит сообщение о сохранении
-            logger.info(f"Executed notebook saved as: {output_path}")
-        except Exception as ex:
-            logger.error(f'Ошибка при сохранении файла {output_path=}', exc_info=True)  # TODO: исправить формат ex
-            pytest.fail(f"Ошибка при сохранении файла {output_path}: {ex}")
+            logger.info(f"Выполненный ноутбук сохранен как: {output_path}")
+        except Exception as e:
+           logger.error(f"Не удалось сохранить выполненный ноутбук: {output_path}, ошибка: {e}")
 ```

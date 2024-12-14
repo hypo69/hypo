@@ -1,25 +1,23 @@
 # Анализ кода модуля `switch_account.py`
 
 **Качество кода**
-6
--  Плюсы
-    - Код структурирован, понятен и выполняет свою задачу.
-    - Используется `j_loads_ns` для загрузки JSON, что соответствует инструкциям.
-    - Присутствует docstring для модуля.
--  Минусы
-    - Отсутствует логирование ошибок.
-    - Отсутствует docstring для функции.
-    - Нет обработки возможных ошибок при выполнении `execute_locator`.
-    - Использована переменная `MODE`, которая не используется.
-    - Не хватает импорта `logger` из `src.logger.logger`.
+10
+- Плюсы
+    - Код хорошо структурирован и понятен.
+    - Используются константы и импорты.
+    - Применяется `j_loads_ns` для загрузки JSON.
+    - Есть docstring для функции.
+- Минусы
+    - Отсутствуют комментарии в формате reStructuredText (RST) для модуля.
+    - Отсутствует обработка ошибок в функции `switch_account`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить логирование ошибок с использованием `from src.logger.logger import logger`.
-2.  Добавить docstring к функции `switch_account` в формате RST.
-3.  Реализовать обработку исключений при выполнении `driver.execute_locator` с использованием `try-except` и логированием ошибок.
-4.  Удалить неиспользуемую переменную `MODE`.
-5.  Добавить описание модуля в docstring в формате RST.
+1.  Добавить docstring в формате RST для модуля.
+2.  Добавить обработку ошибок с использованием `logger.error` в функции `switch_account`.
+3.  Добавить комментарии в формате reStructuredText (RST) к функции.
+4.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+5.  Убедиться, что все переменные и импорты соответствуют ранее обработанным файлам.
 
 **Оптимизированный код**
 
@@ -30,10 +28,10 @@
 
 """
 Модуль для переключения между аккаунтами в Facebook.
-===========================================================================
+=========================================================================================
 
-Этот модуль содержит функцию :func:`switch_account`, которая выполняет переключение между аккаунтами,
-если на странице присутствует соответствующая кнопка.
+Этот модуль содержит функцию :func:`switch_account`, которая выполняет переключение между аккаунтами
+в Facebook, используя локаторы из файла `post_message.json`.
 
 Пример использования
 --------------------
@@ -43,50 +41,40 @@
     from src.webdriver.driver import Driver
     from src.endpoints.advertisement.facebook.scenarios.switch_account import switch_account
 
-    async def main():
-        driver = Driver()
-        await driver.start()
-        try:
-            await switch_account(driver)
-        finally:
-            await driver.close()
-
-    if __name__ == '__main__':
-        import asyncio
-        asyncio.run(main())
-
+    driver = Driver()
+    switch_account(driver)
 """
+MODE = 'dev'
 
 from pathlib import Path
 from types import SimpleNamespace
-
 from src import gs
-from src.webdriver.driver import Driver
+# from src.webdriver.driver import Driver # импорт уже есть
 from src.utils.jjson import j_loads_ns
-from src.logger.logger import logger  # Импорт логгера
+from src.logger.logger import logger
 
 
-# Загрузка локаторов из JSON файла.
+# Load locators from JSON file.
+#  Код загружает локаторы из JSON файла.
 locator: SimpleNamespace = j_loads_ns(
     Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
 )
 
 
-async def switch_account(driver: Driver):
+def switch_account(driver: Driver):
     """
-    Переключает аккаунт в Facebook, если присутствует кнопка переключения.
+    Выполняет переключение между аккаунтами Facebook.
+
+    Если на странице присутствует кнопка "Переключить", то код нажимает её.
 
     :param driver: Экземпляр веб-драйвера.
     :type driver: Driver
-    :raises Exception: Если происходит ошибка во время переключения аккаунта.
-    :return: None
     """
     try:
-        # Пытаемся выполнить нажатие на кнопку переключения аккаунта, используя локатор.
-        await driver.execute_locator(locator.switch_to_account_button)
+        # Код нажимает на кнопку переключения аккаунта, используя локатор.
+        driver.execute_locator(locator.switch_to_account_button)
     except Exception as ex:
-        # Логируем ошибку, если не удалось нажать на кнопку.
-        logger.error('Ошибка при попытке переключить аккаунт', exc_info=ex)
-        ... # Точка остановки.
-        return
+        # Логирование ошибки, если не удалось нажать на кнопку
+        logger.error('Ошибка при переключении аккаунта', ex)
+
 ```

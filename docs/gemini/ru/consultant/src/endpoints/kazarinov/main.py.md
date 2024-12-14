@@ -1,79 +1,68 @@
 # Анализ кода модуля `main.py`
 
-**Качество кода**
-7/10
-- **Плюсы**
-    - Код структурирован, использует функции для разделения логики.
-    - Используется `argparse` для обработки аргументов командной строки.
+**Качество кода: 7/10**
+-  Плюсы
+    - Код имеет базовую структуру, необходимую для запуска телеграм-бота.
+    - Используется `argparse` для обработки аргументов командной строки, что делает скрипт гибким.
     - Присутствует логирование ошибок.
-    - Есть возможность загрузки настроек из файла, что делает код гибким.
-    - Имеется проверка существования файла настроек.
-- **Минусы**
-    - Не используется `j_loads` или `j_loads_ns` для чтения файла.
-    - Отсутствует документация в формате RST для функций и модуля.
-    - Избыточное использование `try-except` с `print` вместо `logger.error`.
-    - Нет обработки случая, когда файл настроек не соответствует ожидаемому формату (не валидный JSON).
+-  Минусы
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+    - Отсутствуют docstring для модуля, функций и классов, что затрудняет понимание и использование кода.
+    - Присутствует избыточное использование стандартного блока `try-except`.
+    - Код содержит устаревшие комментарии  `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`.
 
 **Рекомендации по улучшению**
-
-1.  Добавить reStructuredText (RST) документацию для модуля и функций.
-2.  Использовать `j_loads` или `j_loads_ns` для загрузки JSON файлов.
-3.  Заменить `print` на `logger.error` для вывода ошибок.
-4.  Упростить конструкцию `if-else` при создании экземпляра бота.
-5.  Добавить обработку ошибок при загрузке JSON файла (например, некорректный JSON).
-6.  Привести в соответствие имена переменных и импортов с ранее обработанными файлами.
-7.  Добавить описание каждого аргумента командной строки.
+1.  Добавить docstring в формате RST для модуля, функций и класса.
+2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения JSON файлов.
+3.  Заменить избыточное использование стандартного блока `try-except` на обработку ошибок с помощью `logger.error`.
+4.  Удалить устаревшие комментарии.
+5.  Привести в соответствие имена переменных с ранее обработанными файлами.
+6.  Использовать константы для строк в коде.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль запуска Telegram-бота Kazarinov
-=====================================
+Модуль для запуска и управления Telegram ботом Kazarinov.
+=========================================================================================
 
-Этот модуль содержит основную логику для запуска Telegram-бота Kazarinov.
-Он обрабатывает аргументы командной строки, загружает настройки из файла (если указан),
-и запускает бота.
+Этот модуль содержит функции для парсинга аргументов командной строки, загрузки настроек
+из файла и запуска Telegram бота.
 
 Пример использования
 --------------------
 
-Пример запуска бота с настройками по умолчанию:
+Пример запуска бота с использованием файла настроек:
 
 .. code-block:: bash
 
-    python main.py
+    python main.py --settings config.json --mode prod
 
-Пример запуска бота с файлом настроек:
-
-.. code-block:: bash
-
-    python main.py --settings settings.json
-
-Пример запуска бота в продакшн режиме:
+Пример запуска бота без файла настроек:
 
 .. code-block:: bash
 
-    python main.py --mode prod
+    python main.py --mode test
+
 """
 import argparse
 import asyncio
-# import json # Удален стандартный json
 from pathlib import Path
-# from pydantic import BaseModel # Не используется
+from typing import Dict
+
 from src.logger.logger import logger
-from src.utils.jjson import j_loads # Добавлен j_loads
+from src.utils.jjson import j_loads
 from .bot import KazarinovTelegramBot
 
+_SETTINGS_KEY = "settings"
+_MODE_KEY = "mode"
+_TEST_MODE = "test"
+_PROD_MODE = "prod"
 
-
-def parse_args() -> dict:
+def parse_args() -> Dict:
     """
-    Разбирает аргументы командной строки.
+    Парсит аргументы командной строки.
 
     :return: Словарь с параметрами запуска.
     :rtype: dict
@@ -88,9 +77,9 @@ def parse_args() -> dict:
     parser.add_argument(
         "--mode",
         type=str,
-        choices=["test", "prod"],
-        default="test",
-        help="Режим работы бота (\'test\' или \'prod\').",
+        choices=[_TEST_MODE, _PROD_MODE],
+        default=_TEST_MODE,
+        help="Режим работы бота ('test' или 'prod').",
     )
 
     return vars(parser.parse_args())
@@ -98,36 +87,32 @@ def parse_args() -> dict:
 
 def main():
     """
-    Главная функция для запуска бота KazarinovTelegramBot.
-
-    Инициализирует и запускает Telegram-бота с настройками, полученными из
-    аргументов командной строки или файла настроек.
+    Главная функция запуска KazarinovTelegramBot с параметрами из командной строки или файла настроек.
     """
     print("Starting Kazarinov's Telegram Bot...")
 
     args = parse_args()
-    settings_path = args.get("settings")
-    mode = args.get("mode", "test")
 
-    # Проверка наличия файла настроек и его загрузка
-    if settings_path:
-        settings_path = Path(settings_path)
-        if not settings_path.exists():
-             # Логирование ошибки, если файл не найден
-            logger.error(f"Файл настроек '{settings_path}' не найден.")
-            return
-        try:
-            # Загрузка настроек из файла, используя j_loads
-            with open(settings_path, 'r', encoding='utf-8') as file: # Используется with для автоматического закрытия файла
-                settings = j_loads(file)
-            settings['mode'] = mode # Установка режима
-            bot = KazarinovTelegramBot(**settings)
-        except Exception as ex:
-             # Логирование ошибки, если файл не корректен
-            logger.error(f"Ошибка при загрузке файла настроек: {ex}")
+    # Проверяет наличие файла настроек и загружает их
+    if args.get(_SETTINGS_KEY):
+        settings_path = Path(args[_SETTINGS_KEY])
+        if settings_path.exists():
+            try:
+                #  Загружает настройки из файла с использованием j_loads
+                settings = j_loads(settings_path)
+                settings[_MODE_KEY] = args.get(_MODE_KEY, _TEST_MODE)  #  Дополнительно задаёт режим
+                bot = KazarinovTelegramBot(**settings)
+            except Exception as ex:
+                 # Обработка ошибки чтения файла
+                logger.error(f"Ошибка чтения файла настроек: {settings_path}", exc_info=ex)
+                return
+        else:
+             # Вывод сообщения, если файл настроек не найден
+            print(f"Файл настроек '{settings_path}' не найден.")
             return
     else:
-        # Создание экземпляра бота с параметрами из командной строки
+         # Создание экземпляра бота с параметрами по умолчанию
+        mode = args.get(_MODE_KEY, _TEST_MODE)
         bot = KazarinovTelegramBot(mode=mode)
 
     # Запуск бота
@@ -135,7 +120,7 @@ def main():
         asyncio.run(bot.application.run_polling())
     except Exception as ex:
         # Логирование ошибки при запуске бота
-        logger.error("Ошибка при запуске бота: %s", ex)
+        logger.error("Ошибка при запуске бота: %s", ex, exc_info=True)
 
 
 if __name__ == "__main__":

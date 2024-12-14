@@ -1,116 +1,101 @@
 # Анализ кода модуля `start_posting_my_groups.py`
 
 **Качество кода**
-8
--  Плюсы
-    - Код имеет четкую структуру, разделенную на импорты, настройки и основную логику.
-    - Используется логгер для записи информации о прерывании кампании.
-    - Присутствует обработка прерывания выполнения через `KeyboardInterrupt`.
-    - Наличие docstring для модуля, что соответствует требованиям.
--  Минусы
-    - Отсутствует документация к переменным и другим блокам кода.
-    - Используется `copy.copy` без необходимости.
-    - Отсутствует `from src.utils.jjson import j_loads, j_loads_ns`, что противоречит инструкции.
-    - Неполный docstring в начале файла.
-    - Жестко заданные пути к файлам.
-    - Отсутствие try except для обработки ошибок.
-    - Использование глобальных переменных, таких как MODE, что может привести к проблемам.
-    - В коде отсутсвует обработка ошибок при работе с файлами.
+7
+- Плюсы
+    - Код структурирован и относительно понятен.
+    - Используется логгер для вывода информации.
+    - Присутствует обработка прерывания с клавиатуры.
+- Минусы
+    - Отсутствует reStructuredText (RST) документация для модуля, переменных, классов и функций.
+    - Не используются `j_loads` или `j_loads_ns` для загрузки JSON-файлов.
+    - Не все импорты соответствуют ранее обработанным файлам.
+    - Использование `copy.copy` для `campaigns` в цикле может быть избыточным.
+    - Не используется try-except для обработки ошибок.
+    - Использованы `...` как точки остановки.
+    - Не все комментарии достаточно информативны.
 
 **Рекомендации по улучшению**
-1.  Добавить документацию в стиле reStructuredText (RST) для всех переменных, констант и функций.
-2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки файлов.
-3.  Удалить избыточное использование `copy.copy`.
-4.  Обработать возможные ошибки с помощью `try-except` и `logger.error`.
-5.  Перенести настройки в отдельный файл конфигурации для лучшей гибкости.
-6.  Добавить более информативное логирование.
-7.  Избегать использования глобальных переменных.
-8.  Улучшить читаемость кода, разбив длинные строки на несколько более коротких.
-9.  Добавить проверку на существование файлов, указанных в `filenames`.
+
+1.  Добавить RST документацию для модуля, переменных, классов и функций.
+2.  Использовать `j_loads_ns` для загрузки JSON-файлов.
+3.  Привести в соответствие импорты с ранее обработанными файлами.
+4.  Убрать избыточное использование `copy.copy` для `campaigns`, так как это список.
+5.  Заменить стандартный `try-except` на использование `logger.error`.
+6.  Добавить подробные комментарии в формате RST.
+7.  Убрать `...` как точки остановки.
+8.  Улучшить информативность комментариев.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для запуска рекламных кампаний в Facebook группах.
-========================================================
+Модуль для запуска продвижения рекламных кампаний в группах Facebook.
+=========================================================================================
 
-Этот модуль отвечает за запуск рекламных кампаний в Facebook, используя заданные группы и рекламные материалы.
-Он использует FacebookPromoter для публикации контента и обрабатывает прерывания через KeyboardInterrupt.
+Этот модуль инициализирует веб-драйвер, загружает настройки из файлов и запускает
+продвижение рекламных кампаний в указанных группах Facebook.
 
 Пример использования
 --------------------
 
+Запуск продвижения с использованием списка кампаний и файлов групп:
+
 .. code-block:: python
 
     from src.endpoints.advertisement.facebook.start_posting_my_groups import main
-
-    if __name__ == '__main__':
-        main()
+    main()
 """
 
-# импортируем необходимые библиотеки
+MODE = 'dev'
+
 import copy
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить импорт
 from src.webdriver.driver import Driver, Chrome
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
-from src.logger.logger import logger # импортируем logger
-# from typing import List # TODO: добавить импорт
+from src.logger.logger import logger
+from src.utils.jjson import j_loads_ns
+from typing import List
 
+# Инициализация веб-драйвера Chrome.
+d = Driver(Chrome)
+d.get_url(r"https://facebook.com")
 
+# Список файлов с информацией о группах.
+filenames: List[str] = ['my_managed_groups.json', ]
 
-# задаем режим работы (разработка или продакшн)
-MODE = 'dev' # TODO: использовать для конфигурации
+# Список рекламных кампаний.
+campaigns: List[str] = ['brands',
+                  'mom_and_baby',
+                  'pain',
+                  'sport_and_activity',
+                  'house',
+                  'bags_backpacks_suitcases',
+                  'man']
+
+# Инициализация промоутера Facebook.
+promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = True)
+
 
 def main():
     """
-    Основная функция для запуска рекламных кампаний.
-
-    Инициализирует драйвер браузера, настраивает промоутер, и запускает бесконечный цикл
-    для продвижения рекламных кампаний. Обрабатывает прерывание через KeyboardInterrupt.
+    Главная функция для запуска продвижения рекламных кампаний в группах Facebook.
+    
+    Инициализирует промоутер и запускает бесконечный цикл продвижения кампаний, 
+    обрабатывая прерывание с клавиатуры.
     """
     try:
-        # Инициализируем драйвер браузера Chrome
-        driver = Driver(Chrome)
-        driver.get_url(r"https://facebook.com")
-
-        # Список файлов с группами
-        filenames = ['my_managed_groups.json'] #TODO: вынести в конфиг
-        
-        # Список рекламных кампаний
-        campaigns = [
-            'brands',
-            'mom_and_baby',
-            'pain',
-            'sport_and_activity',
-            'house',
-            'bags_backpacks_suitcases',
-            'man'
-        ] #TODO: вынести в конфиг
-
-        # Создаем экземпляр FacebookPromoter
-        promoter = FacebookPromoter(driver, group_file_paths=filenames, no_video=True)
-
-        # Бесконечный цикл для запуска кампаний
         while True:
-            # Запускаем кампании
-            promoter.run_campaigns(campaigns=campaigns, group_file_paths=filenames) #TODO: убрать copy
-            ...
-    except KeyboardInterrupt:
-        # Логируем прерывание кампании
-        logger.info("Campaign promotion interrupted.")
-    except Exception as e:
-        # Логируем все остальные ошибки
-        logger.error(f"An error occurred: {e}", exc_info=True)
-    finally:
-        # Закрываем драйвер
-        if 'driver' in locals() and driver:
-            driver.close()
+            # Запуск продвижения кампаний.
+            promoter.run_campaigns(campaigns = campaigns, group_file_paths = filenames)
+            # Точка остановки для отладки
+            # ...
 
-if __name__ == '__main__':
-    # Вызываем функцию main только при запуске скрипта
+    except KeyboardInterrupt:
+        # Обработка прерывания с клавиатуры.
+        logger.info("Campaign promotion interrupted.")
+
+
+if __name__ == "__main__":
     main()
 ```

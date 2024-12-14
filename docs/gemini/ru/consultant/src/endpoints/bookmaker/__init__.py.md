@@ -2,37 +2,39 @@
 
 **Качество кода**
 8
--  Плюсы
-    -  Наличие заголовка файла с указанием кодировки.
-    -  Наличие docstring модуля.
--  Минусы
-    -  Отсутствуют необходимые импорты.
-    -  Комментарии и docstring не соответствуют стандарту RST.
-    -  Не используется логирование.
-    -  Не используется `j_loads` или `j_loads_ns`.
+- Плюсы
+    - Код содержит заголовочные комментарии, указывающие на кодировку и интерпретаторы.
+    - Присутствует docstring модуля с базовым описанием.
+    - Задана переменная `MODE`.
+- Минусы
+    - Отсутствуют необходимые импорты, закомментированы.
+    - Комментарий к модулю не соответствует стандарту reStructuredText (RST).
 
 **Рекомендации по улучшению**
-
-1.  Добавить необходимые импорты.
-2.  Переписать docstring модуля в формате reStructuredText.
-3.  Использовать `from src.logger.logger import logger` для логирования.
-4.  Удалить или закомментировать неиспользуемые импорты.
-5.  Добавить комментарий о назначении константы `MODE`.
-6.  Добавить описание для модуля в формате RST
+1. Добавить импорты необходимых модулей из `hypotez/src/endpoints/`.
+2. Переписать docstring модуля в формате RST.
+3. Удалить избыточные комментарии, оставляя только полезные.
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль инициализации endpoints
-=========================================================================================
+==============================
 
-Этот модуль определяет константу MODE и содержит импорты для различных endpoint'ов.
+Этот модуль определяет константы и импортирует подмодули,
+используемые для работы с различными endpoints.
 
+.. data:: MODE
+
+   Режим работы приложения (например, 'dev', 'prod').
 """
-MODE = 'dev' # Режим работы приложения (dev, prod)
 
-# from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
-# from .kazarinov import KazarinovTelegramBot
+MODE = 'dev'
+
+#from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester
+#from .kazarinov import KazarinovTelegramBot
 ```

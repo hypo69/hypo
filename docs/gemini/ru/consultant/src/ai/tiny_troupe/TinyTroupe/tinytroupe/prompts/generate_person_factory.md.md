@@ -1,86 +1,95 @@
-# Анализ кода модуля generate_person_factory.md
+# Анализ кода модуля generate_person_factory
 
 **Качество кода**
 8
 - Плюсы
-    - Код соответствует заданному формату markdown.
-    - Код представляет собой четкое описание задачи генерации контекстов для создания персон.
-    - Приведен пример входных и выходных данных.
+    - Код предоставляет понятное описание задачи по созданию контекстов для генерации персонажей.
+    - Инструкции четко описывают ожидаемый JSON-формат вывода.
+    - Примеры входных и выходных данных помогают понять функциональность.
 - Минусы
-    - Отсутствует описание модуля в формате reStructuredText (RST).
-    - Нет конкретного кода на Python, а только описание задачи.
-    - Не хватает инструкций по использованию, импорту и обработке данных.
-    - Не хватает обработки ошибок и логирования.
-    - Нет документации для функций и переменных, так как их нет.
+    - Отсутствует реальный код, только описание задачи.
+    - Нет обработки исключений и логирования.
+    - Не хватает комментариев в формате reStructuredText.
+    - Не используются `j_loads` и `j_loads_ns`.
+    - Отсутствуют импорты.
 
 **Рекомендации по улучшению**
-1.  Добавить описание модуля в формате reStructuredText (RST).
-2.  Преобразовать задачу в функцию Python, которая будет принимать на вход текстовое описание и возвращать список контекстов.
-3.  Использовать `j_loads` или `j_loads_ns` для работы с JSON.
-4.  Добавить логирование с помощью `from src.logger.logger import logger`.
-5.  Добавить обработку возможных ошибок, используя `try-except` и `logger.error`.
-6.  Добавить docstring для функции в формате RST.
-7.  Добавить пример использования функции в документацию.
+
+1.  **Добавить импорты:**
+    - Необходимо добавить `from src.utils.jjson import j_loads, j_loads_ns` если планируется использование этих функций.
+    - Необходимо добавить `from src.logger.logger import logger` если планируется логирование.
+
+2.  **Использовать reStructuredText:**
+    - Добавить docstring для модуля с описанием его назначения и использования.
+    - Включить docstring для функций.
+
+3.  **Обработка ошибок:**
+    - Использовать `logger.error` для логирования ошибок вместо стандартных `try-except`.
+
+4. **Использование `j_loads` и `j_loads_ns`**:
+   - Если в задаче предполагается загрузка данных из файлов, использовать `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+
+5. **Добавить конкретный код:**
+    - Так как представлен только пример задачи, добавить реализацию функции, которая будет генерировать массив контекстов для генерации персонажей на основе входного контекста.
+
+6. **Формат JSON:**
+   - Проверять корректность формирования JSON массива перед возвратом.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для генерации контекстов описания персон.
-========================================================
+Модуль для генерации контекстов персонажей
+=========================================================================================
 
-Этот модуль содержит функцию :func:`generate_person_contexts`, которая преобразует общие текстовые описания
-в массив более конкретных контекстов, используемых для генерации персонажей.
+Этот модуль содержит функции для создания множества контекстов,
+которые будут использоваться в качестве основы для генерации списка персонажей.
 
 Пример использования
 --------------------
 
-Пример использования функции `generate_person_contexts`:
-
 .. code-block:: python
 
-    from src.utils.jjson import j_loads
-    from src.logger.logger import logger
+   from src.ai.tiny_troupe.TinyTroupe.tinytroupe.prompts.generate_person_factory import generate_person_contexts
 
-    input_text = "Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not"
-    contexts = generate_person_contexts(input_text)
-    print(contexts)
+   input_context = "Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not"
+   person_contexts = generate_person_contexts(input_context, 3)
+   print(person_contexts)
 """
+
 from typing import List
-from src.utils.jjson import j_loads # импорт j_loads
-from src.logger.logger import logger # импорт логера
 import json
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
 
-def generate_person_contexts(input_text: str) -> List[str]:
+
+def generate_person_contexts(broad_context: str, num_persons: int) -> List[str]:
     """
-    Генерирует список контекстов описания персонажей на основе входного текстового описания.
+    Генерирует список контекстов персонажей на основе широкого контекста.
 
-    :param input_text: Текстовое описание общего контекста для генерации персонажей.
-    :type input_text: str
-    :return: Список строк, представляющих собой более конкретные контексты описания персонажей.
-    :rtype: List[str]
-
-    Пример:
-
-    .. code-block:: python
-
-        input_text = "Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not"
-        contexts = generate_person_contexts(input_text)
-        print(contexts)
-
+    :param broad_context: Широкий контекст для генерации персонажей.
+    :param num_persons: Количество контекстов персонажей для генерации.
+    :return: Список контекстов персонажей.
     """
     try:
-        #  Преобразование входного текста в более конкретные контексты.
-        # TODO: Здесь должна быть логика генерации контекстов.
-        #  Временный код для демонстрации функциональности.
+        # TODO: Здесь должна быть логика для генерации контекстов на основе `broad_context`
+        # В данном примере просто создаются общие контексты.
         contexts = [
-            f"Mexican person that has formed as lawyer but now works in other are, is single, like sports and movies",
-            f"Create a Brazilian person that is a doctor, like pets and the nature and love heavy metal.",
-            f"Create a Colombian person that is a lawyer, like to read and drink coffee and is married with 2 children."
-        ]
-        return contexts
+            f"Create a person with context: {broad_context}. Example: Mexican person that has formed as lawyer but now works in other are, is single, like sports and movies",
+            f"Create a person with context: {broad_context}. Example: Brazilian person that is a doctor, like pets and the nature and love heavy metal.",
+            f"Create a person with context: {broad_context}. Example: Colombian person that is a lawyer, like to read and drink coffee and is married with 2 children."
+        ][:num_persons]
+        #  Код преобразует список контекстов в JSON
+        return json.dumps(contexts)
     except Exception as e:
-        # Логирование ошибки, если что-то пошло не так.
-        logger.error(f"Ошибка при генерации контекстов: {e}")
+        #  Код логирует ошибку и возвращает пустой список
+        logger.error(f"Ошибка при генерации контекстов персонажей: {e}")
         return []
+
+
+if __name__ == '__main__':
+    #  Пример использования функции
+    input_context = "Latin American, age between 20 and 40 years old, economic status can vary between poor and rich, it can be religious or not, it can be married or not, it can have children or not, it can be a professional or not, it can be a worker or not"
+    person_contexts = generate_person_contexts(input_context, 3)
+    print(person_contexts)
 ```

@@ -1,110 +1,104 @@
 # Анализ кода модуля `readme.ru.md`
 
 **Качество кода**
-
-*   **Соответствие требованиям по оформлению кода: 5/10**
-    *   **Плюсы:**
-        *   Используется Markdown, что соответствует формату документа.
-        *   Представлена общая структура проекта и его взаимодействие.
-        *   Присутствует описание процесса взаимодействия пользователя с ботом.
-        *   Есть навигация по другим файлам.
-    *   **Минусы:**
-        *   Нет reStructuredText (RST) комментариев, docstring.
-        *   Markdown код требует доработки для единообразия.
-        *   Отсутствует подробное описание каждой функции и метода, а также их параметров и возвращаемых значений.
-        *   Нет конкретных примеров использования кода.
-        *   В текущем формате файл не содержит исполняемый код, поэтому большая часть требований не применима, однако нужно привести в соответствие с форматом `rst`.
+9
+- Плюсы
+    - Документ хорошо структурирован и понятен.
+    - Используется Markdown для форматирования.
+    - Присутствует описание основных компонентов и их взаимодействия.
+    - Включены диаграммы Mermaid для визуализации процессов.
+    - Есть ссылки на связанные документы.
+- Минусы
+    - Не используется reStructuredText (RST) формат, согласно инструкции.
+    - Нет подробного описания каждой функции/метода и их параметров.
 
 **Рекомендации по улучшению**
 
-1.  **Переход на RST**: Переписать весь текст в формате reStructuredText (RST) для единообразия и использования инструментов документации Python, например, Sphinx.
-2.  **Добавить описание модуля**: Добавить в начало файла описание модуля в формате RST.
-3.  **Структурировать информацию**: Разбить информацию на разделы с более подробными описаниями.
-4.  **Использовать секции и подразделы**: Использовать секции, подразделы и списки для лучшего структурирования документа.
-5.  **Переработать блок-схему**: Заменить mermaid-диаграммы на более стандартные диаграммы (например, использовать graphviz через sphinx).
-6.  **Добавить примеры**: Добавить примеры использования функционала.
+1.  **Формат документации:**
+    -   Перевести весь документ в формат RST, включая комментарии и docstring.
+2.  **Сохранение комментариев:**
+    -   Комментарии после `#` должны быть сохранены без изменений.
+3.  **Анализ структуры:**
+    -   Описания функций должны быть оформлены в виде docstring с использованием RST.
+4.  **Рефакторинг и улучшения:**
+    -   Добавить более подробные описания к диаграммам Mermaid.
+    -   Преобразовать текст в RST-совместимые блоки.
+5.  **Дополнительная инструкция:**
+    -   Добавить описание модуля в начале файла в формате RST.
+    -   Уточнить документацию по каждой функции и методу, а также по переменным.
 
 **Оптимизированный код**
+
 ```rst
 .. module:: src.endpoints.kazarinov.readme.ru
-   :synopsis: Документация модуля Казаринова. Мехирон в pdf
+   :synopsis: Документация по созданию прайслиста для Казаринова.
 
+========================================================================
+
+.. raw:: html
+
+    <TABLE>
+    <TR>
+    <TD>
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
+    </TD>
+    <TD>
+    <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/README.MD'>English</A>
+    </TD>
+    </TR>
+    </TABLE>
+
+Создание прайслиста для Казаринова
 ========================================
-Казаринов: Создание прайслиста
-========================================
 
-Этот модуль предоставляет документацию по созданию прайслиста для Казаринова.
-Он включает в себя описание работы Telegram бота и сценариев обработки данных.
+`KazarinovTelegramBot`
+-----------------------
+- https://one-tab.co.il
+- https://morlevi.co.il
+- https://grandavance.co.il
+- https://ivory.co.il
+- https://ksp.co.il
 
-.. include:: kazarinov_links.ru.md
-
-Основные компоненты
---------------------
-
-*   :ref:`KazarinovTelegramBot <kazarinov_bot_ru>`
-*   :ref:`BotHandler <bot_handler_ru>`
-*   :ref:`Сценарии <scenarios_ru>`
-
-Схема взаимодействия
---------------------
+--------
+`BotHandler`
+-----------------------
 
 На стороне клиента:
 
-.. graphviz::
-   :alt: Схема взаимодействия клиента с ботом
+.. code-block:: mermaid
 
-   digraph client_flow {
-       rankdir=LR;
-       Start[label="Выбор комплектующих"];
-       Combine[label="Объединение в One-Tab"];
-       SendToBot[label="Отправка ссылки в Telegram"];
-       ProdBot[label="Telegram бот prod"];
-       TestBot[label="Telegram бот test"];
-       Start -> Combine;
-       Combine -> SendToBot;
-       SendToBot -> ProdBot [label="hypo69_kazarinov_bot"];
-       SendToBot -> TestBot [label="hypo69_test_bot"];
-   }
+    flowchart TD
+        Start[Выбор комплектующих для сборки компьютера] --> Combine[Объединение в One-Tab]
+        Combine --> SendToBot{Отправка ссылки One-Tab в Telegram боту}
+        SendToBot -->|hypo69_kazarinov_bot| ProdBot[Telegram бот ``prod``]
+        SendToBot -->|hypo69_test_bot| TestBot[Telegram бот ``test``]
 
 На стороне кода:
 
-.. graphviz::
-    :alt: Схема работы кода обработки запроса
+- ``kazarinov_bot.handle_message()`` -> ``kazarinov.scenarios.run_scenario()``:
 
-    digraph code_flow {
-        rankdir=LR;
-        A[label="Start"];
-        B[label="URL is from OneTab?"];
-        C[label="Get data from OneTab"];
-        D[label="Reply - Try again"];
-        E[label="Data valid?"];
-        F[label="Reply Incorrect data"];
-        G[label="Run Mexiron scenario"];
-        H[label="Scenario successful?"];
-        I[label="Reply Done!\\nSend link to WhatsApp"];
-        J[label="Reply Error running scenario"];
-        K[label="Return"];
+.. code-block:: mermaid
 
-        A -> B;
-        B -> C [label="Yes"];
-        B -> D [label="No"];
-        C -> E;
-        E -> F [label="No"];
-        E -> G [label="Yes"];
-        G -> H;
-        H -> I [label="Yes"];
-        H -> J [label="No"];
-        F -> K;
-        I -> K;
-        D -> K;
-        J -> K;
-    }
+    flowchart TD
+        A[Start] --> B{URL is from OneTab?}
+        B -->|Yes| C[Get data from OneTab]
+        B -->|No| D[Reply - Try again]
+        C --> E{Data valid?}
+        E -->|No| F[Reply Incorrect data]
+        E -->|Yes| G[Run Mexiron scenario]
+        G --> H{Scenario successful?}
+        H -->|Yes| I[Reply Done! I will send the link to WhatsApp]
+        H -->|No| J[Reply Error running scenario]
+        F --> K[Return]
+        I --> K[Return]
+        D --> K[Return]
+        J --> K[Return]
 
 
 Далее
------
+========
 
-*  :ref:`Казаринов бот <kazarinov_bot_ru>`
-*  :ref:`Исполнение сценария <scenarios_ru>`
-
+`Казаринов бот <https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/kazarinov_bot.ru.md>`_
+<br>
+`Исполнение сценария <https://github.com/hypo69/hypo/blob/master/src/endpoints/kazarinov/scenarios/readme.ru.md>`_
 ```

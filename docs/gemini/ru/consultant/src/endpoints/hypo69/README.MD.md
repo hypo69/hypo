@@ -1,49 +1,81 @@
 # Анализ кода модуля `src.endpoints.hypo69`
 
 **Качество кода**
-
-7
--   **Плюсы**
-    -   Документация в формате reStructuredText (RST).
-    -   Наличие информации о модуле и его назначении.
-    -   Использование ссылок для навигации по проекту.
--   **Минусы**
-    -   Отсутствуют комментарии к переменным.
-    -   Не полная документация к модулю.
-    -   Использование HTML-таблицы в markdown документе (не соответствует стандартам).
+9
+ - Плюсы
+    - Хорошее структурирование документации, наличие ссылок на репозиторий.
+    - Наличие информации о модулях.
+ - Минусы
+    - Документация представлена в смешанном формате (reStructuredText и markdown).
+    - Отсутствуют подробные описания модулей.
+    - Нет документации о использовании модулей.
 
 **Рекомендации по улучшению**
 
-1.  Улучшить документацию модуля, добавив более подробное описание его функциональности.
-2.  Перенести HTML таблицы в формат markdown.
-3.  Использовать RST форматирование для заголовка модуля и списка.
-4.  Добавить документацию для всех переменных.
+1.  **Унификация формата:** Перевести всю документацию в формат reStructuredText (RST) для единообразия.
+2.  **Детальное описание:** Добавить описания для каждого модуля в формате RST, включая их назначение, использование и примеры.
+3.  **Структурирование:** Улучшить структуру документа, добавив заголовки и подзаголовки для удобства чтения.
+4. **Уточнить:**  Добавить описание использование модулей.
 
 **Оптимизированный код**
 
-```markdown
+```rst
 .. module:: src.endpoints.hypo69
    :synopsis: Endpoint for my code AI training
 
-.. _src_endpoints_hypo69:
-
+==============================================
 `hypo69`: Developer endpoints
 ==============================================
 
-Модуль содержит endpoints для различных задач, связанных с обучением ИИ и обработкой кода.
+Этот модуль содержит endpoints для обучения моделей ИИ.
 
-Основные компоненты:
---------------------
+Модули
+------
 
-* **small_talk_bot**: Бот для чата с моделью ИИ.
-* **code_assistant**: Модуль обучения модели коду проекта.
-* **psychologist_bot**: Модуль ранней разработки для парсинга диалогов.
+.. list-table::
+   :widths: 25 25 25
+   :header-rows: 1
 
-.. table:: Структура папок
-   :class: colwidths-auto
-   
-   * - [Root ↑](https://github.com/hypo69/hypo/blob/master/readme.ru.md)
-   * - [src](https://github.com/hypo69/hypo/blob/master/src/README.MD) \\ [endpoints](https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD)
-   * - [Русский](https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md)
+   * - Модуль
+     - Описание
+     - Ссылка
 
+   * - **small_talk_bot**
+     - Бот с чатом модели ИИ.
+     - `ссылка на код <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/small_talk_bot.py>`_
+
+   * - **code_assistant**
+     - Модуль обучения модели коду проекта.
+     - `ссылка на код <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant.py>`_
+
+   * - **psychologist_bot**
+     - Ранняя разработка модуля парсинга диалогов.
+     - `ссылка на код <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/psychologist_bot.py>`_
+
+Ссылки
+------
+
+.. list-table::
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Страница
+     - Ссылка
+     - Язык
+
+   * - [Root ↑]
+     - `https://github.com/hypo69/hypo/blob/master/readme.ru.md <https://github.com/hypo69/hypo/blob/master/readme.ru.md>`_
+     - -
+
+   * - src
+     - `https://github.com/hypo69/hypo/blob/master/src/README.MD <https://github.com/hypo69/hypo/blob/master/src/README.MD>`_
+     - -
+
+   * - endpoints
+     - `https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD <https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD>`_
+     - -
+
+   * - Русский
+     - `https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md>`_
+     - Русский
 ```

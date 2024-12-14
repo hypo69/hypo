@@ -1,39 +1,25 @@
-# Анализ кода модуля `code_explainer_md_en.md`
+# Анализ кода модуля code_explainer_md_en.md
 
 **Качество кода**
 8
--  Плюсы
-    - Код соответствует основным требованиям по структуре и содержанию.
-    - Инструкции четко определяют формат и ожидаемый вывод.
-    - Приведены примеры кода и документации.
--  Минусы
-    - Инструкции могут быть более конкретными в отношении обработки исключений.
-    - Описание алгоритма может быть дополнено для учета всех возможных сценариев.
-    - Примеры могут быть более разнообразными, охватывая более сложные случаи.
+- Плюсы
+    - Код предоставляет подробную инструкцию по анализу и объяснению кода.
+    - Четко определены требования к формату ответа и структуре документации.
+    - Содержит примеры использования и форматирования для облегчения понимания.
+    - Подробно описаны правила использования reStructuredText (RST) и HTML.
+- Минусы
+    - Некоторые формулировки могут быть избыточными и повторными.
+    - Инструкции для Mermaid могут быть более лаконичными.
 
 **Рекомендации по улучшению**
+1. **Уточнение терминологии**: Использовать более точные термины, такие как "шаблон ответа", вместо "Response Format" для ясности.
+2. **Упрощение инструкций**: Некоторые инструкции, такие как по использованию HTML в Mermaid, можно сделать более краткими.
+3. **Избегание повторений**: Сократить избыточные описания и повторения в требованиях к формату.
+4. **Акцент на RST**: Подчеркнуть важность RST как стандарта документации.
+5. **Логическая структура**: Улучшить логическую структуру документации, разделив ее на более мелкие части.
+6. **Примеры**: Добавить больше примеров для каждого этапа.
 
-1.  **Уточнение обработки исключений:**
-    - Добавить явные инструкции по использованию `logger.error` для обработки исключений во всех блоках `try-except`.
-    - Уточнить, как обрабатывать специфичные исключения.
-
-2.  **Детализация описания алгоритма:**
-    - Усилить описание алгоритма, добавив подробности о потоке данных между различными частями программы.
-    - Включить примеры для каждого шага алгоритма, если это применимо.
-
-3.  **Расширение примеров:**
-    - Добавить примеры, демонстрирующие более сложные варианты использования кода.
-    - Использовать примеры, которые охватывают различные типы данных и крайние случаи.
-
-4.  **Усиление документации:**
-    - Включить более подробные примеры документации RST, особенно для сложных случаев.
-    - Дать рекомендации по использованию RST для описания классов и модулей.
-
-5.  **Явное указание на отсутствие изменений в коде:**
-    - Четко указать, что код в блоке `<input code>` не должен быть изменен, а служит лишь для анализа.
-
-**Оптимизированный код**
-
+**Оптимизиробанный код**
 ```markdown
 # ИНСТРУКЦИЯ
 ## Основные требования:
@@ -118,12 +104,11 @@
      async def specification(self, value: Any = None):
          """Fetch and set specification.
 
-         Args:
-             value (Any): это значение можно передать в словаре kwargs через ключ {specification = `value`} при определении класса.
-             Если `value` был передан, его значение подставляется в поле `ProductFields.specification`.
+         :param value: Это значение можно передать в словаре kwargs через ключ {specification = `value`} при определении класса.
+           Если `value` был передан, его значение подставляется в поле `ProductFields.specification`.
          """
          try:
-             # код исполняет получение значения через execute_locator
+             # Код исполняет получение значения через execute_locator
              value = value or  await self.driver.execute_locator(self.locator.specification) or ''
          except Exception as ex:
              logger.error('Ошибка получения значения в поле `specification`', ex)
@@ -136,7 +121,7 @@
              ...
              return
 
-         # Если значение - список, код преобразовывает его в строку с разделителем `\n`
+         # Если значение - список, код преобразовывает его в строку с разделителем `\\n`
          if isinstance(value, list):
              value = '\n'.join(map(str, value))
 
@@ -166,9 +151,7 @@
 ## Формат ответа `.md` (markdown)
 ----------------------------
 ** КОНЕЦ ИНСТРУКЦИИ **
-```
 
-```markdown
 **Prompt**:
 Your task is to help the developer of the code of the project `hypotez` explain to the developer how the code works
 ### Requirements:
@@ -187,8 +170,8 @@ Analyze the provided code and explain its functionality.
 
 2. **<algorithm>**:
    - Describe the code's workflow in a step-by-step block diagram format.
-   - For each logical block, provide examples of how it works (if applicable).
-   - Show how data flows between functions, classes, or methods.
+   - Для каждого логического блока, дайте примеры как он работает (если применимо).
+   - Показать как данные перетекают между функциями, классами или методами.
 
 3. **<explanation>**:
    - Provide a detailed description:
@@ -222,35 +205,85 @@ def add_numbers(a, b):
     return result
 
 <algorithm>
-1. The function `calculate_sum` is imported from the `src.utils.calculator` module.
-2. A function `add_numbers` is defined, taking two arguments, `a` and `b`.
-3. The `calculate_sum(a, b)` function is called to compute the sum of `a` and `b`.
-4. The result of the function is returned to the caller.
+1. Функция `calculate_sum` импортируется из модуля `src.utils.calculator`.
+2. Определена функция `add_numbers`, принимающая два аргумента, `a` и `b`.
+3. Функция `calculate_sum(a, b)` вызывается для вычисления суммы `a` и `b`.
+4. Результат функции возвращается вызывающей стороне.
 
-Example:
-- Input: `a = 3`, `b = 5`.
-- Algorithm: `calculate_sum(3, 5)`.
-- Result: `8`.
+Пример:
+- Ввод: `a = 3`, `b = 5`.
+- Алгоритм: `calculate_sum(3, 5)`.
+- Результат: `8`.
 
 <explanation>
-**Imports**:
-- `from src.utils.calculator import calculate_sum`: Imports the `calculate_sum` function, which is used to perform the addition. This module is located in the `src.utils` package.
+**Импорты**:
+- `from src.utils.calculator import calculate_sum`: импортирует функцию `calculate_sum`, которая используется для выполнения сложения. Этот модуль находится в пакете `src.utils`.
 
-**Function `add_numbers`**:
-- Purpose: Simplifies the addition of two numbers by utilizing the `calculate_sum` function.
-- Arguments:
-  - `a` (number): The first operand.
-  - `b` (number): The second operand.
-- Return Value: The result of adding `a` and `b`.
+**Функция `add_numbers`**:
+- Назначение: упрощает сложение двух чисел, используя функцию `calculate_sum`.
+- Аргументы:
+  - `a` (число): Первый операнд.
+  - `b` (число): Второй операнд.
+- Возвращаемое значение: Результат сложения `a` и `b`.
 
-**Relationship with Other Packages**:
-- The `src.utils.calculator` module is likely part of a library for mathematical operations.
-- If `calculate_sum` relies on additional modules, this can be clarified in its documentation.
+**Связь с другими пакетами**:
+- Модуль `src.utils.calculator`, вероятно, является частью библиотеки для математических операций.
+- Если `calculate_sum` опирается на дополнительные модули, это можно уточнить в ее документации.
 
-**Possible Improvements**:
-- Add type checks for the `a` and `b` arguments to prevent errors.
-- Localize the `calculate_sum` call within the module if it is not reused elsewhere.
+**Возможные улучшения**:
+- Добавить проверки типов для аргументов `a` и `b`, чтобы предотвратить ошибки.
+- Локализовать вызов `calculate_sum` внутри модуля, если он не используется в других местах.
+
+
+### Instructions for Creating Mermaid Flowchart Diagrams Using HTML in Node Descriptions
+
+1. **Graph Type:**
+   - Use `flowchart` (e.g., `flowchart TD` for a top-to-bottom directed graph).
+   - Other options: `LR` (left-to-right), `BT` (bottom-to-top), `RL` (right-to-left).
+
+2. **Node Names:**
+   - Nodes must have meaningful and descriptive names that reflect the operation or state they represent.
+   - Avoid names like `A`, `B`, `C`. Use clear and understandable names, such as `Start`, `InitSupplier`, `ValidateInput`.
+
+3. **Using HTML:**
+   - Apply HTML tags to style the text in nodes.
+   - Supported tags include text formatting (e.g., `<b>`, `<i>`, `<h1>`, `<h3>`, `<code>`).
+   - Use HTML escape codes for special characters when needed:
+     - `(` → `&#40;`
+     - `)` → `&#41;`
+     - `'` → `&#39;`
+     - `"` → `&quot;`
+     - `:` → `&#58;`
+
+4. **Connections Between Nodes:**
+   - Define logical transitions between nodes using arrows: `-->` for directed or `---` for associative connections.
+   - Add text labels to arrows to clarify transition conditions, e.g., `-->|Success|`.
+
+5. **Example:**
+
+```mermaid
+flowchart TD
+    Start[<html>Start of the process<br><b>Create instance</b></html>]
+        --> InitSupplier[<html>Initialize Supplier<br><code>_payload&#40;params&#41;</code></html>]
+    InitSupplier --> Validate[<html>Validate parameters<br><i>is_valid&#40;params&#41;</i></html>]
+    Validate -->|Validation passed| Success[<html><b>Success</b><br>Creation completed</html>]
+    Validate -->|Error| Error[<html>Error<br><span style="color:red;">Invalid parameters</span></html>]
+```
+
+6. **Generating Nodes:**
+   - Generate node names based on the action or state they represent.
+   - Nodes should be concise but informative. Use HTML tags to enhance readability where needed.
+
+7. **Labels and Comments:**
+   - Add labels to arrows to explain transition conditions.
+   - Use comments with `%%` to describe complex connections.
+
+8. **Syntax Validation:**
+   - Ensure the HTML inside nodes is valid and does not break Mermaid syntax.
+
+**Result:** A flowchart with meaningful nodes styled using HTML, clearly representing the logical process or system architecture.
+
+
 ## Response text format: `UTF-8`
 This instruction is designed to ensure the model analyzes the code in detail and provides a comprehensive description of each element's functionality.
-```
 ```

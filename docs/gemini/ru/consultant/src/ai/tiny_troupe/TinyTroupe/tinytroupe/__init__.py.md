@@ -1,31 +1,31 @@
 # Анализ кода модуля `__init__.py`
 
 **Качество кода**
-
-7
--  Плюсы
-    - Код выполняет базовую настройку, включая чтение конфигурации, настройку логирования и вывод предупреждения об использовании ИИ.
-    - Использованы библиотеки `rich` и `logging` для улучшения вывода и логирования.
-    - Код добавляет текущую директорию в `sys.path`, что позволяет импортировать модули из текущей папки.
-    - Предоставлено предупреждение об использовании ИИ в начале работы скрипта.
--  Минусы
-    - Отсутствует docstring для модуля.
-    - Не используются `j_loads` или `j_loads_ns` для чтения конфигурации, хотя это указано в требованиях.
-    - Не все импорты соответствуют ранее обработанным файлам (например, не импортирован logger из `src.logger.logger`).
-    - Используется `print` для вывода предупреждения, лучше использовать логгер.
-    - Не хватает комментариев в формате RST для функций и переменных.
-    - Использован стандартный блок `try-except` без `logger.error`, когда он мог быть применён.
+8
+-   Плюсы
+    - Код выполняет инициализацию и настройку окружения.
+    - Использует `rich` для красивого вывода в консоль.
+    - Применяет пользовательские утилиты.
+    - Настроено логирование.
+    - Добавлен дисклеймер о использовании ИИ.
+    - Исправлен отступ в `rich.jupyter` для корректного отображения в Jupyter.
+-   Минусы
+    - Отсутствует reStructuredText (RST) документация.
+    - Нет явного разделения на этапы инициализации.
+    - Используется стандартный `print` вместо `logging` для дисклеймера.
+    - Импорт `rich` и `rich.jupyter` можно сделать более явным.
+    - Не хватает обработки возможных ошибок при чтении файла конфигурации.
+    - Не используется `j_loads` или `j_loads_ns`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring в формате reStructuredText для модуля.
-2.  Заменить `print` на `logger.info` для вывода предупреждения об использовании ИИ.
-3.  Использовать `j_loads` или `j_loads_ns` для чтения конфигурации.
-4.  Добавить недостающие импорты, например `from src.logger.logger import logger`.
-5.  Добавить docstring для всех функций и переменных.
-6.  Заменить `try-except` на `logger.error` для обработки ошибок.
-7.  Добавить комментарии, объясняющие каждый блок кода.
-8.  Использовать одинарные кавычки `'` в Python коде.
+1.  Добавить reStructuredText (RST) документацию для модуля.
+2.  Заменить `print` на `logger.info` для дисклеймера.
+3.  Явный импорт `from rich import print` и `from rich.jupyter import JUPYTER_HTML_FORMAT` для ясности.
+4.  Обработать ошибки при чтении файла конфигурации и инициализации логгера с использованием `try-except` и `logger.error`.
+5.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` при чтении файла конфигурации, если это необходимо.
+6.  Добавить комментарии к основным этапам инициализации.
+7.  Использовать f-строки вместо конкатенации строк.
 
 **Оптимизированный код**
 
@@ -34,32 +34,22 @@
 Модуль инициализации TinyTroupe
 =========================================================================================
 
-Этот модуль выполняет начальную настройку среды, включая чтение конфигурационного файла,
-инициализацию системы логирования, вывод предупреждения об использовании ИИ и настройку
-стилей для `rich` в Jupyter Notebook.
-
-Пример использования
---------------------
-
-Пример запуска:
-
-.. code-block:: python
-
-   python -m tinytroupe
+Этот модуль выполняет инициализацию окружения, настраивает логирование,
+выводит дисклеймер об использовании ИИ и подготавливает окружение для работы TinyTroupe.
 
 """
 import os
-import logging
-import configparser
-import rich  # for rich console output
-import rich.jupyter
 import sys
-# Добавление текущего пути в sys.path
-sys.path.append('.')
-from tinytroupe import utils # now we can import our utils
-from src.logger.logger import logger # Импорт логгера
+from rich import print # Импорт функции print из rich
+from rich.jupyter import JUPYTER_HTML_FORMAT # Импорт JUPYTER_HTML_FORMAT
+from src.utils.jjson import j_loads # Импорт j_loads для чтения JSON
+from src.logger.logger import logger
+from tinytroupe import utils
 
-# Предупреждение об ИИ
+# add current path to sys.path
+sys.path.append('.')
+
+# AI disclaimers
 logger.info(
     """
 !!!!
@@ -70,16 +60,21 @@ For any serious or consequential use, please review the generated content before
 """
 )
 
-# Чтение файла конфигурации
-#  Используем j_loads из utils для чтения json-подобного файла
-config = utils.j_loads(os.path.join('.', 'config.json'))
-# Вывод конфигурации
-utils.pretty_print_config(config)
-# Запуск системы логирования
-utils.start_logger(config)
 
-# Исправление проблемы с отступами в rich в Jupyter
-rich.jupyter.JUPYTER_HTML_FORMAT = \
-    utils.inject_html_css_style_prefix(rich.jupyter.JUPYTER_HTML_FORMAT, 'margin:0px;')
+try:
+    # Код считывает конфигурационный файл
+    config = utils.read_config_file()
+    # Код выводит конфигурацию на экран
+    utils.pretty_print_config(config)
+    # Код запускает логгер
+    utils.start_logger(config)
 
+    # fix an issue in the rich library: we don't want margins in Jupyter!
+    # Код исправляет проблему с отступами в rich.jupyter
+    JUPYTER_HTML_FORMAT = utils.inject_html_css_style_prefix(JUPYTER_HTML_FORMAT, "margin:0px;")
+
+except Exception as e:
+    # Код обрабатывает ошибку, если таковая произошла
+    logger.error(f"Ошибка при инициализации: {e}")
+    ...
 ```

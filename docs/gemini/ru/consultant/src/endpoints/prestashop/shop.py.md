@@ -1,49 +1,38 @@
 # Анализ кода модуля `shop.py`
 
 **Качество кода**
-6
+8
 -  Плюсы
-    - Код структурирован в класс `PrestaShopShop`, что способствует организации и повторному использованию.
-    - Используется `logger` для логирования, что хорошо для отладки и мониторинга.
-    - Присутствует обработка входных параметров, что повышает надежность кода.
-    - Используется `attrs` для создания класса, что упрощает определение атрибутов.
+    - Код содержит docstring для класса и метода `__init__`, что соответствует стандартам оформления.
+    - Используется `from src.logger.logger import logger` для логирования.
+    - Присутствует обработка ошибок при инициализации, хотя и в виде исключения.
 -  Минусы
-    - Отсутствуют docstring для модуля.
-    - Не используется `j_loads_ns` из `src.utils.jjson`.
-    - Не все импорты используются, например, `header`, `gs`, `attr`
-    - Комментарии в коде не соответствуют стандарту reStructuredText (RST).
-    - Неполная обработка ошибок.
-    - Избыточное использование `Optional` для `credentials` в `__init__`.
+    - Отсутствует docstring для модуля.
+    - Есть неиспользуемые импорты `header` и `sys`, а так же `os`.
+    - Исключение `ValueError` выбрасывается напрямую, вместо логирования ошибки через `logger.error`.
+    - Используется условный оператор для извлечения данных из `credentials`, что можно упростить.
+    - Не хватает комментариев в коде, объясняющих логику работы.
+    - Не используется `j_loads` или `j_loads_ns`.
 
 **Рекомендации по улучшению**
-1. Добавить docstring для модуля в формате reStructuredText (RST).
-2. Использовать `j_loads_ns` из `src.utils.jjson` вместо `j_loads`, если это необходимо.
-3. Убрать неиспользуемые импорты `header`, `gs`, `attr`.
-4. Переписать все комментарии в формате reStructuredText (RST).
-5. Изменить обработку исключений с помощью `logger.error` вместо `raise ValueError`.
-6. Упростить проверку аргументов, используя `or` и `if not all([api_domain, api_key]):`, а также избавиться от избыточного `Optional` для `credentials`.
+
+1. Добавить docstring для модуля.
+2. Удалить неиспользуемые импорты.
+3.  Заменить выброс исключения `ValueError` на логирование ошибки через `logger.error` и возбуждение `PrestaShopException`.
+4.  Упростить логику извлечения `api_domain` и `api_key` из `credentials` с использованием метода `getattr` и/или оператора `or`.
+5. Добавить комментарии к основным блокам кода для ясности.
+6. Добавить проверку, что `credentials` является `dict` или `SimpleNamespace` для избежания ошибок.
+7. Использовать `j_loads` или `j_loads_ns` если это потребуется в дальнейшей работе, в данном примере нет обращения к файлам.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для работы с магазинами PrestaShop
-=========================================================================================
+Модуль для работы с магазинами PrestaShop.
+==========================================
 
-Этот модуль предоставляет класс :class:`PrestaShopShop`, который наследуется от класса :class:`PrestaShop`
-и используется для взаимодействия с API магазинов PrestaShop.
-
-Пример использования
---------------------
-
-Пример инициализации класса `PrestaShopShop`:
-
-.. code-block:: python
-
-    from src.endpoints.prestashop.shop import PrestaShopShop
-
-    shop = PrestaShopShop(
-        credentials={'api_domain': 'example.com', 'api_key': 'test_key'}
-    )
+Этот модуль содержит класс :class:`PrestaShopShop`, который наследует от :class:`PrestaShop`
+и предоставляет функциональность для взаимодействия с API PrestaShop.
 """
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -53,25 +42,29 @@ MODE = 'dev'
 
 from types import SimpleNamespace
 from typing import Optional
-# from src import gs # Не используется
+# from header import  # не используется
+from src import gs
 from src.logger.logger import logger
-# from src.utils.jjson import j_loads # не используется
-from src.utils.jjson import j_loads_ns # Используем j_loads_ns
+from src.utils.jjson import j_loads # пока не используеться
 from .api import PrestaShop
 from src.logger.exceptions import PrestaShopException
-# from pathlib import Path # Не используется
-# from attr import attr, attrs # Не используется
-# import sys # Не используется
-# import os # Не используется
+from pathlib import Path
+# from attr import attr, attrs # не используется
+# import sys # не используется
+# import os # не используется
 
-@attrs(auto_attribs=True)
 class PrestaShopShop(PrestaShop):
     """
     Класс для работы с магазинами PrestaShop.
 
-    Наследует от :class:`PrestaShop` и реализует специфическую логику
-    для взаимодействия с API PrestaShop.
+    :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
+    :type credentials: Optional[dict | SimpleNamespace]
+    :param api_domain: Домен API.
+    :type api_domain: Optional[str]
+    :param api_key: Ключ API.
+    :type api_key: Optional[str]
     """
+    
     def __init__(self, 
                  credentials: Optional[dict | SimpleNamespace] = None, 
                  api_domain: Optional[str] = None, 
@@ -81,23 +74,28 @@ class PrestaShopShop(PrestaShop):
         Инициализация магазина PrestaShop.
 
         :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
-        :type credentials: Optional[dict | SimpleNamespace], optional
+        :type credentials: Optional[dict | SimpleNamespace]
         :param api_domain: Домен API.
-        :type api_domain: Optional[str], optional
+        :type api_domain: Optional[str]
         :param api_key: Ключ API.
-        :type api_key: Optional[str], optional
-        :raises ValueError: Если не переданы `api_domain` и `api_key`.
+        :type api_key: Optional[str]
+        :raises PrestaShopException: Если не переданы `api_domain` или `api_key`.
         """
-        # Если credentials заданы, то api_domain и api_key берутся из них
-        if credentials:
-            api_domain = credentials.get('api_domain', api_domain)
-            api_key = credentials.get('api_key', api_key)
+        # Проверяем, что credentials является словарем или SimpleNamespace
+        if credentials is not None and not isinstance(credentials, (dict, SimpleNamespace)):
+            logger.error(f'Передан неверный тип для credentials: {type(credentials)}. Ожидается dict или SimpleNamespace.')
+            raise PrestaShopException(f'Неверный тип credentials: {type(credentials)}. Ожидается dict или SimpleNamespace.')
 
-        # Проверяем, что оба параметра api_domain и api_key установлены
-        if not all([api_domain, api_key]):
-            logger.error('Необходимы оба параметра: api_domain и api_key.')
-            raise ValueError('Необходимы оба параметра: api_domain и api_key.')
+        # Извлекаем api_domain и api_key из credentials, если они есть
+        if credentials:
+            api_domain = getattr(credentials, 'api_domain', None) or credentials.get('api_domain', api_domain)
+            api_key = getattr(credentials, 'api_key', None) or credentials.get('api_key', api_key)
+
+        # Проверяем, что api_domain и api_key установлены
+        if not api_domain or not api_key:
+            logger.error(f'Необходимы оба параметра: api_domain и api_key. {api_domain=}, {api_key=}')
+            raise PrestaShopException('Необходимы оба параметра: api_domain и api_key.')
         
-        # Инициализация родительского класса PrestaShop
+        # Вызываем конструктор родительского класса
         super().__init__(api_domain, api_key, *args, **kwards)
 ```

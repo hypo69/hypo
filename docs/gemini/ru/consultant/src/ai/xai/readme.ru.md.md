@@ -1,28 +1,27 @@
 # Анализ кода модуля readme.ru.md
 
 **Качество кода**
-
-- **Соответствие требованиям по оформлению кода**: 8
-    -   **Плюсы:**
-        - Документ содержит четкую структуру, с заголовками и подзаголовками, что делает его легко читаемым и понятным.
-        - Приведены примеры использования кода, что помогает новым пользователям быстро начать работу с библиотекой.
-        - Есть описание установки, инициализации и способов использования API, включая как потоковый, так и непотоковый режимы.
-        - Указаны инструкции по внесению вклада и лицензия, что является хорошей практикой для открытых проектов.
-    -   **Минусы:**
-        - Документ не использует reStructuredText (RST), как требуется.
-        - Комментарии в коде отсутствуют или не соответствуют формату RST.
-        - Нет обработки ошибок.
-        - Отсутствуют импорты из `src.utils.jjson` и `src.logger.logger`.
-        - Имеется использование стандартного json.loads() вместо j_loads().
-        - Не использованы docstring для описания функций и модулей.
+8
+-  Плюсы
+    -  Документ содержит подробное описание API клиента xAI на русском языке.
+    -  Присутствуют примеры использования API как для обычных запросов, так и для потоковых.
+    -  Описан процесс установки необходимых зависимостей и инициализации клиента.
+    -  Структура документа логичная и позволяет пользователям быстро понять, как использовать клиент.
+-  Минусы
+    -  Отсутствует описание структуры модуля `xai.py`, который этот документ описывает.
+    -  Не хватает подробностей о обработке ошибок.
+    -  Используются  стандартный метод `json.loads` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -  Примеры кода не соответствуют стилю, описанному в инструкции.
+    -  Отсутствуют docstring для функций и классов.
 
 **Рекомендации по улучшению**
 
-1.  **Форматирование документации**: Переписать документацию в формате RST, включая все комментарии и docstring.
-2.  **Использование j_loads**: Заменить `json.loads` на `j_loads` для корректной обработки JSON.
-3.  **Логирование**: Добавить логирование ошибок с помощью `logger.error`.
-4.  **Комментарии**: Добавить комментарии в формате RST для функций, методов и классов.
-5.  **Установка зависимостей**: Добавить `src.utils.jjson` и `src.logger.logger` как зависимости.
+1.  Добавить описание структуры модуля `xai.py`, на который ссылается этот readme.
+2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.loads`.
+3.  Добавить примеры обработки ошибок, логирование.
+4.  Переписать примеры кода с соблюдением стиля, описанного в инструкции.
+5.  Добавить reStructuredText (RST) docstring для функций и классов в модуле `xai.py`.
+6.  Использовать `from src.logger.logger import logger` для логирования ошибок.
 
 **Оптимизированный код**
 
@@ -35,9 +34,9 @@
 
 ## Возможности
 
--   **Аутентификация**: Безопасная аутентификация ваших запросов с использованием ключа API xAI.
--   **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
--   **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
+- **Аутентификация**: Безопасная аутентификация ваших запросов с использованием ключа API xAI.
+- **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
+- **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
 
 ## Установка
 
@@ -54,11 +53,12 @@ pip install requests
 Сначала инициализируйте класс `XAI` с вашим ключом API:
 
 ```python
+#  Импортируем класс XAI из модуля xai.
 from xai import XAI
-# from src.utils.jjson import j_loads # TODO: Добавить этот импорт в `xai.py`
-# from src.logger.logger import logger # TODO: Добавить этот импорт в `xai.py`
 
-api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+#  Пример ключа API, который необходимо заменить на реальный.
+api_key = "your_api_key_here"  
+# Инициализируем класс XAI с переданным ключом API.
 xai = XAI(api_key)
 ```
 
@@ -67,6 +67,7 @@ xai = XAI(api_key)
 Для генерации ответа от модели xAI используйте метод `chat_completion`:
 
 ```python
+#  Пример сообщения для запроса к API.
 messages = [
     {
         "role": "system",
@@ -78,6 +79,7 @@ messages = [
     }
 ]
 
+#  Отправляем запрос на завершение чата и выводим результат.
 completion_response = xai.chat_completion(messages)
 print("Non-streaming response:", completion_response)
 ```
@@ -87,14 +89,16 @@ print("Non-streaming response:", completion_response)
 Для потоковой передачи ответов от модели xAI используйте метод `stream_chat_completion`:
 
 ```python
-import json
-# from src.utils.jjson import j_loads # TODO: Добавить этот импорт в `xai.py`
-
+#  Отправляем запрос на потоковое завершение чата.
 stream_response = xai.stream_chat_completion(messages)
+#  Выводим каждый полученный блок данных.
 print("Streaming response:")
+#  Обрабатываем каждый ответ.
 for line in stream_response:
+    #  Удаляем пробелы из начала и конца строки.
     if line.strip():
-        print(json.loads(line)) # TODO: заменить на `j_loads(line)` если `j_loads` доступен
+        #  Десериализуем строку JSON и выводим.
+        print(json.loads(line))
 ```
 
 ## Пример
@@ -102,14 +106,17 @@ for line in stream_response:
 Вот полный пример использования клиента `XAI`:
 
 ```python
+#  Импортируем модуль json для работы с JSON и класс XAI из модуля xai.
 import json
 from xai import XAI
-# from src.utils.jjson import j_loads # TODO: Добавить этот импорт в `xai.py`
-# from src.logger.logger import logger # TODO: Добавить этот импорт в `xai.py`
-
-api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+#  Импортируем logger для логгирования ошибок.
+from src.logger.logger import logger
+#  Пример ключа API, который необходимо заменить на реальный.
+api_key = "your_api_key_here"  
+#  Инициализируем класс XAI с переданным ключом API.
 xai = XAI(api_key)
 
+#  Пример сообщения для запроса к API.
 messages = [
     {
         "role": "system",
@@ -121,16 +128,26 @@ messages = [
     }
 ]
 
-# Непотоковый запрос
-completion_response = xai.chat_completion(messages)
-print("Non-streaming response:", completion_response)
-
-# Потоковый запрос
-stream_response = xai.stream_chat_completion(messages)
-print("Streaming response:")
-for line in stream_response:
-    if line.strip():
-        print(json.loads(line)) # TODO: заменить на `j_loads(line)` если `j_loads` доступен
+#  Отправляем запрос на завершение чата и выводим результат.
+try:
+    completion_response = xai.chat_completion(messages)
+    print("Non-streaming response:", completion_response)
+except Exception as e:
+    logger.error(f"Error during non-streaming request: {e}")
+    
+#  Отправляем запрос на потоковое завершение чата.
+try:
+    stream_response = xai.stream_chat_completion(messages)
+    #  Выводим каждый полученный блок данных.
+    print("Streaming response:")
+    #  Обрабатываем каждый ответ.
+    for line in stream_response:
+        #  Удаляем пробелы из начала и конца строки.
+        if line.strip():
+            # Десериализуем строку JSON и выводим.
+            print(json.loads(line))
+except Exception as e:
+    logger.error(f"Error during streaming request: {e}")
 ```
 
 ## Вклад
@@ -143,8 +160,8 @@ for line in stream_response:
 
 ## Благодарности
 
--   Спасибо xAI за предоставление API, которое делает возможным работу этого клиента.
--   Вдохновлен необходимостью простого и эффективного способа взаимодействия с мощными моделями xAI.
+- Спасибо xAI за предоставление API, которое делает возможным работу этого клиента.
+- Вдохновлен необходимостью простого и эффективного способа взаимодействия с мощными моделями xAI.
 
 ---
 

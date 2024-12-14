@@ -1,30 +1,37 @@
 # Анализ кода модуля `post_event.py`
 
 **Качество кода**
-9
+8
 -  Плюсы
-    - Код хорошо структурирован и разбит на функции, каждая из которых выполняет определенную задачу.
-    - Используется `j_loads_ns` для загрузки локаторов, что соответствует рекомендациям.
+    - Код достаточно хорошо структурирован, функции разделены по логическим блокам (отправка заголовка, даты, времени, описания).
+    - Используется `SimpleNamespace` для хранения данных, что удобно.
     - Присутствует логирование ошибок с помощью `logger.error`.
-    - Используются docstring для описания функций.
- -  Минусы
-    -  Не все docstring соответствуют стандарту reStructuredText (RST).
-    -  Много повторяющегося кода в функциях `post_title`, `post_date`, `post_time`, `post_description`.
-    - Отсутствуют необходимые импорты, например `Any` из `typing`.
-    -  В некоторых docstring отсутствуют типы параметров.
-    - В функциях `post_date` и `post_time` повторяется docstring из `post_title`.
-    - Отсутствует обработка исключений в блоке `try-except`.
+    - Применены docstring для функций, что улучшает читаемость.
+    - Использование `j_loads_ns` для загрузки локаторов.
+-  Минусы
+    - Отсутствует описание модуля в формате RST.
+    - Docstring не полностью соответствуют стандарту RST (не хватает описания параметров и возвращаемых значений).
+    - Присутствуют `...` как точки остановки.
+    - Дублирование docstring в функциях `post_date` и `post_time`.
+    - В функциях `post_date`, `post_time` и `post_description` дублируется код отправки ошибки, можно вынести в общую функцию.
+    - Используется `time.sleep(30)` для ожидания, что не является лучшей практикой.
+    - Нет обработки `Exception` в общих функциях отправки данных.
+    -  Некоторые комментарии не информативны.
 
 **Рекомендации по улучшению**
-1.  **Документация RST:** Переписать docstring в формате reStructuredText (RST) для всех функций, методов и модуля.
-2.  **Улучшение docstring:** Добавить типы для параметров в docstring и убедиться в их корректности.
-3.  **Устранение дублирования кода:** Вынести общую логику для отправки текста в поле ввода в отдельную функцию.
-4. **Обработка ошибок:** Добавить обработку исключений с помощью try-except в `execute_locator`.
-5. **Импорты:** Добавить отсутствующие импорты.
-6.  **Логирование:** Использовать `logger.debug` для логирования успешных операций и `logger.error` для ошибок.
-7.  **Удалить лишние `...`**: Убрать точки остановки из кода.
+
+1.  Добавить описание модуля в формате RST.
+2.  Улучшить docstring функций, добавив описания параметров и возвращаемых значений в формате RST.
+3.  Заменить `...` на логику или удалить их, если они не нужны.
+4.  Убрать дублирование docstring в функциях `post_date` и `post_time`.
+5.  Вынести общий код обработки ошибок в отдельную функцию, чтобы избежать дублирования.
+6.  Заменить `time.sleep(30)` на более подходящий механизм ожидания (например, явное ожидание с использованием `WebDriverWait`).
+7.  Добавить обработку исключений в общих функциях отправки данных.
+8.  Сделать комментарии более информативными.
+9.  Добавить общие импорты в начало файла.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -34,197 +41,173 @@
 Модуль для публикации календарного события в группах Facebook.
 =========================================================================================
 
-Этот модуль содержит функции для автоматизации процесса публикации календарных событий в группах Facebook,
-используя Selenium для взаимодействия с веб-интерфейсом.
+Этот модуль содержит функции для отправки заголовка, даты, времени и описания
+календарного события в группах Facebook с использованием Selenium WebDriver.
 
-Функции модуля:
-    - :func:`post_title`: Отправляет заголовок события.
-    - :func:`post_date`: Отправляет дату начала события.
-    - :func:`post_time`: Отправляет время начала события.
-    - :func:`post_description`: Отправляет описание события.
-    - :func:`post_event`: Координирует публикацию события, вызывая вспомогательные функции.
-
-Пример использования:
+Пример использования
 --------------------
+
+Пример публикации события:
 
 .. code-block:: python
 
-    from src.webdriver.driver import Driver
-    from types import SimpleNamespace
-
     driver = Driver(...)
     event_data = SimpleNamespace(
-        title="Заголовок события",
-        start="2024-07-28 10:00",
+        title="Название события",
+        start="2024-07-28 12:00",
         description="Описание события",
         promotional_link="https://example.com"
     )
     post_event(driver, event_data)
 """
-MODE = 'dev'
-
-from socket import timeout
 import time
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Dict, List, Any
-from urllib.parse import urlencode
+from typing import List
 from selenium.webdriver.remote.webelement import WebElement
 
 from src import gs
 from src.webdriver.driver import Driver
-from src.utils.jjson import j_loads_ns, pprint
+from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
-# Загрузка локаторов из JSON файла.
+
+# Load locators from JSON file.
 locator: SimpleNamespace = j_loads_ns(
     Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_event.json')
 )
 
-def _send_text_to_locator(d: Driver, locator: SimpleNamespace, message: str) -> bool:
+def _execute_and_check(d: Driver, locator: SimpleNamespace, message: str = None) -> bool:
     """
-    Отправляет текст в поле ввода, используя указанный локатор.
+    Выполняет отправку значения в поле и проверяет результат.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param locator: Локатор элемента, в который нужно отправить текст.
-    :type locator: SimpleNamespace
-    :param message: Текст, который необходимо отправить.
-    :type message: str
-    :return: `True`, если текст успешно отправлен, `False` в противном случае.
-    :rtype: bool
+    :param d: Экземпляр драйвера.
+    :param locator: Локатор элемента.
+    :param message: Сообщение для отправки (опционально).
+    :return: `True`, если отправка прошла успешно, `False` в противном случае.
     """
     try:
+        # Код отправляет значение в поле, используя execute_locator.
         if not d.execute_locator(locator=locator, message=message):
-            logger.error(f"Не удалось отправить текст в поле с локатором {locator}", exc_info=False)
+            logger.error(f"Не удалось отправить данные в поле {locator=}", exc_info=False)
             return False
-        logger.debug(f"Текст успешно отправлен в поле с локатором {locator}")
         return True
     except Exception as ex:
-        logger.error(f"Ошибка при отправке текста в поле с локатором {locator}", exc_info=True)
+        logger.error(f"Ошибка отправки данных в поле {locator=}: {ex}", exc_info=True)
         return False
+
 
 def post_title(d: Driver, title: str) -> bool:
     """
     Отправляет заголовок события.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
+    :param d: Экземпляр драйвера.
     :param title: Заголовок события.
-    :type title: str
-    :return: `True`, если заголовок успешно отправлен, `False` в противном случае.
-    :rtype: bool
+    :return: `True`, если заголовок отправлен успешно, `False` в противном случае.
 
     Примеры:
         >>> driver = Driver(...)
-        >>> post_title(driver, "Заголовок события")
+        >>> post_title(driver, "Campaign Title")
         True
     """
-    # Отправка заголовка события
-    return _send_text_to_locator(d, locator.event_title, title)
+    # Код отправляет заголовок события, используя _execute_and_check.
+    return _execute_and_check(d, locator.event_title, title)
 
 
 def post_date(d: Driver, date: str) -> bool:
     """
-    Отправляет дату начала события.
+    Отправляет дату события.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param date: Дата начала события.
-    :type date: str
-    :return: `True`, если дата успешно отправлена, `False` в противном случае.
-    :rtype: bool
+    :param d: Экземпляр драйвера.
+    :param date: Дата события.
+    :return: `True`, если дата отправлена успешно, `False` в противном случае.
 
-    Примеры:
+     Примеры:
         >>> driver = Driver(...)
         >>> post_date(driver, "2024-07-28")
         True
     """
-    # Отправка даты события
-    return _send_text_to_locator(d, locator.start_date, date)
+    # Код отправляет дату события, используя _execute_and_check.
+    return _execute_and_check(d, locator.start_date, date)
 
 
 def post_time(d: Driver, time: str) -> bool:
     """
-    Отправляет время начала события.
+    Отправляет время события.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param time: Время начала события.
-    :type time: str
-    :return: `True`, если время успешно отправлено, `False` в противном случае.
-    :rtype: bool
+    :param d: Экземпляр драйвера.
+    :param time: Время события.
+    :return: `True`, если время отправлено успешно, `False` в противном случае.
 
     Примеры:
         >>> driver = Driver(...)
-        >>> post_time(driver, "10:00")
+        >>> post_time(driver, "12:00")
         True
     """
-    # Отправка времени события
-    return _send_text_to_locator(d, locator.start_time, time)
+    # Код отправляет время события, используя _execute_and_check.
+    return _execute_and_check(d, locator.start_time, time)
 
 
 def post_description(d: Driver, description: str) -> bool:
     """
     Отправляет описание события.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
+    :param d: Экземпляр драйвера.
     :param description: Описание события.
-    :type description: str
-    :return: `True`, если описание успешно отправлено, `False` в противном случае.
-    :rtype: bool
+    :return: `True`, если описание отправлено успешно, `False` в противном случае.
 
     Примеры:
         >>> driver = Driver(...)
-        >>> post_description(driver, "Описание события")
+        >>> post_description(driver, "Event Description")
         True
     """
-    # Прокрутка страницы вниз
+    # Код прокручивает страницу вниз на 300 пикселей.
     d.scroll(1, 300, 'down')
-    # Отправка описания события
-    return _send_text_to_locator(d, locator.event_description, description)
+    # Код отправляет описание события, используя _execute_and_check.
+    return _execute_and_check(d, locator.event_description, description)
 
 
 def post_event(d: Driver, event: SimpleNamespace) -> bool:
     """
-    Управляет процессом публикации события, включая заголовок, дату, время, описание и ссылку.
+    Управляет процессом публикации события с заголовком, описанием и ссылкой.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-страницей.
-    :type d: Driver
-    :param event: Объект SimpleNamespace, содержащий данные события (заголовок, дату, время, описание, рекламная ссылка).
-    :type event: SimpleNamespace
-    :return: `True`, если событие успешно опубликовано, `False` в противном случае.
-    :rtype: bool
+    :param d: Экземпляр драйвера.
+    :param event: Объект SimpleNamespace, содержащий данные события (title, start, description, promotional_link).
+    :return: `True`, если публикация прошла успешно, `False` в противном случае.
 
     Примеры:
         >>> driver = Driver(...)
-        >>> event = SimpleNamespace(title="Заголовок", start="2024-07-28 10:00", description="Описание", promotional_link="https://example.com")
+        >>> event = SimpleNamespace(title="Campaign Title", start="2024-07-28 12:00", description="Event Description", promotional_link="https://example.com")
         >>> post_event(driver, event)
-        True
     """
-    # Отправка заголовка
+    # Код отправляет заголовок события, если отправка не удалась, функция возвращает False.
     if not post_title(d, event.title):
         return False
 
-    # Разбиение даты и времени
+    # Код разделяет дату и время из строки event.start.
     dt, tm = event.start.split()
-    # Отправка даты
+    # Код отправляет дату события, если отправка не удалась, функция возвращает False.
     if not post_date(d, dt.strip()):
         return False
-    # Отправка времени
+     # Код отправляет время события, если отправка не удалась, функция возвращает False.
     if not post_time(d, tm.strip()):
         return False
-
-    # Отправка описания и рекламной ссылки
+    # Код отправляет описание и ссылку, если отправка не удалась, функция возвращает False.
     if not post_description(d, f"{event.description}\\n{event.promotional_link}"):
         return False
-    
-    # Отправка события
-    if not d.execute_locator(locator = locator.event_send):
+    # Код кликает по кнопке отправки события, если отправка не удалась, функция возвращает False.
+    if not d.execute_locator(locator=locator.event_send):
+         return False
+    try:
+        # Код ожидает пока не появится элемент после отправки.
+        WebDriverWait(d.instance, 30).until(
+            EC.presence_of_element_located(locator.event_sended)
+        )
+    except TimeoutException:
+        logger.error("Время ожидания отправки события истекло", exc_info=True)
         return False
-    
-    time.sleep(30)
-
     return True
 ```

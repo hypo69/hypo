@@ -1,45 +1,38 @@
 # Анализ кода модуля `grock.py`
 
 **Качество кода**
--  Соответствие требованиям по оформлению кода: 7/10
-    -  Плюсы:
-        - Код относительно хорошо структурирован и понятен.
-        - Используются docstring для описания классов и методов.
-        - Присутствует базовая обработка ошибок с помощью `response.raise_for_status()`.
-    - Минусы:
-        - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-        - Отсутствует использование `from src.logger.logger import logger` для логирования ошибок.
-        - Некоторые комментарии не соответствуют reStructuredText.
-        - Нет обработки ошибок в `stream_chat_completion`, кроме `response.raise_for_status()`.
-        - Отсутствует обработка ошибок при чтении потоковых данных.
-        - Нет проверки типа `api_key` при инициализации класса.
-        - Нет обработки ошибок в блоке `if __name__ == "__main__":`
-        - Не используется константа для `https://api.x.ai/v1`.
-        - `if line.strip():` избыточно, можно перенести логику обработки в генератор.
+
+**Оценка: 7/10**
+-  **Плюсы**
+    - Код хорошо структурирован и разбит на логические блоки.
+    - Используется класс `XAI` для инкапсуляции логики работы с API.
+    - Присутствуют docstring для классов и методов, что облегчает понимание кода.
+    - Обработка ошибок HTTP через `response.raise_for_status()`.
+    - Есть пример использования класса в блоке `if __name__ == "__main__":`.
+-  **Минусы**
+    - Отсутствует обработка исключений в `stream_chat_completion`.
+    - Не используется `j_loads` или `j_loads_ns` для работы с `json`, как указано в инструкции.
+    - Нет логирования ошибок через `src.logger.logger`.
+    - Некоторые комментарии не соответствуют формату RST.
+    - Использование `print` для вывода, вместо логирования.
+    - Отсутствуют необходимые импорты из `src.utils.jjson` и `src.logger.logger`.
 
 **Рекомендации по улучшению**
-
-1.  **Импорты**: Добавить недостающие импорты, такие как `Any` из `typing`, `j_loads` из `src.utils.jjson`, и `logger` из `src.logger.logger`.
-2.  **Формат документации**: Переписать все docstring и комментарии в формате reStructuredText (RST).
-3.  **Обработка данных**: Использовать `j_loads` для обработки JSON из потокового ответа.
-4.  **Логирование**: Добавить логирование ошибок с помощью `logger.error`.
-5.  **Рефакторинг**:
-    -   В `_send_request` добавить обработку ошибок `requests.exceptions.RequestException`.
-    -   В `stream_chat_completion` добавить обработку ошибок при итерации по потоку.
-    -   Использовать константу для базового URL.
-    -   Упростить обработку потока в `stream_chat_completion`.
-    -   Добавить проверку типа `api_key` при инициализации класса.
-    -   Добавить обработку ошибок в блоке `if __name__ == "__main__":`
+1.  Использовать `j_loads` или `j_loads_ns` для разбора JSON в `stream_chat_completion`.
+2.  Добавить обработку исключений в `stream_chat_completion` и логировать их с помощью `logger.error`.
+3.  Импортировать и использовать `logger` для логирования.
+4.  Переписать все комментарии в формате RST, как указано в инструкции.
+5.  Удалить использование `print` для вывода, и заменить на логирование через `logger`.
+6.  Убедиться в правильности всех импортов.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для взаимодействия с API x.ai.
+Модуль для взаимодействия с API x.ai
 =========================================================================================
 
-Этот модуль содержит класс :class:`XAI`, который используется для
-взаимодействия с API x.ai для выполнения задач, связанных с генерацией текста.
+Этот модуль содержит класс :class:`XAI`, который используется для взаимодействия с API x.ai для выполнения задач чат-бота.
 
 Пример использования
 --------------------
@@ -48,56 +41,31 @@
 
 .. code-block:: python
 
-    api_key = "your_api_key_here"  # Замените на ваш реальный API-ключ
-    xai = XAI(api_key)
-
+    xai = XAI(api_key='your_api_key_here')
     messages = [
-        {
-            "role": "system",
-            "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
-        },
-        {
-            "role": "user",
-            "content": "What is the answer to life and universe?"
-        }
+        {"role": "system", "content": "You are Grok, a chatbot"},
+        {"role": "user", "content": "What is the answer?"}
     ]
-
-    # Непотоковый запрос
     completion_response = xai.chat_completion(messages)
-    print("Non-streaming response:", completion_response)
-
-    # Потоковый запрос
-    stream_response = xai.stream_chat_completion(messages)
-    print("Streaming response:")
-    for line in stream_response:
-        print(line)
+    print(completion_response)
 """
 import requests
-from typing import Any, List, Dict, Generator
-#  импортируем j_loads для обработки json
-from src.utils.jjson import j_loads
-#  импортируем logger для логирования
-from src.logger.logger import logger
-#  Константа для базового URL
-BASE_URL = "https://api.x.ai/v1"
+from typing import List, Dict, Any
+from src.utils.jjson import j_loads # импортируем j_loads из src.utils.jjson
+from src.logger.logger import logger # импортируем logger из src.logger.logger
 
 class XAI:
     """
     Класс для взаимодействия с API x.ai.
+
+    :param api_key: Ключ API для аутентификации.
     """
     def __init__(self, api_key: str):
         """
         Инициализация класса XAI.
-
-        :param api_key: Ключ API для аутентификации.
-        :raises TypeError: Если `api_key` не является строкой.
         """
-        if not isinstance(api_key, str):
-            # Проверка типа api_key
-            raise TypeError('api_key must be a string')
         self.api_key = api_key
-        #  Устанавливаем базовый URL
-        self.base_url = BASE_URL
+        self.base_url = "https://api.x.ai/v1"  # Базовый URL API
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json"
@@ -111,22 +79,18 @@ class XAI:
         :param endpoint: Конечная точка API.
         :param data: Данные для отправки в теле запроса (для POST и PUT).
         :return: Ответ от API в формате JSON.
-        :raises requests.exceptions.RequestException: Если возникает ошибка при отправке запроса.
         """
         url = f"{self.base_url}/{endpoint}"
+        #  отправляем запрос к API
         try:
-            # отправляем запрос к API
             response = requests.request(method, url, headers=self.headers, json=data)
-            # выбрасывает исключение, если статус ответа не 2xx
-            response.raise_for_status()
-            # возвращаем json
+            response.raise_for_status()  #  Выбрасывает исключение, если статус ответа не 2xx
             return response.json()
         except requests.exceptions.RequestException as ex:
-            # Логируем ошибку при отправке запроса
-            logger.error(f'Ошибка при отправке запроса к {url}', exc_info=ex)
-            raise
+            logger.error(f'Ошибка при отправке запроса к API: {ex}')
+            return {} # возвращаем пустой словарь в случае ошибки
 
-    def chat_completion(self, messages: List[Dict[str, str]], model: str = "grok-beta", stream: bool = False, temperature: int = 0) -> dict:
+    def chat_completion(self, messages: List[Dict[str, str]], model: str = "grok-beta", stream: bool = False, temperature: float = 0) -> dict:
         """
         Запрос на завершение чата.
 
@@ -143,18 +107,17 @@ class XAI:
             "stream": stream,
             "temperature": temperature
         }
-        # отправляем запрос
+        #  отправляем запрос на завершение чата
         return self._send_request("POST", endpoint, data)
 
-    def stream_chat_completion(self, messages: List[Dict[str, str]], model: str = "grok-beta", temperature: int = 0) -> Generator[dict, None, None]:
+    def stream_chat_completion(self, messages: List[Dict[str, str]], model: str = "grok-beta", temperature: float = 0) -> Any:
         """
         Запрос на завершение чата с потоковой передачей.
 
         :param messages: Список сообщений для чата.
         :param model: Модель для использования.
         :param temperature: Температура для генерации ответа.
-        :return: Генератор, выдающий ответы от API в формате JSON.
-        :raises requests.exceptions.RequestException: Если возникает ошибка при отправке запроса.
+        :return: Поток ответов от API.
         """
         endpoint = "chat/completions"
         data = {
@@ -164,53 +127,42 @@ class XAI:
             "temperature": temperature
         }
         url = f"{self.base_url}/{endpoint}"
+        #  отправляем запрос на завершение чата с потоковой передачей
         try:
-             # отправляем запрос с потоком
             response = requests.post(url, headers=self.headers, json=data, stream=True)
-            # выбрасываем исключение если статус код не 200
             response.raise_for_status()
-            # преобразовываем поток
             for line in response.iter_lines(decode_unicode=True):
-                if line:
-                    # обрабатываем json
+                if line.strip():
+                    #  Используем j_loads для разбора JSON
                     yield j_loads(line)
         except requests.exceptions.RequestException as ex:
-            # логируем ошибку
-            logger.error(f'Ошибка при запросе потока к {url}', exc_info=ex)
-            raise
-        except json.JSONDecodeError as ex:
-            # логируем ошибку
-            logger.error(f'Ошибка при декодировании JSON', exc_info=ex)
-            raise
+            logger.error(f'Ошибка при потоковой передаче запроса: {ex}')
+            return
 
 # Пример использования класса XAI
 if __name__ == "__main__":
-    try:
-        #  замените на ваш реальный API-ключ
-        api_key = "your_api_key_here"
-        xai = XAI(api_key)
+    api_key = "your_api_key_here"  # Замените на ваш реальный API-ключ
+    xai = XAI(api_key)
 
-        messages = [
-            {
-                "role": "system",
-                "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
-            },
-            {
-                "role": "user",
-                "content": "What is the answer to life and universe?"
-            }
-        ]
+    messages = [
+        {
+            "role": "system",
+            "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+        },
+        {
+            "role": "user",
+            "content": "What is the answer to life and universe?"
+        }
+    ]
 
-        # Непотоковый запрос
-        completion_response = xai.chat_completion(messages)
-        print("Non-streaming response:", completion_response)
+    #  Непотоковый запрос
+    completion_response = xai.chat_completion(messages)
+    logger.info(f"Non-streaming response: {completion_response}")
 
-        # Потоковый запрос
-        stream_response = xai.stream_chat_completion(messages)
-        print("Streaming response:")
-        for line in stream_response:
-            print(line)
-    except Exception as ex:
-         # логируем ошибку
-        logger.error(f'Произошла ошибка', exc_info=ex)
+    #  Потоковый запрос
+    stream_response = xai.stream_chat_completion(messages)
+    logger.info("Streaming response:")
+    if stream_response:
+      for line in stream_response:
+        logger.info(line)
 ```

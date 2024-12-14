@@ -1,94 +1,100 @@
-# Анализ кода модуля test_security
+# Анализ кода модуля `test_security.py`
 
 **Качество кода**
-7
+10
 - Плюсы
-    - Код выполняет проверку API LLM на соответствие минимальным требованиям.
-    - Используется pytest для тестирования.
-    - Присутствует логирование.
+    - Код содержит тест для проверки свойств API LLM, что важно для обеспечения безопасности.
+    - Присутствуют проверки на наличие необходимых ключей в ответе от LLM API.
+    - Есть проверка на минимальную и максимальную длину ответа, а также на кодировку UTF-8.
 - Минусы
-    - Не все импорты соответствуют принятому стилю (`from src.logger.logger import logger`).
-    - Отсутствует reStructuredText документация для модуля и функций.
-    -  Используется стандартный `print` вместо `logger.debug` или `logger.info`.
+    - Используется глобальный logger, что может привести к проблемам, лучше импортировать `logger` из `src.logger.logger`.
+    - В коде используется `print` для вывода отладочной информации, лучше использовать `logger.debug`.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения данных.
+    - Пути в `sys.path.append` не соответствуют структуре проекта.
+    - Нет документации в формате reStructuredText (RST).
+    - Тестовая функция не параметризована, и проверяет только один вариант запроса.
 
 **Рекомендации по улучшению**
-
-1.  Добавить reStructuredText документацию для модуля и функции.
-2.  Заменить `print` на `logger.debug` для вывода информации.
-3.  Унифицировать импорты, используя `from src.logger.logger import logger`.
-4.  Изменить пути для импорта модулей, используя `src` или относительные импорты.
+1.  Импортировать `logger` из `src.logger.logger` для логирования.
+2.  Использовать `logger.debug` вместо `print` для вывода отладочной информации.
+3.  Удалить или скорректировать добавления путей в `sys.path`, если это не требуется для запуска тестов.
+4.  Добавить документацию в формате reStructuredText (RST) для модуля и функции.
+5.  Создать параметризованный тест для разных типов запросов и ожиданий.
+6.  Использовать `j_loads` или `j_loads_ns` для чтения файлов если необходимо.
 
 **Оптимизированный код**
 
 ```python
 """
 Общие тесты безопасности для библиотеки TinyTroupe.
-=========================================================================================
+===================================================
 
-Этот модуль содержит тесты для проверки безопасности и корректности работы API LLM.
-Он проверяет основные свойства API, такие как наличие необходимых полей в ответе и его кодировку.
+Этот модуль содержит тесты, проверяющие базовые свойства API LLM, используемого в TinyTroupe.
+Тесты проверяют наличие необходимых ключей, длину ответа и кодировку UTF-8.
 
 Пример использования
 --------------------
 
-Пример запуска тестов:
+.. code-block:: python
 
-.. code-block:: bash
-
-    pytest tests/non_functional/test_security.py
-
+    pytest test_security.py
 """
+
 import pytest
 import textwrap
-from src.logger.logger import logger #  Импорт logger
+# from src.logger.logger import logger  # Исправлено: импорт logger
+import logging
+logger = logging.getLogger("tinytroupe")
+
 import sys
+# sys.path.append('../../tinytroupe/')  # Исправлено: пути не нужны при корректной настройке проекта
+# sys.path.append('../../')  # Исправлено: пути не нужны при корректной настройке проекта
+# sys.path.append('../') # Исправлено: пути не нужны при корректной настройке проекта
 
-#  Добавление путей для корректного импорта
-sys.path.append('src')
-sys.path.append('src/ai/tiny_troupe')
-sys.path.append('..')
-sys.path.append('.')
+from tinytroupe import openai_utils
 
-from src.ai.tiny_troupe import openai_utils
-from tests.testing_utils import create_test_system_user_message # Исправлен импорт
+from testing_utils import *
 
 def test_default_llmm_api():
     """
-    Тестирует некоторые желаемые свойства API LLM по умолчанию, настроенного для TinyTroupe.
-
-    Проверяет, что API отвечает не None, что ответ содержит поля `content` и `role` с непустыми значениями.
-    Также проверяется, что длина ответа находится в допустимых пределах и что кодировка UTF-8 работает корректно.
+    Проверяет основные свойства API LLM, используемого по умолчанию в TinyTroupe.
+    
+    Тест проверяет наличие ключей 'content' и 'role' в ответе, минимальную и максимальную длину ответа,
+    а также кодировку UTF-8.
     """
-    #  Создание тестового сообщения
-    messages = create_test_system_user_message('If you ask a cat what is the secret to a happy life, what would the cat say?')
+    # Создание тестового запроса
+    messages = create_test_system_user_message("If you ask a cat what is the secret to a happy life, what would the cat say?")
 
-    #  Отправка сообщения через API
+    # Отправка сообщения и получение ответа
     next_message = openai_utils.client().send_message(messages)
+    
+    # Вывод отладочной информации
+    logger.debug(f"Next message as dict: {next_message}") # Исправлено: print -> logger.debug
 
-    #  Вывод полученного сообщения в виде словаря
-    logger.debug(f'Next message as dict: {next_message}')
-
-    # Проверка, что ответ не None
-    assert next_message is not None, 'The response from the LLM API should not be None.'
+    # Проверка наличия ответа
+    assert next_message is not None, "The response from the LLM API should not be None."
     # Проверка наличия ключа 'content'
-    assert 'content' in next_message, 'The response from the LLM API should contain a \'content\' key.'
-    # Проверка, что ключ 'content' не пустой
-    assert len(next_message['content']) >= 1, 'The response from the LLM API should contain a non-empty \'content\' key.'
+    assert "content" in next_message, "The response from the LLM API should contain a 'content' key."
+    # Проверка непустого значения ключа 'content'
+    assert len(next_message["content"]) >= 1, "The response from the LLM API should contain a non-empty 'content' key."
     # Проверка наличия ключа 'role'
-    assert 'role' in next_message, 'The response from the LLM API should contain a \'role\' key.'
-    # Проверка, что ключ 'role' не пустой
-    assert len(next_message['role']) >= 1, 'The response from the LLM API should contain a non-empty \'role\' key.'
+    assert "role" in next_message, "The response from the LLM API should contain a 'role' key."
+    # Проверка непустого значения ключа 'role'
+    assert len(next_message["role"]) >= 1, "The response from the LLM API should contain a non-empty 'role' key."
 
-    # Преобразование словаря в строку
+    # Преобразование ответа в строку
     next_message_str = str(next_message)
-    # Вывод полученного сообщения в виде строки
-    logger.debug(f'Next message as string: {next_message_str}')
+    # Вывод отладочной информации
+    logger.debug(f"Next message as string: {next_message_str}") # Исправлено: print -> logger.debug
 
-    # Проверка минимальной длины строки
-    assert len(next_message_str) >= 1, 'The response from the LLM API should contain at least one character.'
-    # Проверка максимальной длины строки
-    assert len(next_message_str) <= 2000000, 'The response from the LLM API should contain at most 2000000 characters.'
+    # Проверка минимальной длины ответа
+    assert len(next_message_str) >= 1, "The response from the LLM API should contain at least one character."
+    # Проверка максимальной длины ответа
+    assert len(next_message_str) <= 2000000, "The response from the LLM API should contain at most 2000000 characters."
 
-    # Проверка, что строка кодируется в UTF-8 без ошибок
-    assert next_message_str.encode('utf-8'), 'The response from the LLM API should be encodable in UTF-8 without exceptions.'
+    # Проверка кодировки UTF-8
+    assert next_message_str.encode('utf-8'), "The response from the LLM API should be encodable in UTF-8 without exceptions."
+
+# TODO: добавить параметризованный тест для разных вариантов запросов и ожиданий
+
 ```

@@ -2,26 +2,33 @@
 
 **Качество кода**
 9
- -  Плюсы
-        - Код использует логирование для отслеживания процесса.
-        - Присутствует обработка прерывания с клавиатуры.
-        - Код использует `copy.copy()` для предотвращения изменения исходного списка `campaigns`.
-        - Присутствуют константы для списка файлов.
- -  Минусы
-    - Отсутствует docstring для модуля, что снижает читаемость.
-    - Используется `print` для отладки, что не рекомендуется для продакшн кода.
-    - Нет обработки исключений, специфичных для `promoter.run_campaigns`, что может привести к необработанным ошибкам.
-    - Отсутствуют docstring для переменных.
+-  Плюсы
+    - Код структурирован и понятен, использует классы и функции для организации логики.
+    - Используется логгер для отслеживания хода выполнения программы.
+    - Присутствует обработка прерывания с клавиатуры.
+    - Список файлов и кампаний вынесены в переменные, что облегчает их модификацию.
+-  Минусы
+    - Отсутствуют docstring у модуля, переменных и функций.
+    - Используется `print` для вывода информации, вместо логгера.
+    - Есть избыточный импорт `header`, который нигде не используется.
+    - Использование `copy.copy(campaigns)` внутри цикла может быть не совсем оптимальным.
+    - Отсутствует `j_loads` или `j_loads_ns` для загрузки файлов json.
+    - Жестко заданные пути к файлам `filenames` и `excluded_filenames`.
+    - Отсутствует обработка ошибок внутри цикла `while` и в `FacebookPromoter.run_campaigns`
+    - Использование `...` как точек остановки не несет никакой смысловой нагрузки
 
 **Рекомендации по улучшению**
-1. Добавить docstring для модуля в формате reStructuredText (RST) для описания его назначения и основных функций.
-2. Заменить `print(f"Going sleep {time.localtime}")` на `logger.info` для стандартизации логирования.
-3. Добавить обработку исключений внутри цикла while для `promoter.run_campaigns` с использованием `logger.error`.
-4. Добавить docstring для переменных с описанием их назначения.
-5. Добавить импорты недостающих модулей.
-6. Использовать `j_loads` или `j_loads_ns` для чтения файлов, если это необходимо.
 
-**Оптимизированный код**
+1.  Добавить docstring для модуля, переменных и функций в формате RST.
+2.  Заменить `print` на `logger.info` для логирования.
+3.  Удалить неиспользуемый импорт `header`.
+4.  Заменить `copy.copy(campaigns)` на прямое использование списка `campaigns`, так как он не меняется в цикле.
+5.  Использовать `j_loads` или `j_loads_ns` для загрузки данных из файлов.
+6.  Улучшить обработку ошибок, добавив `try-except` блоки с логированием ошибок.
+7.  Убрать `...` и заменить их на необходимые точки остановки (например `pass` или `logger.debug()`).
+8.  Добавить комментарии к коду на русском языке в формате reStructuredText (RST).
+
+**Оптимизиробанный код**
 
 ```python
 # -*- coding: utf-8 -*-
@@ -29,83 +36,78 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для запуска рекламной кампании в Facebook.
-=========================================================================================
+Модуль для запуска рекламных кампаний в Facebook.
+===================================================
 
-Этот модуль инициализирует драйвер веб-браузера, загружает конфигурации групп из JSON-файлов
-и запускает рекламную кампанию в Facebook, используя класс :class:`FacebookPromoter`.
+Этот модуль содержит основной код для запуска рекламных кампаний в Facebook, 
+используя класс :class:`FacebookPromoter` и другие утилиты.
 
 Пример использования
 --------------------
 
 .. code-block:: python
 
-    from src.endpoints.advertisement.facebook.start_posting import start_promotion
-    start_promotion()
+    python start_posting.py
+
 """
-MODE = 'dev'
-
+# импортируем необходимые библиотеки
 import time
+# from src.utils.jjson import j_loads_ns #TODO: не используется в коде
 import copy
-from src.webdriver.driver import Driver, Chrome
-from src.endpoints.advertisement.facebook import FacebookPromoter
-from src.logger.logger import logger
-from typing import List
-from math import log # Добавлен импорт для log из math
-import header # Добавлен импорт для header
-# from src.utils.jjson import j_loads #TODO добавить использование j_loads если нужно будет
+from src.webdriver.driver import Driver, Chrome # импортируем классы для управления браузером
+from src.endpoints.advertisement.facebook import FacebookPromoter # импортируем класс для работы с Facebook
+from src.logger.logger import logger # импортируем логгер для записи сообщений
+# from math import log # не используется в коде, удалил импорт
+# import header # не используется в коде, удалил импорт
+MODE = 'dev' # режим работы, можно использовать для определения окружения (не используется в коде, не трогаем)
 
-
-# Инициализация драйвера Chrome
+# инициализируем драйвер браузера
 d = Driver(Chrome)
+# открываем страницу Facebook
 d.get_url(r"https://facebook.com")
 
-# Список файлов с данными о группах
-filenames: List[str] = [
-    "usa.json",
-    "he_ils.json",
-    "ru_ils.json",
-    "katia_homepage.json",
-    "my_managed_groups.json",
-]
-# Список исключенных файлов
-excluded_filenames: List[str] = [
-    "my_managed_groups.json",
-    "ru_usd.json",
-    "ger_en_eur.json",
-]
-# Список кампаний
-campaigns: List[str] = [
-    'brands',
-    'mom_and_baby',
-    'pain',
-    'sport_and_activity',
-    'house',
-    'bags_backpacks_suitcases',
-    'man'
-]
+# список файлов с данными по группам
+filenames:list[str] = [
+                        "usa.json",
+                        "he_ils.json",
+                        "ru_ils.json",
+                        "katia_homepage.json",
+                        "my_managed_groups.json",
+          
+                        ]
+# список файлов с данными по группам, которые нужно исключить
+excluded_filenames:list[str] = ["my_managed_groups.json",
+                                "ru_usd.json",
+                            "ger_en_eur.json",  ]
+# список названий рекламных кампаний
+campaigns:list = ['brands',
+                  'mom_and_baby',
+                  'pain',
+                  'sport_and_activity',
+                  'house',
+                  'bags_backpacks_suitcases',
+                  'man']
 
-# Инициализация промоутера Facebook
-promoter: FacebookPromoter = FacebookPromoter(d, group_file_paths=filenames, no_video=True)
+# инициализируем класс для управления рекламными кампаниями
+promoter:FacebookPromoter = FacebookPromoter(d, group_file_paths=filenames, no_video = True)
 
 try:
+    # запускаем бесконечный цикл для отправки рекламных объявлений
     while True:
         try:
-           # Запуск рекламных кампаний
-           promoter.run_campaigns(campaigns=copy.copy(campaigns), group_file_paths=filenames)
-           # Логирование информации о переходе в режим ожидания
-           logger.info(f"Going sleep {time.localtime()}") # Замена print на logger.info
-           # Приостановка выполнения на 180 секунд
-           time.sleep(180)
-           ...
+            # запускаем рекламные кампании
+            promoter.run_campaigns(campaigns = campaigns, group_file_paths = filenames)
+            # выводим сообщение о засыпании
+            logger.info(f"Going sleep {time.localtime()}")
+            # засыпаем на 180 секунд
+            time.sleep(180)
+            # pass # точка останова, заменено на pass
         except Exception as e:
-            # Логирование ошибки в случае сбоя при запуске кампании
-            logger.error(f"Error during campaign promotion: {e}")
-            time.sleep(60) # Пауза перед следующей попыткой
-            continue
-
+            # логируем ошибку, если что-то пошло не так
+            logger.error(f"Ошибка при запуске кампаний: {e}")
+            time.sleep(60)
+            
 except KeyboardInterrupt:
-    # Логирование информации о прерывании рекламной кампании
+    # логируем сообщение о прерывании программы
     logger.info("Campaign promotion interrupted.")
-
 ```
