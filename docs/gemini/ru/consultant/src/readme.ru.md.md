@@ -1,173 +1,190 @@
 # Анализ кода модуля `readme.ru.md`
 
 **Качество кода**
-7
+8
 -  Плюсы
-    - Документ содержит структурированный обзор модулей проекта.
-    - Присутствуют ссылки на исходный код, документацию, тесты и примеры для каждого модуля.
-    - Разделы глоссария и судебной информации помогают понять контекст проекта.
+    - Документ содержит описание структуры проекта с разбивкой на модули.
+    - Приведены ссылки на исходный код, документацию, тесты и примеры для каждого модуля.
+    - Имеется глоссарий с описанием основных терминов проекта.
+    - Есть информация о точках останова для отладки кода.
 -  Минусы
     - Отсутствует описание модуля в формате reStructuredText (RST).
-    - Нет примеров использования reStructuredText (RST) для docstring.
-    - Документ написан на Markdown, а не на reStructuredText (RST), как указано в инструкции.
-    - Некоторые формулировки, такие как "предоставляет обзор", можно сделать более конкретными, например "описывает".
-    - Не все формулировки в глоссарии соответствуют стандарту reStructuredText.
+    - Отсутствуют docstring для модуля.
+    - Не используются ссылки на классы и функции в RST.
+    - Не все термины в глоссарии имеют описание.
+    - Используются теги html `<TABLE>,<TR>,<TD>` вместо `rst`
+
 **Рекомендации по улучшению**
 
-1.  **Переписать в RST**: Переписать весь документ в reStructuredText (RST), чтобы соответствовать требованиям.
-2.  **Добавить описание модуля в RST**: Добавить описание модуля в формате reStructuredText (RST) в начале документа.
-3.  **Улучшить глоссарий**: Переписать глоссарий с использованием корректного синтаксиса RST.
-4.  **Формулировки**: Избегать общих фраз и использовать более конкретные формулировки, например "описывает модули".
+1.  Добавить описание модуля в формате reStructuredText (RST) в начале файла.
+2.  Использовать docstring для модуля.
+3.  В глоссарии добавить более подробное описание терминов, используя RST.
+4.  Устранить использование html тегов, заменить их на rst
+5.  Сделать ссылки на код более читабельными и использовать относительные пути.
 
 **Оптимизированный код**
+```markdown
+"""
+Модуль документации проекта.
+============================
 
-```rst
-.. module:: src.readme
+Этот документ предоставляет обзор различных модулей проекта, включая ссылки на исходный код, документацию, тесты и примеры.
+Содержит глоссарий терминов и общую информацию о проекте.
 
-=====================
-Модули проекта
-=====================
+"""
 
-Этот документ описывает различные модули проекта, предоставляя ссылки на их исходный код,
-документацию, тесты и примеры.
+.. _root_link: https://github.com/hypo69/hypo/blob/master/README.RU.MD
+.. _en_readme_link: https://github.com/hypo69/hypo/blob/master/src/README.MD
+.. _bot_readme_link: https://github.com/hypo69/hypo/blob/master/src/bot/readme.ru.md
+.. _bot_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bot/readme.ru.md
+.. _bot_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot
+.. _bot_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/bot
+.. _scenario_readme_link: https://github.com/hypo69/hypo/blob/master/src/scenario/readme.ru.md
+.. _scenario_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/scenario/readme.ru.md
+.. _scenario_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario
+.. _scenario_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/scenario
+.. _suppliers_readme_link: https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.ru.md
+.. _suppliers_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/suppliers/readme.ru.md
+.. _suppliers_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers
+.. _suppliers_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers
+.. _templates_readme_link: https://github.com/hypo69/hypo/blob/master/src/templates/readme.ru.md
+.. _templates_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/templates/readme.ru.md
+.. _templates_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates
+.. _templates_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/templates
+.. _translators_readme_link: https://github.com/hypo69/hypo/blob/master/src/translators/readme.ru.md
+.. _translators_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/translators/readme.ru.md
+.. _translators_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators
+.. _translators_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/translators
+.. _utils_readme_link: https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md
+.. _utils_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/utils/readme.ru.md
+.. _utils_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils
+.. _utils_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/utils
+.. _webdriver_readme_link: https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.ru.md
+.. _webdriver_doc_link: https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/webdriver/readme.ru.md
+.. _webdriver_test_link: https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver
+.. _webdriver_example_link: https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver
 
-.. contents:: Содержание
-   :depth: 2
 
-.. _root:
+.. raw:: html
 
-Модули проекта
------------------
+    <table >
+    <tr>
+    <td>
+    <a href = "{_root_link}">[Root ↑]</a>
+    </td>
+    <td>
+    <a href = "{_en_readme_link}">English</a>
+    </td>
+    </tr>
+    </table>
 
-.. _bot:
+# Модули проекта
 
-Модуль ``bot``
-^^^^^^^^^^^^^^^^^^
+## Обзор
 
-Модуль интерфейсов для `telegram` и `discord` ботов.
+Данный документ предоставляет обзор различных модулей проекта, включая ссылки на исходный код, документацию, тесты и примеры.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/bot/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/bot/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/bot>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/bot>`_
+## Модуль `bot`
 
-.. _scenario:
+Модуль интерфейсов для `telegram`,`doscord` ботов
 
-Модуль ``scenario``
-^^^^^^^^^^^^^^^^^^^^^^
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
+
+
+## Модуль `scenario`
 
 Модуль для работы со сценариями, включая генерацию и выполнение сценариев.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/scenario/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/scenario/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/scenario>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/scenario>`_
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
 
-.. _suppliers:
 
-Модуль ``suppliers``
-^^^^^^^^^^^^^^^^^^^^^^^
+## Модуль `suppliers`
 
 Модуль для работы с поставщиками, включая управление их данными и отношениями.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/suppliers/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/suppliers/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/suppliers>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/suppliers>`_
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
 
-.. _templates:
 
-Модуль ``templates``
-^^^^^^^^^^^^^^^^^^^^^^^
+## Модуль `templates`
 
 Модуль для работы с шаблонами, включая создание и управление шаблонами для различных целей.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/templates/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/templates/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/templates>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/templates>`_
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
 
-.. _translators:
 
-Модуль ``translators``
-^^^^^^^^^^^^^^^^^^^^^^^^
+## Модуль `translators`
 
 Модуль для работы с переводчиками и переводом текста.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/translators/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/translators/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/translators>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/translators>`_
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
 
-.. _utils:
 
-Модуль ``utils``
-^^^^^^^^^^^^^^^^^^^
+## Модуль `utils`
 
 Модуль для вспомогательных утилит, упрощающих выполнение общих задач.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/utils/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/utils/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/utils>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/utils>`_
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
 
-.. _webdriver:
 
-Модуль ``webdriver``
-^^^^^^^^^^^^^^^^^^^^^
+## Модуль `webdriver`
 
 Модуль для работы с драйверами веб-браузера и управления веб-элементами.
 
-* `Исходный код модуля <https://github.com/hypo69/hypo/blob/master/src/webdriver/readme.ru.md>`_
-* `Документация <https://github.com/hypo69/hypo/blob/master/docs/gemini/ru/doc/src/webdriver/readme.ru.md>`_
-* `Тесты <https://github.com/hypo69/hypo/blob/master/pytest/gemini/src/webdriver>`_
-* `Примеры <https://github.com/hypo69/hypo/blob/master/docs/examples/webdriver>`_
+- `Исходный код модуля`_
+- `Документация`_
+- `Тесты`_
+- `Примеры`_
 
+---
 
 Глоссарий
-----------
+=========
 
-.. _webdriver_glossary:
+### 1. **webdriver**
 
-1. **``webdriver``**
+   - **`Driver`**: Объект, управляющий браузером (например, Chrome, Firefox) и выполняющий действия, такие как навигация по веб-страницам, заполнение форм и т.д.
+   - **`Executor`**: Интерфейс или класс, выполняющий команды или скрипты в контексте веб-драйвера.
+   - **`Chrome`, `Firefox`, ...**: Конкретные браузеры, которыми можно управлять с помощью веб-драйвера.
+   - **`locator`**: Механизм для поиска элементов на веб-странице (например, по ID, CSS-селектору, XPath).
 
-   - **``Driver``**: Объект, управляющий браузером (например, Chrome, Firefox) и выполняющий действия,
-     такие как навигация по веб-страницам, заполнение форм и т.д.
-   - **``Executor``**: Интерфейс или класс, выполняющий команды или скрипты в контексте веб-драйвера.
-   - **``Chrome``, ``Firefox``, ...**: Конкретные браузеры, которыми можно управлять с помощью веб-драйвера.
-   - **``locator``**: Механизм для поиска элементов на веб-странице (например, по ID, CSS-селектору, XPath).
+### 2. **`Supplier`**
 
-.. _supplier_glossary:
+   - **list of suppliers (`Amazon`, `Aliexpress`, `Morlevi`, ...)**: Список компаний или платформ, предоставляющих товары или услуги.
+   - **`Graber`**: Инструмент или модуль, автоматически собирающий данные с веб-сайтов поставщиков (например, цены, наличие товаров).
 
-2.  **``Supplier``**
+### 3. **`Product`**
 
-   - **Список поставщиков (``Amazon``, ``Aliexpress``, ``Morlevi``, ...)**: Список компаний или платформ,
-     предоставляющих продукты или услуги.
-   - **``Graber``**: Инструмент или модуль, автоматически собирающий данные с веб-сайтов поставщиков
-     (например, цены, наличие товаров).
+   - **`Product`**: Объект, представляющий товар или услугу, доступные на различных платформах.
+   - **`ProductFields`**: Поля или атрибуты, описывающие характеристики товара (например, имя, цена, описание, изображения).
 
-.. _product_glossary:
+### 4. **`ai`**
 
-3.  **``Product``**
+    - **`Model Prompt`**: Определяет, как модель должна обрабатывать входящую информацию и возвращать ответ. Устанавливается при инициализации модели.
+    - **`Command Instruction`**: Небольшая команда или инструкция, отправляемая с каждым запросом.
 
-   - **``Product``**: Объект, представляющий продукт или услугу, доступную на различных платформах.
-   - **``ProductFields``**: Поля или атрибуты, описывающие характеристики продукта (например, имя, цена, описание, изображения).
+Court Information
+=================
+1. Символ многоточия `...` указывает, где следует установить точки останова при отладке кода.
 
-.. _ai_glossary:
-
-4.  **``ai``**
-
-    - **``Model Prompt``**: Определяет, как модель должна обрабатывать входящую информацию и возвращать ответ.
-      Устанавливается при инициализации модели.
-    - **``Command Instruction``**: Небольшая команда или инструкция, отправляемая с каждым запросом.
-
-Судебная информация
---------------------
-
-1.  Символ многоточия ``...`` указывает, где установить точки останова при отладке кода.
-
-Далее
-------
-
-`Инициализация и настройка проекта <https://github.com/hypo69/hypo/blob/master/src/credentials.md>`_
+Next
+====
+[Project Initialization and Setup](https://github.com/hypo69/hypo/blob/master/src/credentials.md)
 ```

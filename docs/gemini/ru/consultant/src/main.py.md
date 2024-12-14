@@ -1,44 +1,34 @@
 # Анализ кода модуля `main.py`
 
 **Качество кода**
-
--   Соответствие требованиям по оформлению кода: 6/10
-    -   **Плюсы:**
-        -   Используется `argparse` для обработки аргументов командной строки.
-        -   Логика разделена на функции, что улучшает читаемость.
-        -   Интерактивное меню работает корректно.
-        -   Используется `logger` для вывода ошибок.
-    -   **Минусы:**
-        -   Не все комментарии оформлены в формате reStructuredText (RST).
-        -   Отсутствует подробное описание модуля в формате RST.
-        -   В коде присутствуют закомментированные блоки кода, которые следует удалить.
-        -   Не все функции имеют docstring в формате RST.
-        -   Импорты не отсортированы.
-        -   Отсутствуют проверки на типы ввода.
-        -   `MODE` не используется, но объявлена как глобальная переменная.
-
+**7/10**
+-  Плюсы
+    - Код разбит на функции, что делает его более читаемым и поддерживаемым.
+    - Используется `argparse` для обработки аргументов командной строки.
+    - Присутствует логирование ошибок с использованием `logger.error`.
+    - Есть интерактивное меню для выбора скриптов.
+    - Используются docstring для описания функций.
+-  Минусы
+    - Не все комментарии переведены в reStructuredText (RST) формат.
+    - Отсутствуют docstring для модуля в начале файла.
+    - Присутствует дублирование кода (закомментированный код в конце файла).
+    - Используются `print` для вывода сообщений, вместо `logger.info`, `logger.debug`.
+    -  Некоторые сообщения об ошибках в консоль не соответствуют стандартам.
+   
 **Рекомендации по улучшению**
-
-1.  **Формат документации**:
-    -   Использовать RST для всех комментариев и docstring.
-    -   Улучшить docstring, добавив более подробные описания параметров и возвращаемых значений.
-2.  **Удаление лишнего**:
-    -   Удалить закомментированный код.
-3.  **Обработка данных**:
-    -   В данном коде не происходит чтение файлов, поэтому `j_loads` и `j_loads_ns` не используются, но если это потребуется в будущем, то использовать их.
-4.  **Анализ структуры**:
-    -   Добавить отсутствующие импорты, если это необходимо.
-    -   Отсортировать импорты.
-5.  **Рефакторинг и улучшения**:
-    -   Добавить комментарии в формате RST ко всем функциям, методам и классам.
-    -   Использовать `from src.logger.logger import logger` для логирования ошибок.
-    -   Избегать избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
-    -   Удалить переменную `MODE` если она не используется.
-6.  **Безопасность**
-     - Добавить обработку исключений в функции ввода, например `ValueError` при некорректном вводе числа.
-
+1.  Добавить docstring в начале файла в формате reStructuredText (RST), чтобы описать модуль.
+2.  Переписать все docstring в reStructuredText (RST) формат.
+3.  Удалить дублированный и закомментированный код.
+4.  Использовать `logger.info` или `logger.debug` для вывода информационных сообщений вместо `print`.
+5.  Использовать f-строки для форматирования строк.
+6.  Сделать сообщения об ошибках более информативными (с указанием, какой именно ввод не корректен).
+7.  Убрать блок `# -*- coding: utf-8 -*-` так как он избыточен
+8.  Убрать `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12` так как они специфичны для операционных систем и  не является необходимым для основного функционала.
+9.  Изменить способ обработки `--help` параметра, если `--help` передан как аргумент в командной строке - это должно завершать работу скрипта.
+10. При обработке ошибок лучше использовать более конкретные исключения (если это возможно).
+11. Убрать `MODE = 'dev'` так как он не используется
+    
 **Оптимизированный код**
-
 ```python
 """
 Модуль для интерактивного запуска скриптов.
@@ -52,100 +42,88 @@
 
 .. code-block:: python
 
-    python main.py  # Запускает интерактивное меню
-    python main.py --help # Выводит справку
+    python main.py  # Запуск интерактивного меню
+    python main.py --help # Вывод справки
+
 """
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
 
 import argparse
+from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
-# from src.utils.jjson import j_loads, j_loads_ns  # не используется в данном коде, но может потребоваться в будущем
 
 
 def script1():
     """
     Выполняет скрипт 1.
-
-    :return: None
     """
-    print('Script 1 started')
-    # ... (Add script 1 code here)
+    logger.info("Скрипт 1 запущен")
+    # ... (Здесь код скрипта 1)
 
 
 def script2():
     """
     Выполняет скрипт 2.
-
-    :return: None
     """
-    print('Script 2 started')
-    # ... (Add script 2 code here)
+    logger.info("Скрипт 2 запущен")
+    # ... (Здесь код скрипта 2)
 
 
 def show_help():
     """
     Выводит справку по доступным командам.
-
-    :return: None
     """
-    print('\nAvailable commands:')
-    print('1. Run script 1 - Executes script 1.')
-    print('2. Run script 2 - Executes script 2.')
-    print('3. --help - Displays this help menu.')
-    print('4. exit - Exits the program.\n')
+    logger.info("\nДоступные команды:")
+    logger.info("1. Запустить скрипт 1 - Выполняет скрипт 1.")
+    logger.info("2. Запустить скрипт 2 - Выполняет скрипт 2.")
+    logger.info("3. --help - Показывает это меню.")
+    logger.info("4. exit - Выход из программы.\n")
 
 
 def interactive_menu():
     """
     Интерактивное меню для выбора и запуска скриптов.
-
-    :return: None
     """
-    print('Welcome! Choose one of the commands:\n')
+    logger.info("Добро пожаловать! Выберите одну из команд:\n")
     while True:
-        print('1. Run script 1')
-        print('2. Run script 2')
-        print('3. --help - Show command list.')
-        print('4. exit - Exit the program.')
+        logger.info("1. Запустить скрипт 1")
+        logger.info("2. Запустить скрипт 2")
+        logger.info("3. --help - Показать список команд.")
+        logger.info("4. exit - Выход из программы.")
 
-        choice = input('Enter command number: ').strip()
+        choice = input("Введите номер команды: ").strip()
 
-        if choice == '1':
+        if choice == "1":
             script1()
-        elif choice == '2':
+        elif choice == "2":
             script2()
-        elif choice == '3' or choice.lower() == '--help':
+        elif choice == "3" or choice.lower() == "--help":
             show_help()
-        elif choice.lower() == 'exit':
-            print('Exiting the program.')
+        elif choice.lower() == "exit":
+            logger.info("Выход из программы.")
             break
         else:
-            logger.error('Invalid input. Please choose a valid command.')
-
+            logger.error(f"Некорректный ввод: '{choice}'. Пожалуйста, выберите одну из предложенных команд.")
 
 
 def main():
     """
-    Главная функция для обработки аргументов командной строки и запуска меню.
-
-    :return: None
+    Основная функция для обработки аргументов командной строки и запуска меню.
     """
-    parser = argparse.ArgumentParser(description='Interactive menu for running scripts.')
+    parser = argparse.ArgumentParser(description="Интерактивное меню для запуска скриптов.")
     parser.add_argument(
-        '--help',
-        action='store_true',
-        help='Show available options and help information',
+        "--help",
+        action="store_true",
+        help="Показать доступные опции и справочную информацию",
     )
     args = parser.parse_args()
 
     if args.help:
         show_help()
+        return
     else:
         interactive_menu()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 ```
