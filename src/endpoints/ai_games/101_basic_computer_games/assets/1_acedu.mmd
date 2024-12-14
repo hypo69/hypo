@@ -1,0 +1,23 @@
+---
+config:
+  layout: fixed
+  theme: neo-dark
+---
+flowchart TD
+    Start["Начало"] --> InitializeVariables["<p align='left'>Инициализация переменных:
+    <code><b>
+    numberOfGuesses = 0
+    targetNumber = random(1, 100)
+    </b></code></p>"]
+    InitializeVariables --> LoopStart{"Начало цикла: пока не угадано"}
+    LoopStart -- Да --> IncreaseGuesses["<code><b>numberOfGuesses = numberOfGuesses + 1</b></code>"]
+    IncreaseGuesses --> InputGuess["Ввод числа пользователем: <code><b>userGuess</b></code>"]
+    InputGuess --> CheckGuess{"Проверка: <code><b>userGuess == targetNumber?</b></code>"}
+    CheckGuess -- Да --> OutputWin["Вывод сообщения: <b>YOU GOT IT IN <code>{numberOfGuesses}</code> GUESSES!</b>"]
+    OutputWin --> End["Конец"]
+    CheckGuess -- Нет --> CheckLow{"Проверка: <code><b>userGuess &lt; targetNumber</b></code>?"}
+    CheckLow -- Да --> OutputLow["Вывод сообщения: <b>TOO LOW</b>"]
+    OutputLow --> LoopStart
+    CheckLow -- Нет --> OutputHigh["Вывод сообщения: <b>TOO HIGH</b>"]
+    OutputHigh --> LoopStart
+    LoopStart -- Нет --> End

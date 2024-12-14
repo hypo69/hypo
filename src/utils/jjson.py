@@ -196,18 +196,21 @@ def j_loads(
 
     def string2dict(json_string: str) -> dict:
         """Удаляет тройные обратные кавычки и 'json' из начала и конца строки."""
-        if json_string.startswith(('```', '```json')) and json_string.endswith('```'):
-            _j = json_string.strip('`').replace('json', '', 1).strip()
+        if json_string.startswith(('```', '```json')) and json_string.endswith(('```','```\n')):
+            json_string = json_string.strip('`').replace('json', '', 1).strip()
+        json_string = json_string.replace()
         try:
             _j = simplejson.loads(json_string)
         except json.JSONDecodeError:
             logger.error(f'Ошибка парсинга строки JSON:\n {json_string}', ex, False)
+            ...
             return {}
         try:
             # Декодирование escape \u0412\u044b\u0441\u043e\u043a\u043e
             return json.loads(json.dumps(_j))
         except Exception as ex:
             logger.error(f"Ошибка декодирования JSON", ex, False)
+            ...
             return {}
 
     # Основная обработка данных

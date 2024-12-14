@@ -1,117 +1,118 @@
 # Анализ кода модуля `category.ru.md`
 
 **Качество кода**
-8
--   Плюсы
-    -   Хорошее общее описание модуля и его функций.
-    -   Использование диаграммы Mermaid для визуализации процесса.
-    -   Примеры использования основных функций модуля.
-    -   Подробное описание аргументов и возвращаемых значений функций.
-    -   Использование нумерованного списка для описания методов класса `DBAdaptor`.
-    -   Описаны зависимости и настройка для работы с модулем.
--   Минусы
-    -   Не все комментарии и docstring в формате reStructuredText (RST), что является требованием инструкции.
-    -   Отсутствуют импорты в коде, необходимо добавить импорты.
-    -   Не все функции и классы имеют docstring.
-    -   Использование `logger` не показано в примерах кода.
-    -   Необходимо добавить более конкретные примеры использования классов и методов.
-    -   Стилистически надо избегать избыточных перечислений в описаниях.
+7
+- Плюсы
+    - Код содержит подробное описание модуля, включая его назначение, функции, примеры использования и структуру.
+    - Присутствует описание классов и методов, что облегчает понимание логики работы.
+    - Есть блок-схема в формате mermaid для визуализации процесса работы модуля.
+    - Приведены примеры использования основных функций и класса.
+    - Описаны зависимости и логирование, что помогает в настройке и отладке модуля.
+- Минусы
+    - Описание модуля выполнено в формате Markdown, а не RST.
+    - Отсутствуют doctstring в коде, что не позволяет автоматически генерировать документацию.
+    - Не указаны типы данных для аргументов функций в описании.
+    - Нет комментариев к коду внутри функций.
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Нет импортов и примеров кода для функций.
+    - Не используются `logger.error` для обработки ошибок.
+    - Нет обработки ошибок.
 
 **Рекомендации по улучшению**
-1.  Добавить docstring в формате RST к модулю, всем функциям и классам.
-2.  Добавить необходимые импорты, такие как `json`, `requests`, `src.utils.jjson`, `src.db.manager_categories.suppliers_categories`, и `src.logger.logger`.
-3.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load`.
-4.  Добавить обработку ошибок с помощью `logger.error` вместо стандартного `try-except`.
-5.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
-6.  Уточнить примеры использования и добавить их в соответствующих разделах.
-7.  Переписать описание модуля и функций в стиле RST.
+
+1.  Переписать описание модуля в формате reStructuredText (RST).
+2.  Добавить doctstring к функциям и методам с указанием типов аргументов и возвращаемых значений.
+3.  Использовать `j_loads` или `j_loads_ns` для чтения файлов.
+4.  Добавить импорты и примеры кода к функциям.
+5.  Использовать `logger.error` для обработки ошибок.
+6.  Добавить комментарии к коду внутри функций.
 
 **Оптимизированный код**
 
 ```markdown
 """
 Модуль для управления категориями Aliexpress
-====================================================
+=================================================
 
 Этот модуль предоставляет функциональность для работы с категориями товаров на платформе Aliexpress.
-Он включает функции для получения ссылок на товары в категории, обновления категорий на основе данных
-с сайта и операций с базой данных.
-
-Описание модуля
-----------------
-
-Модуль предназначен для управления категориями товаров на Aliexpress.
-Он включает в себя следующие ключевые функции:
-
-- Получение списка товаров из категории.
-- Обновление категорий в сценарии на основе данных с сайта.
-- Операции с базой данных для работы с категориями.
+Он включает функции для получения ссылок на товары в категории, обновления категорий на основе данных с сайта и операций с базой данных.
 
 Пример использования
 --------------------
-### Получение списка товаров из категории
+
+Пример использования функции `get_list_products_in_category`:
 
 .. code-block:: python
 
-    # Пример использования функции get_list_products_in_category
     products = get_list_products_in_category(supplier)
 
-### Обновление категорий в файле сценария
+Пример использования функции `update_categories_in_scenario_file`:
 
 .. code-block:: python
 
-    # Пример использования функции update_categories_in_scenario_file
     updated = update_categories_in_scenario_file(supplier, "scenario_file.json")
 
-### Операции с базой данных
+Пример использования класса `DBAdaptor`:
 
 .. code-block:: python
 
-    # Пример использования DBAdaptor для операций с базой данных
     db = DBAdaptor()
     db.select(cat_id=123)
     db.insert()
     db.update()
     db.delete()
+
+Диаграмма работы модуля:
+
+.. mermaid::
+
+    flowchart TD
+        A[Start] --> B[Получение данных с Aliexpress]
+        B --> C{Есть ли категория?}
+        C -->|Да| D[Получение списка товаров в категории]
+        C -->|Нет| E[Обновление категорий в сценарии]
+        D --> F[Сохранение данных в базу данных]
+        E --> F
+        F --> G[Завершение]
+
+
 """
-# TODO: Добавить импорты
-# import requests
-# from src.utils.jjson import j_loads, j_loads_ns
-# from src.db.manager_categories.suppliers_categories import DBAdaptor
-# from src.logger.logger import logger
+
+import asyncio
+from typing import Any, List, Optional
+# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить использование j_loads
+# from src.db.manager_categories.suppliers_categories import DBAdaptor # TODO: добавить импорт DBAdaptor
+# from src.logger.logger import logger # TODO: добавить импорт logger
 
 
-def get_list_products_in_category(s):
+def get_list_products_in_category(s) -> List[str]:
     """
-    Считывает URL товаров со страницы категории.
-
-    Если есть несколько страниц с товарами, функция будет перелистывать все страницы.
+    Считывает URL товаров со страницы категории. Если есть несколько страниц с товарами,
+    функция будет перелистывать все страницы.
 
     :param s: Экземпляр поставщика.
     :type s: Supplier
     :return: Список URL продуктов в категории.
-    :rtype: list
+    :rtype: List[str]
     """
-    # TODO: Реализовать функционал с использованием logger
+    # TODO: implement function
     ...
-    return []
 
 
-def get_prod_urls_from_pagination(s):
+def get_prod_urls_from_pagination(s) -> List[str]:
     """
     Собирает ссылки на товары с страницы категории с перелистыванием страниц.
 
     :param s: Экземпляр поставщика.
     :type s: Supplier
     :return: Список ссылок на товары.
-    :rtype: list
+    :rtype: List[str]
     """
-    # TODO: Реализовать функционал с использованием logger
+    # TODO: implement function
     ...
-    return []
 
 
-def update_categories_in_scenario_file(s, scenario_filename):
+def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
     """
     Проверяет изменения категорий на сайте и обновляет файл сценария.
 
@@ -122,12 +123,11 @@ def update_categories_in_scenario_file(s, scenario_filename):
     :return: True, если обновление прошло успешно.
     :rtype: bool
     """
-    # TODO: Реализовать функционал с использованием logger
+    # TODO: implement function
     ...
-    return True
 
 
-def get_list_categories_from_site(s, scenario_file, brand=''):
+def get_list_categories_from_site(s, scenario_file: str, brand: str = '') -> List[str]:
     """
     Получает список категорий с сайта на основе файла сценария.
 
@@ -136,79 +136,53 @@ def get_list_categories_from_site(s, scenario_file, brand=''):
     :param scenario_file: Имя файла сценария.
     :type scenario_file: str
     :param brand: Опциональное имя бренда.
-    :type brand: str, optional
+    :type brand: str
     :return: Список категорий.
-    :rtype: list
+    :rtype: List[str]
     """
-    # TODO: Реализовать функционал с использованием logger
+    # TODO: implement function
     ...
-    return []
 
 
 class DBAdaptor:
     """
-    Предоставляет методы для выполнения операций с базой данных,
-    таких как `SELECT`, `INSERT`, `UPDATE` и `DELETE`.
+    Предоставляет методы для выполнения операций с базой данных, таких как SELECT, INSERT, UPDATE и DELETE.
     """
-    def select(self, cat_id=None, parent_id=None, project_cat_id=None):
+
+    def select(self, cat_id: Optional[int] = None, parent_id: Optional[int] = None, project_cat_id: Optional[int] = None) -> List[Any]:
         """
         Выбирает записи из базы данных.
 
         :param cat_id: ID категории.
-        :type cat_id: int, optional
+        :type cat_id: Optional[int]
         :param parent_id: ID родительской категории.
-        :type parent_id: int, optional
+        :type parent_id: Optional[int]
         :param project_cat_id: ID категории проекта.
-        :type project_cat_id: int, optional
+        :type project_cat_id: Optional[int]
+        :return: Список записей из базы данных.
+        :rtype: List[Any]
         """
-        # TODO: Реализовать функционал с использованием logger
+        # TODO: implement function
         ...
 
-    def insert(self):
+    def insert(self) -> None:
         """
         Вставляет новые записи в базу данных.
         """
-        # TODO: Реализовать функционал с использованием logger
+        # TODO: implement function
         ...
 
-    def update(self):
+    def update(self) -> None:
         """
         Обновляет записи в базе данных.
         """
-        # TODO: Реализовать функционал с использованием logger
+        # TODO: implement function
         ...
 
-    def delete(self):
+    def delete(self) -> None:
         """
         Удаляет записи из базы данных.
         """
-        # TODO: Реализовать функционал с использованием logger
+        # TODO: implement function
         ...
-
-
-"""
-Установка
----------
-
-Для работы с модулем необходимо установить зависимые пакеты, такие как `requests`,
-а также настроить соединение с базой данных через `gs.db_translations_credentials`.
-
-Зависимости:
-------------
-
-- `requests`
-- `src.utils.jjson`
-- `src.db.manager_categories.suppliers_categories`
-
-Логирование
-----------
-
-В модуле используется логирование через `src.logger`, которое помогает отслеживать ошибки и события
-в процессе выполнения.
-
-Автор
------
-
-Модуль разработан для внутреннего использования в проекте.
-"""
 ```

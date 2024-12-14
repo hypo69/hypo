@@ -1,283 +1,289 @@
 # Анализ кода модуля `category.md`
 
-## Качество кода
+**Качество кода**
 9
--  Плюсы
-        - Код модуля хорошо документирован с использованием Markdown, что облегчает понимание его структуры и назначения.
-        - Описаны основные функции модуля, их параметры и возвращаемые значения.
-        - Присутствует описание классов и их методов.
-        - Указаны зависимости модуля от других компонентов проекта.
-        - Включен пример использования основных функций модуля.
-        - Есть описание лицензии.
-        - Имеется общее описание модуля в начале файла.
--  Минусы
-    -  Документация написана в Markdown, а не в reStructuredText (RST), как указано в инструкции.
-    -  Отсутствуют docstring у функций и методов, хотя в инструкции они требуются.
-    -  Не хватает инструкций по установке и настройке окружения.
-    -  Нет подробного описания по обработке ошибок.
-    -  Некоторые описания функций и параметров могут быть более конкретными.
-    -  Нет информации о том, как использовать класс `DBAdaptor`.
-    -  Зависимости описаны в общих словах, а не как импорты в коде.
-    -  Пример использования не показывает все возможности модуля.
+- Плюсы
+    - Код хорошо структурирован и документирован в формате Markdown.
+    - Описание функций, классов и их параметров довольно подробное.
+    - Есть примеры использования и указания на зависимости.
+    -  Присутствует описание лицензии.
+- Минусы
+    - Документация написана в формате Markdown, а не reStructuredText (RST) как требуется.
+    - Нет примеров кода в формате RST.
+    - Не указаны импорты используемых модулей и классов, которые необходимы для работы кода.
 
-## Рекомендации по улучшению
-1. **Переписать документацию в reStructuredText (RST)**: Заменить текущий Markdown на RST для соответствия требованиям.
-2. **Добавить docstring к функциям и методам**: Включить docstring в формате RST для всех функций, методов и классов.
-3. **Добавить импорты**: Добавить все необходимые импорты в начало файла.
-4. **Уточнить описания**: Сделать описания функций и параметров более подробными и конкретными.
-5. **Привести имена в соответствие**: Проверить и привести имена функций, переменных и импортов с ранее обработанными файлами.
-6. **Реализовать обработку ошибок**: Добавить обработку ошибок с использованием `logger.error` вместо общих `try-except`.
-7. **Добавить примеры**: Добавить больше примеров использования, особенно для `DBAdaptor`.
-8. **Добавить информацию об установке и настройке**: Включить разделы по установке и настройке окружения.
+**Рекомендации по улучшению**
+1.  **Переформатировать документацию в reStructuredText (RST)**: Заменить Markdown на RST для всех комментариев и docstring.
+2.  **Добавить импорты**: Указать необходимые импорты для работы модуля.
+3.  **Использовать docstring**: Добавить docstring в формате RST к функциям, классам и методам.
+4.  **Логирование ошибок**: Использовать `logger.error` для обработки ошибок, вместо `try-except`.
+5.  **Улучшить описание параметров**: Добавить более детальное описание параметров функций и методов.
 
-## Оптимизированный код
+**Оптимизированный код**
+
 ```python
 """
 Модуль для управления категориями AliExpress
 =========================================================================================
 
 Этот модуль предоставляет функциональность для управления категориями на AliExpress.
-Он позволяет получать URL-адреса товаров, обновлять списки категорий и взаимодействовать
+Он включает извлечение URL продуктов, обновление списков категорий и взаимодействие
 с платформой AliExpress для синхронизации категорий.
 
-Основные возможности
---------------------
-- Получение URL-адресов товаров: Сбор URL-адресов товаров со страниц категорий.
-- Синхронизация категорий: Сравнение и обновление категорий на сайте с категориями в локальных файлах сценариев.
-- Взаимодействие с базой данных: Предоставляет операции с базой данных для управления категориями.
+Основные возможности:
+---------------------
 
-Пример использования
---------------------
+- **Извлечение URL продуктов**: Сбор URL продуктов со страниц категорий.
+- **Синхронизация категорий**: Сравнение и обновление категорий на сайте с категориями в локальных файлах сценариев.
+- **Взаимодействие с базой данных**: Операции с базой данных для управления категориями.
 
+Зависимости:
+------------
+    - `src.db.manager_categories.suppliers_categories`: Для управления категориями в базе данных.
+    - `src.utils.jjson`: Для работы с данными JSON.
+    - `src.logger`: Для логирования ошибок и сообщений.
+    - `requests`: Для выполнения HTTP-запросов к сайту AliExpress.
+
+Пример использования:
+---------------------
 .. code-block:: python
 
     from src.suppliers.aliexpress.category import get_list_products_in_category, update_categories_in_scenario_file
-    from src.suppliers.supplier import Supplier  # Предполагаемый импорт
-    
+
+    # Пример использования
     supplier_instance = Supplier()
     category_urls = get_list_products_in_category(supplier_instance)
     update_categories_in_scenario_file(supplier_instance, 'example_scenario.json')
+
 """
+from typing import Any, List
+from src.db.manager_categories.suppliers_categories import AliexpressCategory  # Добавлен импорт класса AliexpressCategory
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
+# from src.suppliers.supplier import Supplier # TODO  может не использоваться
+import requests
 
-from typing import List, Any  # Импорт List из typing
-import requests  # Импорт requests
-# from src.db.manager_categories.suppliers_categories import AliexpressCategory # Предполагаемый импорт
-# from src.utils.jjson import j_loads, j_loads_ns # Предполагаемый импорт
-from src.logger.logger import logger  # Импорт logger
-from src.suppliers.supplier import Supplier  # Импорт класса Supplier
-
-
-def get_list_products_in_category(s: Supplier) -> List[str]:
+def get_list_products_in_category(s: Any) -> list[str]:
     """
-    Извлекает список URL-адресов товаров со страницы категории, включая пагинацию.
+    Извлекает список URL продуктов со страницы категории, включая пагинацию.
 
     :param s: Экземпляр поставщика с драйвером браузера и локаторами.
-    :type s: Supplier
-    :return: Список URL-адресов товаров со страницы категории.
-    :rtype: List[str]
+    :type s: Any
+    :return: Список URL продуктов со страницы категории.
+    :rtype: list[str]
     """
-    # Код исполняет получение списка URL-адресов товаров со страницы категории, включая пагинацию
-    product_urls = []
+    prod_urls = []
     try:
-        product_urls = get_prod_urls_from_pagination(s)
-    except Exception as e:
-        logger.error(f"Ошибка при получении списка URL-адресов товаров: {e}")
-        ...
-    return product_urls
+        #  код исполняет получение списка URL из пагинации
+        prod_urls = get_prod_urls_from_pagination(s)
+    except Exception as ex:
+        logger.error(f'Ошибка получения списка продуктов из категории {ex}')
+    return prod_urls
 
 
-def get_prod_urls_from_pagination(s: Supplier) -> List[str]:
+def get_prod_urls_from_pagination(s: Any) -> list[str]:
     """
-    Извлекает URL-адреса товаров со страниц категорий, обрабатывая пагинацию.
+    Извлекает URL продуктов со страниц категорий, обрабатывая пагинацию.
 
     :param s: Экземпляр поставщика с драйвером браузера и локаторами.
-    :type s: Supplier
-    :return: Список URL-адресов товаров.
-    :rtype: List[str]
+    :type s: Any
+    :return: Список URL продуктов.
+    :rtype: list[str]
     """
-    # Код исполняет получение URL-адресов товаров со страниц категорий, обрабатывая пагинацию
-    product_urls = []
+    urls = []
     try:
-        current_page = 1
-        while True:
-            # Код исполняет получение URL-адресов товаров на текущей странице
-            urls = s.driver.execute_locator(s.locator.products_url)
-            if urls:
-                product_urls.extend(urls)
-            else:
-                break
-            # Код исполняет переход на следующую страницу, если есть
-            next_page_button = s.driver.execute_locator(s.locator.next_page_button)
-            if next_page_button:
-                current_page += 1
-                s.driver.click_element(next_page_button)
-            else:
-                break
-    except Exception as e:
-        logger.error(f"Ошибка при получении URL-адресов товаров из пагинации: {e}")
-        ...
-    return product_urls
+        # код исполняет проверку наличия локатора пагинации
+        if not s.locator.pagination:
+            # код исполняет получение списка продуктов
+            return get_list_products(s)
 
+        # код исполняет получение количества страниц
+        count_page = s.driver.get_count_elements(s.locator.pagination)
+        # код исполняет итерирование по страницам
+        for page in range(1, count_page + 1):
+            # код исполняет получение продуктов на текущей странице
+            urls.extend(get_list_products(s, page))
+            # код исполняет переход на следующую страницу
+            s.driver.execute_locator(s.locator.next_page)
+    except Exception as ex:
+         logger.error(f'Ошибка получения списка продуктов с пагинацией {ex}')
+    return urls
 
-def update_categories_in_scenario_file(s: Supplier, scenario_filename: str) -> bool:
+def get_list_products(s: Any, page: int = None) -> list[str]:
     """
-    Сравнивает категории на сайте с категориями в предоставленном файле сценариев
-    и обновляет файл любыми изменениями.
+    Извлекает список URL продуктов с текущей страницы.
 
     :param s: Экземпляр поставщика с драйвером браузера и локаторами.
-    :type s: Supplier
+    :type s: Any
+    :param page: Номер страницы (необязательно).
+    :type page: int, optional
+    :return: Список URL продуктов.
+    :rtype: list[str]
+    """
+    urls = []
+    try:
+        #  код исполняет получение списка элементов по локатору продуктов
+        elements = s.driver.get_elements(s.locator.product)
+        #  код исполняет итерацию по элементам и извлечение ссылок
+        for el in elements:
+             urls.append(el.get_attribute('href'))
+    except Exception as ex:
+        logger.error(f'Ошибка получения списка продуктов {ex}')
+    return urls
+
+def update_categories_in_scenario_file(s: Any, scenario_filename: str) -> bool:
+    """
+    Сравнивает категории на сайте с категориями в файле сценария и обновляет файл
+    изменениями.
+
+    :param s: Экземпляр поставщика с драйвером браузера и локаторами.
+    :type s: Any
     :param scenario_filename: Имя файла сценария для обновления.
     :type scenario_filename: str
-    :return: True, если категории были успешно обновлены, False в противном случае.
+    :return: True, если категории успешно обновлены, иначе False.
     :rtype: bool
     """
-    # Код исполняет сравнение категорий на сайте с категориями в предоставленном файле сценариев и обновляет файл
     try:
-        # Предполагается, что j_loads определен в src.utils.jjson
-        # with open(scenario_filename, 'r', encoding='utf-8') as f:
-        #     scenario_data = j_loads(f)
-        ...
-        scenario_data = {} #TODO - Заглушка для дебага. Заменить на актуальные данные
+        # код исполняет загрузку данных из файла сценария
+        scenario_data = j_loads(scenario_filename)
+        # код исполняет получение списка категорий с сайта
         site_categories = get_list_categories_from_site(s, scenario_filename)
 
         if not site_categories:
-            logger.error('Не удалось получить категории с сайта')
+            logger.error(f'Не удалось получить категории с сайта')
             return False
 
-        updated_categories = []
-        for item in scenario_data.get('categories', []):
-            category_name = item.get('name')
-            if category_name in [cat.get('name') for cat in site_categories]:
-                updated_categories.append(item)
-            else:
-                # Код исполняет логирование отсутствия категории на сайте
-                logger.debug(f'Категория {category_name} отсутствует на сайте')
+        # код исполняет обновление списка категорий в файле сценария
+        for category in site_categories:
+            for item in scenario_data['categories']:
+                 if item['name'] == category['name']:
+                    item['url'] = category['url']
+                    break
 
-        if len(updated_categories) != len(scenario_data.get('categories', [])):
-            logger.warning('Количество категорий на сайте не совпадает с данными в файле сценария')
+        # код исполняет запись обновлённых данных в файл сценария
+        with open(scenario_filename, 'w', encoding='utf-8') as file:
+            import json # TODO использовать src.utils.jjson.j_dumps для сохранения
+            json.dump(scenario_data, file, indent=4, ensure_ascii=False)
 
-        # Код исполняет обновление файла сценария
-        # with open(scenario_filename, 'w', encoding='utf-8') as f:
-        #     j_dumps(scenario_data, f, indent=4)
-        ...
         return True
-    except Exception as e:
-        logger.error(f"Ошибка при обновлении категорий в файле сценария: {e}")
+    except Exception as ex:
+        logger.error(f'Ошибка обновления категорий в файле сценария {ex}')
         return False
 
-
-def get_list_categories_from_site(s: Supplier, scenario_file: str, brand: str = '') -> List[dict]:
+def get_list_categories_from_site(s: Any, scenario_file: str, brand: str = '') -> list:
     """
-    Извлекает список категорий с сайта AliExpress на основе предоставленного файла сценария.
+    Извлекает список категорий с сайта AliExpress, основываясь на файле сценария.
 
     :param s: Экземпляр поставщика с драйвером браузера и локаторами.
-    :type s: Supplier
+    :type s: Any
     :param scenario_file: Файл сценария, содержащий информацию о категориях.
     :type scenario_file: str
     :param brand: Фильтр бренда для категорий (необязательно).
-    :type brand: str
+    :type brand: str, optional
     :return: Список категорий с сайта.
-    :rtype: List[dict]
+    :rtype: list
     """
-    # Код исполняет получение списка категорий с сайта AliExpress на основе предоставленного файла сценария
     categories = []
     try:
-        # Предполагается, что j_loads определен в src.utils.jjson
-        # with open(scenario_file, 'r', encoding='utf-8') as f:
-        #     scenario_data = j_loads(f)
-        ...
-        scenario_data = {} #TODO - Заглушка для дебага. Заменить на актуальные данные
-        
-        # Код исполняет обход категорий в файле сценария
-        for cat in scenario_data.get('categories', []):
-            category_url = cat.get('url')
-            if not category_url:
-                 logger.debug(f'Отсутствует URL для категории: {cat}')
-                 continue
-
-            s.driver.get_page(category_url)
-            # Код исполняет извлечение названия категории с сайта
-            category_name = s.driver.execute_locator(s.locator.category_name)
-            if category_name:
-                categories.append({'name': category_name, 'url': category_url})
-                logger.debug(f'Добавлена категория: {category_name} url: {category_url}')
-            else:
-               logger.debug(f'Не удалось извлечь название категории для {category_url}')
-
-    except Exception as e:
-        logger.error(f"Ошибка при получении списка категорий с сайта: {e}")
-        ...
+        # код исполняет загрузку данных из файла сценария
+        scenario_data = j_loads(scenario_file)
+        # код исполняет итерацию по категориям в файле сценария
+        for category in scenario_data.get('categories', []):
+            # код исполняет открытие страницы категории
+            s.driver.get_page(category['url'])
+             # код исполняет ожидание загрузки контента
+            s.driver.wait_for_element(s.locator.category_card)
+             # код исполняет добавление категории в список
+            categories.append({
+                'name': category['name'],
+                'url': s.driver.current_url,
+            })
+    except Exception as ex:
+        logger.error(f'Ошибка получения списка категорий с сайта {ex}')
     return categories
 
 
 class DBAdaptor:
     """
     Предоставляет методы для взаимодействия с базой данных,
-    обеспечивая стандартные операции, такие как SELECT, INSERT, UPDATE и DELETE
-    для записей `AliexpressCategory`.
-
+    позволяя выполнять стандартные операции `SELECT`, `INSERT`, `UPDATE` и `DELETE`
+    с записями `AliexpressCategory`.
     """
-    # def __init__(self, db_manager): #TODO - Удалить или раскоментировать и доработать
-    #     """
-    #     Инициализирует адаптер базы данных.
-    #
-    #     :param db_manager: Менеджер базы данных.
-    #     :type db_manager: Any
-    #     """
-    #     self.db_manager = db_manager
-    def select(self, query: dict = None, limit: int = None) -> List[Any]:
+    def select(self, where: str = None, limit: int = None) -> List[AliexpressCategory]:
         """
         Извлекает записи из таблицы `AliexpressCategory`.
 
-        :param query: Запрос для фильтрации записей (необязательно).
-        :type query: dict
-        :param limit: Максимальное количество записей для извлечения (необязательно).
-        :type limit: int
-        :return: Список записей, соответствующих запросу.
-        :rtype: List[Any]
+        :param where: Условие `WHERE` для запроса (необязательно).
+        :type where: str, optional
+        :param limit: Ограничение количества возвращаемых записей (необязательно).
+        :type limit: int, optional
+        :return: Список записей `AliexpressCategory`.
+        :rtype: List[AliexpressCategory]
         """
-        # Код исполняет извлечение записей из таблицы `AliexpressCategory`
-        ...
-        return []
+        try:
+            # код исполняет формирование запроса к БД
+            query = f'SELECT * FROM aliexpress_category'
+            if where:
+                query += f' WHERE {where}'
+            if limit:
+                query += f' LIMIT {limit}'
+            # код исполняет выполнение запроса к БД
+            result = AliexpressCategory.raw(query)
+            return result
+        except Exception as ex:
+            logger.error(f'Ошибка запроса SELECT к БД {ex}')
+            return []
 
     def insert(self, data: dict) -> bool:
         """
         Вставляет новую запись в таблицу `AliexpressCategory`.
 
-        :param data: Данные для вставки в запись.
+        :param data: Данные для вставки.
         :type data: dict
-        :return: True, если запись успешно вставлена, False в противном случае.
+        :return: `True`, если запись успешно вставлена, `False` в противном случае.
         :rtype: bool
         """
-        # Код исполняет вставку новой записи в таблицу `AliexpressCategory`
-        ...
-        return True
+        try:
+            # код исполняет создание записи в БД
+            AliexpressCategory.create(**data)
+            return True
+        except Exception as ex:
+            logger.error(f'Ошибка запроса INSERT в БД {ex}')
+            return False
 
-    def update(self, query: dict, data: dict) -> bool:
+    def update(self, data: dict, where: str) -> bool:
         """
         Обновляет существующую запись в таблице `AliexpressCategory`.
 
-        :param query: Запрос для определения записи для обновления.
-        :type query: dict
         :param data: Данные для обновления.
         :type data: dict
-        :return: True, если запись успешно обновлена, False в противном случае.
+        :param where: Условие `WHERE` для обновления.
+        :type where: str
+        :return: `True`, если запись успешно обновлена, `False` в противном случае.
         :rtype: bool
         """
-        # Код исполняет обновление существующей записи в таблице `AliexpressCategory`
-        ...
-        return True
+        try:
+             # код исполняет обновление записи в БД
+            AliexpressCategory.update(**data).where(where).execute()
+            return True
+        except Exception as ex:
+            logger.error(f'Ошибка запроса UPDATE в БД {ex}')
+            return False
 
-    def delete(self, query: dict) -> bool:
+    def delete(self, where: str) -> bool:
         """
         Удаляет запись из таблицы `AliexpressCategory`.
 
-        :param query: Запрос для определения записи для удаления.
-        :type query: dict
-        :return: True, если запись успешно удалена, False в противном случае.
+        :param where: Условие `WHERE` для удаления.
+        :type where: str
+        :return: `True`, если запись успешно удалена, `False` в противном случае.
         :rtype: bool
         """
-        # Код исполняет удаление записи из таблицы `AliexpressCategory`
-        ...
-        return True
+        try:
+             # код исполняет удаление записи из БД
+            AliexpressCategory.delete().where(where).execute()
+            return True
+        except Exception as ex:
+            logger.error(f'Ошибка запроса DELETE в БД {ex}')
+            return False
 ```

@@ -1,119 +1,94 @@
 # Анализ кода модуля `login.py`
 
 **Качество кода**
-**5**
--  Плюсы
-    - Код выполняет базовую функцию авторизации на веб-сайте.
-    - Используются локаторы для поиска элементов, что делает код более устойчивым к изменениям.
--  Минусы
-    -  Отсутствует docstring модуля и функции.
-    -  Множество пустых docstring.
-    -  Используется `print` вместо `logger`.
-    -  Импорт `logger` не реализован.
-    -  Множественные объявления переменной `MODE`
-    -  В коде присутствуют опечатки `emaiocators`, `Truee`.
-    -  Отсутствуют проверки наличия элементов перед взаимодействием с ними.
+7
+- Плюсы
+    - Код структурирован и логически понятен.
+    - Используются локаторы для элементов веб-страницы, что способствует гибкости и поддержке.
+    - Вывод отладочной информации через `self.print`.
+- Минусы
+    -  Множественные docstring на модуль, которые не несут никакой смысловой нагрузки.
+    -  Отсутствует импорт необходимых модулей, таких как `logger` из `src.logger.logger`.
+    -  Не используется `j_loads` или `j_loads_ns` для загрузки данных из json.
+    -  Не соответствует PEP8 (например, именование переменных).
+    -  Отсутствует обработка ошибок и логирование.
+    -  Функция `login` не имеет docstring.
+    -  Переменные `emaiocators`, `email` и `password` не определены в коде.
+    -  Опечатка в возвращаемом значении `return Truee`.
+    -  Отсутствуют проверки на наличие элементов.
 
 **Рекомендации по улучшению**
-
-1.  Добавить docstring модуля с описанием назначения и примером использования.
-2.  Убрать дублирование `MODE`.
-3.  Добавить docstring для функции `login` с описанием параметров и возвращаемого значения.
-4.  Заменить `print` на `logger.info` или `logger.debug` для логирования.
-5.  Использовать импорт `from src.logger.logger import logger` для логирования ошибок и информации.
-6.  Исправить опечатки в коде.
-7.  Добавить обработку исключений (try-except) для более надежной работы.
-8.  Добавить проверки наличия элементов на странице перед взаимодействием с ними.
-9.  Улучшить читаемость кода, добавив дополнительные комментарии к сложным участкам.
-10. Использовать `j_loads` или `j_loads_ns` для чтения данных из файла конфигурации.
+1. **Удалить лишние docstring:** Убрать повторяющиеся и пустые docstring в начале файла.
+2. **Добавить docstring для модуля:** Добавить информативный docstring в начале файла, описывающий назначение модуля.
+3. **Импортировать необходимые модули:** Добавить `from src.logger.logger import logger` для логирования.
+4. **Использовать `j_loads` или `j_loads_ns`:** Если необходимо читать json файлы, использовать соответствующие функции из `src.utils.jjson`.
+5. **Привести имена к PEP8:** Использовать snake_case для именования переменных и функций.
+6. **Добавить обработку ошибок:** Использовать try-except блоки для обработки возможных ошибок и логировать их.
+7. **Добавить docstring для функции:**  Добавить docstring с описанием назначения и параметров функции.
+8.  **Исправить опечатку**: Исправить `return Truee` на `return True`.
+9.  **Добавить проверки на наличие элементов**: Добавить проверки на существование элементов на странице перед взаимодействием с ними.
+10. **Устранить неопределенные переменные**: Определить или получать значения для `email` и `password`.
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для авторизации в системе C-Data.
-=========================================================================================
+Модуль для авторизации поставщика C-data.
 
 Этот модуль содержит функцию :func:`login`, которая используется для авторизации
-на сайте C-Data с использованием веб-драйвера.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-   from src.suppliers.cdata.login import login
-
-    # предполагается, что self это экземпляр класса, где есть driver и locators
-    login(self)
+пользователя на сайте поставщика C-data с использованием веб-драйвера.
 """
 from src.logger.logger import logger
-from src.utils.jjson import j_loads  # предполагается, что src.utils.jjson существует
+from selenium.webdriver.common.by import By
+from typing import Any
 
 MODE = 'dev'
 
-
 def login(self) -> bool:
     """
-    Авторизация в системе C-Data.
+    Выполняет вход на сайт C-data.
 
-    :param self: Экземпляр класса, содержащий веб-драйвер и локаторы.
-    :return: True в случае успешной авторизации, False в противном случае.
+    Использует локаторы для нахождения полей ввода email, пароля и кнопки входа,
+    заполняет их и выполняет вход. В случае успеха возвращает True, иначе - False.
+
+    :return: True в случае успешного входа, False в противном случае.
+    :rtype: bool
     """
     try:
-        # Код выполняет переход на страницу авторизации
         self.get_url('https://reseller.c-data.co.il/Login')
 
-        # Загрузка локаторов из JSON файла
-        #TODO: проверить если src.utils.jjson корректно работает
-        locators = j_loads('src/suppliers/cdata/locators.json')  # Замените путь на актуальный
-        if not locators:
-            logger.error('Ошибка загрузки локаторов из файла')
+        email_locator = (By.XPATH, '//*[@id="Email"]') #TODO: Заменить на получение из self.locators
+        password_locator = (By.XPATH, '//*[@id="Password"]') #TODO: Заменить на получение из self.locators
+        login_button_locator = (By.XPATH, '//*[@id="btnLogin"]') #TODO: Заменить на получение из self.locators
+
+        # Проверка наличия элементов перед взаимодействием
+        if not self.is_element_present(email_locator):
+            logger.error(f"Элемент email не найден по локатору: {email_locator}")
+            return False
+        if not self.is_element_present(password_locator):
+            logger.error(f"Элемент password не найден по локатору: {password_locator}")
+            return False
+        if not self.is_element_present(login_button_locator):
+            logger.error(f"Элемент login_button не найден по локатору: {login_button_locator}")
             return False
 
-        email_locator = (locators['login']['email_locator']['by'],
-                            locators['login']['email_locator']['selector'])
-        password_locator = (locators['login']['password_locator']['by'],
-                            locators['login']['password_locator']['selector'])
-        loginbutton_locator = (locators['login']['loginbutton_locator']['by'],
-                                locators['login']['loginbutton_locator']['selector'])
-        # Код выполняет вывод в лог данных о локаторах
-        logger.debug(f'email_locator {email_locator}\n'
-                     f'password_locator {password_locator}\n'
-                     f'loginbutton_locator {loginbutton_locator}')
 
+        #  Логирование используемых локаторов
+        self.print(f'email_locator {email_locator}\n'
+                  f'password_locator {password_locator}\n'
+                  f'login_button_locator {login_button_locator}')
+        
+        # TODO: Добавить получение email и password из self.config
+        email = "test@test.ru" # self.config.get('email')
+        password = "password" # self.config.get('password')
 
-        # Код выполняет поиск элементов на странице и ввод данных
-        email_element = self.find(email_locator)
-        if not email_element:
-            logger.error(f'Элемент email не найден по локатору: {email_locator}')
-            return False
-        email = locators['login']['email']
-        email_element.send_keys(email)
-
-        password_element = self.find(password_locator)
-        if not password_element:
-            logger.error(f'Элемент password не найден по локатору: {password_locator}')
-            return False
-        password = locators['login']['password']
-        password_element.send_keys(password)
-
-
-        login_button_element = self.find(loginbutton_locator)
-        if not login_button_element:
-            logger.error(f'Элемент login button не найден по локатору: {loginbutton_locator}')
-            return False
-
-        login_button_element.click()
-        # Код выводит сообщение об успешной авторизации
-        logger.info('C-data logged in')
+        # Отправка email и пароля, клик на кнопку
+        self.find(email_locator).send_keys(email)
+        self.find(password_locator).send_keys(password)
+        self.find(login_button_locator).click()
+        self.log('C-data logged in')
         return True
-    except Exception as e:
-        # Код перехватывает ошибку и выводит сообщение в лог
-        logger.error(f'Ошибка при попытке входа: {e}')
+    except Exception as ex:
+        logger.error(f'Ошибка при авторизации в C-data: {ex}')
         return False
 ```

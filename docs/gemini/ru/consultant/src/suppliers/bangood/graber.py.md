@@ -1,72 +1,59 @@
 # Анализ кода модуля `graber.py`
 
 **Качество кода**
-
 8
--   Плюсы
-    -   Код структурирован, используется наследование от класса `Graber`.
-    -   Присутствует базовая документация модуля.
-    -   Используется `logger` для логирования ошибок.
-    -   Есть заготовка для кастомного декоратора `@close_pop_up`.
--   Минусы
-    -   Отсутствует документация в формате RST для класса, функций и переменных.
-    -   Используется `...` для точек остановки, что может мешать отладке.
-    -   Не все импорты соответствуют предыдущим файлам.
-    -   Не используется `j_loads` или `j_loads_ns`.
-    -   Присутствует избыточный комментарий в коде.
-    -   Не реализовано полное переопределение декоратора.
+- Плюсы
+    - Код имеет четкую структуру и использует классы для организации функциональности.
+    - Используется наследование для повторного использования кода.
+    - Присутствует базовая документация модуля.
+    - Используется logging для отладки.
+- Минусы
+    - Отсутствует reStructuredText (RST) документация для класса и методов.
+    - Не все импорты используются.
+    - Есть закомментированный код, который нужно удалить или доработать.
+    - Не используются функции `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+    - Используется `try-except` без обработки ошибок через logger.
+    - Нет документации для переменных класса.
+    - Нет приведения в порядок импортов в соответствии с другими файлами.
 
 **Рекомендации по улучшению**
 
-1.  Добавить документацию в формате RST для модуля, класса, функций и переменных.
-2.  Использовать `j_loads` или `j_loads_ns` для загрузки JSON, если это необходимо.
-3.  Удалить или заменить `...` на более конкретную логику или комментарии.
-4.  Уточнить использование и реализацию декоратора `@close_pop_up`.
-5.  Использовать `logger.error` вместо стандартного `try-except` для обработки ошибок.
-6.  Привести в соответствие импорты с ранее обработанными файлами.
+1.  Добавить reStructuredText (RST) документацию для класса `Graber`, метода `__init__`, а также переменных класса.
+2.  Удалить неиспользуемые импорты и закомментированный код декоратора или доработать его в соответствии с инструкциями.
+3.  Использовать `j_loads` или `j_loads_ns` если необходимо читать данные из файла.
+4.  Заменить `try-except` на логирование ошибок с помощью `logger.error` и `logger.debug`.
+5.  Описать переменные класса.
+6.  Удалить неиспользуемые импорты.
+7.  Привести в порядок импорты.
+8.  В комментариях использовать более конкретные формулировки действий, избегая слов "получаем", "делаем" и т.д.
+9.  Добавить комментарии в формате RST к коду.
 
 **Оптимизированный код**
 
 ```python
-"""
-Модуль для сбора данных о товарах с сайта bangood.com.
-=====================================================
-
-Этот модуль содержит класс :class:`Graber`, который наследуется от :class:`src.suppliers.graber.Graber`
-и используется для сбора данных о товарах с сайта `bangood.com`.
-Он переопределяет некоторые функции родительского класса для специфической обработки данных.
-
-Пример использования:
---------------------
-
-.. code-block:: python
-
-    from src.webdriver.driver import Driver
-    driver = Driver()
-    graber = Graber(driver=driver)
-
-"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
+"""
+Модуль для работы с сайтом bangood.com.
+======================================
+
+Этот модуль предоставляет класс :class:`Graber`, который используется для сбора данных о товарах
+с веб-сайта `bangood.com`. Он наследуется от класса :class:`src.suppliers.graber.Graber`
+и переопределяет его методы для специфичной обработки данных с сайта `bangood.com`.
+    
+"""
 MODE = 'dev'
 
 from typing import Any, Callable
 from functools import wraps
-# from src.exceptions import ExecuteLocatorException # <- не используется
-# from src.utils.jjson import j_loads, j_loads_ns # <- не используется
-# from src.utils.decorators import  close_pop_up # <- нет в исходном коде
-from src.suppliers.graber import Graber as Grbr, Context #, close_pop_up # <- импорт  close_pop_up происходит из модуля, если раскоментировать эту строку то не будет ошибки
+from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
 from src.logger.logger import logger
+from src.webdriver.exceptions import ExecuteLocatorException
 
-
-# Определение декоратора для закрытия всплывающих окон
-# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# Общее название декоратора `@close_pop_up` можно изменить 
-
-
+#  DECORATOR TEMPLATE.
 def close_pop_up(value: Any = None) -> Callable:
     """
     Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
@@ -80,10 +67,13 @@ def close_pop_up(value: Any = None) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                # await Context.driver.execute_locator(Context.locator.close_pop_up)  # Await async pop-up close # <- выполнение локатора close_pop_up
+                # код исполняет попытку закрытия всплывающего окна
+                await Context.driver.execute_locator(Context.locator_for_decorator)  # Await async pop-up close  
                 ...
-            except Exception as e:
+            except ExecuteLocatorException as e:
+                #  логирование ошибки выполнения локатора
                 logger.debug(f'Ошибка выполнения локатора: {e}')
+            # Код исполняет вызов декорируемой функции
             return await func(*args, **kwargs)  # Await the main function
         return wrapper
     return decorator
@@ -99,14 +89,15 @@ class Graber(Grbr):
 
     def __init__(self, driver: Driver):
         """
-        Инициализация класса сбора полей товара.
+        Инициализирует класс Graber.
 
         :param driver: Экземпляр веб-драйвера.
         :type driver: Driver
         """
+        # код устанавливает префикс поставщика
         self.supplier_prefix = 'bangood'
+        # Код исполняет инициализацию родительского класса
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Устанавливаем глобальные настройки через Context
-        
-        Context.locator_for_decorator = None # <- если будет установлено значение - то оно выполнится в декораторе `@close_pop_up`
+        # Код устанавливает значение локатора для декоратора
+        Context.locator_for_decorator = None  # <- если будет установлено значение - то оно выполнится в декораторе `@close_pop_up`
 ```

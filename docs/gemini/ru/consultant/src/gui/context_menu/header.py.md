@@ -2,92 +2,100 @@
 
 **Качество кода**
 8
--  Плюсы
-    - Код корректно определяет пути к исполняемым файлам GTK, FFmpeg и Graphviz.
-    - Пути добавляются в `sys.path`, что позволяет корректно импортировать необходимые библиотеки.
-    - Используется `pathlib` для работы с путями, что делает код более читаемым и кроссплатформенным.
-    - Настройки проекта загружаются из `settings.json`.
-    - Подавление предупреждений GTK.
-
--  Минусы
-    - Отсутствует docstring для модуля.
+- Плюсы
+    - Код выполняет свою основную задачу по настройке путей и переменных окружения.
+    - Используется `pathlib` для работы с путями, что делает код более читаемым и переносимым.
+    - Присутствует начальная документация модуля.
+- Минусы
+    - Много повторяющихся комментариев и пустых строк.
+    - Используется стандартный `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Отсутствует явное указание кодировки при открытии `settings.json`.
     - Комментарии не соответствуют стандарту reStructuredText.
-    - Использование `json.load` вместо `j_loads` или `j_loads_ns`.
-    - Переменная `MODE` объявлена несколько раз.
-    - Наличие повторяющихся комментариев.
-    - Не используется логгер для обработки ошибок.
-    - Дублирование комментариев
+    - Отсутствует логирование ошибок.
+    - Много лишних импортов
+    - В коде присутствует переменная `MODE`, но нигде не используется.
+    - Отсутствуют проверки для корректности путей к бинарным файлам.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля в формате reStructuredText.
-2.  Использовать `j_loads` из `src.utils.jjson` для загрузки настроек из файла `settings.json`.
-3.  Удалить дублирование переменной `MODE` и лишние комментарии.
-4.  Привести комментарии в соответствие с reStructuredText.
-5.  Использовать логгер для записи ошибок и предупреждений.
-6.  Удалить дублирующие комментарии.
+1.  Удалить лишние комментарии и пустые строки.
+2.  Использовать `j_loads` вместо `json.load`.
+3.  Указать кодировку `utf-8` при открытии файла `settings.json`.
+4.  Переписать комментарии в соответствии со стандартом reStructuredText.
+5.  Добавить логирование ошибок с использованием `logger.error`.
+6.  Удалить неиспользуемую переменную `MODE`.
+7.  Добавить проверку существования директорий бинарных файлов.
+8. Добавить `os` и `typing` для коректной работы `Path` и `list`
+9. Сгруппировать импорты по их типу.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
 """
 Модуль для настройки путей и переменных окружения.
-===================================================
+=========================================================================================
 
-Этот модуль определяет абсолютные пути к каталогам bin GTK, FFmpeg и Graphviz.
-Он также загружает настройки проекта из `settings.json` и обновляет переменную PATH,
-чтобы обеспечить доступ к необходимым исполняемым файлам.
-Модуль подавляет предупреждения GTK для предотвращения засорения консоли.
+Этот модуль выполняет настройку путей к бинарным файлам GTK, FFmpeg и Graphviz,
+а также устанавливает переменную окружения для WeasyPrint.
 
 :platform: Windows, Unix
 """
+
 import sys
-from pathlib import Path
 import warnings
+import os
+from pathlib import Path
+from typing import List, Set
 
 from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
-# Определение режима работы (dev, prod)
-MODE = 'dev'
-
-# Загрузка настроек проекта из файла settings.json
+# Загрузка имени проекта из settings.json
 try:
-    # Код исполняет загрузку настроек из файла settings.json с использованием j_loads
-    settings = j_loads('settings.json')
-    project_name = settings.get("project_name", "hypotez")
+    with open('settings.json', 'r', encoding='utf-8') as settings_file:
+        settings = j_loads(settings_file)
+        project_name = settings.get("project_name", "hypotez")
 except FileNotFoundError as e:
-    # Логирование ошибки, если файл settings.json не найден
-    logger.error(f"Файл settings.json не найден: {e}")
-    project_name = "hypotez"
+    logger.error(f'Файл settings.json не найден: {e}')
+    sys.exit(1)
 except Exception as e:
-    # Логирование других ошибок при загрузке settings.json
-    logger.error(f"Ошибка при загрузке settings.json: {e}")
-    project_name = "hypotez"
+    logger.error(f'Ошибка при загрузке настроек из settings.json: {e}')
+    sys.exit(1)
 
 # Определение корневого пути проекта
-__root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
-sys.path.append(str(__root__))
+try:
+    __root__: Path = Path.cwd().resolve().parents[Path.cwd().parts.index(project_name)]
+    sys.path.append(str(__root__))
+except ValueError as e:
+    logger.error(f'Некорректное имя проекта: {e}')
+    sys.exit(1)
 
-# Определение путей к каталогам bin
+# Пути к бинарным директориям
 gtk_bin_path = __root__ / "bin" / "gtk" / "gtk-nsis-pack" / "bin"
 ffmpeg_bin_path = __root__ / "bin" / "ffmpeg" / "bin"
 graphviz_bin_path = __root__ / "bin" / "graphviz" / "bin"
 
-# Список путей для добавления в sys.path
-paths_to_add = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
-current_paths = set(Path(p) for p in sys.path)
+# Список путей для добавления
+paths_to_add: List[Path] = [gtk_bin_path, ffmpeg_bin_path, graphviz_bin_path]
+current_paths: Set[Path] = set(Path(p) for p in sys.path)
 
-# Добавление путей в sys.path, если их нет
+# Добавление путей, если их нет
 for bin_path in paths_to_add:
-    if bin_path not in current_paths:
+    if bin_path.exists() and bin_path not in current_paths:
         sys.path.insert(0, str(bin_path))
+    elif not bin_path.exists():
+        logger.error(f'Директория не найдена: {bin_path}')
 
-# Настройка переменной окружения для WeasyPrint
+
+# Установка переменной окружения для WeasyPrint
 sys_path_env_var = "WEASYPRINT_DLL_DIRECTORIES"
-if sys_path_env_var not in sys.path:
+if sys_path_env_var not in sys.path and gtk_bin_path.exists():
     sys.path.insert(0, str(gtk_bin_path))
+elif not gtk_bin_path.exists():
+    logger.error(f'Директория GTK не найдена: {gtk_bin_path}')
 
-# Подавление предупреждений GTK
+
+# Подавление вывода GTK в консоль
 warnings.filterwarnings("ignore", category=UserWarning)
 ```

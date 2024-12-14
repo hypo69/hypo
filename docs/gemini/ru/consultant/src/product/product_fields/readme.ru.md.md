@@ -1,228 +1,247 @@
 # Анализ кода модуля `product_fields`
 
 **Качество кода**
-7
+**7**
 - Плюсы
-    - Код хорошо документирован, и есть подробное описание каждого метода и атрибута.
-    - Используется `SimpleNamespace` для хранения полей, что упрощает доступ к ним.
-    - Присутствует обработка ошибок при установке значений полей.
-    - Есть разделение на одноязычные и многоязычные поля, что соответствует требованиям PrestaShop.
+    - Код хорошо структурирован и разделен на логические блоки.
+    - Используются свойства `@property` и `@setter` для доступа к полям, что обеспечивает инкапсуляцию данных.
+    - Есть базовая обработка ошибок.
+    - Документация в формате Markdown.
 - Минусы
-    - Не хватает `from src.logger.logger import logger` для логирования ошибок.
-    - Используются стандартные блоки try-except, которые можно заменить на `logger.error`.
-    - Не все комментарии соответствуют стандарту reStructuredText.
-    - Местами не хватает явного указания типов.
-    - Не хватает проверки типов для многоязычных полей.
-    - `ProductFieldException` не импортирован, и нигде не описан.
-    - В `name.setter` нет обработки случая, если `self.presta_fields.name` не инициализирован.
+    - Отсутствует reStructuredText (RST) документация в коде (docstring) для классов, методов и функций.
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+    - Не хватает импортов для работы кода (`List`, `Optional`, `Dict`, `SimpleNamespace`, `Path`).
+    - Логирование ошибок не соответствует требуемому стандарту (используется print вместо logger.error).
+    -  `ProductFieldException` используется, но не импортируется и не определен.
+    -  Не все сеттеры возвращают `bool`, что противоречит документации.
+    -  В сеттере `name` не учтена возможность добавления значений на разных языках.
+    -  Метод `_payload` не обрабатывает ошибку отсутствия файла.
+    -  Используется `print` вместо `logger.debug` для отладочного вывода.
+    -  Метод `_payload` устанавливает атрибуты напрямую через `setattr`, что может привести к нежелательным побочным эффектам.
+    -  В документации не описано зачем используется  `assist_fields_dict`.
+    -  Не используется `from src.logger.logger import logger`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить `from src.logger.logger import logger` в начало файла.
-2.  Использовать `logger.error` вместо стандартных блоков try-except.
-3.  Переписать комментарии в reStructuredText (RST) формате.
-4.  Добавить явное указание типов для переменных и параметров функций.
-5.  Добавить проверку типов для многоязычных полей.
-6.  Исправить ошибку, когда `self.presta_fields.name` может быть неинициализированным.
-7.  Добавить описание для `ProductFieldException`.
-8.  Заменить `j_loads` на `j_loads_ns` из `src.utils.jjson`, так как нет необходимости в загрузке данных как словаря.
-9.  Заменить `List` и `Dict` на `list` и `dict`, так как они являются встроенными типами.
+1.  **Документация**:
+    *   Переписать всю документацию в формате reStructuredText (RST) в docstring.
+    *   Добавить подробные описания параметров и возвращаемых значений для каждой функции и метода.
+2.  **Импорты**:
+    *   Добавить все необходимые импорты (`List`, `Optional`, `Dict`, `SimpleNamespace`, `Path` из `pathlib`, `j_loads` из `src.utils.jjson`, `logger` из `src.logger.logger`).
+3.  **Обработка файлов**:
+    *   Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки JSON файлов.
+4.  **Обработка ошибок**:
+    *   Заменить блоки `try-except` на использование `logger.error` для обработки ошибок.
+    *   Убрать обработку `ProductFieldException` (исключение не определено).
+    *   Добавить проверку наличия файла перед попыткой загрузить его.
+5.  **Сеттеры**:
+    *   Все сеттеры должны возвращать `True` при успешном выполнении и `False` при ошибке.
+    *   В сеттере `name` предусмотреть возможность добавления нескольких языков, а не только переопределения значения на одном.
+6.  **Улучшение метода `_payload`**:
+    *   Использовать `j_loads` для загрузки данных.
+    *   Добавить проверку наличия файла и обрабатывать `FileNotFoundError`.
+    *   Не использовать setattr напрямую для установки значений, стоит использовать сеттеры.
+7.  **Логирование**:
+    *   Заменить все вызовы `print` на `logger.debug` для отладочной информации и `logger.error` для ошибок.
+8.  **Переменные**:
+    *   Добавить описание `assist_fields_dict` в документации.
+9.  **Безопасность**:
+    *   Заменить использование `setattr` на явные присваивания с проверками, чтобы избежать случайного изменения атрибутов.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для управления и структурирования данных товаров в формате, требуемом API PrestaShop.
-=========================================================================================
+Модуль для управления полями товаров в PrestaShop.
+===================================================
 
-Этот модуль предоставляет класс :class:`ProductFields`, который используется для работы с полями товаров,
-включая как одноязычные, так и многоязычные поля.
+Этот модуль предоставляет класс :class:`ProductFields`,
+который используется для управления и структурирования данных товаров в формате,
+требуемом API PrestaShop. Класс обеспечивает интерфейс для работы с одноязычными
+и многоязычными полями, а также гарантирует, что данные правильно отформатированы
+и проверены перед отправкой в API.
 
 Пример использования
 --------------------
 
-Пример использования класса `ProductFields`:
-
 .. code-block:: python
 
-   product = ProductFields()
-   product.id_product = 123
-   product.name = "Product Name", lang='en'
-   print(product.name)
-"""
-from types import SimpleNamespace
-from pathlib import Path
-from typing import Optional, Any,  Union
-# импортируем `j_loads_ns` для загрузки данных из JSON
-from src.utils.jjson import j_loads_ns
-# импортируем `logger` для логирования ошибок
-from src.logger.logger import logger
-# импортируем `read_text_file` для чтения текстовых файлов
-from src.utils.text_file import read_text_file
-# импортируем `settings` для доступа к путям файлов
-from src.settings import gs
+    from pathlib import Path
+    from src.product.product_fields import ProductFields
+    product = ProductFields()
+    product.id_product = 123
+    print(product.id_product)
 
-class ProductFieldException(Exception):
-    """
-    Исключение, возникающее при ошибке работы с полями товара.
-    """
-    pass
+"""
+from pathlib import Path
+from typing import List, Optional, Dict, Any
+from types import SimpleNamespace
+
+from src.utils.jjson import j_loads
+from src.logger.logger import logger
+
 
 class ProductFields:
     """
-    Класс для управления полями товаров PrestaShop.
+    Класс для управления полями товаров в PrestaShop.
 
-    Этот класс предоставляет интерфейс для работы с полями товаров,
-    включая как одноязычные, так и многоязычные поля. Он гарантирует, что
-    данные будут правильно отформатированы и проверены перед отправкой в API PrestaShop.
+    Предоставляет методы для установки и получения значений полей товаров,
+    обеспечивая проверку и форматирование данных.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         """
-        Инициализирует класс `ProductFields`.
+        Инициализирует класс ProductFields.
 
-        Загружает список полей товаров, устанавливает значения по умолчанию
-        и инициализирует объект `SimpleNamespace` для хранения полей товаров.
+        Загружает список полей товаров, устанавливает языковые соответствия,
+        инициализирует объект SimpleNamespace для хранения полей и вспомогательный
+        словарь для дополнительных полей.
         """
-        # загрузка списка полей из файла `fields_list.txt`
-        self.product_fields_list: list[str] = self._load_product_fields_list()
-        # словарь соответствия языков
-        self.language: dict[str, int] = {'en': 1, 'he': 2, 'ru': 3}
-        # создание `SimpleNamespace` с полями из `product_fields_list`
-        self.presta_fields: SimpleNamespace = SimpleNamespace(**{key: None for key in self.product_fields_list})
-        # словарь для дополнительных полей
-        self.assist_fields_dict: dict[str, Union[str, list[str]]] = {
+        # загрузка списка полей продукта из файла
+        self.product_fields_list = self._load_product_fields_list()
+        # определение словаря языков
+        self.language = {'en': 1, 'he': 2, 'ru': 3}
+        # создание объекта SimpleNamespace для хранения полей продукта
+        self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
+        # создание словаря для хранения дополнительных полей
+        self.assist_fields_dict = {
             'default_image_url': '',
             'images_urls': []
         }
-        # загрузка значений по умолчанию для полей
+        # загрузка значений по умолчанию
         self._payload()
 
-
-    def _load_product_fields_list(self) -> list[str]:
+    def _load_product_fields_list(self) -> List[str]:
         """
-        Загружает список полей товаров из файла `fields_list.txt`.
+        Загружает список полей товаров из текстового файла.
 
-        :return: Список полей товаров.
-        :rtype: list[str]
+        :return: Список строк, каждая из которых представляет поле товара.
+        :rtype: List[str]
         """
-        # чтение файла со списком полей и возврат списка
-        return read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True)
-
+        try:
+            # код исполняет чтение списка полей из файла
+            from src.utils.file_utils import read_text_file
+            return read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True)
+        except FileNotFoundError as ex:
+            logger.error(f'Файл со списком полей не найден: {ex}')
+            return []
 
     def _payload(self) -> bool:
         """
-        Загружает значения по умолчанию для полей товаров из JSON файла.
+        Загружает значения по умолчанию для полей товаров из JSON-файла.
 
-        Если файл не найден или не может быть загружен, логируется сообщение об ошибке.
-
-        :return: `True`, если загрузка прошла успешно, `False` в противном случае.
+        :return: True если значения загружены успешно, иначе False.
         :rtype: bool
         """
-        # загрузка данных из файла
-        data = j_loads_ns(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
-        if not data:
-            # логирование ошибки, если загрузка не удалась
-            logger.debug(f'Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json')
-            return False
-        # установка значений по умолчанию для полей
-        for name, value in data.__dict__.items():
-            setattr(self, name, value)
-        return True
+        try:
+            # код исполняет чтение значений по умолчанию из файла
+            file_path = Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json')
+            data = j_loads(file_path)
+            if not data:
+                logger.debug(f"Ошибка загрузки полей из файла {file_path}")
+                return False
 
+            for name, value in data.items():
+                 # Код устанавливает значения по умолчанию для атрибутов, используя сеттеры.
+                if hasattr(self, name) and hasattr(getattr(self, name), 'setter'):
+                    setattr(self, name, value)
+                else:
+                    setattr(self.presta_fields, name, value)
+            return True
+        except FileNotFoundError as ex:
+            logger.error(f"Файл со значениями по умолчанию не найден: {ex}")
+            return False
+        except Exception as ex:
+             logger.error(f'Ошибка при загрузке значений по умолчанию: {ex}')
+             return False
 
     @property
     def id_product(self) -> Optional[int]:
         """
-        Возвращает значение поля `id_product`.
+        Возвращает ID продукта.
 
-        :return: Значение поля `id_product`.
+        :return: ID продукта или None, если не установлено.
         :rtype: Optional[int]
         """
-        # возвращает значение id_product
         return self.presta_fields.id_product
 
     @id_product.setter
-    def id_product(self, value: Optional[int]) -> None:
+    def id_product(self, value: int = None) -> bool:
         """
-        Устанавливает значение поля `id_product`.
+        Устанавливает ID продукта.
 
-        :param value: Значение поля `id_product`.
-        :type value: Optional[int]
-        :raises ProductFieldException: Если возникает ошибка при установке значения.
+        :param value: ID продукта.
+        :type value: int
+        :return: True если ID продукта успешно установлен, иначе False.
+        :rtype: bool
         """
         try:
-            # устанавливает значение для id_product
+            # Код устанавливает ID продукта.
             self.presta_fields.id_product = value
-        except ProductFieldException as ex:
-            # логирование ошибки, если установка значения не удалась
-            logger.error(f'Ошибка заполнения поля: \'ID\' данными {value}\n        Ошибка: ', ex)
-            return
-
+            return True
+        except Exception as ex:
+            logger.error(f"""Ошибка заполнения поля: 'ID' данными {value}""", ex)
+            return False
 
     @property
     def name(self) -> str:
         """
-        Возвращает значение поля `name`.
+        Возвращает имя продукта.
 
-        :return: Значение поля `name`.
+        :return: Имя продукта или пустая строка, если не установлено.
         :rtype: str
         """
-        # возвращает значение name, пустая строка если не установлено
         return self.presta_fields.name or ''
 
     @name.setter
-    def name(self, value: str, lang: str = 'en') -> Optional[bool]:
+    def name(self, value: str, lang: str = 'en') -> bool:
         """
-        Устанавливает значение поля `name` для указанного языка.
+         Устанавливает имя продукта для указанного языка.
 
-        :param value: Значение поля `name`.
+        :param value: Имя продукта.
         :type value: str
-        :param lang: Язык, для которого устанавливается значение.
+        :param lang: Язык для имени продукта (по умолчанию 'en').
         :type lang: str
-        :return: `True`, если установка прошла успешно, `None` в противном случае.
-        :rtype: Optional[bool]
-        :raises ProductFieldException: Если возникает ошибка при установке значения.
+        :return: True если имя продукта успешно установлено, иначе False.
+        :rtype: bool
         """
         try:
-            if not isinstance(value, str):
-               # если тип значения не строка, логируем ошибку
-               logger.error(f'Неверный тип для поля name, ожидалась строка, получен: {type(value)}')
-               return
-            # устанавливает значение для поля name, если не инициализирован, создает структуру
+             # Код устанавливает имя продукта для указанного языка.
             if not hasattr(self.presta_fields, 'name') or not self.presta_fields.name:
-               self.presta_fields.name = {'language': []}
-            self.presta_fields.name['language'].append({
-                'attrs': {'id': self.language[lang]},
-                'value': value
-            })
+                self.presta_fields.name = {'language': []}
+            self.presta_fields.name['language'].append(
+                 {'attrs': {'id': self.language[lang]}, 'value': value}
+                 )
             return True
-        except ProductFieldException as ex:
-           # логирование ошибки, если установка значения не удалась
-           logger.error(f'Ошибка заполнения поля: \'name\' данными {value}\n        Ошибка: ', ex)
-           return
-
-
+        except Exception as ex:
+            logger.error(f"""Ошибка заполнения поля: 'name' данными {value}""", ex)
+            return False
 
     @property
-    def associations(self) -> Optional[dict]:
+    def associations(self) -> Optional[Dict]:
         """
-        Возвращает ассоциации товара.
+        Возвращает ассоциации продукта.
 
-        :return: Ассоциации товара.
-        :rtype: Optional[dict]
+        :return: Ассоциации продукта или None, если не установлено.
+        :rtype: Optional[Dict]
         """
-        # возвращает ассоциации
         return self.presta_fields.associations or None
 
     @associations.setter
-    def associations(self, value: dict[str, Optional[str]]) -> None:
+    def associations(self, value: Dict[str, Optional[str]]) -> bool:
         """
-        Устанавливает ассоциации товара.
+        Устанавливает ассоциации продукта.
 
-        :param value: Ассоциации товара.
-        :type value: dict[str, Optional[str]]
+        :param value: Ассоциации продукта.
+        :type value: Dict[str, Optional[str]]
+        :return: True если ассоциации успешно установлены, иначе False.
+        :rtype: bool
         """
-        # устанавливает ассоциации
-        self.presta_fields.associations = value
+        try:
+            # Код устанавливает ассоциации продукта.
+            self.presta_fields.associations = value
+            return True
+        except Exception as ex:
+             logger.error(f"Ошибка заполнения поля 'associations' данными {value}", ex)
+             return False
 ```

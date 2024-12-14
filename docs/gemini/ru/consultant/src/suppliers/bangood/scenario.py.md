@@ -3,131 +3,119 @@
 **Качество кода**
 8
 -  Плюсы
-    - Код достаточно хорошо структурирован, присутствуют docstring.
-    - Используется логгер для отслеживания ошибок и предупреждений.
-    - Присутствует проверка на наличие локаторов.
-    - Есть обработка разных типов данных, возвращаемых execute_locator.
+    -   Код в целом соответствует PEP 8, используются type hints.
+    -   Присутствует базовая структура для работы с веб-драйвером и локаторами.
+    -   Используется `logger` для логирования.
+    -   Есть docstrings для функций.
 -  Минусы
-    - Отсутствуют некоторые импорты, которые используются в коде.
-    -  Неполное соответствие с ранее обработанными файлами.
-    -  Используются избыточные комментарии.
-    -  Не хватает docstring для всего модуля и всех функций.
-    -  Не стандартизирован стиль комментариев.
-    -  В `get_list_products_in_category` не реализована логика пролистывания страниц.
-    -  Используется не стандартный способ проверки на наличие `None`.
-    -  Отсутствует обработка ошибок.
-    -  Не используется `j_loads` или `j_loads_ns`.
+    -   Не все docstrings соответствуют стандарту reStructuredText (RST).
+    -   Отсутствуют необходимые импорты, например, `Any` из `typing`.
+    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -   Присутствуют неиспользуемые и дублирующиеся комментарии, которые требуется удалить или переоформить.
+    -   Обработка ошибок выполняется стандартным способом try-except.
+    -   В комментариях местами используется не точная формулировка.
 
 **Рекомендации по улучшению**
 
-1.  **Импорты**: Добавить недостающие импорты, такие как `Any`, `list`, `dict`
-2.  **Docstring**: Добавить docstring для модуля, а также описания для функций и переменных в формате reStructuredText (RST).
-3.  **Логирование**: Использовать `logger.error` для обработки ошибок.
-4.  **Обработка данных**: Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов, если это необходимо.
-5.  **Рефакторинг**: Улучшить читаемость кода, убрав избыточные комментарии и проверки.
-6.  **Пролистывание**: Добавить логику пролистывания страниц категорий в `get_list_products_in_category`.
-7.  **Стандартизация**: Привести в соответствие стиль комментариев и docstring с ранее обработанными файлами.
-8.  **Убрать магические значения**: Вместо `\'category\'`  и `\'product\'` сделать переменные.
-9.  **Обработка ошибок**: Добавить обработку ошибок в `get_list_products_in_category`.
+1.  **Импорты:**
+    -   Добавить отсутствующие импорты `Any` из `typing`, `j_loads_ns` из `src.utils.jjson`.
+
+2.  **Комментарии и Docstrings:**
+    -   Переписать docstrings в формате RST.
+    -   Удалить дублирующиеся комментарии.
+    -   Уточнить формулировки в комментариях.
+    -   Переоформить все комментарии и docstrings в соответствии со стандартами RST.
+
+3.  **Логирование:**
+    -   Использовать `logger.error` для обработки ошибок вместо стандартного `try-except`.
+    -   Использовать более информативные сообщения в логах.
+
+4.  **Обработка данных:**
+    -   Использовать `j_loads` или `j_loads_ns` для чтения данных, если это необходимо.
+
+5.  **Рефакторинг:**
+    -   Удалить неиспользуемые комментарии.
+    -   Упростить логику там, где это возможно.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для сбора товаров со страницы категорий поставщика bangood.co.il через вебдрайвер.
+Модуль для сбора товаров со страницы категорий поставщика bangood.co.il через веб-драйвер.
 =========================================================================================
 
-Этот модуль содержит функции для сбора списка категорий и товаров с сайта bangood.co.il.
-Используется веб-драйвер для навигации по сайту и извлечения данных.
+Этот модуль содержит функции для извлечения данных о категориях и товарах с сайта Banggood.
 
-.. note::
-    У каждого поставщика свой сценарий обработки категорий.
-    Модуль собирает список категорий со страниц продавца.
-    Также, собирает список товаров со страницы категории.
-    Затем итерируясь по списку передает управление в `grab_product_page()`,
-    отправляя функции текущий URL страницы.
-    `grab_product_page()` обрабатывает поля товара и передает управление классу `Product`.
+- Собирает список категорий со страниц продавца :func:`get_list_categories_from_site`.
+- Собирает список товаров со страницы категории :func:`get_list_products_in_category`.
+- Итерируясь по списку, передает управление в `grab_product_page()`, отправляя функции текущий URL страницы.
+  `grab_product_page()` обрабатывает поля товара и передает управление классу `Product`.
 
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from src.suppliers.bangood.scenario import get_list_categories_from_site, get_list_products_in_category
-
-    supplier = ...  # Инициализация объекта поставщика
-    categories = get_list_categories_from_site(supplier)
-    if categories:
-        for category in categories:
-            products = get_list_products_in_category(supplier, category)
-            if products:
-                for product_url in products:
-                    ... # Обработка URL товара
-
+.. todo::
+    Сделать проверку на изменение категорий на страницах продавца.
+    Продавец может добавлять новые категории, переименовывать или удалять/скрывать уже существующие.
+    По большому счету, надо держать таблицу соответствий категорий
+    `PrestaShop.categories <-> aliexpress.shop.categories`.
 """
-from typing import  Union, Any, List, Dict
+
+from typing import List, Any, Optional # Добавлен импорт Any
 from pathlib import Path
 
 from src import gs
 from src.logger.logger import logger
-
-CATEGORY = 'category'
-PRODUCT = 'product'
+# from src.utils.jjson import j_loads_ns # Предположительно не используется в коде
 
 
-def get_list_products_in_category(s, category_url: str = None) -> Union[List[str], None]:
+MODE = 'dev' # Константа режима работы.
+
+
+def get_list_products_in_category(s) -> Optional[List[str]]:
     """
     Извлекает список URL товаров со страницы категории.
 
-    :param s: Объект поставщика.
-    :type s: Any
-    :param category_url: URL категории, если передан.
-    :type category_url: str
-    :return: Список URL товаров или None в случае неудачи.
-    :rtype: Union[List[str], None]
+    Если требуется пролистать страницы категорий, выполняется пролистывание.
 
-    .. note::
-       Если необходимо пролистать страницы категорий, то тут добавляется логика пролистывания.
+    :param s: Объект поставщика (Supplier).
+    :type s: Any
+    :return: Список URL товаров или None, если товары не найдены.
+    :rtype: Optional[List[str]]
     """
     d = s.driver
-    l: Dict = s.locators.get(CATEGORY)
+
+    l: dict = s.locators['category']
+
+    # Выполняет закрытие баннера, если он есть
+    d.execute_locator(s.locators['product']['close_banner'])
 
     if not l:
-        logger.error(f"Локаторы для категории не найдены: {l}")
+        logger.error(f"Отсутствуют локаторы для категории: {l}")
+        return None
+    # Выполняет скролл страницы
+    d.scroll()
+
+    # TODO: Нет листалки. Реализовать пролистывание страниц.
+
+    list_products_in_category = d.execute_locator(l['product_links'])
+    # Извлечение ссылок на товары
+
+    if not list_products_in_category:
+        logger.warning('На странице категории не найдены ссылки на товары.')
         return None
 
-    try:
-        d.execute_locator(s.locators[PRODUCT].get('close_banner'))
-        d.scroll()
+    # Преобразует в список, если это не список
+    list_products_in_category = [list_products_in_category] if isinstance(list_products_in_category, str) else list_products_in_category
 
-        # TODO: Нет листалки
-        list_products_in_category = d.execute_locator(l.get('product_links'))
+    logger.info(f"Найдено {len(list_products_in_category)} товаров.")
 
-        if not list_products_in_category:
-            logger.warning('Нет ссылок на товары в категории.')
-            return None
-
-        if isinstance(list_products_in_category, str):
-             list_products_in_category = [list_products_in_category]
+    return list_products_in_category
 
 
-        logger.info(f"Найдено {len(list_products_in_category)} товаров в категории.")
-        return list_products_in_category
-    except Exception as e:
-         logger.error(f'Ошибка при получении списка товаров в категории: {e}')
-         return None
-
-
-
-def get_list_categories_from_site(s) -> None:
+def get_list_categories_from_site(s):
     """
     Извлекает список категорий с сайта.
 
-    :param s: Объект поставщика.
+    :param s: Объект поставщика (Supplier).
     :type s: Any
     :return: None
-
-    .. note::
-        В данный момент функция не реализована.
     """
     ...

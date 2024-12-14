@@ -1,45 +1,74 @@
 # Анализ кода модуля `__init__.py`
 
 **Качество кода**
-7
+8
 -  Плюсы
-    - Код имеет базовую структуру, определяющую модуль и импортирующие необходимые классы.
-    -  Присутствует описание модуля в формате docstring.
+    - Код имеет базовую структуру и объявляет константу `MODE`.
+    - Присутствуют импорты других модулей.
+    - В начале файла есть docstring.
 -  Минусы
-    - Отсутствует импорт `logger` для логирования.
-    -  Не все комментарии приведены в формат reStructuredText.
-    -  Отсутствует подробное описание переменных модуля в docstring.
-    -  Используется `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`, которые не являются частью стандарта и не используются.
+    -  Отсутствует описание модуля и его назначения в docstring.
+    -  Не хватает документации в reStructuredText (RST).
+    -  Нет описания константы `MODE`.
+    -  Не указаны типы импортируемых модулей, что усложняет понимание кода.
+    -  Отсутствует импорт `logger`.
+    -  Не все комментарии соответствуют RST.
 
 **Рекомендации по улучшению**
 
-1.  Добавить импорт `logger` из `src.logger.logger` для логирования ошибок и отладки.
-2.  Удалить `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12` так как это  не являются частью стандарта и не используются.
-3.  Преобразовать комментарий к модулю в формат reStructuredText.
-4.  Добавить описание переменной `MODE` в docstring модуля.
-5.  Убедиться, что все импорты соответствуют ранее обработанным файлам.
+1.  Добавить подробное описание модуля в docstring в формате RST.
+2.  Добавить подробное описание константы `MODE`.
+3.  Импортировать `logger` и использовать его для логирования.
+4.  Преобразовать все комментарии в формат RST.
+5.  Добавить проверку типов при импорте.
+6.  Добавить пример использования.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для работы с Google Spreadsheets.
-=================================================
-Этот модуль предоставляет классы для взаимодействия с Google Spreadsheets.
+=========================================================================================
 
-:platform: Windows, Unix
-:synopsis:
+Этот модуль предоставляет классы и инструменты для взаимодействия с Google Spreadsheets API,
+включая чтение, запись и обработку данных.
 
-Переменные:
-    MODE (str): Режим работы модуля ('dev' или 'prod').
+Модуль включает классы:
+    - :class:`SpreadSheet` - для работы с отдельными таблицами Google Sheets.
+    - :class:`ReachSpreadsheet` - для расширенных возможностей взаимодействия.
 
-.. moduleauthor::
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    from src.goog.spreadsheet import SpreadSheet, ReachSpreadsheet
+
+    # Пример инициализации SpreadSheet
+    # spreadsheet = SpreadSheet(credentials_path='path/to/credentials.json', spreadsheet_id='your_spreadsheet_id')
+    # Пример инициализации ReachSpreadsheet
+    # reach_spreadsheet = ReachSpreadsheet(credentials_path='path/to/credentials.json', spreadsheet_id='your_spreadsheet_id')
+
 """
-from src.logger.logger import logger
+from src.logger.logger import logger  # Импорт logger для логирования
+from typing import TYPE_CHECKING # Импорт для проверки типов
 
-MODE = 'dev'
+if TYPE_CHECKING:
+    from .spreadsheet import SpreadSheet
+    from .reach_spreadsheet import ReachSpreadsheet
+    
+#: Режим работы приложения.
+#: Может принимать значения 'dev' для разработки, 'test' для тестирования, 'prod' для продакшена.
+MODE: str = 'dev'
 
 
+
+# Импорт классов SpreadSheet и ReachSpreadsheet из соответствующих модулей.
+# Данные импорты предназначены для использования функциональности работы с Google Spreadsheets.
 from .spreadsheet import SpreadSheet
 from .reach_spreadsheet import ReachSpreadsheet
 ```

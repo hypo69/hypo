@@ -1,119 +1,120 @@
 ## Анализ кода модуля `grender.py`
 
-**Качество кода: 6/10**
-- **Плюсы:**
-    - Код имеет базовую структуру, разбит на функции и классы.
-    - Используется библиотека `gspread` для работы с Google Sheets.
-    - Присутствуют некоторые комментарии, описывающие назначение функций.
-- **Минусы:**
-    - Не все функции и классы имеют docstring.
-    - Комментарии не соответствуют стандарту reStructuredText (RST).
-    - В коде используется `json.loads` вместо `j_loads` или `j_loads_ns`.
-    - Присутствует избыточное использование `...` (точки останова).
-    - Не хватает обработки ошибок с использованием `logger.error`.
-    - Есть неиспользуемый код.
-    - Некоторые строки длиннее 80 символов.
-    - Переменная `MODE` объявлена в нескольких местах.
+**Качество кода**
+7/10
+- **Плюсы**
+    - Код структурирован в класс `GSRender`, что способствует организации и повторному использованию.
+    - Присутствует базовая функциональность для работы с Google Sheets API, включая форматирование и объединение ячеек.
+    - Используются аннотации типов, что улучшает читаемость и помогает в отладке.
+    - Есть docstring для классов и методов, что улучшает понимание кода.
 
-**Рекомендации по улучшению:**
+- **Минусы**
+    - Не все docstring заполнены (есть `[Function's description]` и `[Class's description]`).
+    -  Отсутствует обработка ошибок, особенно при работе с Google Sheets API, что может привести к непредсказуемому поведению.
+    -  В коде много повторяющегося кода, особенно при формировании диапазонов ячеек.
+    - Используется стандартный `json.loads`  вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Присутствуют избыточные комментарии.
+    - Не используется `logger` для логирования ошибок.
+    -  Не везде используется reStructuredText (RST) для docstring и комментариев.
 
-1.  **Документация:**
-    -   Добавить docstring в формате RST для всех классов, функций и методов.
-    -   Использовать Sphinx-совместимый формат docstring (например, `:param`, `:return`).
-2.  **Импорты:**
-    -   Добавить отсутствующие импорты из `src.utils.jjson` и `src.logger.logger`.
-3.  **Обработка данных:**
-    -   Заменить `json.loads` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-4.  **Логирование:**
-    -   Использовать `logger.error` для обработки исключений и логирования ошибок.
-    -   Избегать стандартных блоков `try-except` без необходимости.
-5.  **Код:**
-    -   Убрать избыточные `...` (точки останова).
-    -   Переменная `MODE` должна быть объявлена только один раз.
-    -   Избегать дублирования кода.
-    -   Разбить длинные строки на более короткие.
-    -   Убрать неиспользуемый код.
-6. **Стиль кода**
-    -   Привести в порядок отступы.
-    -   Удалить комментарии, которые не несут смысловой нагрузки.
+**Рекомендации по улучшению**
+1.  **Документация**:
+    -   Заполнить все docstring в формате RST, добавив подробные описания параметров и возвращаемых значений.
+    -   Использовать RST для всех комментариев, включая описания модулей, классов, методов и переменных.
+2.  **Обработка ошибок**:
+    -   Использовать `from src.logger.logger import logger` для логирования ошибок.
+    -   Избегать стандартных `try-except` блоков, предпочитая логирование ошибок с помощью `logger.error`.
+3.  **Рефакторинг**:
+    -   Уменьшить дублирование кода, например, вынеся логику формирования диапазонов ячеек в отдельную функцию.
+    -   Использовать более информативные имена переменных.
+    -   Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.loads`.
+4.  **Форматирование**:
+    -   Соблюдать PEP 8.
+    -   Удалить лишние комментарии, которые не несут смысловой нагрузки.
 
 **Оптимизированный код**
-
 ```python
-# -*- coding: utf-8 -*-
 """
 Модуль для рендеринга таблиц Google Sheets.
-=================================================
+=========================================================================================
 
-Этот модуль предоставляет класс :class:`GSRender` для форматирования и
-рендеринга таблиц в Google Sheets, включая установку заголовков,
-объединение ячеек и настройку направления текста.
+Этот модуль предоставляет класс :class:`GSRender`, который используется для форматирования
+и рендеринга данных в Google Sheets.
 
-Примеры
--------
+Пример использования
+--------------------
 
-Пример использования класса `GSRender`:
+Пример создания и использования класса `GSRender`:
 
 .. code-block:: python
 
-    from src import gs
-    from spread import Worksheet, Spreadsheet
-    
-    sh = gs.get_spreadsheet('my_spreadsheet')
-    ws = sh.worksheet('Sheet1')
-    renderer = GSRender()
-    renderer.render_header(ws, "My Table Title")
+    from src.goog.spreadsheet.bberyakov.grender import GSRender
+    from spread import Spreadsheet, Worksheet
+
+    # Пример использования класса GSRender
+    gs_render = GSRender()
+    # Получаем экземпляр таблицы и листа
+    #sh: Spreadsheet = ...
+    #ws: Worksheet = ...
+    # gs_render.render_header(ws, 'Заголовок таблицы', 'A1:Z1')
+    # gs_render.header(ws, 'Заголовок', 2)
 """
-from src import gs
-from src.helpers import logger, WebDriverException, pprint
-from src.utils.jjson import j_loads  # Используем j_loads для загрузки JSON
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 # ------------------------------
+from src import gs
+from src.helpers import  WebDriverException, pprint
+from src.logger.logger import logger
+# -------------------------------
+
 import json
 from typing import List, Type, Union
 from spread_formatting import *
 from spread import Spreadsheet, Worksheet
 from goog.helpers import hex_color_to_decimal, decimal_color_to_hex, hex_to_rgb
+
 from spread.utils import ValueInputOption, ValueRenderOption
-from src.logger.logger import logger
+from src.utils.jjson import j_loads
 MODE = 'dev'
 
 
 class GSRender:
     """
-    Класс для рендеринга таблиц в Google Sheets.
+    Класс для рендеринга таблиц Google Sheets.
 
-    Предоставляет методы для форматирования ячеек, установки заголовков,
+    Предоставляет методы для форматирования заголовков,
     объединения ячеек и установки направления текста.
     """
+
     render_schemas: dict
 
     def __init__(self, *args, **kwargs) -> None:
         """
-        Инициализация класса GSRender.
+        Инициализирует объект GSRender.
 
         :param args: Произвольные позиционные аргументы.
-        :param kwards: Произвольные именованные аргументы.
+        :param kwargs: Произвольные именованные аргументы.
         """
-        # self.render_schemas = json.loads('goog\\\\schema.json')
-        # Код временно отключен
-        ...
+        # TODO: fix use j_loads or j_loads_ns
+        # try:
+        #     with open('goog/schema.json', 'r', encoding='utf-8') as f:
+        #         self.render_schemas = j_loads(f)
+        # except Exception as e:
+        #     logger.error(f'Ошибка при загрузке файла goog/schema.json: {e}')
+        #     ...
+        self.render_schemas = ...
 
     def render_header(self, ws: Worksheet, world_title: str, range: str = 'A1:Z1',
                       merge_type: str = 'MERGE_ALL') -> None:
         """
-        Форматирует и рендерит заголовок таблицы.
+        Отрисовывает заголовок таблицы в первой строке.
 
-        Устанавливает цвет фона, выравнивание текста, направление текста,
-        жирный шрифт и размер шрифта для заголовка таблицы.
-
-        :param ws: Таблица (worksheet) в Google Sheets.
-        :type ws: Worksheet
+        :param ws: Объект Worksheet, представляющий таблицу.
         :param world_title: Заголовок таблицы.
-        :type world_title: str
-        :param range: Диапазон ячеек заголовка.
-        :type range: str
-        :param merge_type: Тип объединения ячеек.
-        :type merge_type: str, ('MERGE_ALL', 'MERGE_COLUMNS', 'MERGE_ROWS')
+        :param range: Диапазон ячеек для заголовка, по умолчанию 'A1:Z1'.
+        :param merge_type: Тип объединения ячеек ('MERGE_ALL', 'MERGE_COLUMNS', 'MERGE_ROWS'), по умолчанию 'MERGE_ALL'.
         """
         bg_color = hex_to_rgb('#FFAAAA')
         fg_color = hex_to_rgb('#AAAAAA')
@@ -123,11 +124,9 @@ class GSRender:
             horizontalAlignment="RIGHT",
             textDirection='RIGHT_TO_LEFT',
             textFormat=TextFormat(bold=True,
-                                   foregroundColor=Color(fg_color[0] / 255, fg_color[1] / 255,
-                                                         fg_color[2] / 255),
+                                   foregroundColor=Color(fg_color[0] / 255, fg_color[1] / 255, fg_color[2] / 255),
                                    fontSize=24),
         )
-
         rule = ConditionalFormatRule(
             ranges=[GridRange.from_a1_range(range, ws)],
             booleanRule=BooleanRule(
@@ -140,35 +139,26 @@ class GSRender:
         format_cell_range(ws, range, fmt)
         self.merge_range(ws, range, merge_type)
 
+
     def merge_range(self, ws: Worksheet, range: str,
                     merge_type: str = 'MERGE_ALL') -> None:
         """
         Объединяет ячейки в указанном диапазоне.
 
-        :param ws: Таблица (worksheet) в Google Sheets.
-        :type ws: Worksheet
+        :param ws: Объект Worksheet, представляющий таблицу.
         :param range: Диапазон ячеек для объединения.
-        :type range: str
-        :param merge_type: Тип объединения ячеек ('MERGE_ALL', 'MERGE_COLUMNS', 'MERGE_ROWS').
-        :type merge_type: str
+        :param merge_type: Тип объединения ячеек ('MERGE_ALL', 'MERGE_COLUMNS', 'MERGE_ROWS'), по умолчанию 'MERGE_ALL'.
         """
-        try:
-            ws.merge_cells(range, merge_type)
-        except Exception as ex:
-            logger.error(f'Ошибка при объединении ячеек в диапазоне {range}', exc_info=ex)
-            ...
+        ws.merge_cells(range, merge_type)
 
     def set_worksheet_direction(self, sh: Spreadsheet, ws: Worksheet,
-                                direction: str = 'rtl'):
+                                direction: str = 'rtl') -> None:
         """
-        Устанавливает направление текста для таблицы.
+        Устанавливает направление текста для листа.
 
-        :param sh: Google Sheets.
-        :type sh: Spreadsheet
-        :param ws: Таблица (worksheet) в Google Sheets.
-        :type ws: Worksheet
-        :param direction: Направление текста ('ltr' или 'rtl').
-        :type direction: str
+        :param sh: Объект Spreadsheet, представляющий книгу.
+        :param ws: Объект Worksheet, представляющий лист.
+        :param direction: Направление текста ('ltr' - слева направо, 'rtl' - справа налево), по умолчанию 'rtl'.
         """
         data: dict = {
             "requests": [
@@ -176,81 +166,54 @@ class GSRender:
                     "updateSheetProperties": {
                         "properties": {
                             "sheetId": int(ws.id),
-                            "rightToLeft": True if direction == 'rtl' else False
-
+                            "rightToLeft": direction == 'rtl'
                         },
                         "fields": "rightToLeft",
                     }
                 }
             ]
         }
-        try:
-            sh.batch_update(data)
-        except Exception as ex:
-            logger.error(f'Ошибка при установке направления текста для таблицы {ws.title}', exc_info=ex)
-            ...
+        sh.batch_update(data)
 
-    def header(self, ws: Worksheet, ws_header: str | list, row: int = None):
+    def header(self, ws: Worksheet, ws_header: str | list, row: int = None) -> None:
         """
-        Записывает и форматирует заголовок таблицы.
+        Добавляет заголовок в указанную строку.
 
-        :param ws: Таблица (worksheet) в Google Sheets.
-        :type ws: Worksheet
-        :param ws_header: Заголовок таблицы (строка или список).
-        :type ws_header: str | list
-        :param row: Номер строки для записи заголовка.
-        :type row: int, optional
+        :param ws: Объект Worksheet, представляющий таблицу.
+        :param ws_header: Заголовок таблицы (строка или список строк).
+        :param row: Номер строки для заголовка, по умолчанию - первая пустая строка.
         """
-        row: int = (self.get_first_empty_row(ws)) if not row else row
-        table_range: str = f'A{row}'
+        row = (self.get_first_empty_row(ws)) if not row else row
+        table_range = f'A{row}'
         ws_header = [ws_header] if isinstance(ws_header, str) else ws_header
-        try:
-            ws.append_row(values=ws_header, table_range=table_range)
-        except Exception as ex:
-             logger.error(f'Ошибка при записи заголовка таблицы', exc_info=ex)
-             ...
+        ws.append_row(values=ws_header, table_range=table_range)
 
         table_range = f'{table_range}:E{row}'
 
         self.render_header(ws, ws_header, table_range, 'MERGE_COLUMNS')
-        ...
 
-    def write_category_title(self, ws: Worksheet, ws_category_title: str | list, row: int = None):
+    def write_category_title(self, ws: Worksheet, ws_category_title: str | list, row: int = None) -> None:
         """
-        Записывает и форматирует заголовок категории.
+        Записывает заголовок категории в указанную строку.
 
-        :param ws: Таблица (worksheet) в Google Sheets.
-        :type ws: Worksheet
-        :param ws_category_title: Заголовок категории (строка или список).
-        :type ws_category_title: str | list
-        :param row: Номер строки для записи заголовка категории.
-        :type row: int, optional
+        :param ws: Объект Worksheet, представляющий таблицу.
+        :param ws_category_title: Заголовок категории (строка или список строк).
+        :param row: Номер строки для заголовка категории, по умолчанию - первая пустая строка.
         """
-        table_range: str = f'B{row}'
+        table_range = f'B{row}' if row else f'B{self.get_first_empty_row(ws)}'
         ws_category_title = [ws_category_title] if isinstance(ws_category_title, str) else ws_category_title
-        try:
-            ws.append_row(values=ws_category_title, table_range=table_range)
-        except Exception as ex:
-            logger.error(f'Ошибка при записи заголовка категории', exc_info=ex)
-            ...
-
-        merge_range = f'{table_range}:E{row}'
+        ws.append_row(values=ws_category_title, table_range=table_range)
+        merge_range = f'{table_range}:E{row if row else self.get_first_empty_row(ws)}'
         self.merge_range(ws, merge_range)
-        ...
 
     def get_first_empty_row(self, ws: Worksheet, by_col: int = None) -> int:
         """
-        Возвращает номер первой пустой строки в таблице.
+        Возвращает номер первой пустой строки в колонке, если в таблице есть значения, иначе 1.
 
-        :param ws: Таблица (worksheet) в Google Sheets.
-        :type ws: Worksheet
-        :param by_col: Номер столбца для поиска пустой строки.
-        :type by_col: int, optional
+        :param ws: Объект Worksheet, представляющий таблицу.
+        :param by_col: Номер колонки для поиска первой пустой строки, если None - поиск по всей таблице.
         :return: Номер первой пустой строки.
-        :rtype: int
         """
-        if not by_col is None:
-            str_list = list(filter(None, ws.col_values(1)))
-        else:
-            str_list = list(filter(None, ws.get_all_values()))
+        str_list = list(filter(None, ws.col_values(1))) if not by_col is None else list(
+            filter(None, ws.get_all_values()))
         return len(str_list) + 1

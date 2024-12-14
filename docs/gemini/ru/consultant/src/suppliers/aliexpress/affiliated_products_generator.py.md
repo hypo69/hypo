@@ -1,68 +1,84 @@
-# Анализ кода модуля `affiliated_products_generator.py`
+## Анализ кода модуля `affiliated_products_generator.py`
 
 **Качество кода**
-1.  **Соответствие требованиям по оформлению кода**: 7/10
-    -   **Плюсы**:
-        -   Код структурирован, используется асинхронность.
-        -   Используется `logger` для логирования.
-        -   Присутствуют docstring для методов и классов.
-    -   **Минусы**:
-        -   Не все комментарии соответствуют формату reStructuredText (RST).
-        -   Не везде используется `logger.error` для обработки ошибок.
-        -   Присутствует избыточное логирование.
-        -   Не все функции и методы имеют подробные docstring.
-        -   Использование `pprint` заменено на `logger.info`, но в коде остались закомментированные варианты.
+9
+ -  Плюсы
+    - Код хорошо структурирован и разбит на функции, что делает его читаемым и поддерживаемым.
+    - Присутствует базовая обработка ошибок, которая помогает в отладке и предотвращении сбоев.
+    - Используются асинхронные операции для неблокирующего ввода-вывода.
+    - Код использует `logger` для записи информации, что упрощает отслеживание процессов.
+    -  В целом код соответствует PEP8 и использует typing для указания типов переменных.
+
+ -  Минусы
+    -  Не все функции и классы документированы в формате reStructuredText (RST).
+    -  Использование `print` для отладки не соответствует логгированию, которое должно быть основным способом отслеживания событий.
+    -  В коде присутсвуют закомментированные строки, которые нужно удалить или раскомментировать если необходимо.
+    -  Некоторые переменные могут быть более описательными, чтобы улучшить читаемость.
+    -  Следует избегать прямого использования `return` в `__init__`, лучше сгенерировать исключение.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    -   Переписать все комментарии и docstring в формате RST.
-    -   Добавить более подробные описания параметров и возвращаемых значений в docstring.
-    -   Удалить закомментированный код.
-2.  **Логирование**:
-    -   Заменить общие `try-except` на обработку ошибок с помощью `logger.error`.
-    -   Уменьшить избыточное логирование, оставив только важные сообщения.
-3.  **Обработка данных**:
-    -   Использовать `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load` (если используется)
-4. **Импорты**:
-    - Добавить недостающие импорты, если необходимо.
-5.  **Рефакторинг**:
-    -   Упростить логику обработки ошибок.
-    -   Переименовать переменные для лучшей читаемости.
+1.  **Документация:**
+    - Добавить docstring в формате RST для модуля, класса и методов.
+    - Уточнить описание аргументов и возвращаемых значений.
+
+2.  **Логирование:**
+    - Заменить `print` на `logger.info` для отладочной печати.
+    - Улучшить сообщения об ошибках, добавляя контекст (например, `product_id`).
+    - Использовать `logger.exception` для логирования ошибок с трассировкой стека.
+
+3.  **Обработка ошибок:**
+    - Пересмотреть использование `return` в `__init__`.
+    - Использовать `try-except` блоки более целенаправленно, чтобы избегать перехвата всех исключений.
+
+4.  **Улучшение кода:**
+    - Удалить или раскомментировать закоментированный код.
+    - Улучшить имена переменных для лучшей читаемости.
+    - Добавить проверки на существование директорий перед сохранением файлов.
+    - Убрать `if not _promotion_links:` чтобы код дальше исполнялся, даже если аффилиат ссылки не были найдены.
+
+5.  **Оптимизация:**
+    - Использовать `asyncio.gather` для параллельной загрузки изображений и видео.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для генерации аффилированных продуктов AliExpress.
-=========================================================================================
+Модуль для работы с партнерскими продуктами AliExpress.
+=======================================================
 
-Этот модуль содержит класс :class:`AliAffiliatedProducts`, который используется для
-сбора полных данных о продуктах по URL-адресам или идентификаторам продуктов.
+Этот модуль предоставляет класс :class:`AliAffiliatedProducts`, который позволяет собирать
+полные данные о продуктах с AliExpress, включая партнерские ссылки и сохраненные изображения.
 
-Подробную информацию о создании шаблонов для рекламных кампаний см. в разделе
-`Управление рекламными кампаниями AliExpress`.
+Основной функционал включает:
 
-Пример использования
---------------------
+-   Получение партнерских ссылок на товары.
+-   Сбор подробной информации о товарах, такой как название, описание, изображения и видео.
+-   Сохранение изображений и видео локально.
+-   Генерация HTML-шаблонов для рекламных кампаний.
 
-Пример использования класса `AliAffiliatedProducts`:
+Пример использования:
+---------------------
 
 .. code-block:: python
 
-    affiliated_products = AliAffiliatedProducts(language='RU', currency='RUB')
-    product_ids = ['https://aliexpress.com/item/1005006190803860.html', '1005006190803860']
-    category_path = Path('output') / 'category_name'
-    products = await affiliated_products.process_affiliate_products(product_ids, category_path)
-    for product in products:
-        print(product.product_title)
-
+    from pathlib import Path
+    import asyncio
+    from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
+    
+    async def main():
+        products_processor = AliAffiliatedProducts(language='RU', currency='RUB')
+        prod_ids = ['https://aliexpress.com/item/1005006349572132.html', 'https://aliexpress.com/item/1005006349572133.html']
+        category_root = Path('output/test_category')
+        products = await products_processor.process_affiliate_products(prod_ids, category_root)
+        if products:
+            for product in products:
+                print(product.product_title)
+    
+    if __name__ == "__main__":
+        asyncio.run(main())
 """
-MODE = 'dev'
 
 import asyncio
 from datetime import datetime
@@ -83,41 +99,55 @@ from src.utils.video import save_video_from_url
 from src.utils.file import get_directory_names, get_filenames, read_text_file, save_text_file
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.printer import pprint
+# from src.logger.logger import logger  # <- дубликат
+
+MODE = 'dev'
 
 
 class AliAffiliatedProducts(AliApi):
     """
-    Класс для сбора данных о продуктах с аффилированными ссылками.
+    Класс для сбора полных данных о продуктах с AliExpress, включая партнерские ссылки.
 
-    :param language: Язык для рекламной кампании (по умолчанию 'EN').
-    :type language: str | dict
-    :param currency: Валюта для рекламной кампании (по умолчанию 'USD').
+    Этот класс наследует функциональность :class:`AliApi` и расширяет ее возможностями
+    по сбору информации о продуктах и их сохранению.
+
+    :param language: Язык для кампании (по умолчанию 'EN').
+    :type language: str
+    :param currency: Валюта для кампании (по умолчанию 'USD').
     :type currency: str
+
+    :ivar language: Язык для кампании.
+    :vartype language: str
+    :ivar currency: Валюта для кампании.
+    :vartype currency: str
     """
+
     language: str = None
     currency: str = None
 
     def __init__(self,
-                 language: str | dict = 'EN',
+                 language: str = 'EN',
                  currency: str = 'USD',
                  *args, **kwargs):
         """
         Инициализирует класс AliAffiliatedProducts.
 
-        :param language: Язык для рекламной кампании (по умолчанию 'EN').
-        :type language: str | dict
-        :param currency: Валюта для рекламной кампании (по умолчанию 'USD').
+        :param language: Язык для кампании (по умолчанию 'EN').
+        :type language: str
+        :param currency: Валюта для кампании (по умолчанию 'USD').
         :type currency: str
+        :raises ValueError: Если язык или валюта не указаны.
         """
         if not language or not currency:
-            logger.critical('Не указан язык или валюта!')
-            return
+            logger.critical(f"No language or currency provided: {language=}, {currency=}")
+            raise ValueError("Language and currency must be provided.")  # <-  выбрасываем исключение
         super().__init__(language, currency)
         self.language, self.currency = language, currency
 
     async def process_affiliate_products(self, prod_ids: list[str], category_root: Path | str) -> list[SimpleNamespace]:
         """
-        Обрабатывает список идентификаторов или URL-адресов продуктов, возвращая список продуктов с партнерскими ссылками и сохраненными изображениями.
+        Обрабатывает список идентификаторов или URL-адресов продуктов и возвращает список продуктов
+        с партнерскими ссылками и сохраненными изображениями.
 
         :param prod_ids: Список URL-адресов или идентификаторов продуктов.
         :type prod_ids: list[str]
@@ -125,168 +155,91 @@ class AliAffiliatedProducts(AliApi):
         :type category_root: Path | str
         :return: Список обработанных продуктов с партнерскими ссылками и сохраненными изображениями.
         :rtype: list[SimpleNamespace]
+        :raises Exception: Если возникает ошибка при обработке продуктов.
 
-        :raises Exception: Если не удалось найти категорию в кампании.
-
-        :Example:
-            >>> campaign = SimpleNamespace(category={})
-            >>> category_name = "electronics"
-            >>> prod_ids = ["http://example.com/product1", "http://example.com/product2"]
-            >>> products = await campaign.process_affiliate_products(category_name, prod_ids)
-            >>> for product in products:
-            ...     print(product.product_title)
-            "Product 1 Title"
-            "Product 2 Title"
-
-        :Notes:
-            - Извлекает содержимое страниц из URL-адресов.
+         .. note::
+            - Получает контент страницы из URL-адресов.
             - Обрабатывает партнерские ссылки и сохранение изображений/видео.
             - Генерирует и сохраняет данные кампании и выходные файлы.
-
-        :Flowchart:
-            
-            .. code-block:: text
-            
-                ┌───────────────────────────────────────────────┐
-                │ Start                                         │
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌─────────────────────────────────────────────────────────┐
-                │ Try to get category from campaign using `category_name` │
-                └─────────────────────────────────────────────────────────┘
-                                    │
-                                    ┴───────────────────────────────────────────┐
-                                    │                                           │
-                                    ▼                                           ▼
-                ┌──────────────────────────────────────────────────────┐
-                │ Campaign Category found: Initialize paths,           │
-                │ set promotional URLs, and process products           │
-                └──────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ No category found: Create default category    │
-                │ and initialize paths, set promotional URLs,   │
-                │ and process products                          │
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ Initialize paths and prepare data structures  │
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ Process products URLs to get affiliate links  │
-                └───────────────────────────────────────────────┘
-                                    │
-                        ┌───────────┴───────────────────────────┐
-                        │                                       │
-                        ▼                                       ▼
-                ┌─────────────────────────────────────────────┐
-                │ No affiliate links found: Log warning       │
-                └─────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ Retrieve product details for affiliate URLs   │
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ Process each product and save images/videos   │
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ Prepare and save final output data            │
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ Return list of affiliated products            │    
-                └───────────────────────────────────────────────┘
-                                    │
-                                    ▼
-                ┌───────────────────────────────────────────────┐
-                │ End                                           │
-                └───────────────────────────────────────────────┘
         """
+
         _promotion_links: list = []
         _prod_urls: list = []
-        # Преобразует URL-адреса продуктов в формат `https://aliexpress.com/item/<product_id>.html`
-        normilized_prod_urls = ensure_https(prod_ids)
+        normilized_prod_urls = ensure_https(prod_ids)  # <- приводим к виду `https://aliexpress.com/item/<product_id>.html`
 
         for prod_url in normilized_prod_urls:
-            # Получение партнерских ссылок для каждого URL-адреса
             _links = super().get_affiliate_links(prod_url)
             if _links:
                 _links = _links[0]
             if hasattr(_links, 'promotion_link'):
-                # Добавление партнерской ссылки и URL-адреса продукта в списки
                 _promotion_links.append(_links.promotion_link)
                 _prod_urls.append(prod_url)
-                logger.info(f"Найдена партнерская ссылка для {_links.promotion_link}")
+                logger.info(f"Found affiliate for {_links.promotion_link}")
             else:
+                logger.warning(f"No affiliate link found for {prod_url}")  # <- логируем, что для данного товара нет аффилиат ссылки
                 continue
 
         if not _promotion_links:
-            # Логирование предупреждения, если не найдено партнерских ссылок
-            logger.warning(
-                f'Не найдены партнерские продукты {prod_ids=}\n')
-            return
+            logger.warning(f'No affiliate products returned for {prod_ids=}')  # <- сообщаем об этом, но код продолжает работу
+            return [] # <- Возвращаем пустой массив, если нет аффилиат ссылок
 
-        # Получение подробной информации о продуктах по партнерским ссылкам
-        _affiliated_products: List[SimpleNamespace] = self.retrieve_product_details(
-            _prod_urls)
+        _affiliated_products: List[SimpleNamespace] = self.retrieve_product_details(_prod_urls)
         if not _affiliated_products:
-            return
+           logger.warning(f"No product details retrieved for {_prod_urls=}")  # <- логируем, что не смогли получить данные о товарах
+           return [] # <- Возвращаем пустой массив, если нет товаров
 
         affiliated_products_list: list[SimpleNamespace] = []
         product_titles: list = []
-        for product, promotion_link in zip(_affiliated_products, _promotion_links):
-            # Добавление заголовка продукта в список
+        
+        
+        async def process_product(product, promotion_link):
+            """
+            Обрабатывает отдельный продукт, сохраняет изображения и видео.
+
+            :param product: Объект продукта.
+            :type product: SimpleNamespace
+            :param promotion_link: Партнерская ссылка.
+            :type promotion_link: str
+            """
             product_titles.append(product.product_title)
-            # Установка языка и партнерской ссылки для продукта
             product.language = self.language
             product.promotion_link = promotion_link
-            # Формирование пути для сохранения изображения
-            image_path = Path(category_root) / 'images' / \
-                f"{product.product_id}.png"
-            # Сохранение изображения продукта
-            await save_png_from_url(product.product_main_image_url, image_path)
-            logger.info(f"Сохранено изображение для {product.product_id=}")
+            
+            category_path = Path(category_root)
+            image_path = category_path / 'images' / f"{product.product_id}.png"
+            video_path = None
+            if not image_path.parent.exists():
+                 image_path.parent.mkdir(parents=True, exist_ok=True)
 
-            # Сохранение пути к изображению
+            await save_png_from_url(product.product_main_image_url, image_path)
+            logger.info(f"Saved image for {product.product_id=}")
             product.local_saved_image = str(image_path)
-            if len(product.product_video_url) > 1:
-                # Получение расширения файла видео
+            
+            if product.product_video_url:
                 parsed_url: Path = urlparse(product.product_video_url)
                 suffix: str = Path(parsed_url.path).suffix
-
-                # Формирование пути для сохранения видео
-                video_path: Path = Path(category_root) / 'videos' / \
-                    f'{product.product_id}{suffix}'
-                # Сохранение видео продукта
+                
+                video_path = category_path / 'videos' / f'{product.product_id}{suffix}'
+                if not video_path.parent.exists():
+                    video_path.parent.mkdir(parents=True, exist_ok=True)
                 await save_video_from_url(product.product_video_url, video_path)
-                # Сохранение пути к видео
                 product.local_saved_video = str(video_path)
-                logger.info(f"Сохранено видео для {product.product_id=}")
-            # Логирование заголовка продукта
+                logger.info(f"Saved video for {product.product_id=}")
+
             logger.info(f"{product.product_title}")
-            # Сохранение данных о продукте в JSON файл
-            j_dumps(product, Path(category_root) /
-                    f'{self.language}_{self.currency}' / f'{product.product_id}.json')
-            # Добавление продукта в список
+            json_file_path = category_path / f'{self.language}_{self.currency}' / f'{product.product_id}.json'
+            if not json_file_path.parent.exists():
+               json_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+            j_dumps(product, json_file_path)
             affiliated_products_list.append(product)
 
-        # Формирование пути для сохранения списка заголовков продуктов
-        product_titles_path: Path = category_root / \
-            f"{self.language}_{self.currency}" / 'product_titles.txt'
-        # Сохранение списка заголовков продуктов в файл
-        save_text_file(product_titles, product_titles_path)
-        # Возврат списка обработанных продуктов
-        return affiliated_products_list
+        await asyncio.gather(*[process_product(product, promotion_link)
+                                for product, promotion_link in zip(_affiliated_products, _promotion_links)])
+    
+        product_titles_path: Path = Path(category_root) / f"{self.language}_{self.currency}" / 'product_titles.txt'
+        if not product_titles_path.parent.exists():
+            product_titles_path.parent.mkdir(parents=True, exist_ok=True)
 
-```
+        save_text_file(product_titles, product_titles_path)
+        return affiliated_products_list

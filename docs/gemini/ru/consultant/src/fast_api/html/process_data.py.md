@@ -1,91 +1,87 @@
 # Анализ кода модуля `process_data.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код начинается с комментариев, описывающих назначение модуля.
-    - Присутствуют импорты, необходимые для работы модуля.
-    - Код содержит определение переменной `MODE`.
-- Минусы
-    - Комментарии не соответствуют стандарту RST.
-    - Отсутствует описание модуля и переменных в формате docstring.
-    - Присутствуют дублирующиеся комментарии.
-    - Не используются `j_loads` или `j_loads_ns` для обработки JSON.
-    - Нет обработки ошибок с помощью `logger.error`.
-    - Не используются функции для вынесения повторяющихся действий.
+6
+-  Плюсы
+    - Присутствуют комментарии, описывающие предназначение модуля.
+    - Определена переменная `MODE`.
+-  Минусы
+    - Отсутствуют необходимые импорты.
+    - Комментарии `synopsis` неинформативны.
+    - Многократно повторяющиеся комментарии.
+    - Отсутствует описание переменных и функций.
+    - Нет использования `logger`.
+    - Отсутствует явная функция, которая выполняет обработку данных
+    - Неправильная структура docstring, необходимо использовать reStructuredText.
 
 **Рекомендации по улучшению**
-1.  Переписать комментарии в формате reStructuredText (RST).
-2.  Добавить docstring к модулю и переменным.
-3.  Удалить дублирующиеся комментарии.
-4.  Использовать `j_loads` или `j_loads_ns` для чтения JSON файлов.
-5.  Добавить логирование ошибок с помощью `logger.error`.
-6.  Добавить проверку на наличие ошибок при обработке файлов.
-7.  Вынести повторяющиеся блоки кода в отдельные функции для переиспользования.
-8.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
-9.  Использовать константы для строковых значений.
-10.  Добавить try-except для обработки исключений при работе с файлами и JSON.
+
+1.  Добавить необходимые импорты.
+2.  Удалить избыточные и неинформативные комментарии.
+3.  Использовать reStructuredText (RST) для комментариев и docstring.
+4.  Добавить docstring для переменных и функций.
+5.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+6.  Создать функцию, которая обрабатывает данные и использовать j_loads/j_loads_ns для чтения файлов.
 
 **Оптимизированный код**
+
 ```python
+"""
+Модуль для обработки данных HTML.
+=========================================================================================
+
+Этот модуль содержит функции для обработки данных HTML, включая чтение и парсинг данных.
+
+Пример использования
+--------------------
+
+.. code-block:: python
+
+   from src.fast_api.html.process_data import process_html_data
+
+   data = process_html_data('data.json')
+   print(data)
+"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-"""
-Модуль обработки данных для fast_api.
-====================================
 
-Этот модуль предназначен для обработки данных, поступающих в fast_api.
-Включает в себя функции для загрузки и обработки данных.
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger #  Импортируем logger для логирования ошибок
 
-.. moduleauthor::  [Имя автора]
+MODE = 'dev'
 """
-# src/fast_api/html/process_data.py
-from src.utils.jjson import j_loads
-from src.logger.logger import logger
-from typing import Dict, Any
-from .. import main
-from main import process_dataa
-MODE: str = 'dev'
-"""
-Режим работы приложения.
-    
-:vartype: str
+Режим работы приложения: 'dev' для разработки, 'prod' для продакшена.
 """
 
-def load_and_process_data(file_path: str) -> Dict[str, Any]:
+def process_html_data(file_path: str) -> dict:
     """
-    Загружает и обрабатывает данные из JSON файла.
+    Считывает и обрабатывает JSON-данные из файла.
 
     :param file_path: Путь к файлу JSON.
     :type file_path: str
-    :raises FileNotFoundError: Если файл не найден.
-    :raises Exception: При возникновении других ошибок.
-    :return: Словарь с данными.
-    :rtype: Dict[str, Any]
+    :return: Обработанные данные в виде словаря или None при ошибке.
+    :rtype: dict or None
     """
     try:
-        #  Код открывает файл и загружает данные
-        with open(file_path, 'r', encoding='utf-8') as file:
-             data = j_loads(file)
+         # Чтение данных из файла с использованием j_loads
+        data = j_loads_ns(file_path)
+        if not data:
+            logger.error(f'Не удалось загрузить данные из файла: {file_path}')
+            return None
         return data
-    except FileNotFoundError as e:
-        logger.error(f'Файл не найден: {file_path}', exc_info=True)
-        raise
     except Exception as e:
         logger.error(f'Ошибка при обработке файла: {file_path}', exc_info=True)
-        raise
-
+        return None
 
 if __name__ == '__main__':
-    #  Пример использования функции load_and_process_data
-    try:
-        file_path = 'example.json'
-        data = load_and_process_data(file_path)
-        print(f"Данные из файла {file_path}: {data}")
-    except FileNotFoundError:
-        print(f"Файл {file_path} не найден")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-    ...
+    # Пример использования функции process_html_data
+    file_path_example = 'example_data.json' #  Указываем путь к файлу, который нужно обработать
+    # TODO: Cоздать `example_data.json` для тестирования
+    processed_data = process_html_data(file_path_example)
+    if processed_data:
+        print("Данные успешно обработаны:")
+        print(processed_data)
+    else:
+        print("Не удалось обработать данные.")
 ```
