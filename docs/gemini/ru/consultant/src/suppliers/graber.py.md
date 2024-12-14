@@ -1,113 +1,114 @@
 # Анализ кода модуля `graber.py`
 
 **Качество кода**
-9
- -  Плюсы
-    -   Код хорошо структурирован, с разделением на классы и функции, что обеспечивает читаемость и удобство в сопровождении.
-    -   Используется асинхронное программирование для неблокирующих операций, что повышает производительность.
-    -   Применена система логирования для отслеживания ошибок и предупреждений.
-    -   Присутствуют docstring для классов, методов и функций, что способствует пониманию кода.
-    -   Имеется декоратор `@close_pop_up` для обработки всплывающих окон.
-    -   Используются `normalize_*` функции для приведения типов данных к единому стандарту.
- -  Минусы
-    -   Много повторяющегося кода в методах, отвечающих за получение значений полей (блоки `try-except`, проверки `if not value:`, запись в `self.fields.*`).
-    -   Некоторые методы содержат `...` в блоках обработки ошибок, что не является хорошей практикой.
-    -   Дублирование кода в методе `error`
-    -   В некоторых методах отсутствует проверка на `None` перед вызовом `normalize_*` функций.
-    -   В `local_saved_image` есть потенциальный баг при передачи `id_supplier` через kwargs, также есть `todo` по фиксации путей.
-    -   Встречаются конструкции `value or await ... or ''` их можно заменить на `value or await ...` c `default=''` в методе.
-    -   Импорт `header` не используется.
+8
+*   **Плюсы**
+    *   Код хорошо структурирован с использованием классов и функций.
+    *   Присутствует базовая обработка ошибок с использованием `try-except` блоков и логирования.
+    *   Используется асинхронность для выполнения операций с веб-драйвером.
+    *   Реализован декоратор `close_pop_up` для обработки всплывающих окон.
+    *   Используется `j_loads_ns` для загрузки JSON.
+    *   Присутствуют функции для нормализации данных.
+
+*   **Минусы**
+    *   Много избыточных блоков `try-except` с `...` вместо более точной обработки ошибок.
+    *   Не все функции имеют docstring,  необходимо добавить описание в формате RST.
+    *   Использование `logger.debug` для ошибок может привести к засорению логов.
+    *   Не все функции используют `normalize_string` для нормализации строк, что может привести к некорректным данным.
+    *   Смешанное использование `value or await` и `await self.driver.execute_locator() or value`, что делает код менее читаемым.
+    *   Сложная логика проверок `if not value: logger.debug... return` внутри каждой функции, можно упростить.
+    *   Отсутствует описание и примеры использования для класса `Context`.
 
 **Рекомендации по улучшению**
 
-1.  **Рефакторинг методов получения значений**:
-    -   Создайте общую функцию для извлечения и нормализации значений полей, чтобы избежать дублирования кода в каждом методе.
+1.  **Унифицировать обработку ошибок**:
+    *   Использовать `logger.error` для логирования ошибок, `logger.debug` оставить для отладочной информации.
+    *   Избегать избыточных `try-except` блоков, где это возможно, вынести обработку ошибок в отдельную функцию.
+    *   Убрать `...` и либо пробросить ошибку, либо корректно её обработать.
 
-2.  **Удаление `...`**:
-    -   Замените все `...` на конкретную обработку ошибок. В идеале, просто логировать ошибку и возвращать `None` или дефолтное значение.
-  
-3. **Улучшение декоратора `close_pop_up`**
-   - Добавить проверку `Context.driver is not None` перед попыткой вызвать `execute_locator` для предотвращения ошибки при отсутствии драйвера.
+2.  **Документирование**:
+    *   Добавить docstring в формате reStructuredText (RST) для всех функций, методов и классов.
+    *   Добавить описание класса `Context` и его атрибутов в формате RST.
+    *   Указать назначение и использование декоратора `@close_pop_up` в docstring.
 
-4.  **Улучшение `local_saved_image`**:
-    -   Передать `id_supplier` через аргументы функции или контекст.
-    -   Избавится от `todo` по фиксации путей
+3.  **Улучшить читаемость кода**:
+    *   Упростить логику проверок `if not value`, возможно создать отдельную функцию для проверки валидности.
+    *   Использовать `normalize_string` для всех строковых полей.
+    *   Избегать дублирования кода, вынести общие операции в отдельные функции.
+    *   Переписать блок получения данных из локатора, используя функцию с обработкой ошибок.
+     
+4.  **Улучшить сохранение локальных файлов**:
+    *   Сделать путь для сохранения файлов настраиваемым.
+    *   Обработать исключения при сохранении файлов.
+   
+5.  **Улучшить работу с локаторами**:
+    *   Упростить вызов локаторов, через единую функцию, с логированием ошибки.
 
-5.  **Оптимизация проверок и присваивания**:
-    -   Использовать значение по умолчанию в `await self.driver.execute_locator(locator, default='')` для упрощения логики.
-    -   Использовать `normalize_string(value, default='')` и другие нормализаторы для упрощения логики.
+6.  **Использование `j_loads`**:
+    *   Убедится что `j_loads_ns` используется во всех нужных местах.
 
-6.  **Исправить дублирование кода**:
-    -   Метод `error` дублируется, нужно оставить один.
-
-7. **Убрать неиспользуемые импорты**
-     -Удалить импорт `header`
 **Оптимизированный код**
 
 ```python
+"""
+Модуль для сбора данных о товарах с веб-страниц поставщиков.
+=========================================================================================
+
+Этот модуль содержит класс :class:`Graber`, который обеспечивает базовый функционал для сбора данных
+о товарах с веб-страниц поставщиков. Он использует веб-драйвер для навигации по страницам и извлечения
+информации с помощью локаторов, определенных в JSON файлах.
+
+Класс :class:`Graber` предоставляет методы для получения различных полей товара, таких как название,
+описание, цена, артикул и т.д. Для нестандартной обработки полей товара можно переопределить
+соответствующие методы в производных классах.
+
+Пример использования:
+---------------------
+
+.. code-block:: python
+
+    s = 'suppler_prefix'
+    from src.suppliers import Graber
+    locator = j_loads(gs.path.src.suppliers / f{s} / 'locators' / 'product.json')
+
+    class G(Graber):
+
+        @close_pop_up()
+        async def name(self, value:Optional[Any] = None):
+            self.fields.name = <Ваша реализация>
+
+Таблица поставщиков:
+---------------------
+https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
+"""
 from __future__ import annotations
 
-## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
-"""
-.. module:: src.suppliers
-    :platform: Windows, Unix
-    :synopsis:  Базовый класс сбора данных со старницы HTML поставщиков.
-    Целевые поля страницы (`название`,`описание`,`спецификация`,`артикул`,`цена`,...) собирает вебдрйвер (class: [`Driver`](../webdriver))
-    Местополжение поля определяется его локатором. Локаторы хранятся в словарях JSON в директории `locators` каждого поставщика.
-    ([подробно о локаторах](locators.ru.md))
-
-Для нестендартной обработки полей товара просто переопределите функцию в своем классе.
-Пример:
-```python
-s = `suppler_prefix`
-from src.suppliers import Graber
-locator = j_loads(gs.path.src.suppliers / f{s} / 'locators' / 'product.json`)
-
-class G(Graber):
-
-    @close_pop_up()
-    async def name(self, value:Optional[Any] = None):
-        self.fields.name = <Ваша реализация>
-        )
-    ```
-    Таблица поставщиков:
-    https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
-"""
-MODE = 'dev'
-
-import datetime
-import os
-import sys
 import asyncio
-from pathlib import Path
-from typing import Optional, Any
-from types import SimpleNamespace
-from typing import Callable
-from langdetect import detect
+import datetime
 from functools import wraps
+from pathlib import Path
+from typing import Any, Callable, Optional
+from types import SimpleNamespace
 
-# from header import header # не использутся
+from langdetect import detect
+
 from src import gs
-
-from src.product.product_fields import ProductFields
+# from src.webdriver.driver import Driver # не требуется импортировать здесь
 from src.category import Category
-# from src.webdriver.driver import Driver  # не требуется импортировать здесь
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_png_from_url, save_png
-from src.utils.string.normalizer import( normalize_string, 
-                                        normalize_int, 
-                                        normalize_float, 
-                                        normalize_boolean, 
-                                        normalize_sql_date, 
-                                        normalize_sku )
 from src.logger.exceptions import ExecuteLocatorException
-#from src.endpoints.prestashop import PrestaShop
-from src.utils.printer import pprint
 from src.logger.logger import logger
+from src.product.product_fields import ProductFields
+from src.utils.image import save_png, save_png_from_url
+from src.utils.jjson import j_loads_ns
+from src.utils.printer import pprint
+from src.utils.string.normalizer import (
+    normalize_boolean,
+    normalize_float,
+    normalize_int,
+    normalize_sku,
+    normalize_sql_date,
+    normalize_string,
+)
 
 # Глобальные настройки через объект `Context`
 class Context:
@@ -116,56 +117,51 @@ class Context:
 
     :ivar driver: Объект драйвера, используется для управления браузером или другим интерфейсом.
     :vartype driver: 'Driver'
-    :ivar locator: Пространство имен для хранения локаторов.
-    :vartype locator: SimpleNamespace
+    :ivar locator_for_decorator: Пространство имен для хранения локаторов, которые будут использованы в декораторе `close_pop_up`.
+    :vartype locator_for_decorator: SimpleNamespace
     :ivar supplier_prefix: Префикс поставщика.
     :vartype supplier_prefix: str
     """
 
-    # Атрибуты класса
     driver: 'Driver' = None
-    locator_for_decorator: SimpleNamespace = None  # <- Если будет установлен - выполнится декоратор `@close_pop_up`. Устанавливается при инициализации поставщика, например: `Context.locator = self.locator.close_pop_up`
+    locator_for_decorator: SimpleNamespace = None
     supplier_prefix: str = None
 
-
-# Определение декоратора для закрытия всплывающих окон
-# В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# Общее название декоратора `@close_pop_up` можно изменить 
-# Если декоратор не используется в поставщике - поставь 
 
 def close_pop_up(value: 'Driver' = None) -> Callable:
     """Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
 
-    :param value: Дополнительное значение для декоратора.
-    :type value: 'Driver', optional
-    :return: Декоратор, оборачивающий функцию.
-    :rtype: Callable
+    Args:
+        value ('Driver'): Дополнительное значение для декоратора.
+
+    Returns:
+        Callable: Декоратор, оборачивающий функцию.
     """
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            if Context.locator_for_decorator and Context.driver is not None: # Проверяем, что драйвер существует
+            if Context.locator_for_decorator:
                 try:
-                    # код исполняет закрытие всплывающего окна
-                    await Context.driver.execute_locator(Context.locator_for_decorator)  # Await async pop-up close  
+                    # код исполняет закрытие всплывающего окна через execute_locator
+                    await Context.driver.execute_locator(Context.locator_for_decorator)
                 except ExecuteLocatorException as ex:
+                    # логирование ошибки при выполнении локатора
                     logger.debug(f'Ошибка выполнения локатора:', ex)
             # код исполняет основную функцию
-            return await func(*args, **kwargs)  # Await the main function
+            return await func(*args, **kwargs)
         return wrapper
     return decorator
 
 
 class Graber:
     """Базовый класс сбора данных со страницы для всех поставщиков."""
-    
+
     def __init__(self, supplier_prefix: str, driver: 'Driver'):
         """Инициализация класса Graber.
 
-        :param supplier_prefix: Префикс поставщика.
-        :type supplier_prefix: str
-        :param driver: Экземпляр класса Driver.
-        :type driver: 'Driver'
+        Args:
+            supplier_prefix (str): Префикс поставщика.
+            driver ('Driver'): Экземпляр класса Driver.
         """
         self.supplier_prefix = supplier_prefix
         self.locator: SimpleNamespace = j_loads_ns(gs.path.src / 'suppliers' / supplier_prefix / 'locators' / 'product.json')
@@ -174,12 +170,32 @@ class Graber:
         Context.driver = self.driver
         Context.supplier_prefix = supplier_prefix
 
+    async def _execute_locator(self, locator: SimpleNamespace, default: Any = '') -> Any:
+        """Выполняет локатор и возвращает результат.
+
+        Args:
+            locator (SimpleNamespace): Локатор для выполнения.
+            default (Any): Значение по умолчанию, если локатор не вернул результата.
+
+        Returns:
+            Any: Результат выполнения локатора или значение по умолчанию.
+        """
+        try:
+            # код исполняет получение значения через execute_locator
+            result = await self.driver.execute_locator(locator)
+            return result or default
+        except Exception as ex:
+            # логирование ошибки при выполнении локатора
+            logger.error(f"Ошибка выполнения локатора: {locator=}", ex)
+            return default
+
     async def error(self, field: str):
         """Обработчик ошибок для полей.
-        
-        :param field: Имя поля, для которого произошла ошибка.
-        :type field: str
+
+        Args:
+            field (str): Название поля.
         """
+        # логирование ошибки заполнения поля
         logger.debug(f"Ошибка заполнения поля {field}")
 
     async def set_field_value(
@@ -187,523 +203,613 @@ class Graber:
         value: Any,
         locator_func: Callable[[], Any],
         field_name: str,
-        default: Any = ''
+        default: Any = '',
     ) -> Any:
         """Универсальная функция для установки значений полей с обработкой ошибок.
-        
-        :param value: Значение для установки.
-        :type value: Any
-        :param locator_func: Функция для получения значения из локатора.
-        :type locator_func: Callable[[], Any]
-        :param field_name: Название поля.
-        :type field_name: str
-        :param default: Значение по умолчанию. По умолчанию пустая строка.
-        :type default: Any, optional
-        :return: Установленное значение.
-        :rtype: Any
+
+        Args:
+            value (Any): Значение для установки.
+            locator_func (Callable[[], Any]): Функция для получения значения из локатора.
+            field_name (str): Название поля.
+            default (Any): Значение по умолчанию.
+
+        Returns:
+            Any: Установленное значение.
         """
+        # код исполняет получение значения из локатора в отдельном потоке
         locator_result = await asyncio.to_thread(locator_func)
         if value:
             return value
         if locator_result:
             return locator_result
+        # логирование ошибки, если значение не найдено
         await self.error(field_name)
         return default
 
-
     async def grab_page(self, *args, **kwards) -> ProductFields:
         """Асинхронная функция для сбора полей продукта.
-        
-        :param args: Кортеж с названиями полей для сбора.
-        :type args: tuple
-        :param kwards: Словарь с ключами и значениями для каждого поля.
-        :type kwards: dict
-        :return: Собранные поля продукта.
-        :rtype: ProductFields
+
+        Args:
+            args (tuple): Кортеж с названиями полей для сбора.
+            kwards (dict): Словарь с ключами и значениями для каждого поля.
+
+        Returns:
+            ProductFields: Собранные поля продукта.
         """
         async def fetch_all_data(*args, **kwards):
-            # Динамическое вызовы функций для каждого поля из args
+            # Динамически вызываем функции для каждого поля из args
             for filed_name in args:
-                #method_name = method_name.replace('_', '')  # Преобразуем имя поля в метод
-                function = getattr(self, filed_name, None)  # Получаем метод по имени
+                # получаем метод по имени
+                function = getattr(self, filed_name, None)
                 if function:
+                    # код исполняет вызов метода с параметром из kwards
                     await function(kwards.get(filed_name, ''))
 
-        # Вызов функции для получения всех данных
+        # код исполняет получение всех данных
         await fetch_all_data(*args, **kwards)
         return self.fields
-
-
+    
     @close_pop_up()
-    async def additional_shipping_cost(self, value:Optional[Any] = None):
-        """Получение и установка стоимости доставки.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {additional_shipping_cost = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.additional_shipping_cost`.
-        :type value: Any, optional
+    async def additional_shipping_cost(self, value: Optional[Any] = None):
+        """Устанавливает дополнительную стоимость доставки.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
-            # код исполняет получение значения через execute_locator
-            self.fields.additional_shipping_cost = normalize_string(value or  await self.driver.execute_locator(self.locator.additional_shipping_cost, default='') )
+            # код исполняет получение и нормализацию значения через execute_locator
+            self.fields.additional_shipping_cost = normalize_string(
+                value or await self._execute_locator(self.locator.additional_shipping_cost)
+            )
             return True
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `additional_shipping_cost`", ex)
             return
 
-
     @close_pop_up()
-    async def delivery_in_stock(self, value:Optional[Any] = None):
-        """Получение и установка статуса доставки на складе.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {delivery_in_stock = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.delivery_in_stock`.
-        :type value: Any, optional
+    async def delivery_in_stock(self, value: Optional[Any] = None):
+        """Устанавливает статус наличия на складе.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
-            # код исполняет получение значения через execute_locator
-            self.fields.delivery_in_stock = normalize_string( value or  await self.driver.execute_locator(self.locator.delivery_in_stock, default='') )
+            # код исполняет получение и нормализацию значения через execute_locator
+            self.fields.delivery_in_stock = normalize_string(
+                value or await self._execute_locator(self.locator.delivery_in_stock)
+            )
             return True
         except Exception as ex:
+            # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `delivery_in_stock`", ex)
             return
 
-
     @close_pop_up()
-    async def active(self, value:Optional[Any] = None):
-        """Получение и установка статуса активности товара.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {active = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.active`.
-        Принимаемое значение 1/0
-        :type value: Any, optional
+    async def active(self, value: Optional[Any] = None):
+        """Устанавливает статус активности товара.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
-            # код исполняет получение значения через execute_locator
-            value = normalize_int( value or  await self.driver.execute_locator(self.locator.active, default=1))
+            # код исполняет получение и нормализацию значения через execute_locator
+            value = normalize_int(
+                value or await self._execute_locator(self.locator.active, 1)
+            )
         except Exception as ex:
+            # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `active`", ex)
             return
         
         # Проверка валидности `value`
         if not value:
+             # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.active}")
             return
 
-        # Код записывает результат в поле `active` объекта `ProductFields`
+        # Записываем результат в поле `active` объекта `ProductFields`
         self.fields.active = value
         return True
 
     @close_pop_up()
-    async def additional_delivery_times(self, value:Optional[Any] = None):
-        """Получение и установка дополнительного времени доставки.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {additional_delivery_times = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.additional_delivery_times`.
-        :type value: Any, optional
+    async def additional_delivery_times(self, value: Optional[Any] = None):
+        """Устанавливает дополнительное время доставки.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.additional_delivery_times, default='')
+            value = value or await self._execute_locator(self.locator.additional_delivery_times)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `additional_delivery_times`", ex)
             return
         
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.additional_delivery_times}")
             return
 
-        # Код записывает результат в поле `additional_delivery_times` объекта `ProductFields`
+        # Записываем результат в поле `additional_delivery_times` объекта `ProductFields`
         self.fields.additional_delivery_times = value
         return True
 
     @close_pop_up()
-    async def advanced_stock_management(self, value:Optional[Any] = None):
-        """Получение и установка статуса управления запасами.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {advanced_stock_management = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.advanced_stock_management`.
-        :type value: Any, optional
+    async def advanced_stock_management(self, value: Optional[Any] = None):
+        """Устанавливает статус расширенного управления запасами.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.advanced_stock_management, default='')
+            value = value or await self._execute_locator(self.locator.advanced_stock_management)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `advanced_stock_management`", ex)
             return
         
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.advanced_stock_management}")
             return
 
-        # Код записывает результат в поле `advanced_stock_management` объекта `ProductFields`
+        # Записываем результат в поле `advanced_stock_management` объекта `ProductFields`
         self.fields.advanced_stock_management = value
         return True
+    
     @close_pop_up()
-    async def affiliate_short_link(self, value:Optional[Any] = None):
-        """Получение и установка короткой партнерской ссылки.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_short_link = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_short_link`.
-        :type value: Any, optional
+    async def affiliate_short_link(self, value: Optional[Any] = None):
+        """Устанавливает партнерскую короткую ссылку.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            self.fields.affiliate_short_link = value or  await self.driver.execute_locator(self.locator.affiliate_short_link, default='')
+            self.fields.affiliate_short_link = value or await self._execute_locator(self.locator.affiliate_short_link)
             return True
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_short_link`", ex)
             return
 
     @close_pop_up()
-    async def affiliate_summary(self, value:Optional[Any] = None):
-        """Получение и установка партнерского резюме.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_summary = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_summary`.
-        :type value: Any, optional
+    async def affiliate_summary(self, value: Optional[Any] = None):
+        """Устанавливает партнерский сводный текст.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
-            # код исполняет получение значения через execute_locator
-            self.fields.affiliate_summary = normalize_string( value or  await self.driver.execute_locator(self.locator.affiliate_summary, default='') )
+            # код исполняет получение и нормализацию значения через execute_locator
+            self.fields.affiliate_summary = normalize_string(
+                value or await self._execute_locator(self.locator.affiliate_summary)
+            )
             return True
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_summary`", ex)
             return
 
-
     @close_pop_up()
-    async def affiliate_summary_2(self, value:Optional[Any] = None):
-        """Получение и установка партнерского резюме 2.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_summary_2 = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_summary_2`.
-        :type value: Any, optional
+    async def affiliate_summary_2(self, value: Optional[Any] = None):
+        """Устанавливает второй партнерский сводный текст.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.affiliate_summary_2, default='')
+            value = value or await self._execute_locator(self.locator.affiliate_summary_2)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_summary_2`", ex)
             return
         
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.affiliate_summary_2}")
             return
 
-        # Код записывает результат в поле `affiliate_summary_2` объекта `ProductFields`
+        # Записываем результат в поле `affiliate_summary_2` объекта `ProductFields`
         self.fields.affiliate_summary_2 = value
         return True
 
     @close_pop_up()
-    async def affiliate_text(self, value:Optional[Any] = None):
-        """Получение и установка партнерского текста.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_text = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_text`.
-        :type value: Any, optional
+    async def affiliate_text(self, value: Optional[Any] = None):
+        """Устанавливает партнерский текст.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.affiliate_text, default='')
+            value = value or await self._execute_locator(self.locator.affiliate_text)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_text`", ex)
             return
         
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.affiliate_text}")
             return
 
-        # Код записывает результат в поле `affiliate_text` объекта `ProductFields`
+        # Записываем результат в поле `affiliate_text` объекта `ProductFields`
         self.fields.affiliate_text = value
         return True
+    
     @close_pop_up()
-    async def affiliate_image_large(self, value:Optional[Any] = None):
-        """Получение и установка большого партнерского изображения.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_image_large = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_large`.
-        :type value: Any, optional
+    async def affiliate_image_large(self, value: Optional[Any] = None):
+        """Устанавливает большую партнерскую картинку.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            self.fields.affiliate_image_large  = value or  await self.driver.execute_locator(self.locator.affiliate_image_large, default='')
+            self.fields.affiliate_image_large = value or await self._execute_locator(self.locator.affiliate_image_large)
             return True
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_image_large`", ex)
             return
 
     @close_pop_up()
-    async def affiliate_image_medium(self, value:Optional[Any] = None):
-        """Получение и установка среднего партнерского изображения.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_image_medium = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_medium`.
-        :type value: Any, optional
+    async def affiliate_image_medium(self, value: Optional[Any] = None):
+        """Устанавливает среднюю партнерскую картинку.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_medium, default='')
+            locator_result = value or await self._execute_locator(self.locator.affiliate_image_medium)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_image_medium`", ex)
             return
 
         # Проверка валидности `value`
         if not locator_result:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {locator_result=}")
             return
 
-        # Код записывает результат в поле `affiliate_image_medium` объекта `ProductFields`
+        # Записываем результат в поле `affiliate_image_medium` объекта `ProductFields`
         self.fields.affiliate_image_medium = locator_result
         return True
 
     @close_pop_up()
-    async def affiliate_image_small(self, value:Optional[Any] = None):
-        """Получение и установка маленького партнерского изображения.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {affiliate_image_small = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.affiliate_image_small`.
-        :type value: Any, optional
+    async def affiliate_image_small(self, value: Optional[Any] = None):
+        """Устанавливает маленькую партнерскую картинку.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            locator_result = value or  await self.driver.execute_locator(self.locator.affiliate_image_small, default='')
+            locator_result = value or await self._execute_locator(self.locator.affiliate_image_small)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `affiliate_image_small`", ex)
             return
 
         # Проверка валидности `value`
         if not locator_result:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {locator_result=}")
             return
 
-        # Код записывает результат в поле `affiliate_image_small` объекта `ProductFields`
+        # Записываем результат в поле `affiliate_image_small` объекта `ProductFields`
         self.fields.affiliate_image_small = locator_result
         return True
 
     @close_pop_up()
-    async def available_date(self, value:Optional[Any] = None):
-        """Получение и установка даты доступности.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {available_date = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.available_date`.
-        :type value: Any, optional
+    async def available_date(self, value: Optional[Any] = None):
+        """Устанавливает дату доступности товара.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            locator_result = value or  await self.driver.execute_locator(self.locator.available_date, default='')
+            locator_result = value or await self._execute_locator(self.locator.available_date)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `available_date`", ex)
             return
 
         # Проверка валидности `value`
         if not locator_result:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {locator_result=}")
             return
 
-        # Код записывает результат в поле `available_date` объекта `ProductFields`
+        # Записываем результат в поле `available_date` объекта `ProductFields`
         self.fields.available_date = locator_result
         return True
+    
     @close_pop_up()
-    async def available_for_order(self, value:Optional[Any] = None):
-        """Получение и установка статуса доступности для заказа.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {available_for_order = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.available_for_order`.
-        :type value: Any, optional
+    async def available_for_order(self, value: Optional[Any] = None):
+        """Устанавливает статус доступности для заказа.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.available_for_order, default='')
+            value = value or await self._execute_locator(self.locator.available_for_order)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `available_for_order`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.available_for_order}")
             return
 
-        # Код записывает результат в поле `available_for_order` объекта `ProductFields`
+        # Записываем результат в поле `available_for_order` объекта `ProductFields`
         self.fields.available_for_order = value
         return True
 
     @close_pop_up()
-    async def available_later(self, value:Optional[Any] = None):
-        """Получение и установка статуса доступности позже.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {available_later = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.available_later`.
-        :type value: Any, optional
+    async def available_later(self, value: Optional[Any] = None):
+        """Устанавливает статус доступности позже.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
-            # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.available_later, default='')
+             # код исполняет получение значения через execute_locator
+            value = value or await self._execute_locator(self.locator.available_later)
         except Exception as ex:
+            # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `available_later`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+             # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.available_later}")
             return
 
-        # Код записывает результат в поле `available_later` объекта `ProductFields`
+        # Записываем результат в поле `available_later` объекта `ProductFields`
         self.fields.available_later = value
         return True
 
     @close_pop_up()
-    async def available_now(self, value:Optional[Any] = None):
-        """Получение и установка статуса доступности сейчас.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {available_now = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.available_now`.
-        :type value: Any, optional
+    async def available_now(self, value: Optional[Any] = None):
+        """Устанавливает статус доступности сейчас.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.available_now, default='')
+            value = value or await self._execute_locator(self.locator.available_now)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `available_now`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.available_now}")
             return
 
-        # Код записывает результат в поле `available_now` объекта `ProductFields`
+        # Записываем результат в поле `available_now` объекта `ProductFields`
         self.fields.available_now = value
         return True
 
     @close_pop_up()
     async def additional_categories(self, value: str | list = None) -> dict:
-        """Установка дополнительных категорий.
-        
-        :param value: Строка или список категорий. Если не передано, используется пустое значение.
-        :type value: str | list, optional
-        :return: Словарь с ID категорий.
-        :rtype: dict
-        
-        Значение можно передать в словаре kwargs через ключ {additional_categories = `value`} при определении класса.
-        Если `value` было передано, оно подставляется в поле `ProductFields.additional_categories`.
+        """Устанавливает дополнительные категории.
+
+        Args:
+            value (str | list, optional): Строка или список категорий. Если не передано, используется пустое значение.
+
+        Returns:
+            dict: Словарь с ID категорий.
         """
-        self.fields.additional_categories = value or  ''
+        # устанавливает значение дополнительных категорий
+        self.fields.additional_categories = value or ''
         return {'additional_categories': self.fields.additional_categories}
 
     @close_pop_up()
-    async def cache_default_attribute(self, value:Optional[Any] = None):
-        """Получение и установка кэшированного атрибута по умолчанию.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {cache_default_attribute = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_default_attribute`.
-        :type value: Any, optional
+    async def cache_default_attribute(self, value: Optional[Any] = None):
+        """Устанавливает кэш атрибута по умолчанию.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.cache_default_attribute, default='')
+            value = value or await self._execute_locator(self.locator.cache_default_attribute)
         except Exception as ex:
+            # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `cache_default_attribute`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.cache_default_attribute}")
             return
 
-        # Код записывает результат в поле `cache_default_attribute` объекта `ProductFields`
+        # Записываем результат в поле `cache_default_attribute` объекта `ProductFields`
         self.fields.cache_default_attribute = value
         return True
+    
     @close_pop_up()
-    async def cache_has_attachments(self, value:Optional[Any] = None):
-        """Получение и установка статуса наличия вложений в кэше.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {cache_has_attachments = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_has_attachments`.
-        :type value: Any, optional
+    async def cache_has_attachments(self, value: Optional[Any] = None):
+        """Устанавливает статус наличия вложений в кэше.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.cache_has_attachments, default='')
+            value = value or await self._execute_locator(self.locator.cache_has_attachments)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `cache_has_attachments`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.cache_has_attachments}")
             return
 
-        # Код записывает результат в поле `cache_has_attachments` объекта `ProductFields`
+        # Записываем результат в поле `cache_has_attachments` объекта `ProductFields`
         self.fields.cache_has_attachments = value
         return True
 
     @close_pop_up()
-    async def cache_is_pack(self, value:Optional[Any] = None):
-        """Получение и установка статуса упаковки в кэше.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {cache_is_pack = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.cache_is_pack`.
-        :type value: Any, optional
+    async def cache_is_pack(self, value: Optional[Any] = None):
+        """Устанавливает статус комплекта в кэше.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.cache_is_pack, default='')
+            value = value or await self._execute_locator(self.locator.cache_is_pack)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `cache_is_pack`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.cache_is_pack}")
             return
 
-        # Код записывает результат в поле `cache_is_pack` объекта `ProductFields`
+        # Записываем результат в поле `cache_is_pack` объекта `ProductFields`
         self.fields.cache_is_pack = value
         return True
 
     @close_pop_up()
-    async def condition(self, value:Optional[Any] = None):
-        """Получение и установка условия товара.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {condition = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.condition`.
-        :type value: Any, optional
+    async def condition(self, value: Optional[Any] = None):
+        """Устанавливает состояние товара.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
             # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.condition, default='')
+            value = value or await self._execute_locator(self.locator.condition)
         except Exception as ex:
+            # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `condition`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
+            # логирование невалидного значения
             logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.condition}")
             return
 
-        # Код записывает результат в поле `condition` объекта `ProductFields`
+        # Записываем результат в поле `condition` объекта `ProductFields`
         self.fields.condition = value
         return True
 
     @close_pop_up()
-    async def customizable(self, value:Optional[Any] = None):
-        """Получение и установка статуса настройки товара.
-        
-        :param value: Значение можно передать в словаре kwargs через ключ {customizable = `value`} при определении класса.
-        Если `value` был передан, его значение подставляется в поле `ProductFields.customizable`.
-        :type value: Any, optional
+    async def customizable(self, value: Optional[Any] = None):
+        """Устанавливает статус возможности настройки товара.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
         """
         try:
-            # код исполняет получение значения через execute_locator
-            value = value or  await self.driver.execute_locator(self.locator.customizable, default='')
+             # код исполняет получение значения через execute_locator
+            value = value or await self._execute_locator(self.locator.customizable)
         except Exception as ex:
+             # логирование ошибки получения значения
             logger.error(f"Ошибка получения значения в поле `customizable`", ex)
             return
 
         # Проверка валидности `value`
         if not value:
-            logger
+            # логирование невалидного значения
+            logger.debug(f"Невалидный результат {value=}\\nлокатор {self.locator.customizable}")
+            return
+
+        # Записываем результат в поле `customizable` объекта `ProductFields`
+        self.fields.customizable = value
+        return True
+    
+    @close_pop_up()
+    async def date_add(self, value: Optional[str | datetime.date] = None):
+        """Устанавливает дату добавления товара.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
+        """
+        try:
+             # код исполняет получение и нормализацию значения через execute_locator
+            self.fields.date_add = normalize_sql_date(
+                value or await self._execute_locator(self.locator.date_add, gs.now)
+            )
+            return True
+        except Exception as ex:
+             # логирование ошибки получения значения
+            logger.error(f"Ошибка получения значения в поле `date_add`", ex)
+            return
+        
+    @close_pop_up()
+    async def date_upd(self, value: Optional[Any] = None):
+        """Устанавливает дату обновления товара.
+
+        Args:
+            value (Any, optional): Значение, которое можно передать через kwargs.
+                Если `value` передано, оно используется; иначе используется значение из локатора.
+        """
+        try:
+            # код исполняет получение и нормализацию значения через execute_locator
+            self.fields.date_upd = normalize_sql_date(
+                value or await self._execute_locator(self.locator.date_upd, gs.now)
+            )
+            return True
+        except Exception as ex:
+            # логирование ошибки получения значения
+            logger.error(f"Ошибка получения значения в поле `date_upd`", ex)
+            return
+
+    @close_pop_up()
+    async def delivery_out_stock(self, value: Optional[Any] = None):
+        """

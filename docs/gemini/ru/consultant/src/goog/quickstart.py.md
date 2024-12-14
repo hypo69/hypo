@@ -1,71 +1,68 @@
 # Анализ кода модуля `quickstart`
 
 **Качество кода**
-7
+8
 - Плюсы
-    - Код выполняет основную функцию - взаимодействие с Google Apps Script API.
-    - Используется `pathlib` для работы с путями.
-    - Применяется `google-api-python-client` для работы с API Google.
-    - Присутствует обработка токенов и их сохранения.
+    - Код выполняет свою основную задачу по взаимодействию с Google Apps Script API.
+    - Используются библиотеки `google-auth` и `googleapiclient` для авторизации и работы с API.
+    - Код структурирован и понятен.
+    -  Используется `pathlib` для работы с путями.
 - Минусы
-    - Отсутствует обработка ошибок с использованием `logger`.
-    - Нет документации в формате RST.
-    - Некоторые переменные и функции не соответствуют стандартам именования.
-    - Стандартный `json.load` используется вместо `j_loads` или `j_loads_ns`.
-    - Присутствуют избыточные комментарии.
+    - Отсутствует обработка ошибок с помощью `logger.error`.
+    - Не используется `j_loads` или `j_loads_ns` для загрузки `json`.
+    - Комментарии не соответствуют формату reStructuredText.
+    - Нет подробных docstring для функций и модуля.
+    - Используется `print` вместо `logger.info` или `logger.error` для вывода сообщений.
+    - Жестко закодированные пути к файлам и `credentials.json`
 
 **Рекомендации по улучшению**
-1. Добавить  документацию в формате RST для модуля, функций и переменных.
-2. Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
-3. Внедрить логирование ошибок с помощью `src.logger.logger` вместо стандартного `print` для ошибок.
-4. Использовать более понятные имена для переменных.
-5. Избавиться от избыточных комментариев.
-6. Добавить обработку ошибок при работе с файлами.
-7.  Улучшить читаемость кода, добавляя разрывы в сложных блоках.
+1. Добавить docstring для модуля и функции `main` в формате reStructuredText.
+2. Использовать `j_loads` для загрузки данных из `token.json`, если это необходимо.
+3. Заменить `print` на `logger.info` или `logger.error` для логирования сообщений и ошибок.
+4. Улучшить обработку ошибок, используя `logger.error` вместо `try-except` с `print`.
+5.  Переписать все комментарии в формате reStructuredText.
+6. Использовать `os.path.join` для построения путей.
+7. Перенести хардкод `credentials.json` в конфиг файл или переменную окружения.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для быстрого старта работы с Google Apps Script API.
-===========================================================
+Модуль для быстрого старта работы с Apps Script API.
+====================================================
 
-Этот модуль предоставляет функциональность для создания нового скриптового проекта,
+Этот модуль демонстрирует базовое использование Apps Script API для создания нового скрипта,
 загрузки файлов в проект и вывода URL скрипта.
 
-.. module:: src.goog.quickstart
-    :platform: Windows, Unix
-    :synopsis: Быстрый старт для работы с Google Apps Script API.
+:platform: Windows, Unix
+:synopsis: Быстрый старт для Apps Script API.
 
 Пример использования
 --------------------
 
 .. code-block:: python
 
-    from src.goog.quickstart import main
+   from src.goog import quickstart
 
-    if __name__ == '__main__':
-        main()
+   quickstart.main()
 """
-import os # импортируем модуль os
-
+import os
 from pathlib import Path
-
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient import errors
 from googleapiclient.discovery import build
 
-from src.logger.logger import logger # подключаем logger
-from src.utils.jjson import j_loads # подключаем j_loads
-from src import gs # подключаем gs
+from src.utils.jjson import j_loads # импорт j_loads из src.utils.jjson
+from src.logger.logger import logger  # импорт logger
+from src import gs
 
-
-MODE = 'dev'  # Режим работы приложения
+MODE = 'dev'
 
 
 # If modifying these scopes, delete the file token.json.
@@ -84,63 +81,69 @@ SAMPLE_MANIFEST = '''
 }
 '''.strip()
 
+
 def main():
     """
-    Выполняет основные действия по работе с Apps Script API.
+    Вызывает Apps Script API для создания и настройки нового скрипта.
 
-    Функция включает в себя:
-        - Авторизацию в Google API.
-        - Создание нового скриптового проекта.
-        - Загрузку кода и манифеста в проект.
-        - Вывод URL созданного скрипта.
+    Эта функция выполняет следующие шаги:
+    1. Аутентифицирует пользователя с помощью Google OAuth2.
+    2. Создает новый проект Apps Script.
+    3. Загружает код и манифест в проект.
+    4. Выводит URL для доступа к созданному скрипту.
     """
     creds = None
-    token_path = gs.path.tmp / 'e-cat-346312-137284f4419e.json'
-    # Проверяем наличие файла с токеном
-    if token_path.exists():
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    # путь к файлу с токеном
+    token_path = os.path.join(gs.path.tmp, 'e-cat-346312-137284f4419e.json')
+    # проверка существования файла с токеном
+    if Path(token_path).exists():
         try:
-            # Код исполняет загрузку учетных данных из файла токена
+            # загрузка учетных данных из файла
             creds = Credentials.from_authorized_user_file(token_path, SCOPES)
         except Exception as ex:
-            logger.error(f'Ошибка при загрузке токена из файла: {token_path}', exc_info=True)
-            return # Код возвращает управление при возникновении ошибки
-    # Проверяем валидность учетных данных
+           logger.error(f'ошибка загрузки файла {token_path}', exc_info=ex)
+           return
+    # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
-                # Код исполняет обновление токена
+                # обновление учетных данных
                 creds.refresh(Request())
             except Exception as ex:
-                logger.error(f'Ошибка при обновлении токена', exc_info=True)
-                return # Код возвращает управление при возникновении ошибки
+                logger.error('ошибка обновления учетных данных', exc_info=ex)
+                return
         else:
             try:
-                # Код исполняет получение учетных данных из файла credentials.json
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
+               # получение учетных данных
+               flow = InstalledAppFlow.from_client_secrets_file(
+                   'credentials.json', SCOPES) # TODO: перенести в конфиг
+               creds = flow.run_local_server(port=0)
             except Exception as ex:
-                logger.error(f'Ошибка при получении учетных данных', exc_info=True)
-                return # Код возвращает управление при возникновении ошибки
-
-            try:
-                # Код исполняет сохранение полученных учетных данных в файл
-                with Path('token.json').open('w') as token:
-                    token.write(creds.to_json())
-            except Exception as ex:
-                logger.error(f'Ошибка при сохранении токена в файл', exc_info=True)
-                return # Код возвращает управление при возникновении ошибки
+                logger.error('ошибка получения учетных данных', exc_info=ex)
+                return
+        # Save the credentials for the next run
+        try:
+            # сохранение учетных данных
+            with Path('token.json').open('w') as token:
+                 token.write(creds.to_json())
+        except Exception as ex:
+            logger.error(f'ошибка сохранения token.json', exc_info=ex)
+            return
 
     try:
-        # Код исполняет создание сервиса для работы с Google Apps Script API
+        # создание сервиса для работы с Apps Script API
         service = build('script', 'v1', credentials=creds)
 
-        # Код исполняет создание нового проекта
-        request_body = {'title': 'My Script'}
-        response = service.projects().create(body=request_body).execute()
-
-        # Код исполняет загрузку файлов в проект
-        request_body = {
+        # Call the Apps Script API
+        # Create a new project
+        # запрос на создание проекта
+        request = {'title': 'My Script'}
+        response = service.projects().create(body=request).execute()
+        # запрос на обновление контента проекта
+        request = {
             'files': [{
                 'name': 'hello',
                 'type': 'SERVER_JS',
@@ -151,17 +154,16 @@ def main():
                 'source': SAMPLE_MANIFEST
             }]
         }
+        # обновление контента проекта
         response = service.projects().updateContent(
-            body=request_body,
-            scriptId=response['scriptId']
-        ).execute()
-        # Код выводит URL созданного скрипта
-        print('https://script.google.com/d/' + response['scriptId'] + '/edit')
+            body=request,
+            scriptId=response['scriptId']).execute()
+        # вывод URL проекта
+        logger.info(f'https://script.google.com/d/{response["scriptId"]}/edit')
     except errors.HttpError as error:
-        # Код логирует ошибку, если API столкнулся с проблемой
-        logger.error(f'Ошибка API: {error.content}', exc_info=True)
-    except Exception as ex:
-        logger.error(f'Произошла непредвиденная ошибка: {ex}', exc_info=True)
+        # The API encountered a problem.
+        logger.error(f'ошибка API: {error.content}')
+
 
 if __name__ == '__main__':
     main()

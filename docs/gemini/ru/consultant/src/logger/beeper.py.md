@@ -1,61 +1,42 @@
 # Анализ кода модуля beeper
 
 **Качество кода**
-7
- -  Плюсы
-    - Код структурирован, присутствуют классы и функции.
-    - Используется `Enum` для определения уровней событий.
-    - Присутствуют docstring для функций и классов, что облегчает понимание кода.
-    -  Реализован декоратор `silent_mode` для отключения звуков.
-
- -  Минусы
-    -  Не используется `j_loads` или `j_loads_ns` для чтения файлов, хотя это требование инструкции.
-    - Присутствуют избыточные try-except блоки.
-    - Не все комментарии соответствуют формату reStructuredText.
-    -  Используется `print` для вывода ошибок, вместо логирования через `logger`.
-    - В коде присутствуют неиспользуемые переменные, закомментированный код, а также не все перечисления `BeepLevel` имеют описание.
-    -  В `Beeper.beep` не обрабатываются все возможные `level` типа `str`
-    - Есть `...` в коде.
+8
+-  Плюсы
+    - Код разбит на логические блоки, что облегчает чтение и понимание.
+    - Используется перечисление `Enum` для определения уровней событий, что делает код более читаемым и поддерживаемым.
+    - Присутствуют docstring для классов и функций, что соответствует стандартам оформления.
+    - Используется декоратор `@silent_mode` для управления режимом беззвучия, что добавляет гибкости в использовании.
+-  Минусы
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` (не требуется в данном коде, но отмечено в инструкции).
+    - Отсутствует импорт `logger` из `src.logger.logger` для логирования ошибок.
+    - Избыточное использование `try-except` блоков, лучше использовать `logger.error`.
+    - Некоторые комментарии не соответствуют формату reStructuredText (RST).
+    - В коде присутствуют неиспользуемые закомментированные строки
+    - Неполная обработка всех значений `BeepLevel`
+    - Не везде используется `async`
 
 **Рекомендации по улучшению**
+1. Добавить импорт `logger` из `src.logger.logger`.
+2. Использовать `logger.error` для обработки исключений вместо `print`.
+3. Полностью реализовать обработку всех `BeepLevel` в функции `beep`.
+4. Привести все docstring к стандарту reStructuredText.
+5. Устранить избыточные `try-except` и добавить логирование в случае ошибок.
+6. Удалить неиспользуемые закомментированные строки
+7. Сделать функцию `beep` асинхронной.
+8. Добавить проверку типа аргумента `level` в функции `beep`, чтобы избежать `AttributeError` если передана строка не из `BeepLevel`
 
-1. **Использовать `j_loads` или `j_loads_ns`:** В данном файле нет операций чтения из файла, но если бы они были, следует использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-2. **Логирование ошибок:** Заменить `print` на `logger.error` для логирования ошибок.
-3. **Формат комментариев:** Привести все комментарии к формату reStructuredText.
-4. **Обработка ошибок:** Убрать избыточные `try-except`, использовать `logger.error`.
-5.  **Исправить docstring:** Добавить полное описание всех элементов перечисления BeepLevel, а так же функции  `silent_mode` и `Beeper.beep`.
-6.  **Добавить обработку всех вариантов `level` в `Beeper.beep`**: Добавить проверку всех уровней `str` в `Beeper.beep`.
-7. **Удалить неиспользуемый код**: Удалить закомментированные блоки кода и неиспользуемые переменные.
-8. **Удалить `...`**: Заменить `...` на корректную реализацию или удалить, если он не нужен.
-
-**Оптимизиробанный код**
-
+**Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для генерации звуковых сигналов.
-=========================================================================================
-
-Этот модуль предоставляет классы и функции для генерации звуковых сигналов,
-используемых для оповещений в системе. Включает в себя возможность настройки
-уровня сигнала, частоты и длительности.
-
-.. code-block:: python
-
-    from src.logger.beeper import Beeper, BeepLevel
-
-    async def main():
-        await Beeper.beep(BeepLevel.SUCCESS)
-        await Beeper.beep(level='error')
-
-
-    if __name__ == '__main__':
-        asyncio.run(main())
+.. module:: src.logger.beeper
+    :platform: Windows, Unix
+    :synopsis: Модуль для генерации звуковых сигналов.
 """
-
 MODE = 'dev'
 
 import asyncio
@@ -63,7 +44,7 @@ import winsound
 import time
 from enum import Enum
 from typing import Union
-from src.logger.logger import logger #  Импорт логгера
+from src.logger.logger import logger  # Импорт логгера
 
 # Ноты и частоты
 note_freq = {
@@ -82,21 +63,23 @@ note_freq = {
     'C7': 2093.00, 'C#7': 2217.46, 'D7': 2349.32, 'D#7': 2489.02, 'E7': 2637.02, 'F7': 2793.83,
     'F#7': 2959.96, 'G7': 3135.96, 'G#7': 3322.44, 'A7': 3520.00, 'A#7': 3729.31, 'B7': 3951.07,
 }
-
+...
 class BeepLevel(Enum):
     """
-    Перечисление уровней звуковых сигналов.
+    Класс перечислитель типов событий.
 
-    :param SUCCESS: Сигнал успешного выполнения.
-    :param INFO: Информационный сигнал.
-    :param INFO_LONG: Длинный информационный сигнал.
-    :param ATTENTION: Сигнал внимания.
-    :param WARNING: Сигнал предупреждения.
-    :param DEBUG: Сигнал отладки.
-    :param ERROR: Сигнал ошибки.
-    :param LONG_ERROR: Длинный сигнал ошибки.
-    :param CRITICAL: Критический сигнал.
-    :param BELL: Сигнал колокола.
+    :details: Разным событиям соответствуют разные мелодии.
+    
+    Уровни событий:
+        - SUCCESS
+        - INFO
+        - ATTENTION
+        - WARNING
+        - DEBUG
+        - ERROR
+        - LONG_ERROR
+        - CRITICAL
+        - BELL
     """
     SUCCESS = [('D5', 100), ('A5', 100), ('D6', 100)]
     INFO_LONG = [('C6', 150), ('E6', 150)]
@@ -108,17 +91,15 @@ class BeepLevel(Enum):
     LONG_ERROR = [('C7', 50), ('C7', 250)]
     CRITICAL = [('G5', 40), ('C7', 100)]
     BELL = [('G6', 200), ('C7', 200), ('E7', 200)]
+...
 
 class BeepHandler:
     """
-    Класс обработчика звуковых сигналов для логгера.
-
-    :param emit: Метод для генерации звукового сигнала на основе записи лога.
-    :param beep: Метод для генерации звукового сигнала.
+    Класс обработчика звуковых сигналов на основе уровней логирования.
     """
     def emit(self, record):
         """
-        Генерирует звуковой сигнал на основе записи лога.
+        Метод для воспроизведения звукового сигнала в зависимости от уровня логирования.
 
         :param record: Запись лога.
         """
@@ -133,114 +114,87 @@ class BeepHandler:
             else:
                 self.play_default_sound()  # Дефолтный звук для других уровней логгирования
         except Exception as ex:
-            logger.error(f'Ошибка воспроизведения звука: {ex}')
+             logger.error(f'Ошибка воспроизведения звука: {ex}') # Логирование ошибки
 
     def beep(self, level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000):
         """
-        Генерирует звуковой сигнал.
-
-        :param level: Уровень сигнала или строка, представляющая уровень.
+        Метод для воспроизведения звукового сигнала через статический метод `Beeper.beep`.
+        
+        :param level: Уровень сигнала (BeepLevel или строка).
         :param frequency: Частота сигнала.
         :param duration: Длительность сигнала.
         """
         Beeper.beep(level, frequency, duration)
 
+...
 # ------------------------------------------------------------------------------------------------
 
 def silent_mode(func):
     """
-    Декоратор для управления режимом "беззвучия".
-
-    Этот декоратор отключает выполнение декорируемой функции, если включен беззвучный режим.
-
+     Функция-декоратор для управления режимом "беззвучия".
+    
     :param func: Функция для декорирования.
-
     :return: Обернутая функция, добавляющая проверку режима "беззвучия".
     """
     def wrapper(*args, **kwargs):
         """
         Внутренняя функция-обертка для проверки режима "беззвучия" перед выполнением функции.
-
-        Если режим "беззвучия" включен, функция выводит сообщение в консоль и возвращает `None`.
-        В противном случае выполняется оригинальная функция.
-
+    
+        :details: Если режим "беззвучия" включен, выводит сообщение о пропуске воспроизведения звука и завершает выполнение функции beep.
+        В противном случае вызывает оригинальную функцию, переданную как аргумент (func(*args, **kwargs)).
+    
         :param args: Позиционные аргументы, переданные в оборачиваемую функцию.
         :param kwargs: Именованные аргументы, переданные в оборачиваемую функцию.
-
-        :return: Результат выполнения оборачиваемой функции или `None`, если режим "беззвучия" включен.
+        :return: Результат выполнения оборачиваемой функции или None, если режим "беззвучия" включен.
         """
         if Beeper.silent:
             print("Silent mode is enabled. Skipping beep.")
             return
         return func(*args, **kwargs)
     return wrapper
-
+...
 
 class Beeper():
-    """
-    Класс для управления звуковыми сигналами.
-
-    :param silent: Флаг, определяющий, включен ли беззвучный режим.
-    :param beep: Метод для воспроизведения звукового сигнала.
-    """
-
+    """ класс звуковых сигналов """
     silent = False
-
+    
     @staticmethod
     @silent_mode
     async def beep(level: BeepLevel | str = BeepLevel.INFO, frequency: int = 400, duration: int = 1000) -> None:
         """
-        Воспроизводит звуковой сигнал.
+        Звуковой сигнал оповещения.
 
-        Даёт возможность на слух определить, что происходит в системе.
+        :details: Дает мне возможность на слух определить, что происходит в системе.
 
-        :param level: Тип события: `info`, `attention`, `warning`, `debug`, `error`, `long_error`, `critical`, `bell`
-                     или `BeepLevel.SUCCESS`, `BeepLevel.INFO`, `BeepLevel.ATTENTION`, `BeepLevel.WARNING`,
-                     `BeepLevel.DEBUG`, `BeepLevel.ERROR`, `BeepLevel.LONG_ERROR`, `BeepLevel.CRITICAL`, `BeepLevel.BELL`.
-        :param frequency: Частота сигнала в диапазоне от 37 до 32000.
+        :param level: Тип события: `info`, `attention`, `warning`, `debug`, `error`, `long_error`, `critical`, `bell` 
+                      или `BeepLevel.SUCCESS`, `BeepLevel.INFO`, `BeepLevel.ATTENTION`, `BeepLevel.WARNING`, `BeepLevel.DEBUG`, 
+                      `BeepLevel.ERROR`, `BeepLevel.LONG_ERROR`, `BeepLevel.CRITICAL`, `BeepLevel.BELL`.
+        :param frequency: Частота сигнала в значениях от 37 до 32000.
         :param duration: Длительность сигнала.
         """
-        melody = None
-
         if isinstance(level, str):
-            if level == 'success':
-                melody = BeepLevel.SUCCESS.value
-            elif level == 'info':
-                melody = BeepLevel.INFO.value
-            elif level == 'info_long':
-                 melody = BeepLevel.INFO_LONG.value
-            elif level == 'attention':
-                melody = BeepLevel.ATTENTION.value
-            elif level == 'warning':
-                melody = BeepLevel.WARNING.value
-            elif level == 'debug':
-                melody = BeepLevel.DEBUG.value
-            elif level == 'error':
-                melody = BeepLevel.ERROR.value
-            elif level == 'long_error':
-                melody = BeepLevel.LONG_ERROR.value
-            elif level == 'critical':
-                melody = BeepLevel.CRITICAL.value
-            elif level == 'bell':
-                melody = BeepLevel.BELL.value
-        elif isinstance(level, BeepLevel):
-            melody = level.value
-
-        if not melody:
-            logger.error(f'Неизвестный уровень сигнала: {level}')
-            return
-
-        for note, duration in melody:
-            frequency = note_freq[note]
-            try:
-                winsound.Beep(int(frequency), duration)
-            except Exception as ex:
-                logger.error(f'''Не бибикает :|
-                              Ошибка - {ex},
-                              нота - {note},
-                              продолжительность - {duration}
-                              мелодия - {melody}
-                    ''')
+           try:
+                level = BeepLevel[level.upper()] # Проверка если передали строку
+           except KeyError:
+                logger.error(f'Неизвестный уровень сигнала: {level}') # Логирование ошибки
                 return
-            time.sleep(0.0)
+
+        if isinstance(level, BeepLevel):
+           melody = level.value
+        else:
+            logger.error(f'Неверный тип уровня сигнала: {level}')
+            return
+        
+        for note, duration in melody:
+            try:
+                frequency = note_freq[note]
+                winsound.Beep(int(frequency), duration)
+                await asyncio.sleep(0) # Используем для асинхронности
+            except KeyError as ex:
+                logger.error(f'Неизвестная нота: {note} {ex}') # Логирование ошибки
+                return
+            except Exception as ex:
+                logger.error(f'Не бибикает :| Ошибка - {ex}, нота - {note}, продолжительность - {duration}, мелодия - {melody}') # Логирование ошибки
+                return
+...
 ```

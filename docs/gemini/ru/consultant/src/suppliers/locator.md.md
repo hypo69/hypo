@@ -1,271 +1,261 @@
 # Анализ кода модуля `locator.md`
 
 **Качество кода**
-
+8
 -  Плюсы
-    -  Документ содержит подробное описание структуры и назначения локаторов.
-    -  Приведены примеры использования локаторов для различных ситуаций.
-    -  Есть описание различных типов селекторов и событий.
-    -  Документ хорошо структурирован и понятен.
- -  Минусы
-    -  Документ не содержит примеров кода на Python, но это скорее специфика формата.
-    -  Некоторые моменты можно было бы сделать более наглядными через RST.
-    -  Отсутствует описание для ключа `timeout`.
+    - Документ подробно описывает структуру локаторов и их использование.
+    - Приведены примеры использования с различными типами данных (списки, словари).
+    - Описаны все ключевые поля локатора, включая новые `timeout` и `timeout_for_event`.
+-  Минусы
+    - Документ представляет собой описание, а не исполняемый код, поэтому не все требования инструкции применимы.
+    - Отсутствуют docstring и reStructuredText (RST) комментарии, поскольку это файл документации, а не Python код.
+    - Некоторые формулировки, такие как "получаем" и "делаем", могут быть заменены на более конкретные.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить описание ключа `timeout`**: в разделе "Key Descriptions for Locators" добавить описание ключа `timeout`.
-2.  **Улучшить форматирование примеров**: Использовать `code-block` для более корректного отображения JSON примеров в RST.
-3.  **Добавить примеры использования в Python**: Добавить примеры того, как можно использовать эти локаторы в коде Python.
-4.  **Оформить в RST**: Перевести текст в формат `reStructuredText (RST)`, включая все комментарии.
+1.  **Формат документации**:
+    -  Добавить примеры использования в формате `rst` для лучшей интеграции в документацию проекта.
+2.  **Обработка данных**:
+     - В данном файле нет необходимости в использовании `j_loads` или `j_loads_ns`, так как это файл документации, а не код.
+3.  **Анализ структуры**:
+     - Структура документа понятная и логичная.
+4.  **Рефакторинг и улучшения**:
+    -  Вместо "получаем" и "делаем" использовать более точные формулировки, например, "выполняется поиск", "извлекается значение".
+    - Добавить больше примеров сложных локаторов и их использования.
+    - Уточнить описания для `timeout` и `timeout_for_event`, например, добавить что они измеряются в секундах.
+    - Можно добавить разделы с часто задаваемыми вопросами (FAQ) для облегчения понимания.
+5.  **Примеры кода**:
+     - Включить примеры локаторов в rst формате.
+6. **Дополнительная инструкция**:
+    -  Учитывая, что это файл документации, нет необходимости в docstring и RST комментариях в коде.
 
 **Оптимизированный код**
 
 ```markdown
-# Локаторы полей на `HTML` странице
-=========================================================================================
+# Field Locators on an `HTML` Page
+====================================
+This document describes the structure of locators used for finding elements on an HTML page.
+Locators are used to define how elements are located, what actions should be performed with them,
+and which attributes should be extracted.
 
-Описание структуры и назначения локаторов для `HTML` элементов.
-Примеры использования, типы селекторов и событий.
+### Example Locator:
 
-.. note::
-    Структура локаторов представлена в формате `JSON`, где каждый ключ соответствует полю
-    в классе `ProductFields`.
+```json
+{
+  "close_banner": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//button[@id = 'closeXButton']",
+    "if_list": "first",
+    "use_mouse": false,
+    "mandatory": false,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": "click()",
+    "locator_description": "Close the pop-up window. If it doesn't appear — no problem (`mandatory`: `false`)."
+  },
+  "additional_images_urls": {
+    "attribute": "src",
+    "by": "XPATH",
+    "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
+    "if_list": "all",
+    "use_mouse": false,
+    "mandatory": false,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "Get the list of `urls` for additional images."
+  },
+  "id_supplier": {
+    "attribute": "innerText",
+    "by": "XPATH",
+    "selector": "//span[@class = 'ltr sku-copy']",
+    "if_list": "first",
+    "use_mouse": false,
+    "mandatory": true,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": null,
+    "locator_description": "SKU Morlevi."
+  },
+  "default_image_url": {
+    "attribute": null,
+    "by": "XPATH",
+    "selector": "//a[@id = 'mainpic']//img",
+    "if_list": "first",
+    "use_mouse": false,
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": "screenshot()",
+    "mandatory": true,
+    "locator_description": "Warning! In Morlevi, the image is obtained via screenshot and returned as PNG (`bytes`)."
+  }
+}
+```
 
-Пример локатора:
-----------------
+### Details:
 
-.. code-block:: json
-   :linenos:
+The dictionary name corresponds to the name of the field in the `ProductFields` class ([more about `ProductFields`](../product/product_fields)).
 
-   {
-        "close_banner": {
-            "attribute": null,
-            "by": "XPATH",
-            "selector": "//button[@id = 'closeXButton']",
-            "if_list": "first",
-            "use_mouse": false,
-            "mandatory": false,
-            "timeout": 0,
-            "timeout_for_event": "presence_of_element_located",
-            "event": "click()",
-            "locator_description": "Закрытие всплывающего окна. Если оно не появляется - это не проблема (`mandatory`: `false`)."
-          },
-          "additional_images_urls": {
-            "attribute": "src",
-            "by": "XPATH",
-            "selector": "//ol[contains(@class, 'flex-control-thumbs')]//img",
-            "if_list": "all",
-            "use_mouse": false,
-            "mandatory": false,
-             "timeout": 0,
-            "timeout_for_event": "presence_of_element_located",
-            "event": null,
-            "locator_description": "Список `url` дополнительных изображений."
-          },
-          "id_supplier": {
-            "attribute": "innerText",
-            "by": "XPATH",
-            "selector": "//span[@class = 'ltr sku-copy']",
-            "if_list": "first",
-            "use_mouse": false,
-            "mandatory": true,
-             "timeout": 0,
-            "timeout_for_event": "presence_of_element_located",
-            "event": null,
-            "locator_description": "SKU Morlevi."
-          },
-          "default_image_url": {
-            "attribute": null,
-            "by": "XPATH",
-            "selector": "//a[@id = 'mainpic']//img",
-            "if_list": "first",
-            "use_mouse": false,
-             "timeout": 0,
-            "timeout_for_event": "presence_of_element_located",
-            "event": "screenshot()",
-            "mandatory": true,
-            "locator_description": "Внимание! В Morlevi изображение получается через скриншот и возвращается как PNG (`bytes`)."
-          }
-    }
+- **`attribute`**: The attribute to get from the web element. Examples: `innerText`, `src`, `id`, `href`, etc.
+  If `attribute` is set to `none/false`, the WebDriver will return the entire web element (`WebElement`).
 
-Детали
-------
+- **`by`**: The strategy to find the element:
+  - `ID` corresponds to `By.ID`
+  - `NAME` corresponds to `By.NAME`
+  - `CLASS_NAME` corresponds to `By.CLASS_NAME`
+  - `TAG_NAME` corresponds to `By.TAG_NAME`
+  - `LINK_TEXT` corresponds to `By.LINK_TEXT`
+  - `PARTIAL_LINK_TEXT` corresponds to `By.PARTIAL_LINK_TEXT`
+  - `CSS_SELECTOR` corresponds to `By.CSS_SELECTOR`
+  - `XPATH` corresponds to `By.XPATH`
 
-Имя словаря соответствует имени поля в классе `ProductFields` (
-`подробнее о ProductFields <../product/product_fields>`_).
+- **`selector`**: The selector that determines how to find the web element. Examples:
+  `(//li[@class = 'slide selected previous'])[1]//img`,
+  `//a[@id = 'mainpic']//img`,
+  `//span[@class = 'ltr sku-copy']`.
 
--   **`attribute`**: Атрибут, который нужно получить из веб-элемента. Примеры: `innerText`, `src`, `id`, `href` и т.д.
-    Если `attribute` установлен в `none/false`, WebDriver вернет весь веб-элемент (`WebElement`).
+- **`if_list`**: Specifies what to do with a list of found web elements (`web_element`). Possible values:
+  - `first`: return the first element from the list.
+  - `all`: return all elements.
+  - `last`: return the last element.
+  - `even`, `odd`: return even/odd elements.
+  - Specific numbers, e.g., `1,2,...` or `[1,3,5]`: return elements with the specified numbers.
 
--   **`by`**: Стратегия поиска элемента:
-    - `ID` соответствует `By.ID`
-    - `NAME` соответствует `By.NAME`
-    - `CLASS_NAME` соответствует `By.CLASS_NAME`
-    - `TAG_NAME` соответствует `By.TAG_NAME`
-    - `LINK_TEXT` соответствует `By.LINK_TEXT`
-    - `PARTIAL_LINK_TEXT` соответствует `By.PARTIAL_LINK_TEXT`
-    - `CSS_SELECTOR` соответствует `By.CSS_SELECTOR`
-    - `XPATH` соответствует `By.XPATH`
+  Alternatively, you can specify the element number directly in the selector, for example:
+  `(//div[contains(@class, 'description')])[2]//p`
 
--   **`selector`**: Селектор, определяющий, как найти веб-элемент. Примеры:
-    ``(//li[@class = 'slide selected previous'])[1]//img``,
-    ``//a[@id = 'mainpic']//img``,
-    ``//span[@class = 'ltr sku-copy']``.
+- **`use_mouse`**: `true` | `false`
+  Determines whether to use the mouse to interact with the element.
 
--   **`if_list`**: Определяет, что делать со списком найденных веб-элементов (`web_element`). Возможные значения:
-    -   `first`: вернуть первый элемент из списка.
-    -   `all`: вернуть все элементы.
-    -   `last`: вернуть последний элемент.
-    -   `even`, `odd`: вернуть четные/нечетные элементы.
-    -   Конкретные числа, например `1,2,...` или `[1,3,5]`: вернуть элементы с указанными номерами.
-    Также можно указать номер элемента прямо в селекторе, например:
-    ``(//div[contains(@class, 'description')])[2]//p``
+- **`event`**: The WebDriver can perform an action on the web element, such as `click()`, `screenshot()`, `scroll()`, etc.
+  **Important**: If `event` is specified, it will be performed **before** getting the value from `attribute`.
+  Example:
 
--   **`use_mouse`**: `true` | `false`
-    Определяет, следует ли использовать мышь для взаимодействия с элементом.
+  ```json
+  {
+      "...": "...",
+      "attribute": "href",
+      "...": "...",
+      "timeout": 0,
+      "timeout_for_event": "presence_of_element_located",
+      "event": "click()",
+      "...": "..."
+  }
+  ```
 
--   **`event`**: WebDriver может выполнить действие с веб-элементом, например, `click()`, `screenshot()`, `scroll()` и т.д.
-    **Важно**: Если указано `event`, он будет выполнен **перед** получением значения из `attribute`.
-    Пример:
+  In this case, the driver will first perform `click()` on the web element and then get its `href` attribute.
+  The sequence works like: **action -> attribute**.
+  Other examples of events:
+   - `screenshot()` returns the web element as a screenshot. Useful when the `CDN` server does not return the image via `URL`.
+   - `send_message()` sends a message to the web element.
+     I recommend sending the message through the `%EXTERNAL_MESSAGE%` variable, as shown below:
+     - `{"timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "click();backspace(10);%EXTERNAL_MESSAGE%"}`
+       This will execute the sequence:
+       <ol type="1">
+         <li><code>click()</code> - clicks the web element (focuses on the input field) <code>&lt;textbox&gt;</code>.</li>
+         <li><code>backspace(10)</code> - moves the caret 10 characters to the left (clears the text in the input field).</li>
+         <li><code>%EXTERNAL_MESSAGE%</code> - sends the message to the input field.</li>
+       </ol>
 
-    .. code-block:: json
-       :linenos:
+- **`mandatory`**: Whether the locator is mandatory.
+  If `{mandatory: true}` and interaction with the element is not possible, an error will be thrown. If `mandatory: false`, the element will be skipped.
 
-       {
-           "...": "...",
-           "attribute": "href",
-           "...": "...",
-           "timeout": 0,
-           "timeout_for_event": "presence_of_element_located",
-           "event": "click()",
-           "...": "..."
-       }
-
-    В этом случае драйвер сначала выполнит `click()` на веб-элементе, а затем получит его атрибут `href`.
-    Последовательность действий: **действие -> атрибут**.
-
-    Другие примеры событий:
-        - `screenshot()` возвращает веб-элемент в виде скриншота. Полезно, когда `CDN` сервер не возвращает изображение через `URL`.
-        - `send_message()` отправляет сообщение веб-элементу.
-          Рекомендуется отправлять сообщение через переменную `%EXTERNAL_MESSAGE%`, как показано ниже:
-        - ``{"timeout": 0, "timeout_for_event": "presence_of_element_located", "event": "click();backspace(10);%EXTERNAL_MESSAGE%"}``
-          Эта последовательность выполнит:
-
-          <ol type="1">
-            <li><code>click()</code> - кликает на веб-элемент (фокусируется на поле ввода) <code>&lt;textbox&gt;</code>.</li>
-            <li><code>backspace(10)</code> - перемещает каретку на 10 символов влево (очищает текст в поле ввода).</li>
-            <li><code>%EXTERNAL_MESSAGE%</code> - отправляет сообщение в поле ввода.</li>
-          </ol>
-
-- **`mandatory`**: Является ли локатор обязательным.
-  Если `{mandatory: true}` и взаимодействие с элементом невозможно, будет выдана ошибка. Если `mandatory: false`, элемент будет пропущен.
-
--   **`locator_description`**: Описание локатора.
+- **`locator_description`**: A description of the locator.
 
 ---
 
-Сложные локаторы
-----------------
+### Complex Locators:
 
-В ключах локатора можно передавать списки, кортежи или словари.
+You can pass lists, tuples, or dictionaries in the locator keys.
 
-Пример локатора со списками:
-----------------------------
+#### Example Locator with Lists:
 
-.. code-block:: json
-   :linenos:
+```json
+{
+  "sample_locator": {
+    "attribute": [
+      null,
+      "href"
+    ],
+    "by": [
+      "XPATH",
+      "XPATH"
+    ],
+    "selector": [
+      "//a[contains(@href, '#tab-description')]",
+      "//div[@id = 'tab-description']//p"
+    ],
+    "timeout": 0,
+    "timeout_for_event": "presence_of_element_located",
+    "event": [
+      "click()",
+      null
+    ],
+    "if_list": "first",
+    "use_mouse": [
+      false,
+      false
+    ],
+    "mandatory": [
+      true,
+      true
+    ],
+    "locator_description": [
+      "Clicking the tab to open the description field.",
+      "Reading data from the div."
+    ]
+  }
+}
+```
+In this example, the first element `//a[contains(@href, '#tab-description')]` will be found.
+The driver will perform `click()` and then get the attribute `href` of the element `//a[contains(@href, '#tab-description')]`.
 
-   "sample_locator": {
-        "attribute": [
-          null,
-          "href"
-        ],
-        "by": [
-          "XPATH",
-          "XPATH"
-        ],
-        "selector": [
-          "//a[contains(@href, '#tab-description')]",
-          "//div[@id = 'tab-description']//p"
-        ],
-        "timeout": 0,
-        "timeout_for_event": "presence_of_element_located",
-        "event": [
-          "click()",
-          null
-        ],
-        "if_list": "first",
-        "use_mouse": [
-          false,
-          false
-        ],
-        "mandatory": [
-          true,
-          true
-        ],
-        "locator_description": [
-          "Клик по вкладке, чтобы открыть поле с описанием.",
-          "Чтение данных из div."
-        ]
-      }
+#### Example Locator with a Dictionary:
 
-В этом примере будет найден первый элемент `//a[contains(@href, '#tab-description')]`.
-Драйвер выполнит `click()` и затем получит атрибут `href` элемента `//a[contains(@href, '#tab-description')]`.
-
-Пример локатора со словарем:
-----------------------------
-
-.. code-block:: json
-   :linenos:
-
-    "sample_locator": {
-      "attribute": {"href": "name"},
-      "..." : "..."
-    }
+```json
+{
+"sample_locator": {
+  "attribute": {"href": "name"},
+    "...": "..."
+  }
+}
+```
 
 ---
 
-Описание ключей для локаторов
------------------------------
+### Key Descriptions for Locators:
 
 1.  **`attribute`**:
-    Этот ключ указывает атрибут, который будет использоваться для извлечения данных из элемента.
-    `null` означает, что атрибут не используется для поиска элемента.
+   This key indicates the attribute that will be used to retrieve data from the element. `null` means the attribute is not used for finding the element.
 
 2.  **`by`**:
-    Определяет метод поиска элемента на странице. В данном случае это `XPATH`, что означает использование XPath для поиска элемента.
+   Specifies the method for locating the element on the page. In this case, it's `\'XPATH\'`, which means using XPath to locate the element.
 
 3.  **`selector`**:
-    Строка локатора, которая будет использоваться для поиска веб-элемента.
-    В данном случае это XPath выражение ``"//a[@id = 'mainpic']//img"``, которое находит изображение внутри тега `a` с `id='mainpic'`.
+   The locator string that will be used to find the web element. In this case, it is an XPath expression `"//a[@id = 'mainpic']//img"`, which locates an image inside an `a` tag with `id='mainpic'`.
 
 4.  **`if_list`**:
-    Определяет правило обработки списка элементов. В данном случае `first` означает, что будет возвращен первый элемент из списка.
+   Specifies the rule for handling a list of elements. In this case, `\'first\'` means returning the first element from the list.
 
 5.  **`use_mouse`**:
-    Логическое значение, указывающее, использовать ли мышь для взаимодействия с элементом.
-    Установлено в `false`, что означает, что взаимодействие с мышью не требуется.
+   A boolean value indicating whether to use the mouse for interaction with the element. Set to `false`, meaning no mouse interaction is needed.
 
-6. **`timeout`**:
-    Время ожидания (в секундах) для поиска элемента. Значение `0` означает отсутствие ожидания; элемент будет найден немедленно.
+6.  **`timeout`**:
+   The timeout (in seconds) for finding the element. A value of `0` means no wait; the element will be found immediately.
 
 7.  **`timeout_for_event`**:
-    Время ожидания (в секундах) для события. `"presence_of_element_located"` означает, что WebDriver будет ждать, пока элемент не появится, прежде чем выполнять событие.
+   The timeout (in seconds) for the event. `"presence_of_element_located"` means the WebDriver will wait for the element to be present before performing the event.
 
 8.  **`event`**:
-    Действие, которое будет выполнено на веб-элементе, такое как `click()`, `screenshot()`, `scroll()` и т. д.
-    Событие будет выполнено перед получением значения из `attribute`.
+   The action that will be performed on the web element, such as `click()`, `screenshot()`, `scroll()`, etc. The event will be executed before getting the value from `attribute`.
 
 9.  **`mandatory`**:
-    Указывает, является ли локатор обязательным.
-    Если установлено значение `true`, будет выдана ошибка, если элемент не может быть найден или с ним нельзя взаимодействовать.
+   Indicates whether the locator is mandatory. If set to `true`, an error will be raised if the element cannot be found or interacted with.
 
 10. **`locator_description`**:
-    Описание локатора, предоставляющее дополнительный контекст о том, что он делает.
-
+   A description of the locator, providing more context about what it does.
 ---------------
-
--   Расположение страницы может меняться, например, между настольной и мобильной версиями. В таких случаях рекомендуется поддерживать отдельные файлы локаторов для каждой версии.
-    Пример: `product.json`, `product_mobile_site.json`.
+- The page layout may vary, for example, between desktop and mobile versions. In such cases, I recommend maintaining separate locator files for each version.
+ Еxample: `product.json`, `product_mobile_site.json`.
 ```

@@ -3,47 +3,51 @@
 **Качество кода**
 9
 - Плюсы
-    - Код хорошо структурирован и разбит на функции, что облегчает его понимание и поддержку.
-    - Используется логирование для отслеживания ошибок и успешного выполнения операций.
-    - Присутствует обработка исключений, что делает код более надежным.
-    - Используются аннотации типов, что улучшает читаемость и помогает в отладке.
+    - Код хорошо структурирован, разбит на функции, что способствует читаемости и повторному использованию.
+    - Используются логирование для отслеживания ошибок и успешного выполнения операций.
+    - Применение асинхронных операций улучшает производительность, особенно при работе с сетевыми запросами.
+    - Наличие docstring для функций и классов.
 - Минусы
-    -  Не все функции и методы имеют подробные docstring в формате reStructuredText (RST).
-    -  Некоторые комментарии после `#` не соответствуют стандарту RST.
-    -  Функция `run_scenarios` имеет TODO, указывающий на необходимость проверки логики работы.
-    -  Функция `insert_grabbed_data` имеет TODO о переносе логики в другой файл.
-    -  Функция `run_scenario` имеет TODO по поводу необходимости параметра `scenario_name`.
-    -  Импорты не отсортированы и не сгруппированы.
-    -  В некоторых функциях используется стандартный `try-except` блок, где можно было бы использовать `logger.error`
+    -  Не все функции и методы имеют docstring в формате RST.
+    -  Некоторые комментарии не соответствуют формату RST.
+    -  Есть повторяющиеся блоки try-except, которые можно упростить с помощью `logger.error`.
+    -  Некоторые части кода, такие как обработка `scenario_files_list`, можно сделать более читаемыми.
+    -  Обработка ошибок в функции `run_scenario_files` не предоставляет достаточно информации для отладки.
+    -  В некоторых местах используется `json.load` вместо `j_loads`.
+    -  Функции `run_scenarios` и `run_scenario` имеют схожую логику, что может быть пересмотрено для упрощения.
+    -  `_journal` не передается в функцию `run_scenario` хотя определен в сигнатуре.
 
 **Рекомендации по улучшению**
 
-1. **Документация:**
-   - Добавить docstring в формате RST для всех функций, методов и переменных.
-   -  Переписать комментарии после `#` в соответствии с RST.
-   - Уточнить docstring для `run_scenarios`, `insert_grabbed_data`, `run_scenario`.
-
-2. **Логирование:**
-    - Заменить избыточные `try-except` блоки на использование `logger.error` для обработки ошибок.
-
-3. **Структура кода:**
-    - Перенести логику вставки данных в PrestaShop из функции `insert_grabbed_data` в класс PrestaShop.
-   - Разобраться с TODO в функциях `run_scenarios`, `run_scenario`.
-   - Отсортировать и сгруппировать импорты.
-
-4.  **Обработка данных:**
-    - Проверить, что все файлы загружаются через `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+1.  **Формат документации**:
+    -   Привести все docstring и комментарии в формат RST.
+    -   Использовать одинарные кавычки для строк.
+2.  **Обработка данных**:
+    -   Заменить все `json.load` на `j_loads` или `j_loads_ns`.
+3.  **Анализ структуры**:
+    -   Добавить отсутствующие импорты.
+    -   Переименовать переменные в соответствии с остальным кодом (например, `f` в `product_fields`).
+4.  **Рефакторинг и улучшения**:
+    -   Уточнить docstring для всех функций и методов.
+    -   Использовать `logger.error` для обработки исключений вместо `try-except` блоков.
+    -   Упростить обработку ошибок и предоставить больше контекста для отладки.
+    -   Рефакторинг функций `run_scenarios` и `run_scenario` для удаления дублирования кода.
+    -   Добавить проверку существования `_journal`, для избежания `KeyError`.
+    -   Перенести логику вставки данных в PrestaShop в соответствующий класс.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для выполнения сценариев.
 =========================================================================================
 
-Этот модуль содержит функции для выполнения сценариев, их загрузки из файлов и обработки процесса
-извлечения информации о продукте и вставки ее в PrestaShop.
+Этот модуль содержит функции для выполнения сценариев, загрузки их из файлов,
+и управления процессом извлечения информации о продуктах и их вставки в PrestaShop.
 
 Пример использования
 --------------------
@@ -54,47 +58,45 @@
 
     from pathlib import Path
     from src.scenario.executor import run_scenario_files
-    from src.supplier import Supplier
 
-    supplier = Supplier(supplier_name='example_supplier', supplier_abs_path=Path('/path/to/supplier'))
-    scenario_files = [Path('/path/to/scenario1.json'), Path('/path/to/scenario2.json')]
-    run_scenario_files(supplier, scenario_files)
+    # Пример запуска сценариев из файлов
+    supplier_instance = ...  # Экземпляр поставщика
+    scenario_files = [Path("path/to/scenario1.json"), Path("path/to/scenario2.json")]
+    run_scenario_files(supplier_instance, scenario_files)
 """
 
-import asyncio
-import json
 import os
 import sys
-import tempfile
+import requests
+import asyncio
 import time
+import tempfile
 from datetime import datetime
 from math import log, prod
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict, List, Any
+import json
 
-import requests
-
+import header  # TODO: check if it used
 from src import gs
-from src.db import ProductCampaignsManager
-from src.endpoints.prestashop import PrestaShop
-from src.logger.exceptions import ProductFieldException
-from src.logger.logger import logger
-from src.product import Product, ProductFields, translate_presta_fields_dict
-from src.utils.jjson import j_dumps, j_loads
 from src.utils.printer import pprint
+from src.utils.jjson import j_loads, j_dumps
+from src.product import Product, ProductFields, translate_presta_fields_dict
+from src.endpoints.prestashop import PrestaShop
+from src.db import ProductCampaignsManager
+from src.logger.logger import logger
+from src.logger.exceptions import ProductFieldException
 
-_journal: Dict[str, Any] = {'scenario_files': ''}
+_journal: dict = {'scenario_files': ''}
 _journal['name'] = timestamp = gs.now
 
 
-def dump_journal(s, journal: Dict[str, Any]):
+def dump_journal(s, journal: dict):
     """
-    Сохраняет данные журнала в JSON файл.
+    Сохраняет данные журнала в файл JSON.
 
     :param s: Экземпляр поставщика.
-    :type s: Supplier
     :param journal: Словарь, содержащий данные журнала.
-    :type journal: dict
     """
     _journal_file_path = Path(s.supplier_abs_path, '_journal', f"{journal['name']}.json")
     j_dumps(journal, _journal_file_path)
@@ -105,12 +107,9 @@ def run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool:
     Выполняет список файлов сценариев.
 
     :param s: Экземпляр поставщика.
-    :type s: Supplier
-    :param scenario_files_list: Список путей к файлам сценариев или путь к одному файлу.
-    :type scenario_files_list: List[Path] | Path
-    :raises TypeError: Если `scenario_files_list` не является списком или объектом Path.
+    :param scenario_files_list: Список путей к файлам сценариев или один путь к файлу.
+    :raises TypeError: Если scenario_files_list не является списком или Path.
     :return: True, если все сценарии выполнены успешно, иначе False.
-    :rtype: bool
     """
     if isinstance(scenario_files_list, Path):
         scenario_files_list = [scenario_files_list]
@@ -122,6 +121,7 @@ def run_scenario_files(s, scenario_files_list: List[Path] | Path) -> bool:
     for scenario_file in scenario_files_list:
         _journal['scenario_files'][scenario_file.name] = {}
         try:
+            # Код исполняет запуск сценария из файла
             if run_scenario_file(s, scenario_file):
                 _journal['scenario_files'][scenario_file.name]['message'] = f"{scenario_file} completed successfully!"
                 logger.success(f'Scenario {scenario_file} completed successfully!')
@@ -139,16 +139,15 @@ def run_scenario_file(s, scenario_file: Path) -> bool:
     Загружает и выполняет сценарии из файла.
 
     :param s: Экземпляр поставщика.
-    :type s: Supplier
     :param scenario_file: Путь к файлу сценария.
-    :type scenario_file: Path
     :return: True, если сценарий выполнен успешно, иначе False.
-    :rtype: bool
     """
     try:
+        # Код исполняет загрузку сценариев из файла
         scenarios_dict = j_loads(scenario_file)['scenarios']
         for scenario_name, scenario in scenarios_dict.items():
             s.current_scenario = scenario
+            # Код исполняет запуск сценария
             if run_scenario(s, scenario, scenario_name):
                 logger.success(f'Scenario {scenario_name} completed successfully!')
             else:
@@ -164,127 +163,111 @@ def run_scenarios(s, scenarios: List[dict] | dict = None, _journal=None) -> List
     Выполняет список сценариев (НЕ ФАЙЛОВ).
 
     :param s: Экземпляр поставщика.
-    :type s: Supplier
     :param scenarios: Список сценариев или один сценарий в виде словаря.
-    :type scenarios: List[dict] | dict, optional
-    :param _journal: Журнал выполнения.
-    :type _journal: dict, optional
-    :return: Результат выполнения сценариев в виде списка или словаря,
-             или False в случае ошибки.
-    :rtype: List | dict | bool
+    :return: Результат выполнения сценариев в виде списка или словаря, или False в случае ошибки.
+
+    .. todo::
+        Проверить вариант, когда сценарии не указаны ниоткуда. Например, когда s.current_scenario не указан и scenarios не указаны.
     """
     if not scenarios:
         scenarios = [s.current_scenario]
-        # Если сценарии не указаны, берем их из s.current_scenario.
+        """
+        Если сценарии не указаны, берутся из s.current_scenario.
+        .. todo::
+            Проверить этот вариант со всех сторон. Например, когда s.current_scenario не указан и scenarios не указаны.
+        """
     scenarios = scenarios if isinstance(scenarios, list) else [scenarios]
     res = []
     for scenario in scenarios:
-        res = run_scenario(s, scenario)
-        _journal['scenario_files'][-1][scenario] = str(res)
-        dump_journal(s, _journal)
+        # Код исполняет запуск сценария
+        result = run_scenario(s, scenario, _journal=_journal)
+        if _journal and _journal.get('scenario_files') and len(_journal['scenario_files']) > 0:
+           _journal['scenario_files'][-1][scenario] = str(result)
+           dump_journal(s, _journal)
+        res.append(result)
     return res
 
-
-def run_scenario(supplier, scenario: dict, scenario_name: str, _journal=None) -> List | dict | bool:
+def run_scenario(supplier, scenario: dict, scenario_name: str = None, _journal=None) -> List | dict | bool:
     """
     Выполняет полученный сценарий.
 
     :param supplier: Экземпляр поставщика.
-    :type supplier: Supplier
     :param scenario: Словарь, содержащий детали сценария.
-    :type scenario: dict
-    :param scenario_name: Имя сценария.
-    :type scenario_name: str
-    :param _journal: Журнал выполнения.
-    :type _journal: dict, optional
+    :param scenario_name: Название сценария.
     :return: Результат выполнения сценария.
-    :rtype: List | dict | bool
+
+    .. todo::
+        Проверить необходимость параметра scenario_name.
     """
     s = supplier
-    logger.info(f'Starting scenario: {scenario_name}')
+    if scenario_name:
+        logger.info(f'Starting scenario: {scenario_name}')
     s.current_scenario = scenario
     d = s.driver
     d.get_url(scenario['url'])
 
-    # Получает список продуктов в категории
+    # Код исполняет получение списка продуктов в категории
     list_products_in_category: list = s.related_modules.get_list_products_in_category(s)
 
-    # Если нет продуктов в категории (или они еще не загрузились)
+    # Проверка наличия продуктов в категории
     if not list_products_in_category:
         logger.warning('No product list collected from the category page. Possibly an empty category - ', d.current_url)
         return False
 
     for url in list_products_in_category:
+        # Код исполняет переход на страницу продукта
         if not d.get_url(url):
             logger.error(f'Error navigating to product page at: {url}')
-            continue  # Ошибка навигации к странице. Пропускаем
+            continue  # Пропуск если ошибка навигации
 
-        # Получает поля страницы продукта
+        # Код исполняет сбор полей со страницы продукта
         grabbed_fields = s.related_modules.grab_product_page(s)
-        f: ProductFields = asyncio.run(s.related_modules.grab_page(s))
-        if not f:
+        product_fields: ProductFields = asyncio.run(s.related_modules.grab_page(s))
+        if not product_fields:
             logger.error(f"Failed to collect product fields")
             continue
 
-        presta_fields_dict, assist_fields_dict = f.presta_fields_dict, f.assist_fields_dict
+        presta_fields_dict, assist_fields_dict = product_fields.presta_fields_dict, product_fields.assist_fields_dict
         try:
+            # Код исполняет создание экземпляра Product и вставку данных
             product: Product = Product(supplier_prefix=s.supplier_prefix, presta_fields_dict=presta_fields_dict)
-            insert_grabbed_data(f)
+            insert_grabbed_data(product_fields)
         except Exception as ex:
-             if hasattr(product, 'fields') and "name" in product.fields:
-                 logger.error(f'Product {product.fields["name"][1]} could not be saved', ex)
-             else:
-                logger.error(f'Product could not be saved', ex)
-             continue
+            logger.error(f'Product {product.fields["name"][1]} could not be saved', ex)
+            continue
 
     return list_products_in_category
 
 
 def insert_grabbed_data(product_fields: ProductFields):
     """
-    Вставляет полученные данные о продукте в PrestaShop.
+    Вставляет полученные данные продукта в PrestaShop.
 
-    :param product_fields: Экземпляр ProductFields, содержащий информацию о продукте.
-    :type product_fields: ProductFields
+    .. todo::
+        Перенести эту логику в другой файл. В класс PrestaShop.
     """
+    # Код исполняет асинхронный запуск вставки данных
     asyncio.run(execute_PrestaShop_insert(product_fields))
 
 
 async def execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
-    """
-    Асинхронно вызывает функцию для вставки данных продукта в PrestaShop.
-
-    :param f: Экземпляр ProductFields, содержащий информацию о продукте.
-    :type f: ProductFields
-    :param coupon_code: Необязательный код купона.
-    :type coupon_code: str, optional
-    :param start_date: Необязательная начальная дата акции.
-    :type start_date: str, optional
-    :param end_date: Необязательная конечная дата акции.
-    :type end_date: str, optional
-    :return: True, если вставка прошла успешно, иначе False.
-    :rtype: bool
-    """
+    # Код исполняет асинхронный запуск вставки данных
     await execute_PrestaShop_insert(f, coupon_code, start_date, end_date)
 
 
 def execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
     """
-    Вставляет данные продукта в PrestaShop.
+    Вставляет продукт в PrestaShop.
 
     :param f: Экземпляр ProductFields, содержащий информацию о продукте.
-    :type f: ProductFields
-    :param coupon_code: Необязательный код купона.
-    :type coupon_code: str, optional
-    :param start_date: Необязательная начальная дата акции.
-    :type start_date: str, optional
-    :param end_date: Необязательная конечная дата акции.
-    :type end_date: str, optional
+    :param coupon_code: Опциональный код купона.
+    :param start_date: Опциональная дата начала акции.
+    :param end_date: Опциональная дата окончания акции.
     :return: True, если вставка прошла успешно, иначе False.
-    :rtype: bool
     """
     try:
         presta = PrestaShop()
+        # Код исполняет отправку данных продукта в PrestaShop
         presta.post_product_data(
             product_id=f.product_id,
             product_name=f.product_name,

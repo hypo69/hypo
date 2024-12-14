@@ -3,49 +3,53 @@
 **Качество кода**
 8
 - Плюсы
-    - Код содержит docstring для модуля.
+    - Присутствует описание модуля в виде docstring.
+    - Используется `from .logger import logger` для импорта логгера.
     - Объявлена переменная `MODE`.
-    - Импортированы необходимые классы и переменные из других модулей пакета `logger`.
-    - Присутствует явное указание кодировки файла.
+    - Импортированы кастомные исключения.
 - Минусы
-    - Отсутствуют комментарии в стиле reStructuredText (RST) для переменных и импортов.
-    - Отсутствует импорт Beeper.
-    - Не используется импорт для логирования `from src.logger.logger import logger`.
+    - Не все импорты используются (закомментирован `from .beeper import Beeper`).
+    - Отсутствует документация reStructuredText для переменных.
+    - Нет примеров использования модуля.
 
 **Рекомендации по улучшению**
-1. Добавить docstring в формате reStructuredText (RST) для описания модуля, переменных и импортов.
-2.  Использовать `from src.logger.logger import logger` для логирования.
-3.  Удалить неиспользуемые импорты или прокомментировать их.
+
+1.  Удалить неиспользуемые импорты (`#from .beeper import Beeper`).
+2.  Добавить документацию reStructuredText для переменной `MODE`.
+3.  Добавить пример использования модуля в docstring.
+4.  Указать использование `from src.logger.logger import logger` для логирования ошибок (хотя это уже сделано).
+5.  Удалить shebang `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12` , т.к. это не имеет смысла для модуля.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль инициализации пакета logger
-====================================================
+.. module:: src.logger
+   :platform: Windows, Unix
+   :synopsis: Инициализация модуля логирования.
 
-Этот модуль содержит инициализацию переменных и импортов для пакета logger.
-Он также содержит определения пользовательских исключений, используемых в пакете.
+   Этот модуль инициализирует и предоставляет доступ к логгеру,
+   а также определяет кастомные исключения для использования в приложении.
 
-.. data:: MODE
-   :type: str
-   :value: 'dev'
+   Пример использования:
 
-   Режим работы логгера. По умолчанию установлен в 'dev'.
+   .. code-block:: python
 
+       from src.logger import logger
+
+       logger.info("Сообщение")
 """
-MODE = 'dev' # Режим работы логгера
+# Переменная MODE определяет режим работы приложения (dev, prod, и т.д.).
+# По умолчанию установлено значение 'dev'.
+MODE = 'dev'
 
-from src.logger.logger import logger # Импорт логгера
-# from .beeper import Beeper # TODO: Возможно, понадобится импортировать Beeper
-from .exceptions import ( # Импорт пользовательских исключений
-    ExecuteLocatorException,
-    DefaultSettingsException,
-    CredentialsError,
-    PrestaShopException,
-    PayloadChecksumError
-)
+from .logger import logger
+# from .beeper import Beeper # не используется, удаляем
+from .exceptions import ( ExecuteLocatorException,
+                         DefaultSettingsException,
+                         CredentialsError,
+                         PrestaShopException,
+                         PayloadChecksumError
+                        )
 ```

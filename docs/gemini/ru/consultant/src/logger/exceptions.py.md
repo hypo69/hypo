@@ -2,24 +2,24 @@
 
 **Качество кода**
 9
--   Плюсы
-    -   Код хорошо структурирован и документирован с использованием reStructuredText (RST).
-    -   Используются пользовательские исключения для конкретных ситуаций, что улучшает читаемость и отладку.
-    -   Присутствует логирование ошибок с помощью `logger.error`.
-    -   Классы исключений наследуются от соответствующих базовых классов.
--   Минусы
-    -   Исключение `KeePassException` наследует несколько исключений, что может привести к избыточности и проблемам с обработкой.
-    -  `MODE = 'dev'` хардкод, лучше вынести в переменные окружения.
-    -  Для `PrestaShopException` добавлена переменная `msg`, дублирующая `ps_error_msg`, можно убрать.
+- Плюсы
+    - Код хорошо структурирован и соответствует стандартам Python.
+    - Используются docstring для описания модулей, классов и методов.
+    - Определены собственные исключения для различных ситуаций.
+    - Используется логирование ошибок через `logger.error`.
+    - Соблюдены основные принципы обработки исключений.
+- Минусы
+    - Некоторые docstring можно сделать более подробными, особенно в классах исключений.
+    - Не все исключения логируются с использованием `logger.error`.
+    - В классе `KeePassException` не используется наследование от `CustomException`.
 
 **Рекомендации по улучшению**
 
-1.  **Упрощение `KeePassException`:** Вместо множественного наследования можно создать собственное исключение `KeePassException` и внутри обработать необходимые исключения.
-2.  **Удаление дублирования в `PrestaShopException`:** Убрать переменную `msg`, так как есть `ps_error_msg`
-3. **Вынести константы:** Константу `MODE` лучше вынести в переменные окружения или файл конфигурации
-4.  **Улучшение логирования:** Для `CustomException` можно добавить логирование с уровнем DEBUG для более детальной информации.
-5.  **Уточнение документации:** В документации можно добавить примеры использования пользовательских исключений.
-6.  **Обработка исключений:** Исключения `CredentialsError, BinaryError, HeaderChecksumError, PayloadChecksumError, UnableToSendToRecycleBin` могут быть перехвачены в методах, вызывающих их, для обеспечения более гранулированной обработки ошибок.
+1. **Улучшить документацию**: Добавить более подробное описание для каждого класса исключений в docstring, чтобы было понятно, в каких случаях они должны вызываться.
+2. **Логирование ошибок**: В классе `CustomException` не всегда явно передаётся `exc_info`. Рекомендуется передавать `exc_info=True` всегда, когда есть оригинальное исключение.
+3. **Обработка исключений**: Класс `KeePassException` должен наследоваться от `CustomException` для единообразия обработки исключений, а не от набора исключений `pykeepass`.
+4. **Упрощение `PrestaShopException`**: Класс `PrestaShopException` может быть упрощен, чтобы более эффективно обрабатывать исключения.
+5. **Форматирование docstring**: Добавить форматирование в docstring, чтобы сделать их более читаемыми.
 
 **Оптимизированный код**
 
@@ -29,62 +29,73 @@
 #! venv/bin/python/python3.12
 
 """
-.. module:: src.logger.exceptions
-    :platform: Windows, Unix
-    :synopsis: Этот модуль определяет пользовательские исключения, используемые в приложении.
+Модуль для определения пользовательских исключений.
+=========================================================================================
 
-Исключения программы
+Этот модуль содержит пользовательские классы исключений, используемые в приложении.
+
+Классы исключений предназначены для обработки ошибок, связанных с различными компонентами
+приложения, включая файловые операции, поля продуктов, подключения к базам данных KeePass,
+ошибки PrestaShop WebService и ошибки WebDriver.
+
+:Classes:
+    - :class:`CustomException`: Базовый класс для всех пользовательских исключений, обеспечивающий ведение журнала ошибок.
+    - :class:`FileNotFoundError`: Исключение, возникающее при отсутствии файла.
+    - :class:`ProductFieldException`: Исключение, возникающее при ошибках, связанных с полями продукта.
+    - :class:`KeePassException`: Исключение, возникающее при ошибках подключения к базе данных KeePass.
+    - :class:`DefaultSettingsException`: Исключение, возникающее при проблемах с настройками по умолчанию.
+    - :class:`WebDriverException`: Исключение, возникающее при ошибках, связанных с WebDriver.
+    - :class:`ExecuteLocatorException`: Исключение, возникающее при ошибках, связанных с исполнителями локаторов.
+    - :class:`PrestaShopException`: Общее исключение для ошибок PrestaShop WebService.
+    - :class:`PrestaShopAuthenticationError`: Исключение, возникающее при ошибках аутентификации PrestaShop WebServices.
+
+Пример использования
 --------------------
 
-Этот модуль содержит несколько пользовательских классов исключений для обработки ошибок, связанных с различными компонентами приложения,
-включая операции с файлами, поля продукта, подключения к базе данных KeePass и ошибки PrestaShop WebService.
+.. code-block:: python
 
-Классы:
---------
-- CustomException: Базовый класс пользовательских исключений, обрабатывающий логирование.
-- FileNotFoundError: Вызывается, когда файл не найден.
-- ProductFieldException: Вызывается для ошибок, связанных с полями продукта.
-- KeePassException: Вызывается для ошибок, связанных с подключениями к базе данных KeePass.
-- DefaultSettingsException: Вызывается, когда возникают проблемы с настройками по умолчанию.
-- WebDriverException: Вызывается для ошибок, связанных с WebDriver.
-- ExecuteLocatorException: Вызывается для ошибок, связанных с исполнителями локаторов.
-- PrestaShopException: Вызывается для общих ошибок PrestaShop WebService.
-- PrestaShopAuthenticationError: Вызывается для ошибок аутентификации PrestaShop WebServices.
+    try:
+        raise FileNotFoundError("Файл не найден")
+    except FileNotFoundError as e:
+        logger.error(f"Ошибка: {e}")
 
 """
 
-# import os #TODO перенести константу в окружение
-# MODE = os.environ.get('MODE', 'dev') #TODO перенести константу в окружение
+MODE = 'dev'
 
 from typing import Optional
+# Импортируется logger из src.logger
 from src.logger.logger import logger
 from selenium.common.exceptions import WebDriverException as WDriverException
-from pykeepass.exceptions import (CredentialsError, BinaryError,
-                                   HeaderChecksumError, PayloadChecksumError,
-                                   UnableToSendToRecycleBin)
+
+# Удалены неиспользуемые импорты
+# from pykeepass.exceptions import (CredentialsError, BinaryError,
+#                                    HeaderChecksumError, PayloadChecksumError, 
+#                                    UnableToSendToRecycleBin)
 
 class CustomException(Exception):
     """
     Базовый класс пользовательских исключений.
+    
+    Этот класс является базовым для всех пользовательских исключений в приложении.
+    Он отвечает за ведение журнала исключений и обеспечивает механизм обработки
+    оригинального исключения, если оно существует.
 
-    Это базовый класс для всех пользовательских исключений в приложении.
-    Он обрабатывает логирование исключения и предоставляет механизм для работы с исходным исключением, если оно существует.
-
-    :ivar original_exception: Исходное исключение, вызвавшее это пользовательское исключение, если есть.
+    :ivar original_exception: Оригинальное исключение, вызвавшее это пользовательское исключение, если есть.
     :vartype original_exception: Optional[Exception]
     :ivar exc_info: Флаг, указывающий, следует ли регистрировать информацию об исключении.
     :vartype exc_info: bool
     """
-
+    
     def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
         """
-        Инициализирует CustomException сообщением и необязательным исходным исключением.
-
+        Инициализирует CustomException с сообщением и опциональным оригинальным исключением.
+        
         :param message: Сообщение об ошибке.
         :type message: str
-        :param e: Исходное исключение, если есть.
+        :param e: Оригинальное исключение, вызвавшее это пользовательское исключение (опционально).
         :type e: Optional[Exception]
-        :param exc_info: Флаг, указывающий, следует ли регистрировать информацию об исключении.
+        :param exc_info: Флаг, указывающий, следует ли логировать информацию об исключении (по умолчанию True).
         :type exc_info: bool
         """
         super().__init__(message)
@@ -93,76 +104,126 @@ class CustomException(Exception):
         self.handle_exception()
 
     def handle_exception(self):
-        """Обрабатывает исключение, регистрируя ошибку и исходное исключение, если доступно."""
-        logger.error(f"Произошло исключение: {self}")
+        """
+        Обрабатывает исключение, логируя ошибку и оригинальное исключение, если оно доступно.
+        
+        :return: None
+        """
+        logger.error(f"Exception occurred: {self}", exc_info=self.exc_info) # Добавлено exc_info
         if self.original_exception:
-            logger.debug(f"Исходное исключение: {self.original_exception}")
-        # TODO: Add recovery logic, retries, or other handling as necessary.
+            logger.debug(f"Original exception: {self.original_exception}")
+        # TODO: Добавить логику восстановления, повторные попытки или другую обработку по мере необходимости.
 
 class FileNotFoundError(CustomException, IOError):
-    """Исключение, вызываемое, когда файл не найден."""
+    """
+    Исключение, возникающее, когда файл не найден.
+    
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
+    """
     pass
 
 class ProductFieldException(CustomException):
-    """Исключение, вызываемое для ошибок, связанных с полями продукта."""
+    """
+    Исключение, возникающее при ошибках, связанных с полями продукта.
+    
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
+    """
     pass
 
+# KeePassException наследуется от CustomException
 class KeePassException(CustomException):
     """
-    Исключение, вызываемое для ошибок, связанных с подключениями к базе данных KeePass.
+    Исключение, возникающее при ошибках подключения к базе данных KeePass.
+    
+    Это исключение может быть вызвано из-за неверных учетных данных, ошибок чтения бинарных данных,
+    ошибок контрольных сумм заголовка или полезной нагрузки, а также при невозможности перемещения
+    элементов в корзину.
+
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
     """
-    def __init__(self, message: str, e: Optional[Exception] = None, exc_info: bool = True):
-        """
-        Инициализирует KeePassException сообщением и необязательным исходным исключением.
-        """
-        super().__init__(message, e, exc_info)
+    pass
+
 
 class DefaultSettingsException(CustomException):
-    """Исключение, вызываемое для проблем с настройками по умолчанию."""
+    """
+    Исключение, возникающее при проблемах с настройками по умолчанию.
+    
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
+    """
     pass
 
 class WebDriverException(WDriverException):
-    """Исключение, вызываемое для проблем, связанных с WebDriver."""
+    """
+    Исключение, возникающее при ошибках, связанных с WebDriver.
+    
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
+    """
     pass
 
 class ExecuteLocatorException(CustomException):
-    """Исключение, вызываемое для ошибок, связанных с исполнителями локаторов."""
+    """
+    Исключение, возникающее при ошибках, связанных с исполнителями локаторов.
+    
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
+    """
     pass
 
 class PrestaShopException(Exception):
     """
     Общее исключение для ошибок PrestaShop WebService.
-
-    Этот класс используется для обработки ошибок, которые возникают при взаимодействии с PrestaShop WebService.
-
-    :ivar error_code: Код ошибки, возвращенный PrestaShop.
+    
+    Этот класс используется для обработки ошибок, возникающих при взаимодействии с PrestaShop WebService.
+    
+    :ivar msg: Пользовательское сообщение об ошибке.
+    :vartype msg: str
+    :ivar error_code: Код ошибки, возвращенный PrestaShop (опционально).
     :vartype error_code: Optional[int]
     :ivar ps_error_msg: Сообщение об ошибке от PrestaShop.
     :vartype ps_error_msg: str
-    :ivar ps_error_code: Код ошибки PrestaShop.
+    :ivar ps_error_code: Код ошибки PrestaShop (опционально).
     :vartype ps_error_code: Optional[int]
     """
-
-    def __init__(self, ps_error_msg: str = '', error_code: Optional[int] = None, ps_error_code: Optional[int] = None):
+    
+    def __init__(self, msg: str, error_code: Optional[int] = None, 
+                 ps_error_msg: str = '', ps_error_code: Optional[int] = None):
         """
         Инициализирует PrestaShopException с предоставленным сообщением и деталями ошибки.
-
+        
+        :param msg: Пользовательское сообщение об ошибке.
+        :type msg: str
+        :param error_code: Код ошибки, возвращенный PrestaShop (опционально).
+        :type error_code: Optional[int]
         :param ps_error_msg: Сообщение об ошибке от PrestaShop.
         :type ps_error_msg: str
-        :param error_code: Код ошибки, возвращенный PrestaShop.
-        :type error_code: Optional[int]
-        :param ps_error_code: Код ошибки PrestaShop.
+        :param ps_error_code: Код ошибки PrestaShop (опционально).
         :type ps_error_code: Optional[int]
         """
+        self.msg = msg
         self.error_code = error_code
         self.ps_error_msg = ps_error_msg
         self.ps_error_code = ps_error_code
 
     def __str__(self):
-        """Возвращает строковое представление исключения."""
-        return repr(self.ps_error_msg)
+        """
+        Возвращает строковое представление исключения.
+
+        :return: Строковое представление сообщения об ошибке PrestaShop или пользовательского сообщения.
+        :rtype: str
+        """
+        return repr(self.ps_error_msg or self.msg)
 
 class PrestaShopAuthenticationError(PrestaShopException):
-    """Исключение, вызываемое для ошибок аутентификации PrestaShop (Unauthorized)."""
+    """
+    Исключение, возникающее при ошибках аутентификации PrestaShop (Unauthorized).
+
+    :ivar original_exception: Оригинальное исключение.
+    :vartype original_exception: Optional[Exception]
+    """
     pass
 ```
