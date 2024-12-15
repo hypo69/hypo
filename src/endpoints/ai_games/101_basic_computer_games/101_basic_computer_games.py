@@ -55,7 +55,7 @@ class Games101Basic():
 			game_name = file_name.split('_', 1)[1].split('.')[0]  # Разделяем по подчеркиванию и точке
 			self.games_list.append(game_name.upper().replace('_', ' '))  # Преобразуем в верхний регистр и заменяем подчеркивания на пробелы
 	
-	async def generate_python_code(self,lang):
+	async def generate_python_code(self):
 		""""""
 		for game in self.games_list:
 			q = self.command_instruction.replace('<GAME>',f'<{game}>')
@@ -88,5 +88,6 @@ if __name__ == '__main__':
 	langs_list:list = ['ru','he','en']
 	
 	for lang in langs_list:
+		print(f'Start: {lang}')
 		g101 = Games101Basic(lang)
 		asyncio.run( g101.generate_python_code())
