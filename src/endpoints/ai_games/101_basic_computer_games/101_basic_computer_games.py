@@ -29,7 +29,6 @@ class Games101Basic():
 	alice:GoogleGenerativeAI
 	base:str = '101_basic_computer_games'
 	base_path:Path = gs.path.endpoints / 'ai_games' / base
-	games_list:list = []
 
 	def __init__(self, lanf:str = 'en'):
 		""""""
@@ -43,19 +42,22 @@ class Games101Basic():
                 api_key=gs.credentials.gemini.onela,
                 system_instruction = system_instruction,
             )
-		self.load_games_list()
 
-	def load_games_list(self):
+
+	@property
+	def games_list(self):
 		"""
 		Генерация списка имен игр из файлов в каталоге 'rules'.
 		Извлекает имя игры из каждого файла, приводя его к верхнему регистру и заменяя подчеркивания на пробелы.
 		"""
 		rules_files = get_filenames(self.base_path / self.lang / 'rules')
+		games:list = []
 		for file_name in rules_files:
-			if file_name == 'README.MD' or 'TOC.MD':
+			if file_name == ('README.MD' or 'TOC.MD'):
 				continue
 			game_name = file_name.split('_', 1)[1].split('.')[0]  # Разделяем по подчеркиванию и точке
-			self.games_list.append(game_name.upper().replace('_', ' '))  # Преобразуем в верхний регистр и заменяем подчеркивания на пробелы
+			games.append( game_name.upper().replace('_', ' ') ) # Преобразуем в верхний регистр и заменяем подчеркивания на пробелы
+		return games
 	
 	async def generate_python_code(self):
 		""""""
@@ -86,8 +88,11 @@ class Games101Basic():
 	async def generate_repository_toc(self):
 		""""""
 		...
+
 		command_instruction = Path(self.base_path / 'assets' / 'instructions' / f'{self.base}_create_toc.{self.lang}.md').read_text(encoding='UTF-8')
-		response = await self.bob.ask(command_instruction)
+		q = command_instruction + str(self.games_list) 
+		response = await self.bob.ask(q)
+		
 		output_file:Path = self.base_path / self.lang  / 'TOC.MD'
 		output_file.parent.mkdir(parents=True, exist_ok=True)
 		output_file.write_text(response,encoding='UTF-8')

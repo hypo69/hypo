@@ -1,371 +1,568 @@
+# Список игр 
 
-## ACE
-&nbsp;Карточная игра, в которой игрок пытается получить 21 очко.
-&nbsp;Игрок начинает с двумя картами, может брать дополнительные карты, цель - не перебрать 21.
+ACEDU
+========
+Сложность 3
 
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ACE)
----
-## AIRPLANE
-&nbsp;Игра-симулятор полета на самолете.
-&nbsp;Игрок управляет самолетом, контролируя высоту и скорость, и пытается приземлиться на аэродром.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/AIRPLANE)
----
-## AMAZING
-&nbsp;Игра-лабиринт, где нужно найти выход.
-&nbsp;Игрок перемещается по лабиринту, стараясь дойти до финиша.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/AMAZING)
----
-## ANIMAL
-&nbsp;Игра в угадывание животного.
-&nbsp;Компьютер загадывает животное, игрок пытается угадать его, отвечая на вопросы "да/нет".
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ANIMAL)
----
-## AWARI
-&nbsp; Игра в авари, традиционная африканская игра.
-&nbsp;Игроки по очереди перемещают фишки по игровому полю, стараясь собрать больше фишек.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/AWARI)
----
-## BAGELS
-&nbsp;Логическая игра, где нужно угадать загаданное число.
-&nbsp;Компьютер загадывает число, игрок пытается его угадать, получая подсказки "bagels", "pico" и "fermi".
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BAGELS)
----
-## BATTLE
-&nbsp;Морской бой.
-&nbsp;Игроки расставляют корабли на поле и по очереди стреляют по полю противника, пытаясь потопить его корабли.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BATTLE)
----
-## BINGO
-&nbsp;Игра в бинго.
-&nbsp;Игрок получает карточку с числами, компьютер объявляет числа, игрок закрывает числа на карточке и выигрывает, когда закрыта вся линия или карточка.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BINGO)
----
-## BLACKBOX
-&nbsp;Логическая игра, в которой нужно угадать расположение атомов в черном ящике.
-&nbsp;Игрок посылает лучи в черный ящик, по отражениям и отклонениям нужно понять расположение атомов.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BLACKBOX)
----
-## BLOWUP
-&nbsp;Игра про взрывы.
-&nbsp;Игрок вводит координаты взрыва, в результате чего взрывы распространяются по полю, уничтожая его клетки.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BLOWUP)
----
-## BOMBER
-&nbsp;Игра, где нужно сбрасывать бомбы.
-&nbsp;Игрок управляет бомбардировщиком и сбрасывает бомбы на цели на земле.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOMBER)
----
-## BOXING
-&nbsp;Игра в бокс.
-&nbsp;Игрок управляет боксером и сражается против компьютерного соперника.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOXING)
----
-## BUZZWORD
-&nbsp;Игра в слова.
-&nbsp;Игрок должен составить как можно больше слов из предложенного набора букв.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BUZZWORD)
----
-## CALENDAR
-&nbsp;Игра с датами календаря.
-&nbsp; Игра выводит календарь на экран.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CALENDAR)
----
-## CAMEL
-&nbsp;Игра про верблюдов и путешествие по пустыне.
-&nbsp;Игрок управляет верблюдом, стараясь как можно дольше продержаться в пустыне, избегая обезвоживания и усталости.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CAMEL)
----
-## CANNON
-&nbsp;Игра, где нужно стрелять из пушки.
-  Rules Игрок настраивает угол и силу выстрела пушки, чтобы поразить цель.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CANNON)
----
-## CAR
-&nbsp;Гонки на автомобиле.
-&nbsp;Игрок управляет автомобилем и должен доехать до финиша, не врезавшись.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CAR)
----
-## CASINO
-&nbsp; Игра в казино.
-&nbsp; Игрок может играть в разные игры казино, например, рулетку или блэкджек.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CASINO)
----
-## CHECKER
-&nbsp;Игра в шашки.
-&nbsp; Игрок играет против компьютера, стараясь съесть все шашки противника.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHECKER)
----
-## CHOMP
-&nbsp;Математическая игра, в которой нужно "съедать" числа.
-&nbsp;Игроки по очереди "съедают" числа на доске, проигрывает тот, кто съедает последнее число.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHOMP)
----
-## CIVILW
-&nbsp;Симулятор Гражданской войны в США.
-&nbsp;Игрок управляет армией и ведет сражения, стараясь победить противника.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CIVILW)
----
-## CRAPS
-&nbsp;Игра в кости.
-&nbsp; Игрок бросает кости и делает ставки на результат броска.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CRAPS)
----
-## CYCLE
-&nbsp; Игра про циклы.
-&nbsp;Игрок задает параметры цикла и наблюдает за его работой.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CYCLE)
----
-## DAISY
-&nbsp;Простая игра-викторина.
-&nbsp; Компьютер задает вопрос, игрок должен ответить правильно.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DAISY)
----
-## DICE
-&nbsp;Игра в кости.
-&nbsp;Игрок бросает кости и сравнивает результат с результатом компьютера.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DICE)
----
-## DIGITS
-&nbsp;Игра с математическими цифрами.
-  Rules Игрок должен решить математическую задачу с помощью заданных цифр.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DIGITS)
----
-## DRAGON
-&nbsp;Игра про дракона.
-&nbsp;Игрок пытается сразиться с драконом, выбирая различные варианты действий.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DRAGON)
----
-## EGG
-&nbsp;Игра про яйца.
-&nbsp;Игрок должен поймать падающие яйца, не дав им разбиться.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/EGG)
----
-## EIGHT
-&nbsp;Игра на перемещение чисел по полю.
-&nbsp;Игрок перемещает числа на поле 3x3, стараясь расставить их в порядке возрастания.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/EIGHT)
----
-## FARKLE
-&nbsp;Игра в кости.
-&nbsp;Игрок бросает кости и набирает очки, собирая определенные комбинации.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FARKLE)
----
-## FOOTBL
-&nbsp;Симулятор футбола.
-&nbsp;Игрок управляет футбольной командой и участвует в матчах против других команд.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FOOTBL)
----
-## FOR
-&nbsp;Игра про циклы FOR.
-&nbsp;Игрок задает параметры цикла FOR и наблюдает за его работой.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FOR)
----
-## FORTUNE
-&nbsp;Игра-предсказание судьбы.
-&nbsp; Компьютер выдает игроку предсказания, основываясь на случайных числах.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FORTUNE)
----
-## GOLF
-&nbsp;Игра в гольф.
-&nbsp;Игрок управляет ударами по мячу для гольфа, стараясь забить его в лунку.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GOLF)
----
-## GUESS
-&nbsp;Игра в угадывание числа.
-&nbsp;Компьютер загадывает число, игрок пытается его угадать.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GUESS)
----
-## GUNNER
-&nbsp;Игра про стрельбу.
-&nbsp;Игрок управляет пушкой и стреляет по движущимся целям.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GUNNER)
----
-## HANG
-&nbsp;Игра в виселицу.
-&nbsp;Компьютер загадывает слово, игрок пытается его угадать по буквам, прежде чем его человечек будет повешен.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HANG)
----
-## HANOI
-&nbsp;Игра "Ханойская башня".
-&nbsp;Игрок переносит диски с одного стержня на другой, соблюдая правила.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HANOI)
----
-## HI-LO
-&nbsp;Игра, где нужно угадать, больше или меньше число.
-&nbsp;Компьютер загадывает число, игрок пытается угадать, больше или меньше следующее число, загаданное компьютером.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HI-LO)
----
-## HOCKEY
-&nbsp;Симулятор хоккея.
-&nbsp;Игрок управляет хоккеистом и участвует в матчах против других команд.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HOCKEY)
----
-## HORSE
-&nbsp;Игра про скачки.
-&nbsp;Игрок делает ставки на лошадей и наблюдает за скачками.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HORSE)
----
-## KING
-&nbsp;Симулятор управления королевством.
-&nbsp; Игрок управляет королевством, принимая решения в разных ситуациях.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/KING)
----
-## LIFE
-&nbsp;Игра "Жизнь" Джона Конвея.
-&nbsp;Игрок наблюдает за развитием колонии клеток на поле, соблюдая правила.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/LIFE)
----
-## LUNAR
-&nbsp;Симулятор посадки на Луну.
-&nbsp;Игрок управляет космическим кораблем и пытается совершить мягкую посадку на Луну.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/LUNAR)
----
-## MATH
-&nbsp;Игра про математические задачи.
-&nbsp;Компьютер задает математические задачи, игрок должен их решить.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/MATH)
----
-## MM
-&nbsp;Логическая игра.
-&nbsp; Игрок угадывает комбинацию из 4-х цветов, получая подсказки о количестве совпавших цветов и их позициях.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/MM)
----
-## MUGWUMP
-&nbsp;Игра в прятки.
-&nbsp;Компьютер прячет "mugwump" на поле, игрок пытается его найти, делая выстрелы.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/MUGWUMP)
----
-## NICOMA
-&nbsp;Логическая игра.
-&nbsp;Компьютер загадывает число, игрок пытается его угадать, получая подсказки.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/NICOMA)
----
-## NUMBER
-&nbsp;Игра с угадыванием чисел.
-&nbsp;Компьютер загадывает число, игрок должен его угадать за меньшее количество попыток.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/NUMBER)
----
-## POKER
-&nbsp;Карточная игра в покер.
-&nbsp;Игрок играет в покер против компьютера, делая ставки и пытаясь собрать лучшую комбинацию.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/POKER)
----
-## PYRAMID
-&nbsp;Карточная игра "Пирамида".
-&nbsp;Игрок выбирает карты из пирамиды, чтобы получить сумму 13 очков.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/PYRAMID)
----
-## QUEEN
-&nbsp;Задача про расстановку ферзей на шахматной доске.
-&nbsp;Игрок должен расставить 8 ферзей на шахматной доске так, чтобы они не угрожали друг другу.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/QUEEN)
----
-## QUBIC
-&nbsp;Игра в 3D крестики-нолики.
-&nbsp;Игроки по очереди ставят свои знаки на трехмерном поле, стараясь выстроить линию из трех своих знаков.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/QUBIC)
----
-## REVERSE
-&nbsp;Игра про переворачивание слов.
-&nbsp;Компьютер выводит слово, игрок должен ввести это же слово задом наперед.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/REVERSE)
----
-## ROCK
-&nbsp;Игра "камень, ножницы, бумага".
-&nbsp; Игрок играет против компьютера, выбирая один из трех вариантов.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ROCK)
----
-## ROULET
-&nbsp;Игра в рулетку.
-&nbsp;Игрок делает ставки на номера или цвета, затем компьютер раскручивает рулетку и определяет выигрышный номер.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ROULET)
----
-## SALVO
-&nbsp;Игра, похожая на морской бой.
-&nbsp;Игрок стреляет по полю, пытаясь поразить корабли противника.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/SALVO)
----
-## SLOTS
-&nbsp;Игра в однорукий бандит.
-&nbsp;Игрок вращает барабаны и выигрывает, если выпадает выигрышная комбинация.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/SLOTS)
----
-## SNOOPY
-&nbsp;Игра, где нужно убегать от злобного Снупи.
-&nbsp;Игрок управляет персонажем и должен убегать от преследующего его Снупи.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/SNOOPY)
----
-## SPACE
-&nbsp;Космический шутер.
-&nbsp;Игрок управляет космическим кораблем и стреляет по вражеским кораблям.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/SPACE)
----
-## SPY
-&nbsp;Игра про шпионов.
-&nbsp;Игрок пытается угадать кодовое слово, получая подсказки.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/SPY)
----
-## STAR
-&nbsp;Игра про звезды.
-&nbsp;Игрок должен нарисовать звезду, соединяя точки.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/STAR)
----
-## STOCK
-&nbsp;Игра про биржу.
-&nbsp;Игрок покупает и продает акции, стараясь заработать деньги.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/STOCK)
----
-## SUB
-&nbsp;Игра про подводную лодку.
-&nbsp;Игрок управляет подводной лодкой и торпедирует корабли противника.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/SUB)
----
-## TARGET
-&nbsp;Игра про стрельбу по мишеням.
-&nbsp;Игрок управляет прицелом и стреляет по мишеням.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TARGET)
----
-## TAXMAN
-&nbsp;Игра с числами и их делителями.
-&nbsp;Игрок выбирает число, компьютер забирает все его делители, стараясь набрать больше очков.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TAXMAN)
----
-## TEASER
-&nbsp;Логическая игра.
-&nbsp;Игрок должен решить загадки, предложенные компьютером.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TEASER)
----
-## TIC-TAC-TOE
-&nbsp;Игра в крестики-нолики.
-&nbsp;Игроки по очереди ставят свои знаки на поле 3x3, стараясь выстроить линию из трех своих знаков.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TIC-TAC-TOE)
----
-## TRAP
-&nbsp;Игра, где нужно ловить мячи.
-&nbsp;Игрок управляет ловушкой и должен ловить падающие мячи.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TRAP)
----
-## TREASURE
-&nbsp;Игра про поиск сокровищ.
-&nbsp;Игрок ищет сокровища на карте, следуя подсказкам.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TREASURE)
----
-## TTT
-&nbsp;Игра в крестики-нолики.
-&nbsp;Игроки по очереди ставят свои знаки на поле 3x3, стараясь выстроить линию из трех своих знаков.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TTT)
----
-## TWENTY
-&nbsp;Карточная игра, цель которой набрать 20 очков.
-&nbsp;Игрок берет карты, стараясь набрать 20 очков.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/TWENTY)
----
-## WAR
-&nbsp;Карточная игра в войну.
-&nbsp; Игроки сравнивают карты, побеждает игрок с картой большего ранга.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/WAR)
----
-## WUMPUS
-&nbsp;Игра про охоту на вампуса.
-&nbsp;Игрок перемещается по пещере, стараясь не попасть в яму и не столкнуться с вампусом.
- - [код здесь](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/WUMPUS)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Карточная игра, в которой игрок делает ставку на то, будет ли следующая карта между двумя открытыми картами.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроку показывают две карты, и он должен сделать ставку, будет ли следующая карта между ними.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ACEDU)
+---
+
+AMAZIN
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра-лабиринт, где игрок пытается найти выход из случайно сгенерированного лабиринта.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок перемещается по лабиринту, выбирая направление, пока не найдет выход.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/AMAZIN)
+---
+
+ANIMAL
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра, в которой компьютер загадывает животное, а игрок пытается его угадать, задавая вопросы, на которые можно ответить "да" или "нет".
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Компьютер выбирает животное, игрок задает вопросы, и компьютер отвечает "да" или "нет". Если животное не отгадано, компьютер задает вопросы, чтобы расширить свою базу знаний.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ANIMAL)
+---
+
+AWARI
+========
+Сложность 7
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Африканская игра-манкала на доске, где игроки перемещают семена по лункам, чтобы захватить камни противника.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди перемещают семена по лункам, пытаясь захватить семена противника.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/AWARI)
+---
+
+BAGLES
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Логическая игра, где игрок должен угадать загаданное компьютером число по подсказкам.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок угадывает число, компьютер дает подсказки: "Bagels" - нет цифр в числе, "Fermi" - цифра есть на правильной позиции, "Pico" - цифра есть в числе, но не на правильной позиции.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BAGLES)
+---
+
+BANNER
+========
+Сложность 2
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Программа для создания текстовых баннеров.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Пользователь вводит текст, и программа выводит его в виде баннера из символов.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BANNER)
+---
+
+BASKET
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор баскетбола, где игрок бросает мяч в корзину.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен рассчитать угол и силу броска, чтобы забросить мяч в корзину.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BASKET)
+---
+
+BATNUM
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с числами, где игрок должен угадать число, которое загадал компьютер.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок пытается угадать число, загаданное компьютером, получая подсказки о том, больше или меньше его предположение.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BATNUM)
+---
+
+BATTLE
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор морского боя, где игроки размещают корабли на поле и пытаются потопить корабли противника.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди называют координаты на поле противника, чтобы потопить его корабли.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BATTLE)
+---
+
+BINGO
+========
+Сложность 2
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в Бинго.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки отмечают числа на своих карточках, когда они выпадают, и выигрывает тот, кто первым заполнит линию или всю карточку.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BINGO)
+---
+
+BLKJAK
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в блэкджек, где игрок пытается набрать 21 очко или близкое к нему значение, не превышая его.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок набирает карты, стараясь набрать 21 очко или как можно ближе к нему, не перебрав.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BLKJAK)
+---
+
+BOAT
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра-симулятор управления лодкой, где нужно доплыть до цели, учитывая течение и ветер.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок управляет лодкой, корректируя направление, чтобы добраться до цели, учитывая ветер и течение.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOAT)
+---
+
+BOMBER
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор бомбардировки, где игрок должен точно сбросить бомбы на цель.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок управляет бомбардировщиком и должен сбросить бомбы на цель, учитывая скорость и траекторию.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOMBER)
+---
+
+BOUNCE
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Анимация прыгающего шара.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Простая программа, которая рисует анимированный прыгающий шар.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOUNCE)
+---
+
+BOWL
+========
+Сложность 5
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор боулинга, где игрок бросает шар и сбивает кегли.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен выбрать направление и силу броска, чтобы сбить как можно больше кеглей.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOWL)
+---
+
+BOXING
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор бокса, где игрок управляет боксером и сражается с противником.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок управляет боксером, наносит удары и защищается, чтобы победить противника.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BOXING)
+---
+
+BULLEYE
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в дартс, где игрок бросает дротики в мишень.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен бросить дротик в мишень, чтобы набрать очки, стараясь попасть в центр.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BULLEYE)
+---
+
+BULL
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор корриды, где игрок управляет тореадором и должен уворачиваться от быка.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок управляет тореадором, маневрируя, чтобы увернуться от быка, и старается продержаться как можно дольше.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BULL)
+---
+
+BUZZWD
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра со словами, где компьютер генерирует жаргоны, а игрок пытается отгадать их значение.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Компьютер генерирует набор слов, и игрок пытается отгадать их значение.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/BUZZWD)
+---
+
+CALNDR
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Программа для вывода календаря на заданный год.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Программа выводит календарь для заданного года в текстовом формате.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CALNDR)
+---
+
+CHANGE
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с монетами, где игрок должен дать сдачу определенной суммы, используя минимальное количество монет.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен посчитать и выдать сдачу минимальным количеством монет.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHANGE)
+---
+
+CHECKR
+========
+Сложность 7
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в шашки.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди перемещают шашки, чтобы захватить шашки противника и достичь противоположного края доски.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHECKR)
+---
+
+CHEMST
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра-викторина по химии, где игроки отвечают на вопросы о химических элементах и соединениях.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок отвечает на вопросы по химии, чтобы проверить свои знания.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHEMST)
+---
+
+CHIEF
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Логическая игра, где игрок должен правильно расставить солдат в звании по росту.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен расположить фигуры по росту, используя ограниченные ходы.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHIEF)
+---
+
+CHOMP
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с поеданием, где игроки по очереди "откусывают" части прямоугольника, и кто откусит последнюю часть, проигрывает.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди откусывают части прямоугольника, пытаясь не откусить последнюю часть.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CHOMP)
+---
+
+CIVILW
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор гражданской войны, где игрок управляет войсками и сражается с противником.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок управляет войсками, перемещает их по полю и участвует в битвах.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CIVILW)
+---
+
+CRAPS
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в крэпс, где игроки бросают кости и делают ставки на результат броска.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки делают ставки на результат броска костей, стараясь угадать комбинацию.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CRAPS)
+---
+
+CUBE
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с кубами, где игрок должен раскрасить грани куба в правильной последовательности.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен расположить грани куба так, чтобы цвета на соседних гранях соответствовали правилам.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/CUBE)
+---
+
+DIAMND
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с алмазами, где игрок должен найти алмазы на карте.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок исследует карту, пытаясь найти алмазы.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DIAMND)
+---
+
+DICE
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в кости, где игрок должен угадать сумму выпавших очков.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок угадывает сумму очков, которые выпадут на костях.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DICE)
+---
+
+DIGITS
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с цифрами, где игрок должен угадать число, загаданное компьютером.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен угадать число, загаданное компьютером, получая подсказки о том, больше или меньше его предположение.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/DIGITS)
+---
+
+EVEN
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с четными числами, где игрок должен выбрать четное число.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок выбирает четное число из предложенных, чтобы выиграть.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/EVEN)
+---
+
+FIPFOP
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с переворотом, где игрок должен перевернуть фишки так, чтобы они стали одного цвета.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок переворачивает фишки, чтобы сделать их все одного цвета.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FIPFOP)
+---
+
+FOOTBL
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор футбола, где игрок управляет командой и пытается забить голы.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок выбирает стратегию и управляет командой, чтобы забить голы и победить противника.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FOOTBL)
+---
+
+FURS
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра о торговле мехом, где игрок должен покупать и продавать меха, чтобы заработать деньги.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен покупать и продавать меха, пытаясь заработать как можно больше денег.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/FURS)
+---
+
+GOLF
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор гольфа, где игрок должен забить мяч в лунку.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен рассчитать силу и направление удара, чтобы забить мяч в лунку.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GOLF)
+---
+
+GOMOKO
+========
+Сложность 7
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в гомоку, где игроки по очереди ставят свои знаки на доску, чтобы выстроить пять в ряд.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди ставят свои знаки, пытаясь первыми выстроить пять в ряд.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GOMOKO)
+---
+
+GUESS
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в угадывание чисел, где игрок пытается угадать загаданное число.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен угадать число, загаданное компьютером, получая подсказки о том, больше или меньше его предположение.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GUESS)
+---
+
+GUNNER
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор стрельбы из пушки, где игрок должен точно стрелять по целям.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен рассчитать угол и силу выстрела, чтобы поразить цель.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/GUNNER)
+---
+
+HANG
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра "Виселица", где игрок должен угадать загаданное слово, угадывая буквы.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен угадать слово, угадывая буквы, прежде чем будет дорисована виселица.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HANG)
+---
+
+HELLO
+========
+Сложность 1
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Программа для приветствия.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Простая программа, которая выводит на экран "HELLO".
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HELLO)
+---
+
+HEX
+========
+Сложность 7
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в гексапау, где игроки по очереди перемещают фишки, чтобы добраться до противоположной стороны доски.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди перемещают свои фишки, чтобы добраться до противоположной стороны доски.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HEX)
+---
+
+HI LO
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в угадывание чисел, где игрок должен угадать число, получая подсказки "выше" или "ниже".
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок угадывает число, получая подсказки от компьютера, выше или ниже загаданное число.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HI LO)
+---
+
+HMRABI
+========
+Сложность 7
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра-симулятор правления Хаммурапи, где игрок управляет городом и должен принимать решения, чтобы город процветал.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок принимает решения по управлению городом, стараясь поддерживать население и экономику.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HMRABI)
+---
+
+HOCKEY
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор хоккея, где игрок управляет командой и пытается забить шайбу.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок управляет командой, перемещает игроков и пытается забить шайбу.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HOCKEY)
+---
+
+HORSES
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Симулятор скачек, где игрок делает ставки на лошадей.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок делает ставки на лошадей, пытаясь угадать победителя забега.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HORSES)
+---
+
+HURKLE
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с поиском, где игрок должен найти спрятанное существо на карте.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок исследует карту, получая подсказки о том, где находится спрятанное существо.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/HURKLE)
+---
+
+KINEMA
+========
+Сложность 2
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с кино, где компьютер выводит кадры из фильма, а игрок пытается угадать название.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Компьютер выводит кадры, а игрок пытается угадать название фильма.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/KINEMA)
+---
+
+KING
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра, где игрок играет роль короля и должен управлять королевством.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок принимает решения в качестве короля, управляя финансами, военными делами и другими сферами.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/KING)
+---
+
+LETTER
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с буквами, где игрок должен составить слово из предложенных букв.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок составляет слова из предложенных букв.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/LETTER)
+---
+
+LIFE
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра "Жизнь", симуляция клеточного автомата, где клетки рождаются, умирают и размножаются.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Клетки на сетке рождаются, умирают и размножаются по правилам игры, создавая различные шаблоны.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/LIFE)
+---
+
+LIT QZ
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра-викторина по литературе, где игроки отвечают на вопросы о писателях и книгах.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок отвечает на вопросы по литературе, чтобы проверить свои знания.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/LIT QZ)
+---
+
+MATHDI
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с математическими кубиками, где игрок должен решить примеры, используя числа на кубиках.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок решает математические примеры, используя числа, выпавшие на кубиках.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/MATHDI)
+---
+
+MUGWMP
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с поиском, где игрок должен найти спрятанное существо на карте.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок исследует карту, получая подсказки о местоположении спрятанного существа.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/MUGWMP)
+---
+
+NIKOMA
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с числами, где игрок должен составить последовательность, используя правило Нихомахуса.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен составить числовую последовательность, используя правило Нихомахуса.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/NIKOMA)
+---
+
+NIM
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра Ним, где игроки по очереди берут предметы из кучи, и проигрывает тот, кто возьмет последний.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди берут предметы из кучи, стараясь не взять последний.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/NIM)
+---
+
+NUMBER
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с числами, где игрок должен угадать число, загаданное компьютером.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок угадывает число, загаданное компьютером.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/NUMBER)
+---
+
+ICHECK
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с шашками, где игрок должен захватить все шашки противника.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игроки по очереди перемещают свои шашки, чтобы захватить шашки противника.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ICHECK)
+---
+
+ORBIT
+========
+Сложность 5
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с орбитой, где игрок должен управлять кораблем, чтобы выйти на орбиту.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен рассчитать тягу, чтобы вывести корабль на орбиту.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ORBIT)
+---
+
+PIZZA
+========
+Сложность 4
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с пиццей, где игрок должен распределить ингредиенты по пицце.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен выбрать ингредиенты и правильно распределить их по пицце.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/PIZZA)
+---
+
+POETRY
+========
+Сложность 3
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с поэзией, где компьютер генерирует стихи.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Компьютер генерирует стихи из набора слов.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/POETRY)
+---
+
+POKER
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра в покер, где игрок должен собрать выигрышную комбинацию карт.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок собирает комбинации карт, стараясь выиграть у компьютера.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/POKER)
+---
+
+QUEEN
+========
+Сложность 6
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игра с ферзем, где игрок должен расположить ферзей на доске так, чтобы они не атаковали друг друга.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Игрок должен расположить ферзей на шахматной доске так, чтобы они не находились под атакой друг друга.
+* [Перейти к коду](https://github.com/hypo69/hypo/blob/master/
