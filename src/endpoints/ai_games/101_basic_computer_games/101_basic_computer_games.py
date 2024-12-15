@@ -75,7 +75,7 @@ class Games101Basic():
 	def save_code(self, game:str, code:str):
 		""""""
 		...
-		output_file:Path = self.base_path / self.lang / 'py' / f'{game.lower().replace(' ','_')}.py'
+		output_file:Path = self.base_path / self.lang / game / f'{game.lower().replace(' ','_')}.py'
 		output_file.parent.mkdir(parents=True, exist_ok=True)
 		output_file.write_text(code,encoding='UTF-8')
 		print('saved')
