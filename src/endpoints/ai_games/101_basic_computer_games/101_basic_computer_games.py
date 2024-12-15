@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/ai_games/101_basic_games.py
+## \file hypotez/src/endpoints/ai_games/101_basic_games/101_basic_games.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -34,8 +34,9 @@ class Games101Basic():
 	def __init__(self):
 		""""""
 		config  = j_loads_ns(self.base_path / '101_basic_computer_games.json')
-		system_instruction = Path(self.base_path / 'instructions' / 'raw.md').read_text(encoding='UTF-8')
-		self.command_instruction = Path(self.base_path / 'instructions' / 'write_code_ru.md').read_text(encoding='UTF-8')
+		#system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'raw.md').read_text(encoding='UTF-8')
+		system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'fts.txt').read_text(encoding='UTF-8')
+		self.command_instruction = Path(self.base_path / 'assets' / 'instructions' / 'write_code_ru.md').read_text(encoding='UTF-8')
 		self.bob = GoogleGenerativeAI(
                 model_name=config.model_name,
                 api_key=gs.credentials.gemini.onela,
@@ -57,9 +58,16 @@ class Games101Basic():
 		""""""
 		for game in self.games_list:
 			q = self.command_instruction.replace('<GAME>',f'<{game}>')
+			print(game)
 			response = await self.bob.ask(q)
-			if response.startswith(('```', '```python')) and response.endswith(('```','```\n')):
-				response = response.strip('`').replace('python', '', 1).strip()
+			if response.startswith(('```', '```python')) and response.endswith(('```', '```\n')):
+				# Удаление начальных ```
+				response = response.lstrip('`')
+				# Удаление начальных 'python' после кавычек
+				if response.startswith('python'):
+					response = response[len('python'):].lstrip()
+				# Удаление закрывающих ```
+				response = response.rstrip('`').rstrip()
 			self.save_code(game , response)
 			time.sleep(20)
 
@@ -67,8 +75,9 @@ class Games101Basic():
 		""""""
 		...
 		output_file:Path = self.base_path / 'py' / f'{game.lower().replace(' ','_')}.py'
-
+		output_file.parent.mkdir(parents=True, exist_ok=True)
 		output_file.write_text(code,encoding='UTF-8')
+		print('saved')
 
 
 

@@ -1,225 +1,106 @@
+
 """
-BAGELS:
+ADDITION:
 =================
-Сложность: 4
+Сложность: 2
 -----------------
-Игра "Баранки" - это логическая игра-угадайка, в которой игрок должен угадать секретное трехзначное число, сгенерированное компьютером. Компьютер сообщает игроку подсказки после каждой попытки угадать, используя слова "Pico" (одна цифра правильная, но не на своем месте), "Fermi" (одна цифра правильная и на своем месте) и "Bagels" (ни одна из цифр не правильная).
+Игра "Сложение" представляет собой простую обучающую игру, в которой игроку предлагается решить несколько примеров на сложение. 
+Компьютер генерирует случайные числа и предлагает их сложить, игрок вводит свой ответ. 
+Если ответ правильный, игрок получает один балл. Игра заканчивается после того как игрок отвечает на заданное количество примеров.
 
-Правила игры: 
-1. Компьютер генерирует случайное трехзначное число, где все цифры уникальны.
-2. Игрок вводит свое предположение - трехзначное число.
-3. Компьютер сравнивает введенное число с загаданным и дает подсказку:
-   - "Fermi" - если цифра угадана и находится на своей позиции.
-   - "Pico" - если цифра угадана, но находится на другой позиции.
-   - "Bagels" - если ни одна цифра не угадана.
-4. Игрок продолжает делать попытки, пока не угадает число или не закончится количество попыток.
-
+Правила игры:
+1.  Компьютер генерирует два случайных целых числа в диапазоне от 1 до 10.
+2.  Игроку предлагается сложить эти два числа.
+3.  Игрок вводит свой ответ.
+4.  Если ответ игрока равен сумме сгенерированных чисел, игрок получает 1 балл.
+5.  Игра продолжается до тех пор, пока игрок не ответит на заданное количество примеров.
+6.  В конце игры выводится общее количество набранных баллов.
 -----------------
 Алгоритм:
-1. Инициализировать переменные:
-   - `max_guesses` = 10 (максимальное количество попыток)
-   - `secret_number` = случайное 3-значное число с уникальными цифрами
-   - `number_of_guesses` = 0 (счетчик попыток)
-2. Запустить цикл пока `number_of_guesses` меньше `max_guesses`:
-    - увеличить счетчик `number_of_guesses` на 1
-    - запросить ввод `guess_number` у игрока
-    - Если `guess_number` == `secret_number`:
-        - Вывести "You got it!" и выйти из цикла
-    - Иначе:
-       - Инициализировать пустую строку `feedback`
-       - Пройти по каждой цифре в `guess_number` :
-         - Если цифра на этой позиции совпадает с `secret_number`:
-           - Добавить "Fermi" к `feedback`
-         - Иначе, если цифра есть в `secret_number` но не на своей позиции:
-           - Добавить "Pico" к `feedback`
-       - Если `feedback` пуст:
-          - Добавить "Bagels" к `feedback`
-       - Вывести `feedback`
-3. Если цикл закончился, а `secret_number` не угадан:
-    - Вывести сообщение о проигрыше
-    - Вывести `secret_number`
+1.  Установить начальный счет в 0.
+2.  Установить количество примеров равное 5.
+3.  Запустить цикл для решения заданного количества примеров:
+    3.1 Сгенерировать два случайных числа в диапазоне от 1 до 10.
+    3.2 Вывести пример на сложение для пользователя.
+    3.3 Запросить у пользователя ввод ответа.
+    3.4 Если ответ пользователя равен сумме сгенерированных чисел, то увеличить счет на 1.
+4.  После завершения цикла, вывести финальный счет пользователя.
+5.  Конец игры.
 -----------------
-Блок-схема: 
+Блок-схема:
 ```mermaid
-  graph TD
-      Start --> Initialize;
-      Initialize --> LoopCondition;
-      LoopCondition -- Yes --> IncrementGuess;
-      IncrementGuess --> InputGuess;
-      InputGuess --> CheckWin;
-      CheckWin -- Yes --> Win;
-      CheckWin -- No --> StartFeedback;
-      StartFeedback --> InitializeFeedback;
-      InitializeFeedback --> LoopDigits;
-      LoopDigits -- Yes --> CheckFermi;
-      CheckFermi -- Yes --> AddFermi;
-      AddFermi --> NextDigit;
-      CheckFermi -- No --> CheckPico;
-      CheckPico -- Yes --> AddPico;
-      AddPico --> NextDigit;
-      CheckPico -- No --> NextDigit;
-      NextDigit --> LoopDigits;
-      LoopDigits -- No --> CheckFeedback;
-      CheckFeedback -- Yes --> OutputBagels;
-      CheckFeedback -- No --> OutputFeedback;
-      OutputFeedback --> LoopCondition;
-      OutputBagels --> LoopCondition;
-      LoopCondition -- No --> GameOver;
-      Win --> End;
-      GameOver --> OutputSecretNumber;
-      OutputSecretNumber --> End;
-      
-      subgraph Initialize
-          Initialize[max_guesses = 10, secret_number = Random, number_of_guesses = 0]
-      end
-      subgraph InputGuess
-          InputGuess[input guess_number]
-      end
-     subgraph StartFeedback
-          StartFeedback[feedback=""]
-      end
-     subgraph InitializeFeedback
-      InitializeFeedback[Initialize feedback]
-      end
-    subgraph LoopDigits
-      LoopDigits[ for each digit in guess_number]
-    end
-    subgraph CheckFermi
-      CheckFermi{Is digit correct and in correct position?}
-    end
-     subgraph CheckPico
-        CheckPico{Is digit correct but in wrong position?}
-    end
-    subgraph AddFermi
-        AddFermi[feedback += "Fermi"]
-    end
-    subgraph AddPico
-        AddPico[feedback += "Pico"]
-    end
-    subgraph NextDigit
-         NextDigit[next digit]
-    end
-    subgraph CheckFeedback
-      CheckFeedback{Is feedback empty?}
-    end
-    subgraph OutputBagels
-      OutputBagels[feedback = "Bagels"]
-    end
-    subgraph OutputFeedback
-         OutputFeedback[Output feedback]
-    end
-   subgraph LoopCondition
-      LoopCondition{number_of_guesses < max_guesses?}
-    end
-    subgraph IncrementGuess
-        IncrementGuess[number_of_guesses += 1]
-    end
-     subgraph CheckWin
-         CheckWin{guess_number == secret_number?}
-    end
-    subgraph Win
-         Win[Output "You got it!"]
-    end
-    subgraph GameOver
-         GameOver[Output "You lost!"]
-     end
-     subgraph OutputSecretNumber
-         OutputSecretNumber[Output secret_number]
-    end
-    subgraph End
-         End[End]
-    end
+flowchart TD
+    Start["Начало"] --> InitializeVariables["<p align='left'>Инициализация переменных:<br><code><b>score = 0</b></code><br><code><b>numberOfProblems = 5</b></code></p>"]
+    InitializeVariables --> LoopStart{"Начало цикла: <code><b>numberOfProblems</b></code> раз"}
+    LoopStart -- Да --> GenerateNumbers["<p align='left'>Генерация чисел:<br><code><b>number1 = random(1, 10)</b></code><br><code><b>number2 = random(1, 10)</b></code></p>"]
+    GenerateNumbers --> OutputProblem["Вывод: <b>Сколько будет <code>number1 + number2</code> ?</b>"]
+    OutputProblem --> InputAnswer["Ввод ответа пользователем: <code><b>userAnswer</b></code>"]
+    InputAnswer --> CheckAnswer{"Проверка: <code><b>userAnswer == number1 + number2 ?</b></code>"}
+    CheckAnswer -- Да --> IncreaseScore["<code><b>score = score + 1</b></code>"]
+    IncreaseScore --> LoopStart
+    CheckAnswer -- Нет --> LoopStart
+    LoopStart -- Нет --> OutputScore["Вывод: <b>Твой счет: <code>score</code></b>"]
+    OutputScore --> End["Конец"]
 ```
+
+Legenda:
+    Start - Начало программы.
+    InitializeVariables - Инициализация переменных: score (счет) устанавливается в 0, numberOfProblems (количество примеров) устанавливается в 5.
+    LoopStart - Начало цикла, который повторяется numberOfProblems раз (в данном случае 5 раз).
+    GenerateNumbers - Генерация двух случайных чисел number1 и number2 в диапазоне от 1 до 10.
+    OutputProblem - Вывод пользователю примера на сложение, сформированного из number1 и number2.
+    InputAnswer - Запрос у пользователя ввода ответа и сохранение его в переменной userAnswer.
+    CheckAnswer - Проверка, равен ли ответ пользователя userAnswer сумме чисел number1 и number2.
+    IncreaseScore - Увеличение счета score на 1, если ответ пользователя правильный.
+    OutputScore - Вывод финального счета score после завершения всех примеров.
+    End - Конец программы.
 """
 import random
 
-def generate_secret_number():
-    """Генерирует случайное трехзначное число с уникальными цифрами."""
-    digits = list(range(10))  # Создаем список цифр от 0 до 9
-    random.shuffle(digits)  # Перемешиваем цифры
-    while digits[0] == 0:
-      random.shuffle(digits) # убеждаемся, что первая цифра не 0
-    return str(digits[0]) + str(digits[1]) + str(digits[2])  # Возвращаем число в виде строки
+# Инициализация счета и количества примеров
+score = 0
+numberOfProblems = 5
 
+# Основной игровой цикл
+for _ in range(numberOfProblems):
+    # Генерация случайных чисел от 1 до 10
+    number1 = random.randint(1, 10)
+    number2 = random.randint(1, 10)
 
-def get_feedback(guess_number, secret_number):
-    """
-    Сравнивает guess_number с secret_number и возвращает подсказку
-    (Fermi, Pico, Bagels).
-    """
-    feedback = ""  # Инициализируем пустую строку для подсказки
-    # Проходим по каждой цифре в guess_number
-    for i in range(len(guess_number)):
-        if guess_number[i] == secret_number[i]:
-            feedback += "Fermi " # Если цифра и позиция совпадают, добавляем "Fermi"
-        elif guess_number[i] in secret_number:
-            feedback += "Pico "  # Если цифра есть в числе, но не на своем месте, добавляем "Pico"
-    if not feedback:
-        feedback = "Bagels" # Если ни одна цифра не угадана, добавляем "Bagels"
-    return feedback.strip()  # Возвращаем строку с подсказкой, убирая пробелы в конце
+    # Вывод примера на сложение
+    try:
+         userAnswer = int(input(f"Сколько будет {number1} + {number2} ? "))
+    except ValueError:
+        print("Пожалуйста, введите целое число.")
+        continue
 
+    # Проверка ответа пользователя
+    if userAnswer == number1 + number2:
+        score += 1 # Увеличение счета, если ответ правильный
+    else:
+        print(f"Неправильно, правильный ответ {number1 + number2}")
 
-def play_bagels():
-    """Запускает игру 'Баранки'."""
-    max_guesses = 10  # Максимальное количество попыток
-    secret_number = generate_secret_number()  # Генерируем секретное число
-    number_of_guesses = 0  # Счетчик попыток
-    print("Я загадал трехзначное число с уникальными цифрами.")
-    print("Попробуй угадать его. У тебя есть 10 попыток.")
-    
-    while number_of_guesses < max_guesses:  # Цикл продолжается, пока есть попытки
-        number_of_guesses += 1  # Увеличиваем счетчик попыток
-        guess_number = input(f"Попытка #{number_of_guesses}: ") # Запрашиваем ввод числа от игрока
-         
-        if guess_number == secret_number: # Проверяем, угадал ли игрок число
-            print("Вы угадали!")  # Если угадал, выводим сообщение и выходим из цикла
-            return
-        
-        feedback = get_feedback(guess_number, secret_number) # Получаем подсказку от компьютера
-        print(feedback) # Выводим подсказку игроку
-
-    print(f"Вы проиграли. Секретное число было {secret_number}") # Если попытки закончились, сообщаем о проигрыше и выводим загаданное число
-
-
-if __name__ == "__main__":
-    play_bagels()
+# Вывод итогового счета
+print(f"Твой счет: {score}")
 """
 Пояснения:
-1. **`generate_secret_number()`**:
-   - Эта функция создает случайное трехзначное число, где все цифры уникальны.
-   - Сначала создается список цифр от 0 до 9.
-   - Затем список перемешивается, чтобы получить случайную последовательность.
-   - Далее происходит проверка, что первая цифра не равна нулю
-   - После этого первые три цифры из перемешанного списка преобразуются в строку и возвращаются.
-
-2.  **`get_feedback(guess_number, secret_number)`**:
-   - Эта функция сравнивает введенное пользователем число (`guess_number`) с секретным числом (`secret_number`) и формирует подсказку.
-   - Инициализируется пустая строка `feedback` для хранения подсказок.
-   - Цикл `for i in range(len(guess_number))` перебирает каждую цифру введенного числа.
-   - Если цифра на текущей позиции в `guess_number` совпадает с цифрой на той же позиции в `secret_number`, то в `feedback` добавляется "Fermi ".
-   - Если цифра из `guess_number` присутствует в `secret_number`, но не на той же позиции, то в `feedback` добавляется "Pico ".
-   - Если после проверки всех цифр `feedback` остается пустой, это означает, что ни одна цифра не угадана, и в `feedback` записывается "Bagels".
-   - В конце функция возвращает строку с подсказкой, убрав лишние пробелы с помощью `.strip()`.
-
-3.  **`play_bagels()`**:
-   - Эта функция запускает игру "Баранки".
-   - Определяются начальные значения:
-      - `max_guesses` равно 10 (максимальное количество попыток).
-      - `secret_number` генерируется с помощью `generate_secret_number()`.
-      - `number_of_guesses` устанавливается в 0 для отслеживания количества сделанных попыток.
-   - Далее выводится приветственное сообщение, объясняющее правила игры.
-   - Цикл `while number_of_guesses < max_guesses:` позволяет игроку делать попытки, пока не будет исчерпано их максимальное количество.
-   - В начале каждой итерации цикла количество попыток (`number_of_guesses`) увеличивается на 1.
-   - Затем у пользователя запрашивается ввод трехзначного числа (`guess_number`).
-   - Если введенное число равно `secret_number`, выводится сообщение об успехе, и функция завершается.
-   - Если же числа не совпадают, функция вызывает `get_feedback` для получения подсказки.
-   - Полученная подсказка выводится на экран, и цикл продолжается.
-   - Если цикл завершается (все попытки исчерпаны), выводится сообщение о проигрыше и раскрывается загаданное число.
-
-4.  **`if __name__ == "__main__":`**
-   - Это стандартная конструкция в Python, которая гарантирует, что функция `play_bagels()` будет вызвана только тогда, когда файл запускается напрямую, а не когда он импортируется как модуль.
-
-licence:MIT(../licence)
+1.  **Импорт модуля `random`**:
+    -   `import random`: Импортирует модуль `random`, который используется для генерации случайных чисел.
+2.  **Инициализация переменных**:
+    -   `score = 0`: Инициализирует переменную `score` для хранения текущего счета игрока, начальное значение равно 0.
+    -   `numberOfProblems = 5`: Инициализирует переменную `numberOfProblems` для хранения количества примеров на сложение, которые нужно решить игроку.
+3.  **Основной игровой цикл**:
+    -   `for _ in range(numberOfProblems):`: Цикл `for` повторяется `numberOfProblems` раз, выполняя код внутри него для каждого примера.
+    -   `number1 = random.randint(1, 10)`: Генерирует случайное целое число в диапазоне от 1 до 10 и сохраняет его в `number1`.
+    -   `number2 = random.randint(1, 10)`: Генерирует случайное целое число в диапазоне от 1 до 10 и сохраняет его в `number2`.
+    -   `try...except ValueError`: Блок try-except обрабатывает возможные ошибки ввода. Если пользователь введет не целое число, то будет выведено сообщение об ошибке.
+    -   `userAnswer = int(input(f"Сколько будет {number1} + {number2} ? "))`: Выводит пример на сложение (`number1 + number2`) и запрашивает у пользователя ввод ответа. Введенное значение преобразуется в целое число и сохраняется в `userAnswer`.
+    -   **Проверка ответа**:
+        -   `if userAnswer == number1 + number2:`: Проверяет, равен ли ответ пользователя (`userAnswer`) сумме сгенерированных чисел (`number1 + number2`).
+        -   `score += 1`: Если ответ правильный, счет увеличивается на 1.
+        -   `else:`:  Если ответ не правильный, то выводиться правильный ответ
+        -   `print(f"Неправильно, правильный ответ {number1 + number2}")`: Выводит сообщение о неправильном ответе и правильный ответ.
+4.  **Вывод итогового счета**:
+    -   `print(f"Твой счет: {score}")`: После завершения цикла, выводит итоговый счет игрока.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
 ```

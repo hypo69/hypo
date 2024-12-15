@@ -1,118 +1,167 @@
 """
 DIAMND:
 =================
-Сложность: 4
+Сложность: 5
 -----------------
-Игра "Бриллиант" представляет собой простую текстовую игру, в которой игрок пытается угадать загаданное компьютером число, представляющее размер "бриллианта". 
-Размер бриллианта варьируется от 1 до 10.  
-После каждой попытки компьютер сообщает, является ли введенное число больше или меньше загаданного. Игрок продолжает угадывать, пока не назовет правильное число.
+Игра "Бриллиант" - это игра, в которой игрок управляет движением точки по экрану, оставляя за собой след. Цель игры — нарисовать бриллиант. Игрок может изменять направление движения точки, вводя команды (1-влево, 2-вниз, 3-вправо, 4-вверх). Игра заканчивается, когда бриллиант сформирован (то есть 4 стороны бриллианта нарисованы).
 
 Правила игры:
-1. Компьютер случайным образом выбирает целое число от 1 до 10, представляющее размер бриллианта.
-2. Игрок вводит число, которое, по его мнению, является размером бриллианта.
-3. Компьютер сравнивает введенное число с загаданным и сообщает, больше ли оно, меньше или равно загаданному числу.
-4. Если введенное число не равно загаданному, игрок повторяет шаг 2.
-5. Если введенное число равно загаданному, игра заканчивается, и игрок побеждает.
+1. Игрок начинает с позиции в центре экрана.
+2. Игрок вводит число от 1 до 4, определяющее направление движения:
+    - 1: Влево
+    - 2: Вниз
+    - 3: Вправо
+    - 4: Вверх
+3. Точка движется в выбранном направлении, оставляя след.
+4. Игра продолжается до тех пор, пока игрок не нарисует все 4 стороны бриллианта. (Количество ходов не ограничено.)
+5. В конце игры выводится сообщение о завершении рисования бриллианта.
 -----------------
 Алгоритм:
-1. Присвоить переменной `diamondSize` случайное целое число от 1 до 10.
-2. Вывести на экран сообщение "I AM THINKING OF A DIAMOND".
-3. Вывести на экран сообщение "OF WHAT SIZE (1 TO 10)".
-4. Ввести с клавиатуры число в переменную `playerGuess`.
-5. Если `playerGuess` < `diamondSize`, то вывести на экран сообщение "TOO SMALL, TRY AGAIN". и перейти к шагу 4.
-6. Если `playerGuess` > `diamondSize`, то вывести на экран сообщение "TOO BIG, TRY AGAIN". и перейти к шагу 4.
-7. Если `playerGuess` = `diamondSize`, то вывести на экран сообщение "YOU GOT IT!".
-8. Конец игры.
+1.  Инициализировать позицию точки в центре экрана и счетчик сторон бриллианта (diamondSides) в 0.
+2.  Начать цикл "пока diamondSides < 4":
+    2.1 Вывести текущее состояние экрана (позицию точки).
+    2.2 Запросить у игрока ввод направления движения (1-4).
+    2.3 В зависимости от введенного направления, обновить позицию точки.
+    2.4 Проверить, образует ли след точки сторону бриллианта.
+      2.4.1 Если след образует сторону бриллианта, увеличить счетчик diamondSides.
+    2.5 Если diamondSides равен 4, то перейти к шагу 3.
+3.  Вывести сообщение о завершении рисования бриллианта.
+4.  Конец игры.
 -----------------
 Блок-схема:
 ```mermaid
-graph TD
-    Start(Начало) --> GenerateDiamondSize(Сгенерировать diamondSize случайное число от 1 до 10);
-    GenerateDiamondSize --> OutputPrompt1(Вывести "I AM THINKING OF A DIAMOND");
-    OutputPrompt1 --> OutputPrompt2(Вывести "OF WHAT SIZE (1 TO 10)");
-    OutputPrompt2 --> InputPlayerGuess(Ввод playerGuess);
-    InputPlayerGuess --> CompareGuess(Сравнить playerGuess и diamondSize);
-    CompareGuess -- playerGuess < diamondSize --> OutputTooSmall(Вывести "TOO SMALL, TRY AGAIN");
-    OutputTooSmall --> InputPlayerGuess;
-    CompareGuess -- playerGuess > diamondSize --> OutputTooBig(Вывести "TOO BIG, TRY AGAIN");
-    OutputTooBig --> InputPlayerGuess;
-    CompareGuess -- playerGuess = diamondSize --> OutputWin(Вывести "YOU GOT IT!");
-    OutputWin --> End(Конец);
+flowchart TD
+    Start["Начало"] --> InitializeVariables["<p align='left'>Инициализация переменных:
+    <code><b>
+    xPosition = 20
+    yPosition = 20
+    diamondSides = 0
+    </b></code></p>"]
+    InitializeVariables --> LoopStart{"Начало цикла: пока <code><b>diamondSides < 4</b></code>"}
+    LoopStart -- Да --> DisplayScreen["Отображение экрана: <code><b>точка в {xPosition}, {yPosition}</b></code>"]
+    DisplayScreen --> InputDirection["Ввод направления движения (1-4): <code><b>direction</b></code>"]
+    InputDirection --> UpdatePosition{"Обновление позиции: <code><b>xPosition, yPosition</b></code> в зависимости от <code><b>direction</b></code>"}
+    UpdatePosition --> CheckDiamondSide{"Проверка: след точки образует сторону бриллианта?"}
+    CheckDiamondSide -- Да --> IncreaseSides["<code><b>diamondSides = diamondSides + 1</b></code>"]
+    IncreaseSides --> CheckSides{"Проверка: <code><b>diamondSides == 4</b></code>?"}
+    CheckDiamondSide -- Нет --> CheckSides
+    CheckSides -- Да --> OutputWin["Вывод сообщения: <b>DIAMOND COMPLETE!</b>"]
+    OutputWin --> End["Конец"]
+    CheckSides -- Нет --> LoopStart
+    LoopStart -- Нет --> End
+
 ```
+Legenda:
+    Start - Начало программы.
+    InitializeVariables - Инициализация переменных: xPosition и yPosition (позиция точки) устанавливаются в 20, а diamondSides (количество нарисованных сторон) устанавливается в 0.
+    LoopStart - Начало цикла, который продолжается, пока не будет нарисовано 4 стороны бриллианта (diamondSides < 4).
+    DisplayScreen - Отображение текущей позиции точки на экране.
+    InputDirection - Запрос у пользователя ввода направления движения (1-4).
+    UpdatePosition - Обновление позиции точки в зависимости от введенного направления.
+    CheckDiamondSide - Проверка, образует ли след точки сторону бриллианта.
+    IncreaseSides - Увеличение счетчика количества нарисованных сторон бриллианта на 1.
+    CheckSides - Проверка, равно ли количество нарисованных сторон 4.
+    OutputWin - Вывод сообщения о завершении рисования бриллианта.
+    End - Конец программы.
 """
-import random
+import os
 
-def play_diamond_game():
-    """
-    Функция, реализующая игру "Бриллиант".
-    """
+# Инициализация позиции точки и счетчика сторон бриллианта
+xPosition = 20
+yPosition = 20
+diamondSides = 0
+previousPositions = []
 
-    # 1. Присваиваем переменной diamondSize случайное целое число от 1 до 10.
-    diamond_size = random.randint(1, 10)
+# Функция для очистки экрана (кроссплатформенная)
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-    # 2. Выводим на экран сообщение "I AM THINKING OF A DIAMOND".
-    print("I AM THINKING OF A DIAMOND")
 
-    # 3. Выводим на экран сообщение "OF WHAT SIZE (1 TO 10)".
-    print("OF WHAT SIZE (1 TO 10)")
+# Функция для отображения экрана
+def display_screen(x, y, positions):
+    clear_screen()
+    # Создаем "экран" - список строк
+    screen = [[' ' for _ in range(40)] for _ in range(40)]
+    for pos_x, pos_y in positions:
+        screen[pos_y][pos_x] = '#'
+    # Устанавливаем текущую позицию точки
+    screen[y][x] = '*'
 
-    while True:
-       # 4. Вводим с клавиатуры число в переменную playerGuess.
-        try:
-            player_guess = int(input("Ваш вариант: "))
-        except ValueError:
-            print("Пожалуйста, введите целое число.")
-            continue
+    for row in screen:
+        print(''.join(row))
+    print(f"Текущая позиция: x={x}, y={y}, стороны: {diamondSides}")
 
-        # 5. Если playerGuess < diamondSize, выводим "TOO SMALL, TRY AGAIN"
-        if player_guess < diamond_size:
-            print("TOO SMALL, TRY AGAIN")
-            continue
+# Основной игровой цикл
+while diamondSides < 4:
+    # Выводим экран
+    display_screen(xPosition, yPosition, previousPositions)
 
-        # 6. Если playerGuess > diamondSize, выводим "TOO BIG, TRY AGAIN"
-        elif player_guess > diamond_size:
-            print("TOO BIG, TRY AGAIN")
-            continue
-        
-        # 7. Если playerGuess = diamondSize, выводим "YOU GOT IT!"
-        else:
-            print("YOU GOT IT!")
-            break  # 8. Конец игры
+    # Запрашиваем ввод направления движения
+    try:
+        direction = int(input("Введите направление (1-влево, 2-вниз, 3-вправо, 4-вверх): "))
+    except ValueError:
+        print("Пожалуйста, введите число от 1 до 4")
+        continue
 
-# Запускаем игру
-if __name__ == "__main__":
-    play_diamond_game()
+    # Обновляем позицию точки
+    previousPositions.append((xPosition, yPosition))
+    if direction == 1:  # Влево
+        xPosition -= 1
+    elif direction == 2:  # Вниз
+        yPosition += 1
+    elif direction == 3:  # Вправо
+        xPosition += 1
+    elif direction == 4:  # Вверх
+        yPosition -= 1
+    else:
+        print("Неверное направление. Введите число от 1 до 4.")
+        continue
+
+
+    # Проверка условий для завершения стороны бриллианта
+    # Здесь можно добавить более сложную логику
+    # В данном примере простое условие: если точка вернулась в начальную точку по одной из сторон, считаем ее завершенной
+    sideComplete = False
+    if len(previousPositions) > 1:
+        first_x, first_y = previousPositions[0]
+        if (xPosition == first_x and yPosition == first_y):
+              sideComplete=True
+
+    if sideComplete :
+        diamondSides += 1
+        previousPositions = [] # начинаем отслеживать следующую сторону
+# Выводим сообщение о завершении рисования бриллианта
+display_screen(xPosition, yPosition, previousPositions)
+print("DIAMOND COMPLETE!")
 """
 Пояснения:
-1.  `import random`: Импортируем модуль random для генерации случайных чисел.
+1. **Импорт модуля `os`**:
+   - `import os`: Импортирует модуль `os`, который используется для очистки экрана.
 
-2.  `def play_diamond_game():`:  Объявляем функцию `play_diamond_game`, в которой будет реализована логика игры.
+2. **Инициализация переменных**:
+   - `xPosition = 20`: Начальная координата x точки на экране.
+   - `yPosition = 20`: Начальная координата y точки на экране.
+   - `diamondSides = 0`: Счетчик нарисованных сторон бриллианта.
+   - `previousPositions = []`: Список для хранения предыдущих позиций точки.
 
-3.  `diamond_size = random.randint(1, 10)`: Генерируем случайное целое число от 1 до 10 (включительно) и присваиваем его переменной `diamond_size`. Это размер бриллианта, который нужно угадать.
+3. **Функция `clear_screen()`**:
+   -  `os.system('cls' if os.name == 'nt' else 'clear')`: Очищает экран терминала. Используется `cls` для Windows и `clear` для других ОС.
 
-4.  `print("I AM THINKING OF A DIAMOND")`: Выводим сообщение о том, что компьютер задумал бриллиант.
+4. **Функция `display_screen(x, y, positions)`**:
+   -  Очищает экран, создает псевдографический "экран" (список списков).
+   -  Отображает пройденный путь ('#') и текущую позицию точки ('*').
 
-5.  `print("OF WHAT SIZE (1 TO 10)")`: Выводим сообщение о том, что нужно угадать его размер.
+5. **Основной цикл `while diamondSides < 4:`**:
+   -  Выводит текущее состояние экрана.
+   -  Запрашивает ввод направления (1-4) у пользователя.
+   -  Обрабатывает ввод:
+     -  Обновляет координаты `xPosition`, `yPosition` в зависимости от выбранного направления.
+     -  Добавляет текущую позицию в список `previousPositions`.
+   -  Проверка, завершена ли сторона бриллианта.
+     -  Условие: если точка вернулась в начальную точку по одной из сторон
+   -  Если сторона завершена - увеличиваем счетчик `diamondSides` и обнуляем список `previousPositions`
 
-6. `while True:`: Создаем бесконечный цикл, который будет продолжаться, пока игрок не угадает размер бриллианта.
+6. **Вывод сообщения о завершении игры**:
+    - После выхода из цикла, выводится сообщение "DIAMOND COMPLETE!", и экран в последний раз отображается.
 
-7.  `try... except...`:  Обрабатываем возможные ошибки при вводе данных от пользователя. Если пользователь введет не число, то программа выведет сообщение и перейдет к следующей итерации цикла.
-
-8.  `player_guess = int(input("Ваш вариант: "))`: Запрашиваем у пользователя ввод числа и преобразуем его в целое число. Это число - попытка угадать размер бриллианта.
-
-9. `if player_guess < diamond_size: `:  Сравниваем введенное число с загаданным размером бриллианта. Если введенное число меньше, выводим сообщение "TOO SMALL, TRY AGAIN" и переходим к следующей итерации цикла, чтобы получить еще одну попытку.
-
-10. `elif player_guess > diamond_size:`: Если введенное число больше, выводим сообщение "TOO BIG, TRY AGAIN" и переходим к следующей итерации цикла.
-
-11. `else:`: Если введенное число не меньше и не больше загаданного, значит оно равно ему. 
-
-12. `print("YOU GOT IT!")`: Выводим сообщение о победе, если игрок угадал размер бриллианта.
-
-13. `break`: Завершаем цикл и игра заканчивается.
-
-14. `if __name__ == "__main__":`: Проверяем, является ли скрипт запущенным напрямую. Если это так, вызываем функцию `play_diamond_game()` для начала игры.
-
-licence:MIT(../licence)
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
-```
