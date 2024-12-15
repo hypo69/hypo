@@ -210,4 +210,4 @@ if __name__ == "__main__":
 ----------
 - Файл с кодом [ACEDU](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/ACEDU/acedu.py)
 - Запустить код на Google Colab: [ACEDU](https://colab.research.google.com/drive/1aG11rVe2m7_0pdz1fmLhHGwmUH02eWhs?usp=sharing)
-- [К списку игр](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru)
+- [К списку игр](https://github.com/hypo69/hypo/tree/master/src/endpoints/ai_games/101_basic_computer_games/ru#%D1%81%D0%BF%D0%B8%D1%81%D0%BE%D0%BA-%D0%B8%D0%B3%D1%80)
