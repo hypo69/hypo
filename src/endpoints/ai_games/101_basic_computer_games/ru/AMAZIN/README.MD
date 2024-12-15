@@ -73,6 +73,7 @@ Legenda:
     OutputLose - Вывод сообщения о проигрыше и загаданного слова.
     End - Конец программы.
 """
+```python
 import random
 
 # 1. Инициализация
@@ -113,9 +114,8 @@ while attempts > 0 and guessedWord != targetWord:
 if guessedWord != targetWord:
     print("Вы проиграли. Загаданное слово было:", targetWord)
 
-
-"""
-Объяснение кода:
+```
+**Объяснение кода**:
 1.  **Импорт модуля `random`**:
     -   `import random`: Импортирует модуль random для выбора случайного слова.
 
@@ -146,3 +146,8 @@ if guessedWord != targetWord:
 5. **Проверка поражения**:
    -  `if guessedWord != targetWord:`: После завершения цикла проверяет, не угадано ли слово.
        -  `print("Вы проиграли. Загаданное слово было:", targetWord)`: Выводит сообщение о проигрыше и показывает загаданное слово.
+
+       ----------
+- Файл с кодом [ACEDU](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru/AMAZING/amazing.py)
+- Запустить код на Google Colab: [ACEDU](https://colab.research.google.com/drive/1aG11rVe2m7_0pdz1fmLhHGwmUH02eWhs?usp=sharing)
+- [К списку игр](https://github.com/hypo69/hypo/blob/master/src/endpoints/ai_games/101_basic_computer_games/ru)
