@@ -29,7 +29,8 @@ class MoreBasicGames():
 	lang:str
 	bob:GoogleGenerativeAI
 	alice:GoogleGenerativeAI
-	base_path:Path = gs.path.endpoints / 'ai_games' / 'more_basic_computer_games'
+	base:str = 'more_basic_computer_games'
+	base_path:Path = gs.path.endpoints / 'ai_games' / base
 	command_instruction:str 
 	games_list:list = []
 
@@ -38,7 +39,7 @@ class MoreBasicGames():
 		config  = j_loads_ns(self.base_path / 'more_basic_computer_games.json')
 		self.lang = lang
 		system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'raw.txt').read_text(encoding='UTF-8')
-		self.command_instruction = Path(self.base_path / 'assets' / 'instructions' / f'write_code.{self.lang}.md').read_text(encoding='UTF-8')
+		self.command_instruction = Path(self.base_path / 'assets' / 'instructions' / f'{self.base}_write_code.{self.lang}.md').read_text(encoding='UTF-8')
 		self.bob = GoogleGenerativeAI(
                 model_name=config.model_name,
                 api_key=gs.credentials.gemini.onela,
@@ -171,10 +172,6 @@ class MoreBasicGames():
 			output_file:Path = Path( self.base_path / self.lang / 'rules' / file )
 			output_file.parent.mkdir(parents=True, exist_ok=True)
 			output_file.write_text('',encoding='UTF-8')
-
-
-
-
 
 
 if __name__ == '__main__':

@@ -27,15 +27,16 @@ class Games101Basic():
 	lang:str
 	bob:GoogleGenerativeAI
 	alice:GoogleGenerativeAI
-	base_path:Path = gs.path.endpoints / 'ai_games' / '101_basic_computer_games'
+	base:str = '101_basic_computer_games'
+	base_path:Path = gs.path.endpoints / 'ai_games' / base
 	games_list:list = []
 
 	def __init__(self, lanf:str = 'en'):
 		""""""
 		config  = j_loads_ns(self.base_path / '101_basic_computer_games.json')
 		self.lang = lang
-		#system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'raw.md').read_text(encoding='UTF-8')
-		system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'fts.txt').read_text(encoding='UTF-8')
+		system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'raw.md').read_text(encoding='UTF-8')
+		#system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'fts.txt').read_text(encoding='UTF-8')
 		
 		self.bob = GoogleGenerativeAI(
                 model_name=config.model_name,
@@ -51,7 +52,7 @@ class Games101Basic():
 		"""
 		rules_files = get_filenames(self.base_path / self.lang / 'rules')
 		for file_name in rules_files:
-			if file_name == 'README.MD':
+			if file_name == 'README.MD' or 'TOC.MD':
 				continue
 			game_name = file_name.split('_', 1)[1].split('.')[0]  # Разделяем по подчеркиванию и точке
 			self.games_list.append(game_name.upper().replace('_', ' '))  # Преобразуем в верхний регистр и заменяем подчеркивания на пробелы
@@ -59,7 +60,7 @@ class Games101Basic():
 	async def generate_python_code(self):
 		""""""
 		for game in self.games_list:
-			command_instruction:str = Path(self.base_path / 'assets' / 'instructions' / f'write_code.{self.lang}.md').read_text(encoding='UTF-8')
+			command_instruction:str = Path(self.base_path / 'assets' / 'instructions' / f'{self.base}_write_code.{self.lang}.md').read_text(encoding='UTF-8')
 			q = command_instruction.replace('<GAME>',f'<{game}>')
 			print(game)
 			response = await self.bob.ask(q)
@@ -82,12 +83,12 @@ class Games101Basic():
 		output_file.write_text(code,encoding='UTF-8')
 		print('saved')
 
-	async def create_repository_toc(self):
+	async def generate_repository_toc(self):
 		""""""
 		...
-		command_instruction = Path(self.base_path / 'assets' / 'instructions' / f'create_toc.{self.lang}.md').read_text(encoding='UTF-8')
+		command_instruction = Path(self.base_path / 'assets' / 'instructions' / f'{self.base}_create_toc.{self.lang}.md').read_text(encoding='UTF-8')
 		response = await self.bob.ask(command_instruction)
-		output_file:Path = self.base_path / self.lang  / 'toc.md'
+		output_file:Path = self.base_path / self.lang  / 'TOC.MD'
 		output_file.parent.mkdir(parents=True, exist_ok=True)
 		output_file.write_text(response,encoding='UTF-8')
 
@@ -101,5 +102,5 @@ if __name__ == '__main__':
 	for lang in langs_list:
 		print(f'Start: {lang}')
 		g101 = Games101Basic(lang)
-		asyncio.run( g101.create_repository_toc())
+		asyncio.run( g101.generate_repository_toc())
 		#asyncio.run( g101.generate_python_code())
