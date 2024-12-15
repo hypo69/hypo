@@ -162,7 +162,7 @@ def main():
 if __name__ == "__main__":
     main() # Запускаем основную функцию игры
 
-
+```
 **Объяснение кода**:
 1. **Импорт модуля `random`**:
    - `import random`: Импортирует модуль `random`, который используется для генерации случайных чисел.
@@ -207,4 +207,5 @@ if __name__ == "__main__":
     - `if __name__ == "__main__":`: Гарантирует, что функция `main()` будет запущена, только если файл исполняется напрямую, а не импортируется как модуль.
     - `main()`: Вызывает функцию для начала игры.
 """
-Google Colab: [AMAZIN](https://colab.research.google.com/drive/1aG11rVe2m7_0pdz1fmLhHGwmUH02eWhs#scrollTo=pxPvAke3SC70)
+Файл [ACEDU]
+Google Colab: [ACEDU](https://colab.research.google.com/drive/1aG11rVe2m7_0pdz1fmLhHGwmUH02eWhs?usp=sharing)
