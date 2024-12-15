@@ -19,6 +19,8 @@ import header
 from src import gs
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.jjson import j_loads_ns
+from src.utils.file import get_filenames
+from src.utils.printer import pprint
 
 class ProjectEuler:
 	"""
@@ -29,7 +31,7 @@ class ProjectEuler:
 	bob:GoogleGenerativeAI
 	base_path:Path = gs.path.endpoints / 'ai_games' / 'projecteuler' 
 	alice_instruction:str = Path(base_path / 'assets' / 'instructions' / 'alice.md').read_text(encoding='UTF-8')
-	bob_instruction:str = Path(base_path / 'assets' / 'instructions' / 'alice.md').read_text(encoding='UTF-8')
+	bob_instruction:str = Path(base_path / 'assets' / 'instructions' / 'bob.md').read_text(encoding='UTF-8')
 	config: 'SimpleNamespace' = j_loads_ns(base_path / 'projecteuler.json')
 
 	def __init__(self):
@@ -48,15 +50,26 @@ class ProjectEuler:
 	async def collect_problems(self):
 		""""""
 		...
-		for i in range(1,900):
+		for i in range(135,900):
 			q = self.alice_instruction.replace('<PROBLEM_NUMBER>', str(i))
 			response = await self.alice.ask(q)
-			self.save_code(str(i), response)
-			print(response)
+			self.save_problem(str(i), response)
+			time.sleep(25)
+
+	async def solve_probems(self):
+		""""""
+		...
+		problems_to_solve_files_list:list = get_filenames(self.base_path / 'problems')
+		for file_name in problems_to_solve_files_list:
+			problem_number = int(file_name.split('_')[1].split('.')[0])
+			q = self.bob_instruction.replace('<PROBLEM_TO_SOLVE>', Path(self.base_path / 'problems' / file_name).read_text(encoding='UTF-8'))
+			response  =  await self.bob.ask(q)
+			self.save_problem_solve(problem_number,response)
 			time.sleep(25)
 
 
-	def save_code(self, problem_number:str, problem_text:str):
+
+	def save_problem(self, problem_number:str, problem_text:str):
 		""""""
 		...
 		output_file:Path = self.base_path / 'problems' / f'e_{problem_number}.md'
@@ -64,6 +77,15 @@ class ProjectEuler:
 		output_file.write_text(problem_text,encoding='UTF-8')
 		print(f'Saved problem No {problem_number}')
 
+	def save_problem_solve(self, problem_number:str, solve_text:str):
+		""""""
+		...
+		output_file:Path = self.base_path / 'solves' / f'e_{problem_number}.md'
+		output_file.parent.mkdir(parents=True, exist_ok=True)
+		output_file.write_text(solve_text,encoding='UTF-8')
+		print(f'Saved sovle No {problem_number}')
+
 if __name__ == '__main__':
 	euler = ProjectEuler()
 	asyncio.run( euler.collect_problems())
+	asyncio.run( euler.solve_probems())
