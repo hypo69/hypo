@@ -85,8 +85,8 @@ class Games101Basic():
 
 if __name__ == '__main__':
 
-	langs_list:list = ['ru','he','en']
-	
+	langs_list:list = ['he','en']
+	executed_langs_list:list = ['ru',]
 	for lang in langs_list:
 		print(f'Start: {lang}')
 		g101 = Games101Basic(lang)
