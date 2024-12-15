@@ -1,0 +1,18 @@
+flowchart TD
+    Start["Начало"] --> DisplayMenu["Вывод меню: 1-Сложение, 2-Вычитание, 3-Умножение, 4-Деление"]
+    DisplayMenu --> InputChoice["Ввод выбора операции"]
+    InputChoice --> InitializeCorrectAnswers["Инициализация: <code>correctAnswers = 0</code>"]
+    InitializeCorrectAnswers --> LoopStart{"Начало цикла (10 раз)"}
+    LoopStart -- Да --> GenerateNumbers["Генерация случайных чисел <code>number1, number2</code> в зависимости от выбора операции"]
+    GenerateNumbers --> DisplayProblem["Вывод примера: <code>number1 operator number2 = ?</code>"]
+    DisplayProblem --> InputAnswer["Ввод ответа пользователя"]
+    InputAnswer --> CalculateCorrectAnswer["Вычисление правильного ответа"]
+    CalculateCorrectAnswer --> CheckAnswer{"Проверка: <code>userAnswer == correctAnswer?</code>"}
+    CheckAnswer -- Да --> IncreaseCorrectAnswers["<code>correctAnswers = correctAnswers + 1</code>"]
+    IncreaseCorrectAnswers --> LoopEnd
+    CheckAnswer -- Нет --> LoopEnd
+    LoopEnd --> LoopStart{"Конец цикла (10 раз)"}
+    LoopStart -- Нет --> OutputTotalCorrectAnswers["Вывод: <b>Общее количество правильных ответов: <code>correctAnswers</code></b>"]
+    OutputTotalCorrectAnswers --> CalculatePercentage["Вычисление процента правильных ответов: <code>percentage = (correctAnswers / 10) * 100</code>"]
+    CalculatePercentage --> OutputPercentage["Вывод: <b>Процент правильных ответов: <code>percentage</code>%</b>"]
+    OutputPercentage --> End["Конец"]
