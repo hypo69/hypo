@@ -19,9 +19,9 @@
 Вот как они выглядели:
 ##### Компьютер первого поколения
 
-<table>
+<table align=center>
 <tr><td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg'>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg' width=150pt align=center>
 </td></tr>
 <tr><td>
 ENIAC
@@ -29,7 +29,7 @@ ENIAC
 </table>
 
 ##### Компьютеры второго поколения
-<table><tr>
+<table align=center><tr>
 <td>
 <img src='https://upload.wikimedia.org/wikipedia/commons/5/50/Coru%C3%B1a%2C_MUNCYT_01-21b.JPG' width=150pt align=center>
 </TD><TD>
@@ -51,7 +51,7 @@ UNIVAC=II
 Выпускники Массачусетского технологического института (MIT) Кен Олсон и Харлан Андерсон не были новичками в вычислительной технике.
 Работая в Лаборатории Линкольна (научно-исследовательское учреждение Министерства обороны США в структуре Массачусетского технологического института)
 они выполнили бо́льшую часть проектов при разработке машин AN/FSQ- 7, TX-0 и TX-2 
-<table>
+<table align=center>
 <tr><td>
 <img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg' width=150pt align=center>
 </td></tr>
@@ -69,7 +69,7 @@ AN/FSQ-7 был самой большой дискретной компьюте�
 
 
 
-<table><tr>
+<table align=center><tr>
 <td>
 <img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=150pt align=center>
 </TD><TD>
