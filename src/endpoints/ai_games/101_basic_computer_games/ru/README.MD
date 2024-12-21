@@ -101,7 +101,7 @@ UNIVAC
 <img src='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.jpg' width=340pt align=center>
 </td>
 
-<td>
+<td valign=bottom>
 IBM 29 Keypunch<br>
 Перфоратор
 (Source:
@@ -115,9 +115,10 @@ FORTRAN IV Pocket Handbook, Daniel E. Alexander and Andrew C. Messer, McGraw Hil
 <img src='https://raw.githubusercontent.com/hypo69/hypo/refs/heads/master/src/endpoints/ai_games/101_basic_computer_games/assets/images/punched_cards.png' width=340pt align=center>
 </td>
 
-<td>
-Эта стопка из 62 500 перфокарт — объемом 5 МБ — содержала программу управления гигантской военной компьютерной сетью SAGE.
-<sup>Изображение взято с сайта  <a href='https://www.computerhistory.org/revolution/memory-storage/8/326/924'>Computer History Museum (CHM)</a></sup>
+<td valign=bottom>
+Эта стопка из 62 500 перфокарт — объемом 5 МБ — содержала программу управления гигантской военной компьютерной сетью SAGE.  
+
+<sub>Изображение взято с сайта  <a href='https://www.computerhistory.org/revolution/memory-storage/8/326/924'>Computer History Museum (CHM)</a></sub>
 </td></tr>
 </table>
 
