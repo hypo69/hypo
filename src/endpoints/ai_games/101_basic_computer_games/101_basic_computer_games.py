@@ -34,8 +34,8 @@ class Games101Basic():
 		""""""
 		config  = j_loads_ns(self.base_path / '101_basic_computer_games.json')
 		self.lang = lang
-		system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'raw.md').read_text(encoding='UTF-8')
-		#system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'fts.txt').read_text(encoding='UTF-8')
+		#system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'raw.md').read_text(encoding='UTF-8')
+		system_instruction = Path(self.base_path / 'assets' / 'instructions' / 'fts.txt').read_text(encoding='UTF-8')
 		
 		self.bob = GoogleGenerativeAI(
                 model_name=config.model_name,
