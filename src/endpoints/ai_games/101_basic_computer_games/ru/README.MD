@@ -16,7 +16,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;«Мини-компьютеры» DEC, такие как PDP-8 и PDP-11, занимали целые комнаты и стоили десятки тысяч долларов. 
 
-<img src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg'>
+<img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg'>
 
 **Minicomputer PDP-8 from DEC, ca. 1965**
 
@@ -66,7 +66,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;Книга «101 BASIC Computer Games» выдержала три переиздания, и каждое из них было значительно улучшено
 благодаря редакции Дэвида Ала (David H. Ahl).
 
-<img src='https://upload.wikimedia.org/wikipedia/commons/4/40/David_Ahl_%28cropped%29.jpg'>
+<img width='240pt' src='https://upload.wikimedia.org/wikipedia/commons/4/40/David_Ahl_%28cropped%29.jpg'>
 
 &nbsp;&nbsp;&nbsp;&nbsp;Дэвид Ал родился в 1939 году в США. Он начал свою карьеру в Digital Equipment Corporation (DEC), в качестве консультанта по психологии образования и маркетингу для разработки линейки образовательных продуктов.
 Он редактировал информационный бюллетень DEC, в котором регулярно публиковались инструкции по игре в компьютерные игры на миникомпьютерах. Ал уговорил 
