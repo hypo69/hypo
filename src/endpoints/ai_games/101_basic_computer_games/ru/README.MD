@@ -14,6 +14,57 @@
 первой книгой на компьютерную тематику, которая которая популяризовала создание прогаммого кода разработчиками с минимальным входным порогом. 
 За этим успехом стояла компания Digital Equipment Corporation (DEC), один из пионеров в производстве мини-компьютеров.
 
+#### История DEC
+к 1957 гигантские машины, на электронных лампах (например, ENIAC) были замещены следующим поколениям компьютеров на транзисторах.
+Вот как они выглядели:
+##### Компьютер первого поколения
+
+<table>
+<tr><td>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg'>
+</td></tr>
+<tr><td>
+ENIAC
+</td></tr>
+</table>
+
+##### Компьютеры второго поколения
+<table><tr>
+<td>
+<img src='https://upload.wikimedia.org/wikipedia/commons/5/50/Coru%C3%B1a%2C_MUNCYT_01-21b.JPG' width=150pt align=center>
+</TD><TD>
+<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Univac-I-Navy-Electronics-Supply-Office-BRL61-0992.jpg/1020px-Univac-I-Navy-Electronics-Supply-Office-BRL61-0992.jpg' width=150pt align=center>
+</td>
+<TD>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pegasus_computer.jpg' width=150pt align=center>
+</td>
+<tr>
+<td>
+IBM-650
+</td>
+<td>
+UNIVAC=II
+</td>
+</tr>
+</table>
+
+Выпускники Массачусетского технологического института (MIT) Кен Олсон и Харлан Андерсон не были новичками в вычислительной технике.
+Работая в Лаборатории Линкольна (научно-исследовательское учреждение Министерства обороны США в структуре Массачусетского технологического института)
+они выполнили бо́льшую часть проектов при разработке машин AN/FSQ- 7, TX-0 и TX-2 
+<table>
+<tr><td>
+<img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg'>
+</td></tr>
+<tr><td>
+Название "AN/FSQ" происходит от Army-Navy / Fixed Special eQuipment.
+AN/FSQ-7 был самой большой дискретной компьютерной системой из когда-либо созданных
+Относится к компьютерам первого поколения
+</td></tr>
+</table>
+
+Американская корпорация исследований и разработок (ARDC) была новаторской американской венчурной фирмой, 
+созданной в период после Второй мировой войны. ARDC известна своими ранними инвестициями в компании, которые впоследствии стали крупными игроками в области технологий
+
 &nbsp;&nbsp;&nbsp;&nbsp;«Мини-компьютеры» DEC, такие как PDP-8 и PDP-11, занимали целые комнаты и стоили десятки тысяч долларов. 
 
 <img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg'>
