@@ -12,21 +12,30 @@
 &nbsp;&nbsp;&nbsp;
 В 1973 году была опубликована книга [«101 BASIC Computer Games»](http://www.bitsavers.org/pdf/dec/_Books/101_BASIC_Computer_Games_Mar75.pdf). 
 Она стала настоящим бестселлером, разойдясь тиражом в миллион экземпляров. Книга сыграла ключевую роль в популяризации программирования.
-За этим успехом стояла компания Digital Equipment Corporation (DEC), один из пионеров в производстве мини-компьютеров.
+За её успехом стояла компания Digital Equipment Corporation (DEC), один из пионеров в производстве мини-компьютеров.
 
 &nbsp;&nbsp;&nbsp;
 К концу пятидесятых годов прошлого века гигантские машины на электронных лампах (например, ENIAC) 
 в основном были замещены поколением компьютеров на транзисторах.
 Вот как они выглядели:
+
 ##### Компьютер первого поколения
 
 <table align=center>
 <tr><td>
 <img src='https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg' width=220pt align=center>
-</td></tr>
+</td>
+<td>
+<img src='https://upload.wikimedia.org/wikipedia/commons/0/07/Harvard_Mark_I_Computer_-_Input-Output_Details.jpg' width=220pt align=center>
+</td>
+</tr>
 <tr><td>
 ENIAC
-</td></tr>
+</td>
+<td>
+Устройство ввода - ввывода MARK-1
+</td>
+</tr>
 </table>
 
 ##### Компьютеры второго поколения
