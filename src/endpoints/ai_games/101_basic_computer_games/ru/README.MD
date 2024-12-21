@@ -112,15 +112,12 @@ FORTRAN IV Pocket Handbook, Daniel E. Alexander and Andrew C. Messer, McGraw Hil
 
 <table align=center width=90% >
 <tr><td width=360pt >
-<img src='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.jpg' width=340pt align=center>
+<img src='https://raw.githubusercontent.com/hypo69/hypo/refs/heads/master/src/endpoints/ai_games/101_basic_computer_games/assets/images/punched_cards.png' width=340pt align=center>
 </td>
 
 <td>
-IBM 29 Keypunch<br>
-Перфоратор
-(Source:
-FORTRAN IV Pocket Handbook, Daniel E. Alexander and Andrew C. Messer, McGraw Hill, 1972.
-)
+Эта стопка из 62 500 перфокарт — объемом 5 МБ — содержала программу управления гигантской военной компьютерной сетью SAGE.
+<sup>Изображение взято с сайта  <a href='https://www.computerhistory.org/revolution/memory-storage/8/326/924'>Computer History Museum (CHM)</a></sup>
 </td></tr>
 </table>
 
