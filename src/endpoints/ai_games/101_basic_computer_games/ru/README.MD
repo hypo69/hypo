@@ -20,19 +20,20 @@
 в основном были замещены поколением компьютеров на транзисторах.
 Вот как они выглядели:
 
-##### Компьютер первого поколения
+##### Компьютеры первого поколения
 
-<table align=center>
-<tr><td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/d/d3/Glen_Beck_and_Betty_Snyder_program_the_ENIAC_in_building_328_at_the_Ballistic_Research_Laboratory.jpg' width=320pt align=center>
+<table align=left width=90%>
+<tr>
+<td width=360pt>
+<img src='https://upload.wikimedia.org/wikipedia/commons/d/d3/Glen_Beck_and_Betty_Snyder_program_the_ENIAC_in_building_328_at_the_Ballistic_Research_Laboratory.jpg' width=340pt align=center>
 </td><td>
 ENIAC на Абердинском испытательном полигоне, штат Мэриленд. Глен Бек (на заднем плане) и Бетти Снайдер (на переднем плане) программируют ENIAC в здании 328 в Баллистической исследовательской лаборатории
 </td>
-
 </tr>
+
 <tr>
-<td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/0/07/Harvard_Mark_I_Computer_-_Input-Output_Details.jpg' width=320pt align=center>
+<td width=360pt>
+<img src='https://upload.wikimedia.org/wikipedia/commons/0/07/Harvard_Mark_I_Computer_-_Input-Output_Details.jpg' width=340pt align=center>
 </td>
 <td>
 Устройство ввода - вывода MARK-1
@@ -41,9 +42,10 @@ ENIAC на Абердинском испытательном полигоне, �
 </table>
 
 ##### Компьютеры второго поколения
-<table align=center><tr>
-<td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/6/66/IBM_1401_signal_tracing_at_CHM.jpg' width=320pt align=center>
+<table align=left width=90%>
+<tr>
+<td width=360pt>
+<img src='https://upload.wikimedia.org/wikipedia/commons/6/66/IBM_1401_signal_tracing_at_CHM.jpg' width=340pt align=center>
 </TD>
 <td>
 IBM 1401
@@ -51,8 +53,8 @@ IBM 1401
 </tr>
 
 <tr>
-<TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/2/2f/Univac_I_Census_dedication.jpg' width=320pt align=center>
+<TD width=360pt>
+<img src='https://upload.wikimedia.org/wikipedia/commons/2/2f/Univac_I_Census_dedication.jpg' width=340pt align=center>
 </td>
 <td>
 UNIVAC
@@ -60,8 +62,8 @@ UNIVAC
 </tr>
 
 <tr>
-<TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/f/f3/IBM_7070.jpg' width=320pt align=center>
+<TD width=360pt>
+<img src='https://upload.wikimedia.org/wikipedia/commons/f/f3/IBM_7070.jpg' width=340pt align=center>
 </td>
 <td>
 Ячейка логики на транзисторах (IBM 7070)
@@ -69,11 +71,13 @@ UNIVAC
 </tr>
 
 
-<tr><td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/1/1c/Control_Panel_for_UNIVAC_1232_Computer.jpg' width=320pt align=center>
+<tr>
+<td width=360pt>
+<img src='https://upload.wikimedia.org/wikipedia/commons/1/1c/Control_Panel_for_UNIVAC_1232_Computer.jpg' width=340pt align=center>
 </td><td>
 Панель управления для компьютера UNIVAC 1232. Этот компьютер использовался примерно с 1967 по 1990 год в Центре управления спутниками ВВС США в Саннивейл, Калифорния. Данная модель является военной версией коммерческого компьютера UNIVAC 490 общего назначения. Экспонат представлен в Национальном музее авиации и космонавтики Смитсоновского института (Центр Udvar-Hazy).
 </td>
+</tr>
 </table>
 
 &nbsp;&nbsp;&nbsp;
@@ -88,11 +92,11 @@ UNIVAC
 
 
 
-<table align=center width=320pt >
+<table align=center width=340pt >
 <tr><td>
-<img src='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.jpg' width=320pt align=center>
+<img src='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.jpg' width=340pt align=center>
 </td></tr>
-<tr><td width=320pt >
+<tr><td width=340pt >
 IBM 29 Keypunch<br>
 Перфоратор
 </td></tr>
@@ -102,11 +106,11 @@ IBM 29 Keypunch<br>
 Выпускники Массачусетского технологического института (MIT) Кен Олсон и Харлан Андерсон не были новичками в вычислительной технике.
 Работая в Лаборатории Линкольна (научно-исследовательское учреждение Министерства обороны США в структуре Массачусетского технологического института)
 они выполнили бо́льшую часть проектов при разработке машин AN/FSQ- 7, TX-0 и TX-2. TX-0 был первым полностью транзисторным 16-битным компьютером с 16-битной адресацией и 16-битными инструкциями 
-<table align=center width=320pt >
+<table align=center width=340pt >
 <tr><td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg' width=320pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg' width=340pt align=center>
 </td></tr>
-<tr><td width=320pt >
+<tr><td width=340pt >
 AN/FSQ- 7<br>
 Название "AN/FSQ" происходит от Army-Navy / Fixed Special eQuipment.
 AN/FSQ-7 был самой большой дискретной компьютерной системой из когда-либо созданных.
@@ -123,9 +127,9 @@ AN/FSQ-7 был самой большой дискретной компьюте�
 
 <table align=center><tr>
 <td>
-<img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=320pt align=center>
+<img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=340pt align=center>
 </TD><TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pdp-11-40.jpg' width=320pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pdp-11-40.jpg' width=340pt align=center>
 </td>
 
 <tr>
