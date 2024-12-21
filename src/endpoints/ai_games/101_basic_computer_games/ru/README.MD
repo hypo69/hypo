@@ -105,11 +105,12 @@ UNIVAC
 IBM 29 Keypunch<br>
 Перфоратор  
 
-<sub>
-<a href='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.html'>
 (Source:
 FORTRAN IV Pocket Handbook, Daniel E. Alexander and Andrew C. Messer, McGraw Hill, 1972.
 )
+<sub>Изображение взято с сайта 
+<a href='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.html'>
+https://www.math-cs.gordon.edu
 </a></sub>
 </td></tr>
 </table>
