@@ -92,13 +92,17 @@ UNIVAC
 
 
 
-<table align=center width=340pt >
+<table align=center width=90% >
 <tr><td>
 <img src='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.jpg' width=340pt align=center>
-</td></tr>
-<tr><td width=340pt >
+</td>
+
+<td>
 IBM 29 Keypunch<br>
 Перфоратор
+(Source:
+FORTRAN IV Pocket Handbook, Daniel E. Alexander and Andrew C. Messer, McGraw Hill, 1972.
+)
 </td></tr>
 </table>
 
