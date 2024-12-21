@@ -93,7 +93,7 @@ UNIVAC
 
 
 <table align=center width=90% >
-<tr><td>
+<tr><td width=360pt >
 <img src='https://www.math-cs.gordon.edu/courses/cs323/FORTRAN/keypunch.jpg' width=340pt align=center>
 </td>
 
@@ -110,11 +110,10 @@ FORTRAN IV Pocket Handbook, Daniel E. Alexander and Andrew C. Messer, McGraw Hil
 Выпускники Массачусетского технологического института (MIT) Кен Олсон и Харлан Андерсон не были новичками в вычислительной технике.
 Работая в Лаборатории Линкольна (научно-исследовательское учреждение Министерства обороны США в структуре Массачусетского технологического института)
 они выполнили бо́льшую часть проектов при разработке машин AN/FSQ- 7, TX-0 и TX-2. TX-0 был первым полностью транзисторным 16-битным компьютером с 16-битной адресацией и 16-битными инструкциями 
-<table align=center width=340pt >
-<tr><td>
+<table align=center width=90% >
+<tr><td width=360pt >
 <img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg' width=340pt align=center>
-</td></tr>
-<tr><td width=340pt >
+</td><td >
 AN/FSQ- 7<br>
 Название "AN/FSQ" происходит от Army-Navy / Fixed Special eQuipment.
 AN/FSQ-7 был самой большой дискретной компьютерной системой из когда-либо созданных.
@@ -131,7 +130,7 @@ AN/FSQ-7 был самой большой дискретной компьюте�
 
 <table align=center><tr>
 <td>
-<img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=340pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=340pt align=center>
 </TD><TD>
 <img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pdp-11-40.jpg' width=340pt align=center>
 </td>
