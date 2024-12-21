@@ -1,1 +1,0 @@
-[GORILLAS QBASIC](https://archive.org/details/GorillasQbasic)
