@@ -198,7 +198,7 @@ def j_loads(
         """Удаляет тройные обратные кавычки и 'json' из начала и конца строки."""
         if json_string.startswith(('```', '```json')) and json_string.endswith(('```','```\n')):
             json_string = json_string.strip('`').replace('json', '', 1).strip()
-        json_string = json_string.replace()
+        #json_string = json_string.replace()
         try:
             _j = simplejson.loads(json_string)
         except json.JSONDecodeError:

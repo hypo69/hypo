@@ -44,7 +44,7 @@
     "timeout": 2,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "SKU ksp"
+    "locator_description": "KSP 2787"
   },
   "id_product": {
     "attribute": "innerText",
@@ -878,14 +878,14 @@
   "description_short": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "//h2[contains(text(), 'תיאור קצר')]/following-sibling::p[1]",
+    "selector": "//p[@class = 'rtl-ztzywj']",
     "if_list": "all",
     "use_mouse": false,
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
     "mandatory": true,
-    "locator_description": "краткое Описание товара. "
+    "locator_description": "KSP mobile version краткое Описание товара. "
   },
   "description": {
     "attribute": null,
@@ -902,14 +902,14 @@
   "specification": {
     "attribute": "innerText",
     "by": "XPATH",
-    "selector": "/html/body/div[1]/div[1]/div/div/div/div[12]",
+    "selector": "(//div[@class='rtl-1xo3mso'])[8]",
     "if_list": "all",
     "use_mouse": false,
     "mandatory": true,
     "timeout": 0,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "Технические характеристики. "
+    "locator_description": "KSP mobile Технические характеристики. "
   },
   "affiliate_short_link": {
     "attribute": null,

@@ -169,7 +169,7 @@ class GoogleGenerativeAI:
                     {"role": "assistant", "content": response.text}
                 ]
 
-                self._save_dialogue([messages])
+                # self._save_dialogue([messages])
                 return response.text
 
             except requests.exceptions.RequestException as ex:

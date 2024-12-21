@@ -74,7 +74,6 @@ class ReportGenerator:
         Args:
             lang (str): Язык отчёта.
         """
-        _data:dict = data[lang]
 
         # Обслуживание:
         service_dict:dict = {
@@ -82,9 +81,9 @@ class ReportGenerator:
                             "specification":Path(gs.path.endpoints / 'kazarinov' / 'pricelist_generator' / 'templates' / f'service_as_product_{lang}.html').read_text(encoding='UTF-8').replace('/n','<br>'),
                             "image_local_saved_path":random_image(gs.path.external_storage / 'kazarinov' / 'converted_images' )
                             }
-        _data['products'].append(service_dict)
+        data['products'].append(service_dict)
 
-        html_content = await self.generate_html(_data,lang)
+        html_content = await self.generate_html(data,lang)
         Path(html_file).write_text(data = html_content, encoding='UTF-8')
         pdf = PDFUtils()
 

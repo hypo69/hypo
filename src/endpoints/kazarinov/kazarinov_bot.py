@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
+
 ## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -14,7 +14,6 @@ Telegram-бот для проекта Kazarinov
 	:synopsis: KazarinovTelegramBot
 
 """
-MODE = 'dev'
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict, Self
@@ -42,6 +41,7 @@ from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger.logger import logger
 
+import argparse
 
 
 class KazarinovTelegramBot(TelegramBot, BotHandler):
@@ -97,13 +97,15 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run Kazarinov Telegram Bot with specified mode.")
+    parser.add_argument('-m', '--mode', type=str, default='test', help="Operating mode: 'test' or 'production'")
+    args = parser.parse_args()
+
+    mode = args.mode
 
     if gs.host_name == 'Vostro-3888':
-        
         mode = 'prod'
-        #mode = 'test' # <- commnet to prod
-        kt = KazarinovTelegramBot(mode)
-    else:
-        kt = KazarinovTelegramBot() 
+        #mode = 'test' # <- comment to prod
 
+    kt = KazarinovTelegramBot(mode)
     asyncio.run(kt.application.run_polling())

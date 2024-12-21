@@ -1,4 +1,4 @@
-
+"""
 BAGLES:
 =================
 Сложность: 6
@@ -67,8 +67,8 @@ Legenda:
     OutputClues - Вывод сгенерированных подсказок.
     CheckLose - Проверка, достигло ли количество попыток 10.
     OutputLose - Вывод сообщения о проигрыше и секретного числа secretNumber.
-```
-```python
+
+"""
 import random
 
 def generate_secret_number():

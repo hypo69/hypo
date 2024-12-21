@@ -44,7 +44,7 @@
     "timeout": 2,
     "timeout_for_event": "presence_of_element_located",
     "event": null,
-    "locator_description": "SKU ksp"
+    "locator_description": "KSP 2787"
   },
   "id_product": {
     "attribute": "innerText",

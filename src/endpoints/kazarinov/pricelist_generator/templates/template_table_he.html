@@ -83,12 +83,13 @@
             </div>
         </div>
         {% endfor %}
-
+        {% if price %}
         <div class="footer">
             <p>מחיר כולל הכל: 
                 <span class="price-tag">{{ price }} {{ currency }}</span>
             </p>
         </div>
+        {% endif %}
     </div>
 </body>
 

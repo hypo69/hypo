@@ -83,6 +83,7 @@ MODE = 'dev'
 from pathlib import Path
 import tempfile
 import asyncio
+import logging
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
@@ -94,6 +95,7 @@ import requests  # For downloading files
 from src.utils.convertors.tts import speech_recognizer, text2speech
 from src.utils.file import read_text_file
 
+logging.getLogger('telegram').setLevel(logging.ERROR)
 
 
 class TelegramBot:

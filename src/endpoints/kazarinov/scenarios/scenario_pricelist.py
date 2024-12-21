@@ -69,7 +69,7 @@ class MexironBuilder:
     products_list: List = field(default_factory=list)
     model: GoogleGenerativeAI
     config: SimpleNamespace
-
+    translations: 'SimpleNamespace' =  j_loads_ns(gs.path.endpoints / 'kazarinov' / 'translations' / 'mexiron.json')
     # telegram
     update: Update 
     context: CallbackContext
@@ -152,6 +152,7 @@ class MexironBuilder:
                                  'local_saved_image')
         products_list = []
 
+        # 1. Сбор товаров
         for url in urls:
 
             graber = self.get_graber_by_supplier_url(url) 
@@ -165,6 +166,8 @@ class MexironBuilder:
                 await update.message.reply_text(f"""Process: 
                 {url}""")
                 f = await graber.grab_page(*required_fields)
+
+                ...
                 if gs.host_name == 'Vostro-3888':
                     ...
                     #self.driver.wait(5)   # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Замедлитель
@@ -190,49 +193,31 @@ class MexironBuilder:
                 continue
             products_list.append(product_data)    
 
-        # AI processing
+        # 2. AI processing
         """ список компонентов сборки компьютера уходит в обработку моделью (`gemini`) -> 
         модель парсит данные, делает перевод на `ru`, `he` и возвращает кортеж словарей по языкам.
         Внимание! модель может ошибаться"""
-        await update.message.reply_text(f"AI processing lang = he")
-        he = await self.process_ai(products_list,'he')
-        he['he']['price'] = price
-        he['he']['currency'] = "ש''ח"
-        await update.message.reply_text("successfull")
-        await update.message.reply_text(f"AI processing lang = ru")
-        ru = await self.process_ai(products_list,'ru')
-        ru['ru']['price'] = price
-        ru['ru']['currency'] = "шекелей"
-        await update.message.reply_text("successfull")
 
-        if not j_dumps(he, self.export_path / f'{self.mexiron_name}_he.json'):
-            logger.error(f'Ошибка сохранения словаря `he`', None, False)
-            ...
-                
-        if not j_dumps(ru, self.export_path / f'{self.mexiron_name}_ru.json'):
-            logger.error(f'Ошибка сохранения словаря `ru`', None, False)
-            ...
+        langs_list:list = ['he','ru']
+        for lang in langs_list:
 
+            await update.message.reply_text(f"AI processing lang = {lang}")
+            data:dict = await self.process_ai(products_list, lang)
+            if not data:
+                await update.message.reply_text("Ошибка модели")
+                continue
 
-        generator = ReportGenerator()
+            data[lang]['price'] = price
+            data[lang]['currency'] = getattr( self.translations.currency , lang, "ש''ח")
 
-        for lang in ['he','ru']:
-            html_file=Path(self.export_path/f'{self.mexiron_name}_{lang}.html')
+            if not j_dumps(data, self.export_path / f'{self.mexiron_name}_{lang}.json'):
+                await update.message.reply_text("Ошибка JSON")
+
+            html_file = Path(self.export_path/f'{self.mexiron_name}_{lang}.html')
             pdf_file =  Path(self.export_path/f'{self.mexiron_name}_{lang}.pdf')
-            if not await generator.create_report(data=he if lang == 'he' else ru, 
-                                                lang=lang, 
-                                                html_file=html_file, 
-                                                pdf_file=pdf_file):
-                logger.error(f"Ошибка создания PDF: {self.mexiron_name}_he.pdf", None, False)
-                ...
-            if pdf_file.exists() and pdf_file.is_file():
-                        # Отправка боту PDF-файл через reply_document()
-                        await self.update.message.reply_document(document=pdf_file)
-            else:
-                logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
-                ...
-
-        return True 
+            # 3. Report creating
+            if await self.create_report(data[lang], lang, html_file, pdf_file):
+                await update.message.reply_text("successfull")
 
 
     def get_graber_by_supplier_url(self, url: str):
@@ -320,7 +305,8 @@ class MexironBuilder:
             return {}  # return early if no attempts are left
         model_command = Path(gs.path.endpoints / 'kazarinov' / 'instructions' / f'command_instruction_mexiron_{lang}.md').read_text(encoding='UTF-8')
         # Request response from the AI model
-        response = await self.model.ask(model_command + '\n' + str(products_list))
+        q = model_command + '\n' + str(products_list)
+        response = await self.model.ask(q)
         if not response:
             logger.error(f"Нет ответа от модели")
             ...
@@ -359,21 +345,21 @@ class MexironBuilder:
 
         return True
 
-    async def create_report(self, data: dict, html_file: Path, pdf_file: Path):
+    async def create_report(self, data: dict, lang:str, html_file: Path, pdf_file: Path) -> bool:
         """Функция отправляет задание на создание мехирона в формате `html` и `pdf`.
         Если мехорон в pdf создался (`generator.create_report()` вернул True) - 
         отправить его боту
         """
 
         generator = ReportGenerator()
-    
-        for lang in ['he', 'ru']:
-            if await generator.create_report(data, lang, html_file, pdf_file):
-                # Проверка, существует ли файл и является ли он файлом
-                if pdf_file.exists() and pdf_file.is_file():
-                    # Отправка боту PDF-файл через reply_document()
-                    await self.update.message.reply_document(document=pdf_file)
-                else:
-                    logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
-                    ...
+
+        if await generator.create_report(data, lang, html_file, pdf_file):
+            # Проверка, существует ли файл и является ли он файлом
+            if pdf_file.exists() and pdf_file.is_file():
+                # Отправка боту PDF-файл через reply_document()
+                await self.update.message.reply_document(document=pdf_file)
+                return True
+            else:
+                logger.error(f"PDF файл не найден или не является файлом: {pdf_file}")
+                return
 
