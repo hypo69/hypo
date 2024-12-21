@@ -21,7 +21,7 @@
 
 <table align=center>
 <tr><td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg' width=150pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/e5/ENIAC-changing_a_tube.jpg' width=220pt align=center>
 </td></tr>
 <tr><td>
 ENIAC
@@ -31,13 +31,11 @@ ENIAC
 ##### Компьютеры второго поколения
 <table align=center><tr>
 <td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/5/50/Coru%C3%B1a%2C_MUNCYT_01-21b.JPG' width=150pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/5/50/Coru%C3%B1a%2C_MUNCYT_01-21b.JPG' width=220pt align=center>
 </TD><TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Univac-I-Navy-Electronics-Supply-Office-BRL61-0992.jpg/1020px-Univac-I-Navy-Electronics-Supply-Office-BRL61-0992.jpg' width=150pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Univac-I-Navy-Electronics-Supply-Office-BRL61-0992.jpg/1020px-Univac-I-Navy-Electronics-Supply-Office-BRL61-0992.jpg' width=220pt align=center>
 </td>
-<TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pegasus_computer.jpg' width=150pt align=center>
-</td>
+
 <tr>
 <td>
 IBM-650
@@ -53,7 +51,7 @@ UNIVAC=II
 они выполнили бо́льшую часть проектов при разработке машин AN/FSQ- 7, TX-0 и TX-2 
 <table align=center>
 <tr><td>
-<img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg' width=150pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/8/8e/SAGE_computer_room.jpg' width=220pt align=center>
 </td></tr>
 <tr><td>
 Название "AN/FSQ" происходит от Army-Navy / Fixed Special eQuipment.
@@ -71,12 +69,12 @@ AN/FSQ-7 был самой большой дискретной компьюте�
 
 <table align=center><tr>
 <td>
-<img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=150pt align=center>
+<img  width='240pt'  src='https://upload.wikimedia.org/wikipedia/commons/6/6b/PDP-8_%281%29.jpg' width=220pt align=center>
 </TD><TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pdp-11-40.jpg' width=150pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pdp-11-40.jpg' width=220pt align=center>
 </td>
 <TD>
-<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pegasus_computer.jpg' width=150pt align=center>
+<img src='https://upload.wikimedia.org/wikipedia/commons/e/ee/Pegasus_computer.jpg' width=220pt align=center>
 </td>
 <tr>
 <td>
