@@ -36,6 +36,9 @@ ENIAC
 </TD><TD>
 <img src='https://upload.wikimedia.org/wikipedia/commons/2/2f/Univac_I_Census_dedication.jpg' width=220pt align=center>
 </td>
+<TD>
+<img src='https://upload.wikimedia.org/wikipedia/commons/1/1c/Control_Panel_for_UNIVAC_1232_Computer.jpg' width=220pt align=center>
+</td>
 
 <tr>
 <td>
@@ -43,6 +46,9 @@ IBM 1401
 </td>
 <td>
 UNIVAC
+</td>
+<td>
+Пульт управления подводной лодкой компьютером UNIVAC - II
 </td>
 </tr>
 </table>
