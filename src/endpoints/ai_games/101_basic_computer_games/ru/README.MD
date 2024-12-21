@@ -26,7 +26,7 @@
 <tr>
 <td width=360pt>
 <img src='https://upload.wikimedia.org/wikipedia/commons/d/d3/Glen_Beck_and_Betty_Snyder_program_the_ENIAC_in_building_328_at_the_Ballistic_Research_Laboratory.jpg' width=340pt align=center>
-</td><td>
+</td><td valign=bottom>
 ENIAC на Абердинском испытательном полигоне, штат Мэриленд. Глен Бек (на заднем плане) и Бетти Снайдер (на переднем плане) программируют ENIAC в здании 328 в Баллистической исследовательской лаборатории
 </td>
 </tr>
@@ -35,7 +35,7 @@ ENIAC на Абердинском испытательном полигоне, �
 <td width=360pt>
 <img src='https://upload.wikimedia.org/wikipedia/commons/0/07/Harvard_Mark_I_Computer_-_Input-Output_Details.jpg' width=340pt align=center>
 </td>
-<td>
+<td valign=bottom>
 Устройство ввода - вывода MARK-1
 </td>
 </tr>
@@ -47,7 +47,7 @@ ENIAC на Абердинском испытательном полигоне, �
 <td width=360pt>
 <img src='https://upload.wikimedia.org/wikipedia/commons/6/66/IBM_1401_signal_tracing_at_CHM.jpg' width=340pt align=center>
 </TD>
-<td>
+<td valign=bottom>
 IBM 1401
 </td>
 </tr>
@@ -56,7 +56,7 @@ IBM 1401
 <TD width=360pt>
 <img src='https://upload.wikimedia.org/wikipedia/commons/2/2f/Univac_I_Census_dedication.jpg' width=340pt align=center>
 </td>
-<td>
+<td valign=bottom>
 UNIVAC
 </td>
 </tr>
@@ -65,7 +65,7 @@ UNIVAC
 <TD width=360pt>
 <img src='https://upload.wikimedia.org/wikipedia/commons/f/f3/IBM_7070.jpg' width=340pt align=center>
 </td>
-<td>
+<td valign=bottom>
 Ячейка логики на транзисторах (IBM 7070)
 </td>
 </tr>
@@ -74,7 +74,7 @@ UNIVAC
 <tr>
 <td width=360pt>
 <img src='https://upload.wikimedia.org/wikipedia/commons/1/1c/Control_Panel_for_UNIVAC_1232_Computer.jpg' width=340pt align=center>
-</td><td>
+</td><td valign=bottom>
 Панель управления для компьютера UNIVAC 1232. Этот компьютер использовался примерно с 1967 по 1990 год в Центре управления спутниками ВВС США в Саннивейл, Калифорния. Данная модель является военной версией коммерческого компьютера UNIVAC 490 общего назначения. Экспонат представлен в Национальном музее авиации и космонавтики Смитсоновского института (Центр Udvar-Hazy).
 </td>
 </tr>
