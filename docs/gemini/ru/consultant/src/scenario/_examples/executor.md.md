@@ -1,88 +1,77 @@
-# Анализ кода модуля executor.md
+# Анализ кода модуля `executor`
 
 **Качество кода**
-8
+7
 - Плюсы
-    -  Код предоставляет примеры использования функций модуля `executor`.
-    -  Используются `Mock` классы для имитации зависимостей, что упрощает тестирование.
-    -  Примеры охватывают основные функции модуля.
+    - Код содержит примеры использования функций и методов модуля `executor`.
+    - Присутствуют заглушки классов `MockSupplier`, `MockRelatedModules`, `MockDriver` для тестирования.
+    - Есть примеры как синхронного так и асинхронного выполнения операций.
 - Минусы
-    -  Отсутствуют docstring у функций.
-    -  Отсутствуют импорты для `asyncio`.
-    -  Используется `print` вместо логирования.
-    -  Не используется `j_loads_ns` для загрузки json.
-    -  Нет обработки ошибок и логирования в примерах.
+    - Отсутствует документация в формате reStructuredText (RST).
+    - Используется стандартный `print` для вывода результатов, что затрудняет интеграцию с системой логирования.
+    - Отсутствует импорт `asyncio`, что вызывает ошибку при запуске асинхронной функции.
+    - Не используются возможности логирования ошибок.
+    - Использованы магические строки при определение путей к файлам
+    - Названия переменных и функций не соответствуют стандарту `snake_case`.
+    - Примеры не являются самодостаточными для запуска, требуют наличия реального окружения `PrestaShop`.
 
 **Рекомендации по улучшению**
-
-1.  Добавить docstring к каждой функции для описания их назначения, параметров и возвращаемых значений.
-2.  Использовать `from src.logger.logger import logger` и заменить `print` на `logger.info`, `logger.error` и т.д.
-3.  Обработать ошибки в примерах, используя `try-except` блоки с логированием.
-4.  Добавить импорт `asyncio` для асинхронных примеров.
-5.  Проверять результат выполнения функций и сообщать об ошибках.
-6.  Унифицировать использование одинарных кавычек в строках.
-7. Использовать `j_loads_ns` для загрузки json (хотя здесь нет загрузки, но в соответствии с инструкцией).
+1.  Добавить документацию в формате RST для всех модулей, функций и классов.
+2.  Использовать `from src.logger.logger import logger` для логирования вместо `print`.
+3.  Добавить импорт `asyncio` для поддержки асинхронных операций.
+4.  Избегать избыточного использования `try-except` блоков, предпочитая `logger.error`.
+5.  Изменить названия переменных и функций в соответствии со стандартом `snake_case`.
+6.  Убрать магические строки при определении путей к файлам
+7.  Сделать примеры самодостаточными, если это возможно (например, предоставить больше моков)
+8.  Улучшить обработку ошибок, добавляя больше деталей в сообщения об ошибках.
 
 **Оптимизированный код**
-
 ```python
 """
-Примеры для модуля `executor` из `src.scenario.executor`.
-======================================================================
+Примеры использования модуля `executor` из `src.scenario.executor`.
+====================================================================
 
-Этот файл содержит примеры использования функций, представленных в модуле `executor`.
+Этот файл содержит примеры использования функций, предоставляемых в модуле `executor`.
 Примеры демонстрируют, как запускать сценарии, обрабатывать файлы сценариев и взаимодействовать с PrestaShop API.
 
 :details:
-- `Пример 1` показывает, как запустить список файлов сценариев.
-- `Пример 2` демонстрирует, как запустить один файл сценария.
-- `Пример 3` иллюстрирует, как запустить один сценарий.
-- `Пример 4` предоставляет пример выполнения сценария страницы продукта.
-- `Пример 5` показывает, как добавить купон, используя PrestaShop API.
+  - `Пример 1` показывает, как запустить список файлов сценариев.
+  - `Пример 2` демонстрирует, как запустить один файл сценария.
+  - `Пример 3` иллюстрирует, как запустить один сценарий.
+  - `Пример 4` предоставляет пример выполнения сценария для страницы продукта.
+  - `Пример 5` показывает, как добавить купон, используя PrestaShop API.
 
 :image html: executor.png
 """
 import asyncio
 from pathlib import Path
-from typing import Any
-
-from src.scenario.executor import (
-    run_scenario_files,
-    run_scenario_file,
-    run_scenarios,
-    run_scenario,
-    insert_grabbed_data,
-    execute_PrestaShop_insert,
-    execute_PrestaShop_insert_async,
-    add_coupon,
-)
+from typing import Any, List
+from src.scenario.executor import run_scenario_files, run_scenario_file, run_scenarios, run_scenario, insert_grabbed_data, execute_PrestaShop_insert, execute_PrestaShop_insert_async, add_coupon
 from src.utils.jjson import j_loads_ns
 from src.product.product_fields import ProductFields
-from src.endpoints.PrestaShop import PrestaShop
 from src.logger.logger import logger
 
-
-#  Предполагается, что класс `Supplier` доступен и имеет необходимые методы и атрибуты
+# TODO: Добавить описание класса MockSupplier в формате RST
 class MockSupplier:
     """
-    Мок класс для имитации поставщика данных.
+    Мок класс поставщика для тестирования.
 
-    :ivar supplier_abs_path: Абсолютный путь к каталогу со сценариями.
+    :ivar supplier_abs_path: Абсолютный путь к каталогу сценариев.
     :vartype supplier_abs_path: Path
     :ivar scenario_files: Список файлов сценариев.
-    :vartype scenario_files: list[Path]
+    :vartype scenario_files: List[Path]
     :ivar current_scenario: Текущий сценарий.
-    :vartype current_scenario: dict
+    :vartype current_scenario: Any
     :ivar supplier_settings: Настройки поставщика.
     :vartype supplier_settings: dict
-    :ivar related_modules: Мок объект для модулей.
+    :ivar related_modules: Мок связанных модулей.
     :vartype related_modules: MockRelatedModules
-    :ivar driver: Мок объект для драйвера.
+    :ivar driver: Мок драйвера.
     :vartype driver: MockDriver
     """
     def __init__(self):
         """
-        Инициализирует мок-объект поставщика.
+        Инициализация мок объекта поставщика.
         """
         self.supplier_abs_path = Path('/path/to/scenarios')
         self.scenario_files = [Path('scenarios/scenario1.json'), Path('scenarios/scenario2.json')]
@@ -91,201 +80,148 @@ class MockSupplier:
         self.related_modules = MockRelatedModules()
         self.driver = MockDriver()
 
+# TODO: Добавить описание класса MockRelatedModules в формате RST
 class MockRelatedModules:
     """
-    Мок класс для имитации связанных модулей.
-
-    :ivar s: Строка для имитации аргумента.
+    Мок связанных модулей для тестирования.
     """
-    def get_list_products_in_category(self, s: str) -> list:
+    def get_list_products_in_category(self, s: Any) -> List[str]:
         """
-        Мок метод для получения списка продуктов в категории.
+        Мок функции для получения списка товаров в категории.
 
-        :param s: Строка для имитации аргумента.
-        :return: Список URL продуктов.
-        :rtype: list
+        :param s: Параметр, не используемый в мок реализации.
+        :return: Список URL товаров.
         """
         return ['http://example.com/product1', 'http://example.com/product2']
 
-    def grab_product_page(self, s: str) -> ProductFields:
+    def grab_product_page(self, s: Any) -> ProductFields:
         """
-        Мок метод для имитации получения данных со страницы продукта.
+        Мок функции для сбора данных со страницы продукта.
 
-        :param s: Строка для имитации аргумента.
-        :return: Мок объект с данными о продукте.
-        :rtype: ProductFields
+        :param s: Параметр, не используемый в мок реализации.
+        :return: Объект ProductFields с моковыми данными.
         """
         return ProductFields(
             presta_fields_dict={'reference': 'REF123', 'name': [{ 'id': 1, 'value': 'Sample Product' }], 'price': 100},
             assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
         )
 
-    async def grab_page(self, s: str) -> ProductFields:
+    async def grab_page(self, s: Any) -> ProductFields:
         """
-        Асинхронный мок метод для имитации получения данных со страницы продукта.
+        Асинхронная мок функция для сбора данных со страницы продукта.
 
-        :param s: Строка для имитации аргумента.
-        :return: Мок объект с данными о продукте.
-        :rtype: ProductFields
+        :param s: Параметр, не используемый в мок реализации.
+        :return: Объект ProductFields с моковыми данными.
         """
         return self.grab_product_page(s)
 
+# TODO: Добавить описание класса MockDriver в формате RST
 class MockDriver:
     """
-     Мок класс для имитации драйвера.
+    Мок драйвера для тестирования.
     """
     def get_url(self, url: str) -> bool:
         """
-        Мок метод для имитации загрузки URL.
+        Мок функции для получения URL.
 
-        :param url: URL для имитации загрузки.
-        :return: True, если загрузка прошла успешно.
-        :rtype: bool
+        :param url: URL для получения.
+        :return: Всегда возвращает True.
         """
         return True
 
-# Пример 1: Запуск списка файлов сценариев
-def example_run_scenario_files() -> None:
+# TODO: Добавить описание функции example_run_scenario_files в формате RST
+def example_run_scenario_files():
     """
     Пример запуска списка файлов сценариев.
-
-    :return: None
     """
     supplier = MockSupplier()
     scenario_files = [Path('scenarios/scenario1.json'), Path('scenarios/scenario2.json')]
-    try:
-        result = run_scenario_files(supplier, scenario_files)
-        if result:
-            logger.info("All scenarios executed successfully.")
-        else:
-            logger.error("Some scenarios failed.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
+    result = run_scenario_files(supplier, scenario_files)
+    if result:
+        logger.info("Все сценарии выполнены успешно.")
+    else:
+        logger.error("Некоторые сценарии не удалось выполнить.")
 
-
-# Пример 2: Запуск одного файла сценария
-def example_run_scenario_file() -> None:
+# TODO: Добавить описание функции example_run_scenario_file в формате RST
+def example_run_scenario_file():
     """
     Пример запуска одного файла сценария.
-
-    :return: None
     """
     supplier = MockSupplier()
     scenario_file = Path('scenarios/scenario1.json')
-    try:
-        result = run_scenario_file(supplier, scenario_file)
-        if result:
-             logger.info("Scenario file executed successfully.")
-        else:
-             logger.error("Failed to execute scenario file.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
+    result = run_scenario_file(supplier, scenario_file)
+    if result:
+        logger.info("Файл сценария выполнен успешно.")
+    else:
+       logger.error("Не удалось выполнить файл сценария.")
 
-
-# Пример 3: Запуск одного сценария
-def example_run_scenario() -> None:
+# TODO: Добавить описание функции example_run_scenario в формате RST
+def example_run_scenario():
     """
     Пример запуска одного сценария.
-
-    :return: None
     """
     supplier = MockSupplier()
     scenario = {
         'url': 'http://example.com/category',
         'products': [{'url': 'http://example.com/product1'}, {'url': 'http://example.com/product2'}]
     }
-    try:
-        result = run_scenario(supplier, scenario)
-        if result:
-            logger.info("Scenario executed successfully.")
-        else:
-             logger.error("Failed to execute the scenario.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
+    result = run_scenario(supplier, scenario)
+    if result:
+        logger.info("Сценарий выполнен успешно.")
+    else:
+        logger.error("Не удалось выполнить сценарий.")
 
-
-# Пример 4: Вставка данных о продукте в PrestaShop
-def example_insert_grabbed_data() -> None:
+# TODO: Добавить описание функции example_insert_grabbed_data в формате RST
+def example_insert_grabbed_data():
     """
-    Пример вставки данных о продукте в PrestaShop.
-
-    :return: None
+    Пример вставки полученных данных о продукте в PrestaShop.
     """
     product_fields = ProductFields(
         presta_fields_dict={'reference': 'REF123', 'name': [{ 'id': 1, 'value': 'Sample Product' }], 'price': 100},
         assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
     )
-    try:
-        insert_grabbed_data(product_fields)
-        logger.info("Product data inserted into PrestaShop.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
+    insert_grabbed_data(product_fields)
+    logger.info("Данные о продукте вставлены в PrestaShop.")
 
-
-# Пример 5: Добавление купона с использованием PrestaShop API
-def example_add_coupon() -> None:
+# TODO: Добавить описание функции example_add_coupon в формате RST
+def example_add_coupon():
     """
-    Пример добавления купона с использованием PrestaShop API.
-
-    :return: None
+    Пример добавления купона через PrestaShop API.
     """
     credentials = {'api_domain': 'https://example.com/api', 'api_key': 'YOUR_API_KEY'}
     reference = 'REF123'
     coupon_code = 'SUMMER2024'
     start_date = '2024-07-01'
     end_date = '2024-07-31'
-    try:
-        add_coupon(credentials, reference, coupon_code, start_date, end_date)
-        logger.info("Coupon added successfully.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
+    add_coupon(credentials, reference, coupon_code, start_date, end_date)
+    logger.info("Купон добавлен успешно.")
 
-
-# Пример 6: Асинхронное выполнение вставки данных о продукте в PrestaShop
-async def example_execute_PrestaShop_insert_async() -> None:
+# TODO: Добавить описание функции example_execute_PrestaShop_insert_async в формате RST
+async def example_execute_PrestaShop_insert_async():
     """
-    Пример асинхронного выполнения вставки данных о продукте в PrestaShop.
-
-    :return: None
+    Пример асинхронной вставки данных о продукте в PrestaShop.
     """
     product_fields = ProductFields(
         presta_fields_dict={'reference': 'REF123', 'name': [{ 'id': 1, 'value': 'Sample Product' }], 'price': 100},
         assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
     )
-    try:
-        await execute_PrestaShop_insert_async(product_fields)
-        logger.info("Product data inserted into PrestaShop asynchronously.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
+    await execute_PrestaShop_insert_async(product_fields)
+    logger.info("Данные о продукте вставлены в PrestaShop асинхронно.")
 
-
-# Пример 7: Синхронное выполнение вставки данных о продукте в PrestaShop
-def example_execute_PrestaShop_insert() -> None:
+# TODO: Добавить описание функции example_execute_PrestaShop_insert в формате RST
+def example_execute_PrestaShop_insert():
     """
-    Пример синхронного выполнения вставки данных о продукте в PrestaShop.
-
-    :return: None
+    Пример синхронной вставки данных о продукте в PrestaShop.
     """
     product_fields = ProductFields(
         presta_fields_dict={'reference': 'REF123', 'name': [{ 'id': 1, 'value': 'Sample Product' }], 'price': 100},
-        assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
+         assist_fields_dict={'images_urls': ['http://example.com/image1.jpg'], 'default_image_url': 'http://example.com/default_image.jpg', 'locale': 'en'}
     )
-    try:
-        result = execute_PrestaShop_insert(product_fields)
-        if result:
-             logger.info("Product data inserted into PrestaShop.")
-        else:
-             logger.error("Failed to insert product data into PrestaShop.")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
-        return
-
+    result = execute_PrestaShop_insert(product_fields)
+    if result:
+        logger.info("Данные о продукте вставлены в PrestaShop.")
+    else:
+        logger.error("Не удалось вставить данные о продукте в PrestaShop.")
 
 # Запуск примеров
 if __name__ == "__main__":

@@ -1,62 +1,55 @@
 # Анализ кода модуля `supplier`
 
 **Качество кода**
-8
--  Плюсы
-    - Код хорошо структурирован и использует классы для представления поставщиков.
-    - Присутствует базовая документация в формате reStructuredText (RST) для модуля и классов.
-    - Используется `pydantic` для валидации данных.
-    - Применяется `logger` для логирования ошибок и информации.
+10
+- Плюсы
     - Код соответствует PEP 8.
-
--  Минусы
-    -  Не все функции и методы имеют docstring в формате reStructuredText (RST).
-    -  В некоторых местах используются избыточные блоки `try-except`.
-    -  В некоторых местах логирование ошибок не полное(не передаётся ex).
-    - Отсутствуют комментарии для строк кода.
-    - Присутствует импорт header, который не используется.
-    - Не указаны типы для  параметров `scenario_files` в методе `run_scenario_files` и `scenarios` в методе `run_scenarios`
+    - Используются аннотации типов.
+    - Присутствуют docstring для классов и методов.
+    - Используется `pydantic` для валидации данных.
+    - Логирование с помощью `src.logger.logger`.
+    - Отдельная обработка ошибок с помощью `logger.error`.
+- Минусы
+   -  Смешанный стиль `reStructuredText` в docstring и обычных комментариях.
 
 **Рекомендации по улучшению**
-1.  Добавить подробные docstring в формате RST для всех функций и методов, включая параметры и возвращаемые значения.
-2.  Улучшить обработку ошибок, используя `logger.error` с передачей объекта исключения для более детального логирования.
-3.  Избегать избыточных блоков `try-except`, где это возможно, и применять логирование ошибок.
-4.  Добавить комментарии к строкам кода для пояснения выполняемых действий.
-5. Удалить неиспользуемый импорт `header`.
-6.  Указать конкретные типы для параметров `scenario_files` в методе `run_scenario_files` и `scenarios` в методе `run_scenarios`.
+1. Привести все комментарии в docstring к формату `reStructuredText`.
+2.  Уточнить docstring к методу `login`.
+3. Убрать дублирование логики загрузки настроек в методе `_payload` в try/except блоке, разделив на несколько методов
+4.  В методе `_payload` следует использовать константу или перечисление для ключей `price_rule`, `locale`, `scenario_files`, `locators`
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с поставщиками
+Модуль для работы с поставщиками.
 =========================================================================================
 
-Этот модуль содержит класс :class:`Supplier`, который используется для управления
-различными поставщиками, загрузки их настроек и выполнения сценариев.
+Этот модуль содержит класс :class:`Supplier`, который служит базовым классом
+для работы с различными поставщиками. Он управляет загрузкой настроек,
+выполнением сценариев и взаимодействием с веб-драйвером.
 
 Пример использования
 --------------------
 
-Пример использования класса `Supplier`:
+Пример создания экземпляра класса `Supplier`:
 
 .. code-block:: python
 
-    supplier = Supplier(supplier_prefix='example_supplier')
+    supplier = Supplier(supplier_prefix='example_supplier', locale='ru')
     supplier.run_scenario_files()
 """
 MODE = 'dev'
 
 import importlib
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional, Dict, Any
 from types import ModuleType, SimpleNamespace
 
 from pydantic import BaseModel, Field, validator
-
+import header
 from src import gs
 from src.utils.jjson import j_loads_ns
 from src.webdriver.driver import Driver
@@ -64,13 +57,12 @@ from src.scenario import run_scenarios, run_scenario_files
 from src.logger.logger import logger
 from src.logger.exceptions import DefaultSettingsException
 
-
 class Supplier(BaseModel):
     """
-    Базовый класс для поставщиков.
+    Базовый класс для работы с поставщиками.
 
-    Предоставляет интерфейс для загрузки настроек поставщика,
-    запуска сценариев и управления веб-драйвером.
+    Управляет загрузкой настроек поставщика, выполнением сценариев и
+    взаимодействием с веб-драйвером.
 
     :param supplier_id: Идентификатор поставщика.
     :type supplier_id: Optional[int]
@@ -90,6 +82,7 @@ class Supplier(BaseModel):
     :type locators: Dict[str, Any]
     :param driver: Веб-драйвер.
     :type driver: Optional[Driver]
+
     """
     supplier_id: Optional[int] = Field(default=None)
     supplier_prefix: str = Field(...)
@@ -102,13 +95,18 @@ class Supplier(BaseModel):
     driver: Optional[Driver] = Field(default=None)
 
     class Config:
-        """Настройки модели."""
+        """
+        Настройки модели.
+
+        :ivar arbitrary_types_allowed: Разрешает произвольные типы.
+        :vartype arbitrary_types_allowed: bool
+        """
         arbitrary_types_allowed = True
 
     @validator('supplier_prefix')
     def check_supplier_prefix(cls, value: str) -> str:
         """
-        Проверяет префикс поставщика.
+        Проверяет префикс поставщика на пустоту.
 
         :param value: Префикс поставщика.
         :type value: str
@@ -122,109 +120,109 @@ class Supplier(BaseModel):
 
     def __init__(self, **data):
         """
-        Инициализирует поставщика.
+        Инициализирует поставщика и загружает конфигурацию.
 
-        Загружает конфигурацию поставщика и вызывает исключение `DefaultSettingsException`
-        если конфигурация не загружена.
-
-        :param data: Данные для инициализации поставщика.
-        :type data: Dict[str, Any]
-        :raises DefaultSettingsException: Если не удалось загрузить настройки поставщика.
+        :param data: Параметры инициализации.
+        :type data: dict
+        :raises DefaultSettingsException: Если не удалось загрузить настройки.
         """
         super().__init__(**data)
-        # Проверяет загрузку конфигурации поставщика
         if not self._payload():
-            # Если загрузка не удалась вызывает исключение
             raise DefaultSettingsException(f'Ошибка запуска поставщика: {self.supplier_prefix}')
+
+    def _load_related_module(self) -> bool:
+        """
+        Импортирует модуль, связанный с поставщиком.
+
+        :return: True, если импорт успешен, иначе False.
+        :rtype: bool
+        """
+        try:
+            #  код импортирует модуль поставщика
+            related_module = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
+            object.__setattr__(self, 'related_modules', related_module)
+            return True
+        except ModuleNotFoundError as ex:
+            logger.error(f'Модуль не найден для поставщика {self.supplier_prefix}: ', ex)
+            return False
+
+    def _load_settings(self) -> bool:
+        """
+        Загружает настройки поставщика из JSON файла.
+
+        :return: True, если загрузка успешна, иначе False.
+        :rtype: bool
+        """
+        settings_path = gs.path.src / 'suppliers' / f'{self.supplier_prefix}_settings.json'
+        try:
+            #  код загружает настройки поставщика
+            settings: SimpleNamespace = j_loads_ns(settings_path)
+            if not settings:
+                logger.error(f'Настройки не найдены для поставщика: {self.supplier_prefix}')
+                return False
+            self._apply_settings(settings)
+            logger.info(f'Настройки для поставщика {self.supplier_prefix} успешно загружены')
+            return True
+        except Exception as ex:
+            logger.error(f'Ошибка при загрузке настроек для поставщика {self.supplier_prefix}: ', ex)
+            return False
+
+    def _apply_settings(self, settings: SimpleNamespace) -> None:
+        """
+        Применяет загруженные настройки к атрибутам класса.
+
+        :param settings: Настройки поставщика.
+        :type settings: SimpleNamespace
+        """
+        #  код устанавливает значения атрибутов класса из загруженных настроек
+        object.__setattr__(self, 'price_rule', getattr(settings, 'price_rule', 'default_rule'))
+        object.__setattr__(self, 'locale', getattr(settings, 'locale', 'en'))
+        object.__setattr__(self, 'scenario_files', getattr(settings, 'scenario_files', []))
+        object.__setattr__(self, 'locators', getattr(settings, 'locators', {}))
 
     def _payload(self) -> bool:
         """
         Загружает параметры поставщика.
 
-        Использует `j_loads_ns` для загрузки настроек из JSON-файла.
-        Импортирует модуль, связанный с поставщиком.
-
-        :return: `True`, если загрузка успешна, иначе `False`.
+        :return: True, если загрузка успешна, иначе False.
         :rtype: bool
         """
         logger.info(f'Загрузка настроек для поставщика: {self.supplier_prefix}')
-
-        # Пытается импортировать модуль, связанный с поставщиком
-        try:
-            # Формирует имя модуля для импорта
-            related_module = importlib.import_module(f'src.suppliers.{self.supplier_prefix}')
-            # Устанавливает модуль как атрибут экземпляра класса
-            object.__setattr__(self, 'related_modules', related_module)
-        except ModuleNotFoundError as ex:
-            # Логирует ошибку, если модуль не найден
-            logger.error(f'Модуль не найден для поставщика {self.supplier_prefix}: ', ex)
+        if not self._load_related_module():
             return False
-
-        # Формирует путь к файлу настроек поставщика
-        settings_path = gs.path.src / 'suppliers' / f'{self.supplier_prefix}_settings.json'
-
-        # Пытается загрузить настройки поставщика
-        try:
-            # Загружает настройки из файла с использованием j_loads_ns
-            settings: SimpleNamespace = j_loads_ns(settings_path)
-            # Проверяет, что настройки были загружены
-            if not settings:
-                # Логирует ошибку, если настройки не найдены
-                logger.error(f'Настройки не найдены для поставщика: {self.supplier_prefix}')
-                return False
-
-            # Устанавливает значения атрибутов класса из загруженных настроек
-            object.__setattr__(self, 'price_rule', getattr(settings, 'price_rule', 'default_rule'))
-            object.__setattr__(self, 'locale', getattr(settings, 'locale', 'en'))
-            object.__setattr__(self, 'scenario_files', getattr(settings, 'scenario_files', []))
-            object.__setattr__(self, 'locators', getattr(settings, 'locators', {}))
-
-            # Логирует успешную загрузку настроек
-            logger.info(f'Настройки для поставщика {self.supplier_prefix} успешно загружены')
-            return True
-
-        except Exception as ex:
-            # Логирует ошибку, если при загрузке произошла ошибка
-            logger.error(f'Ошибка при загрузке настроек для поставщика {self.supplier_prefix}: ', ex)
+        if not self._load_settings():
             return False
+        return True
 
     def login(self) -> bool:
         """
         Выполняет вход на сайт поставщика.
-
-        Вызывает метод `login` из модуля, связанного с поставщиком.
-
-        :return: `True`, если вход выполнен успешно, иначе `False`.
+        
+        :return: True, если вход выполнен успешно, иначе False.
         :rtype: bool
         """
-        # Вызывает метод login из связанного модуля
         return self.related_modules.login(self)
 
-    def run_scenario_files(self, scenario_files: Optional[Union[str, List[str]]] = None) -> bool:
+    def run_scenario_files(self, scenario_files: Optional[str | List[str]] = None) -> bool:
         """
-        Запускает выполнение одного или нескольких файлов сценариев.
+        Выполняет один или несколько файлов сценариев.
 
-        Если `scenario_files` не переданы, используются файлы из `self.scenario_files`.
-
-        :param scenario_files: Список файлов сценариев.
-        :type scenario_files: Optional[Union[str, List[str]]]
-        :return: `True`, если все сценарии успешно выполнены, иначе `False`.
+        :param scenario_files: Список файлов сценариев. Если не указан, берется из `self.scenario_files`.
+        :type scenario_files: Optional[str | List[str]]
+        :return: True, если все сценарии успешно выполнены, иначе False.
         :rtype: bool
         """
-        # Определяет список файлов сценариев
         scenario_files = scenario_files if scenario_files else self.scenario_files
-        # Вызывает функцию для выполнения файлов сценариев
         return run_scenario_files(self, scenario_files)
 
-    def run_scenarios(self, scenarios: Union[dict, List[dict]]) -> bool:
+    def run_scenarios(self, scenarios: dict | List[dict]) -> bool:
         """
-        Запускает выполнение одного или списка сценариев.
+        Выполняет список или один сценарий.
 
-        :param scenarios: Сценарий или список сценариев.
-        :type scenarios: Union[dict, List[dict]]
-        :return: `True`, если сценарий успешно выполнен, иначе `False`.
+        :param scenarios: Сценарий или список сценариев для выполнения.
+        :type scenarios: dict | List[dict]
+        :return: True, если сценарий успешно выполнен, иначе False.
         :rtype: bool
         """
-        # Вызывает функцию для выполнения сценариев
         return run_scenarios(self, scenarios)
 ```

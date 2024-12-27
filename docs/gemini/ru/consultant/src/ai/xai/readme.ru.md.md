@@ -3,40 +3,102 @@
 **Качество кода**
 8
 -  Плюсы
-    -  Документ содержит подробное описание API клиента xAI на русском языке.
-    -  Присутствуют примеры использования API как для обычных запросов, так и для потоковых.
-    -  Описан процесс установки необходимых зависимостей и инициализации клиента.
-    -  Структура документа логичная и позволяет пользователям быстро понять, как использовать клиент.
+    -   Документ предоставляет понятное описание клиента API xAI, его функциональности и способов использования.
+    -   Содержит примеры кода для инициализации, отправки запросов и обработки ответов.
+    -   Охватывает важные аспекты, такие как аутентификация, завершение чата и потоковая передача ответов.
+    -   Инструкции по установке и использованию достаточно ясны и легки для понимания.
+    -   Наличие разделов о вкладе, лицензии и благодарностях.
+    -   Есть ссылка на документацию API.
 -  Минусы
-    -  Отсутствует описание структуры модуля `xai.py`, который этот документ описывает.
-    -  Не хватает подробностей о обработке ошибок.
-    -  Используются  стандартный метод `json.loads` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Примеры кода не соответствуют стилю, описанному в инструкции.
-    -  Отсутствуют docstring для функций и классов.
+    -   В тексте не используется reStructuredText (RST) для форматирования документации.
+    -   Отсутствует docstring для модуля и других элементов.
+    -   Используется стандартный `json.loads` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -   Не используются логирование с помощью `from src.logger.logger import logger`.
+    -   Не все примеры кода корректны (например, отсутствует импорт `json`).
+    -   Не проводится обработка ошибок.
+    -   Присутствуют избыточные комментарии после `#`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание структуры модуля `xai.py`, на который ссылается этот readme.
-2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.loads`.
-3.  Добавить примеры обработки ошибок, логирование.
-4.  Переписать примеры кода с соблюдением стиля, описанного в инструкции.
-5.  Добавить reStructuredText (RST) docstring для функций и классов в модуле `xai.py`.
-6.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+1.  **Форматирование документации**:
+    -   Переписать все комментарии в формате reStructuredText (RST).
+    -   Добавить docstring для модуля и функций (если таковые будут добавлены).
+
+2.  **Использование j_loads**:
+    -   Заменить `json.loads` на `j_loads` или `j_loads_ns` из `src.utils.jjson`. (В данном случае, это относится к примерам использования.)
+
+3.  **Логирование**:
+    -   Добавить логирование ошибок с использованием `from src.logger.logger import logger`.
+    -   Избегать стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
+
+4.  **Обработка ошибок**:
+    -   Добавить обработку ошибок в примеры кода.
+
+5.  **Корректировка примеров кода**:
+    -   Исправить все примеры, добавив импорты и убедившись в их работоспособности.
+
+6.  **Удалить избыточные комментарии**:
+    -   Удалить все комментарии после `#`.
+
+7. **Общая оптимизация**:
+   -   Улучшить текст с точки зрения ясности и лаконичности.
+   -   Соблюдать стандарты оформления docstring в Python (например, для Sphinx).
+    
+8.  **Примеры кода**:
+    -   Привести примеры документации RST и возможные улучшения.
 
 **Оптимизированный код**
 
 ```markdown
 # Клиент API xAI
+"""
+Модуль содержит документацию по использованию Python-клиента для взаимодействия с API xAI.
+
+Этот клиент разработан для упрощения процесса отправки запросов к API xAI, включая как стандартные, так и потоковые запросы.
+
+Пример использования
+--------------------
+
+Пример инициализации класса XAI и запроса:
+
+.. code-block:: python
+
+    from xai import XAI
+    import json
+
+    api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+    xai = XAI(api_key)
+    
+    messages = [
+        {
+            "role": "system",
+            "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+        },
+        {
+            "role": "user",
+            "content": "What is the answer to life and universe?"
+        }
+    ]
+    
+    completion_response = xai.chat_completion(messages)
+    print("Non-streaming response:", completion_response)
+
+    stream_response = xai.stream_chat_completion(messages)
+    print("Streaming response:")
+    for line in stream_response:
+        if line.strip():
+            print(json.loads(line))
+"""
 
 ## Обзор
-
+    
 Этот репозиторий содержит Python-клиент для взаимодействия с API xAI. Клиент разработан для упрощения процесса отправки запросов к API xAI, включая как стандартные, так и потоковые запросы.
 
 ## Возможности
 
 - **Аутентификация**: Безопасная аутентификация ваших запросов с использованием ключа API xAI.
-- **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
-- **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
+- **Завершение чата**: Генерация ответов от моделей xAI с использованием метода ``chat_completion``.
+- **Потоковая передача ответов**: Потоковая передача ответов от моделей xAI с использованием метода ``stream_chat_completion``.
 
 ## Установка
 
@@ -50,24 +112,24 @@ pip install requests
 
 ### Инициализация
 
-Сначала инициализируйте класс `XAI` с вашим ключом API:
+Сначала инициализируйте класс ``XAI`` с вашим ключом API:
 
 ```python
-#  Импортируем класс XAI из модуля xai.
 from xai import XAI
 
-#  Пример ключа API, который необходимо заменить на реальный.
-api_key = "your_api_key_here"  
-# Инициализируем класс XAI с переданным ключом API.
+api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
 xai = XAI(api_key)
 ```
 
 ### Завершение чата
 
-Для генерации ответа от модели xAI используйте метод `chat_completion`:
+Для генерации ответа от модели xAI используйте метод ``chat_completion``:
 
 ```python
-#  Пример сообщения для запроса к API.
+import json
+from src.utils.jjson import j_loads  # Используем j_loads для загрузки JSON
+from src.logger.logger import logger # импортируем логер
+
 messages = [
     {
         "role": "system",
@@ -79,44 +141,22 @@ messages = [
     }
 ]
 
-#  Отправляем запрос на завершение чата и выводим результат.
-completion_response = xai.chat_completion(messages)
-print("Non-streaming response:", completion_response)
+try: # Оборачиваем в try except блок для обработки ошибок
+    completion_response = xai.chat_completion(messages)
+    print("Non-streaming response:", completion_response)
+except Exception as e:
+    logger.error(f"Ошибка при выполнении запроса chat_completion: {e}")
 ```
 
 ### Потоковая передача завершения чата
 
-Для потоковой передачи ответов от модели xAI используйте метод `stream_chat_completion`:
+Для потоковой передачи ответов от модели xAI используйте метод ``stream_chat_completion``:
 
 ```python
-#  Отправляем запрос на потоковое завершение чата.
-stream_response = xai.stream_chat_completion(messages)
-#  Выводим каждый полученный блок данных.
-print("Streaming response:")
-#  Обрабатываем каждый ответ.
-for line in stream_response:
-    #  Удаляем пробелы из начала и конца строки.
-    if line.strip():
-        #  Десериализуем строку JSON и выводим.
-        print(json.loads(line))
-```
-
-## Пример
-
-Вот полный пример использования клиента `XAI`:
-
-```python
-#  Импортируем модуль json для работы с JSON и класс XAI из модуля xai.
 import json
-from xai import XAI
-#  Импортируем logger для логгирования ошибок.
-from src.logger.logger import logger
-#  Пример ключа API, который необходимо заменить на реальный.
-api_key = "your_api_key_here"  
-#  Инициализируем класс XAI с переданным ключом API.
-xai = XAI(api_key)
+from src.utils.jjson import j_loads # Используем j_loads для загрузки JSON
+from src.logger.logger import logger # импортируем логер
 
-#  Пример сообщения для запроса к API.
 messages = [
     {
         "role": "system",
@@ -128,26 +168,56 @@ messages = [
     }
 ]
 
-#  Отправляем запрос на завершение чата и выводим результат.
-try:
+try: # Оборачиваем в try except блок для обработки ошибок
+    stream_response = xai.stream_chat_completion(messages)
+    print("Streaming response:")
+    for line in stream_response:
+        if line.strip():
+            print(j_loads(line)) # Используем j_loads для загрузки JSON
+except Exception as e:
+    logger.error(f"Ошибка при выполнении запроса stream_chat_completion: {e}")
+```
+
+## Пример
+
+Вот полный пример использования клиента ``XAI``:
+
+```python
+import json
+from xai import XAI
+from src.utils.jjson import j_loads # Используем j_loads для загрузки JSON
+from src.logger.logger import logger # импортируем логер
+
+api_key = "your_api_key_here"  # Замените на ваш реальный ключ API
+xai = XAI(api_key)
+
+messages = [
+    {
+        "role": "system",
+        "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
+    },
+    {
+        "role": "user",
+        "content": "What is the answer to life and universe?"
+    }
+]
+
+# Непотоковый запрос
+try: # Оборачиваем в try except блок для обработки ошибок
     completion_response = xai.chat_completion(messages)
     print("Non-streaming response:", completion_response)
 except Exception as e:
-    logger.error(f"Error during non-streaming request: {e}")
-    
-#  Отправляем запрос на потоковое завершение чата.
-try:
+    logger.error(f"Ошибка при выполнении запроса chat_completion: {e}")
+
+# Потоковый запрос
+try: # Оборачиваем в try except блок для обработки ошибок
     stream_response = xai.stream_chat_completion(messages)
-    #  Выводим каждый полученный блок данных.
     print("Streaming response:")
-    #  Обрабатываем каждый ответ.
     for line in stream_response:
-        #  Удаляем пробелы из начала и конца строки.
         if line.strip():
-            # Десериализуем строку JSON и выводим.
-            print(json.loads(line))
+            print(j_loads(line)) # Используем j_loads для загрузки JSON
 except Exception as e:
-    logger.error(f"Error during streaming request: {e}")
+    logger.error(f"Ошибка при выполнении запроса stream_chat_completion: {e}")
 ```
 
 ## Вклад

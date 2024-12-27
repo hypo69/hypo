@@ -1,52 +1,54 @@
 # Анализ кода модуля `drive.py`
 
 **Качество кода**
-7
+8
 -  Плюсы
-    - Код использует  библиотеку `googleapiclient` для работы с Google Drive API.
-    - Присутствует  базовая структура для загрузки файла на Google Drive.
-    - Используется `pickle` для сохранения и загрузки токена доступа, что позволяет избежать повторной авторизации.
-    - Код использует `Path` из библиотеки `pathlib` для работы с путями файлов.
+    - Код структурирован в класс `GoogleDriveHandler`, что обеспечивает инкапсуляцию функциональности.
+    - Используются необходимые библиотеки для работы с Google Drive API.
+    - Присутствует базовая обработка аутентификации через `token.pickle`.
+    - Есть пример использования в `if __name__ == '__main__':`.
 -  Минусы
-    -  Отсутствует обработка ошибок при загрузке файла.
-    -  Не используется `logger` для отладки и логирования ошибок.
-    -  Код содержит неиспользуемые импорты и дубликаты импортов.
-    -  Файл содержит избыточные комментарии в начале, которые не имеют отношения к описанию модуля.
-    -  Отсутствует описание в формате reStructuredText для модуля, классов и методов.
-    -  Метод `upload_file` не реализован, а содержит лишь комментарий-заглушку.
-    -  Используется прямой `print` вместо `logger` для вывода информации о файлах.
-    - Имя `creds_file` не определено. Предположительно, должно использовать `creds_file = gs.path.secrets  / 'hypo69-c32c8736ca62.json'` но  `self.creds_file` используется в методе `_create_credentials` до его определения.
-    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Отсутствует полная реализация логики загрузки файлов.
+    - Использованы глобальные константы, которые не объявлены в начале модуля.
+    - Не все функции и методы имеют docstring.
+    - Код содержит дублирование импортов.
+    - Используется  `print` вместо `logger`.
+    - `_create_credentials` не является статическим методом класса
+     - Отсутствует проверка на существование директории `token.pickle`, из за чего при первом запуске может упасть.
+    - Не хватает описания назначения переменных и аргументов.
+    - Не используется `j_loads` или `j_loads_ns`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring в формате reStructuredText для модуля, класса `GoogleDriveHandler` и его методов.
-2.  Реализовать метод `upload_file` с корректной загрузкой файла в Google Drive.
-3.  Заменить `print` на `logger` для вывода информации о файлах.
-4.  Использовать `logger` для логирования ошибок и отладки.
-5.  Удалить дублирующиеся импорты и неиспользуемые импорты.
-6.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `pickle.load` для чтения файла с токеном, если это необходимо.
-7.  Обрабатывать ошибки при загрузке файла, используя `try-except` и логирование ошибок через `logger.error`.
-8.  Исправить ошибку с `creds_file` и правильно передавать его в метод `_create_credentials`.
-9.  Добавить проверку наличия токена перед попыткой его загрузки.
-10.  Избегать использования `...` в коде, за исключением мест, где это действительно необходимо как указание на точку остановки.
-11. Добавить проверку, что файл для загрузки существует.
+1.  Добавить docstring для модуля, класса и методов с использованием reStructuredText (RST).
+2.  Убрать дублирующиеся импорты.
+3.  Использовать `logger` для вывода сообщений вместо `print`.
+4.  Реализовать логику загрузки файла в методе `upload_file`.
+5.  Устранить неиспользуемые переменные `MODE`.
+6.  Уточнить работу с файлом `creds_file`
+7.   Добавить `try-except` для обработки ошибок аутентификации и загрузки файлов.
+8.   Перенести константы в начало модуля.
+9.   Сделать метод `_create_credentials` статическим.
+10.  Добавить обработку исключений для случаев, когда `token.pickle` отсутствует.
+11. Убрать неиспользуемые комментарии и `#!`.
+12. Добавить проверку на существование каталога для `token.pickle`.
+13.   Добавить полное описание  переменных и аргументов
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для работы с Google Drive.
-=========================================================================================
+Модуль для работы с Google Drive API.
+========================================================
 
-Этот модуль предоставляет класс :class:`GoogleDriveHandler` для управления файлами в Google Drive.
-Он позволяет загружать файлы на Google Drive, используя API Google Drive v3.
+Этот модуль предоставляет класс :class:`GoogleDriveHandler` для загрузки файлов в Google Drive.
+Аутентификация выполняется через файл `token.pickle`, в котором хранятся учетные данные пользователя.
 
 Пример использования
 --------------------
 
-Пример использования класса `GoogleDriveHandler`:
+Пример загрузки файла в Google Drive:
 
 .. code-block:: python
 
@@ -58,135 +60,155 @@
     google_drive_handler = GoogleDriveHandler(folder_name=folder_name)
     google_drive_handler.upload_file(file_path)
 """
+
 import os
 import pickle
 from pathlib import Path
-from googleapiclient.discovery import build
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 from src import gs
 from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns
+
+# Определяем константы
+SCOPES = ['https://www.googleapis.com/auth/drive']
+TOKEN_FILE = 'token.pickle'
+SECRETS_FILE = gs.path.secrets / 'hypo69-c32c8736ca62.json'
 
 
 class GoogleDriveHandler:
     """
-    Класс для управления файлами в Google Drive.
+    Класс для взаимодействия с Google Drive.
 
-    :param folder_name: Имя папки в Google Drive, в которую будут загружаться файлы.
+    :param folder_name: Имя папки в Google Drive, куда будут загружаться файлы.
+    :type folder_name: str
     """
+
     def __init__(self, folder_name: str):
         """
-        Инициализирует обработчик Google Drive.
+        Инициализация обработчика Google Drive.
+
+        :param folder_name: Имя папки в Google Drive.
+        :type folder_name: str
         """
         self.folder_name = folder_name
         self.creds = self._create_credentials()
+        self.service = build('drive', 'v3', credentials=self.creds)
 
-    def _create_credentials(self) -> Credentials:
+    @staticmethod
+    def _create_credentials():
         """
-        Создает или загружает учетные данные для доступа к Google Drive API.
+        Получает действительные учетные данные пользователя из хранилища.
 
-        :return: Объект Credentials с учетными данными.
+        Метод проверяет наличие файла `token.pickle`. Если он есть, загружает учетные данные из него.
+        Если файла нет или учетные данные недействительны, выполняется процесс аутентификации.
+        Результатом является объект `Credentials` для работы с Google API.
+
+        :return: Учетные данные Google Drive.
+        :rtype: google.oauth2.credentials.Credentials
         """
-        creds_file: Path = gs.path.secrets / 'hypo69-c32c8736ca62.json'
-        SCOPES: list = ['https://www.googleapis.com/auth/drive']
         creds = None
-        # Проверяем существует ли файл с токеном
-        if os.path.exists('token.pickle'):
-             # Пытаемся загрузить токен
+        if os.path.exists(TOKEN_FILE):
             try:
-                with open('token.pickle', 'rb') as token:
+                with open(TOKEN_FILE, 'rb') as token:
                     creds = pickle.load(token)
             except Exception as ex:
-                 # Если не удалось загрузить токен, логируем ошибку
-                logger.error(f'Ошибка при загрузке токена из файла token.pickle: {ex}')
+                logger.error(f'Ошибка загрузки токена из файла {TOKEN_FILE}', exc_info=ex)
                 return None
 
-        # Проверяем, валидны ли учетные данные
         if not creds or not creds.valid:
-            # Если учетные данные есть, но они истекли, пытаемся их обновить
             if creds and creds.expired and creds.refresh_token:
                 try:
                     creds.refresh(Request())
                 except Exception as ex:
-                    # Если обновление не удалось, логируем ошибку
-                    logger.error(f'Ошибка при обновлении токена: {ex}')
-                    return None
+                     logger.error('Ошибка обновления токена', exc_info=ex)
+                     return None
             else:
-                # Если учетных данных нет или они недействительны, запускаем процесс аутентификации
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    str(creds_file), SCOPES)
-                try:
+                 try:
+                    flow = InstalledAppFlow.from_client_secrets_file(
+                        str(SECRETS_FILE), SCOPES
+                    )
                     creds = flow.run_local_server(port=0)
-                except Exception as ex:
-                    # Если аутентификация не удалась, логируем ошибку
-                    logger.error(f'Ошибка при аутентификации: {ex}')
-                    return None
-                # Сохраняем новые учетные данные
-                try:
-                    with open('token.pickle', 'wb') as token:
-                        pickle.dump(creds, token)
-                except Exception as ex:
-                    # Если не удалось сохранить токен, логируем ошибку
-                    logger.error(f'Ошибка при сохранении токена в файл token.pickle: {ex}')
-                    return None
+                 except Exception as ex:
+                     logger.error('Ошибка создания flow для аутентификации', exc_info=ex)
+                     return None
+            try:
+                with open(TOKEN_FILE, 'wb') as token:
+                    pickle.dump(creds, token)
+            except Exception as ex:
+                 logger.error(f'Ошибка сохранения токена в файл {TOKEN_FILE}', exc_info=ex)
+                 return None
         return creds
 
     def upload_file(self, file_path: Path):
         """
-        Загружает файл на Google Drive в указанную папку.
+        Загружает файл в указанную папку Google Drive.
 
         :param file_path: Путь к файлу, который нужно загрузить.
+        :type file_path: pathlib.Path
         """
-        if not file_path.exists():
-            logger.error(f'Файл не найден: {file_path}')
+        if not self.creds:
+            logger.error('Отсутствуют учетные данные для Google Drive.')
             return
-        service = build('drive', 'v3', credentials=self.creds)
-        file_metadata = {'name': file_path.name,
-                         'parents': [self.folder_name]} #TODO реализовать поиск папки по имени
-        try:
-            # Открываем файл для чтения в бинарном режиме
-            with open(file_path, 'rb') as file_content:
-                 # Загружаем файл в Google Drive
-                 file = service.files().create(body=file_metadata,
-                                                     media_body=file_content).execute()
-            logger.info(f'Файл "{file_path.name}" успешно загружен на Google Drive. ID файла: {file.get("id")}')
-        except Exception as ex:
-              # Логируем ошибку, если не удалось загрузить файл
-            logger.error(f'Ошибка при загрузке файла "{file_path}": {ex}')
 
+        try:
+             # Проверяем, существует ли папка с указанным именем
+            folder_id = self._get_folder_id()
+            if not folder_id:
+                logger.error(f'Папка с именем {self.folder_name} не найдена.')
+                return
+
+            # Загрузка файла
+            file_metadata = {'name': file_path.name, 'parents': [folder_id]}
+            media =  googleapiclient.http.MediaFileUpload(str(file_path), mimetype='application/octet-stream', resumable=True)
+            file = self.service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            logger.info(f'Файл {file_path.name} успешно загружен в Google Drive, id файла: {file.get("id")}')
+        except Exception as ex:
+            logger.error(f'Ошибка загрузки файла {file_path.name} в Google Drive', exc_info=ex)
+
+    def _get_folder_id(self) -> str | None:
+        """
+        Получает ID папки в Google Drive по ее имени.
+
+        :return: ID папки, если она найдена, иначе None.
+        :rtype: str | None
+        """
+        try:
+            # Поиск папки по имени
+            query = f"mimeType='application/vnd.google-apps.folder' and name='{self.folder_name}'"
+            results = self.service.files().list(q=query, fields="files(id)").execute()
+            items = results.get('files', [])
+            if items:
+                return items[0].get('id')
+            return None
+        except Exception as ex:
+            logger.error(f'Ошибка поиска папки {self.folder_name} в Google Drive', exc_info=ex)
+            return None
 
 def main():
-    """
-    Демонстрирует базовое использование Drive v3 API.
-    """
-    #  Создаём экземпляр GoogleDriveHandler
-    drive_handler = GoogleDriveHandler(folder_name='My Drive Folder') #TODO заменить на получение имени папки
-    # Получаем учетные данные
-    creds = drive_handler.creds
-    # Создаем сервис Google Drive API
-    service = build('drive', 'v3', credentials=creds)
-
+    """Показывает базовое использование Drive v3 API."""
+    # Инициализация GoogleDriveHandler
+    google_drive = GoogleDriveHandler(folder_name='My Drive Folder')
+    if not google_drive.creds:
+        logger.error('Не удалось получить учетные данные Google Drive')
+        return
     try:
-       #  Получаем список файлов
-        results = service.files().list(
-            pageSize=10, fields="nextPageToken, files(id, name)").execute()
+        # Вызов Drive v3 API
+        results = google_drive.service.files().list(pageSize=10, fields="nextPageToken, files(id, name)").execute()
         items = results.get('files', [])
-        # Проверяем, есть ли файлы
+
         if not items:
             logger.info('Файлы не найдены.')
         else:
             logger.info('Файлы:')
-            # Выводим список файлов
             for item in items:
                 logger.info(f'{item["name"]} ({item["id"]})')
 
     except Exception as ex:
-          #  Логируем ошибку при работе с API
-        logger.error(f'Ошибка при работе с Google Drive API: {ex}')
-
+        logger.error('Ошибка при обращении к Google Drive API', exc_info=ex)
 
 if __name__ == '__main__':
     main()

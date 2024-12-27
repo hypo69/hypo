@@ -2,25 +2,25 @@
 
 **Качество кода**
 8
--   Плюсы
-    *   Код содержит необходимые импорты для работы с моделями ИИ.
-    *   Имеется переменная `MODE` для определения режима работы.
-    *   Есть описание модуля в формате docstring.
--   Минусы
-    *   Отсутствуют docstring для переменных.
-    *   Не используется `logger` для логирования.
-    *   Нет комментариев в формате RST к переменным.
-    *   Нет стандартизированного описания модуля в формате RST.
-    *   Используется не стандартный импорт модулей, что может привести к проблемам.
-    *   Название модуля не описано в docstring.
+-  Плюсы
+    - Код соответствует основным требованиям по оформлению, включая использование docstring для модуля.
+    - Объявлены необходимые импорты для моделей ИИ.
+    -  Используется константа MODE.
+
+-  Минусы
+    -  Отсутствуют комментарии в формате reStructuredText (RST) для модуля.
+    -  Не хватает docstring для переменных и констант.
+    -  Не указано использование `from src.logger.logger import logger`.
+    -  Отсутствует обработка ошибок.
+    -  Не все импорты, используемые в других файлах, приведены здесь.
 
 **Рекомендации по улучшению**
-
-1.  Добавить docstring для переменной `MODE` в формате RST.
-2.  Использовать `from src.logger.logger import logger` для логирования.
-3.  Переписать docstring модуля в формате RST, используя директивы Sphinx.
-4.  Исправить импорт модулей, применив `from .gemini import GoogleGenerativeAI` и `from .openai import OpenAIModel` для относительного импорта модулей в пакете.
-5.  Переименовать переменную MODE в соответствии с PEP8 (например, `MODE_ENV`).
+1.  Добавить описание модуля в формате RST.
+2.  Добавить документацию в формате RST для переменных.
+3.  Использовать `from src.logger.logger import logger` для логирования.
+4.  Избегать избыточного использования стандартных блоков `try-except`.
+5.  Добавить обработку ошибок с помощью `logger.error`.
+6.  Сделать импорт модуля `from src.utils.jjson import j_loads, j_loads_ns`.
 
 **Оптимизированный код**
 
@@ -30,34 +30,36 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для инициализации моделей ИИ
+Модуль инициализации для работы с моделями ИИ.
 =========================================================================================
 
-:platform: Windows, Unix
-:synopsis: Модуль содержит инициализацию классов для работы с моделями ИИ Google Gemini и OpenAI.
-           В модуле определена переменная для задания режима работы `MODE_ENV`.
+Этот модуль содержит необходимые импорты и настройки для работы с различными моделями ИИ,
+такими как Google Gemini и OpenAI. Он также определяет режим работы (`dev` или `prod`).
 
 Пример использования
 --------------------
+
+Пример импорта моделей:
 
 .. code-block:: python
 
     from src.ai import GoogleGenerativeAI, OpenAIModel
 
-    # Инициализация модели Google Gemini
-    gemini_model = GoogleGenerativeAI(api_key="your_api_key")
-
-    # Инициализация модели OpenAI
-    openai_model = OpenAIModel(api_key="your_api_key")
+"""
+from src.logger.logger import logger # Импорт логгера
+from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для работы с JSON
+MODE = 'dev' # Режим работы ('dev' или 'prod').
+"""
+Режим работы.
+:vartype: str
 """
 
-from src.logger.logger import logger # Импорт модуля logger для логирования
-MODE_ENV = 'dev'
+from .gemini import GoogleGenerativeAI
 """
-:type: str
-:description: Устанавливает режим работы приложения.
+Импорт класса GoogleGenerativeAI из модуля gemini.
 """
-
-from .gemini import GoogleGenerativeAI # Импорт класса GoogleGenerativeAI из модуля gemini
-from .openai import OpenAIModel # Импорт класса OpenAIModel из модуля openai
+from .openai import OpenAIModel
+"""
+Импорт класса OpenAIModel из модуля openai.
+"""
 ```

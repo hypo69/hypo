@@ -3,50 +3,49 @@
 **Качество кода**
 8
 -  Плюсы
-    - Код имеет базовую структуру класса для работы с ценами.
-    - Используется наследование от класса `PrestaShop`.
-    - Присутствуют docstring для класса и методов.
-    - Импорты в начале файла.
+    - Код имеет базовую структуру класса для работы с ценами PrestaShop.
+    - Используются docstring для описания классов и методов.
+    - Присутствует импорт необходимых модулей.
 -  Минусы
-    - Отсутствует обработка ошибок при работе с API.
-    - Методы `request_prices`, `update_source`, `modify_product_price` не имеют реализации.
-    - Не используется `logger` для логирования.
-    - Не используются `j_loads`, `j_loads_ns`.
-    - Нет reStructuredText документации для модуля.
+    - Отсутствует подробное описание модуля в формате RST.
+    - Отсутствует обработка ошибок и логирование.
+    - Методы `request_prices` и `modify_product_price` не имеют реализации, только `pass`.
+    - Не все импорты используются.
+    - Нет проверки типов.
 
 **Рекомендации по улучшению**
 
-1. **Документация:** Добавить reStructuredText документацию для модуля.
-2. **Логирование:** Использовать `logger` для логирования ошибок и отладочной информации.
-3. **Обработка ошибок:** Реализовать обработку исключений при запросах к API.
-4. **Реализация методов:** Добавить реализацию для методов `request_prices`, `update_source`, `modify_product_price`.
-5. **Использование j_loads:** В случае необходимости, использовать `j_loads` или `j_loads_ns`.
-6.  **Использовать** `from src.logger.logger import logger`
-7. **Удалить** `MODE = 'dev'`, если он не используется
+1.  Добавить подробное описание модуля в формате RST.
+2.  Реализовать методы `request_prices` и `modify_product_price` с запросами к API PrestaShop.
+3.  Добавить обработку ошибок и логирование с использованием `src.logger.logger`.
+4.  Изменить использование `json.load` на `src.utils.jjson.j_loads` или `src.utils.jjson.j_loads_ns`.
+5.  Удалить неиспользуемые импорты.
+6.  Добавить проверку типов.
+7.  Удалить не используемые переменные (MODE).
+8.  Добавить комментарии в формате RST к переменным.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с прайс-листами PrestaShop.
-==================================================
+Модуль для работы со списком цен PrestaShop.
+=========================================================================================
 
-Этот модуль содержит класс :class:`PriceListRequester`, который используется для запроса,
-обновления и модификации цен на товары в PrestaShop.
+Этот модуль содержит класс :class:`PriceListRequester`, который используется для запроса и модификации цен товаров в PrestaShop.
 
 Пример использования
 --------------------
 
+Пример использования класса `PriceListRequester`:
+
 .. code-block:: python
 
-    api_credentials = {
-        'api_domain': 'your_prestashop_domain',
-        'api_key': 'your_api_key'
-    }
+    api_credentials = {'api_domain': 'your_domain', 'api_key': 'your_key'}
     price_list_requester = PriceListRequester(api_credentials)
-    products_list = ['product1', 'product2', 'product3']
-    prices = price_list_requester.request_prices(products_list)
+    products = ['product1', 'product2']
+    prices = price_list_requester.request_prices(products)
     print(prices)
+
 """
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -54,90 +53,70 @@
 
 import sys
 import os
-from attr import attr, attrs
 from pathlib import Path
-from typing import Union
+from typing import Union, Dict, List, Any
 
-import header
+# from attr import attr, attrs # not used
+# import header # not used
 from src import gs
-from src.logger.logger import logger # используется для логирования
+from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 from .api import PrestaShop
 from types import SimpleNamespace
-
 
 class PriceListRequester(PrestaShop):
     """
     Класс для запроса списка цен.
 
-    :param api_credentials: Словарь с учетными данными для API,
-                           включая `api_domain` и `api_key`.
-    :type api_credentials: dict
-    :ivar source: Источник данных цен.
+    :param api_credentials: Словарь с учетными данными для API, включая 'api_domain' и 'api_key'.
+    :type api_credentials: Dict[str, str]
+    :ivar source: Источник данных для запроса цен.
     :vartype source: Any
-    :cvar MODE: Режим работы (в данном случае не используется).
-    :vartype MODE: str
-    :raises TypeError: If api_credentials is not dict.
-    :raises KeyError: If api_credentials doesn't contain keys: `api_domain`, `api_key`
+    :inherits: PrestaShop
     """
-    MODE = 'dev' # это не используется, и можно удалить
+    source: Any
 
-    def __init__(self, api_credentials):
+    def __init__(self, api_credentials: Dict[str, str]):
         """
         Инициализирует объект класса PriceListRequester.
 
-        :param api_credentials: Словарь с учетными данными для API,
-                                включая 'api_domain' и 'api_key'.
-        :type api_credentials: dict
+        :param api_credentials: Словарь с учетными данными для API, включая 'api_domain' и 'api_key'.
+        :type api_credentials: Dict[str, str]
         """
-        if not isinstance(api_credentials, dict):
-            logger.error(f'Неверный тип данных для api_credentials, ожидается dict, а получен {type(api_credentials)}')
-            raise TypeError(f'Неверный тип данных для api_credentials, ожидается dict, а получен {type(api_credentials)}')
-
-        if 'api_domain' not in api_credentials or 'api_key' not in api_credentials:
-            logger.error(f'Отсутствуют обязательные ключи "api_domain" или "api_key" в api_credentials')
-            raise KeyError(f'Отсутствуют обязательные ключи "api_domain" или "api_key" в api_credentials')
-        # Инициализация родительского класса PrestaShop с переданными учетными данными
         super().__init__(api_credentials['api_domain'], api_credentials['api_key'])
+        # код инициализирует родительский класс PrestaShop с переданными учетными данными
 
-    def request_prices(self, products: list) -> dict:
+    def request_prices(self, products: List[str]) -> Dict[str, float]:
         """
         Запрашивает список цен для указанных товаров.
 
         :param products: Список товаров, для которых требуется получить цены.
-        :type products: list
+        :type products: List[str]
         :return: Словарь, где ключами являются товары, а значениями - их цены.
                  Например: {'product1': 10.99, 'product2': 5.99}
-        :rtype: dict
+        :rtype: Dict[str, float]
         """
+        # Код отправляет запрос на получение цен из API PrestaShop
         try:
-           #  Здесь код для отправки запроса на получение цен из источника данных
-           # TODO: Реализовать запрос цен из API PrestaShop
-            logger.info(f'Запрос цен для товаров: {products}')
             prices = {}
-            # пример добавления данных
             for product in products:
-                prices[product] = 10.00
+               # Заглушка, должен быть запрос к API
+               prices[product] = 10.00
             return prices
-
         except Exception as e:
-            logger.error(f'Ошибка при запросе цен: {e}')
+            logger.error(f"Ошибка при запросе цен: {e}")
             return {}
+        # Код возвращает словарь цен или пустой словарь в случае ошибки
 
-    def update_source(self, new_source):
+    def update_source(self, new_source: Any):
         """
         Обновляет источник данных для запроса цен.
 
         :param new_source: Новый источник данных.
         :type new_source: Any
         """
-        try:
-           #  здесь код для обновления источника
-           #  TODO: Реализовать обновление источника данных
-            self.source = new_source
-            logger.info(f'Источник данных обновлен на: {new_source}')
-        except Exception as e:
-            logger.error(f'Ошибка при обновлении источника данных: {e}')
+        self.source = new_source
+        # Код обновляет источник данных
 
     def modify_product_price(self, product: str, new_price: float):
         """
@@ -148,12 +127,12 @@ class PriceListRequester(PrestaShop):
         :param new_price: Новая цена товара.
         :type new_price: float
         """
+        # Код изменяет цену товара в источнике данных PrestaShop
         try:
-            # Здесь код для изменения цены товара в источнике данных
-            # TODO: Реализовать изменение цены товара в API PrestaShop
-            logger.info(f'Изменение цены для товара: {product} на: {new_price}')
-            pass
-
+            # Заглушка, должен быть запрос к API
+             logger.info(f"Изменена цена для товара '{product}' на '{new_price}'")
         except Exception as e:
-            logger.error(f'Ошибка при изменении цены товара {product}: {e}')
+             logger.error(f"Ошибка при изменении цены товара '{product}': {e}")
+        # Код выполняет изменение цены или записывает ошибку в лог
+
 ```

@@ -1,71 +1,88 @@
-# Анализ кода модуля test_validation
+# Анализ кода модуля `test_validation.py`
 
 **Качество кода**
-7
-- Плюсы
-    - Код имеет тесты для проверки валидации персонажей.
-    - Используются `TinyPersonFactory` и `TinyPersonValidator` для создания и валидации персонажей.
-    - Тесты включают позитивные и негативные сценарии.
-- Минусы
-    - Отсутствует документация в формате reStructuredText (RST).
-    - Есть импорты из разных мест, которые можно привести к одному виду.
-    - Использование `print` для вывода результатов вместо логирования.
-    - Не хватает обработки ошибок и логирования.
+8
+-  Плюсы
+    - Код хорошо структурирован и понятен.
+    - Используются фикстуры `pytest` для подготовки тестовой среды.
+    - Тесты покрывают различные сценарии валидации персонажей.
+    - Присутствует вывод результатов валидации и обоснования.
+-  Минусы
+    - Отсутствуют docstring для модуля и функций.
+    - Не используется `j_loads` или `j_loads_ns` для загрузки данных, хотя в данном случае это не требуется, так как нет загрузки из файлов.
+    - Избыточное добавление путей в `sys.path`, так как все импорты внутри проекта.
+    - Некоторые переменные и методы имеют не информативные имена.
+    - Не используется логирование ошибок через `logger.error`.
 
 **Рекомендации по улучшению**
-
-1.  Добавить docstring в формате reStructuredText (RST) для модуля, функций и переменных.
-2.  Использовать `from src.logger.logger import logger` для логирования вместо `print`.
-3.  Убрать избыточное добавление путей в `sys.path`
-4.  Улучшить структуру импортов.
-5.  Добавить проверку на ошибки с использованием `logger.error`.
+1. Добавить docstring для модуля и функций в формате RST.
+2. Убрать лишние добавления путей в `sys.path`.
+3. Использовать более информативные имена переменных.
+4. Добавить логирование ошибок через `logger.error`.
+5. Улучшить читаемость кода, разбив на более мелкие функции там где это уместно.
+6.  Вместо прямого вывода в консоль `print`,  использовать  возможности pytest для вывода  результатов (например, `pytest.fail` для проваленных тестов с детальным сообщением)
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль тестирования валидации персонажей.
-==========================================================
+Модуль для тестирования валидации персонажей.
+================================================
 
 Этот модуль содержит тесты для проверки функциональности валидации персонажей,
-используя классы `TinyPersonFactory` и `TinyPersonValidator`.
+используя класс :class:`TinyPersonValidator`.
 Тесты проверяют соответствие сгенерированных персонажей заданным ожиданиям.
 """
 import pytest
-import os
-import sys
+# import os # не используется
+# import sys # лишние импорты
+# sys.path.append('../../tinytroupe/')
+# sys.path.append('../../')
+# sys.path.append('../')
 
-# sys.path.append('../../tinytroupe/') # Удалено избыточное добавление пути
-# sys.path.append('../../') # Удалено избыточное добавление пути
-# sys.path.append('../') # Удалено избыточное добавление пути
+from tinytroupe.examples import create_oscar_the_architect
+from tinytroupe.control import Simulation
+import tinytroupe.control as control
+from tinytroupe.factory import TinyPersonFactory
+from tinytroupe.validation import TinyPersonValidator
+from src.logger.logger import logger # импорт логера
+from testing_utils import *
 
 
-from src.ai.tiny_troupe.tinytroupe.examples import create_oscar_the_architect
-from src.ai.tiny_troupe.tinytroupe.control import Simulation
-import src.ai.tiny_troupe.tinytroupe.control as control
-from src.ai.tiny_troupe.tinytroupe.factory import TinyPersonFactory
-from src.ai.tiny_troupe.tinytroupe.validation import TinyPersonValidator
+def _validate_person(person_factory: TinyPersonFactory, expectations: str, test_name: str, expected_score: float):
+    """
+    Проводит валидацию персонажа и проверяет полученный результат.
 
-from src.logger.logger import logger # Добавлен импорт logger
-from tests.unit.testing_utils import * # Исправлен импорт
+    :param person_factory: Фабрика для создания персонажа.
+    :param expectations: Строка с ожиданиями относительно персонажа.
+    :param test_name: Имя теста для логирования.
+    :param expected_score: Ожидаемый минимальный балл валидации.
+    """
+    person = person_factory.generate_person()
+    score, justification = TinyPersonValidator.validate_person(
+        person, expectations=expectations, include_agent_spec=False, max_content_length=None
+    )
+
+    print(f"{test_name} score: ", score)
+    print(f"{test_name} justification: ", justification)
+    if score < expected_score:
+        logger.error(f"Validation score is too low: {score:.2f} for {test_name}")
+        pytest.fail(f"Validation score is too low: {score:.2f} for {test_name}")
+
+    assert score > expected_score, f"Validation score is too low: {score:.2f} for {test_name}"
+
 
 def test_validate_person(setup):
     """
-    Тестирует валидацию персонажей.
+    Тестирует валидацию различных персонажей с различными ожиданиями.
 
-    :param setup: Фикстура pytest для настройки тестовой среды.
+    :param setup: Фикстура pytest.
     """
-    ##########################
-    # Banker
-    ##########################
+    # Тест для банкира
     banker_spec = """
     A vice-president of one of the largest brazillian banks. Has a degree in engineering and an MBA in finance. 
     Is facing a lot of pressure from the board of directors to fight off the competition from the fintechs.    
     """
-    # Создает фабрику персонажей банкира
     banker_factory = TinyPersonFactory(banker_spec)
-    # Генерирует персонажа банкира
-    banker = banker_factory.generate_person()
     banker_expectations = """
     He/she is:
     - Wealthy
@@ -85,24 +102,14 @@ def test_validate_person(setup):
     - Is a bit of a snob
     - Might pretend to be a hard-core woke, but in reality that's just a facade to climb the corporate ladder  
     """
-    # Валидирует персонажа банкира
-    banker_score, banker_justification = TinyPersonValidator.validate_person(banker, expectations=banker_expectations, include_agent_spec=False, max_content_length=None)
-    logger.info(f"Banker score: {banker_score}") # Изменен на logger
-    logger.info(f"Banker justification: {banker_justification}") # Изменен на logger
+    _validate_person(banker_factory, banker_expectations, "Banker", 0.5)
 
-    # Проверяет, что оценка валидации банкира выше 0.5
-    assert banker_score > 0.5, f"Validation score is too low: {banker_score:.2f}"
 
-    ##########################
-    # Busy Knowledge Worker   
-    ########################## 
+    # Тест для монаха
     monk_spec = """
     A poor buddhist monk living alone and isolated in a remote montain.
     """
-    # Создает фабрику персонажей монаха
     monk_spec_factory = TinyPersonFactory(monk_spec)
-    # Генерирует персонажа монаха
-    monk = monk_spec_factory.generate_person()
     monk_expectations = """
     Some characteristics of this person:
     - Is very poor, and in fact do not seek money
@@ -111,18 +118,18 @@ def test_validate_person(setup):
     - Is very humble and does not seek attention
     - Honesty is a core value    
     """
-    # Валидирует персонажа монаха
-    monk_score, monk_justification = TinyPersonValidator.validate_person(monk, expectations=monk_expectations, include_agent_spec=False, max_content_length=None)
-    logger.info(f"Monk score: {monk_score}") # Изменен на logger
-    logger.info(f"Monk justification: {monk_justification}") # Изменен на logger
+    _validate_person(monk_spec_factory, monk_expectations, "Monk", 0.5)
 
-    # Проверяет, что оценка валидации монаха выше 0.5
-    assert monk_score > 0.5, f"Validation score is too low: {monk_score:.2f}"
+    # Тест на несовпадение ожиданий
+    monk = monk_spec_factory.generate_person()
+    wrong_expectations_score, wrong_expectations_justification = TinyPersonValidator.validate_person(
+        monk, expectations=banker_expectations, include_agent_spec=False, max_content_length=None
+    )
+    print("Wrong expectations score: ", wrong_expectations_score)
+    print("Wrong expectations justification: ", wrong_expectations_justification)
+    if wrong_expectations_score > 0.5:
+        logger.error(f"Validation score is too high: {wrong_expectations_score:.2f} for wrong expectations")
+        pytest.fail(f"Validation score is too high: {wrong_expectations_score:.2f} for wrong expectations")
 
-    # Проверка с неправильными ожиданиями для монаха
-    wrong_expectations_score, wrong_expectations_justification = TinyPersonValidator.validate_person(monk, expectations=banker_expectations, include_agent_spec=False, max_content_length=None)
 
-    # Проверяет, что оценка валидации с неправильными ожиданиями ниже 0.5
     assert wrong_expectations_score < 0.5, f"Validation score is too high: {wrong_expectations_score:.2f}"
-    logger.info(f"Wrong expectations score: {wrong_expectations_score}") # Изменен на logger
-    logger.info(f"Wrong expectations justification: {wrong_expectations_justification}") # Изменен на logger

@@ -1,55 +1,63 @@
 # Анализ кода модуля `api.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован, используется объектно-ориентированный подход.
-    - Присутствует базовая обработка ошибок.
-    - Используются `logger` для логирования.
-    - Есть документация в формате docstring.
-    - Используются перечисления `Enum`.
-- Минусы
-    -  Не все docstring соответствуют стандарту reStructuredText (RST).
-    -  Используется старый формат docstring, где @param и @return не являются стандартом.
-    - Некоторые docstring не полные и не информативные.
-    -  Есть избыточное использование try-except блоков.
-    -  Дублирование кода в методах `upload_image_async` и `upload_image`.
-    -  Импорт `header` не используется в коде, что говорит о его ненужности.
-    - В функции `_exec` открывается файл для записи `stderr.log` но он не закрывается.
-    - В функции `_parse` не обрабатывается исключение, если `response` не содержит метод `json()`.
+7
+-   Плюсы
+    -   Код структурирован в класс `PrestaShop`, что облегчает его использование и поддержку.
+    -   Используется `requests.Session` для управления HTTP-соединениями.
+    -   Обработка ошибок присутствует, хотя и требует доработки.
+    -   Используются `Enum` для определения форматов данных.
+    -   Код содержит docstrings для большинства методов, что облегчает понимание его функциональности.
+-   Минусы
+    -   Не все комментарии и docstring соответствуют стандарту RST.
+    -   Не все импорты необходимые, к примеру `header`.
+    -   Используется `try-except` для обработки ошибок, что не всегда эффективно.
+    -   Логирование ошибок не всегда достаточно информативно.
+    -   Дублирование кода при загрузке изображений.
+    -   Не все методы и переменные имеют docstring.
+    -   Импорт `sys` внутри метода, что не является хорошей практикой.
+    -   Использования `open('stderr.log', 'w')` в `debug=True`, лучше логировать в файл через `logger`.
 
 **Рекомендации по улучшению**
 
-1.  **Документация:**
-    *   Переписать все docstring в соответствии со стандартом reStructuredText (RST), используя `:param:` и `:return:` для описания параметров и возвращаемых значений.
-    *   Уточнить и расширить описание для всех функций и методов.
-2.  **Обработка ошибок:**
-    *   Упростить обработку ошибок, заменив избыточные `try-except` блоки на использование `logger.error`.
-    *   Убедиться, что все исключения обрабатываются корректно и логируются.
-3.  **Рефакторинг:**
-    *   Удалить дублирование кода в методах `upload_image_async` и `upload_image`.
-    *   Удалить неиспользуемый импорт `header`.
-    *   В функции `_exec` необходимо закрывать файл `stderr.log`.
-    *   Добавить проверку наличия метода `json()` у `response` в функции `_parse`.
-    *   Использовать форматированные строки (f-strings) для улучшения читаемости и производительности, где это применимо.
-4.  **Производительность:**
-    *   Убрать неиспользуемый импорт `sys` в `_exec`.
-5. **Общее**
-     *   Необходимо добавлять комментарии к каждому блоку кода, объясняющие его работу.
+1.  **Форматирование документации**:
+    -   Необходимо переписать все комментарии и docstring в формате reStructuredText (RST), чтобы соответствовать стандарту.
+    -   Примеры:
+        -   Заменить `@param` на `:param:`
+        -   Заменить `@return` на `:return:`
+        -   Заменить `@throws` на `:raises:`
+        -   Добавить описание для модуля в начале файла.
+        -   Добавить более подробные описания для параметров функций.
+        -   Привести все docstring к общему виду.
+        -   Удалить неиспользуемые комментарии.
+2.  **Использование `j_loads` и `j_loads_ns`**:
+    -   В данном коде `j_loads` и `j_loads_ns` не используются, но они должны быть использованы вместо `json.load` при необходимости.
+3.  **Анализ структуры**:
+    -   Импорт `header` не используется и его нужно удалить.
+    -   Необходимо унифицировать импорты по алфавиту и группам.
+    -   Проверить все имена переменных и функций на соответствие стилю кода.
+4.  **Рефакторинг и улучшения**:
+    -   Заменить использование `try-except` на проверку статуса ответа и логирование через `logger.error` в методе `_exec`.
+    -   Удалить дублирование кода в методах `upload_image_async` и `upload_image`.
+    -   Перенести логику сохранения в `debug` режиме в `logger.debug` с форматированием сообщения.
+    -   Пересмотреть метод `_parse`, он не должен вызывать исключение.
+    -   Добавить обработку ошибок в методах `_parse`, `create`, `read`, `write`, `unlink`, `search`, `create_binary`.
+    -   Добавить docstring для переменных класса.
+    -   Добавить docstring для `__init__` класса.
+    -   Избавиться от `if self.data_format == 'JSON': ... else:` используя try/except при парсинге JSON, XML.
+5.  **Дополнительные улучшения**:
+    -   Добавить комментарии в формате RST ко всем функциям и методам.
+    -   Улучшить обработку ошибок и логирование.
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для взаимодействия с API PrestaShop.
+Модуль для взаимодействия с API PrestaShop
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`PrestaShop`, который используется для взаимодействия с API PrestaShop.
-Он обеспечивает методы для выполнения CRUD-операций, поиска и загрузки изображений.
+Этот модуль предоставляет класс :class:`PrestaShop`, который позволяет взаимодействовать с API PrestaShop,
+выполняя операции CRUD, поиск и загрузку изображений.
 
 Пример использования
 --------------------
@@ -59,8 +67,9 @@
 .. code-block:: python
 
     from src.endpoints.prestashop.api.api import PrestaShop
+
     api = PrestaShop(
-        API_DOMAIN="https://myPrestaShop.com",
+        API_DOMAIN = "https://myPrestaShop.com",
         API_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         default_lang=1,
         debug=True,
@@ -68,46 +77,94 @@
     )
 
     api.ping()
-"""
 
+    data = {
+        'tax': {
+            'rate': 3.000,
+            'active': '1',
+            'name': {
+                'language': {
+                    'attrs': {'id': '1'},
+                    'value': '3% tax'
+                }
+            }
+        }
+    }
+
+    # Create tax record
+    rec = api.create('taxes', data)
+
+    # Update the same tax record
+    update_data = {
+        'tax': {
+            'id': str(rec['id']),
+            'rate': 3.000,
+            'active': '1',
+            'name': {
+                'language': {
+                    'attrs': {'id': '1'},
+                    'value': '3% tax'
+                }
+            }
+        }
+    }
+
+    update_rec = api.write('taxes', update_data)
+
+    # Remove this tax
+    api.unlink('taxes', str(rec['id']))
+
+    # Search the first 3 taxes with '5' in the name
+    import pprint
+    recs = api.search('taxes', filter='[name]=%[5]%', limit='3')
+
+    for rec in recs:
+        pprint(rec)
+
+    # Create binary (product image)
+    api.create_binary('images/products/22', 'img.jpeg', 'image')
+"""
 import os
+import sys
 from enum import Enum
 from http.client import HTTPConnection
-from requests import Session
-from requests.models import PreparedRequest
-from typing import Dict, List, Any
 from pathlib import Path
+from typing import Any, Dict, List, Tuple, Union
 from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
+from requests import Session
+from requests.models import PreparedRequest
+
 from src import gs
-from src.utils.file import save_text_file
-from src.utils.convertors.base64 import  base64_to_tmpfile
+from src.logger.exceptions import PrestaShopAuthenticationError, PrestaShopException
+from src.logger.logger import logger
+from src.utils.convertors.base64 import base64_to_tmpfile
 from src.utils.convertors.dict import dict2xml
 from src.utils.convertors.xml2dict import xml2dict
+from src.utils.file import save_text_file
 from src.utils.image import save_png_from_url
+from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.logger.logger import logger
-from src.logger.exceptions import PrestaShopException, PrestaShopAuthenticationError
+
+MODE = 'dev'
 
 
 class Format(Enum):
     """
-    Перечисление для определения формата данных (JSON, XML).
+    Тип возвращаемых данных (JSON, XML)
 
     :param Enum (int): 1 => JSON, 2 => XML
-    :deprecated: Предпочитается JSON
+    :deprecated: Я предпочитаю JSON 👍 :))
     """
+
     JSON = 'JSON'
     XML = 'XML'
 
 
 class PrestaShop:
     """
-    Класс для взаимодействия с веб-сервисом API PrestaShop, используя JSON и XML для сообщений.
-
-    Предоставляет методы для CRUD-операций, поиска и загрузки изображений, а также обработку ошибок.
+    Класс для взаимодействия с API PrestaShop, используя JSON и XML для сообщений.
 
     :param API_KEY: API ключ, сгенерированный в PrestaShop.
     :type API_KEY: str
@@ -119,18 +176,16 @@ class PrestaShop:
     :type default_lang: int
     :param debug: Активировать режим отладки. По умолчанию True.
     :type debug: bool
-
-    :raises PrestaShopAuthenticationError: Если API ключ неверен или не существует.
-    :raises PrestaShopException: Для общих ошибок PrestaShop WebServices.
+    :raises PrestaShopAuthenticationError: Если API ключ неверный или не существует.
+    :raises PrestaShopException: Для общих ошибок веб-сервисов PrestaShop.
 
     Пример использования:
-
     .. code-block:: python
 
         from src.endpoints.prestashop.api.api import PrestaShop, Format
 
         api = PrestaShop(
-            API_DOMAIN = "https://myPrestaShop.com",
+            API_DOMAIN="https://myPrestaShop.com",
             API_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
             default_lang=1,
             debug=True,
@@ -152,10 +207,10 @@ class PrestaShop:
             }
         }
 
-        # Создание новой записи налога
+        # Create tax record
         rec = api.create('taxes', data)
 
-        # Обновление записи налога
+        # Update the same tax record
         update_data = {
             'tax': {
                 'id': str(rec['id']),
@@ -172,479 +227,461 @@ class PrestaShop:
 
         update_rec = api.write('taxes', update_data)
 
-        # Удаление налога
+        # Remove this tax
         api.unlink('taxes', str(rec['id']))
 
-        # Поиск первых 3 налогов с '5' в имени
+        # Search the first 3 taxes with '5' in the name
         import pprint
         recs = api.search('taxes', filter='[name]=%[5]%', limit='3')
 
         for rec in recs:
             pprint(rec)
 
-        # Создание бинарных данных (изображения продукта)
+        # Create binary (product image)
         api.create_binary('images/products/22', 'img.jpeg', 'image')
-
     """
     client: Session = Session()
-    debug = True
-    language = None
-    data_format = 'JSON'
-    ps_version = ''
+    """Сессия HTTP запросов"""
+    debug: bool = True
+    """Флаг режима отладки"""
+    language: int = None
+    """ID языка"""
+    data_format: str = 'JSON'
+    """Формат данных"""
+    ps_version: str = ''
+    """Версия PrestaShop"""
 
-    def __init__(self,
-                 data_format: str = 'JSON',
-                 default_lang: int = 1,
-                 debug: bool = True) -> None:
+    def __init__(self, data_format: str = 'JSON', default_lang: int = 1, debug: bool = True) -> None:
         """
         Инициализирует класс PrestaShop.
 
+        :param API_DOMAIN: Домен API вашего магазина PrestaShop (например, https://myPrestaShop.com).
+        :type API_DOMAIN: str
+        :param API_KEY: API ключ, сгенерированный в PrestaShop.
+        :type API_KEY: str
         :param data_format: Формат данных по умолчанию ('JSON' или 'XML'). По умолчанию 'JSON'.
         :type data_format: str
         :param default_lang: ID языка по умолчанию. По умолчанию 1.
         :type default_lang: int
         :param debug: Активировать режим отладки. По умолчанию True.
         :type debug: bool
-
         :return: None
+        :rtype: None
         """
-        # Извлекаем API_DOMAIN из настроек и формируем полный URL
         self.API_DOMAIN = gs.credentials.presta.client.api_key.rstrip('/') + '/api/'
-        # Извлекаем API_KEY из настроек
         self.API_KEY = gs.credentials.presta.client.api_key
-        # Устанавливаем режим отладки
         self.debug = debug
-        # Устанавливаем язык по умолчанию
         self.language = default_lang
-        # Устанавливаем формат данных по умолчанию
         self.data_format = data_format
 
-        # Устанавливаем аутентификацию для сессии
         if not self.client.auth:
             self.client.auth = (self.API_KEY, '')
-        
-        # Выполняем HEAD запрос для получения версии PrestaShop
-        response = self.client.request(
-            method='HEAD',
-            url=self.API_DOMAIN
-        )
-        # Сохраняем версию PrestaShop из заголовков ответа
+
+        response = self.client.request(method='HEAD', url=self.API_DOMAIN)
         self.ps_version = response.headers.get('psws-version')
 
     def ping(self) -> bool:
         """
-        Проверяет, работает ли веб-сервис.
+        Проверяет работоспособность веб-сервиса.
 
-        :return: True, если веб-сервис работает, иначе False.
+        :return: Результат проверки. Возвращает `True`, если веб-сервис работает, иначе `False`.
         :rtype: bool
         """
-        # Выполняем HEAD запрос к API_DOMAIN
-        response = self.client.request(
-            method='HEAD',
-            url=self.API_DOMAIN
-        )
-        # Проверяем статус ответа
+        response = self.client.request(method='HEAD', url=self.API_DOMAIN)
         return self._check_response(response.status_code, response)
 
-    def _check_response(self, status_code: int, response: Any, method: str = None, url: str = None, headers: dict = None, data: dict = None) -> bool:
+    def _check_response(self, status_code: int, response: Any, method: str = None, url: str = None,
+                       headers: Dict = None, data: Dict = None) -> bool:
         """
-        Проверяет статус ответа и обрабатывает ошибки.
+        Проверяет код ответа и обрабатывает ошибки.
 
-        :param status_code: HTTP код ответа.
+        :param status_code: Код статуса HTTP ответа.
         :type status_code: int
         :param response: Объект HTTP ответа.
         :type response: requests.Response
-        :param method: HTTP метод запроса.
-        :type method: str, optional
+        :param method: HTTP метод, использованный для запроса.
+        :type method: str
         :param url: URL запроса.
-        :type url: str, optional
+        :type url: str
         :param headers: Заголовки запроса.
-        :type headers: dict, optional
+        :type headers: dict
         :param data: Данные запроса.
-        :type data: dict, optional
-
-        :return: True, если код ответа 200 или 201, иначе False.
+        :type data: dict
+        :return: `True`, если код статуса 200 или 201, иначе `False`.
         :rtype: bool
         """
-        # Проверяем, является ли статус код успешным
         if status_code in (200, 201):
             return True
         else:
-            # Обрабатываем ошибку, если код ответа не успешный
             self._parse_response_error(response, method, url, headers, data)
             return False
 
-    def _parse_response_error(self, response: Any, method: str = None, url: str = None, headers: dict = None, data: dict = None):
+    def _parse_response_error(self, response: Any, method: str = None, url: str = None, headers: Dict = None,
+                              data: Dict = None) -> Tuple[str, str] | None:
         """
         Разбирает ответ об ошибке от API PrestaShop.
 
-        :param response: Объект HTTP ответа.
+        :param response: Объект HTTP ответа от сервера.
         :type response: requests.Response
-        :param method: HTTP метод запроса.
-        :type method: str, optional
+        :param method: HTTP метод, использованный для запроса.
+        :type method: str
         :param url: URL запроса.
-        :type url: str, optional
+        :type url: str
         :param headers: Заголовки запроса.
-        :type headers: dict, optional
+        :type headers: dict
         :param data: Данные запроса.
-        :type data: dict, optional
+        :type data: dict
+        :return: Код и сообщение об ошибке или None, если ошибка не распознана.
+        :rtype: tuple[str, str] | None
         """
-        # Если формат данных JSON
-        if self.data_format == 'JSON':
-            status_code = response.status_code
-            # Логируем критическую ошибку если статус код не 200 или 201
-            if not status_code in (200, 201):
-                logger.critical(f"""response status code: {status_code}\n
-                    url: {response.request.url}\n
-                    --------------\n
-                    headers: {response.headers}\n
-                    --------------\n
-                    response text: {response.text}""")
-            # Возвращаем объект response
-            return response
-        else:
-             # Если формат данных XML
-            error_answer = self._parse(response.text)
-            # Проверяем тип error_answer, если это словарь
-            if isinstance(error_answer, dict):
-                # Извлекаем детали ошибки из словаря
-                error_content = (error_answer
-                                 .get('PrestaShop', {})
-                                 .get('errors', {})
-                                 .get('error', {}))
-                # Если error_content это список, то берем первый элемент
-                if isinstance(error_content, list):
-                    error_content = error_content[0]
-                # Извлекаем код и сообщение об ошибке
-                code = error_content.get('code')
-                message = error_content.get('message')
-            # Проверяем тип error_answer, если это XML Element
-            elif isinstance(error_answer, ElementTree.Element):
-                 # Извлекаем детали ошибки из XML
-                error = error_answer.find('errors/error')
-                code = error.find('code').text
-                message = error.find('message').text
-            # Логируем ошибку
-            logger.error(f"XML response error: {message} \\n Code: {code}")
-            # Возвращаем кортеж с кодом и сообщением об ошибке
-            return code, message
+        try:
+            if self.data_format == 'JSON':
+                status_code = response.status_code
+                if not status_code in (200, 201):
+                    logger.critical(f"""response status code: {status_code}\n
+                        url: {response.request.url}\n
+                        --------------\n
+                        headers: {response.headers}\n
+                        --------------\n
+                        response text: {response.text}""")
+                return response
+            else:
+                error_answer = self._parse(response.text)
+                if isinstance(error_answer, dict):
+                    error_content = (error_answer
+                                     .get('PrestaShop', {})
+                                     .get('errors', {})
+                                     .get('error', {}))
+                    if isinstance(error_content, list):
+                        error_content = error_content[0]
+                    code = error_content.get('code')
+                    message = error_content.get('message')
+                elif isinstance(error_answer, ElementTree.Element):
+                    error = error_answer.find('errors/error')
+                    code = error.find('code').text
+                    message = error.find('message').text
+                logger.error(f"XML response error: {message} \\n Code: {code}")
+                return code, message
+        except Exception as ex:
+            logger.error(f'Ошибка при разборе ответа об ошибке: {ex}')
+            return None
 
-    def _prepare(self, url: str, params: dict) -> str:
+    def _prepare(self, url: str, params: Dict) -> str:
         """
         Подготавливает URL для запроса.
 
         :param url: Базовый URL.
         :type url: str
-        :param params: Параметры для запроса.
+        :param params: Параметры запроса.
         :type params: dict
-
         :return: Подготовленный URL с параметрами.
         :rtype: str
         """
-        # Создаем объект PreparedRequest
         req = PreparedRequest()
-        # Подготавливаем URL с параметрами
         req.prepare_url(url, params)
-        # Возвращаем сформированный URL
         return req.url
 
-    def _exec(self,
-              resource: str,
-              resource_id: int | str = None,
-              resource_ids: int | tuple = None,
-              method: str = 'GET',
-              data: dict = None,
-              headers: dict = {},
-              search_filter: str | dict = None,
-              display: str | list = 'full',
-              schema: str | None = None,
-              sort: str = None,
-              limit: str = None,
-              language: int = None,
-              io_format: str = 'JSON') -> dict | None:
+    def _exec(self, resource: str, resource_id: Union[int, str] = None, resource_ids: Union[int, tuple] = None,
+              method: str = 'GET', data: Dict = None, headers: Dict = {}, search_filter: str = None,
+              display: Union[str, list] = 'full', schema: str = None, sort: str = None, limit: str = None,
+              language: int = None, io_format: str = 'JSON') -> Union[Dict, bool, None]:
         """
-        Выполняет HTTP-запрос к API PrestaShop.
+        Выполняет HTTP запрос к API PrestaShop.
 
-        :param resource: API ресурс (например, 'products', 'categories').
+        :param resource: Ресурс API (например, 'products', 'categories').
         :type resource: str
         :param resource_id: ID ресурса.
-        :type resource_id: int | str, optional
+        :type resource_id: int | str
         :param resource_ids: ID нескольких ресурсов.
-        :type resource_ids: int | tuple, optional
+        :type resource_ids: int | tuple
         :param method: HTTP метод (GET, POST, PUT, DELETE).
-        :type method: str, optional
+        :type method: str
         :param data: Данные для отправки с запросом.
-        :type data: dict, optional
+        :type data: dict
         :param headers: Дополнительные заголовки для запроса.
-        :type headers: dict, optional
+        :type headers: dict
         :param search_filter: Фильтр для запроса.
-        :type search_filter: str | dict, optional
+        :type search_filter: str | dict
         :param display: Поля для отображения в ответе.
-        :type display: str | list, optional
+        :type display: str | list
         :param schema: Схема данных.
-        :type schema: str, optional
+        :type schema: str | None
         :param sort: Параметр сортировки для запроса.
-        :type sort: str, optional
+        :type sort: str
         :param limit: Лимит результатов для запроса.
-        :type limit: str, optional
+        :type limit: str
         :param language: ID языка для запроса.
-        :type language: int, optional
+        :type language: int
         :param io_format: Формат данных ('JSON' или 'XML').
-        :type io_format: str, optional
-
-        :return: Ответ от API или False при неудаче.
-        :rtype: dict | None
+        :type io_format: str
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool | None
         """
-        # Включаем дебаг режим, если self.debug = True
+        url = f'{self.API_DOMAIN}{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}{resource}'
+        params = {
+            'filter': search_filter,
+            'display': display,
+            'schema': schema,
+            'sort': sort,
+            'limit': limit,
+            'language': language,
+            'output_format': io_format
+        }
         if self.debug:
-            # Открываем файл для записи ошибок
-            f = open('stderr.log', 'w')
-            import sys
-            # Сохраняем стандартный stderr
-            original_stderr = sys.stderr
-            # Перенаправляем stderr в файл
-            sys.stderr = f
-             
-            # Выполняем запрос с учетом дебага
-            response = self.client.request(
-                 method=method,
-                 url=self._prepare(
-                     f'{self.API_DOMAIN}{resource}/{resource_id}' if resource_id else f'{self.API_DOMAIN}{resource}',
-                     {'filter': search_filter,
-                      'display': display,
-                      'schema': schema,
-                      'sort': sort,
-                      'limit': limit,
-                      'language': language,
-                      'output_format': io_format}
-                 ),
-                 data=dict2xml(data) if data and io_format == 'XML' else data,
-                 headers=headers,
-            )
-            # Возвращаем stderr в исходное состояние
-            sys.stderr = original_stderr
-            # Закрываем файл
-            f.close()
-        # Проверяем статус ответа
+            logger.debug(f"Request: {method=}, {url=}, {params=}, {data=}, {headers=}")
+
+        response = self.client.request(
+            method=method,
+            url=self._prepare(url, params),
+            data=dict2xml(data) if data and io_format == 'XML' else data,
+            headers=headers,
+        )
+
         if not self._check_response(response.status_code, response, method, url, headers, data):
             return False
-        # Возвращаем данные в JSON или XML
-        if io_format == 'JSON':
-            # Обрабатываем JSON
-            return response.json()
-        else:
-            # Обрабатываем XML
-            return self._parse(response.text)
 
+        try:
+            if io_format == 'JSON':
+                return response.json()
+            else:
+                return self._parse(response.text)
+        except Exception as ex:
+            logger.error(f'Ошибка при получении ответа: {ex}')
+            return False
 
-    def _parse(self, text: str) -> dict | ElementTree.Element | bool:
+    def _parse(self, text: str) -> Union[Dict, ElementTree.Element, bool]:
         """
         Разбирает XML или JSON ответ от API.
 
         :param text: Текст ответа.
         :type text: str
-
-        :return: Разобранные данные или False при неудаче.
+        :return: Разобранные данные или `False` при ошибке.
         :rtype: dict | ElementTree.Element | bool
         """
         try:
-            # Обрабатываем JSON
             if self.data_format == 'JSON':
-                try:
-                    data = response.json()
-                except AttributeError as ex:
-                     logger.error(f'Parsing Error: {str(ex)}')
-                     return False
+                data = j_loads(text)
                 return data.get('PrestaShop', {}) if 'PrestaShop' in data else data
             else:
-                # Обрабатываем XML
                 tree = ElementTree.fromstring(text)
                 return tree
         except (ExpatError, ValueError) as ex:
-            # Логируем ошибки разбора
-            logger.error(f'Parsing Error: {str(ex)}')
+            logger.error(f'Ошибка при разборе: {ex}')
             return False
 
-    def create(self, resource: str, data: dict) -> dict:
+    def create(self, resource: str, data: Dict) -> Union[Dict, bool]:
         """
         Создает новый ресурс в API PrestaShop.
 
-        :param resource: API ресурс (например, 'products').
+        :param resource: Ресурс API (например, 'products').
         :type resource: str
         :param data: Данные для нового ресурса.
         :type data: dict
-
-        :return: Ответ от API.
-        :rtype: dict
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool
         """
-        # Выполняем POST запрос для создания нового ресурса
         return self._exec(resource=resource, method='POST', data=data, io_format=self.data_format)
 
-    def read(self, resource: str, resource_id: int | str, **kwargs) -> dict:
+    def read(self, resource: str, resource_id: Union[int, str], **kwargs) -> Union[Dict, bool, None]:
         """
         Читает ресурс из API PrestaShop.
 
-        :param resource: API ресурс (например, 'products').
+        :param resource: Ресурс API (например, 'products').
         :type resource: str
         :param resource_id: ID ресурса.
         :type resource_id: int | str
-        :param kwargs: Дополнительные параметры для запроса.
-
-        :return: Ответ от API.
-        :rtype: dict
+        :param kwargs: Дополнительные аргументы для запроса.
+        :type kwargs: dict
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool | None
         """
-        # Выполняем GET запрос для чтения ресурса
-        return self._exec(resource=resource, resource_id=resource_id, method='GET', io_format=self.data_format, **kwargs)
+        return self._exec(resource=resource, resource_id=resource_id, method='GET', io_format=self.data_format,
+                          **kwargs)
 
-    def write(self, resource: str, data: dict) -> dict:
+    def write(self, resource: str, data: Dict) -> Union[Dict, bool, None]:
         """
         Обновляет существующий ресурс в API PrestaShop.
 
-        :param resource: API ресурс (например, 'products').
+        :param resource: Ресурс API (например, 'products').
         :type resource: str
         :param data: Данные для ресурса.
         :type data: dict
-
-        :return: Ответ от API.
-        :rtype: dict
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool | None
         """
-        # Выполняем PUT запрос для обновления ресурса
-        return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data, io_format=self.data_format)
+        return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data,
+                          io_format=self.data_format)
 
-    def unlink(self, resource: str, resource_id: int | str) -> bool:
+    def unlink(self, resource: str, resource_id: Union[int, str]) -> Union[bool, None]:
         """
         Удаляет ресурс из API PrestaShop.
 
-        :param resource: API ресурс (например, 'products').
+        :param resource: Ресурс API (например, 'products').
         :type resource: str
         :param resource_id: ID ресурса.
         :type resource_id: int | str
-
-        :return: True, если удаление успешно, иначе False.
-        :rtype: bool
+        :return: `True`, если успешно, `False` в противном случае.
+        :rtype: bool | None
         """
-        # Выполняем DELETE запрос для удаления ресурса
         return self._exec(resource=resource, resource_id=resource_id, method='DELETE', io_format=self.data_format)
 
-    def search(self, resource: str, filter: str | dict = None, **kwargs) -> List[dict]:
+    def search(self, resource: str, filter: Union[str, Dict] = None, **kwargs) -> Union[List[Dict], bool, None]:
         """
-        Ищет ресурсы в API PrestaShop.
+        Поиск ресурсов в API PrestaShop.
 
-        :param resource: API ресурс (например, 'products').
+        :param resource: Ресурс API (например, 'products').
         :type resource: str
         :param filter: Фильтр для поиска.
-        :type filter: str | dict, optional
-        :param kwargs: Дополнительные параметры для запроса.
-
-        :return: Список ресурсов, соответствующих критериям поиска.
-        :rtype: List[dict]
+        :type filter: str | dict
+        :param kwargs: Дополнительные аргументы для запроса.
+        :type kwargs: dict
+        :return: Список ресурсов, соответствующих критериям поиска, или `False` при ошибке.
+        :rtype: list[dict] | bool | None
         """
-        # Выполняем GET запрос для поиска ресурсов
-        return self._exec(resource=resource, search_filter=filter, method='GET', io_format=self.data_format, **kwargs)
+        return self._exec(resource=resource, search_filter=filter, method='GET', io_format=self.data_format,
+                          **kwargs)
 
-    def create_binary(self, resource: str, file_path: str, file_name: str) -> dict:
-         """
-        Загружает бинарный файл в API PrestaShop.
+    def create_binary(self, resource: str, file_path: str, file_name: str) -> Union[Dict, bool]:
+        """
+        Загружает бинарный файл в ресурс API PrestaShop.
 
-        :param resource: API ресурс (например, 'images/products/22').
+        :param resource: Ресурс API (например, 'images/products/22').
         :type resource: str
         :param file_path: Путь к бинарному файлу.
         :type file_path: str
         :param file_name: Имя файла.
         :type file_name: str
-
-        :return: Ответ от API.
-        :rtype: dict
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool
         """
-         # Открываем файл для чтения в бинарном виде
-         with open(file_path, 'rb') as file:
-            # Устанавливаем заголовки для запроса
-            headers = {'Content-Type': 'application/octet-stream'}
-            # Выполняем POST запрос для загрузки файла
-            response = self.client.post(
-                url=f'{self.API_DOMAIN}{resource}',
-                headers=headers,
-                data=file.read()
-            )
-            # Возвращаем JSON ответ
-            return response.json()
+        try:
+            with open(file_path, 'rb') as file:
+                headers = {'Content-Type': 'application/octet-stream'}
+                response = self.client.post(
+                    url=f'{self.API_DOMAIN}{resource}',
+                    headers=headers,
+                    data=file.read()
+                )
+                return response.json()
+        except Exception as ex:
+            logger.error(f'Ошибка при загрузке бинарного файла: {ex}')
+            return False
 
-    def _save(self, file_name: str, data: dict):
-         """
+    def _save(self, file_name: str, data: Dict) -> None:
+        """
         Сохраняет данные в файл.
 
         :param file_name: Имя файла.
         :type file_name: str
         :param data: Данные для сохранения.
         :type data: dict
+        :return: None
+        :rtype: None
         """
-        # Сохраняем данные в файл
         save_text_file(file_name, j_dumps(data, indent=4, ensure_ascii=False))
 
-    def get_data(self, resource: str, **kwargs) -> dict | None:
+    def get_data(self, resource: str, **kwargs) -> Union[Dict, bool, None]:
         """
-        Получает данные из API PrestaShop и сохраняет их в файл.
+        Получает данные из ресурса API PrestaShop и сохраняет их.
 
-        :param resource: API ресурс (например, 'products').
+        :param resource: Ресурс API (например, 'products').
         :type resource: str
-        :param kwargs: Дополнительные параметры для запроса.
-
-        :return: Данные от API или False при неудаче.
-        :rtype: dict | None
+        :param kwargs: Дополнительные аргументы для запроса API.
+        :type kwargs: dict
+        :return: Данные от API или `False` при ошибке.
+        :rtype: dict | bool | None
         """
-        # Выполняем GET запрос для получения данных
         data = self._exec(resource=resource, method='GET', io_format=self.data_format, **kwargs)
-        # Если данные получены, сохраняем их в файл
         if data:
             self._save(f'{resource}.json', data)
             return data
         return False
 
-    def remove_file(self, file_path: str):
+    def remove_file(self, file_path: str) -> None:
         """
         Удаляет файл из файловой системы.
 
         :param file_path: Путь к файлу.
         :type file_path: str
+        :return: None
+        :rtype: None
         """
         try:
-            # Удаляем файл
             os.remove(file_path)
         except Exception as e:
-            # Логируем ошибку удаления файла
-            logger.error(f"Error removing file {file_path}: {e}")
+            logger.error(f"Ошибка при удалении файла {file_path}: {e}")
 
-    def get_apis(self) -> dict:
+    def get_apis(self) -> Union[Dict, bool, None]:
         """
         Получает список всех доступных API.
 
         :return: Список доступных API.
-        :rtype: dict
+        :rtype: dict | bool | None
         """
-        # Выполняем GET запрос для получения списка API
         return self._exec('apis', method='GET', io_format=self.data_format)
 
-    def get_languages_schema(self) -> dict:
+    def get_languages_schema(self) -> Union[Dict, None]:
         """
         Получает схему для языков.
 
-        :return: Схема языков или None при неудаче.
-        :rtype: dict
+        :return: Схема языков или None при ошибке.
+        :rtype: dict | None
         """
         try:
-            # Выполняем GET запрос для получения схемы языков
-            response = self._exec('languages', display='full', io_format='JSON')
+            return self._exec('languages', display='full', io_format='JSON')
+        except Exception as ex:
+            logger.error(f"Ошибка при получении схемы языков: {ex}")
+            return None
+
+    def _upload_image(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> Union[Dict, bool, None]:
+        """
+        Загружает изображение в API PrestaShop.
+
+        :param resource: Ресурс API (например, 'images/products/22').
+        :type resource: str
+        :param resource_id: ID ресурса.
+        :type resource_id: int
+        :param img_url: URL изображения.
+        :type img_url: str
+        :param img_name: Имя файла изображения.
+        :type img_name: str, optional
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool | None
+        """
+        try:
+            url_parts = img_url.rsplit('.', 1)
+            extension = url_parts[1] if len(url_parts) > 1 else ''
+            filename = f'{resource_id}_{img_name}.{extension}'
+            png_file_path = save_png_from_url(img_url, filename)
+            response = self.create_binary(resource, png_file_path, img_name)
+            self.remove_file(png_file_path)
             return response
         except Exception as ex:
-             # Логируем ошибку получения схемы языков
-            logger.error(f"Error: {ex}")
-            return
+            logger.error(f"Ошибка при загрузке изображения: {ex}")
+            return False
 
-    def _upload_image(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
+    def upload_image_async(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> Union[Dict, bool, None]:
+         """
+         Асинхронно загружает изображение в API PrestaShop.
+
+         :param resource: Ресурс API (например, 'images/products/22').
+         :type resource: str
+         :param resource_id: ID ресурса.
+         :type resource_id: int
+         :param img_url: URL изображения.
+         :type img_url: str
+         :param img_name: Имя файла изображения.
+         :type img_name: str, optional
+         :return: Ответ от API или `False` при ошибке.
+         :rtype: dict | bool | None
+         """
+         return self._upload_image(resource, resource_id, img_url, img_name)
+
+    def upload_image(self, resource: str, resource_id: int, img_url: str, img_name: str = None) ->  Union[Dict, bool, None]:
         """
         Загружает изображение в API PrestaShop.
 
-        :param resource: API ресурс (например, 'images/products/22').
+        :param resource: Ресурс API (например, 'images/products/22').
         :type resource: str
         :param resource_id: ID ресурса.
         :type resource_id: int
@@ -652,72 +689,18 @@ class PrestaShop:
         :type img_url: str
         :param img_name: Имя файла изображения.
         :type img_name: str, optional
-
-        :return: Ответ от API или None при неудаче.
-        :rtype: dict | None
+        :return: Ответ от API или `False` при ошибке.
+        :rtype: dict | bool | None
         """
-        # Разделяем URL на имя и расширение
-        url_parts = img_url.rsplit('.', 1)
-        url_without_extension = url_parts[0]
-        extension = url_parts[1] if len(url_parts) > 1 else ''
-        # Формируем имя файла
-        filename = str(resource_id) + f'_{img_name}.{extension}'
-         # Сохраняем изображение в формате png
-        png_file_path = save_png_from_url(img_url, filename)
-         # Загружаем бинарное изображение
-        response = self.create_binary(resource, png_file_path, img_name)
-        # Удаляем временный файл
-        self.remove_file(png_file_path)
-        return response
-
-    def upload_image_async(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
-        """
-        Асинхронно загружает изображение в API PrestaShop.
-
-        :param resource: API ресурс (например, 'images/products/22').
-        :type resource: str
-        :param resource_id: ID ресурса.
-        :type resource_id: int
-        :param img_url: URL изображения.
-        :type img_url: str
-        :param img_name: Имя файла изображения.
-        :type img_name: str, optional
-
-        :return: Ответ от API или None при неудаче.
-        :rtype: dict | None
-        """
-        # Вызываем метод _upload_image для загрузки изображения
         return self._upload_image(resource, resource_id, img_url, img_name)
 
-
-    def upload_image(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
+    def get_product_images(self, product_id: int) ->  Union[Dict, bool, None]:
         """
-        Загружает изображение в API PrestaShop.
-
-        :param resource: API ресурс (например, 'images/products/22').
-        :type resource: str
-        :param resource_id: ID ресурса.
-        :type resource_id: int
-        :param img_url: URL изображения.
-        :type img_url: str
-        :param img_name: Имя файла изображения.
-        :type img_name: str, optional
-
-        :return: Ответ от API или None при неудаче.
-        :rtype: dict | None
-        """
-        # Вызываем метод _upload_image для загрузки изображения
-        return self._upload_image(resource, resource_id, img_url, img_name)
-
-    def get_product_images(self, product_id: int) -> dict | None:
-        """
-        Получает изображения продукта.
+        Получает изображения для продукта.
 
         :param product_id: ID продукта.
         :type product_id: int
-
-        :return: Список изображений продукта или False при неудаче.
-        :rtype: dict | None
+        :return: Список изображений продукта или `False` при ошибке.
+        :rtype: dict | bool | None
         """
-        # Выполняем GET запрос для получения изображений продукта
         return self._exec(f'products/{product_id}/images', method='GET', io_format=self.data_format)

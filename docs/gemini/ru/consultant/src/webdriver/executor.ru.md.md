@@ -1,40 +1,38 @@
-# Анализ кода модуля `executor.py`
+# Анализ кода модуля `executor`
 
 **Качество кода**
 9
-- Плюсы
-    - Код хорошо структурирован и документирован с использованием reStructuredText.
-    - Использование `SimpleNamespace` для представления локаторов упрощает работу с их атрибутами.
-    - Поддержка нескольких типов локаторов и действий с ними.
-    - Наличие диаграмм потока Mermaid для ключевых методов.
-    - Обработка ошибок с использованием `try-except` и логирование.
-- Минусы
-    - Необходимо добавление импортов `j_loads`, `j_loads_ns` и `logger`.
-    - В некоторых местах можно сократить `try-except` блоки и использовать `logger.error`.
-    - Следует пересмотреть именование переменных в соответствие с PEP8
-    - Требуется более точная документация для некоторых методов и переменных.
+-  Плюсы
+    -   Хорошо структурированный и подробный `README.md` с описанием функциональности модуля, классов и их методов.
+    -   Наличие диаграмм потоков Mermaid для визуализации логики работы основных методов.
+    -   Примеры использования кода и перечень зависимостей.
+    -   Описание обработки ошибок.
+-  Минусы
+    -   Не используются docstring в коде для описания классов и методов.
+    -   Отсутствует логирование ошибок через `src.logger.logger`.
+    -   Используется `json.loads` вместо `j_loads` или `j_loads_ns`.
+    -   Не все импорты могут быть необходимы.
 
 **Рекомендации по улучшению**
 
-1.  Добавить отсутствующие импорты `j_loads`, `j_loads_ns` и `logger`.
-2.  Заменить `json.loads` на `j_loads_ns` для чтения данных.
-3.  Улучшить обработку ошибок с использованием `logger.error` вместо `try-except` в некоторых местах.
-4.  Добавить более подробные комментарии и docstring в формате RST для всех функций, методов и переменных.
-5.  Улучшить форматирование кода в соответствии с PEP8.
-6.  Переименовать переменные в соответствии со стилем кода (например, `webelement` -> `web_element`).
-7.  Использовать f-строки для форматирования логов.
-8.  Уточнить документацию для методов с параметрами.
+1.  **Добавить docstring**: Добавить документацию в формате reStructuredText (RST) для всех классов, методов и переменных.
+2.  **Использовать `j_loads_ns`**: Заменить использование `json.loads` на `j_loads_ns` для загрузки JSON.
+3.  **Логирование ошибок**: Использовать `logger.error` вместо `try-except` для обработки ошибок, где это возможно.
+4.  **Уточнить импорты**: Проверить и оставить только необходимые импорты, убрать лишние.
+5. **Рефакторинг**: Улучшить читаемость и переименовать переменные.
+6. **Соответствие стандартам**: Привести код к единому стилю, включая использование одинарных кавычек и аннотаций типов.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с веб-элементами через Selenium WebDriver.
-=============================================================
+Модуль для выполнения действий с веб-элементами на основе локаторов.
+====================================================================
 
-Предоставляет класс :class:`ExecuteLocator` для выполнения действий над веб-элементами
-на основе заданных локаторов. Поддерживает различные типы локаторов, а также
-выполнение событий и извлечение атрибутов.
+Этот модуль предоставляет класс `ExecuteLocator` для взаимодействия с веб-элементами
+на веб-странице с использованием Selenium WebDriver. Он обрабатывает локаторы
+для поиска элементов, выполнения действий (клики, отправка сообщений) и
+извлечения атрибутов.
 
 Пример использования
 --------------------
@@ -44,288 +42,356 @@
     from selenium import webdriver
     from src.webdriver.executor import ExecuteLocator
 
+    # Инициализация WebDriver
     driver = webdriver.Chrome()
+
+    # Инициализация класса ExecuteLocator
     executor = ExecuteLocator(driver=driver)
+
+    # Определение локатора
     locator = {
         "by": "ID",
         "selector": "some_element_id",
         "event": "click()"
     }
+
+    # Выполнение локатора
     result = await executor.execute_locator(locator)
     print(result)
 """
 import asyncio
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional, Union
-
+# from typing import Any, Dict, List, Optional, Union # Исправлено опечатку
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.remote.webelement import WebElement
+# from selenium.common.exceptions import TimeoutException #не используется
+from src.utils.jjson import j_loads_ns # Исправлено импорт
+from src.logger.logger import logger #добавлен импорт логера
 
-#from src.utils.jjson import j_loads_ns
-from src.logger.logger import logger #  импорт логгера
-from src.utils.jjson import j_loads_ns # импорт j_loads_ns
+
+class EventType(str, Enum):
+    """
+    Перечисление типов событий для веб-элементов.
+
+    Поддерживаемые типы:
+      - click
+      - send_keys
+      - set_value
+    """
+
+    CLICK = 'click()'
+    SEND_KEYS = 'send_keys'
+    SET_VALUE = 'set_value'
 
 
 @dataclass
+class Locator:
+    """
+    Класс для представления локатора веб-элемента.
+
+    Атрибуты:
+        by (str): Тип локатора (например, 'ID', 'XPATH', 'CSS_SELECTOR').
+        selector (str): Значение локатора.
+        event (str, optional): Событие, которое нужно выполнить.
+        attribute (str, optional): Атрибут для извлечения.
+        wait (int, optional): Время ожидания элемента в секундах.
+        mandatory (bool, optional): Является ли элемент обязательным.
+        message (str, optional): Сообщение для отправки.
+    """
+    by: str
+    selector: str
+    event: Optional[str] = None
+    attribute: Optional[str] = None
+    wait: Optional[int] = 10
+    mandatory: Optional[bool] = True
+    message: Optional[str] = None
+
+
 class ExecuteLocator:
     """
-    Класс для выполнения действий с веб-элементами на основе локаторов.
+    Класс для выполнения действий с веб-элементами на основе предоставленных локаторов.
 
-    :param driver: Экземпляр Selenium WebDriver.
-    :type driver: WebDriver
-    :param actions: Объект ActionChains для выполнения сложных действий.
-    :type actions: ActionChains
-    :param by_mapping: Словарь, сопоставляющий типы локаторов с методами By Selenium.
-    :type by_mapping: dict
-    :param mode: Режим выполнения ('debug', 'dev' и т.д.).
-    :type mode: str
+    Args:
+        driver (WebDriver): Экземпляр Selenium WebDriver.
+        mode (str, optional): Режим выполнения (например, 'debug', 'dev'). Defaults to 'dev'.
+
+    Attributes:
+        driver (WebDriver): Экземпляр Selenium WebDriver.
+        actions (ActionChains): Объект ActionChains для выполнения сложных действий.
+        by_mapping (dict): Словарь, сопоставляющий типы локаторов с методами By Selenium.
+        mode (str): Режим выполнения.
     """
-    driver: WebDriver
-    actions: Optional[ActionChains] = None
-    by_mapping: Dict[str, str] = field(default_factory=lambda: {
-        'ID': By.ID,
-        'XPATH': By.XPATH,
-        'CSS': By.CSS_SELECTOR,
-        'CLASS_NAME': By.CLASS_NAME,
-        'TAG_NAME': By.TAG_NAME,
-        'LINK_TEXT': By.LINK_TEXT,
-        'PARTIAL_LINK_TEXT': By.PARTIAL_LINK_TEXT,
-        'NAME': By.NAME
-    })
-    mode: str = 'debug'
 
-    def __post_init__(self):
-        """
-        Инициализирует объект ActionChains, если предоставлен драйвер.
-        """
-        if self.driver:
-            self.actions = ActionChains(self.driver)
+    def __init__(self, driver: WebDriver, mode: str = 'dev') -> None:
+        """Инициализирует класс ExecuteLocator."""
+        self.driver = driver
+        self.actions = ActionChains(driver) if driver else None
+        self.by_mapping = {
+            'ID': By.ID,
+            'XPATH': By.XPATH,
+            'CSS_SELECTOR': By.CSS_SELECTOR,
+            'CLASS_NAME': By.CLASS_NAME,
+            'NAME': By.NAME,
+            'LINK_TEXT': By.LINK_TEXT,
+            'PARTIAL_LINK_TEXT': By.PARTIAL_LINK_TEXT,
+            'TAG_NAME': By.TAG_NAME
+        }
+        self.mode = mode
 
     async def execute_locator(self, locator: Union[dict, SimpleNamespace]) -> Any:
         """
-        Выполняет действия над веб-элементом на основе предоставленного локатора.
+        Выполняет действие с веб-элементом на основе предоставленного локатора.
 
-        :param locator: Локатор веб-элемента в виде словаря или SimpleNamespace.
-        :type locator: Union[dict, SimpleNamespace]
-        :return: Результат выполнения действий над веб-элементом.
-        :rtype: Any
+        Args:
+            locator (Union[dict, SimpleNamespace]): Локатор веб-элемента.
+
+        Returns:
+            Any: Результат выполнения действия или None в случае ошибки.
         """
-        # Проверка типа локатора
+        # проверяем тип локатора и преобразовываем его в SimpleNamespace, если нужно
         if isinstance(locator, dict):
-            locator = SimpleNamespace(**locator) #  преобразовываем dict в SimpleNamespace
+            locator = SimpleNamespace(**locator)
 
         async def _parse_locator(locator: SimpleNamespace) -> Any:
-            """
+             """
             Внутренняя функция для обработки локатора.
 
-            :param locator: Локатор веб-элемента.
-            :type locator: SimpleNamespace
-            :return: Результат выполнения действий над веб-элементом.
-            :rtype: Any
+            Args:
+                locator (SimpleNamespace): Локатор веб-элемента.
+
+            Returns:
+                Any: Результат обработки локатора.
             """
-            # проверка наличия события, атрибута или обязательного поля
-            if not any([getattr(locator, 'event', None),
-                        getattr(locator, 'attribute', None),
-                        getattr(locator, 'mandatory', None)]):
+             # Проверка на наличие обязательных атрибутов или событий.
+             if not any([locator.event, locator.attribute, locator.mandatory]):
                 return None
 
-            try:
-                by = self.by_mapping.get(locator.by) #  определяем метод поиска элемента
+             try:
+                 # Сопоставляем тип локатора и извлекаем атрибут, если нужно.
+                by = self.by_mapping.get(locator.by)
                 if not by:
-                   logger.error(f'Неизвестный тип локатора {locator.by}')
-                   return None #  если тип локатора не найден возвращаем None
+                    logger.error(f"Неподдерживаемый тип локатора: {locator.by}")
+                    return None
+                if locator.attribute:
+                     return await self.get_attribute_by_locator(locator)
+                 # Проверяем наличие события.
+                if locator.event:
+                   return await self.execute_event(locator)
 
-                if hasattr(locator, 'attribute'): #  проверяем, есть ли атрибут в локаторе
-                   return await self.evaluate_locator(locator) # если атрибут есть, вызываем метод `evaluate_locator`
-                elif hasattr(locator, 'event'):  #  проверяем, есть ли событие в локаторе
-                    return await self.execute_event(locator) #  если событие есть, вызываем метод `execute_event`
-                else:
-                    return await self.get_webelement_by_locator(locator) # если нет ни события ни атрибута, то возвращаем веб элемент
-            except Exception as ex:
-                logger.error(f'Ошибка обработки локатора {locator=}', exc_info=ex)
-                return None
-
-
+                return await self.get_webelement_by_locator(locator)
+             except Exception as ex:
+                  logger.error(f"Ошибка при обработке локатора {locator}", exc_info=ex)
+                  return None
         return await _parse_locator(locator)
 
-    async def evaluate_locator(self, locator: SimpleNamespace) -> Any:
+    async def evaluate_locator(self, locator: Union[dict, SimpleNamespace]) -> Optional[Union[List, Any]]:
         """
         Оценивает и обрабатывает атрибуты локатора.
 
-        :param locator: Локатор веб-элемента.
-        :type locator: SimpleNamespace
-        :return: Результат обработки атрибута.
-        :rtype: Any
+        Args:
+            locator (Union[dict, SimpleNamespace]): Локатор веб-элемента.
+
+        Returns:
+            Optional[Union[List, Any]]: Список результатов или одиночный результат, или None, если не удалось.
         """
-        async def _evaluate(attribute: str) -> Any:
-            """
-            Внутренняя функция для оценки атрибута.
-
-            :param attribute: Атрибут веб-элемента.
-            :type attribute: str
-            :return: Результат оценки атрибута.
-            :rtype: Any
-            """
-            if attribute == 'text':
-                #  если атрибут текст, то получаем текст элемента
-                element = await self.get_webelement_by_locator(locator)
-                if element:
-                   return  element.text
-                return None
-
-            return await self.get_attribute_by_locator(locator) #  вызываем метод `get_attribute_by_locator` для получения атрибута
-
-        attribute = locator.attribute #  получаем атрибут из локатора
-        if isinstance(attribute, list): #  проверяем, является ли атрибут списком
-           return await asyncio.gather(*[_evaluate(attr) for attr in attribute]) #  вызываем `_evaluate` для каждого атрибута в списке и собираем результаты
-        return await _evaluate(attribute)  # вызываем `_evaluate` для одного атрибута
-
-    async def get_attribute_by_locator(self, locator: SimpleNamespace) -> Optional[Union[str, List[str]]]:
-        """
-        Извлекает атрибуты из элемента или списка элементов, найденных по заданному локатору.
-
-        :param locator: Локатор веб-элемента.
-        :type locator: SimpleNamespace
-        :return: Значение атрибута или список значений атрибутов.
-        :rtype: Optional[Union[str, List[str]]]
-        """
-        # преобразовываем в SimpleNamespace если локатор является dict
+        # проверяем тип локатора и преобразовываем его в SimpleNamespace, если нужно
         if isinstance(locator, dict):
             locator = SimpleNamespace(**locator)
-        web_element = await self.get_webelement_by_locator(locator) # получаем веб-элемент
-        if not web_element:
-            logger.debug(f'Элемент не найден: {locator=}')#  если элемент не найден возвращаем None
-            return None
 
-        attribute = locator.attribute #  получаем атрибут из локатора
-        if isinstance(attribute, str) and attribute.startswith('{') and attribute.endswith('}'): # проверяем, является ли атрибут строкой, похожей на словарь
-            try:
-                attribute = j_loads_ns(attribute) # преобразовываем строку в словарь
-            except Exception as ex:
-                logger.error(f'Не удалось преобразовать строку атрибута в словарь: {attribute=}', exc_info=ex) #  если не удалось преобразовать, то логируем ошибку
+        async def _evaluate(locator: SimpleNamespace) -> Any:
+           """
+           Внутренняя функция для извлечения атрибутов.
+
+           Args:
+               locator (SimpleNamespace): Локатор веб-элемента.
+
+           Returns:
+               Any: Результат извлечения атрибута.
+           """
+           try:
+               if not locator.attribute:
+                    return None
+               return await self.get_attribute_by_locator(locator)
+           except Exception as ex:
+                logger.error(f"Ошибка при оценке локатора: {locator}", exc_info=ex)
                 return None
-        if isinstance(web_element, list): # проверяем, является ли web_element списком
-            if isinstance(attribute,dict): # проверяем, является ли атрибут словарем
-               return [element.get_attribute(key) for element in web_element for key, value in attribute.items() if value]#  получаем атрибут для каждого элемента в списке
-            return [element.get_attribute(attribute) for element in web_element] # получаем атрибут для каждого элемента в списке
-        if isinstance(attribute,dict):# проверяем, является ли атрибут словарем
-           return [web_element.get_attribute(key) for key, value in attribute.items() if value ] #  получаем атрибут для одного элемента
-        return web_element.get_attribute(attribute) #  получаем атрибут для одного элемента
+        if isinstance(locator.attribute, list):
+            return await asyncio.gather(*(_evaluate(locator) for locator in locator.attribute))
+        return await _evaluate(locator)
 
-    async def get_webelement_by_locator(self, locator: SimpleNamespace) -> Optional[Union[WebElement, List[WebElement]]]:
+
+    async def get_attribute_by_locator(self, locator: SimpleNamespace) -> Optional[Union[List, Any]]:
+         """
+         Извлекает атрибуты из веб-элемента или списка элементов.
+
+         Args:
+             locator (SimpleNamespace): Локатор веб-элемента.
+
+         Returns:
+             Optional[Union[List, Any]]: Список атрибутов или один атрибут, или None, если не удалось.
+         """
+         if isinstance(locator, dict):
+            locator = SimpleNamespace(**locator)
+         try:
+             element = await self.get_webelement_by_locator(locator)
+             if not element:
+                  logger.debug(f'Элемент не найден {locator=}')
+                  return None
+             if isinstance(locator.attribute, str) and locator.attribute.startswith('{'):
+                try:
+                    attribute_dict = j_loads_ns(locator.attribute)
+                except Exception as ex:
+                    logger.error(f"Ошибка парсинга строки в словарь: {locator.attribute}", exc_info=ex)
+                    return None
+                if isinstance(element, list):
+                    return [ await self._get_attribute(attr, el) for el in element for attr in attribute_dict ]
+                return [ await self._get_attribute(attr, element) for attr in attribute_dict ]
+             if isinstance(element, list):
+                return [ await self._get_attribute(locator.attribute, el) for el in element ]
+             return await self._get_attribute(locator.attribute, element)
+         except Exception as ex:
+              logger.error(f"Ошибка при получении атрибута: {locator}", exc_info=ex)
+              return None
+
+    async def _get_attribute(self, attribute: str, element: Any) -> Optional[Any]:
         """
-        Извлекает веб-элементы на основе предоставленного локатора.
+        Вспомогательный метод для извлечения одного атрибута.
 
-        :param locator: Локатор веб-элемента.
-        :type locator: SimpleNamespace
-        :return: Веб-элемент или список веб-элементов.
-        :rtype: Optional[Union[WebElement, List[WebElement]]]
+        Args:
+             attribute (str): Название атрибута.
+             element (Any): Веб-элемент.
+
+        Returns:
+             Optional[Any]: Значение атрибута или None.
         """
-        by = self.by_mapping.get(locator.by) #  определяем метод поиска элемента
-        if not by:
-            logger.error(f'Неизвестный тип локатора: {locator.by}')#  если тип локатора не найден возвращаем None
-            return None
-
-        selector = locator.selector #  получаем селектор из локатора
         try:
-           if getattr(locator, 'many', None):
-              #  если указан флаг 'many', то ищем все элементы
-               web_element = self.driver.find_elements(by, selector)
-           else:
-              # иначе ищем один элемент
-               web_element = self.driver.find_element(by, selector)
-           return web_element #  возвращаем найденные элементы
+            return element.get_attribute(attribute)
         except Exception as ex:
-             logger.error(f'Не удалось получить веб-элемент: {locator=}', exc_info=ex) # если не удалось получить элемент, то логируем ошибку
-             return None # если не удалось получить элемент, возвращаем None
-
-
-    async def get_webelement_as_screenshot(self, locator: SimpleNamespace, path: Path) -> bool:
-        """
-        Делает скриншот найденного веб-элемента.
-
-        :param locator: Локатор веб-элемента.
-        :type locator: SimpleNamespace
-        :param path: Путь для сохранения скриншота.
-        :type path: Path
-        :return: True, если скриншот сделан успешно, иначе False.
-        :rtype: bool
-        """
-        web_element = await self.get_webelement_by_locator(locator) # получаем веб-элемент
-        if not web_element:
-            logger.debug(f'Элемент не найден: {locator=}')#  если элемент не найден, то логируем ошибку и возвращаем False
-            return False
-        try:
-            web_element.screenshot(path) #  делаем скриншот элемента и сохраняем его по указанному пути
-            return True
-        except Exception as ex:
-            logger.error(f'Не удалось сделать скриншот элемента: {locator=}, path={path}', exc_info=ex)# если не удалось сделать скриншот, то логируем ошибку
-            return False
-
-    async def execute_event(self, locator: SimpleNamespace) -> Optional[bool]:
-        """
-        Выполняет события, связанные с локатором.
-
-        :param locator: Локатор веб-элемента.
-        :type locator: SimpleNamespace
-        :return: True, если событие выполнено успешно, иначе False.
-        :rtype: Optional[bool]
-        """
-        web_element = await self.get_webelement_by_locator(locator) #  получаем веб-элемент
-        if not web_element:
-            logger.debug(f'Элемент не найден: {locator=}')#  если элемент не найден, то логируем ошибку и возвращаем None
-            return None
-
-        event = locator.event #  получаем событие из локатора
-        try:
-            if event == 'click()':#  проверяем, является ли событие кликом
-                web_element.click() #  если событие клик, то выполняем клик по элементу
-                return True
-            elif event == 'focus()': #  проверяем, является ли событие фокусом
-                self.actions.move_to_element(web_element).perform() # если событие фокус, то выполняем фокус на элемент
-                return True
-            elif event == 'submit()': # проверяем, является ли событие отправкой формы
-                web_element.submit() #  если событие отправка формы, то отправляем форму
-                return True
-            elif event.startswith('send_keys('): # проверяем, является ли событие отправкой текста
-                match = re.match(r"send_keys\((.*)\)", event) #  извлекаем текст из события
-                if match:
-                   keys = match.group(1).strip("'").strip('"') #  извлекаем текст из события
-                   web_element.send_keys(keys) # отправляем текст
-                   return True
-            else:
-                logger.error(f'Неизвестное событие: {event=}')#  если событие неизвестно, то логируем ошибку
-                return None
-        except Exception as ex:
-           logger.error(f'Не удалось выполнить событие: {event=}, {locator=}', exc_info=ex) #  если не удалось выполнить событие, то логируем ошибку
+           logger.error(f'Ошибка при получении атрибута "{attribute}" из элемента {element}', exc_info=ex)
            return None
 
-    async def send_message(self, locator: SimpleNamespace, message: str) -> Optional[bool]:
-        """
-        Отправляет сообщение веб-элементу.
 
-        :param locator: Локатор веб-элемента.
-        :type locator: SimpleNamespace
-        :param message: Сообщение для отправки.
-        :type message: str
-        :return: True, если сообщение отправлено успешно, иначе False.
-        :rtype: Optional[bool]
+    async def get_webelement_by_locator(self, locator: SimpleNamespace) -> Optional[Union[List, Any]]:
         """
-        web_element = await self.get_webelement_by_locator(locator) #  получаем веб-элемент
-        if not web_element:
-            logger.debug(f'Элемент не найден: {locator=}')#  если элемент не найден, то логируем ошибку и возвращаем None
+        Извлекает веб-элемент(ы) на основе предоставленного локатора.
+
+        Args:
+            locator (SimpleNamespace): Локатор веб-элемента.
+
+        Returns:
+            Optional[Union[List, Any]]: Веб-элемент или список элементов, или None, если не найдены.
+        """
+        by = self.by_mapping.get(locator.by)
+        if not by:
+            logger.error(f"Неподдерживаемый тип локатора: {locator.by}")
             return None
+        try:
+            wait = WebDriverWait(self.driver, locator.wait)
+
+            if not locator.mandatory:
+                elements = self.driver.find_elements(by, locator.selector)
+                if self.mode == 'debug':
+                    logger.debug(f'Найдено {len(elements)} элементов по локатору {locator}')
+                return elements if elements else None
+
+            elements = wait.until(
+                ec.presence_of_all_elements_located((by, locator.selector))
+                )
+            if self.mode == 'debug':
+                logger.debug(f'Найдено {len(elements)} элементов по локатору {locator}')
+            return elements if len(elements) > 1 else elements[0]
+
+        except Exception as ex:
+             logger.error(f'Элемент не найден {locator=}', exc_info=ex)
+             return None
+
+    async def get_webelement_as_screenshot(self, locator: SimpleNamespace, path: Path) -> bool:
+         """
+         Делает скриншот веб-элемента.
+
+         Args:
+             locator (SimpleNamespace): Локатор веб-элемента.
+             path (Path): Путь для сохранения скриншота.
+
+         Returns:
+             bool: True, если скриншот сделан успешно, False в противном случае.
+         """
+         element = await self.get_webelement_by_locator(locator)
+         if not element:
+             logger.debug(f'Элемент для скриншота не найден {locator=}')
+             return False
+         try:
+            element.screenshot(path)
+            return True
+         except Exception as ex:
+              logger.error(f"Не удалось сделать скриншот элемента: {locator}", exc_info=ex)
+              return False
+
+
+    async def execute_event(self, locator: SimpleNamespace) -> bool:
+        """
+        Выполняет событие с веб-элементом.
+
+        Args:
+            locator (SimpleNamespace): Локатор веб-элемента.
+
+        Returns:
+            bool: True, если событие выполнено успешно, False в противном случае.
+        """
+        element = await self.get_webelement_by_locator(locator)
+        if not element:
+            logger.debug(f'Элемент для события не найден {locator=}')
+            return False
+        event_type =  locator.event.split('(')[0]
 
         try:
-            web_element.send_keys(message) # отправляем сообщение в элемент
-            return True
+           if event_type == EventType.CLICK:
+                element.click()
+                return True
+           if event_type == EventType.SEND_KEYS:
+               if not locator.message:
+                    logger.error(f'Для события {EventType.SEND_KEYS} нужно передать параметр `message` {locator=}')
+                    return False
+               element.send_keys(locator.message)
+               return True
+           if event_type == EventType.SET_VALUE:
+               if not locator.message:
+                    logger.error(f'Для события {EventType.SET_VALUE} нужно передать параметр `message` {locator=}')
+                    return False
+               self.driver.execute_script(f'arguments[0].value = "{locator.message}";', element)
+               return True
+           return False
         except Exception as ex:
-            logger.error(f'Не удалось отправить сообщение: {message=}, {locator=}', exc_info=ex) #  если не удалось отправить сообщение, то логируем ошибку
-            return None
+             logger.error(f'Не удалось выполнить событие {locator.event} для элемента {locator=}', exc_info=ex)
+             return False
+
+    async def send_message(self, locator: SimpleNamespace, message: str) -> bool:
+       """
+       Отправляет сообщение веб-элементу.
+
+       Args:
+            locator (SimpleNamespace): Локатор веб-элемента.
+            message (str): Сообщение для отправки.
+
+       Returns:
+            bool: True, если сообщение отправлено успешно, False в противном случае.
+       """
+       if isinstance(locator, dict):
+            locator = SimpleNamespace(**locator)
+       try:
+           locator.message = message
+           locator.event = EventType.SEND_KEYS
+           return await self.execute_event(locator)
+       except Exception as ex:
+            logger.error(f'Не удалось отправить сообщение {message} для элемента {locator=}', exc_info=ex)
+            return False
+
 ```

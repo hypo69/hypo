@@ -1,85 +1,98 @@
-# Анализ кода модуля src.utils.pdf
+# Анализ кода модуля `pdf.py`
 
 **Качество кода**
 7
 -  Плюсы
-    - Код имеет четкую структуру, разбит на функции и класс `PDFUtils`, что облегчает понимание и поддержку.
-    - Используется библиотека `logger` для логирования ошибок и информации.
-    - Присутствуют docstring для функций и класса, что способствует лучшей читаемости кода.
-    - Код использует `Path` для работы с путями, что делает его более кроссплатформенным.
-    - Код корректно обрабатывает различные типы входных данных (строки и пути).
+    - Код содержит docstring для модуля, классов и методов.
+    - Используется `logger` для логирования ошибок.
+    - Код предоставляет несколько способов для преобразования HTML в PDF с использованием различных библиотек.
+    - Наличие обработки основных исключений в блоках `try-except`.
 -  Минусы
-    - Используется `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - В некоторых местах используется избыточный `try-except`, который можно заменить на `logger.error` и `return False`.
-    - Присутствуют `...` в коде, которые не должны быть в финальном варианте.
-    - В docstring не все описания аргументов и возвращаемых значений следуют стандарту reStructuredText.
-    -  Не везде в комментариях используется reStructuredText.
-    - Есть `print` вместо `logger.info`.
-    - Захардкоженный MODE = 'dev'
-    - Не все импорты соответствуют ранее обработанным файлам.
+    - Используется стандартный `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -  Избыточное использование `try-except` блоков, которое можно заменить на обработку ошибок через `logger.error`.
+    -  Не все функции имеют docstring.
+    -  Некоторые сообщения об ошибках не информативны.
+    -  Не все импорты используются.
+    - Некоторые комментарии не соответствуют RST стилю
+    - Есть `print` для ошибок, которые не должны попадать в продакшен
+    - В коде есть `...` как точки остановки, которые нужно убрать.
 
 **Рекомендации по улучшению**
 
-1.  Заменить `json.load` на `j_loads` из `src.utils.jjson` для чтения файлов.
-2.  Удалить избыточные блоки `try-except` и использовать `logger.error` для обработки ошибок.
-3.  Удалить `...` из кода, заменяя на `return` или `pass`.
-4.  Переписать docstring в соответствии со стандартом reStructuredText, добавив описание параметров и возвращаемых значений.
-5.  Все комментарии переписать в формате reStructuredText.
-6.  Использовать `logger.info` вместо `print`.
-7.  Удалить захардкоженный `MODE`, сделать его переменной окружения.
-8. Добавить отсутствующие импорты: `from src.utils.jjson import j_loads`
-9. Исправить docstring `Args` -> `:param`  и `Returns` -> `:return:`
+1.  **Импорты:**
+    -   Удалить неиспользуемые импорты.
+2.  **Использование `j_loads`:**
+    -   Заменить `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+3.  **Логирование ошибок:**
+    -   Улучшить обработку ошибок, используя `logger.error` вместо `print` и избыточного `try-except`.
+4.  **Комментарии:**
+    -   Привести все комментарии в соответствие с форматом RST, включая docstring.
+5.  **Docstring:**
+    -   Добавить docstring для всех функций и методов.
+6.  **Удалить точки остановки:**
+     - Удалить `...` из кода.
+7.  **Информативность ошибок:**
+    - Улучшить сообщения об ошибках, сделав их более информативными.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 Модуль для преобразования HTML-контента или файлов в PDF
 =========================================================================================
 
-Этот модуль предоставляет инструменты для преобразования HTML-контента или файлов в PDF
+Этот модуль содержит класс :class:`PDFUtils`, который используется для преобразования HTML-контента или файлов в PDF
 с использованием различных библиотек, таких как pdfkit, FPDF, WeasyPrint и xhtml2pdf.
 
-Дополнительная информация:
-- https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b
-- https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
-- https://habr.com/ru/companies/bothub/articles/853490/
-"""
-import os
-import sys
-from pathlib import Path
+.. note::
+    Для работы модуля требуется установленная библиотека `wkhtmltopdf`.
+    Путь к исполняемому файлу `wkhtmltopdf.exe` определяется автоматически.
 
+Пример использования
+--------------------
+
+Пример использования класса `PDFUtils`:
+
+.. code-block:: python
+
+    from src.utils.pdf import PDFUtils
+    from pathlib import Path
+
+    html_content = "<h1>Hello, World!</h1>"
+    pdf_path = Path("output.pdf")
+    success = PDFUtils.save_pdf_pdfkit(html_content, pdf_path)
+    if success:
+        print(f"PDF файл успешно создан: {pdf_path}")
+    else:
+        print("Не удалось создать PDF файл")
+"""
+
+import sys
+import os
+from pathlib import Path
 import pdfkit
 from fpdf import FPDF
-from pdfminer.high_level import extract_text
-from reportlab.pdfgen import canvas
 from weasyprint import HTML
 from xhtml2pdf import pisa
-
+from pdfminer.high_level import extract_text
 from src.logger.logger import logger
 from src.utils.jjson import j_loads
-from src.utils.printer import pprint
+# from src.utils.printer import pprint # не используется
 
 
-MODE = os.getenv('MODE', 'dev')
-
+MODE = 'dev'
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
-    Определяет корневую директорию проекта, начиная с директории текущего файла,
-    поиском вверх до первой директории, содержащей любой из маркерных файлов.
+    Определяет корневую директорию проекта на основе наличия файлов-маркеров.
 
-    :param marker_files: Список файлов или директорий, которые идентифицируют корень проекта.
+    :param marker_files: Список файлов или директорий, которые используются для определения корня проекта.
     :type marker_files: tuple
-    :return: Путь к корневой директории проекта, или директория, где находится скрипт.
+    :return: Путь к корневой директории проекта.
     :rtype: Path
     """
-    __root__: Path
-    current_path: Path = Path(__file__).resolve().parent
+    __root__:Path
+    current_path:Path = Path(__file__).resolve().parent
     __root__ = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
@@ -92,18 +105,19 @@ def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt'
 
 # Получение корневой директории проекта
 __root__ = set_project_root()
-"""__root__ (Path): Путь к корневой директории проекта"""
+"""__root__ (Path): Path to the root directory of the project"""
 
-wkhtmltopdf_exe = __root__ / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' / 'wkhtmltopdf.exe'
+wkhtmltopdf_exe = __root__ / 'bin' / 'wkhtmltopdf' / 'files' / 'bin' /  'wkhtmltopdf.exe'
 
 if not wkhtmltopdf_exe.exists():
-    logger.error("Не найден wkhtmltopdf.exe по указанному пути.")
-    raise FileNotFoundError("wkhtmltopdf.exe отсутствует")
+    logger.error(f"Не найден wkhtmltopdf.exe по указанному пути: {wkhtmltopdf_exe}")
+    raise FileNotFoundError(f"wkhtmltopdf.exe отсутствует по пути: {wkhtmltopdf_exe}")
 
 
 class PDFUtils:
     """
-    Класс для работы с PDF-файлами, предоставляющий методы для сохранения HTML-контента в PDF с использованием различных библиотек.
+    Класс для работы с PDF-файлами.
+    Предоставляет методы для сохранения HTML-контента в PDF с использованием различных библиотек.
     """
 
     @staticmethod
@@ -117,24 +131,33 @@ class PDFUtils:
         :type pdf_file: str | Path
         :return: `True`, если PDF успешно сохранен, иначе `False`.
         :rtype: bool
-        :raises pdfkit.PDFKitError: Ошибка генерации PDF через `pdfkit`.
-        :raises OSError: Ошибка доступа к файлу.
+
+        :raises pdfkit.PDFKitError: Если возникает ошибка при генерации PDF.
+        :raises OSError: Если возникает ошибка доступа к файлу.
         """
         try:
-            configuration = pdfkit.configuration(
-                wkhtmltopdf=str(wkhtmltopdf_exe)
-            )
+            configuration = pdfkit.configuration(wkhtmltopdf=str(wkhtmltopdf_exe))
             options = {"enable-local-file-access": ""}
+
             if isinstance(data, str):
-                # Преобразование HTML-контента в PDF
+                #  Преобразование HTML-контента в PDF
                 pdfkit.from_string(data, pdf_file, configuration=configuration, options=options)
             else:
-                # Преобразование HTML-файла в PDF
+                #  Преобразование HTML-файла в PDF
                 pdfkit.from_file(str(data), pdf_file, configuration=configuration, options=options)
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             return True
+        except pdfkit.PDFKitError as ex:
+             # Логирование ошибки генерации PDF через pdfkit
+            logger.error(f"Ошибка генерации PDF через pdfkit: {ex}")
+            return False
+        except OSError as ex:
+            # Логирование ошибки доступа к файлу
+            logger.error(f"Ошибка доступа к файлу: {ex}")
+            return False
         except Exception as ex:
-            logger.error("Ошибка генерации PDF: ", ex)
+            # Логирование неожиданной ошибки
+            logger.error(f"Неожиданная ошибка при генерации PDF: {ex}")
             return False
 
     @staticmethod
@@ -152,7 +175,7 @@ class PDFUtils:
         try:
             pdf = FPDF()
             pdf.add_page()
-            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.set_auto_page_break(auto = True, margin = 15)
 
             # Путь к файлу fonts.json
             fonts_file_path = __root__ / 'assets' / 'fonts' / 'fonts.json'
@@ -170,27 +193,35 @@ class PDFUtils:
                     '}'
                 )
                 raise FileNotFoundError(f'Файл шрифтов не найден: {fonts_file_path}')
+                
 
-            # Загрузка шрифтов из JSON файла
-            fonts = j_loads(fonts_file_path)
-
+            with open(fonts_file_path, 'r', encoding = 'utf-8') as json_file:
+                #  Загрузка шрифтов из JSON файла с использованием j_loads
+                fonts = j_loads(json_file)
+            
             # Добавление шрифтов
             for font_name, font_info in fonts.items():
                 font_path = __root__ / 'assets' / 'fonts' / font_info['path']
                 if not font_path.exists():
                     logger.error(f'Файл шрифта не найден: {font_path}')
                     raise FileNotFoundError(f'Файл шрифта не найден: {font_path}')
+                   
 
-                pdf.add_font(font_info['family'], font_info['style'], str(font_path), uni=font_info['uni'])
+                pdf.add_font(font_info['family'], font_info['style'], str(font_path), uni = font_info['uni'])
 
             # Установка шрифта по умолчанию
-            pdf.set_font('DejaVuSans', style='book', size=12)
+            pdf.set_font('DejaVuSans', style = 'book', size = 12)
             pdf.multi_cell(0, 10, data)
             pdf.output(str(pdf_file))
             logger.info(f'PDF отчет успешно сохранен: {pdf_file}')
             return True
+        except FileNotFoundError as ex:
+            # Логирование ошибки, если файл шрифта не найден
+            logger.error(f'Ошибка при сохранении PDF через FPDF: Файл не найден: {ex}')
+            return False
         except Exception as ex:
-            logger.error('Ошибка при сохранении PDF через FPDF: ', ex)
+             # Логирование общей ошибки при сохранении PDF через FPDF
+            logger.error(f'Ошибка при сохранении PDF через FPDF: {ex}')
             return False
 
     @staticmethod
@@ -213,7 +244,8 @@ class PDFUtils:
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             return True
         except Exception as ex:
-            logger.error("Ошибка при сохранении PDF через WeasyPrint: ", ex)
+            # Логирование ошибки при сохранении PDF через WeasyPrint
+            logger.error(f"Ошибка при сохранении PDF через WeasyPrint: {ex}")
             return False
 
     @staticmethod
@@ -231,37 +263,50 @@ class PDFUtils:
         try:
             with open(pdf_file, "w+b") as result_file:
                 if isinstance(data, str):
-                    # Убедимся, что строка имеет кодировку UTF-8
-                    data_utf8 = data.encode('utf-8').decode('utf-8')  # Преобразуем строку обратно в UTF-8, если нужно
+                    #  Убедимся, что строка имеет кодировку UTF-8
+                    data_utf8 = data.encode('utf-8').decode('utf-8')  #  Преобразуем строку обратно в UTF-8, если нужно
                     try:
                         pisa.CreatePDF(data, dest=result_file)
                     except Exception as ex:
-                        logger.error("Ошибка компиляции PDF: ", ex)
-                        return False
+                         # Логирование ошибки компиляции PDF
+                        logger.error(f"Ошибка компиляции PDF: {ex}")
+                        
                 else:
                     with open(data, "r", encoding="utf-8") as source_file:
                         try:
-                            # Прочитаем файл в кодировке UTF-8
+                            #  Прочитаем файл в кодировке UTF-8
                             source_data = source_file.read()
                             pisa.CreatePDF(source_data, dest=result_file, encoding='UTF-8')
                         except Exception as ex:
-                            logger.error("Ошибка компиляции PDF: ", ex)
-                            return False
+                            # Логирование ошибки компиляции PDF
+                            logger.error(f"Ошибка компиляции PDF: {ex}")
+                            
             logger.info(f"PDF успешно сохранен: {pdf_file}")
             return True
         except Exception as ex:
-            logger.error("Ошибка при сохранении PDF через xhtml2pdf: ", ex)
+            # Логирование ошибки при сохранении PDF через xhtml2pdf
+            logger.error(f"Ошибка при сохранении PDF через xhtml2pdf: {ex}")
             return False
 
     @staticmethod
     def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
-        """Конвертирует HTML контент в PDF файл используя WeasyPrint."""
-        try:
-            HTML(string=html_str).write_pdf(pdf_file)
-            return True
-        except Exception as e:
-            logger.error(f"Ошибка во время генерации PDF: {e}")
-            return
+         """
+         Конвертирует HTML-контент в PDF-файл с использованием WeasyPrint.
+         
+         :param html_str: HTML контент в виде строки.
+         :type html_str: str
+         :param pdf_file: Путь к выходному PDF-файлу.
+         :type pdf_file: str | Path
+         :return: `True`, если PDF успешно сохранен, иначе `None`.
+         :rtype: bool | None
+         """
+         try:
+             HTML(string=html_str).write_pdf(pdf_file)
+             return True
+         except Exception as ex:
+            # Логирование ошибки при генерации PDF
+            logger.error(f"Ошибка при генерации PDF: {ex}")
+            return None
 
     @staticmethod
     def pdf_to_html(pdf_file: str | Path, html_file: str | Path) -> bool:
@@ -276,15 +321,16 @@ class PDFUtils:
         :rtype: bool
         """
         try:
-            # Извлечение текста из PDF
+            #  Извлечение текста из PDF
             text = extract_text(str(pdf_file))
 
-            # Создание HTML-файла
+            #  Создание HTML-файла
             with open(html_file, 'w', encoding='utf-8') as file:
                 file.write(f"<html><body>{text}</body></html>")
 
             logger.info(f"HTML успешно сохранен: {html_file}")
             return True
         except Exception as ex:
+             # Логирование ошибки при конвертации PDF в HTML
             logger.error(f"Ошибка при конвертации PDF в HTML: {ex}")
             return False

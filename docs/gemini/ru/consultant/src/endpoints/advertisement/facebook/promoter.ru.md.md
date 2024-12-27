@@ -1,39 +1,42 @@
-# Анализ кода модуля `promoter.ru.md`
+# Анализ кода модуля `promoter`
 
 **Качество кода**
 8
--   Плюсы
-    -   Код содержит подробную документацию в формате Markdown, что облегчает понимание функциональности модуля.
-    -   Присутствует описание основных классов, методов и их параметров, что способствует удобству использования модуля.
-    -   Представлен Mermaid-граф, наглядно отображающий процесс работы модуля.
-    -   Есть пример использования класса `FacebookPromoter`.
--   Минусы
-    -   Документация не соответствует формату reStructuredText (RST), что затрудняет интеграцию с инструментами документации Python.
-    -   В коде не используются `j_loads` или `j_loads_ns` для загрузки файлов, что является нарушением инструкции.
-    -   Не хватает импортов, используемых в коде.
-    -   Отсутствует логирование ошибок с использованием `src.logger.logger`.
-    -   Некоторые комментарии не достаточно подробные и не соответствуют reStructuredText (RST).
+ -  Плюсы
+     -  Код хорошо структурирован и имеет четкое разделение на классы и методы.
+     -  Присутствует подробное описание модуля, классов и методов в формате Markdown.
+     -  Логика работы промоутера понятна и последовательна.
+ -  Минусы
+    -   Не все комментарии и docstring соответствуют стандарту reStructuredText (RST).
+    -   Используется стандартный `json.load`, вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -   Отсутствуют некоторые необходимые импорты.
+    -   Не везде используется `logger.error` для обработки ошибок.
+    -   В комментариях используются слова типа 'получаем', 'делаем'.
+    -   Используются `try-except` без явной необходимости.
 
 **Рекомендации по улучшению**
-1.  Переписать всю документацию в формате reStructuredText (RST).
-2.  Заменить `json.load` на `j_loads` или `j_loads_ns`.
-3.  Добавить необходимые импорты.
-4.  Внедрить логирование ошибок через `src.logger.logger`.
-5.  Добавить подробные комментарии в формате RST для каждой функции, метода и класса.
-6.  Использовать `try-except` блоки с `logger.error` вместо стандартных.
-7.  Унифицировать стиль кода и комментариев.
-8.  Переписать все комментарии после `#` в соответствии с инструкцией.
-9.  Использовать консистентные наименования переменных и функций.
-10. Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+1.  **Форматирование документации**:
+    -   Переписать все комментарии и docstring в формате reStructuredText (RST).
+2.  **Обработка данных**:
+    -   Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо `json.load` для чтения файлов.
+3.  **Импорты**:
+    -   Добавить необходимые импорты, такие как `json`, `Path`, `Any`, `Optional` из `typing`.
+    -   Импортировать `logger` из `src.logger.logger`.
+4.  **Логирование ошибок**:
+    -   Заменить стандартные блоки `try-except` на использование `logger.error` для обработки ошибок.
+5.  **Комментарии**:
+    -   Переформулировать комментарии, избегая слов типа 'получаем', 'делаем'.
+6.  **Обновление данных группы**:
+    -   Добавить сохранение данных группы после обновления.
 
-**Оптимизированный код**
+**Оптимизиробанный код**
 ```python
 """
 Модуль для автоматизации продвижения товаров и мероприятий AliExpress в группах Facebook.
-=====================================================================================
+=========================================================================================
 
-Модуль `FacebookPromoter` управляет публикациями рекламных материалов на Facebook,
-избегая дублирования. Для эффективного продвижения используется WebDriver для автоматизации браузера.
+Этот модуль предоставляет класс :class:`FacebookPromoter`, который управляет процессом
+продвижения рекламных материалов в группах Facebook, избегая дублирования публикаций.
 
 Пример использования
 --------------------
@@ -65,55 +68,73 @@
         currency="USD"
     )
 """
+import json
 import random
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, Optional
 from urllib.parse import urlencode
 from types import SimpleNamespace
-from typing import Optional, List, Union, Any
 
-# from src.utils.jjson import j_loads # Исправлено на j_loads_ns
-from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
-from src.webdriver.driver import Driver # Добавлен импорт
-# from src.endpoints.advertisement.base_promoter import BasePromoter # Добавлен импорт (если необходим)
+from src.utils.jjson import j_loads_ns, j_loads
+from src.webdriver.driver import Driver
 
 
 class FacebookPromoter:
     """
-    Класс для управления продвижением товаров и мероприятий AliExpress в группах Facebook.
+    Управляет процессом продвижения товаров и мероприятий AliExpress в группах Facebook.
 
-    :param d: Экземпляр WebDriver для автоматизации.
+    :param d: Экземпляр WebDriver для автоматизации браузера.
     :type d: Driver
     :param promoter: Имя промоутера (например, "aliexpress").
     :type promoter: str
-    :param group_file_paths: Пути к файлам с данными групп.
-    :type group_file_paths: Optional[list[str | Path] | str | Path]
-    :param no_video: Флаг для отключения видео в публикациях.
-    :type no_video: bool
+    :param group_file_paths: Список путей к файлам с данными групп или путь к одному файлу.
+    :type group_file_paths: Optional[list[str | Path] | str | Path], optional
+    :param no_video: Флаг для отключения видео в публикациях. По умолчанию `False`.
+    :type no_video: bool, optional
     """
-    def __init__(self, d: Driver, promoter: str, group_file_paths: Optional[Union[List[Union[str, Path]], str, Path]] = None, no_video: bool = False):
+    def __init__(self, d: Driver, promoter: str, group_file_paths: Optional[list[str | Path] | str | Path] = None, no_video: bool = False):
         self.driver = d
         self.promoter = promoter
-        self.group_file_paths = group_file_paths
+        self.group_file_paths = group_file_paths if group_file_paths else []
         self.no_video = no_video
-        self.groups = []
-        if group_file_paths:
-            self.load_groups()
+        self.groups = self._load_groups()
 
-    def load_groups(self):
+
+    def _load_groups(self) -> list[SimpleNamespace]:
         """
-        Загружает данные групп из файлов.
+        Загружает данные групп из указанных файлов.
+
+        Если `group_file_paths` является строкой, то она интерпретируется как путь к одному файлу.
+        В противном случае ожидается список путей.
+
+        :return: Список объектов SimpleNamespace, представляющих данные групп.
+        :rtype: list[SimpleNamespace]
         """
-        if isinstance(self.group_file_paths, (str, Path)):
+        groups = []
+        if not self.group_file_paths:
+            return groups
+        
+        if isinstance(self.group_file_paths, str) or isinstance(self.group_file_paths, Path):
             self.group_file_paths = [self.group_file_paths]
+
         for file_path in self.group_file_paths:
-           try:
-              # код исполняет загрузку данных группы из файла используя j_loads_ns
-              group = j_loads_ns(file_path)
-              self.groups.append(group)
-           except Exception as ex:
-                logger.error(f'Ошибка при загрузке данных группы из файла: {file_path}', exc_info=ex)
+            try:
+                #  Загрузка данных из файла, используя j_loads_ns
+                with open(file_path, 'r', encoding='utf-8') as f:
+                   group_data = j_loads_ns(f)
+                if isinstance(group_data, list):
+                    groups.extend(group_data)
+                else:
+                    groups.append(group_data)
+            except FileNotFoundError:
+                logger.error(f'Файл не найден: {file_path}')
+            except json.JSONDecodeError as ex:
+                 logger.error(f'Ошибка при чтении файла {file_path}: {ex}')
+            except Exception as ex:
+                logger.error(f'Неизвестная ошибка при загрузке файла {file_path}: {ex}')
+        return groups
 
     def promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool:
         """
@@ -124,34 +145,73 @@ class FacebookPromoter:
         :param item: Категория или мероприятие для продвижения.
         :type item: SimpleNamespace
         :param is_event: Является ли элемент мероприятием.
-        :type is_event: bool
+        :type is_event: bool, optional
         :param language: Язык публикации.
-        :type language: str
+        :type language: str, optional
         :param currency: Валюта для продвижения.
-        :type currency: str
+        :type currency: str, optional
         :return: Успешно ли прошло продвижение.
         :rtype: bool
         """
-        try:
-            # Код формирует ссылку для публикации
-            link = item.link
-            if not link:
-               logger.error(f'Не найдена ссылка для продвижения {item=}')
-               return False
-            if language and currency:
-                params = {"language": language, "currency": currency}
-                link += f"&{urlencode(params)}"
+        
+        if not item:
+            logger.error(f"Нет доступных элементов для продвижения в группе {group.name}")
+            return False
 
-            # код исполняет переход по ссылке и публикацию
-            self.driver.get(link)
-            # TODO: Добавить логику публикации
-            self.driver.wait(random.randint(2, 5))
-            logger.info(f'Успешно продвинута ссылка: {link}')
+        try:
+            group_link = f'https://m.facebook.com/groups/{group.group_id}'
+            self.driver.get_page(group_link)
+            
+            text = self._generate_promotion_text(item, language, currency)
+            
+            if text:
+               self.driver.input_text_to_element(text, self.driver.locator.facebook.post_text_area)
+            else:
+                logger.error(f"Не удалось сгенерировать текст для продвижения элемента {item.name}")
+                return False
+            
+            if not self.no_video and hasattr(item, 'video'):
+               self.driver.input_text_to_element(item.video, self.driver.locator.facebook.add_video_input)
+            elif hasattr(item, 'images') and item.images:
+                self.driver.input_text_to_element(item.images[0], self.driver.locator.facebook.add_photo_input)
+            
+            self.driver.click_element(self.driver.locator.facebook.post_button)
+            
+            self.update_group_promotion_data(group, item.name, is_event)
             return True
         except Exception as ex:
-            logger.error(f'Ошибка во время продвижения {item=}', exc_info=ex)
+            logger.error(f'Ошибка при продвижении элемента {item.name} в группе {group.name}: {ex}')
             self.log_promotion_error(is_event, item.name)
             return False
+
+    def _generate_promotion_text(self, item: SimpleNamespace, language: str = None, currency: str = None) -> str:
+         """
+         Генерирует текст для публикации, включая ссылку, описание и цену.
+
+        :param item: Данные элемента для продвижения.
+        :type item: SimpleNamespace
+        :param language: Язык публикации.
+        :type language: str, optional
+        :param currency: Валюта для продвижения.
+        :type currency: str, optional
+        :return: Сгенерированный текст для публикации.
+        :rtype: str
+        """
+         text = ''
+         
+         if hasattr(item, 'link'):
+             link = item.link
+             if language and currency:
+                link = f'{item.link}&{urlencode({"language": language, "currency": currency})}'
+             text += f'{link}\n'
+
+         if hasattr(item, 'description'):
+             text += f'{item.description}\n'
+
+         if hasattr(item, 'price'):
+            text += f'Цена: {item.price}\n'
+
+         return text
 
     def log_promotion_error(self, is_event: bool, item_name: str):
         """
@@ -162,78 +222,78 @@ class FacebookPromoter:
         :param item_name: Название элемента.
         :type item_name: str
         """
-        item_type = "мероприятия" if is_event else "категории"
+        item_type = 'мероприятия' if is_event else 'категории'
         logger.error(f'Не удалось продвинуть {item_type} {item_name}')
 
     def update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool = False):
         """
-        Обновляет данные группы после продвижения, добавляя продвигаемый элемент в список продвигаемых категорий или мероприятий.
+        Обновляет данные группы после продвижения, добавляя продвигаемый элемент
+        в список продвигаемых категорий или мероприятий.
 
         :param group: Данные группы.
         :type group: SimpleNamespace
         :param item_name: Название продвигаемого элемента.
         :type item_name: str
         :param is_event: Является ли элемент мероприятием.
-        :type is_event: bool
+        :type is_event: bool, optional
         """
         if is_event:
             if not hasattr(group, 'promoted_events'):
                 group.promoted_events = []
-            # код добавляет название мероприятия в список продвинутых
-            group.promoted_events.append(item_name)
+            if item_name not in group.promoted_events:
+                group.promoted_events.append(item_name)
         else:
             if not hasattr(group, 'promoted_categories'):
-               group.promoted_categories = []
-            # код добавляет название категории в список продвинутых
-            group.promoted_categories.append(item_name)
-        # TODO: реализовать сохранение данных группы
-    def process_groups(self, campaign_name: str = None, events: Optional[List[SimpleNamespace]] = None,
-                       is_event: bool = False, group_file_paths: Optional[List[str]] = None,
-                       group_categories_to_adv: List[str] = ['sales'], language: str = None, currency: str = None):
+                group.promoted_categories = []
+            if item_name not in group.promoted_categories:
+                group.promoted_categories.append(item_name)
+
+        # Сохранение обновленных данных группы (TODO: реализация сохранения)
+        # (пример) self._save_group_data(group)
+        pass
+
+    def process_groups(self, campaign_name: str = None, events: list[SimpleNamespace] = None, is_event: bool = False, group_file_paths: list[str] = None, group_categories_to_adv: list[str] = ['sales'], language: str = None, currency: str = None):
         """
         Обрабатывает группы для текущей кампании или продвижения мероприятия.
 
         :param campaign_name: Название кампании.
-        :type campaign_name: str
+        :type campaign_name: str, optional
         :param events: Список мероприятий для продвижения.
-        :type events: Optional[List[SimpleNamespace]]
+        :type events: list[SimpleNamespace], optional
         :param is_event: Является ли продвижение мероприятий или категорий.
-        :type is_event: bool
+        :type is_event: bool, optional
         :param group_file_paths: Пути к файлам с данными групп.
-        :type group_file_paths: Optional[List[str]]
+        :type group_file_paths: list[str], optional
         :param group_categories_to_adv: Категории для продвижения.
-        :type group_categories_to_adv: List[str]
+        :type group_categories_to_adv: list[str], optional
         :param language: Язык публикации.
-        :type language: str
+        :type language: str, optional
         :param currency: Валюта для продвижения.
-        :type currency: str
+        :type currency: str, optional
         """
         if group_file_paths:
-            self.group_file_paths = group_file_paths
-            self.load_groups()
+             self.group_file_paths = group_file_paths
+             self.groups = self._load_groups()
 
+        items = events if is_event else None
+        
         for group in self.groups:
-            if not self.validate_group(group):
-                logger.error(f'Группа не прошла валидацию, пропускаем {group=}')
+           if not self.validate_group(group):
+             continue
+           
+           if not self.check_interval(group):
                 continue
 
-            if not self.check_interval(group):
-                logger.debug(f'Интервал для группы {group.name} еще не прошел, пропускаем')
-                continue
+           item = None
+           if items:
+               item = next((item for item in items if item.name not in getattr(group, 'promoted_events', [])), None)
+           else:
+                item = self.get_category_item(campaign_name, group, language, currency) if group_categories_to_adv else None
+          
+           if item:
+                self.promote(group, item, is_event, language, currency)
 
-            if is_event and events:
-                # код продвигает мероприятия если is_event == True и есть список событий
-                for event in events:
-                    if self.promote(group, event, is_event, language, currency):
-                        self.update_group_promotion_data(group, event.name, is_event)
-            else:
-                # код продвигает категории если is_event == False
-                item = self.get_category_item(campaign_name, group, language, currency)
-                if item:
-                    if self.promote(group, item, is_event, language, currency):
-                        self.update_group_promotion_data(group, item.name, is_event)
-
-    def get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> Optional[SimpleNamespace]:
+    def get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace:
         """
         Получает элемент категории для продвижения в зависимости от кампании и промоутера.
 
@@ -246,41 +306,60 @@ class FacebookPromoter:
         :param currency: Валюта для публикации.
         :type currency: str
         :return: Элемент категории для продвижения.
-        :rtype: Optional[SimpleNamespace]
+        :rtype: SimpleNamespace
         """
         try:
-            # TODO: Реализовать логику выбора категории для продвижения
-            # код возвращает случайный элемент из списка категорий
-            if not hasattr(group, 'categories'):
-                logger.error(f'У группы {group.name} отсутствуют категории')
+            # Формирование пути к файлу с данными о категориях
+            file_path = Path(f'src/data/{self.promoter}/categories/{campaign_name}.json')
+            #  Загрузка данных о категориях из файла, используя j_loads
+            with open(file_path, 'r', encoding='utf-8') as f:
+               categories = j_loads(f)
+
+            if not categories:
+               logger.error(f"Нет доступных категорий для продвижения в {campaign_name}")
+               return None
+
+            # Выбор категории для продвижения, которая еще не продвигалась в группе
+            category = next((cat for cat in categories if cat['name'] not in getattr(group, 'promoted_categories', [])), None)
+            
+            if category:
+                return SimpleNamespace(**category)
+            else:
+                logger.debug(f"Нет доступных категорий для продвижения в группе {group.name}")
                 return None
-            available_categories = [cat for cat in group.categories if cat.name not in getattr(group, 'promoted_categories', [])]
-            if not available_categories:
-                logger.debug(f'Нет доступных категорий для продвижения в группе {group.name}')
-                return None
-            return random.choice(available_categories)
-        except Exception as ex:
-            logger.error(f'Ошибка при получении элемента категории {group=}', exc_info=ex)
+
+        except FileNotFoundError:
+             logger.error(f'Файл не найден: {file_path}')
+             return None
+        except json.JSONDecodeError as ex:
+            logger.error(f'Ошибка при чтении файла {file_path}: {ex}')
             return None
-
+        except Exception as ex:
+             logger.error(f'Неизвестная ошибка при получении элемента категории: {ex}')
+             return None
+    
     def check_interval(self, group: SimpleNamespace) -> bool:
-        """
-        Проверяет, прошло ли достаточно времени, чтобы снова продвигать эту группу.
+         """
+         Проверяет, прошло ли достаточно времени, чтобы снова продвигать эту группу.
 
-        :param group: Данные группы.
-        :type group: SimpleNamespace
-        :return: Можно ли снова продвигать группу.
-        :rtype: bool
-        """
-        if not hasattr(group, 'last_promotion'):
-           return True
-        if not group.last_promotion:
-            return True
-        # код проверяет, прошло ли достаточно времени с последнего продвижения
-        last_promotion_time = datetime.fromisoformat(group.last_promotion)
-        interval = timedelta(minutes=group.promotion_interval)
-        return datetime.now() >= last_promotion_time + interval
+         :param group: Данные группы.
+         :type group: SimpleNamespace
+         :return: Можно ли снова продвигать группу.
+         :rtype: bool
+         """
+         if not hasattr(group, 'last_promotion_time'):
+             group.last_promotion_time = datetime.now().isoformat()
+             return True
 
+         last_promotion_time = datetime.fromisoformat(group.last_promotion_time)
+         
+         if datetime.now() - last_promotion_time >= timedelta(hours=2):
+             group.last_promotion_time = datetime.now().isoformat()
+             return True
+         else:
+            logger.debug(f'Интервал между продвижениями не прошел для группы {group.name}')
+            return False
+    
     def validate_group(self, group: SimpleNamespace) -> bool:
         """
         Проверяет данные группы, чтобы убедиться в их корректности.
@@ -290,9 +369,12 @@ class FacebookPromoter:
         :return: Корректны ли данные группы.
         :rtype: bool
         """
-        # код проверяет, все ли необходимые поля присутствуют в данных группы
-        if not all(hasattr(group, attr) for attr in ['name', 'link', 'promotion_interval']):
-            logger.error(f'Не все обязательные поля присутствуют в группе {group=}')
+        if not hasattr(group, 'group_id') or not group.group_id:
+            logger.error(f'Некорректные данные группы: отсутствует group_id')
+            return False
+        if not hasattr(group, 'name') or not group.name:
+            logger.error(f'Некорректные данные группы: отсутствует name')
             return False
         return True
+
 ```

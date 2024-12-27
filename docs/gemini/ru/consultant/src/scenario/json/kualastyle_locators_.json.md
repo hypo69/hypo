@@ -1,31 +1,27 @@
 # Анализ кода модуля `kualastyle_locators_.json`
 
-**Качество кода:**
-7
+**Качество кода**
+9
+- Плюсы
+    - Код представляет собой JSON-структуру, что соответствует требованиям формата файла.
+    - Структура файла хорошо организована и разделена на логические блоки, такие как "main menu", "store", "product" и т.д.
+    - Используются описательные ключи для локаторов, что облегчает понимание их назначения.
+- Минусы
+    - Отсутствует явное описание назначения JSON-файла в формате reStructuredText.
+    - Некоторые значения атрибутов содержат JSON-подобные строки (например, `'{"innerText":"href"}`), что может потребовать дополнительной обработки.
+    - Есть неоднородность в написании значений для атрибута `attribute`: где-то строка, а где-то JSON-подобная строка
+    - Некоторые селекторы используют text*='...', что не является стандартным css-селектором.
 
--   Плюсы:
-    -   Код представляет собой JSON-структуру, что соответствует требованиям к формату файла.
-    -   Структура файла достаточно понятная, сгруппирована по логическим блокам (main menu, store, product, и т.д.).
--   Минусы:
-    -   Отсутствуют docstring для описания структуры JSON.
-    -   Не используются константы для магических строк, что усложняет поддержку.
-    -   Не все локаторы имеют описание.
-    -   В некоторых местах `attribute` является словарем, в других строкой.
-    -   Присутствуют специфические символы  в строке `text*=\'éöøï\'` что делает локатор не надежным.
+**Рекомендации по улучшению**
+1.  Добавить описание назначения JSON-файла в формате reStructuredText.
+2.  Унифицировать форматирование значений атрибута `attribute`
+3.  Заменить `text*='...'` на более стандартные селекторы.
+4.  Добавить обработки для значений атрибута `'{"innerText":"href"}'`
+5.  Использовать `j_loads` или `j_loads_ns` при чтении файла.
+6.  Добавить комментарии к сложным участкам кода.
+7.  Переименовать `"a"` на более осмысленное имя.
 
-**Рекомендации по улучшению:**
-
-1.  Добавить docstring в формате RST для описания структуры JSON и её назначения.
-2.  Использовать константы для магических строк, таких как "XPATH", "css selector", "ID", "innerText", "innerHTML" и т.д.
-3.  Добавить комментарии к каждому блоку и локатору с описанием их назначения.
-4.  Унифицировать формат хранения `attribute`, либо словарь, либо строка.
-5.  Избегать использования специфических символов в локаторах.
-6.  Добавить примеры использования для каждого типа локаторов.
-7.  Сделать структуру более гибкой и легко расширяемой.
-8.  Добавить валидацию структуры JSON при загрузке.
-
-**Оптимизированный код:**
-
+**Оптимизированный код**
 ```json
 {
   "infinity_scroll": false,
@@ -45,9 +41,7 @@
       "formula for locator": "range(1,6)"
     },
     "categories sub menu": {
-      "attribute": {
-        "innerText": "href"
-      },
+      "attribute": { "innerText": "href" },
       "by": "XPATH",
       "selector": "//nav[@class,'site-navigation']//li[contains(@class,'navmenu-item-parent')][{x}]//div[contains(@class,'navmenu-submenu')]//li//a",
       "if_list": "first",
@@ -58,7 +52,7 @@
       "event": "click()",
       "logic for action[AND|OR|XOR|VALUE|null]": null
     },
-    "a": {
+    "pagination_links": {
       "attribute": null,
       "by": "XPATH",
       "selector": "//ul[@class='pagination']//a[@class='page-link']",
@@ -70,9 +64,7 @@
   "store": {
     "store categories dept-1": {
       "description": "Список главных категероий магазина",
-      "attribute": {
-        "innerText": "href"
-      },
+      "attribute": { "innerText": "href" },
       "by": "XPATH",
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li",
       "timeout": 0,
@@ -81,9 +73,7 @@
     },
     "store categories dept-2": {
       "description": "Список подкатегероий магазина",
-      "attribute": {
-        "innerText": "href"
-      },
+       "attribute": { "innerText": "href" },
       "by": "XPATH",
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li",
       "timeout": 0,
@@ -92,9 +82,7 @@
     },
     "store categories dept-3": {
       "description": "Список подкатегероий магазина",
-      "attribute": {
-        "innerText": "href"
-      },
+        "attribute": { "innerText": "href" },
       "by": "XPATH",
       "selector": "//nav[@class='site-navigation'],//ul[contains(@class,'navmenu-depth-1')]/li//ul[contains(@class,'navmenu-depth-2')]/li//ul[contains(@class,'navmenu-depth-3')]/li",
       "timeout": 0,
@@ -154,8 +142,8 @@
     "brand_locator": {
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "text*='éöøï'",
-       "timeout": 0,
+        "selector": "[text*='éöøï']",
+      "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": null
     },
@@ -197,7 +185,7 @@
     "screen": {
       "attribute": "innerHTML",
       "by": "css selector",
-       "selector": "text*='âåãì îñê'",
+      "selector": "[text*='âåãì îñê']",
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": null
@@ -205,7 +193,7 @@
     "CPUTYPE": {
       "attribute": "innerHTML",
       "by": "css selector",
-        "selector": "text*='CPUTYPE'",
+      "selector": "[text*='CPUTYPE']",
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": null
@@ -213,7 +201,7 @@
     "cpu": {
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "text='îòáã'",
+      "selector": "[text='îòáã']",
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": null

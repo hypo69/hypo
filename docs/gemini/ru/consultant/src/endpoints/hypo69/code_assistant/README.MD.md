@@ -1,42 +1,31 @@
 # Анализ кода модуля `code_assistant`
 
 **Качество кода: 8/10**
-- **Плюсы:**
-    - Хорошо структурированное описание модуля.
-    - Наличие подробной информации о каждом скрипте.
-    - Примеры использования и командные параметры описаны четко.
-    - Описание рабочего процесса и исключений.
-    - Указаны зависимости и шаги по созданию новой роли.
-    - Комментарии в формате reStructuredText (RST) присутствуют для всего модуля.
 
-- **Минусы:**
-    - Не хватает RST-документации для отдельных функций, переменных, и классов внутри модулей `code_assistant.py`, `make_summary.py`, `onela_bot.py` и `bot_handlers.py`.
-    - Примеры кода не всегда следуют стилю и рекомендациям.
-    - Нет явного указания на использование `j_loads` или `j_loads_ns`.
-    - Не прослеживается использование `from src.logger.logger import logger` для логирования.
-    - Отсутствует обрамление кода в теги подсветки синтаксиса в некоторых местах.
+-   Плюсы
+    -   Хорошее и подробное описание модуля и его компонентов.
+    -   Четкая структура и логическое разделение информации.
+    -   Присутствуют примеры использования и описание параметров командной строки.
+    -   Упоминание зависимостей и процесса создания новой роли для ИИ-моделей.
+    -   Использование reStructuredText (RST) для описания модуля.
+-   Минусы
+    -   Отсутствуют docstring для модуля и отдельных частей кода.
+    -   Нет явных примеров формата документации RST в коде.
+    -   Не используются `j_loads` или `j_loads_ns` для чтения файлов JSON.
+    -   Отсутствует логирование ошибок.
+    -   Неполное соответствие требованиям по форматированию документации и комментариев.
+    -   Нет примеров кода с обработкой исключений.
 
 **Рекомендации по улучшению**
-1. **Документация RST:**
-   - Добавить RST-документацию для всех функций, методов, и классов в модулях `code_assistant.py`, `make_summary.py`, `onela_bot.py` и `bot_handlers.py`.
-   - Привести все комментарии к формату RST, включая описания параметров, возвращаемых значений и т.д.
-   - Добавить документацию для каждой переменной.
 
-2. **Использование `j_loads`:**
-   - Проверить все места, где используется загрузка JSON, и заменить на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-
-3. **Логирование:**
-    - Убедиться, что для обработки ошибок и логирования используется `from src.logger.logger import logger`.
-    - Пересмотреть использование try-except блоков, отдавая предпочтение `logger.error` для обработки исключений.
-
-4. **Стиль кода:**
-   - Придерживаться единого стиля кода, включая использование одинарных кавычек в Python коде.
-   - Обрамить примеры кода в соответствующие теги подсветки синтаксиса (`bash`, `json`, `python` и т.д.).
-
-5. **Примеры:**
-   - Проверить и унифицировать все примеры, чтобы они соответствовали требованиям стиля.
+1.  **Добавить docstring:** Обязательно добавьте docstring для модуля и функций с использованием reStructuredText (RST).
+2.  **Использовать `j_loads`**: Замените стандартный `json.load` на `j_loads` или `j_loads_ns` для чтения JSON файлов.
+3.  **Логирование ошибок:** Добавьте логирование ошибок с использованием `from src.logger.logger import logger` и исключите избыточные блоки `try-except`.
+4.  **Улучшить примеры**: Добавьте примеры кода с обработкой ошибок и покажите форматы RST.
+5.  **Форматирование**: Исправьте форматирование комментариев в соответствии с требованиями reStructuredText (RST) и сохраните существующие комментарии.
 
 **Оптимизированный код**
+
 ```markdown
 <TABLE >
 <TR>
@@ -44,8 +33,8 @@
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \\
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> \\
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> \
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD'>hypo69</A>
 </TD>
 <TD>
@@ -60,28 +49,42 @@
 
 ```rst
 .. module:: src.endpoints.hypo69.code_assistant
+
     :synopsis: Модуль для работы с ассистентом кода.
+    :description:
+        Модуль содержит набор инструментов для взаимодействия с моделями Gemini и OpenAI для обработки исходного кода проекта.
 
-    Этот модуль содержит скрипты для взаимодействия с моделями ИИ (Gemini, OpenAI),
-    обработки файлов кода и создания документации.
+    :classes:
+        - CodeAssistant: Класс для управления ассистентом кода.
 
-    .. rubric:: Особенности:
+    :functions:
+        - process_files: Функция для обработки файлов.
+        - create_summary: Функция для создания файла SUMMARY.md.
+        - run_bot: Функция для запуска телеграм-бота.
 
-    *   Обработка файлов .py и README.md.
-    *   Генерация документации и обзоров кода с помощью моделей ИИ.
-    *   Создание файла SUMMARY.md для документации.
-    *   Реализация Telegram бота для взаимодействия с пользователем.
+    :usage:
+        Пример использования:
+
+        .. code-block:: python
+
+            from src.endpoints.hypo69.code_assistant import CodeAssistant
+
+            assistant = CodeAssistant(role='code_checker', lang='ru', model=['gemini'])
+            assistant.process_files()
+
+    .. note::
+        Для корректной работы модуля необходимо настроить API-ключи для Gemini и OpenAI.
 
 ```
-# Модуль Code Assistant
+
 <TABLE>
 <TR>
 <TD>
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/README.MD'>[Root ↑]</A>
 </TD>
 <TD>
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \\
-<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> \\
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \
+<A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A> \
 <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/README.MD'>hypo69</A>
 </TD>
 <TD>
@@ -90,100 +93,108 @@
 </TR>
 </TABLE>
 
-## Обзор
+# Code Assistant Module
 
-Модуль `Code Assistant` представляет собой набор инструментов, предназначенных для взаимодействия с моделями **Gemini** и **OpenAI** для обработки исходного кода проекта. Он выполняет такие задачи, как генерация документации, проверка кода и генерация тестов на основе указанных файлов. Кроме того, он включает скрипты для создания файла `SUMMARY.md` для компиляции документации и Telegram-бота для обработки задач, связанных с кодом.
+## Overview
 
-## Основные функции
+The `Code Assistant` module is a set of tools designed to interact with **Gemini** and **OpenAI** models for processing project source code. It performs tasks such as generating documentation, code review, and test generation based on specified files. Additionally, it includes scripts for creating a `SUMMARY.md` file for documentation compilation and a Telegram bot for handling code-related tasks.
+
+## Key Features
 
 ### `code_assistant.py`
-- **Чтение файлов**: Читает код из файлов `.py` и `README.MD` в указанных директориях.
-- **Взаимодействие с моделью**: Отправляет код моделям для таких задач, как генерация документации или проверка ошибок.
-- **Генерация результатов**: Сохраняет ответы моделей в назначенных каталогах для каждой роли.
+- **File Reading**: Reads code from `.py` and `README.MD` files in specified directories.
+- **Model Interaction**: Sends code to models for tasks like documentation generation or error checking.
+- **Result Generation**: Saves model responses in designated directories for each role.
 
 ### `make_summary.py`
-- **Генерация `SUMMARY.md`**: Рекурсивно обходит каталог для создания файла `SUMMARY.md` для компиляции документации.
-- **Фильтрация по языку**: Поддерживает фильтрацию файлов по языку (`ru` или `en`).
+- **SUMMARY.md Generation**: Recursively traverses a directory to create a `SUMMARY.md` file for documentation compilation.
+- **Language Filtering**: Supports filtering files by language (`ru` or `en`).
 
-### `onela_bot.py` и `bot_handlers.py`
-- **Telegram-бот**: Бот для обработки задач, связанных с кодом, таких как отправка фрагментов кода на проверку или генерация документации.
-- **Обработчики бота**: Содержит обработчики для обработки команд и сообщений бота.
+### `onela_bot.py` and `bot_handlers.py`
+- **Telegram Bot**: A bot for handling code-related tasks, such as sending code snippets for review or generating documentation.
+- **Bot Handlers**: Contains handlers for processing bot commands and messages.
 
-## Структура проекта
+## Project Structure
 
-- **Модели**: Использует модели **Gemini** и **OpenAI** для обработки запросов.
-- **Запросы (промпты)**: Читает запросы из файлов в `src/ai/prompts/developer/` (например, `doc_writer_en.md`).
-- **Файлы**: Обрабатывает файлы `.py` и `README.MD` в указанных каталогах.
+- **Models**: Uses **Gemini** and **OpenAI** models for processing requests.
+- **Prompts**: Reads prompts from files in `src/ai/prompts/developer/` (e.g., `doc_writer_en.md`).
+- **Files**: Processes `.py` and `README.MD` files in specified directories.
 
-## Примеры использования
-### Запуск с настройками JSON:
+## Usage Examples
+
+### Running with JSON Settings:
 ```bash
 python code_assistant.py --settings settings.json
 ```
 
-### Запуск с явными параметрами:
+### Running with Explicit Parameters:
 ```bash
 python code_assistant.py --role doc_writer --lang ru --models gemini openai --start_dirs /path/to/dir1 /path/to/dir2
 ```
 
-### Пример для роли `code_checker`:
+### Example for Role `code_checker`:
 ```bash
 python code_assistant.py --role code_checker --lang en --models gemini --start_dirs /path/to/dir
 ```
 
-### Пример для модели `openai`:
+### Example for Model `openai`:
 ```bash
 python code_assistant.py --role doc_writer --lang en --models openai
 ```
 
-## Параметры командной строки
-- `--settings`: Путь к JSON-файлу с настройками. Загружает параметры из файла.
-- `--role`: Роль модели для задачи (например, `doc_writer`, `code_checker`).
-- `--lang`: Язык для задачи (например, `ru` или `en`).
-- `--models`: Список моделей для инициализации (например, `gemini`, `openai`).
-- `--start_dirs`: Список директорий для обработки (например, `/path/to/dir1`).
+## Command-Line Parameters
 
-## Рабочий процесс
-1. **Чтение файлов**: Поиск файлов `.py` и `README.MD` в указанных каталогах.
-2. **Загрузка промптов**: Загрузка специфических для роли промптов из `src/ai/prompts/developer/`.
-3. **Обработка запроса**: Формирование запросов на основе загруженных файлов и их отправка моделям.
-4. **Сохранение ответа**: Сохранение ответов моделей в каталогах, соответствующих роли и модели (например, `docs/raw_rst_from_<model>/<lang>/`).
+- `--settings`: Path to a JSON file with settings. Loads parameters from the file.
+- `--role`: The role of the model for the task (e.g., `doc_writer`, `code_checker`).
+- `--lang`: The language for the task (e.g., `ru` or `en`).
+- `--models`: List of models to initialize (e.g., `gemini`, `openai`).
+- `--start_dirs`: List of directories to process (e.g., `/path/to/dir1`).
 
-## Исключения
-Настройка исключений для файлов и директорий с использованием параметров:
-- `exclude_file_patterns`: Список шаблонов регулярных выражений для исключения файлов.
-- `exclude_dirs`: Список исключаемых директорий.
-- `exclude_files`: Список исключаемых файлов.
+## Workflow
 
-## Логирование
-Логи сохраняются с использованием библиотеки `logger` и содержат информацию об обработке файлов и ответах моделей.
+1. **File Reading**: Searches for `.py` and `README.MD` files in specified directories.
+2. **Prompt Loading**: Loads role-specific prompts from `src/ai/prompts/developer/`.
+3. **Request Processing**: Forms requests based on loaded files and sends them to models.
+4. **Response Saving**: Saves model responses in directories corresponding to the role and model (e.g., `docs/raw_rst_from_<model>/<lang>/`).
 
-## Зависимости
-- **Gemini API**: Требуется API-ключ для модели Gemini.
-- **OpenAI API**: Требуется API-ключ для модели OpenAI.
+## Exceptions
 
-## Создание новой роли для моделей ИИ
+Configure exceptions for files and directories using parameters:
+- `exclude_file_patterns`: List of regex patterns to exclude files.
+- `exclude_dirs`: List of directories to exclude.
+- `exclude_files`: List of files to exclude.
 
-1. **Обновите `code_assistant.json`**:
-   - Добавьте новую роль в список ролей:
-     ```json
-     "roles": [
-       "code_checker",
-       ...
-     ]
-     ```
-   - Или исключите ее в `"exclude-roles"`.
+## Logging
 
-2. **Добавьте роль в переводы**:
-   - Обновите файл `translations/translations.json` новой ролью.
+Logs are saved using the `logger` library and contain information about the file processing and model responses.
 
-3. **Создайте системный промпт**:
-   - Добавьте новый системный промпт в `ai/prompts/developer/`.
+## Dependencies
 
-4. **Создайте инструкцию для команды**:
-   - Добавьте новую инструкцию для команды в `instructions/`.
+- **Gemini API**: Requires an API key for the Gemini model.
+- **OpenAI API**: Requires an API key for the OpenAI model.
+
+## Creating a New Role for AI Models
+
+1.  **Update `code_assistant.json`**:
+    -   Add the new role to the list of roles:
+        ```json
+        "roles": [
+          "code_checker",
+          ...
+        ]
+        ```
+    -   Alternatively, exclude it in `"exclude-roles"`.
+
+2.  **Add Role to Translations**:
+    -   Update the `translations/translations.json` file with the new role.
+
+3.  **Create a System Prompt**:
+    -   Add a new system prompt in `ai/prompts/developer/`.
+
+4.  **Create a Command Instruction**:
+    -   Add a new command instruction in `instructions/`.
 
 ---
 
-Этот `README.md` предоставляет всесторонний обзор модуля `code_assistant`, его скриптов и способов их эффективного использования.
+This `README.md` provides a comprehensive overview of the `code_assistant` module, its scripts, and how to use them effectively.
 ```

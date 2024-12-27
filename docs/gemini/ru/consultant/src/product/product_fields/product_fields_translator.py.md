@@ -2,83 +2,111 @@
 
 **Качество кода**
 8
-- Плюсы
-    - Код имеет docstring для модуля и функций, что облегчает понимание его назначения и использования.
-    - Используется `logger` для логирования ошибок, что помогает в отладке и мониторинге приложения.
-    - Код структурирован и разбит на функции, каждая из которых выполняет определенную задачу.
-- Минусы
-    - Присутствуют неиспользуемые импорты, что может загромождать код.
-    - Некоторые комментарии не соответствуют reStructuredText.
-    - В логировании ошибок не везде используется f-строки для форматирования.
-    - В функции `translate_presta_fields_dict` есть повторение кода и неявная обработка ошибок.
-    - Некоторые комментарии внутри функций не несут полезной информации.
+-  Плюсы
+    - Код в целом структурирован и выполняет поставленную задачу.
+    - Используется `logger` для логирования ошибок.
+    - Присутствует docstring для функций.
+-  Минусы
+    -  Не все комментарии и docstring написаны в формате reStructuredText (RST).
+    -  В коде присутствуют закомментированные строки, которые следует удалить.
+    -  Используется глобальная переменная `record`, что не является хорошей практикой.
+    -  Используются стандартные `try-except`, которые можно заменить на обработку ошибок с помощью `logger.error`.
+    -  Не хватает проверок типов входных данных для функций.
+    -  Необходимо добавить отсутствующие импорты.
+    -  Необходимо убрать лишние комментарии, такие как ` # <- оч плохо А если he или IL?`
+    -  Стоит пересмотреть использование `enabled_product_translations`, т.к. проверка на `if not enabled_product_translations or enabled_product_translations or len(enabled_product_translations) <1:` выглядит избыточной.
 
 **Рекомендации по улучшению**
 
-1.  **Импорты**: Удалить неиспользуемые импорты.
-2.  **Документация**:
-    - Переписать docstring модуля и функций в формате reStructuredText (RST).
-    - Добавить описания параметров и возвращаемых значений для каждой функции.
-3.  **Логирование**: Использовать f-строки для форматирования сообщений об ошибках в `logger.error`.
-4.  **Обработка ошибок**: Убрать лишние блоки `try-except` и обрабатывать ошибки более гранулярно.
-5.  **Код**:
-    -   Упростить логику в `translate_presta_fields_dict` для повышения читаемости.
-    -   Избегать повторения кода в циклах.
-6.  **Комментарии**: Сделать комментарии более информативными и убрать бесполезные комментарии.
+1.  **Документация**:
+    -   Переписать docstring и комментарии в формате RST, включая описания параметров, возвращаемых значений и примеры использования.
+    -   Добавить docstring для модуля.
+2.  **Импорты**:
+    -   Добавить отсутствующие импорты.
+3.  **Обработка ошибок**:
+    -   Использовать `logger.error` для обработки исключений вместо `try-except` блоков.
+4.  **Глобальные переменные**:
+    -   Избегать использования глобальных переменных, таких как `record`.
+5.  **Проверки типов**:
+    -   Добавить проверки типов для аргументов функций.
+6.  **Удаление лишнего кода**:
+    -   Удалить закомментированные строки.
+    -   Пересмотреть логику с `enabled_product_translations`.
+7.  **Форматирование**:
+    -   Привести код в соответствие с PEP8.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 """
 Модуль для перевода полей товара на языки клиентской базы данных.
-==================================================================
+===================================================================
 
-Этот модуль содержит функции для обработки и перевода полей товара,
-полученных от поставщика, в соответствии с языковыми настройками
-клиентской базы данных.
+Этот модуль содержит функции для перевода полей товара, полученных от поставщика,
+на языки, соответствующие клиентской базе данных. Он обрабатывает мультиязычные поля,
+где каждое значение связано с определенным языковым идентификатором.
 
-Функции модуля:
-    - :func:`rearrange_language_keys`: Обновляет идентификаторы языков в данных о товаре.
-    - :func:`translate_presta_fields_dict`: Переводит многоязычные поля товара.
+Функции используют схему языков клиента для корректного сопоставления идентификаторов
+и обеспечивают правильное отображение информации о товарах на разных языках.
 """
-MODE = 'dev'
 
 from pathlib import Path
 from typing import List, Dict, Any
+from src.utils.jjson import j_loads, j_loads_ns
 from src import gs
 from src.utils.printer import pprint
 from src.logger.logger import logger
+from src.db import ProductTranslationsManager # <- Добавлен импорт
+from src.translator import get_translations_from_presta_translations_table, insert_new_translation_to_presta_translations_table # <- Добавлен импорт
 from src.logger.exceptions import ProductFieldException
-from src.utils.jjson import j_loads_ns
-from src.db import get_translations_from_presta_translations_table, insert_new_translation_to_presta_translations_table
+from collections import namedtuple  # <- Добавлен импорт
+
+record = namedtuple('record', ['reference', 'description', 'description_short', 'name']) #  <- Исправлена глобальная переменная
 
 
 def rearrange_language_keys(presta_fields_dict: Dict, client_langs_schema: List[Dict], page_lang: str) -> Dict:
     """
-    Обновляет идентификаторы языков в словаре `presta_fields_dict` на соответствующие
-    идентификаторы из схемы клиентских языков при совпадении языка страницы.
+    Обновляет идентификаторы языка в словаре `presta_fields_dict` на соответствующие идентификаторы
+    из схемы клиентских языков при совпадении языка страницы.
 
     :param presta_fields_dict: Словарь полей товара.
     :type presta_fields_dict: dict
     :param client_langs_schema: Схема языков клиента.
-    :type client_langs_schema: list or dict
+    :type client_langs_schema: list[dict]
     :param page_lang: Язык страницы.
     :type page_lang: str
+    :raises TypeError: Если `presta_fields_dict` не является словарем, или `client_langs_schema` не список, или `page_lang` не строка.
     :return: Обновленный словарь `presta_fields_dict`.
     :rtype: dict
     """
+    if not isinstance(presta_fields_dict, dict):
+        logger.error(f'Неверный тип данных для presta_fields_dict: {type(presta_fields_dict)}')
+        raise TypeError(f'Expected dict, got {type(presta_fields_dict)}')
+    if not isinstance(client_langs_schema, list):
+         logger.error(f'Неверный тип данных для client_langs_schema: {type(client_langs_schema)}')
+         raise TypeError(f'Expected list, got {type(client_langs_schema)}')
+    if not isinstance(page_lang, str):
+        logger.error(f'Неверный тип данных для page_lang: {type(page_lang)}')
+        raise TypeError(f'Expected str, got {type(page_lang)}')
+
     client_lang_id = None
     for lang in client_langs_schema:
-        if lang['locale'] == page_lang or lang['iso_code'] == page_lang or lang['language_code'] == page_lang:
-            client_lang_id = lang['id']
+        if not isinstance(lang, dict):
+            logger.error(f'Неверный тип данных в client_langs_schema: {type(lang)}')
+            continue
+        if (lang.get('locale') == page_lang or
+            lang.get('iso_code') == page_lang or
+            lang.get('language_code') == page_lang):
+            client_lang_id = lang.get('id')
             break
 
     if client_lang_id is not None:
         for field in presta_fields_dict.values():
-            if isinstance(field, dict) and 'language' in field:
+             if isinstance(field, dict) and 'language' in field:
                 for lang_data in field['language']:
-                    lang_data['attrs']['id'] = str(client_lang_id)  # Айдишники ОБЯЗАТЕЛЬНО строки. Связано с XML парсером
-
+                    if isinstance(lang_data, dict) and 'attrs' in lang_data:
+                        lang_data['attrs']['id'] = str(client_lang_id)
     return presta_fields_dict
 
 
@@ -86,70 +114,75 @@ def translate_presta_fields_dict(presta_fields_dict: Dict,
                                   client_langs_schema: List[Dict],
                                   page_lang: str = None) -> Dict:
     """
-    Переводит многоязычные поля в соответствии со схемой значений `id` языка
-    в базе данных клиента.
+    Переводит мультиязычные поля в соответствии со схемой значений `id` языка в базе данных клиента.
 
-    Многоязычные поля содержат значения, полученные с сайта поставщика
-    в виде словаря:
+    Функция получает на вход словарь полей товара. Мультиязычные поля содержат значения,
+    полученные с сайта поставщика в виде словаря:
 
     .. code-block:: python
 
         {
-            'language': [
-                {'attrs': {'id': '1'}, 'value': value},
-            ]
+            'language':[
+                {'attrs':{'id':'1'}, 'value':value},
+                ]
         }
 
-    У клиента язык с ключом `id=1` может быть любым, в зависимости от
-    того, на каком языке была изначально установлена PrestaShop.
+    У клиента язык с ключом `id=1` может быть любым, в зависимости от того, на каком языке
+    была изначально установлена PrestaShop. Чаще всего это английский, но это не правило.
+    Точные соответствия получаются в схеме языков клиента.
+
+    Самый быстрый способ узнать схему API языков - набрать в адресной строке браузера:
+    https://API_KEY@mypresta.com/api/languages?display=full&io_format=JSON
 
     :param client_langs_schema: Словарь актуальных языков на клиенте.
-    :type client_langs_schema: list or dict
+    :type client_langs_schema: list[dict]
     :param presta_fields_dict: Словарь полей товара, собранный со страницы поставщика.
     :type presta_fields_dict: dict
-    :param page_lang: Язык страницы поставщика в коде en-US, ru-RU, he_HE. Если не задан,
-                      функция пытается определить по тексту.
+    :param page_lang: Язык страницы поставщика в коде en-US, ru-RU, he_HE.
+    Если не задан, функция пытается определить по тексту.
     :type page_lang: str, optional
+    :raises TypeError: Если `presta_fields_dict` не является словарем, или `client_langs_schema` не список.
     :return: Переведенный словарь полей товара.
     :rtype: dict
     """
-    # Код переупорядочивает ключи таблицы
+
+    if not isinstance(presta_fields_dict, dict):
+        logger.error(f'Неверный тип данных для presta_fields_dict: {type(presta_fields_dict)}')
+        raise TypeError(f'Expected dict, got {type(presta_fields_dict)}')
+    if not isinstance(client_langs_schema, list):
+         logger.error(f'Неверный тип данных для client_langs_schema: {type(client_langs_schema)}')
+         raise TypeError(f'Expected list, got {type(client_langs_schema)}')
+
     presta_fields_dict = rearrange_language_keys(presta_fields_dict, client_langs_schema, page_lang)
-    # Код получает переводы из таблицы переводов
-    enabled_product_translations = get_translations_from_presta_translations_table(presta_fields_dict['reference'])
-    
-    if not enabled_product_translations or len(enabled_product_translations) < 1:
-        # Если в таблице переводов нет такого перевода товара. Код добавляет текущий, как новый
-        rec = record(presta_fields_dict)
+    enabled_product_translations = get_translations_from_presta_translations_table(presta_fields_dict.get('reference'))
+
+    if not enabled_product_translations:
+        rec = record(presta_fields_dict.get('reference'),
+                     presta_fields_dict.get('description'),
+                     presta_fields_dict.get('description_short'),
+                     presta_fields_dict.get('name'))
+
         insert_new_translation_to_presta_translations_table(rec)
         return presta_fields_dict
 
     for client_lang in client_langs_schema:
-        for translated_record in enabled_product_translations:
-            # Код производит проверку соответствия языка перевода
+         if not isinstance(client_lang, dict):
+              logger.error(f'Неверный тип данных в client_langs_schema: {type(client_lang)}')
+              continue
+         for translated_record in enabled_product_translations:
             try:
-                if client_lang['iso_code'] in translated_record.locale:
-                    # Код записывает перевод из таблицы
-                    for key in presta_fields_dict.keys():
+                if not hasattr(translated_record, 'locale'):
+                     logger.error(f'Объект {translated_record} не имеет атрибута "locale"')
+                     continue
+                if client_lang.get('iso_code') in translated_record.locale:
+                   for key in presta_fields_dict.keys():
                         if hasattr(translated_record, key):
-                            presta_fields_dict[key] = {
-                                'language': [{'attrs': {'id': str(client_lang['id'])},
-                                              'value': getattr(translated_record, key)}]
-                            }  # Айдишники ОБЯЗАТЕЛЬНО строки. Связано с XML парсером
+                            presta_fields_dict[key] = {'language': [{'attrs': {'id': str(client_lang.get('id'))},
+                                                                    'value': getattr(translated_record, key)}]}
             except Exception as ex:
-                logger.error(f"Ошибка при переводе: {ex}\n client_lang = {pprint(client_lang)}")
+                logger.error(f"""Ошибка {ex}\n
+                client_lang = {pprint(client_lang)}\n
+                """)
                 ...
     return presta_fields_dict
-
-
-def record(data: Dict) -> Any:
-        """
-        TODO: Add docstring
-        """
-        class Record:
-            def __init__(self, data: Dict):
-                self.data = data
-                for key, value in data.items():
-                    setattr(self, key, value)
-        return Record(data)
 ```

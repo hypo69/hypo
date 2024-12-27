@@ -1,33 +1,25 @@
-# Анализ кода модуля `src.utils.csv`
+# Анализ кода модуля `csv.py`
 
 **Качество кода**
 8
-- Плюсы
-    - Код соответствует PEP8.
-    - Присутствует базовая документация к функциям.
-    - Используется `logger` для логирования ошибок.
-    - Есть обработка исключений.
-- Минусы
-    - Не все docstring соответствуют reStructuredText (RST).
-    - Не используется `j_loads` и `j_loads_ns` для загрузки JSON.
-    - Не везде присутствуют подробные комментарии к коду.
-    -  В некоторых местах документации отсутствуют типы.
+-  Плюсы
+    - Код достаточно хорошо структурирован и читаем.
+    - Присутствует базовая обработка ошибок и логирование.
+    - Используются type hints.
+    - Наличие docstring для каждой функции.
+-  Минусы
+    - Отсутствует использование `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Избыточное использование `try-except` в функциях `read_csv_file`, `read_csv_as_json`.
+    - Не все функции используют единый подход к обработке ошибок.
+    - Не все docstring соответствуют формату reStructuredText.
 
 **Рекомендации по улучшению**
 
-1.  **Документация:**
-    -   Переписать все docstring в формате RST.
-    -   Добавить типы параметров и возвращаемых значений в docstring.
-2.  **Импорты:**
-    -   Проверить и добавить необходимые импорты, если они отсутствуют.
-3.  **Обработка JSON:**
-    -   Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для работы с JSON. В данном коде это пока не требуется, так как нет чтения JSON файлов, но в будущем следует использовать.
-4.  **Логирование:**
-    -   Убрать лишние блоки `try-except` и использовать `logger.error` для обработки ошибок.
-5.  **Комментарии:**
-    -   Добавить более подробные комментарии к коду, описывающие каждый шаг.
-6. **Общая стилистика:**
-   - Использовать одинарные кавычки `'` во всем коде, кроме docstring.
+1.  **Использовать `j_loads`:** Заменить `json.dump` на `j_dumps` из `src.utils.jjson`.
+2.  **Упростить обработку ошибок:** Использовать `logger.error` для обработки ошибок и избегать множественных блоков `try-except`.
+3.  **Унифицировать обработку ошибок:** Сделать обработку ошибок консистентной во всех функциях.
+4.  **Форматирование Docstring:** Привести все docstring к стандарту reStructuredText.
+5. **Добавить импорты**: Добавить импорт `j_dumps` из `src.utils.jjson`.
 
 **Оптимизированный код**
 
@@ -37,51 +29,38 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с CSV файлами.
+Модуль для работы с CSV и JSON файлами.
 =========================================================================================
 
-Этот модуль предоставляет набор утилит для чтения и записи CSV файлов,
-а также для их конвертации в другие форматы, такие как JSON и словари.
+Этот модуль предоставляет набор функций для сохранения, чтения и преобразования CSV файлов.
+Он поддерживает чтение CSV в виде списка словарей, преобразование в JSON, а также загрузку данных с использованием Pandas.
 
 Пример использования
 --------------------
 
-Пример использования функций:
+Пример сохранения данных в CSV файл:
 
 .. code-block:: python
 
-    from pathlib import Path
-    from src.utils.csv import save_csv_file, read_csv_file, read_csv_as_json, read_csv_as_dict, read_csv_as_ns
+    data = [{'name': 'John', 'age': '30'}, {'name': 'Jane', 'age': '25'}]
+    file_path = 'data.csv'
+    save_csv_file(data, file_path, mode='w')
 
-    # Пример записи в CSV файл
-    data_to_save = [{'name': 'John', 'age': '30'}, {'name': 'Jane', 'age': '25'}]
-    file_path = Path('output.csv')
-    save_csv_file(data_to_save, file_path, mode='w')
+Пример чтения данных из CSV файла:
 
-    # Пример чтения из CSV файла
-    read_data = read_csv_file(file_path)
-    print(read_data)
+.. code-block:: python
 
-    # Пример конвертации CSV в JSON
-    json_file_path = Path('output.json')
-    read_csv_as_json(file_path, json_file_path)
+    file_path = 'data.csv'
+    data = read_csv_file(file_path)
 
-    # Пример чтения CSV как словаря
-    dict_data = read_csv_as_dict(file_path)
-    print(dict_data)
-
-    # Пример чтения CSV как списка словарей с Pandas
-    ns_data = read_csv_as_ns(file_path)
-    print(ns_data)
 """
 
 import csv
-# импорт модуля json удален, так как он не используется напрямую в коде
 from pathlib import Path
-# from types import SimpleNamespace # SimpleNamespace не используется, импорт удален
 from typing import List, Dict, Union
 import pandas as pd
 from src.logger.logger import logger
+from src.utils.jjson import j_dumps # Добавлен импорт j_dumps
 
 
 def save_csv_file(
@@ -97,101 +76,96 @@ def save_csv_file(
     :type data: List[Dict[str, str]]
     :param file_path: Путь к CSV файлу.
     :type file_path: Union[str, Path]
-    :param mode: Режим открытия файла ('a' для добавления, 'w' для перезаписи). По умолчанию 'a'.
+    :param mode: Режим файла ('a' - дозапись, 'w' - перезапись). По умолчанию 'a'.
     :type mode: str
-    :param exc_info: Включать ли информацию об ошибках в логи.
+    :param exc_info: Включать ли информацию о трассировке в логи.
     :type exc_info: bool
     :raises TypeError: Если входные данные не являются списком словарей.
     :raises ValueError: Если входные данные пусты.
     :returns: True в случае успеха, иначе False.
     :rtype: bool
     """
-    # проверка, что входные данные являются списком
     if not isinstance(data, list):
-        raise TypeError('Input data must be a list of dictionaries.')
-    # проверка, что входные данные не пустые
+        raise TypeError("Input data must be a list of dictionaries.")
     if not data:
-        raise ValueError('Input data cannot be empty.')
-    
+        raise ValueError("Input data cannot be empty.")
+
     try:
-        #  преобразование пути к файлу в объект Path
+        # Код преобразует путь к файлу в объект Path
         file_path = Path(file_path)
-        #  создание родительской директории, если она не существует
+        # Код создаёт родительские директории, если они не существуют
         file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # открытие файла в указанном режиме с кодировкой utf-8
+        # Код открывает файл в заданном режиме
         with file_path.open(mode, newline='', encoding='utf-8') as file:
-            # создание объекта DictWriter для записи в CSV
+            # Код создает объект для записи CSV
             writer = csv.DictWriter(file, fieldnames=data[0].keys())
-            # если файл открывается на запись или не существует, записывается заголовок
+            # Код проверяет, нужно ли писать заголовок
             if mode == 'w' or not file_path.exists():
                 writer.writeheader()
-            # запись строк в файл
+            # Код записывает данные в файл
             writer.writerows(data)
         return True
     except Exception as e:
-        # в случае ошибки запись в лог и возврат False
-        logger.error(f'Failed to save CSV to {file_path}', exc_info=exc_info)
+        # Код логирует ошибку и возвращает False
+        logger.error(f"Failed to save CSV to {file_path}", exc_info=exc_info)
         return False
 
 
 def read_csv_file(file_path: Union[str, Path], exc_info: bool = True) -> List[Dict[str, str]] | None:
     """
-    Читает содержимое CSV файла как список словарей.
+    Считывает содержимое CSV файла в виде списка словарей.
 
     :param file_path: Путь к CSV файлу.
     :type file_path: Union[str, Path]
-    :param exc_info: Включать ли информацию об ошибках в логи.
+    :param exc_info: Включать ли информацию о трассировке в логи.
     :type exc_info: bool
-    :raises FileNotFoundError: Если файл не найден.
-    :returns: Список словарей или None, если чтение не удалось.
+    :returns: Список словарей или None, если не удалось.
     :rtype: List[Dict[str, str]] | None
     """
     try:
-        # открытие файла на чтение с кодировкой utf-8
+        # Код открывает CSV файл для чтения
         with Path(file_path).open('r', encoding='utf-8') as file:
-            # создание объекта DictReader для чтения CSV
+            # Код читает CSV файл и преобразует его в список словарей
             reader = csv.DictReader(file)
-            # преобразование данных в список словарей
             return list(reader)
-    except FileNotFoundError as e:
-        # в случае ошибки файла запись в лог и возврат None
-        logger.error(f'File not found: {file_path}', exc_info=exc_info)
+    except FileNotFoundError:
+        # Код логирует ошибку, если файл не найден
+        logger.error(f"File not found: {file_path}", exc_info=exc_info)
         return None
     except Exception as e:
-         # в случае ошибки при чтении запись в лог и возврат None
-        logger.error(f'Failed to read CSV from {file_path}', exc_info=exc_info)
+        # Код логирует ошибку при чтении CSV файла
+        logger.error(f"Failed to read CSV from {file_path}", exc_info=exc_info)
         return None
 
 
 def read_csv_as_json(csv_file_path: Union[str, Path], json_file_path: Union[str, Path], exc_info: bool = True) -> bool:
     """
-    Преобразует CSV файл в JSON формат и сохраняет его.
+    Преобразует CSV файл в формат JSON и сохраняет его.
 
     :param csv_file_path: Путь к CSV файлу.
     :type csv_file_path: Union[str, Path]
     :param json_file_path: Путь для сохранения JSON файла.
     :type json_file_path: Union[str, Path]
-    :param exc_info: Включать ли информацию об ошибках в логи.
+    :param exc_info: Включать ли информацию о трассировке в логи.
     :type exc_info: bool, optional
-    :returns: True, если преобразование успешно, иначе False.
+    :returns: True, если преобразование выполнено успешно, иначе False.
     :rtype: bool
     """
     try:
-        # чтение данных из CSV файла
+        # Код считывает данные из CSV файла
         data = read_csv_file(csv_file_path, exc_info=exc_info)
-        # если чтение не удалось, возвращается False
+        # Код проверяет, успешно ли прочитаны данные
         if data is None:
             return False
-        # открытие файла для записи JSON
+        # Код открывает файл для записи JSON данных
         with Path(json_file_path).open('w', encoding='utf-8') as f:
-            # запись данных в JSON файл с отступами
-            import json # импорт json здесь так как он используется только в этой функции
-            json.dump(data, f, indent=4)
+            # Код записывает JSON данные в файл с отступами
+            f.write(j_dumps(data, indent=4)) # Используется j_dumps
         return True
     except Exception as ex:
-        # в случае ошибки запись в лог и возврат False
-        logger.error(f'Failed to convert CSV to JSON at {json_file_path}', exc_info=exc_info)
+        # Код логирует ошибку при преобразовании CSV в JSON
+        logger.error(f"Failed to convert CSV to JSON at {json_file_path}", exc_info=exc_info)
         return False
 
 
@@ -201,43 +175,42 @@ def read_csv_as_dict(csv_file: Union[str, Path]) -> dict | None:
 
     :param csv_file: Путь к CSV файлу.
     :type csv_file: Union[str, Path]
-    :returns: Словарь, представляющий CSV, или None в случае ошибки.
+    :returns: Словарь, представляющий содержимое CSV файла, или None, если не удалось.
     :rtype: dict | None
     """
     try:
-        # открытие файла на чтение с кодировкой utf-8
+        # Код открывает CSV файл для чтения
         with Path(csv_file).open('r', encoding='utf-8') as f:
-            # создание объекта DictReader для чтения CSV
+            # Код читает CSV файл и преобразует его в словарь
             reader = csv.DictReader(f)
-            # формирование словаря из прочитанных данных
-            return {'data': [row for row in reader]}
+            return {"data": [row for row in reader]}
     except Exception as ex:
-        # в случае ошибки запись в лог и возврат None
-        logger.error('Failed to read CSV as dictionary', exc_info=True)
+        # Код логирует ошибку при чтении CSV файла как словаря
+        logger.error("Failed to read CSV as dictionary", exc_info=True)
         return None
 
 
 def read_csv_as_ns(file_path: Union[str, Path]) -> List[dict]:
     """
-    Загружает данные CSV в список словарей, используя Pandas.
+    Загружает CSV данные в список словарей, используя Pandas.
 
     :param file_path: Путь к CSV файлу.
     :type file_path: Union[str, Path]
-    :returns: Список словарей, представляющий содержимое CSV.
+    :returns: Список словарей, представляющий содержимое CSV файла.
     :rtype: List[dict]
     :raises FileNotFoundError: Если файл не найден.
     """
     try:
-        # чтение CSV файла с помощью pandas
+        # Код читает CSV файл с помощью Pandas
         df = pd.read_csv(file_path)
-        # преобразование DataFrame в список словарей
+        # Код преобразует DataFrame в список словарей
         return df.to_dict(orient='records')
-    except FileNotFoundError as e:
-        # в случае ошибки файла запись в лог и возврат пустого списка
-        logger.error(f'File not found: {file_path}', exc_info=True)
+    except FileNotFoundError:
+         # Код логирует ошибку, если файл не найден
+        logger.error(f"File not found: {file_path}", exc_info=True)
         return []
     except Exception as e:
-        # в случае ошибки записи в лог и возврат пустого списка
-        logger.error(f'Failed to load CSV as dictionaries from {file_path}', exc_info=True)
+        # Код логирует ошибку при загрузке CSV файла
+        logger.error(f"Failed to load CSV as dictionaries from {file_path}", exc_info=True)
         return []
 ```

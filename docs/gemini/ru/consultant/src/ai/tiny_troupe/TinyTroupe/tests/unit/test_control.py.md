@@ -1,39 +1,38 @@
-# Анализ кода модуля `test_control.py`
+# Анализ кода модуля `test_control`
 
 **Качество кода**
 8
-- Плюсы
-    - Код хорошо структурирован и разбит на отдельные тестовые функции.
-    - Используются фикстуры pytest для настройки окружения.
-    - Тесты охватывают различные сценарии использования `control.py`, включая работу с агентами, миром и фабрикой персонажей.
-    - Присутствуют проверки на корректность статусов симуляции, существование файлов кэша и корректность данных, полученных в результате выполнения.
-    - Используется логгер для вывода отладочной информации.
-- Минусы
-    - Отсутствует документация в формате reStructuredText (RST).
-    - Используются прямые проверки на `None` для `_current_simulations`, что может быть улучшено.
-    - Присутствуют множественные вызовы `remove_file_if_exists` для одного и того же файла в разных тестах.
-    - Использованы `sys.path.append` для импорта модулей, что не является лучшей практикой.
-    - Некоторые проверки могут быть более детализированы.
+-  Плюсы
+    - Код хорошо структурирован, с четкими тестами, проверяющими различные аспекты управления симуляциями.
+    - Используется `pytest` для тестирования, что является хорошей практикой.
+    - Присутствует логирование, что помогает в отладке.
+    - Применяется `remove_file_if_exists` для очистки перед тестами.
+-  Минусы
+    -  Отсутствуют docstring у функций и модуля.
+    -  Используется `sys.path.append` для добавления путей, что не всегда является лучшей практикой.
+    -  Многократное использование `assert control._current_simulations["default"] is not None` можно вынести в отдельную функцию или использовать `pytest.mark.parametrize`
+    -  Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+    -  Не все assert сообщения достаточно информативны
 
 **Рекомендации по улучшению**
-1.  **Документация**: Добавить reStructuredText (RST) docstrings для всех модулей, функций, методов и переменных.
-2.  **Импорты**: Использовать более структурированный способ импорта модулей, возможно, используя относительные импорты.
-3.  **Обработка ошибок**: Заменить прямые проверки `assert` на обработку через `logger.error` для более информативного логирования.
-4.  **Управление файлами**: Улучшить управление файлами, возможно, вынеся удаление файлов в отдельную функцию или фикстуру.
-5.  **Улучшить проверки**:  Добавить больше проверок для убеждения в том, что симуляция работает правильно. Например, можно проверять контент файлов.
-6.  **Ассерты**: Использовать более информативные сообщения в ассертах, чтобы облегчить отладку.
-7.  **`sys.path.append`**:  Избегать использования `sys.path.append`, вместо этого настроить `PYTHONPATH` или использовать пакетную структуру.
 
-**Оптимизиробанный код**
+1.  **Документация:** Добавить docstring к модулю и функциям в формате RST.
+2.  **Импорты:** Проверить и добавить отсутствующие импорты, если это необходимо.
+3.  **Пути:** Рассмотреть возможность использования более гибких способов управления путями, чем `sys.path.append`.
+4.  **Обработка ошибок:** Заменить стандартные `try-except` на использование `logger.error`.
+5.  **Утверждения:**  Сделать сообщения `assert` более информативными, чтобы они помогали в отладке.
+6.  **Рефакторинг:** Вынести повторяющиеся проверки  `assert control._current_simulations["default"] is not None` в отдельную функцию или использовать параметризацию.
+7.  **Чтение файлов:** Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+
+**Оптимизированный код**
+
 ```python
 """
-Модуль для тестирования функциональности управления симуляциями.
-=================================================================
+Модуль тестирования системы управления симуляциями TinyTroupe
+============================================================
 
-Этот модуль содержит набор тестов, проверяющих корректность работы
-класса :class:`Simulation` и функций управления симуляциями, включая
-запуск, создание контрольных точек и завершение симуляций с агентами,
-мирами и фабриками персонажей.
+Этот модуль содержит набор тестов для проверки функциональности управления симуляциями в TinyTroupe,
+включая запуск, сохранение состояния (checkpoint) и завершение симуляций с агентами, мирами и фабриками персонажей.
 
 Примеры использования
 --------------------
@@ -42,18 +41,26 @@
 
 .. code-block:: python
 
-    pytest.main(["-s", "test_control.py"])
+    # Пример использования test_begin_checkpoint_end_with_agent_only
+    def test_begin_checkpoint_end_with_agent_only(setup):
+        ...
 
+    # Пример использования test_begin_checkpoint_end_with_world
+    def test_begin_checkpoint_end_with_world(setup):
+        ...
+
+    # Пример использования test_begin_checkpoint_end_with_factory
+    def test_begin_checkpoint_end_with_factory(setup):
+        ...
 """
 import pytest
 import os
-# #  Импортируем sys для добавления путей, но лучше использовать PYTHONPATH
-# import sys
-# sys.path.append('../../tinytroupe/')
-# sys.path.append('../../')
-# sys.path.append('../')
+# # TODO: проверить необходимость `sys.path.append` и заменить если нужно
+import sys
+sys.path.append('../../tinytroupe/')
+sys.path.append('../../')
+sys.path.append('..')
 
-#  Импортируем необходимые модули из tinytroupe
 from tinytroupe.examples import create_oscar_the_architect, create_lisa_the_data_scientist
 from tinytroupe.agent import TinyPerson, TinyToolUse
 from tinytroupe.environment import TinyWorld
@@ -64,174 +71,145 @@ from tinytroupe.enrichment import TinyEnricher
 from tinytroupe.extraction import ArtifactExporter
 from tinytroupe.tools import TinyWordProcessor
 
-# Импортируем логгер из нашего модуля
-from src.logger.logger import logger
-
+import logging
+from src.logger.logger import logger # Используем logger из src.logger.logger
 import importlib
-
-# Импортируем вспомогательные функции из файла testing_utils
+from src.utils.jjson import j_loads, j_loads_ns #  Импортируем j_loads и j_loads_ns
 from tests.unit.testing_utils import remove_file_if_exists
 
+def _check_simulation_exists():
+    """
+    Проверяет, что текущая симуляция существует и имеет статус "начата".
+
+    :raises AssertionError: Если текущая симуляция не существует или не имеет статус "начата".
+    """
+    assert control._current_simulations["default"] is not None, "Текущая симуляция должна существовать."
+    assert control._current_simulations["default"].status == Simulation.STATUS_STARTED, "Статус симуляции должен быть 'начата'."
 
 def test_begin_checkpoint_end_with_agent_only(setup):
     """
-    Тестирует начало, создание контрольной точки и завершение симуляции только с агентами.
+    Тестирует жизненный цикл симуляции с агентами, включая запуск, checkpoint и остановку.
 
-    :param setup: фикстура pytest для настройки тестовой среды.
+    :param setup: Фикстура pytest для настройки окружения.
     """
-    # Удаляем файл кэша, если он существует
+    # удаляем файл, если он существует
     remove_file_if_exists("control_test.cache.json")
 
-    # Сбрасываем состояние контроллера симуляции
     control.reset()
     
-    # Проверяем, что нет запущенных симуляций
-    assert control._current_simulations["default"] is None, "На данный момент не должно быть запущенной симуляции."
+    assert control._current_simulations["default"] is None, "Не должно быть запущенных симуляций на данном этапе."
 
-    # Удаляем файл кэша, если он существует
+    # удаляем файл, если он существует
     remove_file_if_exists("control_test.cache.json")
 
-    # Начинаем новую симуляцию
     control.begin("control_test.cache.json")
-    # Проверяем, что симуляция запущена
-    assert control._current_simulations["default"].status == Simulation.STATUS_STARTED, "Симуляция должна быть запущена."
+    _check_simulation_exists() # Проверяем, что симуляция существует и запущена
 
 
-    # Создаем экспортер артефактов, обогатитель и факультет использования инструментов
     exporter = ArtifactExporter(base_output_folder="./synthetic_data_exports_3/")
     enricher = TinyEnricher()
     tooluse_faculty = TinyToolUse(tools=[TinyWordProcessor(exporter=exporter, enricher=enricher)])
 
-    # Создаем агента 1 (Оскар Архитектор) и добавляем ему способности
     agent_1 = create_oscar_the_architect()
     agent_1.add_mental_faculties([tooluse_faculty])
     agent_1.define("age", 19)
     agent_1.define("nationality", "Brazilian")
 
-    # Создаем агента 2 (Лиза Ученый по Данным) и добавляем ему способности
     agent_2 = create_lisa_the_data_scientist()
     agent_2.add_mental_faculties([tooluse_faculty])
     agent_2.define("age", 80)
     agent_2.define("nationality", "Argentinian")
 
-    # Проверяем, что создан кэш и трассировка выполнения
-    assert control._current_simulations["default"].cached_trace is not None, "Должна быть создана кэшированная трассировка."
-    assert control._current_simulations["default"].execution_trace is not None, "Должна быть создана трассировка выполнения."
+    assert control._current_simulations["default"].cached_trace is not None, "Должна быть сохраненная трассировка на этом этапе."
+    assert control._current_simulations["default"].execution_trace is not None, "Должна быть трассировка исполнения на этом этапе."
 
-    # Создаем контрольную точку
     control.checkpoint()
 
-    # Агенты выполняют действия
     agent_1.listen_and_act("How are you doing?")
     agent_2.listen_and_act("What\'s up?")
 
-    # Проверяем, что файл контрольной точки создан
-    assert os.path.exists("control_test.cache.json"), "Файл контрольной точки должен быть создан."
+    # проверка, что файл был создан
+    assert os.path.exists("control_test.cache.json"), "Файл checkpoint должен быть создан."
 
-    # Завершаем симуляцию
     control.end()
 
-    # Проверяем, что симуляция завершена
-    assert control._current_simulations["default"].status == Simulation.STATUS_STOPPED, "Симуляция должна быть завершена."
-
+    assert control._current_simulations["default"].status == Simulation.STATUS_STOPPED, "Симуляция должна быть остановлена на этом этапе."
 
 def test_begin_checkpoint_end_with_world(setup):
     """
-    Тестирует начало, создание контрольной точки и завершение симуляции с миром.
+    Тестирует жизненный цикл симуляции с миром (TinyWorld), включая запуск, checkpoint и остановку.
 
-    :param setup: фикстура pytest для настройки тестовой среды.
+    :param setup: Фикстура pytest для настройки окружения.
     """
-    # Удаляем файл кэша, если он существует
+    # удаляем файл, если он существует
     remove_file_if_exists("control_test_world.cache.json")
 
-    # Сбрасываем состояние контроллера симуляции
     control.reset()
     
-    # Проверяем, что нет запущенных симуляций
-    assert control._current_simulations["default"] is None, "На данный момент не должно быть запущенной симуляции."
+    assert control._current_simulations["default"] is None, "Не должно быть запущенных симуляций на данном этапе."
 
-    # Начинаем новую симуляцию
     control.begin("control_test_world.cache.json")
-    # Проверяем, что симуляция запущена
-    assert control._current_simulations["default"].status == Simulation.STATUS_STARTED, "Симуляция должна быть запущена."
+    _check_simulation_exists() # Проверяем, что симуляция существует и запущена
 
-    # Создаем мир и добавляем в него агентов
     world = TinyWorld("Test World", [create_oscar_the_architect(), create_lisa_the_data_scientist()])
-    # Делаем всех агентов доступными друг для друга
+
     world.make_everyone_accessible()
 
-    # Проверяем, что создан кэш и трассировка выполнения
-    assert control._current_simulations["default"].cached_trace is not None, "Должна быть создана кэшированная трассировка."
-    assert control._current_simulations["default"].execution_trace is not None, "Должна быть создана трассировка выполнения."
+    assert control._current_simulations["default"].cached_trace is not None, "Должна быть сохраненная трассировка на этом этапе."
+    assert control._current_simulations["default"].execution_trace is not None, "Должна быть трассировка исполнения на этом этапе."
 
-    # Запускаем мир на 2 шага
     world.run(2)
 
-    # Создаем контрольную точку
     control.checkpoint()
 
-    # Проверяем, что файл контрольной точки создан
-    assert os.path.exists("control_test_world.cache.json"), "Файл контрольной точки должен быть создан."
+    # проверка, что файл был создан
+    assert os.path.exists("control_test_world.cache.json"), "Файл checkpoint должен быть создан."
 
-    # Завершаем симуляцию
     control.end()
 
-    # Проверяем, что симуляция завершена
-    assert control._current_simulations["default"].status == Simulation.STATUS_STOPPED, "Симуляция должна быть завершена."
-
+    assert control._current_simulations["default"].status == Simulation.STATUS_STOPPED, "Симуляция должна быть остановлена на этом этапе."
 
 def test_begin_checkpoint_end_with_factory(setup):
     """
-    Тестирует начало, создание контрольной точки и завершение симуляции с фабрикой персонажей.
+    Тестирует жизненный цикл симуляции с фабрикой персонажей (TinyPersonFactory), включая запуск, checkpoint и остановку.
 
-    :param setup: фикстура pytest для настройки тестовой среды.
+    :param setup: Фикстура pytest для настройки окружения.
     """
-    # Удаляем файл кэша, если он существует
+    # удаляем файл, если он существует
     remove_file_if_exists("control_test_personfactory.cache.json")
 
     def aux_simulation_to_repeat(iteration, verbose=False):
         """
-        Вспомогательная функция для повторения симуляций.
+        Вспомогательная функция для выполнения повторяющихся симуляций.
 
-        :param iteration: номер итерации.
-        :param verbose: флаг для включения подробного вывода.
-        :return: сгенерированный агент.
+        :param iteration: Номер итерации симуляции.
+        :param verbose: Флаг для включения подробного логирования.
+        :return: Созданный агент.
         """
-        # Сбрасываем состояние контроллера симуляции
         control.reset()
     
-        # Проверяем, что нет запущенных симуляций
-        assert control._current_simulations["default"] is None, "На данный момент не должно быть запущенной симуляции."
+        assert control._current_simulations["default"] is None, "Не должно быть запущенных симуляций на данном этапе."
 
-        # Начинаем новую симуляцию
         control.begin("control_test_personfactory.cache.json")
-        # Проверяем, что симуляция запущена
-        assert control._current_simulations["default"].status == Simulation.STATUS_STARTED, "Симуляция должна быть запущена."    
+        _check_simulation_exists() # Проверяем, что симуляция существует и запущена
         
-        # Создаем фабрику персонажей
         factory = TinyPersonFactory("We are interested in experts in the production of the traditional Gazpacho soup.")
 
-        # Проверяем, что создан кэш и трассировка выполнения
-        assert control._current_simulations["default"].cached_trace is not None, "Должна быть создана кэшированная трассировка."
-        assert control._current_simulations["default"].execution_trace is not None, "Должна быть создана трассировка выполнения."
+        assert control._current_simulations["default"].cached_trace is not None, "Должна быть сохраненная трассировка на этом этапе."
+        assert control._current_simulations["default"].execution_trace is not None, "Должна быть трассировка исполнения на этом этапе."
 
-        # Генерируем персонажа
         agent = factory.generate_person("A Brazilian tourist who learned about Gazpaccho in a trip to Spain.")
 
-        # Проверяем, что создан кэш и трассировка выполнения
-        assert control._current_simulations["default"].cached_trace is not None, "Должна быть создана кэшированная трассировка."
-        assert control._current_simulations["default"].execution_trace is not None, "Должна быть создана трассировка выполнения."
+        assert control._current_simulations["default"].cached_trace is not None, "Должна быть сохраненная трассировка на этом этапе."
+        assert control._current_simulations["default"].execution_trace is not None, "Должна быть трассировка исполнения на этом этапе."
 
-        # Создаем контрольную точку
         control.checkpoint()
 
-        # Проверяем, что файл контрольной точки создан
-        assert os.path.exists("control_test_personfactory.cache.json"), "Файл контрольной точки должен быть создан."
+        # проверка, что файл был создан
+        assert os.path.exists("control_test_personfactory.cache.json"), "Файл checkpoint должен быть создан."
 
-        # Завершаем симуляцию
         control.end()
-        # Проверяем, что симуляция завершена
-        assert control._current_simulations["default"].status == Simulation.STATUS_STOPPED, "Симуляция должна быть завершена."
+        assert control._current_simulations["default"].status == Simulation.STATUS_STOPPED, "Симуляция должна быть остановлена на этом этапе."
 
         if verbose:
             logger.debug(f"###################################################################################### Sim Iteration:{iteration}")
@@ -252,6 +230,5 @@ def test_begin_checkpoint_end_with_factory(setup):
     age_2 = agent_2.get("age")
     nationality_2 = agent_2.get("nationality")
 
-    # Проверяем, что возраст и национальность одинаковы в обеих симуляциях
     assert age_1 == age_2, "Возраст должен быть одинаковым в обеих симуляциях."
     assert nationality_1 == nationality_2, "Национальность должна быть одинаковой в обеих симуляциях."

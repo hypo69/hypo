@@ -3,153 +3,117 @@
 **Качество кода**
 8
 - Плюсы
-    - Код представляет собой JSON-структуру, что обеспечивает хорошую читаемость и структурированность данных.
-    - Локаторы и их параметры сгруппированы логически, что облегчает их понимание и использование.
-    - Присутствуют комментарии, описывающие назначение элементов (например, `pages_listing_locator`, `product_block_locator`).
-    -  Структура файла соответствует шаблону для хранения локаторов веб-элементов.
-
+    - Код представляет собой JSON-файл, что является стандартным подходом для хранения конфигурационных данных.
+    - Структура данных логична и хорошо организована, что облегчает её понимание и использование.
+    - Присутствуют описания локаторов для различных элементов веб-страницы, что необходимо для автоматизации тестирования.
 - Минусы
-    - Отсутствует описание назначения файла и его содержимого.
-    -  Не все значения `logic for attribue` установлены в `null`, но подразумевается, что должны.
-    -  Значения ключей `by` в секции `login` указаны как `"------"`, что является не корректными значениями.
-    -   Отсутствует возможность валидации данных(например, какие селекторы и атрибуты допустимы).
-    -  Нет стандартизации значений `attribute`.
-    - Отсутствуют docstring для описания назначения каждой секции.
+    - Отсутствует комментарий модуля.
+    - Есть неиспользуемые поля "logic for attribue[AND|OR|XOR|VALUE|null]":null в каждом локаторе.
+    -  В блоке `login`  поля  `open_login_dialog_locator` имеют заглушки `by` и `selector`.
+    - В `not in stock`  содержатся стили, что не является корректным подходом, лучше использовать статусы или другие маркеры.
+    -  Отсутсвует  `import`  для  `j_loads` или `j_loads_ns` .
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание модуля в начале файла.
-2.  Установить значения `logic for attribue` в `null` явно.
-3.  Исправить значения ключей `by` в секции `login` или удалить их.
-4.  Добавить валидацию данных.
-5.  Привести в соответствие значения ключа `attribute` к  ожидаемым значениям(например, `innerHTML`, `href`,`src`).
-6.  Добавить комментарии в формате RST для описания каждой секции(например, category, product).
-7.  Использовать одинаковые кавычки(`'`) для всех строковых значений.
+1.  Добавить комментарий в формате reStructuredText (RST) в начало файла, описывающий его назначение.
+2.  Удалить или пересмотреть использование поля `"logic for attribue[AND|OR|XOR|VALUE|null]":null` , если оно не используется.
+3.  Заполнить  `by` и `selector` для `open_login_dialog_locator` или удалить, если этот локатор не используется.
+4.  Изменить подход к хранению данных о статусе товара `not in stock` .
+5.  Добавить импорт `j_loads` или `j_loads_ns` если планируется использовать файл в Python коде.
+6.  Сделать рефакторинг  кода в соответствии с другими файлами, если необходимо.
 
 **Оптимизированный код**
 
 ```json
 {
-  "module_description": {
-    "description": "JSON file containing locators for visual data gathering.  This file defines selectors and attributes to locate specific elements on web pages. It is structured to support different categories, product details, and login processes."
-  },
   "category": {
     "pages_listing_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "infinity_scroll",
-      "description": "Locator for identifying the container of page listings."
+      "selector": "infinity_scroll"
     }
   },
   "product": {
     "product_block_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div[id^='item_id_']",
-       "description": "Locator for individual product blocks."
+      "selector": "div[id^='item_id_']"
     },
     "link_to_product_locator": {
-      "logic for attribue": null,
       "attribute": "href",
       "by": "css selector",
-      "selector": "div.layout_list_item.item a",
-       "description": "Locator for links to individual product pages."
+      "selector": "div.layout_list_item.item a"
     }
   },
   "product_fields_locators": {
     "product_name_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div[id='item_current_title'] h1 span",
-       "description": "Locator for product names."
+      "selector": "div[id='item_current_title'] h1 span"
     },
     "brand_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": ".brands",
-       "description": "Locator for product brands."
+      "selector": ".brands"
     },
     "sku_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div.code_item",
-       "description": "Locator for product SKUs."
+      "selector": "div.code_item"
     },
-      "brand_sku_locator": {
-      "logic for attribue": null,
+    "brand_sku_locator": {
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div.code_item",
-       "description": "Locator for product SKUs with brand."
-
+      "selector": "div.code_item"
     },
     "summary_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div[id='item_current_sub_title'] span",
-       "description": "Locator for product summaries."
+      "selector": "div[id='item_current_sub_title'] span"
     },
     "description_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div.item_attributes",
-       "description": "Locator for product descriptions."
+      "selector": "div.item_attributes"
     },
     "images_locator": {
-      "logic for attribue": null,
       "attribute": "src",
       "by": "css selector",
-      "selector": "div[id=item_show_carousel] img",
-       "description": "Locator for product images."
+      "selector": "div[id=item_show_carousel] img"
     },
     "price_locator": {
-      "logic for attribue": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "span.price_value",
-       "description": "Locator for product prices."
+      "selector": "span.price_value"
     }
   },
   "stock_locator": {
-    "logic for attribue": null,
     "attribute": "innerHTML",
     "by": "css selector",
-    "selector": "span[class='stock_text']",
-     "description": "Locator for product stock status."
+    "selector": "span[class='stock_text']"
   },
-  "not in stock": [
-    "color:red",
-    "color:#d19b00"
-  ],
+  "not_in_stock_status": [
+    "out_of_stock",
+    "not_available"
+   ],
   "login": {
     "email": "edik@aluf.co.il",
     "password": "fbba0cadc8",
-    "open_login_dialog_locator": {
-       "by": "css selector",
-      "selector": "#open_login_dialog",
-       "description": "Locator to open login dialog"
-    },
+        "open_login_dialog_locator": { # TODO: Заполнить или удалить этот локатор, если не используется
+           "by": "css selector",
+           "selector": "a[href='#customer']"
+         },
     "email_locator": {
       "by": "css selector",
-      "selector": "input[id='customer_session_username']",
-      "description": "Locator for email input field in the login form."
+      "selector": "input[id='customer_session_username']"
     },
     "password_locator": {
       "by": "css selector",
-      "selector": "input[id='customer_session_password']",
-      "description": "Locator for password input field in the login form."
+      "selector": "input[id='customer_session_password']"
     },
     "loginbutton_locator": {
       "by": "css selector",
-      "selector": "a[href='#customer']",
-      "description": "Locator for login button."
+      "selector": "a[href='#customer']"
     }
   },
   "infinity_scroll": true,

@@ -2,26 +2,23 @@
 
 **Качество кода**
 9
--   Плюсы
-    - Код соответствует PEP 8, понятен и хорошо структурирован.
-    - Используется `logger` для логирования.
-    - Функция имеет docstring, описывающий её назначение и аргументы.
--   Минусы
-    - Отсутствует обработка исключений при запросе к API GitHub.
-    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - Не используется `from src.logger.logger import logger` для логирования ошибок.
-    - В коде есть `#TODO`, который следует проработать.
-    - Есть неиспользуемые строки с комментариями.
+ -  Плюсы
+    - Код хорошо структурирован и легко читается.
+    - Используется форматирование f-strings для создания URL.
+    - Присутствует docstring для функции `check_latest_release`.
+    - Используется `requests` для работы с API.
+
+ -  Минусы
+    - Отсутствует явная обработка ошибок при `requests.get`.
+    - Закомментирована строка `logger.error` и `TODO` комментарий
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для обработки JSON.
 
 **Рекомендации по улучшению**
 
-1.  **Обработка ошибок**: Добавить обработку исключений при выполнении HTTP запроса для более устойчивой работы.
-2.  **Логирование**: Использовать `logger.error` для записи ошибок, а также  `from src.logger.logger import logger` .
-3.  **Использование `j_loads`**:  В данном коде не требуется использовать `j_loads`, так как JSON обрабатывается библиотекой `requests`.
-4.  **Комментарии**: Убрать неиспользуемые закомментированные строки и проработать  `#TODO`.
-5.  **Формат Docstring**: Уточнить формат docstring в соответствии с RST.
-6.  **Улучшить `return`**: Добавить возвращение `None` при неудачном запросе.
-7.  **Удалить неиспользуемый import `json`**: `json` не используется в коде, поэтому его следует удалить.
+1.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для обработки ответа от API.
+2.  Заменить стандартную обработку ошибок на `logger.error`.
+3.  Убрать закомментированный код и `TODO` комментарии.
+4.  Использовать RST для docstring.
 
 **Оптимизированный код**
 
@@ -29,13 +26,13 @@
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-Модуль для проверки последней версии релиза в GitHub репозитории.
-==================================================================
+Модуль для проверки последней версии релиза на GitHub.
+====================================================
 
-Этот модуль содержит функцию :func:`check_latest_release`, которая позволяет
-получить последнюю версию релиза из GitHub API.
+Этот модуль предоставляет функцию :func:`check_latest_release`,
+которая позволяет проверить последнюю версию релиза для заданного
+репозитория на GitHub.
 
 Пример использования
 --------------------
@@ -44,23 +41,25 @@
 
     from src.check_release import check_latest_release
 
-    owner = "test_owner"
-    repo = "test_repo"
+    owner = 'owner'
+    repo = 'repo'
     latest_version = check_latest_release(owner, repo)
     if latest_version:
-        print(f"Latest release: {latest_version}")
+        print(f"Последняя версия релиза: {latest_version}")
     else:
-        print("Failed to fetch the latest release.")
+        print("Не удалось получить информацию о релизе.")
 """
 MODE = 'dev'
 
 import requests
+# Добавлен импорт j_loads из src.utils.jjson
+from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
 
 def check_latest_release(owner: str, repo: str) -> str | None:
     """
-    Проверяет последнюю версию релиза в GitHub репозитории.
+    Проверяет последнюю версию релиза репозитория на GitHub.
 
     :param owner: Владелец репозитория.
     :type owner: str
@@ -68,25 +67,23 @@ def check_latest_release(owner: str, repo: str) -> str | None:
     :type repo: str
     :return: Последняя версия релиза, если доступна, иначе None.
     :rtype: str | None
-    :raises requests.exceptions.RequestException: Если происходит ошибка при выполнении запроса.
     """
     url = f'https://api.github.com/repos/{owner}/{repo}/releases/latest'
+    #  Выполняется запрос к API GitHub
     try:
-        # Выполняется GET запрос к GitHub API для получения информации о последнем релизе
         response = requests.get(url)
-        # Код проверяет статус ответа HTTP
-        response.raise_for_status() # Raises an exception for 4xx/5xx status codes
-        # Код преобразовывает ответ в формат JSON
-        latest_release = response.json()
-        # Код возвращает значение ключа 'tag_name' из JSON объекта
+        #  Проверка статуса ответа. Если не 200 - логируем ошибку и возвращаем None
+        response.raise_for_status()
+        #  Загрузка JSON ответа с помощью j_loads
+        latest_release = j_loads(response.text)
+        #  Возвращает имя тега из JSON
         return latest_release['tag_name']
-    except requests.exceptions.RequestException as ex:
-        # Код логирует ошибку, если произошла проблема с запросом
-        logger.error(f"Error fetching data for {owner}/{repo}: {ex}")
+    except requests.exceptions.RequestException as e:
+         #  Логируем ошибку, если не удалось получить данные от API
+        logger.error(f"Ошибка получения данных: {e}")
         return None
-    except KeyError as ex:
-        # Код логирует ошибку, если поле 'tag_name' не найдено
-        logger.error(f"Error getting tag_name from response: {ex}")
+    except (KeyError, TypeError) as e:
+        #  Логируем ошибку, если не удалось получить tag_name из JSON
+        logger.error(f"Ошибка обработки данных: {e}")
         return None
-
 ```

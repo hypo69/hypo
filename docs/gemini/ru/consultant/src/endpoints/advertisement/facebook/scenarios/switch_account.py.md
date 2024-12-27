@@ -1,23 +1,24 @@
 # Анализ кода модуля `switch_account.py`
 
 **Качество кода**
-10
-- Плюсы
+9
+ -  Плюсы
     - Код хорошо структурирован и понятен.
-    - Используются константы и импорты.
-    - Применяется `j_loads_ns` для загрузки JSON.
-    - Есть docstring для функции.
-- Минусы
-    - Отсутствуют комментарии в формате reStructuredText (RST) для модуля.
-    - Отсутствует обработка ошибок в функции `switch_account`.
+    - Используется `j_loads_ns` для загрузки JSON, что соответствует требованиям.
+    - Присутствует описание модуля в docstring.
+ -  Минусы
+    - Отсутствуют docstring для функций.
+    - Отсутствует обработка ошибок.
+    - Не используется логирование.
+    - Не хватает комментариев, объясняющих каждый шаг кода.
+    - Не все импорты используются (например, `types`, `Path`).
 
 **Рекомендации по улучшению**
-
-1.  Добавить docstring в формате RST для модуля.
-2.  Добавить обработку ошибок с использованием `logger.error` в функции `switch_account`.
-3.  Добавить комментарии в формате reStructuredText (RST) к функции.
-4.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-5.  Убедиться, что все переменные и импорты соответствуют ранее обработанным файлам.
+1. Добавить docstring к функции `switch_account`, описывающий её назначение, параметры и возвращаемые значения.
+2. Добавить обработку ошибок с использованием `try-except` и логирование с помощью `logger.error` в функции `switch_account`.
+3. Добавить комментарии, объясняющие каждый шаг выполнения в функции `switch_account`.
+4. Удалить неиспользуемые импорты `Path` и `types`.
+5. Использовать RST docstring для описания модуля и функции.
 
 **Оптимизированный код**
 
@@ -28,10 +29,10 @@
 
 """
 Модуль для переключения между аккаунтами в Facebook.
-=========================================================================================
+=====================================================
 
-Этот модуль содержит функцию :func:`switch_account`, которая выполняет переключение между аккаунтами
-в Facebook, используя локаторы из файла `post_message.json`.
+Этот модуль содержит функцию :func:`switch_account`, которая используется для переключения между аккаунтами в Facebook,
+используя веб-драйвер.
 
 Пример использования
 --------------------
@@ -46,35 +47,38 @@
 """
 MODE = 'dev'
 
-from pathlib import Path
-from types import SimpleNamespace
+# from pathlib import Path # Не используется, можно удалить
+# from types import SimpleNamespace  # Не используется, можно удалить
 from src import gs
-# from src.webdriver.driver import Driver # импорт уже есть
+from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
-
-
-# Load locators from JSON file.
-#  Код загружает локаторы из JSON файла.
+from pathlib import Path
+from types import SimpleNamespace
+# Загрузка локаторов из JSON файла.
 locator: SimpleNamespace = j_loads_ns(
     Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'post_message.json')
 )
 
 
-def switch_account(driver: Driver):
+def switch_account(driver: Driver) -> bool:
     """
-    Выполняет переключение между аккаунтами Facebook.
-
-    Если на странице присутствует кнопка "Переключить", то код нажимает её.
+    Переключает аккаунт, если есть кнопка "Переключить".
 
     :param driver: Экземпляр веб-драйвера.
     :type driver: Driver
+    :raises Exception: Если возникает ошибка при выполнении действия.
+    :return: Возвращает True, если переключение произошло успешно, иначе False.
+    :rtype: bool
     """
     try:
-        # Код нажимает на кнопку переключения аккаунта, используя локатор.
-        driver.execute_locator(locator.switch_to_account_button)
+        # Код выполняет проверку наличия кнопки переключения и, при её наличии, нажимает на неё.
+        if driver.execute_locator(locator.switch_to_account_button):
+            return True
+        return False
     except Exception as ex:
-        # Логирование ошибки, если не удалось нажать на кнопку
+        # Логирование ошибки, если переключение не удалось.
         logger.error('Ошибка при переключении аккаунта', ex)
+        return False
 
 ```

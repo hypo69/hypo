@@ -2,179 +2,533 @@
 
 **Качество кода**
 9
-- Плюсы
-    - Структура данных JSON хорошо организована и легко читается.
-    - Присутствуют поля для различных языковых версий, что обеспечивает поддержку мультиязычности.
-- Минусы
-    - Отсутствует описание структуры данных в формате reStructuredText (RST).
-    - Данные представлены в формате JSON, который предназначен для хранения данных, а не для документации кода.
-    - Необходимо адаптировать структуру под использование в Python и добавить docstring для каждой переменной.
+-  Плюсы
+    - Код представляет собой структуру данных в формате JSON, что является стандартным и легко интерпретируемым форматом.
+    - Структура данных хорошо организована, с четким разделением полей и их значений.
+    - Использование объекта `language` для поддержки многоязычности является хорошей практикой.
+-  Минусы
+    - Отсутствует документация к структуре данных.
+    - Некоторые значения по умолчанию могут быть более информативными.
+    - Присутствуют поля со значениями `null` и `""`, что может потребовать дополнительной обработки.
+    - Не все поля содержат значения, что может вызвать проблемы при использовании данных в приложении.
+    - Поля `affiliate_short_link`, `affiliate_summary`, `affiliate_summary_2`, `affiliate_text`, `available_later`, `available_now`, `delivery_in_stock`, `delivery_out_stock`, `description`, `description_short`, `how_to_use`, `ingridients`, `link_rewrite`, `meta_description`, `meta_keywords`, `meta_title`, `name`, `affiliate_image_medium`, `affiliate_image_small`, `delivery_additional_message`  представлены в виде массива словарей, что может усложнить их обработку, хотя это стандартное представление для мультиязычности
 
 **Рекомендации по улучшению**
-1. Добавить описание структуры данных в формате reStructuredText (RST) для документирования JSON-полей.
-2. Создать Python-класс для представления этих данных. Это позволит более удобно работать с данными в коде.
-3. Добавить docstring к полям класса, чтобы предоставить информацию о каждом поле.
-4. Использовать `j_loads` или `j_loads_ns` для загрузки JSON.
-5.  Включить примеры использования и комментарии в формате RST.
+
+1. **Документация**: Добавить описание структуры данных, назначение каждого поля и ожидаемые типы данных.
+2. **Значения по умолчанию**: Предоставить более осмысленные значения по умолчанию там, где это возможно, чтобы избежать пустых строк и `null` значений.
+3. **Унификация**:  Рассмотреть возможность унификации представления языковых полей (например, использование словаря вместо массива словарей).
+4. **Обработка ошибок**: В коде, использующем эти данные, необходимо добавить обработку возможных ошибок, связанных с отсутствием значений или несоответствием типов данных.
+5. **Валидация**: При чтении и записи данных использовать валидацию для обеспечения их целостности.
 
 **Оптимизированный код**
-```python
-"""
-Модуль для представления полей продукта.
-====================================================
-
-Этот модуль определяет структуру данных для полей продукта, загружаемых из JSON.
-Он использует класс `ProductFields` для представления этих данных.
-
-Пример использования
---------------------
-
-Пример загрузки данных из JSON и доступа к полям:
-
-.. code-block:: python
-
-    from src.utils.jjson import j_loads
-    from src.logger.logger import logger
-    from dataclasses import dataclass, field
-    from typing import List, Dict, Any, Optional
-
-
-    @dataclass
-    class LanguageValue:
-      attrs: dict[str, str] = field(default_factory=dict)
-      value: str = ''
-
-    @dataclass
-    class ProductFields:
-        '''
-        Структура данных для полей продукта.
-        '''
-        associations: Optional[Any] = None
-        active: int = 1
-        additional_delivery_times: int = 0
-        additional_shipping_cost: str = ''
-        advanced_stock_management: int = 0
-        affiliate_short_link: List[LanguageValue] = field(default_factory=list)
-        affiliate_summary: List[LanguageValue] = field(default_factory=list)
-        affiliate_summary_2: List[LanguageValue] = field(default_factory=list)
-        affiliate_text: List[LanguageValue] = field(default_factory=list)
-        available_date: str = ''
-        available_for_order: int = 1
-        available_later: List[LanguageValue] = field(default_factory=list)
-        available_now: List[LanguageValue] = field(default_factory=list)
-        cache_default_attribute: str = ''
-        cache_has_attachments: str = ''
-        cache_is_pack: str = ''
-        additional_categories_append: Optional[Any] = None
-        additional_categories: Optional[Any] = None
-        condition: str = 'new'
-        customizable: str = ''
-        date_add: str = ''
-        date_upd: str = ''
-        delivery_in_stock: List[LanguageValue] = field(default_factory=list)
-        delivery_out_stock: List[LanguageValue] = field(default_factory=list)
-        depth: str = ''
-        description: List[LanguageValue] = field(default_factory=list)
-        description_short: List[LanguageValue] = field(default_factory=list)
-        ean13: str = ''
-        ecotax: str = ''
-        height: str = ''
-        how_to_use: List[LanguageValue] = field(default_factory=list)
-        id_category_default: int = 2
-        id_default_combination: str = ''
-        id_default_image: str = ''
-        id_lang: int = 1
-        id_manufacturer: str = ''
-        id_product: str = ''
-        id_shop_default: int = 1
-        id_shop: Optional[Any] = None
-        id_supplier: str = '11267'
-        id_tax: int = 13
-        id_type_redirected: str = ''
-        images_urls: Optional[Any] = None
-        indexed: str = ''
-        ingridients: List[LanguageValue] = field(default_factory=list)
-        is_virtual: int = 0
-        isbn: str = ''
-        link_rewrite: List[LanguageValue] = field(default_factory=list)
-        location: str = ''
-        low_stock_alert: str = ''
-        low_stock_threshold: str = ''
-        meta_description: List[LanguageValue] = field(default_factory=list)
-        meta_keywords: List[LanguageValue] = field(default_factory=list)
-        meta_title: List[LanguageValue] = field(default_factory=list)
-        minimal_quantity: str = ''
-        mpn: str = ''
-        name: List[LanguageValue] = field(default_factory=list)
-        online_only: int = 1
-        on_sale: str = ''
-        out_of_stock: int = 0
-        pack_stock_type: str = ''
-        position_in_category: str = ''
-        price: Optional[Any] = None
-        product_type: str = ''
-        quantity: str = ''
-        quantity_discount: str = ''
-        redirect_type: str = ''
-        reference: str = '11267-389'
-        show_condition: int = 1
-        show_price: int = 1
-        state: str = ''
-        supplier_reference: str = '389'
-        text_fields: str = ''
-        unit_price_ratio: str = ''
-        unity: str = ''
-        upc: str = ''
-        uploadable_files: str = ''
-        default_image_url: Optional[Any] = None
-        visibility: int = 1
-        volume: Optional[Any] = None
-        weight: str = ''
-        wholesale_price: str = 'False'
-        width: str = ''
-        affiliate_image_medium: List[LanguageValue] = field(default_factory=list)
-        affiliate_image_small: List[LanguageValue] = field(default_factory=list)
-        delivery_additional_message: List[LanguageValue] = field(default_factory=list)
-
-    def load_product_fields(file_path: str) -> ProductFields:
-        """
-        Загружает данные о полях продукта из JSON-файла.
-
-        :param file_path: Путь к JSON-файлу.
-        :return: Объект ProductFields с загруженными данными.
-        :raises FileNotFoundError: Если файл не найден.
-        """
-        try:
-            # Код исполняет загрузку данных из JSON файла с помощью функции `j_loads`
-            with open(file_path, 'r', encoding='utf-8') as f:
-                 data = j_loads(f.read())
-            #  Код исполняет создание объекта ProductFields из загруженных данных
-            return ProductFields(**data)
-        except FileNotFoundError as e:
-            #  Код исполняет логирование ошибки, если файл не найден
-            logger.error(f'Файл не найден: {file_path}', exc_info=True)
-            raise
-        except Exception as e:
-             # Код исполняет логирование общей ошибки при загрузке или обработке данных
-            logger.error(f'Ошибка при загрузке или обработке данных из {file_path}: {e}', exc_info=True)
-            raise
-
-    if __name__ == '__main__':
-        # Пример использования:
-        try:
-             # Код исполняет загрузку данных из файла 'product_fields.json'
-            product_fields = load_product_fields('product_fields.json')
-            # Код исполняет вывод значения поля 'reference'
-            print(f'Reference: {product_fields.reference}')
-            # Код исполняет вывод значения поля 'name' для языка с id '1'
-            if product_fields.name and product_fields.name[0].value :
-                print(f'Name (lang 1): {product_fields.name[0].value}')
-        except FileNotFoundError:
-             # Код исполняет обработку ошибки, если файл не найден
-            print('Ошибка: Файл product_fields.json не найден.')
-        except Exception as e:
-            # Код исполняет обработку других ошибок
-            print(f'Произошла ошибка: {e}')
-
-
+```json
+{
+    "associations": null,
+    "active": 1,
+    "additional_delivery_times": 0,
+    "additional_shipping_cost": "",
+    "advanced_stock_management": 0,
+    "affiliate_short_link": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "affiliate_summary": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "affiliate_summary_2": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "affiliate_text": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "available_date": "",
+    "available_for_order": 1,
+    "available_later": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "available_now": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": 1
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": 1
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": 1
+            }
+        ]
+    },
+    "cache_default_attribute": "",
+    "cache_has_attachments": "",
+    "cache_is_pack": "",
+    "additional_categories_append": null,
+    "additional_categories": null,
+    "condition": "new",
+    "customizable": "",
+    "date_add": "",
+    "date_upd": "",
+    "delivery_in_stock": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": false
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": false
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": false
+            }
+        ]
+    },
+    "delivery_out_stock": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": "\\u05d4\\u05de\\u05dc\\u05d0\\u05d9 \\u05d0\\u05d6\\u05dc"
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": "\\u05d4\\u05de\\u05dc\\u05d0\\u05d9 \\u05d0\\u05d6\\u05dc"
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": "\\u05d4\\u05de\\u05dc\\u05d0\\u05d9 \\u05d0\\u05d6\\u05dc"
+            }
+        ]
+    },
+    "depth": "",
+    "description": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "description_short": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "ean13": "",
+    "ecotax": "",
+    "height": "",
+    "how_to_use": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "id_category_default": 2,
+    "id_default_combination": "",
+    "id_default_image": "",
+    "id_lang": 1,
+    "id_manufacturer": "",
+    "id_product": "",
+    "id_shop_default": 1,
+     "id_shop": null,
+    "id_supplier": "11267",
+    "id_tax": 13,
+    "id_type_redirected": "",
+    "images_urls": null,
+    "indexed": "",
+     "ingridients": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "is_virtual": 0,
+    "isbn": "",
+    "link_rewrite": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "location": "",
+    "low_stock_alert": "",
+    "low_stock_threshold": "",
+     "meta_description": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "meta_keywords": {
+        "language": [
+             {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+   "meta_title": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "minimal_quantity": "",
+    "mpn": "",
+     "name": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "online_only": 1,
+    "on_sale": "",
+    "out_of_stock": 0,
+    "pack_stock_type": "",
+    "position_in_category": "",
+    "price": null,
+    "product_type": "",
+    "quantity": "",
+    "quantity_discount": "",
+    "redirect_type": "",
+    "reference": "11267-389",
+    "show_condition": 1,
+    "show_price": 1,
+    "state": "",
+    "supplier_reference": "389",
+    "text_fields": "",
+    "unit_price_ratio": "",
+    "unity": "",
+    "upc": "",
+    "uploadable_files": "",
+    "default_image_url": null,
+    "visibility": 1,
+    "volume": null,
+    "weight": "",
+    "wholesale_price": "False",
+    "width": "",
+   "affiliate_image_medium": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+             {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+    "affiliate_image_small": {
+        "language": [
+             {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    },
+      "delivery_additional_message": {
+        "language": [
+            {
+                "attrs": {
+                    "id": "1"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "2"
+                },
+                "value": ""
+            },
+            {
+                "attrs": {
+                    "id": "3"
+                },
+                "value": ""
+            }
+        ]
+    }
+}
 ```

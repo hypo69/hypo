@@ -1,104 +1,123 @@
-# Анализ кода модуля `src.goog.gtranslater`
+# Анализ кода модуля `__init__.py`
 
 **Качество кода**
-
-8/10
- -  Плюсы
-    -  Код выполняет поставленную задачу по переводу текста с использованием Google Translate API.
-    -  Используется автоматическое определение языка, если язык ввода не указан.
-    -  Логирование ошибок и информационных сообщений.
-    -  Используется библиотека `googletrans` и `langdetect` для перевода и определения языка.
- -  Минусы
-    -  Отсутствует docstring для модуля.
-    -  Комментарии не соответствуют формату RST.
-    -  Имеется избыточное определение переменной `MODE` и пустые строки в начале файла.
-    -  В функции `main` не обрабатываются исключения при вводе пользователем.
-    -  Нет явной проверки на наличие текста перед отправкой на перевод.
-    -  Не хватает описания входных и выходных параметров в docstring.
+7
+-   Плюсы
+    -   Используется `googletrans` для перевода текста.
+    -   Используется `langdetect` для определения языка.
+    -   Логирование ошибок с помощью `logger`.
+    -   Функция `translate` имеет docstring, описывающий ее работу.
+-   Минусы
+    -   Много повторяющихся docstring-комментариев в начале файла.
+    -   Нет описания модуля в формате RST.
+    -   docstring для функций и параметров не соответствует формату reStructuredText (RST).
+    -   Отсутствует обработка пустых параметров `locale_in` и `locale_out` в `main`.
+    -   Использование `try-except` без необходимости в `translate`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля в формате reStructuredText (RST).
-2.  Преобразовать все комментарии в docstring в формат RST.
-3.  Удалить избыточное определение переменной `MODE` и пустые строки в начале файла.
-4.  Добавить проверку на пустоту входного текста в функции `translate`.
-5.  В функции `main` добавить обработку исключений при вводе пользователя.
-6.  Добавить подробное описание входных и выходных параметров в docstring функций.
-7.  Заменить общий `try-except` на более конкретную обработку исключений, если это возможно.
-8.  Уточнить сообщение об ошибке в логгере.
-9.  Использовать `f-string` для форматирования строк логгера.
-10. Убрать `#!` в начале файла.
+1.  **Формат документации**:
+    -   Добавить описание модуля в формате RST в начале файла.
+    -   Переписать docstring функций в формате RST.
+
+2.  **Обработка данных**:
+    -   Не требуется использование `j_loads` или `j_loads_ns`, так как работа с файлами не производится.
+
+3.  **Анализ структуры**:
+    -   Импорты корректны.
+
+4.  **Рефакторинг и улучшения**:
+    -   Удалить повторяющиеся комментарии и оставить только осмысленную документацию.
+    -   Улучшить обработку ошибок, используя `logger.error` вместо `try-except` без дополнительной логики.
+    -   Добавить обработку пустых параметров в функции `main`.
+    -   Переписать комментарии в стиле RST.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль для перевода текста с использованием Google Translate API.
-===================================================================
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-Этот модуль предоставляет функциональность для перевода текста с одного языка на другой,
-используя Google Translate API. Поддерживается автоматическое определение языка ввода.
+"""
+Модуль для работы с Google Translate API
+=========================================================================================
+
+Этот модуль предоставляет функциональность для перевода текста с использованием Google Translate API.
+Включает функцию :func:`translate` для автоматического определения языка оригинала, если он не указан.
 
 Пример использования
 --------------------
 
+Пример использования функции `translate`:
+
 .. code-block:: python
 
-    from src.goog.gtranslater import translate
+   from src.goog.gtranslater import translate
 
-    translated_text = translate('Hello', locale_out='ru')
-    print(translated_text)
-
+   translated_text = translate("Hello, world!", locale_out='ru')
+   print(translated_text)
 """
+MODE = 'dev'
+
 from googletrans import Translator
 from langdetect import detect
 from src.logger.logger import logger
 
 
-def translate(text: str, locale_in: str = None, locale_out: str = 'en') -> str:
-    """Переводит текст с одного языка на другой, используя Google Translate.
+def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
+    """
+    Переводит текст с одного языка на другой, используя Google Translate.
 
     :param text: Текст для перевода.
     :type text: str
-    :param locale_in: Языковой код входного текста (необязательно, если не указан - определяется автоматически).
+    :param locale_in: Код языка оригинала (необязательный, автоматическое определение, если не указан).
     :type locale_in: str, optional
-    :param locale_out: Языковой код выходного текста (по умолчанию 'en').
+    :param locale_out: Код языка перевода (по умолчанию 'EN').
     :type locale_out: str, optional
     :return: Переведенный текст.
     :rtype: str
-    :raises Exception: Если произошла ошибка при переводе.
     """
     translator = Translator()
 
-    if not text:
-        logger.error('Входной текст пустой. Перевод невозможен.')
-        return ''
-    try:
-        if not locale_in:
+    # Код пытается автоматически определить язык, если он не указан
+    if not locale_in:
+        try:
             locale_in = detect(text)
-            logger.info(f'Автоматически определен язык ввода: {locale_in}')
-
+            logger.info(f"Auto-detected input language: {locale_in}")
+        except Exception as ex:
+            logger.error(f"Failed to detect input language: {ex}")
+            return ""
+    
+    # Код выполняет перевод текста
+    try:
         result = translator.translate(text, src=locale_in, dest=locale_out)
         return result.text
     except Exception as ex:
-        logger.error(f'Ошибка перевода: {ex}')
-        return ''
+        logger.error(f"Translation failed: {ex}")
+        return ""
 
 
 def main():
-    """Запрашивает текст для перевода у пользователя и выводит результат."""
-    try:
-        text = input('Введите текст для перевода: ')
-        locale_in = input('Введите код языка оригинала (оставьте пустым для автоопределения): ')
-        locale_out = input('Введите код языка перевода: ')
-    except Exception as ex:
-        logger.error(f'Ошибка ввода: {ex}')
-        return
+    """
+    Основная функция для запуска перевода.
+    Код запрашивает у пользователя текст, язык оригинала и язык перевода.
+    Код выводит переведенный текст.
+    """
+    text = input("Enter the text to be translated: ")
+    locale_in = input("Enter the source language code (leave blank for auto-detect): ")
+    locale_out = input("Enter the target language code: ")
+
+    # Код проверяет, введен ли язык перевода, если нет, то устанавливается значение по умолчанию
+    if not locale_out:
+         locale_out = 'EN'
+    
+    # Код вызывает функцию translate и выводит результат
     translated_text = translate(text, locale_in, locale_out)
-    print(f'Переведенный текст: {translated_text}')
+    print(f"Translated text: {translated_text}")
 
 
 if __name__ == "__main__":
     main()
+
 ```

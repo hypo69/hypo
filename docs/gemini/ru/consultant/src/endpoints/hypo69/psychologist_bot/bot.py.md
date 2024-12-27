@@ -1,89 +1,52 @@
-## Анализ кода модуля `bot.py`
+# Анализ кода модуля `bot.py`
 
 **Качество кода**
-    7
- -  Плюсы
-        - Код имеет базовую структуру, необходимую для работы Telegram-бота.
-        - Используется асинхронность для обработки сообщений.
-        - Присутствует разделение на обработчики команд и сообщений.
-        - Логирование ошибок с использованием `logger`.
- -  Минусы
-    -  Отсутствует документация в формате reStructuredText.
-    -  Используются конструкции `try-except` без явной необходимости.
-    -  Жестко заданные пути к файлам и папкам.
-    -  Импорты не упорядочены и могут быть избыточными.
-    -  Дублирование кода в обработчиках URL.
-    -  Не используется `j_loads` или `j_loads_ns` для загрузки файлов.
-    -  Некоторые переменные не используются (например, `mode`).
-    -  Логирование в `handle_next_command` не информативно.
-    -  Не все функции имеют docstrings.
-    -  Не хватает обработки ошибок в некоторых местах.
-    -  Присутсвуют магические строки  `'Hi! I am a smart assistant psychologist.'`, `'Готово!'`, `'Хуёвенько. Попробуй еще раз'`  и т.д..
+8
+- Плюсы
+    - Код использует асинхронность для обработки сообщений в Telegram, что обеспечивает хорошую производительность.
+    - Присутствует разделение на классы, что способствует лучшей организации кода.
+    - Используются dataclasses для определения структуры данных бота.
+    - Применяется `recursively_read_text_files` для загрузки данных, что удобно.
+    -  Логика обработки различных типов сообщений (текст, голос, документы) разделена.
+- Минусы
+    -  Отсутствует подробная документация в формате reStructuredText для всех функций и классов.
+    -  Не везде используется `logger.error` для обработки исключений, вместо этого иногда используется `print` или `logger.debug` для ошибок.
+    -  Есть дублирование кода в `handle_suppliers_response` и `handle_onetab_response`.
+    -  Использование `...` в коде как точки остановки.
+    -  Не все переменные имеют аннотацию типов.
+    -  Не всегда используются f-строки для форматирования строк.
 
 **Рекомендации по улучшению**
 
-1.  **Документация:**
-    *   Добавить reStructuredText (RST) комментарии для всех модулей, классов, функций и методов.
-    *   Описать назначение, параметры и возвращаемые значения для каждой функции и метода.
+1. **Документация**: Добавить reStructuredText (RST) docstrings для всех классов, методов и функций.
+2. **Логирование**: Заменить `print` на `logger.error` для обработки исключений. Использовать более информативные сообщения в логах.
+3. **Рефакторинг**: Вынести общую логику `handle_suppliers_response` и `handle_onetab_response` в отдельную функцию.
+4. **Импорты**: Добавить все необходимые импорты, которые могут отсутствовать.
+5. **Удалить `...`**: Убрать все `...` из кода.
+6. **Типизация**: Добавить аннотации типов для всех переменных.
+7.  **Форматирование строк**: Использовать f-строки для форматирования строк, где это возможно.
+8. **Константы**: Вынести повторяющиеся строки и значения в константы.
+9. **Переменные**: Добавить аннотации типов для переменных.
 
-2.  **Обработка ошибок:**
-    *   Использовать `logger.error` вместо `try-except` блоков.
-    *   Добавить более информативные сообщения об ошибках в лог.
-
-3.  **Импорты:**
-    *   Упорядочить импорты в алфавитном порядке и сгруппировать их.
-    *   Удалить неиспользуемые импорты.
-
-4.  **Пути к файлам:**
-    *   Использовать переменные для хранения путей к файлам и папкам.
-    *   Сделать пути конфигурационными, если это необходимо.
-
-5.  **Обработка URL:**
-    *   Реализовать более гибкую систему сопоставления URL с обработчиками.
-    *   Избегать дублирования кода в обработчиках URL.
-
-6. **Магические строки**
-    * Перенести все магические строки в константы или переменные, если они могут быть изменены.
-    * Для сообщений бота предусмотреть возможность их изменения из вне (возможно через json файл).
-
-7.  **Загрузка файлов:**
-    *   Использовать `j_loads` или `j_loads_ns` для загрузки JSON файлов.
-
-8. **Разное**
-    *   Удалить или закомментировать неиспользуемый код.
-    *   Перенести инициализацию бота в отдельную функцию.
-    *   В `handle_onetab_response`  не используются переменные `price`, `mexiron_name` и `urls`, нужно либо передать, либо удалить.
-
-**Оптимизиробанный код**
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для реализации Telegram-бота психолога.
-=========================================================================================
+==================================================
 
-Этот модуль содержит класс :class:`PsychologistTelgrambot`, который используется для
-создания и управления Telegram-ботом, предоставляющим психологическую помощь.
+Этот модуль содержит класс :class:`PsychologistTelgrambot`,
+который наследуется от :class:`TelegramBot` и реализует
+специфическое поведение бота-психолога.
 
-Основные возможности:
-    - Обработка команд и текстовых сообщений пользователей.
-    - Интеграция с Google Gemini AI для генерации ответов на вопросы.
-    - Запись истории сообщений пользователя.
-    - Обработка голосовых сообщений и документов.
-
-Пример использования
---------------------
-
-Пример инициализации и запуска бота:
-
-.. code-block:: python
-
-    kt = PsychologistTelgrambot()
-    asyncio.run(kt.application.run_polling())
 """
 import asyncio
 from pathlib import Path
-from typing import Optional, Any
+from typing import Optional, List, Tuple, Callable, Dict, Any
 from dataclasses import dataclass, field
 import random
 
@@ -96,220 +59,231 @@ from src.webdriver.driver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import read_text_file, recursively_read_text_files, save_text_file
 from src.logger.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.url import is_url
 
-BOT_GREETING = 'Hi! I am a smart assistant psychologist.'
-SUCCESS_MESSAGE = 'Готово!'
-FAILURE_MESSAGE = 'Хуёвенько. Попробуй еще раз'
-ERROR_READING_QUESTIONS = 'Произошла ошибка при чтении вопросов.'
-RECEIVED_DOCUMENT_MESSAGE = 'Received your document. Content: {}'
-WHATSAPP_LINK_MESSAGE = 'Готово!\\nСсылку я вышлю на WhatsApp'
-
+MODE: str = 'dev' # Режим работы бота ('dev' или 'test')
+SUPPLIERS_URLS: Tuple[str, ...] = (
+    'https://morlevi.co.il', 'https://www.morlevi.co.il',
+    'https://grandadvance.co.il', 'https://www.grandadvance.co.il',
+    'https://ksp.co.il', 'https://www.ksp.co.il',
+    'https://ivory.co.il', 'https://www.ivory.co.il'
+)
+ONETAB_URLS: Tuple[str, ...] = ('https://www.one-tab.com',)
+GREETING_MESSAGE: str = 'Hi! I am a smart assistant psychologist.'
+ERROR_READING_QUESTIONS: str = 'Произошла ошибка при чтении вопросов.'
+READY_MESSAGE: str = 'Готово!'
+TRY_AGAIN_MESSAGE: str = 'Хуёвенько. Попробуй еще раз'
+WHATSAPP_MESSAGE: str = 'Готово!\\nСсылку я вышлю на WhatsApp'
 
 @dataclass
 class PsychologistTelgrambot(TelegramBot):
     """
-    Класс, представляющий Telegram-бота с пользовательским поведением для психолога.
+    Класс, реализующий Telegram-бота психолога.
 
-    :ivar token: Токен Telegram-бота.
+    Наследуется от :class:`TelegramBot` и добавляет
+    специфическую функциональность для обработки сообщений
+    и взаимодействия с пользователем.
+
+    :ivar token: Токен для доступа к Telegram API.
     :vartype token: str
-    :ivar d: Драйвер для управления веб-браузером.
+    :ivar d: Драйвер веб-браузера.
     :vartype d: Driver
-    :ivar model: Модель Google Gemini для генерации текста.
+    :ivar model: Модель Google Gemini для генерации ответов.
     :vartype model: GoogleGenerativeAI
-    :ivar system_instruction: Инструкции для модели.
+    :ivar system_instruction: Инструкция для модели Gemini.
     :vartype system_instruction: str
     :ivar questions_list: Список вопросов для бота.
     :vartype questions_list: list
-    :ivar timestamp: Временная метка запуска бота.
+    :ivar timestamp: Временная метка создания экземпляра бота.
     :vartype timestamp: str
     """
     token: str = field(init=False)
     d: Driver = field(init=False)
     model: GoogleGenerativeAI = field(init=False)
     system_instruction: str = field(init=False)
-    questions_list: list = field(init=False)
+    questions_list: List[str] = field(init=False)
     timestamp: str = field(default_factory=lambda: gs.now)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """
-        Инициализация бота после создания экземпляра класса.
-
-        :return: None
+        Инициализирует бота, настраивает токен, драйвер, модель ИИ и загружает необходимые данные.
         """
-        #  код устанавливает токен бота
+        mode: str = 'test'
+        #self.token = gs.credentials.telegram.hypo69_test_bot if mode == 'test' else gs.credentials.telegram.hypo69_psychologist_bot
+        #  Получение токена для телеграм бота из настроек
         self.token = gs.credentials.telegram.hypo69_psychologist_bot
         super().__init__(self.token)
-
-        # код инициализирует драйвер веб-браузера
+        #  Инициализация драйвера для работы с браузером
         self.d = Driver(Chrome)
-
-        # код читает системные инструкции из файла
+        #  Чтение системной инструкции для модели ИИ из файла
         self.system_instruction = read_text_file(
             gs.path.google_drive / 'hypo69_psychologist_bot' / 'prompts' / 'chat_system_instruction.txt'
         )
-        #  код читает список вопросов из файлов
+        #  Чтение списка вопросов из файлов
         self.questions_list = recursively_read_text_files(
             gs.path.google_drive / 'hypo69_psychologist_bot' / 'prompts' / 'train_data' / 'q', ['*.*'], as_list=True
         )
-
-        #  код инициализирует модель Google Gemini AI
+        #  Инициализация модели Google Gemini
         self.model = GoogleGenerativeAI(
             api_key=gs.credentials.gemini.hypo69_psychologist_bot,
             system_instruction=self.system_instruction,
             generation_config={"response_mime_type": "text/plain"}
         )
-        # код регистрирует обработчики
+        #  Регистрация обработчиков
         self.register_handlers()
 
-    def register_handlers(self):
+    def register_handlers(self) -> None:
         """
-        Регистрирует обработчики команд и сообщений бота.
-
-        :return: None
+        Регистрирует обработчики команд и сообщений для бота.
         """
+        #  Регистрация обработчика команды start
         self.application.add_handler(CommandHandler('start', self.start))
+        #  Регистрация обработчика команды help
         self.application.add_handler(CommandHandler('help', self.help_command))
+        #  Регистрация обработчика текстовых сообщений
         self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
+        #  Регистрация обработчика голосовых сообщений
         self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
+        #  Регистрация обработчика документов
         self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
 
     async def start(self, update: Update, context: CallbackContext) -> None:
         """
-        Обрабатывает команду /start.
+         Обрабатывает команду /start, отправляет приветственное сообщение.
 
         :param update: Объект Update от Telegram.
-        :type update: Update
+        :type update: telegram.Update
         :param context: Объект CallbackContext от Telegram.
-        :type context: CallbackContext
-        :return: None
+        :type context: telegram.ext.CallbackContext
         """
-        # код отправляет приветствие пользователю
-        await update.message.reply_text(BOT_GREETING)
+        #  Отправка приветственного сообщения
+        await update.message.reply_text(GREETING_MESSAGE)
         await super().start(update, context)
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
         """
-         Обрабатывает текстовые сообщения, включая URL.
+        Обрабатывает текстовые сообщения, включая URL-адреса.
 
         :param update: Объект Update от Telegram.
-        :type update: Update
+        :type update: telegram.Update
         :param context: Объект CallbackContext от Telegram.
-        :type context: CallbackContext
-        :return: None
+        :type context: telegram.ext.CallbackContext
         """
-        response = update.message.text
-        user_id = update.effective_user.id
-
-        # код сохраняет сообщение в лог
-        log_path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
+        #  Получение текста сообщения от пользователя
+        response: str = update.message.text
+        user_id: int = update.effective_user.id
+        #  Формирование пути к файлу логов
+        log_path: Path = gs.path.google_drive / 'bots' / str(user_id) / 'chat_logs.txt'
+        #  Сохранение сообщения пользователя в лог
         save_text_file(f"User {user_id}: {response}\n", Path(log_path))
+        #  Получение ответа от модели ИИ
+        answer: str = self.model.ask(q=response, history_file=f'{user_id}.txt')
+        #  Отправка ответа пользователю
+        return await update.message.reply_text(answer)
 
-        # код получает ответ от модели ИИ
-        answer = self.model.ask(q=response, history_file=f'{user_id}.txt')
-        await update.message.reply_text(answer)
-
-    def get_handler_for_url(self, response: str):
+    def get_handler_for_url(self, response: str) -> Optional[Callable]:
         """
-        Определяет обработчик для URL.
+        Определяет обработчик для URL-адреса, если такой существует.
 
-        :param response: Текст сообщения.
+        :param response: URL-адрес для проверки.
         :type response: str
-        :return: Функция-обработчик или None.
+        :return: Функция-обработчик или None, если не найдено.
         :rtype: Optional[Callable]
         """
-        url_handlers = {
-            "suppliers": (
-                (
-                    'https://morlevi.co.il', 'https://www.morlevi.co.il',
-                    'https://grandadvance.co.il', 'https://www.grandadvance.co.il',
-                    'https://ksp.co.il', 'https://www.ksp.co.il',
-                    'https://ivory.co.il', 'https://www.ivory.co.il'
-                ),
-                self.handle_suppliers_response
-            ),
-            "onetab": (('https://www.one-tab.com',), self.handle_onetab_response),
+        url_handlers: Dict[str, Tuple[Tuple[str, ...], Callable]] = {
+            "suppliers": (SUPPLIERS_URLS, self.handle_suppliers_response),
+            "onetab": (ONETAB_URLS, self.handle_onetab_response),
         }
+        #  Проверка наличия обработчика для URL
         for urls, handler_func in url_handlers.values():
             if response.startswith(urls):
                 return handler_func
         return None
 
-    async def handle_suppliers_response(self, update: Update, response: str) -> None:
+    async def _run_mexiron_scenario(self, update: Update, response: str, price: Optional[float] = None, mexiron_name: Optional[str] = None, urls: Optional[List[str]] = None) -> None:
         """
-        Обрабатывает URL-адреса поставщиков.
+        Выполняет сценарий Mexiron и отправляет ответ пользователю.
 
         :param update: Объект Update от Telegram.
-        :type update: Update
-        :param response: Текст сообщения.
+        :type update: telegram.Update
+        :param response: Текст сообщения от пользователя.
         :type response: str
-        :return: None
+        :param price: Цена товара.
+        :type price: Optional[float]
+        :param mexiron_name: Название сценария Mexiron.
+        :type mexiron_name: Optional[str]
+        :param urls: Список URL-адресов.
+        :type urls: Optional[List[str]]
         """
-        # код запускает сценарий mexiron
-        if await self.mexiron.run_scenario(response, update):
-             # код отправляет сообщение об успешном выполнении
-            await update.message.reply_text(SUCCESS_MESSAGE)
-        else:
-            # код отправляет сообщение о неудаче
-            await update.message.reply_text(FAILURE_MESSAGE)
+        try:
+            if await self.mexiron.run_scenario(response, update, price=price, mexiron_name=mexiron_name, urls=urls):
+               await update.message.reply_text(READY_MESSAGE)
+            else:
+                await update.message.reply_text(TRY_AGAIN_MESSAGE)
+        except Exception as ex:
+            logger.error(f'Ошибка выполнения сценария Mexiron: {ex}', exc_info=True)
+            await update.message.reply_text(TRY_AGAIN_MESSAGE)
+
+    async def handle_suppliers_response(self, update: Update, response: str) -> None:
+        """
+        Обрабатывает ответы, содержащие URL-адреса поставщиков.
+
+        :param update: Объект Update от Telegram.
+        :type update: telegram.Update
+        :param response: URL-адрес от пользователя.
+        :type response: str
+        """
+        await self._run_mexiron_scenario(update, response)
 
     async def handle_onetab_response(self, update: Update, response: str) -> None:
         """
-        Обрабатывает URL-адреса OneTab.
-        
+        Обрабатывает ответы, содержащие URL-адреса OneTab.
+
         :param update: Объект Update от Telegram.
-        :type update: Update
-        :param response: Текст сообщения.
+        :type update: telegram.Update
+        :param response: URL-адрес от пользователя.
         :type response: str
-        :return: None
         """
-        # TODO: add params to  `self.mexiron.run_scenario`
-        #  код запускает сценарий mexiron
-        if await self.mexiron.run_scenario():
-             # код отправляет сообщение об успешном выполнении
-            await update.message.reply_text(WHATSAPP_LINK_MESSAGE)
-        else:
-             # код отправляет сообщение о неудаче
-            await update.message.reply_text(FAILURE_MESSAGE)
+        await self._run_mexiron_scenario(update, response, mexiron_name='onetab', urls=[response])
+        await update.message.reply_text(WHATSAPP_MESSAGE)
 
     async def handle_next_command(self, update: Update) -> None:
         """
-        Обрабатывает команду \'--next\' и связанные с ней команды.
+        Обрабатывает команду '--next', выбирая случайный вопрос и отправляя его с ответом.
 
         :param update: Объект Update от Telegram.
-        :type update: Update
-        :return: None
+        :type update: telegram.Update
         """
         try:
-             # код выбирает случайный вопрос из списка
-            question = random.choice(self.questions_list)
-             # код получает ответ на вопрос от модели ИИ
-            answer = self.model.ask(question)
-            # код отправляет вопрос и ответ пользователю
+            question: str = random.choice(self.questions_list)
+            answer: str = self.model.ask(question)
             await asyncio.gather(
                 update.message.reply_text(question),
                 update.message.reply_text(answer)
             )
         except Exception as ex:
-            #  код логирует ошибку
-            logger.error("Ошибка чтения вопросов", exc_info=ex)
+            logger.error(f"Ошибка чтения вопросов: {ex}", exc_info=True)
             await update.message.reply_text(ERROR_READING_QUESTIONS)
 
     async def handle_document(self, update: Update, context: CallbackContext) -> None:
         """
-        Обрабатывает загруженные документы.
-        
+        Обрабатывает загруженные документы, отправляет содержимое пользователю.
+
         :param update: Объект Update от Telegram.
-        :type update: Update
+        :type update: telegram.Update
         :param context: Объект CallbackContext от Telegram.
-        :type context: CallbackContext
-        :return: None
+        :type context: telegram.ext.CallbackContext
         """
-        # код получает содержимое загруженного документа
-        file_content = await super().handle_document(update, context)
-        # код отправляет сообщение с содержимым документа
-        await update.message.reply_text(RECEIVED_DOCUMENT_MESSAGE.format(file_content))
+        #  Получение содержимого файла
+        file_content: str = await super().handle_document(update, context)
+        #  Отправка содержимого файла пользователю
+        await update.message.reply_text(f'Received your document. Content: {file_content}')
+
 
 if __name__ == "__main__":
-    # код запускает бота
+    #  Создание экземпляра бота
     kt = PsychologistTelgrambot()
+    #  Запуск бота
     asyncio.run(kt.application.run_polling())
+```

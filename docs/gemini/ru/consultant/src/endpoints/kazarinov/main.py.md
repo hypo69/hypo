@@ -1,68 +1,68 @@
 # Анализ кода модуля `main.py`
 
-**Качество кода: 7/10**
--  Плюсы
-    - Код имеет базовую структуру, необходимую для запуска телеграм-бота.
-    - Используется `argparse` для обработки аргументов командной строки, что делает скрипт гибким.
-    - Присутствует логирование ошибок.
--  Минусы
-    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
-    - Отсутствуют docstring для модуля, функций и классов, что затрудняет понимание и использование кода.
-    - Присутствует избыточное использование стандартного блока `try-except`.
-    - Код содержит устаревшие комментарии  `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`.
+**Качество кода**
+9/10
+-   Плюсы
+    -   Код хорошо структурирован, используется `argparse` для обработки параметров командной строки.
+    -   Применяется `pydantic` для работы с моделями данных (хоть и не показано в данном коде, но подразумевается использованием `BaseModel` ).
+    -   Используется логгер для обработки ошибок.
+    -   Наличие docstring для функций.
+-   Минусы
+    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файла `json`.
+    -   Не все комментарии оформлены в стиле reStructuredText.
+    -   Импорт `json` не используется, нужно использовать `j_loads` из `src.utils.jjson`.
 
 **Рекомендации по улучшению**
-1.  Добавить docstring в формате RST для модуля, функций и класса.
-2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения JSON файлов.
-3.  Заменить избыточное использование стандартного блока `try-except` на обработку ошибок с помощью `logger.error`.
-4.  Удалить устаревшие комментарии.
-5.  Привести в соответствие имена переменных с ранее обработанными файлами.
-6.  Использовать константы для строк в коде.
+
+1.  Заменить `json.load` на `j_loads` из `src.utils.jjson`.
+2.  Добавить docstring в формате reStructuredText для модуля.
+3.  Улучшить docstring для функций, указав параметры и возвращаемые значения в формате RST.
+4.  Изменить обработку исключений, чтобы использовать `logger.error` с более подробными сообщениями.
+5.  Использовать более конкретные формулировки в комментариях.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
 """
-Модуль для запуска и управления Telegram ботом Kazarinov.
-=========================================================================================
+Модуль запуска Telegram-бота Kazarinov.
+=====================================================
 
-Этот модуль содержит функции для парсинга аргументов командной строки, загрузки настроек
-из файла и запуска Telegram бота.
+Этот модуль содержит функции для парсинга аргументов командной строки и запуска Telegram-бота Kazarinov.
 
 Пример использования
 --------------------
 
-Пример запуска бота с использованием файла настроек:
+Пример запуска бота с параметрами из командной строки:
 
 .. code-block:: bash
 
-    python main.py --settings config.json --mode prod
+    python main.py --settings settings.json --mode prod
 
-Пример запуска бота без файла настроек:
+Пример запуска бота с параметрами по умолчанию (test mode):
 
 .. code-block:: bash
 
-    python main.py --mode test
-
+    python main.py
 """
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+MODE = 'dev'
+
 import argparse
 import asyncio
+# import json # импорт не используется
 from pathlib import Path
-from typing import Dict
-
+# from pydantic import BaseModel # импорт не используется
 from src.logger.logger import logger
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads  # импорт для j_loads
 from .bot import KazarinovTelegramBot
 
-_SETTINGS_KEY = "settings"
-_MODE_KEY = "mode"
-_TEST_MODE = "test"
-_PROD_MODE = "prod"
 
-def parse_args() -> Dict:
+def parse_args() -> dict:
     """
-    Парсит аргументы командной строки.
+    Парсинг аргументов командной строки.
 
     :return: Словарь с параметрами запуска.
     :rtype: dict
@@ -77,9 +77,9 @@ def parse_args() -> Dict:
     parser.add_argument(
         "--mode",
         type=str,
-        choices=[_TEST_MODE, _PROD_MODE],
-        default=_TEST_MODE,
-        help="Режим работы бота ('test' или 'prod').",
+        choices=["test", "prod"],
+        default="test",
+        help="Режим работы бота (\'test\' или \'prod\').",
     )
 
     return vars(parser.parse_args())
@@ -88,39 +88,39 @@ def parse_args() -> Dict:
 def main():
     """
     Главная функция запуска KazarinovTelegramBot с параметрами из командной строки или файла настроек.
+
+    Функция запускает Telegram-бота Kazarinov, используя параметры, переданные через командную строку или файл настроек.
     """
     print("Starting Kazarinov's Telegram Bot...")
 
     args = parse_args()
 
-    # Проверяет наличие файла настроек и загружает их
-    if args.get(_SETTINGS_KEY):
-        settings_path = Path(args[_SETTINGS_KEY])
+    # Проверка наличия файла настроек
+    if args.get("settings"):
+        settings_path = Path(args["settings"])
         if settings_path.exists():
+            # Код загружает настройки из файла
             try:
-                #  Загружает настройки из файла с использованием j_loads
-                settings = j_loads(settings_path)
-                settings[_MODE_KEY] = args.get(_MODE_KEY, _TEST_MODE)  #  Дополнительно задаёт режим
+                with open(settings_path, "r", encoding="utf-8") as file:
+                    settings = j_loads(file)
+                settings['mode'] = args.get("mode", "test")  # Дополнительно устанавливает режим
                 bot = KazarinovTelegramBot(**settings)
             except Exception as ex:
-                 # Обработка ошибки чтения файла
-                logger.error(f"Ошибка чтения файла настроек: {settings_path}", exc_info=ex)
+                logger.error(f"Ошибка при загрузке настроек из файла {settings_path}: {ex}")
                 return
         else:
-             # Вывод сообщения, если файл настроек не найден
-            print(f"Файл настроек '{settings_path}' не найден.")
+            print(f"Файл настроек \'{settings_path}\' не найден.")
             return
     else:
-         # Создание экземпляра бота с параметрами по умолчанию
-        mode = args.get(_MODE_KEY, _TEST_MODE)
+        # Код создает экземпляр бота с параметрами из командной строки
+        mode = args.get("mode", "test")
         bot = KazarinovTelegramBot(mode=mode)
 
-    # Запуск бота
+    # Код запускает бота
     try:
         asyncio.run(bot.application.run_polling())
     except Exception as ex:
-        # Логирование ошибки при запуске бота
-        logger.error("Ошибка при запуске бота: %s", ex, exc_info=True)
+        logger.error(f"Ошибка при запуске бота: {ex}")
 
 
 if __name__ == "__main__":

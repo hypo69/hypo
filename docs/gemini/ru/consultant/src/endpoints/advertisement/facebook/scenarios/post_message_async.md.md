@@ -1,330 +1,227 @@
 # Анализ кода модуля `src.endpoints.advertisement.facebook.post_message_async`
 
 **Качество кода**
-8
+9
 -  Плюсы
-    - Хорошая структура документации с использованием reStructuredText.
-    - Подробное описание функций, параметров и возвращаемых значений.
-    - Наличие блок-схемы процесса для лучшего понимания работы скрипта.
-    - Присутствуют примеры использования и описаны зависимости.
+    - Документация в формате reStructuredText (RST) для всего модуля.
+    - Подробное описание функций, их параметров и возвращаемых значений.
+    - Наличие диаграммы Mermaid для визуализации процесса работы скрипта.
+    - Описание структуры модуля и порядка выполнения функций.
+    - Примеры использования функций и перечисление зависимостей.
+
 -  Минусы
-    - Отсутствуют импорты в представленном коде, что делает его непригодным для прямого использования.
-    - Нет конкретного кода функций, только их описание и сигнатуры.
-    - Не указана обработка исключений и логирование.
-    - Нет примеров кода в функциях.
+   -  В коде не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+   -  Отсутствуют логирование ошибок.
+   -  Нет обработки ошибок через `try-except` с использованием `logger.error`.
+   -  Не используются асинхронные функции в примере кода.
+   -  Нет импортов в примере кода.
 
 **Рекомендации по улучшению**
 
-1. **Добавить импорты**: Включить необходимые импорты, такие как `asyncio`, `pathlib`, `json`, `List`, `Any`, `WebElement`, `j_loads_ns` из `src.utils.jjson` и `logger` из `src.logger.logger`.
-2. **Реализовать функции**: Написать код для функций `post_title`, `upload_media`, `update_images_captions` и `promote_post`, включая логику для взаимодействия с веб-страницей через `selenium` и обработки исключений.
-3. **Добавить логирование**: Включить использование `logger.error` для обработки исключений и записи ошибок.
-4. **Уточнить документацию**: В документации RST добавить больше конкретики о том, как именно каждая функция взаимодействует с веб-страницей и какие локаторы использует.
-5. **Примеры кода**: Добавить примеры кода внутри функций, показывающие, как именно они используют `Driver` и другие параметры.
-6. **Удалить многоточия**: Заменить `...` на реальную логику или, если это точки остановки, то оставить, но в таком случае добавить описание для чего это нужно.
-7. **Избегать избыточных try-except**:  Использовать `logger.error` вместо общего try-except.
+1. **Использование `j_loads` или `j_loads_ns`**:
+   -  Замените стандартный `json.load` на `j_loads` или `j_loads_ns` для чтения файлов, если это необходимо.
 
-**Оптимизированный код**
+2. **Добавление логирования ошибок**:
+   -  Используйте `from src.logger.logger import logger` для логирования ошибок.
 
+3. **Обработка ошибок**:
+   -  Избегайте избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
+
+4. **Асинхронный пример кода**:
+    - В примере кода используйте `async` и `await` для соответствия асинхронному характеру функций.
+
+5. **Добавление импортов**:
+    - Добавьте все необходимые импорты в примере кода.
+
+6. **Переписать комментарии**:
+    - Привести все комментарии к функциям и переменным в соответствие с reStructuredText (RST) стандартом.
+
+**Оптимизиробанный код**
 ```markdown
-```rst
-.. module:: src.endpoints.advertisement.facebook.post_message_async
+# Анализ кода модуля `src.endpoints.advertisement.facebook.post_message_async`
 
-====================================================================
+**Качество кода**
+9
+-  Плюсы
+    - Документация в формате reStructuredText (RST) для всего модуля.
+    - Подробное описание функций, их параметров и возвращаемых значений.
+    - Наличие диаграммы Mermaid для визуализации процесса работы скрипта.
+    - Описание структуры модуля и порядка выполнения функций.
+    - Примеры использования функций и перечисление зависимостей.
 
-Асинхронный сценарий публикации сообщений в Facebook
-====================================================================
+-  Минусы
+   -  В коде не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+   -  Отсутствуют логирование ошибок.
+   -  Нет обработки ошибок через `try-except` с использованием `logger.error`.
+   -  Не используются асинхронные функции в примере кода.
+   -  Нет импортов в примере кода.
 
-Этот модуль автоматизирует процесс публикации сообщений в Facebook,
-включая отправку заголовка и описания, загрузку медиафайлов и
-обновление их подписей.
+**Рекомендации по улучшению**
 
-Описание
----------
+1. **Использование `j_loads` или `j_loads_ns`**:
+   -  Замените стандартный `json.load` на `j_loads` или `j_loads_ns` для чтения файлов, если это необходимо.
 
-Модуль предназначен для автоматизации процесса публикации сообщений на
-странице Facebook. Скрипт взаимодействует со страницей Facebook с
-помощью локаторов для выполнения различных действий, таких как отправка
-сообщений, загрузка медиафайлов и обновление подписей.
+2. **Добавление логирования ошибок**:
+   -  Используйте `from src.logger.logger import logger` для логирования ошибок.
 
-Основные функции
-----------------
+3. **Обработка ошибок**:
+   -  Избегайте избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
 
-1. **Отправка заголовка и описания**: Отправляет заголовок и описание
-   кампании в поле сообщения Facebook.
-2. **Загрузка медиафайлов**: Загружает медиафайлы (изображения и видео)
-   в сообщение Facebook и обновляет их подписи.
-3. **Продвижение публикации**: Управляет всем процессом продвижения
-   публикации с заголовком, описанием и медиафайлами.
+4. **Асинхронный пример кода**:
+    - В примере кода используйте `async` и `await` для соответствия асинхронному характеру функций.
 
-Структура модуля
-----------------
+5. **Добавление импортов**:
+    - Добавьте все необходимые импорты в примере кода.
 
-.. mermaid::
+6. **Переписать комментарии**:
+    - Привести все комментарии к функциям и переменным в соответствие с reStructuredText (RST) стандартом.
 
-   graph TD
-       Start[Start] --> InitDriver[Initialize Driver]
-       InitDriver --> LoadCategoryAndProducts[Load Category and Products]
-       LoadCategoryAndProducts --> SendTitle[Send Title]
-       SendTitle --> CheckTitleSuccess{Success?}
-       CheckTitleSuccess -->|Yes| UploadMediaAndPromotePost[Upload Media and Promote Post]
-       CheckTitleSuccess -->|No| TitleError[Error: Failed to Send Title]
-       UploadMediaAndPromotePost --> UploadMedia[Upload Media]
-       UploadMedia --> CheckMediaSuccess{Success?}
-       CheckMediaSuccess -->|Yes| UpdateCaptions[Update Image Captions]
-       CheckMediaSuccess -->|No| MediaError[Error: Failed to Upload Media]
-       UpdateCaptions --> PromotePost[Promote Post]
-       PromotePost --> CheckPromoteSuccess{Success?}
-       CheckPromoteSuccess -->|Yes| End[End]
-       CheckPromoteSuccess -->|No| PromoteError[Error: Failed to Promote Post]
-
-Легенда
-------
-
-1.  **Start**: Начало выполнения скрипта.
-2.  **InitDriver**: Создание экземпляра класса :class:`Driver`.
-3.  **LoadCategoryAndProducts**: Загрузка данных категории и продукта.
-4.  **SendTitle**: Вызов функции :func:`post_title` для отправки
-    заголовка.
-5.  **CheckTitleSuccess**: Проверка, успешно ли отправлен заголовок.
-    -   **Yes**: Продолжение загрузки медиа и продвижения публикации.
-    -   **No**: Вывод ошибки "Failed to send title".
-6.  **UploadMediaAndPromotePost**: Вызов функции :func:`promote_post`.
-7.  **UploadMedia**: Вызов функции :func:`upload_media` для загрузки
-    медиафайлов.
-8.  **CheckMediaSuccess**: Проверка, успешно ли загружены медиафайлы.
-    -   **Yes**: Продолжение обновления подписей изображений.
-    -   **No**: Вывод ошибки "Failed to upload media".
-9.  **UpdateCaptions**: Вызов функции :func:`update_images_captions` для
-    обновления подписей.
-10. **PromotePost**: Завершение процесса продвижения публикации.
-11. **CheckPromoteSuccess**: Проверка, успешно ли продвинута публикация.
-    -   **Yes**: Завершение выполнения скрипта.
-    -   **No**: Вывод ошибки "Failed to promote post".
-
------------------------
-
-Функции
--------
-
-.. function:: post_title(d: Driver, category: SimpleNamespace) -> bool
-
-   Отправляет заголовок и описание кампании в поле сообщения Facebook.
-
-   :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-   :type d: Driver
-   :param category: Объект :class:`SimpleNamespace` с заголовком и описанием.
-   :type category: SimpleNamespace
-   :return: :data:`True`, если заголовок и описание успешно отправлены, иначе :data:`None`.
-   :rtype: bool
-
-.. function:: upload_media(d: Driver, products: List[SimpleNamespace], no_video: bool = False) -> bool
-
-   Загружает медиафайлы в сообщение Facebook и обновляет их подписи.
-
-   :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-   :type d: Driver
-   :param products: Список объектов :class:`SimpleNamespace` с путями к медиафайлам.
-   :type products: List[SimpleNamespace]
-   :param no_video: Флаг, указывающий, следует ли пропускать загрузку видео.
-   :type no_video: bool
-   :return: :data:`True`, если медиафайлы успешно загружены, иначе :data:`None`.
-   :rtype: bool
-
-.. function:: update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None
-
-   Асинхронно добавляет описания к загруженным медиафайлам.
-
-   :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-   :type d: Driver
-   :param products: Список объектов :class:`SimpleNamespace` с деталями для обновления.
-   :type products: List[SimpleNamespace]
-   :param textarea_list: Список элементов :class:`WebElement`, в которые добавляются подписи.
-   :type textarea_list: List[WebElement]
-
-.. function:: promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool
-
-   Управляет процессом продвижения публикации с заголовком, описанием и медиафайлами.
-
-   :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-   :type d: Driver
-   :param category: Объект :class:`SimpleNamespace` с деталями категории, используемыми для заголовка и описания.
-   :type category: SimpleNamespace
-   :param products: Список объектов :class:`SimpleNamespace` с медиафайлами и деталями для публикации.
-   :type products: List[SimpleNamespace]
-   :param no_video: Флаг, указывающий, следует ли пропускать загрузку видео.
-   :type no_video: bool
-   :return: :data:`True`, если публикация успешно продвинута, иначе :data:`None`.
-   :rtype: bool
-
-Использование
-------------
-
-Для использования этого скрипта выполните следующие шаги:
-
-1.  **Инициализация драйвера**: Создайте экземпляр класса :class:`Driver`.
-2.  **Загрузка локаторов**: Загрузите локаторы из JSON-файла.
-3.  **Вызов функций**: Используйте предоставленные функции для отправки
-    заголовка, загрузки медиа и продвижения публикации.
-
-Пример
-------
-
-```python
-from src.webdriver.driver import Driver
-from types import SimpleNamespace
-import asyncio
-
-# Инициализация драйвера
-driver = Driver(...)
-
-# Загрузка категории и продуктов
-category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
-products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
-
-async def main():
-    # Отправка заголовка
-    await post_title(driver, category)
-
-    # Загрузка медиа и продвижение публикации
-    await promote_post(driver, category, products)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-Зависимости
-------------
-
--   `selenium`: Для автоматизации веб-страниц.
--   `asyncio`: Для асинхронных операций.
--   `pathlib`: Для обработки путей к файлам.
--   `types`: Для создания простых пространств имен.
--   `typing`: Для аннотаций типов.
-
-Обработка ошибок
-----------------
-
-Скрипт включает обработку ошибок для обеспечения непрерывного
-выполнения даже в случае, если определенные элементы не найдены или
-возникают проблемы с веб-страницей. Это особенно полезно для
-обработки динамических или нестабильных веб-страниц.
-
-Вклад
------
-
-Приветствуются любые вклады в этот скрипт. Убедитесь, что любые
-изменения хорошо документированы и включают соответствующие тесты.
-
-Лицензия
---------
-
-Этот скрипт распространяется под лицензией MIT. Подробности см. в
-файле `LICENSE`.
-```
+**Оптимизиробанный код**
 ```python
 """
-Модуль для асинхронной публикации сообщений в Facebook.
-=========================================================================================
+Модуль для асинхронной отправки сообщений в Facebook.
+====================================================
 
 Этот модуль содержит функции для автоматизации процесса публикации сообщений в Facebook,
-включая отправку заголовка и описания, загрузку медиафайлов и обновление их подписей.
+включая отправку заголовков, загрузку медиафайлов и обновление подписей.
+
+Пример использования
+--------------------
+
+Пример использования асинхронных функций для публикации сообщения в Facebook:
+
+.. code-block:: python
+
+    from src.webdriver.driver import Driver
+    from types import SimpleNamespace
+    from src.logger.logger import logger
+
+    async def main():
+        driver = Driver(...)
+        category = SimpleNamespace(title="Заголовок кампании", description="Описание кампании")
+        products = [SimpleNamespace(local_saved_image='путь/к/изображению.jpg', ...)]
+
+        if not await post_title(driver, category):
+            logger.error("Не удалось отправить заголовок")
+            return
+
+        if not await promote_post(driver, category, products):
+            logger.error("Не удалось опубликовать сообщение")
+            return
+
+    if __name__ == "__main__":
+        import asyncio
+        asyncio.run(main())
 """
-import asyncio
-import json
-from pathlib import Path
-from types import SimpleNamespace
 from typing import List, Any
+from types import SimpleNamespace
 from selenium.webdriver.remote.webelement import WebElement
-
+from src.webdriver.driver import Driver
 from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns
 
-async def post_title(d: Any, category: SimpleNamespace) -> bool:
+# from src.utils.jjson import j_loads, j_loads_ns # TODO: используется, если нужно читать json файлы
+
+async def post_title(d: Driver, category: SimpleNamespace) -> bool:
     """
     Отправляет заголовок и описание кампании в поле сообщения Facebook.
 
-    :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-    :type d: Any
-    :param category: Объект :class:`SimpleNamespace` с заголовком и описанием.
+    :param d: Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+    :type d: Driver
+    :param category: Объект `SimpleNamespace`, содержащий заголовок и описание.
     :type category: SimpleNamespace
-    :return: :data:`True`, если заголовок и описание успешно отправлены, иначе :data:`None`.
+    :return: `True`, если заголовок и описание успешно отправлены, иначе `False`.
     :rtype: bool
     """
     try:
-        # Код исполняет отправку заголовка
-        ...
+        # код исполняет отправку заголовка в поле ввода
+        await d.send_keys(d.locator.message_input, category.title)
+        # код исполняет отправку описания в поле ввода
+        await d.send_keys(d.locator.message_input, category.description)
         return True
-    except Exception as ex:
-        # Логирование ошибки отправки заголовка
-        logger.error('Ошибка отправки заголовка', ex)
+    except Exception as e:
+        # код исполняет логирование ошибки, если отправка не удалась
+        logger.error(f'Ошибка при отправке заголовка: {e}')
         return False
 
-async def upload_media(d: Any, products: List[SimpleNamespace], no_video: bool = False) -> bool:
+async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: bool = False) -> bool:
     """
-    Загружает медиафайлы в сообщение Facebook и обновляет их подписи.
+    Загружает медиафайлы (изображения и видео) в сообщение Facebook.
 
-    :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-    :type d: Any
-    :param products: Список объектов :class:`SimpleNamespace` с путями к медиафайлам.
+    :param d: Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+    :type d: Driver
+    :param products: Список объектов `SimpleNamespace`, содержащих пути к медиафайлам.
     :type products: List[SimpleNamespace]
-    :param no_video: Флаг, указывающий, следует ли пропускать загрузку видео.
+    :param no_video: Флаг, указывающий, нужно ли пропускать загрузку видео.
     :type no_video: bool
-    :return: :data:`True`, если медиафайлы успешно загружены, иначе :data:`None`.
+    :return: `True`, если медиафайлы успешно загружены, иначе `False`.
     :rtype: bool
     """
     try:
-        # Код исполняет загрузку медиафайлов
-        ...
+        for product in products:
+            if hasattr(product, 'local_saved_image') and product.local_saved_image:
+                 # код исполняет загрузку изображения
+                await d.send_keys(d.locator.upload_media, product.local_saved_image)
+            if not no_video and hasattr(product, 'local_saved_video') and product.local_saved_video:
+                # код исполняет загрузку видео, если no_video=False
+                await d.send_keys(d.locator.upload_media, product.local_saved_video)
         return True
-    except Exception as ex:
-        # Логирование ошибки загрузки медиафайлов
-        logger.error('Ошибка загрузки медиафайлов', ex)
+    except Exception as e:
+        # код исполняет логирование ошибки, если загрузка не удалась
+        logger.error(f'Ошибка при загрузке медиафайлов: {e}')
         return False
 
-async def update_images_captions(d: Any, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
+async def update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None:
     """
     Асинхронно добавляет описания к загруженным медиафайлам.
 
-    :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-    :type d: Any
-    :param products: Список объектов :class:`SimpleNamespace` с деталями для обновления.
+    :param d: Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+    :type d: Driver
+    :param products: Список объектов `SimpleNamespace` с деталями для обновления.
     :type products: List[SimpleNamespace]
-    :param textarea_list: Список элементов :class:`WebElement`, в которые добавляются подписи.
+    :param textarea_list: Список элементов `WebElement`, представляющих поля для ввода подписей.
     :type textarea_list: List[WebElement]
     """
-    # Код исполняет обновление подписей изображений
-    ...
-    return
+    for i, product in enumerate(products):
+        if hasattr(product, 'description') and product.description and i < len(textarea_list):
+            # код исполняет добавление описания к медиафайлу
+            await d.send_keys(textarea_list[i], product.description)
 
-async def promote_post(d: Any, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool:
+
+async def promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool:
     """
-    Управляет процессом продвижения публикации с заголовком, описанием и медиафайлами.
+    Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
 
-    :param d: Экземпляр :class:`Driver`, используемый для взаимодействия с веб-страницей.
-    :type d: Any
-    :param category: Объект :class:`SimpleNamespace` с деталями категории, используемыми для заголовка и описания.
+    :param d: Экземпляр класса `Driver` для взаимодействия с веб-страницей.
+    :type d: Driver
+    :param category: Объект `SimpleNamespace` с деталями заголовка и описания поста.
     :type category: SimpleNamespace
-    :param products: Список объектов :class:`SimpleNamespace` с медиафайлами и деталями для публикации.
+    :param products: Список объектов `SimpleNamespace`, содержащих медиа и детали для публикации.
     :type products: List[SimpleNamespace]
-    :param no_video: Флаг, указывающий, следует ли пропускать загрузку видео.
+    :param no_video: Флаг, указывающий, нужно ли пропускать загрузку видео.
     :type no_video: bool
-    :return: :data:`True`, если публикация успешно продвинута, иначе :data:`None`.
+    :return: `True`, если пост успешно продвинут, иначе `False`.
     :rtype: bool
     """
+    if not await post_title(d, category):
+        # код исполняет логирование ошибки, если отправка заголовка не удалась
+        logger.error('Не удалось отправить заголовок')
+        return False
+
+    if not await upload_media(d, products, no_video):
+         # код исполняет логирование ошибки, если загрузка медиа не удалась
+        logger.error('Не удалось загрузить медиа')
+        return False
+
+    textarea_list = await d.find_elements(d.locator.media_textarea_list)
+    # код исполняет обновление подписей к изображениям
+    await update_images_captions(d, products, textarea_list)
+
     try:
-        # Код исполняет отправку заголовка
-        if not await post_title(d, category):
-            return False
-
-        # Код исполняет загрузку медиафайлов
-        if not await upload_media(d, products, no_video):
-            return False
-
-        # Код исполняет обновление подписей
-        ...
+        # код исполняет нажатие кнопки "опубликовать"
+        await d.click(d.locator.promote_button)
         return True
-    except Exception as ex:
-        # Логирование ошибки продвижения публикации
-        logger.error('Ошибка продвижения публикации', ex)
+    except Exception as e:
+        # код исполняет логирование ошибки, если публикация не удалась
+        logger.error(f'Ошибка при продвижении поста: {e}')
         return False
 ```

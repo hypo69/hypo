@@ -1,94 +1,86 @@
 # Анализ кода модуля `language.py`
 
 **Качество кода**
-8
+**7/10**
 -  Плюсы
-    - Код имеет базовую структуру и использует классы для организации функциональности.
-    - Присутствуют docstring для класса и метода `__init__`.
-    - Используются импорты для необходимых модулей и классов.
-    - Выполняется проверка наличия необходимых параметров (`api_domain` и `api_key`).
+    - Код содержит базовую структуру для работы с API PrestaShop.
+    - Присутствует документация в формате docstring для класса и метода `__init__`.
+    - Используется `Optional` для указания необязательных параметров.
+    - Используется наследование от класса `PrestaShop`.
+    - Логика инициализации параметров api_domain и api_key вынесена в метод init.
+    
 -  Минусы
-    - Отсутствует описание модуля в формате reStructuredText (RST).
-    - Необходимо добавить docstring для всех методов класса, включая примеры их использования и описания аргументов.
-    - Не используется `j_loads` или `j_loads_ns`.
-    - Не все импорты используются.
-    - Не используется логирование ошибок через `logger.error`.
-    - Присутствует неиспользуемая переменная `MODE`.
+    - Отсутствует reStructuredText (RST) документация для модуля и класса.
+    - Нет обработки ошибок для возможных исключений при работе с API.
+    - Не все функции и методы имеют docstring.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Не используется `from src.logger.logger import logger` для логирования ошибок.
+    - Комментарии не в формате RST.
+    - Отсутствует перенос строк в длинных комментариях.
+    - Код не полностью соответствует стандартам оформления docstring в Python.
+    - Присутствуют неиспользуемые импорты (`import header`).
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание модуля в формате RST.
-2.  Добавить docstring для всех методов класса, используя RST-формат, включая примеры использования и описания аргументов и возвращаемых значений.
-3.  Удалить неиспользуемые импорты `header`.
-4.  Использовать `logger.error` для обработки ошибок вместо `raise ValueError`.
-5.  Удалить неиспользуемую переменную `MODE`.
-6.  Переименовать `PrestaLanguage` в `PrestashopLanguage` для соответствия общей стилистике проекта.
-7.  Добавить описание для полей класса.
-8.  Добавить try-except для более надежной работы при инициализации.
-9.  Добавить пример использования класса в формате RST.
+1.  Добавить reStructuredText (RST) документацию для модуля и класса.
+2.  Добавить docstring ко всем функциям и методам в формате RST.
+3.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+4.  Удалить неиспользуемые импорты (`import header`).
+5.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` при работе с json файлами (если необходимо).
+6.  Изменить комментарии `#` на формат RST.
+7.  Переписать длинные комментарии и документацию на более короткие и понятные.
+8.  Добавить обработку ошибок для возможных исключений при работе с API.
+9.  Удалить `MODE = 'dev'` если не используется.
+10. Убедиться, что все комментарии после `#` соответствуют стандарту.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для работы с языковыми настройками PrestaShop.
-=======================================================
+Модуль для работы с языками в PrestaShop
+=========================================================================================
 
-Этот модуль содержит класс :class:`PrestashopLanguage`, который используется для управления языками в магазине PrestaShop.
+Этот модуль содержит класс :class:`PrestaLanguage`, который используется для управления языками в магазине PrestaShop.
 Он предоставляет методы для добавления, удаления, обновления и получения информации о языках.
 
 Пример использования
 --------------------
 
+Пример использования класса `PrestaLanguage`:
+
 .. code-block:: python
 
-    from src.endpoints.prestashop.language import PrestashopLanguage
-    
-    # Пример использования с параметрами, переданными через `credentials`
-    credentials = {'api_domain': 'your_api_domain', 'api_key': 'your_api_key'}
-    prestashop_language = PrestashopLanguage(credentials=credentials)
-
-    # Пример использования с прямым указанием параметров
-    prestashop_language = PrestashopLanguage(api_domain='your_api_domain', api_key='your_api_key')
-    
-    # Пример использования методов класса
-    # prestashop_language.add_language_PrestaShop('English', 'en')
-    # prestashop_language.delete_language_PrestaShop(3)
-    # prestashop_language.update_language_PrestaShop(4, 'Updated Language Name')
-    # print(prestashop_language.get_language_details_PrestaShop(5))
-
+    prestalanguage = PrestaLanguage(api_domain='your_api_domain', api_key='your_api_key')
+    prestalanguage.add_language_PrestaShop('English', 'en')
+    prestalanguage.delete_language_PrestaShop(3)
+    prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
+    print(prestalanguage.get_language_details_PrestaShop(5))
 """
 from types import SimpleNamespace
 from typing import Optional
-from src.endpoints.prestashop.api import PrestaShop
+
 from src.utils.printer import pprint
 from src.logger.logger import logger
 from src.logger.exceptions import PrestaShopException
+from .api import PrestaShop
+
+# from src.utils.jjson import j_loads_ns # TODO: Если json используется, раскомментировать.
+# import header # TODO: Удалить неиспользуемый импорт.
 
 
-class PrestashopLanguage(PrestaShop):
+class PrestaLanguage(PrestaShop):
     """
     Класс для управления языками в PrestaShop.
 
-    Предоставляет методы для добавления, удаления, обновления и получения информации о языках магазина.
+    Предоставляет методы для добавления, удаления, обновления и получения информации о языках.
 
-    :param credentials: (Optional[dict | SimpleNamespace], optional) Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`. Defaults to None.
-    :param api_domain: (Optional[str], optional) Домен API. Defaults to None.
-    :param api_key: (Optional[str], optional) Ключ API. Defaults to None.
-
-    :ivar api_domain: Домен API PrestaShop.
-    :ivar api_key: Ключ API PrestaShop.
-
-    Пример использования класса:
-    
-    .. code-block:: python
-    
-        prestalanguage = PrestashopLanguage(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
-        prestalanguage.add_language_PrestaShop('English', 'en')
-        prestalanguage.delete_language_PrestaShop(3)
-        prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
-        print(prestalanguage.get_language_details_PrestaShop(5))
+    :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
+    :type credentials: Optional[dict | SimpleNamespace]
+    :param api_domain: Домен API PrestaShop.
+    :type api_domain: Optional[str]
+    :param api_key: Ключ API PrestaShop.
+    :type api_key: Optional[str]
     """
 
     def __init__(
@@ -100,25 +92,26 @@ class PrestashopLanguage(PrestaShop):
         **kwards,
     ):
         """
-        Инициализация класса PrestashopLanguage.
+        Инициализация класса PrestaLanguage.
 
-        Принимает параметры для подключения к API PrestaShop. Параметры могут передаваться как отдельные аргументы, так и через словарь `credentials`.
-
-        :param credentials: (Optional[dict | SimpleNamespace], optional) Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`. Defaults to None.
-        :param api_domain: (Optional[str], optional) Домен API. Defaults to None.
-        :param api_key: (Optional[str], optional) Ключ API. Defaults to None.
+        :param credentials: Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
+        :type credentials: Optional[dict | SimpleNamespace]
+        :param api_domain: Домен API.
+        :type api_domain: Optional[str]
+        :param api_key: Ключ API.
+        :type api_key: Optional[str]
+        :raises ValueError: Если не указаны api_domain или api_key.
         """
-        try:
-            if credentials is not None:
-                api_domain = credentials.get('api_domain', api_domain)
-                api_key = credentials.get('api_key', api_key)
-
-            if not api_domain or not api_key:
-                raise ValueError('Необходимы оба параметра: api_domain и api_key.')
-
-            super().__init__(api_domain, api_key, *args, **kwards)
-        except Exception as ex:
-            logger.error(f'Ошибка инициализации класса PrestashopLanguage: {ex}')
-            ...
-            # raise  # раскомментировать если необходимо пробросить исключение выше
+        # Проверяет, были ли переданы учетные данные через параметр credentials.
+        if credentials is not None:
+            api_domain = credentials.get('api_domain', api_domain)
+            api_key = credentials.get('api_key', api_key)
+        
+        # Проверяет наличие api_domain и api_key.
+        if not api_domain or not api_key:
+            logger.error('Необходимы оба параметра: api_domain и api_key.')
+            raise ValueError('Необходимы оба параметра: api_domain и api_key.')
+        
+        # Инициализирует родительский класс PrestaShop.
+        super().__init__(api_domain, api_key, *args, **kwards)
 ```

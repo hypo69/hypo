@@ -1,41 +1,40 @@
 # Анализ кода модуля `helicone.py`
 
 **Качество кода**
-8/10
--  Плюсы
-    - Код хорошо структурирован и читаем.
-    - Присутствует базовая документация в виде docstring для функций.
-    - Используется класс для организации функциональности.
-    - Код выполняет поставленные задачи, связанные с запросами к API OpenAI и логированием через Helicone.
--  Минусы
-    - Отсутствует обработка ошибок.
-    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - Отсутствуют логирование ошибок через `logger.error`.
-    - Не все комментарии переписаны в формате RST.
-    - Импорт `header` не используется и, вероятно, является ошибкой.
+9
+- Плюсы
+    - Код хорошо структурирован, функции имеют понятные имена и назначения.
+    - Присутствует базовая документация в виде docstring для каждой функции.
+    - Используются асинхронные вызовы для взаимодействия с API.
+
+- Минусы
+    - Отсутствует обработка ошибок при вызовах API, что может привести к проблемам в работе программы.
+    - Отсутствует явное указание типа возвращаемых данных в docstring.
+    - Используется устаревший способ импорта `header`.
+    - Отсутствует логгирование, что затрудняет отладку и мониторинг.
+    - Нет обработки случаев, когда `response.choices` может быть пустым или отсутствовать.
+    - Docstring не соответствует формату RST
 
 **Рекомендации по улучшению**
-1. **Импорт `header`**: Удалить неиспользуемый импорт `header`.
-2. **Использование `j_loads` или `j_loads_ns`**: В данном коде нет необходимости в `j_loads` или `j_loads_ns`, так как не происходит чтение файлов.
-3. **Логирование ошибок**: Добавить логирование ошибок с использованием `logger.error` для отслеживания проблем при взаимодействии с API OpenAI.
-4. **Формат документации**: Привести все комментарии и docstring к формату reStructuredText (RST).
-5. **Обработка исключений**: Добавить обработку исключений для запросов к API OpenAI.
-6. **Удаление неиспользуемого MODE**: Удалить неиспользуемую константу MODE.
-7. **Переменные окружения**: Рассмотреть возможность использования переменных окружения для хранения ключей API.
+
+1.  **Импорты**: Замените импорт `header` на что-то более конкретное или удалите его, если он не нужен.
+2.  **Обработка ошибок**: Добавьте обработку ошибок при вызовах API, используя `try-except` блоки и логирование ошибок через `src.logger.logger`.
+3.  **Документация**: Приведите docstring к формату RST, включая описания параметров и возвращаемых значений с указанием типов.
+4.  **Логирование**: Добавьте логирование для отслеживания запросов и ответов API, а также для записи ошибок.
+5.  **Улучшение обработки ответов**: Проверьте наличие `response.choices` и `response.choices[0].message.content` или `response.choices[0].text` перед их использованием.
+6.  **Унификация методов**: Замените вызовы `client.completions.create` на более абстрактные методы, которые используют `chat.completions` в качестве основы, чтобы иметь возможность применять разные модели.
+7.  **Удаление неиспользуемых переменных**: Удалите `MODE` если он не используется.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для взаимодействия с OpenAI API через Helicone.
+Модуль для интеграции с Helicone и OpenAI API
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`HeliconeAI` для генерации текста,
-анализа тональности, суммирования и перевода текста с использованием моделей OpenAI.
+Этот модуль содержит класс :class:`HeliconeAI`, который используется для взаимодействия с Helicone и OpenAI API
+для выполнения различных задач обработки текста, таких как генерация текста, анализ тональности,
+суммирование и перевод.
 
 Пример использования
 --------------------
@@ -46,56 +45,98 @@
 
     helicone_ai = HeliconeAI()
     poem = helicone_ai.generate_poem("Напиши мне стихотворение про кота.")
-    print(poem)
+    print("Generated Poem:\\n", poem)
 """
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
+# https://docs.helicone.ai/guides/overview
+# TODO: replace with concrete import or remove
+# import header
+
+from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
 from helicone import Helicone
 from openai import OpenAI
-from src.logger.logger import logger # Импорт logger
+from typing import Any, Dict
+
 
 class HeliconeAI:
     """
-    Класс для взаимодействия с OpenAI API через Helicone.
-
-    :ivar helicone: Экземпляр класса Helicone для логирования запросов.
-    :vartype helicone: Helicone
-    :ivar client: Экземпляр класса OpenAI для взаимодействия с API.
-    :vartype client: OpenAI
+    Класс для взаимодействия с Helicone и OpenAI API.
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
-        Инициализирует класс HeliconeAI, создавая экземпляры Helicone и OpenAI.
+        Инициализирует Helicone и OpenAI клиентов.
         """
         self.helicone = Helicone()
         self.client = OpenAI()
 
+    def _create_chat_completion(self, model: str, messages: list, **kwargs: Any) -> Any:
+        """
+        Вспомогательный метод для создания запроса к OpenAI Chat Completion API.
+
+        :param model: Имя модели для использования.
+        :param messages: Список сообщений для запроса.
+        :param kwargs: Дополнительные аргументы для API.
+        :return: Ответ от OpenAI API.
+        """
+        try:
+            # Код отправляет запрос к OpenAI Chat Completion API
+            response = self.client.chat.completions.create(
+                model=model,
+                messages=messages,
+                **kwargs
+            )
+            self.helicone.log_completion(response)
+            return response
+        except Exception as ex:
+            # Код логирует ошибку в случае неудачи запроса к API
+            logger.error(f'Ошибка при запросе к OpenAI API: {ex}')
+            return None
+
+    def _create_completion(self, model: str, prompt: str, **kwargs: Any) -> Any:
+        """
+         Вспомогательный метод для создания запроса к OpenAI Completion API.
+
+        :param model: Имя модели для использования.
+        :param prompt: Текст запроса.
+        :param kwargs: Дополнительные аргументы для API.
+        :return: Ответ от OpenAI API.
+        """
+        try:
+            # Код отправляет запрос к OpenAI Completion API
+            response = self.client.completions.create(
+                model=model,
+                prompt=prompt,
+                **kwargs
+            )
+            self.helicone.log_completion(response)
+            return response
+        except Exception as ex:
+            # Код логирует ошибку в случае неудачи запроса к API
+            logger.error(f'Ошибка при запросе к OpenAI API: {ex}')
+            return None
+    
     def generate_poem(self, prompt: str) -> str:
         """
         Генерирует стихотворение на основе заданного промпта.
 
         :param prompt: Промпт для генерации стихотворения.
         :type prompt: str
-        :raises Exception: Если при запросе к API OpenAI возникла ошибка.
         :return: Сгенерированное стихотворение.
         :rtype: str
         """
-        try:
-            #  Отправка запроса в OpenAI API для генерации стихотворения.
-            response = self.client.chat.completions.create(
-                model='gpt-3.5-turbo',
-                messages=[
-                    {'role': 'user', 'content': prompt}
-                ]
-            )
-            #  Логирование ответа с помощью Helicone.
-            self.helicone.log_completion(response)
-            # Возвращение сгенерированного стихотворения.
+        response = self._create_chat_completion(
+            model='gpt-3.5-turbo',
+            messages=[{'role': 'user', 'content': prompt}]
+        )
+        if response and response.choices:
+            # Код возвращает сгенерированный текст стихотворения
             return response.choices[0].message.content
-        except Exception as e:
-            #  Логирование ошибки при генерации стихотворения.
-            logger.error('Ошибка при генерации стихотворения', exc_info=True)
-            return ''
-
+        # Код возвращает пустую строку в случае ошибки
+        return ''
 
     def analyze_sentiment(self, text: str) -> str:
         """
@@ -103,25 +144,19 @@ class HeliconeAI:
 
         :param text: Текст для анализа.
         :type text: str
-        :raises Exception: Если при запросе к API OpenAI возникла ошибка.
         :return: Результат анализа тональности.
         :rtype: str
         """
-        try:
-            #  Отправка запроса в OpenAI API для анализа тональности.
-            response = self.client.completions.create(
-                model='text-davinci-003',
-                prompt=f'Analyze the sentiment of the following text: {text}',
-                max_tokens=50
-            )
-            #  Логирование ответа с помощью Helicone.
-            self.helicone.log_completion(response)
-            # Возвращение результата анализа тональности.
+        response = self._create_completion(
+            model='text-davinci-003',
+            prompt=f'Analyze the sentiment of the following text: {text}',
+            max_tokens=50
+        )
+        if response and response.choices:
+            # Код возвращает результат анализа тональности
             return response.choices[0].text.strip()
-        except Exception as e:
-            #  Логирование ошибки при анализе тональности.
-            logger.error('Ошибка при анализе тональности', exc_info=True)
-            return ''
+        # Код возвращает пустую строку в случае ошибки
+        return ''
 
     def summarize_text(self, text: str) -> str:
         """
@@ -129,26 +164,19 @@ class HeliconeAI:
 
         :param text: Текст для изложения.
         :type text: str
-        :raises Exception: Если при запросе к API OpenAI возникла ошибка.
         :return: Краткое изложение текста.
         :rtype: str
         """
-        try:
-            #  Отправка запроса в OpenAI API для создания краткого изложения.
-            response = self.client.completions.create(
-                model='text-davinci-003',
-                prompt=f'Summarize the following text: {text}',
-                max_tokens=100
-            )
-            #  Логирование ответа с помощью Helicone.
-            self.helicone.log_completion(response)
-            # Возвращение краткого изложения текста.
+        response = self._create_completion(
+            model='text-davinci-003',
+            prompt=f'Summarize the following text: {text}',
+            max_tokens=100
+        )
+        if response and response.choices:
+             # Код возвращает краткое изложение текста
             return response.choices[0].text.strip()
-        except Exception as e:
-            # Логирование ошибки при создании краткого изложения.
-            logger.error('Ошибка при создании краткого изложения', exc_info=True)
-            return ''
-
+        # Код возвращает пустую строку в случае ошибки
+        return ''
 
     def translate_text(self, text: str, target_language: str) -> str:
         """
@@ -158,44 +186,39 @@ class HeliconeAI:
         :type text: str
         :param target_language: Целевой язык перевода.
         :type target_language: str
-        :raises Exception: Если при запросе к API OpenAI возникла ошибка.
         :return: Переведенный текст.
         :rtype: str
         """
-        try:
-            # Отправка запроса в OpenAI API для перевода текста.
-            response = self.client.completions.create(
-                model='text-davinci-003',
-                prompt=f'Translate the following text to {target_language}: {text}',
-                max_tokens=200
-            )
-            #  Логирование ответа с помощью Helicone.
-            self.helicone.log_completion(response)
-            # Возвращение переведенного текста.
+        response = self._create_completion(
+            model='text-davinci-003',
+            prompt=f'Translate the following text to {target_language}: {text}',
+            max_tokens=200
+        )
+        if response and response.choices:
+             # Код возвращает переведенный текст
             return response.choices[0].text.strip()
-        except Exception as e:
-            #  Логирование ошибки при переводе текста.
-             logger.error('Ошибка при переводе текста', exc_info=True)
-             return ''
+         # Код возвращает пустую строку в случае ошибки
+        return ''
 
-def main():
+def main() -> None:
     """
-    Основная функция для демонстрации работы класса HeliconeAI.
+    Основная функция для демонстрации работы HeliconeAI.
     """
     helicone_ai = HeliconeAI()
-    #  Генерация стихотворения.
-    poem = helicone_ai.generate_poem("Напиши мне стихотворение про кота.")
-    print("Generated Poem:\n", poem)
-    #  Анализ тональности текста.
-    sentiment = helicone_ai.analyze_sentiment("Сегодня был отличный день!")
-    print("Sentiment Analysis:\n", sentiment)
-    #  Создание краткого изложения текста.
-    summary = helicone_ai.summarize_text("Длинный текст для изложения...")
-    print("Summary:\n", summary)
-    #  Перевод текста на русский язык.
-    translation = helicone_ai.translate_text("Hello, how are you?", "русский")
-    print("Translation:\n", translation)
+    # Код генерирует стихотворение
+    poem = helicone_ai.generate_poem('Напиши мне стихотворение про кота.')
+    print('Generated Poem:\\n', poem)
+    # Код анализирует тональность текста
+    sentiment = helicone_ai.analyze_sentiment('Сегодня был отличный день!')
+    print('Sentiment Analysis:\\n', sentiment)
+    # Код создает краткое изложение текста
+    summary = helicone_ai.summarize_text('Длинный текст для изложения...')
+    print('Summary:\\n', summary)
+    # Код переводит текст
+    translation = helicone_ai.translate_text('Hello, how are you?', 'русский')
+    print('Translation:\\n', translation)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()
 ```

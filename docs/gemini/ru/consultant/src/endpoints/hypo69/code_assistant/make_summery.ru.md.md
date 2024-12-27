@@ -1,102 +1,105 @@
 # Анализ кода модуля `make_summary.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и выполняет поставленную задачу по генерации `SUMMARY.md`.
-    - Имеется описание модуля, основных возможностей, инструкция по установке и запуску.
-    -  Код достаточно гибок, поддерживает фильтрацию по языку.
-    -  Используется рекурсивный обход директорий для поиска файлов.
-- Минусы
-    - Отсутствуют docstring для функций и классов.
-    - Не используются кастомные логи, ошибки обрабатываются базовым `try-except`.
-    - Не используются `j_loads` или `j_loads_ns` для чтения файлов.
+9
+-  Плюсы
+    - Хорошее общее описание модуля и его функциональности.
+    - Четкое объяснение основных возможностей модуля, включая генерацию `SUMMARY.md` и фильтрацию по языку.
+    - Подробные инструкции по установке и использованию модуля.
+    - Наличие примеров вывода `SUMMARY.md` для различных языковых фильтров.
+    - Указание авторства и лицензии.
+-  Минусы
+    - Недостаточно подробное описание структуры кода и обработки данных.
+    - Отсутствуют явные комментарии к коду в формате RST.
+    - Нет указания на использование `j_loads` или `j_loads_ns`.
+    - Не используется `logger` для логирования ошибок.
+    - Отсутствуют docstring для функций.
+    - Не указаны импорты.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring к функциям, классам и модулю, используя reStructuredText (RST).
-2.  Заменить `try-except` на обработку ошибок через `logger.error`.
-3.  Использовать `j_loads` или `j_loads_ns` для работы с файлами (если это необходимо).
-4.  Добавить проверки на существование директорий и файлов.
-5.  Импортировать `logger` и использовать его для логирования.
-6.  Переработать код в соответствии с заданными инструкциями.
+1.  Добавить docstring для функций и модуля в формате RST.
+2.  Добавить обработку ошибок с использованием `logger.error`.
+3.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
+4.  Добавить недостающие импорты.
+5.  Убедиться, что все комментарии в коде соответствуют формату RST.
+6.  Избегать избыточного использования try-except, предпочитая `logger.error`.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для создания файла SUMMARY.md
+Модуль для автоматического создания файла SUMMARY.md.
 =========================================================================================
 
-Этот модуль рекурсивно обходит указанную директорию с исходными файлами `.md`
-и генерирует оглавление в файле `SUMMARY.md`, включая или исключая файлы в
-зависимости от указанного языка.
+Этот модуль рекурсивно обходит указанную директорию с исходными файлами .md и
+генерирует оглавление, включая или исключая файлы в зависимости от указанного языка.
 
 Пример использования
 --------------------
 
-Пример запуска скрипта для генерации `SUMMARY.md`:
-
-.. code-block:: python
+Пример использования модуля::
 
     python src/endpoints/hypo69/code_assistant/make_summary.py -lang ru src
 
 """
 import os
 import argparse
-# добавлен импорт logger
+# from src.utils.jjson import j_loads, j_loads_ns # TODO: если надо
 from src.logger.logger import logger
-# Добавлен импорт j_loads_ns
-from src.utils.jjson import j_loads_ns
 
-
-def create_summary(directory: str, language: str) -> None:
+def create_summary(root_dir: str, lang: str = None) -> None:
     """
-    Создает файл `SUMMARY.md` с оглавлением для файлов `.md` в указанной директории.
+    Создает файл SUMMARY.md на основе структуры директории с `.md` файлами.
 
-    :param directory: Путь к директории с исходными файлами.
-    :param language: Язык для фильтрации файлов ('ru' или 'en').
+    :param root_dir: Путь к корневой директории, содержащей файлы `.md`.
+    :param lang: Язык фильтрации (ru или en).
+        Если `ru`, то включаются только файлы с суффиксом `.ru.md`.
+        Если `en`, то исключаются файлы с суффиксом `.ru.md`.
     """
+    summary_lines = ['# Summary\n']
+
+    for dirpath, _, filenames in os.walk(root_dir):
+        for filename in filenames:
+            if filename.endswith('.md'):
+                if lang == 'ru' and not filename.endswith('.ru.md'):
+                     # если указан русский язык и файл не `.ru.md`, то файл пропускается
+                    continue
+                if lang == 'en' and filename.endswith('.ru.md'):
+                    # если указан английский язык и файл  `.ru.md`, то файл пропускается
+                    continue
+                # Код формирует путь к файлу относительно корня проекта
+                file_path = os.path.relpath(os.path.join(dirpath, filename), root_dir)
+                # Код формирует строку для файла SUMMARY.md
+                summary_lines.append(f'- [{filename.replace(".md", "")}]({file_path})\n')
+
+    # Код создает файл SUMMARY.md в директории docs
+    docs_dir = os.path.join(os.path.dirname(root_dir), 'docs')
+    if not os.path.exists(docs_dir):
+        os.makedirs(docs_dir)
+    summary_file_path = os.path.join(docs_dir, 'SUMMARY.md')
+
     try:
-        # Создаем файл SUMMARY.md
-        with open('docs/SUMMARY.md', 'w', encoding='utf-8') as f:
-            f.write('# Summary\n\n')
-            # код исполняет рекурсивный обход директории
-            for root, _, files in os.walk(directory):
-                for file in files:
-                    # код исполняет проверку расширения файла
-                    if file.endswith('.md'):
-                        #  код исполняет проверку языка и формирование пути к файлу
-                        if language == 'ru' and file.endswith('.ru.md') or language == 'en' and not file.endswith('.ru.md'):
-                            file_path = os.path.join(root, file)
-                            # код формирует путь относительно корня проекта
-                            relative_path = os.path.relpath(file_path, directory)
-                            # Код записывает ссылку в файл SUMMARY.md
-                            f.write(f'- [{file}]({relative_path})\n')
+        # Код записывает сформированное оглавление в файл SUMMARY.md
+        with open(summary_file_path, 'w', encoding='utf-8') as f:
+            f.writelines(summary_lines)
     except Exception as e:
-        # Логируем ошибки с помощью logger.error
-        logger.error(f'Произошла ошибка при создании SUMMARY.md: {e}', exc_info=True)
-        ...
+         # Код обрабатывает ошибку записи в файл и логирует ее
+        logger.error(f'Error writing to SUMMARY.md: {e}')
 
 def main():
     """
-    Основная функция для обработки аргументов командной строки и запуска создания `SUMMARY.md`.
+    Основная функция запуска модуля.
     """
-    # код исполняет настройку парсера аргументов командной строки
-    parser = argparse.ArgumentParser(description='Генерирует SUMMARY.md для mdbook')
-    #  добавляет аргумент для выбора языка
-    parser.add_argument('-lang', type=str, default='ru', choices=['ru', 'en'],
-                        help='Язык для фильтрации файлов')
-    # добавляет аргумент для указания директории
-    parser.add_argument('directory', type=str,
-                        help='Директория с исходными файлами .md')
-    # Код получает аргументы из командной строки
+    parser = argparse.ArgumentParser(description='Generate SUMMARY.md for mdbook.')
+    parser.add_argument('-lang', type=str, default=None, choices=['ru', 'en'], help='Filter by language (ru or en)')
+    parser.add_argument('root_dir', type=str, help='Root directory containing markdown files')
     args = parser.parse_args()
-    # Код вызывает функцию создания SUMMARY.md
-    create_summary(args.directory, args.lang)
 
+    # Код вызывает функцию для создания SUMMARY.md
+    create_summary(args.root_dir, args.lang)
 
 if __name__ == '__main__':
-    # код исполняет запуск основной функции
+    # Код запускает основную функцию если скрипт запущен напрямую
     main()
 ```

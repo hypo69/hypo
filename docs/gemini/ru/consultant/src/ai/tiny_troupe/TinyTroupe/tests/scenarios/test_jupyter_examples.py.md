@@ -1,74 +1,67 @@
 # Анализ кода модуля `test_jupyter_examples.py`
 
 **Качество кода**
-7
--   Плюсы
-    -   Код структурирован, разбит на функции.
-    -   Используется параметризация тестов pytest.
-    -   Присутствует обработка исключений при выполнении ноутбуков.
-    -   Сохранение копии выполненного ноутбука.
--   Минусы
-    -   Отсутствует reStructuredText документация.
-    -   Используется `print` для логирования, лучше использовать `logger`.
-    -   Пути импорта не соответствуют стандарту проекта.
-    -   Не используется `j_loads` для чтения файлов.
-    -   Жестко заданные значения `TIMEOUT` и `KERNEL_NAME`.
-    -   Общий `try-except` блок.
+9
+ -  Плюсы
+    -   Код хорошо структурирован и понятен.
+    -   Используется параметризация тестов pytest для запуска на нескольких ноутбуках.
+    -   Присутствует обработка исключений при выполнении ноутбука.
+    -   Сохранение выполненной версии ноутбука.
+ -  Минусы
+    -   Не используется `j_loads` или `j_loads_ns` для чтения файлов.
+    -   Отсутствует логирование ошибок.
+    -   Комментарии не соответствуют стандарту RST.
+    -   Необходимо явно прописывать `sys.path.insert`, лучше использовать `os.path.abspath`
+    -   Необходимо добавить документацию к функциям и модулю.
 
 **Рекомендации по улучшению**
 
-1.  Добавить reStructuredText документацию для модуля, функций.
-2.  Заменить `print` на логирование с использованием `logger` из `src.logger.logger`.
-3.  Уточнить пути импорта и использовать абсолютные пути.
-4.  Использовать `j_loads` для чтения файлов ноутбуков.
-5.  Перенести `TIMEOUT` и `KERNEL_NAME` в переменные окружения или конфигурационный файл.
-6.  Разделить `try-except` блок на более конкретные блоки, логировать ошибки с помощью `logger.error`.
-7.  Добавить проверку на наличие директории перед ее использованием.
-8.  Использовать f-строки для форматирования логов.
+1.  **Использование `j_loads`**: Заменить `nbformat.read` на `j_loads` для чтения файлов.
+2.  **Логирование**: Добавить логирование ошибок с помощью `logger.error`.
+3.  **Документация**: Привести комментарии к стандарту RST, добавить документацию к функциям и модулю.
+4.  **Абсолютные пути**: Использовать `os.path.abspath` для работы с путями.
+5.  **Удалить sys.path.insert**:  Использовать `os.path.abspath` для работы с путями.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для тестирования выполнения Jupyter Notebook.
+Модуль для тестирования Jupyter Notebook
 =========================================================================================
 
-Этот модуль содержит функции для поиска и выполнения Jupyter Notebooks
-и проверки их на отсутствие ошибок.
+Этот модуль содержит тесты для выполнения Jupyter Notebook файлов и проверки отсутствия исключений.
 
 Пример использования
 --------------------
 
+Запуск тестов для всех ноутбуков в папке `../examples/`:
+
 .. code-block:: python
 
-    pytest test_jupyter_examples.py
+    pytest tests/scenarios/test_jupyter_examples.py
+
 """
 import os
-# from src.utils.jjson import j_loads # убрал, так как json не используется
+#from src.utils.jjson import j_loads, j_loads_ns # TODO удалить если не нужно 
 import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 import pytest
-from src.logger.logger import logger # подключаем логер
-
-import sys
-sys.path.insert(0, 'src/ai/tiny_troupe/TinyTroupe/') # ensures that the package is imported from the parent directory, not the Python installation
-sys.path.insert(0, 'src/') # ensures that the package is imported from the parent directory, not the Python installation
-sys.path.insert(0, 'src/ai/tiny_troupe/') # ensures that the package is imported from the parent directory, not the Python installation
+#from src.logger.logger import logger # TODO удалить если не нужно
+#import sys # TODO удалить
+#sys.path.insert(0, os.path.abspath('../../tinytroupe/')) # ensures that the package is imported from the parent directory, not the Python installation # TODO удалить
+#sys.path.insert(0, os.path.abspath('../../')) # ensures that the package is imported from the parent directory, not the Python installation # TODO удалить
+#sys.path.insert(0, os.path.abspath('../')) # ensures that the package is imported from the parent directory, not the Python installation # TODO удалить
 
 # Set the folder containing the notebooks
-NOTEBOOK_FOLDER = "examples"  # Update this path
-if not os.path.exists(NOTEBOOK_FOLDER):
-    logger.error(f"Директория '{NOTEBOOK_FOLDER}' не найдена.")
-    raise FileNotFoundError(f"Директория '{NOTEBOOK_FOLDER}' не найдена.")
+NOTEBOOK_FOLDER = os.path.abspath("../examples/")  # Update this path # задаем абсолютный путь
+
 # Set a timeout for long-running notebooks
 TIMEOUT = 600
 
 KERNEL_NAME = "python3" #"py310"
 
-
-def get_notebooks(folder: str) -> list[str]:
+def get_notebooks(folder: str) -> list:
     """
-    Извлекает все файлы Jupyter notebook из указанной папки.
+    Извлекает все Jupyter notebook файлы из указанной папки.
 
     :param folder: Путь к папке с ноутбуками.
     :return: Список путей к файлам ноутбуков.
@@ -79,38 +72,37 @@ def get_notebooks(folder: str) -> list[str]:
         if f.endswith(".ipynb") and not ".executed." in f and not ".local." in f
     ]
 
-
 @pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
-def test_notebook_execution(notebook_path: str):
+def test_notebook_execution(notebook_path: str) -> None:
     """
-    Выполняет Jupyter notebook и проверяет, что не возникает исключений.
+    Выполняет Jupyter notebook и проверяет отсутствие исключений.
 
     :param notebook_path: Путь к файлу ноутбука.
     """
     try:
-        # открываем файл с ноутбуком
+    # открываем файл ноутбука
         with open(notebook_path, "r", encoding="utf-8") as nb_file:
-            # Читаем содержимое файла
+            # читаем содержимое ноутбука
             notebook = nbformat.read(nb_file, as_version=4)
-        logger.info(f"Выполнение ноутбука: {notebook_path} с ядром: {KERNEL_NAME}")
-        # инициализируем препроцессор
-        ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
+            print(f"Executing notebook: {notebook_path} with kernel: {KERNEL_NAME}")
+             # инициализируем препроцессор для выполнения ячеек
+            ep = ExecutePreprocessor(timeout=TIMEOUT, kernel_name=KERNEL_NAME)
 
-        # Выполняем notebook
-        ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
-        logger.info(f"Ноутбук {notebook_path} выполнен успешно.")
-
+            # выполняем ноутбук
+            ep.preprocess(notebook, {'metadata': {'path': NOTEBOOK_FOLDER}})
+            print(f"Notebook {notebook_path} executed successfully.")
+    # обрабатываем исключения, которые могут возникнуть при выполнении
     except Exception as e:
-        logger.error(f"Ноутбук {notebook_path} вызвал исключение: {e}")
-        pytest.fail(f"Ноутбук {notebook_path} вызвал исключение: {e}")
-
+        # если возникло исключение, тест считается проваленным
+        pytest.fail(f"Notebook {notebook_path} raised an exception: {e}")
+    
     finally:
-        # сохраняем копию выполненного ноутбука
+        # создаем путь для сохранения выполненной копии ноутбука
         output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
-        try:
-            with open(output_path, "w", encoding="utf-8") as out_file:
-                nbformat.write(notebook, out_file)
-            logger.info(f"Выполненный ноутбук сохранен как: {output_path}")
-        except Exception as e:
-           logger.error(f"Не удалось сохранить выполненный ноутбук: {output_path}, ошибка: {e}")
+        # открываем файл для записи выполненного ноутбука
+        with open(output_path, "w", encoding="utf-8") as out_file:
+            # сохраняем выполненный ноутбук
+            nbformat.write(notebook, out_file)
+        
+        print(f"Executed notebook saved as: {output_path}")
 ```

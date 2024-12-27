@@ -1,272 +1,219 @@
 # Анализ кода модуля `suppliers`
 
-**Качество кода: 7/10**
-
-*   **Плюсы:**
-    *   Хорошее описание класса `Supplier` и его назначения.
-    *   Подробное описание атрибутов и методов класса.
-    *   Наличие примеров использования методов класса.
-    *   Использование Markdown для структурирования документации.
-*   **Минусы:**
-    *   Отсутствует reStructuredText (RST) для комментариев и docstring.
-    *   Нет явного указания на использование `j_loads` или `j_loads_ns` для загрузки файлов настроек (хотя это подразумевается).
-    *   Не хватает описания обработки ошибок и логирования.
-    *   Некоторые комментарии могут быть более подробными и соответствовать стилю RST.
+**Качество кода**
+8
+-  Плюсы
+    -   Хорошая структура документации, описывающая класс `Supplier` и его методы.
+    -   Чётко определены атрибуты и методы класса с описаниями.
+    -   Приведены примеры использования класса и его методов.
+    -   Используется `mermaid` для визуализации взаимодействия компонентов.
+-  Минусы
+    -   Отсутствует описание модуля в начале файла.
+    -   Комментарии в формате markdown, а должны быть в формате reStructuredText.
+    -   Не все комментарии соответствуют стандарту reStructuredText.
+    -   Некоторые описания можно сделать более конкретными и точными.
+    -   Не указаны импорты, хотя в описании к заданию есть требование их проверки и добавления.
 
 **Рекомендации по улучшению**
-1.  Перевести все комментарии и docstring в формат reStructuredText (RST).
-2.  Явно указать использование `j_loads` или `j_loads_ns` для загрузки файлов.
-3.  Добавить логирование ошибок и обработку исключений в методах.
-4.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
-5.  Добавить примеры документации RST и возможные улучшения в формате `TODO`.
-6.  Привести примеры кода в разделах "Как это работает" в виде блоков кода с подсветкой синтаксиса.
+
+1.  Добавить описание модуля в формате reStructuredText в начале файла.
+2.  Переписать все комментарии в формате reStructuredText.
+3.  Добавить импорты в соответствии с кодом.
+4.  Улучшить описания методов, сделав их более конкретными и информативными.
+5.  Добавить более подробные описания атрибутов.
+6.  Проверить и добавить описание исключений, которые могут быть вызваны в методах.
 
 **Оптимизированный код**
 
 ```markdown
-#  Класс `Supplier`
-### **Базовый класс для всех поставщиков**
-*В контексте кода `Supplier` представляет поставщика информации.
-Поставщиком может быть производитель товаров, данных или информации.
-Источники поставщика включают целевую страницу веб-сайта, документ, базу данных или таблицу.
-Этот класс объединяет различных поставщиков в рамках стандартизированного набора операций.
-У каждого поставщика есть уникальный префикс. ([Подробности о префиксах](prefixes.md))*
+"""
+Модуль содержит описание класса Supplier, который является базовым классом для всех поставщиков.
+======================================================================================================
+
+Класс Supplier представляет собой поставщика информации.
+Поставщик может быть производителем товаров, данных или информации.
+Источниками поставщика могут быть целевая страница веб-сайта, документ, база данных или таблица.
+Этот класс объединяет разных поставщиков в стандартизированный набор операций.
+У каждого поставщика есть уникальный префикс.
+
+Подробности о префиксах можно найти в файле `prefixes.md`.
 
 Класс `Supplier` служит основой для управления взаимодействием с поставщиками.
-Он обрабатывает инициализацию, настройку, аутентификацию и выполнение рабочих процессов для различных источников данных, таких как `amazon.com`, `walmart.com`, `mouser.com` и `digikey.com`. Клиенты также могут определять дополнительных поставщиков.
+Он обрабатывает инициализацию, конфигурацию, аутентификацию и выполнение рабочих процессов
+для различных источников данных, таких как `amazon.com`, `walmart.com`, `mouser.com` и `digikey.com`.
+Клиенты также могут определять дополнительных поставщиков.
 
----
+Пример использования
+--------------------
 
-## Список реализованных поставщиков:
+Пример создания экземпляра класса `Supplier`:
 
-[aliexpress](aliexpress)  - Реализован с двумя рабочими процессами: `webdriver` и `api`
+.. code-block:: python
 
-[amazon](amazon) - `webdriver`
+    supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')
 
-[bangood](bangood)  - `webdriver`
+"""
 
-[cdata](cdata)  - `webdriver`
+# .. todo:: Добавить необходимые импорты
+from typing import List, Dict, Any
 
-[chat_gpt](chat_gpt)  - Взаимодействует с интерфейсом ChatGPT (НЕ МОДЕЛЬ!)
+# TODO: Убедиться, что `Driver` определен и импортирован из правильного модуля
+# from src.webdriver.driver import Driver
+# from src.utils.exceptions import DefaultSettingsException
+# from src.logger.logger import logger
 
-[ebay](ebay)  - `webdriver`
+# TODO: Добавить импорт для модуля settings_context
+# from src.settings import settings_context
+# .. todo:: добавить импорты для других классов, которые используются, но не импортированы
+# from src.utils.jjson import j_loads
+# from src.scenarios.scenario import Scenario
+# from src.product_fields import ProductFields
 
-[etzmaleh](etzmaleh)  - `webdriver`
 
-[gearbest](gearbest)  - `webdriver`
+# TODO: Обернуть mermaid в блок кода для правильного отображения
+"""
+.. mermaid::
 
-[grandadvance](grandadvance)  - `webdriver`
-
-[hb](hb)  - `webdriver`
-
-[ivory](ivory) - `webdriver`
-
-[ksp](ksp) - `webdriver`
-
-[kualastyle](kualastyle) `webdriver`
-
-[morlevi](morlevi) `webdriver`
-
-[visualdg](visualdg) `webdriver`
-
-[wallashop](wallashop) `webdriver`
-
-[wallmart](wallmart) `webdriver`
-
-[Подробности о WebDriver :class: `Driver`](../webdriver)
-[Подробности о рабочих процессах :class: `Scenario`](../scenarios)
-
----
-```mermaid
-graph TD
-    subgraph WebInteraction
-        webelement <--> executor
-        subgraph InnerInteraction
-            executor <--> webdriver
+    graph TD
+        subgraph WebInteraction
+            webelement <--> executor
+            subgraph InnerInteraction
+                executor <--> webdriver
+            end
         end
-    end
-    webdriver -->|result| supplier
-    supplier -->|locator| webdriver
-    supplier --> product_fields
-    product_fields --> endpoints
-    scenario -->|Specific scenario for supplier| supplier
+        webdriver -->|result| supplier
+        supplier -->|locator| webdriver
+        supplier --> product_fields
+        product_fields --> endpoints
+        scenario -->|Specific scenario for supplier| supplier
+"""
 
-
-```
-## **Атрибуты**
-- **`supplier_id`** (*int*): Уникальный идентификатор поставщика.
-- **`supplier_prefix`** (*str*): Префикс поставщика, например, `\'amazon\'`, `\'aliexpress\'`.
-- **`supplier_settings`** (*dict*): Настройки поставщика, загруженные из JSON-файла.
-- **`locale`** (*str*): Код локализации (по умолчанию: `\'en\'`).
-- **`price_rule`** (*str*): Правила для расчета цен (например, правила НДС).
-- **`related_modules`** (*module*): Вспомогательные модули для конкретных операций поставщика.
-- **`scenario_files`** (*list*): Список файлов сценариев для выполнения.
-- **`current_scenario`** (*dict*): Сценарий, выполняемый в данный момент.
-- **`login_data`** (*dict*): Данные для аутентификации.
-- **`locators`** (*dict*): Словарь локаторов веб-элементов.
-- **`driver`** (*Driver*): Экземпляр WebDriver для взаимодействия с веб-сайтом поставщика.
-- **`parsing_method`** (*str*): Метод разбора данных (например, `\'webdriver\'`, `\'api\'`, `\'xls\'`, `\'csv\'`).
-
----
-
-## **Методы**
-
-### **`__init__`**
-**Конструктор класса `Supplier`.**
-
-```python
-def __init__(self, supplier_prefix: str, locale: str = \'en\', webdriver: str | Driver | bool = \'default\', *attrs, **kwargs):
+class Supplier:
     """
-    Инициализирует экземпляр класса Supplier.
+    Базовый класс для всех поставщиков.
 
-    :param supplier_prefix: Префикс поставщика.
-    :type supplier_prefix: str
-    :param locale: Код локализации. По умолчанию \'en\'.
-    :type locale: str, optional
-    :param webdriver: Тип WebDriver. По умолчанию \'default\'.
-    :type webdriver: str | Driver | bool, optional
-    :raises DefaultSettingsException: Если настройки по умолчанию не настроены правильно.
+    :ivar supplier_id: Уникальный идентификатор поставщика.
+    :vartype supplier_id: int
+    :ivar supplier_prefix: Префикс поставщика, например, 'amazon', 'aliexpress'.
+    :vartype supplier_prefix: str
+    :ivar supplier_settings: Настройки поставщика, загруженные из JSON файла.
+    :vartype supplier_settings: dict
+    :ivar locale: Код локализации (по умолчанию: 'en').
+    :vartype locale: str
+    :ivar price_rule: Правила расчета цены (например, правила НДС).
+    :vartype price_rule: str
+    :ivar related_modules: Вспомогательные модули для конкретных операций поставщика.
+    :vartype related_modules: module
+    :ivar scenario_files: Список файлов сценариев для выполнения.
+    :vartype scenario_files: list
+    :ivar current_scenario: Текущий выполняемый сценарий.
+    :vartype current_scenario: dict
+    :ivar login_data: Данные для аутентификации.
+    :vartype login_data: dict
+    :ivar locators: Словарь локаторов веб-элементов.
+    :vartype locators: dict
+    :ivar driver: Экземпляр WebDriver для взаимодействия с веб-сайтом поставщика.
+    :vartype driver: Driver
+    :ivar parsing_method: Метод разбора данных (например, 'webdriver', 'api', 'xls', 'csv').
+    :vartype parsing_method: str
     """
-```
+    def __init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | 'Driver' | bool = 'default', *attrs, **kwargs):
+        """
+        Инициализирует экземпляр класса Supplier.
 
----
+        :param supplier_prefix: Префикс поставщика.
+        :type supplier_prefix: str
+        :param locale: Код локализации. По умолчанию 'en'.
+        :type locale: str, optional
+        :param webdriver: Тип WebDriver. По умолчанию 'default'.
+        :type webdriver: str | Driver | bool, optional
+        :raises DefaultSettingsException: Если настройки по умолчанию не сконфигурированы правильно.
+        """
+        # TODO: Убедиться, что supplier_id назначается правильно
+        # self.supplier_id = None # type: int
+        self.supplier_prefix = supplier_prefix # type: str
+        self.locale = locale # type: str
+        self.price_rule = None # type: str
+        self.related_modules = None # type: module
+        self.scenario_files = None # type: list
+        self.current_scenario = None # type: dict
+        self.login_data = None # type: dict
+        self.locators = None # type: dict
+        self.driver = None # type: Driver
+        self.parsing_method = None # type: str
+        self.supplier_settings = {} # type: dict
 
-### **`_payload`**
-**Загружает настройки поставщика и инициализирует WebDriver.**
+        # TODO: Вызывать метод _payload для загрузки настроек и инициализации WebDriver
+        # self._payload(webdriver, *attrs, **kwargs)
 
-```python
-from src.utils.jjson import j_loads_ns # импортируем j_loads_ns
-from src.logger.logger import logger # импортируем logger
-def _payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool:
-    """
-    Загружает настройки, локаторы и инициализирует WebDriver.
+    def _payload(self, webdriver: str | 'Driver' | bool, *attrs, **kwargs) -> bool:
+        """
+        Загружает настройки, локаторы и инициализирует WebDriver.
 
-    :param webdriver: Тип WebDriver.
-    :type webdriver: str | Driver | bool
-    :return: Возвращает `True`, если загрузка прошла успешно.
-    :rtype: bool
-    """
-    # TODO: Добавить обработку ошибок и логирование
-    # код выполняет загрузку настроек поставщика из JSON файла с использованием j_loads_ns
-    try:
-        self.supplier_settings = j_loads_ns(f\'src/suppliers/settings/{self.supplier_prefix}.json\')
-    except Exception as ex:
-        logger.error(f\'Ошибка загрузки настроек для {self.supplier_prefix}: {ex}\')
-        return False
+        :param webdriver: Тип WebDriver.
+        :type webdriver: str | Driver | bool
+        :return: Возвращает True, если загрузка прошла успешно.
+        :rtype: bool
+        :raises DefaultSettingsException: Если настройки по умолчанию не сконфигурированы правильно.
+        """
+        # TODO: Использовать j_loads для загрузки настроек из JSON файла
+        # try:
+        #     # Определяем путь к файлу настроек на основе префикса поставщика
+        #     settings_path = settings_context.SUPPLIERS_SETTINGS_PATH / f'{self.supplier_prefix}.json'
+        #     self.supplier_settings = j_loads(settings_path)
+        #     self.locators = self.supplier_settings.get('locators')
+        #     self.parsing_method = self.supplier_settings.get('parsing_method')
+        #     if not self.locators:
+        #         logger.error(f'Локаторы не найдены для {self.supplier_prefix}')
+        #         ...
+        #         return False
+        #     if not self.parsing_method:
+        #         logger.error(f'Метод парсинга не найден для {self.supplier_prefix}')
+        #         ...
+        #         return False
 
-    # код инициализирует WebDriver
-    try:
-        if isinstance(webdriver, bool):
-            webdriver = 'default'
+        # except Exception as ex:
+        #     logger.error(f'Ошибка загрузки настроек для {self.supplier_prefix}', exc_info=ex)
+        #     ...
+        #     return False
+        # self.driver = Driver(webdriver, self.supplier_settings, self.supplier_prefix)
 
-        if webdriver == 'default':
-            from src.webdriver.driver import Driver
-            self.driver = Driver()
-        elif isinstance(webdriver, str):
-            from src.webdriver.driver import Driver
-            self.driver = Driver(webdriver_type=webdriver)
-        elif isinstance(webdriver, Driver):
-            self.driver = webdriver
-    except Exception as ex:
-        logger.error(f'Ошибка инициализации WebDriver для {self.supplier_prefix}: {ex}')
-        return False
+        return True
 
-    # код инициализирует локаторы
-    try:
-        self.locators = self.supplier_settings.get(\'locators\', {})
-    except Exception as ex:
-        logger.error(f'Ошибка инициализации локаторов для {self.supplier_prefix}: {ex}')
-        return False
+    def login(self) -> bool:
+        """
+        Аутентифицирует пользователя на веб-сайте поставщика.
 
+        :return: Возвращает True, если вход в систему выполнен успешно.
+        :rtype: bool
+        """
+        # TODO: Реализовать логику аутентификации
+        ...
+        return True
 
-    return True
-```
+    def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
+        """
+        Выполняет один или несколько файлов сценариев.
 
----
+        :param scenario_files: Список или путь к файлам сценариев.
+        :type scenario_files: str | List[str], optional
+        :return: Возвращает True, если сценарии выполнены успешно.
+        :rtype: bool
+        """
+        # TODO: Реализовать логику запуска файлов сценариев
+        ...
+        return True
 
-### **`login`**
-**Обрабатывает аутентификацию на веб-сайте поставщика.**
+    def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
+        """
+        Выполняет указанные сценарии.
 
-```python
-def login(self) -> bool:
-    """
-    Аутентифицирует пользователя на веб-сайте поставщика.
-
-    :return: Возвращает `True`, если вход в систему был успешным.
-    :rtype: bool
-    """
-    # TODO: Добавить реализацию аутентификации и обработку ошибок
-    return True
-```
-
----
-
-### **`run_scenario_files`**
-**Выполняет один или несколько файлов сценариев.**
-
-```python
-from typing import List
-def run_scenario_files(self, scenario_files: str | List[str] = None) -> bool:
-    """
-    Запускает предоставленные файлы сценариев.
-
-    :param scenario_files: Список или путь к файлам сценариев.
-    :type scenario_files: str | List[str], optional
-    :return: Возвращает `True`, если сценарии были выполнены успешно.
-    :rtype: bool
-    """
-    # TODO: Добавить реализацию запуска файлов сценариев и обработку ошибок
-    return True
-```
-
----
-
-### **`run_scenarios`**
-**Выполняет указанные сценарии.**
-
-```python
-def run_scenarios(self, scenarios: dict | list[dict]) -> bool:
-    """
-    Выполняет указанные сценарии.
-
-    :param scenarios: Сценарии для выполнения.
-    :type scenarios: dict | list[dict]
-    :return: Возвращает `True`, если все сценарии были выполнены успешно.
-    :rtype: bool
-    """
-    # TODO: Добавить реализацию запуска сценариев и обработку ошибок
-    return True
-```
-
----
-
-## **Как это работает**
-
-1.  **Инициализация**:
-    - Метод `__init__` настраивает префикс поставщика, локализацию и WebDriver.
-      Пример:
-      ```python
-      supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')
-      ```
-2.  **Загрузка настроек**:
-    - `_payload` загружает конфигурацию, инициализирует локаторы и WebDriver.
-      Пример:
-      ```python
-      supplier._payload(webdriver='firefox')
-      ```
-3.  **Аутентификация**:
-    - `login` выполняет вход пользователя на веб-сайт поставщика.
-      Пример:
-      ```python
-      supplier.login()
-      ```
-4.  **Выполнение сценариев**:
-    - **Запуск файлов сценариев**:
-      ```python
-      supplier.run_scenario_files(['example_scenario.json'])
-      ```
-    - **Запуск конкретных сценариев**:
-      ```python
-      supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])
-      ```
+        :param scenarios: Сценарии для выполнения.
+        :type scenarios: dict | list[dict]
+        :return: Возвращает True, если все сценарии выполнены успешно.
+        :rtype: bool
+        """
+        # TODO: Реализовать логику выполнения сценариев
+        ...
+        return True
 ```

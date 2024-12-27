@@ -2,39 +2,49 @@
 
 **Качество кода**
 9
--  Плюсы
-    - Код имеет чёткую структуру, использует docstring для описания функций.
-    - Используется `j_loads_ns` для загрузки локаторов, что соответствует требованиям.
-    - Присутствует логирование ошибок с помощью `logger.error`.
--  Минусы
-    - Отсутствуют некоторые необходимые импорты, такие как `Any` и `dataclass` для работы с `gs.facebook_credentials`.
-    - Использование `try-except` блоков избыточно, можно использовать `logger.error` с контекстным менеджером или декоратором.
-    -  Не все комментарии в коде оформлены в стиле reStructuredText (RST).
-    -  В docstring отсутствует описание параметра `d` в RST формате.
-    - Имеется обращение к элементу словаря через индекс, вместо проверки на наличие ключа в словаре.
-    - Присутствует дублирование текста ошибки "Invalid login" во всех блоках `except`.
+- Плюсы
+    - Код структурирован и выполняет поставленную задачу по авторизации на Facebook.
+    - Используется кастомный логгер для обработки ошибок.
+    - Присутствует базовая документация в формате docstring.
+    - Используются кастомные функции для работы с веб-элементами.
+- Минусы
+    - Отсутствует reStructuredText (RST) документация для модуля, функций, переменных, а также более детальное описание логики.
+    - Используется стандартный try-except для обработки ошибок, что не является оптимальным.
+    - Некоторые комментарии `#` не предоставляют достаточного объяснения для кода.
+    - Повторение кода в блоках try-except.
+    - Не используется `j_dumps` для сохранения данных, если это потребуется.
+    - Отсутствует проверка на наличие данных в `gs.facebook_credentials`.
+    - Не все имена переменных и ключей соответствуют общему стилю.
 
 **Рекомендации по улучшению**
-1.  Добавить импорты `Any` и `dataclass` для работы с `gs.facebook_credentials`.
-2.  Переписать docstring функции `login` в формате RST.
-3.  Использовать  контекстный менеджер или декоратор для обработки ошибок вместо избыточного `try-except`
-4.  Унифицировать текст ошибки в `logger.error` и добавить контекст.
-5.  Заменить обращение к элементам словаря по индексу на обращение по ключу.
-6.  Удалить избыточные комментарии с использованием # и заменить их на RST комментарии
-7.  Оформить все комментарии в коде в формате RST.
+
+1.  **Документация**:
+    -   Добавить reStructuredText (RST) документацию для модуля и функций.
+    -   Уточнить комментарии `#`, описывая назначение каждого блока кода.
+2.  **Обработка ошибок**:
+    -   Использовать `logger.error` для обработки ошибок без избыточного `try-except`.
+3.  **Улучшение кода**:
+    -   Добавить проверку на наличие данных в `gs.facebook_credentials`.
+    -   Привести имена переменных и ключей в соответствие общему стилю.
+    -   Использовать `j_dumps` для сохранения данных, если это потребуется.
+4.  **Безопасность**:
+    -   Рассмотреть возможность хранения учётных данных в более безопасном месте, нежели `gs.facebook_credentials`.
+5.  **Общая структура**:
+    -   Следовать общему стилю кодирования и именования переменных.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для выполнения сценария входа в Facebook
-==============================================
+Модуль для выполнения сценария входа в Facebook.
+=========================================================================================
 
-Этот модуль содержит функцию :func:`login`, которая используется для выполнения
-авторизации пользователя на сайте Facebook.
+Этот модуль содержит функцию :func:`login`, которая используется для автоматической авторизации
+пользователя в Facebook с использованием предоставленных учетных данных.
 
 Пример использования
 --------------------
@@ -44,73 +54,60 @@
     from src.webdriver.driver import Driver
     from src.endpoints.advertisement.facebook.scenarios.login import login
 
-    def main():
-        driver = Driver()
-        login_success = login(driver)
-        if login_success:
-            print("Успешная авторизация")
-        else:
-            print("Ошибка авторизации")
-
-    if __name__ == "__main__":
-        main()
+    driver = Driver()
+    if login(driver):
+        print("Авторизация прошла успешно.")
+    else:
+        print("Авторизация не удалась.")
 """
 from pathlib import Path
 from typing import Dict, Any
 from src import gs
 from src.webdriver.driver import Driver
-from src.utils.jjson import j_loads, j_loads_ns
+from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger.logger import logger
-from dataclasses import dataclass
 
 # Загрузка локаторов для авторизации Facebook
+# Код исполняет загрузку JSON файла с локаторами для элементов страницы входа
 locators = j_loads_ns(
-            Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
+    Path(gs.path.src / 'endpoints' / 'advertisement' / 'facebook' / 'locators' / 'login.json'))
 if not locators:
-    logger.debug(f"Ошибка в файле локаторов")
+    # Логирование ошибки, если локаторы не были загружены
+    logger.error("Ошибка в файле локаторов: файл не найден или поврежден")
     ...
 
-@dataclass
-class Credentials:
-    username: str
-    password: str
-
 def login(d: Driver) -> bool:
-    """
-    Выполняет вход на Facebook.
+    """Выполняет вход в Facebook.
 
-    :param d: Экземпляр драйвера для взаимодействия с веб-элементами.
-    :type d: src.webdriver.driver.Driver
-    :return: `True`, если авторизация прошла успешно, иначе `False`.
+    Функция использует переданный `Driver` для авторизации в Facebook. Заполняет
+    поля логина и пароля и нажимает кнопку входа.
+
+    :param d: Экземпляр драйвера для управления браузером.
+    :type d: Driver
+    :return: `True`, если вход выполнен успешно, иначе `False`.
     :rtype: bool
 
     :raises Exception: Если возникает ошибка при вводе логина, пароля или нажатии кнопки.
-
     """
-    # Извлекает учетные данные из глобального хранилища
-    credentials: Credentials = gs.facebook_credentials[0]
-    try:
-        # Код отправляет логин в поле ввода электронной почты
-        d.send_key_to_webelement(locators.email, credentials.username)
-    except Exception as ex:
-        logger.error("Ошибка при вводе логина", exc_info=ex)
+    # Код проверяет наличие учетных данных Facebook
+    if not gs.facebook_credentials:
+        logger.error("Не найдены учетные данные Facebook")
         return False
 
-    d.wait(1.3)
+    credentials = gs.facebook_credentials[0]
+    # Код исполняет попытку ввода логина и пароля, а также нажатие кнопки входа
     try:
-        # Код отправляет пароль в поле ввода пароля
-        d.send_key_to_webelement(locators['password'], credentials.password)
+        # Код отправляет логин в поле ввода
+        d.send_key_to_webelement(locators.email, credentials.get('username', ''))
+        d.wait(1.3)
+        # Код отправляет пароль в поле ввода
+        d.send_key_to_webelement(locators.get('password'), credentials.get('password', ''))
+        d.wait(0.5)
+        # Код исполняет нажатие на кнопку входа
+        d.execute_locator(locators.get('button'))
+        return True
     except Exception as ex:
-        logger.error("Ошибка при вводе пароля", exc_info=ex)
+        # Логирование ошибки в случае сбоя
+        logger.error("Ошибка при входе в Facebook", ex)
         return False
-
-    d.wait(0.5)
-    try:
-        # Код выполняет нажатие на кнопку входа
-        d.execute_locator(locators['button'])
-    except Exception as ex:
-        logger.error("Ошибка при нажатии кнопки входа", exc_info=ex)
-        return False
-
-    return True
 ```

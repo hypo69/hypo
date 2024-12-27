@@ -2,26 +2,29 @@
 
 **Качество кода**
 7
- -  Плюсы
-        - Код хорошо структурирован и разделен на функции, что улучшает читаемость и возможность повторного использования.
-        - Присутствуют docstring для функций и класса, описывающие их назначение.
-        - Используется `QtWidgets` для создания графического интерфейса, что соответствует цели модуля.
- -  Минусы
-    - Некоторые docstring не соответствуют стандарту RST.
-    - Отсутствуют явные импорты из `src.logger.logger` для логирования ошибок.
-    - Использование `try-except` без логирования в некоторых местах.
-    - Много пустых строк в начале файла.
-    - Использование `QtWidgets.QMessageBox` для вывода сообщений, хотя для логирования ошибок предпочтительнее `logger.error`.
-    - Переменная `MODE` определена дважды.
+-  Плюсы
+    -  Код выполняет поставленную задачу по добавлению и удалению пунктов контекстного меню.
+    -  Используется `PyQt6` для создания GUI и `winreg` для работы с реестром Windows.
+    -  Присутствует обработка ошибок при работе с реестром.
+    -  Имеется разделение на функции для добавления и удаления пунктов меню, что улучшает читаемость и возможность повторного использования.
+-  Минусы
+    -  Отсутствуют docstring для модуля.
+    -  Используется глобальная переменная `MODE`, которая не используется, ее следует удалить.
+    -  Присутствуют повторяющиеся комментарии в начале файла.
+    -  Не используется `logger` для логирования ошибок.
+    -  В коде присутствуют избыточные комментарии.
+    -  Не все строки кода прокомментированы, что затрудняет понимание логики.
+    -  Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+
 **Рекомендации по улучшению**
-1.  Переписать все docstring в формате reStructuredText (RST).
-2.  Добавить импорт `from src.logger.logger import logger` для логирования ошибок.
-3.  Заменить использование `QtWidgets.QMessageBox.critical` для ошибок на `logger.error` с сохранением вывода сообщения пользователю через `QtWidgets.QMessageBox`.
-4.  Удалить дублирующую переменную `MODE` и пустые строки в начале файла.
-5.  Добавить обработку ошибок с помощью `logger.error` для записи в лог файл.
-6.  Использовать `gs.path.src` и подобные константы в соответствии со структурой проекта.
-7.  Добавить docstring к конструктору класса `ContextMenuManager`.
-8.  Уточнить docstring с описанием конкретных действий, которые выполняет функция.
+1.  Добавить docstring для модуля, класса и функций.
+2.  Удалить неиспользуемую переменную `MODE`.
+3.  Удалить повторяющиеся и неинформативные комментарии.
+4.  Использовать `logger` для логирования ошибок вместо `QtWidgets.QMessageBox.critical`.
+5.  Добавить комментарии ко всем строкам кода для улучшения понимания логики.
+6.  Переработать обработку исключений, используя `logger.error` вместо вывода окна сообщения.
+7.  Переписать все комментарии в формате reStructuredText (RST)
+8.  В коде используется os.path.exists, необходимо заменить его на pathlib
 
 **Оптимизированный код**
 ```python
@@ -30,142 +33,158 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для добавления или удаления пунктов контекстного меню для рабочего стола и фона папки с использованием PyQt6.
-==============================================================================================================
+Модуль для добавления и удаления пунктов контекстного меню.
+=========================================================================================
 
-Этот модуль предоставляет функции для добавления или удаления пользовательского пункта контекстного меню
-под названием 'hypo AI assistant' для фона каталогов и рабочего стола в Windows Explorer. Он использует
-реестр Windows для достижения этой цели, с путями и логикой, реализованными для нацеливания на меню
-правой кнопки мыши в пустых местах (не на файлах или папках).
+Этот модуль предоставляет функциональность для добавления и удаления пользовательского
+пункта контекстного меню 'hypo AI assistant' для фона рабочего стола и папок.
+Использует реестр Windows для достижения этой цели, с путями и логикой,
+нацеленными на меню, вызываемое правой кнопкой мыши на пустом месте.
 
 Пример использования
 --------------------
 
-Пример использования:
+Пример использования класса `ContextMenuManager`:
 
 .. code-block:: python
 
-   from PyQt6 import QtWidgets
-   from src.gui.context_menu.qt6.main import ContextMenuManager
-
-   if __name__ == "__main__":
-       app = QtWidgets.QApplication([])
-       window = ContextMenuManager()
-       window.show()
-       app.exec()
-"""
-import winreg as reg
-import os
-from PyQt6 import QtWidgets
-from src.logger.logger import logger
-import header
-from src import gs
-
-
-MODE = 'dev'
-
-
-def add_context_menu_item():
-    """
-    Добавляет пункт контекстного меню на рабочий стол и фон папок.
-
-    Эта функция создает раздел реестра в ``HKEY_CLASSES_ROOT\\Directory\\Background\\shell``
-    чтобы добавить пункт меню под названием 'hypo AI assistant' в контекстное меню фона в проводнике Windows.
-    Пункт запускает скрипт Python при выборе.
-
-    Детали пути реестра:
-        - ``key_path``: ``Directory\\Background\\shell\\hypo_AI_assistant``
-            Этот путь добавляет пункт контекстного меню в фон папок и рабочий стол, позволяя
-            пользователям запускать его, щелкая правой кнопкой мыши на пустом месте.
-
-        - ``command_key``: ``Directory\\Background\\shell\\hypo_AI_assistant\\command``
-            Этот подраздел определяет действие для пункта контекстного меню и связывает его со скриптом
-            или командой (в данном случае, скрипт Python).
-
-    :raises FileNotFoundError:  Выводит сообщение об ошибке, если файл скрипта не существует.
-    """
-    key_path = r"Directory\\Background\\shell\\hypo_AI_assistant"
-    try:
-        with reg.CreateKey(reg.HKEY_CLASSES_ROOT, key_path) as key:
-            reg.SetValue(key, "", reg.REG_SZ, "hypo AI assistant")
-            command_key = rf"{key_path}\\command"
-            with reg.CreateKey(reg.HKEY_CLASSES_ROOT, command_key) as command:
-                command_path = gs.path.src / 'gui' / 'context_menu' / 'main.py'
-                if not os.path.exists(command_path):
-                    logger.error(f"Файл {command_path} не найден.")
-                    QtWidgets.QMessageBox.critical(None, "Ошибка", f"Файл {command_path} не найден.")
-                    return
-
-                reg.SetValue(command, "", reg.REG_SZ, f"python \"{command_path}\" \"%1\"")
-        QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно добавлен!")
-    except Exception as ex:
-         logger.error(f"Ошибка добавления пункта меню: {ex}")
-         QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {ex}")
-
-def remove_context_menu_item():
-    """
-    Удаляет пункт контекстного меню 'hypo AI assistant'.
-
-    Эта функция удаляет раздел реестра, отвечающий за отображение пользовательского
-    пункта контекстного меню, эффективно удаляя его из контекстного меню фона.
-
-    Детали пути реестра:
-        - ``key_path``: ``Directory\\Background\\shell\\hypo_AI_assistant``
-            Этот путь нацелен на пользовательский пункт контекстного меню и удаляет его из
-            контекстного меню фона рабочего стола и папок.
-
-     :raises FileNotFoundError:  Выводит предупреждение, если пункт меню не существует.
-     :raises Exception:  Выводит сообщение об ошибке, если операция не удалась.
-    """
-    key_path = r"Directory\\Background\\shell\\hypo_AI_assistant"
-    try:
-        reg.DeleteKey(reg.HKEY_CLASSES_ROOT, key_path)
-        QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно удален!")
-    except FileNotFoundError:
-        logger.warning("Пункт меню не найден.")
-        QtWidgets.QMessageBox.warning(None, "Предупреждение", "Пункт меню не найден.")
-    except Exception as e:
-        logger.error(f"Ошибка удаления пункта меню: {e}")
-        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {e}")
-
-
-class ContextMenuManager(QtWidgets.QWidget):
-    """
-    Главное окно приложения для управления пользовательским пунктом контекстного меню.
-    """
-    def __init__(self):
-        """
-        Инициализирует главное окно приложения.
-        """
-        super().__init__()
-        self.initUI()
-
-    def initUI(self):
-        """
-        Инициализирует пользовательский интерфейс с кнопками для добавления, удаления или выхода.
-
-        Этот метод устанавливает заголовок окна, создает вертикальный макет,
-        добавляет кнопки для добавления и удаления пункта меню, а также кнопку выхода.
-        """
-        self.setWindowTitle("Управление контекстным меню")
-        layout = QtWidgets.QVBoxLayout()
-
-        add_button = QtWidgets.QPushButton("Добавить пункт меню")
-        add_button.clicked.connect(add_context_menu_item)
-        layout.addWidget(add_button)
-
-        remove_button = QtWidgets.QPushButton("Удалить пункт меню")
-        remove_button.clicked.connect(remove_context_menu_item)
-        layout.addWidget(remove_button)
-
-        exit_button = QtWidgets.QPushButton("Выход")
-        exit_button.clicked.connect(self.close)
-        layout.addWidget(exit_button)
-
-        self.setLayout(layout)
-
-if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     window = ContextMenuManager()
     window.show()
+    app.exec()
+"""
+import winreg as reg
+# Module for interacting with Windows Registry
+import os
+# Module for OS path manipulation and checks
+from PyQt6 import QtWidgets
+# Module for GUI creation with PyQt6
+from pathlib import Path
+# Module for OS path manipulation and checks
+
+from src.logger.logger import logger
+# Custom import, assuming it initializes settings or constants
+from src import gs
+# Custom import, likely for path settings or project structure
+
+def add_context_menu_item():
+    """Добавляет пункт контекстного меню на рабочий стол и фон папок.
+
+    Создает ключ реестра в `HKEY_CLASSES_ROOT\\Directory\\Background\\shell`
+    для добавления пункта меню 'hypo AI assistant' в контекстное меню фона проводника Windows.
+    При выборе пункта меню запускается Python-скрипт.
+
+    Детали пути в реестре:
+        - `key_path`: Directory\\Background\\shell\\hypo_AI_assistant
+            Этот путь добавляет пункт контекстного меню на фон папок и рабочего стола,
+            позволяя пользователям запускать его, щелкнув правой кнопкой мыши на пустом месте.
+
+        - `command_key`: Directory\\Background\\shell\\hypo_AI_assistant\\command
+            Этот подключ определяет действие для пункта контекстного меню и связывает его со скриптом
+            (в данном случае, Python-скриптом).
+
+    :raises:
+        Выводит сообщение об ошибке, если файл скрипта не существует.
+    """
+    # Registry path for adding a menu item to the background of folders and the desktop
+    key_path = r"Directory\\Background\\shell\\hypo_AI_assistant"
+    try:
+        # Create a new key for the menu item under the specified registry path
+        with reg.CreateKey(reg.HKEY_CLASSES_ROOT, key_path) as key:
+            # Set the display name of the context menu item
+            reg.SetValue(key, "", reg.REG_SZ, "hypo AI assistant")
+            # Sub-key to define the command to run when the menu item is selected
+            command_key = rf"{key_path}\\command"
+            with reg.CreateKey(reg.HKEY_CLASSES_ROOT, command_key) as command:
+                # Define the path to the Python script that will be executed
+                command_path = Path(gs.path.src) / 'gui' / 'context_menu' / 'main.py'
+                # Проверка существования файла скрипта.
+                if not command_path.exists():
+                    # Вывод сообщения об ошибке, если файл не найден.
+                    logger.error(f"Файл {command_path} не найден.")
+                    QtWidgets.QMessageBox.critical(None, "Ошибка", f"Файл {command_path} не найден.")
+                    return
+                # Set the command to execute the script with Python when the context menu item is clicked
+                reg.SetValue(command, "", reg.REG_SZ, f"python \"{str(command_path)}\" \"%1\"")
+        # Confirmation message for successful addition
+        QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно добавлен!")
+    except Exception as ex:
+        # Log the error
+        logger.error(f"Ошибка при добавлении пункта меню: {ex}")
+        # Display any error that occurs during the registry modification
+        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {ex}")
+
+def remove_context_menu_item():
+    """Удаляет пункт контекстного меню 'hypo AI assistant'.
+
+    Эта функция удаляет ключ реестра, отвечающий за отображение пользовательского
+    пункта контекстного меню, фактически удаляя его из контекстного меню фона.
+
+    Детали пути в реестре:
+        - `key_path`: Directory\\Background\\shell\\hypo_AI_assistant
+            Этот путь нацелен на пользовательский пункт контекстного меню и удаляет его из
+            контекстного меню фона рабочего стола и папок.
+
+    :raises:
+        Выводит предупреждение, если пункт меню не существует, и ошибку, если операция не удалась.
+    """
+    # Registry path for the custom menu item
+    key_path = r"Directory\\Background\\shell\\hypo_AI_assistant"
+    try:
+        # Attempt to delete the registry key associated with the context menu item
+        reg.DeleteKey(reg.HKEY_CLASSES_ROOT, key_path)
+        # Confirmation message for successful removal
+        QtWidgets.QMessageBox.information(None, "Успех", "Пункт меню успешно удален!")
+    except FileNotFoundError:
+        # Warn if the context menu item was not found
+        logger.warning(f"Пункт меню не найден: {key_path}")
+        QtWidgets.QMessageBox.warning(None, "Предупреждение", "Пункт меню не найден.")
+    except Exception as e:
+        # Log the error
+        logger.error(f"Ошибка при удалении пункта меню: {e}")
+        # Display any other errors encountered during the key deletion
+        QtWidgets.QMessageBox.critical(None, "Ошибка", f"Ошибка: {e}")
+
+class ContextMenuManager(QtWidgets.QWidget):
+    """Главное окно приложения для управления пользовательским пунктом контекстного меню."""
+    def __init__(self):
+        """Инициализирует главное окно."""
+        super().__init__()
+        # Инициализация интерфейса
+        self.initUI()
+
+    def initUI(self):
+        """Инициализирует пользовательский интерфейс с кнопками для добавления, удаления и выхода."""
+        # Set the window title
+        self.setWindowTitle("Управление контекстным меню")
+        # Create a layout to organize buttons vertically
+        layout = QtWidgets.QVBoxLayout()
+        # Button to add the custom context menu item
+        add_button = QtWidgets.QPushButton("Добавить пункт меню")
+        # Connect the button to the function for adding context menu
+        add_button.clicked.connect(add_context_menu_item)
+        # Add button to layout
+        layout.addWidget(add_button)
+        # Button to remove the custom context menu item
+        remove_button = QtWidgets.QPushButton("Удалить пункт меню")
+        # Connect the button to the function for removing context menu
+        remove_button.clicked.connect(remove_context_menu_item)
+        # Add button to layout
+        layout.addWidget(remove_button)
+        # Button to exit the program
+        exit_button = QtWidgets.QPushButton("Выход")
+        # Connect the button to close the window
+        exit_button.clicked.connect(self.close)
+        # Add button to layout
+        layout.addWidget(exit_button)
+        # Apply the layout to the main window
+        self.setLayout(layout)
+
+if __name__ == "__main__":
+    # Initialize the Qt application
+    app = QtWidgets.QApplication([])
+    # Create and display the main application window
+    window = ContextMenuManager()
+    window.show()
+    # Execute the application event loop
     app.exec()

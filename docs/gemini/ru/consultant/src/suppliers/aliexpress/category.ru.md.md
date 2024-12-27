@@ -3,69 +3,92 @@
 **Качество кода**
 7
 - Плюсы
-    - Код содержит подробное описание модуля, включая его назначение, функции, примеры использования и структуру.
-    - Присутствует описание классов и методов, что облегчает понимание логики работы.
-    - Есть блок-схема в формате mermaid для визуализации процесса работы модуля.
-    - Приведены примеры использования основных функций и класса.
-    - Описаны зависимости и логирование, что помогает в настройке и отладке модуля.
+    - Присутствует общее описание модуля и его функциональности.
+    - Код хорошо структурирован с использованием Markdown для разделения на разделы.
+    - Есть описание функций, классов и методов, а также их параметров и возвращаемых значений.
+    - Приведены примеры использования основных функций модуля.
+    - Есть описание зависимостей и логирования.
+
 - Минусы
-    - Описание модуля выполнено в формате Markdown, а не RST.
-    - Отсутствуют doctstring в коде, что не позволяет автоматически генерировать документацию.
-    - Не указаны типы данных для аргументов функций в описании.
-    - Нет комментариев к коду внутри функций.
-    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - Нет импортов и примеров кода для функций.
-    - Не используются `logger.error` для обработки ошибок.
-    - Нет обработки ошибок.
+    - Отсутствует  пример кода Python с комментариями в формате reStructuredText (RST) внутри документа.
+    - Не используются `j_loads` или `j_loads_ns` для загрузки JSON.
+    - Отсутствует импорт необходимых модулей.
+    - Нет обработки ошибок и логирования с использованием `logger.error`.
+    - Нет единого форматирования в примерах кода Python.
+    - Нет примера использования `close_pop_up`.
+    - Нет пояснений в комментариях после `#` к каждому блоку кода.
+    - Присутствуют лишние слова, такие как "получаем", "делаем" и т.д. в комментариях
 
 **Рекомендации по улучшению**
 
-1.  Переписать описание модуля в формате reStructuredText (RST).
-2.  Добавить doctstring к функциям и методам с указанием типов аргументов и возвращаемых значений.
-3.  Использовать `j_loads` или `j_loads_ns` для чтения файлов.
-4.  Добавить импорты и примеры кода к функциям.
-5.  Использовать `logger.error` для обработки ошибок.
-6.  Добавить комментарии к коду внутри функций.
+1. **Документация в reStructuredText (RST)**:
+   - Переписать все комментарии и описания функций, методов и классов в формате RST.
+   - Добавить подробные docstring к каждой функции, методу и классу.
+
+2. **Импорты**:
+   - Добавить необходимые импорты в начало файла.
+   - Использовать `from src.logger.logger import logger` для логирования.
+   - Добавить импорт `j_loads` и `j_loads_ns` из `src.utils.jjson`.
+
+3. **Обработка данных**:
+   - Использовать `j_loads` или `j_loads_ns` для загрузки JSON.
+
+4. **Логирование**:
+   - Добавить логирование ошибок с использованием `logger.error` вместо `try-except` блоков.
+
+5. **Комментарии**:
+   - Добавить комментарии к каждому блоку кода, объясняя, что он выполняет.
+   - Избегать слов "получаем", "делаем", используя более конкретные формулировки, такие как "выполняет", "проверяет".
+
+6. **Структура кода**:
+   - Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+
+7. **Примеры кода**:
+   - Добавить примеры кода с комментариями в стиле RST.
 
 **Оптимизированный код**
 
 ```markdown
+# Модуль управления категориями Aliexpress
 """
-Модуль для управления категориями Aliexpress
-=================================================
+Модуль для работы с категориями товаров на Aliexpress.
+=========================================================================================
 
 Этот модуль предоставляет функциональность для работы с категориями товаров на платформе Aliexpress.
-Он включает функции для получения ссылок на товары в категории, обновления категорий на основе данных с сайта и операций с базой данных.
+Он включает функции для получения ссылок на товары в категории, обновления категорий на основе данных с сайта
+и операций с базой данных.
 
 Пример использования
 --------------------
 
-Пример использования функции `get_list_products_in_category`:
+Примеры использования функций модуля:
 
 .. code-block:: python
 
+    # Пример использования функции get_list_products_in_category
     products = get_list_products_in_category(supplier)
 
-Пример использования функции `update_categories_in_scenario_file`:
-
-.. code-block:: python
-
+    # Пример использования функции update_categories_in_scenario_file
     updated = update_categories_in_scenario_file(supplier, "scenario_file.json")
 
-Пример использования класса `DBAdaptor`:
-
-.. code-block:: python
-
+    # Пример использования DBAdaptor для операций с базой данных
     db = DBAdaptor()
     db.select(cat_id=123)
     db.insert()
     db.update()
     db.delete()
+"""
 
-Диаграмма работы модуля:
+import asyncio
+from typing import Any, List, Optional
+# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить импорт
+# from src.logger.logger import logger # TODO: добавить импорт
+# from src.db.manager_categories.suppliers_categories import DBAdaptor # TODO: добавить импорт
 
+#from src.suppliers.supplier import Supplier  #TODO: добавить импорт
+
+"""
 .. mermaid::
-
     flowchart TD
         A[Start] --> B[Получение данных с Aliexpress]
         B --> C{Есть ли категория?}
@@ -74,18 +97,10 @@
         D --> F[Сохранение данных в базу данных]
         E --> F
         F --> G[Завершение]
-
-
 """
+#TODO: Добавить описание работы диаграммы
 
-import asyncio
-from typing import Any, List, Optional
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить использование j_loads
-# from src.db.manager_categories.suppliers_categories import DBAdaptor # TODO: добавить импорт DBAdaptor
-# from src.logger.logger import logger # TODO: добавить импорт logger
-
-
-def get_list_products_in_category(s) -> List[str]:
+def get_list_products_in_category(s: Any) -> List[str]:
     """
     Считывает URL товаров со страницы категории. Если есть несколько страниц с товарами,
     функция будет перелистывать все страницы.
@@ -95,11 +110,12 @@ def get_list_products_in_category(s) -> List[str]:
     :return: Список URL продуктов в категории.
     :rtype: List[str]
     """
-    # TODO: implement function
+    # TODO: Добавить описание логики работы функции
     ...
+    return []
 
 
-def get_prod_urls_from_pagination(s) -> List[str]:
+def get_prod_urls_from_pagination(s: Any) -> List[str]:
     """
     Собирает ссылки на товары с страницы категории с перелистыванием страниц.
 
@@ -108,11 +124,11 @@ def get_prod_urls_from_pagination(s) -> List[str]:
     :return: Список ссылок на товары.
     :rtype: List[str]
     """
-    # TODO: implement function
+    # TODO: Добавить описание логики работы функции
     ...
+    return []
 
-
-def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
+def update_categories_in_scenario_file(s: Any, scenario_filename: str) -> bool:
     """
     Проверяет изменения категорий на сайте и обновляет файл сценария.
 
@@ -123,11 +139,11 @@ def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
     :return: True, если обновление прошло успешно.
     :rtype: bool
     """
-    # TODO: implement function
+    # TODO: Добавить описание логики работы функции
     ...
+    return True
 
-
-def get_list_categories_from_site(s, scenario_file: str, brand: str = '') -> List[str]:
+def get_list_categories_from_site(s: Any, scenario_file: str, brand: str = '') -> List[Any]:
     """
     Получает список категорий с сайта на основе файла сценария.
 
@@ -136,53 +152,54 @@ def get_list_categories_from_site(s, scenario_file: str, brand: str = '') -> Lis
     :param scenario_file: Имя файла сценария.
     :type scenario_file: str
     :param brand: Опциональное имя бренда.
-    :type brand: str
+    :type brand: str, optional
     :return: Список категорий.
-    :rtype: List[str]
+    :rtype: List[Any]
     """
-    # TODO: implement function
+    # TODO: Добавить описание логики работы функции
     ...
-
+    return []
 
 class DBAdaptor:
     """
-    Предоставляет методы для выполнения операций с базой данных, таких как SELECT, INSERT, UPDATE и DELETE.
+    Предоставляет методы для выполнения операций с базой данных, таких как `SELECT`, `INSERT`, `UPDATE` и `DELETE`.
     """
-
-    def select(self, cat_id: Optional[int] = None, parent_id: Optional[int] = None, project_cat_id: Optional[int] = None) -> List[Any]:
+    def select(self, cat_id: Optional[int] = None, parent_id: Optional[int] = None, project_cat_id: Optional[int] = None) -> None:
         """
         Выбирает записи из базы данных.
 
         :param cat_id: ID категории.
-        :type cat_id: Optional[int]
+        :type cat_id: int, optional
         :param parent_id: ID родительской категории.
-        :type parent_id: Optional[int]
+        :type parent_id: int, optional
         :param project_cat_id: ID категории проекта.
-        :type project_cat_id: Optional[int]
-        :return: Список записей из базы данных.
-        :rtype: List[Any]
+        :type project_cat_id: int, optional
         """
-        # TODO: implement function
+        # TODO: Добавить описание логики работы метода
         ...
+        pass
 
     def insert(self) -> None:
         """
         Вставляет новые записи в базу данных.
         """
-        # TODO: implement function
+        # TODO: Добавить описание логики работы метода
         ...
+        pass
 
     def update(self) -> None:
         """
         Обновляет записи в базе данных.
         """
-        # TODO: implement function
+        # TODO: Добавить описание логики работы метода
         ...
+        pass
 
     def delete(self) -> None:
         """
         Удаляет записи из базы данных.
         """
-        # TODO: implement function
+        # TODO: Добавить описание логики работы метода
         ...
+        pass
 ```

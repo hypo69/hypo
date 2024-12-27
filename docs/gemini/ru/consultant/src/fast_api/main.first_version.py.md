@@ -1,113 +1,118 @@
 # Анализ кода модуля `main.first_version.py`
 
 **Качество кода**
-9
--  Плюсы
-    -  Код выполняет поставленную задачу по запуску веб-сервера и обработке данных из формы.
-    -  Используется `FastAPI` для создания веб-приложения.
-    -  Обработка данных из формы и запуск скрипта `script.py` реализованы корректно.
-    -  Присутствуют проверки на ошибки при исполнении скрипта.
-    -  Статические файлы из директории `html` корректно подключены.
--  Минусы
-    -  Отсутствуют docstring для модуля, функций и классов.
-    -  Не используется `logger` для логирования ошибок.
-    -  Много избыточных комментариев, которые ничего не описывают.
-    -  Не все импорты используются.
-    -  Использование `webbrowser.open` может вызывать проблемы в некоторых окружениях.
+
+8/10
+-   **Плюсы**
+    -   Код использует FastAPI для создания веб-сервера.
+    -   Есть обработка POST-запроса для получения данных из формы.
+    -   Код запускает скрипт Python и возвращает результат.
+    -   Используется `webbrowser` для открытия страницы в браузере.
+    -   Присутствует обработка ошибок при выполнении скрипта.
+-   **Минусы**
+    -   Отсутствует явное описание модуля в формате reStructuredText (RST).
+    -   Отсутствуют docstring для функций.
+    -   Не используется `from src.logger.logger import logger` для логирования ошибок.
+    -   Не все комментарии соответствуют стандарту RST.
+    -   Используется стандартный `json.load` (несмотря на инструкцию использовать `j_loads` или `j_loads_ns`).
+    -   `MODE` объявлен несколько раз.
 
 **Рекомендации по улучшению**
-1. Добавить docstring для модуля, функций и классов.
-2. Использовать `logger` для логирования ошибок вместо `print` и `raise Exception`.
-3. Удалить избыточные комментарии.
-4. Удалить неиспользуемые импорты.
-5. Пересмотреть использование `webbrowser.open` на более надежное решение.
-6. Привести код в соответствие с PEP 8.
-7.  Заменить `json.load` на `j_loads` или `j_loads_ns` для работы с JSON.
-8.  Избегать использования `try-except` без необходимости, вместо этого использовать `logger.error` для обработки ошибок.
+
+1.  Добавить описание модуля в формате RST.
+2.  Добавить docstring для всех функций в формате RST.
+3.  Заменить стандартный блок `try-except` на `logger.error` для обработки исключений.
+4.  Использовать `from src.logger.logger import logger` для логирования.
+5.  Удалить лишние объявления `MODE`.
+6.  Удалить дублирующиеся комментарии.
+7.  Изменить комментарии в соответствии с форматом RST.
+8.  Убрать закомментированный код.
+9.  Импортировать необходимые модули.
 
 **Оптимизированный код**
+
 ```python
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для запуска FastAPI приложения.
 =========================================================================================
 
-Этот модуль содержит FastAPI приложение для обработки данных из HTML формы
-и запуска скрипта `script.py` с передачей данных.
+Этот модуль содержит FastAPI приложение, которое обрабатывает POST-запросы с данными формы,
+запускает скрипт Python и возвращает результат. Также, модуль открывает веб-страницу в браузере.
 
 Пример использования
 --------------------
 
-Для запуска приложения необходимо выполнить:
+.. code-block:: python
 
-.. code-block:: bash
-
+    # Запуск FastAPI приложения
     uvicorn main:app --reload
-
 """
-import os # импорт модуля os
-import subprocess # импорт модуля subprocess
-# import webbrowser # импорт модуля webbrowser
-from pathlib import Path # импорт модуля Path
+
+import os
+import subprocess
+import webbrowser
+from pathlib import Path
+from fastapi import FastAPI, Form, Request, HTTPException
+from subprocess import Popen, PIPE
+from fastapi.staticfiles import StaticFiles
 from typing import Any
-from fastapi import FastAPI, Form, Request, HTTPException # импорт необходимых компонентов FastAPI
-from subprocess import Popen, PIPE # импорт Popen и PIPE из subprocess
-from fastapi.staticfiles import StaticFiles # импорт StaticFiles для статики
-from src.utils.jjson import j_loads, j_loads_ns # импорт j_loads и j_loads_ns
-from src.logger.logger import logger # импорт logger
+from src.logger.logger import logger # Добавлен импорт logger
 
+MODE = 'dev'
 
-MODE = 'dev' # определение режима работы
+app = FastAPI()
 
-app = FastAPI() # создание экземпляра FastAPI
-
-# подключение статических файлов из папки 'html'
+# Mount the 'html' folder as static files
 app.mount("/", StaticFiles(directory="html"), name="html")
 
+webbrowser.open("http://localhost:8000/html/index.html")
 
-# webbrowser.open("http://localhost:8000/html/index.html") # открытие веб-страницы в браузере
-
-
+# Endpoint to process data from HTML form
 @app.post("/process_data")
-async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)) -> dict[str, Any]:
+async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)) -> dict[str, str]:
     """
-    Обрабатывает данные, полученные из HTML-формы, и запускает скрипт script.py.
+    Обрабатывает данные формы, запускает скрипт и возвращает результат.
 
-    :param request: Объект запроса FastAPI.
+    :param request: Объект Request.
     :param first_name: Имя, полученное из формы.
     :param last_name: Фамилия, полученная из формы.
     :return: Словарь с результатом работы скрипта.
-    :raises HTTPException: Если не переданы имя или фамилия, или если скрипт завершился с ошибкой.
+    :raises HTTPException: В случае ошибок, связанных с некорректными данными или ошибкой выполнения скрипта.
     """
-    # Проверка наличия имени и фамилии
+    # проверка наличия имени и фамилии
     if not first_name or not last_name:
-         logger.error('Имя и фамилия должны быть переданы')
-         raise HTTPException(status_code=400, detail="First name and last name must be provided")
+        logger.error('Имя и фамилия должны быть предоставлены')# Логирование ошибки отсутствия имени или фамилии
+        raise HTTPException(status_code=400, detail="First name and last name must be provided")
 
-    # Формирование входных данных для скрипта
+    # Формирование строки входных данных
     input_data = f"{first_name} {last_name}"
-    
-    # Формирование пути к скрипту script.py
-    script_path = Path(__file__).resolve().parent.parent / 'script.py'
 
-    # Запуск скрипта script.py с передачей данных
+    # определение пути к скрипту
+    script_path = Path(__file__).resolve().parent.parent / 'script.py'
     process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    # выполнение скрипта с передачей входных данных
     stdout, stderr = process.communicate(input=input_data.encode())
-    
-    # Проверка кода возврата скрипта на наличие ошибок
+
+    # Проверка кода возврата скрипта
     if process.returncode != 0:
-        logger.error(f"Ошибка выполнения скрипта: {stderr.decode()}")
+        logger.error(f'Ошибка выполнения скрипта: {stderr.decode()}')# Логирование ошибки выполнения скрипта
         raise HTTPException(status_code=500, detail=f"Error executing the script: {stderr.decode()}")
 
-    # Возврат результатов работы скрипта
+    # Возвращение результата
     return {"output": stdout.decode()}
 
 
+# Endpoint to open index.html in the browser
 @app.get("/")
 async def open_index() -> dict[str, str]:
     """
-    Перенаправляет на страницу index.html.
+    Перенаправляет на index.html.
 
-    :return: Словарь с сообщением о перенаправлении.
+    :return: Сообщение о перенаправлении.
     """
     # Перенаправление на index.html
     return {"message": "Redirecting to index.html..."}

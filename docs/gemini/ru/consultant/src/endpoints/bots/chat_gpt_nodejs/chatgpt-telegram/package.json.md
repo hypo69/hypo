@@ -1,21 +1,25 @@
 # Анализ кода модуля package.json
 
 **Качество кода**
-9
+8
 - Плюсы
-    - Код представляет собой корректный JSON-файл, который используется для управления зависимостями и скриптами в Node.js проекте.
-    - Присутствуют необходимые поля, такие как `name`, `version`, `description`, `main`, `scripts`, `dependencies` и `devDependencies`.
-    -  Используется `type: module`, что указывает на использование синтаксиса ES Modules.
+    - Файл `package.json` имеет стандартную структуру, необходимую для Node.js проектов.
+    - Определены зависимости (`dependencies`) и dev-зависимости (`devDependencies`).
+    - Присутствуют скрипты для запуска приложения в production и development режимах.
+    - Используется `type: "module"` для поддержки ES модулей.
 - Минусы
-    - Отсутствует описание `description`.
+    - Отсутствует описание проекта в поле `description`.
     - Поля `keywords` и `author` пустые.
+    - Нет тестов
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание проекта в поле `"description"`.
-2.  Заполнить поле `"keywords"` ключевыми словами для облегчения поиска проекта.
-3.  Указать автора проекта в поле `"author"`.
-4.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
+1.  **Добавить описание проекта:** Заполнить поле `description` для лучшего понимания предназначения проекта.
+2.  **Указать ключевые слова:** Добавить ключевые слова в поле `keywords` для облегчения поиска проекта.
+3.  **Добавить автора:** Указать автора проекта в поле `author`.
+4.  **Уточнить зависимости:** Проверить версии зависимостей на актуальность и безопасность.
+5.  **Добавить тесты:** Написать тесты для проверки корректности работы приложения.
+6. **Улучшить скрипты**: Добавить скрипты для линтинга и форматирования кода.
 
 **Оптимизированный код**
 
@@ -23,16 +27,16 @@
 {
   "name": "chatgpt-telegram",
   "version": "1.0.0",
-  "description": "Telegram bot for interacting with ChatGPT using Node.js.",
+  "description": "Telegram бот с интеграцией ChatGPT.",
   "main": "index.js",
   "keywords": [
     "telegram",
     "chatgpt",
     "bot",
-    "nodejs",
-    "openai"
+    "openai",
+      "nodejs"
   ],
-  "author": "Your Name Here",
+  "author": "Your Name",
   "license": "ISC",
   "devDependencies": {
     "cross-env": "^7.0.3",
@@ -41,7 +45,10 @@
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./src/main.js",
-    "dev": "cross-env NODE_ENV=development nodemon ./src/main.js"
+    "dev": "cross-env NODE_ENV=development nodemon ./src/main.js",
+    "lint": "eslint ./src/**/*.js",
+    "format": "prettier --write ./src/**/*.js"
+
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",

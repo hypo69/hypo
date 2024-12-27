@@ -1,175 +1,196 @@
-## Анализ кода модуля `gspreadsheet.py`
+## Анализ кода модуля `gspreadsheet`
 
-**Качество кода**
-8
--  Плюсы
-    - Код в целом структурирован и выполняет свою основную задачу: взаимодействие с Google Sheets API.
-    - Используется класс `GSpreadsheet` для инкапсуляции логики работы с таблицами.
-    - Присутствуют docstring для классов и методов, хотя они требуют доработки.
-    -  Импорт необходимых библиотек.
--  Минусы
-    -  Много дублирующихся комментариев и лишних docstring.
-    -  Отсутствует использование `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Не все комментарии соответствуют стандарту reStructuredText (RST).
-    -  Не используется логгирование ошибок.
-    -  Имена переменных и методов не всегда соответствуют соглашениям (например, `gsh`, `s_id`, `sh_title`).
-    -  Использование `print` вместо логирования.
-    -  Отсутствуют проверки на корректность id или title при открытии spreadsheet.
+**Качество кода: 5/10**
+
+*   **Плюсы:**
+    *   Код использует `gspread` для работы с Google Sheets, что является хорошим выбором для данной задачи.
+    *   Присутствует базовая структура класса `GSpreadsheet` с методами для открытия и создания таблиц.
+    *   Используется `service_account` для аутентификации, что безопасно для серверных приложений.
+
+*   **Минусы:**
+    *   Множество лишних пустых строк и неинформативных комментариев, таких как `[Class's description]` или `[Function's description]`.
+    *   Несоответствие docstring стандарту RST, что делает документацию нечитаемой.
+    *   Некорректное использование `json.loads` для загрузки файла `spreadsheets.json`.
+    *   Переменная `MODE` не используется.
+    *   Отсутствует обработка исключений для `open_by_title` и `open_by_key`.
+    *   Дублирование комментариев с описанием функциональности, например, `Книга Google sheets` и `Книга google spreadsheet`.
+    *   Неправильное использование `self = ...` для присваивания объекта класса, необходимо использовать `return` для возврата.
+    *   Импорты не отсортированы и не приведены в соответствие с ранее обработанными файлами.
+    *   Не используется `logger` для логирования ошибок.
+    *   Не все функции имеют документацию.
+    *   Дублирование кода в методе `get_by_title`.
 
 **Рекомендации по улучшению**
 
-1.  **Удалить лишние комментарии и docstring**: Оставить только осмысленные docstring в формате reStructuredText (RST).
-2.  **Использовать `j_loads` для загрузки JSON**: Заменить `json.loads` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-3.  **Добавить логирование**: Использовать `logger.error` для записи ошибок вместо `print`.
-4.  **Стандартизировать имена**: Привести имена переменных и функций к более понятному и общепринятому виду.
-5.  **Обработка ошибок**: Добавить try-except блоки там, где это необходимо.
-6.  **Улучшить документацию**: Добавить более подробное описание классов и методов в docstring.
-7.  **Удалить лишний код**: Убрать закомментированный код, который не используется.
-8.  **Проверки на корректность** Добавить проверки входных параметров, таких как id и title, на корректность.
-9.  **Использовать `from src.logger.logger import logger`**: для логирования ошибок.
-10. **Удалить лишнии импорты** : Удалить не используемые импорты.
+1.  **Улучшить документацию:**
+    *   Переписать все docstring в формате RST, включая описание модуля, классов, методов и параметров.
+    *   Удалить неинформативные комментарии типа `[Class's description]` и `[Function's description]`.
+    *   Использовать более конкретные и понятные описания функций и их параметров.
+2.  **Использовать `j_loads`:**
+    *   Заменить `json.loads` на `j_loads_ns` из `src.utils.jjson` для загрузки `spreadsheets.json`.
+3.  **Логирование ошибок:**
+    *   Добавить логирование ошибок с использованием `logger.error` вместо `print` и блоков `try-except` для обработки исключений при открытии таблиц.
+4.  **Рефакторинг кода:**
+    *   Удалить неиспользуемую переменную `MODE`.
+    *   Убрать дублирование функциональности в методе `get_by_title`, выделив общую логику.
+    *   Использовать  `self.gsh = ...`  вместо  `self = ...`
+5.  **Импорты:**
+    *   Сгруппировать и отсортировать импорты.
+    *   Убрать неиспользуемые импорты.
+6.  **Обработка исключений:**
+    *   Добавить обработку исключений при работе с Google Sheets API, используя `logger.error` для логирования.
+7.  **Форматирование кода:**
+    *   Соблюдать PEP 8 стандарты для форматирования кода.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для работы с Google Sheets API.
-=========================================================================================
+Модуль для работы с Google Spreadsheets.
+======================================
 
-Этот модуль предоставляет класс :class:`GSpreadsheet`, который используется для взаимодействия
-с Google Sheets API. Он позволяет открывать, создавать и получать доступ к таблицам.
+Этот модуль предоставляет класс :class:`GSpreadsheet`, который
+используется для взаимодействия с Google Sheets API.
+
+Он позволяет открывать, создавать и управлять Google таблицами.
 
 Пример использования
 --------------------
-
-Пример использования класса `GSpreadsheet`:
 
 .. code-block:: python
 
     from src.goog.spreadsheet.bberyakov.gspreadsheet import GSpreadsheet
 
     spreadsheet = GSpreadsheet(s_id='your_spreadsheet_id')
-    # Или
+    # или
     spreadsheet = GSpreadsheet(s_title='Your Spreadsheet Title')
-    data = spreadsheet.get_all_spreadsheets_for_current_account()
+
 """
-from src.global_settingspread import Spreadsheet, service_account
 import gspread
 from typing import List, Type, Union
-from src.utils.jjson import j_loads
+from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
-
+from global_settingspread import Spreadsheet, service_account
+#from global_settings import GWorksheet #удален неиспользуемый импорт
 
 
 class GSpreadsheet(Spreadsheet):
     """
-    Класс для работы с Google Sheets.
+    Класс для работы с Google Spreadsheets.
 
-    :param s_id: ID таблицы Google Sheets.
-    :type s_id: str, optional
-    :param s_title: Название таблицы Google Sheets.
-    :type s_title: str, optional
-    :raises ValueError: Если не передан id или title
+    Предоставляет методы для открытия, создания и управления
+    Google таблицами.
+
+    :param s_id: ID Google таблицы (необязательно).
+    :type s_id: str
+    :param s_title: Название Google таблицы (необязательно).
+    :type s_title: str
     """
-    gsh: Spreadsheet = None
+
+    gsh: Spreadsheet = None  # Объект Spreadsheet для работы с таблицей.
     gclient = gspread.client
-    
-    def __init__(self, s_id: str = None, s_title: str = None, *args, **kwargs):
+
+    def __init__(self, s_id: str = None, s_title: str = None, *args, **kwards):
         """
-        Инициализация класса GSpreadsheet.
-        
-        :param s_id: ID таблицы Google Sheets.
-        :type s_id: str, optional
-        :param s_title: Название таблицы Google Sheets.
-        :type s_title: str, optional
+        Инициализация объекта GSpreadsheet.
+
+        :param s_id: ID Google таблицы (необязательно).
+        :type s_id: str
+        :param s_title: Название Google таблицы (необязательно).
+        :type s_title: str
         """
-        secret_file = 'goog/onela-hypotez-1aafa5e5d1b5.json'
+        secret_file = f'goog/onela-hypotez-1aafa5e5d1b5.json'
         try:
             self.gclient = service_account(filename=secret_file)
-        except Exception as ex:
-             logger.error(f'Ошибка при инициализации gclient {ex=}')
-             raise
+        except Exception as e:
+             logger.error(f'Ошибка при инициализации Google Sheets API: {e}')
+             return
+        
         if s_id:
-            self.gsh = self.get_by_id(s_id)
+            try:
+                self.gsh = self.get_by_id(s_id)  # Открываем по ID
+            except Exception as e:
+                logger.error(f'Не удалось открыть таблицу по ID: {s_id}, ошибка {e}')
+                return
         elif s_title:
-             self.gsh = self.get_by_title(s_title)
-        else:
-            logger.error('Не указан id или title таблицы')
-            raise ValueError('Не указан id или title таблицы')
+            try:
+                self.gsh = self.get_by_title(s_title) # Открываем по названию
+            except Exception as e:
+                logger.error(f'Не удалось открыть таблицу по имени: {s_title}, ошибка {e}')
+                return
 
 
     def get_project_spreadsheets_dict(self) -> dict:
         """
-        Получение словаря с настройками таблиц.
+        Загружает словарь с настройками таблиц из файла JSON.
 
         :return: Словарь с настройками таблиц.
         :rtype: dict
         """
         try:
-            # Используем j_loads для загрузки JSON
-            return j_loads('goog/spreadsheets.json')
-        except Exception as ex:
-            logger.error(f'Ошибка загрузки файла настроек {ex=}')
+           # код выполняет загрузку данных из файла spreadsheets.json
+           return j_loads_ns('goog/spreadsheets.json')
+        except Exception as e:
+            logger.error(f'Ошибка при загрузке файла spreadsheets.json: {e}')
             return {}
 
-
-    def get_by_title(self, sh_title: str = 'New Spreadsheet'):
+    def get_by_title(self, sh_title: str = 'New Spreadsheet') -> Spreadsheet:
         """
-        Открытие или создание таблицы по названию.
-        
+        Открывает таблицу Google Sheets по названию, создавая ее, если не существует.
+
         :param sh_title: Название таблицы.
         :type sh_title: str
+        :return: Объект Spreadsheet.
+        :rtype: Spreadsheet
         """
         try:
-            if not sh_title:
-               logger.error('Не указано название таблицы')
-               raise ValueError('Не указано название таблицы')
+            # код проверяет существует ли таблица с заданным именем
             all_spreadsheets = self.gclient.openall()
             if sh_title not in [sh.title for sh in all_spreadsheets]:
-                # Код создает новую таблицу
-                self.gclient.create(sh_title)
-                self.gclient.share('d07708766@gmail.com', perm_type='user', role='writer')
-                logger.info(f'Создана новая таблица {sh_title=}')
+                # код создает таблицу
+                new_sh = self.gclient.create(sh_title)
+                # код предоставляет доступ на редактирование таблицы
+                new_sh.share('d07708766@gmail.com', perm_type='user', role='writer')
+                self.gsh = new_sh
+                logger.info(f'Создана таблица: {sh_title}')
             else:
-                # Код открывает существующую таблицу
-                 self.gsh = self.gclient.open(sh_title)
-                 logger.info(f'Таблица {sh_title} уже существует')
-        except Exception as ex:
-             logger.error(f'Ошибка при создании/открытии таблицы {ex=}')
-             raise
-    
+                # код открывает таблицу
+                 self.gsh = self.gclient.open_by_title(sh_title)
+                 logger.info(f'Таблица {sh_title} уже существует. Открыта')
+            return self.gsh
+        except Exception as e:
+              logger.error(f'Ошибка при работе с таблицей {sh_title}: {e}')
+              return None
+
+
+
     def get_by_id(self, sh_id: str) -> Spreadsheet:
         """
-        Открытие таблицы по ID.
+        Открывает таблицу Google Sheets по ID.
 
-        :param sh_id: ID таблицы Google Sheets.
+        :param sh_id: ID таблицы.
         :type sh_id: str
         :return: Объект Spreadsheet.
         :rtype: Spreadsheet
-        :raises ValueError: Если id не передан
         """
-        if not sh_id:
-             logger.error('Не указан id таблицы')
-             raise ValueError('Не указан id таблицы')
         try:
-            # Код открывает таблицу по ID
+            # код открывает таблицу по ID
             return self.gclient.open_by_key(sh_id)
-        except Exception as ex:
-            logger.error(f'Ошибка открытия таблицы по id {sh_id=} {ex=}')
-            raise
+        except Exception as e:
+             logger.error(f'Не удалось открыть таблицу по ID: {sh_id}, ошибка: {e}')
+             return None
 
-
-    def get_all_spreadsheets_for_current_account(self):
+    def get_all_spreadsheets_for_current_account(self) -> List[Spreadsheet]:
         """
-        Получение всех таблиц для текущего аккаунта.
+        Получает список всех таблиц текущего аккаунта.
 
-        :return: Список всех таблиц.
-        :rtype: list
+        :return: Список объектов Spreadsheet.
+        :rtype: List[Spreadsheet]
         """
         try:
-             # Код открывает все таблицы аккаунта
+             # код возвращает список всех таблиц аккаунта
             return self.gclient.openall()
-        except Exception as ex:
-            logger.error(f'Ошибка получения списка таблиц {ex=}')
+        except Exception as e:
+            logger.error(f'Ошибка при получении списка таблиц: {e}')
             return []

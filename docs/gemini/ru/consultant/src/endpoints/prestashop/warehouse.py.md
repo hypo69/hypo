@@ -1,73 +1,75 @@
 # Анализ кода модуля `warehouse.py`
 
 **Качество кода**
-7
+6
 -  Плюсы
-    -   Присутствует базовая структура модуля и импорты.
-    -   Используется logger для логирования.
+    -  Используется импорт `from src.logger.logger import logger` для логирования.
+    -  Используется базовый класс `PrestaShop`.
+    -  Присутствуют необходимые импорты `os, sys, attr, attrs, pathlib, header, src, printer`.
 -  Минусы
-    -   Отсутствует docstring для модуля.
-    -   Не все импорты используются, что может говорить о потенциальном избыточном коде или неполной реализации.
-    -   `MODE` определён, но не используется, что может быть проблемой.
-    -   Отсутствует документация в формате reStructuredText (RST).
-    -   Импорт `header` без конкретного указания пути или контекста, что может привести к проблемам.
-    -   `...`  - это не должно быть в конечном коде, это маркер незаконченного кода.
+    -  Отсутствует docstring для модуля.
+    -  Отсутствует импорт `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    -  Используются не все импорты в соответствии с рекомендациями.
+    -  Не используется RST формат в комментариях.
+    -  Отсутствует документация к классу.
+    -  Присутствует неиспользуемый `MODE = 'dev'`
+    -  Остутствуют константы для `MODE`
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring в формате RST для модуля с описанием его назначения.
-2.  Удалить или использовать `MODE`.
-3.  Удалить неиспользуемые импорты.
-4.  Переписать все комментарии в формате reStructuredText (RST), включая docstring класса.
-5.  Уточнить импорт `header`, предоставить путь или удалить, если не требуется.
-6.  Удалить `...` и дописать логику.
+1.  Добавить docstring для модуля в формате RST.
+2.  Использовать `j_loads` или `j_loads_ns` для чтения файлов если это необходимо.
+3.  Добавить docstring для класса `PrestaWarehouse`.
+4.  Удалить неиспользуемую переменную `MODE`.
+5.  Добавить константы `MODE_DEV` и `MODE_PROD` вместо литералов.
+6.  Переписать все комментарии в формате RST.
+7.  Добавить обработку ошибок с использованием `logger.error`.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для работы с функционалом складов PrestaShop.
-=======================================================
+Модуль для работы с API PrestaShop для управления складом.
+===========================================================
 
-Этот модуль предоставляет класс `PrestaWarehouse`, который расширяет базовый
-класс `PrestaShop` и предназначен для взаимодействия с API PrestaShop для
-управления складами.
+Этот модуль содержит класс :class:`PrestaWarehouse`, который наследуется от :class:`PrestaShop`
+и предоставляет методы для работы с API PrestaShop для управления складом.
 
 Пример использования
 --------------------
 
-.. code-block:: python
+Пример создания экземпляра класса::
 
-    warehouse = PrestaWarehouse(api_url='https://your-prestashop.com/api', api_key='YOUR_API_KEY')
-    # пример вызова методов для работы со складом.
+    from src.endpoints.prestashop.warehouse import PrestaWarehouse
+    warehouse = PrestaWarehouse(api_url='https://your-prestashop.com/api', api_key='your_api_key')
 """
-# MODE = 'dev' # TODO: Удалить если не используется
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-import os
-import sys
+import os, sys
 from attr import attr, attrs
 from pathlib import Path
-# from src import header  #  TODO: Уточнить импорт или удалить, если не используется
+import header
 from src import gs
+# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить если надо
 from src.utils.printer import pprint
 from .api import PrestaShop
 from src.logger.logger import logger
 
+MODE_DEV = 'dev'
+MODE_PROD = 'prod'
 
+@attrs
 class PrestaWarehouse(PrestaShop):
     """
-    Класс для работы со складами PrestaShop.
+    Класс для работы с API PrestaShop для управления складом.
 
-    Расширяет класс :class:`PrestaShop` и предоставляет методы для
-    взаимодействия с API PrestaShop, специализируясь на операциях со складами.
+    Наследуется от :class:`PrestaShop` и предоставляет методы для выполнения операций со складом,
+    используя API PrestaShop.
 
     :param api_url: URL API PrestaShop.
-    :param api_key: API ключ для PrestaShop.
+    :param api_key: API ключ PrestaShop.
     """
-    #TODO: Здесь должен быть код с методами для работы со складами PrestaShop
     ...
 ```

@@ -1,33 +1,23 @@
-# Анализ кода модуля 6pm.json
+# Анализ кода модуля `6pm.json`
 
 **Качество кода**
-
 7
 - Плюсы
-    - Код представляет собой JSON-файл, который содержит конфигурационные данные для парсера.
-    - Структура файла логична и понятна.
-    - Присутствует разделение на различные секции, что облегчает чтение и понимание.
+    - Код представляет собой JSON-файл, который соответствует структуре, ожидаемой для сценариев.
+    - Структура файла логически понятна и содержит необходимые поля для определения параметров поставщика, правил сбора данных и исключений.
+    - Присутствует поле `excluded`, позволяющее исключать определенные категории товаров, что улучшает управляемость процесса сбора данных.
 - Минусы
-    - Отсутствует описание предназначения файла и его отдельных ключей в формате RST.
-    - Нет комментариев, объясняющих значения полей, что может затруднить понимание их назначения.
-    - Не хватает явного указания типов данных для каждого поля.
-    - Присутствует неоднородность в написании названий файлов: есть и `ksp_categories_wathces_apple.json` и `ksp_categories_phones_samsung.json`. Это может вызвать ошибки.
-    -  В массиве excluded есть дублирование `ksp_categories_phones_philips.json`.
+    - Отсутствует описание назначения файла или его структуры.
+    - Нет комментариев или документации, объясняющих назначение каждого поля.
+    - В `scenario_files` указано расширение ".json", что может быть не совсем корректно, поскольку подразумевается, что в этом поле должен находиться список конкретных файлов, а не расширений.
+    - Стилистически вложенность в `excluded` не очень удобна.
 
 **Рекомендации по улучшению**
 
-1.  **Документирование JSON:**
-    -   Добавить подробные комментарии в формате RST к каждому полю JSON, чтобы объяснить его назначение и возможные значения.
-    -   Добавить описание модуля в начале файла в формате RST.
-2.  **Типизация данных:**
-    -   Хотя JSON не имеет строгой типизации, можно добавить комментарии, указывающие на ожидаемый тип данных для каждого поля (например, `string`, `number`, `boolean`, `array`).
-3.  **Унификация именования файлов:**
-    -   Привести имена файлов в массиве `excluded` к единому виду, например используя `snake_case` для всего списка.
-    -   Удалить дубликат `ksp_categories_phones_philips.json`.
-4. **Использовать j_loads:**
-     - При чтении данного json файла использовать `j_loads_ns` из `src.utils.jjson`.
-5.  **Логирование:**
-    -   Добавить логирование в случае ошибок при загрузке JSON-файла.
+1.  Добавить описание модуля в начале файла, используя reStructuredText.
+2.  Добавить документацию для каждого поля, объясняя его назначение и ожидаемые значения.
+3.  Уточнить значение поля `scenario_files`, либо убрать расширение ".json" и указать конкретный файл.
+4.  Пересмотреть структуру вложенности в `excluded`, либо оставить как есть.
 
 **Оптимизированный код**
 
@@ -41,7 +31,6 @@
   "collect_products_from_categorypage": false,
   "root_category": 3,
   "scenario_files": [
-    ".json",
     "ksp_categories_wathces_apple.json"
   ],
   "excluded": [
@@ -54,6 +43,7 @@
     "ksp_categories_phones_nokia.json",
     "ksp_categories_phones_oppo.json",
     "ksp_categories_phones_oneplus.json",
+    "ksp_categories_phones_philips.json",
     "ksp_categories_phones_xiaomi.json",
     "ksp_categories_headphones_bang_olufsen.json",
     "ksp_categories_headphones_hyperx.json",
@@ -77,17 +67,18 @@
     "ksp_categories_notebooks_lenovo_by_model.json",
     "ksp_categories_notebooks_hp_by_model.json",
     "ksp_categories_notebooks_dell_by_model.json",
-     "ksp_categories_notebooks_huawei_by_model.json",
-     "ksp_categories_watches_honor.json",
-     "ksp_categories_watches_lenovo.json",
-     "ksp_categories_watches_garmin.json",
-     "ksp_categories_watches_samsung.json",
-     "ksp_categories_watches_xiaomi.json",
-     "ksp_categories_watches_amazfit.json",
-     "ksp_categories_streamers_google.json",
+    "ksp_categories_notebooks_huawei_by_model.json",
+    "ksp_categories_speakers_google.json",
+    "ksp_categories_speakers_jbl.json",
+    "ksp_categories_watches_honor.json",
+    "ksp_categories_watches_lenovo.json",
+    "ksp_categories_watches_garmin.json",
+    "ksp_categories_watches_samsung.json",
+    "ksp_categories_watches_xiaomi.json",
+    "ksp_categories_watches_amazfit.json",
+    "ksp_categories_streamers_google.json",
     "ksp_categories_monitors_samsung.json",
     "ksp_categories_monitors_lg.json"
-
   ],
   "last_runned_scenario": ""
 }

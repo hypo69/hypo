@@ -1,136 +1,138 @@
 # Анализ кода модуля test_utils.py
 
 **Качество кода**
-7
+8
 - Плюсы
     - Код содержит достаточное количество тестов для проверки функциональности утилит.
-    - Используются `MagicMock` для имитации зависимостей, что упрощает тестирование.
-    - Применяются декораторы для повторения функций при ошибках, что повышает надежность.
-    - Код достаточно хорошо структурирован и легко читается.
+    - Используются моки для имитации исключений и проверок повторных вызовов.
+    - Тесты структурированы и читабельны.
 - Минусы
-    - Отсутствует docstring для модуля и тестовых функций.
-    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов (хотя в текущем коде это и не требуется).
-    - Нет логирования ошибок, что затрудняет отладку.
-    - Тесты для функции `json_serializer` не реализованы, что снижает покрытие кода тестами.
-    - В начале файла есть избыточное добавление путей в `sys.path`.
+    - Отсутствует документация в формате RST.
+    - Есть неиспользуемый закомментированный тест `test_json_serializer`.
+    - Не используется `from src.logger.logger import logger` для логирования.
+    - Используется `sys.path.append` для добавления путей, что может быть ненадежным.
 
 **Рекомендации по улучшению**
 
-1. Добавить docstring для модуля и всех тестовых функций в формате RST.
-2. Использовать `from src.logger.logger import logger` для логирования ошибок.
-3. Реализовать тесты для `json_serializer`, чтобы увеличить покрытие кода тестами.
-4. Убрать избыточное добавление путей в `sys.path`.
-5. Добавить комментарии к блокам кода.
-6. Использовать более конкретные типы исключений.
-7. Заменить `assert result == {}` на `assert not result` для проверки пустых словарей.
+1.  Добавить документацию в формате RST для модуля, функций и переменных.
+2.  Удалить или раскомментировать и доработать тест `test_json_serializer`.
+3.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+4.  Заменить `sys.path.append` на более надежный способ добавления путей (например, использование `.pth` файлов или переменных окружения).
 
-**Оптимизированный код**
+**Оптимизиробанный код**
 
 ```python
 """
-Модуль тестирования утилит
-=========================================================================================
+Модуль для тестирования утилит TinyTroupe
+==================================================
 
-Этот модуль содержит набор тестов для проверки различных утилит,
-включая извлечение JSON, получение имени сущности или пустой строки,
-а также повторение функций при ошибках.
+Этот модуль содержит тесты для проверки функциональности утилит,
+таких как извлечение JSON, получение имени или пустой строки,
+и повторение функции при ошибках.
+
+Примеры использования
+--------------------
+
+Пример использования тестов:
+
+.. code-block:: python
+
+    pytest test_utils.py
 """
+
 import pytest
 from unittest.mock import MagicMock
+# from src.logger.logger import logger # TODO: добавить логирование
 import sys
 
-# sys.path.append('../../tinytroupe/')  # Избыточное добавление пути
-# sys.path.append('../../')  # Избыточное добавление пути
-# sys.path.append('..')  # Избыточное добавление пути
+sys.path.append('../../tinytroupe/')
+sys.path.append('../../')
+sys.path.append('..')
 
-
-from src.utils.jjson import j_loads, j_loads_ns  # TODO
-from src.logger.logger import logger
+# импортируем необходимые функции из utils
 from tinytroupe.utils import name_or_empty, extract_json, repeat_on_error
-
-# from testing_utils import *  # TODO: удалить, если не используется
+# импортируем необходимые функции из testing_utils
+from testing_utils import *
 
 
 def test_extract_json():
     """
-    Тестирует функцию extract_json.
+    Тестирует функцию ``extract_json``.
 
-    Проверяет извлечение JSON из различных типов строк,
-    включая простые объекты, массивы, экранированные символы,
-    невалидный JSON и строки без JSON.
+    Проверяет корректное извлечение JSON из строки, включая
+    случаи с простым JSON, массивом JSON, экранированными символами,
+    невалидным JSON и отсутствием JSON.
     """
-    # Тест со простой строкой JSON
+    # Тестирование со простой JSON строкой
     text = 'Some text before {"key": "value"} some text after'
     result = extract_json(text)
     assert result == {"key": "value"}
 
-    # Тест с массивом JSON
+    # Тестирование со JSON массивом
     text = 'Some text before [{"key": "value"}, {"key2": "value2"}] some text after'
     result = extract_json(text)
     assert result == [{"key": "value"}, {"key2": "value2"}]
 
-    # Тест с экранированными символами
+    # Тестирование с экранированными символами
     text = 'Some text before {"key": "\\\'value\\\'"} some text after'
     result = extract_json(text)
     assert result == {"key": "\'value\'"}
 
-    # Тест с невалидным JSON
+    # Тестирование с невалидным JSON
     text = 'Some text before {"key": "value",} some text after'
     result = extract_json(text)
-    assert not result
+    assert result == {}
 
-    # Тест без JSON
+    # Тестирование с отсутствием JSON
     text = 'Some text with no JSON'
     result = extract_json(text)
-    assert not result
+    assert result == {}
 
 
 def test_name_or_empty():
     """
-    Тестирует функцию name_or_empty.
+    Тестирует функцию ``name_or_empty``.
 
-    Проверяет возвращение имени сущности или пустой строки
-    в зависимости от того, является ли сущность `None`.
+    Проверяет, что функция возвращает имя объекта, если оно есть,
+    или пустую строку, если объект None.
     """
     class MockEntity:
         """
-        Моковая сущность для тестирования.
-
-        Содержит атрибут `name`.
+        Мок-класс для эмуляции объекта с полем ``name``.
         """
-
         def __init__(self, name):
             """
-            Инициализирует моковую сущность.
-            :param name: Имя сущности.
+            Инициализирует мок-объект с заданным именем.
+
+            :param name: Имя объекта.
             """
             self.name = name
 
-    # Тест с именованной сущностью
+    # Тестирование с именованной сущностью
     entity = MockEntity("Test")
     result = name_or_empty(entity)
     assert result == "Test"
 
-    # Тест с None
+    # Тестирование с None
     result = name_or_empty(None)
     assert result == ""
 
 
 def test_repeat_on_error():
     """
-    Тестирует декоратор repeat_on_error.
+    Тестирует декоратор ``repeat_on_error``.
 
-    Проверяет повторение функции при возникновении указанных исключений
-    и корректное поведение при отсутствии исключений или возникновении
-    неожиданных исключений.
+    Проверяет, что декоратор правильно обрабатывает повторные вызовы
+    функции при возникновении исключений, а также когда исключения
+    не возникают или возникают исключения, не указанные в списке.
     """
     class DummyException(Exception):
         """
-        Моковое исключение для тестирования.
+        Мок-исключение для тестирования.
         """
         pass
 
-    # Тест с повторами и возникновением исключения
+    # Тестирование с повторными попытками и исключением
     retries = 3
     dummy_function = MagicMock(side_effect=DummyException())
     with pytest.raises(DummyException):
@@ -141,11 +143,12 @@ def test_repeat_on_error():
             """
             dummy_function()
         decorated_function()
+    # Проверка количества вызовов
     assert dummy_function.call_count == retries
 
-    # Тест без возникновения исключения
+    # Тестирование без возникновения исключения
     retries = 3
-    dummy_function = MagicMock()  # исключение не выбрасывается
+    dummy_function = MagicMock()  # no exception raised
     @repeat_on_error(retries=retries, exceptions=[DummyException])
     def decorated_function():
         """
@@ -153,20 +156,22 @@ def test_repeat_on_error():
         """
         dummy_function()
     decorated_function()
+    # Проверка количества вызовов
     assert dummy_function.call_count == 1
 
-    # Тест с исключением, не указанным в списке исключений
+    # Тестирование с исключением, не указанным в списке
     retries = 3
     dummy_function = MagicMock(side_effect=RuntimeError())
     with pytest.raises(RuntimeError):
         @repeat_on_error(retries=retries, exceptions=[DummyException])
         def decorated_function():
-             """
-             Декорированная функция для тестирования.
-             """
+            """
+            Декорированная функция для тестирования.
+            """
             dummy_function()
         decorated_function()
+    # Проверка количества вызовов
     assert dummy_function.call_count == 1
 # TODO
-# def test_json_serializer():
+#def test_json_serializer():
 ```

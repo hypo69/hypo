@@ -1,81 +1,84 @@
 # Анализ кода модуля `src.endpoints.hypo69`
 
 **Качество кода**
-9
- - Плюсы
-    - Хорошее структурирование документации, наличие ссылок на репозиторий.
-    - Наличие информации о модулях.
- - Минусы
-    - Документация представлена в смешанном формате (reStructuredText и markdown).
-    - Отсутствуют подробные описания модулей.
-    - Нет документации о использовании модулей.
+8
+  - Плюсы
+        - Документ содержит структуру навигации по репозиторию.
+        - Присутствует краткое описание функциональности модулей.
+  - Минусы
+        - Документация неполная, не соответствует стандарту reStructuredText (RST) для Python.
+        - Отсутствует подробное описание каждого модуля.
+        - Недостаточно примеров использования модулей.
+        - Нет разделения на разделы.
 
 **Рекомендации по улучшению**
-
-1.  **Унификация формата:** Перевести всю документацию в формат reStructuredText (RST) для единообразия.
-2.  **Детальное описание:** Добавить описания для каждого модуля в формате RST, включая их назначение, использование и примеры.
-3.  **Структурирование:** Улучшить структуру документа, добавив заголовки и подзаголовки для удобства чтения.
-4. **Уточнить:**  Добавить описание использование модулей.
+*   Переписать документацию в соответствии с reStructuredText (RST).
+*   Добавить подробное описание каждого модуля, включая его назначение и возможности.
+*   Добавить примеры использования модулей.
+*   Структурировать документ с помощью заголовков и разделов.
+*   Использовать списки для перечисления элементов.
 
 **Оптимизированный код**
 
-```rst
+```markdown
 .. module:: src.endpoints.hypo69
-   :synopsis: Endpoint for my code AI training
+   :synopsis: Endpoint для обучения кода с использованием ИИ.
 
-==============================================
-`hypo69`: Developer endpoints
-==============================================
+===========================================================================
 
-Этот модуль содержит endpoints для обучения моделей ИИ.
+.. raw:: html
 
-Модули
-------
+   <TABLE>
+   <TR>
+   <TD>
+   <A HREF = 'https://github.com/hypo69/hypo/blob/master/readme.ru.md'>[Root ↑]</A>
+   </TD>
+   <TD>
+   <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/README.MD'>src</A> \
+   <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD'>endpoints</A>
+   </TD>
+   <TD>
+   <A HREF = 'https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md'>Русский</A>
+   </TD>
+   </TR>
+   </TABLE>
 
-.. list-table::
-   :widths: 25 25 25
-   :header-rows: 1
+`hypo69`: Эндпоинты для разработчиков
+====================================
 
-   * - Модуль
-     - Описание
-     - Ссылка
+Этот модуль содержит эндпоинты, предназначенные для обучения моделей искусственного интеллекта (ИИ) на коде проекта.
+Он включает в себя несколько подмодулей, каждый из которых отвечает за свою конкретную задачу.
 
-   * - **small_talk_bot**
-     - Бот с чатом модели ИИ.
-     - `ссылка на код <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/small_talk_bot.py>`_
+Подмодули
+----------
 
-   * - **code_assistant**
-     - Модуль обучения модели коду проекта.
-     - `ссылка на код <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/code_assistant.py>`_
+**small_talk_bot**
+    - :mod:`src.endpoints.hypo69.small_talk_bot`: Бот для чата с языковой моделью ИИ.
+    - Используется для интерактивного взаимодействия с ИИ.
+    - Позволяет вести диалог с моделью, получая ответы на вопросы.
 
-   * - **psychologist_bot**
-     - Ранняя разработка модуля парсинга диалогов.
-     - `ссылка на код <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/psychologist_bot.py>`_
+**code_assistant**
+    - :mod:`src.endpoints.hypo69.code_assistant`: Модуль для обучения модели ИИ на коде проекта.
+    - Позволяет обучать модель на основе существующего кода.
+    - Предоставляет инструменты для проверки качества кода.
 
-Ссылки
-------
+**psychologist_bot**
+    - :mod:`src.endpoints.hypo69.psychologist_bot`: Модуль для анализа и парсинга диалогов. (Ранняя разработка)
+    - Предназначен для анализа текстовых диалогов.
+    - Позволяет извлекать информацию из текстовых данных.
 
-.. list-table::
-   :widths: 25 25 25
-   :header-rows: 1
+Пример использования
+--------------------
 
-   * - Страница
-     - Ссылка
-     - Язык
+Пример запуска `small_talk_bot`:
 
-   * - [Root ↑]
-     - `https://github.com/hypo69/hypo/blob/master/readme.ru.md <https://github.com/hypo69/hypo/blob/master/readme.ru.md>`_
-     - -
+.. code-block:: python
 
-   * - src
-     - `https://github.com/hypo69/hypo/blob/master/src/README.MD <https://github.com/hypo69/hypo/blob/master/src/README.MD>`_
-     - -
+    from src.endpoints.hypo69.small_talk_bot import SmallTalkBot
+    bot = SmallTalkBot()
+    bot.start()
 
-   * - endpoints
-     - `https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD <https://github.com/hypo69/hypo/blob/master/src/endpoints/README.MD>`_
-     - -
 
-   * - Русский
-     - `https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md <https://github.com/hypo69/hypo/blob/master/src/endpoints/hypo69/readme.ru.md>`_
-     - Русский
+..  note::
+    В настоящее время модуль `psychologist_bot` находится на ранней стадии разработки.
 ```

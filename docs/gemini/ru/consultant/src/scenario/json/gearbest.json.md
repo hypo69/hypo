@@ -1,40 +1,61 @@
 # Анализ кода модуля `gearbest.json`
 
 **Качество кода**
-8/10
-- Плюсы:
-    - Код представляет собой JSON-файл, который является стандартным способом хранения конфигурационных данных.
+8
+- Плюсы
+    - Код представляет собой JSON-файл, который содержит конфигурацию для парсинга.
     - Структура файла логически понятна и хорошо организована.
-    - Использование списков для хранения данных, таких как `scenario_files` и `excluded`, позволяет легко добавлять или удалять элементы.
-- Минусы:
-    - Отсутствует описание назначения файла.
-    - Некоторые ключи в JSON (`"parcing method [webdriver|api]"`, `"about method web scrapping [webdriver|api]"`) содержат пробелы и квадратные скобки, что не является стандартным и может затруднить их обработку в коде.
+    - Присутствует разделение на ключевые секции, такие как `supplier`, `start_url`, `scenario_files`, и `excluded`.
+- Минусы
+    - Отсутствует явное описание назначения каждого ключа в JSON-файле.
+    - Значение ключа `"parcing method [webdriver|api]"` содержит опечатку `"parcing"`.
+    - Ключ `"about method web scrapping [webdriver|api]"` кажется избыточным и нуждается в пересмотре или удалении.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить описание файла**: Добавить комментарий в начале файла, описывающий его назначение и структуру, в формате RST.
-2.  **Переименовать ключи**: Переименовать ключи `"parcing method [webdriver|api]"` и `"about method web scrapping [webdriver|api]"` в более стандартные имена без пробелов и скобок, например `"parsing_method"` и `"scraping_method_description"`.
-3.  **Добавить комментарии**: Добавить комментарии к каждому ключу в формате RST для пояснения их назначения.
-4.  **Консистентность наименований**: Привести в соответствие написание ключей с другими файлами.
+1.  **Документирование JSON:**
+    -   Добавить комментарии для каждого ключа JSON, поясняющие их назначение и возможные значения. Это улучшит читаемость и понимание файла.
+2.  **Исправление опечаток:**
+    -   Исправить опечатку в ключе `"parcing method [webdriver|api]"` на `"parsing method [webdriver|api]"`.
+3.  **Пересмотр избыточных ключей:**
+    -   Пересмотреть назначение ключа `"about method web scrapping [webdriver|api]"` и, возможно, удалить его или сделать его более информативным.
+4.  **Унификация названий:**
+    -   Рассмотреть возможность унификации названий ключей для большей консистентности. Например, `collect_products_from_categorypage` можно переименовать в `collect_from_category_page` для краткости.
+5.  **Дополнительные комментарии:**
+    -   Добавить комментарии для пояснения значения массива `excluded`, чтобы было ясно, почему именно эти файлы исключены.
+6.  **Формат документации**:
+    -   Документация должна быть в формате reStructuredText (RST).
 
 **Оптимизированный код**
 
 ```json
 {
   "supplier": "ksp",
+  # Идентификатор поставщика.
   "supplier_prefix": "ksp",
+  # Префикс для идентификатора поставщика.
   "start_url": "https://www.ksp.co.il/",
+  # URL стартовой страницы для парсинга.
   "price_rule": "+100",
+  # Правило ценообразования.
   "num_items_4_flush": 300,
+  # Количество элементов для сброса кэша.
   "if_login": false,
-  "parsing_method": "web",
-  "scraping_method_description": "Если я работаю через API мне не нужен webdriver",
+  # Флаг, определяющий необходимость входа в систему.
+  "parsing method [webdriver|api]": "web",
+  # Метод парсинга: "web" или "api".
+  # "about method web scrapping [webdriver|api]": "Если я работаю через API мне не нужен webdriver",
+  # Информация о методе веб-скреппинга (комментарий убран для ясности).
   "collect_products_from_categorypage": false,
+  # Флаг, указывающий на сбор данных со страниц категорий.
   "scenario_files": [
+    # Список файлов сценариев для парсинга.
     "ksp_categories_consoles_microsoft.json",
     "ksp_categories_wathces_apple.json"
   ],
   "excluded": [
+    # Список исключенных файлов сценариев.
+    # Исключены для избежания дублирования или для фокусировки на определённых категориях.
     "ksp_categories_speakers_google.json",
     "ksp_categories_speakers_jbl.json",
     "ksp_categories_phones_philips.json",
@@ -76,11 +97,12 @@
     "ksp_categories_watches_garmin.json",
     "ksp_categories_watches_samsung.json",
     "ksp_categories_watches_xiaomi.json",
-    "ksp_categories_watches_amazfit.json",
+     "ksp_categories_watches_amazfit.json",
     "ksp_categories_streamers_google.json",
     "ksp_categories_monitors_samsung.json",
     "ksp_categories_monitors_lg.json"
   ],
-  "last_runned_scenario": ""
+    "last_runned_scenario": ""
+    # Дата и время последнего запуска сценария
 }
 ```

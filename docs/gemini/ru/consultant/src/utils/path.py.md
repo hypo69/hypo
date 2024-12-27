@@ -1,20 +1,26 @@
 # Анализ кода модуля `src.utils.path`
 
 **Качество кода**
-9
- -  Плюсы
-        - Код хорошо структурирован и легко читается.
-        - Используется `pathlib` для работы с путями, что делает код более кроссплатформенным.
-        - Функция `get_relative_path` имеет docstring, описывающий ее назначение, параметры и возвращаемое значение.
+
+8/10
+-  Плюсы
+    - Код достаточно читаемый и хорошо документирован.
+    - Используется `pathlib` для работы с путями, что делает код кроссплатформенным.
+    - Функция `get_relative_path` выполняет свою задачу, как описано в docstring.
+    - Присутствует описание модуля в формате docstring.
+    - Используются type hints.
  -  Минусы
-    - Отсутствуют импорты из `src.logger.logger`, необходимо добавить для логирования.
-    - Нет обработки ошибок при работе с путями.
+    - Отсутствуют импорты `logger` и использование его для обработки ошибок, что могло бы улучшить надежность кода.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`, но в данном случае это не требуется.
+    - Не все комментарии написаны в стиле RST.
+    - Переменная MODE не документирована.
 
 **Рекомендации по улучшению**
 
-1.  Добавить логирование ошибок с использованием `src.logger.logger`.
-2.  Улучшить комментарии в формате reStructuredText (RST), включая более подробное описание модуля и функции.
-3.  Добавить обработку возможных ошибок при работе с путями.
+1.  **Документирование переменных:** Добавить docstring для переменной `MODE`, описывающей ее назначение и возможные значения.
+2.  **Импорт и использование logger:** Добавить импорт `logger` из `src.logger.logger` и использовать его для логирования ошибок, если они возникнут при работе с путями.
+3.  **Комментарии в стиле RST:** Привести docstring модуля в полный формат RST.
+4.  **Уточнить документацию:** По возможности, уточнить описание функции `get_relative_path`.
 
 **Оптимизированный код**
 
@@ -24,26 +30,26 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с путями в проекте.
-=====================================
+Модуль для определения корневого пути к проекту.
+=================================================
 
-Этот модуль предоставляет функции для работы с путями файлов и каталогов.
-Основной функциональностью является определение корневого пути проекта
-и получение относительных путей от заданного сегмента.
-
-.. moduleauthor::  Hypotez
+:platform: Windows, Unix
+:synopsis: Модуль определяет корневой путь к проекту. Все импорты строятся относительно этого пути.
+:TODO: В дальнейшем перенести в системную переменную
 """
-
-MODE = 'dev'
 
 from pathlib import Path
 from typing import Optional
-from src.logger.logger import logger # Добавлен импорт для логирования
+
+# from src.logger.logger import logger  # TODO: Добавить импорт логгера
+
+#: Режим работы приложения ('dev' - разработка, 'prod' - продакшн).
+MODE = 'dev'
 
 
 def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
     """
-    Возвращает относительный путь начиная с указанного сегмента.
+    Возвращает часть пути начиная с указанного сегмента и до конца.
 
     :param full_path: Полный путь.
     :type full_path: str
@@ -51,34 +57,34 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
     :type relative_from: str
     :return: Относительный путь начиная с `relative_from`, или None, если сегмент не найден.
     :rtype: Optional[str]
-    
-    :raises TypeError: Если `full_path` или `relative_from` не являются строками.
-    :raises Exception: Если возникает ошибка при работе с путями.
-
-    Пример использования:
-    
-    .. code-block:: python
-
-       path = get_relative_path("/home/user/project/src/utils", "src")
-       print(path)
     """
-    try:
-        # Преобразуем строки в объекты Path
-        if not isinstance(full_path, str) or not isinstance(relative_from, str): # Проверка типа входных параметров
-            logger.error(f'Неверный тип данных. full_path: {type(full_path)=} relative_from: {type(relative_from)=}') # Логирование ошибки типа
-            raise TypeError('Аргументы `full_path` и `relative_from` должны быть строками')# Вывод ошибки типа
-        path = Path(full_path) # Создаем объект Path
-        parts = path.parts # Получаем части пути
-        # Находим индекс сегмента relative_from
-        if relative_from in parts: # Проверка наличия сегмента в пути
-            start_index = parts.index(relative_from) # Код получает индекс сегмента
-            # Формируем путь начиная с указанного сегмента
-            relative_path = Path(*parts[start_index:]) # Создаем новый объект Path с относительным путем
-            return relative_path.as_posix() # Код преобразует путь в строку posix
-        else:
-            logger.debug(f'Сегмент "{relative_from}" не найден в пути "{full_path}"') # Логирование, если сегмент не найден
-            return None
-    except Exception as ex:
-        logger.error(f'Ошибка при работе с путями: {ex}') # Логирование любых других ошибок
+    # Преобразуем строки в объекты Path
+    path = Path(full_path)
+    parts = path.parts
+
+    # Находим индекс сегмента relative_from
+    if relative_from in parts:
+        start_index = parts.index(relative_from)
+        # Формируем путь начиная с указанного сегмента
+        relative_path = Path(*parts[start_index:])
+        return relative_path.as_posix()
+    else:
         return None
+    # TODO: добавить try except и логирование
+    # try:
+    #     # Преобразуем строки в объекты Path
+    #     path = Path(full_path)
+    #     parts = path.parts
+    #
+    #     # Находим индекс сегмента relative_from
+    #     if relative_from in parts:
+    #         start_index = parts.index(relative_from)
+    #         # Формируем путь начиная с указанного сегмента
+    #         relative_path = Path(*parts[start_index:])
+    #         return relative_path.as_posix()
+    #     else:
+    #         return None
+    # except Exception as ex:
+    #     logger.error(f'Ошибка при получении относительного пути: {ex}')
+    #     return None
 ```

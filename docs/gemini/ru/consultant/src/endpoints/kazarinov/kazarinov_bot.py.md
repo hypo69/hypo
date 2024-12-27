@@ -1,76 +1,49 @@
-# Анализ кода модуля `kazarinov_bot`
+## Анализ кода модуля kazarinov_bot
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован, используется объектно-ориентированный подход.
-    - Присутствует базовая обработка сообщений и URL.
-    - Используется `asyncio` для асинхронных операций, что хорошо для телеграм-ботов.
-    - Применяется кастомный класс `TelegramBot` для работы с Telegram API.
-    - Есть разделение на классы `KazarinovTelegramBot` и `BotHandler`, что способствует модульности.
-    - Присутствует механизм переключения между тестовым и продакшн режимами.
-- Минусы
-    - Не используются все возможности reStructuredText для docstring.
-    - Не везде используется логирование ошибок.
-    - В коде есть места с `...`, которые нужно доработать.
-    - Отсутствует обработка ошибок при инициализации.
-    - Использованы магические строки для токенов.
-    - Не используется `j_dumps` для сохранения конфигурации.
-    - Не стандартизированы переменные (`q` например)
-    - Комментарии не все соответствуют reStructuredText
+9
+-   Плюсы
+    -   Код хорошо структурирован и разделен на классы и функции.
+    -   Используется `argparse` для управления режимом работы бота через командную строку.
+    -   Применяются асинхронные операции для неблокирующей обработки сообщений.
+    -   Используется кастомный логгер.
+    -   Есть обработка URL-адресов.
+    -   Используется `j_loads_ns` для загрузки конфигурации, что соответствует требованиям.
+-   Минусы
+    -   Не везде добавлены docstring в reStructuredText формате, требуется доработка.
+    -   Смешанное использование комментариев в формате `#` и docstring.
+    -   Не все ошибки обрабатываются с использованием `logger.error`, некоторые обрабатываются через `try-except` с `...`
+    -   Импорты не полностью соответствуют стандартам, например, отсутствует импорт `Any` из `typing`
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    -   Добавить подробные docstring в формате reStructuredText для всех функций и методов, включая описание параметров и возвращаемых значений.
-    -   Добавить описание модуля в начале файла.
-    -   Использовать Sphinx-совместимый формат docstring.
+1.  **Документация**: Необходимо добавить docstring в reStructuredText формате для всех функций, методов и классов.
+2.  **Обработка ошибок**: Необходимо заменить `try-except` с `...` на использование `logger.error` с выводом подробностей исключения.
+3.  **Импорты**: Проверить и добавить отсутствующие импорты, а также привести их в соответствие с PEP8.
+4.  **Форматирование**: Привести форматирование комментариев в соответствие со стандартом RST
+5. **Логика обработки сообщений**: Отрефакторить обработку `if q in ...`, чтобы сделать код более читаемым и расширяемым. Можно перенести обработку команд в отдельную функцию или использовать словарь для сопоставления команд и функций.
+6. **Использовать `Self`** для аннотации методов класса, возвращающих экземпляр этого класса.
 
-2.  **Логирование**:
-    -   Использовать `logger.error` для обработки ошибок вместо `try-except` блоков.
-    -   Добавить логирование важных событий, таких как старт бота, обработка сообщений, успешная и неуспешная обработка URL.
-
-3.  **Обработка ошибок**:
-    -   Обработать ошибки, которые могут возникнуть при инициализации `KazarinovTelegramBot` и `BotHandler`.
-    -   Логировать все ошибки, включая ошибки при чтении конфигурации.
-
-4.  **Конфигурация**:
-    -   Вынести логику определения режима в отдельную функцию для лучшей читаемости.
-    -   Использовать константы для токенов вместо магических строк.
-    -   Добавить возможность сохранять конфигурацию с помощью `j_dumps`.
-
-5.  **Обработка сообщений**:
-    -   Улучшить обработку URL-адресов, добавив подробное логирование и обработку ошибок.
-    -   Стандартизировать переменные.
-    -   Убрать "магические" строки ('--next', '-next', '__next', '-n', '-q') в отдельную константу.
-    -   Продумать логику и обработку ошибок после вызова `await self.handle_url(update, context)`.
-
-6.  **Общие рекомендации**:
-    -   Убрать `...` из кода, реализовать заложенную логику.
-    -   Привести все импорты в соответствие со структурой проекта, придерживаясь ранее использованных стилей.
-
-**Оптимизированный код**
+**Оптимизиробанный код**
 
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-
 """
-Модуль для реализации Telegram-бота Kazarinov
-=========================================================================================
-
-Этот модуль содержит класс :class:`KazarinovTelegramBot`, который используется для взаимодействия с Telegram API.
-Бот поддерживает обработку текстовых сообщений, документов и URL.
+Telegram-бот для проекта Kazarinov
+====================================================
+Бот взаимодействует 
+с парсером Mexiron и моделью Google Generative AI, поддерживает обработку текстовых сообщений, документов и URL.
 
 .. module:: src.endpoints.kazarinov.kazarinov_bot
-    :platform: Windows, Unix
-    :synopsis: KazarinovTelegramBot
+   :platform: Windows, Unix
+   :synopsis: KazarinovTelegramBot
 
 """
 import asyncio
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Self
 from types import SimpleNamespace
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
@@ -81,7 +54,6 @@ import header
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
-
         Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
 """
@@ -95,115 +67,108 @@ from src.utils.url import is_url
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger.logger import logger
 
+import argparse
+
 
 class KazarinovTelegramBot(TelegramBot, BotHandler):
     """
-    Реализует Telegram бота с кастомным поведением для проекта Kazarinov.
+    Telegram bot with custom behavior for Kazarinov.
 
-    :cvar token: Токен для доступа к Telegram API.
-    :vartype token: str
-    :cvar config: Конфигурация бота, загруженная из JSON файла.
-    :vartype config: SimpleNamespace
-    :cvar model: Модель Google Generative AI для диалога.
-    :vartype model: GoogleGenerativeAI
+    :param token: Telegram bot token.
+    :type token: str
+    :param config: Configuration settings for the bot.
+    :type config: SimpleNamespace
+    :param model: Google Generative AI model for text generation.
+    :type model: GoogleGenerativeAI
     """
-    MODE_DEV = 'dev'
-    MODE_TEST = 'test'
-    MODE_PROD = 'prod'
-    NEXT_COMMANDS = ('--next', '-next', '__next', '-n', '-q')
 
     token: str
     config = j_loads_ns(gs.path.endpoints / 'kazarinov' / 'kazarinov.json')
-    model: GoogleGenerativeAI = GoogleGenerativeAI(
-        api_key=gs.credentials.gemini.kazarinov,
-        generation_config={"response_mime_type": "text/plain"},
-    )
+    model: GoogleGenerativeAI = GoogleGenerativeAI(api_key=gs.credentials.gemini.kazarinov,
+                                                  generation_config={"response_mime_type": "text/plain"})
+    """
+    Модель используется для диалога с пользователем. Для обработки сценариев используется модель,
+    определяемая в классе :class:`BotHandler`.
+    """
 
-    def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
+    def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox') -> None:
         """
-        Инициализирует экземпляр класса KazarinovTelegramBot.
+        Initialize the KazarinovTelegramBot instance.
 
-        :param mode: Режим работы бота ('test' или 'production'). По умолчанию 'test'.
+        :param mode: Operating mode, 'test' or 'production'. Defaults to 'test'.
         :type mode: Optional[str]
-        :param webdriver_name: Имя веб-драйвера для BotHandler. По умолчанию 'firefox'.
+        :param webdriver_name: Webdriver to use with BotHandler. Defaults to 'firefox'.
         :type webdriver_name: Optional[str]
         """
-        # Определяем режим работы
+        # Устанавливает режим работы бота
         mode = mode or self.config.mode
-        if mode not in (self.MODE_TEST, self.MODE_PROD, self.MODE_DEV):
-            logger.error(f'Неизвестный режим работы: {mode}')
-            raise ValueError(f'Неизвестный режим работы: {mode}')
-        # Инициализация токена в зависимости от режима
+        # Инициализирует токен на основе режима работы
         self.token = (
             gs.credentials.telegram.hypo69_test_bot
-            if mode == self.MODE_TEST
-            else gs.credentials.telegram.hypo69_kazarinov_bot if mode == self.MODE_PROD
-            else gs.credentials.telegram.hypo69_test_bot #TODO delete after test
+            if mode == 'test'
+            else gs.credentials.telegram.hypo69_kazarinov_bot
         )
-        # Инициализация родительских классов
-        TelegramBot.__init__(self, self.token)
-        BotHandler.__init__(self, getattr(self.config, 'webdriver_name', 'firefox'))
-        logger.info(f'Бот Kazarinov запущен в режиме: {mode}')
 
+        # Инициализирует родительские классы
+        TelegramBot.__init__(self, self.token)
+        # BotHandler.__init__ вызывается для настройки обработчика
+        BotHandler.__init__(self, getattr(self.config, 'webdriver_name', 'firefox'))
 
     async def handle_message(self, update: Update, context: CallbackContext) -> None:
         """
-        Обрабатывает входящие текстовые сообщения, определяет тип и вызывает соответствующий метод.
+        Handles incoming text messages, routing URLs and commands.
 
-        :param update: Объект Update от Telegram API.
-        :type update: telegram.Update
-        :param context: Объект CallbackContext от Telegram API.
-        :type context: telegram.ext.CallbackContext
+        :param update: Telegram update object.
+        :type update: Update
+        :param context: Telegram context object.
+        :type context: CallbackContext
         """
+        # Извлекает текст сообщения
         q = update.message.text
-        if not q:
-            logger.debug(f'Получено пустое сообщение от user_id:{update.effective_user.id}')
-            return
+
+        # Проверяет если сообщение "?" - отвечает картинкой
         if q == '?':
-            # Отправляет фотографию с блок-схемой
-            try:
-                await update.message.reply_photo(gs.path.endpoints / 'kazarinov' / 'assets' / 'user_flowchart.png')
-                logger.info(f'Отправлена блок-схема пользователю user_id:{update.effective_user.id}')
-            except Exception as ex:
-                logger.error(f'Не удалось отправить блок-схему пользователю user_id:{update.effective_user.id}', exc_info=ex)
+            await update.message.reply_photo(gs.path.endpoints / 'kazarinov' / 'assets' / 'user_flowchart.png')
             return
 
+        # Получает ID пользователя
+        user_id = update.effective_user.id
+        
+        # Проверяет, является ли текст URL
         if is_url(q):
-            # Обработка URL
             await self.handle_url(update, context)
-            # логика после обработки url
-            logger.info(f'Завершена обработка URL пользователем user_id:{update.effective_user.id}')
+            #  логика после завершения URL сценария
+            ...
             return
 
-        if q in self.NEXT_COMMANDS:
-            # Обработка команды перехода
-            await self.handle_next_command(update)
-            logger.info(f'Обработана команда перехода пользователем user_id:{update.effective_user.id}')
-            return
+        # Проверяет, есть ли сообщение в списке команд
+        if q in ('--next', '-next', '__next', '-n', '-q'):
+            return await self.handle_next_command(update)
 
-        # Обработка обычного текстового сообщения
-        try:
-            answer = self.model.chat(q)
-            await update.message.reply_text(answer)
-            logger.info(f'Отправлен ответ пользователю user_id:{update.effective_user.id}')
-        except Exception as ex:
-             logger.error(f'Ошибка при формировании ответа для user_id:{update.effective_user.id}', exc_info=ex)
+        # Если ни одно условие не выполнилось, отвечает моделью
+        answer = self.model.chat(q)
+        await update.message.reply_text(answer)
 
 
-def main():
-    """
-    Основная функция запуска бота.
-    Определяет режим работы в зависимости от имени хоста и запускает бота.
-    """
-    if gs.host_name == 'Vostro-3888':
-        mode = KazarinovTelegramBot.MODE_PROD
-        # mode = KazarinovTelegramBot.MODE_TEST # <- commnet to prod
-        kt = KazarinovTelegramBot(mode)
-    else:
-        kt = KazarinovTelegramBot()
+    @classmethod
+    def run(cls) -> None:
+      """
+      Runs the Kazarinov Telegram bot with specified mode.
+      This function parses command-line arguments to determine the bot's operating mode and then starts the bot using asyncio.
 
-    asyncio.run(kt.application.run_polling())
+      :return: None
+      """
+      parser = argparse.ArgumentParser(description="Run Kazarinov Telegram Bot with specified mode.")
+      parser.add_argument('-m', '--mode', type=str, default='test', help="Operating mode: 'test' or 'production'")
+      args = parser.parse_args()
+      mode = args.mode
+      if gs.host_name == 'Vostro-3888':
+          mode = 'prod'
+          # mode = 'test' # <- comment to prod
+      kt = cls(mode)
+      asyncio.run(kt.application.run_polling())
+
+
 
 if __name__ == "__main__":
-    main()
-```
+    KazarinovTelegramBot.run()

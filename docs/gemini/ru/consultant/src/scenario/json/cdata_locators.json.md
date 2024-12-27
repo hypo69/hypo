@@ -3,27 +3,28 @@
 **Качество кода**
 8
 - Плюсы
-    - Код представляет собой JSON-файл, который является структурированным и читаемым.
-    - Присутствуют различные локаторы для элементов веб-страницы, что полезно для парсинга данных.
-    - Структура JSON-файла логически разделена на категории, продукты и поля продуктов, что облегчает навигацию и понимание.
+    - Код представляет собой JSON-файл, который является стандартным форматом для хранения данных.
+    - Структура JSON-файла логически организована, что облегчает понимание его содержимого.
+    - Локаторы сгруппированы по смыслу (категория, продукт, поля продукта и т.д.).
 - Минусы
-    - Отсутствует описание структуры JSON и назначения каждого поля в формате reStructuredText.
-    -  Не используются константы для обозначения логических операций (`AND`, `OR`, `XOR`, `VALUE`), что усложняет понимание.
+    - Отсутствует описание назначения JSON-файла.
+    - Нет комментариев к элементам внутри файла.
+    - Значения `"logic for attribue[AND|OR|XOR|VALUE|null]"` всегда `null`, возможно стоит пересмотреть необходимость этого поля.
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание структуры JSON в формате reStructuredText, объясняющее назначение каждого блока и поля.
-2.  Заменить строковые значения `AND`, `OR`, `XOR`, `VALUE`, `null` на константы или enum для большей читаемости.
-3.  Добавить комментарии в формате reStructuredText к каждому блоку в JSON, чтобы улучшить понимание структуры данных.
-4.  Добавить проверку на типы данных для значений в JSON, таких как `selector`, `attribute`, чтобы избежать ошибок при использовании файла.
+1.  **Добавить описание файла**:  В начале файла, в виде комментария, добавить описание его назначения.
+2.  **Уточнить значения ключей**: Уточнить назначение ключа `"logic for attribue[AND|OR|XOR|VALUE|null]"` и привести его к общему виду, если он не используется.
+3.  **Добавить комментарии**: Добавить комментарии к элементам JSON для лучшего понимания назначения каждого блока.
+4.  **Использовать консистентность**: Привести имена ключей к одному стилю, например, использовать snake_case.
 
 **Оптимизированный код**
-
 ```json
 {
+  "comment": "JSON-файл с локаторами элементов для парсинга веб-сайта.",
   "category": {
     "pages_listing_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "href",
       "by": "css selector",
       "selector": "li.next-page a"
@@ -31,13 +32,13 @@
   },
   "product": {
     "product_block_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": "div.item-box"
     },
     "link_to_product_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "href",
       "by": "css selector",
       "selector": "div.product-item a"
@@ -45,61 +46,61 @@
   },
   "product_fields_locators": {
     "product_name_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=product-name] h1[itemprop='name']"
     },
     "brand_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": ".brands"
     },
     "sku_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=sku] span[itemprop='sku']"
     },
-    "brand_sku_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+     "brand_sku_locator": {
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=sku] span[itemprop='sku']"
     },
     "summary_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": "div[class=product-name] h1[itemprop='name']"
     },
     "description_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": ".data-table[role='presentation']"
     },
     "images_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "src",
       "by": "css selector",
       "selector": ".cloudzoom"
     },
     "price_locator": {
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+      "logic_for_attribute": null,
       "attribute": "innerHTML",
       "by": "css selector",
       "selector": "div span[itemprop='price']"
     }
   },
   "stock_locator": {
-    "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+    "logic_for_attribute": null,
     "attribute": "innerHTML",
     "by": "css selector",
     "selector": "div[class=stock]"
   },
-  "not in stock": [
+  "not_in_stock": [
     "color:red",
     "color:yellow",
     "color:#d19b00"

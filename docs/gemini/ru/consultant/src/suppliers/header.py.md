@@ -1,83 +1,80 @@
 # Анализ кода модуля `header`
 
 **Качество кода**
-8
-- Плюсы
-    - Код выполняет задачу определения корневой директории проекта и загрузки настроек.
-    - Используется `pathlib` для работы с путями, что является хорошей практикой.
-    - Присутствует обработка исключений при загрузке файлов настроек.
-    - Код разбит на логические блоки.
-    - Определены метаданные проекта.
-    - Использованы `docstring` для документирования модуля и функций
-- Минусы
-    - Не используется `j_loads` из `src.utils.jjson` для чтения файлов.
-    - Избыточное использование стандартных блоков `try-except`.
-    - Отсутствуют необходимые импорты из `src.logger.logger`.
-    - Местами отсутствуют docstring для переменных
-    - Имена некоторых переменных не соответствуют общепринятым соглашениям (например, `doc_str`).
-    - Есть опечатки в метаданных (например, `copyrihgnt`).
+    
+    - 7
+    - Плюсы
+        - Код достаточно хорошо структурирован и выполняет свою основную функцию по определению корневой директории проекта и загрузке настроек.
+        - Используется `pathlib.Path` для работы с путями, что является хорошей практикой.
+        - Присутствует механизм поиска корневой директории проекта, что полезно для гибкости.
+    - Минусы
+        - Отсутствует логирование ошибок при загрузке настроек и документации.
+        - Используется стандартный `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+        - Много избыточного кода try-except с `...`, что усложняет отладку.
+        - Отсутствуют docstring для переменных модуля.
+        - Не все импорты используются.
+        - Не все переменные имеют аннотации типов.
 
 **Рекомендации по улучшению**
 
-1.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки `settings.json`.
-2.  Заменить множественные блоки `try-except` на единый блок с использованием `logger.error` для логирования ошибок.
-3.  Добавить необходимые импорты из `src.logger.logger`.
-4.  Переименовать переменные для соответствия соглашениям (например, `doc_str` на `readme_content`).
-5.  Исправить опечатку в `copyright`.
-6. Добавить документацию для переменных.
-7. Добавить более подробные описания в docstring.
+1.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для загрузки JSON файлов.
+2.  Добавить логирование ошибок при загрузке настроек и документации, используя `logger.error`.
+3.  Убрать избыточное использование `try-except` с `...` и заменить на корректную обработку исключений с логированием.
+4.  Добавить docstring для переменных модуля.
+5.  Удалить неиспользуемые импорты.
+6.  Добавить аннотации типов для переменных там где их нет.
+7.  Добавить подробные комментарии в формате RST для всех функций и модуля.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для определения корневой директории проекта и загрузки основных настроек.
-=================================================================================
+Модуль для определения корневой директории проекта,
+загрузки настроек и метаданных проекта.
+=========================================================================================
 
-Этот модуль предоставляет функциональность для автоматического определения корневой
-директории проекта на основе наличия маркерных файлов, таких как 'pyproject.toml',
-'requirements.txt' или '.git'. Также модуль загружает настройки проекта из файла
-'settings.json' и считывает содержимое 'README.MD', предоставляя доступ к этим
-данным через глобальные переменные.
-
-Пример использования
---------------------
+Этот модуль предоставляет функциональность для определения корневой директории проекта
+на основе наличия определенных файлов-маркеров, загружает настройки из файла `settings.json`
+и читает документацию из `README.MD`.
 
 .. code-block:: python
 
-    from src.suppliers.header import __project_name__, __version__, __doc__, __author__
+    from src.suppliers.header import __root__ , __project_name__, __version__, __doc__, __details__, __author__, __copyright__, __cofee__
 
-    print(f"Project Name: {__project_name__}")
-    print(f"Version: {__version__}")
-    print(f"Author: {__author__}")
+    print(__project_name__)
+
 """
-MODE = 'dev'
-
 import sys
 from pathlib import Path
-# импортируем j_loads
+# избыточный импорт
+# import json
+# from packaging.version import Version
+# Код импортирует j_loads для обработки json файлов.
 from src.utils.jjson import j_loads
+# Код импортирует logger для логирования ошибок.
 from src.logger.logger import logger
-from packaging.version import Version
+
+MODE = 'dev'
+"""str: Режим работы приложения (dev, prod)"""
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 
-    Функция ищет корневую директорию проекта, начиная с директории текущего файла и поднимаясь вверх
-    по дереву каталогов. Поиск останавливается при обнаружении первого каталога, содержащего
-    один из маркерных файлов.
+    Начиная с директории текущего файла, поиск идет вверх по родительским директориям
+    до тех пор, пока не будет найдена директория, содержащая хотя бы один из файлов-маркеров.
 
-    :param marker_files: Кортеж имен файлов или каталогов для идентификации корня проекта.
+    :param marker_files: Кортеж имен файлов или директорий, которые используются для идентификации корневой директории проекта.
     :type marker_files: tuple
-    :return: Путь к корневой директории проекта, если она найдена, иначе - путь к директории, где находится скрипт.
+    :return: Путь к корневой директории проекта. Если корневая директория не найдена, возвращается директория, где находится скрипт.
     :rtype: Path
     """
-    __root__:Path
-    current_path:Path = Path(__file__).resolve().parent
+    __root__: Path
+    current_path: Path = Path(__file__).resolve().parent
     __root__ = current_path
     for parent in [current_path] + list(current_path.parents):
         if any((parent / marker).exists() for marker in marker_files):
@@ -87,78 +84,55 @@ def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt'
         sys.path.insert(0, str(__root__))
     return __root__
 
-
-# Определяем корневую директорию проекта
-__root__ = set_project_root()
-"""
-:type: Path
-:desc:  Путь к корневой директории проекта.
-"""
+# Код получает корневую директорию проекта.
+__root__: Path = set_project_root()
+"""Path: Путь к корневой директории проекта."""
 
 from src import gs
-
-settings: dict = None
-"""
-:type: dict
-:desc: Словарь с настройками проекта, загруженными из файла 'settings.json'.
-"""
+#  добавил аннотацию типа
+settings: dict | None = None
+# Код загружает настройки из settings.json
 try:
-    # код исполняет загрузку настроек из файла 'settings.json'
-    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+    with open(gs.path.root / 'src' / 'settings.json', 'r') as settings_file:
+        # settings = json.load(settings_file)
+        # Код использует j_loads для загрузки json файла
         settings = j_loads(settings_file)
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    # Логируем ошибку, если файл не найден или не удается декодировать JSON
-    logger.error(f'Ошибка при загрузке настроек из файла {gs.path.root / "src" / "settings.json"}', exc_info=e)
-    ...
+except FileNotFoundError:
+    # Код логирует ошибку если файл не найден
+    logger.error(f'Файл settings.json не найден {gs.path.root / "src" / "settings.json"}')
+    settings = {}
+except Exception as e:
+    # Код логирует ошибку если json не удалось декодировать
+    logger.error(f'Ошибка декодирования json {gs.path.root / "src" / "settings.json"}', exc_info=e)
+    settings = {}
 
-readme_content: str = None
-"""
-:type: str
-:desc: Содержимое файла 'README.MD'.
-"""
+# Код загружает содержимое README.MD
+doc_str: str | None = None
 try:
-    # Код исполняет чтение содержимого файла 'README.MD'
-    with open(gs.path.root / 'src' /  'README.MD', 'r') as readme_file:
-        readme_content = readme_file.read()
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    # Логируем ошибку, если файл не найден или не удается прочитать файл
-    logger.error(f'Ошибка при чтении файла {gs.path.root / "src" / "README.MD"}', exc_info=e)
-    ...
+    with open(gs.path.root / 'src' / 'README.MD', 'r', encoding='utf-8') as settings_file:
+        doc_str = settings_file.read()
+except FileNotFoundError:
+    # Код логирует ошибку если файл не найден
+     logger.error(f'Файл README.MD не найден {gs.path.root / "src" / "README.MD"}')
+     doc_str = ''
+except Exception as e:
+    # Код логирует ошибку
+    logger.error(f'Ошибка чтения файла README.MD {gs.path.root / "src" / "README.MD"}', exc_info=e)
+    doc_str = ''
 
-# Получение метаданных проекта из настроек или установка значений по умолчанию.
-__project_name__: str = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
-"""
-:type: str
-:desc: Имя проекта.
-"""
-__version__: str = settings.get("version", '')  if settings  else ''
-"""
-:type: str
-:desc: Версия проекта.
-"""
-__doc__: str = readme_content if readme_content else ''
-"""
-:type: str
-:desc: Содержимое файла README.MD.
-"""
+
+__project_name__: str = settings.get("project_name", 'hypotez') if settings else 'hypotez'
+"""str: Имя проекта."""
+__version__: str = settings.get("version", '') if settings else ''
+"""str: Версия проекта."""
+__doc__: str = doc_str if doc_str else ''
+"""str: Документация проекта, полученная из файла README.MD."""
 __details__: str = ''
-"""
-:type: str
-:desc: Детали проекта (в текущей реализации не используется).
-"""
-__author__: str = settings.get("author", '')  if settings  else ''
-"""
-:type: str
-:desc: Автор проекта.
-"""
-__copyright__: str = settings.get("copyright", '')  if settings  else ''
-"""
-:type: str
-:desc: Информация об авторских правах.
-"""
-__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
-"""
-:type: str
-:desc: Сообщение для поддержки разработчика.
-"""
+"""str: Детали проекта."""
+__author__: str = settings.get("author", '') if settings else ''
+"""str: Автор проекта."""
+__copyright__: str = settings.get("copyrihgnt", '') if settings else ''
+"""str: Информация о авторских правах."""
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69") if settings else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+"""str: Призыв поддержать разработчика чашечкой кофе."""
 ```

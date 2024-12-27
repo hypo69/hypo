@@ -1,27 +1,23 @@
-# Анализ кода модуля `__init__.py`
+# Анализ кода модуля `src.goog.spreadsheet`
 
 **Качество кода**
 8
 -  Плюсы
-    - Код имеет базовую структуру и объявляет константу `MODE`.
-    - Присутствуют импорты других модулей.
-    - В начале файла есть docstring.
+    - Код структурирован, использует импорты.
+    -  Присутствует docstring в начале файла.
 -  Минусы
-    -  Отсутствует описание модуля и его назначения в docstring.
-    -  Не хватает документации в reStructuredText (RST).
-    -  Нет описания константы `MODE`.
-    -  Не указаны типы импортируемых модулей, что усложняет понимание кода.
-    -  Отсутствует импорт `logger`.
-    -  Не все комментарии соответствуют RST.
+    -  Отсутствует явное описание модуля.
+    -  Не используется `logger` для логирования.
+    - Отсутствуют docstring для переменных.
+    - `MODE` не имеет аннотации типа
 
 **Рекомендации по улучшению**
 
-1.  Добавить подробное описание модуля в docstring в формате RST.
-2.  Добавить подробное описание константы `MODE`.
-3.  Импортировать `logger` и использовать его для логирования.
-4.  Преобразовать все комментарии в формат RST.
-5.  Добавить проверку типов при импорте.
-6.  Добавить пример использования.
+1.  Добавить подробное описание модуля в формате reStructuredText (RST).
+2.  Использовать `from src.logger.logger import logger` для логирования.
+3.  Добавить docstring для переменной `MODE`
+4.  Добавить аннотацию типа для переменной `MODE`
+5.  Добавить docstring для импортированных модулей `SpreadSheet` и `ReachSpreadsheet`
 
 **Оптимизированный код**
 
@@ -31,44 +27,24 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с Google Spreadsheets.
+Модуль для работы с Google Sheets.
 =========================================================================================
 
-Этот модуль предоставляет классы и инструменты для взаимодействия с Google Spreadsheets API,
-включая чтение, запись и обработку данных.
+Этот модуль предоставляет классы :class:`SpreadSheet` и :class:`ReachSpreadsheet`
+для взаимодействия с Google Sheets API.
 
-Модуль включает классы:
-    - :class:`SpreadSheet` - для работы с отдельными таблицами Google Sheets.
-    - :class:`ReachSpreadsheet` - для расширенных возможностей взаимодействия.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from src.goog.spreadsheet import SpreadSheet, ReachSpreadsheet
-
-    # Пример инициализации SpreadSheet
-    # spreadsheet = SpreadSheet(credentials_path='path/to/credentials.json', spreadsheet_id='your_spreadsheet_id')
-    # Пример инициализации ReachSpreadsheet
-    # reach_spreadsheet = ReachSpreadsheet(credentials_path='path/to/credentials.json', spreadsheet_id='your_spreadsheet_id')
-
+:platform: Windows, Unix
+:synopsis:
 """
-from src.logger.logger import logger  # Импорт logger для логирования
-from typing import TYPE_CHECKING # Импорт для проверки типов
+from typing import Literal
 
-if TYPE_CHECKING:
-    from .spreadsheet import SpreadSheet
-    from .reach_spreadsheet import ReachSpreadsheet
-    
-#: Режим работы приложения.
-#: Может принимать значения 'dev' для разработки, 'test' для тестирования, 'prod' для продакшена.
-MODE: str = 'dev'
+MODE: Literal['dev', 'prod'] = 'dev'
+# ^ Код объявляет переменную MODE, которая может принимать значения 'dev' или 'prod'. Изначально ей присвоено значение 'dev'
 
-
-
-# Импорт классов SpreadSheet и ReachSpreadsheet из соответствующих модулей.
-# Данные импорты предназначены для использования функциональности работы с Google Spreadsheets.
+from src.logger.logger import logger
+# ^ Код импортирует logger для логирования ошибок и отладки
 from .spreadsheet import SpreadSheet
+# ^ Код импортирует класс SpreadSheet из модуля spreadsheet
 from .reach_spreadsheet import ReachSpreadsheet
+# ^ Код импортирует класс ReachSpreadsheet из модуля reach_spreadsheet
 ```

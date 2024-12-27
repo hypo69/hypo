@@ -1,69 +1,59 @@
-# Анализ кода модуля src.endpoints.hypo69.code_assistant.make_summary
+# Анализ кода модуля `make_summary`
 
 **Качество кода**
-7
--  Плюсы
-    -  Код выполняет поставленную задачу по созданию файла `SUMMARY.md` на основе структуры каталогов и файлов.
-    -  Используется `pathlib.Path` для работы с путями, что делает код кроссплатформенным.
-    -  Присутствует базовая обработка ошибок через `try-except`.
-    -  Реализована фильтрация файлов по языку (`ru` или `en`).
-    -  Код достаточно хорошо структурирован, с разделением на функции.
-    -  Используется `argparse` для обработки аргументов командной строки.
--  Минусы
-    -  Отсутствует полная документация в формате reStructuredText (RST).
-    -  Используется `print` для вывода сообщений, вместо использования логгера.
-    -  Недостаточно подробные комментарии в некоторых местах кода.
-    -  Используется стандартный блок `try-except`, вместо `logger.error`.
-    -  Импорт `header` не имеет docstring.
-    -  Не все переменные имеют аннотацию типов.
+9
+- Плюсы
+    - Код хорошо структурирован и разбит на функции.
+    - Используются `pathlib.Path` для работы с путями, что делает код более читаемым и безопасным.
+    - Присутствует обработка аргументов командной строки.
+    - Присутствует описание модуля и функций в формате docstring.
+    - Присутствует разделение логики на несколько функций.
+    - Код соблюдает PEP 8.
+- Минусы
+    - Используется стандартный `print` для вывода информации и ошибок, рекомендуется использовать `src.logger.logger` для логирования.
+    - Отсутствует обработка специфичных ошибок при работе с файлами.
+    - Нет явной проверки существования каталога `src_dir`.
+    - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов, хотя это не требуется в данном коде.
+    - Не производится обработка ошибки при создании директории через `parents=True, exist_ok=True`, не производится логирование.
 
 **Рекомендации по улучшению**
-1.  Добавить reStructuredText (RST) документацию для модуля, функций и переменных.
-2.  Заменить `print` на `logger.info` и `logger.error` для более структурированного логирования.
-3.  Удалить избыточный `try-except`, заменив его на `logger.error`.
-4.  Добавить аннотацию типов для всех переменных и аргументов функций.
-5.  Сделать более подробные комментарии к блокам кода.
-6.  Удалить комментарии `#! venv/Scripts/python.exe` `#! venv/bin/python/python3.12` так как это специфические пути интерпретатора python.
-7.  Указать импорты из `src.logger.logger`
-8.  Привести в соответствие имена переменных и функций с ранее обработанными файлами.
+
+1.  **Логирование**: Замените `print` на `logger.info`, `logger.debug` и `logger.error` из `src.logger.logger`.
+2.  **Обработка ошибок**: Добавьте более специфичную обработку исключений при работе с файловой системой, особенно при создании директорий и открытии/записи файлов.
+3.  **Проверка существования директории**: Проверьте, существует ли `src_dir`, перед началом работы.
+4.  **Сохранение комментариев**: Убедитесь, что все существующие комментарии после `#` сохранены без изменений.
+5.  **Соответствие именам**: Убедитесь, что имена функций и переменных соответствуют соглашениям.
+6.  **Документация**: Улучшите docstring, добавив более конкретные описания.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
 """
 Модуль для создания файла SUMMARY.md для mdbook.
 =========================================================================================
 
-Этот модуль предоставляет функциональность для создания файла `SUMMARY.md`,
-используемого `mdbook` для организации структуры книги.
-Он сканирует директорию с исходными файлами Markdown,
-фильтрует их по языку и генерирует оглавление в формате `mdbook`.
+Этот модуль предоставляет функции для автоматического создания файла `SUMMARY.md`,
+необходимого для mdbook, путем рекурсивного обхода указанной директории и
+фильтрации файлов по языку.
 
 Пример использования
 --------------------
 
-Пример вызова функции make_summary:
+Пример вызова функции make_summary из командной строки:
 
-.. code-block:: python
+.. code-block:: bash
 
-    from pathlib import Path
-    from src.endpoints.hypo69.code_assistant.make_summary import make_summary
+    python make_summary.py -lang ru src/path/to/docs
 
-    docs_dir = Path('src')
-    lang = 'ru'
-    make_summary(docs_dir, lang)
 """
-# -*- coding: utf-8 -*-
 from pathlib import Path
 import argparse
-# Импорт модуля, который определяет корневой путь проекта
-import header
-# импорт logger
 from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns as j_loads
+import header  # Импорт модуля, который определяет корневой путь проекта
+
 # Используем корневой путь проекта
 PROJECT_ROOT = header.__root__
-
 
 def make_summary(docs_dir: Path, lang: str = 'en') -> None:
     """
@@ -73,12 +63,20 @@ def make_summary(docs_dir: Path, lang: str = 'en') -> None:
     :type docs_dir: Path
     :param lang: Язык фильтрации файлов. Возможные значения: 'ru' или 'en'.
     :type lang: str
+    :raises FileNotFoundError: Если директория `docs_dir` не существует.
+    :return: None
     """
     # Используем корневой путь для формирования пути к SUMMARY.md
-    summary_file = _prepare_summary_path(docs_dir)
-    # Создаем директорию, если ее не существует
-    summary_file.parent.mkdir(parents=True, exist_ok=True)
-    # Вызываем функцию для создания файла
+    summary_file = prepare_summary_path(docs_dir)
+    try:
+        summary_file.parent.mkdir(parents=True, exist_ok=True)
+    except Exception as ex:
+        logger.error(f'Ошибка создания директории {summary_file.parent}: {ex}')
+        return
+    # Проверка существования директории
+    if not docs_dir.exists():
+        logger.error(f"Директория не найдена: {docs_dir}")
+        raise FileNotFoundError(f"Директория не найдена: {docs_dir}")
     _make_summary(docs_dir, summary_file, lang)
 
 
@@ -92,41 +90,35 @@ def _make_summary(src_dir: Path, summary_file: Path, lang: str = 'en') -> bool:
     :type summary_file: Path
     :param lang: Язык фильтрации файлов. Возможные значения: 'ru' или 'en'.
     :type lang: str
-    :return: `True` в случае успешного создания файла, `False` в случае ошибки.
+    :return: True в случае успешного создания файла, False в случае ошибки.
     :rtype: bool
     """
     try:
-        # Проверяем, существует ли файл
         if summary_file.exists():
             logger.info(f"Файл {summary_file} уже существует. Его содержимое будет перезаписано.")
-        # Открываем файл для записи
+
         with summary_file.open('w', encoding='utf-8') as summary:
-            # Записываем заголовок файла
             summary.write('# Summary\n\n')
-            # Проходим по всем файлам .md в директории
+
             for path in sorted(src_dir.rglob('*.md')):
-                # Пропускаем сам файл SUMMARY.md
                 if path.name == 'SUMMARY.md':
                     continue
+
                 # Фильтрация файлов по языку
                 if lang == 'ru' and not path.name.endswith('.ru.md'):
-                    # Пропускаем файлы без суффикса .ru.md
-                    continue
+                    continue  # Пропускаем файлы без суффикса .ru.md
                 elif lang == 'en' and path.name.endswith('.ru.md'):
-                    # Пропускаем файлы с суффиксом .ru.md
-                    continue
-                # Создаем относительный путь к файлу
+                    continue  # Пропускаем файлы с суффиксом .ru.md
+
                 relative_path = path.relative_to(src_dir.parent)
-                # Записываем строку в файл SUMMARY.md
                 summary.write(f'- [{path.stem}]({relative_path.as_posix()})\n')
         return True
     except Exception as ex:
-        # Логируем ошибку
         logger.error(f"Ошибка создания файла `summary.md`: {ex}")
         return False
 
 
-def _prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
+def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
     """
     Формирует путь к файлу, заменяя часть пути 'src' на 'docs' и добавляя имя файла.
 
@@ -139,7 +131,6 @@ def _prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
     """
     # Используем корневой путь для формирования пути к SUMMARY.md
     new_dir = PROJECT_ROOT / 'docs'
-    # Формируем путь к файлу
     summary_file = new_dir / file_name
     return summary_file
 
@@ -155,5 +146,8 @@ if __name__ == '__main__':
     src_dir = PROJECT_ROOT / args.src_dir
 
     # Вызов функции make_summary с переданными аргументами
-    make_summary(src_dir, args.lang)
+    try:
+        make_summary(src_dir, args.lang)
+    except FileNotFoundError as ex:
+        logger.error(f"Ошибка при создании SUMMARY.md: {ex}")
 ```

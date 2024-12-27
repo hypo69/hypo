@@ -1,28 +1,24 @@
 # Анализ кода модуля `brands.json`
 
 **Качество кода**
- 
-8
--  Плюсы
-    - Код представляет собой валидный JSON.
-    - Структура данных понятна и логична, содержит информацию о брендах и их параметрах.
-    - Данные хорошо структурированы.
- -  Минусы
-    - Отсутствует описание модуля.
-    - Нет документации, комментариев.
-    - Название файла не соответствует формату.
+7
+- Плюсы
+    - Данные представлены в формате JSON, что является стандартным и удобным для обработки.
+    - Структура данных достаточно проста и понятна, что облегчает её использование.
+    - Присутствует поле `active`, что позволяет включать или выключать бренды при обработке.
+- Минусы
+    - Отсутствует описание структуры в комментариях.
+    - Нет проверок на корректность значений (например, `active` должно быть `true` или `false`).
+    - Поле `condition` всегда имеет значение `new`, что может быть избыточным.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    -   Добавить описание модуля в начале файла.
-    -   Добавить описание структуры json данных.
-
-2. **Именование**:
-    -  Переименовать файл в `brands_data.json` для соответствия именованию других файлов json.
-
-3.  **Форматирование**:
-    -  Обеспечить консистентность форматирования JSON (например, убрать лишние пустые строки).
+1. Добавить описание структуры данных в формате reStructuredText (RST) в отдельном файле.
+2. Реализовать валидацию данных, например, проверку типа данных и допустимых значений.
+3. Рассмотреть возможность использования более гибкой структуры, если в будущем появятся дополнительные поля.
+4. Оптимизировать структуру, если поле `condition` всегда имеет одно и то же значение.
+5. Привести ключи к единому формату, так как есть ключи типа `AOURUS BY GIGABYTE`
+6. Переписать все комментарии в формате `reStructuredText`
 
 **Оптимизированный код**
 
@@ -49,7 +45,7 @@
       "condition": "new",
       "presta_categories": 26
     },
-    "AOURUS BY GIGABYTE": {
+     "AOURUS_BY_GIGABYTE": {
       "active": true,
       "condition": "new",
       "presta_categories": 33
@@ -74,7 +70,7 @@
       "condition": "new",
       "presta_categories": 39
     },
-    "COOLER MASTER": {
+    "COOLER_MASTER": {
       "active": true,
       "condition": "new",
       "presta_categories": 4
@@ -94,7 +90,7 @@
       "condition": "new",
       "presta_categories": 16
     },
-    "D-LINK": {
+    "D_LINK": {
       "active": true,
       "condition": "new",
       "presta_categories": 41
@@ -114,12 +110,12 @@
       "condition": "new",
       "presta_categories": 34
     },
-    "G.SKILL": {
+    "G_SKILL": {
       "active": true,
       "condition": "new",
       "presta_categories": 17
     },
-    "GENERIC": {
+     "GENERIC": {
       "active": true,
       "condition": "new",
       "presta_categories": 6
@@ -154,12 +150,12 @@
       "condition": "new",
       "presta_categories": 14
     },
-    "LOGITECH": {
+     "LOGITECH": {
       "active": true,
       "condition": "new",
       "presta_categories": 11
     },
-    "MAG": {
+     "MAG": {
       "active": true,
       "condition": "new",
       "presta_categories": 32
@@ -179,12 +175,12 @@
       "condition": "new",
       "presta_categories": 22
     },
-    "NVIDIA TESLA": {
+    "NVIDIA_TESLA": {
       "active": true,
       "condition": "new",
       "presta_categories": 37
     },
-     "NVIDIA QUATRO": {
+     "NVIDIA_QUATRO": {
       "active": true,
       "condition": "new",
       "presta_categories": 28
@@ -194,7 +190,7 @@
       "condition": "new",
       "presta_categories": 27
     },
-     "PNY": {
+    "PNY": {
       "active": true,
       "condition": "new",
       "presta_categories": 25
@@ -204,7 +200,7 @@
       "condition": "new",
       "presta_categories": 21
     },
-   "SANDISK": {
+    "SANDISK": {
       "active": true,
       "condition": "new",
       "presta_categories": 29
@@ -219,17 +215,17 @@
       "condition": "new",
       "presta_categories": 36
     },
-    "TP-LINK": {
+     "TP_LINK": {
       "active": true,
       "condition": "new",
       "presta_categories": 52
     },
-     "WESTERN DIGITAL": {
+    "WESTERN_DIGITAL": {
       "active": true,
       "condition": "new",
       "presta_categories": 30
     },
-    "WD": {
+     "WD": {
       "active": true,
       "condition": "new",
       "presta_categories": 30

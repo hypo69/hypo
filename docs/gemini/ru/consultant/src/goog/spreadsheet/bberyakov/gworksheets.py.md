@@ -1,28 +1,37 @@
-# Анализ кода модуля `gworksheets.py`
+## Анализ кода модуля `gworksheets.py`
 
 **Качество кода**
-7
--  Плюсы
-    - Код структурирован в класс `GWorksheet`, наследующий от `Worksheet`.
-    - Имеется базовая функциональность для работы с Google Sheets, включая создание, открытие и очистку листов.
-    - Используется класс `GSRender` для отрисовки данных в таблице.
--  Минусы
-    - Не все docstring соответствуют стандарту reStructuredText.
-    - Отсутствует импорт необходимых модулей (например, `logger` из `src.logger.logger`).
-    - Есть дублирование кода и неэффективное использование переменных (например, `sh.gsh` обращение к одному и тому же объекту несколько раз).
-    - Некоторые комментарии не полные и не соответствуют reStructuredText.
-    -  Отсутствует обработка ошибок.
-    -  Не везде используется логирование.
-    -  Используются `print` вместо `logger`.
+- **Соответствие требованиям**: 7/10
+    - **Плюсы:**
+        - Код в целом структурирован и выполняет заявленные функции.
+        - Присутствует разделение на классы и методы, что улучшает читаемость.
+        - Используется класс `GSRender` для отрисовки, что соответствует принципу разделения ответственности.
+    - **Минусы:**
+        - Отсутствует полная документация в формате reStructuredText (RST).
+        - Использование стандартного `print` для вывода сообщений вместо логирования.
+        - Не все комментарии достаточно информативны или соответствуют стандарту RST.
+        - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+        - Присутствует избыточное использование `...` как точек остановки.
+        - Не все методы класса `GWorksheet` имеют docstring.
+        - В некоторых местах код можно сделать более лаконичным и читаемым.
+        - Присутсвует дублирование кода в функциях `get` и `direction`.
 
 **Рекомендации по улучшению**
-1.  **Импорты**: Добавить недостающие импорты, такие как `logger` из `src.logger.logger`.
-2.  **Docstrings**: Переписать docstring в формате RST, включая описания параметров и возвращаемых значений, а также модуля и класса.
-3.  **Логирование**: Использовать `logger.error` вместо `try-except` и `print` для обработки и логирования ошибок.
-4.  **Рефакторинг**: Убрать дублирование кода и оптимизировать обращения к объектам.
-5.  **Комментарии**:  Комментарии должны быть информативными, написаны в формате reStructuredText и объяснять назначение следующего за ними блока кода.
-6.  **Улучшение функции `get`:** Код можно сделать более читаемым за счет вынесения повторяющихся операций обращения к `sh.gsh` в отдельную переменную.
-7.  **Использовать константы:** Для параметров `rtl` лучше использовать константы, вместо дублирования значений.
+1. **Документация**:
+    - Добавить docstring в формате RST для всех классов, методов и переменных, включая описание параметров и возвращаемых значений.
+    - Переписать все существующие комментарии в формате RST, если это необходимо.
+2. **Логирование**:
+    - Заменить `print` на логирование с помощью `from src.logger.logger import logger`.
+    - Добавить логирование ошибок и отладочные сообщения.
+3. **Использование `j_loads`**:
+    - Убедиться, что для чтения файлов используется `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это необходимо.
+4. **Удаление точек остановки**:
+    - Избегать использования `...` в коде.
+5. **Обработка ошибок**:
+     - Избегать использования стандартных блоков `try-except`, и логировать ошибки через `logger.error`.
+6. **Рефакторинг**:
+    - Устранить дублирование кода в методах `get` и `direction`, выделив общие операции в отдельные функции.
+    - Избегать избыточного использования переменных `_ws`.
 
 **Оптимизированный код**
 ```python
@@ -31,167 +40,185 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для работы с Google Sheets Worksheet.
-=====================================================
+Модуль для работы с Google Sheets API.
+=========================================================================================
 
-Этот модуль предоставляет класс :class:`GWorksheet`, который наследует от :class:`Worksheet`
-и используется для управления листами (worksheets) в Google Sheets.
+Этот модуль предоставляет класс :class:`GWorksheet`, который упрощает взаимодействие
+с Google Sheets API для создания, открытия и управления листами (worksheets) в
+электронных таблицах. Класс также включает методы для установки направления текста
+и добавления заголовков.
 
-Он включает функции для создания, открытия и очистки листов, а также для установки
-направления текста и форматирования заголовков.
-
-Пример использования:
+Пример использования
 --------------------
+
+Пример создания и настройки нового листа:
 
 .. code-block:: python
 
-    sh = ... # экземпляр Spreadsheet
-    ws = GWorksheet(sh, ws_title='MySheet', rows=100, cols=20, wipe_if_exist=True)
-    ws.header('Заголовок таблицы')
+    from global_settingspread import Spreadsheet
+    from goog.spreadsheet.bberyakov.gworksheets import GWorksheet
+
+    spreadsheet = Spreadsheet(file_name='my_spreadsheet.json')
+    gws = GWorksheet(spreadsheet, ws_title='My New Sheet', rows=150, cols=50)
+    gws.header('My Sheet Header', range='A1:F1')
+
 """
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
 MODE = 'dev'
 
 from global_settingspread import Spreadsheet, Worksheet
 from goog.grender import GSRender
 from typing import Union
-from src.logger.logger import logger  # Импорт logger
+from src.logger.logger import logger # импортируем logger
 
-RTL = 'rtl'
 
 class GWorksheet(Worksheet):
     """
-    Класс для управления листами в Google Sheets.
+    Класс для работы с листом Google Таблиц.
 
-    Наследует от :class:`Worksheet` и предоставляет методы для создания, открытия,
-    очистки, установки направления текста и форматирования заголовков листов.
+    Предоставляет методы для создания, открытия, настройки направления текста
+    и добавления заголовков в листы Google Таблиц.
 
-    :ivar sh: Экземпляр Spreadsheet.
+    :ivar sh: Объект Spreadsheet.
     :vartype sh: Spreadsheet
-    :ivar ws: Экземпляр Worksheet.
+    :ivar ws: Объект Worksheet.
     :vartype ws: Worksheet
-    :ivar render: Экземпляр GSRender для отрисовки данных.
+    :ivar render: Объект GSRender для отрисовки элементов.
     :vartype render: GSRender
     """
     sh = None
     ws: Worksheet = None
     render: GSRender = GSRender()
 
-    def __init__(self, sh, ws_title: str = 'new', rows: int = None, cols: int = None, direction: str = RTL, wipe_if_exist: bool = True, *args, **kwards) -> None:
+    def __init__(self, sh: Spreadsheet, ws_title: str = 'new', rows: int = None, cols: int = None,
+                 direction: str = 'rtl', wipe_if_exist: bool = True, *args, **kwards) -> None:
         """
-        Инициализирует объект GWorksheet.
+        Инициализация объекта GWorksheet.
 
-        :param sh: Экземпляр Spreadsheet.
+        :param sh: Объект Spreadsheet.
         :type sh: Spreadsheet
-        :param ws_title: Название листа. По умолчанию 'new'.
-        :type ws_title: str
-        :param rows: Количество строк. По умолчанию None.
-        :type rows: int
-        :param cols: Количество столбцов. По умолчанию None.
-        :type cols: int
-        :param direction: Направление текста. По умолчанию 'rtl'.
-        :type direction: str
-        :param wipe_if_exist: Очищать ли лист, если он существует. По умолчанию True.
-        :type wipe_if_exist: bool
-        :param args: Произвольные позиционные аргументы.
+        :param ws_title: Название листа.
+        :type ws_title: str, optional
+        :param rows: Количество строк листа.
+        :type rows: int, optional
+        :param cols: Количество столбцов листа.
+        :type cols: int, optional
+        :param direction: Направление текста ('rtl' или 'ltr').
+        :type direction: str, optional
+        :param wipe_if_exist: Очистить лист при открытии, если существует.
+        :type wipe_if_exist: bool, optional
+        :param args: Дополнительные позиционные аргументы.
         :type args: tuple
-        :param kwards: Произвольные именованные аргументы.
+        :param kwards: Дополнительные именованные аргументы.
         :type kwards: dict
-        :raises Exception: Если возникает ошибка при инициализации.
+        :raises Exception: Если не удалось получить лист.
         """
+        self.sh = sh
         try:
-            self.sh = sh
-            self.get(self.sh, ws_title, rows, cols, direction, wipe_if_exist)
-            ...
+            self.get(sh, ws_title, rows, cols, direction, wipe_if_exist)
         except Exception as ex:
-            logger.error(f'Ошибка при инициализации GWorksheet: {ex}')
-            ...
+           logger.error(f'Ошибка при инициализации GWorksheet: {ex}')
+        
 
-    def get(self, sh, ws_title: str = 'new', rows: int = 100, cols: int = 100, direction: str = RTL, wipe_if_exist: bool = True):
+    def _get_worksheet(self, sh: Spreadsheet, ws_title: str, rows: int, cols: int, wipe_if_exist: bool) -> Worksheet:
         """
-        Получает или создает лист в Google Sheets.
+        Получение или создание листа Google Таблиц.
 
-        Если `ws_title` равен 'new', создает новый лист.
-        В противном случае, открывает существующий лист или создает новый,
-        если такого листа нет.
-
-        :param sh: Экземпляр Spreadsheet.
+        :param sh: Объект Spreadsheet.
         :type sh: Spreadsheet
-        :param ws_title: Название листа. По умолчанию 'new'.
+        :param ws_title: Название листа.
         :type ws_title: str
-        :param rows: Количество строк для нового листа. По умолчанию 100.
+        :param rows: Количество строк листа.
         :type rows: int
-        :param cols: Количество столбцов для нового листа. По умолчанию 100.
+        :param cols: Количество столбцов листа.
         :type cols: int
-        :param direction: Направление текста. По умолчанию 'rtl'.
-        :type direction: str
-        :param wipe_if_exist: Очищать ли лист, если он существует. По умолчанию True.
+        :param wipe_if_exist: Очистить лист при открытии, если существует.
         :type wipe_if_exist: bool
-        :raises Exception: Если возникает ошибка при получении листа.
+        :return: Объект Worksheet.
+        :rtype: Worksheet
+        :raises Exception: Если не удалось получить или создать лист.
+        """
+        if ws_title == 'new':
+            try:
+                ws = sh.gsh.get()
+                return ws
+            except Exception as ex:
+                logger.error(f'Не удалось получить новый лист: {ex}')
+                raise
+        else:
+            try:
+                if ws_title in [ws.title for ws in sh.gsh.worksheets()]:
+                    logger.info(f'Лист {ws_title} уже существует.')
+                    ws = sh.gsh.worksheet(ws_title)
+                    if wipe_if_exist:
+                        ws.clear()
+                    return ws
+                else:
+                    ws = sh.gsh.add_worksheet(ws_title, rows, cols)
+                    logger.info(f'Создан новый лист: {ws_title}')
+                    return ws
+            except Exception as ex:
+                logger.error(f'Ошибка при получении или создании листа {ws_title}: {ex}')
+                raise
+                
+    def get(self, sh: Spreadsheet, ws_title: str = 'new', rows: int = 100, cols: int = 100, direction: str = 'rtl',
+            wipe_if_exist: bool = True) -> None:
+        """
+        Получение или создание листа Google Таблиц.
+
+        Если `ws_title` равно 'new', создается новый лист.
+        Иначе, открывается существующий лист с названием `ws_title`.
+        Если лист существует и `wipe_if_exist` True, то лист очищается от старых данных.
+
+        :param sh: Объект Spreadsheet.
+        :type sh: Spreadsheet
+        :param ws_title: Название листа.
+        :type ws_title: str, optional
+        :param rows: Количество строк листа.
+        :type rows: int, optional
+        :param cols: Количество столбцов листа.
+        :type cols: int, optional
+        :param direction: Направление текста ('rtl' или 'ltr').
+        :type direction: str, optional
+        :param wipe_if_exist: Очистить лист при открытии, если существует.
+        :type wipe_if_exist: bool, optional
+        :raises Exception: Если не удалось получить или создать лист.
         """
         try:
-            gsh = sh.gsh # Сохранение объекта gsh в переменную для избежания повторных обращений.
-            if ws_title == 'new':
-                self.ws = gsh.get() # Создание нового листа, если ws_title равен 'new'
-            else:
-                if ws_title in [_ws.title for _ws in gsh.worksheets()]:  # Проверка на существование листа
-                    logger.info(f'Лист {ws_title} уже существует!')
-                    self.ws = gsh.worksheet(ws_title)  # Открываем существующий лист
-                    if wipe_if_exist:
-                        self.ws.clear() # Очищаем лист, если wipe_if_exist установлен в True
-                else:
-                    self.ws = gsh.add_worksheet(ws_title, rows, cols) # Создание нового листа, если лист с таким именем не существует
-                    logger.info(f'Создан новый лист с именем {ws_title}!')
-
-            self.render.set_worksheet_direction(gsh, self.ws, RTL) # Установка направления текста для листа
+            self.ws = self._get_worksheet(sh, ws_title, rows, cols, wipe_if_exist)
         except Exception as ex:
-            logger.error(f'Ошибка при получении листа: {ex}')
-            ...
+             logger.error(f'Ошибка при получении листа: {ex}')
+             return
+             
+        self.render.set_worksheet_direction(sh.gsh, self.ws, direction)
 
-
-    def header(self, world_title: str, range: str = 'A1:Z1', merge_type: str = 'MERGE_ALL') -> None:
+    def header(self, world_title: str, range: str = 'A1:Z1',
+               merge_type: str = 'MERGE_ALL') -> None:
         """
-        Устанавливает заголовок для листа.
+        Установка заголовка листа.
 
         :param world_title: Текст заголовка.
         :type world_title: str
-        :param range: Диапазон ячеек для заголовка. По умолчанию 'A1:Z1'.
-        :type range: str
-        :param merge_type: Тип объединения ячеек. По умолчанию 'MERGE_ALL'.
-        :type merge_type: str
+        :param range: Диапазон ячеек для заголовка.
+        :type range: str, optional
+        :param merge_type: Тип объединения ячеек.
+        :type merge_type: str, optional
         """
-        try:
-            self.render.header(self.ws, world_title, range, merge_type) # Вызов метода render для установки заголовка
-        except Exception as ex:
-            logger.error(f'Ошибка при установке заголовка: {ex}')
-            ...
+        self.render.header(self.ws, world_title, range, merge_type)
 
-    def category(self, ws_category_title):
+    def category(self, ws_category_title: str) -> None:
         """
-        Устанавливает заголовок категории.
+        Запись заголовка категории.
 
-        :param ws_category_title: Текст заголовка категории.
+        :param ws_category_title: Заголовок категории.
         :type ws_category_title: str
-        :raises Exception: Если возникает ошибка при записи заголовка категории.
         """
-        try:
-            self.render.write_category_title(self.ws, ws_category_title) # Вызов метода render для записи заголовка категории
-        except Exception as ex:
-             logger.error(f'Ошибка при установке категории: {ex}')
-             ...
+        self.render.write_category_title(self, ws_category_title)
 
-    def direction(self, direction: str = RTL):
+    def direction(self, direction: str = 'rtl') -> None:
         """
-        Устанавливает направление текста для листа.
+        Установка направления текста листа.
 
-        :param direction: Направление текста. По умолчанию 'rtl'.
-        :type direction: str
-        :raises Exception: Если возникает ошибка при установке направления.
+        :param direction: Направление текста ('rtl' или 'ltr').
+        :type direction: str, optional
         """
-        try:
-            self.render.set_worksheet_direction(sh = self.sh, ws = self.ws, direction = direction) # Вызов метода render для установки направления текста
-        except Exception as ex:
-            logger.error(f'Ошибка при установке направления текста: {ex}')
-            ...
+        self.render.set_worksheet_direction(self.sh.gsh, self.ws, direction)

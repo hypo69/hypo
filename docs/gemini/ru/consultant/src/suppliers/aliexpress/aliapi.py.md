@@ -1,74 +1,67 @@
 # Анализ кода модуля `aliapi.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код структурирован и разбит на классы.
-    - Используются менеджеры БД для категорий и кампаний.
-    - Присутствует базовая документация для классов и методов.
-    - Используется `logger` для логирования.
-- Минусы
-    - Не все функции и методы имеют документацию в формате reStructuredText (RST).
-    - Используются стандартные блоки try-except без явного логирования ошибок.
-    - Отсутствуют комментарии, объясняющие назначение некоторых участков кода.
-    - Некоторые импорты не используются.
-    - Используется старый формат docstring.
-    - Есть закомментированный код.
-    - Отсутствует описание модуля в формате RST.
-    - Не все методы имеют docstring.
-    - Использованы переменные с именами в стиле snake_case, когда в других файлах используется camelCase
+9
+-   Плюсы
+    - Код хорошо структурирован, использует классы для организации функциональности.
+    - Присутствуют docstring для классов и методов.
+    - Используется  `SimpleNamespace` для представления данных.
+    - Присутствуют аннотации типов.
+    - Логирование ошибок через `src.logger.logger`.
+-   Минусы
+    - Отсутствуют docstring для модуля.
+    - Использование `json.load` вместо `j_loads` из `src.utils.jjson`.
+    - Использование `get`, `post` из `requests` вместо `src.utils.requests`.
+    - Отсутствует инициализация менеджеров БД.
+    - Не все комментарии в формате RST
+    - Избыточное использование `dict | dict | None` в аннотациях типов.
+    - В примерах в docstring используется `print` - убрать.
+    - Использование `super()` без проверки типов аргументов.
 
 **Рекомендации по улучшению**
 
-1.  Добавить полное описание модуля в формате RST в начале файла.
-2.  Переписать все docstring в формате RST для всех функций, методов и классов.
-3.  Использовать `logger.error` для логирования ошибок вместо стандартных `try-except`.
-4.  Добавить комментарии для всех участков кода, объясняющие их назначение.
-5.  Удалить неиспользуемые импорты и закомментированный код.
-6.  Исправить имена переменных на camelCase, согласно другим модулям.
-7.  Использовать `j_loads` и `j_dumps` из `src.utils.jjson` для работы с JSON.
+1.  Добавить docstring для модуля в формате RST.
+2.  Использовать `j_loads` вместо `json.load` для загрузки JSON данных.
+3.  Использовать `src.utils.requests` для запросов к API.
+4.  Удалить закомментированный код.
+5.  Добавить инициализацию менеджеров БД.
+6.  Изменить все комментарии в формате RST.
+7.  Уточнить аннотации типов, убрав дублирование.
+8.  Удалить из примеров в docstring print().
+9.  Убрать `*args, **kwargs` при инициализации класса `AliApi` или добавить проверку типов аргументов.
 
 **Оптимизированный код**
 
 ```python
-"""
-Модуль для работы с API AliExpress.
-=========================================================================================
-
-Этот модуль предоставляет класс :class:`AliApi`, который используется для взаимодействия с API AliExpress.
-Он включает в себя методы для получения деталей продуктов, генерации партнерских ссылок и
-управления категориями и рекламными кампаниями.
-
-Пример использования
---------------------
-
-Пример создания экземпляра класса `AliApi`:
-
-.. code-block:: python
-
-    ali_api = AliApi(language='en', currency='usd')
-    product_ids = [12345, 67890]
-    product_details = ali_api.retrieve_product_details_as_dict(product_ids)
-"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
+"""
+Модуль для работы с API AliExpress
+===========================================================
+
+Этот модуль содержит класс :class:`AliApi`, который используется для взаимодействия с API AliExpress.
+Он включает функциональность для получения деталей продукта, аффилиатных ссылок и других связанных операций.
+
+.. note::
+   Для корректной работы требуется наличие настроенных параметров доступа к API AliExpress.
+"""
 MODE = 'dev'
 
 import re
 import asyncio
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Any
 from types import SimpleNamespace
-# from requests import get, post #  Удален неиспользуемый импорт
 
 from src import gs
-from src.utils.jjson import j_loads_ns, j_loads, j_dumps # Используем j_loads
-# from src.utils.printer import pprint #  Удален неиспользуемый импорт
-# from src.utils.convertors.json import json2csv #  Удален неиспользуемый импорт
+from src.utils.jjson import j_loads_ns, j_loads, j_dumps
+from src.utils.printer import pprint
+from src.utils.convertors.json import json2csv
 from src.logger.logger import logger
 from .api import AliexpressApi
+from src.utils.requests import get, post
 
 from src.db.manager_categories import AliexpressCategory, CategoryManager
 from src.db.manager_coupons_and_sales import ProductCampaignsManager
@@ -76,81 +69,79 @@ from src.db.manager_coupons_and_sales import ProductCampaignsManager
 
 class AliApi(AliexpressApi):
     """
-    Класс для взаимодействия с API AliExpress.
-    
-    Предоставляет методы для получения информации о продуктах, генерации партнерских ссылок,
-    а также для управления категориями и рекламными кампаниями.
+    Класс для выполнения операций с API AliExpress.
+
+    :ivar manager_categories: Менеджер для работы с категориями товаров AliExpress.
+    :vartype manager_categories: CategoryManager
+    :ivar manager_campaigns: Менеджер для работы с кампаниями и скидками товаров AliExpress.
+    :vartype manager_campaigns: ProductCampaignsManager
     """
-    
-    # Менеджеры базы данных
-    managerCategories: CategoryManager = None
-    managerCampaigns: ProductCampaignsManager = None
+    # Database managers
+    manager_categories: CategoryManager = None
+    manager_campaigns: ProductCampaignsManager = None
        
-    def __init__(self, language: str = 'en', currency: str = 'usd', *args, **kwargs):
+    def __init__(self, language: str = 'en', currency: str = 'usd'):
         """
         Инициализирует экземпляр класса AliApi.
 
-        :param language: Язык для API запросов. По умолчанию 'en'.
+        :param language: Язык для API запросов.
         :type language: str
-        :param currency: Валюта для API запросов. По умолчанию 'usd'.
+        :param currency: Валюта для API запросов.
         :type currency: str
         """
         credentials = gs.credentials.aliexpress
-        apiKey = credentials.api_key
+        api_key = credentials.api_key
         secret = credentials.secret
-        trackingId = credentials.tracking_id
-        super().__init__(apiKey, secret, language, currency, trackingId)
-        # self.managerCategories = CategoryManager() #  Удален закомментированный код
-        # self.managerCampaigns = ProductCampaignsManager(gs.presta_credentials[0]) #  Удален закомментированный код
+        tracking_id = credentials.tracking_id
+        super().__init__(api_key, secret, language, currency, tracking_id)
+        # Инициализация менеджеров базы данных
+        self.manager_categories = CategoryManager()
+        self.manager_campaigns = ProductCampaignsManager(gs.presta_credentials[0])
         ...
 
-    # def collect_deals_from_url(): #  Удален закомментированный код
-    #     """ Given a URL, retrieve deals, coupons, and other offers received from AliExpress""" #  Удален закомментированный код
-    #     ... #  Удален закомментированный код
-
-    def retrieve_product_details_as_dict(self, product_ids: list) -> dict | dict | None:
+    def retrieve_product_details_as_dict(self, product_ids: list) -> List[dict] | None:
         """
-        Отправляет список ID продуктов в AliExpress и получает список словарей с описаниями продуктов.
+        Отправляет список ID продуктов в AliExpress и получает список словарей с их описаниями.
 
         :param product_ids: Список ID продуктов.
         :type product_ids: list
-        :return: Список словарей с данными о продуктах.
-        :rtype: dict | None
-        
+        :return: Список словарей с данными о продуктах или None.
+        :rtype: List[dict] | None
+
         :Example:
-            # Convert from SimpleNamespace format to dict
-            namespace_list = [
-                SimpleNamespace(a=1, b=2, c=3),
-                SimpleNamespace(d=4, e=5, f=6),
-                SimpleNamespace(g=7, h=8, i=9)
-            ]
+            # Пример преобразования из SimpleNamespace в словарь
+            
+            # namespace_list = [
+            #   SimpleNamespace(a=1, b=2, c=3),
+            #    SimpleNamespace(d=4, e=5, f=6),
+            #   SimpleNamespace(g=7, h=8, i=9)
+            # ]
             
             # Convert each SimpleNamespace object to a dictionary
-            dict_list = [vars(ns) for ns in namespace_list]
+            # dict_list = [vars(ns) for ns in namespace_list]
             
             # Alternatively, use the __dict__ method:
-            dict_list = [ns.__dict__ for ns in namespace_list]
-            
-            # Print the list of dictionaries
-            print(dict_list)
+            # dict_list = [ns.__dict__ for ns in namespace_list]
         """
-        # Код получает детали продуктов в виде списка SimpleNamespace
+        # Вызов метода для получения деталей продукта в формате SimpleNamespace
         prod_details_ns = self.retrieve_product_details(product_ids)
-        # Код преобразует список SimpleNamespace в список словарей
-        prod_details_dict = [vars(ns) for ns in prod_details_ns]
-        return prod_details_dict
+        # Преобразование списка SimpleNamespace в список словарей
+        if prod_details_ns:
+            prod_details_dict = [vars(ns) for ns in prod_details_ns]
+            return prod_details_dict
+        return None
     
     def get_affiliate_links(self, links: str | list, link_type: int = 0, **kwargs) -> List[SimpleNamespace]:
         """
-        Получает партнерские ссылки для указанных продуктов.
+        Получает аффилиатные ссылки для указанных продуктов.
 
-        :param links: Ссылки на продукты для обработки.
+        :param links: Ссылки на продукты.
         :type links: str | list
-        :param link_type: Тип партнерской ссылки для генерации. По умолчанию 0.
-        :type link_type: int
-        :return: Список объектов SimpleNamespace, содержащих партнерские ссылки.
+        :param link_type: Тип аффилиатной ссылки.
+        :type link_type: int, optional
+        :return: Список объектов SimpleNamespace с аффилиатными ссылками.
         :rtype: List[SimpleNamespace]
         """
-        # Код вызывает родительский метод для получения партнерских ссылок
+        # Вызов метода родительского класса для получения аффилиатных ссылок
         return super().get_affiliate_links(links, link_type, **kwargs)
 ```

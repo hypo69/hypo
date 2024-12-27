@@ -1,72 +1,112 @@
-# Анализ кода модуля experimentation.py
+# Анализ кода модуля `experimentation.py`
 
-**Качество кода**
-8
--  Плюсы
-    - Код достаточно хорошо структурирован и читаем.
-    - Используются docstrings для описания классов и методов.
-    - Присутствует разделение ответственности между классами `ABRandomizer` и `Intervention`.
-    - Код соответствует PEP8.
--  Минусы
-    - Не используется `j_loads` или `j_loads_ns` для чтения файлов (хотя в данном коде нет операций чтения файлов).
-    - Отсутствуют некоторые необходимые импорты, например, `logger` из `src.logger.logger`.
-    - В классе `Intervention` не обрабатываются исключения при вызове `effect_func`, а также отсутствуют проверки на None для `self.agents` и `self.environments` в методе `apply`.
-    - Метод `check_precondition` в классе `Intervention` вызывает `NotImplementedError` с `"TO-DO"`, что не является корректной обработкой.
+**Качество кода: 7/10**
+
+*   **Плюсы**
+    *   Код логически структурирован, классы и методы имеют понятные названия.
+    *   Используется `random.Random` с заданным `random_seed` для воспроизводимости.
+    *   Класс `ABRandomizer` предоставляет функциональность для A/B-тестирования.
+    *   Класс `Intervention` предоставляет базовый интерфейс для применения вмешательств.
+    *   Используются docstrings для описания классов и методов, хотя и не в reStructuredText формате.
+*   **Минусы**
+    *   Отсутствуют необходимые импорты для использования `logger`.
+    *   Docstrings не соответствуют стандарту reStructuredText (RST).
+    *   Не используются `j_loads` или `j_loads_ns` для чтения файлов (хотя в данном файле это не требуется).
+    *   В классе `Intervention` отсутствуют проверки на тип аргументов.
+    *   Метод `check_precondition` класса `Intervention` не реализован.
+    *   Не используются логирование ошибок.
 
 **Рекомендации по улучшению**
-1. Добавить импорт `logger` из `src.logger.logger`.
-2. В классе `Intervention` реализовать логику для проверки предусловий в методе `check_precondition` и обрабатывать исключения при применении эффектов в методе `apply`.
-3. Избегать вызова исключений, заменяя их на логирование с использованием `logger.error`.
-4. Добавить docstring для класса `Intervention` и его методов в формате RST.
-5. Использовать более информативные сообщения об ошибках.
-6. Добавить проверки на `None` перед вызовом методов и обращением к атрибутам объектов в классе `Intervention`.
-7. Переписать docstring в формате RST.
+
+1.  Импортировать `logger` из `src.logger.logger`.
+2.  Переписать все docstrings в формате reStructuredText.
+3.  Добавить логирование ошибок в методы `derandomize` и `derandomize_name` класса `ABRandomizer`.
+4.  В классе `Intervention` добавить проверку типов для аргументов `agent`, `agents`, `environment` и `environments`.
+5.  Реализовать метод `check_precondition` в классе `Intervention`.
+6.  Добавить обработку исключений с помощью `logger.error` вместо общих `try-except`.
+7.  Уточнить документацию к параметрам функций, особенно к `func` в `set_functional_precondition`, `effect_func` в `set_effect`.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для проведения экспериментов и интервенций.
-===================================================
+Модуль для проведения экспериментов и A/B тестирования.
+========================================================
 
-Этот модуль содержит классы :class:`ABRandomizer` для рандомизации вариантов
-и :class:`Intervention` для применения интервенций к агентам и средам.
+Этот модуль предоставляет классы для рандомизации вариантов A/B-тестирования
+и применения вмешательств в экспериментах.
+
+Содержит классы:
+    - :class:`ABRandomizer` для рандомизации и дерандомизации вариантов.
+    - :class:`Intervention` для определения и применения вмешательств.
+
+Пример использования
+--------------------
+
+Пример использования класса :class:`ABRandomizer`:
+
+.. code-block:: python
+
+    randomizer = ABRandomizer()
+    a, b = randomizer.randomize(0, "option_a", "option_b")
+    print(f"Рандомизированные варианты: {a}, {b}")
+    a, b = randomizer.derandomize(0, "option_a", "option_b")
+    print(f"Дерандомизированные варианты: {a}, {b}")
+    real_name = randomizer.derandomize_name(0, "A")
+    print(f"Дерандомизированное имя: {real_name}")
+
+Пример использования класса :class:`Intervention`:
+
+.. code-block:: python
+
+    def my_effect(agents, environments):
+        if agents:
+            for agent in agents:
+                 print(f'Вмешательство применено к агенту: {agent}')
+        if environments:
+            for env in environments:
+                print(f'Вмешательство применено к среде: {env}')
+
+
+    intervention = Intervention()
+    intervention.set_effect(my_effect)
+    intervention.apply()
 """
 import random
-# импортируем библиотеку pandas
 import pandas as pd
-# импортируем класс TinyPerson
-from tinytroupe.agent import TinyPerson
-# импортируем logger
+from typing import Any, List, Callable
+# from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
+from tinytroupe.agent import TinyPerson
 
 
 class ABRandomizer():
     """
-    Утилитарный класс для рандомизации между двумя вариантами и их последующей дерандомизации.
+    Утилитарный класс для рандомизации между двумя опциями и последующей дерандомизации.
 
-    Выбор хранится в словаре, где ключом является индекс элемента.
-    Реальные имена - это имена вариантов в данных, а слепые имена -
-    это имена вариантов, которые видит пользователь.
-    Имена, которые не нужно рандомизировать, всегда возвращаются как есть.
+    Выбор хранится в словаре, где ключ - индекс элемента.
+    Реальные имена - это имена опций в данных, а слепые имена - это имена,
+    представленные пользователю. Имена `passtrough` не рандомизируются и возвращаются как есть.
 
-    :param real_name_1: Имя первого варианта.
+    :param real_name_1: Имя первой опции.
     :type real_name_1: str
-    :param real_name_2: Имя второго варианта.
+    :param real_name_2: Имя второй опции.
     :type real_name_2: str
-    :param blind_name_a: Имя первого варианта, видимое пользователю.
+    :param blind_name_a: Имя первой опции, как она видна пользователю.
     :type blind_name_a: str
-    :param blind_name_b: Имя второго варианта, видимое пользователю.
+    :param blind_name_b: Имя второй опции, как она видна пользователю.
     :type blind_name_b: str
-    :param passtrough_name: Список имен, которые не должны быть рандомизированы.
+    :param passtrough_name: Список имен, которые не должны рандомизироваться.
     :type passtrough_name: list
-    :param random_seed: Зерно для генератора случайных чисел.
+    :param random_seed: Случайное зерно для воспроизводимости.
     :type random_seed: int
     """
+
     def __init__(self, real_name_1="control", real_name_2="treatment",
                        blind_name_a="A", blind_name_b="B",
                        passtrough_name=[],
                        random_seed=42):
-        # Инициализация атрибутов класса
+        """Инициализация ABRandomizer."""
         self.choices = {}
         self.real_name_1 = real_name_1
         self.real_name_2 = real_name_2
@@ -75,11 +115,10 @@ class ABRandomizer():
         self.passtrough_name = passtrough_name
         self.random_seed = random_seed
 
-    def randomize(self, i, a, b):
+    def randomize(self, i: int, a: str, b: str) -> tuple[str, str]:
         """
-        Случайным образом меняет местами a и b и возвращает результаты.
-
-        Сохраняет информацию о том, были ли a и b переключены для элемента i,
+        Случайно меняет местами a и b и возвращает выбор.
+        Сохраняет информацию о том, были ли a и b поменяны местами для элемента i,
         чтобы иметь возможность дерандомизировать позже.
 
         :param i: Индекс элемента.
@@ -88,10 +127,10 @@ class ABRandomizer():
         :type a: str
         :param b: Второй вариант.
         :type b: str
-        :return: Возвращает переставленные или оригинальные варианты.
-        :rtype: tuple
+        :return: Кортеж из двух строк, где a и b могут быть поменяны местами.
+        :rtype: tuple[str, str]
         """
-        # Используем seed
+        # код исполняет рандомизацию с использованием заданного seed
         if random.Random(self.random_seed).random() < 0.5:
             self.choices[i] = (0, 1)
             return a, b
@@ -100,9 +139,9 @@ class ABRandomizer():
             self.choices[i] = (1, 0)
             return b, a
 
-    def derandomize(self, i, a, b):
+    def derandomize(self, i: int, a: str, b: str) -> tuple[str, str]:
         """
-        Дерандомизирует варианты для элемента i и возвращает результаты.
+        Дерандомизирует выбор для элемента i и возвращает выбор.
 
         :param i: Индекс элемента.
         :type i: int
@@ -110,35 +149,34 @@ class ABRandomizer():
         :type a: str
         :param b: Второй вариант.
         :type b: str
-        :return: Возвращает исходные варианты.
-        :rtype: tuple
-        :raises Exception: Если нет информации о рандомизации для элемента i.
+        :return: Кортеж из двух строк, где a и b приведены к исходному порядку.
+        :rtype: tuple[str, str]
+        :raises Exception: Если рандомизация не найдена для элемента i.
         """
-        if self.choices[i] == (0, 1):
+        # код исполняет дерандомизацию, восстанавливая исходный порядок вариантов
+        if self.choices.get(i) == (0, 1):
             return a, b
-        elif self.choices[i] == (1, 0):
+        elif self.choices.get(i) == (1, 0):
             return b, a
         else:
-             # Логируем ошибку, если нет информации о рандомизации
             logger.error(f"No randomization found for item {i}")
             raise Exception(f"No randomization found for item {i}")
 
-
-    def derandomize_name(self, i, blind_name):
+    def derandomize_name(self, i: int, blind_name: str) -> str:
         """
-        Декодирует выбор, сделанный пользователем, и возвращает исходный вариант.
+        Декодирует выбор пользователя и возвращает исходное имя варианта.
 
         :param i: Индекс элемента.
         :type i: int
-        :param blind_name: Выбор пользователя.
+        :param blind_name: Выбор пользователя (слепое имя).
         :type blind_name: str
-        :return: Возвращает исходное имя варианта.
+        :return: Исходное имя варианта.
         :rtype: str
-        :raises Exception: Если выбор не распознан или нет информации о рандомизации.
+        :raises Exception: Если выбор не распознан или нет рандомизации для элемента i.
         """
-        # Проверяем, был ли рандомизирован выбор i
-        if self.choices[i] == (0, 1):
-            # если нет, возвращаем выбор
+        # код проверяет, была ли произведена рандомизация
+        if self.choices.get(i) == (0, 1):
+            # код проверяет соответствие имени и возвращает исходное имя
             if blind_name == self.blind_name_a:
                 return self.real_name_1
             elif blind_name == self.blind_name_b:
@@ -146,12 +184,11 @@ class ABRandomizer():
             elif blind_name in self.passtrough_name:
                 return blind_name
             else:
-                # Логируем ошибку, если выбор не распознан
                 logger.error(f"Choice \'{blind_name}\' not recognized")
                 raise Exception(f"Choice \'{blind_name}\' not recognized")
 
-        elif self.choices[i] == (1, 0):
-             # если да, возвращаем противоположный выбор
+        elif self.choices.get(i) == (1, 0):
+            # код возвращает противоположный вариант, если была рандомизация
             if blind_name == self.blind_name_a:
                 return self.real_name_2
             elif blind_name == self.blind_name_b:
@@ -159,140 +196,119 @@ class ABRandomizer():
             elif blind_name in self.passtrough_name:
                 return blind_name
             else:
-                # Логируем ошибку, если выбор не распознан
                 logger.error(f"Choice \'{blind_name}\' not recognized")
                 raise Exception(f"Choice \'{blind_name}\' not recognized")
         else:
-            # Логируем ошибку, если нет информации о рандомизации
-            logger.error(f"No randomization found for item {i}")
-            raise Exception(f"No randomization found for item {i}")
+             logger.error(f"No randomization found for item {i}")
+             raise Exception(f"No randomization found for item {i}")
 
 
 # TODO under development
 class Intervention():
     """
-    Класс для представления интервенции, которая может быть применена к агентам или средам.
+    Класс для определения и применения вмешательств в эксперименте.
 
-    :param agent: Агент, на которого применяется интервенция.
+    :param agent: Агент, на которого оказывается вмешательство.
     :type agent: TinyPerson, optional
-    :param agents: Список агентов, на которых применяется интервенция.
-    :type agents: list, optional
-    :param environment: Среда, на которую применяется интервенция.
+    :param agents: Список агентов, на которых оказывается вмешательство.
+    :type agents: list[TinyPerson], optional
+    :param environment: Среда, на которую оказывается вмешательство.
     :type environment: TinyWorld, optional
-    :param environments: Список сред, на которые применяется интервенция.
-    :type environments: list, optional
-    :raises Exception: Если передано более одного типа сущностей (агент/среда)
-        или если ни одна сущность не передана.
+    :param environments: Список сред, на которые оказывается вмешательство.
+    :type environments: list[TinyWorld], optional
+    :raises Exception: Если не передан ни один параметр, или переданы оба параметра одновременно (agent и agents, environment и environments).
     """
-    def __init__(self, agent=None, agents:list=None, environment=None, environments:list=None):
-        # Проверяем, что передан только один из параметров agent/agents и environment/environments
+
+    def __init__(self, agent: TinyPerson = None, agents: List[TinyPerson] = None, environment: Any = None, environments: List[Any] = None):
+        """Инициализация Intervention."""
+        # код проверяет, что передан хотя бы один параметр и не переданы оба варианта параметров одновременно
         if agent and agents:
-            logger.error("Either \'agent\' or \'agents\' should be provided, not both")
             raise Exception("Either \'agent\' or \'agents\' should be provided, not both")
         if environment and environments:
-            logger.error("Either \'environment\' or \'environments\' should be provided, not both")
             raise Exception("Either \'environment\' or \'environments\' should be provided, not both")
         if not (agent or agents or environment or environments):
-            logger.error("At least one of the parameters should be provided")
             raise Exception("At least one of the parameters should be provided")
 
-        # инициализируем сущности
+        # код инициализирует возможные сущности для вмешательства
         self.agents = None
         self.environments = None
         if agent is not None:
+            if not isinstance(agent, TinyPerson):
+                raise TypeError("agent must be an instance of TinyPerson")
             self.agents = [agent]
         elif agents is not None:
+            if not all(isinstance(a, TinyPerson) for a in agents):
+                raise TypeError("agents must be a list of TinyPerson instances")
             self.agents = agents
         elif environment is not None:
             self.environments = [environment]
         elif environments is not None:
-             self.environments = environments
+            self.environments = environments
 
-        # Инициализация предусловий
+
+        # код инициализирует предусловия
         self.text_precondition = None
         self.precondition_func = None
 
-        # Инициализация эффектов
+        # код инициализирует эффекты
         self.effect_func = None
 
     ################################################################################################
     # Intervention flow
     ################################################################################################
 
-    def check_precondition(self):
+    def check_precondition(self) -> bool:
         """
-        Проверяет, выполнено ли предусловие для интервенции.
+        Проверяет, выполнено ли предусловие для вмешательства.
 
-        :raises NotImplementedError: Если предусловие не реализовано.
+        :raises NotImplementedError: Если метод не реализован.
         """
-        # Проверяем, задано ли функциональное предусловие
-        if self.precondition_func:
-            try:
-                # Проверяем предусловие
-                return self.precondition_func(self.agents, self.environments)
-            except Exception as e:
-                # Логируем ошибку при проверке предусловия
-                logger.error(f"Error checking precondition: {e}")
-                return False
-        elif self.text_precondition:
-            # TODO: добавить поддержку текстового предусловия
-            logger.warning("Textual precondition is not supported yet.")
-            return True
-        else:
-             # Если нет предусловия возвращаем True
-            return True
+        # TODO: implement precondition check
+        raise NotImplementedError("TO-DO")
 
-
-    def apply(self):
+    def apply(self) -> None:
         """
-        Применяет интервенцию.
-
-        Вызывает функцию эффекта, если она установлена, передавая ей агентов и/или среды.
-        Логирует ошибку, если возникает исключение при применении эффекта.
+        Применяет вмешательство, вызывая функцию эффекта.
         """
-        # Проверяем, есть ли эффект и применяем его
+        # код вызывает функцию эффекта с агентами и средами
         if self.effect_func:
-            try:
-                if self.agents is not None and self.environments is not None:
-                    self.effect_func(self.agents, self.environments)
-                elif self.agents is not None:
-                    self.effect_func(self.agents, None)
-                elif self.environments is not None:
-                    self.effect_func(None, self.environments)
-                else:
-                    logger.error("No agents or environments to apply effect to")
-            except Exception as e:
-                # Логируем ошибку при применении эффекта
-                logger.error(f"Error applying effect: {e}")
+             self.effect_func(self.agents, self.environments)
+        else:
+             logger.error("Effect function is not set")
 
     ################################################################################################
     # Pre and post conditions
     ################################################################################################
 
-    def set_textual_precondition(self, text):
+    def set_textual_precondition(self, text: str) -> None:
         """
-        Устанавливает предусловие в виде текста, который должен интерпретироваться языковой моделью.
+        Устанавливает предусловие в виде текста, который интерпретируется языковой моделью.
 
         :param text: Текст предусловия.
         :type text: str
         """
+        # код устанавливает текстовое предусловие
         self.text_precondition = text
 
-    def set_functional_precondition(self, func):
+    def set_functional_precondition(self, func: Callable[[List[TinyPerson], List[Any]], bool]) -> None:
         """
-        Устанавливает предусловие в виде функции, которая будет вычисляться кодом.
+        Устанавливает предусловие в виде функции, которая оценивается кодом.
 
         :param func: Функция предусловия.
-         Функция должна принимать аргументы: agent, agents, environment, environments.
-        :type func: function
+           Функция должна принимать аргументы: agent, agents, environment, environments и возвращать булево значение.
+        :type func: Callable[[List[TinyPerson], List[Any]], bool]
         """
+        # код устанавливает функциональное предусловие
         self.precondition_func = func
 
-    def set_effect(self, effect_func):
+    def set_effect(self, effect_func: Callable[[List[TinyPerson], List[Any]], None]) -> None:
         """
-        Устанавливает функцию, которая определяет эффект интервенции.
+        Устанавливает функцию эффекта вмешательства.
 
         :param effect_func: Функция эффекта.
-        :type effect_func: function
+           Функция должна принимать аргументы: агенты и среды.
+        :type effect_func: Callable[[List[TinyPerson], List[Any]], None]
         """
+        # код устанавливает функцию эффекта
         self.effect_func = effect_func
+```

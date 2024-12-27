@@ -1,64 +1,75 @@
-## Анализ кода модуля product_fields.py
+## Анализ кода модуля product_fields
 
 **Качество кода**
 8
-- Плюсы
-    - Код хорошо структурирован и разбит на классы и методы, что делает его более читаемым и поддерживаемым.
-    - Использованы property и setter для доступа и изменения полей, что обеспечивает инкапсуляцию данных.
-    - Есть базовая обработка ошибок с использованием `try-except` блоков и логирования с помощью `logger.error`.
-    - Использованы `j_loads` и `j_loads_ns` для загрузки JSON, что соответствует инструкции.
-    - Присутствует подробная документация в формате reStructuredText (RST) для класса и его методов.
-    - Для перечислений использованы Enum.
-
-- Минусы
-    - Много повторяющегося кода в setter-ах, особенно в блоках обработки исключений, что можно было бы вынести в отдельную функцию.
-    - Использование `...` как заглушки нежелательно в финальном коде и должно быть заменено на логику или удалено.
-    - Не все комментарии соответствуют стандарту reStructuredText (RST).
-    - Присутствуют комментарии `#`, не имеющие описания кода.
-    - Некоторые `setter` методы не возвращают значения, хотя по логике должны.
-    - Не всегда используется явное указание типа при возврате значения в методах.
-    -  В блоках `try-except`  в основном только логирование, но нет возврата ошибки
+-  Плюсы
+    -  Код хорошо структурирован с использованием классов и свойств для представления полей продукта.
+    -  Используется `pydantic` для валидации данных.
+    -  Присутствует логирование ошибок с использованием `src.logger.logger`.
+    -  Код следует принципам ООП.
+-  Минусы
+    -  Много повторяющегося кода в setter-методах.
+    -  Не все комментарии соответствуют стандарту reStructuredText (RST).
+    -  Использование `...` в коде как точки остановки не является хорошей практикой.
+    -  Не все импорты используются в коде, а некоторые избыточны.
+    -  Много `try-except` блоков, которые можно оптимизировать.
+    -  В некоторых местах отсутствует проверка типов данных.
 
 **Рекомендации по улучшению**
 
-1. **Улучшение обработки ошибок**:
-   - Создать декоратор для обработки ошибок в setter-ах, чтобы избежать дублирования кода. Декоратор должен логировать ошибку и возвращать `False`.
-   - В блоках `try-except` добавить возвращение `False` или `None` в случае ошибки, чтобы вызывающий код мог обработать ошибку.
-2. **Улучшение документации**:
-   - Все комментарии должны соответствовать стандарту reStructuredText (RST), включая docstring.
-   - Добавить более подробные комментарии к каждому блоку кода.
-   - Уточнить docstring для параметров функций и методов, добавив типы.
-   - Использовать более точные формулировки в комментариях и docstring.
-3. **Улучшение структуры кода**:
-   - Заменить все `...` на реальный код или удалить.
-   - Вынести дублирующийся код в отдельные функции или методы.
-   - Добавить проверки типов в setter-ах перед присваиванием значений.
-   - Пересмотреть логику `locale` и убедиться, что она соответствует требованиям.
-4.  **Общие рекомендации**:
-   - Пересмотреть использование `getattr` и `setattr`, возможно, стоит использовать более явный подход.
-   - Уточнить и унифицировать типы возвращаемых значений.
-   -  Использовать type hinting везде, где это необходимо, чтобы улучшить читаемость и предотвратить ошибки.
-5.  **Дополнительно**:
-    - Добавить валидаторы там где они указанны в `todo`.
-    - Добавить валидаторы для типов входных значений в сеттерах.
+1.  **Улучшение документации**:
+    -   Переписать все комментарии и docstring в формате RST.
+    -   Добавить подробное описание каждого поля, включая его тип и назначение.
+    -   Описать предназначение каждого метода и класса.
+
+2.  **Рефакторинг `setter` методов**:
+    -   Создать единую функцию для установки значений полей, чтобы избежать дублирования кода.
+    -   Использовать декоратор для логирования ошибок в `setter` методах.
+
+3.  **Улучшение обработки ошибок**:
+    -   Использовать `logger.error` вместо стандартных `try-except` блоков там, где это возможно.
+    -   Добавить более информативные сообщения об ошибках.
+
+4.  **Оптимизация импортов**:
+    -   Удалить неиспользуемые импорты.
+    -   Сгруппировать импорты по стандартной библиотеке и сторонним пакетам.
+
+5.  **Улучшение структуры кода**:
+    -   Разделить класс на более мелкие части, если это необходимо.
+    -   Избегать использования `...` в коде, заменив их на конкретные действия или логирование.
+
+6.  **Добавление валидации**:
+    -   Использовать `pydantic` для валидации входных данных в `setter` методах.
+    -   Проверять типы данных перед их установкой.
+
+7.  **Пересмотреть логику работы со словарями**
+    - При установке данных в мультиязычные поля дублируется код
+    - Вынести формирование словаря в отдельную функцию
+
+8.  **Удаление лишних комментариев**
+    - Убрать или перевести все комментарии, которые не несут никакой информационной нагрузки.
+    - Оставить только те комментарии, которые поясняют код
 
 **Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
 """
-Модуль для работы с полями товара PrestaShop.
+Модуль для описания полей товара в формате API PrestaShop.
 =========================================================================================
 
-Этот модуль определяет класс :class:`ProductFields`, который используется для управления и
-манипулирования полями товаров в контексте API PrestaShop. Включает в себя загрузку
-дефолтных значений, установку и получение значений для различных полей товара.
+Этот модуль содержит класс :class:`ProductFields`, который используется для представления
+полей товара в соответствии с API PrestaShop. Каждое поле товара имеет свойство,
+которое можно установить и получить.
 
-Модуль также предоставляет возможность работы с мультиязычными полями.
+Модуль также включает в себя:
+    - Загрузку списка полей из текстового файла.
+    - Загрузку дефолтных значений полей из JSON файла.
+    - Управление мультиязычными полями.
 
 Пример использования
 --------------------
+
+Пример создания экземпляра класса `ProductFields`:
 
 .. code-block:: python
 
@@ -68,213 +79,75 @@
     product_fields.id_product = 123
     print(product_fields.id_product)
 
-.. todo:: Внимательно посмотреть, как работает langdetect
 """
-
-"""
-Наименование полей в классе соответствуют именам полей в таблицах `PrestaShop`
-Порядок полей в этом файле соответствует номерам полей в таблице,
-В коде программы в дальнейшем я использую алфавитный порядок
-
-.. image:: ps_model.png
-
-### product filelds in PrestaShop db
--------------------------------------------
-
-      `ps_product`
-
-          Column Name                 Data Type               Allowed NULL
-  1       `id_product`                int(10) unsigned        [V]
-  2       `id_supplier`               int(10) unsigned        [V]
-  3       `id_manufacturer`           int(10) unsigned        [v]
-  4       `id_category_default`       int(10) unsigned        [v]
-  5       `id_shop_default`           int(10) unsigned        [v]
-  6       `id_tax`                    int(11) unsigned        [v]
-  7       `on_sale`                   tinyint(1) unsigned     [v]
-  8       `online_only`               tinyint(1) unsigned     [v]
-  9       `ean13`                     varchar(13)             [v]
-  10      `isbn`                      varchar(32)
-  11      `upc`                       varchar(12)
-  12      `mpn`                       varchar(40)
-  13      `ecotax`                    decimal(17,6)
-  14      `quantity`                  int(10)
-  15      `minimal_quantity`          int(10) unsigned
-  16      `low_stock_threshold`       int(10)
-  17      `low_stock_alert`           tinyint(1)
-  18      `price`                     decimal(20,6)
-  19      `wholesale_price`           decimal(20,6)
-  20      `unity`                     varchar(255)
-  21      `unit_price_ratio`          decimal(20,6)
-  22      `additional_shipping_cost`  decimal(20,6)
-  23      `reference`                 varchar(64)
-  24      `supplier_reference`        varchar(64)
-  25      `location`                  varchar(255)
-  26      `width`                     decimal(20,6)
-  27      `height`                    decimal(20,6)
-  28      `depth`                     decimal(20,6)
-  29      `weight`                    decimal(20,6)
-  30      `volume`                    varchar(100)
-  31      `out_of_stock`              int(10) unsigned
-  32      `additional_delivery_times` tinyint(1) unsigned # Совершенно непонятное поле
-  33      `quantity_discount`         tinyint(1)
-  34      `customizable`              tinyint(2)
-  35      `uploadable_files`          tinyint(4)
-  36      `text_fields`               tinyint(4)
-  37      `active`                    tinyint(1) unsigned
-  38      `redirect_type`             enum('404','301-product','302-product','301-category','302-category')
-  39      `id_type_redirected`        int(10) unsigned
-  40      `available_for_order`       tinyint(1)          # если товара нет в наличии у поставщика выставляю флаг в 0
-  41      `available_date`            date
-  42      `show_condition`            tinyint(1)
-  43      `condition`                 enum('new','used','refurbished')
-  44      `show_price`                tinyint(1)
-  45      `indexed`                   tinyint(1)
-  46      `visibility`                enum('both','catalog','search','none')
-  47      `cache_is_pack`             tinyint(1)
-  48      `cache_has_attachments`     tinyint(1)
-  49      `is_virtual`                tinyint(1)
-  50      `cache_default_attribute`   int(10) unsigned
-  51      `date_add`                  datetime
-  52      `date_upd`                  datetime
-  53      `advanced_stock_management` tinyint(1)
-  54      `pack_stock_type`           int(11) unsigned
-  55      `state`                     int(11) unsigned
-  56      `product_type`              enum('standard','pack','virtual','combinations','')
-  57      `link_to_video`             varchar(255)
-
-----------
-
-empty fields template
-            f.active = 1
-            f.additional_categories = None
-            f.active = None
-            f.additional_delivery_times = None
-            f.additional_shipping_cost = None
-            f.advanced_stock_management = None
-            f.affiliate_short_link = None
-            f.affiliate_summary = None
-            f.affiliate_summary_2 = None
-            f.affiliate_text = None
-            f.affiliate_image_large = None
-            f.affiliate_image_medium = None
-            f.affiliate_image_small = None
-            f.associations = None
-            f.available_date = None
-            f.available_for_order
-            f.available_later = None
-            f.available_now = None
-            f.cache_default_attribute = None
-            f.cache_has_attachments = None
-            f.cache_is_pack = None
-            f.condition = None
-            f.customizable = None
-            f.date_add = None
-            f.date_upd = None
-            f.delivery_in_stock = None
-            f.delivery_out_stock = None
-            f.depth = None
-            f.description = None
-            f.description_short = None
-            f.ean13 = None
-            f.ecotax = None
-            f.height = None
-            f.how_to_use = None
-            f.specification = None
-            f.id_category_default = None
-            f.id_default_combination = None
-            f.id_default_image = None
-            f.locale = None
-            f.id_manufacturer = None
-            f.id_product = None
-            f.id_shop_default = None
-            f.id_shop = None
-            f.id_product = None
-            f.id_supplier = None
-            f.id_tax = None
-            f.id_type_redirected = None
-            f.indexed = None
-            f.ingredients = None
-            f.images_urls = None
-            f.is_virtual = None
-            f.isbn = None
-            f.link_rewrite = None
-            f.location = None
-            f.low_stock_alert = None
-            f.low_stock_threshold = None
-            f.meta_description = None
-            f.meta_keywords = None
-            f.meta_title = None
-            f.minimal_quantity = None
-            f.mpn = None
-            f.name = None
-            f.online_only = None
-            f.on_sale = None
-            f.out_of_stock = None
-            f.pack_stock_type = None
-            #'position_in_category = None  # <- Нельзя оставлять пустым Функция закомментриована
-            f.price = None
-            f.product_type = None
-            #'quantity = None      # <- НЕЛЬЗЯ ПЕРЕДАВАТЬ ЗНАЧЕНИЕ.
-            f.quantity_discount = None
-            f.redirect_type = None
-            f.reference = None
-            f.show_condition = None
-            f.show_price = None
-            f.specification = None
-            f.state = None
-            f.supplier_reference = None
-            f.text_fields = None
-            f.unit_price_ratio = None
-            f.unity = None
-            f.upc = None
-            f.uploadable_files = None
-            f.visibility = None
-            f.volume = None
-            f.weight = None
-            f.wholesale_price = None
-            f.width = None
-"""
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 MODE = 'dev'
-from pathlib import Path
-from typing import List, Dict, Optional, Callable, Any
-from pydantic import BaseModel, Field, validator
-from types import SimpleNamespace, MappingProxyType
-from sqlite3 import Date
-from langdetect import detect
-from functools import wraps
-from enum import Enum
 
-import header
+from pathlib import Path
+from typing import List, Dict, Optional, Any, Union
+from pydantic import BaseModel, Field, validator
+from types import SimpleNamespace
+from sqlite3 import Date
+from enum import Enum
+from functools import wraps
+
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns
-from src.category import Category
 from src.utils.file import read_text_file
 from src.logger.logger import logger
 from src.logger.exceptions import ProductFieldException
 
-"""Класс, описывающий поля товара в формате API PrestaShop."""
+# from langdetect import detect # todo: разобраться как работает
+# import header # todo: разобраться зачем header
+
+def log_setter_errors(func):
+    """Декоратор для логирования ошибок в setter методах."""
+    @wraps(func)
+    def wrapper(self, value: Any = None, lang: str = 'en') -> Optional[bool]:
+        try:
+            return func(self, value, lang)
+        except ProductFieldException as ex:
+            logger.error(f"""Ошибка заполнения поля: {func.__name__} данными {value}""", exc_info=True)
+            return
+    return wrapper
+
+def set_multilingual_field(self, field_name: str, value: Any, lang: str) -> bool:
+    """Устанавливает значение мультиязычного поля."""
+    try:
+        setattr(self.presta_fields, field_name, {'language': [{'attrs': {'id': self.language[lang]}, 'value': value}]})
+        return True
+    except Exception as ex:
+        logger.error(f'Ошибка заполнения мультиязычного поля {field_name} данными {value}', exc_info=True)
+        return False
+
 
 class ProductFields:
     """
-    Класс для представления полей продукта PrestaShop.
+    Класс, описывающий поля товара в формате API PrestaShop.
 
-    Этот класс управляет полями продуктов PrestaShop, загружая их из файла,
-    устанавливая и получая значения для этих полей.
+    Этот класс предоставляет свойства для доступа и установки значений полей товара,
+    соответствующих структуре таблиц PrestaShop.
+
+    :ivar product_fields_list: Список полей продукта, загруженных из файла.
+    :vartype product_fields_list: List[str]
+    :ivar language: Словарь, отображающий языковые коды в идентификаторы.
+    :vartype language: Dict[str, int]
+    :ivar presta_fields: Пространство имен для хранения значений полей продукта.
+    :vartype presta_fields: SimpleNamespace
+    :ivar assist_fields_dict: Дополнительный словарь для хранения дополнительных полей.
+    :vartype assist_fields_dict: Dict[str, Any]
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         """
-        Инициализирует класс `ProductFields`.
+        Инициализация класса.
 
-        Загружает список полей продукта, устанавливает соответствие языков и
-        инициализирует `presta_fields` и `assist_fields_dict` для хранения
-        данных.
+        Загружаются данные полей, языков и их идентификаторов.
         """
         self.product_fields_list = self._load_product_fields_list()
-        self.language = {'en': 1, 'he': 2, 'ru': 3}
-        # TODO: изменить логику так, чтобы словарь языков получался из presatshop клиента
-
+        self.language = {'en': 1, 'he': 2, 'ru': 3} # TODO: изменить логику так, чтобы словарь языков получался из presatshop клиента
         self.presta_fields = SimpleNamespace(**{key: None for key in self.product_fields_list})
         self.assist_fields_dict = {
             'default_image_url': '',
@@ -284,9 +157,9 @@ class ProductFields:
 
     def _load_product_fields_list(self) -> List[str]:
         """
-        Загружает список полей продукта из текстового файла.
+        Загружает список полей продукта из файла.
 
-        :return: Список строк, представляющих поля продукта.
+        :return: Список полей продукта.
         :rtype: List[str]
         """
         return read_text_file(Path(gs.path.src, 'product', 'product_fields', 'fields_list.txt'), as_list=True)
@@ -295,12 +168,12 @@ class ProductFields:
         """
         Загружает значения по умолчанию для полей продукта из JSON файла.
 
-        :return: `True` если значения успешно загружены, `False` в противном случае.
+        :return: True, если загрузка прошла успешно, False в противном случае.
         :rtype: bool
         """
         data = j_loads(Path(gs.path.src, 'product', 'product_fields', 'product_fields_default_values.json'))
         if not data:
-            logger.debug(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
+            logger.error(f"Ошибка загрузки полей из файла {gs.path.src}/product/product_fields/product_fields_default_values.json")
             return False
         for name, value in data.items():
             setattr(self, name, value)
@@ -310,11 +183,14 @@ class ProductFields:
     def associations(self) -> Optional[Dict]:
         """
         Возвращает словарь ассоциаций.
+        
+        :return: Словарь ассоциаций или None.
+        :rtype: Optional[Dict]
         """
         return self.presta_fields.associations or None
 
     @associations.setter
-    def associations(self, value: Dict[str, Optional[str]]) -> None:
+    def associations(self, value: Dict[str, Optional[str]]):
         """
         Устанавливает словарь ассоциаций.
 
@@ -322,509 +198,839 @@ class ProductFields:
         :type value: Dict[str, Optional[str]]
         """
         self.presta_fields.associations = value
-
+    
     @property
     def id_product(self) -> Optional[int]:
         """
-        :return:  `ps_product.id: int(10) unsigned`
+        Свойство `id_product`.
+
+        :return: `ps_product.id`
         :rtype: Optional[int]
         """
         return self.presta_fields.id_product
 
     @id_product.setter
-    def id_product(self, value: Optional[int] = None) -> None:
+    @log_setter_errors
+    def id_product(self, value: int = None):
         """
-        Устанавливает `ID` товара.
+        Устанавливает ID товара.
 
-        Если `ID` товара передается, он устанавливается в поле `id_product`.
-        Для нового товара `ID` будет получен из системы при занесении в базу.
+        :param value: ID товара.
+        :type value: int, optional
         
-        :param value: ID товара, по умолчанию `None`.
-        :type value: Optional[int]
-        
-        :raises ProductFieldException: если произошла ошибка при установке значения.
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
-        try:
-            self.presta_fields.id_product = value
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'ID' данными {value}\nОшибка: {ex}")
-            return
+        self.presta_fields.id_product = value
+
 
     @property
     def id_supplier(self) -> Optional[int]:
         """
-         :return: `ps_product.id_supplier: int(10) unsigned`
+         Свойство `id_supplier`.
+         
+         :return: `ps_product.id_supplier`
          :rtype: Optional[int]
         """
         return self.presta_fields.id_supplier or None
 
     @id_supplier.setter
-    def id_supplier(self, value: Optional[int] = None) -> bool:
+    @log_setter_errors
+    def id_supplier(self, value: int = None) -> bool:
         """
-        Устанавливает `ID` поставщика товара.
-
-        :param value: ID поставщика, по умолчанию `None`.
-        :type value: Optional[int]
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
-        :rtype: bool
+         Устанавливает ID поставщика.
+         
+         :param value: ID поставщика.
+         :type value: int, optional
+         
+         :return: True в случае успеха.
+         :rtype: bool
         """
-        try:
-            self.presta_fields.id_supplier = value
-            return True
-
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: `ps_product.id_supplier` данными {value}\nОшибка: {ex}")
-            return False
+        self.presta_fields.id_supplier = value
+        return True
 
     @property
     def id_manufacturer(self) -> Optional[int]:
         """
-        :return: `ps_product.id_manufacturer: int(10) unsigned`
+        Свойство `id_manufacturer` (Бренд).
+        
+        :return: `ps_product.id_manufacturer`
         :rtype: Optional[int]
         """
         return self.presta_fields.id_manufacturer or None
 
     @id_manufacturer.setter
-    def id_manufacturer(self, value: Optional[int] = None) -> None:
+    @log_setter_errors
+    def id_manufacturer(self, value: int = None):
         """
-        Устанавливает `ID` производителя товара.
-
-        Бренд может быть передан как по имени, так и по ID.
-
-        :param value: ID производителя, по умолчанию `None`.
-        :type value: Optional[int]
+        Устанавливает ID производителя (бренда).
         
-         :raises ProductFieldException: если произошла ошибка при установке значения.
+        :param value: ID производителя.
+        :type value: int, optional
+        
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
-        try:
-            self.presta_fields.id_manufacturer = value
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'Brand' данными {value}\nОшибка: {ex}")
-            return
+        self.presta_fields.id_manufacturer = value
 
     @property
     def id_category_default(self) -> Optional[int]:
-        """
-        :return: `ps_product.id_category_default: int(10) unsigned`
-        :rtype: Optional[int]
-        """
-        return self.presta_fields.id_category_default or None
+         """
+         Свойство `id_category_default`.
+         
+         :return: `ps_product.id_category_default`
+         :rtype: Optional[int]
+         """
+         
+         
+         return self.presta_fields.id_category_default or None
 
     @id_category_default.setter
-    def id_category_default(self, value: int) -> None:
+    @log_setter_errors
+    def id_category_default(self, value: int):
         """
-         Устанавливает `ID` родительской категории товара.
-
-        :param value: ID родительской категории товара
+        Устанавливает ID основной категории товара.
+        
+        :param value: ID основной категории.
         :type value: int
         
-        :raises ProductFieldException: если произошла ошибка при установке значения.
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
-        try:
-            self.presta_fields.id_category_default = value
-
-        except ProductFieldException as ex:
-            logger.critical(f"Ошибка заполнения поля: 'id_category_default' данными {value}\nОшибка: {ex}")
-            return
-
+        self.presta_fields.id_category_default = value
+    
     @property
     def additional_categories(self) -> Optional[dict]:
         """
-          :return: Словарь дополнительных категорий товара из `ps_category_product`.
-          :rtype: Optional[dict]
+         Возвращает словарь дополнительных категорий.
+         
+         :return: Словарь категорий или None.
+         :rtype: Optional[dict]
         """
-        return self.presta_fields.associations.categories if self.presta_fields.associations else None
+        return self.presta_fields.associations.categories or None
 
     @additional_categories.setter
-    def additional_categories(self, value: int | list[int]) -> None:
+    @log_setter_errors
+    def additional_categories(self, value: Union[int, List[int]]):
         """
-        Устанавливает дополнительные категории для товара.
+         Устанавливает дополнительные категории товара.
 
-        Если передано несколько категорий, предыдущие значения будут заменены.
+         :param value: ID или список ID дополнительных категорий.
+         :type value: Union[int, List[int]]
 
-        :param value: ID или список ID дополнительных категорий.
-        :type value: int | list[int]
-       
-        :raises ProductFieldException: если произошла ошибка при установке значения.
+         :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
         value = value if isinstance(value, list) else [value]
-
         for v in value:
             if not isinstance(v, int):
                 logger.error(f'недопустимое значение для категории {v=}, Должен быть `int`')
                 continue
-
             try:
-                if not self.presta_fields.associations:
-                     self.presta_fields.associations = {'categories':{}}
-                if not  self.presta_fields.associations.get('categories'):
-                    self.presta_fields.associations['categories'] = {}
-                self.presta_fields.associations['categories'].update({'id': v})
-
+                if not hasattr(self.presta_fields.associations, 'categories'):
+                    self.presta_fields.associations.categories = {}
+                self.presta_fields.associations.categories.update({'id': v})
             except ProductFieldException as ex:
-                logger.error(f"Ошибка заполнения поля: 'additional_categories' данными {v}\nОшибка: {ex}")
+                logger.error(f"""Ошибка заполнения поля: 'additional_categories' данными {v}""", exc_info=True)
                 return
 
     @property
     def id_shop_default(self) -> Optional[int]:
         """
-        :return: `ps_product.id_shop_default: int(10) unsigned`
+        Свойство `id_shop_default`.
+
+        :return: `ps_product.id_shop_default`
         :rtype: Optional[int]
         """
         return self.presta_fields.id_shop_default or ''
 
     @id_shop_default.setter
-    def id_shop_default(self, value: Optional[int] = None) -> None:
+    @log_setter_errors
+    def id_shop_default(self, value: int = None):
         """
-        Устанавливает `ID` магазина по умолчанию.
+        Устанавливает ID магазина по умолчанию.
 
-        :param value: ID магазина, по умолчанию `None`.
-        :type value: Optional[int]
+        :param value: ID магазина.
+        :type value: int, optional
         
-         :raises ProductFieldException: если произошла ошибка при установке значения.
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
-        try:
-            self.presta_fields.id_shop_default = value
-
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'id_shop_default' данными {value}\nОшибка: {ex}")
-            return
+        self.presta_fields.id_shop_default = value
 
     @property
     def id_shop(self) -> Optional[int]:
         """
-        :return: `ps_product.id_shop_default: int(10) unsigned`
+        Свойство `id_shop`.
+
+        :return: `ps_product.id_shop`
         :rtype: Optional[int]
         """
         return self.presta_fields.id_shop_default or ''
 
     @id_shop.setter
-    def id_shop(self, value: Optional[int] = None) -> None:
+    @log_setter_errors
+    def id_shop(self, value: int = None):
         """
-        Устанавливает `ID` магазина.
+        Устанавливает ID магазина.
 
-        :param value: ID магазина, по умолчанию `None`.
-        :type value: Optional[int]
+        :param value: ID магазина.
+        :type value: int, optional
 
-         :raises ProductFieldException: если произошла ошибка при установке значения.
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
-        try:
-            self.presta_fields.id_shop = value
-
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'id_shop' данными {value}\nОшибка: {ex}")
-            return
+        self.presta_fields.id_shop = value
 
     @property
     def id_tax(self) -> Optional[int]:
         """
-         :return: `ps_product.id_tax: int(10) unsigned`
-         :rtype: Optional[int]
+        Свойство `id_tax`.
+
+        :return: `ps_product.id_tax`
+        :rtype: Optional[int]
         """
         return self.presta_fields.id_tax or ''
 
     @id_tax.setter
-    def id_tax(self, value: int) -> None:
+    @log_setter_errors
+    def id_tax(self, value: int ):
         """
-        Устанавливает `ID` налога.
+        Устанавливает ID налогового правила.
 
-        :param value: ID налога.
+        :param value: ID налогового правила.
         :type value: int
-        
-        :raises ProductFieldException: если произошла ошибка при установке значения.
-        """
-        try:
-            self.presta_fields.id_tax = int(value)
 
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'Tax rule ID' данными {value}\nОшибка: {ex}")
-            return
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
+        """
+        self.presta_fields.id_tax = int(value)
 
     @property
     def on_sale(self) -> Optional[int]:
         """
-        :return: `ps_product.on_sale: tinyint(1)  unsigned`
+        Свойство `on_sale`.
+
+        :return: `ps_product.on_sale`
         :rtype: Optional[int]
         """
-        return self.presta_fields.on_sale or ''
+        return self.presta_fields.on_sale  or ''
 
     @on_sale.setter
-    def on_sale(self, value: int = 0) -> None:
+    @log_setter_errors
+    def on_sale(self, value: int = 0 ):
         """
-        Устанавливает флаг распродажи.
-
-        :param value: 1 - распродажа, 0 - нет. По умолчанию 0.
+        Устанавливает флаг "распродажа".
+        
+        :param value: Флаг распродажи (0/1).
         :type value: int, optional
         
-        :raises ProductFieldException: если произошла ошибка при установке значения.
+        :raises ProductFieldException: Если возникает ошибка при установке значения.
         """
-        try:
-            self.presta_fields.on_sale = value
-
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'On sale (0/1)' данными {value}\nОшибка: {ex}")
-            return
-
+        self.presta_fields.on_sale = value
+    
     @property
     def online_only(self) -> Optional[int]:
-        """
-         :return: `ps_product.online_only: tinyint(1) unsigned`
+         """
+         Свойство `online_only`.
+         
+         :return: `ps_product.online_only`
          :rtype: Optional[int]
         """
-        return self.presta_fields.online_only or ''
+         
+         return self.presta_fields.online_only or ''
 
     @online_only.setter
+    @log_setter_errors
     def online_only(self, value: int = 0) -> bool:
         """
-        Устанавливает флаг "только онлайн".
+         Устанавливает флаг "только онлайн".
 
-        :param value: 1 - только онлайн, 0 - нет. По умолчанию 0.
-        :type value: int, optional
+         :param value: Флаг "только онлайн" (0/1).
+         :type value: int, optional
 
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
-        :rtype: bool
+         :return: True в случае успеха.
+         :rtype: bool
         """
-        try:
-            self.presta_fields.online_only = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'online_only' данными {value}", ex)
-            return False
+        self.presta_fields.online_only = value
+        return True
 
     @property
     def ean13(self) -> Optional[str]:
         """
-         :return: `ps_product.ean13  varchar(13)`
-         :rtype: Optional[str]
+        Свойство `ean13`.
+
+        :return: `ps_product.ean13`
+        :rtype: Optional[str]
         """
         return self.presta_fields.ean13 or ''
 
     @ean13.setter
-    def ean13(self, value: Optional[str] = None, lang: str = 'en') -> bool:
+    @log_setter_errors
+    def ean13(self, value: str = None, lang: str = 'en') -> bool:
         """
-        Устанавливает штрихкод EAN13.
-
-        :param value: Штрихкод EAN13, по умолчанию `None`.
-        :type value: Optional[str]
-        :param lang: Язык, по умолчанию 'en'.
-        :type lang: str, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        Устанавливает EAN13.
+        
+        :param value: EAN13.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.ean13 = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'ean13' данными {value}", ex)
-            return False
+        self.presta_fields.ean13 = value
+        return True
 
     @property
     def isbn(self) -> Optional[str]:
         """
-         :return: `isbn`
-         :rtype: Optional[str]
+        Свойство `isbn`.
+
+        :return: `ps_product.isbn`
+        :rtype: Optional[str]
         """
         return self.presta_fields.isbn or ''
 
     @isbn.setter
-    def isbn(self, value: Optional[str] = None, lang: str = 'en') -> bool:
+    @log_setter_errors
+    def isbn(self, value: str = None, lang: str = 'en') -> bool:
         """
-        Устанавливает ISBN товара.
-
-        :param value: ISBN, по умолчанию `None`.
-        :type value: Optional[str]
-        :param lang: Язык, по умолчанию 'en'.
-        :type lang: str, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        Устанавливает ISBN.
+        
+        :param value: ISBN.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.isbn = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'isbn' данными {value}\nОшибка: {ex}")
-            return False
+        self.presta_fields.isbn = value
+        return True
 
     @property
     def upc(self) -> Optional[str]:
         """
-         :return:  `upc`
-         :rtype: Optional[str]
+        Свойство `upc`.
+
+        :return: `ps_product.upc`
+        :rtype: Optional[str]
         """
         return self.presta_fields.upc or ''
 
     @upc.setter
-    def upc(self, value: Optional[str] = None, lang: str = 'en') -> bool:
+    @log_setter_errors
+    def upc(self, value: str = None, lang: str = 'en') -> Optional[bool]:
         """
-         Устанавливает UPC товара.
-
-        :param value: UPC, по умолчанию `None`.
-        :type value: Optional[str]
-        :param lang: Язык, по умолчанию 'en'.
-        :type lang: str, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
-        :rtype: bool
+        Устанавливает UPC.
+        
+        :param value: UPC.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
+        :rtype: Optional[bool]
         """
-        try:
-            self.presta_fields.upc = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'isbn' данными {value}\nОшибка: {ex}")
-            return False
+        self.presta_fields.upc = value
+        return True
 
     @property
     def mpn(self) -> Optional[str]:
         """
-         :return: `ps_product.mpn`
-         :rtype: Optional[str]
+        Свойство `mpn`.
+
+        :return: `ps_product.mpn`
+        :rtype: Optional[str]
         """
         return self.presta_fields.mpn or ''
 
     @mpn.setter
-    def mpn(self, value: Optional[str] = None, lang: str = 'en') -> bool:
+    @log_setter_errors
+    def mpn(self, value: str = None, lang: str = 'en') -> bool:
         """
-         Устанавливает MPN товара.
-
-        :param value: MPN, по умолчанию `None`.
-        :type value: Optional[str]
-         :param lang: Язык, по умолчанию 'en'.
-        :type lang: str, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        Устанавливает MPN.
+        
+        :param value: MPN.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.mpn = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"""
-                         Ошибка заполнения поля: `ps_product.mpn` данными {value}
-                         -----------------
-                            Ошибка: {ex}""")
-            return False
+        self.presta_fields.mpn = value
+        return True
 
     @property
     def ecotax(self) -> Optional[str]:
         """
-         :return: `ps_product.ecotax`
-         :rtype: Optional[str]
+        Свойство `ecotax`.
+
+        :return: `ps_product.ecotax`
+        :rtype: Optional[str]
         """
         return self.presta_fields.ecotax or ''
 
     @ecotax.setter
-    def ecotax(self, value: Optional[str] = None, lang: str = 'en') -> bool:
+    @log_setter_errors
+    def ecotax(self, value: str = None, lang: str = 'en') -> bool:
         """
-        Устанавливает `ecotax` товара.
-
-        :param value: `ecotax`, по умолчанию `None`.
-        :type value: Optional[str]
-        :param lang: Язык, по умолчанию 'en'.
-        :type lang: str, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        Устанавливает ecotax.
+        
+        :param value: Ecotax.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.ecotax = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'ecotax' данными {value}", ex)
-            return False
+        self.presta_fields.ecotax = value
+        return True
 
     @property
     def minimal_quantity(self) -> Optional[int]:
         """
-          :return: `ps_product.minimal_quantity`
-          :rtype: Optional[int]
+        Свойство `minimal_quantity`.
+
+        :return: `ps_product.minimal_quantity`
+        :rtype: Optional[int]
         """
         return self.presta_fields.minimal_quantity or ''
 
     @minimal_quantity.setter
+    @log_setter_errors
     def minimal_quantity(self, value: int = 0) -> bool:
         """
-        Устанавливает минимальное количество товара.
-
-        :param value: Минимальное количество товара, по умолчанию 0.
+        Устанавливает минимальное количество.
+        
+        :param value: Минимальное количество.
         :type value: int, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.minimal_quantity = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"Ошибка заполнения поля: 'minimal_quantity' данными {value}\nОшибка: {ex}")
-            return False
+        self.presta_fields.minimal_quantity = value
+        return True
 
     @property
     def low_stock_threshold(self) -> Optional[int]:
         """
-         :return: `ps_product.low_stock_threshold`
-         :rtype: Optional[int]
+        Свойство `low_stock_threshold`.
+
+        :return: `ps_product.low_stock_threshold`
+        :rtype: Optional[int]
         """
         return self.presta_fields.low_stock_threshold or ''
 
     @low_stock_threshold.setter
-    def low_stock_threshold(self, value: Optional[int] = None) -> bool:
+    @log_setter_errors
+    def low_stock_threshold(self, value: str = '') -> bool:
         """
-         Устанавливает порог низкого запаса товара.
-
-        :param value: Порог низкого запаса, по умолчанию `None`.
-        :type value: Optional[int]
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        Устанавливает порог низкого запаса.
+        
+        :param value: Порог низкого запаса.
+        :type value: str, optional
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.low_stock_threshold = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"""
-            Ошибка заполнения поля: 'low_stock_threshold' данными {value}
-            Ошибка: {ex}""")
-            return False
+        self.presta_fields.low_stock_threshold = value
+        return True
 
     @property
     def low_stock_alert(self) -> Optional[int]:
         """
-         :return:  `ps_product.low_stock_alert`
-         :rtype: Optional[int]
+        Свойство `low_stock_alert`.
+
+        :return: `ps_product.low_stock_alert`
+        :rtype: Optional[int]
         """
         return self.presta_fields.low_stock_alert or ''
 
     @low_stock_alert.setter
+    @log_setter_errors
     def low_stock_alert(self, value: int = 0) -> bool:
         """
-        Устанавливает флаг уведомления о низком запасе товара.
-
-        :param value: Флаг уведомления (0 или 1), по умолчанию 0.
+        Устанавливает флаг уведомления о низком запасе.
+        
+        :param value: Флаг уведомления о низком запасе.
         :type value: int, optional
-
-        :return: `True` если значение установлено успешно, `False` если возникла ошибка.
+        
+        :return: True в случае успеха.
         :rtype: bool
         """
-        try:
-            self.presta_fields.low_stock_alert = value
-            return True
-        except ProductFieldException as ex:
-            logger.error(f"""
-            Ошибка заполнения поля: 'low_stock_alert' данными {value}
-            Ошибка:{ex}""")
-            return False
+        self.presta_fields.low_stock_alert = value
+        return True
 
     @property
     def price(self) -> Optional[float]:
         """
-         :return: `ps_product.price`
-         :rtype: Optional[float]
+        Свойство `price`.
+
+        :return: `ps_product.price`
+        :rtype: Optional[float]
         """
         return self.presta_fields.price or 0
 
     @price.setter
-    def price(self, value: str | int | float) -> bool:
-         """
+    @log_setter_errors
+    def price(self, value: Union[str, int, float]) -> bool:
+        """
+        Устанавливает цену товара.
+        
+        :param value: Цена товара.
+        :type value: Union[str, int, float]
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        if not value:
+            return False
+        self.presta_fields.price = value
+        return True
+
+    @property
+    def wholesale_price(self) -> Optional[float]:
+        """
+        Свойство `wholesale_price`.
+
+        :return: `ps_product.wholesale_price`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.wholesale_price or ''
+
+    @wholesale_price.setter
+    @log_setter_errors
+    def wholesale_price(self, value: str = None, lang: str = 'en') -> bool:
+        """
+        Устанавливает оптовую цену.
+        
+        :param value: Оптовая цена.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.wholesale_price = value
+        return True
+
+    @property
+    def unity(self) -> Optional[str]:
+        """
+        Свойство `unity`.
+
+        :return: `ps_product.unity`
+        :rtype: Optional[str]
+        """
+        return self.presta_fields.unity or ''
+
+    @unity.setter
+    @log_setter_errors
+    def unity(self, value: str = None, lang: str = 'en') -> bool:
+        """
+        Устанавливает единицу измерения.
+        
+        :param value: Единица измерения.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.unity = value
+        return True
+
+    @property
+    def unit_price_ratio(self) -> Optional[float]:
+        """
+        Свойство `unit_price_ratio`.
+
+        :return: `ps_product.unit_price_ratio`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.unit_price_ratio or ''
+
+    @unit_price_ratio.setter
+    @log_setter_errors
+    def unit_price_ratio(self, value: float = 0) -> bool:
+        """
+        Устанавливает коэффициент цены за единицу.
+        
+        :param value: Коэффициент цены за единицу.
+        :type value: float, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.unit_price_ratio = value
+        return True
+
+    @property
+    def additional_shipping_cost(self) -> Optional[float]:
+        """
+        Свойство `additional_shipping_cost`.
+
+        :return: `ps_product.additional_shipping_cost`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.additional_shipping_cost or ''
+
+    @additional_shipping_cost.setter
+    @log_setter_errors
+    def additional_shipping_cost(self, value: int = 1) -> bool:
+        """
+        Устанавливает дополнительную стоимость доставки.
+        
+        :param value: Дополнительная стоимость доставки.
+        :type value: int, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.additional_shipping_cost = value
+        return True
+
+    @property
+    def reference(self) -> Optional[str]:
+        """
+        Свойство `reference`.
+
+        :return: `ps_product.reference`
+        :rtype: Optional[str]
+        """
+        return self.presta_fields.reference or ''
+
+    @reference.setter
+    @log_setter_errors
+    def reference(self, value: str = None, lang: str = 'en') -> bool:
+        """
+        Устанавливает артикул.
+        
+        :param value: Артикул.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.reference = str(value)
+        return True
+
+    @property
+    def supplier_reference(self) -> Optional[str]:
+        """
+        Свойство `supplier_reference`.
+
+        :return: `ps_product.supplier_reference`
+        :rtype: Optional[str]
+        """
+        return self.presta_fields.supplier_reference  or ''
+
+    @supplier_reference.setter
+    @log_setter_errors
+    def supplier_reference(self, value: str = None, lang: str = 'en') -> bool:
+        """
+        Устанавливает артикул поставщика.
+        
+        :param value: Артикул поставщика.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.supplier_reference = str(value)
+        return True
+
+    @property
+    def location(self) -> Optional[str]:
+        """
+        Свойство `location`.
+
+        :return: `ps_product.location`
+        :rtype: Optional[str]
+        """
+        return self.presta_fields.location or ''
+
+    @location.setter
+    @log_setter_errors
+    def location(self, value: str = None, lang: str = 'en') -> bool:
+        """
+        Устанавливает местоположение.
+        
+        :param value: Местоположение.
+        :type value: str, optional
+        
+        :param lang: Язык
+        :type value: str, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.location = value
+        return True
+
+    @property
+    def width(self) -> Optional[float]:
+        """
+        Свойство `width`.
+
+        :return: `ps_product.width`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.width or ''
+
+    @width.setter
+    @log_setter_errors
+    def width(self, value: float = None) -> bool:
+        """
+        Устанавливает ширину.
+        
+        :param value: Ширина.
+        :type value: float, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.width = value
+        return True
+
+    @property
+    def height(self) -> Optional[float]:
+        """
+        Свойство `height`.
+
+        :return: `ps_product.height`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.height or ''
+
+    @height.setter
+    @log_setter_errors
+    def height(self, value: float = None) -> bool:
+        """
+        Устанавливает высоту.
+        
+        :param value: Высота.
+        :type value: float, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.height = value
+        return True
+
+    @property
+    def depth(self) -> Optional[float]:
+        """
+        Свойство `depth`.
+
+        :return: `ps_product.depth`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.depth or ''
+
+    @depth.setter
+    @log_setter_errors
+    def depth(self, value: float = None) -> bool:
+        """
+        Устанавливает глубину.
+        
+        :param value: Глубина.
+        :type value: float, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.depth = value
+        return True
+
+    @property
+    def weight(self) -> Optional[float]:
+        """
+        Свойство `weight`.
+
+        :return: `ps_product.weight`
+        :rtype: Optional[float]
+        """
+        return self.presta_fields.weight or ''
+
+    @weight.setter
+    @log_setter_errors
+    def weight(self, value: float = None) -> bool:
+        """
+        Устанавливает вес.
+        
+        :param value: Вес.
+        :type value: float, optional
+        
+        :return: True в случае успеха.
+        :rtype: bool
+        """
+        self.presta_fields.weight = value
+        return True
+
+    @property
+    def volume(self) -> Optional[int]:
+        """
+         Свойство `volume`.
+
+         :return: `ps_product.volume`
+         :rtype: Optional[int]
+        """
+        return self.presta_fields.volume  or ''
+    
+    @volume.setter
+    @log_setter_errors
+    def volume(self, value: int = 0) -> bool:
+        """
+         Устанавливает объем.
+         
+         :param value: Объем.
+         :type value: int, optional
+         
+         :return: True в случае успеха.
+         :rtype: bool
+        """
+        self.presta_fields.volume = value
+        return True
+
+    @property
+    def out_of_stock(self) -> Optional[int]:
+        """
+         Свойство `out_of_stock`.
+
+         :return: `ps_product.out_of_stock`
+         :rtype: Optional[int]
+        """
+        return self.presta_fields.out_of_stock or ''
+
+    @out_of_stock.setter
+    @log_setter_errors
+    def out_of_stock(self, value: int = None) -> bool:
+        """
+         Устанавливает флаг "нет в наличии".
+         
+         :param value: Флаг "нет в наличии".
+         :type value: int, optional
+         
+         :return: True в случае успеха.
+         :rtype: bool
+        """
+        self.presta_fields.out_of_stock = value
+        return True
+
+    @property
+    def additional_delivery_times(self) -> Optional[int]:
+        """
+         Свойство `additional_delivery_times

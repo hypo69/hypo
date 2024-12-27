@@ -2,43 +2,52 @@
 
 **Качество кода**
 9
-- Плюсы
-    - Документ содержит ссылку на кодекс поведения Microsoft Open Source, что обеспечивает ясность и понимание норм поведения.
-    - Предоставлены ссылки на ресурсы и контактную информацию, что облегчает обратную связь и обращение за помощью.
-- Минусы
-    - Отсутствует описание цели документа в формате reStructuredText.
-    - Нет подробного описания каждого раздела документа.
+-  Плюсы
+    - Код представляет собой ясное и лаконичное руководство, указывающее на принятие Кодекса поведения Microsoft для Open Source проектов.
+    - Содержит полезные ссылки на ресурсы, которые помогают пользователям понять и следовать кодексу поведения.
+    - Указан контактный адрес электронной почты для обратной связи.
+-  Минусы
+    - Отсутствует reStructuredText (RST) форматирование.
 
 **Рекомендации по улучшению**
-- Добавить описание модуля в формате reStructuredText.
-- Добавить комментарии к каждой ссылке.
+
+1.  Преобразовать Markdown в reStructuredText (RST) для обеспечения единообразия в документации проекта.
+2. Добавить блок RST комментариев для описания содержимого файла.
 
 **Оптимизированный код**
-
-```markdown
+```rst
 """
-Кодекс поведения Microsoft Open Source
-=========================================================================================
+Кодекс поведения Microsoft для Open Source проектов
+==================================================
 
-Этот документ описывает кодекс поведения, которого следует придерживаться при участии в данном проекте.
-Он обеспечивает основу для уважительного и открытого взаимодействия между участниками.
+Этот документ содержит информацию о Кодексе поведения Microsoft для Open Source проектов,
+а также ссылки на ресурсы для ознакомления с ним и контактную информацию для обратной связи.
 
 Пример использования
 --------------------
 
-Этот документ предназначен для ознакомления всех участников проекта с правилами поведения.
-"""
-# Microsoft Open Source Code of Conduct
+Для ознакомления с кодексом поведения и другими ресурсами, пожалуйста, перейдите по ссылкам:
 
-# This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-Этот проект принял [Кодекс поведения Microsoft Open Source](https://opensource.microsoft.com/codeofconduct/).
+- `Microsoft Open Source Code of Conduct <https://opensource.microsoft.com/codeofconduct/>`_
+- `Microsoft Code of Conduct FAQ <https://opensource.microsoft.com/codeofconduct/faq/>`_
+
+Для вопросов или обращений используйте электронную почту: opencode@microsoft.com
+"""
+
+# Microsoft Open Source Code of Conduct
+# Этот проект принял Кодекс поведения Microsoft для Open Source проектов.
+
+#  Ресурсы:
+#
+#  - [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
+#  - [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+#  - Контакт [opencode@microsoft.com](mailto:opencode@microsoft.com) с вопросами или опасениями
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
 Resources:
 
-# - [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
-- [Кодекс поведения Microsoft Open Source](https://opensource.microsoft.com/codeofconduct/)
-# - [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-- [Часто задаваемые вопросы по кодексу поведения Microsoft](https://opensource.microsoft.com/codeofconduct/faq/)
-# - Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
-- Связаться с [opencode@microsoft.com](mailto:opencode@microsoft.com) с вопросами или опасениями
+- [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/)
+- [Microsoft Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
+- Contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with questions or concerns
 ```

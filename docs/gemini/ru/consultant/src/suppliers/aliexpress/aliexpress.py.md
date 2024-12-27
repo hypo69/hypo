@@ -1,146 +1,149 @@
-# Анализ кода модуля `aliexpress.py`
+# Анализ кода модуля `aliexpress`
 
 **Качество кода**
 
-**Соответствие требованиям по оформлению кода: 7/10**
--   **Плюсы**
-    *   Код в целом структурирован и следует принципам объектно-ориентированного программирования.
-    *   Используется наследование от нескольких классов для комбинирования функциональности.
-    *   Присутствуют docstring для классов и методов, что облегчает понимание их назначения.
-    *   Используются `logger` для логирования, что является хорошей практикой.
--   **Минусы**
-    *   Использование `...` как точки остановки.
-    *   Отсутствуют reStructuredText (RST) docstring.
-    *   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    *   Не все комментарии содержат подробное объяснение следующего за ними блока кода.
-    *   Некоторые импорты не приведены в соответствие с предыдущими файлами.
-    *   Используется обычный `json.load` а не `j_loads_ns` или `j_loads`.
+- **Соответствие требованиям по оформлению кода**: 6/10
+    -   **Плюсы:**
+        -  Используется reStructuredText (RST) для docstring, что соответствует требованиям.
+        -  Код содержит описание модуля и класса.
+        -  Используется `logger.error` для обработки ошибок, но не везде.
+        -  Сохранена структура импортов.
+    -   **Минусы:**
+        -  Не все комментарии соответствуют формату RST.
+        -  Отсутствуют комментарии для переменных модуля.
+        -  Не используется `j_loads` или `j_loads_ns`.
+        -  Не все функции и методы документированы в формате RST.
+        -  Присутствуют `...` как точки остановки, но не во всех случаях это оправдано.
+        -  Не везде используется `logger.error` для обработки исключений.
+        -  Используется `MODE = 'dev'`, но неясно как он используется.
 
 **Рекомендации по улучшению**
 
-1.  **Заменить `json.load` на `j_loads` или `j_loads_ns`:**
-    Использовать функции из `src.utils.jjson` для загрузки JSON, как это указано в инструкциях.
-2.  **Форматировать docstring в RST:**
-    Привести docstring к формату reStructuredText (RST) для корректной генерации документации.
-3.  **Уточнить комментарии:**
-    Сделать комментарии более информативными, описывая не только, что делает код, но и зачем.
-4.  **Проверить и добавить недостающие импорты:**
-    Обеспечить наличие всех необходимых импортов и привести их в соответствие с другими модулями.
-5.  **Удалить `...` как точки остановки:**
-    Заменить `...` на конкретную реализацию или убрать.
-6.  **Избавиться от избыточного `try-except`:**
-    Перенести обработку ошибок в `logger.error`.
-7.  **Привести имена переменных и функций в соответствие с ранее обработанными файлами**.
+1.  **Импорты**:
+    - Добавить `from src.utils.jjson import j_loads, j_loads_ns`
+    - Добавить `from src.logger.logger import logger`
+2.  **Формат документации**:
+    -  Все комментарии и docstring должны быть в формате reStructuredText (RST).
+    -  Добавить docstring для всех функций и методов, включая описание параметров и возвращаемых значений.
+3. **Обработка данных**:
+    -   Использовать `j_loads` или `j_loads_ns` вместо стандартного `json.load` при чтении файлов.
+4.  **Логирование**:
+    -   Активно использовать `logger.error` для обработки исключений, заменяя стандартные блоки `try-except`, где это уместно.
+5.  **Унификация кода**:
+    -  Привести в соответствие имена переменных с другими частями кода, где это необходимо.
+6. **Комментарии**:
+    - Добавить комментарии для всех переменных модуля, описывая их назначение.
+7. **Константы**:
+    - Перевести `MODE` в константы, если это подразумевает его использование в качестве константы.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с AliExpress.
-=========================================================================================
+.. module:: src.suppliers.aliexpress
+   :platform: Windows, Unix
+   :synopsis: Module provides the `Aliexpress` class, which integrates functionality
+              from `Supplier`, `AliRequests`, and `AliApi` for working with AliExpress.
 
-Этот модуль предоставляет класс :class:`Aliexpress`, который объединяет функциональность
-из классов :class:`Supplier`, :class:`AliRequests` и :class:`AliApi` для работы с AliExpress.
+Module for handling AliExpress interactions.
+=====================================================
+This module defines the Aliexpress class, which combines functionality from
+`Supplier`, `AliRequests`, and `AliApi` to provide an interface for
+interacting with AliExpress.
 
-Пример использования
---------------------
-
-Примеры использования класса `Aliexpress`:
-
-.. code-block:: python
-
-    # Запуск без вебдрайвера
-    a = Aliexpress()
-
-    # Запуск с вебдрайвером `Chrome`
-    a = Aliexpress('chrome')
-
-    # Запуск в режиме requests
-    a = Aliexpress(requests=True)
 """
 
-MODE = 'dev'
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 import pickle
 import threading
 from requests.sessions import Session
 from fake_useragent import UserAgent
 from pathlib import Path
-from typing import Union, Any
+from typing import Union
 from requests.cookies import RequestsCookieJar
 from urllib.parse import urlparse
 
-# from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить j_loads_ns или j_loads
-from src import gs  
+from src import gs  # импорт gs
 from src.suppliers.supplier import Supplier
 from .alirequests import AliRequests
 from .aliapi import AliApi
-from src.logger.logger import logger  
+from src.logger.logger import logger  # импорт logger
+from src.utils.jjson import j_loads, j_loads_ns  # импорт j_loads, j_loads_ns
+
+#: str: Defines the mode of the script ('dev' for development, could be 'prod' for production)
+MODE = 'dev'
 
 class Aliexpress(Supplier, AliRequests, AliApi):
     """
-    Базовый класс для AliExpress.
+    Base class for AliExpress.
 
-    Этот класс объединяет функциональность классов :class:`Supplier`, :class:`AliRequests` и :class:`AliApi`
-    для облегчения взаимодействия с AliExpress.
+    This class combines features of the `Supplier`, `AliRequests`, and `AliApi`
+    classes to facilitate interaction with AliExpress.
 
-    :param webdriver: Режим вебдрайвера. Поддерживаемые значения:
-        - `False` (по умолчанию): Без вебдрайвера.
-        - `'chrome'`: Использовать вебдрайвер Chrome.
-        - `'mozilla'`: Использовать вебдрайвер Mozilla.
-        - `'edge'`: Использовать вебдрайвер Edge.
-        - `'default'`: Использовать системный вебдрайвер по умолчанию.
+    :param webdriver: Webdriver mode. Supported values are:
+        - `False` (default): No webdriver.
+        - `'chrome'`: Use the Chrome webdriver.
+        - `'mozilla'`: Use the Mozilla webdriver.
+        - `'edge'`: Use the Edge webdriver.
+        - `'default'`: Use the system's default webdriver.
     :type webdriver: bool | str
 
-    :param locale: Настройки языка и валюты для скрипта.
+    :param locale: The language and currency settings for the script.
     :type locale: str | dict
 
-    :param args: Дополнительные позиционные аргументы.
-    :param kwargs: Дополнительные ключевые аргументы.
+    :param args: Additional positional arguments.
+    :param kwargs: Additional keyword arguments.
 
-    **Примеры использования**::
+    **Usage examples**::
 
-        # Запуск без вебдрайвера
+        # Run without a webdriver
         a = Aliexpress()
 
-        # Запуск с вебдрайвером `Chrome`
+        # Webdriver `Chrome`
         a = Aliexpress('chrome')
 
-        # Запуск в режиме `requests`
+        # Requests mode
         a = Aliexpress(requests=True)
+
     """
-    def __init__(self, 
-                 webdriver: bool | str = False, 
+    ...
+
+    def __init__(self,
+                 webdriver: bool | str = False,
                  locale: str | dict = {'EN': 'USD'},
                  *args, **kwargs):
         """
-        Инициализирует класс Aliexpress.
+        Initialize the Aliexpress class.
 
-        :param webdriver: Режим вебдрайвера. Поддерживаемые значения:
-            - `False` (по умолчанию): Без вебдрайвера.
-            - `'chrome'`: Использовать вебдрайвер Chrome.
-            - `'mozilla'`: Использовать вебдрайвер Mozilla.
-            - `'edge'`: Использовать вебдрайвер Edge.
-            - `'default'`: Использовать системный вебдрайвер по умолчанию.
+        :param webdriver: Webdriver mode. Supported values are:
+            - `False` (default): No webdriver.
+            - `'chrome'`: Use the Chrome webdriver.
+            - `'mozilla'`: Use the Mozilla webdriver.
+            - `'edge'`: Use the Edge webdriver.
+            - `'default'`: Use the system's default webdriver.
         :type webdriver: bool | str
 
-        :param locale: Настройки языка и валюты для скрипта.
+        :param locale: The language and currency settings for the script.
         :type locale: str | dict
 
-        :param args: Дополнительные позиционные аргументы.
-        :param kwargs: Дополнительные ключевые аргументы.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional keyword arguments.
 
-        **Примеры**::
+        **Examples**::
 
-            # Запуск без вебдрайвера
+            # Run without a webdriver
             a = Aliexpress()
 
-            # Запуск с вебдрайвером `Chrome`
+            # Webdriver `Chrome`
             a = Aliexpress('chrome')
+
         """
-        # Вызов конструктора родительского класса Supplier с передачей префикса 'aliexpress', локали и настроек вебдрайвера
-        super().__init__(supplier_prefix = 'aliexpress', 
-                         locale = locale, 
-                         webdriver = webdriver, 
+        # Инициализирует базовые классы Supplier, AliRequests и AliApi
+        super().__init__(supplier_prefix='aliexpress',
+                         locale=locale,
+                         webdriver=webdriver,
                          *args, **kwargs)
 ```

@@ -2,183 +2,146 @@
 
 **Качество кода**
 
-10
--  Плюсы
-    -  Представленна схема последовательности действий в формате mermaid.
-    -  Схема является наглядным представлением работы модуля.
--  Минусы
-    -  Файл не является исполняемым кодом на python, поэтому большая часть инструкций не применима.
-    -  Необходимо переработать код в исполняемый код на python.
-    -  Отсутствует описание модуля.
+8
+- Плюсы
+    - Код представляет собой диаграмму, описывающую логику выполнения сценариев, что является понятным и структурированным.
+    - Диаграмма использует понятные обозначения и стрелки, что упрощает понимание потока выполнения.
+- Минусы
+    - Код не является исполняемым и представляет собой описание в формате `mermaid`, что требует дополнительной обработки для интерпретации.
+    - Отсутствует какая-либо документация в формате reStructuredText (RST).
+    - Не предоставляется никакой информации о реализации каждого из блоков.
 
 **Рекомендации по улучшению**
 
-1. Необходимо переписать mmd файл в python файл, который будет соответствовать описанной логике.
-2. Добавить описание модуля в формате reStructuredText (RST).
-3. Реализовать функции и классы, соответствующие описанным операциям.
-4. Добавить логирование для отслеживания ошибок и хода выполнения.
-5. Добавить docstring к каждой функции, методу и классу.
+1.  **Документация**: Необходимо добавить описание структуры файла с использованием формата reStructuredText (RST)
+2.  **Интеграция с кодом**: Описать соответствие каждого блока в `mermaid` диаграмме с функциями в коде.
+3.  **Описания блоков**: Необходимо описать каждый блок в диаграмме в терминах действий, которые он выполняет в коде.
+4.  **Обработка ошибок**: Описать подробнее механизм обработки ошибок.
 
 **Оптимизированный код**
 
-```python
-"""
-Модуль для выполнения сценариев сбора данных о продуктах.
-===========================================================
-
-Этот модуль содержит классы и функции для загрузки, итерации и запуска
-сценариев, направленных на сбор информации о продуктах с веб-сайтов.
-Он включает в себя навигацию по страницам, извлечение данных и сохранение
-результатов.
-
-Пример использования
---------------------
-
-.. code-block:: python
-
-    from src.scenario.scenario_executor import ScenarioExecutor
-
-    executor = ScenarioExecutor()
-    executor.run_all_scenarios()
-"""
-
-import asyncio
-import json
-from typing import List, Dict, Any
-
-from src.utils.jjson import j_loads_ns
-from src.logger.logger import logger # импортируем logger
-
-# TODO: Добавить импорты для работы с Selenium, PrestaShop API, и другими необходимыми модулями
-
-class ScenarioExecutor:
+```markdown
     """
-    Класс для выполнения сценариев сбора данных о продуктах.
+    Модуль `scenario_executor.mmd`
+    =========================================================================================
 
-    :ivar scenario_files: Список путей к файлам сценариев.
-    :vartype scenario_files: List[str]
+    Этот модуль содержит описание процесса выполнения сценариев в виде диаграммы Mermaid.
+    Диаграмма описывает поток выполнения сценариев от загрузки списка файлов до вставки
+    продуктов в PrestaShop.
+
+    Описание диаграммы
+    --------------------
+
+    .. graphviz::
+
+       digraph scenario_execution {
+           rankdir=LR;
+           A [label="Supplier Instance"];
+           B [label="Scenario Files List"];
+           C [label="Run Scenario Files"];
+           D [label="Error Handling"];
+           E [label="Iterate Through Each Scenario File"];
+           F [label="Run Scenario File"];
+           G [label="Load Scenarios"];
+           H [label="Iterate Through Each Scenario"];
+           I [label="Run Scenario"];
+           J [label="Navigate to URL"];
+           K [label="Get List of Products"];
+           L [label="Iterate Through Products"];
+           M [label="Navigate to Product Page"];
+           N [label="Grab Product Fields"];
+           O [label="Create Product Object"];
+           P [label="Insert Product into PrestaShop"];
+           Q [label="Success"];
+           R [label="Error Handling"];
+           S [label="Update Journal"];
+           T [label="Return True/False"];
+
+           A -> B;
+           B -> C [label="Valid List"];
+           B -> D [label="Invalid List"];
+           C -> E;
+           E -> F;
+           F -> G;
+           G -> H;
+           H -> I;
+           I -> J;
+           J -> K;
+           K -> L;
+           L -> M;
+           M -> N;
+           N -> O;
+           O -> P;
+           P -> Q [label="Success"];
+           P -> R [label="Failure"];
+           Q -> S;
+           R -> S;
+           S -> T;
+       }
+
+
+    Описание блоков диаграммы
+    --------------------
+
+    *   **A [Supplier Instance]**:
+        Представляет экземпляр поставщика, инициирующий процесс выполнения сценариев.
+
+    *   **B {Scenario Files List}**:
+        Отображает получение списка файлов сценариев.
+        Далее список разделяется на валидный и невалидный.
+
+    *   **C [Run Scenario Files]**:
+        Представляет начало выполнения валидных файлов сценариев.
+
+    *   **D [Error Handling]**:
+        Представляет обработку ошибок для невалидных файлов сценариев.
+
+    *   **E {Iterate Through Each Scenario File}**:
+        Отображает итерацию по каждому файлу сценариев.
+
+    *   **F [Run Scenario File]**:
+        Выполняет обработку отдельного файла сценария.
+
+    *   **G {Load Scenarios}**:
+        Загружает сценарии из текущего обрабатываемого файла.
+
+    *   **H [Iterate Through Each Scenario]**:
+        Итерирует по каждому загруженному сценарию.
+
+    *   **I [Run Scenario]**:
+        Запускает выполнение текущего сценария.
+
+    *   **J [Navigate to URL]**:
+        Выполняет переход по URL, указанному в текущем сценарии.
+
+    *   **K [Get List of Products]**:
+        Извлекает список продуктов со страницы.
+
+    *   **L {Iterate Through Products}**:
+        Итерирует по списку продуктов.
+
+    *   **M [Navigate to Product Page]**:
+        Переходит на страницу конкретного продукта.
+
+    *   **N [Grab Product Fields]**:
+         Извлекает необходимые поля данных продукта со страницы.
+
+    *   **O [Create Product Object]**:
+         Создает объект продукта на основе извлеченных данных.
+
+    *   **P [Insert Product into PrestaShop]**:
+        Вставляет объект продукта в базу данных PrestaShop.
+
+    *   **Q [Success]**:
+        Отображает успешную вставку продукта.
+
+    *   **R [Error Handling]**:
+        Отображает обработку ошибок при вставке продукта.
+
+    *   **S [Update Journal]**:
+         Обновляет журнал с информацией о выполненных действиях.
+
+    *   **T [Return True/False]**:
+        Возвращает результат выполнения сценария.
     """
-    def __init__(self, scenario_files: List[str] = None):
-        """
-        Инициализирует экземпляр класса ScenarioExecutor.
-
-        :param scenario_files: Список путей к файлам сценариев.
-        :type scenario_files: List[str], optional
-        """
-        self.scenario_files = scenario_files or []
-
-    def _load_scenarios(self, file_path: str) -> List[Dict]:
-        """
-        Загружает сценарии из файла JSON.
-
-        :param file_path: Путь к файлу JSON.
-        :type file_path: str
-        :return: Список словарей, представляющих сценарии.
-        :rtype: List[Dict]
-        :raises FileNotFoundError: Если файл не найден.
-        :raises json.JSONDecodeError: Если файл не является валидным JSON.
-        """
-        try:
-            # Загружаем сценарии из файла
-            with open(file_path, 'r', encoding='utf-8') as f:
-                scenarios = j_loads_ns(f)
-            return scenarios
-        except FileNotFoundError as e:
-            logger.error(f'Файл не найден: {file_path}', exc_info=True)
-            return []
-        except json.JSONDecodeError as e:
-             logger.error(f'Ошибка декодирования JSON в файле: {file_path}', exc_info=True)
-             return []
-
-
-    async def _run_scenario(self, scenario: Dict):
-        """
-        Выполняет один сценарий.
-
-        :param scenario: Словарь, представляющий сценарий.
-        :type scenario: Dict
-        :raises Exception: В случае ошибки во время выполнения сценария.
-        """
-        try:
-            # TODO: Реализация логики навигации, сбора данных и сохранения в PrestaShop
-            logger.info(f'Начало выполнения сценария: {scenario.get("name", "Без имени")}')
-            url = scenario.get('url')
-            if not url:
-                logger.error(f'URL не найден в сценарии: {scenario.get("name", "Без имени")}')
-                return
-            # Навигация к URL
-            # TODO: Добавить реализацию навигации
-            logger.info(f'Навигация к {url}')
-            # Получаем список продуктов
-            # TODO: Добавить реализацию получения списка продуктов
-            products = ['product1', 'product2']
-            for product in products:
-                # TODO: Добавить реализацию навигации к странице продукта
-                logger.info(f'Навигация к странице продукта: {product}')
-                # TODO: Добавить реализацию сбора данных о продукте
-                product_fields = {'name': 'Test Product', 'price': 100}
-                # TODO: Добавить реализацию создания объекта продукта
-                # TODO: Добавить реализацию вставки продукта в PrestaShop
-                logger.info(f'Продукт {product} обработан и добавлен в PrestaShop')
-            logger.info(f'Сценарий {scenario.get("name", "Без имени")} выполнен.')
-
-        except Exception as ex:
-             logger.error(f'Ошибка при выполнении сценария: {scenario.get("name", "Без имени")}', exc_info=True)
-             ...
-
-    async def _run_scenario_file(self, file_path: str):
-        """
-        Выполняет все сценарии, содержащиеся в файле.
-
-        :param file_path: Путь к файлу сценария.
-        :type file_path: str
-        """
-        scenarios = self._load_scenarios(file_path)
-        if not scenarios:
-            logger.warning(f'Нет сценариев для выполнения в файле: {file_path}')
-            return
-        tasks = [self._run_scenario(scenario) for scenario in scenarios]
-        await asyncio.gather(*tasks)
-    
-    async def run_all_scenarios(self):
-        """
-        Выполняет все сценарии из списка файлов.
-
-        """
-        if not self.scenario_files:
-             logger.warning('Список файлов сценариев пуст.')
-             return
-        tasks = [self._run_scenario_file(file_path) for file_path in self.scenario_files]
-        await asyncio.gather(*tasks)
-        logger.info('Завершено выполнение всех сценариев.')
-
-    @staticmethod
-    def validate_scenario_files(files: List[str]) -> (List[str], List[str]):
-        """
-         Проверяет список файлов на существование и возвращает два списка: валидные и невалидные файлы.
-
-         :param files: Список путей к файлам.
-         :type files: List[str]
-         :return: Кортеж из двух списков - валидные и невалидные файлы.
-         :rtype: (List[str], List[str])
-         """
-        valid_files = []
-        invalid_files = []
-        for file in files:
-             try:
-                # Проверяем, существует ли файл
-                with open(file, 'r', encoding='utf-8') as f:
-                    pass # Файл существует и открыт, добавляем его в список валидных
-                valid_files.append(file)
-             except FileNotFoundError:
-                 invalid_files.append(file)
-                 logger.error(f'Файл не найден: {file}', exc_info=True)
-        return valid_files, invalid_files
-
-if __name__ == '__main__':
-     # Пример использования
-     scenario_files = ['scenario1.json', 'scenario2.json', 'non_existent_file.json']  # Замените на ваши пути к файлам
-     valid_files, invalid_files = ScenarioExecutor.validate_scenario_files(scenario_files)
-     executor = ScenarioExecutor(valid_files)
-     asyncio.run(executor.run_all_scenarios())
 ```

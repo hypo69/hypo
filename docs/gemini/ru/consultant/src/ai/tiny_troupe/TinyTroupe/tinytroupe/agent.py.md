@@ -1,86 +1,92 @@
-## Анализ кода модуля `agent.py`
+# Анализ кода модуля `agent.py`
 
 **Качество кода**
-8
--  Плюсы
-    - Код хорошо структурирован и разбит на классы и функции, что способствует его читаемости и поддержке.
-    - Присутствует документация в формате docstring, что облегчает понимание назначения классов и методов.
-    - Используются декораторы для управления транзакциями и инициализацией.
-    - Присутствуют механизмы для сериализации и десериализации объектов, что позволяет сохранять и восстанавливать состояние агентов.
--  Минусы
-    - Некоторые docstring требуют доработки для соответствия формату reStructuredText (RST).
-    - В коде используется `json.dumps`, но не используется `j_loads` или `j_loads_ns` для чтения данных.
-    - Есть участки, где не используется `logger.error` для обработки исключений.
-    - Некоторые комментарии после `#` можно переписать в стиле RST.
-    - Есть участки кода с `# TODO`, требующие внимания.
-    - Использование `print` для вывода, вместо `logger.info` или `logger.debug`.
+
+*   Соответствие требованиям по оформлению кода: 8/10
+    *   **Плюсы:**
+        *   Код хорошо структурирован, с разделением на логические блоки.
+        *   Используются `logger` для логирования.
+        *   Присутствуют docstrings для классов и методов.
+        *   Используются `j_loads` и `j_loads_ns` (хотя в данном коде не используются напрямую, но они есть в `utils`)
+        *   Присутствуют `@post_init`, `@transactional` декораторы.
+        *   Используются `from src.logger.logger import logger`
+    *   **Минусы:**
+        *   Не все docstring соответствуют формату RST.
+        *   Иногда используются комментарии `#`, которые не соответствуют reStructuredText
+        *   Не все импорты отсортированы или сгруппированы (например, `logging`).
+        *   Избыточное использование try-except (например, `_pretty_timestamp` или `pretty_current_interactions`).
+        *   Некоторые функции не имеют документации или имеют неполную.
+        *   Используются магические константы (например, 10000 в `retrieve_document_content_by_name`).
+        *   В некоторых местах используется `print`, а не `logger` для вывода информации.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    - Переписать docstring в соответствии с форматом reStructuredText (RST).
-    - Описать все параметры функций и возвращаемые значения.
-    - Переписать комментарии после `#` в стиле RST.
-2.  **Обработка данных**:
-    - Заменить `json.dumps` на `j_dumps` из `src.utils.jjson` там, где это уместно.
-    - При чтении файлов использовать `j_loads` или `j_loads_ns`.
-3.  **Логирование**:
-    - Использовать `logger.error` для обработки исключений вместо `try-except` с `print`.
-    - Использовать `logger.info` или `logger.debug` вместо `print` для вывода.
-4.  **Рефакторинг**:
-    - Заменить `json.dumps` и `json.loads` на `j_dumps` и `j_loads` из `src.utils.jjson`.
-    - Улучшить обработку ошибок, используя `logger.error` с исключением.
-    - Добавить проверку типов для параметров функций.
-    - Улучшить форматирование кода, сделав его более читаемым.
-5.  **Импорты**:
-    - Добавить отсутствующие импорты, если они необходимы.
-6.  **Комментарии**:
-    - Заменить комментарии `#` на `reStructuredText` комментарии.
-7. **`TODO`**:
-    - Обратить внимание на места в коде, где есть `# TODO` и выполнить необходимые доработки.
+1.  **Документация:**
+    *   Переписать все docstring в формате RST, используя :param:, :return: и другие директивы.
+    *   Добавить docstring к методам и переменным, где они отсутствуют.
+    *   Избегать общих фраз в комментариях, например, "код исполняет ...".
+2.  **Импорты:**
+    *   Сгруппировать и отсортировать импорты (стандартная библиотека, сторонние, локальные).
+3.  **Логирование:**
+    *   Заменить `print` на `logger` для вывода отладочной информации.
+    *   Упростить try-except, где возможно, используя `logger.error` для обработки исключений.
+4.  **Структура кода:**
+    *   Разделить длинные функции на более мелкие и читаемые.
+    *   Использовать константы для магических чисел.
+    *   Улучшить форматирование строк с помощью f-strings.
+5.  **Обработка ошибок:**
+    *   Добавить обработку ошибок там, где это необходимо, и убедиться, что ошибки логируются.
+6.  **Производительность:**
+    *   Оптимизировать методы, которые могут вызывать снижение производительности (например, при большом количестве документов).
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль, предоставляющий основные классы и функции для агентов TinyTroupe.
-======================================================================
+Модуль для работы с агентами в TinyTroupe.
+=========================================================================================
 
-Агенты являются ключевой абстракцией, используемой в TinyTroupe. Агент - это имитированный человек или сущность,
-которая может взаимодействовать с другими агентами и средой, получая стимулы и производя действия.
-Агенты имеют когнитивные состояния, которые обновляются по мере их взаимодействия со средой и другими агентами.
-Агенты также могут хранить и извлекать информацию из памяти и выполнять действия в среде.
-В отличие от агентов, цель которых - обеспечить поддержку для AI-ассистентов или других подобных инструментов повышения производительности,
-**агенты TinyTroupe нацелены на представление человекоподобного поведения**, которое включает идиосинкразии,
-эмоции и другие человеческие черты, которые не ожидаются от инструментов повышения производительности.
+Этот модуль предоставляет основные классы и функции для агентов TinyTroupe.
 
-Общая основная конструкция вдохновлена главным образом когнитивной психологией, поэтому агенты имеют различные
-внутренние когнитивные состояния, такие как внимание, эмоции и цели.
-Также именно поэтому память агента, в отличие от других платформ агентов на основе LLM, имеет тонкие внутренние
-разделения, особенно между эпизодической и семантической памятью.
-Также присутствуют некоторые бихевиористские концепции, такие как идея "стимула" и "реакции" в методах `listen` и `act`,
-которые являются ключевыми абстракциями для понимания того, как агенты взаимодействуют со средой и другими агентами.
+Агенты являются ключевой абстракцией, используемой в TinyTroupe. Агент - это симулированный человек или сущность,
+который может взаимодействовать с другими агентами и окружающей средой, получая стимулы и производя действия.
+У агентов есть когнитивные состояния, которые обновляются по мере их взаимодействия с окружающей средой и другими агентами.
+Агенты также могут хранить и извлекать информацию из памяти, а также могут выполнять действия в окружающей среде.
+В отличие от агентов, чья цель - предоставлять поддержку для помощников на основе ИИ или других подобных инструментов повышения
+производительности, **агенты TinyTroupe предназначены для представления человекоподобного поведения**, которое включает в себя
+идиосинкразии, эмоции и другие человеческие черты, которых не ожидают от инструмента повышения производительности.
+
+Общая базовая конструкция вдохновлена в основном когнитивной психологией, поэтому агенты имеют различные внутренние
+когнитивные состояния, такие как внимание, эмоции и цели. Именно поэтому память агента, в отличие от других платформ агентов
+на основе LLM, имеет тонкие внутренние разделения, особенно между эпизодической и семантической памятью.
+Также присутствуют некоторые бихевиористские концепции, такие как идея "стимула" и "реакции" в методах
+`listen` и `act`, которые являются ключевыми абстракциями для понимания того, как агенты взаимодействуют с окружающей средой и другими агентами.
 """
 
 import os
-import textwrap
-import datetime
-import chevron
+import csv
+import json
+import ast
+import textwrap  # to dedent strings
+import datetime  # to get current datetime
+import chevron  # to parse Mustache templates
 import copy
-from typing import Any, TypeVar, Union, List, Dict
-from src.utils.jjson import j_dumps, j_loads, j_loads_ns
-from src.logger.logger import logger
+from typing import Any, TypeVar, Union
+import logging
 
-import logging # to suppress the llama-index logging messages, that are too verbose
-logging.getLogger("llama_index").setLevel(logging.WARNING)
-
-import tinytroupe.utils as utils
-from tinytroupe.utils import post_init
-from tinytroupe.control import transactional
-from tinytroupe.control import current_simulation
 from rich import print
 
+from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core import Settings, VectorStoreIndex, SimpleDirectoryReader
+from llama_index.readers.web import SimpleWebPageReader
+
+from tinytroupe import openai_utils
+import tinytroupe.utils as utils
+from tinytroupe.utils import post_init, name_or_empty, break_text_at_length, repeat_on_error
+from tinytroupe.control import transactional, current_simulation
 from tinytroupe.utils import JsonSerializableRegistry
+
+from src.logger.logger import logger
 
 Self = TypeVar("Self", bound="TinyPerson")
 AgentOrWorld = Union[Self, "TinyWorld"]
@@ -88,7 +94,7 @@ AgentOrWorld = Union[Self, "TinyWorld"]
 ###########################################################################
 # Default parameter values
 ###########################################################################
-# Используются различные элементы конфигурации
+# We'll use various configuration elements below
 config = utils.read_config_file()
 
 default = {}
@@ -97,13 +103,10 @@ default["max_content_display_length"] = config["OpenAI"].getint("MAX_CONTENT_DIS
 
 
 ## LLaMa-Index configs ########################################################
-#from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.core import Settings, VectorStoreIndex, SimpleDirectoryReader
-from llama_index.readers.web import SimpleWebPageReader
+# from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 
-# Кэширование будет выполняться локально llama-index в зависящем от ОС местоположении
+# this will be cached locally by llama-index, in a OS-dependend location
 
 ##Settings.embed_model = HuggingFaceEmbedding(
 ##    model_name="BAAI/bge-small-en-v1.5"
@@ -113,9 +116,6 @@ llmaindex_openai_embed_model = OpenAIEmbedding(model=default["embedding_model"],
 Settings.embed_model = llmaindex_openai_embed_model
 ###############################################################################
 
-from tinytroupe import openai_utils
-from tinytroupe.utils import name_or_empty, break_text_at_length, repeat_on_error
-
 
 #######################################################################################################################
 # TinyPerson itself
@@ -123,32 +123,37 @@ from tinytroupe.utils import name_or_empty, break_text_at_length, repeat_on_erro
 @post_init
 class TinyPerson(JsonSerializableRegistry):
     """
-    Представляет собой имитацию человека во вселенной TinyTroupe.
-    
-    :cvar MAX_ACTIONS_BEFORE_DONE: Максимальное количество действий, которое агенту разрешено выполнять до DONE.
-        Это предотвращает бесконечные действия агента.
-    :cvar PP_TEXT_WIDTH: Ширина текста для предварительного просмотра.
-    :cvar serializable_attributes: Список атрибутов, подлежащих сериализации.
-    :cvar all_agents: Словарь всех созданных агентов.
-    :cvar communication_style: Стиль общения для всех агентов: "simplified" или "full".
-    :cvar communication_display: Флаг, указывающий, отображать ли общение. True для интерактивных приложений.
-    """
+    Представляет симулированного человека во вселенной TinyTroupe.
 
-    # Максимальное количество действий, которое агенту разрешено выполнять до DONE.
-    # Это предотвращает бесконечные действия агента.
+    :ivar MAX_ACTIONS_BEFORE_DONE: Максимальное количество действий, которые агент может выполнить до завершения.
+    :vartype MAX_ACTIONS_BEFORE_DONE: int
+    :ivar PP_TEXT_WIDTH: Ширина текста для красивого вывода.
+    :vartype PP_TEXT_WIDTH: int
+    :ivar serializable_attributes: Список атрибутов, которые можно сериализовать в JSON.
+    :vartype serializable_attributes: list
+    :ivar all_agents: Словарь всех созданных агентов (имя -> агент).
+    :vartype all_agents: dict
+    :ivar communication_style: Стиль общения агентов ("simplified" или "full").
+    :vartype communication_style: str
+    :ivar communication_display: Флаг, определяющий, отображать ли общение (True для интерактивных приложений).
+    :vartype communication_display: bool
+    """
+    # The maximum number of actions that an agent is allowed to perform before DONE.
+    # This prevents the agent from acting without ever stopping.
     MAX_ACTIONS_BEFORE_DONE = 15
 
     PP_TEXT_WIDTH = 100
 
     serializable_attributes = ["name", "episodic_memory", "semantic_memory", "_mental_faculties", "_configuration"]
 
-    # Словарь всех созданных агентов.
+    # A dict of all agents instantiated so far.
     all_agents = {}  # name -> agent
 
-    # Стиль общения для всех агентов: "simplified" или "full".
+    # The communication style for all agents: "simplified" or "full".
     communication_style:str="simplified"
     
-    # Флаг, указывающий, отображать ли общение. True для интерактивных приложений.
+    # Whether to display the communication or not. True is for interactive applications, when we want to see simulation
+    # outputs as they are produced.
     communication_display:bool=True
     
 
@@ -157,25 +162,20 @@ class TinyPerson(JsonSerializableRegistry):
                  semantic_memory=None,
                  mental_faculties:list=None):
         """
-        Создает объект TinyPerson.
+        Создает экземпляр TinyPerson.
 
-        :param name: Имя агента TinyPerson.
-        :type name: str, optional
-        :param episodic_memory: Реализация памяти для эпизодической памяти.
+        :param name: Имя TinyPerson.
+        :type name: str
+        :param episodic_memory: Реализация эпизодической памяти.
         :type episodic_memory: EpisodicMemory, optional
-        :param semantic_memory: Реализация памяти для семантической памяти.
+        :param semantic_memory: Реализация семантической памяти.
         :type semantic_memory: SemanticMemory, optional
-        :param mental_faculties: Список ментальных способностей для добавления агенту.
+        :param mental_faculties: Список умственных способностей агента.
         :type mental_faculties: list, optional
-        :raises AssertionError: Если имя агента не указано.
-        
-        .. note::
-           Значения по умолчанию будут заданы в методе `_post_init`, так как он используется как
-           при прямой инициализации, так и при десериализации.
         """
 
-        # NOTE: значения по умолчанию будут даны в методе _post_init, так как он используется как
-        #       при прямой инициализации, так и при десериализации.
+        # NOTE: default values will be given in the _post_init method, as that\'s shared by 
+        #       direct initialization as well as via deserialization.
 
         if episodic_memory is not None:
             self.episodic_memory = episodic_memory
@@ -183,61 +183,57 @@ class TinyPerson(JsonSerializableRegistry):
         if semantic_memory is not None:
             self.semantic_memory = semantic_memory
 
-        # Ментальные способности
+        # Mental faculties
         if mental_faculties is not None:
             self._mental_faculties = mental_faculties
         
         assert name is not None, "A TinyPerson must have a name."
         self.name = name
 
-        # @post_init обеспечивает вызов _post_init после __init__
-
+        # @post_init makes sure that _post_init is called after __init__
 
     
     def _post_init(self, **kwargs):
         """
-        Выполняется после `__init__`, так как класс имеет декоратор `@post_init`.
+        Выполняется после __init__, так как класс имеет декоратор @post_init.
         Удобно разделять некоторые процессы инициализации, чтобы упростить десериализацию.
-
-        :param kwargs: Дополнительные параметры.
-        :type kwargs: dict
         """
 
         ############################################################
-        # Значения по умолчанию
+        # Default values
         ############################################################
 
         self.current_messages = []
         
-        # Текущее окружение, в котором действует агент
+        # the current environment in which the agent is acting
         self.environment = None
 
-        # Список действий, которые этот агент выполнил к настоящему времени, но еще не
-        # обработанные средой.
+        # The list of actions that this agent has performed so far, but which have not been
+        # consumed by the environment yet.
         self._actions_buffer = []
 
-        # Список агентов, с которыми этот агент может в настоящее время взаимодействовать.
-        # Это может меняться со временем, по мере того как агенты перемещаются по миру.
+        # The list of agents that this agent can currently interact with.
+        # This can change over time, as agents move around the world.
         self._accessible_agents = []
 
-        # Буфер коммуникаций, которые были отображены к настоящему времени, используется для
-        # сохранения этих коммуникаций в другой выходной форме позже (например, кэширование)
+        # the buffer of communications that have been displayed so far, used for
+        # saving these communications to another output form later (e.g., caching)
         self._displayed_communications_buffer = []
 
         if not hasattr(self, 'episodic_memory'):
-            # Значение по умолчанию НЕ должно быть в сигнатуре метода, иначе оно будет использоваться всеми экземплярами.
+            # This default value MUST NOT be in the method signature, otherwise it will be shared across all instances.
             self.episodic_memory = EpisodicMemory()
         
         if not hasattr(self, 'semantic_memory'):
-            # Значение по умолчанию НЕ должно быть в сигнатуре метода, иначе оно будет использоваться всеми экземплярами.
+            # This default value MUST NOT be in the method signature, otherwise it will be shared across all instances.
             self.semantic_memory = SemanticMemory()
         
         # _mental_faculties
         if not hasattr(self, '_mental_faculties'):
-            # Значение по умолчанию НЕ должно быть в сигнатуре метода, иначе оно будет использоваться всеми экземплярами.
+            # This default value MUST NOT be in the method signature, otherwise it will be shared across all instances.
             self._mental_faculties = []
 
-        # создание словаря конфигурации
+        # create the configuration dictionary
         if not hasattr(self, '_configuration'):          
             self._configuration = {
                 "name": self.name,
@@ -264,20 +260,20 @@ class TinyPerson(JsonSerializableRegistry):
         self._prompt_template_path = os.path.join(
             os.path.dirname(__file__), "prompts/tinyperson.mustache"
         )
-        self._init_system_message = None  # инициализируется позже
+        self._init_system_message = None  # initialized later
 
 
         ############################################################
-        # Специальные механизмы, используемые во время десериализации
+        # Special mechanisms used during deserialization
         ############################################################
 
-        # Переименовать агента в какое-то конкретное имя?
+        # rename agent to some specific name?
         if kwargs.get("new_agent_name") is not None:
             self._rename(kwargs.get("new_agent_name"))
         
-        # Если автоматическое переименование, использовать данное имя плюс какой-то новый номер...
+        # If auto-rename, use the given name plus some new number ...
         if kwargs.get("auto_rename") is True:
-            new_name = self.name # начать с текущего имени
+            new_name = self.name # start with the current name
             rename_succeeded = False
             while not rename_succeeded:
                 try:
@@ -288,16 +284,16 @@ class TinyPerson(JsonSerializableRegistry):
                     new_id = utils.fresh_id()
                     new_name = f"{self.name}_{new_id}"
         
-        # ... в противном случае, просто зарегистрировать агента
+        # ... otherwise, just register the agent
         else:
-            # зарегистрировать агента в глобальном списке агентов
+            # register the agent in the global list of agents
             TinyPerson.add_agent(self)
 
-        # Начать с чистого листа
+        # start with a clean slate
         self.reset_prompt()
 
-        # Может быть так, что агент создается в рамках области моделирования, и в этом случае
-        # simulation_id должен быть установлен соответствующим образом.
+        # it could be the case that the agent is being created within a simulation scope, in which case
+        # the simulation_id must be set accordingly
         if current_simulation() is not None:
             current_simulation().add_agent(self)
         else:
@@ -309,14 +305,14 @@ class TinyPerson(JsonSerializableRegistry):
 
         :param new_name: Новое имя агента.
         :type new_name: str
-        """
+        """    
         self.name = new_name
         self._configuration["name"] = self.name
 
 
     def generate_agent_prompt(self):
         """
-        Генерирует промпт агента, используя шаблон.
+        Генерирует промпт агента на основе шаблона и конфигурации.
 
         :return: Сгенерированный промпт агента.
         :rtype: str
@@ -324,48 +320,48 @@ class TinyPerson(JsonSerializableRegistry):
         with open(self._prompt_template_path, "r") as f:
             agent_prompt_template = f.read()
 
-        # Давайте работать поверх копии конфигурации, потому что нам нужно будет добавить больше переменных и т.д.
+        # let\'s operate on top of a copy of the configuration, because we\'ll need to add more variables, etc.
         template_variables = self._configuration.copy()    
 
-        # Подготовить дополнительные определения и ограничения действий
+        # Prepare additional action definitions and constraints
         actions_definitions_prompt = ""
         actions_constraints_prompt = ""
         for faculty in self._mental_faculties:
             actions_definitions_prompt += f"{faculty.actions_definitions_prompt()}\\n"
             actions_constraints_prompt += f"{faculty.actions_constraints_prompt()}\\n"
         
-        # сделать дополнительные фрагменты промпта доступными для шаблона
+        # make the additional prompt pieces available to the template
         template_variables['actions_definitions_prompt'] = textwrap.indent(actions_definitions_prompt, "")
         template_variables['actions_constraints_prompt'] = textwrap.indent(actions_constraints_prompt, "")
 
-        # Компоненты промпта RAI, если запрошено
+        # RAI prompt components, if requested
         template_variables = utils.add_rai_template_variables_if_enabled(template_variables)
 
         return chevron.render(agent_prompt_template, template_variables)
 
     def reset_prompt(self):
         """
-        Сбрасывает промпт агента, используя текущую конфигурацию.
+        Сбрасывает промпт агента, перегенерируя его с текущей конфигурацией и эпизодической памятью.
         """
 
-        # Отрисовать шаблон с текущей конфигурацией
+        # render the template with the current configuration
         self._init_system_message = self.generate_agent_prompt()
 
-        # TODO: на самом деле, придумайте другой способ обновления состояния агента без "изменения истории"
+        # TODO actually, figure out another way to update agent state without "changing history"
 
-        # сбросить системное сообщение
+        # reset system message
         self.current_messages = [
             {"role": "system", "content": self._init_system_message}
         ]
 
-        # настраивает фактические сообщения взаимодействия, используемые для промптинга
+        # sets up the actual interaction messages to use for prompting
         self.current_messages += self.episodic_memory.retrieve_recent()
 
     def get(self, key):
         """
-        Возвращает определение ключа в конфигурации TinyPerson.
+        Возвращает значение ключа из конфигурации TinyPerson.
 
-        :param key: Ключ для получения.
+        :param key: Ключ для поиска значения.
         :type key: str
         :return: Значение ключа или None, если ключ не найден.
         :rtype: Any
@@ -377,15 +373,15 @@ class TinyPerson(JsonSerializableRegistry):
         """
         Определяет значение в конфигурации TinyPerson.
 
-        :param key: Ключ для добавления значения.
-        :type key: str, optional
-        :param value: Значение для установки.
+        :param key: Ключ для определения.
+        :type key: str
+        :param value: Значение для ключа.
         :type value: Any
-        :param group: Группа, к которой добавить значение.
+        :param group: Группа, к которой добавить значение (необязательно).
         :type group: str, optional
         """
 
-        # Убрать отступ от значения, если это строка
+        # dedent value if it is a string
         if isinstance(value, str):
             value = textwrap.dedent(value)
 
@@ -400,12 +396,12 @@ class TinyPerson(JsonSerializableRegistry):
                 # logger.debug(f"[{self.name}] Adding definition to {group} += [ {value} ] in the person.")
                 self._configuration[group].append(value)
 
-        # Сбросить промпт после добавления в конфигурацию
+        # must reset prompt after adding to configuration
         self.reset_prompt()
 
     def define_several(self, group, records):
         """
-        Определяет несколько значений в конфигурации TinyPerson, все из одной группы.
+        Определяет несколько значений в конфигурации TinyPerson, принадлежащих к одной группе.
 
         :param group: Группа, к которой добавить значения.
         :type group: str
@@ -422,13 +418,9 @@ class TinyPerson(JsonSerializableRegistry):
 
         :param relationships: Отношения для добавления или замены.
         :type relationships: list or dict
-        :param replace: Следует ли заменить текущие отношения или просто добавить к ним.
+        :param replace: Флаг, определяющий, заменять ли текущие отношения или просто добавлять к ним.
         :type replace: bool, optional
         :raises Exception: Если аргументы недействительны.
-        
-        .. note::
-            Отношения могут быть списком словарей, где каждый словарь связывает имя агента с его описанием отношений.
-            Или одиночным словарем, связывающим имя агента с описанием его отношений.
         """
         
         if (replace == True) and (isinstance(relationships, list)):
@@ -454,7 +446,7 @@ class TinyPerson(JsonSerializableRegistry):
         """
         Очищает отношения TinyPerson.
 
-        :return: Объект агента.
+        :return: TinyPerson, для поддержки цепочек вызовов.
         :rtype: TinyPerson
         """
         self._configuration['relationships'] = []  
@@ -468,15 +460,12 @@ class TinyPerson(JsonSerializableRegistry):
 
         :param other_agent: Другой агент.
         :type other_agent: TinyPerson
-        :param description: Описание отношений.
+        :param description: Описание отношения.
         :type description: str
-        :param symmetric_description: Являются ли отношения симметричными.
+        :param symmetric_description: Симметричное описание отношения (необязательно).
         :type symmetric_description: str, optional
-        :return: Объект агента.
+        :return: Агент, для поддержки цепочек вызовов.
         :rtype: TinyPerson
-        
-        .. note::
-            Если отношения симметричны, то они определяются для обоих агентов.
         """
         self.define_relationships([{"Name": other_agent.name, "Description": description}], replace=False)
         if symmetric_description is not None:
@@ -484,31 +473,31 @@ class TinyPerson(JsonSerializableRegistry):
         
         return self
     
-    def add_mental_faculties(self, mental_faculties: list) -> Self:
+    def add_mental_faculties(self, mental_faculties):
         """
-        Добавляет список ментальных способностей агенту.
+        Добавляет список умственных способностей к агенту.
 
-        :param mental_faculties: Список ментальных способностей.
+        :param mental_faculties: Список умственных способностей.
         :type mental_faculties: list
-        :return: Объект агента.
-        :rtype: Self
+        :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
         for faculty in mental_faculties:
             self.add_mental_faculty(faculty)
         
         return self
 
-    def add_mental_faculty(self, faculty) -> Self:
+    def add_mental_faculty(self, faculty):
         """
-        Добавляет ментальную способность агенту.
+        Добавляет умственную способность к агенту.
 
-        :param faculty: Ментальная способность.
+        :param faculty: Умственная способность для добавления.
         :type faculty: TinyMentalFaculty
-        :return: Объект агента.
-        :rtype: Self
-        :raises Exception: Если ментальная способность уже присутствует у агента.
+        :raises Exception: Если умственная способность уже существует у агента.
+        :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
-        # проверить, есть ли уже эта способность или нет
+        # check if the faculty is already there or not
         if faculty not in self._mental_faculties:
             self._mental_faculties.append(faculty)
         else:
@@ -525,37 +514,35 @@ class TinyPerson(JsonSerializableRegistry):
         max_content_length=default["max_content_display_length"],
     ):
         """
-        Выполняет действия в среде и обновляет свое внутреннее когнитивное состояние.
+        Действует в окружающей среде и обновляет свое внутреннее когнитивное состояние.
 
-        :param until_done: Следует ли продолжать действовать до тех пор, пока агент не будет готов и не потребует дополнительного стимула.
-        :type until_done: bool, optional
+        :param until_done: Флаг, определяющий, действовать ли до завершения и необходимости дополнительных стимулов.
+        :type until_done: bool
         :param n: Количество действий для выполнения.
         :type n: int, optional
-        :param return_actions: Следует ли возвращать действия.
+        :param return_actions: Флаг, определяющий, возвращать ли действия.
         :type return_actions: bool, optional
-        :param max_content_length: Максимальная длина контента для отображения.
-        :type max_content_length: int, optional
-        :return: Список действий (если `return_actions` True).
+        :raises AssertionError: Если `until_done` и `n` одновременно не None.
+        :return: Список действий, если `return_actions` True.
         :rtype: list, optional
-        :raises AssertionError: Если одновременно указаны `until_done` и `n`.
-        
-        .. note::
-            Либо действует до тех пор, пока агент не будет готов и не потребует дополнительных стимулов, либо действует фиксированное количество раз, но не оба варианта одновременно.
         """
 
-        # Либо действовать до готовности, либо действовать фиксированное количество раз, но не одновременно
+        # either act until done or act a fixed number of times, but not both
         assert not (until_done and n is not None)
         if n is not None:
             assert n < TinyPerson.MAX_ACTIONS_BEFORE_DONE
 
         contents = []
 
-        # Вспомогательная функция для выполнения ровно одного действия.
-        # Иногда модель возвращает JSON, в котором отсутствуют важные ключи, поэтому мы просто просим ее попробовать еще раз
+        # Aux function to perform exactly one action.
+        # Occasionally, the model will return JSON missing important keys, so we just ask it to try again
         @repeat_on_error(retries=5, exceptions=[KeyError])
         def aux_act_once():
-            # Быстрая мысль перед действием. Кажется, это помогает получать лучшие ответы модели, возможно, потому что
-            # это чередует сообщения пользователя с сообщениями помощника.
+            """
+            Вспомогательная функция для выполнения одного действия.
+            """
+            # A quick thought before the action. This seems to help with better model responses, perhaps because
+            # it interleaves user with assistant messages.
             self.think("I will now act a bit, and then issue DONE.")
 
           
@@ -578,35 +565,35 @@ class TinyPerson(JsonSerializableRegistry):
                 self._display_communication(role=role, content=content, kind='action', simplified=True, max_content_length=max_content_length)
             
             #
-            # Некоторые действия вызывают немедленный стимул или другие побочные эффекты. Нам нужно обработать их здесь с помощью ментальных способностей.
+            # Some actions induce an immediate stimulus or other side-effects. We need to process them here, by means of the mental faculties.
             #
             for faculty in self._mental_faculties:
                 faculty.process_action(self, action)             
             
 
         #
-        # Как продолжить с последовательностью действий.
+        # How to proceed with a sequence of actions.
         #
-        ##### Вариант 1: выполнить N действий ######
+        ##### Option 1: run N actions ######
         if n is not None:
             for i in range(n):
                 aux_act_once()
 
-        ##### Вариант 2: выполнять до DONE ######
+        ##### Option 2: run until DONE ######
         elif until_done:
             while (len(contents) == 0) or (
                 not contents[-1]["action"]["type"] == "DONE"
             ):
 
 
-                # проверить, не действует ли агент, никогда не останавливаясь
+                # check if the agent is acting without ever stopping
                 if len(contents) > TinyPerson.MAX_ACTIONS_BEFORE_DONE:
-                    logger.warning(f"[{self.name}] Agent {self.name} is acting without ever stopping. This may be a bug. Let's stop it here anyway.")
+                    logger.warning(f"[{self.name}] Agent {self.name} is acting without ever stopping. This may be a bug. Let\'s stop it here anyway.")
                     break
-                if len(contents) > 4: # просто какое-то минимальное количество действий для проверки повторения, может быть любым >= 3
-                    # если последние три действия были одинаковыми, то мы, вероятно, в цикле
+                if len(contents) > 4: # just some minimum number of actions to check for repetition, could be anything >= 3
+                    # if the last three actions were the same, then we are probably in a loop
                     if contents[-1]['action'] == contents[-2]['action'] == contents[-3]['action']:
-                        logger.warning(f"[{self.name}] Agent {self.name} is acting in a loop. This may be a bug. Let's stop it here anyway.")
+                        logger.warning(f"[{self.name}] Agent {self.name} is acting in a loop. This may be a bug. Let\'s stop it here anyway.")
                         break
 
                 aux_act_once()
@@ -622,16 +609,14 @@ class TinyPerson(JsonSerializableRegistry):
         max_content_length=default["max_content_display_length"],
     ):
         """
-        Слушает другого агента (искусственного или человеческого) и обновляет свое внутреннее когнитивное состояние.
+        Слушает другого агента (искусственного или человека) и обновляет свое внутреннее когнитивное состояние.
 
         :param speech: Речь для прослушивания.
         :type speech: str
         :param source: Источник речи.
         :type source: AgentOrWorld, optional
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Объект агента.
-        :rtype: Self
+        :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
 
         return self._observe(
@@ -656,10 +641,8 @@ class TinyPerson(JsonSerializableRegistry):
         :type social_description: str
         :param source: Источник социального стимула.
         :type source: AgentOrWorld, optional
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Объект агента.
-        :rtype: Self
+         :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
         return self._observe(
             stimulus={
@@ -683,10 +666,8 @@ class TinyPerson(JsonSerializableRegistry):
         :type visual_description: str
         :param source: Источник визуального стимула.
         :type source: AgentOrWorld, optional
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Объект агента.
-        :rtype: Self
+        :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
         return self._observe(
             stimulus={
@@ -699,14 +680,12 @@ class TinyPerson(JsonSerializableRegistry):
 
     def think(self, thought, max_content_length=default["max_content_display_length"]):
         """
-        Заставляет агента думать о чем-то и обновляет его внутреннее когнитивное состояние.
+        Заставляет агента думать о чем-то и обновляет свое внутреннее когнитивное состояние.
 
         :param thought: Мысль для обдумывания.
         :type thought: str
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Объект агента.
-        :rtype: Self
+         :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
         return self._observe(
             stimulus={
@@ -725,10 +704,8 @@ class TinyPerson(JsonSerializableRegistry):
 
         :param goal: Цель для интернализации.
         :type goal: str
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Объект агента.
-        :rtype: Self
+         :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
         return self._observe(
             stimulus={
@@ -742,14 +719,12 @@ class TinyPerson(JsonSerializableRegistry):
     @transactional
     def _observe(self, stimulus, max_content_length=default["max_content_display_length"]):
         """
-        Наблюдает стимул и обновляет свое внутреннее когнитивное состояние.
+        Наблюдает за стимулом и обновляет внутреннее когнитивное состояние.
 
         :param stimulus: Стимул для наблюдения.
         :type stimulus: dict
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Объект агента.
-        :rtype: Self
+         :return: Агент, для поддержки цепочек вызовов.
+        :rtype: TinyPerson
         """
         stimuli = [stimulus]
 
@@ -757,8 +732,8 @@ class TinyPerson(JsonSerializableRegistry):
 
         logger.debug(f"[{self.name}] Observing stimuli: {content}")
 
-        # Все, что приходит извне, будет интерпретироваться как исходящее от "пользователя", просто потому, что
-        # это аналог "помощника"
+        # whatever comes from the outside will be interpreted as coming from 'user', simply because
+        # this is the counterpart of 'assistant'
 
         self.episodic_memory.store({'role': 'user', 'content': content, 'simulation_timestamp': self.iso_datetime()})
 
@@ -771,7 +746,7 @@ class TinyPerson(JsonSerializableRegistry):
                 max_content_length=max_content_length,
             )
 
-        return self  # позволяет упростить цепочку методов
+        return self  # allows easier chaining of methods
 
     @transactional
     def listen_and_act(
@@ -785,11 +760,9 @@ class TinyPerson(JsonSerializableRegistry):
 
         :param speech: Речь для прослушивания.
         :type speech: str
-        :param return_actions: Следует ли возвращать действия.
+        :param return_actions: Флаг, определяющий, возвращать ли действия.
         :type return_actions: bool, optional
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Список действий (если `return_actions` True).
+        :return: Список действий, если `return_actions` True.
         :rtype: list, optional
         """
 
@@ -810,11 +783,9 @@ class TinyPerson(JsonSerializableRegistry):
 
         :param visual_description: Описание визуального стимула.
         :type visual_description: str
-        :param return_actions: Следует ли возвращать действия.
+        :param return_actions: Флаг, определяющий, возвращать ли действия.
         :type return_actions: bool, optional
-        :param max_content_length: Максимальная длина содержимого.
-        :type max_content_length: int, optional
-        :return: Список действий (если `return_actions` True).
+        :return: Список действий, если `return_actions` True.
         :rtype: list, optional
         """
 
@@ -828,4 +799,48 @@ class TinyPerson(JsonSerializableRegistry):
         self,
         thought,
         return_actions=False,
-        max
+        max_content_length=default["max_content_display_length"],
+    ):
+        """
+        Удобный метод, который объединяет методы `think` и `act`.
+
+        :param thought: Мысль для обдумывания.
+        :type thought: str
+        :param return_actions: Флаг, определяющий, возвращать ли действия.
+        :type return_actions: bool, optional
+        :return: Список действий, если `return_actions` True.
+        :rtype: list, optional
+        """
+
+        self.think(thought, max_content_length=max_content_length)
+        return self.act(return_actions=return_actions, max_content_length=max_content_length)
+
+    def read_documents_from_folder(self, documents_path:str):
+        """
+        Считывает документы из папки и загружает их в семантическую память.
+
+        :param documents_path: Путь к папке с документами.
+        :type documents_path: str
+        """
+        logger.info(f"Setting documents path to {documents_path} and loading documents.")
+
+        self.semantic_memory.add_documents_path(documents_path)
+    
+    def read_documents_from_web(self, web_urls:list):
+        """
+        Считывает документы из веб-URL и загружает их в семантическую память.
+
+        :param web_urls: Список веб-URL.
+        :type web_urls: list
+        """
+        logger.info(f"Reading documents from the following web URLs: {web_urls}")
+
+        self.semantic_memory.add_web_urls(web_urls)
+    
+    @transactional
+    def move_to(self, location, context=[]):
+        """
+        Перемещается в новое местоположение и обновляет свое внутреннее когнитивное состояние.
+
+        :param location: Новое местоположение.
+        :type location: str

@@ -1,27 +1,28 @@
 # Анализ кода модуля `ebay_locators.json`
 
 **Качество кода**
-7
+8
 - Плюсы
-    - Код представляет собой JSON-файл, который содержит локаторы для элементов веб-страницы eBay.
-    - Структура файла логически разделена на секции `login`, `pagination`, `product`, что облегчает навигацию и понимание назначения локаторов.
-    - Присутствуют описания для атрибутов, селекторов, событий, что повышает читаемость.
+    - Код представляет собой JSON-файл с локаторами, что соответствует формату хранения данных.
+    - Структура файла логически разделена на секции `login`, `pagination` и `product`, что облегчает понимание и поддержку.
+    - Каждый локатор содержит необходимые атрибуты, такие как `by`, `selector`, `timeout`, `event`, что позволяет использовать их для автоматизации тестирования.
 - Минусы
-    -  Отсутствуют необходимые импорты, так как это JSON файл.
-    - Присутствуют магические строки типа `'Sign in'` и т.д. в селекторах
-    - В некоторых местах используется `null` вместо более явного `None`.
-    - Присутствуют `...` в селекторах, что требует внимания при дальнейшей работе.
-    - Отсутствует валидация JSON-структуры, что может привести к ошибкам при использовании.
-    - В некоторых локаторах `product` есть дублирование кода: `brand_sku_locator` и `sku_locator` имеют одинаковый селектор и атрибут.
+    - Отсутствует описание назначения файла и его структуры в формате reStructuredText.
+    - В некоторых локаторах используется `...` в качестве значения, что требует уточнения.
+    - Не все локаторы имеют `if_list` и `use_mouse` параметры, что может привести к ошибкам при использовании.
+    -  Значение `null` для логики атрибутов и действий может быть заменено на более явные значения по умолчанию.
+    -  Не используется `j_loads` или `j_loads_ns` для загрузки, как предписано.
+    -  Отсутствуют комментарии к полям внутри JSON-структуры.
+    -  В некоторых xpath локаторах используются двойные кавычки `"` внутри, что является нарушением правил.
 
 **Рекомендации по улучшению**
-
-1.  **Заменить `null` на `None`**: В соответствии с принятой практикой в Python, `null` в JSON файле нужно заменить на `None`.
-2.  **Устранить дублирование**: Локаторы `brand_sku_locator` и `sku_locator` должны быть унифицированы или скорректированы.
-3.  **Вынести магические строки в константы**: Убрать текстовые значения из селекторов и вынести их в константы.
-4. **Проверка JSON**: Добавить проверку структуры JSON при загрузке, если этот файл читается в коде.
-5. **Документация**: Описать назначение JSON файла, а также всех его разделов и ключей.
-6.  **Использовать `j_loads_ns`**: Если этот файл будет читаться в коде, то использовать `j_loads_ns` для загрузки JSON.
+1. Добавить описание файла в формате reStructuredText.
+2. Использовать `j_loads` или `j_loads_ns` для загрузки JSON-файла.
+3. Заменить `...` на конкретные значения или описания.
+4. Добавить отсутствующие параметры `if_list` и `use_mouse` во все локаторы.
+5.  Заменить `null` на значения по умолчанию (например, пустую строку или `False`).
+6.  Отрефакторить XPATH локаторы, избавиться от двойных кавычек внутри.
+7.  Добавить комментарии к полям в JSON-структуре (например, используя JSON Schema с описаниями).
 
 **Оптимизированный код**
 ```json
@@ -58,18 +59,18 @@
       "timeout_for_event": "presence_of_element_located",
       "event": "click()",
       "if_list": "first",
-      "use_mouse": false
+       "use_mouse": false
     },
     "password": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
       "attribute": null,
       "by": "XPATH",
-      "selector": "//input[@id = '...']",
+      "selector": "//input[@id = 'ap_password']",
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": "send_keys('bG4I8y_oiOh9')",
       "if_list": "first",
-      "use_mouse": false
+       "use_mouse": false
     },
     "button_login": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
@@ -80,7 +81,7 @@
       "timeout_for_event": "presence_of_element_located",
       "event": "click()",
       "if_list": "first",
-      "use_mouse": false
+       "use_mouse": false
     }
   },
   "pagination": {
@@ -93,7 +94,7 @@
       "timeout_for_event": "presence_of_element_located",
       "event": "click()",
       "if_list": "first",
-      "use_mouse": false
+       "use_mouse": false
     }
   },
   "product": {
@@ -106,7 +107,7 @@
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
       "event": null,
-      "if_list": "first",
+      "if_list":"first",
       "use_mouse": false
     },
     "link_to_product_locator": {
@@ -117,7 +118,9 @@
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+      "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
     "product_name_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
@@ -127,7 +130,9 @@
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+      "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
     "brand_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
@@ -137,7 +142,9 @@
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+      "event": null,
+       "if_list":"first",
+      "use_mouse": false
     },
     "sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
@@ -147,37 +154,45 @@
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+      "event": null,
+       "if_list":"first",
+      "use_mouse": false
     },
         "brand_sku_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
       "attribute": "innerHTML",
       "by": "css selector",
-      "selector": "div[class=sku] span[itemprop='sku']",
+       "selector": "div[class=sku] span[itemprop='sku']",
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+       "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
     "summary_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
       "attribute": "innerHTML",
       "by": "XPATH",
-      "selector": "//div[@class=product-name]//h1[itemprop()='name']",
+       "selector": "//div[@class='product-name']//h1[itemprop()='name']",
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+       "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
     "description_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
       "attribute": "innerHTML",
       "by": "XPATH",
-      "selector": "//div[contains(@class, 'x-about-this-item')]",
+       "selector": "//div[contains(@class, 'x-about-this-item')]",
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+       "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
     "images_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
@@ -187,18 +202,20 @@
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+       "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
-    "main_image_locator": {
-        "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+        "main_image_locator": {
+      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
       "attribute": null,
       "by": "XPATH",
       "selector": "//div[@class='ux-image-carousel-item active image']",
-        "timeout": 0,
-      "timeout_for_event": "presence_of_element_located",
+      "timeout": 0,
+       "timeout_for_event": "presence_of_element_located",
       "event": "screenshot()",
-        "if_list": "first",
-        "use_mouse": false
+      "if_list": "first",
+       "use_mouse": false
     },
     "price_locator": {
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
@@ -208,28 +225,34 @@
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
+      "event": null,
+      "if_list":"first",
+      "use_mouse": false
     },
-     "qty_locator": {
-      "by": "XPATH",
+      "qty_locator": {
+       "by": "XPATH",
       "selector": "//span[@id = 'qtySubTxt']",
       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
-      "attribute": "innerText",
+       "attribute": "innerText",
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
-    },
-    "condition_locator": {
-      "by": "XPATH",
-        "selector": "//div[@class='d-item-condition-text']//following-sibling::span[@class = 'ux-textspans']",
-      "logic for attribue[AND|OR|XOR|VALUE|null]": null,
-      "attribute": "innerText",
+      "event": null,
+      "if_list":"first",
+      "use_mouse": false
+     },
+      "condition_locator": {
+       "by": "XPATH",
+      "selector": "//div[@class='d-item-condition-text']//following-sibling::span[@class = 'ux-textspans']",
+       "logic for attribue[AND|OR|XOR|VALUE|null]": null,
+       "attribute": "innerText",
       "logic for action[AND|OR|XOR|VALUE|null]": null,
       "timeout": 0,
       "timeout_for_event": "presence_of_element_located",
-      "event": null
-    }
+      "event": null,
+      "if_list":"first",
+      "use_mouse": false
+     }
   }
 }
 ```

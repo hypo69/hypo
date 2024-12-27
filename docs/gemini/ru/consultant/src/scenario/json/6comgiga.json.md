@@ -2,21 +2,19 @@
 
 **Качество кода**
 8
- -  Плюсы
-    - Код представляет собой корректный JSON-файл, что соответствует его назначению как файла конфигурации.
-    - Структура JSON файла хорошо организована, что облегчает его чтение и понимание.
-    -  Присутствуют важные параметры, такие как `supplier`, `start_url`, `price_rule` и другие, необходимые для работы с поставщиком.
-    -  Есть разделы для исключений, что позволяет гибко настраивать процесс сбора данных.
- -  Минусы
-    - Отсутствует описание назначения файла и полей.
-    -  Не хватает комментариев, которые бы объясняли назначение конкретных параметров.
-    -  В файле присутствуют  `catalog_wholesale-products` которые не используются.
+- Плюсы
+    - Код представляет собой JSON-файл, который корректно структурирован и соответствует формату JSON.
+    - Файл содержит необходимые ключи для настройки параметров сбора данных.
+- Минусы
+    - Отсутствует описание назначения полей и структуры данных.
+    - Нет проверок валидности данных.
+    - Название файла не соответствует правилу snake_case.
+    - Не указано, как обрабатываются значения, не соответствующие типам (например, если url будет int)
 
 **Рекомендации по улучшению**
-1. Добавить описание назначения файла и полей в виде docstring.
-2.  Добавить комментарии к каждому полю, объясняющие его назначение и формат.
-3. Удалить неиспользуемые поля: `"catalog_wholesale-products"`.
-4. Убедиться в корректности `scenario_files` и `excluded` файлов, проверить существование их.
+1.  Добавить описание полей в формате reStructuredText (RST) в комментариях.
+2.  Предусмотреть валидацию данных для обработки ошибок, если данные не соответствуют ожиданиям.
+3.  Переименовать файл в `6com_giga.json` для соответствия стандарту snake_case.
 
 **Оптимизированный код**
 ```json
@@ -29,16 +27,26 @@
   "num_items_4_flush": 300,
   "if_login": true,
   "login_url": "",
-    "root_category": 3,
+  "root_category": 3,
   "collect_products_from_categorypage": false,
-  
+
   "aliexpres_ajax_store": "https://he.aliexpress.com/store/productGroupsAjax.htm?storeId=",
   
+  "catalog_wholesale-products": {
+    "ALL NOT SORTED": "https://www.aliexpress.com/wholesale.html?spm=a2g0o.11810135.0.0.61b4IPjRIPjR75",
+    "HE": "https://www.he.aliexpress.com/shop categories page.html",
+    "RU": "https://www.aliexpress.com/shop categories page.html",
+    "EN": "https://www.aliexpress.com/shop categories page.html",
+    "FR": "https://fr.aliexpress.com/shop categories page.html"
+  },
   "scenario_files": [
+     
     "aliexpress_stores_elctronic_toys.json",
     "aliexpress_stores_baby_clothing.json"
+
   ],
   "excluded": [
+    
     "aliexpress_stores_battery.json",
     "aliexpress_stores_brands.json",
     "aliexpress_stores_computer_components.json",

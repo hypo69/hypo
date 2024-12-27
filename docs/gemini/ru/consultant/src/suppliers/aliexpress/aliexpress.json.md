@@ -1,31 +1,22 @@
 # Анализ кода модуля `aliexpress.json`
 
 **Качество кода**
+
 8
 -  Плюсы
-    -   Код представляет собой JSON-файл, который является стандартным форматом для хранения конфигурационных данных.
-    -   Структура файла логически организована, сгруппирована по ключам, описывающим настройки для парсера AliExpress.
-    -   Наличие ключей `supplier`, `supplier_id`, `supplier_prefix` указывает на структурированный подход к идентификации поставщика.
-    -   Использование `scenario_files` и `out` позволяет удобно управлять файлами сценариев и результатами.
-
+    - Код представляет собой JSON-файл, который используется для конфигурации парсера. 
+    - Логическая структура файла понятна.
 -  Минусы
-    -   Отсутствуют docstring и комментарии в формате reStructuredText (RST).
-    -   Не используются функции логирования ошибок, в случае, если это необходимо.
-    -   Присутствуют дубликаты в списке `out`.
+    - В файле присутствуют дубликаты имен файлов в массиве `out`.
+    - Отсутствует описание назначения полей.
+    - Отсутствует описание назначения файла.
 
 **Рекомендации по улучшению**
-
-1.  **Документирование**:
-    -   Добавить комментарии в формате reStructuredText (RST) для описания каждого ключа и его назначения. Это поможет другим разработчикам понять структуру и цель каждой настройки.
-
-2.  **Устранение дубликатов**:
-    -   Убрать дубликаты в массиве `out`, для исключения лишней обработки данных.
-
-3.  **Логирование**:
-    -  Если этот файл используется для парсинга и требует обработки ошибок, добавить функционал логирования.
+1.  Удалить дубликаты имен файлов из массива `out`.
+2.  Добавить описание назначения каждого поля в формате `RST`.
+3.  Добавить описание назначения файла в формате `RST`.
 
 **Оптимизированный код**
-
 ```json
 {
   "supplier": "aliexpress",
@@ -37,7 +28,6 @@
   "login_url": "https://www.login.aliexpress.com",
   "collect_products_from_categorypage": true,
   "aliexpres_ajax_store": "https://he.aliexpress.com/store/productGroupsAjax.htm?storeId=",
-  
   "scenario_files": [
     "aliexpress_stores_6388_1053035_hi5group.json",
     "aliexpress_stores_baby_clothing.json",
@@ -57,26 +47,27 @@
     "aliexpress_stores_4810_911670040_smartphones_poco.json",
     "aliexpress_stores_4546_5777771_smartphones_realme.json",
      "aliexpress_stores_4534_5394047_smartphones_poco.json",
-     "aliexpress_stores_9445_2179113_chuwi.json",
+    "aliexpress_stores_9445_2179113_chuwi.json",
     "aliexpress_stores_4813_911355049_smartphones_poco.json",
     "aliexpress_stores_4811_911383159_smartphones_poco.json",
     "aliexpress_stores_4788_2343184_BASEUS.json",
     "aliexpress_stores_6062_709663_Ecoolkey_Technology_Co.json",
-      "aliexpress_stores_drills.json",
+     "aliexpress_stores_drills.json",
     "aliexpress_stores_elctronic_components_leds.json",
     "aliexpress_stores_battery.json",
     "aliexpress_stores_brands.json",
-      "aliexpress_stores_computer_components.json",
+    "aliexpress_stores_computer_components.json",
     "aliexpress_stores_computer_components_fans.json",
     "aliexpress_stores_computers.json",
-     "aliexpress_stores_electronics.json",
+    "aliexpress_stores_electronics.json",
     "aliexpress_stores_elctronic_components_audio.json",
     "aliexpress_stores_lighting.json",
     "aliexpress_stores_leds.json",
-    "aliexpress_stores_malls.json",
+     "aliexpress_stores_malls.json",
     "aliexpress_stores_memory.json",
     "aliexpress_stores_phones_repair_computers.json",
     "aliexpress_stores_electronic_toys.json"
+   
   ],
   "last_runned_scenario": "aliexpress_stores_6600_911935962_Cellphone_discount_Store.json",
   "locator_description": "",

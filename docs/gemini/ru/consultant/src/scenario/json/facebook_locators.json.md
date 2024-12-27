@@ -1,108 +1,85 @@
-# Анализ кода модуля facebook_locators.json
+# Анализ кода модуля `facebook_locators.json`
 
 **Качество кода**
-7
-- Плюсы
-    -   Код представляет собой JSON-файл, который является структурированным и легко читаемым.
-    -   Локаторы сгруппированы по назначению, что облегчает их поиск и использование.
-    -   Используются как `CSS_SELECTOR`, так и `ID` для определения локаторов, что дает гибкость при работе с элементами страницы.
-- Минусы
-    -  Некоторые селекторы кажутся специфичными и могут быть нестабильными (`u_0_b`, `js_r`, `js_31`, `js_1z`, `._1mf7._4jy0._4jy3._4jy1._51sy`).
-    -   Есть повторяющиеся ключи (например, `"input_text_message"`) с разными значениями, что может привести к путанице.
-    -   В значениях локаторов используется как `CSS_SELECTOR` так и `css selector` что является не консистентным.
-    -   Наличие ключа `"govno-vsjqko-razno"` с неинформативным названием и дублированием данных.
-    -   Отсутствует описание назначения ключей и локаторов.
+10
+-  Плюсы
+    - Код представляет собой JSON-структуру, что соответствует задаче хранения локаторов.
+    - Структура данных организована логично, с разделением на секции `login`, `locators` и `govno-vsjqko-razno`.
+    -  Используются общепринятые обозначения для локаторов, такие как `ID`, `CSS_SELECTOR`.
+-  Минусы
+    -   Использование "govno-vsjqko-razno" как ключа не несет смысловой нагрузки и требует рефакторинга.
+    -   Не все локаторы имеют консистентное использование `css selector` или `CSS_SELECTOR`.
+    -   Значение `...` для `password_locator` должно быть конкретизировано.
 
 **Рекомендации по улучшению**
-
-1.  **Уточнение селекторов**:
-    -   Использовать более устойчивые и надежные селекторы (например, атрибуты `data-*`, `aria-*`, или комбинации `id` и класса).
-    -   Уточнить и пересмотреть неоднозначные селекторы такие как `._1mf7._4jy0._4jy3._4jy1._51sy` и `js_1z`.
-2.  **Устранение дублирования ключей**:
-    -   Пересмотреть структуру данных для устранения дублирования ключей.
-    -   Использовать более конкретные ключи, чтобы избежать путаницы (например, `input_text_message_dialog` и `input_text_message_chat`).
-3.  **Консистентность**:
-   - Привести к единому виду `CSS_SELECTOR` и `css selector`. Рекомендую использовать `CSS_SELECTOR`
-4.  **Удаление избыточных данных**:
-    -   Удалить или пересмотреть ключ `"govno-vsjqko-razno"`, возможно перенести в другой файл или как-то переименовать и переструктурировать
-5.  **Добавление документации**:
-    -   Добавить описание для каждого ключа и локатора.
-    -  Использовать комментарии, чтобы пояснить назначение каждого блока.
-6.  **Общая структура**:
-    -   Сделать структуру файла более логичной. Например, разнести локаторы для разных частей интерфейса, таких как логин, отправка сообщений, и т.д.
-    -   Использовать более описательные имена для ключей (например, вместо `email_selector` - `login_email_input`).
+1.  Заменить ключ `"govno-vsjqko-razno"` на более осмысленный, например, `"message_input_variations"`.
+2.  Унифицировать использование `css selector` и `CSS_SELECTOR` (рекомендовано использовать `CSS_SELECTOR`).
+3.  Уточнить селектор `password_locator`, заменив `...` на конкретный селектор.
+4.  Добавить комментарии для каждого блока локаторов.
 
 **Оптимизированный код**
-
 ```json
 {
-  "login_page": {
-    "description": "Локаторы для страницы логина",
-    "email_input": {
-      "description": "Поле для ввода email",
+  "login": {
+    "email": "one.last.bit@gmail.com",
+    "password": "@o533368048",
+    "email_selector": {
       "by": "ID",
       "selector": "email"
     },
-    "password_input": {
-      "description": "Поле для ввода пароля",
+    "password_locator": {
       "by": "ID",
-      "selector": "..."
+      "selector": "pass"
     },
-    "login_button": {
-      "description": "Кнопка для входа в аккаунт",
+    "loginbutton_locator": {
       "by": "ID",
       "selector": "u_0_b"
     }
   },
-  "message_page": {
-    "description": "Локаторы для страницы отправки сообщений",
-    "send_message_button": {
-        "description": "Кнопка отправки сообщения",
+  "locators": {
+    "btn_send_message": {
       "by": "CSS_SELECTOR",
       "selector": "._1mf7._4jy0._4jy3._4jy1._51sy"
     },
-    "start_write_message_button": {
-        "description": "Кнопка для начала написания сообщения",
+    "btn_start_write_message": {
       "by": "CSS_SELECTOR",
       "selector": "span._5qtp"
     },
-    "upload_image_button": {
-        "description": "Кнопка загрузки изображения",
+    "btn_upload_image": {
       "by": "CSS_SELECTOR",
       "selector": "._n._5f0v"
     },
-    "div_before_upload_image_text": {
-        "description": "Див перед кнопкой загрузки изображения (текст)",
+    "div_before_btn_upload_image_text": {
+       "by": "CSS_SELECTOR",
+       "selector": "text^='Фото/видео'"
+     },
+    "div_before_btn_upload_image_class": {
       "by": "CSS_SELECTOR",
-      "selector": "text^='�����/�����'"
+      "selector": "._5qtp"
     },
-      "div_before_upload_image_class": {
-        "description": "Див перед кнопкой загрузки изображения (класс)",
+    "input_image_element_id": [
+      "js_r",
+      "js_31"
+    ],
+    "input_text_message___": {
       "by": "CSS_SELECTOR",
-        "selector": "._5qtp"
-      },
-      "input_image_element_ids": {
-        "description": "Список ID для элемента загрузки изображения",
-        "value": [
-        "js_r",
-        "js_31"
-      ]
-      },
-    "input_text_message_dialog": {
-        "description": "Поле ввода текста сообщения (в диалоге)",
-      "by": "CSS_SELECTOR",
-        "selector": "._1mf._1mk"
+      "selector": "._1mf._1mk"
     },
-      "input_text_message_chat": {
-          "description": "Поле ввода текста сообщения (в чате)",
-        "by": "CSS_SELECTOR",
+    "input_text_message": {
+      "by": "CSS_SELECTOR",
       "selector": "._2cuy._3dgx"
     },
-     "textarea_navigation_focus": {
-          "description": "Текстовое поле для навигации фокуса",
+    "textarea_navigationFocus": {
       "by": "CSS_SELECTOR",
-        "selector": "js_1z"
+      "selector": "js_1z"
     }
+  },
+  "message_input_variations": {
+    "input_text_message": [
+      "._1mf._1mk",
+      "._1p1v",
+      "textarea[placeholder*='Сообщение']"
+    ]
   }
 }
 ```
