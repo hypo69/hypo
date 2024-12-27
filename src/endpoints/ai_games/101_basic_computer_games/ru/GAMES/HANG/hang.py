@@ -1,7 +1,7 @@
 """
 <HANG>:
 =================
-Сложность: 7
+Сложность: 3
 -----------------
 Игра "Виселица" - это игра в слова, где один игрок (или компьютер) загадывает слово, а другой игрок пытается его отгадать по буквам.
 За каждую неправильную букву игрок получает штраф, обычно в виде части рисунка виселицы. Если рисунок завершен, игрок проигрывает.
@@ -32,61 +32,7 @@
 7. Вывести сообщение "SORRY, YOU DIDN'T GET IT.", затем загаданное слово, и перейти к шагу 8.
 8. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeWords["<p align='left'>Инициализация:
-    <code><b>
-    words = ['слово1', 'слово2', ...]
-    </b></code></p>"]
-    InitializeWords --> ChooseWord["<p align='left'>Выбор случайного слова:
-    <code><b>
-    targetWord = random(words)
-    </b></code></p>"]
-    ChooseWord --> CreateGuessString["<p align='left'>Создание строки GUESS$:
-    <code><b>
-    guessString = '______'
-    </b></code></p>"]
-    CreateGuessString --> InitializeErrors["<p align='left'>Инициализация счетчика ошибок:
-    <code><b>
-    numberOfErrors = 0
-    </b></code></p>"]
-    InitializeErrors --> LoopStart{"Начало цикла: пока слово не угадано и ошибок < 6"}
-    LoopStart -- Да --> InputLetter["Ввод буквы пользователем: <code><b>userLetter</b></code>"]
-    InputLetter --> CheckLetter{"Проверка: <code><b>userLetter in targetWord?</b></code>"}
-    CheckLetter -- Да --> UpdateGuessString["<p align='left'>Обновление GUESS$:
-    <code><b>
-    guessString = replace(guessString, userLetter)
-    </b></code></p>"]
-    UpdateGuessString --> CheckWin{"Проверка: <code><b>guessString == targetWord?</b></code>"}
-    CheckWin -- Да --> OutputWin["Вывод сообщения: <b>YOU GOT IT!</b> и <b>targetWord</b>"]
-    OutputWin --> End["Конец"]
-    CheckWin -- Нет --> LoopStart
-    CheckLetter -- Нет --> IncreaseErrors["<code><b>numberOfErrors = numberOfErrors + 1</b></code>"]
-    IncreaseErrors --> DrawHangman["Вывод виселицы: <code><b>drawHangman(numberOfErrors)</b></code>"]
-    DrawHangman --> CheckLose{"Проверка: <code><b>numberOfErrors == 6?</b></code>"}
-    CheckLose -- Да --> OutputLose["Вывод сообщения: <b>SORRY, YOU DIDN'T GET IT.</b> и <b>targetWord</b>"]
-    OutputLose --> End
-    CheckLose -- Нет --> LoopStart
-    LoopStart -- Нет --> End
-```
-Legenda:
-  Start - Начало игры.
-  InitializeWords - Инициализация списка слов для выбора.
-  ChooseWord - Выбор случайного слова из списка.
-  CreateGuessString - Создание строки `guessString` из прочерков, соответствующей длине загаданного слова.
-  InitializeErrors - Инициализация счетчика ошибок `numberOfErrors` в 0.
-  LoopStart - Начало цикла, который продолжается, пока слово не угадано и количество ошибок меньше 6.
-  InputLetter - Запрос у пользователя ввода буквы и сохранение ее в `userLetter`.
-  CheckLetter - Проверка, есть ли введенная буква `userLetter` в загаданном слове `targetWord`.
-  UpdateGuessString - Обновление строки `guessString`, показывая введенную букву на ее местах.
-  CheckWin - Проверка, угадано ли слово (т.е. `guessString` равен `targetWord`).
-  OutputWin - Вывод сообщения о победе "YOU GOT IT!" и загаданного слова.
-  End - Конец игры.
-  IncreaseErrors - Увеличение счетчика ошибок `numberOfErrors` на 1.
-  DrawHangman - Отображение текущего состояния виселицы в зависимости от количества ошибок.
-  CheckLose - Проверка, достигло ли количество ошибок `numberOfErrors` значения 6.
-  OutputLose - Вывод сообщения о проигрыше "SORRY, YOU DIDN'T GET IT." и загаданного слова.
+
 """
 import random
 
@@ -210,7 +156,7 @@ def play_hangman():
 if __name__ == "__main__":
     play_hangman()
 """
-Объяснение кода:
+Разбор кода:
 
 1.  **Импорт модуля `random`:**
     -   `import random`: Импортирует модуль random для случайного выбора слова.
