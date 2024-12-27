@@ -36,7 +36,7 @@ from src.logger import logger
 from src import gs
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Находит корневую директорию проекта, начиная с текущей директории файла,
     ищет вверх по дереву директорий и останавливается на первой директории, содержащей любой из указанных файлов-маркеров.
@@ -135,7 +135,7 @@ from src.logger import logger
 from src import gs
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
 
@@ -245,7 +245,7 @@ from src.logger import logger
 from src import gs
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
 

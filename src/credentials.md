@@ -110,7 +110,7 @@ When the project starts, it initializes and configures various settings and cred
 The project automatically determines its root directory by searching upwards from the current file directory for specific marker files (`pyproject.toml`, `requirements.txt`, `.git`). This ensures that the project can find its resources regardless of the current working directory.
 
 ```python
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Finds the project's root directory starting from the current file directory,
     searching upwards and stopping at the first directory containing any of the marker files.

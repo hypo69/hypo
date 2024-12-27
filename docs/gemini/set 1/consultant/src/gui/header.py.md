@@ -62,7 +62,7 @@ from src.logger.logger import logger
 MODE = 'dev'
 #: str: Режим работы приложения.
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
     ===================================

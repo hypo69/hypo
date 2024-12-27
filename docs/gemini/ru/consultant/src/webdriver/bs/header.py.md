@@ -58,7 +58,7 @@ MODE = 'dev'
 """Режим работы приложения (например, 'dev' или 'prod')."""
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта на основе наличия файлов-маркеров.
 

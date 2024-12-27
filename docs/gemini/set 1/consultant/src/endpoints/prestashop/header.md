@@ -18,7 +18,7 @@ import json
 from packaging.version import Version
 
 from pathlib import Path
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -95,7 +95,7 @@ from src.utils.jjson import j_loads  # Импортируем функцию д�
 
 MODE = 'dev'
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
 
@@ -192,7 +192,7 @@ from src.logger import logger  # импорт logger
 
 MODE = 'dev'
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
 

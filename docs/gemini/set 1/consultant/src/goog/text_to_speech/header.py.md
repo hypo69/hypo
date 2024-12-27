@@ -33,7 +33,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта.
 
@@ -147,7 +147,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта.
 

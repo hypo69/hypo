@@ -20,7 +20,7 @@ from packaging.version import Version
 from src.logger.logger import logger
 from src.utils.jjson import j_loads  # Исправлено: импорт j_loads
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
 
@@ -146,7 +146,7 @@ from packaging.version import Version
 from src.logger.logger import logger
 from src.utils.jjson import j_loads  # Исправлено: импорт j_loads
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневой каталог проекта.
 

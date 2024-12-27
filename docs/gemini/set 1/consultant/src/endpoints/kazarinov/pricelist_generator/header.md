@@ -26,7 +26,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 # Этот импорт был добавлен для соответствия заданию
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Находит корневую директорию проекта, начиная от текущей директории файла,
     ища вверх по директориям и останавливаясь на первой директории, содержащей любой из указанных файлов.
@@ -103,7 +103,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта, начиная от текущего файла.
     Ищет вверх по дереву директорий, пока не найдет директорию содержащую указанные файлы.
@@ -193,7 +193,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта, начиная от текущего файла.
     Ищет вверх по дереву директорий, пока не найдет директорию содержащую указанные файлы.

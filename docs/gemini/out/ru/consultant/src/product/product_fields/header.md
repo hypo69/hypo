@@ -48,7 +48,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads  # Импортируем j_loads
 from src.logger import logger  # Импортируем logger
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Находит корневой каталог проекта, начиная с каталога текущего файла,
     ищет вверх по каталогам, останавливаясь на первом каталоге,
@@ -147,7 +147,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта.
 
@@ -256,7 +256,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта.
 

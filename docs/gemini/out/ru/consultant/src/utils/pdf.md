@@ -31,7 +31,7 @@ from xhtml2pdf import pisa
 from src.logger import logger
 from src.utils.printer import pprint
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с директории текущего файла,
     ищет вверх по дереву директорий, останавливаясь на первой директории,
@@ -159,7 +159,7 @@ from src.utils.jjson import j_loads  # Импортируем j_loads
 from src.utils.printer import pprint
 from src.utils.paths import project_root
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с директории текущего файла,
     ищет вверх по дереву директорий, останавливаясь на первой директории,

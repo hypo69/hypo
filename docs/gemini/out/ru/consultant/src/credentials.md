@@ -46,7 +46,7 @@ from src.utils.file import read_text_file
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.printer import pprint
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с текущей директории.
     Ищет вверх по дереву директорий, пока не найдет директорию, содержащую один из файлов-маркеров.

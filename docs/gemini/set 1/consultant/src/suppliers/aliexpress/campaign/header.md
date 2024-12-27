@@ -22,7 +22,7 @@ from src import gs
 from src.utils import jjson
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Находит корневую директорию проекта, начиная с текущей директории файла,
     ищет вверх по иерархии директорий и останавливается на первой директории,
@@ -99,7 +99,7 @@ from src.utils import jjson
 from src.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта.
     
@@ -189,7 +189,7 @@ from src.utils import jjson
 from src.logger import logger
 
 
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта.
     

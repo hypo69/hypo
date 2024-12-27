@@ -24,7 +24,7 @@ from src.logger import logger
 ```
 
 ```python
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с текущей директории.
 
@@ -111,7 +111,7 @@ __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boos
  import sys
 @@ -14,38 +17,40 @@
  from pathlib import Path
- def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+ def set_project_root(marker_files=('__root__')) -> Path:
      """
 -    Finds the root directory of the project starting from the current file\'s directory,\n    searching upwards and stopping at the first directory containing any of the marker files.\n\n    Args:\n        marker_files (tuple): Filenames or directory names to identify the project root.\n    \n    Returns:\n        Path: Path to the root directory if found, otherwise the directory where the script is located.\n    """
 +    Находит корневую директорию проекта, начиная с текущего файла.
@@ -203,7 +203,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 
 from src import gs
 from src.logger import logger
-def set_project_root(marker_files=('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files=('__root__')) -> Path:
     """
     Находит корневую директорию проекта, начиная с текущего файла.
     
