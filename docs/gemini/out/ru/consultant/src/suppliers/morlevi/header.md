@@ -19,7 +19,7 @@ import json
 from packaging.version import Version
 
 from pathlib import Path
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -93,7 +93,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходи
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта.
 
@@ -185,7 +185,7 @@ from src.logger import logger  # Импорт функции логирован�
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта.
 

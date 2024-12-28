@@ -50,7 +50,7 @@
 - `Path`: Путь к корневому каталогу проекта, если он найден, в противном случае путь к каталогу, где находится скрипт.
 
 ```python
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Finds the project's root directory starting from the current file directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -572,7 +572,7 @@ def now(self) -> str:
 Проект автоматически определяет свой корневой каталог, ища вверх от текущего каталога файла определенные маркерные файлы (`pyproject.toml`, `requirements.txt`, `.git`). Это гарантирует, что проект сможет найти свои ресурсы независимо от текущего рабочего каталога.
 
 ```python
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Finds the project's root directory starting from the current file directory,
     searching upwards and stopping at the first directory containing any of the marker files.

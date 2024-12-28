@@ -1,260 +1,215 @@
 ## <алгоритм>
 
-1.  **Инициализация (Пример MockSupplier):**
-    *   Создается экземпляр `MockSupplier`. Этот класс имитирует поставщика данных с путями к сценариям, списком файлов сценариев, текущим сценарием и настройками. Он также содержит моки для связанных модулей (`MockRelatedModules`) и драйвера (`MockDriver`).
-        *   Пример: `supplier = MockSupplier()`
-        *   Данные: `supplier_abs_path`, `scenario_files`, `current_scenario`, `supplier_settings`, `related_modules`, `driver`
-2.  **Запуск сценариев из списка файлов (example_run_scenario_files):**
-    *   Функция `example_run_scenario_files` создает экземпляр `MockSupplier` и список файлов сценариев.
-    *   Вызывается `run_scenario_files` с поставщиком и списком файлов.
-    *   Возвращается `True`, если все сценарии выполнены успешно, иначе `False`.
-        *   Пример: `result = run_scenario_files(supplier, scenario_files)`
-        *   Поток данных: `MockSupplier` -> `run_scenario_files` -> `True` / `False`
-3.  **Запуск сценария из файла (example_run_scenario_file):**
-    *   Функция `example_run_scenario_file` создает экземпляр `MockSupplier` и путь к файлу сценария.
-    *   Вызывается `run_scenario_file` с поставщиком и путем к файлу.
-    *   Возвращается `True`, если сценарий выполнен успешно, иначе `False`.
-        *   Пример: `result = run_scenario_file(supplier, scenario_file)`
-        *   Поток данных: `MockSupplier` -> `run_scenario_file` -> `True` / `False`
-4.  **Запуск сценария (example_run_scenario):**
-    *   Функция `example_run_scenario` создает экземпляр `MockSupplier` и структуру данных сценария.
-    *   Вызывается `run_scenario` с поставщиком и сценарием.
-    *   Возвращается `True`, если сценарий выполнен успешно, иначе `False`.
-        *   Пример: `result = run_scenario(supplier, scenario)`
-        *   Поток данных: `MockSupplier` -> `run_scenario` -> `True` / `False`
-5.  **Вставка данных продукта (example_insert_grabbed_data):**
-    *   Функция `example_insert_grabbed_data` создает экземпляр `ProductFields`.
-    *   Вызывается `insert_grabbed_data` с данными продукта.
-        *   Пример: `insert_grabbed_data(product_fields)`
-        *   Поток данных: `ProductFields` -> `insert_grabbed_data`
-6.  **Добавление купона (example_add_coupon):**
-    *   Функция `example_add_coupon` собирает учетные данные, `reference`, код купона и даты.
-    *   Вызывается `add_coupon` с собранными данными.
-        *   Пример: `add_coupon(credentials, reference, coupon_code, start_date, end_date)`
-        *   Поток данных: `credentials`, `reference`, `coupon_code`, `start_date`, `end_date` -> `add_coupon`
-7.  **Асинхронная вставка данных продукта (example_execute_PrestaShop_insert_async):**
-    *   Функция `example_execute_PrestaShop_insert_async` создает экземпляр `ProductFields`.
-    *   Вызывается асинхронная функция `execute_PrestaShop_insert_async` с данными продукта.
-        *   Пример: `await execute_PrestaShop_insert_async(product_fields)`
-        *   Поток данных: `ProductFields` -> `execute_PrestaShop_insert_async`
-8.  **Синхронная вставка данных продукта (example_execute_PrestaShop_insert):**
-    *   Функция `example_execute_PrestaShop_insert` создает экземпляр `ProductFields`.
-    *   Вызывается `execute_PrestaShop_insert` с данными продукта.
-    *   Возвращается `True`, если вставка прошла успешно, иначе `False`.
-        *   Пример: `result = execute_PrestaShop_insert(product_fields)`
-        *   Поток данных: `ProductFields` -> `execute_PrestaShop_insert` -> `True` / `False`
-9.  **Запуск примеров (if \_\_name\_\_ == "\_\_main\_\_"):**
-    *   Последовательно вызываются все функции-примеры, демонстрирующие различные способы использования функций из `executor`. Асинхронная функция запускается с помощью `asyncio.run`.
-        *   Последовательный вызов функций.
-        *   Асинхронный вызов функции `example_execute_PrestaShop_insert_async` с `asyncio.run`.
+1.  **`example_run_scenario_files()`**:
+    *   Создается экземпляр `MockSupplier`, имитирующий поставщика данных.
+    *   Определяется список файлов сценариев `scenario_files`.
+    *   Вызывается функция `run_scenario_files` с поставщиком и списком файлов.
+    *   Если выполнение сценариев успешно, выводится сообщение "All scenarios executed successfully.", иначе "Some scenarios failed."
+    *   **Пример:** `run_scenario_files(MockSupplier(), [Path('scenarios/scenario1.json'), Path('scenarios/scenario2.json')])`
+
+2.  **`example_run_scenario_file()`**:
+    *   Создается экземпляр `MockSupplier`.
+    *   Определяется один файл сценария `scenario_file`.
+    *   Вызывается функция `run_scenario_file` с поставщиком и файлом.
+    *   Если выполнение сценария успешно, выводится "Scenario file executed successfully.", иначе "Failed to execute scenario file."
+    *   **Пример:** `run_scenario_file(MockSupplier(), Path('scenarios/scenario1.json'))`
+
+3.  **`example_run_scenario()`**:
+    *   Создается экземпляр `MockSupplier`.
+    *   Определяется словарь `scenario`, содержащий URL категории и список URL продуктов.
+    *   Вызывается функция `run_scenario` с поставщиком и сценарием.
+    *   Если выполнение сценария успешно, выводится "Scenario executed successfully.", иначе "Failed to execute the scenario."
+    *   **Пример:** `run_scenario(MockSupplier(), {'url': 'http://example.com/category', 'products': [{'url': 'http://example.com/product1'}, {'url': 'http://example.com/product2'}]})`
+
+4.  **`example_insert_grabbed_data()`**:
+    *   Создается экземпляр `ProductFields` с данными о продукте.
+    *   Вызывается функция `insert_grabbed_data` с данными о продукте.
+    *   Выводится сообщение "Product data inserted into PrestaShop."
+    *   **Пример:** `insert_grabbed_data(ProductFields(...))`
+
+5.  **`example_add_coupon()`**:
+    *   Определяются учетные данные `credentials` для PrestaShop API, `reference` продукта, `coupon_code`, `start_date`, `end_date` купона.
+    *   Вызывается функция `add_coupon` с этими параметрами.
+    *    Выводится сообщение "Coupon added successfully."
+    *   **Пример:** `add_coupon({'api_domain': 'https://example.com/api', 'api_key': 'YOUR_API_KEY'}, 'REF123', 'SUMMER2024', '2024-07-01', '2024-07-31')`
+
+6.  **`example_execute_PrestaShop_insert_async()`**:
+    *   Создается экземпляр `ProductFields` с данными о продукте.
+    *   Вызывается асинхронная функция `execute_PrestaShop_insert_async` с данными о продукте.
+    *   Выводится сообщение "Product data inserted into PrestaShop asynchronously."
+    *   **Пример:** `await execute_PrestaShop_insert_async(ProductFields(...))`
+
+7.  **`example_execute_PrestaShop_insert()`**:
+    *   Создается экземпляр `ProductFields` с данными о продукте.
+    *   Вызывается функция `execute_PrestaShop_insert` с данными о продукте.
+    *   Если вставка данных успешна, выводится сообщение "Product data inserted into PrestaShop.", иначе "Failed to insert product data into PrestaShop."
+    *   **Пример:** `execute_PrestaShop_insert(ProductFields(...))`
+
+8.  **`if __name__ == "__main__":`**:
+    *   Вызываются все функции примеров: `example_run_scenario_files()`, `example_run_scenario_file()`, `example_run_scenario()`, `example_insert_grabbed_data()`, `example_add_coupon()`, `example_execute_PrestaShop_insert_async()` и `example_execute_PrestaShop_insert()`.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[MockSupplier Initialization] --> B(run_scenario_files);
-    A --> C(run_scenario_file);
-    A --> D(run_scenario);
-    E[ProductFields Initialization] --> F(insert_grabbed_data);
-    G[Credentials and Coupon Data] --> H(add_coupon);
-    E --> I(execute_PrestaShop_insert_async);
-    E --> J(execute_PrestaShop_insert);
-    B --> K{Scenario Files Result};
-    C --> L{Scenario File Result};
-    D --> M{Scenario Result};
-    I --> N{Async PrestaShop Insert};
-    J --> O{Sync PrestaShop Insert};
-    K -- True --> P[Print "All scenarios executed successfully."];
-    K -- False --> Q[Print "Some scenarios failed."];
-    L -- True --> R[Print "Scenario file executed successfully."];
-    L -- False --> S[Print "Failed to execute scenario file."];
-    M -- True --> T[Print "Scenario executed successfully."];
-    M -- False --> U[Print "Failed to execute the scenario."];
-    F --> V[Print "Product data inserted into PrestaShop."];
-    H --> W[Print "Coupon added successfully."];
-    N --> X[Print "Product data inserted into PrestaShop asynchronously."];
-    O -- True --> Y[Print "Product data inserted into PrestaShop."];
-    O -- False --> Z[Print "Failed to insert product data into PrestaShop."];
+flowchart TD
+    subgraph MockSupplier Class
+        MockSupplierInit(MockSupplier<br> __init__) --> SetSupplierPath[Set supplier_abs_path: Path('/path/to/scenarios')]
+        SetSupplierPath --> SetScenarioFiles[Set scenario_files: list of Paths]
+        SetScenarioFiles --> SetCurrentScenario[Set current_scenario: None]
+        SetCurrentScenario --> SetSupplierSettings[Set supplier_settings: {'runned_scenario': []}]
+        SetSupplierSettings --> SetRelatedModules[Set related_modules: MockRelatedModules()]
+        SetRelatedModules --> SetDriver[Set driver: MockDriver()]
+    end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#ccf,stroke:#333,stroke-width:2px
+    subgraph MockRelatedModules Class
+        GetListProductsInCategory(MockRelatedModules<br> get_list_products_in_category) --> ReturnListProducts[Return list of product URLs]
+        GrabProductPage(MockRelatedModules<br> grab_product_page) --> CreateProductFields[Create ProductFields with presta and assist fields]
+        CreateProductFields --> ReturnProductFields[Return ProductFields object]
+         GrabPageAsync(MockRelatedModules<br> grab_page) --> CallGrabProductPage[Call grab_product_page]
+    end
+
+    subgraph MockDriver Class
+        GetURL(MockDriver<br> get_url) --> ReturnTrue[Return True]
+    end
+    
+    subgraph Example Functions
+    
+        example_run_scenario_files --> CreateMockSupplier1[Create MockSupplier Instance]
+        CreateMockSupplier1 --> SetScenarioFilesList[Set scenario_files list]
+        SetScenarioFilesList --> RunScenarioFiles(run_scenario_files)
+        RunScenarioFiles --> PrintResult1[Print success or failure message]
+        
+        example_run_scenario_file --> CreateMockSupplier2[Create MockSupplier Instance]
+         CreateMockSupplier2 --> SetSingleScenarioFile[Set single scenario_file Path]
+         SetSingleScenarioFile --> RunScenarioFile(run_scenario_file)
+         RunScenarioFile --> PrintResult2[Print success or failure message]
+
+        example_run_scenario --> CreateMockSupplier3[Create MockSupplier Instance]
+         CreateMockSupplier3 --> SetScenarioDict[Set scenario Dictionary]
+         SetScenarioDict --> RunScenario(run_scenario)
+         RunScenario --> PrintResult3[Print success or failure message]
+
+
+        example_insert_grabbed_data --> CreateProductFields1[Create ProductFields Instance]
+         CreateProductFields1 --> InsertGrabbedData(insert_grabbed_data)
+         InsertGrabbedData --> PrintMessage1[Print message: "Product data inserted into PrestaShop."]
+
+         example_add_coupon --> SetCredentials[Set PrestaShop API credentials]
+         SetCredentials --> SetCouponData[Set coupon data: reference, code, dates]
+         SetCouponData --> AddCoupon(add_coupon)
+         AddCoupon --> PrintMessage2[Print message: "Coupon added successfully."]
+
+        example_execute_PrestaShop_insert_async --> CreateProductFields2[Create ProductFields Instance]
+         CreateProductFields2 --> ExecutePrestaShopInsertAsync(execute_PrestaShop_insert_async)
+         ExecutePrestaShopInsertAsync --> PrintMessage3[Print message: "Product data inserted into PrestaShop asynchronously."]
+
+        example_execute_PrestaShop_insert --> CreateProductFields3[Create ProductFields Instance]
+        CreateProductFields3 --> ExecutePrestaShopInsert(execute_PrestaShop_insert)
+        ExecutePrestaShopInsert --> PrintResult4[Print success or failure message]
+    end
+
+    
+    Start --> example_run_scenario_files
+    Start --> example_run_scenario_file
+    Start --> example_run_scenario
+    Start --> example_insert_grabbed_data
+    Start --> example_add_coupon
+    Start --> example_execute_PrestaShop_insert_async
+    Start --> example_execute_PrestaShop_insert
 ```
-
-**Зависимости и пояснения:**
-
-*   `MockSupplier Initialization`: Имитация поставщика данных, инициализация необходимых атрибутов.
-*   `ProductFields Initialization`: Инициализация структуры данных для представления информации о продукте.
-*   `Credentials and Coupon Data`: Сбор данных для добавления купона через PrestaShop API.
-*   `run_scenario_files`, `run_scenario_file`, `run_scenario`: Функции, выполняющие сценарии.
-*   `insert_grabbed_data`, `execute_PrestaShop_insert_async`, `execute_PrestaShop_insert`: Функции для вставки данных о продукте в PrestaShop.
-*   `add_coupon`: Функция для добавления купона через PrestaShop API.
-*   `Scenario Files Result`, `Scenario File Result`, `Scenario Result`, `Async PrestaShop Insert`, `Sync PrestaShop Insert`: Результаты выполнения функций и их обработка.
-*   Остальные узлы являются выводом в консоль в зависимости от результата работы предыдущих функций.
-
-**Импорт зависимостей (в виде `mermaid`-диаграммы):**
-
-```mermaid
-graph LR
-    A[src.scenario._examples._example_executor] --> B(asyncio);
-    A --> C(pathlib.Path);
-    A --> D[src.scenario.executor];
-    A --> E[src.utils.jjson];
-    A --> F[src.product.product_fields];
-    A --> G[src.endpoints.PrestaShop];
-    D --> H(run_scenario_files);
-    D --> I(run_scenario_file);
-    D --> J(run_scenarios);
-    D --> K(run_scenario);
-    D --> L(insert_grabbed_data);
-    D --> M(execute_PrestaShop_insert);
-    D --> N(execute_PrestaShop_insert_async);
-    D --> O(add_coupon);
-    E --> P(j_loads_ns);
-    F --> Q(ProductFields);
-    G --> R(PrestaShop);
-```
-
-**Объяснение:**
-
-*   `src.scenario._examples._example_executor`: Основной модуль, содержащий примеры использования функций из модуля `src.scenario.executor`.
-*   `asyncio`: Модуль для поддержки асинхронного программирования. Используется для `example_execute_PrestaShop_insert_async`.
-*   `pathlib.Path`: Модуль для работы с путями к файлам и директориям. Используется для определения путей к файлам сценариев.
-*   `src.scenario.executor`: Модуль, содержащий функции для выполнения сценариев и взаимодействия с PrestaShop API.
-*   `src.utils.jjson`: Модуль для работы с JSON. Функция `j_loads_ns` используется для загрузки JSON-данных.
-*   `src.product.product_fields`: Модуль, определяющий структуру данных для информации о продукте.
-*   `src.endpoints.PrestaShop`: Модуль, предоставляющий интерфейс для взаимодействия с PrestaShop API.
-
 ## <объяснение>
 
 **Импорты:**
-
-*   `import asyncio`: Импортирует модуль `asyncio` для поддержки асинхронного программирования. Это необходимо для асинхронной вставки данных о продукте (`execute_PrestaShop_insert_async`).
-*   `from pathlib import Path`: Импортирует класс `Path` из модуля `pathlib` для удобной работы с путями к файлам. Используется для указания путей к файлам сценариев.
-*   `from src.scenario.executor import ...`: Импортирует функции из модуля `src.scenario.executor`, такие как `run_scenario_files`, `run_scenario_file`, `run_scenarios`, `run_scenario`, `insert_grabbed_data`, `execute_PrestaShop_insert`, `execute_PrestaShop_insert_async`, и `add_coupon`.
-*   `from src.utils.jjson import j_loads_ns`: Импортирует функцию `j_loads_ns` из модуля `src.utils.jjson`, которая, вероятно, используется для загрузки JSON-данных.
-*   `from src.product.product_fields import ProductFields`: Импортирует класс `ProductFields` из модуля `src.product.product_fields` для создания объектов, представляющих информацию о продукте.
-*   `from src.endpoints.PrestaShop import PrestaShop`: Импортирует класс `PrestaShop` из модуля `src.endpoints.PrestaShop` для взаимодействия с PrestaShop API.
+*   `import asyncio`: Используется для поддержки асинхронного программирования, необходимого для `example_execute_PrestaShop_insert_async`.
+*   `from pathlib import Path`: Используется для работы с путями к файлам и директориям, что облегчает управление файлами сценариев.
+*   `from src.scenario.executor import ...`: Импортирует функции из модуля `src.scenario.executor`, которые выполняют основные операции со сценариями, такие как запуск файлов сценариев, отдельных сценариев, а также взаимодействие с PrestaShop API.
+*   `from src.utils.jjson import j_loads_ns`: Импортируется для загрузки JSON-данных, предположительно с применением namespace.
+*   `from src.product.product_fields import ProductFields`: Импортируется для создания экземпляров класса `ProductFields`, который содержит информацию о продукте для импорта в PrestaShop.
+*   `from src.endpoints.PrestaShop import PrestaShop`: Импортируется для взаимодействия с PrestaShop API.
 
 **Классы:**
-
 *   **`MockSupplier`**:
-    *   **Роль**: Имитирует класс поставщика данных, который в реальном приложении будет отвечать за загрузку и управление данными о сценариях, настройках и связанных модулях.
-    *   **Атрибуты**:
-        *   `supplier_abs_path`: `Path`-объект, представляющий абсолютный путь к директории со сценариями.
-        *   `scenario_files`: Список `Path`-объектов, представляющих пути к файлам сценариев.
-        *   `current_scenario`: Текущий сценарий (изначально `None`).
-        *   `supplier_settings`: Словарь настроек поставщика.
-        *   `related_modules`: Экземпляр `MockRelatedModules` для имитации взаимодействия с другими модулями.
-        *   `driver`: Экземпляр `MockDriver` для имитации драйвера браузера.
-    *   **Методы**:
-        *   `__init__`: Конструктор, инициализирующий атрибуты класса.
+    *   Роль: Имитирует класс поставщика, который хранит информацию о сценариях, настройках и модулях.
+    *   Атрибуты:
+        *   `supplier_abs_path` (Path): Абсолютный путь к директории со сценариями.
+        *   `scenario_files` (list): Список путей к файлам сценариев.
+        *   `current_scenario`: Текущий выполняемый сценарий.
+        *   `supplier_settings` (dict): Словарь настроек поставщика.
+        *   `related_modules`: Экземпляр `MockRelatedModules` для имитации связанных модулей.
+        *   `driver`: Экземпляр `MockDriver` для имитации работы с драйвером браузера.
+    *   Методы: `__init__` (конструктор) устанавливает атрибуты объекта.
 *   **`MockRelatedModules`**:
-    *   **Роль**: Имитирует класс, предоставляющий доступ к функциональности других модулей, таких как получение списка продуктов в категории и получение данных со страницы продукта.
-    *   **Методы**:
-        *   `get_list_products_in_category(self, s)`: Возвращает список URL продуктов.
-        *   `grab_product_page(self, s)`: Возвращает экземпляр `ProductFields` с моковыми данными продукта.
-        *    `async grab_page(self, s)`: Асинхронная версия `grab_product_page`.
-*   **`MockDriver`**:
-    *   **Роль**: Имитирует класс, предоставляющий функции для управления браузером.
-    *   **Методы**:
-        *   `get_url(self, url)`: Возвращает `True`, имитируя успешное открытие страницы.
+    *   Роль: Имитирует связанные модули, которые могут получать информацию о продуктах и страницах.
+    *   Методы:
+        *   `get_list_products_in_category(self, s)`: Возвращает список URL продуктов в категории.
+        *   `grab_product_page(self, s)`: Возвращает объект `ProductFields` с данными о продукте.
+        *   `async grab_page(self, s)`: Асинхронно возвращает `ProductFields`.
+*    **`MockDriver`**:
+    *    Роль: Имитирует драйвер браузера для навигации по страницам.
+    *    Методы:
+        *    `get_url(self, url)`: Имитирует загрузку страницы по URL и возвращает True.
 
 **Функции:**
-
 *   **`example_run_scenario_files()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует запуск нескольких сценариев из списка файлов. Использует `run_scenario_files` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        example_run_scenario_files()
-        # Вывод: "All scenarios executed successfully." или "Some scenarios failed."
-        ```
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Запускает выполнение списка файлов сценариев, используя функцию `run_scenario_files`.
+    *   Пример: Создает `MockSupplier`, список файлов `scenario_files`, затем вызывает `run_scenario_files(supplier, scenario_files)`.
 *   **`example_run_scenario_file()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует запуск сценария из одного файла. Использует `run_scenario_file` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        example_run_scenario_file()
-        # Вывод: "Scenario file executed successfully." или "Failed to execute scenario file."
-        ```
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Запускает выполнение одного файла сценария, используя функцию `run_scenario_file`.
+    *   Пример: Создает `MockSupplier`, путь к файлу `scenario_file`, затем вызывает `run_scenario_file(supplier, scenario_file)`.
 *   **`example_run_scenario()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует запуск одного сценария. Использует `run_scenario` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        example_run_scenario()
-        # Вывод: "Scenario executed successfully." или "Failed to execute the scenario."
-        ```
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Запускает выполнение одного сценария (словаря), используя функцию `run_scenario`.
+    *   Пример: Создает `MockSupplier`, словарь `scenario`, затем вызывает `run_scenario(supplier, scenario)`.
 *   **`example_insert_grabbed_data()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует вставку данных продукта в PrestaShop. Использует `insert_grabbed_data` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        example_insert_grabbed_data()
-        # Вывод: "Product data inserted into PrestaShop."
-        ```
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Имитирует вставку данных продукта в PrestaShop, используя функцию `insert_grabbed_data`.
+    *   Пример: Создает экземпляр `ProductFields` и вызывает `insert_grabbed_data(product_fields)`.
 *   **`example_add_coupon()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует добавление купона через PrestaShop API. Использует `add_coupon` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        example_add_coupon()
-        # Вывод: "Coupon added successfully."
-        ```
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Добавляет купон в PrestaShop, используя функцию `add_coupon`.
+    *   Пример: Определяет учетные данные и данные купона, затем вызывает `add_coupon(credentials, reference, coupon_code, start_date, end_date)`.
 *   **`example_execute_PrestaShop_insert_async()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует асинхронную вставку данных продукта в PrestaShop. Использует `execute_PrestaShop_insert_async` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        await example_execute_PrestaShop_insert_async()
-        # Вывод: "Product data inserted into PrestaShop asynchronously."
-        ```
-*   **`example_execute_PrestaShop_insert()`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет (выводит сообщение в консоль).
-    *   **Назначение**: Демонстрирует синхронную вставку данных продукта в PrestaShop. Использует `execute_PrestaShop_insert` из `src.scenario.executor`.
-    *   **Пример**:
-        ```python
-        example_execute_PrestaShop_insert()
-        # Вывод: "Product data inserted into PrestaShop." или "Failed to insert product data into PrestaShop."
-        ```
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Асинхронно вставляет данные продукта в PrestaShop, используя функцию `execute_PrestaShop_insert_async`.
+    *   Пример: Создает экземпляр `ProductFields` и вызывает `await execute_PrestaShop_insert_async(product_fields)`.
+*  **`example_execute_PrestaShop_insert()`**:
+    *   Аргументы: Нет.
+    *   Возвращаемое значение: Нет.
+    *   Назначение: Синхронно вставляет данные продукта в PrestaShop, используя функцию `execute_PrestaShop_insert`.
+    *   Пример: Создает экземпляр `ProductFields` и вызывает `execute_PrestaShop_insert(product_fields)`.
 
 **Переменные:**
 
-*   ``: Константа, указывающая на режим разработки.
-*   `supplier`: Экземпляр класса `MockSupplier`.
-*   `scenario_files`: Список `Path`-объектов, представляющих пути к файлам сценариев.
-*   `scenario_file`: `Path`-объект, представляющий путь к файлу сценария.
-*   `scenario`: Словарь, представляющий структуру данных сценария.
-*   `product_fields`: Экземпляр класса `ProductFields` для хранения данных о продукте.
-*   `credentials`: Словарь с учетными данными для PrestaShop API.
-*   `reference`: Строка, представляющая reference продукта.
-*   `coupon_code`: Строка, представляющая код купона.
-*   `start_date`, `end_date`: Строки, представляющие начальную и конечную даты действия купона.
-*   `result`: Булева переменная, представляющая результат выполнения различных функций.
+*   `supplier`: Экземпляр `MockSupplier`.
+*   `scenario_files`: Список объектов `Path`, представляющих файлы сценариев.
+*   `scenario_file`: Объект `Path`, представляющий один файл сценария.
+*   `scenario`: Словарь, представляющий сценарий.
+*   `product_fields`: Экземпляр `ProductFields`, содержащий данные о продукте.
+*   `credentials`: Словарь, содержащий учетные данные для PrestaShop API.
+*   `reference`, `coupon_code`, `start_date`, `end_date`: Строковые переменные, представляющие данные купона.
+*   `result`: Переменная для хранения результата выполнения функций, возвращающих статус выполнения операции.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Отсутствие реальной реализации**: Классы `MockSupplier`, `MockRelatedModules` и `MockDriver` являются моками и не выполняют реальные операции. Для использования в реальном приложении необходимо реализовать их функциональность.
-*   **Жестко заданные данные**: Многие данные, такие как пути к файлам, URL и учетные данные, жестко заданы. Необходимо сделать их настраиваемыми через конфигурационные файлы или аргументы командной строки.
-*   **Обработка ошибок**: В коде отсутствует явная обработка исключений. Необходимо добавить блоки `try-except` для обработки возможных ошибок во время выполнения сценариев или взаимодействия с PrestaShop API.
-*   **Логирование**: Отсутствует логирование действий. Необходимо добавить логирование для отслеживания прогресса выполнения и выявления проблем.
-*   **Асинхронность**: Хотя используется `asyncio`, не все функции, которые могут быть асинхронными, реализованы как таковые (например, `run_scenario_files`, `run_scenario_file`, `run_scenario`).
-*   **Модульность**:  Код можно сделать более модульным, выделив логику работы с PrestaShop API в отдельный модуль, чтобы упростить тестирование и поддержку.
+*   **Мокирование:** Классы `MockSupplier`, `MockRelatedModules` и `MockDriver` являются имитациями и не отражают реальное поведение, что может привести к неточностям при тестировании.
+*   **Обработка ошибок:** В коде не предусмотрена полноценная обработка ошибок, что может привести к сбоям при выполнении реальных сценариев.
+*   **Конфигурация:** Параметры API PrestaShop жестко заданы, что не подходит для реальных проектов.
+*   **Асинхронность:** Не все функции используют асинхронность, что может замедлить выполнение при большом количестве операций.
+*   **Логирование**: Отсутствует логирование действий.
+*   **Зависимости**: Код сильно зависит от `src.scenario.executor`, `src.product.product_fields`, `src.endpoints.PrestaShop` и `src.utils.jjson`, без которых он не будет работать.
 
-**Цепочка взаимосвязей с другими частями проекта:**
+**Взаимосвязи с другими частями проекта:**
 
-*   Модуль `_example_executor.py` зависит от модуля `src.scenario.executor`, который предоставляет основную логику для выполнения сценариев и взаимодействия с PrestaShop API.
-*   Он также использует модули `src.utils.jjson` для работы с JSON-данными, `src.product.product_fields` для представления информации о продукте и `src.endpoints.PrestaShop` для взаимодействия с PrestaShop API.
-*   `MockSupplier` имитирует класс, который в реальном приложении может взаимодействовать с другими частями проекта, такими как базы данных, системы управления файлами или сторонние API.
-*   `MockRelatedModules` имитирует связь с модулями, отвечающими за навигацию, парсинг и другие специфические операции.
-*   `MockDriver` имитирует связь с модулем браузера для выполнения действий на странице.
-
-Этот файл служит демонстрацией того, как можно использовать `src.scenario.executor` для выполнения сценариев, получения данных с веб-страниц и взаимодействия с PrestaShop API.
+*   Модуль `src.scenario.executor` - это основной модуль, который запускает сценарии,
+    а этот файл содержит примеры его использования.
+*   Модуль `src.product.product_fields` - используется для представления данных о продуктах.
+*   Модуль `src.endpoints.PrestaShop` - используется для взаимодействия с PrestaShop API.
+*   Модуль `src.utils.jjson` - используется для загрузки и обработки JSON данных.

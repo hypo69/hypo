@@ -62,7 +62,7 @@ from src.logger.logger import logger
 
 #: str: Режим работы приложения.
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта.
     ===================================

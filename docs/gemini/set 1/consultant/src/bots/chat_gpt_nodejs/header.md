@@ -48,7 +48,7 @@ from src import gs
 from src.utils.jjson import j_loads
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Находит корневой каталог проекта, начиная с текущей директории,
     переходя наверх по иерархии директорий и останавливаясь на первой директории,
@@ -153,7 +153,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт logger для логирования
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта, начиная от текущего файла.
     Поиск происходит вверх по дереву директорий, пока не будет найдена директория,
@@ -277,7 +277,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт logger для логирования
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта, начиная от текущего файла.
     Поиск происходит вверх по дереву директорий, пока не будет найдена директория,

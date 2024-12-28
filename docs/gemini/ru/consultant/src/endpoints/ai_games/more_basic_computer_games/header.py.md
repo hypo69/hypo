@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads
 # импортируем logger для логирования ошибок
 from src.logger.logger import logger
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Находит корневой каталог проекта, начиная с каталога текущего файла,
     поиска вверх и остановки в первом каталоге, содержащем любой из маркерных файлов.

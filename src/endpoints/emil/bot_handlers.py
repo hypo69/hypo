@@ -32,17 +32,19 @@ import asyncio
 import requests
 from typing import Optional, Any
 from bs4 import BeautifulSoup
+from telegram import Update
+from telegram.ext import CallbackContext
+
 from src import gs
-from src.logger.logger import logger
 from src.webdriver.driver import Driver
 from src.webdriver.chrome import Chrome
 from src.webdriver.firefox import Firefox
 from src.webdriver.edge import Edge
 from src.ai.gemini import GoogleGenerativeAI
+from src.suppliers.get_graber_by_supplier import get_graber_by_supplier_url
 from src.utils.url import is_url
 from src.utils.printer import pprint
-from telegram import Update
-from telegram.ext import CallbackContext
+from src.logger.logger import logger
 
 
 class BotHandler:
@@ -58,7 +60,25 @@ class BotHandler:
         """
         firefox = Firefox(options=["--kiosk", "--headless"])
 
-       
+    async def handle_message(self, update: Update, context: CallbackContext) -> None:
+        """Handle text messages with URL-based routing."""
+        q = update.message.text
+        if q == '?':
+            await update.message.reply_photo(gs.path.endpoints / 'kazarinov' / 'assets' / 'user_flowchart.png' )
+            return
+        user_id = update.effective_user.id
+        if is_url(q):
+            await self.handle_url(update, context)
+            # <- add logic after url scenario ended
+            ...
+            return # <- 
+
+
+        if q in ('--next', '-next', '__next', '-n', '-q'):
+            return await self.handle_next_command(update)
+
+        answer = self.model.chat(q)
+        await update.message.reply_text(answer)       
 
     async def handle_url(self, update: Update, context: CallbackContext) -> Any:
         """
@@ -72,17 +92,13 @@ class BotHandler:
         response = update.message.text
         if response.startswith(('https://one-tab.com', 'http://one-tab.com',
                                 'https://www.one-tab.com', 'http://www.one-tab.com')):
-            price, mexiron_name, urls = self.fetch_target_urls_onetab(response)
+
+            urls = self.fetch_target_urls_onetab(response)
+
             if not urls:
                 await update.message.reply_text('Некорректные данные.')
-
-            if await self.mexiron.run_scenario( update=update, context=context, urls=urls if isinstance (urls, list) else [urls], price=price, mexiron_name=mexiron_name  ):
-                await update.message.reply_text('Готово!')
-                return True
-        else:
-            await update.message.reply_text('Ошибка. Попробуй ещё раз.')
-            ...
-            return
+        
+        graber = get_graber_by_supplier_url(response)
 
 
     async def handle_next_command(self, update: Update) -> None:

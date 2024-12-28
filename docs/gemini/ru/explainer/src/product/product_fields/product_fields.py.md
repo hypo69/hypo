@@ -1,455 +1,532 @@
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+    которые импортируются при создании диаграммы.
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    ```
+
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    -   **Переменные**: Их типы и использование.
+    -   Выделите потенциальные ошибки или области для улучшения.
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+
 ## <алгоритм>
+```mermaid
+graph LR
+    A[Start: Инициализация ProductFields] --> B(Загрузка списка полей из файла fields_list.txt);
+    B --> C{Успешно?};
+    C -- Yes --> D(Инициализация словаря языков:  {'en': 1, 'he': 2, 'ru': 3});
+    C -- No --> E(Логирование ошибки загрузки полей);
+    D --> F(Создание объекта SimpleNamespace с полями товара);
+    F --> G(Инициализация словаря assist_fields_dict с  default_image_url и images_urls);
+    G --> H(Загрузка дефолтных значений полей из product_fields_default_values.json);
+    H --> I{Успешно?};
+     I -- Yes --> J(Установка дефолтных значений в объект класса ProductFields через setattr);
+    I -- No --> K(Логирование ошибки загрузки дефолтных значений);
 
-### Блок-схема:
+    J --> L{Работа с полями через property и setter};
+     L -->M[Пример: Установка id_product];
+        M --> N{Проверка на ошибку ProductFieldException};
+        N -- Yes --> O(Логирование ошибки установки id_product);
+        N -- No --> P(Установка значения id_product);
+         P --> Q[Пример: Получение значения  description];
+        Q --> R(Возвращение значения description);
+    
+    K --> S(End);
+    O --> S
+    R --> S
+     
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style L fill:#ccf,stroke:#333,stroke-width:2px
+    style B fill:#fff,stroke:#333,stroke-width:1px
+        style C fill:#fff,stroke:#333,stroke-width:1px
+            style D fill:#fff,stroke:#333,stroke-width:1px
+             style E fill:#fff,stroke:#333,stroke-width:1px
+                  style F fill:#fff,stroke:#333,stroke-width:1px
+                      style G fill:#fff,stroke:#333,stroke-width:1px
+                         style H fill:#fff,stroke:#333,stroke-width:1px
+                             style I fill:#fff,stroke:#333,stroke-width:1px
+                                 style J fill:#fff,stroke:#333,stroke-width:1px
+                                     style K fill:#fff,stroke:#333,stroke-width:1px
+                                         style M fill:#fff,stroke:#333,stroke-width:1px
+                                              style N fill:#fff,stroke:#333,stroke-width:1px
+                                                style O fill:#fff,stroke:#333,stroke-width:1px
+                                                   style P fill:#fff,stroke:#333,stroke-width:1px
+                                                     style Q fill:#fff,stroke:#333,stroke-width:1px
+                                                           style R fill:#fff,stroke:#333,stroke-width:1px
+```
 
-1.  **Инициализация `ProductFields`:**
-    *   Создается экземпляр класса `ProductFields`.
-    *   Вызывается метод `__init__`.
-    *   Загружается список полей продукта из файла `fields_list.txt` в `self.product_fields_list`.
-        *   Пример: Список может содержать `['id_product', 'id_supplier', 'name', 'price', ...]`.
-    *   Инициализируется словарь `self.language` со значениями `{'en': 1, 'he': 2, 'ru': 3}`.
-    *   Создается `self.presta_fields` (SimpleNamespace), заполненный ключами из `self.product_fields_list` и значениями `None`.
-        *   Пример: `self.presta_fields` будет содержать поля, такие как `id_product=None`, `id_supplier=None`, `name=None`, ...
-    *   Инициализируется словарь `self.assist_fields_dict` с ключами `default_image_url` (пустая строка) и `images_urls` (пустой список).
-        *   Пример: `self.assist_fields_dict` будет `{'default_image_url': '', 'images_urls': []}`.
-    *   Вызывается метод `self._payload()`.
-2.  **Загрузка дефолтных значений (`_payload`)**:
-    *   Загружаются дефолтные значения полей из файла `product_fields_default_values.json`.
-        *   Пример: JSON файл может содержать `{'active': 1, 'price': 0, ...}`.
-    *   Для каждой пары ключ-значение из загруженного JSON, значение устанавливается как атрибут объекта `self`.
-        *   Пример: Если в JSON есть `'active': 1`, то `self.active` станет равным `1`.
-3.  **Работа с ассоциациями (`associations`)**:
-    *   Метод `associations` с декоратором `@property` возвращает `self.presta_fields.associations` или `None`.
-        *   Пример: Если `self.presta_fields.associations` имеет значение `{'categories': [{'id': 123}]}`, то метод вернет этот словарь.
-    *   Метод `associations` с декоратором `@associations.setter` устанавливает значение для `self.presta_fields.associations`.
-        *   Пример: `self.associations = {'categories': [{'id': 456}]}` установит новое значение для ассоциаций.
-4.  **Работа с полями продукта (`id_product`, `id_supplier`, `id_manufacturer`, ...):**
-    *   Для каждого поля (например, `id_product`):
-        *   Метод с декоратором `@property` возвращает текущее значение поля из `self.presta_fields`.
-            *   Пример: Если `self.presta_fields.id_product` равен `123`, то `self.id_product` вернет `123`.
-        *   Метод с декоратором `@<поле>.setter` устанавливает новое значение для поля.
-            *   Пример: `self.id_product = 456` установит новое значение для `self.presta_fields.id_product` равным `456`.
-        *   Перед установкой значения проверяется на наличие исключения `ProductFieldException`. Если такое исключение происходит, в лог записывается ошибка и функция завершается.
-5.  **Работа с дополнительными категориями (`additional_categories`):**
-    *   Метод `additional_categories` с декоратором `@property` возвращает список дополнительных категорий.
-        *   Пример: Если `self.presta_fields.associations` имеет значение `{'categories': [{'id': 123}, {'id': 456}]}`, то вернет `[{'id': 123}, {'id': 456}]`.
-    *   Метод `additional_categories` с декоратором `@additional_categories.setter` устанавливает новые значения для дополнительных категорий. Если передано целое число, то оно преобразуется в список из одного элемента.
-        *   Пример: `self.additional_categories = 789` установит `self.presta_fields.associations.categories` в `[{'id': 789}]`.
-    *   Если передано не целое число, то в лог записывается ошибка и функция завершается.
-6.  **Работа с мультиязычными полями (`description`, `name`, `meta_description`, ...):**
-    *   Для каждого мультиязычного поля:
-        *   Метод с декоратором `@property` возвращает текущее значение поля из `self.presta_fields`.
-            *   Пример: Если `self.presta_fields.description` равен `{'language': [{'attrs': {'id': '1'}, 'value': 'Description in English'}]}`, то `self.description` вернет этот словарь.
-        *   Метод с декоратором `@<поле>.setter` устанавливает новое значение для поля, оборачивая его в словарь `{'language': [{'attrs': {'id': self.language[lang]}, 'value': value}]}`.
-            *   Пример: `self.description = 'Описание на русском', lang='ru'` установит `self.presta_fields.description` в `{'language': [{'attrs': {'id': '3'}, 'value': 'Описание на русском'}]}`.
-        *   Используется `self.language` для определения ID языка.
+**Примеры для логических блоков:**
 
-### Поток данных:
-
-1.  **Инициализация:**
-    *   `fields_list.txt` -> `_load_product_fields_list` -> `self.product_fields_list`
-    *   `product_fields_default_values.json` -> `_payload` -> атрибуты `self`
-2.  **Установка значений полей:**
-    *   Значение -> `@<поле>.setter` -> `self.presta_fields.<поле>`
-    *   `self.presta_fields.<поле>` -> `@property` -> значение
-3.  **Установка значений мультиязычных полей:**
-    *   Значение, `lang` -> `@<поле>.setter` -> `self.presta_fields.<поле>: {'language': [{'attrs': {'id': self.language[lang]}, 'value': value}]}`
-    *   `self.presta_fields.<поле>` -> `@property` -> значение
+*   **B (Загрузка списка полей):** Из файла `fields_list.txt` загружается список полей, например: `['id_product', 'id_supplier', 'name', 'price', ...]`.
+*   **D (Инициализация словаря языков):**  Создается словарь соответствия языков их id в PrestaShop, например: `{'en': 1, 'he': 2, 'ru': 3}`.
+*   **F (Создание объекта SimpleNamespace):** Создается объект `presta_fields` с атрибутами, соответствующими полям из `fields_list.txt`, например: `presta_fields.id_product = None, presta_fields.name = None, ...`.
+*   **H (Загрузка дефолтных значений):** Из файла `product_fields_default_values.json` загружаются значения по умолчанию, например: `{"active": 1, "on_sale": 0, "price": 0.00, ...}`.
+*  **J (Установка дефолтных значений):** Значения из JSON устанавливаются в `presta_fields` с помощью `setattr()`, например: `self.active = 1`, `self.price = 0.00`.
+*   **M (Пример: Установка `id_product`):** Вызывается setter `@id_product.setter`,  с проверкой на  `ProductFieldException`. Например, если `id_product` устанавливается как `self.id_product = 123`.
+*   **Q (Пример: Получение значения `description`):** Вызывается getter `@description.property`, возвращается значение поля `description` которое может быть, например:
+    ```python
+    {
+    'language':
+         [
+                {'attrs': {'id': '1'}, 'value': "Описание товара на английском"},
+          ]
+      }
+    ```
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[ProductFields] --> B(_load_product_fields_list);
-    A --> C(_payload);
-    A --> D(presta_fields);
-    A --> E(assist_fields_dict);
-    B --> F(fields_list.txt);
-    C --> G(product_fields_default_values.json);
-    D --> H(id_product);
-    D --> I(id_supplier);
-     D --> J(id_manufacturer);
-     D --> K(id_category_default);
-    D --> L(additional_categories)
-     D --> M(id_shop_default)
-     D --> N(id_shop)
-     D --> O(id_tax)
-     D --> P(on_sale)
-     D --> Q(online_only)
-     D --> R(ean13)
-     D --> S(isbn)
-     D --> T(upc)
-     D --> U(mpn)
-     D --> V(ecotax)
-     D --> W(minimal_quantity)
-     D --> X(low_stock_threshold)
-     D --> Y(low_stock_alert)
-     D --> Z(price)
-     D --> AA(wholesale_price)
-    D --> AB(unity)
-    D --> AC(unit_price_ratio)
-    D --> AD(additional_shipping_cost)
-    D --> AE(reference)
-    D --> AF(supplier_reference)
-    D --> AG(location)
-    D --> AH(width)
-    D --> AI(height)
-    D --> AJ(depth)
-    D --> AK(weight)
-    D --> AL(volume)
-    D --> AM(out_of_stock)
-    D --> AN(additional_delivery_times)
-    D --> AO(quantity_discount)
-    D --> AP(customizable)
-    D --> AQ(uploadable_files)
-    D --> AR(text_fields)
-    D --> AS(active)
-     D --> AT(redirect_type)
-     D --> AU(id_type_redirected)
-    D --> AV(available_for_order)
-    D --> AW(available_date)
-     D --> AX(show_condition)
-     D --> AY(condition)
-     D --> AZ(show_price)
-     D --> BA(indexed)
-      D --> BB(visibility)
-    D --> BC(cache_is_pack)
-    D --> BD(cache_has_attachments)
-    D --> BE(is_virtual)
-    D --> BF(cache_default_attribute)
-    D --> BG(date_add)
-    D --> BH(date_upd)
-    D --> BI(advanced_stock_management)
-    D --> BJ(pack_stock_type)
-    D --> BK(state)
-    D --> BL(product_type)
-    D --> BM(description)
-    D --> BN(description_short)
-    D --> BO(link_rewrite)
-    D --> BP(meta_description)
-    D --> BQ(meta_keywords)
-    D --> BR(meta_title)
-    D --> BS(name)
-    D --> BT(available_now)
-    D --> BU(available_later)
-    D --> BV(delivery_in_stock)
-     D --> BW(delivery_out_stock)
-     D --> BX(delivery_additional_message)
-    D --> BY(affiliate_short_link)
-    D --> BZ(affiliate_text)
-    D --> CA(affiliate_summary)
-    D --> CB(affiliate_summary_2)
-    D --> CC(affiliate_image_small)
-     D --> CD(affiliate_image_medium)
-    D --> CE(affiliate_image_large)
-    D --> CF(ingredients)
-    D --> CG(how_to_use)
-    D --> CH(specification)
-    D --> CI(id_default_image)
-    D --> CJ(link_to_video)
-    D --> CK(local_saved_image)
-    D --> CL(local_saved_video)
-    D --> CM(position_in_category)
-    D --> CN(images_urls);
+flowchart TD
+    Start[Start] --> ProductFieldsInit[ProductFields.__init__];
+    ProductFieldsInit --> LoadFieldsList[ProductFields._load_product_fields_list];
+    LoadFieldsList --> ReadFile[file.read_text_file]
+    ReadFile --> ReturnFieldsList[Return List[str] ]
+     ReturnFieldsList-->  SetLanguageDict[self.language = {'en': 1, 'he': 2, 'ru': 3}]
+     SetLanguageDict --> CreatePrestaFields[Create SimpleNamespace for presta_fields]
+      CreatePrestaFields --> SetAssistFields[self.assist_fields_dict = {'default_image_url': '', 'images_urls': []}]
+     SetAssistFields --> LoadDefaultValues[ProductFields._payload]
+       LoadDefaultValues --> LoadJsonFromFile[j_loads]
+         LoadJsonFromFile --> CheckJsonData[if not data]
+            CheckJsonData -- No --> SetDefaultValues[setattr for each field]
+        CheckJsonData -- Yes --> LogErrorLoadJson[logger.debug("Ошибка загрузки")]
+        SetDefaultValues -->  EndPayload[Return True]
+         LogErrorLoadJson--> EndPayload
+   
+     EndPayload --> EndInit[end __init__]
+
     
     
     
-    E --> CO(page_lang);
+     
     
-    H -->|setter| A
-    I -->|setter| A
-    J -->|setter| A
-    K -->|setter| A
-    L -->|setter| A
-    M -->|setter| A
-    N -->|setter| A
-    O -->|setter| A
-    P -->|setter| A
-    Q -->|setter| A
-    R -->|setter| A
-    S -->|setter| A
-    T -->|setter| A
-    U -->|setter| A
-    V -->|setter| A
-    W -->|setter| A
-    X -->|setter| A
-    Y -->|setter| A
-    Z -->|setter| A
-    AA -->|setter| A
-    AB -->|setter| A
-    AC -->|setter| A
-    AD -->|setter| A
-    AE -->|setter| A
-    AF -->|setter| A
-    AG -->|setter| A
-    AH -->|setter| A
-    AI -->|setter| A
-    AJ -->|setter| A
-    AK -->|setter| A
-    AL -->|setter| A
-    AM -->|setter| A
-    AN -->|setter| A
-    AO -->|setter| A
-    AP -->|setter| A
-    AQ -->|setter| A
-    AR -->|setter| A
-    AS -->|setter| A
-    AT -->|setter| A
-    AU -->|setter| A
-    AV -->|setter| A
-    AW -->|setter| A
-    AX -->|setter| A
-    AY -->|setter| A
-    AZ -->|setter| A
-    BA -->|setter| A
-    BB -->|setter| A
-    BC -->|setter| A
-    BD -->|setter| A
-    BE -->|setter| A
-    BF -->|setter| A
-    BG -->|setter| A
-    BH -->|setter| A
-    BI -->|setter| A
-    BJ -->|setter| A
-    BK -->|setter| A
-    BL -->|setter| A
-    BM -->|setter| A
-    BN -->|setter| A
-    BO -->|setter| A
-    BP -->|setter| A
-    BQ -->|setter| A
-    BR -->|setter| A
-    BS -->|setter| A
-    BT -->|setter| A
-    BU -->|setter| A
-    BV -->|setter| A
-    BW -->|setter| A
-    BX -->|setter| A
-    BY -->|setter| A
-    BZ -->|setter| A
-    CA -->|setter| A
-    CB -->|setter| A
-    CC -->|setter| A
-    CD -->|setter| A
-    CE -->|setter| A
-    CF -->|setter| A
-    CG -->|setter| A
-     CH -->|setter| A
-    CI -->|setter| A
-    CJ -->|setter| A
-    CK -->|setter| A
-    CL -->|setter| A
-    CM -->|setter| A
-    CN -->|setter| A
     
-    CO -->|setter| A
+     
+     
 
+    classDef property fill:#ccf,stroke:#333,stroke-width:2px
+     classDef setter fill:#cfc,stroke:#333,stroke-width:2px
+     classDef function fill:#fff,stroke:#333,stroke-width:1px
 
-    H -->|property| A
-    I -->|property| A
-    J -->|property| A
-     K -->|property| A
-    L -->|property| A
-     M -->|property| A
-    N -->|property| A
-    O -->|property| A
-    P -->|property| A
-    Q -->|property| A
-    R -->|property| A
-    S -->|property| A
-     T -->|property| A
-    U -->|property| A
-    V -->|property| A
-    W -->|property| A
-    X -->|property| A
-    Y -->|property| A
-    Z -->|property| A
-    AA -->|property| A
-    AB -->|property| A
-    AC -->|property| A
-     AD -->|property| A
-    AE -->|property| A
-    AF -->|property| A
-    AG -->|property| A
-    AH -->|property| A
-    AI -->|property| A
-    AJ -->|property| A
-    AK -->|property| A
-    AL -->|property| A
-     AM -->|property| A
-    AN -->|property| A
-    AO -->|property| A
-    AP -->|property| A
-    AQ -->|property| A
-    AR -->|property| A
-    AS -->|property| A
-     AT -->|property| A
-    AU -->|property| A
-    AV -->|property| A
-    AW -->|property| A
-    AX -->|property| A
-    AY -->|property| A
-    AZ -->|property| A
-    BA -->|property| A
-    BB -->|property| A
-    BC -->|property| A
-    BD -->|property| A
-    BE -->|property| A
-    BF -->|property| A
-    BG -->|property| A
-    BH -->|property| A
-    BI -->|property| A
-    BJ -->|property| A
-    BK -->|property| A
-     BL -->|property| A
-    BM -->|property| A
-    BN -->|property| A
-    BO -->|property| A
-    BP -->|property| A
-    BQ -->|property| A
-    BR -->|property| A
-    BS -->|property| A
-    BT -->|property| A
-    BU -->|property| A
-     BV -->|property| A
-    BW -->|property| A
-    BX -->|property| A
-    BY -->|property| A
-    BZ -->|property| A
-    CA -->|property| A
-    CB -->|property| A
-    CC -->|property| A
-    CD -->|property| A
-    CE -->|property| A
-    CF -->|property| A
-    CG -->|property| A
-    CH -->|property| A
-    CI -->|property| A
-    CJ -->|property| A
-    CK -->|property| A
-    CL -->|property| A
-    CM -->|property| A
-    CN -->|property| A
+    ProductFieldsInit -- Создает --> ProductFields
+     ProductFieldsInit  -->  ProductFieldsClass [ProductFields Class]
+     ProductFieldsClass  -- Использует --> ReadFile
+      ProductFieldsClass  -- Использует --> j_loads
+      ReadFile  -- Использует --> Path [pathlib.Path]
+         ProductFieldsClass  -- Использует --> logger[src.logger.logger]
+             ProductFieldsClass  -- Использует --> ProductFieldException[src.logger.exceptions]
+
+     ProductFieldsClass  -- get -->   AssociationsProperty[ProductFields.associations  property]
+     ProductFieldsClass  -- set -->  AssociationsSetter [ProductFields.associations setter]
+          AssociationsProperty  -- get -->  presta_fields.associations
+             AssociationsSetter  -- set -->  presta_fields.associations
     
-    CO -->|property| A
-```
+    ProductFieldsClass  -- get -->  IdProductProperty[ProductFields.id_product  property]
+     ProductFieldsClass  -- set -->   IdProductSetter [ProductFields.id_product setter]
+          IdProductProperty  -- get -->  presta_fields.id_product
+              IdProductSetter -- set -->  presta_fields.id_product
 
-### Описание `mermaid`:
+    ProductFieldsClass -- get -->  IdSupplierProperty[ProductFields.id_supplier  property]
+     ProductFieldsClass  -- set -->    IdSupplierSetter [ProductFields.id_supplier setter]
+           IdSupplierProperty  -- get -->  presta_fields.id_supplier
+                IdSupplierSetter -- set -->  presta_fields.id_supplier
 
-1.  **`ProductFields` (A):** Центральный класс, управляющий полями продукта. Он является источником и приемником данных для других компонентов.
-2.  **`_load_product_fields_list` (B):** Метод, отвечающий за загрузку списка полей продукта. Он получает данные из файла `fields_list.txt` (F).
-3.  **`_payload` (C):** Метод, загружающий дефолтные значения полей. Он получает данные из файла `product_fields_default_values.json` (G).
-4.  **`presta_fields` (D):** Объект типа `SimpleNamespace`, который хранит все поля продукта.
-5.  **`assist_fields_dict` (E):** Словарь для хранения служебных полей, не входящих в `presta_fields`.
-6.  **`fields_list.txt` (F):** Файл, содержащий список имен полей продукта.
-7.  **`product_fields_default_values.json` (G):** Файл, содержащий дефолтные значения для полей продукта.
-8.  **`id_product` (H), `id_supplier` (I), ..., `page_lang` (CO):**  Отдельные поля продукта, которые хранятся в `presta_fields` (D) или `assist_fields_dict` (E) и могут устанавливаться через соответствующие сеттеры и получатся через гетеры класса `ProductFields` (A).
-9. **Стрелки с подписью `setter`:** Показывают как данные передаются в класс `ProductFields` (A) для установки значения полей.
-10. **Стрелки с подписью `property`:** Показывают как данные получаются из класса `ProductFields` (A) через его свойства.
+    ProductFieldsClass  -- get -->  IdManufacturerProperty[ProductFields.id_manufacturer  property]
+     ProductFieldsClass  -- set -->  IdManufacturerSetter [ProductFields.id_manufacturer setter]
+          IdManufacturerProperty  -- get -->  presta_fields.id_manufacturer
+               IdManufacturerSetter -- set -->  presta_fields.id_manufacturer
 
-## <объяснение>
 
-### Импорты:
+     ProductFieldsClass  -- get -->  IdCategoryDefaultProperty[ProductFields.id_category_default  property]
+      ProductFieldsClass  -- set -->  IdCategoryDefaultSetter [ProductFields.id_category_default setter]
+            IdCategoryDefaultProperty  -- get -->  presta_fields.id_category_default
+                 IdCategoryDefaultSetter -- set -->  presta_fields.id_category_default
 
-*   `pathlib.Path`: Используется для работы с путями файлов и каталогов.
-*   `typing.List`, `typing.Dict`, `typing.Optional`, `typing.Callable`, `typing.Any`: Используются для аннотации типов, что делает код более читаемым и помогает выявлять ошибки на этапе разработки.
-*   `pydantic.BaseModel`, `pydantic.Field`, `pydantic.validator`: Используются для валидации данных. В данном коде явно не используются, возможно, планируется использование.
-*   `types.SimpleNamespace`, `types.MappingProxyType`: `SimpleNamespace` используется для создания объектов с произвольными атрибутами, а `MappingProxyType` для создания неизменяемых словарей, но в коде не используется.
-*    `sqlite3.Date`: используется для работы с датами, но в коде используется как `Date` из `from sqlite3 import Date`, хотя это тип из `sqlite3`, его нужно заменить на `from datetime import date` или `from datetime import datetime`.
-*   `langdetect.detect`: Используется для определения языка текста.
-*   `functools.wraps`: Декоратор, используемый для сохранения метаданных декорируемой функции, в данном коде не используется, но импорт есть.
-*   `enum.Enum`: Используется для создания перечислений.
-*   `header`: Пользовательский модуль, предположительно, содержит метаданные или общую информацию.
-*   `src.gs`: Глобальные настройки проекта.
-*   `src.utils.jjson.j_loads`, `src.utils.jjson.j_loads_ns`: Функции для загрузки данных из JSON файлов. `j_loads_ns` не используется, но импорт есть.
-*   `src.category.Category`: Класс для представления категорий товаров (в данном коде явно не используется, но импорт есть).
-*   `src.utils.file.read_text_file`: Функция для чтения текстовых файлов.
-*   `src.logger.logger.logger`: Объект логгера.
-*   `src.logger.exceptions.ProductFieldException`: Пользовательское исключение для обработки ошибок в полях товара.
+     ProductFieldsClass  -- get -->   AdditionalCategoriesProperty[ProductFields.additional_categories  property]
+     ProductFieldsClass  -- set -->    AdditionalCategoriesSetter [ProductFields.additional_categories setter]
+      AdditionalCategoriesProperty -- get -->   presta_fields.associations.categories
+         AdditionalCategoriesSetter -- set -->  presta_fields.associations.categories
+         
+     ProductFieldsClass  -- get --> IdShopDefaultProperty [ProductFields.id_shop_default  property]
+     ProductFieldsClass  -- set --> IdShopDefaultSetter[ProductFields.id_shop_default  setter]
+         IdShopDefaultProperty -- get -->  presta_fields.id_shop_default
+            IdShopDefaultSetter -- set -->  presta_fields.id_shop_default
 
-### Классы:
+     ProductFieldsClass  -- get --> IdShopProperty[ProductFields.id_shop  property]
+      ProductFieldsClass  -- set -->IdShopSetter [ProductFields.id_shop  setter]
+          IdShopProperty -- get -->  presta_fields.id_shop
+            IdShopSetter -- set -->  presta_fields.id_shop
+          
+    ProductFieldsClass  -- get -->  IdTaxProperty[ProductFields.id_tax  property]
+     ProductFieldsClass  -- set -->  IdTaxSetter[ProductFields.id_tax  setter]
+       IdTaxProperty -- get -->  presta_fields.id_tax
+        IdTaxSetter -- set -->  presta_fields.id_tax
 
-*   **`ProductFields`**:
-    *   **Роль:** Представляет поля товара в формате API PrestaShop.
-    *   **Атрибуты:**
-        *   `product_fields_list`: Список полей продукта, загруженный из `fields_list.txt`.
-        *   `language`: Словарь, содержащий соответствия между кодами языков и их ID.
-        *   `presta_fields`: Объект типа `SimpleNamespace`, хранящий значения полей товара.
-        *    `assist_fields_dict`: Словарь для хранения служебных полей.
-    *   **Методы:**
-        *   `__init__`: Инициализирует класс, загружает список полей, языки и их идентификаторы, создает `presta_fields` и `assist_fields_dict` , загружает дефолтные значения полей.
-        *   `_load_product_fields_list`: Загружает список полей из файла.
-        *   `_payload`: Загружает дефолтные значения полей из файла JSON.
-        *   `associations`: Свойство для управления ассоциациями товара.
-        *   `id_product`, `id_supplier`, `id_manufacturer`, и т.д.: Свойства (property) и сеттеры для каждого поля товара. Обеспечивают доступ к значениям полей и их установку. Сеттеры валидируют значения и пишут ошибки в лог.
-        *   `EnumRedirect`: Внутренний класс enum для представления типов редиректов.
-        *   `EnumCondition`: Внутренний класс enum для представления состояний товара (new, used, refurbished).
-        *   `EnumVisibity`: Внутренний класс enum для представления видимости товара.
-        *  `EnumProductType`: Внутренний класс enum для представления типов товара.
-        *   `page_lang` свойство для хранения текущего языка.
+     ProductFieldsClass -- get -->  OnSaleProperty[ProductFields.on_sale  property]
+     ProductFieldsClass -- set -->  OnSaleSetter [ProductFields.on_sale  setter]
+          OnSaleProperty -- get -->  presta_fields.on_sale
+              OnSaleSetter -- set -->  presta_fields.on_sale
 
-### Функции:
+      ProductFieldsClass  -- get -->  OnlineOnlyProperty[ProductFields.online_only  property]
+       ProductFieldsClass  -- set -->   OnlineOnlySetter[ProductFields.online_only  setter]
+          OnlineOnlyProperty -- get -->  presta_fields.online_only
+             OnlineOnlySetter -- set -->  presta_fields.online_only
 
-*   `_load_product_fields_list()`:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** `List[str]` - список полей из файла.
-    *   **Назначение:** Читает список полей продукта из текстового файла.
-        *  Пример: `['id_product', 'id_supplier', 'id_manufacturer']`
-*   `_payload()`:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** `bool` - `True` при успешной загрузке, `False` при неудачной.
-    *   **Назначение:** Загружает дефолтные значения для полей продукта из JSON файла.
-        *   Пример: Загружает из `product_fields_default_values.json` `{'active': 1, 'price': 0}` и устанавливает как атрибуты `self.active` и `self.price`.
+    ProductFieldsClass  -- get --> Ean13Property[ProductFields.ean13 property]
+     ProductFieldsClass  -- set --> Ean13Setter [ProductFields.ean13 setter]
+          Ean13Property -- get -->  presta_fields.ean13
+              Ean13Setter -- set -->  presta_fields.ean13
 
-### Переменные:
 
-*   `MODE`: Константа, определяющая режим работы (`dev`).
-*   `self.product_fields_list`: Список полей товара.
-*   `self.language`: Словарь, сопоставляющий языковые коды с их идентификаторами.
-*   `self.presta_fields`: Объект `SimpleNamespace`, содержащий поля товара.
-*   `self.assist_fields_dict`: Словарь с дополнительными (служебными) полями.
+    ProductFieldsClass -- get -->  IsbnProperty[ProductFields.isbn  property]
+    ProductFieldsClass  -- set -->  IsbnSetter [ProductFields.isbn setter]
+        IsbnProperty -- get -->  presta_fields.isbn
+            IsbnSetter -- set -->  presta_fields.isbn
 
-### Взаимосвязи с другими частями проекта:
+    ProductFieldsClass  -- get -->  UpcProperty[ProductFields.upc property]
+    ProductFieldsClass  -- set --> UpcSetter [ProductFields.upc setter]
+        UpcProperty -- get -->  presta_fields.upc
+             UpcSetter -- set -->  presta_fields.upc
 
-*   **`src.gs`**: Используется для получения путей к файлам.
-*   **`src.utils.jjson`**: Используется для загрузки данных из JSON.
-*   **`src.utils.file`**: Используется для чтения текстовых файлов.
-*   **`src.logger`**: Используется для логирования ошибок и предупреждений.
-*   **`src.category`**: хотя и импортирован класс, но он явно не используется.
-*   `header` предположительно, содержит метаданные или общую информацию.
+    ProductFieldsClass -- get -->   MpnProperty[ProductFields.mpn  property]
+     ProductFieldsClass  -- set -->   MpnSetter [ProductFields.mpn setter]
+        MpnProperty -- get -->  presta_fields.mpn
+             MpnSetter -- set -->  presta_fields.mpn
 
-### Потенциальные ошибки и области для улучшения:
+    ProductFieldsClass -- get --> EcotaxProperty[ProductFields.ecotax property]
+     ProductFieldsClass -- set --> EcotaxSetter[ProductFields.ecotax setter]
+          EcotaxProperty -- get -->  presta_fields.ecotax
+            EcotaxSetter -- set -->  presta_fields.ecotax
+    
 
-1.  **Валидация данных:**
-    *   В коде присутствуют проверки на `ProductFieldException` в сеттерах, но отсутствует непосредственная валидация значений перед присвоением их атрибутам `self.presta_fields`. Желательно добавить валидацию типов и диапазонов значений.
-        *   Например, можно использовать Pydantic для валидации.
-2.  **Обработка исключений:**
-    *   Исключения `ProductFieldException` обрабатываются очень просто (логирование и `return`). Было бы полезно обрабатывать их более детально и, возможно, вызывать другие исключения для более высокой абстракции.
-3.  **Использование `sqlite3.Date`:**
-     *   Тип `Date` импортируется из `sqlite3`, но  он не подходит для установки значений.  Вместо него нужно использовать `datetime.date`
-4.  **Логика мультиязычных полей:**
-    *   Код для мультиязычных полей (таких как `description`, `name`, `meta_description`) повторяется. Можно вынести логику в отдельную функцию или декоратор.
-    *   Мультиязычные данные записываются в виде списка словарей, но есть вероятность, что это не всегда будет необходимо, и можно будет упростить структуру.
-5.  **Зависимость от `fields_list.txt` и `product_fields_default_values.json`:**
-    *   Зависимость от файлов для хранения полей и дефолтных значений может усложнить поддержку и расширение. Можно рассмотреть возможность использования базы данных или другого более гибкого способа хранения этой информации.
-6.  **Отсутствие констант для ключей словарей:**
-    *   В коде используются строковые литералы в качестве ключей для словарей (например, `'language'`, `'attrs'`, `'id'`, `'value'`). Можно было бы определить константы для этих ключей.
-7.  **Обработка None значений:**
-    *   В коде присутствуют проверки на `None` значения, но они не всегда обрабатываются последовательно. Можно унифицировать обработку `None` значений.
-8.  **`Quantity`:**
-    *   Поле `quantity` в комментариях помечено как "нельзя передавать значение", но это не отображено в коде. Желательно явно указать, что это поле не управляется через сеттер.
-9.  **Неявные зависимости**:
-    *   В коде встречаются неявные зависимости, к примеру, логика  мультиязычных полей привязана к словарю `self.language`. Такое связывание усложняет рефакторинг.
-10. **Обработка `additional_categories`**:
-    * При добавлении дополнительных категорий в цикле происходит мутация словаря `self.presta_fields.associations.categories`.  Это потенциально может привести к непредсказуемому поведению, если данные будут меняться при итерации.
-11. **Смешанная логика `setter`-ов**:
-    *  Сеттеры, которые должны просто устанавливать значение поля, выполняют ещё и дополнительную логику, к примеру, преобразование значений `str(value)`.
-12. **Не все поля инициализируются при создании объекта**:
-    *  Не все поля класса явно инициализируются, это может привести к не очевидным ошибкам в работе программы, если где-то будет использовано не инициализированное поле.
+     ProductFieldsClass -- get -->MinimalQuantityProperty[ProductFields.minimal_quantity property]
+      ProductFieldsClass -- set -->MinimalQuantitySetter[ProductFields.minimal_quantity setter]
+          MinimalQuantityProperty -- get -->  presta_fields.minimal_quantity
+               MinimalQuantitySetter -- set -->  presta_fields.minimal_quantity
 
-### Цепочка взаимосвязей с другими частями проекта:
+    ProductFieldsClass -- get -->LowStockThresholdProperty[ProductFields.low_stock_threshold property]
+     ProductFieldsClass  -- set -->  LowStockThresholdSetter[ProductFields.low_stock_threshold setter]
+        LowStockThresholdProperty -- get -->  presta_fields.low_stock_threshold
+             LowStockThresholdSetter -- set -->  presta_fields.low_stock_threshold
 
-1.  `ProductFields` используется для представления структуры данных, которая передается между модулями. Например, для преобразования данных из БД в формат, понятный API.
-2.  Этот модуль является частью `src.product`, и предположительно будет использоваться в модулях, которые работают с товарами.
-3.  Может использоваться в модулях, которые занимаются импортом/экспортом данных, интеграцией с внешними сервисами, парсингом информации о товарах, взаимодействием с API PrestaShop.
-4.  Модуль опирается на `src.gs` для доступа к настройкам, `src.utils.jjson` и `src.utils.file` для чтения файлов конфигурации и `src.logger` для ведения журнала событий.
+     ProductFieldsClass  -- get --> LowStockAlertProperty [ProductFields.low_stock_alert property]
+     ProductFieldsClass  -- set --> LowStockAlertSetter [ProductFields.low_stock_alert setter]
+          LowStockAlertProperty -- get -->  presta_fields.low_stock_alert
+               LowStockAlertSetter -- set -->  presta_fields.low_stock_alert
+      
+     ProductFieldsClass -- get -->   PriceProperty[ProductFields.price property]
+     ProductFieldsClass -- set --> PriceSetter [ProductFields.price setter]
+          PriceProperty -- get -->  presta_fields.price
+               PriceSetter -- set -->  presta_fields.price
+
+    ProductFieldsClass -- get -->  WholesalePriceProperty[ProductFields.wholesale_price  property]
+    ProductFieldsClass  -- set -->  WholesalePriceSetter [ProductFields.wholesale_price  setter]
+        WholesalePriceProperty -- get -->  presta_fields.wholesale_price
+            WholesalePriceSetter -- set -->  presta_fields.wholesale_price
+    
+     ProductFieldsClass  -- get -->UnityProperty[ProductFields.unity property]
+     ProductFieldsClass  -- set --> UnitySetter [ProductFields.unity setter]
+        UnityProperty -- get -->  presta_fields.unity
+            UnitySetter -- set -->  presta_fields.unity
+
+    ProductFieldsClass  -- get -->UnitPriceRatioProperty[ProductFields.unit_price_ratio property]
+     ProductFieldsClass -- set -->  UnitPriceRatioSetter[ProductFields.unit_price_ratio setter]
+         UnitPriceRatioProperty -- get -->  presta_fields.unit_price_ratio
+            UnitPriceRatioSetter -- set -->  presta_fields.unit_price_ratio
+
+    ProductFieldsClass -- get -->   AdditionalShippingCostProperty[ProductFields.additional_shipping_cost property]
+     ProductFieldsClass  -- set --> AdditionalShippingCostSetter [ProductFields.additional_shipping_cost setter]
+          AdditionalShippingCostProperty -- get -->  presta_fields.additional_shipping_cost
+            AdditionalShippingCostSetter -- set -->  presta_fields.additional_shipping_cost
+
+    ProductFieldsClass -- get --> ReferenceProperty[ProductFields.reference property]
+    ProductFieldsClass -- set -->  ReferenceSetter[ProductFields.reference setter]
+          ReferenceProperty -- get -->  presta_fields.reference
+             ReferenceSetter -- set -->  presta_fields.reference
+
+    ProductFieldsClass  -- get --> SupplierReferenceProperty[ProductFields.supplier_reference  property]
+    ProductFieldsClass  -- set -->  SupplierReferenceSetter[ProductFields.supplier_reference  setter]
+          SupplierReferenceProperty -- get -->  presta_fields.supplier_reference
+               SupplierReferenceSetter -- set -->  presta_fields.supplier_reference
+
+    ProductFieldsClass  -- get -->LocationProperty[ProductFields.location property]
+     ProductFieldsClass -- set -->LocationSetter [ProductFields.location setter]
+        LocationProperty -- get -->  presta_fields.location
+            LocationSetter -- set -->  presta_fields.location
+
+     ProductFieldsClass  -- get -->WidthProperty [ProductFields.width property]
+     ProductFieldsClass -- set -->  WidthSetter[ProductFields.width setter]
+           WidthProperty -- get -->  presta_fields.width
+            WidthSetter -- set -->  presta_fields.width
+
+
+     ProductFieldsClass  -- get --> HeightProperty[ProductFields.height  property]
+      ProductFieldsClass -- set -->HeightSetter [ProductFields.height  setter]
+           HeightProperty -- get -->  presta_fields.height
+            HeightSetter -- set -->  presta_fields.height
+
+
+    ProductFieldsClass  -- get --> DepthProperty[ProductFields.depth  property]
+     ProductFieldsClass  -- set -->  DepthSetter[ProductFields.depth  setter]
+           DepthProperty -- get -->  presta_fields.depth
+             DepthSetter -- set -->  presta_fields.depth
+
+     ProductFieldsClass  -- get -->  WeightProperty[ProductFields.weight  property]
+      ProductFieldsClass  -- set -->WeightSetter [ProductFields.weight setter]
+            WeightProperty -- get -->  presta_fields.weight
+              WeightSetter -- set -->  presta_fields.weight
+    
+
+    ProductFieldsClass -- get -->   VolumeProperty[ProductFields.volume  property]
+     ProductFieldsClass  -- set -->VolumeSetter [ProductFields.volume  setter]
+         VolumeProperty -- get -->  presta_fields.volume
+             VolumeSetter -- set -->  presta_fields.volume
+
+     ProductFieldsClass  -- get -->   OutOfStockProperty[ProductFields.out_of_stock  property]
+     ProductFieldsClass  -- set -->OutOfStockSetter [ProductFields.out_of_stock  setter]
+           OutOfStockProperty -- get -->  presta_fields.out_of_stock
+               OutOfStockSetter -- set -->  presta_fields.out_of_stock
+
+      ProductFieldsClass  -- get --> AdditionalDeliveryTimesProperty[ProductFields.additional_delivery_times property]
+      ProductFieldsClass -- set --> AdditionalDeliveryTimesSetter[ProductFields.additional_delivery_times setter]
+          AdditionalDeliveryTimesProperty -- get -->  presta_fields.additional_delivery_times
+              AdditionalDeliveryTimesSetter -- set -->  presta_fields.additional_delivery_times
+
+     ProductFieldsClass  -- get --> QuantityDiscountProperty[ProductFields.quantity_discount  property]
+      ProductFieldsClass -- set -->  QuantityDiscountSetter [ProductFields.quantity_discount setter]
+          QuantityDiscountProperty -- get -->  presta_fields.quantity_discount
+               QuantityDiscountSetter -- set -->  presta_fields.quantity_discount
+
+      ProductFieldsClass  -- get --> CustomizableProperty[ProductFields.customizable  property]
+      ProductFieldsClass -- set -->  CustomizableSetter[ProductFields.customizable  setter]
+            CustomizableProperty -- get -->  presta_fields.customizable
+                 CustomizableSetter -- set -->  presta_fields.customizable
+
+      ProductFieldsClass -- get --> UploadableFilesProperty[ProductFields.uploadable_files property]
+      ProductFieldsClass  -- set -->  UploadableFilesSetter[ProductFields.uploadable_files  setter]
+          UploadableFilesProperty -- get -->  presta_fields.uploadable_files
+               UploadableFilesSetter -- set -->  presta_fields.uploadable_files
+
+    ProductFieldsClass -- get -->   TextFieldsProperty[ProductFields.text_fields  property]
+     ProductFieldsClass -- set -->  TextFieldsSetter[ProductFields.text_fields setter]
+           TextFieldsProperty -- get -->  presta_fields.text_fields
+             TextFieldsSetter -- set -->  presta_fields.text_fields
+
+    ProductFieldsClass -- get -->  ActiveProperty[ProductFields.active property]
+     ProductFieldsClass -- set -->  ActiveSetter[ProductFields.active setter]
+          ActiveProperty -- get -->  presta_fields.active
+            ActiveSetter -- set -->  presta_fields.active
+
+    ProductFieldsClass -- get --> RedirectTypeProperty[ProductFields.redirect_type property]
+     ProductFieldsClass  -- set --> RedirectTypeSetter[ProductFields.redirect_type setter]
+          RedirectTypeProperty -- get -->  presta_fields.redirect_type
+             RedirectTypeSetter -- set -->  presta_fields.redirect_type
+
+    ProductFieldsClass -- get -->  IdTypeRedirectedProperty[ProductFields.id_type_redirected property]
+     ProductFieldsClass -- set -->   IdTypeRedirectedSetter[ProductFields.id_type_redirected setter]
+            IdTypeRedirectedProperty -- get -->  presta_fields.id_type_redirected
+               IdTypeRedirectedSetter -- set -->  presta_fields.id_type_redirected
+
+    ProductFieldsClass -- get --> AvailableForOrderProperty[ProductFields.available_for_order  property]
+     ProductFieldsClass -- set -->  AvailableForOrderSetter[ProductFields.available_for_order setter]
+        AvailableForOrderProperty -- get -->  presta_fields.available_for_order
+            AvailableForOrderSetter -- set -->  presta_fields.available_for_order
+
+    ProductFieldsClass -- get -->  AvailableDateProperty[ProductFields.available_date property]
+    ProductFieldsClass -- set -->  AvailableDateSetter[ProductFields.available_date setter]
+         AvailableDateProperty -- get -->  presta_fields.available_date
+            AvailableDateSetter -- set -->  presta_fields.available_date
+    
+    ProductFieldsClass -- get -->   ShowConditionProperty[ProductFields.show_condition  property]
+     ProductFieldsClass -- set -->  ShowConditionSetter[ProductFields.show_condition  setter]
+           ShowConditionProperty -- get -->  presta_fields.show_condition
+              ShowConditionSetter -- set -->  presta_fields.show_condition
+    
+    ProductFieldsClass -- get -->  ConditionProperty[ProductFields.condition property]
+    ProductFieldsClass -- set -->  ConditionSetter [ProductFields.condition setter]
+           ConditionProperty -- get -->  presta_fields.condition
+              ConditionSetter -- set -->  presta_fields.condition
+
+    ProductFieldsClass -- get --> ShowPriceProperty[ProductFields.show_price property]
+    ProductFieldsClass -- set --> ShowPriceSetter [ProductFields.show_price setter]
+        ShowPriceProperty -- get -->  presta_fields.show_price
+            ShowPriceSetter -- set -->  presta_fields.show_price
+
+    ProductFieldsClass -- get -->  IndexedProperty[ProductFields.indexed property]
+    ProductFieldsClass -- set -->  IndexedSetter[ProductFields.indexed setter]
+         IndexedProperty -- get -->  presta_fields.indexed
+            IndexedSetter -- set -->  presta_fields.indexed
+
+    ProductFieldsClass -- get --> VisibilityProperty[ProductFields.visibility  property]
+    ProductFieldsClass -- set --> VisibilitySetter[ProductFields.visibility  setter]
+         VisibilityProperty -- get -->  presta_fields.visibility
+            VisibilitySetter -- set -->  presta_fields.visibility
+
+     ProductFieldsClass -- get --> CacheIsPackProperty[ProductFields.cache_is_pack property]
+      ProductFieldsClass  -- set --> CacheIsPackSetter [ProductFields.cache_is_pack setter]
+           CacheIsPackProperty -- get -->  presta_fields.cache_is_pack
+               CacheIsPackSetter -- set -->  presta_fields.cache_is_pack
+
+    ProductFieldsClass -- get -->   CacheHasAttachmentsProperty[ProductFields.cache_has_attachments  property]
+    ProductFieldsClass  -- set --> CacheHasAttachmentsSetter[ProductFields.cache_has_attachments  setter]
+        CacheHasAttachmentsProperty -- get -->  presta_fields.cache_has_attachments
+            CacheHasAttachmentsSetter -- set -->  presta_fields.cache_has_attachments
+
+     ProductFieldsClass  -- get --> IsVirtualProperty[ProductFields.is_virtual property]
+      ProductFieldsClass -- set -->IsVirtualSetter [ProductFields.is_virtual setter]
+          IsVirtualProperty -- get -->  presta_fields.is_virtual
+            IsVirtualSetter -- set -->  presta_fields.is_virtual
+    
+     ProductFieldsClass  -- get -->CacheDefaultAttributeProperty [ProductFields.cache_default_attribute  property]
+      ProductFieldsClass  -- set --> CacheDefaultAttributeSetter[ProductFields.cache_default_attribute setter]
+         CacheDefaultAttributeProperty -- get -->  presta_fields.cache_default_attribute
+             CacheDefaultAttributeSetter -- set -->  presta_fields.cache_default_attribute
+
+     ProductFieldsClass  -- get --> DateAddProperty[ProductFields.date_add property]
+     ProductFieldsClass  -- set -->DateAddSetter [ProductFields.date_add setter]
+        DateAddProperty -- get -->  presta_fields.date_add
+            DateAddSetter -- set -->  presta_fields.date_add
+
+     ProductFieldsClass  -- get -->  DateUpdProperty[ProductFields.date_upd  property]
+      ProductFieldsClass  -- set -->DateUpdSetter [ProductFields.date_upd setter]
+         DateUpdProperty -- get -->  presta_fields.date_upd
+            DateUpdSetter -- set -->  presta_fields.date_upd
+
+    ProductFieldsClass -- get -->  AdvancedStockManagementProperty[ProductFields.advanced_stock_management  property]
+     ProductFieldsClass  -- set -->AdvancedStockManagementSetter [ProductFields.advanced_stock_management setter]
+         AdvancedStockManagementProperty -- get -->  presta_fields.advanced_stock_management
+             AdvancedStockManagementSetter -- set -->  presta_fields.advanced_stock_management
+
+    ProductFieldsClass -- get --> PackStockTypeProperty[ProductFields.pack_stock_type  property]
+    ProductFieldsClass -- set -->  PackStockTypeSetter[ProductFields.pack_stock_type setter]
+         PackStockTypeProperty -- get -->  presta_fields.pack_stock_type
+            PackStockTypeSetter -- set -->  presta_fields.pack_stock_type
+
+    ProductFieldsClass  -- get --> StateProperty[ProductFields.state property]
+    ProductFieldsClass  -- set -->  StateSetter[ProductFields.state  setter]
+           StateProperty -- get -->  presta_fields.state
+                StateSetter -- set -->  presta_fields.state
+
+
+     ProductFieldsClass  -- get -->   ProductTypeProperty[ProductFields.product_type  property]
+    ProductFieldsClass  -- set -->ProductTypeSetter [ProductFields.product_type setter]
+         ProductTypeProperty -- get -->  presta_fields.product_type
+            ProductTypeSetter -- set -->  presta_fields.product_type
+     ProductFieldsClass  -- get --> DescriptionProperty[ProductFields.description  property]
+      ProductFieldsClass  -- set -->  DescriptionSetter[ProductFields.description  setter]
+        DescriptionProperty -- get -->  presta_fields.description
+           DescriptionSetter -- set -->  presta_fields.description
+         
+     ProductFieldsClass  -- get -->DescriptionShortProperty[ProductFields.description_short property]
+      ProductFieldsClass  -- set --> DescriptionShortSetter [ProductFields.description_short setter]
+          DescriptionShortProperty -- get -->  presta_fields.description_short
+            DescriptionShortSetter -- set -->  presta_fields.description_short
+
+    ProductFieldsClass  -- get -->   LinkRewriteProperty[ProductFields.link_rewrite property]
+    ProductFieldsClass  -- set -->  LinkRewriteSetter[ProductFields.link_rewrite setter]
+        LinkRewriteProperty -- get -->  presta_fields.link_rewrite
+           LinkRewriteSetter -- set -->  presta_fields.link_rewrite
+
+    ProductFieldsClass  -- get -->MetaDescriptionProperty[ProductFields.meta_description property]
+    ProductFieldsClass  -- set -->  MetaDescriptionSetter[ProductFields.meta_description setter]
+        MetaDescriptionProperty -- get -->  presta_fields.meta_description
+            MetaDescriptionSetter -- set -->  presta_fields.meta_description
+    
+     ProductFieldsClass  -- get -->  MetaKeywordsProperty[ProductFields.meta_keywords  property]
+     ProductFieldsClass  -- set --> MetaKeywordsSetter[ProductFields.meta_keywords setter]
+          MetaKeywordsProperty -- get -->  presta_fields.meta_keywords
+            MetaKeywordsSetter -- set -->  presta_fields.meta_keywords
+
+     ProductFieldsClass  -- get -->  MetaTitleProperty[ProductFields.meta_title  property]
+      ProductFieldsClass -- set -->MetaTitleSetter[ProductFields.meta_title setter]
+         MetaTitleProperty -- get -->  presta_fields.meta_title
+             MetaTitleSetter -- set -->  presta_fields.meta_title
+
+    ProductFieldsClass -- get -->   NameProperty[ProductFields.name property]
+     ProductFieldsClass  -- set -->  NameSetter[ProductFields.name setter]
+          NameProperty -- get -->  presta_fields.name
+            NameSetter -- set -->  presta_fields.name
+
+     ProductFieldsClass  -- get -->  AvailableNowProperty[ProductFields.available_now  property]
+     ProductFieldsClass -- set --> AvailableNowSetter [ProductFields.available_now setter]
+           AvailableNowProperty -- get -->  presta_fields.available_now
+            AvailableNowSetter -- set -->  presta_fields.available_now
+
+    ProductFieldsClass -- get -->   AvailableLaterProperty[ProductFields.available_later property]
+     ProductFieldsClass  -- set --> AvailableLaterSetter[ProductFields.available_later setter]
+        AvailableLaterProperty -- get -->  presta_fields.available_later
+            AvailableLaterSetter -- set -->  presta_fields.available_later
+    
+    ProductFieldsClass -- get --> DeliveryInStockProperty[ProductFields.delivery_in_stock property]
+    ProductFieldsClass -- set -->   DeliveryInStockSetter[ProductFields.delivery_in_stock setter]
+         DeliveryInStockProperty -- get -->  presta_fields.delivery_in_stock
+            DeliveryInStockSetter -- set -->  presta_fields.delivery_in_stock
+    
+    ProductFieldsClass -- get --> DeliveryOutStockProperty[ProductFields.delivery_out_stock  property]
+     ProductFieldsClass -- set --> DeliveryOutStockSetter[ProductFields.delivery_out_stock setter]
+          DeliveryOutStockProperty -- get -->  presta_fields.delivery_out_stock
+               DeliveryOutStockSetter -- set -->  presta_fields.delivery_out_stock
+
+
+     ProductFieldsClass  -- get -->  DeliveryAdditionalMessageProperty[ProductFields.delivery_additional_message  property]
+    ProductFieldsClass  -- set --> DeliveryAdditionalMessageSetter[ProductFields.delivery_additional_message setter]
+          DeliveryAdditionalMessageProperty -- get -->  presta_fields.delivery_additional_message
+               DeliveryAdditionalMessageSetter -- set -->  presta_fields.delivery_additional_message
+
+     ProductFieldsClass  -- get -->  AffiliateShortLinkProperty[ProductFields.affiliate_short_link  property]
+    ProductFieldsClass -- set --> AffiliateShortLinkSetter [ProductFields.affiliate_short_link setter]
+          AffiliateShortLinkProperty -- get -->  presta_fields.affiliate_short_link
+                AffiliateShortLinkSetter -- set -->  presta_fields.affiliate_short_link
+
+    ProductFieldsClass -- get -->  AffiliateTextProperty[ProductFields.affiliate_text property]
+    ProductFieldsClass -- set -->   AffiliateTextSetter[ProductFields.affiliate_text setter]
+          AffiliateTextProperty -- get -->  presta_fields.affiliate_text
+                AffiliateTextSetter -- set -->  presta_fields.affiliate_text
+
+    ProductFieldsClass -- get --> AffiliateSummaryProperty[ProductFields.affiliate_summary property]
+     ProductFieldsClass  -- set --> AffiliateSummarySetter[ProductFields.affiliate_summary  setter]
+          AffiliateSummaryProperty -- get -->  presta_fields.affiliate_summary
+               AffiliateSummarySetter -- set -->  presta_fields.affiliate_summary
+
+
+    ProductFieldsClass -- get --> AffiliateSummary2Property[ProductFields.affiliate_summary_2  property]
+      ProductFieldsClass -- set -->   AffiliateSummary2Setter[ProductFields.affiliate_summary_2 setter]
+          AffiliateSummary2Property -- get -->  presta_fields.affiliate_summary_2
+             AffiliateSummary2Setter -- set -->  presta_fields.affiliate_summary_2
+
+    ProductFieldsClass -- get --> AffiliateImageSmallProperty[ProductFields.affiliate_image_small  property]
+     ProductFieldsClass -- set -->  AffiliateImageSmallSetter[ProductFields.affiliate_image_small setter]
+           AffiliateImageSmallProperty -- get -->  presta_fields.affiliate_image_small
+              AffiliateImageSmallSetter -- set -->  presta_fields.affiliate_image_small
+
+    ProductFieldsClass -- get --> AffiliateImageMediumProperty[ProductFields.affiliate_image_medium property]
+      ProductFieldsClass  -- set --> AffiliateImageMediumSetter[ProductFields.affiliate_image_medium setter]
+          AffiliateImageMediumProperty -- get -->  presta_fields.affiliate_image_medium
+              AffiliateImageMediumSetter -- set -->  presta_fields.affiliate_image_medium
+
+
+    ProductFieldsClass -- get -->  AffiliateImageLargeProperty[ProductFields.affiliate_image_large property]
+     ProductFieldsClass -- set -->  AffiliateImageLargeSetter[ProductFields.affiliate_image_large setter]
+         AffiliateImageLargeProperty -- get -->  presta_fields.affiliate_image_large
+             AffiliateImageLargeSetter -- set -->  presta_fields.affiliate_image_large
+    
+     ProductFieldsClass

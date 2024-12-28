@@ -52,7 +52,7 @@ from src import gs
 """Режим работы приложения (dev, prod)."""
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта, начиная с каталога текущего файла.
 

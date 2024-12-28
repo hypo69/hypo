@@ -2,6 +2,9 @@ from pathlib import Path
 import tempfile
 import asyncio
 import logging
+import json
+import requests  # For downloading files
+from typing import Dict
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 from aiohttp import web
@@ -11,24 +14,57 @@ import header
 from src import gs
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.logger.logger import logger
-import requests  # For downloading files
 from src.utils.convertors.tts import speech_recognizer, text2speech
 from src.utils.file import read_text_file
+from src.utils.get_free_port import get_free_port
 
 
 class TelegramBot:
     """Telegram bot interface class."""
 
     application: Application
+    host: str
+    port: int
 
-    def __init__(self, token: str):
+    def __init__(self, token: str, config_path: Path):
         """Initialize the Telegram bot.
 
-        Args:
-            token (str): Telegram bot token, e.g., `gs.credentials.telegram.bot.kazarinov`.
+        :param token: Telegram bot token, e.g., `gs.credentials.telegram.bot.kazarinov`.
+        :type token: str
+        :param config_path: Path to the JSON configuration file.
+        :type config_path: Path
         """
+        config_path = config_path if config_path else Path(__file__).parent / 'config.json'
+        self._load_config()
         self.application = Application.builder().token(token).build()
         self.register_handlers()
+
+
+    def _load_config(self, config_path:str | Path) -> None:
+        """Load configuration from JSON file."""
+        try:
+            with open(self.config_path, 'r') as f:
+                config = json.load(f)
+                bot_config = config.get(self.__class__.__name__, {})
+                if bot_config:
+                    self.host = bot_config.get('host', '127.0.0.1')
+                    port_range = bot_config.get('port_range', ['9000','9100'])
+                    self.port = get_free_port(self.host, port_range)
+                else:
+                    logger.error(f'No config found for {self.__class__.__name__}')
+                    self.host = '127.0.0.1'
+                    self.port =  get_free_port(self.host,['9000','9100'])
+
+        except FileNotFoundError as ex:
+            logger.error('Error: Configuration file not found: ', ex)
+            self.host = '127.0.0.1'
+            self.port = 8080
+            ...
+        except json.JSONDecodeError as ex:
+             logger.error('Error: Invalid JSON format in configuration file: ', ex)
+             self.host = '127.0.0.1'
+             self.port = 8080
+             ...
 
     def register_handlers(self):
         """Register bot commands and message handlers."""
@@ -99,12 +135,12 @@ class TelegramBot:
     async def handle_document(self, update: Update, context: CallbackContext) -> str:
         """Handle received documents.
 
-        Args:
-            update (Update): Update object containing the message data.
-            context (CallbackContext): Context of the current conversation.
-
-        Returns:
-            str: Content of the text document.
+        :param update: Update object containing the message data.
+        :type update: Update
+        :param context: Context of the current conversation.
+        :type context: CallbackContext
+        :return: Content of the text document.
+        :rtype: str
         """
         self.update = update
         self.context = context
@@ -115,12 +151,12 @@ class TelegramBot:
     async def handle_message(self, update: Update, context: CallbackContext) -> str:
         """Handle any text message.
 
-        Args:
-            update (Update): Update object containing the message data.
-            context (CallbackContext): Context of the current conversation.
-
-        Returns:
-            str: Text received from the user.
+        :param update: Update object containing the message data.
+        :type update: Update
+        :param context: Context of the current conversation.
+        :type context: CallbackContext
+        :return: Text received from the user.
+        :rtype: str
         """
         self.update = update
         self.context = context
@@ -164,11 +200,12 @@ def create_app(bot: TelegramBot) -> web.Application:
 def main() -> None:
     """Start the bot with webhook."""
     token = gs.credentials.telegram.bot.kazarinov
-    bot = TelegramBot(token)
+    config_path = Path(__file__).parent / 'config.json'
+    bot = TelegramBot(token, config_path)
 
     # Create and run the aiohttp application
     app = create_app(bot)
-    web.run_app(app, host=gs.settings.SITE_HOST, port=gs.settings.SITE_PORT)
+    web.run_app(app, host=bot.host, port=bot.port)
 
 if __name__ == '__main__':
     main()

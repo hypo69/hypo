@@ -28,7 +28,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads
 
 # Определение корневого пути проекта
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта, начиная
     с текущего файла и поднимаясь вверх по
@@ -121,7 +121,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 # Определение корневого пути проекта
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта, начиная
     с текущего файла и поднимаясь вверх по

@@ -49,7 +49,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций �
 from src import gs
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Находит корневую директорию проекта, начиная с текущей директории файла,
     перемещаясь вверх по директориям и останавливаясь на первой директории,
@@ -159,7 +159,7 @@ from src import gs
 from src.logger import logger  # Импорт функции логирования
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с текущей.
 
@@ -276,7 +276,7 @@ from src import gs
 from src.logger import logger  # Импорт функции логирования
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с текущей.
 

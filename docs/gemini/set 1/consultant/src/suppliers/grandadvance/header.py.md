@@ -35,7 +35,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads # Импорт j_loads из src.utils.jjson
 from src.logger.logger import logger # Импорт logger из src.logger.logger
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Находит корневую директорию проекта, начиная с директории текущего файла.
 
@@ -137,7 +137,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads # Импорт j_loads из src.utils.jjson
 from src.logger.logger import logger # Импорт logger из src.logger.logger
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Находит корневую директорию проекта, начиная с директории текущего файла.
 

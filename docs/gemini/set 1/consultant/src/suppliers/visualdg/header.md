@@ -31,7 +31,7 @@ from src.logger import logger
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 
@@ -121,7 +121,7 @@ from src.logger import logger
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 

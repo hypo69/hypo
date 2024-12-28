@@ -46,7 +46,7 @@ from src.utils.file import read_text_file
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.printer import pprint
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта, начиная с каталога текущего файла.
     Поиск происходит вверх по иерархии каталогов, пока не будет найден каталог, содержащий один из указанных файлов.
@@ -220,7 +220,7 @@ from src.utils.file import read_text_file
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.printer import pprint
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневой каталог проекта, начиная с каталога текущего файла.
     Поиск происходит вверх по иерархии каталогов, пока не будет найден каталог, содержащий один из указанных файлов.

@@ -1,305 +1,157 @@
 ## <алгоритм>
 
-1.  **Начало**:
-    *   Инициализация: Задаётся режим `MODE = 'debug'`.
-    *   Подготовка: В HTML-документе описывается задача по созданию Google-таблицы через Python API.
-    *   Установка: Предлагается установить библиотеку `google-api-python-client` через pip.
+1.  **Импорт библиотек**:
+    *   Импортируются библиотеки `httplib2`, `apiclient.discovery`, и `ServiceAccountCredentials` из `oauth2client.service_account`, необходимые для взаимодействия с Google API.
+    *   *Пример:* `import httplib2`
 
-2.  **Создание Service-объекта**:
-    *   Импорт: Импортируются необходимые модули `httplib2`, `apiclient.discovery` и `oauth2client.service_account`.
-    *   Аутентификация: Считываются учетные данные сервисного аккаунта из JSON-файла (`CREDENTIALS_FILE`).
-    *   Авторизация: Создаётся HTTP-объект для авторизации.
-    *   Инициализация сервиса: Создаётся объект `service` для взаимодействия с Google Sheets API v4.
+2.  **Настройка аутентификации**:
+    *   Загружаются учетные данные сервисного аккаунта из JSON-файла.
+    *   Авторизуется HTTP-клиент для Google API.
+    *   *Пример:* `credentials = ServiceAccountCredentials.from_json_keyfile_name('test-proj-for-habr-article-1ab131d98a6b.json', ['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/drive'])`
 
-3.  **Создание Spreadsheet**:
-    *   Запрос: Создаётся запрос к API на создание нового документа.
-    *   Параметры: Задаются свойства документа (название, локаль) и первого листа (тип, ID, название, размеры).
-    *   Выполнение: Запрос выполняется, и получается объект Spreadsheet с `spreadsheetId`.
-    *   Пример:
-        *   **Запрос**:
-        ```python
-            spreadsheet = service.spreadsheets().create(body = {
-                'properties': {'title': 'Сие есть название документа', 'locale': 'ru_RU'},
-                'sheets': [{'properties': {'sheetType': 'GRID',
-                                        'sheetId': 0,
-                                        'title': 'Сие есть название листа',
-                                        'gridProperties': {'rowCount': 8, 'columnCount': 5}}}]
-            }).execute()
-        ```
-        *   **Результат**: Объект Spreadsheet с `spreadsheetId`.
+3.  **Создание сервисных объектов**:
+    *   Создается сервис-объект для работы с Google Sheets API v4.
+    *   Создается сервис-объект для работы с Google Drive API v3.
+    *   *Пример:* `service = apiclient.discovery.build('sheets', 'v4', http = httpAuth)`
 
-4.  **Настройка доступа**:
-    *   Создание Drive Service: Создаётся объект `driveService` для работы с Google Drive API.
-    *   Запрос доступа: Создаётся запрос на выдачу доступа к созданному документу (например, доступ на чтение для всех).
-    *    Пример:
-        *   **Запрос**:
-            ```python
-                shareRes = driveService.permissions().create(
-                    fileId = spreadsheet['spreadsheetId'],
-                    body = {'type': 'anyone', 'role': 'reader'},
-                    fields = 'id'
-                ).execute()
-            ```
-        *   **Результат**: Доступ к документу предоставлен.
+4.  **Создание нового spreadsheet**:
+    *   Создается новый документ Google Sheets с заданными свойствами (заголовок, локаль, количество строк и столбцов).
+    *   Получается идентификатор созданного документа (`spreadsheetId`).
+    *   *Пример:* `spreadsheet = service.spreadsheets().create(body = {'properties': {'title': 'Сие есть название документа', 'locale': 'ru_RU'},'sheets': [{'properties': {'sheetType': 'GRID','sheetId': 0,'title': 'Сие есть название листа','gridProperties': {'rowCount': 8, 'columnCount': 5}}}]}).execute()`
 
-5.  **Настройка ширины столбцов**:
-    *   `UpdateDimensionPropertiesRequest`:  Формируются запросы для изменения ширины столбцов A, B, C/D, E.
-    *   `spreadsheets.batchUpdate`: Запросы отправляются в Google Sheets API.
-    *   Пример:
-        *   **Запрос**:
-             ```python
-            results = service.spreadsheets().batchUpdate(spreadsheetId = spreadsheet['spreadsheetId'], body = {
-            "requests": [
-                {
-                "updateDimensionProperties": {
-                    "range": {
-                    "sheetId": 0,
-                    "dimension": "COLUMNS",
-                    "startIndex": 0,
-                    "endIndex": 1
-                    },
-                    "properties": {
-                    "pixelSize": 317
-                    },
-                    "fields": "pixelSize"
-                }
-                },
-                {
-                "updateDimensionProperties": {
-                    "range": {
-                    "sheetId": 0,
-                    "dimension": "COLUMNS",
-                    "startIndex": 1,
-                    "endIndex": 2
-                    },
-                    "properties": {
-                    "pixelSize": 200
-                    },
-                    "fields": "pixelSize"
-                }
-                },
-                {
-                "updateDimensionProperties": {
-                    "range": {
-                    "sheetId": 0,
-                    "dimension": "COLUMNS",
-                    "startIndex": 2,
-                    "endIndex": 4
-                    },
-                    "properties": {
-                    "pixelSize": 165
-                    },
-                    "fields": "pixelSize"
-                }
-                },
-                {
-                "updateDimensionProperties": {
-                    "range": {
-                    "sheetId": 0,
-                    "dimension": "COLUMNS",
-                    "startIndex": 4,
-                    "endIndex": 5
-                    },
-                    "properties": {
-                    "pixelSize": 100
-                    },
-                    "fields": "pixelSize"
-                }
-                }
-            ]
-            }).execute()
-            ```
-        *   **Результат**: Ширина столбцов изменена.
+5.  **Установка прав доступа к документу**:
+    *   Настраиваются права доступа к созданному документу (например, доступ на чтение для всех, или доступ на редактирование для конкретного пользователя).
+    *   Используется Drive API для управления разрешениями.
+    *   *Пример:* `shareRes = driveService.permissions().create(fileId = spreadsheet['spreadsheetId'], body = {'type': 'anyone', 'role': 'reader'},  fields = 'id').execute()`
 
-6.  **Класс-обертка Spreadsheet**:
-    *   Инкапсуляция: Создаётся класс `Spreadsheet` для управления запросами к Sheets API.
-    *   Методы:
-        *   `prepare_setDimensionPixelSize`:  Добавляет запрос на изменение размера столбцов/строк.
-        *   `prepare_setColumnsWidth`: Добавляет запрос на изменение ширины столбцов.
-        *   `prepare_setColumnWidth`: Добавляет запрос на изменение ширины конкретного столбца.
-        *   `prepare_setValues`: Добавляет запрос на обновление значений в диапазоне ячеек.
-        *   `runPrepared`: Выполняет подготовленные запросы.
-    *   Пример:
-        *   **Использование**:
-           ```python
-            ss = Spreadsheet(...)
-            ss.prepare_setColumnWidth(0, 317)
-            ss.prepare_setColumnWidth(1, 200)
-            ss.prepare_setColumnsWidth(2, 3, 165)
-            ss.prepare_setColumnWidth(4, 100)
-            ss.runPrepared()
-            ```
-        *   **Результат**: Ширина столбцов изменяется с помощью методов класса.
+6.  **Создание экземпляра класса `Spreadsheet`**:
+    *   Создается экземпляр класса `Spreadsheet`, который предоставляет методы для удобного управления таблицей.
 
-7.  **Заполнение данными**:
-    *   `spreadsheets.values.batchUpdate`: Выполняется запрос для заполнения ячеек данными (текст, формулы).
-    *    Пример:
-        *   **Запрос**:
-             ```python
-                results = service.spreadsheets().values().batchUpdate(spreadsheetId = spreadsheet['spreadsheetId'], body = {
-                    "valueInputOption": "USER_ENTERED",
-                    "data": [
-                        {"range": "Сие есть название листа!B2:C3",
-                        "majorDimension": "ROWS",
-                        "values": [["This is B2", "This is C2"], ["This is B3", "This is C3"]]},
-                        {"range": "Сие есть название листа!D5:E6",
-                        "majorDimension": "COLUMNS",
-                        "values": [["This is D5", "This is D6"], ["This is E5", "=5+5"]]}
-                    ]
-                }).execute()
-             ```
-        *   **Результат**: Ячейки заполнены данными.
-        *  **Использование класса**:
-            ```python
-                ss.prepare_setValues("B2:C3", [["This is B2", "This is C2"], ["This is B3", "This is C3"]])
-                ss.prepare_setValues("D5:E6", [["This is D5", "This is D6"], ["This is E5", "=5+5"]], "COLUMNS")
-                ss.runPrepared()
-            ```
+7.  **Настройка ширины столбцов**:
+    *   Используются методы `prepare_setColumnWidth` и `prepare_setColumnsWidth` для установки ширины столбцов.
+    *   Эти методы формируют запросы `UpdateDimensionPropertiesRequest`.
+    *   *Пример:* `ss.prepare_setColumnWidth(0, 317)`
 
-8.  **Объединение и форматирование ячеек**:
-    *   `MergeCellsRequest`: Объединение ячеек.
-    *   `RepeatCellRequest`: Изменение формата ячеек (жирность, выравнивание, формат отображения, цвет фона).
-    *   `UpdateCellsRequest`: Индивидуальные изменения для каждой ячейки.
-    *   `UpdateBordersRequest`: Установка границ ячеек.
+8.  **Заполнение ячеек данными**:
+    *   Используется метод `prepare_setValues` для заполнения ячеек данными, включая текст и формулы.
+    *   Эти методы формируют запросы `spreadsheets.values.batchUpdate`.
+    *   *Пример:* `ss.prepare_setValues("B2:C3", [["This is B2", "This is C2"], ["This is B3", "This is C3"]])`
 
-9.  **Конец**: Описание тонкостей работы с API (локаль, формат продолжительности, GridRange, квоты) и заключение.
+9. **Объединение ячеек, форматирование и прочее**:
+    * Используются методы `prepare_mergeCells`, `prepare_setCellsFormat`, `prepare_setCellsFormats` и другие методы класса `Spreadsheet` для объединения ячеек, настройки жирности, формата отображения, цвета фона и добавления границ.
+    * Эти методы формируют запросы `MergeCellsRequest`, `RepeatCellRequest`, `UpdateCellsRequest`, `UpdateBordersRequest`
+
+10. **Выполнение подготовленных запросов**:
+    *   Вызывается метод `runPrepared`, который выполняет все накопленные запросы к Google Sheets API.
+    *   Метод `runPrepared` вызывает `spreadsheets.batchUpdate` и `spreadsheets.values.batchUpdate`
+
+11. **Обработка результатов**:
+    *   Результаты выполнения запросов возвращаются, если требуется.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[Начало] --> B(Инициализация);
-    B --> C{Создание Service-объекта};
-    C --> D[Аутентификация];
-    D --> E[Инициализация сервиса Google Sheets API];
-    E --> F{Создание Spreadsheet};
-    F --> G[Запрос к API для создания документа];
-    G --> H(Получение spreadsheetId);
-    H --> I{Настройка доступа к документу};
-    I --> J[Создание Drive Service];
-    J --> K[Запрос к API для настройки прав доступа];
-    K --> L(Доступ предоставлен);
-    L --> M{Настройка ширины столбцов};
-    M --> N[Формирование UpdateDimensionPropertiesRequest];
-    N --> O[Отправка запросов через spreadsheets.batchUpdate];
-    O --> P(Ширина столбцов изменена);
-    P --> Q{Создание класса Spreadsheet};
-    Q --> R[Методы prepare_*];
-    R --> S[Метод runPrepared];
-    S --> T{Заполнение данными};
-    T --> U[Формирование запроса spreadsheets.values.batchUpdate];
-    U --> V(Ячейки заполнены данными);
-    V --> W{Форматирование ячеек};
-    W --> X[MergeCellsRequest];
-    X --> Y[RepeatCellRequest];
-    Y --> Z[UpdateCellsRequest];
-    Z --> AA[UpdateBordersRequest];
-    AA --> BB(Форматирование завершено);
-    BB --> CC[Конец];
-     style A fill:#f9f,stroke:#333,stroke-width:2px
-     style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-     style F fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#ccf,stroke:#333,stroke-width:2px
-     style H fill:#ccf,stroke:#333,stroke-width:2px
-    style I fill:#ccf,stroke:#333,stroke-width:2px
-     style J fill:#ccf,stroke:#333,stroke-width:2px
-    style K fill:#ccf,stroke:#333,stroke-width:2px
-      style L fill:#ccf,stroke:#333,stroke-width:2px
-    style M fill:#ccf,stroke:#333,stroke-width:2px
-    style N fill:#ccf,stroke:#333,stroke-width:2px
-    style O fill:#ccf,stroke:#333,stroke-width:2px
-     style P fill:#ccf,stroke:#333,stroke-width:2px
-     style Q fill:#ccf,stroke:#333,stroke-width:2px
-     style R fill:#ccf,stroke:#333,stroke-width:2px
-     style S fill:#ccf,stroke:#333,stroke-width:2px
-    style T fill:#ccf,stroke:#333,stroke-width:2px
-     style U fill:#ccf,stroke:#333,stroke-width:2px
-    style V fill:#ccf,stroke:#333,stroke-width:2px
-     style W fill:#ccf,stroke:#333,stroke-width:2px
-   style X fill:#ccf,stroke:#333,stroke-width:2px
-   style Y fill:#ccf,stroke:#333,stroke-width:2px
-  style Z fill:#ccf,stroke:#333,stroke-width:2px
-  style AA fill:#ccf,stroke:#333,stroke-width:2px
-  style BB fill:#ccf,stroke:#333,stroke-width:2px
-    style CC fill:#f9f,stroke:#333,stroke-width:2px
+flowchart TD
+    Start --> ImportLibraries[Import Libraries:<br><code>httplib2</code>, <code>apiclient.discovery</code>, <code>ServiceAccountCredentials</code>]
+    ImportLibraries --> LoadCredentials[Load Credentials:<br>from JSON keyfile]
+    LoadCredentials --> AuthorizeHTTP[Authorize HTTP Client]
+    AuthorizeHTTP --> CreateSheetsService[Create Sheets API Service Object]
+    AuthorizeHTTP --> CreateDriveService[Create Drive API Service Object]
+    CreateSheetsService --> CreateSpreadsheet[Create New Spreadsheet:<br><code>spreadsheets().create()</code>]
+    CreateSpreadsheet --> SetPermissions[Set Permissions:<br><code>driveService.permissions().create()</code>]
+    SetPermissions --> CreateSpreadsheetInstance[Create Spreadsheet Class Instance]
+    CreateSpreadsheetInstance --> ConfigureColumns[Configure Columns Width:<br><code>prepare_setColumnWidth()</code>,<code>prepare_setColumnsWidth()</code>]
+    ConfigureColumns --> FillCells[Fill Cells with Data:<br><code>prepare_setValues()</code>]
+    FillCells --> FormatCells[Format Cells:<br><code>prepare_mergeCells()</code>, <code>prepare_setCellsFormat()</code>, <code>prepare_setCellsFormats()</code>, ...]
+    FormatCells --> RunPrepared[Run Prepared Updates:<br><code>runPrepared()</code>]
+    RunPrepared --> BatchUpdate[<code>spreadsheets().batchUpdate()</code> and <code>spreadsheets.values().batchUpdate()</code>]
+    BatchUpdate --> End[End]
+    
+    
+   
+    
 ```
-
-**Зависимости:**
-
-*   `httplib2`: Используется для выполнения HTTP-запросов.
-*   `apiclient.discovery`: Используется для построения сервисных объектов для взаимодействия с Google APIs.
-*   `oauth2client.service_account`: Используется для аутентификации сервисного аккаунта.
 
 ## <объяснение>
 
 ### Импорты:
-*   **`httplib2`**:  
-    -   **Назначение**: HTTP-клиент для отправки запросов к Google API.  
-    -   **Связь**: Используется `oauth2client` для авторизации и последующего взаимодействия с API.
-*   **`apiclient.discovery`**:  
-    -   **Назначение**:  Используется для динамического построения API-клиентов, позволяя коду не зависеть от конкретных версий API.
-    -   **Связь**:  Создаёт объекты сервисов (например, `service` для Sheets API, `driveService` для Drive API), которые затем используются для выполнения запросов к Google API.
-*   **`oauth2client.service_account`**:  
-    -   **Назначение**: Предоставляет механизм аутентификации с использованием учетных данных сервисного аккаунта.
-    -   **Связь**:  Позволяет приложению авторизоваться от имени сервисного аккаунта и получать доступ к Google Sheets и Drive API.
+*   `httplib2`: Библиотека HTTP-клиента, необходимая для отправки HTTP-запросов к Google API.
+*   `apiclient.discovery`: Библиотека, позволяющая динамически обнаруживать и использовать Google API.
+*   `oauth2client.service_account.ServiceAccountCredentials`: Класс для управления учетными данными сервисного аккаунта, используемого для аутентификации в Google API.
+*    **Взаимосвязь с пакетом `src`**: Код не имеет прямой зависимости от пакета `src`.
 
 ### Классы:
-*   **`Spreadsheet`**:
-    *   **Роль**: Класс-обертка для упрощения работы с Google Sheets API v4.
+*   `Spreadsheet`:
+    *   **Роль**: Класс-обёртка над Google Sheets API v4, предоставляющий удобные методы для управления таблицами.
     *   **Атрибуты**:
-        - `service`: Объект API-сервиса Google Sheets.
-        -   `spreadsheetId`: ID Google-документа.
-        -   `sheetId`: ID текущего листа.
-        -   `sheetTitle`: Название текущего листа.
-        -   `requests`: Список подготовленных запросов на изменение форматирования.
-        -   `valueRanges`: Список диапазонов ячеек и их значений для обновления.
+        *   `service`: Сервисный объект для работы с Google Sheets API.
+        *   `spreadsheetId`: Идентификатор Google-таблицы.
+        *   `sheetId`: Идентификатор листа в таблице.
+        *   `sheetTitle`: Заголовок листа.
+        *   `requests`: Список запросов для пакетного обновления (`spreadsheets.batchUpdate`).
+        *   `valueRanges`: Список диапазонов значений для пакетного обновления (`spreadsheets.values.batchUpdate`).
     *   **Методы**:
-        -   `__init__(self, service, spreadsheetId, sheetId, sheetTitle)`:  Конструктор класса.
-        -   `prepare_setDimensionPixelSize(self, dimension, startIndex, endIndex, pixelSize)`: Добавляет запрос на изменение размера столбцов/строк.
-        -   `prepare_setColumnsWidth(self, startCol, endCol, width)`: Добавляет запрос на изменение ширины столбцов.
-        -   `prepare_setColumnWidth(self, col, width)`: Добавляет запрос на изменение ширины конкретного столбца.
-        -    `prepare_setValues(self, cellsRange, values, majorDimension="ROWS")`: Добавляет запрос на обновление значений в диапазоне ячеек.
-        -   `runPrepared(self, valueInputOption="USER_ENTERED")`: Выполняет подготовленные запросы.
-        -  `toGridRange(self, cellsRange)`: Преобразует строковый диапазон ячеек (A1-нотация) в GridRange (словарь с индексами).
-        - `prepare_mergeCells(self, cellsRange)`: Добавляет запрос на объединение ячеек.
-        - `prepare_setCellsFormat(self, cellsRange, cellFormat, fields="userEnteredFormat")`: Добавляет запрос на изменение формата ячеек.
-         - `prepare_setCellsFormats(self, cellsRange, cellFormats, fields="userEnteredFormat")`: Добавляет запрос на изменение формата ячеек с разными форматами.
-        - `prepare_setBorders(self, cellsRange, borders)`: Добавляет запрос на установку границ.
-    *   **Взаимодействие**:
-        -   Класс `Spreadsheet` инкапсулирует логику взаимодействия с Google Sheets API, предоставляя удобные методы для настройки и управления таблицами.
-        -   Экземпляр класса использует объект `service` (созданный на основе `apiclient.discovery`) для отправки запросов к API.
-        -  Методы `prepare_*`  добавляют запросы в очередь, а `runPrepared` отправляет их группами, повышая эффективность.
+        *   `__init__`: Конструктор класса, инициализирует сервисный объект и идентификатор таблицы.
+        *   `prepare_setDimensionPixelSize`: Подготавливает запрос для изменения размера столбцов или строк.
+        *   `prepare_setColumnsWidth`: Устанавливает ширину одного или нескольких столбцов.
+        *   `prepare_setColumnWidth`: Устанавливает ширину одного столбца.
+        *    `prepare_setValues`: Добавляет диапазон ячеек и значения для пакетной вставки данных.
+        *   `prepare_mergeCells`: Подготавливает запрос для объединения ячеек.
+        *   `prepare_setCellsFormat`: Подготавливает запрос для форматирования ячеек.
+        *   `prepare_setCellsFormats`: Подготавливает запрос для форматирования группы ячеек.
+        *   `runPrepared`: Выполняет все накопленные запросы к Google Sheets API.
+*    **Взаимодействие**: Класс `Spreadsheet` взаимодействует с Google Sheets API для создания, изменения и форматирования электронных таблиц. Он инкапсулирует логику работы с API, делая код более читаемым и удобным в использовании.
 
 ### Функции:
-*   В коде присутствуют только методы класса `Spreadsheet` и функции библиотеки `apiclient`.
+*   (В коде нет явно определенных функций кроме методов класса `Spreadsheet`)
+*   **Аргументы**:
+    *  Методы `prepare_setDimensionPixelSize`, `prepare_setColumnsWidth`, `prepare_setColumnWidth` -  принимают аргументы для указания диапазонов и ширины столбцов.
+    *  Метод `prepare_setValues` - принимает диапазон ячеек, значения для вставки и порядок заполнения (по строкам или столбцам).
+    *  Метод `prepare_mergeCells` -  принимает диапазон ячеек для объединения.
+    *  Методы `prepare_setCellsFormat`, `prepare_setCellsFormats` -  принимают диапазоны ячеек и параметры форматирования
+    *  Метод `runPrepared` принимает параметр `valueInputOption`, определяющий способ интерпретации значений (USER_ENTERED или RAW).
+*   **Возвращаемые значения**:
+    *   `runPrepared` возвращает кортеж из двух списков, содержащих результаты  выполнения пакетных обновлений.
+*    **Назначение**:
+    *   Методы `prepare_*` создают запросы для Google Sheets API.
+    *    Метод `runPrepared` отправляет накопленные запросы и обрабатывает ответы.
+*   **Примеры**:
+    *   `prepare_setColumnWidth(0, 317)` подготавливает запрос для изменения ширины столбца A до 317 пикселей.
+    *   `prepare_setValues("B2:C3", [["This is B2", "This is C2"], ["This is B3", "This is C3"]])` подготавливает запрос для заполнения ячеек B2:C3 данными из списка.
+    *   `runPrepared()` выполняет все подготовленные запросы к Google Sheets API.
 
 ### Переменные:
-*   `MODE`: Строковая переменная, определяющая режим работы скрипта, в примере имеет значение `debug`.
-*   `CREDENTIALS_FILE`: Строковая переменная, содержащая путь к файлу с учетными данными сервисного аккаунта.
-*   `credentials`: Объект, представляющий учетные данные сервисного аккаунта, полученный из `ServiceAccountCredentials`.
-*   `httpAuth`: Объект, представляющий авторизованный HTTP-клиент.
-*   `service`: Объект сервиса Google Sheets API v4, созданный с использованием `apiclient.discovery.build`.
-*   `driveService`: Объект сервиса Google Drive API v3, созданный с использованием `apiclient.discovery.build`.
-*   `spreadsheet`: Объект, представляющий созданный Google Spreadsheet, содержащий metadata, включая spreadsheetId.
-*   `shareRes`: Объект ответа на запрос доступа к документу.
-*   `results`: Объект ответа на запрос к API на обновление ширины столбцов или ячеек.
-*   `ss`: Экземпляр класса `Spreadsheet`, используемый для работы с таблицей.
+*   `MODE`: Глобальная переменная, которая задает режим работы программы (debug или production).
+*   `CREDENTIALS_FILE`: Строка, содержащая имя файла с учетными данными сервисного аккаунта.
+*   `credentials`: Объект `ServiceAccountCredentials`, представляющий учетные данные сервисного аккаунта.
+*   `httpAuth`: Объект авторизованного HTTP-клиента.
+*   `service`: Объект сервиса для работы с Google Sheets API.
+*   `driveService`: Объект сервиса для работы с Google Drive API.
+*   `spreadsheet`: Словарь, содержащий информацию о созданном документе Google Sheets, включая `spreadsheetId`.
+*   `shareRes`: Словарь, содержащий информацию о настройках доступа к документу.
+*   `results`: Переменная, которая используется для хранения ответов от API Google Sheets.
+*  **Типы**:
+    * `MODE`: `str`
+    * `CREDENTIALS_FILE`: `str`
+    * `credentials`: `ServiceAccountCredentials`
+    * `httpAuth`: `httplib2.Http`
+    * `service`: `apiclient.discovery.Resource`
+    * `driveService`: `apiclient.discovery.Resource`
+    * `spreadsheet`: `dict`
+    * `shareRes`: `dict`
+    * `results`: `dict`
+*   **Использование**:
+    *   `MODE` используется для переключения режимов работы программы.
+    *   `CREDENTIALS_FILE`, `credentials`, `httpAuth`, `service`, и `driveService` используются для аутентификации и взаимодействия с Google API.
+    *    `spreadsheet` используется для доступа к идентификатору и другим свойствам созданной электронной таблицы.
 
 ### Потенциальные ошибки и области для улучшения:
-1.  **Обработка ошибок**:  В коде не хватает явной обработки ошибок при выполнении API-запросов. Необходимо добавить try-except блоки для обработки исключений, которые могут возникнуть в процессе взаимодействия с API.
-2.  **Разбиение на модули**: Логику класса `Spreadsheet` можно разбить на несколько модулей, чтобы улучшить ее читаемость и масштабируемость.
-3.  **Динамическое определение размеров**:  Текущий код хардкодит размеры столбцов, строк. Желательно использовать автоматический расчет, либо конфигурационные файлы.
-4.  **Проверка входных данных**:  Методы класса `Spreadsheet` не проверяют корректность входных данных (например, диапазоны ячеек, форматы). Добавление проверок позволит избежать ошибок времени выполнения.
-5.  **Комментарии**: Код содержит места с копипастой, и некоторые сложные моменты не описаны в комментариях.
+*   **Обработка ошибок**: В коде не предусмотрена обработка ошибок, возникающих при работе с Google API.
+*   **Квоты API**: В коде не учитываются ограничения Google API (квоты), что может привести к ошибкам при большом количестве запросов.
+*   **Управление доступом**: Выдача доступа всем по ссылке (как указано в примере) может быть небезопасной, лучше использовать более гранулированную настройку доступа.
+*   **Рефакторинг**: Класс `Spreadsheet` можно расширить, добавив больше методов для управления таблицами.
 
-### Взаимосвязи с другими частями проекта:
-*  Данный код является частью модуля `src.goog.spreadsheet._docs`, и взаимодействует непосредственно с Google Sheets и Drive API.
-*  Класс `Spreadsheet` может использоваться другими модулями, которым необходимо создавать и модифицировать Google-таблицы.
+### Цепочка взаимосвязей с другими частями проекта:
+*  Код не имеет прямой зависимости от других частей проекта.
 
-### Дополнительные замечания:
-*   Код демонстрирует взаимодействие с Google Sheets API v4 для создания и форматирования таблиц.
-*   Он предоставляет абстракцию над низкоуровневым API, упрощая выполнение стандартных операций.
-*   Класс `Spreadsheet` является полезным инструментом для автоматизации работы с Google-таблицами в Python.
+Этот анализ предоставляет детальное объяснение кода, его функциональности, а также взаимосвязи между различными частями.

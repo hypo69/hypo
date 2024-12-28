@@ -61,7 +61,7 @@ from src.logger.logger import logger
 Режим работы проекта: 'dev' для разработки, 'prod' для продакшена
 """
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта.
     Ищет директорию, содержащую файлы-маркеры, начиная с текущей директории файла.

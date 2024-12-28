@@ -66,7 +66,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с текущей директории.
 
@@ -169,7 +169,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Добавление импорта для логирования
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта, начиная с текущей директории.
 

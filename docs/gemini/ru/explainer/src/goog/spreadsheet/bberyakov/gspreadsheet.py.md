@@ -1,238 +1,121 @@
-## <алгоритм>
+## АЛГОРИТМ:
 
-1. **Инициализация GSpreadsheet:**
-   - При создании экземпляра класса `GSpreadsheet`, вызывается метод `__init__`.
-   - Загружается JSON файл с секретным ключом для аутентификации Google API.
-   - Если передан `s_id` (идентификатор таблицы), вызывается `get_by_id` для открытия таблицы по ID.
-   - Если передан `s_title` (название таблицы), вызывается `get_by_title` для открытия таблицы по названию.
-   
-   *Пример:* 
-   ```python
-   gspread_obj_with_id = GSpreadsheet(s_id="1ZcK74BCgWKVr4kODjPmSvjp5IyO0OxhXdbeHKWzLQiM")
-   gspread_obj_with_title = GSpreadsheet(s_title="MySpreadsheet")
-   gspread_obj_default = GSpreadsheet()
-   ```
-   
-2. **Получение списка таблиц проекта:**
-   - Метод `get_project_spreadsheets_dict` возвращает словарь с информацией о таблицах из файла `goog/spreadsheets.json`.
-   
-   *Пример:*
-     ```python
-     project_spreadsheets = gspread_obj_with_title.get_project_spreadsheets_dict()
-    ```
+1.  **Инициализация (`__init__`)**:
+    *   Принимает `s_id` (ID таблицы) и `s_title` (название таблицы) как необязательные параметры.
+    *   Инициализирует `gclient` с использованием файла ключа сервисного аккаунта (`goog\\onela-hypotez-1aafa5e5d1b5.json`).
+        *   **Пример:** `secret_file` = "goog\\onela-hypotez-1aafa5e5d1b5.json".
+    *   Если передан `s_id`, вызывает `get_by_id` для открытия таблицы по ID.
+        *   **Пример:** `s_id` = '1ZcK74BCgWKVr4kODjPmSvjp5IyO0OxhXdbeHKWzLQiM'.
+    *   Если передан `s_title`, вызывает `get_by_title` для открытия или создания таблицы по названию.
+        *   **Пример:** `s_title` = "My Spreadsheet".
+        *   Поток данных: `s_title` -> `__init__` -> `get_by_title`
+2.  **Получение словаря таблиц (`get_project_spreadsheets_dict`)**:
+    *   Возвращает словарь таблиц из файла `goog\\spreadsheets.json`.
+        *   **Пример:** Возвращает `{"sheet1": "id1", "sheet2": "id2"}`.
+3.  **Получение таблицы по названию (`get_by_title`)**:
+    *   Принимает `sh_title` (название таблицы).
+    *   Проверяет, существует ли таблица с таким названием среди всех открытых таблиц текущего аккаунта.
+    *   Если таблицы не существует, создает ее с помощью `self.gsh.create(sh_title)`, делает ее доступной для пользователя `d07708766@gmail.com` с правами записи, используя `self.gsh.share()`.
+        *   Поток данных: `sh_title` -> `get_by_title` -> `self.gsh.create()` -> `self.gsh.share()`
+    *   Если таблица существует, выводит сообщение и открывает ее с помощью `self.gsh.open_by_title(sh_title)`.
+        *  Поток данных: `sh_title` -> `get_by_title` -> `self.gsh.open_by_title()`
+4.  **Получение таблицы по ID (`get_by_id`)**:
+    *   Принимает `sh_id` (ID таблицы).
+    *   Открывает таблицу по ID, используя `self.gclient.open_by_key(sh_id)`, и возвращает ее.
+        *   Поток данных: `sh_id` -> `get_by_id` -> `self.gclient.open_by_key()`
+        *   **Пример:** `sh_id` = '1ZcK74BCgWKVr4kODjPmSvjp5IyO0OxhXdbeHKWzLQiM'
+5.  **Получение всех таблиц для текущего аккаунта (`get_all_spreadsheets_for_current_account`)**:
+    *   Возвращает список всех открытых таблиц текущего аккаунта, используя `self.openall()`.
+        *   Поток данных: `get_all_spreadsheets_for_current_account` -> `self.openall()`
 
-3. **Открытие таблицы по названию:**
-    - Метод `get_by_title` проверяет существует ли таблица с указанным именем.
-    - Если таблицы нет, создает новую таблицу с указанным именем,  предоставляет доступ для `d07708766@gmail.com` с правами `writer`.
-    - Если таблица существует, открывает ее и выводит сообщение.
-
-    *Пример:*
-     ```python
-     gspread_obj_default.get_by_title("New Spreadsheet")
-     ```
-4. **Открытие таблицы по ID:**
-    - Метод `get_by_id` открывает таблицу Google Sheets по ее идентификатору.
-    
-    *Пример:*
-      ```python
-     spreadsheet = gspread_obj_with_id.get_by_id("1ZcK74BCgWKVr4kODjPmSvjp5IyO0OxhXdbeHKWzLQiM")
-      ```
-
-5. **Получение списка всех таблиц аккаунта:**
-    - Метод `get_all_spreadsheets_for_current_account` открывает все таблицы Google Sheets, к которым имеет доступ текущий аккаунт.
-
-    *Пример:*
-     ```python
-      all_spreadsheets = gspread_obj_default.get_all_spreadsheets_for_current_account()
-     ```
-
-## <mermaid>
+## MERMAID:
 
 ```mermaid
-graph LR
-    A[GSpreadsheet Class] --> B(service_account);
-    B --> C(gspread.client);
-    A --> D{__init__};
-    D --> E{s_id is not None};
-    E -- Yes --> F[get_by_id];
-    D --> G{s_title is not None};
-     G -- Yes --> H[get_by_title];
-    A --> I[get_project_spreadsheets_dict];
-    A --> H;
-    H --> J{sh_title in all_titles};
-    J -- No --> K[create spreadsheet];
-    K --> L[share spreadsheet];
-    J -- Yes --> M[open_by_title];    
-    A --> F;
-    F --> N[open_by_key];
-    A --> O[get_all_spreadsheets_for_current_account];
-    O --> P[openall]
+flowchart TD
+    Start[Start] --> InitClass[<code>__init__</code><br>Initialize GSpreadsheet]
     
+    InitClass --> Check_s_id{s_id?}
+    Check_s_id -- Yes --> GetById[<code>get_by_id(s_id)</code><br>Open Spreadsheet by ID]
+    Check_s_id -- No --> Check_s_title{s_title?}
     
-    
-    
-    
-    
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    Check_s_title -- Yes --> GetByTitle[<code>get_by_title(s_title)</code><br>Open or Create Spreadsheet by Title]
+    Check_s_title -- No --> Load_Secret_File[Load Service Account Credentials <br> from <code>secret_file</code>]
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#ccf,stroke:#333,stroke-width:2px
-    style H fill:#ccf,stroke:#333,stroke-width:2px
-    style I fill:#ccf,stroke:#333,stroke-width:2px
-    style J fill:#ccf,stroke:#333,stroke-width:2px
-    style K fill:#ccf,stroke:#333,stroke-width:2px
-    style L fill:#ccf,stroke:#333,stroke-width:2px
-     style M fill:#ccf,stroke:#333,stroke-width:2px
-    style N fill:#ccf,stroke:#333,stroke-width:2px
-    style O fill:#ccf,stroke:#333,stroke-width:2px
-    style P fill:#ccf,stroke:#333,stroke-width:2px
+    Load_Secret_File --> GetSpreadsheetDict[<code>get_project_spreadsheets_dict()</code><br>Load Spreadsheets from JSON file]
+    GetSpreadsheetDict --> End[End]
+    
+    GetById --> End
+    
+    GetByTitle --> CheckSheetExist{Check Spreadsheet Exist?}
+    CheckSheetExist -- Yes --> OpenExistingSheet[<code>self.gsh.open_by_title(sh_title)</code> <br> Open Existing Spreadsheet]
+    CheckSheetExist -- No --> CreateAndShare[<code>self.gsh.create(sh_title)</code> & <br><code>self.gsh.share()</code><br>Create and Share Spreadsheet]
+    OpenExistingSheet --> End
+    CreateAndShare --> End
+    
+    classDef blue fill:#f9f,stroke:#333,stroke-width:2px
+    class InitClass,GetById,GetByTitle,GetSpreadsheetDict blue
 ```
 
-**Описание зависимостей:**
-
--   **`GSpreadsheet Class`**: Основной класс, который управляет взаимодействием с Google Sheets.
--   **`service_account`**: Функция из библиотеки `global_settingspread`, которая используется для аутентификации в Google API. Она принимает путь к файлу с секретным ключом.
--   **`gspread.client`**: Клиентский объект из библиотеки `gspread` для работы с Google Sheets.
--   **`__init__`**: Конструктор класса `GSpreadsheet`, который инициализирует клиент и открывает таблицу при необходимости.
--   **`s_id is not None`**: Условный блок, проверяющий, был ли передан идентификатор таблицы.
--   **`get_by_id`**: Метод для открытия таблицы по ее ID.
--  **`s_title is not None`**: Условный блок, проверяющий, было ли передано название таблицы.
--   **`get_by_title`**: Метод для открытия таблицы по ее названию.
--  **`get_project_spreadsheets_dict`**: Метод для загрузки списка таблиц проекта из JSON файла.
--   **`sh_title in all_titles`**: Условный блок, проверяющий, существует ли таблица с указанным названием.
--    **`create spreadsheet`**: Метод для создания таблицы.
--    **`share spreadsheet`**: Метод для предоставления доступа к таблице.
--   **`open_by_title`**: Метод для открытия таблицы по названию, если она существует.
--   **`open_by_key`**: Метод из `gspread.client` для открытия таблицы по её ID.
--   **`get_all_spreadsheets_for_current_account`**: Метод для получения списка всех таблиц аккаунта.
--  **`openall`**: Метод для открытия всех таблиц, к которым имеет доступ текущий аккаунт.
-
-## <объяснение>
+## ОБЪЯСНЕНИЕ:
 
 **Импорты:**
 
--   `from global_settingspread import Spreadsheet, service_account`: Импортирует классы `Spreadsheet` и функцию `service_account` из модуля `global_settingspread`. `Spreadsheet`, вероятно, является базовым классом для работы с таблицами, а `service_account` используется для аутентификации через JSON-ключ. Это указывает на использование кастомной логики для работы с Google Sheets, выходящей за рамки `gspread`.
--   `import gspread`: Импортирует библиотеку `gspread` для работы с Google Sheets API. Используется для аутентификации и управления таблицами.
--   `import json`: Импортирует стандартную библиотеку `json` для работы с JSON-файлами, используется для загрузки конфигураций таблиц.
--   `from typing import List, Type, Union`: Импортирует типы из библиотеки `typing` для статической типизации, используется для улучшения читаемости и предотвращения ошибок.
+*   `from global_settingspread import Spreadsheet, service_account`: Импортирует базовый класс `Spreadsheet` и функцию `service_account` из файла `global_settingspread`, предположительно, содержащего общие настройки и утилиты для работы с Google Sheets API. `service_account` используется для аутентификации через сервисный аккаунт Google.
+*   `import gspread`: Импортирует библиотеку `gspread`, которая предоставляет удобный интерфейс для работы с Google Sheets API.
+*   `import json`: Импортирует библиотеку `json` для работы с JSON файлами (в данном случае для чтения словаря с данными о таблицах).
+*   `from typing import List, Type, Union`: Импортирует типы для аннотации типов (List, Type, Union).
 
-**Классы:**
+**Класс `GSpreadsheet`:**
 
--   **`GSpreadsheet(Spreadsheet)`:**
-    -   **Роль**: Класс для управления Google Sheets. Наследуется от кастомного класса `Spreadsheet`.
-    -   **Атрибуты**:
-        -   `gsh: Spreadsheet = None`:  Представляет открытую таблицу, тип `Spreadsheet`, что намекает на использование кастомного класса.
-        -   `gclient = gspread.client`:  Клиент Google Sheets, используется для работы с API.
-    -   **Методы**:
-        -   `__init__(self, s_id: str = None, s_title: str = None, *args, **kwards)`: Конструктор класса.
-            -   Инициализирует клиента `gspread` с помощью `service_account`.
-            -   Открывает таблицу по ID (`s_id`) или заголовку (`s_title`), если они переданы.
-        -   `get_project_spreadsheets_dict(self) -> dict`: Возвращает словарь с информацией о таблицах проекта, загружая данные из JSON-файла.
-        -   `get_by_title(self, sh_title: str = 'New Spreadsheet')`: Открывает таблицу по заголовку, создает таблицу, если она не существует и предоставляет доступ пользователю `d07708766@gmail.com` с правами `writer`.
-        -   `get_by_id(self, sh_id: str) -> Spreadsheet`: Открывает таблицу по её идентификатору.
-        -   `get_all_spreadsheets_for_current_account(self)`: Возвращает список всех доступных таблиц аккаунта.
-    -   **Взаимодействие**: Использует `global_settingspread.service_account` для аутентификации, `gspread` для работы с Google Sheets API.
-
+*   **Роль:** Предоставляет интерфейс для взаимодействия с Google Sheets. Класс инкапсулирует логику открытия, создания и управления таблицами Google.
+*   **Наследует:** `Spreadsheet` (предположительно, из `global_settingspread.py`), что позволяет переиспользовать общие методы.
+*   **Атрибуты:**
+    *   `gsh: Spreadsheet`: Хранит объект открытой книги Google Sheets.
+    *   `gclient`: Хранит экземпляр клиента `gspread.client` для работы с Google Sheets API.
+*   **Методы:**
+    *   `__init__(self, s_id: str = None, s_title: str = None, *args, **kwards)`: Конструктор класса. Инициализирует `gclient` и открывает/создаёт Google Spreadsheet по ID или названию.
+    *   `get_project_spreadsheets_dict(self) -> dict`: Возвращает словарь с идентификаторами таблиц из файла `goog\\spreadsheets.json`.
+    *   `get_by_title(self, sh_title: str = 'New Spreadsheet')`: Открывает таблицу по названию. Если не существует, создает её.
+    *   `get_by_id(self, sh_id: str) -> Spreadsheet`: Открывает таблицу по ID.
+    *  `get_all_spreadsheets_for_current_account(self)`: Открывает все таблицы текущего аккаунта.
+    
 **Функции:**
 
--   `__init__(self, s_id: str = None, s_title: str = None, *args, **kwards)`:
-    -   **Аргументы**:
-        -   `self`: Ссылка на текущий экземпляр класса.
-        -   `s_id: str = None`: Идентификатор Google Sheets.
-        -   `s_title: str = None`: Название Google Sheets.
-        -   `*args, **kwards`: Дополнительные аргументы.
-    -   **Возвращаемое значение**: None (конструктор не возвращает значения).
-    -   **Назначение**: Инициализирует объект `GSpreadsheet`. Загружает credentials из json файла, открывает Google Sheet по id или title.
-    -   **Пример**:
-       ```python
-        gspread_obj = GSpreadsheet(s_id = "123456", s_title = "My Sheet")
-       ```
-
--  `get_project_spreadsheets_dict(self) -> dict`:
-    -   **Аргументы**: `self`: Ссылка на текущий экземпляр класса.
-    -   **Возвращаемое значение**: `dict`: Словарь с информацией о таблицах проекта.
-    -   **Назначение**: Загружает словарь из JSON файла `goog/spreadsheets.json`.
-    -   **Пример**:
-       ```python
-       project_data = gspread_obj.get_project_spreadsheets_dict()
-       ```
-
--   `get_by_title(self, sh_title: str = 'New Spreadsheet')`:
-    -   **Аргументы**:
-        -   `self`: Ссылка на текущий экземпляр класса.
-        -   `sh_title: str = 'New Spreadsheet'`: Название таблицы.
-    -   **Возвращаемое значение**: None
-    -   **Назначение**: Открывает таблицу по названию, создает таблицу, если её не существует, предоставляет доступ.
-    -    **Пример:**
-       ```python
-        gspread_obj.get_by_title("My New Sheet")
-       ```
-
--   `get_by_id(self, sh_id: str) -> Spreadsheet`:
-    -   **Аргументы**:
-        -   `self`: Ссылка на текущий экземпляр класса.
-        -   `sh_id: str`: Идентификатор таблицы.
-    -   **Возвращаемое значение**: `Spreadsheet`: Объект открытой таблицы.
-    -   **Назначение**: Открывает таблицу по ее ID.
-    -  **Пример:**
-      ```python
-       spreadsheet = gspread_obj.get_by_id("123456")
-      ```
-
--   `get_all_spreadsheets_for_current_account(self)`:
-    -   **Аргументы**: `self`: Ссылка на текущий экземпляр класса.
-    -   **Возвращаемое значение**: Список таблиц.
-    -   **Назначение**: Возвращает список всех таблиц Google Sheets, к которым имеет доступ текущий аккаунт.
-     -  **Пример:**
-      ```python
-       all_spreadsheets = gspread_obj.get_all_spreadsheets_for_current_account()
-      ```
+*   `__init__`:
+    *   **Аргументы**: `s_id` (ID таблицы), `s_title` (название таблицы).
+    *   **Назначение**: Инициализирует экземпляр класса, устанавливает клиент API и открывает таблицу.
+*   `get_project_spreadsheets_dict`:
+    *   **Аргументы**: Нет.
+    *   **Возвращаемое значение**: `dict`, словарь таблиц.
+    *   **Назначение**: Загружает словарь таблиц из JSON файла.
+*   `get_by_title`:
+    *   **Аргументы**: `sh_title` (название таблицы).
+    *   **Назначение**: Открывает таблицу по названию, если она существует; в противном случае создает новую таблицу с данным именем.
+*   `get_by_id`:
+    *   **Аргументы**: `sh_id` (ID таблицы).
+    *   **Возвращаемое значение**: `Spreadsheet` (объект открытой таблицы).
+    *   **Назначение**: Открывает таблицу по ID.
+*    `get_all_spreadsheets_for_current_account`:
+    *  **Аргументы**: Нет.
+    * **Возвращаемое значение:** `List<Spreadsheet>`, список всех открытых таблиц
+    *   **Назначение**: Открывает все таблицы текущего аккаунта.
 
 **Переменные:**
 
--   ``: Глобальная переменная режима работы, используется для определения окружения.
--   `secret_file`: Локальная переменная, содержащая имя JSON файла с ключом.
--   `gsh`: Атрибут класса `GSpreadsheet`, представляет открытую таблицу.
--   `gclient`: Атрибут класса `GSpreadsheet`, представляет клиента `gspread`.
+*   `gsh: Spreadsheet = None`: Атрибут экземпляра класса, хранящий объект Google Sheets. Изначально None, пока не будет открыта таблица.
+*    `secret_file`: Имя файла с ключом сервисного аккаунта.
+*    `gclient`: Клиент Google Sheets API.
 
 **Потенциальные ошибки и области для улучшения:**
 
--   **Обработка ошибок**: В коде отсутствует обработка исключений (например, при открытии файла, создании таблицы).
--   **Дублирование логики**: Логика открытия таблицы по ID и по title, а также проверки существования таблицы в `get_by_title`  может быть вынесена в отдельные методы.
--    **Жестко заданные данные**: Имя файла `goog/onela-hypotez-1aafa5e5d1b5.json` и email `d07708766@gmail.com` жёстко прописаны в коде, следует вынести в конфигурационные файлы или переменные среды.
--   **Отсутствие закрытия**: Нет явного закрытия открытых таблиц, что может привести к утечкам ресурсов.
--    **Неиспользуемый импорт:** Закомментированные импорты `import gs`  и  `from global_settings import GWorksheet` не используются, их стоит удалить.
--   **Несоответствие документации и кода**:  `_gsh = self.create(sh_title)` и дальнейший код в `get_by_title` закомментированы. Нужно актуализировать код или удалить комментарий.
+*   **Жестко заданный путь к файлу ключа:** Путь `goog\\onela-hypotez-1aafa5e5d1b5.json` прописан в коде. Лучше вынести путь в конфигурационный файл или переменную окружения.
+*   **Жестко заданный email для доступа к таблице**: Email `d07708766@gmail.com` также жестко прописан в коде. Его также желательно вынести в конфигурационный файл или переменную окружения.
+*   **Отсутствие обработки ошибок:** Код не обрабатывает исключения, которые могут возникнуть при работе с Google Sheets API, например, при открытии несуществующей таблицы или при проблемах с аутентификацией.
+*   **Возможная путаница с Spreadsheet:** Класс `GSpreadsheet` наследует от `Spreadsheet` (непонятно какого) и одновременно использует атрибут `gsh` с тем же типом, что может вызвать путаницу. Возможно стоит пересмотреть архитектуру наследования.
 
-**Взаимосвязи с другими частями проекта:**
+**Взаимосвязь с другими частями проекта:**
 
--   Зависит от `global_settingspread`, который, вероятно, предоставляет общую логику для работы с Google Sheets и аутентификации.
--   Использует библиотеку `gspread` для доступа к Google Sheets API.
--   Использует `json` для загрузки конфигурации таблиц и секретных ключей.
--   Предполагается, что файл `goog/spreadsheets.json` содержит метаданные о таблицах проекта.
--   Предполагается, что файл `goog/onela-hypotez-1aafa5e5d1b5.json` содержит ключи для аутентификации Google API.
--   Может быть частью системы обработки данных, где используется Google Sheets как хранилище данных.
-
-В целом, код представляет собой класс для управления Google Sheets с базовой функциональностью: открытие таблиц по ID, названию, создание таблиц и предоставление доступа. Однако код требует улучшения в части обработки ошибок, конфигурации, и общей структуры.
+*   Зависит от `global_settingspread.py` (для базового класса `Spreadsheet` и функции `service_account`).
+*   Использует JSON файл (`goog\\spreadsheets.json`) для хранения информации о таблицах.
+*   Предполагается наличие файла ключа сервисного аккаунта (`goog\\onela-hypotez-1aafa5e5d1b5.json`) для аутентификации.
+*   Взаимодействует с Google Sheets API через библиотеку `gspread`.

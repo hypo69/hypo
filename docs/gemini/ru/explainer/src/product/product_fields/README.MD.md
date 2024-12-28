@@ -1,220 +1,242 @@
-## Анализ кода `ProductFields`
+## АНАЛИЗ КОДА: `ProductFields`
 
-### <алгоритм>
+### 1. `<алгоритм>`:
+1.  **Инициализация (`__init__`)**:
+    *   Загружает список полей продукта из файла (`fields_list.txt`).
+        *   Пример: `['id_product', 'name', 'description', 'price', 'associations']`.
+    *   Инициализирует словарь `language` для хранения соответствий языков и их идентификаторов (например, `{'en': 1, 'he': 2, 'ru': 3}`).
+    *   Создает объект `SimpleNamespace` (`presta_fields`) для хранения полей продукта, устанавливая начальные значения `None`.
+        *   Пример: `presta_fields.id_product = None`, `presta_fields.name = None`.
+    *   Создает словарь `assist_fields_dict` для дополнительных полей, таких как `default_image_url` и `images_urls`.
+        *   Пример: `assist_fields_dict = {'default_image_url': '', 'images_urls': []}`.
+    *   Вызывает метод `_payload` для загрузки значений по умолчанию.
+2.  **Загрузка списка полей (`_load_product_fields_list`)**:
+    *   Читает файл `fields_list.txt` из директории `src/product/product_fields`.
+    *   Возвращает список строк, где каждая строка - это имя поля.
+        *   Пример: `['id_product', 'name', 'description', 'price', 'associations']`.
+3.  **Загрузка значений по умолчанию (`_payload`)**:
+    *   Читает JSON файл `product_fields_default_values.json` из директории `src/product/product_fields`.
+        *   Пример: `{"id_product": 0, "price": "0.00", "name": {}}`.
+    *   Если файл не найден или не удалось прочитать, записывает сообщение об ошибке в логи и возвращает `False`.
+    *   Перебирает пары ключ-значение из загруженных данных и присваивает их как атрибуты объекта `ProductFields`.
+        *   Пример: `self.id_product = 0`, `self.price = "0.00"`, `self.name = {}`.
+    *   Возвращает `True` после успешной загрузки.
+4.  **Установка и получение значений полей (например, `id_product`)**:
+    *   **Getter** (`@property`): возвращает текущее значение поля из объекта `presta_fields`.
+        *   Пример: `return self.presta_fields.id_product` возвращает значение, хранящееся в `presta_fields.id_product`.
+    *   **Setter** (`@<field>.setter`): устанавливает значение поля в `presta_fields`, обрабатывая возможные исключения.
+        *   Пример:  `self.presta_fields.id_product = value`.
+        *   Если происходит исключение `ProductFieldException`, оно перехватывается, записывается в лог и функция возвращает `None`.
+5.  **Установка и получение значений многоязычных полей (например, `name`)**:
+    *   **Getter** (`@property`): возвращает значение поля `name` из `presta_fields` или пустую строку если значение не задано.
+        *   Пример: `return self.presta_fields.name or ''`.
+    *   **Setter** (`@name.setter`): устанавливает значение поля `name` для заданного языка (например, 'en', 'he', 'ru') в виде словаря в `presta_fields`, обрабатывая возможные исключения.
+        *   Пример: `self.presta_fields.name = {'language': [{'attrs': {'id': self.language[lang]}, 'value': value}]}`
+        *   Если происходит исключение `ProductFieldException`, оно перехватывается, записывается в лог и функция возвращает `None`.
+6. **Установка и получение значений ассоциаций (`associations`)**:
+    *   **Getter** (`@property`): возвращает текущее значение поля `associations` из `presta_fields` или None если значение не задано.
+        *   Пример: `return self.presta_fields.associations or None`.
+    *   **Setter** (`@associations.setter`): устанавливает значение поля `associations` в `presta_fields`.
+        *   Пример: `self.presta_fields.associations = value`.
 
-1. **Инициализация `ProductFields`:**
-   - Вызывается метод `__init__`.
-   - Загружается список полей продукта из файла `fields_list.txt` с помощью `_load_product_fields_list`.
-     - `_load_product_fields_list`: читает файл, каждый ряд которого - название поля продукта.
-        *Пример*: файл `fields_list.txt` содержит:
-        ```text
-        id_product
-        name
-        description
-        price
-        ```
-        Результат: `['id_product', 'name', 'description', 'price']`.
-   - Инициализируется словарь `language`, сопоставляющий коды языков с их ID. *Пример*: `{'en': 1, 'he': 2, 'ru': 3}`
-   - Создается объект `SimpleNamespace` `presta_fields` для хранения значений полей продукта. Все поля инициализируются значением `None`.
-      *Пример*: `presta_fields` содержит:
-        ```
-        SimpleNamespace(id_product=None, name=None, description=None, price=None)
-        ```
-   - Создается словарь `assist_fields_dict` для хранения дополнительных полей, таких как URL изображений. *Пример*: `{'default_image_url': '', 'images_urls': []}`.
-   - Вызывается метод `_payload` для загрузки значений по умолчанию.
-     - `_payload`: загружает значения полей по умолчанию из JSON файла (`product_fields_default_values.json`).
-         *Пример*: файл `product_fields_default_values.json` содержит:
-            ```json
-            {
-            "id_product": 1,
-            "price": 10.0
-            }
-            ```
-         Результат: `self.id_product` устанавливается в `1`, `self.price` устанавливается в `10.0`.
-2. **Работа с полями (пример на `id_product`):**
-    - Для доступа к значению поля `id_product` используется геттер `id_product`, возвращающий значение из `self.presta_fields.id_product`.
-    - Для установки значения поля `id_product` используется сеттер `id_product`:
-      - Происходит попытка присвоить значение `value` полю `self.presta_fields.id_product`.
-      - Если происходит исключение `ProductFieldException`, оно перехватывается, и в лог записывается ошибка, функция завершается.
-       *Пример*: вызов `product.id_product = 123` установит `self.presta_fields.id_product` в `123`.
-3. **Работа с многоязычными полями (пример на `name`):**
-   - Для доступа к значению поля `name` используется геттер `name`, возвращающий значение `self.presta_fields.name`, если оно есть, или пустую строку.
-   - Для установки значения поля `name` используется сеттер `name`:
-     - Формируется словарь с ключом `language`, содержащий список словарей с `attrs` (аттрибутами) и `value` (значением).
-        *Пример*: вызов `product.name = "Product Name", lang='en'` сформирует:
-         ```json
-        {
-            "language": [
-                {
-                  "attrs": {
-                    "id": 1
-                  },
-                  "value": "Product Name"
-                }
-              ]
-        }
-         ```
-      - Происходит попытка присвоить это значение полю `self.presta_fields.name`.
-      - Если происходит исключение `ProductFieldException`, оно перехватывается, и в лог записывается ошибка, функция завершается.
-4. **Работа с ассоциациями:**
-   - Для доступа к значению поля `associations` используется геттер `associations`, возвращающий значение из `self.presta_fields.associations`.
-   - Для установки значения поля `associations` используется сеттер `associations`, устанавливающий значение `value` в поле `self.presta_fields.associations`.
-      *Пример*: вызов `product.associations = {'categories': [{'id': 2}, {'id': 3}]}` установит `self.presta_fields.associations` в `{'categories': [{'id': 2}, {'id': 3}]}`.
-
-### <mermaid>
+### 2. `<mermaid>`:
 
 ```mermaid
-graph TD
-    A[ProductFields Instance] -->|initializes| B(load_product_fields_list);
-    B --> C(presta_fields);
-    C -->|init with None|D(assist_fields_dict);
-    D -->|default values| E(_payload);
-    E -->|load values| F(ProductFields);
-    F --> G{Set Field Value};
-    G -- id_product --> H(presta_fields.id_product);
-     G -- name --> I(presta_fields.name);
-     G -- associations --> J(presta_fields.associations);
-     H --> K{Error Handling};
-     I --> K;
-     J --> K;
-    K -- Exception --> L[Log Error];
-    K -- No Exception --> G;
-    F --> M{Get Field Value};
-     M -- id_product --> N(presta_fields.id_product);
-      M -- name --> O(presta_fields.name);
-      M -- associations --> P(presta_fields.associations);
-     N --> Q[Return value];
-     O --> Q;
-      P --> Q;
+flowchart TD
+    Start[Start] --> Init[<code>__init__</code><br>Initialize Product Fields]
+    Init --> LoadFieldsList[<code>_load_product_fields_list</code><br>Load Product Fields List]
+    LoadFieldsList --> ReadFile[Read <code>fields_list.txt</code>]
+    ReadFile --> ReturnList[Return List of Fields]
+    Init --> InitLanguage[Initialize Language Dictionary]
+    Init --> CreatePrestaFields[Create <code>presta_fields</code> (SimpleNamespace)]
+    Init --> InitAssistFields[Initialize <code>assist_fields_dict</code>]
+    Init --> LoadDefaultValues[<code>_payload</code><br>Load Default Values]
+    LoadDefaultValues --> ReadJSON[Read <code>product_fields_default_values.json</code>]
+    ReadJSON -- "Data Loaded" --> SetDefaultValues[Set Default Values]
+    ReadJSON -- "Data Load Fail" --> LogError[Log Debug Error]
+    SetDefaultValues --> ReturnTrue[Return True]
+    LogError --> ReturnFalse[Return False]    
     
     
     
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#ffc,stroke:#333,stroke-width:2px
-    style M fill:#ccf,stroke:#333,stroke-width:2px
+    
+    
+    
+    
+    
+    
+    subgraph Single Language Field
+        GetSingleField[Get Field Value (e.g., <code>id_product</code>)]
+        SetSingleField[Set Field Value (e.g., <code>id_product</code>)]
+        SetSingleField --> UpdatePrestaFields[Update <code>presta_fields</code>]        
+    end
+    
+    subgraph Multi Language Field
+        GetMultiField[Get Field Value (e.g., <code>name</code>)]
+        SetMultiField[Set Field Value (e.g., <code>name</code>, <code>lang</code>)]
+        SetMultiField --> CreateLangDict[Create Language Dictionary]
+        CreateLangDict --> UpdatePrestaFieldsLang[Update <code>presta_fields</code> with Lang data]
+    end
+    
+    subgraph Associations
+    
+        GetAssociations[Get Associations Value]
+         SetAssociations[Set Associations Value]
+         SetAssociations --> UpdatePrestaFieldsAssociations[Update <code>presta_fields.associations</code>]
+    end
+
+    
+    
+    Init --> GetSingleField
+    Init --> SetSingleField    
+    Init --> GetMultiField    
+    Init --> SetMultiField
+    Init --> GetAssociations
+    Init --> SetAssociations
+        
+   
+    
+    
+    
+
+    
+```
+**Разбор зависимостей `mermaid`:**
+
+1.  **`Start`**: Начало процесса.
+2.  **`__init__`**: Метод инициализации класса `ProductFields`.
+3.  **`_load_product_fields_list`**: Метод для загрузки списка полей продукта.
+4.  **`ReadFile`**: Чтение файла `fields_list.txt`.
+5.  **`ReturnList`**: Возвращение списка полей продукта.
+6.   **`InitLanguage`**: Инициализация словаря `language`.
+7.  **`CreatePrestaFields`**: Создание объекта `SimpleNamespace` для хранения полей.
+8.  **`InitAssistFields`**: Инициализация словаря `assist_fields_dict` для дополнительных полей.
+9.  **`_payload`**: Метод для загрузки значений по умолчанию для полей.
+10. **`ReadJSON`**: Чтение файла `product_fields_default_values.json`.
+11. **`SetDefaultValues`**: Установка значений по умолчанию для полей.
+12. **`LogError`**: Логирование ошибки, если файл JSON не удалось загрузить.
+13. **`ReturnTrue`**: Возвращение `True` после успешной загрузки данных из JSON.
+14. **`ReturnFalse`**: Возвращение `False` после неудачной загрузки данных из JSON.
+15. **`GetSingleField`**: Получение значения поля в рамках одноязычного поля, например `id_product`.
+16. **`SetSingleField`**: Установка значения поля в рамках одноязычного поля, например `id_product`.
+17.  **`UpdatePrestaFields`**: Обновление значения в объекте `presta_fields`.
+18. **`GetMultiField`**: Получение значения поля в рамках многоязычного поля, например `name`.
+19. **`SetMultiField`**: Установка значения поля в рамках многоязычного поля, например `name`.
+20. **`CreateLangDict`**: Создание словаря для многоязычных данных.
+21. **`UpdatePrestaFieldsLang`**: Обновление значения в объекте `presta_fields` с учетом языка.
+22. **`GetAssociations`**: Получение значения поля `associations`.
+23. **`SetAssociations`**: Установка значения поля `associations`.
+24. **`UpdatePrestaFieldsAssociations`**: Обновление значения поля `associations` в объекте `presta_fields`.
+
+**Объяснение:**
+
+Диаграмма `mermaid` показывает поток выполнения программы при инициализации класса `ProductFields`, а также при взаимодействии с его полями.
+Начинается с инициализации, где происходит загрузка списка полей, создание структур данных, и загрузка значений по умолчанию.
+После инициализации класс готов к работе с различными типами полей: одноязычные, многоязычные и ассоциации.
+Диаграмма также показывает пути обработки ошибок при загрузке данных из JSON.
+Стрелки показывают последовательность вызовов методов и передачу данных между ними.
+
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
 ```
 
-**Объяснение зависимостей:**
+**Объяснение `header.py`:**
 
-*   **`ProductFields Instance`**: Представляет экземпляр класса `ProductFields`, являющийся точкой входа для всей логики.
-*   **`load_product_fields_list`**: Функция, загружающая список полей из внешнего файла.
-*   **`presta_fields`**: Объект `SimpleNamespace`, который хранит значения полей продукта.
-*   **`assist_fields_dict`**: Словарь для хранения дополнительных полей, таких как URL-адреса изображений.
-*   **`_payload`**: Функция, загружающая значения по умолчанию из JSON-файла.
-*  **`ProductFields`**: Объект класса, представляющий контейнер для данных продукта.
-*   **`Set Field Value`**: Представляет процесс установки значения поля через сеттеры.
-    *  `presta_fields.id_product`, `presta_fields.name`, `presta_fields.associations` -  поля в объекте `presta_fields`, где хранятся значения.
-*  **`Error Handling`**: Блок, обрабатывающий исключения, возникающие при установке значений полей.
-*  **`Log Error`**: Блок, записывающий информацию об ошибке в лог.
-*  **`Get Field Value`**:  Представляет процесс получения значения поля через геттеры.
-*   **`Return value`**: Возвращает значение запрашиваемого поля.
+`header.py` определяет корень проекта и импортирует глобальные настройки `gs`, которые используются для определения путей к файлам и другим ресурсам проекта. Это позволяет централизовано управлять конфигурацией и путями проекта.
 
-### <объяснение>
+### 3. `<объяснение>`:
 
 **Импорты:**
+*   `SimpleNamespace` из `types`: Используется для создания объектов, атрибуты которых можно устанавливать как обычные переменные. В данном случае используется для хранения полей продукта (`presta_fields`). Это упрощает работу с набором полей, позволяя обращаться к ним как `self.presta_fields.id_product` вместо `self.presta_fields['id_product']`.
+*   `Path` из `pathlib`: Используется для работы с путями файлов и директорий в операционной системе. Обеспечивает кроссплатформенность путей.
+*   `List`, `Dict`, `Optional` из `typing`: Используются для аннотации типов, что делает код более читаемым и помогает отлаживать. `List[str]` указывает, что переменная должна быть списком строк, `Dict` – словарем, `Optional[int]` – может быть целым числом или `None`.
+*   `read_text_file` из `src.utils.file_utils`: Функция, которая используется для чтения текстового файла.
+*   `j_loads` из `src.utils.json_utils`: Функция для загрузки данных из JSON файла.
+*   `logger` из `src.logger`: Используется для логирования ошибок и отладочной информации.
+*    `gs` из `src`: глобальные настройки проекта, которые используются для доступа к путям и другой конфигурационной информации.
 
-*   `from types import SimpleNamespace`: Импортирует класс `SimpleNamespace`, который используется для создания объекта для хранения полей продукта, что позволяет обращаться к полям как к атрибутам. Это полезно для хранения динамического набора полей.
-*   `from typing import List, Dict, Optional`: Импортирует типы данных для аннотации кода, улучшая его читаемость и помогая избежать ошибок типизации.
-*   `from pathlib import Path`: Импортирует класс `Path` для работы с путями к файлам и директориям.
-*   `from src.utils.files import read_text_file, j_loads`: Импортирует функции `read_text_file` и `j_loads` для чтения текстовых файлов и JSON-файлов соответственно,  из модуля `src.utils.files`. Это указывает на то, что класс `ProductFields` зависит от этих утилит для загрузки данных.
-*  `from src.utils.logger import logger`: Импортирует объект `logger` для логирования сообщений. Это позволяет отслеживать ошибки и другие события.
-*   `from src.exceptions import ProductFieldException`: Импортирует пользовательское исключение `ProductFieldException`, которое будет использоваться для обработки ошибок, связанных с полями продукта.
-*   `import src.settings as gs`: Импортирует модуль `settings` как `gs`, что позволяет получать доступ к глобальным настройкам проекта, таким как пути к файлам.
-
-**Классы:**
-
-*   `ProductFields`:
-    *   **Роль:** Управляет и структурирует данные о продуктах в формате, необходимом для API PrestaShop.
-    *   **Атрибуты:**
-        *   `product_fields_list`: Список названий полей продукта.
-        *   `language`: Словарь, сопоставляющий языковые коды с их ID.
-        *   `presta_fields`: Объект `SimpleNamespace` для хранения значений полей продукта.
-        *   `assist_fields_dict`: Словарь для хранения дополнительных полей.
-    *   **Методы:**
-        *   `__init__`: Инициализирует класс, загружая список полей, устанавливая значения по умолчанию и иницилизируя `SimpleNamespace`.
-        *   `_load_product_fields_list`: Загружает список полей продукта из файла.
-        *   `_payload`: Загружает значения по умолчанию для полей продукта из файла JSON.
-        *   `id_product` (getter и setter): Обрабатывает поле `id_product`, включая логику установки и чтения его значения.
-         *   `name` (getter и setter): Обрабатывает поле `name`, включая логику установки и чтения его значения, обеспечивая поддержку нескольких языков.
-       *   `associations` (getter и setter): Обрабатывает поле `associations`, позволяющее устанавливать связи продукта с другими объектами.
-    *   **Взаимодействие:**
-        *   Взаимодействует с утилитами `read_text_file` и `j_loads` для загрузки данных.
-        *   Использует объект `logger` для логирования ошибок и других сообщений.
-        *   Использует `ProductFieldException` для обработки ошибок, связанных с полями продукта.
+**Класс `ProductFields`:**
+*   **Роль**: Управляет структурой данных продукта для PrestaShop API, обеспечивая корректное форматирование и валидацию полей.
+*   **Атрибуты:**
+    *   `product_fields_list`: Список полей продукта, загружается из файла.
+    *   `language`: Словарь соответствия языка и его ID (например, {'en': 1, 'he': 2, 'ru': 3}).
+    *   `presta_fields`: Объект `SimpleNamespace` для хранения значений полей продукта.
+    *   `assist_fields_dict`: Словарь для хранения вспомогательных полей, таких как `default_image_url` и `images_urls`.
+*   **Методы:**
+    *   `__init__()`: Инициализирует класс, загружает список полей, устанавливает значения по умолчанию и инициализирует основные структуры данных.
+    *   `_load_product_fields_list()`: Загружает список полей из файла.
+    *   `_payload()`: Загружает значения по умолчанию для полей из JSON файла.
+    *   Геттеры (`@property`) и сеттеры (`@<field>.setter`) для каждого поля продукта (например, `id_product`, `name`, `associations`).
 
 **Функции:**
 
 *   `__init__(self)`:
-    *   **Аргументы:** `self` (экземпляр класса).
-    *   **Возвращаемое значение:** `None`.
-    *   **Назначение:** Инициализирует объект `ProductFields`, загружая список полей, устанавливая значения по умолчанию и создавая объект `presta_fields`.
-        *   *Пример*:  При создании экземпляра `ProductFields`,  этот метод подгружает список полей и значения по умолчанию.
+    *   Аргументы: `self` (ссылка на экземпляр класса).
+    *   Возвращает: `None`.
+    *   Назначение: Инициализирует атрибуты класса, вызывая методы загрузки полей и значений по умолчанию.
+    *   Пример:
+        ```python
+        product = ProductFields() # Создает экземпляр класса
+        # Загружает список полей, инициализирует словарь language, создает объект SimpleNamespace для хранения полей, загружает значения по умолчанию из JSON файла.
+        ```
 *   `_load_product_fields_list(self) -> List[str]`:
-    *   **Аргументы:** `self` (экземпляр класса).
-    *   **Возвращаемое значение:** `List[str]` - список названий полей продукта.
-    *   **Назначение:** Загружает список полей продукта из текстового файла.
-        *   *Пример*: возвращает `['id_product', 'name', 'description']` из файла `fields_list.txt`.
+    *   Аргументы: `self` (ссылка на экземпляр класса).
+    *   Возвращает: Список строк (имена полей).
+    *   Назначение: Читает файл `fields_list.txt` и возвращает список полей продукта.
+    *   Пример:
+        ```python
+        fields = self._load_product_fields_list() # Возвращает список ['id_product', 'name', 'description', ...]
+        ```
 *   `_payload(self) -> bool`:
-    *   **Аргументы:** `self` (экземпляр класса).
-    *   **Возвращаемое значение:** `bool` - `True`, если загрузка прошла успешно, `False` - в противном случае.
-    *   **Назначение:** Загружает значения по умолчанию для полей продукта из JSON-файла.
-        *   *Пример*: Устанавливает `self.id_product` в `1` и `self.price` в `10.0` из файла `product_fields_default_values.json`.
-*   `id_product` (getter):
-    *   **Аргументы:** `self` (экземпляр класса).
-    *   **Возвращаемое значение:** `Optional[int]` - значение поля `id_product` или `None`.
-    *   **Назначение:** Возвращает значение поля `id_product` из `presta_fields`.
-        *   *Пример*: возвращает `123`, если `self.presta_fields.id_product` равно `123`.
-*   `id_product` (setter):
-    *   **Аргументы:** `self` (экземпляр класса), `value` - новое значение (по умолчанию `None`).
-    *   **Возвращаемое значение:** `None`.
-    *   **Назначение:** Устанавливает значение поля `id_product`.
-        *   *Пример*: `product.id_product = 123` установит `self.presta_fields.id_product` в `123`.
-*   `name` (getter):
-    *  **Аргументы:** `self` (экземпляр класса).
-    *  **Возвращаемое значение:** Значение поля `name` или пустая строка `''`.
-    *  **Назначение**: Возвращает значение поля `name` из `presta_fields`.
-         *  *Пример*:  если `self.presta_fields.name` имеет значение  `{'language': [{'attrs': {'id': 1}, 'value': 'Product Name'}]}`, то вернет его.
-* `name` (setter):
-     *  **Аргументы:** `self` (экземпляр класса), `value` (новое значение),  `lang` (код языка по умолчанию 'en').
-     *  **Возвращаемое значение:** `bool` - `True` в случае успеха, `None` - если не удалось установить.
-     *  **Назначение**: Устанавливает значение поля `name` для определенного языка.
-         *  *Пример*: `product.name = "Product Name", lang='en'` установит значение поля `name` как словарь с информацией о языке.
-* `associations` (getter):
-    *  **Аргументы:** `self` (экземпляр класса).
-    *  **Возвращаемое значение:** `Optional[Dict]` - значение поля `associations` или `None`.
-    *  **Назначение**: Возвращает значение поля `associations` из `presta_fields`.
-        *  *Пример*: если `self.presta_fields.associations` имеет значение  `{'categories': [{'id': 2}, {'id': 3}]}`, то вернет его.
-*   `associations` (setter):
-    *   **Аргументы:** `self` (экземпляр класса), `value` - новое значение для поля.
-    *   **Возвращаемое значение:** `None`.
-    *   **Назначение:** Устанавливает значение поля `associations` в объекте `presta_fields`.
-        *   *Пример*: `product.associations = {'categories': [{'id': 2}, {'id': 3}]}` установит  `self.presta_fields.associations` в `{'categories': [{'id': 2}, {'id': 3}]}`
+    *   Аргументы: `self` (ссылка на экземпляр класса).
+    *   Возвращает: `True` при успешной загрузке значений по умолчанию, `False` при неудаче.
+    *   Назначение: Загружает значения по умолчанию для полей продукта из JSON файла.
+    *   Пример:
+        ```python
+        success = self._payload() # Возвращает True, если загрузка прошла успешно, иначе False
+        ```
+*   Геттеры (`@property`):
+    *   Аргументы: `self` (ссылка на экземпляр класса).
+    *   Возвращает: Значение соответствующего поля продукта.
+    *   Назначение: Предоставляет доступ на чтение к значениям полей.
+    *   Пример:
+        ```python
+        product_id = product.id_product # Возвращает значение поля id_product из объекта presta_fields
+        ```
+*   Сеттеры (`@<field>.setter`):
+    *   Аргументы: `self` (ссылка на экземпляр класса), `value` (новое значение поля), `lang` (для многоязычных полей).
+    *   Возвращает: `None` (для одноязычных полей) или `True` (для многоязычных полей).
+    *   Назначение: Устанавливает значения полей продукта, обрабатывая возможные исключения.
+    *   Пример:
+        ```python
+        product.id_product = 123 # Устанавливает значение поля id_product равным 123
+        product.name = "Product Name", lang='en' # Устанавливает значение поля name для языка 'en'
+        ```
 
 **Переменные:**
 
-*   `self.product_fields_list`: Список строк, представляющих названия полей продукта.
-*   `self.language`: Словарь, сопоставляющий языковые коды с их числовыми идентификаторами (например, `{'en': 1, 'he': 2, 'ru': 3}`).
-*   `self.presta_fields`: Объект `SimpleNamespace`, используемый для хранения значений полей продукта.
-*   `self.assist_fields_dict`: Словарь для хранения дополнительных полей, таких как URL-адреса изображений.
-*   `value`: Параметр, который используется для установки значения поля через сеттеры.
-*   `data`: Временная переменная, которая хранит данные, загруженные из JSON-файла в методе `_payload`.
-*   `name`: Параметр, который используется для итерации по именам ключей в JSON-данных при загрузке значений по умолчанию.
-*  `lang`: Параметр, который используется для определения языка, для которого устанавливается значение многоязычного поля.
+*   `product_fields_list`: `List[str]` - список имен полей продукта.
+*   `language`: `Dict[str, int]` - словарь для соответствия языка и его идентификатора в PrestaShop.
+*   `presta_fields`: `SimpleNamespace` - объект для хранения полей продукта.
+*   `assist_fields_dict`: `Dict` - словарь для хранения дополнительных полей продукта.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Обработка ошибок:**  Обработка ошибок в сеттерах не позволяет продолжить выполнение программы, нужно доработать механизм обработки ошибок, а именно позволять продолжать работу, но при этом логировать ошибку и возвращать ошибку.
-*   **Типизация:** Можно добавить более конкретную типизацию для `self.presta_fields` ,чтобы обеспечить большую безопасность типов.
-*  **Валидация данных**: Можно добавить валидацию для входящих данных в сеттерах, чтобы не позволять вводить некорректные данные.
-*  **Рефакторинг**: Можно добавить более гибкий способ  работы с многоязычными полями, вынеся логику формирования словаря  в отдельную функцию.
-*   **Модульность:** Класс `ProductFields` может стать более модульным, если выделить логику загрузки и обработки полей в отдельные классы.
+*   **Отсутствие валидации типов данных**: В сеттерах не проводится явная валидация типов данных, что может привести к ошибкам во время работы с API.
+*   **Обработка ошибок**: Хотя предусмотрен блок `try...except` для `ProductFieldException`, было бы полезно конкретизировать обработку исключений, включая проверку типов данных и логику обработки различных ошибок.
+*   **Использование `SimpleNamespace`**: Хотя `SimpleNamespace` удобен для быстрого доступа к атрибутам, он может затруднить динамическое добавление полей. Рассмотреть использование `dict` с методами `__getattr__` и `__setattr__` может повысить гибкость.
+*   **Отсутствие описания `ProductFieldException`**: Необходимо добавить информацию об этом пользовательском исключении, включая его назначение и как оно генерируется.
+*   **Жестко закодированные пути**: Использование `gs.path.src` более гибкое, чем жестко закодированные пути, но можно расширить этот механизм, сделав пути более настраиваемыми через файл конфигурации.
+*   **Управление многоязычными данными**: Текущая реализация перезаписывает предыдущие данные при повторном вызове сеттера для многоязычного поля. Было бы полезно реализовать логику добавления новых языков или обновления существующих.
 
 **Взаимосвязь с другими частями проекта:**
 
-*   **`src.utils.files`**:  Класс `ProductFields` зависит от утилит `read_text_file` и `j_loads` для загрузки данных из файлов, что указывает на связь с модулем управления файлами.
-*   **`src.utils.logger`**:  Класс `ProductFields` использует  `logger` для логирования ошибок,  показывает связь с модулем логирования.
-*   **`src.exceptions`**: Класс `ProductFields` использует `ProductFieldException` для обработки ошибок, связанных с полями продукта, указывая на связь с модулем исключений.
-*  **`src.settings`**: Класс `ProductFields` использует настройки из `src.settings` для получения пути к файлам, что указывает на связь с модулем настроек.
+*   Класс `ProductFields` зависит от модулей `src.utils.file_utils` и `src.utils.json_utils` для чтения файлов.
+*   Класс `ProductFields` использует `src.logger` для логирования.
+*   Класс `ProductFields` использует `src` для доступа к глобальным настройкам через объект `gs`.
+*   Класс `ProductFields` может использоваться модулями, которые взаимодействуют с API PrestaShop для создания и обновления товаров.
 
-Этот анализ обеспечивает полное понимание класса `ProductFields`, его функциональности и взаимосвязей с другими частями проекта.
+В целом, класс `ProductFields` представляет собой хорошо структурированный инструмент для управления данными продукта, но есть несколько областей, которые можно улучшить, в частности, это явная валидация данных и обработка ошибок, а также более гибкое управление многоязычными данными.

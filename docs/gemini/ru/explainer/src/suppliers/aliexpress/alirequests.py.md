@@ -1,214 +1,254 @@
 ## <алгоритм>
 
-1. **Инициализация `AliRequests`**:
-   - При создании экземпляра `AliRequests` вызывается метод `__init__`.
-   - Создается пустой `RequestsCookieJar` для хранения куки.
-   - Инициализируются `session_id` как `None` и `headers` с `User-Agent`.
-   - Создается сессия `requests.Session()`.
-   - Вызывается метод `_load_webdriver_cookies_file`, чтобы загрузить куки из файла.
+**1. `__init__` (Инициализация класса):**
+   - Создает пустой `RequestsCookieJar` для хранения куки.
+   - Инициализирует `session_id` как `None`.
+   - Устанавливает случайный `User-Agent` в заголовках.
+   - Создает объект `requests.Session` для управления сессией.
+   - Вызывает метод `_load_webdriver_cookies_file` для загрузки куки из файла.
+    ```python
+    # Пример:
+    # class AliRequests(webdriver_for_cookies='chrome')
+    # self.cookies_jar = RequestsCookieJar()
+    # self.session_id = None
+    # self.headers = {'User-Agent': 'Mozilla/5.0 ...'}
+    # self.session = requests.Session()
+    # self._load_webdriver_cookies_file(webdriver_for_cookies='chrome')
+    ```
 
-   **Пример**:
+**2. `_load_webdriver_cookies_file` (Загрузка куки из файла):**
+   - Формирует путь к файлу куки на основе `gs.dir_cookies`, `'aliexpress.com'`, имени вебдрайвера и имени файла `'cookie'`.
+     ```python
+    # Пример:
+    # gs.dir_cookies = /path/to/cookies
+    # webdriver_for_cookies = 'chrome'
+    # cookie_file_path = /path/to/cookies/aliexpress.com/chrome/cookie
+     ```
+   - Открывает файл куки в бинарном режиме чтения (`'rb'`).
+   - Использует `pickle.load` для десериализации списка куки.
+   - Итерируется по списку куки и устанавливает каждую куку в `self.cookies_jar`.
+       - Извлекает `name`, `value`, `domain`, `path`, `secure`, `HttpOnly`, `SameSite`, `expires`
+       -  Если `domain`, `path`, `secure`, `expires` не существует - используется значение по умолчанию
+         ```python
+        # Пример:
+        #   cookie = {'name': 'cookie_name', 'value': 'cookie_value', 'domain': '.aliexpress.com', 'path': '/', 'secure': True, 'HttpOnly': True, 'SameSite': 'None', 'expirationDate': 1678886400}
+        #   self.cookies_jar.set(cookie['name'], cookie['value'], domain=cookie.get('domain', ''), path=cookie.get('path', '/'), secure=bool(cookie.get('secure', False)), rest={'HttpOnly': cookie.get('HttpOnly', 'false'), 'SameSite': cookie.get('SameSite', 'unspecified')}, expires=cookie.get('expirationDate'))
+         ```
+   - После успешной загрузки, обновляет сессионные куки вызовом `_refresh_session_cookies()`.
+   - Логирует успех или неудачу в зависимости от результата.
+   - Возвращает `True` при успехе, `False` при ошибке.
+
+**3. `_refresh_session_cookies` (Обновление сессионных куки):**
+   - Отправляет GET запрос на `https://portals.aliexpress.com` с заголовками и куки из `self.cookies_jar`.
+      ```python
+      # Пример:
+      # url = 'https://portals.aliexpress.com'
+      # resp = self.session.get(url, headers=self.headers, cookies=self.cookies_jar)
+      ```
+   - Если `self.cookies_jar` пустой, то запрос отправляется без кук.
+   - Вызывает `_handle_session_id` для обработки `JSESSIONID` из кук ответа.
+   - Логирует ошибки в случае неудачи запроса.
+
+**4. `_handle_session_id` (Обработка `JSESSIONID`):**
+   - Итерируется по кукам ответа.
+   - Ищет куку с именем `'JSESSIONID'`.
+   - Если `JSESSIONID` найден и его значение отличается от `self.session_id`, то:
+     - Обновляет `self.session_id` новым значением.
+     - Устанавливает куку в `self.cookies_jar`.
+       - Извлекает `name`, `value`, `domain`, `path`, `secure`, `HttpOnly`, `SameSite`, `expires`
+         ```python
+        # Пример:
+        #   cookie = {'name': 'JSESSIONID', 'value': 'new_session_id', 'domain': '.aliexpress.com', 'path': '/', 'secure': True, 'HttpOnly': True, 'SameSite': 'None', 'expires': 1678886400}
+        #   self.cookies_jar.set(cookie.name, cookie.value, domain=cookie.domain, path=cookie.path, secure=cookie.secure, rest={'HttpOnly': cookie._rest.get('HttpOnly', 'false'), 'SameSite': cookie._rest.get('SameSite', 'unspecified')}, expires=cookie.expires)
+        ```
+     - Выходит из цикла.
+   - Если `JSESSIONID` не найден, то логирует предупреждение.
+
+**5. `make_get_request` (Выполнение GET запроса):**
+   - Принимает `url`, опциональный `cookies` и `headers`.
+   - Объединяет переданные заголовки с `self.headers`.
+   - Обновляет `session.cookies` из `self.cookies_jar`.
+   - Отправляет GET запрос с объединенными заголовками.
+   - Вызывает `resp.raise_for_status()` для проверки статуса ответа.
+   - Если запрос успешен, вызывает `_handle_session_id` для обработки `JSESSIONID`.
+   - Возвращает объект `requests.Response` при успехе, `False` при ошибке.
    ```python
-   ali_requests = AliRequests(webdriver_for_cookies='chrome')
-   ```
+    # Пример:
+    # url = 'https://example.com/api/data'
+    # headers = {'X-Custom-Header': 'value'}
+    # cookies = [{'name': 'custom_cookie', 'value': 'custom_value'}]
+    # self.session.cookies.update(self.cookies_jar)
+    # resp = self.session.get(url, headers=headers)
+    # self._handle_session_id(resp.cookies)
+    # return resp
+    ```
 
-2. **Загрузка куки из файла `_load_webdriver_cookies_file`**:
-   - Формируется путь к файлу с куками.
-   - Пытается открыть файл и загрузить куки (список словарей) с помощью `pickle`.
-   - Для каждой куки в списке:
-      - Добавляет куки в `self.cookies_jar` используя `set()`.
-   - Вызывает метод `_refresh_session_cookies` для обновления куки в сессии.
-   - В случае успеха возвращает `True`, иначе `False` (с логированием ошибок).
-
-   **Пример**:
+**6. `short_affiliate_link` (Получение короткой аффилиатной ссылки):**
+   - Формирует URL для запроса короткой аффилиатной ссылки на основе `link_url` и `track_id`.
+   - Вызывает `make_get_request` с сформированным URL.
+   - Возвращает результат вызова `make_get_request`.
    ```python
-   # Файл cookie существует и содержит данные
-   # cookies_list = [{'name': 'cookie1', 'value': 'value1', ...}, ...]
-   self._load_webdriver_cookies_file('chrome') # Загрузит куки из файла
-   ```
-
-3. **Обновление куки сессии `_refresh_session_cookies`**:
-   - Выполняет GET-запрос к `https://portals.aliexpress.com` для обновления куки.
-   - Если `self.cookies_jar` не пустой, то запрос выполняется с куками, иначе без них.
-   - Вызывает метод `_handle_session_id` для обработки и сохранения `JSESSIONID`.
-
-   **Пример**:
-   ```python
-    # self.cookies_jar имеет какие-то куки
-    resp = self.session.get(url, headers=self.headers, cookies=self.cookies_jar)
-    # response.cookies содержит данные о куки с JSESSIONID
-   self._refresh_session_cookies() # Обновит куки в сессии и обработает JSESSIONID
-   ```
-
-4. **Обработка `JSESSIONID` `_handle_session_id`**:
-   - Проходит по всем куки ответа.
-   - Если кука имеет имя `JSESSIONID`:
-     - Проверяет, изменился ли `JSESSIONID`. Если не изменился, то выход.
-     - Обновляет `self.session_id` и добавляет куку в `self.cookies_jar`.
-   - Логирует предупреждение, если `JSESSIONID` не найден.
-
-   **Пример**:
-   ```python
-   # response_cookies это  requests.cookies.RequestsCookieJar
-   response_cookies = [{'name': 'JSESSIONID', 'value': 'new_session_id', ...}, ...]
-   self._handle_session_id(response_cookies)
-   # self.session_id станет равным new_session_id
-   ```
-
-5. **Выполнение GET-запроса `make_get_request`**:
-   - Принимает URL, необязательный список куки и заголовки.
-   - Обновляет куки сессии.
-   - Выполняет GET-запрос к указанному URL.
-   - Вызывает `raise_for_status()` для проверки статуса ответа.
-   - Вызывает метод `_handle_session_id` для обработки куки ответа.
-   - Возвращает объект `requests.Response` в случае успеха, в противном случае `False`.
-
-   **Пример**:
-   ```python
-   response = self.make_get_request(url='https://example.com', headers={'X-Custom': 'value'})
-   # Вернет  requests.Response  или False
-   ```
-
-6. **Получение короткой партнерской ссылки `short_affiliate_link`**:
-   - Формирует URL для получения короткой партнерской ссылки, добавляя `track_id` и `link_url`.
-   - Вызывает `make_get_request` с сформированным URL и возвращает результат.
-
-   **Пример**:
-   ```python
-   short_link_response = self.short_affiliate_link(link_url='https://example.com/product')
-   # Вернет requests.Response или False
-   ```
+   # Пример:
+   # link_url = 'https://example.com/product/123'
+   # base_url = 'https://portals.aliexpress.com/affiportals/web/link_generator.htm'
+   # track_id = 'default'
+   # url = f"{base_url}?trackId={track_id}&targetUrl={link_url}"
+   # return self.make_get_request(url)
+    ```
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[AliRequests.__init__] --> B(_load_webdriver_cookies_file)
-    B --> C[pickle.load];
-    C --> D[Iterate cookies]
-    D --> E[self.cookies_jar.set]
-    E --> F[_refresh_session_cookies];
-    F --> G[requests.Session.get];
-    G --> H[_handle_session_id];
-    H --> I[Iterate response cookies];
-    I --> J[Check if cookie.name == 'JSESSIONID'];
-     J -- Yes --> K[Update session_id and cookie_jar]
-    J -- No --> I
-    K --> L[AliRequests.make_get_request];
-    L --> M[requests.Session.get];
-    M --> N[_handle_session_id];
-    N --> O[requests.Response or False];
-     O --> P[AliRequests.short_affiliate_link];
-     P --> Q[AliRequests.make_get_request];
-    Q --> R[requests.Response or False];
-
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style R fill:#ccf,stroke:#333,stroke-width:2px
+flowchart TD
+    Start[Start] --> Init[<code>__init__</code><br>Initialize AliRequests]
+    Init --> LoadCookies[<code>_load_webdriver_cookies_file</code><br>Load Cookies from File]
+    LoadCookies -- Success --> RefreshSessionCookies[<code>_refresh_session_cookies</code><br>Refresh Session Cookies]
+    LoadCookies -- Failure --> End[End]
+    RefreshSessionCookies --> HandleSessionId1[<code>_handle_session_id</code><br>Handle JSESSIONID]
+    HandleSessionId1 --> MakeGetRequest[<code>make_get_request</code><br>Make GET Request]
+    MakeGetRequest --> HandleSessionId2[<code>_handle_session_id</code><br>Handle JSESSIONID]
+    HandleSessionId2 --> ShortAffiliateLink[<code>short_affiliate_link</code><br>Get Short Affiliate Link]
+    ShortAffiliateLink --> MakeGetRequest
+    MakeGetRequest -- Success --> End
+    MakeGetRequest -- Failure --> End
+    End[End]
 ```
 
-**Описание зависимостей `mermaid`:**
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
 
--   `AliRequests.__init__`: Инициализирует объект `AliRequests`, устанавливает начальные значения и загружает куки.
--   `_load_webdriver_cookies_file`: Загружает куки из файла, используя `pickle`.
--   `pickle.load`: Десериализует данные из файла.
--   `Iterate cookies`: Перебирает загруженные куки.
--   `self.cookies_jar.set`: Устанавливает куки в `RequestsCookieJar`.
--   `_refresh_session_cookies`: Обновляет куки сессии.
--    `requests.Session.get`: Отправляет GET запрос с куки.
--   `_handle_session_id`: Обрабатывает `JSESSIONID` из куки ответа.
--   `Iterate response cookies`: Перебирает куки ответа.
--   `Check if cookie.name == 'JSESSIONID'`: Проверяет, является ли кука `JSESSIONID`.
--   `Update session_id and cookie_jar`: Обновляет `session_id` и добавляет куку в `self.cookies_jar`.
--   `AliRequests.make_get_request`: Выполняет GET запрос с обработкой куки.
--   `requests.Session.get`: Отправляет GET запрос.
--  `requests.Response or False`:  Возвращает ответ или False.
-- `AliRequests.short_affiliate_link`: Формирует URL для сокращения партнерской ссылки.
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
+**Анализ зависимостей `mermaid`:**
+
+-   **`Start`**:  Начало процесса.
+-   **`Init`**:  Инициализация класса `AliRequests`. Зависимости:
+    -  `RequestsCookieJar` из `requests.cookies` для управления куками.
+    -  `UserAgent` из `fake_useragent` для генерации случайного `User-Agent`.
+    - `requests.Session` из `requests` для управления сессией.
+    - Вызов `_load_webdriver_cookies_file` для загрузки кук.
+-   **`LoadCookies`**: Загрузка кук из файла. Зависимости:
+    -   `pickle` для сериализации/десериализации кук.
+    -   `Path` из `pathlib` для работы с путями к файлам.
+    - `gs` из `src` для доступа к глобальным настройкам.
+-   **`RefreshSessionCookies`**: Обновление сессионных кук. Зависимости:
+    -   `requests.Session` из `requests` для отправки HTTP запросов.
+    -   `RequestsCookieJar` из `requests.cookies` для работы с куками.
+-   **`HandleSessionId1`**: Обработка `JSESSIONID` после загрузки кук. Зависимости:
+    -   `RequestsCookieJar` из `requests.cookies` для работы с куками.
+    -   Работает с куками из `resp.cookies`
+-   **`MakeGetRequest`**: Отправка GET-запроса. Зависимости:
+    -   `requests.Session` из `requests` для отправки HTTP запросов.
+    -   `requests.RequestException` из `requests` для отлова ошибок запроса.
+    - Работает с куками из `self.cookies_jar`.
+-   **`HandleSessionId2`**: Обработка `JSESSIONID` после выполнения запроса. Зависимости:
+    -   `RequestsCookieJar` из `requests.cookies` для работы с куками.
+-   **`ShortAffiliateLink`**: Получение сокращенной аффилиатной ссылки. Зависимости:
+    -   `make_get_request` для отправки HTTP запроса.
+-   **`End`**: Конец процесса.
 
 ## <объяснение>
 
 **Импорты:**
 
--   `pickle`: Используется для сериализации и десериализации объектов Python (в данном случае, для загрузки куки из файла). Это стандартный модуль Python.
--   `requests`: Библиотека для отправки HTTP-запросов, используется для выполнения GET-запросов к AliExpress. Сторонний модуль.
--   `pathlib.Path`: Модуль для работы с путями к файлам и каталогам, используется для построения пути к файлу с куками. Стандартный модуль.
--   `typing.List`:  Используется для аннотации типов переменных (для списка куки). Стандартный модуль.
--   `requests.cookies.RequestsCookieJar`: Используется для управления куками, которые будут отправляться с запросами. Сторонний модуль.
--   `urllib.parse.urlparse`: Модуль для разбора URL (не используется напрямую в этом коде, но импортируется). Стандартный модуль.
--   `fake_useragent.UserAgent`: Модуль для генерации случайных User-Agent, для эмуляции браузера. Сторонний модуль.
--   `src.gs`: Предположительно, пользовательский модуль для хранения общих глобальных настроек проекта, используется для получения каталога с куками.
--   `src.utils.jjson.j_dumps`: Пользовательский модуль для сериализации данных в JSON-формат (не используется напрямую в этом коде, но импортируется).
--   `src.logger.logger`: Пользовательский модуль для логирования событий, используется для вывода информации об ошибках и успешных операциях.
+-   `pickle`: Используется для сохранения и загрузки объектов Python (в данном случае, списка куки) в файл. Это позволяет сохранять куки между сессиями.
+-   `requests`: Основная библиотека для выполнения HTTP-запросов. Используется для отправки GET-запросов на сервер AliExpress.
+-   `pathlib.Path`: Обеспечивает кроссплатформенную работу с путями к файлам и директориям. Позволяет гибко управлять файлами куки.
+-   `typing.List`: Используется для аннотации типов. Указывает, что переменная может быть списком.
+-   `requests.cookies.RequestsCookieJar`:  Класс для хранения куки в формате, используемом библиотекой `requests`. Позволяет эффективно управлять куками.
+-   `urllib.parse.urlparse`: Используется для разбора URL. (Не используется напрямую в коде, но возможно используется в `_handle_session_id` через cookie.domain и cookie.path)
+-   `fake_useragent.UserAgent`: Используется для генерации случайных `User-Agent` для избежания блокировки со стороны сервера.
+-   `src.gs`:  Импорт глобальных настроек проекта из модуля `src`. Используется для доступа к директории хранения кук.
+-   `src.utils.jjson.j_dumps`: Функция из модуля `src.utils.jjson` для сериализации JSON. (Не используется в данном коде)
+-   `src.logger.logger`:  Импорт логгера из модуля `src.logger` для логирования сообщений об ошибках и успехах.
 
 **Класс `AliRequests`:**
 
--   **Роль:** Класс предназначен для обработки HTTP-запросов к AliExpress с учетом куки и `JSESSIONID`.
--   **Атрибуты:**
-    -   `cookies_jar`: Объект `RequestsCookieJar`, который хранит куки.
-    -   `session_id`: Строка, представляющая идентификатор сессии `JSESSIONID`.
-    -   `headers`: Словарь с заголовками по умолчанию, включая `User-Agent`.
-    -   `session`: Объект `requests.Session`, используемый для хранения сессии.
+-   **Роль**: Инкапсулирует логику взаимодействия с AliExpress API через HTTP-запросы. Обеспечивает управление куками и сессиями для авторизации.
+-   **Атрибуты**:
+    -   `cookies_jar`: Объект `RequestsCookieJar` для хранения кук.
+    -   `session_id`: Идентификатор сессии, получаемый из кук `JSESSIONID`.
+    -   `headers`: Словарь с HTTP-заголовками, включая случайный `User-Agent`.
+    -   `session`: Объект `requests.Session` для управления сессией.
 -   **Методы:**
-    -   `__init__(self, webdriver_for_cookies='chrome')`: Конструктор класса, инициализирует атрибуты и загружает куки.
-    -   `_load_webdriver_cookies_file(self, webdriver_for_cookies='chrome')`: Загружает куки из файла.
-    -   `_refresh_session_cookies(self)`: Обновляет куки сессии, выполняя GET-запрос.
-    -   `_handle_session_id(self, response_cookies)`: Обрабатывает `JSESSIONID` из куки ответа.
-    -   `make_get_request(self, url, cookies=None, headers=None)`: Выполняет GET-запрос с куки и обработкой `JSESSIONID`.
-    -   `short_affiliate_link(self, link_url)`: Получает короткую партнерскую ссылку, вызывая `make_get_request`.
+    -   `__init__(self, webdriver_for_cookies: str = 'chrome')`: Конструктор класса. Инициализирует атрибуты и загружает куки.
+    -   `_load_webdriver_cookies_file(self, webdriver_for_cookies: str = 'chrome')`: Загружает куки из файла, используя `pickle`. Возвращает `True` при успехе, `False` при ошибке.
+    -   `_refresh_session_cookies(self)`: Обновляет куки сессии, делая запрос на `https://portals.aliexpress.com`.
+    -   `_handle_session_id(self, response_cookies)`: Обрабатывает `JSESSIONID` из кук ответа. Сохраняет или обновляет идентификатор сессии.
+    -   `make_get_request(self, url: str, cookies: List[dict] = None, headers: dict = None)`: Выполняет GET запрос с куками и заголовками. Возвращает объект `requests.Response` или `False` в случае ошибки.
+    -   `short_affiliate_link(self, link_url: str)`:  Генерирует сокращенную аффилиатную ссылку, вызывая `make_get_request`. Возвращает объект `requests.Response` или `False` в случае ошибки.
 
 **Функции:**
 
--   `_load_webdriver_cookies_file(self, webdriver_for_cookies: str = 'chrome') -> bool`:
-    -   **Аргументы**: `webdriver_for_cookies` (строка, имя вебдрайвера).
-    -   **Возвращаемое значение**: `True` если куки успешно загружены, `False` в противном случае.
-    -   **Назначение**: Загружает куки из файла, сформированного вебдрайвером.
-    -   **Пример**: `self._load_webdriver_cookies_file('chrome')`
--   `_refresh_session_cookies(self)`:
-    -   **Аргументы**: Нет.
-    -   **Возвращаемое значение**: Нет.
-    -   **Назначение**: Обновляет куки сессии, выполняя GET-запрос к порталу AliExpress.
-    -    **Пример:** `self._refresh_session_cookies()`
--   `_handle_session_id(self, response_cookies)`:
-    -   **Аргументы**: `response_cookies` (объект `RequestsCookieJar`).
-    -   **Возвращаемое значение**: Нет.
-    -   **Назначение**: Проверяет и обновляет `JSESSIONID` в сессии.
-    -   **Пример**: `self._handle_session_id(resp.cookies)`
--   `make_get_request(self, url: str, cookies: List[dict] = None, headers: dict = None)`:
+-   `__init__`:
     -   **Аргументы**:
-        -   `url` (строка, URL для GET-запроса).
-        -   `cookies` (список словарей, куки для запроса, необязательный).
-        -   `headers` (словарь, заголовки для запроса, необязательный).
-    -   **Возвращаемое значение**: `requests.Response` если запрос успешен, `False` в противном случае.
-    -   **Назначение**: Выполняет GET-запрос к указанному URL с обработкой куки и ошибок.
-    -   **Пример**: `self.make_get_request('https://example.com', headers={'X-Custom': 'value'})`
--   `short_affiliate_link(self, link_url: str)`:
-    -   **Аргументы**: `link_url` (строка, URL для сокращения).
-    -   **Возвращаемое значение**: `requests.Response` если запрос успешен, `False` в противном случае.
-    -   **Назначение**: Получает короткую партнерскую ссылку, вызывая `make_get_request`.
-    -   **Пример**: `self.short_affiliate_link('https://example.com/product')`
+        -   `webdriver_for_cookies` (str, по умолчанию `'chrome'`): Имя вебдрайвера, для которого загружаются куки.
+    -   **Возвращаемое значение**: Отсутствует (метод инициализации).
+    -   **Назначение**: Инициализирует объект класса `AliRequests`.
+-   `_load_webdriver_cookies_file`:
+    -   **Аргументы**:
+        -   `webdriver_for_cookies` (str, по умолчанию `'chrome'`): Имя вебдрайвера, из которого загружаются куки.
+    -   **Возвращаемое значение**: `bool`: `True` при успехе, `False` при ошибке.
+    -   **Назначение**: Загружает куки из файла, используя `pickle` и устанавливает их в `self.cookies_jar`.
+-  `_refresh_session_cookies`:
+    -  **Аргументы**: Отсутствуют
+    -  **Возвращаемое значение**: Отсутствует
+    -  **Назначение**:  Обновляет куки сессии, делая запрос на `https://portals.aliexpress.com`.
+-   `_handle_session_id`:
+    -   **Аргументы**:
+        -   `response_cookies`:  Куки, полученные в ответе от сервера.
+    -   **Возвращаемое значение**: Отсутствует.
+    -   **Назначение**:  Обрабатывает куку `JSESSIONID`, сохраняя или обновляя идентификатор сессии.
+-   `make_get_request`:
+    -   **Аргументы**:
+        -   `url` (str): URL для запроса.
+        -   `cookies` (List[dict], опционально): Список кук для использования.
+        -   `headers` (dict, опционально): Дополнительные заголовки для запроса.
+    -   **Возвращаемое значение**: `requests.Response` при успехе или `False` при ошибке.
+    -   **Назначение**: Отправляет GET-запрос с заданными параметрами.
+-   `short_affiliate_link`:
+    -   **Аргументы**:
+        -   `link_url` (str): URL для сокращения.
+    -   **Возвращаемое значение**: `requests.Response` при успехе или `False` при ошибке.
+    -   **Назначение**: Получает короткую аффилиатную ссылку.
 
 **Переменные:**
 
--   `MODE`: Строка, указывающая режим работы (в данном случае, 'dev').
--   `cookie_file_path`: Объект `pathlib.Path`, хранит путь к файлу с куками.
--   `cookies_list`: Список словарей, содержащих данные куки, загруженные из файла.
--   `url`: Строка, представляющая URL для запроса.
--    `base_url`:  Строка, базовая часть URL для сокращения партнерских ссылок.
--    `track_id`: Строка, идентификатор отслеживания для партнерских ссылок.
--   `resp`: Объект `requests.Response`, хранит ответ на запрос.
--    `session_id_found`: Флаг, указывающий, был ли найден `JSESSIONID`.
+-   `self.cookies_jar`: Объект `RequestsCookieJar` для хранения кук.
+-   `self.session_id`: Идентификатор сессии (строка).
+-   `self.headers`: Словарь с HTTP-заголовками (словарь).
+-    `self.session`: Объект `requests.Session` для управления сессией.
+-    `cookie_file_path`: Путь к файлу с куками (Path).
+- `cookie`: Словарь кук (словарь).
+- `url`: URL для запроса (строка)
+- `resp`: Ответ от сервера (requests.Response)
+- `base_url`: Базовый URL для создания сокращенной аффилиатной ссылки (строка)
+- `track_id`: Трек ID для аффилиатной ссылки (строка)
+- `link_url`: URL для сокращения (строка)
 
 **Потенциальные ошибки и области для улучшения:**
 
--   Обработка исключений в `_load_webdriver_cookies_file` и `make_get_request` может быть более детализированной.
--   Можно добавить поддержку других HTTP-методов (POST, PUT и т.д.) в `make_get_request`.
--   Можно вынести базовый URL для запросов в константу.
--   Можно добавить кэширование результатов запросов для сокращения количества обращений к серверу.
--   Логирование можно улучшить, добавив уровни логирования.
+-   Обработка ошибок: Код обрабатывает `FileNotFoundError`, `ValueError`, `requests.RequestException` и общие `Exception`, но можно добавить более специфичную обработку ошибок для разных случаев.
+-   Куки: Куки обрабатываются в виде словарей, что может вызвать проблемы если структура словаря кук изменится.
+-   Логирование: Добавить уровень логирования для всех действий, а не только для ошибок и успехов.
+-   Рефакторинг: Можно вынести повторяющийся код для установки кук в отдельную функцию.
+-   Управление сессиями: Можно добавить механизм для управления несколькими сессиями.
 
 **Взаимосвязи с другими частями проекта:**
 
--   Использует `src.gs` для получения пути к файлам с куками, что подразумевает наличие общих глобальных настроек.
--   Использует `src.logger.logger` для логирования событий, что является частью общей системы логирования проекта.
--   Использует `src.utils.jjson.j_dumps`, хотя непосредственно не вызывает метод.
+-   **`src.gs`**: Используется для доступа к глобальным настройкам проекта, в частности к директории хранения кук.
+-   **`src.logger.logger`**: Используется для логирования событий в приложении.
+-   **`src.utils.jjson`**: (Не используется в данном коде) потенциально используется для работы с JSON данными.
 
-Таким образом, данный код представляет собой класс для управления HTTP-запросами к AliExpress с учетом куки и `JSESSIONID`, обеспечивая переиспользование и инкапсулируя логику работы с запросами.
+**Цепочка взаимосвязей:**
+
+1.  Класс `AliRequests` инициализируется и использует глобальные настройки (`src.gs`) для определения местоположения файлов куки.
+2.  Куки загружаются из файла, используя `pickle` и `pathlib.Path`.
+3.  Сессионные куки обновляются, используя `requests.Session` и `RequestsCookieJar`.
+4.  `JSESSIONID` обрабатывается, обеспечивая сохранение сессии.
+5.  Метод `make_get_request` отправляет HTTP запросы на AliExpress с необходимыми заголовками и куками.
+6.  Метод `short_affiliate_link` использует `make_get_request` для получения сокращенной ссылки.
+7.  Все действия логируются через `src.logger.logger`.
+
+Таким образом, данный код обеспечивает логику для взаимодействия с AliExpress API, используя куки и сессии для авторизации и отправки запросов, и является важной частью функциональности проекта.

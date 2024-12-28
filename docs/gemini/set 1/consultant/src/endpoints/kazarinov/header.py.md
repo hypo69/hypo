@@ -51,7 +51,7 @@ from packaging.version import Version
 from pathlib import Path
 from src.logger.logger import logger # Импортируем logger
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 
@@ -177,7 +177,7 @@ from packaging.version import Version
 from pathlib import Path
 from src.logger.logger import logger # Импортируем logger
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определяет корневую директорию проекта.
 

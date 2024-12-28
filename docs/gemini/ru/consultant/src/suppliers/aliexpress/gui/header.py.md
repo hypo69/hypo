@@ -49,7 +49,7 @@ from packaging.version import Version
 from src import gs
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """
     Определение корневого каталога проекта.
 

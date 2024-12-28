@@ -23,7 +23,7 @@ from src.utils.jjson import j_loads
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """Определяет корневую директорию проекта.
 
     Ищет корневую директорию проекта, начиная с текущей директории,
@@ -117,7 +117,7 @@ from src.logger import logger
 
 
 
-def set_project_root(marker_files=('__root__')) -> Path:
+def set_project_root(marker_files=('__root__','.git')) -> Path:
     """Определяет корневую директорию проекта.
 
     Ищет корневую директорию проекта, начиная с текущей директории,
