@@ -1,4 +1,4 @@
-
+"""
 FIPFOP:
 =================
 Сложность: 5
@@ -23,35 +23,7 @@ FIPFOP:
 4. Вывести сообщение "ТЫ ИСПОЛЬЗОВАЛ {количество ходов} ХОДОВ"
 5. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeVariables["<p align='left'>Инициализация переменных:
-    <code><b>
-    totalSum = 0
-    numberOfTurns = 0
-    </b></code></p>"]
-    InitializeVariables --> LoopStart{"Начало цикла: пока totalSum < 100"}
-    LoopStart -- Да --> InputNumber["Ввод числа пользователем: <code><b>userNumber</b></code>"]
-    InputNumber --> IncreaseTurns["<code><b>numberOfTurns = numberOfTurns + 1</b></code>"]
-     IncreaseTurns --> AddNumber["<code><b>totalSum = totalSum + userNumber</b></code>"]
-    AddNumber --> CheckSum{"Проверка: <code><b>totalSum >= 100?</b></code>"}
-    CheckSum -- Да --> OutputTurns["Вывод сообщения: <b>YOU USED <code>{numberOfTurns}</code> TURNS</b>"]
-    OutputTurns --> End["Конец"]
-     CheckSum -- Нет --> LoopStart
-    LoopStart -- Нет --> End
-```
 
-**Legenda:**
-    Start - Начало программы.
-    InitializeVariables - Инициализация переменных: totalSum (сумма введенных чисел) устанавливается в 0, а numberOfTurns (количество ходов) устанавливается в 0.
-    LoopStart - Начало цикла, который продолжается, пока totalSum меньше 100.
-    InputNumber - Запрос у пользователя ввода числа и сохранение его в переменной userNumber.
-    IncreaseTurns - Увеличение счетчика количества ходов на 1.
-    AddNumber - Прибавление введенного числа userNumber к общей сумме totalSum.
-    CheckSum - Проверка, больше или равна ли общая сумма totalSum 100.
-    OutputTurns - Вывод сообщения о количестве ходов, использованных пользователем.
-    End - Конец программы.
 """
 __author__ = 'hypo69 (hypo69@davidka.net)'
 
@@ -94,4 +66,3 @@ print(f"ТЫ ИСПОЛЬЗОВАЛ {numberOfTurns} ХОДОВ")
 6.  **Вывод результата:**
     - `print(f"ТЫ ИСПОЛЬЗОВАЛ {numberOfTurns} ХОДОВ")`: Выводит на экран сообщение о том, сколько ходов было сделано, когда сумма чисел достигла 100 или больше.
 """
-```

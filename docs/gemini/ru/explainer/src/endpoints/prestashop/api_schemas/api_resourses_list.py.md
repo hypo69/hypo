@@ -1,91 +1,147 @@
-## Анализ кода `api_resourses_list.py`
+## <алгоритм>
 
-### 1. <алгоритм>
+1.  **Инициализация списка ресурсов:**
+    *   Начало: Программа начинает выполнение, создавая список `resource`.
+    *   Пример: `resource = []` - инициализация пустого списка.
 
-**Описание:**
+2.  **Заполнение списка ресурсами:**
+    *   Элементы: В список `resource` добавляются строковые литералы, представляющие названия ресурсов API PrestaShop.
+    *   Пример: 
+        ```
+        resource.append('products') 
+        resource.append('categories') 
+        ...
+        resource.append('zones')
+        ```
 
-1. **Инициализация переменной `MODE`**: Устанавливается режим работы (например, 'dev' для разработки).
-   *   Пример: ``
-2. **Создание списка `resource`**: Определяется список строк, представляющих доступные ресурсы API PrestaShop.
-   *   Пример: `resource = ['products', 'categories', 'customers', ...]`
+3.  **Завершение:**
+    *   Результат: Список `resource` полностью заполнен именами ресурсов API, которые могут быть запрошены.
+    *   Пример: `resource = ['products', 'categories', ..., 'zones']` - полный список ресурсов.
 
-**Блок-схема:**
+4.  **Использование:**
+    *   Этот список используется для определения допустимых ресурсов API. Например, валидации URL, выбора запросов и т.д.
+    *   Пример: Функция, которая принимает строку с именем ресурса, проверяет, содержится ли она в списке `resource`.
+
+## <mermaid>
 
 ```mermaid
-graph LR
-    A[Начало] --> B{Инициализация };
-    B --> C{Создание списка resource};
-    C --> D[Конец];
+flowchart TD
+    Start --> InitializeResourceList[Инициализация: resource = []]
+    InitializeResourceList --> AddProducts["Добавление 'products'"]
+    AddProducts --> AddCategories["Добавление 'categories'"]
+    AddCategories --> AddAttachments["Добавление 'attachments'"]
+    AddAttachments --> AddAddresses["Добавление 'addresses'"]
+        AddAddresses --> AddCarriers["Добавление 'carriers'"]
+        AddCarriers --> AddCartRules["Добавление 'cart_rules'"]
+        AddCartRules --> AddCarts["Добавление 'carts'"]
+        AddCarts --> AddCountries["Добавление 'countries'"]
+        AddCountries --> AddContentManagementSystem["Добавление 'content_management_system'"]
+        AddContentManagementSystem --> AddCurrencies["Добавление 'currencies'"]
+        AddCurrencies --> AddCustomerMessages["Добавление 'customer_messages'"]
+        AddCustomerMessages --> AddCustomerThreads["Добавление 'customer_threads'"]
+        AddCustomerThreads --> AddCustomers["Добавление 'customers'"]
+        AddCustomers --> AddCustomizations1["Добавление 'customizations'"]
+        AddCustomizations1 --> AddDeliveries["Добавление 'deliveries'"]
+        AddDeliveries --> AddEmployees["Добавление 'employees'"]
+        AddEmployees --> AddGroups["Добавление 'groups'"]
+        AddGroups --> AddGuests["Добавление 'guests'"]
+         AddGuests --> AddImageTypes["Добавление 'image_types'"]
+        AddImageTypes --> AddCustomizations2["Добавление 'customizations'"]
+         AddCustomizations2 --> AddImages["Добавление 'images'"]
+        AddImages --> AddLanguages["Добавление 'languages'"]
+        AddLanguages --> AddManufacturers["Добавление 'manufacturers'"]
+        AddManufacturers --> AddMessages["Добавление 'messages'"]
+        AddMessages --> AddOrderCarriers["Добавление 'order_carriers'"]
+        AddOrderCarriers --> AddOrderCartRules["Добавление 'order_cart_rules'"]
+        AddOrderCartRules --> AddOrderDetails["Добавление 'order_details'"]
+        AddOrderDetails --> AddOrderHistories["Добавление 'order_histories'"]
+        AddOrderHistories --> AddOrderInvoices["Добавление 'order_invoices'"]
+        AddOrderInvoices --> AddOrderPayments["Добавление 'order_payments'"]
+        AddOrderPayments --> AddOrderSlip["Добавление 'order_slip'"]
+        AddOrderSlip --> AddOrderStates["Добавление 'order_states'"]
+        AddOrderStates --> AddOrders["Добавление 'orders'"]
+        AddOrders --> AddPriceRanges["Добавление 'price_ranges'"]
+        AddPriceRanges --> AddProductCustomizationFields["Добавление 'product_customization_fields'"]
+        AddProductCustomizationFields --> AddProductFeatureValues["Добавление 'product_feature_values'"]
+        AddProductFeatureValues --> AddProductFeatures["Добавление 'product_features'"]
+        AddProductFeatures --> AddProductOptionValues["Добавление 'product_option_values'"]
+         AddProductOptionValues --> AddProductOptions["Добавление 'product_options'"]
+        AddProductOptions --> AddProductSuppliers["Добавление 'product_suppliers'"]
+        AddProductSuppliers --> AddProducts2["Добавление 'products'"]
+        AddProducts2 --> AddSearch["Добавление 'search'"]
+        AddSearch --> AddShopGroups["Добавление 'shop_groups'"]
+        AddShopGroups --> AddShopUrls["Добавление 'shop_urls'"]
+        AddShopUrls --> AddShops["Добавление 'shops'"]
+        AddShops --> AddSpecificPriceRules["Добавление 'specific_price_rules'"]
+        AddSpecificPriceRules --> AddSpecificPrices["Добавление 'specific_prices'"]
+        AddSpecificPrices --> AddStates["Добавление 'states'"]
+        AddStates --> AddStockAvailables["Добавление 'stock_availables'"]
+        AddStockAvailables --> AddStockMovementReasons["Добавление 'stock_movement_reasons'"]
+        AddStockMovementReasons --> AddStockMovements["Добавление 'stock_movements'"]
+         AddStockMovements --> AddStocks["Добавление 'stocks'"]
+        AddStocks --> AddStores["Добавление 'stores'"]
+        AddStores --> AddSuppliers["Добавление 'suppliers'"]
+        AddSuppliers --> AddSupplyOrderDetails["Добавление 'supply_order_details'"]
+         AddSupplyOrderDetails --> AddSupplyOrderReceiptHistories["Добавление 'supply_order_receipt_histories'"]
+        AddSupplyOrderReceiptHistories --> AddSupplyOrderStates["Добавление 'supply_order_states'"]
+        AddSupplyOrderStates --> AddSupplyOrders["Добавление 'supply_orders'"]
+        AddSupplyOrders --> AddTags["Добавление 'tags'"]
+         AddTags --> AddTaxRuleGroups["Добавление 'tax_rule_groups'"]
+        AddTaxRuleGroups --> AddTaxRules["Добавление 'tax_rules'"]
+         AddTaxRules --> AddTaxes["Добавление 'taxes'"]
+        AddTaxes --> AddTranslatedConfigurations["Добавление 'translated_configurations'"]
+         AddTranslatedConfigurations --> AddWarehouseProductLocations["Добавление 'warehouse_product_locations'"]
+        AddWarehouseProductLocations --> AddWarehouses["Добавление 'warehouses'"]
+        AddWarehouses --> AddWeightRanges["Добавление 'weight_ranges'"]
+        AddWeightRanges --> AddZones["Добавление 'zones'"]
+     AddZones --> End[Конец: resource]
+
+
 ```
 
-### 2. <mermaid>
+## <объяснение>
 
-```mermaid
-graph LR
-    subgraph api_schemas
-    A[resource: list]
-    B[MODE: str]
-    end
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-```
+**Импорты:**
 
-**Описание зависимостей:**
+*   В данном коде нет импортов. Это связано с тем, что данный файл представляет собой просто объявление списка строковых литералов, и не требует никаких внешних зависимостей.
 
-*   Диаграмма показывает, что файл `api_resourses_list.py` содержит две переменные: `resource`, которая является списком, и `MODE`, которая является строкой. `resource` хранит список всех доступных ресурсов API PrestaShop, а `MODE` определяет текущий режим работы (например, 'dev' для разработки).
-*   Нет внешних зависимостей от других модулей, все переменные определены внутри текущего файла.
+**Классы:**
 
-### 3. <объяснение>
+*   В этом коде нет классов.
 
-#### Импорты:
+**Функции:**
 
-*   В данном коде отсутствуют импорты. Это означает, что код не зависит от других модулей или пакетов, кроме стандартных возможностей Python.
+*   В этом коде нет функций.
 
-#### Переменные:
+**Переменные:**
 
-*   `MODE`:
-    *   Тип: `str` (строка).
-    *   Назначение: Определяет режим работы приложения, в данном случае установлен в `'dev'` (разработка).
-    *   Использование: Может использоваться для условной логики в других частях проекта, например, для вывода отладочной информации или переключения между разными настройками.
-*   `resource`:
-    *   Тип: `list` (список строк).
-    *   Назначение: Хранит список всех доступных ресурсов API PrestaShop.
-    *   Использование: Этот список используется для формирования запросов к API, например, для определения доступных конечных точек.
-    *   Значение: Список содержит строки, каждая из которых является названием API ресурса PrestaShop (например, 'products', 'categories', 'customers' и т.д.)
+*   `resource: list`:
+    *   Тип: `list` (список).
+    *   Назначение: Список строковых литералов, представляющих имена ресурсов API PrestaShop.
+    *   Использование: Используется для хранения и валидации доступных ресурсов API.
 
-#### Классы и функции:
+**Потенциальные ошибки и области для улучшения:**
 
-*   В данном файле нет классов и функций. Файл содержит только определение переменных.
+*   **Дублирование:** В списке дважды встречается `'customizations'` и `'products'`. Это может привести к ошибкам в логике, если на это полагается какой-либо алгоритм. Следует удалить дубликаты.
+*   **Ручное заполнение:** Список заполняется вручную, что затрудняет поддержку и обновление. Идеальным вариантом было бы получать список извне (например, из файла конфигурации или API). Это повысило бы гибкость и надежность кода.
+*   **Отсутствие описания:** Каждому элементу списка не помешает описание (например, в виде словаря или объекта). Это упростит понимание назначения каждого ресурса и сделает код более читаемым.
 
-#### Потенциальные ошибки и области для улучшения:
+**Взаимосвязи с другими частями проекта:**
 
-*   **Отсутствие описания:**  Отсутствует docstring для модуля, можно добавить описание назначения модуля.
-*   **Жестко заданный список:** Список ресурсов задан жестко в коде.  Изменения в API PrestaShop могут потребовать ручной правки этого списка. Было бы лучше загружать список ресурсов из файла конфигурации или динамически, из ответа API PrestaShop.
-*   **Отсутствие обработки ошибок:** В текущем коде отсутствуют механизмы обработки ошибок, если, например, список `resource` не будет определен или будет иметь неверный формат.
-*    **Типы данных**: Типы данных у переменных можно сделать более строгими с помощью type hints.
-*    **Дублирование в `resource`**: Присутсвует дублирование `customizations`.
+*   Этот список `resource` скорее всего используется в других частях проекта, например, в модулях для работы с PrestaShop API. Он может использоваться для валидации запросов, формирования URL, или при выборе необходимых методов API.
+*   Может быть использован в функциях, которые проверяют допустимость запрошенных ресурсов, или которые генерируют URL-адреса API.
+*   Так же, он может быть частью более крупной конфигурации, где определяются допустимые ресурсы для запросов.
 
-#### Взаимосвязи с другими частями проекта:
-
-*   Этот файл, вероятно, используется другими частями проекта (например, модулями для выполнения API-запросов к PrestaShop) для определения списка доступных ресурсов. Этот список может быть импортирован и использован для формирования URL-адресов для API-запросов, например в `src.endpoints.prestashop.api_client.py`
-
-**Пример использования списка `resource` в других частях проекта:**
+**Пример использования:**
 
 ```python
-# Пример использования
-from src.endpoints.prestashop.api_schemas.api_resourses_list import resource
-from src.endpoints.prestashop.api_client import ApiClient # воображаемый класс
-
-api = ApiClient(api_url="https://example.com/api", api_key="YOUR_API_KEY")
-
-for res in resource:
-    try:
-        response = api.get_resource(res)
-        print(f"Получены данные для ресурса: {res}")
-    except Exception as e:
-        print(f"Ошибка при получении данных для ресурса: {res}, Ошибка: {e}")
+def validate_resource(resource_name):
+    if resource_name in resource: # resource из этого файла
+        return True
+    else:
+        return False
 ```
 
-**Общее заключение:**
+**Общее резюме:**
 
-Код представляет собой простой список доступных ресурсов PrestaShop API, используемый для настройки API-клиента. Код легко читается и понятен, но нуждается в улучшении в плане поддержки динамических изменений списка ресурсов, обработки ошибок и большей гибкости.
+Данный код представляет собой простой список строковых литералов, представляющий список ресурсов API PrestaShop. Он выполняет свою задачу, но имеет потенциал для улучшения в плане поддержки, читаемости и гибкости. Следует убрать дубликаты, рассмотреть возможность загрузки списка из внешнего источника, а так же описать каждый элемент.

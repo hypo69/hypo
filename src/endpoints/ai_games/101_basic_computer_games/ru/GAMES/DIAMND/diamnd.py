@@ -28,43 +28,7 @@ DIAMND:
           3.3.5.2. Уменьшить `stars` на 2.
 4. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InputHeight["Ввод высоты ромба (height)"]
-    InputHeight --> CheckHeight{"Проверка: <code><b>height</b></code> нечетное и > 0?"}
-    CheckHeight -- Нет --> OutputError["Вывод сообщения: <b>Введите нечетное число больше 0</b>"]
-    OutputError --> InputHeight
-    CheckHeight -- Да --> InitializeVars["<p align='left'>Инициализация переменных: 
-    <code><b>
-    spaces = height // 2 <br>
-    stars = 1
-    </b></code></p>"]
-    InitializeVars --> LoopStart{"Начало цикла: от 1 до <code><b>height</b></code>"}
-    LoopStart -- Да --> OutputSpaces["Вывод <code><b>spaces</b></code> пробелов"]
-    OutputSpaces --> OutputStars["Вывод <code><b>stars</b></code> звездочек"]
-     OutputStars --> OutputNewline["Вывод перевода строки"]
-     OutputNewline --> CheckRow{"Проверка: текущая строка <= <code><b>height // 2 + 1</b></code>"}
-     CheckRow -- Да --> DecreaseSpaceIncreaseStars["<code><b>spaces = spaces - 1<br> stars = stars + 2</b></code>"]
-     DecreaseSpaceIncreaseStars --> LoopStart
-     CheckRow -- Нет --> IncreaseSpaceDecreaseStars["<code><b>spaces = spaces + 1<br> stars = stars - 2</b></code>"]
-     IncreaseSpaceDecreaseStars --> LoopStart
-     LoopStart -- Нет --> End["Конец"]
-```
-Legenda:
-    Start - Начало программы.
-    InputHeight - Запрос у пользователя ввода высоты ромба и сохранение значения в переменной `height`.
-    CheckHeight - Проверка, является ли введенная высота нечетным числом больше 0.
-    OutputError - Вывод сообщения об ошибке, если высота не соответствует условию.
-    InitializeVars - Инициализация переменных: `spaces` (количество пробелов) устанавливается равным `height // 2`, а `stars` (количество звездочек) устанавливается в 1.
-    LoopStart - Начало цикла, который повторяется `height` раз.
-    OutputSpaces - Вывод `spaces` пробелов.
-    OutputStars - Вывод `stars` звездочек.
-    OutputNewline - Вывод символа новой строки.
-    CheckRow - Проверка, меньше или равна ли текущая строка середине ромба (`height // 2 + 1`).
-    DecreaseSpaceIncreaseStars - Уменьшение количества пробелов `spaces` на 1 и увеличение количества звездочек `stars` на 2.
-    IncreaseSpaceDecreaseStars - Увеличение количества пробелов `spaces` на 1 и уменьшение количества звездочек `stars` на 2.
-    End - Конец программы.
+
 """
 __author__ = 'hypo69 (hypo69@davidka.net)'
 

@@ -28,47 +28,7 @@ CRAPS:
     6.5 Иначе, повторить цикл с шага 6.
 7. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> RollDice1["Сгенерировать значения для двух костей: <code><b>dice1, dice2</b></code>"]
-    RollDice1 --> CalculateSum1["<code><b>sumOfDice = dice1 + dice2</b></code>"]
-    CalculateSum1 --> CheckWin1{"Проверка: <code><b>sumOfDice == 7 или sumOfDice == 11?</b></code>"}
-    CheckWin1 -- Да --> OutputWin1["Вывод сообщения: <b>YOU WIN!</b>"]
-    OutputWin1 --> End["Конец"]
-    CheckWin1 -- Нет --> CheckLose1{"Проверка: <code><b>sumOfDice == 2 или sumOfDice == 3 или sumOfDice == 12?</b></code>"}
-    CheckLose1 -- Да --> OutputLose1["Вывод сообщения: <b>YOU LOSE!</b>"]
-    OutputLose1 --> End
-    CheckLose1 -- Нет --> SetPoint["<code><b>point = sumOfDice</b></code>"]
-    SetPoint --> LoopStart{"Начало цикла: пока не выиграл или не проиграл"}
-    LoopStart --> RollDice2["Сгенерировать значения для двух костей: <code><b>dice1, dice2</b></code>"]
-    RollDice2 --> CalculateSum2["<code><b>sumOfDice = dice1 + dice2</b></code>"]
-     CalculateSum2 --> CheckWin2{"Проверка: <code><b>sumOfDice == point?</b></code>"}
-    CheckWin2 -- Да --> OutputWin2["Вывод сообщения: <b>YOU WIN!</b>"]
-    OutputWin2 --> End
-    CheckWin2 -- Нет --> CheckLose2{"Проверка: <code><b>sumOfDice == 7?</b></code>"}
-    CheckLose2 -- Да --> OutputLose2["Вывод сообщения: <b>YOU LOSE!</b>"]
-     OutputLose2 --> End
-    CheckLose2 -- Нет --> LoopStart
-```
 
-Legenda:
-    Start - Начало игры.
-    RollDice1 - Генерация случайных значений для двух игральных костей (dice1, dice2) в первом броске.
-    CalculateSum1 - Вычисление суммы значений костей dice1 и dice2 и сохранение результата в переменной sumOfDice.
-    CheckWin1 - Проверка, равна ли сумма sumOfDice 7 или 11. Если да, то игрок выиграл.
-    OutputWin1 - Вывод сообщения "YOU WIN!" и завершение игры.
-    CheckLose1 - Проверка, равна ли сумма sumOfDice 2, 3 или 12. Если да, то игрок проиграл.
-    OutputLose1 - Вывод сообщения "YOU LOSE!" и завершение игры.
-    SetPoint - Если не выиграл и не проиграл в первом броске, то сумма sumOfDice сохраняется в переменной point, которая становится "целевым числом".
-    LoopStart - Начало цикла, который продолжается пока игрок не выиграет или не проиграет.
-    RollDice2 - Генерация случайных значений для двух игральных костей (dice1, dice2) в последующих бросках.
-    CalculateSum2 - Вычисление суммы значений костей dice1 и dice2 и сохранение результата в переменной sumOfDice.
-    CheckWin2 - Проверка, равна ли сумма sumOfDice "целевому числу" point. Если да, то игрок выиграл.
-    OutputWin2 - Вывод сообщения "YOU WIN!" и завершение игры.
-    CheckLose2 - Проверка, равна ли сумма sumOfDice 7. Если да, то игрок проиграл.
-    OutputLose2 - Вывод сообщения "YOU LOSE!" и завершение игры.
-    End - Конец игры.
 """
 import random
 

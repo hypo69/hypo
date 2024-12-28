@@ -28,34 +28,7 @@ CHOMP:
     4.6.  Передать ход следующему игроку.
 5. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InputBoardSize["Ввод размера доски: <code><b>rows</b></code>, <code><b>cols</b></code>"]
-    InputBoardSize --> InitializeBoard["Инициализация доски: <code><b>board</b></code>"]
-    InitializeBoard --> LoopStart{"Начало цикла: пока игра не закончена"}
-    LoopStart --> DisplayBoard["Вывод доски"]
-    DisplayBoard --> InputMove["Ввод хода игрока: <code><b>rowMove</b></code>, <code><b>colMove</b></code>"]
-    InputMove --> UpdateBoard["Обновление доски: <code><b>board</b></code>"]
-    UpdateBoard --> CheckWin{"Проверка: <code><b>board[0][0] == ' '</b></code>?"}
-    CheckWin -- Да --> OutputWinner["Вывод сообщения: <b>Победил игрок!</b>"]
-    OutputWinner --> End["Конец"]
-    CheckWin -- Нет --> SwitchPlayer["Переключение игрока"]
-    SwitchPlayer --> LoopStart
-    LoopStart -- Нет --> End
-```
-Legenda:
-    Start - Начало игры.
-    InputBoardSize - Запрос размера доски (количество строк и столбцов).
-    InitializeBoard - Инициализация игровой доски.
-    LoopStart - Начало игрового цикла, который продолжается, пока игра не закончена.
-    DisplayBoard - Вывод текущего состояния доски на экран.
-    InputMove - Запрос у текущего игрока координат откусываемого куска шоколада.
-    UpdateBoard - Обновление состояния доски после хода игрока.
-    CheckWin - Проверка, съел ли текущий игрок ядовитую дольку.
-    OutputWinner - Вывод сообщения о победе другого игрока.
-    End - Конец игры.
-    SwitchPlayer - Переключение хода на следующего игрока.
+
 """
 __author__ = 'hypo69 (hypo69@davidka.net)'
 

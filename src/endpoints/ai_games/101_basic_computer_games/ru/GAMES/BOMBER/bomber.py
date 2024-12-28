@@ -22,31 +22,7 @@ BOMBER:
 7. Иначе вывести сообщение о проигрыше.
 8. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeTargetDistance["Инициализация: <code><b>targetDistance = random(100, 1000)</b></code>"]
-    InitializeTargetDistance --> InputAngleDistance["Ввод: <code><b>angle, distance</b></code>"]
-    InputAngleDistance --> ConvertAngle["Конвертация: <code><b>angleInRadians = angle * PI / 180</b></code>"]
-    ConvertAngle --> CalculateDropDistance["Вычисление: <code><b>dropDistance = distance * cos(angleInRadians)</b></code>"]
-    CalculateDropDistance --> CalculateDistanceDifference["Вычисление: <code><b>distanceDifference = abs(dropDistance - targetDistance)</b></code>"]
-    CalculateDistanceDifference --> CheckDistanceDifference{"Проверка: <code><b>distanceDifference <= 10</b></code>"}
-    CheckDistanceDifference -- Да --> OutputWin["Вывод: <b>YOU HIT THE TARGET!</b>"]
-    OutputWin --> End["Конец"]
-    CheckDistanceDifference -- Нет --> OutputLose["Вывод: <b>YOU MISSED IT!</b>"]
-    OutputLose --> End
-```
-Legenda:
-    Start - Начало программы.
-    InitializeTargetDistance - Инициализация: генерируется случайное расстояние до цели (targetDistance) от 100 до 1000.
-    InputAngleDistance - Запрос у пользователя угла сброса (angle) и расстояния сброса (distance).
-    ConvertAngle - Преобразование угла из градусов в радианы (angleInRadians).
-    CalculateDropDistance - Вычисление расстояния падения бомбы (dropDistance) на основе введенных данных.
-    CalculateDistanceDifference - Вычисление абсолютной разницы между расстоянием падения бомбы (dropDistance) и расстоянием до цели (targetDistance).
-    CheckDistanceDifference - Проверка, находится ли разница между расстояниями в пределах 10 единиц (distanceDifference <= 10).
-    OutputWin - Вывод сообщения о выигрыше, если разница в пределах 10 единиц.
-    End - Конец программы.
-    OutputLose - Вывод сообщения о проигрыше, если разница больше 10 единиц.
+
 """
 import random
 import math

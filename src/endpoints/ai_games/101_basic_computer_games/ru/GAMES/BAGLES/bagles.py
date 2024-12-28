@@ -28,45 +28,6 @@ BAGLES:
 4. Если после 10 попыток число не угадано, вывести загаданное число и сообщение о проигрыше.
 5. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> GenerateSecretNumber["<p align='left'>Генерация секретного числа <code><b>secretNumber</b></code> (3 неповторяющиеся цифры)
-    <code><b>numberOfGuesses = 0</b></code>
-    </p>"]
-    GenerateSecretNumber --> LoopStart{"Начало цикла: пока не угадано и попыток < 10"}
-    LoopStart -- Да --> IncreaseGuesses["<code><b>numberOfGuesses = numberOfGuesses + 1</b></code>"]
-    IncreaseGuesses --> InputGuess["Ввод числа пользователем: <code><b>userGuess</b></code>"]
-    InputGuess --> GenerateClues["<p align='left'>Генерация подсказок (<code><b>clues</b></code>):
-    <ul>
-    <li><code><b>PICO</b></code>- цифра угадана и на правильном месте</li>
-    <li><code><b>FERMI</b></code> - цифра угадана но не на месте</li>
-    <li><code><b>BAGELS</b></code> - ни одна из цифр не угадана</li>
-    </ul></p>"]
-    GenerateClues --> CheckWin{"Проверка: <code><b>userGuess == secretNumber?</b></code>"}
-    CheckWin -- Да --> OutputWin["Вывод сообщения о победе и количестве попыток"]
-    OutputWin --> End["Конец"]
-    CheckWin -- Нет --> OutputClues["Вывод подсказок <code><b>clues</b></code>"]
-    OutputClues --> LoopStart
-    LoopStart -- Нет --> CheckLose{"Проверка: <code><b>numberOfGuesses == 10?</b></code>"}
-    CheckLose -- Да --> OutputLose["Вывод сообщения о проигрыше и <code><b>secretNumber</b></code>"]
-    OutputLose --> End
-    CheckLose -- Нет --> LoopStart
-
-```
-Legenda:
-    Start - Начало игры.
-    GenerateSecretNumber - Генерация секретного числа secretNumber из 3 неповторяющихся цифр и инициализация количества попыток numberOfGuesses = 0.
-    LoopStart - Начало цикла, который продолжается, пока число не угадано и число попыток меньше 10.
-    IncreaseGuesses - Увеличение счетчика количества попыток на 1.
-    InputGuess - Запрос у пользователя ввода числа и сохранение его в переменной userGuess.
-    GenerateClues - Генерация подсказок на основе сравнения userGuess и secretNumber.
-    CheckWin - Проверка, равно ли введенное число userGuess секретному числу secretNumber.
-    OutputWin - Вывод сообщения о победе и количестве попыток.
-    End - Конец игры.
-    OutputClues - Вывод сгенерированных подсказок.
-    CheckLose - Проверка, достигло ли количество попыток 10.
-    OutputLose - Вывод сообщения о проигрыше и секретного числа secretNumber.
 
 """
 import random
