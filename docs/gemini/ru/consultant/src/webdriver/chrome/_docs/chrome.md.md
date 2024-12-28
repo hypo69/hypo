@@ -3,56 +3,57 @@
 **Качество кода**
 8
 -  Плюсы
-    - Код хорошо структурирован и использует классы для инкапсуляции функциональности.
-    - Применяются логирование для отслеживания ошибок и хода выполнения программы.
-    - Используется `j_loads_ns` для загрузки JSON, что соответствует требованиям.
-    - Присутствует обработка исключений для предотвращения сбоев программы.
-    - Код достаточно хорошо документирован с использованием комментариев.
--  Минусы
-    - Некоторые комментарии не соответствуют стандарту RST.
-    - Не везде используется обработка ошибок через `logger.error`, вместо этого применяются стандартные блоки `try-except`.
-    - В коде есть `...`, которые являются точками остановки и требуют дополнительной обработки.
-    - В коде присутствуют todo.
+    - Код хорошо структурирован, с использованием классов и методов для организации логики.
+    - Присутствует обработка ошибок и логирование.
+    - Используется `fake-useragent` для генерации случайных `user-agent`.
+    -  Конфигурация webdriver вынесена в отдельный файл `chrome.json`.
+ -  Минусы
+    -  Не все функции и методы имеют подробное описание в формате reStructuredText (RST).
+    -   В коде используются `try-except` блоки без конкретизации исключений, что может затруднить отладку.
+    - Некоторые комментарии после `#` могут быть более подробными.
+    - Не используется `j_loads_ns` для чтения `json` файла.
 
 **Рекомендации по улучшению**
-- Необходимо переписать docstring в формате reStructuredText (RST).
-- Заменить `try-except` на `logger.error` там, где это возможно.
-- Заменить все `...` на корректный код.
-- Удалить `WebDriverException` и обьединить с общим `Exception`.
-- Все комментарии после `#` должны пояснять код, который следует за ними.
-- Необходимо добавить обработку случая, когда не удалось выделить порт.
+
+1.  Добавить docstring в формате RST ко всем функциям, методам и классам, чтобы документация была более понятной и соответствовала стандартам.
+2.  Использовать `j_loads_ns` для загрузки `json` файлов.
+3.  Улучшить обработку ошибок, добавляя конкретные типы исключений в `try-except` блоки и использовать `logger.error` для вывода ошибок.
+4.  Переписать комментарии после `#` на более подробные, описывающие назначение кода.
+5.  Удалить лишние импорты, которые не используются в коде.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для работы с веб-драйвером Chrome.
+Модуль для работы с Chrome WebDriver.
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`Chrome`, который является подклассом
-`selenium.webdriver.Chrome` и обеспечивает дополнительную функциональность для
-настройки и управления веб-драйвером Chrome.
+Этот модуль предоставляет класс :class:`Chrome`, который является подклассом `selenium.webdriver.Chrome`
+и обеспечивает дополнительную функциональность для настройки и запуска Chrome WebDriver.
+
+Используется Chrome для разработчиков. Версия определяется в файле `chrome.json`.
 
 Пример использования
 --------------------
 
-Пример инициализации класса `Chrome`:
+Пример использования класса `Chrome`:
 
 .. code-block:: python
 
-    from src.webdriver.chrome.chrome import Chrome
-
-    driver = Chrome()
-    driver.get('https://www.example.com')
-    driver.quit()
+    chrome_driver = Chrome()
+    chrome_driver.get('https://example.com')
+    ...
 """
 import os
 import socket
 from pathlib import Path
 from typing import List, Dict, Any
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from fake_useragent import UserAgent
+from selenium.common.exceptions import WebDriverException
 
 from src import gs
 from src.utils.jjson import j_loads_ns
@@ -63,8 +64,14 @@ class Chrome(webdriver.Chrome):
     """
     Подкласс `selenium.webdriver.Chrome`, предоставляющий дополнительную функциональность.
 
-    Этот класс расширяет возможности стандартного веб-драйвера Chrome,
-    добавляя методы для настройки параметров запуска и управления портом.
+    :ivar driver_name: Имя используемого веб-драйвера.
+    :vartype driver_name: str
+    :ivar d: Экземпляр веб-драйвера Chrome.
+    :vartype d: webdriver.Chrome
+    :ivar options: Опции для настройки Chrome.
+    :vartype options: ChromeOptions
+    :ivar user_agent: Настройки User-Agent.
+    :vartype user_agent: dict
     """
 
     driver_name = 'chrome'
@@ -74,70 +81,88 @@ class Chrome(webdriver.Chrome):
 
     def __init__(self, user_agent: dict = None, *args, **kwargs) -> None:
         """
-        Инициализирует веб-драйвер Chrome с заданными опциями и профилем.
+        Инициализирует Chrome WebDriver с заданными опциями и профилем.
 
-        :param user_agent: Настройки User-Agent для веб-драйвера Chrome.
-          Подробнее: https://chatgpt.com/share/c12e9951-dcfe-455a-a5b6-0d5d3e412066
+        :param user_agent: Настройки User-Agent для Chrome WebDriver.
         :type user_agent: dict, optional
-        :raises Exception: Если возникает ошибка при настройке или инициализации драйвера.
+        :raises FileNotFoundError: Если файл конфигурации `chrome.json` не найден.
+        :raises KeyError: Если в файле конфигурации отсутствуют необходимые ключи.
+        :raises Exception: При возникновении других ошибок во время настройки WebDriver.
+        :return: None
+        
+        .. note::
+           Подробнее про User-Agent можно посмотреть тут: https://chatgpt.com/share/c12e9951-dcfe-455a-a5b6-0d5d3e412066
         """
-        # устанавливаем user_agent или используем случайный из UserAgent()
         self.user_agent = user_agent if user_agent else UserAgent().random
+
         try:
-            # загружает настройки chrome из файла chrome.json
+            # Загрузка настроек Chrome из JSON-файла
             settings: dict = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))
             if not settings:
-                logger.critical("Ошибка в конфигурационном файле 'chrome.json'.")
+                logger.critical('Файл конфигурации \'chrome.json\' не найден или пуст.')
                 return
 
-            # определяет директорию профиля пользователя
+            # Определение каталога профиля Chrome
             profile_directory: str = os.path.join(os.getenv('LOCALAPPDATA'), 'Google', 'Chrome for Testing', 'User Data')
 
-            # формирует путь к драйверу chrome
+            # Настройка пути к ChromeDriver
             chromedriver_path_parts: list = settings['driver']['chromedriver']
             if 'chrome' in chromedriver_path_parts:
                 index = chromedriver_path_parts.index('chrome')
                 chromedriver_path_parts[index] = gs.default_webdriver
             chromedriver_path: str = str(Path(gs.path.bin, *chromedriver_path_parts))
 
-            # формирует путь к исполняемому файлу chrome
+            # Настройка пути к исполняемому файлу Chrome
             binary_location_parts: list = settings['driver']['chrome_binary']
             if 'chrome' in binary_location_parts:
                 index = binary_location_parts.index('chrome')
                 binary_location_parts[index] = gs.default_webdriver
             binary_location: str = str(Path(gs.path.bin, *binary_location_parts))
 
-            # устанавливаем опции chrome
+            # Настройка опций Chrome
             self.options: ChromeOptions = self.set_options(settings)
             self.options.add_argument(f'user-data-dir={profile_directory}')
-            
-            # устанавливаем chrome service
+
+            # Определение сервиса Chrome с указанным расположением бинарного файла
             self.service = ChromeService(executable_path=binary_location)
-            
-            # задаём порт для webdriver
+
+            # Поиск свободного порта
             free_port = gs.webdriver_current_port
             gs.webdriver_current_port += 1
-            
+
             if free_port:
                 self.options.add_argument(f'--port={free_port}')
-                logger.info(f'Установлен порт веб-драйвера: {free_port}')
+                logger.info(f'Установлен порт WebDriver: {free_port}')
             else:
-                logger.critical("Нет свободных портов в диапазоне (9500, 9599)")
+                logger.critical('Нет свободных портов в диапазоне (9500, 9599).')
                 return
 
+        except FileNotFoundError as e:
+            logger.error(f'Файл конфигурации не найден: {e}', exc_info=True)
+            return
+        except KeyError as e:
+            logger.error(f'Отсутствует необходимый ключ в конфигурации: {e}', exc_info=True)
+            return
         except Exception as e:
-            logger.error('Ошибка при настройке веб-драйвера Chrome.', exc_info=True)
+            logger.critical('Ошибка при настройке Chrome WebDriver.', exc_info=True)
             return
 
         try:
-            logger.info("Запуск веб-драйвера Chrome")
+            logger.info('Запуск Chrome WebDriver.')
+            service = None
+            # Инициализация веб-драйвера с заданными опциями и сервисом
             super().__init__(options=self.options, service=self.service)
 
+        except WebDriverException as ex:
+            logger.critical(f'Ошибка инициализации Chrome WebDriver: {ex}', exc_info=True)
+            """ @todo Implement driver restart """
+            return
         except Exception as ex:
-            logger.error("Веб-драйвер Chrome не запустился. Общая ошибка:", exc_info=True)
+            logger.critical(f'Chrome WebDriver завершился с ошибкой: {ex}', exc_info=True)
+            """ @todo Implement program restart """
             return
 
-    def find_free_port(self, start_port: int, end_port: int) -> int |  None:
+    def find_free_port(self, start_port: int, end_port: int) -> int | None:
         """
         Находит свободный порт в заданном диапазоне.
 
@@ -145,26 +170,26 @@ class Chrome(webdriver.Chrome):
         :type start_port: int
         :param end_port: Конечный порт диапазона.
         :type end_port: int
-        :return: Свободный порт, если доступен, иначе None.
+        :return: Свободный порт или None, если нет доступных портов.
         :rtype: int | None
         """
         for port in range(start_port, end_port + 1):
             try:
-                # пробуем забиндить порт для проверки свободен ли он
+                # Проверка доступности порта
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     s.bind(('localhost', port))
                     return port
             except OSError as ex:
-                logger.debug(f"Порт {port} занят", exc_info=True)
+                logger.debug(f'Порт {port} занят: {ex}', exc_info=True)
         return None
 
-    def set_options(self, settings: dict = None) -> ChromeOptions:
+    def set_options(self, settings: list | dict | None = None) -> ChromeOptions:
         """
-        Устанавливает параметры запуска для веб-драйвера Chrome.
+        Устанавливает опции запуска для Chrome WebDriver.
 
-        :param settings: Конфигурационные настройки для опций Chrome.
-        :type settings: dict, optional
-        :return: Объект `ChromeOptions` с заданными параметрами запуска.
+        :param settings: Настройки конфигурации для опций Chrome.
+        :type settings: list | dict | None
+        :return: Объект `ChromeOptions` с заданными опциями запуска.
         :rtype: ChromeOptions
         """
         if not settings or ('options' not in settings and 'headers' not in settings):
@@ -173,17 +198,21 @@ class Chrome(webdriver.Chrome):
         options = ChromeOptions()
 
         if 'options' in settings:
-            # конвертирует список формата [key=value, key2=value2, ...] в словарь
+            # Преобразование списка параметров в словарь
             options_dict = {}
             for item in settings['options']:
-                key, value = item.split('=')
-                options_dict[key.strip()] = value.strip()
-        
-            # устанавливает настройки из словаря в ChromeOptions
-            [options.add_argument(f"--{key}={value}") for key, value in options_dict.items()]
+                try:
+                    key, value = item.split('=')
+                    options_dict[key.strip()] = value.strip()
+                except ValueError as e:
+                    logger.error(f'Неверный формат опции: {item} - {e}', exc_info=True)
+                    continue
+
+            # Добавление настроек из словаря в объект ChromeOptions
+            [options.add_argument(f'--{key}={value}') for key, value in options_dict.items()]
 
         if 'headers' in settings and settings['headers']:
-            [options.add_argument(f"--{key}={value}") for key, value in settings['headers'].items()]
+            [options.add_argument(f'--{key}={value}') for key, value in settings['headers'].items()]
 
         return options
 ```

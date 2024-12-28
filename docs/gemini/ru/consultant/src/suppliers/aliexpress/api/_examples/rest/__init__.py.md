@@ -1,83 +1,67 @@
 # Анализ кода модуля `__init__.py`
 
 **Качество кода**
-9
--  Плюсы
-    - Код соответствует PEP8 и имеет правильное форматирование.
-    - Присутствует docstring модуля.
-    - Все импорты расположены в алфавитном порядке.
--  Минусы
-    - Не хватает подробной документации в формате reStructuredText (RST) для модуля.
-    - В docstring модуля нет примера использования.
+8
+-   Плюсы
+    -   Код структурирован и соответствует PEP 8.
+    -   Импорты организованы по алфавиту.
+-   Минусы
+    -   Отсутствует docstring для модуля.
+    -   Не используется `from src.logger.logger import logger` для логирования.
+    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson` так как нет работы с файлами.
+    -   Отсутствуют RST комментарии к модулю.
 
 **Рекомендации по улучшению**
-1. Добавить подробное описание модуля в формате reStructuredText (RST).
-2. Добавить пример использования модуля в формате reStructuredText (RST).
-3. Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` при работе с JSON файлами, если таковые имеются в проекте.
-4. Добавить логирование ошибок с помощью `from src.logger.logger import logger`, если в проекте есть такая необходимость.
+
+1.  Добавить docstring в формате RST для модуля.
+2.  Добавить `from src.logger.logger import logger` для логирования (хотя в данном контексте это не требуется, но это стандартная практика).
+3.  Переписать комментарий модуля в формате RST.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~
 """
-Модуль для импорта и использования классов API AliExpress
-=========================================================================================
+Модуль для работы с примерами REST API Aliexpress
+=========================================================================
 
-Этот модуль предоставляет набор классов для работы с API AliExpress,
-включая запросы для получения информации о продуктах, заказах, категориях
-и других данных.
+Этот модуль содержит импорты классов, представляющих различные запросы к API Aliexpress.
+Он используется для организации и упрощения доступа к этим запросам.
 
 Пример использования
 --------------------
 
+Пример импорта класса:
+
 .. code-block:: python
 
-    from src.suppliers.aliexpress.api._examples.rest import (
-        AliexpressAffiliateProductSmartmatchRequest,
-        AliexpressAffiliateOrderGetRequest,
-        AliexpressAffiliateOrderListRequest,
-        AliexpressAffiliateHotproductDownloadRequest,
-        AliexpressAffiliateProductdetailGetRequest,
-        AliexpressAffiliateHotproductQueryRequest,
-        AliexpressAffiliateFeaturedpromoProductsGetRequest,
-        AliexpressAffiliateFeaturedpromoGetRequest,
-        AliexpressAffiliateProductQueryRequest,
-        AliexpressAffiliateCategoryGetRequest,
-        AliexpressAffiliateOrderListbyindexRequest,
-        AliexpressAffiliateLinkGenerateRequest,
-    )
+   from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
 
-    # Пример использования класса AliexpressAffiliateProductSmartmatchRequest
-    request = AliexpressAffiliateProductSmartmatchRequest()
-    # ... (дальнейшая настройка запроса и выполнение)
 """
-# Добавлено описание модуля в формате reStructuredText (RST)
-# Добавлен пример использования модуля в формате reStructuredText (RST)
-
-from .AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
-# импорт класса AliexpressAffiliateCategoryGetRequest
-from .AliexpressAffiliateFeaturedpromoGetRequest import AliexpressAffiliateFeaturedpromoGetRequest
-# импорт класса AliexpressAffiliateFeaturedpromoGetRequest
-from .AliexpressAffiliateFeaturedpromoProductsGetRequest import AliexpressAffiliateFeaturedpromoProductsGetRequest
-# импорт класса AliexpressAffiliateFeaturedpromoProductsGetRequest
-from .AliexpressAffiliateHotproductDownloadRequest import AliexpressAffiliateHotproductDownloadRequest
-# импорт класса AliexpressAffiliateHotproductDownloadRequest
-from .AliexpressAffiliateHotproductQueryRequest import AliexpressAffiliateHotproductQueryRequest
-# импорт класса AliexpressAffiliateHotproductQueryRequest
-from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGenerateRequest
-# импорт класса AliexpressAffiliateLinkGenerateRequest
-from .AliexpressAffiliateOrderGetRequest import AliexpressAffiliateOrderGetRequest
-# импорт класса AliexpressAffiliateOrderGetRequest
-from .AliexpressAffiliateOrderListRequest import AliexpressAffiliateOrderListRequest
-# импорт класса AliexpressAffiliateOrderListRequest
-from .AliexpressAffiliateOrderListbyindexRequest import AliexpressAffiliateOrderListbyindexRequest
-# импорт класса AliexpressAffiliateOrderListbyindexRequest
-from .AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQueryRequest
-# импорт класса AliexpressAffiliateProductQueryRequest
+#  Модуль для работы с примерами REST API Aliexpress
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
-# импорт класса AliexpressAffiliateProductSmartmatchRequest
+#  Импорт класса AliexpressAffiliateOrderGetRequest
+from .AliexpressAffiliateOrderGetRequest import AliexpressAffiliateOrderGetRequest
+#  Импорт класса AliexpressAffiliateOrderListRequest
+from .AliexpressAffiliateOrderListRequest import AliexpressAffiliateOrderListRequest
+#  Импорт класса AliexpressAffiliateHotproductDownloadRequest
+from .AliexpressAffiliateHotproductDownloadRequest import AliexpressAffiliateHotproductDownloadRequest
+#  Импорт класса AliexpressAffiliateProductdetailGetRequest
 from .AliexpressAffiliateProductdetailGetRequest import AliexpressAffiliateProductdetailGetRequest
-# импорт класса AliexpressAffiliateProductdetailGetRequest
+#  Импорт класса AliexpressAffiliateHotproductQueryRequest
+from .AliexpressAffiliateHotproductQueryRequest import AliexpressAffiliateHotproductQueryRequest
+#  Импорт класса AliexpressAffiliateFeaturedpromoProductsGetRequest
+from .AliexpressAffiliateFeaturedpromoProductsGetRequest import AliexpressAffiliateFeaturedpromoProductsGetRequest
+#  Импорт класса AliexpressAffiliateFeaturedpromoGetRequest
+from .AliexpressAffiliateFeaturedpromoGetRequest import AliexpressAffiliateFeaturedpromoGetRequest
+#  Импорт класса AliexpressAffiliateProductQueryRequest
+from .AliexpressAffiliateProductQueryRequest import AliexpressAffiliateProductQueryRequest
+#  Импорт класса AliexpressAffiliateCategoryGetRequest
+from .AliexpressAffiliateCategoryGetRequest import AliexpressAffiliateCategoryGetRequest
+#  Импорт класса AliexpressAffiliateOrderListbyindexRequest
+from .AliexpressAffiliateOrderListbyindexRequest import AliexpressAffiliateOrderListbyindexRequest
+#  Импорт класса AliexpressAffiliateLinkGenerateRequest
+from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGenerateRequest
 ```

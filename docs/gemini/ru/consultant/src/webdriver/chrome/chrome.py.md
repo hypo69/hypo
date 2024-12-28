@@ -1,148 +1,183 @@
-# Анализ кода модуля chrome.py
+# Анализ кода модуля `chrome.py`
 
 **Качество кода**
-9
--  Плюсы
-    - Код хорошо структурирован, используется класс `Chrome` для управления WebDriver.
-    - Присутствует механизм singleton для управления экземпляром драйвера.
-    - Используется `j_loads_ns` для загрузки конфигурации из JSON.
-    - Применяется `fake_useragent` для генерации случайных user-agent.
-    - Наличие логирования ошибок через `logger`.
-    - Выделен функционал по работе с JS в отдельный класс `JavaScript`.
-    - Выделен функционал по работе с локаторами в отдельный класс `ExecuteLocator`.
--  Минусы
-    -  Отсутствуют docstring для некоторых методов и переменных.
-    -  В некоторых местах используются `...` вместо обработки ошибок.
-    -  Не везде используется RST формат для комментариев.
-    -  Смешанный стиль использования кавычек в коде.
+   - Соответствие требованиям по оформлению кода: 7/10
+    - Плюсы
+        -  Используется reStructuredText (RST) для docstring.
+        -  Присутствует базовая обработка ошибок с использованием `try-except` и `logger.error`.
+        -  Применяется `j_loads_ns` для загрузки JSON.
+        -  Используется `fake-useragent` для генерации случайных user-agent.
+        -  Реализован Singleton для управления экземпляром драйвера.
+        -  Код хорошо структурирован с разделением ответственности.
+
+    - Минусы
+        -  Не везде используются docstring в формате reStructuredText (RST).
+        -  Не все функции и методы имеют подробные RST-комментарии.
+        -  В некоторых местах обработка исключений недостаточно детализирована.
+        -  Избыточное использование блоков `try-except`, можно заменить на обработку с помощью `logger.error`.
+        -  Некоторые комментарии после `#` недостаточно информативны.
+        -  Импорт `header` без использования.
+        -  Не соблюдается PEP8 в некоторых местах.
+        -  Отсутствует проверка на существование директорий `profile_directory` и `binary_location`
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring в формате RST для всех методов и переменных, включая `_instance`, `driver_name`, `config`.
-2.  Заменить `...` на конкретную логику обработки ошибок, например, через `logger.error` или возвращение `None`.
-3.  Привести все комментарии к формату RST.
-4.  Использовать одинарные кавычки `'` везде в коде.
-5.  Добавить обработку ошибки при создании `ChromeService`.
-6.  Добавить проверку существования `profile_directory` и `binary_location` перед их использованием.
+1.  **Документация**:
+    *   Добавить недостающие docstring в формате reStructuredText (RST) для всех функций, методов и класса, включая переменные.
+    *   Переписать существующие комментарии в стиле RST.
+    *   Соблюдать стандарты оформления docstring в Python (например, для Sphinx).
+    *   Добавить более информативные комментарии после `#` для объяснения кода.
+2.  **Импорты**:
+    *   Удалить неиспользуемый импорт `header`.
+3.  **Обработка ошибок**:
+    *   Улучшить обработку ошибок с использованием `logger.error` и убрать избыточные блоки `try-except`.
+4.  **Рефакторинг**:
+    *   Соблюдать PEP8, улучшить читаемость кода (пробелы, длинна строк).
+    *   Проверить на существование директорий `profile_directory` и `binary_location`.
+    *   Улучшить именование переменных и методов.
+    *   Добавить более подробные логи.
+5.  **Безопасность**:
+    *   Убедиться, что пути к файлам и каталогам безопасны и не допускают обхода каталогов.
 
 **Оптимизированный код**
 
 ```python
 """
-Module for Chrome WebDriver
+Модуль для управления Chrome WebDriver.
 =========================================================================================
 
-This module contains a custom implementation of the Chrome WebDriver using Selenium. It integrates
-configuration settings defined in the `chrome.json` file, such as user-agent and browser profile settings,
-to enable flexible and automated browser interactions.
+Этот модуль содержит класс :class:`Chrome`, который представляет собой
+пользовательскую реализацию Chrome WebDriver, использующую Selenium.
+Он интегрирует настройки конфигурации, определенные в файле `chrome.json`,
+такие как user-agent и настройки профиля браузера, для обеспечения
+гибкого и автоматизированного взаимодействия с браузером.
 
-Key Features:
-    - Centralized configuration via JSON files.
-    - Support for multiple browser profiles.
-    - Enhanced logging and error handling.
+Основные характеристики:
+    - Централизованная конфигурация через JSON-файлы.
+    - Поддержка нескольких профилей браузера.
+    - Улучшенное логирование и обработка ошибок.
+    - Возможность передачи пользовательских параметров во время инициализации.
 
-Example usage
+Пример использования
 --------------------
 
-Example of using the `Chrome` class:
+Пример использования класса `Chrome`:
 
 .. code-block:: python
 
     from src.webdriver.chrome import Chrome
 
-    # Initialize Chrome WebDriver with user-agent settings
-    browser = Chrome(user_agent='Mozilla/5.0...')
+    # Инициализация Chrome WebDriver с настройками user-agent и пользовательскими параметрами
+    browser = Chrome(user_agent='Mozilla/5.0...', options=["--headless", "--disable-gpu"])
     browser.get("https://www.example.com")
     browser.quit()
 """
 
-MODE = 'dev'
-
 import os
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 from types import SimpleNamespace
+
+from fake_useragent import UserAgent
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from fake_useragent import UserAgent
 from selenium.common.exceptions import WebDriverException
 
-import header
 from src import gs
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.js import JavaScript
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
+MODE = 'dev'
+
 
 class Chrome(webdriver.Chrome):
     """
-    Class for Chrome WebDriver.
+    Класс для управления Chrome WebDriver.
 
-    This class extends the Selenium Chrome WebDriver and provides a singleton pattern and custom configurations.
+    Этот класс расширяет Selenium Chrome WebDriver и предоставляет шаблон singleton
+    и пользовательские конфигурации.
     """
 
     _instance = None
     """
-    _instance (Chrome): The single instance of the Chrome WebDriver.
+    _instance (Chrome): Единственный экземпляр Chrome WebDriver.
     """
     driver_name: str = 'chrome'
     """
-    driver_name (str): The name of the driver ('chrome').
+    driver_name (str): Имя драйвера ('chrome').
     """
     config: SimpleNamespace
     """
-    config (SimpleNamespace): Configuration settings loaded from a JSON file.
+    config (SimpleNamespace): Настройки конфигурации, загруженные из JSON-файла.
     """
 
     def __new__(cls, *args, **kwargs):
         """
-        Ensure a single instance of Chrome WebDriver.
+        Гарантирует единственный экземпляр Chrome WebDriver.
 
-        If an instance already exists, it calls `window_open()`.
+        Если экземпляр уже существует, вызывается метод `window_open()`.
 
-        :return: The singleton instance of the Chrome WebDriver.
+        :return: Единственный экземпляр Chrome WebDriver.
         :rtype: Chrome
         """
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         else:
-            cls._instance.window_open()  # Open a new window if instance already exists
+            # Открывает новое окно, если экземпляр уже существует.
+            cls._instance.window_open()
         return cls._instance
 
-    def __init__(self, user_agent: Optional[str] = None, *args, **kwargs):
+    def __init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs):
         """
-        Initializes the Chrome WebDriver with specified options and profile.
+        Инициализирует Chrome WebDriver с указанными параметрами и профилем.
 
-        :param user_agent: The user-agent string to be used. Defaults to a random user agent.
+        :param user_agent: Строка user-agent для использования.
+                           По умолчанию используется случайный user agent.
         :type user_agent: Optional[str]
+        :param options: Список параметров Chrome для передачи во время инициализации.
+        :type options: Optional[List[str]]
         """
         try:
-            # устанавливаем user_agent или генерируем случайный
+            # Устанавливает user_agent или генерирует случайный.
             user_agent = user_agent or UserAgent().random
-            # загружаем конфигурации из JSON файла
+            # Загружает конфигурацию из JSON-файла.
             self.config = j_loads_ns(Path(gs.path.src, 'webdriver', 'chrome', 'chrome.json'))
 
-            # Проверяем загружена ли конфигурация
+            # Проверяет, загружена ли конфигурация.
             if not self.config:
-                logger.debug('Error in `chrome.json` file.')
+                logger.error('Ошибка в файле `chrome.json`.')
                 return
-            # инициализируем параметры
-            options = ChromeOptions()
-            # устанавливаем путь до профиля
-            profile_directory: Path
-            # устанавливаем путь до исполняемого файла
-            executable_path: str
+
+            # Инициализирует объект параметров.
+            options_obj = ChromeOptions()
+
+            # Добавляет аргументы из конфигурации.
+            if hasattr(self.config, 'options') and self.config.options:
+                for option in self.config.options:
+                    options_obj.add_argument(option)
+
+            # Добавляет пользовательские параметры.
+            if options:
+                for option in options:
+                    options_obj.add_argument(option)
+
+            # Добавляет заголовки из конфигурации.
+            if hasattr(self.config, 'headers') and self.config.headers:
+                for key, value in vars(self.config.headers).items():
+                    options_obj.add_argument(f'--{key}={value}')
 
             def normalize_path(path: str) -> str:
                 """
-                Replace placeholders with actual environment paths.
+                Заменяет плейсхолдеры фактическими путями среды.
 
-                :param path: The path string with placeholders like %APPDATA% or %LOCALAPPDATA%.
+                :param path: Путь со специальными плейсхолдерами,
+                              например %APPDATA% или %LOCALAPPDATA%.
                 :type path: str
-                :return: The normalized path with environment variables substituted.
+                :return: Нормализованный путь с подставленными переменными среды.
                 :rtype: str
                 """
                 if not path:
@@ -152,51 +187,48 @@ class Chrome(webdriver.Chrome):
                     .replace('%LOCALAPPDATA%', os.getenv('LOCALAPPDATA', ''))
                 )
 
-            # Добавляем аргументы из настроек options
-            if hasattr(self.config, 'options') and self.config.options:
-                for key, value in vars(self.config.options).items():
-                    options.add_argument(f'--{key}={value}')
-
-            # Добавляем аргументы из настроек headers
-            if hasattr(self.config, 'headers') and self.config.headers:
-                for key, value in vars(self.config.headers).items():
-                    options.add_argument(f'--{key}={value}')
-
-            # Нормализуем пути
+            # Нормализуем пути к профилю и бинарному файлу.
             profile_directory = Path(gs.path.root / normalize_path(self.config.profile_directory.testing))
             binary_location = Path(gs.path.root / normalize_path(self.config.binary_location.binary))
 
-            # Проверяем наличие директории профиля и добавляем аргумент
-            if profile_directory:
-                options.add_argument(f'user-data-dir={profile_directory}')
 
-             # Устанавливаем путь к исполняемому файлу
-            options.binary_location = str(binary_location)
-            # Инициализируем сервис chrome driver
-            service = ChromeService(executable_path=str(binary_location)) if binary_location else ChromeService()
+            # Проверяет существование директории профиля и добавляет аргумент.
+            if profile_directory.exists():
+                options_obj.add_argument(f'user-data-dir={profile_directory}')
+            else:
+                logger.error(f'Директория профиля не найдена: {profile_directory}')
 
+             # Проверяет существование бинарного файла.
+            if binary_location.exists():
+                  # Устанавливает путь к исполняемому файлу.
+                options_obj.binary_location = str(binary_location)
+                # Инициализирует сервис Chrome Driver.
+                service = ChromeService(executable_path=str(binary_location))
+            else:
+                logger.error(f'Бинарный файл не найден: {binary_location}')
+                service = ChromeService()  # Используем сервис по умолчанию
         except Exception as ex:
-            logger.error('Error setting up Chrome WebDriver:', ex)
-            return
+             logger.error('Ошибка при настройке Chrome WebDriver:', ex)
+             return
 
         try:
-            # Инициализируем webdriver
-            super().__init__(options=options, service=service)
+            # Инициализирует WebDriver.
+            super().__init__(options=options_obj, service=service)
         except WebDriverException as ex:
-            logger.critical('Error initializing Chrome WebDriver:', ex)
+            logger.critical('Ошибка при инициализации Chrome WebDriver:', ex)
             return
         except Exception as ex:
-            logger.critical('Chrome WebDriver crashed. General error:', ex)
+            logger.critical('Chrome WebDriver аварийно завершил работу. Общая ошибка:', ex)
             return
 
         self._payload()
 
     def _payload(self) -> None:
         """
-        Load executor for locators and JavaScript scenarios.
+        Загружает исполнитель для локаторов и JavaScript-сценариев.
 
-        This method initializes and assigns the necessary executors for web element interaction and
-        JavaScript execution within the WebDriver.
+        Этот метод инициализирует и присваивает необходимые исполнители для взаимодействия
+        с веб-элементами и выполнения JavaScript в WebDriver.
         """
         js_executor = JavaScript(self)
         self.get_page_lang = js_executor.get_page_lang
@@ -212,7 +244,7 @@ class Chrome(webdriver.Chrome):
         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
         self.send_message = self.send_key_to_webelement = execute_locator.send_message
 
-
 if __name__ == "__main__":
-    driver = Chrome()
+    driver = Chrome(options=["--headless", "--disable-gpu"])
     driver.get(r"https://google.com")
+```

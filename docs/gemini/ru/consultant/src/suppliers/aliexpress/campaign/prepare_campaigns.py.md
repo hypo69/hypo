@@ -1,34 +1,34 @@
 # Анализ кода модуля `prepare_campaigns.py`
 
 **Качество кода**
-9
-- Плюсы
-    - Код хорошо структурирован и разделен на функции.
-    - Используется `argparse` для обработки аргументов командной строки.
-    - Присутствует логирование.
-    - Код соответствует PEP8.
-    - Используются `j_loads_ns`.
-- Минусы
-    - Не все функции имеют docstring в формате reStructuredText (RST).
-    - Есть избыточное использование стандартных блоков `try-except` (хотя в коде их нет).
-    - Некоторые комментарии не соответствуют стандарту RST.
-    - Отсутствует обработка ошибок в некоторых местах.
-    -  Не везде используется логирование ошибок.
+
+-   Соответствие требованиям по оформлению кода: 7/10
+    -   **Плюсы:**
+        -   Используется `argparse` для обработки аргументов командной строки.
+        -   Код разбит на функции, что улучшает читаемость и поддерживаемость.
+        -   Присутствуют docstring для функций.
+        -   Используется `logger` для логирования.
+    -   **Минусы:**
+        -   Не все docstring соответствуют формату reStructuredText (RST).
+        -   Импорты не все приведены в соответствие с ранее обработанными файлами.
+        -   Не везде используются `j_loads_ns`.
+        -   В некоторых функциях есть избыточное использование `try-except`.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    -   Добавить docstring в формате reStructuredText (RST) для всех функций и модулей.
-    -   Переписать существующие комментарии в формате RST.
-2.  **Логирование**:
-    -   Использовать `logger.error` вместо `try-except` для обработки ошибок.
-    -   Добавить логирование в местах, где это необходимо.
-3.  **Обработка ошибок**:
-    -   Улучшить обработку ошибок, проверяя возвращаемые значения функций.
-4.  **Рефакторинг**:
-     - Упростить логику обработки локалей.
-5.  **Соответствие стандарту**:
-    - Все комментарии к модулям, функциям, методам и переменным переписать в формате reStructuredText (RST).
+1.  **Документация:**
+    -   Привести все docstring к формату RST, включая параметры, возвращаемые значения и примеры.
+    -   Добавить более подробные описания к модулю.
+2.  **Импорты:**
+    -   Проверить и добавить недостающие импорты.
+    -   Привести импорты в соответствие с ранее обработанными файлами.
+3.  **Обработка данных:**
+    -   Убедиться, что `j_loads_ns` используется вместо `json.load` там, где это необходимо.
+4.  **Логирование:**
+    -   Избегать избыточного использования стандартных блоков `try-except`, предпочитая обработку ошибок с помощью `logger.error`.
+5.  **Структура:**
+    -   Рассмотреть возможность добавления констант для повторяющихся строк.
+    -   Использовать более описательные имена переменных.
 
 **Оптимизированный код**
 
@@ -38,14 +38,13 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для подготовки кампаний AliExpress.
+Модуль для подготовки рекламных кампаний AliExpress
 =========================================================================================
 
-Этот модуль обрабатывает категории товаров, управляет данными кампаний и генерирует рекламные материалы.
-Он позволяет запускать обработку как для отдельных кампаний, так и для всех кампаний,
-находящихся в директории `campaigns`.
+Этот модуль обрабатывает категории товаров, управляет данными кампаний
+и генерирует рекламные материалы для AliExpress.
 
-Пример использования
+Примеры использования
 --------------------
 
 Для запуска скрипта для конкретной кампании:
@@ -67,45 +66,40 @@ from pathlib import Path
 from typing import List, Optional
 
 from src import gs
-# Код импортирует класс AliCampaignEditor из модуля campaign
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
-# Код импортирует список локалей из модуля utils
 from src.suppliers.aliexpress.utils import locales
 from src.utils.printer import pprint
 from src.utils.file import get_directory_names
 from src.utils.jjson import j_loads_ns
-# Код импортирует logger из модуля logger
 from src.logger.logger import logger
 
 
-# Определяется путь к директории с кампаниями на Google Drive
+# Путь к директории с кампаниями
 campaigns_directory = gs.path.google_drive / 'aliexpress' / 'campaigns'
-
 
 def process_campaign_category(
     campaign_name: str, category_name: str, language: str, currency: str
 ) -> List[str]:
     """
-    Обрабатывает конкретную категорию в рамках кампании для заданного языка и валюты.
+    Обрабатывает конкретную категорию в рамках кампании.
 
     :param campaign_name: Название рекламной кампании.
     :type campaign_name: str
-    :param category_name: Название категории товаров для кампании.
+    :param category_name: Название категории товаров.
     :type category_name: str
     :param language: Язык кампании.
     :type language: str
     :param currency: Валюта кампании.
     :type currency: str
-    :return: Список заголовков товаров в рамках категории.
+    :return: Список заголовков продуктов в категории.
     :rtype: List[str]
 
-    Пример:
-    
+    :Example:
     >>> titles: List[str] = process_campaign_category("summer_sale", "electronics", "EN", "USD")
     >>> print(titles)
-    ['Product 1', 'Product 2']
+    [\'Product 1\', \'Product 2\']
     """
-    # Код создает экземпляр класса AliCampaignEditor и запускает обработку категории
+    #  Код создает и возвращает экземпляр класса AliCampaignEditor, вызывая метод process_campaign_category
     return AliCampaignEditor(
         campaign_name=campaign_name, language=language, currency=currency
     ).process_campaign_category(category_name)
@@ -118,119 +112,116 @@ def process_campaign(
     campaign_file: Optional[str] = None,
 ) -> bool:
     """
-    Обрабатывает кампанию, настраивая и обрабатывая её.
+    Обрабатывает рекламную кампанию.
 
     :param campaign_name: Название рекламной кампании.
     :type campaign_name: str
-    :param language: Язык кампании. Если не указан, обработка выполняется для всех локалей.
+    :param language: Язык кампании (необязательно). Если не указан, обрабатываются все языки.
     :type language: Optional[str]
-    :param currency: Валюта кампании. Если не указана, обработка выполняется для всех локалей.
+    :param currency: Валюта кампании (необязательно). Если не указана, обрабатываются все валюты.
     :type currency: Optional[str]
-    :param campaign_file: Путь к файлу кампании.
+    :param campaign_file: Путь к файлу кампании (необязательно).
     :type campaign_file: Optional[str]
-    :return: Возвращает True, если обработка кампании завершена успешно, иначе False.
+    :return: True, если кампания обработана успешно, иначе False.
     :rtype: bool
 
-    Пример:
-    
-    >>> res = process_campaign("summer_sale", "EN", "USD", "campaign_file.json")
+    :Example:
+        >>> res = process_campaign("summer_sale", "EN", "USD", "campaign_file.json")
     """
-    # Код создает список пар (язык, валюта) для всех локалей, если язык или валюта не указаны
-    if language and currency:
-        _l = [(language, currency)]
-    else:
-         _l = [(lang, curr) for locale in locales for lang, curr in locale.items()]
+    # Формируется список пар (язык, валюта) для обработки.
+    _locales_list = [(lang, curr) for locale in locales for lang, curr in locale.items()]
 
-    # Код обрабатывает каждую пару (язык, валюта)
-    for language, currency in _l:
+    # Если указаны язык и валюта, список фильтруется.
+    if language and currency:
+        _locales_list = [(language, currency)]
+
+    # Код итерируется по списку пар язык-валюта для обработки кампании для каждого языка и валюты
+    for language, currency in _locales_list:
         logger.info(f"Processing campaign: {campaign_name=}, {language=}, {currency=}")
         editor = AliCampaignEditor(
             campaign_name = campaign_name,
             language = language,
             currency = currency,
         )
-        # Код запускает обработку кампании
-        if not editor.process_campaign():
-            logger.error(f"Failed to process campaign {campaign_name=}, {language=}, {currency=}")
-            return False
+        # Код вызывает метод process_campaign экземпляра AliCampaignEditor
+        editor.process_campaign()
+
     return True
+
 
 def process_all_campaigns(language: Optional[str] = None, currency: Optional[str] = None) -> None:
     """
-    Обрабатывает все кампании в директории 'campaigns' для заданного языка и валюты.
+    Обрабатывает все кампании в директории 'campaigns'.
 
-    :param language: Язык для обработки кампаний.
+    :param language: Язык кампаний (необязательно).
     :type language: Optional[str]
-    :param currency: Валюта для обработки кампаний.
+    :param currency: Валюта кампаний (необязательно).
     :type currency: Optional[str]
 
-    Пример:
-    
-    >>> process_all_campaigns("EN", "USD")
+    :Example:
+        >>> process_all_campaigns("EN", "USD")
     """
-    # Код определяет список локалей для обработки, если не переданы язык и валюта
+    #  Формируется список пар (язык, валюта) для обработки всех кампаний.
     if not language and not currency:
-        _l = [(lang, curr) for locale in locales for lang, curr in locale.items()]
+        _locales_list = [(lang, curr) for locale in locales for lang, curr in locale.items()]
     else:
-        _l = [(language, currency)]
-    
-    pprint(f"{_l=}")
-    for lang, curr in _l:
-        # Код получает список имен директорий кампаний
+        _locales_list = [(language, currency)]
+    pprint(f"{_locales_list=}")
+    # Код итерируется по списку пар язык-валюта для обработки кампании для каждого языка и валюты
+    for lang, curr in _locales_list:
+        # Код получает список директорий в директории кампаний
         campaigns_dir = get_directory_names(campaigns_directory)
         pprint(f"{campaigns_dir=}")
+        # Код итерируется по каждой кампании в списке
         for campaign_name in campaigns_dir:
              logger.info(f"Start processing {campaign_name=}, {lang=}, {curr=}")
              editor = AliCampaignEditor(
-                campaign_name=campaign_name,
-                language=lang,
-                currency=curr
-            )
-             # Код запускает обработку кампании
-             if not editor.process_campaign():
-                  logger.error(f"Failed to process campaign {campaign_name=}, {lang=}, {curr=}")
-                  
+                 campaign_name=campaign_name,
+                 language=lang,
+                 currency=curr
+             )
+             # Код вызывает метод process_campaign экземпляра AliCampaignEditor
+             editor.process_campaign()
+
 def main_process(campaign_name: str, categories: List[str] | str, language: Optional[str] = None, currency: Optional[str] = None) -> None:
     """
-    Основная функция для обработки кампании.
+    Главная функция для обработки кампании.
 
     :param campaign_name: Название рекламной кампании.
     :type campaign_name: str
-    :param categories: Список категорий для обработки. Если пустой, обрабатывается вся кампания.
+    :param categories: Список категорий для обработки. Если не указан, обрабатывается вся кампания.
     :type categories: List[str] | str
-    :param language: Язык кампании.
+    :param language: Язык кампании (необязательно).
     :type language: Optional[str]
-    :param currency: Валюта кампании.
+    :param currency: Валюта кампании (необязательно).
     :type currency: Optional[str]
 
-    Пример:
-    
-    >>> main_process("summer_sale", ["electronics"], "EN", "USD")
-    >>> main_process("summer_sale", [], "EN", "USD")
+    :Example:
+        >>> main_process("summer_sale", ["electronics"], "EN", "USD")
+        >>> main_process("summer_sale", [], "EN", "USD")
     """
-    # Код определяет список локалей для обработки
+    #  Определяются локали для обработки на основе предоставленных языка и валюты.
     locales_to_process = [(language, currency)] if language and currency else [(lang, curr) for locale in locales for lang, curr in locale.items()]
-    
+    # Код итерируется по списку пар язык-валюта для обработки кампании для каждого языка и валюты
     for lang, curr in locales_to_process:
         if categories:
-            # Код обрабатывает каждую категорию, если они указаны
+            # Код обрабатывает каждую указанную категорию в списке
             for category in categories:
-                logger.info(f"Processing specific category {category=}, {lang=}, {curr=}")
-                process_campaign_category(campaign_name, category, lang, curr)
+                 logger.info(f"Processing specific category {category=}, {lang=}, {curr=}")
+                 process_campaign_category(campaign_name, category, lang, curr)
         else:
-            # Код запускает обработку всей кампании, если категории не указаны
-            logger.info(f"Processing entire campaign {campaign_name=}, {lang=}, {curr=}")
-            process_campaign(campaign_name, lang, curr)
+            # Если категории не указаны, обрабатывается вся кампания
+             logger.info(f"Processing entire campaign {campaign_name=}, {lang=}, {curr=}")
+             process_campaign(campaign_name, lang, curr)
 
 def main() -> None:
     """
-    Основная функция для разбора аргументов командной строки и запуска обработки.
-
-    Пример:
+    Главная функция для запуска обработки кампаний.
     
-    >>> main()
+    :Example:
+        >>> main()
     """
-    # Код создает парсер аргументов командной строки
+    #  Создание парсера аргументов командной строки
     parser = argparse.ArgumentParser(description="Prepare AliExpress Campaign")
     parser.add_argument("campaign_name", type=str, help="Name of the campaign")
     parser.add_argument(
@@ -246,16 +237,19 @@ def main() -> None:
         "-cu", "--currency", type=str, default=None, help="Currency for the campaign"
     )
     parser.add_argument("--all", action="store_true", help="Process all campaigns")
-    # Код разбирает аргументы командной строки
+
+    # Код парсит аргументы командной строки
     args = parser.parse_args()
-    # Код запускает обработку всех кампаний или конкретной кампании
+
+    # Код проверяет, был ли указан аргумент --all
     if args.all:
-        process_all_campaigns(args.language, args.currency)
+         # Код вызывает функцию process_all_campaigns для обработки всех кампаний
+         process_all_campaigns(args.language, args.currency)
     else:
-        main_process(
+        # Код вызывает функцию main_process для обработки конкретной кампании
+         main_process(
             args.campaign_name, args.categories or [], args.language, args.currency
         )
-
 
 if __name__ == "__main__":
     main()

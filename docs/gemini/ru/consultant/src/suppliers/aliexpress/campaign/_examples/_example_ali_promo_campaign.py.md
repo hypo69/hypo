@@ -1,123 +1,146 @@
-# Анализ кода модуля `_example_ali_promo_campaign`
+# Анализ кода модуля `_example_ali_promo_campaign.py`
 
 **Качество кода**
 8
 -  Плюсы
-    - Код использует `Path` для работы с путями, что является хорошей практикой.
-    - Присутствуют импорты необходимых модулей, включая `AliPromoCampaign`, `AliAffiliatedProducts`, и `j_loads_ns`.
-    - Используется `pprint` для вывода, что помогает в отладке.
-    - Наличие переменных для имени кампании, категории, языка и валюты делает код более читаемым.
-
+    -   Код использует импорты из внутренних модулей, что способствует модульности и переиспользованию кода.
+    -   Присутствует использование `Path` для работы с путями, что является хорошей практикой.
+    -   Используется `SimpleNamespace` для создания экземпляра кампании, что упрощает доступ к атрибутам.
 -  Минусы
-    -  Отсутствует docstring для модуля, что затрудняет понимание его назначения.
-    -  В начале кода присутствуют избыточные комментарии, которые не добавляют полезной информации.
-    -  Использование `...` как точек останова в коде не является хорошей практикой в продакшн-коде.
-    -  Примеры создания `AliPromoCampaign` с разными типами аргументов не пояснены и не документированы.
-    -  Не хватает обработки ошибок, например, при чтении файлов или при работе с API.
-    -  Нет явного указания типов для переменных, что снижает читаемость и надежность.
-    -  Комментарии не соответствуют формату RST.
+    -   Множественные дублирующиеся и избыточные комментарии в начале файла.
+    -   Отсутствует docstring для модуля.
+    -   Не хватает обработки ошибок и логирования.
+    -   Не все переменные и функции имеют описания в формате RST.
+    -   В коде присутствуют `...` что говорит о незаконченном коде.
+    -   Использование `AliPromoCampaign` и `AliAffiliatedProducts` не показано в полном объеме, что затрудняет анализ.
+    -   Не хватает использования `j_loads_ns` из `src.utils.jjson`.
+    -   Использование `MODE` не определено.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля с описанием его назначения.
-2.  Удалить избыточные и неинформативные комментарии.
-3.  Заменить `...` на конкретные действия или убрать их, если они не нужны.
-4.  Добавить документацию для класса и функций с использованием RST.
-5.  Использовать `logger.error` для обработки ошибок вместо стандартных `try-except` блоков, где это возможно.
-6.  Добавить проверки на корректность данных, например, существование директории.
-7.  Улучшить читаемость кода, добавив аннотации типов и более осмысленные имена переменных.
-8.  Удалить дублирующиеся комментарии.
-9.  Проверить и откорректировать использование ``AliPromoCampaign`` с разными вариантами входных аргументов.
-10. Заменить `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-11. Добавить обработку возможных исключений при работе с файловой системой и сторонними API.
-12. Форматировать весь код с помощью `black` и `isort`.
+1.  Удалить дублирующиеся комментарии в начале файла и добавить docstring к модулю.
+2.  Добавить docstring к классу `AliPromoCampaign` и переменным.
+3.  Заменить `json.load` на `j_loads_ns` из `src.utils.jjson`.
+4.  Внедрить обработку ошибок с использованием `logger.error`.
+5.  Удалить избыточные `try-except` блоки.
+6.  Добавить логирование важных этапов выполнения кода.
+7.  Заменить `...` на рабочую реализацию.
+8.  Убедиться, что все импорты необходимы и используются.
+9.  Добавить пример использования `AliAffiliatedProducts`.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для демонстрации создания рекламной кампании AliExpress.
-================================================================
+Модуль для примера создания рекламной кампании AliExpress.
+=========================================================
 
-Этот модуль содержит примеры создания экземпляров класса :class:`AliPromoCampaign`
-с различными параметрами, такими как имя кампании, категория, язык и валюта.
+Этот модуль демонстрирует пример создания и настройки рекламной кампании
+на платформе AliExpress, используя классы `AliPromoCampaign` и `AliAffiliatedProducts`.
 
 Пример использования
 --------------------
 
-Пример создания экземпляра класса `AliPromoCampaign`:
-
 .. code-block:: python
 
-    a = AliPromoCampaign(
-        campaign_name='280624_cleararanse',
-        category_name='gaming_comuter_accessories',
-        language='EN',
-        currency='USD'
-    )
+   from pathlib import Path
+   from src.suppliers.aliexpress import AliPromoCampaign
+   from src.utils import get_directory_names
+   from src.logger.logger import logger
 
+   campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
+   campaign_names = get_directory_names(campaigns_directory)
+
+   campaign_name = '280624_cleararanse'
+   category_name = 'gaming_comuter_accessories'
+   language = 'EN'
+   currency = 'USD'
+
+   try:
+       campaign = AliPromoCampaign(
+           campaign_name=campaign_name,
+           category_name=category_name,
+           language=language,
+           currency=currency
+       )
+       logger.info(f'Кампания {campaign_name} успешно создана.')
+       # дальнейшие действия с campaign
+   except Exception as e:
+        logger.error(f"Ошибка при создании кампании {campaign_name}: {e}")
 """
-
-from pathlib import Path
-from types import SimpleNamespace
-
-from src import gs
-from src.suppliers.aliexpress import AliPromoCampaign
-from src.suppliers.aliexpress import AliAffiliatedProducts
-# from src.utils import get_filenames, get_directory_names, read_text_file, csv2dict # Не используется в коде
-from src.utils.jjson import j_loads_ns
-from src.utils.printer import pprint
-from src.logger.logger import logger
-
-
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 MODE = 'dev'
-# Путь к директории с кампаниями
-campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
-# Получаем список имен директорий кампаний
-# campaign_names = get_directory_names(campaigns_directory) # Не используется в коде
 
-# Параметры кампании
+import header # импорт модуля header
+from pathlib import Path # импорт класса Path из модуля pathlib
+from types import SimpleNamespace # импорт класса SimpleNamespace из модуля types
+from src import gs # импорт модуля gs из пакета src
+# импорт класса AliPromoCampaign и AliAffiliatedProducts из пакета src.suppliers.aliexpress
+from src.suppliers.aliexpress import AliPromoCampaign
+from src.suppliers.aliexpress import AliAffiliatedProducts
+# импорт функций get_filenames, get_directory_names, read_text_file, csv2dict из пакета src.utils
+from src.utils import get_filenames, get_directory_names, read_text_file, csv2dict
+from src.utils.jjson import j_loads_ns # импорт функции j_loads_ns из пакета src.utils.jjson
+from src.utils.printer import pprint # импорт функции pprint из пакета src.utils.printer
+from src.logger.logger import logger # импорт логера
+
+# определение директории для кампаний
+campaigns_directory = Path(gs.path.google_drive, 'aliexpress', 'campaigns')
+# получение списка имен директорий в директории кампаний
+campaign_names = get_directory_names(campaigns_directory)
+
+# определение имени кампании, категории, языка и валюты
 campaign_name = '280624_cleararanse'
 category_name = 'gaming_comuter_accessories'
 language = 'EN'
 currency = 'USD'
 
-# Создание экземпляра AliPromoCampaign с параметрами
+# создание экземпляра AliPromoCampaign с передачей параметров
 try:
-    #  Код создает экземпляр `AliPromoCampaign` с заданными параметрами
-    a: SimpleNamespace = AliPromoCampaign(
-        campaign_name=campaign_name,
-        category_name=category_name,
-        language=language,
-        currency=currency,
-    )
+    a: SimpleNamespace = AliPromoCampaign(campaign_name = campaign_name,
+                        category_name = category_name,
+                        language = language,
+                        currency = currency)
+    logger.info(f"Кампания {campaign_name} создана успешно.")
 except Exception as e:
-    logger.error(f'Ошибка при создании AliPromoCampaign: {e}')
-    raise
-
-#  Код получает доступ к атрибутам `campaign`, `category` и `products` экземпляра `a`
-campaign = a.campaign
-category = a.category
-products = a.category.products
+    logger.error(f"Ошибка при создании кампании {campaign_name}: {e}")
 
 
-# Демонстрация создания экземпляра AliPromoCampaign с разными вариантами инициализации
-#  Код создает экземпляр `AliPromoCampaign` передавая словарь с языком и валютой
+# получение доступа к атрибутам campaign, category и products
+if hasattr(a, 'campaign'):
+    campaign = a.campaign
+else:
+    logger.error(f"Атрибут 'campaign' не найден в объекте {a}")
+    campaign = None
+
+if hasattr(a, 'category'):
+    category = a.category
+else:
+    logger.error(f"Атрибут 'category' не найден в объекте {a}")
+    category = None
+
+if hasattr(a, 'category') and hasattr(a.category, 'products'):
+    products = a.category.products
+else:
+    logger.error(f"Атрибут 'products' не найден в объекте {a}")
+    products = None
+
+
+# пример создания AliPromoCampaign с использованием словаря
 try:
-    a = AliPromoCampaign(campaign_name, category_name, {'EN': 'USD'})
+   a = AliPromoCampaign(campaign_name,category_name,{'EN':'USD'})
+   logger.info(f"Кампания {campaign_name} создана успешно с использованием словаря.")
 except Exception as e:
-     logger.error(f'Ошибка при создании AliPromoCampaign со словарем: {e}')
-     raise
+    logger.error(f"Ошибка при создании кампании {campaign_name} со словарем: {e}")
 
-#  Код создает экземпляр `AliPromoCampaign` передавая язык и валюту как отдельные строки
+# пример создания AliPromoCampaign с использованием строк
 try:
-    a = AliPromoCampaign(campaign_name, category_name, 'EN', 'USD')
+   a = AliPromoCampaign(campaign_name,category_name, 'EN','USD')
+   logger.info(f"Кампания {campaign_name} создана успешно со строками.")
 except Exception as e:
-    logger.error(f'Ошибка при создании AliPromoCampaign со строками: {e}')
-    raise
+    logger.error(f"Ошибка при создании кампании {campaign_name} со строками: {e}")
+...
 ```

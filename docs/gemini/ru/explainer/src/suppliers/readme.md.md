@@ -1,167 +1,203 @@
-## Анализ кода `hypotez/src/suppliers/readme.md`
+## <алгоритм>
 
-### 1. **<алгоритм>**
-
-**Общий процесс работы класса `Supplier`:**
+### Общая схема работы класса `Supplier`
 
 1.  **Инициализация (`__init__`)**:
-    *   Принимает `supplier_prefix` (строка, например, `'amazon'`), `locale` (строка, например, `'en'`), и тип `webdriver` (строка или объект `Driver`, например, `'chrome'` или экземпляр класса `Driver`.)
-    *   Устанавливает значения атрибутов экземпляра класса, таких как `supplier_prefix` и `locale`.
-    *   Вызывает метод `_payload` для загрузки настроек и инициализации `webdriver`.
-    *   **Пример**: `supplier = Supplier(supplier_prefix='aliexpress', locale='ru', webdriver='chrome')`
+    *   Принимает `supplier_prefix` (строка, например, `'amazon'`), `locale` (строка, например, `'en'`), и `webdriver` (строка `'default'`, экземпляр `Driver` или булево значение).
+    *   Сохраняет `supplier_prefix`, `locale` и вызывает метод `_payload` для загрузки настроек и инициализации веб-драйвера.
+    *   Пример: `supplier = Supplier(supplier_prefix='aliexpress', locale='en', webdriver='chrome')`
+    *   Поток данных: `__init__` -> `_payload`
 
-2.  **Загрузка настроек (`_payload`)**:
-    *   Принимает тип `webdriver` (строка или объект `Driver`).
-    *   Загружает настройки поставщика из JSON-файла на основе `supplier_prefix`.
-    *   Загружает локаторы веб-элементов для данного поставщика.
-    *   Инициализирует объект `webdriver` в зависимости от переданного типа.
-    *   Возвращает `True` в случае успеха.
-    *  **Пример**: `supplier._payload(webdriver='firefox')`
+2.  **Загрузка настроек и инициализация веб-драйвера (`_payload`)**:
+    *   Загружает настройки поставщика из JSON-файла, используя `supplier_prefix`.
+    *   Инициализирует `locators` (словари с локаторами веб-элементов).
+    *   Инициализирует экземпляр `Driver` (веб-драйвера), если `webdriver` является строкой или булевым значением.
+    *   Пример: `supplier._payload(webdriver='firefox')`
+    *   Поток данных: `_payload` -> Загрузка настроек из JSON, инициализация `locators`, инициализация `Driver`
 
 3.  **Аутентификация (`login`)**:
-    *   Использует данные для входа (если имеются) и `webdriver` для входа на сайт поставщика.
-    *   Возвращает `True` если вход выполнен успешно.
-    *   **Пример**: `supplier.login()`
+    *   Выполняет вход на веб-сайт поставщика, используя сохраненные данные аутентификации (`login_data`).
+    *   Пример: `supplier.login()`
+    *   Поток данных: `login` -> взаимодействие с веб-сайтом через `driver`, использование данных из `login_data`
 
-4.  **Выполнение сценариев**:
-    *   `run_scenario_files` принимает список или путь к файлам сценариев.
-        *   Читает файлы сценариев и передает их в `run_scenarios`.
-    *  `run_scenarios` принимает список или словарь со сценариями.
-         *   Для каждого сценария, вызывает соответствующие действия (например, скрейпинг данных).
-    *   Возвращает `True`, если все сценарии выполнены успешно.
-    *   **Примеры**:
-        *   `supplier.run_scenario_files(['scenario1.json', 'scenario2.json'])`
-        *   `supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])`
+4.  **Запуск сценариев (`run_scenario_files` и `run_scenarios`)**:
+    *   **`run_scenario_files`**: Принимает список путей к файлам сценариев (`scenario_files`). Загружает сценарии из JSON-файлов и передает их в `run_scenarios`.
+        *   Пример: `supplier.run_scenario_files(['example_scenario.json'])`
+    *   **`run_scenarios`**: Принимает список или словарь со сценариями. Выполняет каждый сценарий, используя `driver`, `locators` и другие атрибуты класса.
+        *   Пример: `supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])`
+    *   Поток данных: `run_scenario_files` -> `run_scenarios` -> выполнение сценариев с использованием `driver` и `locators`
 
-**Поток данных:**
-    1.  `__init__` → `_payload` (передаёт тип вебдрайвера)
-    2.  `_payload` → загрузка настроек и локаторов, создание `webdriver`
-    3. `_payload`→ `__init__` (сигнал об успехе)
-    4.  `login` → (использование `webdriver` для аутентификации)
-    5.  `run_scenario_files` → чтение сценариев из файлов
-    6.  `run_scenario_files` → `run_scenarios` (передает сценарии)
-    7. `run_scenarios` → (использует `webdriver`, `locators` и настройки для выполнения сценариев)
+### Блок-схема
 
-### 2. **<mermaid>**
+```mermaid
+flowchart TD
+    subgraph Initialization
+        A[__init__] --> B[_payload]
+        B --> C[Load Supplier Settings]
+        C --> D[Initialize Webdriver]
+        D --> E[Locators initialization]
+    end
+    subgraph Authentication
+        E --> F[login]
+        F --> G[Web Login]
+    end
+    subgraph Execution
+        G --> H[run_scenario_files]
+        H --> I[load scenarios from files]
+         I --> J[run_scenarios]
+        J --> K[Execute Scenario steps]
+    end
+    K --> L[Data scraping]
+    L --> M[Return results]
+```
+
+## <mermaid>
 
 ```mermaid
 graph TD
     subgraph WebInteraction
-        webelement(Web Element) <--> executor(Action Executor)
+        webelement <--> executor
         subgraph InnerInteraction
-            executor <--> webdriver(WebDriver)
+            executor <--> webdriver
         end
     end
-    webdriver -->|result| supplier(Supplier)
+    webdriver -->|result| supplier
     supplier -->|locator| webdriver
-    supplier --> product_fields(Product Fields)
-    product_fields --> endpoints(Endpoints)
-    scenario(Scenario) -->|Specific scenario for supplier| supplier
+    supplier --> product_fields
+    product_fields --> endpoints
+    scenario -->|Specific scenario for supplier| supplier
 ```
 
-**Разбор диаграммы `mermaid`:**
+**Объяснение:**
 
-*   **WebInteraction (подграф):** Представляет взаимодействие с веб-сайтом.
-    *   **webelement (Web Element):** Веб-элемент на странице, с которым взаимодействует автоматизация.
-    *   **executor (Action Executor):**  Компонент, ответственный за выполнение действий над веб-элементами (клик, ввод текста и т. д.).
-    *   **InnerInteraction (подграф):** Описывает внутреннее взаимодействие между `executor` и `webdriver`.
-        *   **webdriver (WebDriver):** Инструмент для управления браузером (например, Chrome, Firefox) и взаимодействия с веб-страницами.
-*   **webdriver --> supplier:** `WebDriver` передает результаты своих действий (например, HTML-код страницы или данные элементов) классу `Supplier`.
-*   **supplier --> webdriver:**  `Supplier` предоставляет `WebDriver` локаторы для поиска веб-элементов.
-*   **supplier --> product_fields:** `Supplier` определяет структуру данных для извлечения информации о продуктах.
-*   **product_fields --> endpoints:** Структура полей продукта определяет какие конечные точки могут быть использованы для запросов.
-*   **scenario --> supplier:** Сценарий определяет конкретные действия, которые `Supplier` должен выполнить.
-    *   **scenario (Scenario):** Набор действий (например, "scrape product details", "add to cart"), предназначенных для выполнения конкретной задачи.
+*   **WebInteraction**: Подграф, представляющий взаимодействие с веб-страницей.
+    *   **webelement**: Представляет HTML-элемент на веб-странице.
+    *   **executor**: Отвечает за выполнение действий с `webelement`.
+    *   **InnerInteraction**: Подграф, представляющий внутреннее взаимодействие с веб-драйвером.
+        *   **webdriver**: Управляет браузером и веб-элементами.
+
+*   **webdriver**: Экземпляр веб-драйвера, который взаимодействует с браузером.
+*   **supplier**: Экземпляр класса `Supplier`, который управляет веб-драйвером и выполняет сценарии.
+*   **product_fields**: Словарь с полями товара, которые нужно извлечь.
+*   **endpoints**: URL-адреса для взаимодействия.
+*   **scenario**: Представляет сценарий (последовательность действий) для конкретного поставщика.
 
 **Зависимости:**
 
-Диаграмма показывает следующие зависимости:
+*   **Веб-взаимодействие**: Зависимость от `webelement`, `executor`, и `webdriver` для взаимодействия с веб-страницами.
+*   **Supplier**: Зависимость от `webdriver` для управления браузером и от `scenario` для выполнения действий.
+*   **Поля продукта**: Зависимость от поставщика `supplier`, чтобы определить, какие поля нужно извлечь.
+*   **Сценарий**: Зависимость от `supplier` для выполнения сценариев.
 
-*   `WebDriver` (взаимодействие с браузером) зависит от `Web Elements` и `Action Executor` (управление браузером).
-*   `Supplier` зависит от `WebDriver` (для сбора данных), `locators` (для поиска элементов) и сценариев (определение последовательности действий).
-*   `Product Fields` зависит от поставщика (`Supplier`).
-*   `Endpoints` зависят от структуры полей товара (`Product Fields`).
-*  `Supplier` зависит от `Scenario` для выполнения конкретных действий.
+## <объяснение>
 
-### 3. **<объяснение>**
+### Импорты
 
-#### **Импорты:**
+В предоставленном коде нет явных импортов, но на основе описания и контекста можно заключить, что класс `Supplier` зависит от следующих компонентов:
 
-В предоставленном коде импорты не указаны. Однако, судя по контексту,  необходимы импорты из других частей проекта:
-* `src.webdriver` -  содержит класс `Driver`.
-* `src.scenarios` - содерждит класс `Scenario`.
-* `src.exceptions` - содежит класс `DefaultSettingsException`
+*   **`Driver`**: Класс `Driver` (вероятно, определенный в `../webdriver`), который отвечает за взаимодействие с веб-браузером. Это обертка над webdriver, например, selenium.
+*   **`Scenario`**: Класс `Scenario` (вероятно, определенный в `../scenarios`), который представляет сценарии (наборы действий) для конкретных поставщиков.
+*   **`src.gs`** (неявный импорт): `gs` (глобальные настройки) из `src`, которые могут включать пути к файлам конфигураций, общие параметры и т. д.
 
-#### **Класс `Supplier`:**
+### Классы
 
-*   **Роль:** Базовый класс для всех поставщиков данных. Он абстрагирует взаимодействие с различными источниками данных (веб-сайты, API и т.д.).
-*   **Атрибуты:**
-    *   `supplier_id` (int): Уникальный идентификатор поставщика.
-    *   `supplier_prefix` (str): Префикс поставщика (например, `'amazon'`, `'aliexpress'`). Используется для поиска настроек и локаторов.
-    *   `supplier_settings` (dict): Настройки поставщика, загруженные из JSON.
-    *   `locale` (str): Локализация, например, `'en'`, `'ru'`.
-    *   `price_rule` (str): Правила расчёта цен, например, с учетом НДС.
-    *   `related_modules` (module): Дополнительные модули для поставщика.
-    *   `scenario_files` (list): Список файлов сценариев.
-    *   `current_scenario` (dict): Текущий выполняемый сценарий.
-    *   `login_data` (dict): Данные для аутентификации.
-    *   `locators` (dict): Локаторы веб-элементов.
-    *   `driver` (Driver): Экземпляр класса `Driver` для управления браузером.
-    *   `parsing_method` (str): Метод парсинга данных (например, `'webdriver'`, `'api'`, `'xls'`, `'csv'`).
-*   **Методы:**
-    *   `__init__`: Конструктор класса. Инициализирует атрибуты экземпляра класса и вызывает метод `_payload`.
-    *   `_payload`: Загружает настройки поставщика, локаторы, и инициализирует `WebDriver`.
-    *   `login`: Выполняет аутентификацию на веб-сайте.
-    *   `run_scenario_files`: Выполняет сценарии из файлов.
-    *   `run_scenarios`: Выполняет конкретные сценарии.
+*   **`Supplier`**:
+    *   **Роль**: Базовый класс для всех поставщиков данных. Он управляет взаимодействием с поставщиком, загружает конфигурации, инициализирует веб-драйвер и выполняет сценарии.
+    *   **Атрибуты**:
+        *   `supplier_id` (int): Уникальный идентификатор поставщика.
+        *   `supplier_prefix` (str): Префикс поставщика (например, `'amazon'`).
+        *   `supplier_settings` (dict): Настройки поставщика из JSON-файла.
+        *   `locale` (str): Код локализации (например, `'en'`, `'ru'`).
+        *   `price_rule` (str): Правила расчета цены.
+        *   `related_modules` (module): Модули для специфичных операций поставщика.
+        *   `scenario_files` (list): Список файлов сценариев.
+        *   `current_scenario` (dict): Текущий выполняемый сценарий.
+        *   `login_data` (dict): Данные для аутентификации.
+        *   `locators` (dict): Словарь с локаторами веб-элементов.
+        *   `driver` (`Driver`): Экземпляр веб-драйвера.
+        *   `parsing_method` (str): Метод парсинга данных (`'webdriver'`, `'api'`, `'xls'`, `'csv'`).
+    *   **Методы**:
+        *   `__init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs)`: Конструктор, инициализирует атрибуты и вызывает `_payload`.
+        *   `_payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool`: Загружает настройки, инициализирует локаторы и веб-драйвер.
+        *   `login(self) -> bool`: Выполняет аутентификацию на веб-сайте.
+        *   `run_scenario_files(self, scenario_files: str | List[str] = None) -> bool`: Запускает сценарии из файлов.
+        *   `run_scenarios(self, scenarios: dict | list[dict]) -> bool`: Запускает конкретные сценарии.
 
-#### **Функции:**
+### Функции
 
-*   `__init__(self, supplier_prefix: str, locale: str = 'en', webdriver: str | Driver | bool = 'default', *attrs, **kwargs)`
-    *   **Аргументы:** `supplier_prefix` (обязательный, строка), `locale` (необязательный, строка, по умолчанию 'en'), `webdriver` (необязательный, строка или `Driver` или `bool`, по умолчанию 'default').
-    *   **Возвращает:** `None`
-    *   **Назначение:** Конструктор класса, инициализирует атрибуты и вызывает метод `_payload`.
-    *   **Пример:** `Supplier(supplier_prefix='amazon', locale='en', webdriver='chrome')`
-*   `_payload(self, webdriver: str | Driver | bool, *attrs, **kwargs) -> bool`
-    *   **Аргументы:** `webdriver` (обязательный, строка или `Driver` или `bool`).
-    *   **Возвращает:** `True`, если загрузка выполнена успешно, в противном случае - вызывает исключение.
-    *   **Назначение:** Загружает настройки, локаторы, и инициализирует вебдрайвер.
-    *   **Пример:** `supplier._payload(webdriver='firefox')`
-*   `login(self) -> bool`
-    *   **Аргументы:** Нет.
-    *   **Возвращает:** `True`, если вход выполнен успешно.
-    *   **Назначение:** Выполняет аутентификацию на сайте поставщика.
-    *   **Пример:** `supplier.login()`
-*    `run_scenario_files(self, scenario_files: str | List[str] = None) -> bool`
-    *   **Аргументы:** `scenario_files` (необязательный, строка или список строк, по умолчанию `None`).
-    *   **Возвращает:** `True`, если выполнение всех сценариев прошло успешно.
-    *   **Назначение:** Выполняет сценарии из указанных файлов.
-    *   **Пример:** `supplier.run_scenario_files(['scenario1.json', 'scenario2.json'])`
-*   `run_scenarios(self, scenarios: dict | list[dict]) -> bool`
-    *   **Аргументы:** `scenarios` (обязательный, словарь или список словарей).
-    *   **Возвращает:** `True`, если все сценарии выполнены успешно.
-    *   **Назначение:** Выполняет указанные сценарии.
-    *   **Пример:** `supplier.run_scenarios([{'action': 'scrape', 'target': 'product_list'}])`
+*   `__init__`:
+    *   **Аргументы**:
+        *   `supplier_prefix` (str): Префикс поставщика (обязательный).
+        *   `locale` (str, по умолчанию: `'en'`): Код локализации.
+        *   `webdriver` (str | `Driver` | bool, по умолчанию: `'default'`): Тип или экземпляр веб-драйвера.
+        *   `*attrs`, `**kwargs`: Дополнительные атрибуты и параметры.
+    *   **Возвращаемое значение**: Нет (метод-конструктор).
+    *   **Назначение**: Инициализирует объект поставщика.
 
-#### **Переменные:**
+*   `_payload`:
+    *   **Аргументы**:
+        *   `webdriver` (str | `Driver` | bool): Тип или экземпляр веб-драйвера.
+        *   `*attrs`, `**kwargs`: Дополнительные атрибуты и параметры.
+    *   **Возвращаемое значение**: `bool` (`True` при успехе).
+    *   **Назначение**: Загружает настройки поставщика, инициализирует локаторы и веб-драйвер.
 
-*   Переменные класса и экземпляра (`supplier_id`, `supplier_prefix`, `locale`, `driver` и другие) описаны в разделе **Атрибуты** класса `Supplier`.
-*   Переменные, которые используются внутри методов (`scenario_files` и `scenarios` в `run_scenario_files` и `run_scenarios` соответственно) описаны в разделе **Функции**.
+*   `login`:
+    *   **Аргументы**: Нет.
+    *   **Возвращаемое значение**: `bool` (`True` при успешном входе).
+    *   **Назначение**: Выполняет аутентификацию на веб-сайте поставщика.
 
-#### **Потенциальные ошибки и области для улучшения:**
+*   `run_scenario_files`:
+    *   **Аргументы**:
+        *   `scenario_files` (str | List[str], по умолчанию: `None`): Список или путь к файлам сценариев.
+    *   **Возвращаемое значение**: `bool` (`True` при успешном выполнении).
+    *   **Назначение**: Запускает сценарии из файлов.
 
-*   **Обработка ошибок:** В коде не показана явная обработка ошибок при загрузке настроек, выполнении сценариев, и взаимодействии с вебдрайвером. Необходимо добавить блоки `try-except` для обработки возможных исключений.
-*   **Валидация данных:** Необходимо добавить валидацию входных данных, таких как `supplier_prefix`, `locale`, и `webdriver`, чтобы предотвратить некорректную работу программы.
-*   **Конфигурация:** Загрузка настроек из JSON-файлов может быть расширена для поддержки других форматов (например, YAML) и более гибкой конфигурации.
-*   **Логирование:** Необходимо добавить логирование действий для отладки и мониторинга работы программы.
-*   **Параллельное выполнение:** Реализация параллельного выполнения сценариев может ускорить работу программы.
+*   `run_scenarios`:
+    *   **Аргументы**:
+        *   `scenarios` (dict | list[dict]): Словарь или список словарей со сценариями.
+    *   **Возвращаемое значение**: `bool` (`True` при успешном выполнении).
+    *   **Назначение**: Запускает конкретные сценарии.
 
-#### **Цепочка взаимосвязей с другими частями проекта:**
+### Переменные
 
-*   **`src.webdriver`**: Класс `Supplier` использует класс `Driver` из `src.webdriver` для управления браузером.
-*   **`src.scenarios`**:  Сценарии, которые используются в `run_scenario_files` и `run_scenarios`, скорее всего определены в `src.scenarios`.
-*   **`src.exceptions`**:  Класс `Supplier` обрабатывает `DefaultSettingsException`, который, вероятно, находится в `src.exceptions`.
-*   **`src.settings`**:  Настройки поставщиков (supplier settings) вероятно, должны быть  расположены в  `src.settings`.
-*   **`src.locators`**: Локаторы веб-элементов (`locators`) для каждого поставщика вероятно должны быть расположены в `src.locators`.
+*   `supplier_prefix` (str): Префикс поставщика (например, `'amazon'`, `'aliexpress'`).
+*   `locale` (str): Код локализации (например, `'en'`, `'ru'`).
+*   `webdriver` (str | `Driver` | bool): Тип или экземпляр веб-драйвера.
+*   `supplier_settings` (dict): Настройки поставщика из JSON.
+*   `locators` (dict): Словарь с локаторами веб-элементов.
+*   `driver` (`Driver`): Экземпляр веб-драйвера.
+*   `scenario_files` (list): Список файлов сценариев.
+*   `scenarios` (dict | list[dict]): Сценарии для выполнения.
 
-**В целом, класс `Supplier` является ключевым компонентом системы, который обеспечивает гибкую и расширяемую архитектуру для работы с различными поставщиками данных. Необходимо обратить внимание на обработку ошибок и расширение функциональности для более эффективной работы.**
+### Потенциальные ошибки и области для улучшения
+
+*   **Обработка ошибок**: Код не имеет явной обработки исключений. Следует добавить try-except блоки для обработки ошибок при загрузке файлов, выполнении веб-драйвера и т.д.
+*   **Логирование**: Нет логирования. Для отладки и мониторинга следует добавить логирование.
+*   **Конфигурация веб-драйвера**:  Нужно обеспечить более гибкую конфигурацию веб-драйвера.
+*   **Гибкость сценариев**:  Нужно обеспечить гибкое определение сценариев, которые можно было бы переиспользовать для разных поставщиков.
+
+### Взаимосвязи с другими частями проекта
+
+*   **`webdriver`**: Класс `Supplier` зависит от класса `Driver`, который инкапсулирует взаимодействие с браузером.
+*   **`scenarios`**: Класс `Supplier` использует сценарии, определенные в модуле `scenarios`, для управления действиями веб-драйвера.
+*   **`settings`**: Зависит от общей системы настроек для получения конфигурационных данных, общих путей и параметров.
+*   **`prefix`**: При инициализации используется для определения файлов настроек поставщика.
+*   **`locators`**: При загрузке настроек используются для идентификации веб-элементов.
+
+```mermaid
+flowchart TD
+    Start --> SupplierClass[<code>Supplier</code> Class<br>Base class for suppliers]
+    SupplierClass --> InitMethod[<code>__init__</code> Method<br>Initializes supplier instance]
+    InitMethod --> PayloadMethod[<code>_payload</code> Method<br>Loads settings & webdriver]
+    PayloadMethod --> LoadSettings[Load settings from json ]
+    LoadSettings --> InitializeWebdriver[Initialize Webdriver <br>using <code>Driver</code>]
+     InitializeWebdriver --> LoginMethod[<code>login</code> Method<br>Authenticates User]
+    LoginMethod --> WebLogin[Web Login with<br> login data from settings]
+    WebLogin --> RunScenarioFiles[<code>run_scenario_files</code> Method<br>Executes scenario files]
+    RunScenarioFiles --> LoadScenario[Load scenario files <br> from JSON]
+    LoadScenario --> RunScenarios[<code>run_scenarios</code> Method<br>Executes specified scenarios]
+    RunScenarios --> ExecuteScenario[Execute scenario actions <br> using <code>Driver</code> and locators]
+        ExecuteScenario -->|Interaction with| WebdriverClass[<code>webdriver</code>  Class<br>Driver for web interaction]
+    ExecuteScenario -->|scenario instructions| ScenariosClass[<code>scenarios</code> Class<br>Class to define scenario]
+    
+    Start --> GlobalSettings[Global Settings<br> <code>src.gs</code>]

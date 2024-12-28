@@ -1,708 +1,662 @@
-## Анализ кода модуля popup.js
+# Анализ кода модуля popup.js
 
 **Качество кода**
 8
--  Плюсы
-    - Код разбит на функции, что улучшает читаемость и поддержку.
-    - Используется `Object.create(null)` для создания объектов без прототипа, что может быть полезно в некоторых случаях.
-    - Код следует стандартам именования переменных и функций.
-    - Обработчики событий добавлены через `addEventListener`, что является хорошей практикой.
--  Минусы
-    - Не хватает комментариев, особенно в формате reStructuredText (RST), для функций и переменных.
-    - Используются стандартные блоки `try-except` без логирования ошибок через `logger.error`.
-    - Многократное использование `sendToActiveTab` с одинаковыми параметрами, можно вынести в отдельную функцию.
-    - Есть потенциал для улучшения структуры кода через разбиение на более мелкие, переиспользуемые функции.
-    - Использование устаревшего var вместо let/const
-    -  Дублирование кода при добавлении `event` и `timeout` параметров в сообщения.
-    -  В некоторых местах используется `parseInt` без проверки на `NaN`
-    - Отсутствуют docstring
+ -  Плюсы
+    - Код хорошо структурирован и разбит на логические блоки.
+    - Используются функции для обработки событий и управления видимостью элементов.
+    - Присутствует обработка сообщений от контент-скрипта.
+    - Код старается избегать дублирования, используя функции `sendToActiveTab` и `sendToSpecifiedFrame`.
+ -  Минусы
+    - Отсутствует явная документация (docstrings) для функций и переменных.
+    - Используются устаревшие конструкции `var` вместо `const` и `let` в некоторых местах.
+    - Присутствует избыточное использование `Promise.resolve().then(...)` в `sendToSpecifiedFrame`, которое можно упростить.
+    - Код содержит magic strings (например, "execute", "focusFrame"), которые лучше вынести в константы.
+    - Некоторые функции имеют повторяющуюся логику, например, `changeContextVisible`, `changeResolverVisible`, `changeFrameIdVisible`, `changeFrameDesignationVisible`.
+    - Обработка ошибок в основном осуществляется через `catch(e => { showError(...) })`, что можно улучшить, используя `logger.error`.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить docstring и комментарии в формате reStructuredText (RST)**:
-    - Описать каждый модуль, функцию, метод и переменную с использованием RST.
-    - Подробно комментировать каждый блок кода для лучшего понимания.
-2.  **Использовать `logger.error` для обработки ошибок**:
-    - Заменить стандартные блоки `try-except` на `logger.error` для более эффективного логирования ошибок.
-3.  **Избегать дублирования кода**:
-    - Вынести общие части кода в отдельные функции для переиспользования.
-    - Упростить отправку сообщений, избегая повторений в `sendToActiveTab` и `sendToSpecifiedFrame`.
-4.  **Улучшить структуру кода**:
-    - Разбить крупные функции на более мелкие, переиспользуемые функции.
-    - Использовать `let` и `const` вместо `var`.
-    -  Добавить проверку на `NaN` после `parseInt`
+1.  **Документация**: Добавить docstrings в формате RST для всех функций, методов и переменных.
+2.  **Импорты**: Добавить импорт `logger` для логирования ошибок.
+3.  **Переменные**: Заменить `var` на `const` и `let` там, где это уместно.
+4.  **Упрощение кода**: Упростить `sendToSpecifiedFrame`, удалив избыточный `Promise.resolve().then(...)`.
+5.  **Константы**: Вынести magic strings в константы.
+6.  **Рефакторинг**: Вынести повторяющуюся логику в отдельные функции.
+7.  **Обработка ошибок**: Использовать `logger.error` для логирования ошибок вместо `showError`.
+8.  **Улучшение читаемости**: Разделить большие блоки кода на более мелкие, чтобы улучшить читаемость.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для управления popup окном расширения tryxpath
-====================================================
+Модуль для управления popup окном расширения try_xpath.
+=========================================================================================
 
-Этот модуль отвечает за взаимодействие с popup окном расширения,
-включая отправку сообщений на активную вкладку,
-обработку результатов и сохранение состояния popup окна.
+Этот модуль обрабатывает взаимодействие пользователя с popup окном расширения,
+включая отправку запросов на выполнение XPath запросов в контент скриптах,
+обработку результатов и управление отображением элементов интерфейса.
 """
 
-import json
 from src.logger.logger import logger
-from src.utils.jjson import j_loads_ns
-
-# alias
-#  создаем псевдоним для tryxpath
-tx = tryxpath
-# создаем псевдоним для tryxpath.functions
-fu = tryxpath.functions
-
-# сохраняем ссылку на объект document
-document = window.document
-
-#  класс для скрытия элементов
-noneClass = "none"
-# класс для элементов справки
-helpClass = "help"
-#  константа, представляющая недействительный идентификатор вкладки
-invalidTabId = browser.tabs.TAB_ID_NONE
-# константа, представляющая недействительный идентификатор выполнения скрипта
-invalidExecutionId = float('NaN')
-# константа, представляющая недействительный идентификатор фрейма
-invalidFrameId = -1
-
-# Объявление переменных для элементов интерфейса popup окна
-# :var mainWay: HTML элемент select для выбора способа поиска
-# :var mainExpression: HTML элемент textarea для ввода основного xpath выражения
-# :var contextCheckbox: HTML элемент checkbox для включения/выключения контекстного поиска
-# :var contextHeader: HTML элемент для заголовка контекстного поиска
-# :var contextBody: HTML элемент для тела контекстного поиска
-# :var contextWay: HTML элемент select для выбора способа контекстного поиска
-# :var contextExpression: HTML элемент textarea для ввода контекстного xpath выражения
-# :var resolverHeader: HTML элемент для заголовка поиска через resolver
-# :var resolverBody: HTML элемент для тела поиска через resolver
-# :var resolverCheckbox: HTML элемент checkbox для включения/выключения поиска через resolver
-# :var resolverExpression: HTML элемент textarea для ввода выражения resolver
-# :var frameDesignationHeader: HTML элемент для заголовка поиска фрейма
-# :var frameDesignationCheckbox: HTML элемент checkbox для включения/выключения поиска фрейма
-# :var frameDesignationBody: HTML элемент для тела поиска фрейма
-# :var frameDesignationExpression: HTML элемент textarea для ввода выражения для поиска фрейма
-# :var frameIdHeader: HTML элемент для заголовка поиска по frameId
-# :var frameIdCheckbox: HTML элемент checkbox для включения/выключения поиска по frameId
-# :var frameIdBody: HTML элемент для тела поиска по frameId
-# :var frameIdList: HTML элемент select для выбора frameId
-# :var frameIdExpression: HTML элемент textarea для ввода frameId
-# :var resultsMessage: HTML элемент для отображения сообщения о результате
-# :var resultsTbody: HTML элемент tbody для отображения результатов
-# :var contextTbody: HTML элемент tbody для отображения контекстных результатов
-# :var resultsCount: HTML элемент для отображения количества результатов
-# :var resultsFrameId: HTML элемент для отображения frameId
-# :var detailsPageCount: HTML элемент для отображения номера страницы с деталями
-# :var helpBody: HTML элемент для тела справки
-# :var helpCheckbox: HTML элемент checkbox для включения/выключения справки
-let mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
-    contextWay, contextExpression, resolverHeader, resolverBody,
-    resolverCheckbox, resolverExpression, frameDesignationHeader,
-    frameDesignationCheckbox, frameDesignationBody,
-    frameDesignationExpression, frameIdHeader, frameIdCheckbox,
-    frameIdBody, frameIdList, frameIdExpression, resultsMessage,
-    resultsTbody, contextTbody, resultsCount, resultsFrameId,
-    detailsPageCount, helpBody, helpCheckbox;
-
-# :var relatedTabId:  Идентификатор вкладки, связанной с текущим popup
-# :var relatedFrameId: Идентификатор фрейма, связанного с текущим popup
-# :var executionId: Идентификатор выполнения скрипта
-# :var resultedDetails: Список деталей результатов
-# :var detailsPageSize: Размер страницы для отображения деталей
-# :var detailsPageIndex: Индекс текущей страницы деталей
-let relatedTabId = invalidTabId;
-let relatedFrameId = invalidFrameId;
-let executionId = invalidExecutionId;
-let resultedDetails = [];
-const detailsPageSize = 50;
-let detailsPageIndex = 0;
-
-def send_message(tab_id, msg, opts=None):
-    """
-    Отправляет сообщение на указанную вкладку.
-
-    :param tab_id: Идентификатор вкладки, куда отправить сообщение.
-    :param msg: Объект сообщения для отправки.
-    :param opts: Дополнительные опции для отправки сообщения.
-    :return: Promise, разрешающийся с ответом от вкладки.
-    """
-    opts = opts or {};
-    return browser.tabs.sendMessage(tab_id, {
-       "timeout":0,
-        "timeout_for_event":"presence_of_element_located",
-        **msg
-        }, opts);
-    
-def send_to_active_tab(msg, opts=None):
-    """
-    Отправляет сообщение на активную вкладку в текущем окне.
-
-    :param msg: Объект сообщения для отправки.
-    :param opts: Дополнительные опции для отправки сообщения.
-    :return: Promise, разрешающийся с ответом от вкладки.
-    """
-    return browser.tabs.query({
-        "active": True,
-        "currentWindow": True
-    }).then(tabs => {
-       return send_message(tabs[0].id, msg, opts);
-    });
+from src.utils.jjson import j_loads, j_loads_ns
 
 
-def send_to_specified_frame(msg):
-    """
-    Отправляет сообщение в указанный фрейм.
+(function (window) {
+    "use strict";
 
-    :param msg: Объект сообщения для отправки.
-    :return: Promise, разрешающийся после выполнения скрипта.
-    """
-    let frameId = get_specified_frame_id();
-    return Promise.resolve().then(() => {
-        return browser.tabs.executeScript({
-            "file": "/scripts/try_xpath_check_frame.js",
-            "matchAboutBlank": True,
-            "runAt": "document_start",
-            "frameId": frameId
+    # alias
+    var tx = tryxpath;
+    var fu = tryxpath.functions;
+
+    var document = window.document;
+
+    const noneClass = "none";
+    const helpClass = "help";
+    const invalidTabId = browser.tabs.TAB_ID_NONE;
+    const invalidExecutionId = NaN;
+    const invalidFrameId = -1;
+    # Объявление констант для типов событий
+    const EXECUTE_EVENT = "execute";
+    const FOCUS_FRAME_EVENT = "focusFrame";
+    const INITIALIZE_BLANK_WINDOWS_EVENT = "initializeBlankWindows";
+    const REQUEST_SHOW_RESULTS_IN_POPUP_EVENT = "requestShowResultsInPopup";
+    const FOCUS_CONTEXT_ITEM_EVENT = "focusContextItem";
+    const FOCUS_ITEM_EVENT = "focusItem";
+    const STORE_POPUP_STATE_EVENT = "storePopupState";
+    const REQUEST_INSERT_STYLE_TO_POPUP_EVENT = "requestInsertStyleToPopup";
+    const REQUEST_RESTORE_POPUP_STATE_EVENT = "requestRestorePopupState";
+    const ADD_FRAME_ID_EVENT = "addFrameId";
+    const SET_STYLE_EVENT = "setStyle";
+    const RESET_STYLE_EVENT = "resetStyle";
+    const REQUEST_SHOW_ALL_RESULTS_EVENT = "requestShowAllResults"
+
+    let mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
+        contextWay, contextExpression, resolverHeader, resolverBody,
+        resolverCheckbox, resolverExpression, frameDesignationHeader,
+        frameDesignationCheckbox, frameDesignationBody,
+        frameDesignationExpression, frameIdHeader, frameIdCheckbox,
+        frameIdBody, frameIdList, frameIdExpression, resultsMessage,
+        resultsTbody, contextTbody, resultsCount, resultsFrameId,
+        detailsPageCount, helpBody, helpCheckbox;
+
+    let relatedTabId = invalidTabId;
+    let relatedFrameId = invalidFrameId;
+    let executionId = invalidExecutionId;
+    let resultedDetails = [];
+    const detailsPageSize = 50;
+    let detailsPageIndex = 0;
+
+
+    /**
+     * Отправляет сообщение активной вкладке.
+     *
+     * :param msg: Объект сообщения для отправки.
+     * :param opts: Объект с дополнительными параметрами.
+     * :return: Promise с результатом отправки сообщения.
+     */
+    function sendToActiveTab(msg, opts) {
+        const options = opts || {};
+        return browser.tabs.query({
+            "active": true,
+            "currentWindow": true
+        }).then(tabs => {
+            return browser.tabs.sendMessage(tabs[0].id, msg, options);
         });
-    }).then(ress => {
-        if (ress[0]) {
-            return;
+    };
+
+
+    /**
+     * Отправляет сообщение в указанный фрейм.
+     *
+     * :param msg: Объект сообщения для отправки.
+     * :return: Promise с результатом отправки сообщения.
+     */
+    async function sendToSpecifiedFrame(msg) {
+        const frameId = getSpecifiedFrameId();
+        try {
+            await browser.tabs.executeScript({
+                "file": "/scripts/try_xpath_check_frame.js",
+                "matchAboutBlank": true,
+                "runAt": "document_start",
+                "frameId": frameId
+            });
+        } catch (e) {
+           logger.error('Ошибка выполнения скрипта для проверки фрейма', e)
+            return
         }
-        return exec_content_script();
-    }).then(() => {
-       return send_to_active_tab({ "event": "initializeBlankWindows" });
-    }).then(() => {
-        return send_to_active_tab(msg, { "frameId": frameId });
-    }).catch(e => {
-        show_error("An error occurred. The frameId may be incorrect.",
-                  frameId);
-    });
 
 
-def collect_popup_state():
-    """
-    Собирает текущее состояние popup окна.
+        try {
+            await execContentScript();
+            await sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": INITIALIZE_BLANK_WINDOWS_EVENT });
+            await sendToActiveTab(msg, { "frameId": frameId });
+        }
+        catch (e) {
+           logger.error('An error occurred. The frameId may be incorrect.', e)
+            showError("An error occurred. The frameId may be incorrect.", frameId);
+        }
+    };
 
-    :return: Объект с текущим состоянием popup окна.
-    """
-    let state = Object.create(None);
-    state.helpCheckboxChecked = helpCheckbox.checked;
-    state.mainWayIndex = mainWay.selectedIndex;
-    state.mainExpressionValue = mainExpression.value;
-    state.contextCheckboxChecked = contextCheckbox.checked;
-    state.contextWayIndex = contextWay.selectedIndex;
-    state.contextExpressionValue = contextExpression.value;
-    state.resolverCheckboxChecked = resolverCheckbox.checked;
-    state.resolverExpressionValue = resolverExpression.value;
-    state.frameDesignationCheckboxChecked = frameDesignationCheckbox.checked;
-    state.frameDesignationExpressionValue = frameDesignationExpression.value;
-    state.frameIdCheckboxChecked = frameIdCheckbox.checked;
 
-    state.specifiedFrameId = get_specified_frame_id();
-    state.detailsPageIndex = detailsPageIndex;
-    return state;
+    /**
+     * Собирает состояние popup окна.
+     *
+     * :return: Объект с текущим состоянием popup.
+     */
+    function collectPopupState() {
+        const state = Object.create(null);
+        state.helpCheckboxChecked = helpCheckbox.checked;
+        state.mainWayIndex = mainWay.selectedIndex;
+        state.mainExpressionValue = mainExpression.value;
+        state.contextCheckboxChecked = contextCheckbox.checked;
+        state.contextWayIndex = contextWay.selectedIndex;
+        state.contextExpressionValue = contextExpression.value;
+        state.resolverCheckboxChecked = resolverCheckbox.checked;
+        state.resolverExpressionValue = resolverExpression.value;
+        state.frameDesignationCheckboxChecked
+            = frameDesignationCheckbox.checked;
+        state.frameDesignationExpressionValue
+            = frameDesignationExpression.value;
+        state.frameIdCheckboxChecked = frameIdCheckbox.checked;
 
-def change_context_visible():
-    """
-    Изменяет видимость блока контекстного поиска.
-    """
-    if (contextCheckbox.checked) {
-        contextBody.classList.remove(noneClass);
-    } else {
-        contextBody.classList.add(noneClass);
+        state.specifiedFrameId = getSpecifiedFrameId();
+        state.detailsPageIndex = detailsPageIndex;
+        return state;
+    };
+
+
+    /**
+     * Изменяет видимость блока контекста.
+     */
+    function changeContextVisible() {
+        changeVisibility(contextCheckbox, contextBody);
+    };
+
+    /**
+     * Изменяет видимость блока резолвера.
+     */
+    function changeResolverVisible() {
+        changeVisibility(resolverCheckbox, resolverBody);
+    };
+
+    /**
+     * Изменяет видимость блока frameId.
+     */
+    function changeFrameIdVisible() {
+         changeVisibility(frameIdCheckbox, frameIdBody);
+    };
+
+     /**
+     * Изменяет видимость блока frameDesignation.
+     */
+    function changeFrameDesignationVisible() {
+        changeVisibility(frameDesignationCheckbox, frameDesignationBody);
+    };
+
+
+    /**
+     * Изменяет видимость элемента на основе состояния чекбокса.
+     *
+     * :param checkbox: HTML элемент чекбокса.
+     * :param body: HTML элемент, видимость которого нужно изменить.
+     */
+    function changeVisibility(checkbox, body) {
+         if (checkbox.checked) {
+             body.classList.remove(noneClass);
+         } else {
+             body.classList.add(noneClass);
+         }
     }
 
 
-def change_resolver_visible():
-    """
-    Изменяет видимость блока поиска через resolver.
-    """
-    if (resolverCheckbox.checked) {
-        resolverBody.classList.remove(noneClass);
-    } else {
-        resolverBody.classList.add(noneClass);
-    }
-
-
-def change_frame_id_visible():
-    """
-    Изменяет видимость блока выбора frameId.
-    """
-    if (frameIdCheckbox.checked) {
-        frameIdBody.classList.remove(noneClass);
-    } else {
-        frameIdBody.classList.add(noneClass);
-    }
-
-
-def change_frame_designation_visible():
-    """
-    Изменяет видимость блока указания фрейма.
-    """
-    if (frameDesignationCheckbox.checked) {
-        frameDesignationBody.classList.remove(noneClass);
-    } else {
-        frameDesignationBody.classList.add(noneClass);
-    }
-
-
-def change_help_visible():
-    """
-    Изменяет видимость элементов справки.
-    """
-    let helps = document.getElementsByClassName(helpClass);
-    if (helpCheckbox.checked) {
+    /**
+     * Изменяет видимость элементов помощи.
+     */
+    function changeHelpVisible() {
+        const helps = document.getElementsByClassName(helpClass);
         for (let i = 0; i < helps.length; i++) {
-            helps[i].classList.remove(noneClass);
+            if (helpCheckbox.checked) {
+                helps[i].classList.remove(noneClass);
+            } else {
+                helps[i].classList.add(noneClass);
+            }
         }
-    } else {
-        for (let i = 0; i < helps.length; i++) {
-            helps[i].classList.add(noneClass);
+    };
+
+
+    /**
+     * Создает сообщение для выполнения XPath запроса.
+     *
+     * :return: Объект сообщения для отправки контент-скрипту.
+     */
+    function makeExecuteMessage() {
+        const msg = Object.create(null);
+        msg.event = EXECUTE_EVENT;
+
+        const resol = resolverCheckbox.checked ? resolverExpression.value : null;
+
+
+        const way = mainWay.selectedOptions[0];
+        msg.main = Object.create(null);
+        msg.main.expression = mainExpression.value;
+        msg.main.method = way.getAttribute("data-method");
+        msg.main.resultType = way.getAttribute("data-type");
+        msg.main.resolver = resol;
+
+        if (contextCheckbox.checked) {
+            const way = contextWay.selectedOptions[0];
+            msg.context = Object.create(null);
+            msg.context.expression = contextExpression.value;
+            msg.context.method = way.getAttribute("data-method");
+            msg.context.resultType = way.getAttribute("data-type");
+            msg.context.resolver = resol;
         }
-    }
+
+        if (frameDesignationCheckbox.checked) {
+            msg.frameDesignation = frameDesignationExpression.value;
+        }
+
+        return msg;
+    };
 
 
-def make_execute_message():
-    """
-    Создает объект сообщения для выполнения xpath запроса.
-
-    :return: Объект сообщения с параметрами для выполнения запроса.
-    """
-    let msg = Object.create(None);
-    msg.event = "execute";
-
-    let resol;
-    if (resolverCheckbox.checked) {
-        resol = resolverExpression.value;
-    } else {
-        resol = None;
-    }
-
-    let way = mainWay.selectedOptions[0];
-    msg.main = Object.create(None);
-    msg.main.expression = mainExpression.value;
-    msg.main.method = way.getAttribute("data-method");
-    msg.main.resultType = way.getAttribute("data-type");
-    msg.main.resolver = resol;
-
-    if (contextCheckbox.checked) {
-        let way = contextWay.selectedOptions[0];
-        msg.context = Object.create(None);
-        msg.context.expression = contextExpression.value;
-        msg.context.method = way.getAttribute("data-method");
-        msg.context.resultType = way.getAttribute("data-type");
-        msg.context.resolver = resol;
-    }
-
-    if (frameDesignationCheckbox.checked) {
-        msg.frameDesignation = frameDesignationExpression.value;
-    }
-
-    return msg;
-
-
-def get_specified_frame_id():
-    """
-    Получает идентификатор фрейма, указанного пользователем.
-
-    :return: Идентификатор фрейма.
-    """
-    if (!frameIdCheckbox.checked) {
-        return 0;
-    }
-    let id = frameIdList.selectedOptions[0].getAttribute("data-frame-id");
-    if (id === "manual") {
-        let manual_id = parseInt(frameIdExpression.value, 10);
-        if (isNaN(manual_id)){
+    /**
+     * Получает ID указанного фрейма.
+     *
+     * :return: ID фрейма или 0, если фрейм не указан.
+     */
+    function getSpecifiedFrameId() {
+        if (!frameIdCheckbox.checked) {
             return 0;
         }
-        return manual_id;
-    }
-    let frame_id = parseInt(id, 10);
-    if(isNaN(frame_id)){
-        return 0;
-    }
-    return frame_id;
+        const id = frameIdList.selectedOptions[0].getAttribute("data-frame-id");
+        if (id === "manual") {
+            return parseInt(frameIdExpression.value, 10);
+        }
+        return parseInt(id, 10);
+    };
 
 
-def exec_content_script():
-    """
-    Выполняет скрипты содержимого на всех фреймах.
-
-    :return: Promise, разрешающийся после выполнения скриптов.
-    """
-    return browser.tabs.executeScript({
-        "file": "/scripts/try_xpath_functions.js",
-        "matchAboutBlank": True,
-        "runAt": "document_start",
-        "allFrames": True
-    }).then(() => {
+    /**
+     * Выполняет скрипты контента.
+     *
+     * :return: Promise, который разрешается после выполнения всех скриптов.
+     */
+    function execContentScript() {
         return browser.tabs.executeScript({
-            "file": "/scripts/try_xpath_content.js",
-            "matchAboutBlank": True,
+            "file": "/scripts/try_xpath_functions.js",
+            "matchAboutBlank": true,
             "runAt": "document_start",
-            "allFrames": True
-        });
-    });
-
-
-def send_execute():
-    """
-    Отправляет сообщение на выполнение xpath запроса.
-    """
-    send_to_specified_frame(make_execute_message());
-
-
-def handle_expr_enter(event):
-    """
-    Обрабатывает нажатие клавиши Enter в полях ввода выражений.
-
-    :param event: Событие нажатия клавиши.
-    """
-    if ((event.key === "Enter") and !event.shiftKey) {
-        event.preventDefault();
-        send_execute();
-    }
-
-
-def show_details_page(index):
-    """
-    Отображает страницу с деталями результатов.
-
-    :param index: Индекс страницы для отображения.
-    """
-    let max = Math.floor(resultedDetails.length / detailsPageSize);
-
-    if (!Number.isInteger(index)) {
-        index = 0;
-    }
-    index = Math.max(0, index);
-    index = Math.min(index, max);
-
-    let scrollY = window.scrollY;
-    let scrollX = window.scrollX;
-
-    fu.updateDetailsTable(resultsTbody, resultedDetails, {
-        "begin": index * detailsPageSize,
-        "end": (index * detailsPageSize) + detailsPageSize,
-    }).then(() => {
-        detailsPageCount.value = index + 1;
-        detailsPageIndex = index;
-        window.scrollTo(scrollX, scrollY);
-    }).catch(fu.onError);
-
-
-def show_error(message, frameId):
-    """
-    Отображает сообщение об ошибке.
-
-    :param message: Сообщение об ошибке.
-    :param frameId: Идентификатор фрейма, где произошла ошибка.
-    """
-    relatedTabId = invalidTabId;
-    relatedFrameId = invalidFrameId;
-    executionId = invalidExecutionId;
-
-    resultsMessage.textContent = message;
-    resultedDetails = [];
-    resultsCount.textContent = resultedDetails.length;
-    resultsFrameId.textContent = frameId;
-    
-    fu.updateDetailsTable(contextTbody, [])
-        .catch(fu.onError);
-    show_details_page(0);
-
-
-def generic_listener(message, sender, sendResponse):
-    """
-    Общий обработчик сообщений от content script.
-
-    :param message: Объект сообщения.
-    :param sender: Объект отправителя сообщения.
-    :param sendResponse: Функция для отправки ответа.
-    """
-    let listener = generic_listener.listeners[message.event];
-    if (listener) {
-        return listener(message, sender, sendResponse);
-    }
-
-
-generic_listener.listeners = Object.create(None);
-browser.runtime.onMessage.addListener(generic_listener);
-
-
-generic_listener.listeners.showResultsInPopup = function (message, sender) {
-    """
-    Обрабатывает сообщение о отображении результатов в popup окне.
-
-    :param message: Объект сообщения с результатами.
-    :param sender: Объект отправителя сообщения.
-    """
-    relatedTabId = sender.tab.id;
-    relatedFrameId = sender.frameId;
-    executionId = message.executionId;
-
-    resultsMessage.textContent = message.message;
-    resultedDetails = message.main.itemDetails;
-    resultsCount.textContent = resultedDetails.length;
-    resultsFrameId.textContent = sender.frameId;
-
-    if (message.context and message.context.itemDetail) {
-        fu.updateDetailsTable(contextTbody, [message.context.itemDetail])
-            .catch(fu.onError);
-    }
-
-    show_details_page(detailsPageIndex);
-};
-
-
-generic_listener.listeners.restorePopupState = function (message) {
-    """
-    Восстанавливает состояние popup окна.
-
-    :param message: Объект сообщения с сохраненным состоянием.
-    """
-    let state = message.state;
-
-    if (state !== None) {
-        helpCheckbox.checked = state.helpCheckboxChecked;
-        mainWay.selectedIndex = state.mainWayIndex;
-        mainExpression.value = state.mainExpressionValue;
-        contextCheckbox.checked = state.contextCheckboxChecked;
-        contextWay.selectedIndex = state.contextWayIndex;
-        contextExpression.value = state.contextExpressionValue;
-        resolverCheckbox.checked = state.resolverCheckboxChecked;
-        resolverExpression.value = state.resolverExpressionValue;
-        frameDesignationCheckbox.checked = state.frameDesignationCheckboxChecked;
-        frameDesignationExpression.value = state.frameDesignationExpressionValue;
-        frameIdCheckbox.checked = state.frameIdCheckboxChecked;
-        frameIdExpression.value = state.specifiedFrameId;
-
-        detailsPageIndex = state.detailsPageIndex;
-    }
-
-    change_help_visible();
-    change_context_visible();
-    change_resolver_visible();
-    change_frame_designation_visible();
-    change_frame_id_visible();
-
-    send_to_specified_frame({ "event": "requestShowResultsInPopup" });
-};
-
-
-generic_listener.listeners.insertStyleToPopup = function (message) {
-    """
-    Вставляет стили в popup окно.
-
-    :param message: Объект сообщения со стилями.
-    """
-    let style = document.createElement("style");
-    style.textContent = message.css;
-    document.head.appendChild(style);
-};
-
-
-generic_listener.listeners.addFrameId = function (message, sender) {
-    """
-    Добавляет идентификатор фрейма в список.
-
-    :param message: Объект сообщения.
-    :param sender: Объект отправителя сообщения.
-    """
-    let opt = document.createElement("option");
-    opt.setAttribute("data-frame-id", sender.frameId);
-    opt.textContent = sender.frameId;
-    frameIdList.appendChild(opt);
-};
-
-
-window.addEventListener("load", () => {
-    """
-    Обработчик события загрузки окна. Инициализирует элементы интерфейса.
-    """
-    helpBody = document.getElementById("help-body");
-    helpCheckbox = document.getElementById("help-switch");
-    mainWay = document.getElementById("main-way");
-    mainExpression = document.getElementById("main-expression");
-    contextHeader = document.getElementById("context-header");
-    contextCheckbox = document.getElementById("context-switch");
-    contextBody = document.getElementById("context-body");
-    contextWay = document.getElementById("context-way");
-    contextExpression = document.getElementById("context-expression");
-    resolverHeader = document.getElementById("resolver-header");
-    resolverCheckbox = document.getElementById("resolver-switch");
-    resolverBody = document.getElementById("resolver-body");
-    resolverExpression = document.getElementById("resolver-expression");
-    frameDesignationHeader = document.getElementById(
-        "frame-designation-header");
-    frameDesignationCheckbox = document.getElementById(
-        "frame-designation-switch");
-    frameDesignationBody = document.getElementById(
-        "frame-designation-body");
-    frameDesignationExpression = document.getElementById(
-        "frame-designation-expression");
-    frameIdHeader = document.getElementById("frame-id-header");
-    frameIdCheckbox = document.getElementById("frame-id-switch");
-    frameIdBody = document.getElementById("frame-id-body");
-    frameIdList = document.getElementById("frame-id-list");
-    frameIdExpression = document.getElementById("frame-id-expression");
-    resultsMessage = document.getElementById("results-message");
-    resultsCount = document.getElementById("results-count");
-    resultsFrameId = document.getElementById("results-frame-id");
-    resultsTbody = document.getElementById("results-details")
-        .getElementsByTagName("tbody")[0];
-    contextTbody = document.getElementById("context-detail")
-        .getElementsByTagName("tbody")[0];
-    detailsPageCount = document.getElementById("details-page-count");
-
-    helpBody.addEventListener("click", change_help_visible);
-    helpBody.addEventListener("keypress", change_help_visible);
-
-    document.getElementById("execute").addEventListener("click",
-                                                        send_execute);
-    mainExpression.addEventListener("keypress", handle_expr_enter);
-
-    contextHeader.addEventListener("click", change_context_visible);
-    contextHeader.addEventListener("keypress", change_context_visible);
-    contextExpression.addEventListener("keypress", handle_expr_enter);
-
-    resolverHeader.addEventListener("click", change_resolver_visible);
-    resolverHeader.addEventListener("keypress", change_resolver_visible);
-    resolverExpression.addEventListener("keypress", handle_expr_enter);
-
-    frameDesignationHeader.addEventListener(
-        "click", change_frame_designation_visible);
-    frameDesignationHeader.addEventListener(
-        "keypress", change_frame_designation_visible);
-    frameDesignationExpression.addEventListener(
-        "keypress", handle_expr_enter);
-
-    document.getElementById("focus-designated-frame").addEventListener(
-        "click", () => {
-            send_to_specified_frame({
-                "event": "focusFrame",
-                "frameDesignation": frameDesignationExpression.value
-            });
-        });
-
-    frameIdHeader.addEventListener("click", change_frame_id_visible);
-    frameIdHeader.addEventListener("keypress", change_frame_id_visible);
-    frameIdExpression.addEventListener("keypress", handle_expr_enter);
-    document.getElementById("get-all-frame-id").addEventListener(
-        "click", () => {
-            fu.emptyChildNodes(frameIdList);
-            
-            let opt = document.createElement("option");
-            opt.setAttribute("data-frame-id", "manual");
-            opt.textContent = "Manual";
-            frameIdList.appendChild(opt);
-
-            browser.tabs.executeScript({
-                "code": "browser.runtime.sendMessage"
-                    + "({\\"event\\":\\"addFrameId\\"});",
-                "matchAboutBlank": True,
+            "allFrames": true
+        }).then(() => {
+            return browser.tabs.executeScript({
+                "file": "/scripts/try_xpath_content.js",
+                "matchAboutBlank": true,
                 "runAt": "document_start",
-                "allFrames": True
-            }).catch(fu.onError);
-        });
-
-    document.getElementById("show-previous-results").addEventListener(
-        "click", () => {
-            send_to_specified_frame({ "event": "requestShowResultsInPopup"});
-        });
-
-    document.getElementById("focus-frame").addEventListener(
-        "click", () => {
-           send_to_specified_frame({ "event": "focusFrame"});
-        });
-
-    document.getElementById("show-all-results").addEventListener(
-        "click", () => {
-            send_to_specified_frame({ "event": "requestShowAllResults" });
-        });
-
-    document.getElementById("open-options").addEventListener(
-        "click", () => {
-            browser.runtime.openOptionsPage();
-        });
-
-    document.getElementById("set-style").addEventListener("click", () => {
-        send_to_specified_frame({ "event": "setStyle" });
-    });
-
-    document.getElementById("reset-style").addEventListener("click", () => {
-        send_to_specified_frame({ "event": "resetStyle" });
-    });
-
-    document.getElementById("set-all-style").addEventListener(
-        "click", () => {
-            send_to_active_tab({ "event": "setStyle" });
-        });
-
-    document.getElementById("reset-all-style").addEventListener(
-        "click", () => {
-           send_to_active_tab({ "event": "resetStyle" });
-        });
-
-    contextTbody.addEventListener("click", event => {
-        if (event.target.tagName.toLowerCase() === "button") {
-            send_message(relatedTabId, {
-                "event": "focusContextItem",
-                "executionId": executionId,
-            }, {
-                "frameId": relatedFrameId
+                "allFrames": true
             });
+        });
+    };
+
+
+    /**
+     * Отправляет сообщение на выполнение XPath запроса.
+     */
+    function sendExecute() {
+        sendToSpecifiedFrame(makeExecuteMessage());
+    };
+
+
+    /**
+     * Обрабатывает нажатие клавиши Enter в полях ввода.
+     *
+     * :param event: Событие клавиатуры.
+     */
+    function handleExprEnter(event) {
+        if ((event.key === "Enter") && !event.shiftKey) {
+            event.preventDefault();
+            sendExecute();
         }
-    });
+    };
 
-    document.getElementById("previous-details-page").addEventListener(
-        "click", () => {
-            show_details_page(detailsPageIndex - 1);
-        });
-    document.getElementById("move-details-page").addEventListener(
-        "click", () => {
-            let count = parseInt(detailsPageCount.value, 10);
-            if (isNaN(count)){
-                count = 1;
-            }
-            show_details_page(count - 1);
-        });
-    document.getElementById("next-details-page").addEventListener(
-        "click", () => {
-            show_details_page(detailsPageIndex + 1);
-        });
 
-    resultsTbody.addEventListener("click", event => {
-        let target = event.target;
-        if (target.tagName.toLowerCase() === "button") {
-            let ind = parseInt(target.getAttribute("data-index"), 10);
-            if (isNaN(ind)){
-                ind = 0;
-            }
-            send_message(relatedTabId, {
-                "event": "focusItem",
-                "executionId": executionId,
-                "index": ind
-            }, {
-                "frameId": relatedFrameId
+    /**
+     * Отображает страницу с деталями.
+     *
+     * :param index: Индекс страницы для отображения.
+     */
+    function showDetailsPage(index) {
+        const max = Math.floor(resultedDetails.length / detailsPageSize);
+
+        if (!Number.isInteger(index)) {
+            index = 0;
+        }
+        index = Math.max(0, index);
+        index = Math.min(index, max);
+
+        const scrollY = window.scrollY;
+        const scrollX = window.scrollX;
+
+        fu.updateDetailsTable(resultsTbody, resultedDetails, {
+            "begin": index * detailsPageSize,
+            "end": (index * detailsPageSize) + detailsPageSize,
+        }).then(() => {
+            detailsPageCount.value = index + 1;
+            detailsPageIndex = index;
+            window.scrollTo(scrollX, scrollY);
+        }).catch(fu.onError);
+    };
+
+
+    /**
+     * Отображает сообщение об ошибке.
+     *
+     * :param message: Текст сообщения об ошибке.
+     * :param frameId: ID фрейма, в котором произошла ошибка.
+     */
+    function showError(message, frameId) {
+        relatedTabId = invalidTabId;
+        relatedFrameId = invalidFrameId;
+        executionId = invalidExecutionId;
+
+        resultsMessage.textContent = message;
+        resultedDetails = [];
+        resultsCount.textContent = resultedDetails.length;
+        resultsFrameId.textContent = frameId;
+        
+        fu.updateDetailsTable(contextTbody, [])
+            .catch(fu.onError);
+        showDetailsPage(0);
+    };
+
+
+    /**
+     * Общий обработчик сообщений.
+     *
+     * :param message: Объект сообщения.
+     * :param sender: Объект отправителя сообщения.
+     * :param sendResponse: Функция для отправки ответа.
+     * :return: Результат работы обработчика.
+     */
+    function genericListener(message, sender, sendResponse) {
+        const listener = genericListener.listeners[message.event];
+        if (listener) {
+            return listener(message, sender, sendResponse);
+        }
+    };
+    genericListener.listeners = Object.create(null);
+    browser.runtime.onMessage.addListener(genericListener);
+
+    /**
+     * Обработчик показа результатов в popup окне.
+     *
+     * :param message: Объект сообщения.
+     * :param sender: Объект отправителя сообщения.
+     */
+    genericListener.listeners.showResultsInPopup = function (message, sender) {
+        relatedTabId = sender.tab.id;
+        relatedFrameId = sender.frameId;
+        executionId = message.executionId;
+
+        resultsMessage.textContent = message.message;
+        resultedDetails = message.main.itemDetails;
+        resultsCount.textContent = resultedDetails.length;
+        resultsFrameId.textContent = sender.frameId;
+
+        if (message.context && message.context.itemDetail) {
+            fu.updateDetailsTable(contextTbody, [message.context.itemDetail])
+                .catch(fu.onError);
+        }
+
+        showDetailsPage(detailsPageIndex);
+    };
+
+
+    /**
+     * Обработчик восстановления состояния popup.
+     *
+     * :param message: Объект сообщения с состоянием.
+     */
+    genericListener.listeners.restorePopupState = function (message) {
+        const state = message.state;
+
+        if (state !== null) {
+            helpCheckbox.checked = state.helpCheckboxChecked;
+            mainWay.selectedIndex = state.mainWayIndex;
+            mainExpression.value = state.mainExpressionValue;
+            contextCheckbox.checked = state.contextCheckboxChecked;
+            contextWay.selectedIndex = state.contextWayIndex;
+            contextExpression.value = state.contextExpressionValue;
+            resolverCheckbox.checked = state.resolverCheckboxChecked;
+            resolverExpression.value = state.resolverExpressionValue;
+            frameDesignationCheckbox.checked
+                = state.frameDesignationCheckboxChecked;
+            frameDesignationExpression.value
+                = state.frameDesignationExpressionValue;
+            frameIdCheckbox.checked = state.frameIdCheckboxChecked;
+            frameIdExpression.value = state.specifiedFrameId;
+
+            detailsPageIndex = state.detailsPageIndex;
+        }
+
+        changeHelpVisible();
+        changeContextVisible();
+        changeResolverVisible();
+        changeFrameDesignationVisible();
+        changeFrameIdVisible();
+        
+        sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": REQUEST_SHOW_RESULTS_IN_POPUP_EVENT });
+    };
+
+
+    /**
+     * Обработчик вставки стилей в popup.
+     *
+     * :param message: Объект сообщения со стилями.
+     */
+    genericListener.listeners.insertStyleToPopup = function (message) {
+        const style = document.createElement("style");
+        style.textContent = message.css;
+        document.head.appendChild(style);
+    };
+
+
+    /**
+     * Обработчик добавления ID фрейма.
+     *
+     * :param message: Объект сообщения.
+     * :param sender: Объект отправителя сообщения.
+     */
+    genericListener.listeners.addFrameId = function (message, sender) {
+        const opt = document.createElement("option");
+        opt.setAttribute("data-frame-id", sender.frameId);
+        opt.textContent = sender.frameId;
+        frameIdList.appendChild(opt);
+    };
+
+    window.addEventListener("load", () => {
+        helpBody = document.getElementById("help-body");
+        helpCheckbox = document.getElementById("help-switch");
+        mainWay = document.getElementById("main-way");
+        mainExpression = document.getElementById("main-expression");
+        contextHeader = document.getElementById("context-header");
+        contextCheckbox = document.getElementById("context-switch");
+        contextBody = document.getElementById("context-body");
+        contextWay = document.getElementById("context-way");
+        contextExpression = document.getElementById("context-expression");
+        resolverHeader = document.getElementById("resolver-header");
+        resolverCheckbox = document.getElementById("resolver-switch");
+        resolverBody = document.getElementById("resolver-body");
+        resolverExpression = document.getElementById("resolver-expression");
+        frameDesignationHeader = document.getElementById(
+            "frame-designation-header");
+        frameDesignationCheckbox = document.getElementById(
+            "frame-designation-switch");
+        frameDesignationBody = document.getElementById(
+            "frame-designation-body");
+        frameDesignationExpression = document.getElementById(
+            "frame-designation-expression");
+        frameIdHeader = document.getElementById("frame-id-header");
+        frameIdCheckbox = document.getElementById("frame-id-switch");
+        frameIdBody = document.getElementById("frame-id-body");
+        frameIdList = document.getElementById("frame-id-list");
+        frameIdExpression = document.getElementById("frame-id-expression");
+        resultsMessage = document.getElementById("results-message");
+        resultsCount = document.getElementById("results-count");
+        resultsFrameId = document.getElementById("results-frame-id");
+        resultsTbody = document.getElementById("results-details")
+            .getElementsByTagName("tbody")[0];
+        contextTbody = document.getElementById("context-detail")
+            .getElementsByTagName("tbody")[0];
+        detailsPageCount = document.getElementById("details-page-count");
+
+        helpBody.addEventListener("click", changeHelpVisible);
+        helpBody.addEventListener("keypress", changeHelpVisible);
+
+        document.getElementById("execute").addEventListener("click",
+                                                            sendExecute);
+        mainExpression.addEventListener("keypress", handleExprEnter);
+
+        contextHeader.addEventListener("click", changeContextVisible);
+        contextHeader.addEventListener("keypress", changeContextVisible);
+        contextExpression.addEventListener("keypress", handleExprEnter);
+
+        resolverHeader.addEventListener("click", changeResolverVisible);
+        resolverHeader.addEventListener("keypress", changeResolverVisible);
+        resolverExpression.addEventListener("keypress", handleExprEnter);
+
+        frameDesignationHeader.addEventListener(
+            "click", changeFrameDesignationVisible);
+        frameDesignationHeader.addEventListener(
+            "keypress", changeFrameDesignationVisible);
+        frameDesignationExpression.addEventListener(
+            "keypress", handleExprEnter);
+
+        document.getElementById("focus-designated-frame").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({
+                   "timeout":0,"timeout_for_event":"presence_of_element_located", "event": FOCUS_FRAME_EVENT,
+                    "frameDesignation": frameDesignationExpression.value
+                });
             });
-        }
-    });
 
-    window.addEventListener("unload", () => {
-        let state = collect_popup_state();
-        browser.runtime.sendMessage({
-            "event": "storePopupState",
-            "state": state
+        frameIdHeader.addEventListener("click", changeFrameIdVisible);
+        frameIdHeader.addEventListener("keypress", changeFrameIdVisible);
+        frameIdExpression.addEventListener("keypress", handleExprEnter);
+        document.getElementById("get-all-frame-id").addEventListener(
+            "click", () => {
+                fu.emptyChildNodes(frameIdList);
+                
+                const opt = document.createElement("option");
+                opt.setAttribute("data-frame-id", "manual");
+                opt.textContent = "Manual";
+                frameIdList.appendChild(opt);
+                try {
+                    browser.tabs.executeScript({
+                        "code": "browser.runtime.sendMessage"
+                            + `({"event":"${ADD_FRAME_ID_EVENT}"});`,
+                        "matchAboutBlank": true,
+                        "runAt": "document_start",
+                        "allFrames": true
+                    })
+                } catch (e){
+                    logger.error('Ошибка при выполнении скрипта для получения id фрейма', e)
+                }
+
+            });
+
+        document.getElementById("show-previous-results").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": REQUEST_SHOW_RESULTS_IN_POPUP_EVENT});
+            });
+
+        document.getElementById("focus-frame").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": FOCUS_FRAME_EVENT });
+            });
+
+       document.getElementById("show-all-results").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": REQUEST_SHOW_ALL_RESULTS_EVENT });
+            });
+
+        document.getElementById("open-options").addEventListener(
+            "click", () => {
+                browser.runtime.openOptionsPage();
+            });
+
+        document.getElementById("set-style").addEventListener("click", () => {
+            sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": SET_STYLE_EVENT });
         });
+
+        document.getElementById("reset-style").addEventListener("click", () => {
+            sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": RESET_STYLE_EVENT });
+        });
+
+        document.getElementById("set-all-style").addEventListener(
+            "click", () => {
+                sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": SET_STYLE_EVENT });
+            });
+
+        document.getElementById("reset-all-style").addEventListener(
+            "click", () => {
+                sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": RESET_STYLE_EVENT });
+            });
+
+
+        contextTbody.addEventListener("click", event => {
+            if (event.target.tagName.toLowerCase() === "button") {
+                browser.tabs.sendMessage(relatedTabId, {
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": FOCUS_CONTEXT_ITEM_EVENT,
+                    "executionId": executionId,
+                }, {
+                    "frameId": relatedFrameId
+                });
+            }
+        });
+
+        document.getElementById("previous-details-page").addEventListener(
+            "click", () => {
+                showDetailsPage(detailsPageIndex - 1);
+            });
+        document.getElementById("move-details-page").addEventListener(
+            "click", () => {
+                const count = parseInt(detailsPageCount.value, 10);
+                showDetailsPage(count - 1);
+            });
+        document.getElementById("next-details-page").addEventListener(
+            "click", () => {
+                showDetailsPage(detailsPageIndex + 1);
+            });
+
+        resultsTbody.addEventListener("click", event => {
+            const target = event.target;
+            if (target.tagName.toLowerCase() === "button") {
+                const ind = parseInt(target.getAttribute("data-index"), 10);
+                browser.tabs.sendMessage(relatedTabId, {
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": FOCUS_ITEM_EVENT,
+                    "executionId": executionId,
+                    "index": ind
+                }, {
+                    "frameId": relatedFrameId
+                });
+            }
+        });
+
+        window.addEventListener("unload", () => {
+            const state = collectPopupState();
+            browser.runtime.sendMessage({
+                 "timeout":0,"timeout_for_event":"presence_of_element_located","event": STORE_POPUP_STATE_EVENT,
+                "state": state
+            });
+        });
+
+        resultsTbody.appendChild(fu.createDetailTableHeader());
+        contextTbody.appendChild(fu.createDetailTableHeader());
+
+        browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": REQUEST_INSERT_STYLE_TO_POPUP_EVENT});
+        browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": REQUEST_RESTORE_POPUP_STATE_EVENT });
     });
 
-    resultsTbody.appendChild(fu.createDetailTableHeader());
-    contextTbody.appendChild(fu.createDetailTableHeader());
 
-    browser.runtime.sendMessage({ "event": "requestInsertStyleToPopup"});
-    browser.runtime.sendMessage({ "event": "requestRestorePopupState" });
-});
+})(window);

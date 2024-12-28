@@ -2,93 +2,108 @@
 
 **Качество кода**
 8
--  Плюсы
-    -   Код структурирован и читаем.
-    -   Используются ангулярные директивы для управления UI.
-    -   Есть разделение на вкладки 'Chat' и 'Model'.
-    -   Есть базовый функционал для общения с моделью и её обучения.
-
--  Минусы
-    -   Отсутствует обработка ошибок при взаимодействии с ассистентами.
-    -   Отсутствует логирование действий.
-    -   Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -   Отсутствуют комментарии в формате reStructuredText (RST).
-    -   Присутствует лишний коментарий `# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe`.
-    -   Переменная `MODE` не используется в коде.
-    -  Отсутствуют docstring для модуля
+-   Плюсы
+    -   Код структурирован с использованием HTML и Angular, что обеспечивает разделение структуры и логики.
+    -   Используются стили CSS для оформления, что улучшает внешний вид.
+    -   Присутствует базовая функциональность для чата и тренировки модели.
+-   Минусы
+    -   Отсутствует полноценная обработка ошибок.
+    -   Не хватает документации и комментариев для более ясного понимания функциональности.
+    -   Не используются `j_loads` или `j_loads_ns` для загрузки данных, если таковые имеются.
+    -   Не хватает логирования.
 
 **Рекомендации по улучшению**
-
-1.  **Документация**: Добавить документацию в формате RST для модуля.
-2.  **Логирование**:  Добавить логирование для отслеживания ошибок и действий.
-3.  **Обработка данных**: Использовать `j_loads` или `j_loads_ns` при загрузке данных.
-4.  **Обработка ошибок**: Добавить обработку ошибок при взаимодействии с ассистентами.
-5.  **Удалить лишние коментарии**:  Удалить ` # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe`
-6.  **Удалить неиспользуемые переменные**: Удалить переменную `MODE`.
+1.  Добавить обработку ошибок в JavaScript коде, особенно при отправке сообщений и тренировке модели.
+2.  Использовать `j_loads` или `j_loads_ns` для чтения данных, если таковые есть в `popup.js`.
+3.  Добавить документацию к HTML-коду, описывающую назначение каждого блока.
+4.  В JavaScript коде добавить логирование для отслеживания ошибок и действий пользователя.
+5.  Проверить и, при необходимости, добавить обработку асинхронных операций.
+6.  Добавить комментарии в стиле reStructuredText (RST) для важных частей кода, особенно в `popup.js`.
+7.  Убедиться, что все зависимости, например, `angular.min.js` и `jquery-3.5.1.slim.min.js`, соответствуют актуальным версиям.
+8.  Обеспечить проверку ввода данных в `textarea`.
 
 **Оптимизированный код**
+
 ```html
 <!--
-    Модуль для интерфейса OpenAI
-    =========================================================================================
+    Модуль для отображения интерфейса взаимодействия с OpenAI моделями.
+    ========================================================================
 
-    Этот модуль содержит HTML-структуру для интерфейса взаимодействия с моделями OpenAI.
-    Он включает вкладки для чата и управления моделью, используя AngularJS.
+    Этот HTML-файл содержит структуру интерфейса пользователя для взаимодействия с моделями OpenAI,
+    включая вкладки для чата и тренировки модели.
 
-    Пример использования
+    Пример использования:
     --------------------
 
-    Открыть popup.html в расширении Chrome для доступа к интерфейсу.
+    Загрузите этот HTML-файл в браузере с расширением Chrome, где также подключен скрипт popup.js.
+    Интерфейс позволит вам взаимодействовать с OpenAI моделями через предоставленные поля ввода и кнопки.
 -->
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>OpenAI Model Interface</title>
+    <title>Интерфейс OpenAI</title>
+    <meta charset="utf-8">
     <script src="scripts/angular.min.js"></script>
     <script src="scripts/jquery-3.5.1.slim.min.js"></script>
     <script src="scripts/popup.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body ng-app="openaiApp" ng-controller="MainController">
-    <h1>OpenAI Model Interface</h1>
+    <h1>Интерфейс OpenAI</h1>
     
     <!-- Навигационные вкладки -->
     <ul class="tabs">
-        <li ng-class="{active: isTabActive('chat')}" ng-click="setActiveTab('chat')">Chat</li>
-        <li ng-class="{active: isTabActive('model')}" ng-click="setActiveTab('model')">Model</li>
+        <li ng-class="{active: isTabActive('chat')}" ng-click="setActiveTab('chat')">Чат</li>
+        <li ng-class="{active: isTabActive('model')}" ng-click="setActiveTab('model')">Модель</li>
     </ul>
 
-    <!-- Содержимое вкладки 'Chat' -->
+    <!-- Содержимое вкладки 'Чат' -->
     <div ng-show="isTabActive('chat')">
-        <h2>Chat with Model</h2>
+        <h2>Чат с моделью</h2>
         <!-- Выпадающий список ассистентов -->
-        <label for="assistants">Choose an Assistant:</label>
+         <!--
+            Выбор ассистента из списка.
+            Здесь отображается выпадающий список ассистентов, доступных для выбора.
+        -->
+        <label for="assistants">Выберите ассистента:</label>
         <select id="assistants" ng-model="selectedAssistant" ng-options="assistant.name for assistant in assistants track by assistant.id">
-            <option value="">-- Select Assistant --</option>
+            <option value="">-- Выбрать ассистента --</option>
         </select>
 
         <!-- Поле для ввода сообщения -->
-        <textarea ng-model="message" placeholder="Enter your message"></textarea>
-        <button ng-click="sendMessage()">Send</button>
+         <!--
+            Ввод сообщения.
+            Здесь пользователь вводит свое сообщение для отправки.
+        -->
+        <textarea ng-model="message" placeholder="Введите ваше сообщение"></textarea>
+        <button ng-click="sendMessage()">Отправить</button>
 
         <!-- Ответ модели -->
+         <!--
+            Отображение ответа.
+            Здесь отображается ответ, полученный от модели.
+        -->
         <div id="response">
-            <h3>Response:</h3>
+            <h3>Ответ:</h3>
             <p>{{response}}</p>
         </div>
     </div>
 
-    <!-- Содержимое вкладки 'Model' -->
+    <!-- Содержимое вкладки 'Модель' -->
     <div ng-show="isTabActive('model')">
-        <h2>Model Training and Status</h2>
-        <p>Here you can start training or check the status of the model.</p>
+        <h2>Тренировка и статус модели</h2>
+        <p>Здесь можно начать тренировку или проверить статус модели.</p>
 
         <!-- Дополнительный функционал для работы с моделью, как пример: -->
-        <label for="data">Training Data:</label>
-        <textarea id="data" ng-model="trainingData" placeholder="Enter training data"></textarea>
-        <button ng-click="trainModel()">Train</button>
+         <!--
+            Ввод данных для обучения.
+            Здесь пользователь вводит данные для обучения модели.
+        -->
+        <label for="data">Данные для обучения:</label>
+        <textarea id="data" ng-model="trainingData" placeholder="Введите данные для обучения"></textarea>
+        <button ng-click="trainModel()">Тренировать</button>
 
-        <h3>Training Status:</h3>
+        <h3>Статус тренировки:</h3>
         <p>{{trainingStatus}}</p>
     </div>
 </body>

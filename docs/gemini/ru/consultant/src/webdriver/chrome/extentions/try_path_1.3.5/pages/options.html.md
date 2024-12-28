@@ -1,89 +1,108 @@
-# Анализ кода модуля `options.html`
+# Анализ кода модуля options.html
 
 **Качество кода**
-
-6/10
+6
 - Плюсы
-    - Код содержит базовую HTML-структуру для страницы настроек расширения.
-    - Используются понятные идентификаторы для элементов ввода.
-    - Код структурирован с использованием `<div>`, `<dl>`, `<dt>`, `<dd>`, `<label>`, `<input>` и `<textarea>`.
+    - Код представляет собой HTML-страницу с базовой структурой, включая head и body.
+    - Присутствуют ссылки на внешние JavaScript файлы.
+    - Присутствует минимальная структура для настроек расширения.
 - Минусы
-    - Отсутствует описание назначения HTML-страницы.
-    - Отсутствует подключение стилей для элементов.
-    - Отсутствует явное указание типа кодировки в HTML-заголовке.
-    - Использование `<!DOCTYPE html>` может быть указано более явно.
-    - Переменная `MODE` не используется в HTML, вероятно, должна быть в `options.js`.
-    - Файл не содержит обработки событий или динамической логики, которые обычно присутствуют в страницах настроек.
-    - Отсутствует обработка сохранения или сброса настроек.
+    - Отсутствуют какие-либо стили.
+    - Код содержит html-комментарий в самом начале (`## \\file ...`), что некорректно и может вызывать ошибки.
+    - HTML-разметка не имеет явных классов или id для основных элементов управления, что затрудняет автоматизацию тестов и работу с элементами через JavaScript.
+    - Отсутствует описание модуля в формате reStructuredText (RST).
+    - Использование  `MODE = 'debug'` в html файле не имеет смысла, так как данный файл не обрабатывается интерпретатором python
+    - Нет никаких комментариев поясняющих функциональность блоков кода.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**: Добавить описание назначения HTML-страницы в виде комментария.
-2.  **Стили**: Добавить подключение стилей для элементов (либо встроенные стили, либо ссылка на CSS-файл).
-3.  **Кодировка**: Указать кодировку явно в HTML-заголовке (например, `<meta charset="UTF-8">`).
-4.  **Тип документа**: Указать явно `<!DOCTYPE html>`.
-5.  **Переменная `MODE`**: Убрать из HTML.
-6.  **Обработка событий**: Добавить JavaScript для обработки событий (например, для сохранения настроек).
-7.  **Сохранение/сброс**: Реализовать логику сохранения и сброса настроек.
-8.  **Унификация**: Добавить `type="text"` для `input` для явности.
+1.  Удалите html-комментарии в начале файла.
+2.  Добавьте описание модуля в формате reStructuredText (RST).
+3.  Удалите переменную `MODE`, неиспользуемую в html-файле.
+4.  Добавьте классы или id для элементов управления (например, `<input>` и `<button>`) для более удобного доступа к ним через JavaScript.
+5.  Добавьте базовые стили для улучшения внешнего вида страницы.
+6.  Добавьте комментарии в код, описывающие назначение каждого элемента и блока.
+7.  Используйте корректный doctype HTML5 `< !DOCTYPE html>`.
+8.  Убедитесь, что все необходимые атрибуты для `input` элементов указаны. Например, атрибут `type` для `input` элементов.
 
 **Оптимизированный код**
 
 ```html
-<!--
-    HTML страница настроек расширения для Try Xpath.
-    ====================================================
-    
-    Страница предназначена для настройки параметров, таких как:
-    - атрибуты элементов
-    - стили для вставки
-    - стили для всплывающего окна.
--->
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Настройки Try Xpath</title>
-    <link rel="stylesheet" href="../styles/options.css">
-    <script src="../scripts/try_xpath_functions.js"></script>
-    <script src="options.js"></script>
-</head>
-<body>
-    <div>
-        <h1>Атрибуты</h1>
-        <dl>
-            <dt><label for="element-attribute">Результат</label></dt>
-            <dd><input type="text" id="element-attribute" type="text"></dd>
-            <dt><label for="context-attribute">Контекстный элемент</label></dt>
-            <dd><input type="text" id="context-attribute" type="text"></dd>
-            <dt><label for="focused-attribute">Фокусированный элемент</label></dt>
-            <dd><input type="text" id="focused-attribute" type="text"></dd>
-            <dt><label for="ancestor-attribute">Предки фокусированного элемента</label></dt>
-            <dd><input type="text" id="ancestor-attribute" type="text"></dd>
-            <dt><label for="frame-attribute">Фреймы</label></dt>
-            <dd><input type="text" id="frame-attribute" type="text"></dd>
-            <dt><label for="frame-ancestor-attribute">Предки фреймов</label></dt>
-            <dd><input type="text" id="frame-ancestor-attribute" type="text"></dd>
-        </dl>
-    </div>
-    <div>
-        <h1>Стиль для вставки</h1>
-        <dl>
-            <dt><label for="style">Стиль</label></dt>
-            <dd><textarea id="style"></textarea></dd>
-        </dl>
-    </div>
-    <div>
-        <h1>Стили для всплывающего окна</h1>
-        <dl>
-            <dt><label for="popup-body-width">Ширина тела(auto или px)</label></dt>
-            <dd><input type="text" id="popup-body-width" type="text"></dd>
-            <dt><label for="popup-body-height">Высота тела(auto или px)</label></dt>
-            <dd><input type="text" id="popup-body-height" type="text"></dd>
-        </dl>
-    </div>
-    <div><button id="save">Сохранить</button><button id="show-default">По умолчанию</button></div>
-    <div id="message"></div>
-</body>
-</html>
+<!--
+    Модуль для страницы настроек расширения.
+    =========================================================================================
+
+    Этот модуль представляет собой HTML-страницу, которая предоставляет пользовательский интерфейс для настройки параметров расширения.
+
+    Пример использования
+    --------------------
+
+    Пример использования страницы `options.html`:
+
+    .. code-block:: html
+
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <script src="../scripts/try_xpath_functions.js"></script>
+                <script src="options.js"></script>
+                <style>
+                    /* Базовые стили для страницы */
+                    body { font-family: sans-serif; margin: 20px; }
+                    h1 { margin-bottom: 20px; }
+                    dl { margin-bottom: 20px; }
+                    dt { font-weight: bold; margin-bottom: 5px; }
+                    dd { margin-left: 20px; margin-bottom: 10px; }
+                    input[type="text"], textarea { width: 100%; padding: 8px; box-sizing: border-box; margin-bottom: 10px; }
+                    button { padding: 10px 15px; cursor: pointer; margin-right: 10px;}
+                    #message { margin-top: 20px; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div>
+                    <h1>Attributes</h1>
+                    <!-- Блок для настроек атрибутов элементов -->
+                    <dl>
+                        <dt><label for="element-attribute">Resulted elements</label></dt>
+                        <dd><input type="text" id="element-attribute" /></dd>
+                        <dt><label for="context-attribute">Context element</label></dt>
+                        <dd><input type="text" id="context-attribute" /></dd>
+                        <dt><label for="focused-attribute">Focused element</label></dt>
+                        <dd><input type="text" id="focused-attribute" /></dd>
+                        <dt><label for="ancestor-attribute">Ancestors of the focused element</label></dt>
+                        <dd><input type="text" id="ancestor-attribute" /></dd>
+                        <dt><label for="frame-attribute">Frame elements</label></dt>
+                        <dd><input type="text" id="frame-attribute" /></dd>
+                        <dt><label for="frame-ancestor-attribute">Ancestors of the frames</label></dt>
+                        <dd><input type="text" id="frame-ancestor-attribute" /></dd>
+                    </dl>
+                </div>
+                <div>
+                    <h1>Style to be inserted</h1>
+                    <!-- Блок для ввода стилей -->
+                    <dl>
+                        <dt><label for="style">Style</label></dt>
+                        <dd><textarea id="style"></textarea></dd>
+                    </dl>
+                </div>
+                <div>
+                    <h1>Popup styles</h1>
+                    <!-- Блок для настроек стилей всплывающего окна -->
+                    <dl>
+                        <dt><label for="popup-body-width">Body width(auto or px)</label></dt>
+                        <dd><input type="text" id="popup-body-width" /></dd>
+                        <dt><label for="popup-body-height">Body height(auto or px)</label></dt>
+                        <dd><input type="text" id="popup-body-height" /></dd>
+                    </dl>
+                </div>
+                <div>
+                    <!-- Кнопки управления -->
+                    <button id="save">Save</button><button id="show-default">Show default</button>
+                </div>
+                <div id="message"></div>
+            </body>
+        </html>
+    
+-->
 ```

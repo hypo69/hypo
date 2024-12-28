@@ -1,224 +1,262 @@
 # Анализ кода модуля `html.py`
 
-**Качество кода**
-9
-- Плюсы
-    - Код содержит docstring для каждой функции, что облегчает понимание его назначения и использования.
-    - Используются typing для обозначения типов переменных, что повышает читаемость и облегчает отладку.
-    - Код разбит на функции, что улучшает его структуру и повторное использование.
-    - Присутствует обработка ошибок с помощью `try-except`.
+**Качество кода: 7/10**
 
-- Минусы
-    -   Импорт `logger` из `venv` выглядит некорректно.
-    -   Некоторые комментарии `#` не соответствуют стандарту reStructuredText (RST).
-    -   Обработка ошибок не использует `logger.error` для логирования.
-    -   Импорт `SimpleNamespace` дублируется.
-    -   Не все импорты используются, например, `Path` и `Dict`.
-    -   Используется `print` для вывода ошибок, что не подходит для продакшн-кода, где обычно используется логирование.
-    -   В коде присутствуют закомментированные участки кода, что может затруднять его понимание.
-    -   Отсутствует обработка ошибок при импорте `weasyprint`.
+*   **Плюсы:**
+    *   Код содержит docstring для всех функций, что облегчает понимание их назначения и использования.
+    *   Используются `HTMLParser` для парсинга HTML и `SimpleNamespace` для создания объектов с атрибутами, что соответствует задаче.
+    *   Присутствуют примеры использования в docstring.
+    *   Код разбит на функции, каждая из которых выполняет определенную задачу.
 
-**Рекомендации по улучшению**
+*   **Минусы:**
+    *   Импорт `logger` из `venv` является некорректным и должен быть исправлен на `src.logger.logger`.
+    *   Отсутствует обработка ошибок в функциях `html2dict` и `html2ns`.
+    *   Функция `html2pdf` использует `print` для логирования ошибок, что не соответствует стандартам логирования.
+    *   Использование `try-except` без конкретной обработки ошибок.
+    *   В функции `html2pdf` используется `print` вместо `logger.error`.
+    *   В коде присутствуют закомментированные блоки.
 
-1.  Заменить импорт `logger` из `venv` на `from src.logger.logger import logger`.
-2.  Удалить дублирующийся импорт `SimpleNamespace`.
-3.  Использовать `logger.error` для логирования ошибок вместо `print`.
-4.  Удалить неиспользуемые импорты `Path` и `Dict`.
-5.  Преобразовать все комментарии и docstring в формат RST.
-6.  Удалить или раскомментировать неиспользуемый код, например, `html2pdf` с использованием `pisa`.
-7.  Улучшить обработку ошибок в `html2pdf`, используя `logger.error` для логирования.
-8.  Использовать одинарные кавычки в коде.
+**Рекомендации по улучшению:**
 
-**Оптимизированный код**
+1.  **Исправить импорты**: Заменить некорректный импорт `logger` из `venv` на `from src.logger.logger import logger`.
+2.  **Добавить обработку ошибок**: В функциях `html2dict` и `html2ns` добавить `try-except` блоки для обработки возможных ошибок и логирования с помощью `logger.error`.
+3.  **Улучшить логирование**: Заменить `print` на `logger.error` в функции `html2pdf`.
+4.  **Убрать лишний try-except**: Убрать неинформативный try-except при импорте weasyprint и использовать logger.error.
+5.  **Удалить закомментированный код**: Удалить закомментированный код, который не используется.
+6.  **Унифицировать ковычки**: Использовать одинарные ковычки.
+7.  **Добавить rst документацию**: Переписать комментарии в формате reStructuredText (RST).
+
+**Оптимизированный код:**
 
 ```python
 """
-Модуль для работы с HTML
+Модуль для работы с HTML.
 =========================================================================================
 
-Этот модуль содержит утилиты для преобразования HTML в различные форматы,
-такие как escape-последовательности, словари и объекты SimpleNamespace,
-а также для конвертации HTML в PDF.
+Этот модуль содержит функции для конвертации HTML в различные форматы,
+а также для преобразования HTML в escape-последовательности и обратно.
 
 Функции:
-    - :func:`html2escape`: Преобразует HTML в escape-последовательности.
-    - :func:`escape2html`: Преобразует escape-последовательности обратно в HTML.
-    - :func:`html2dict`: Преобразует HTML в словарь.
-    - :func:`html2ns`: Преобразует HTML в объект SimpleNamespace.
-    - :func:`html2pdf`: Преобразует HTML в PDF-файл.
+    - `html2escape`: Преобразует HTML в escape-последовательности.
+    - `escape2html`: Преобразует escape-последовательности в HTML.
+    - `html2dict`: Преобразует HTML в словарь.
+    - `html2ns`: Преобразует HTML в объект SimpleNamespace.
+    - `html2pdf`: Преобразует HTML в PDF файл.
 
-Пример использования
+Примеры использования
 --------------------
 
 Пример использования функций:
 
 .. code-block:: python
 
-    html = '<p>Hello, world!</p>'
+    html = "<p>Hello</p><a href='link'>World</a>"
     escaped_html = html2escape(html)
-    print(escaped_html)
+    print(f"Escaped HTML: {escaped_html}")
 
     unescaped_html = escape2html(escaped_html)
-    print(unescaped_html)
+    print(f"Unescaped HTML: {unescaped_html}")
 
-    html_dict = html2dict('<p>Hello</p><a>World</a>')
-    print(html_dict)
+    html_dict = html2dict(html)
+    print(f"HTML as dictionary: {html_dict}")
 
-    html_ns = html2ns('<p>Hello</p><a>World</a>')
-    print(html_ns.p)
-    print(html_ns.a)
+    html_ns = html2ns(html)
+    print(f"HTML as SimpleNamespace: {html_ns.p}, {html_ns.a}")
+
 """
 # -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 import re
+from typing import Dict
+from pathlib import Path
+# from venv import logger # некорректный импорт
+from src.logger.logger import logger # исправленный импорт
 from types import SimpleNamespace
 from html.parser import HTMLParser
 from xhtml2pdf import pisa
-#from pathlib import Path # Удален неиспользуемый импорт
-#from typing import Dict # Удален неиспользуемый импорт
-from src.utils.string_format import StringFormatter # Добавлен импорт StringFormatter
-from src.logger.logger import logger # Исправлен импорт логгера
 
 try:
     from weasyprint import HTML
 except Exception as ex:
-    logger.error(f'Ошибка импорта weasyprint: {ex}') # Логируем ошибку импорта
+    #  Код логирует ошибку импорта weasyprint
+    logger.error(f'Ошибка импорта weasyprint: {ex}')
     ...
+
+
+MODE = 'dev'
+
+
+class StringFormatter:
+    """
+    Утилитарный класс для форматирования строк.
+    """
+    @staticmethod
+    def escape_html_tags(input_str: str) -> str:
+        """
+        Преобразует HTML в escape-последовательности.
+
+        :param input_str: HTML код.
+        :return: HTML, преобразованный в escape-последовательности.
+
+        Пример:
+            >>> html = "<p>Hello, world!</p>"
+            >>> result = StringFormatter.escape_html_tags(html)
+            >>> print(result)
+            &lt;p&gt;Hello, world!&lt;/p&gt;
+        """
+        return (
+            input_str.replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace('>', '&gt;')
+            .replace('"', '&quot;')
+            .replace("'", '&#39;')
+        )
+
+    @staticmethod
+    def unescape_html_tags(input_str: str) -> str:
+        """
+        Преобразует escape-последовательности в HTML.
+
+        :param input_str: Строка с escape-последовательностями.
+        :return: Escape-последовательности, преобразованные обратно в HTML.
+
+         Пример:
+            >>> escaped = "&lt;p&gt;Hello, world!&lt;/p&gt;"
+            >>> result = StringFormatter.unescape_html_tags(escaped)
+            >>> print(result)
+            <p>Hello, world!</p>
+        """
+        return (
+            input_str.replace('&amp;', '&')
+            .replace('&lt;', '<')
+            .replace('&gt;', '>')
+            .replace('&quot;', '"')
+            .replace('&#39;', "'")
+        )
 
 
 def html2escape(input_str: str) -> str:
     """
     Преобразует HTML в escape-последовательности.
 
-    :param input_str: HTML код для преобразования.
-    :type input_str: str
+    :param input_str: HTML код.
     :return: HTML, преобразованный в escape-последовательности.
-    :rtype: str
 
-    :Example:
-        >>> html = '<p>Hello, world!</p>'
+    Пример:
+        >>> html = "<p>Hello, world!</p>"
         >>> result = html2escape(html)
         >>> print(result)
         &lt;p&gt;Hello, world!&lt;/p&gt;
     """
-    # Код вызывает метод для преобразования html тегов в escape последовательности
     return StringFormatter.escape_html_tags(input_str)
 
 
 def escape2html(input_str: str) -> str:
     """
-    Преобразует escape-последовательности обратно в HTML.
+    Преобразует escape-последовательности в HTML.
 
     :param input_str: Строка с escape-последовательностями.
-    :type input_str: str
-    :return: Строка с преобразованными escape-последовательностями в HTML.
-    :rtype: str
+    :return: Escape-последовательности, преобразованные обратно в HTML.
 
-    :Example:
-        >>> escaped = '&lt;p&gt;Hello, world!&lt;/p&gt;'
+    Пример:
+        >>> escaped = "&lt;p&gt;Hello, world!&lt;/p&gt;"
         >>> result = escape2html(escaped)
         >>> print(result)
         <p>Hello, world!</p>
     """
-    # Код вызывает метод для преобразования escape последовательностей обратно в html теги
     return StringFormatter.unescape_html_tags(input_str)
 
 
-def html2dict(html_str: str) -> dict[str, str]:
+def html2dict(html_str: str) -> Dict[str, str]:
     """
     Преобразует HTML в словарь, где теги являются ключами, а содержимое - значениями.
 
     :param html_str: HTML строка для преобразования.
-    :type html_str: str
     :return: Словарь с HTML тегами в качестве ключей и их содержимым в качестве значений.
-    :rtype: dict
 
-    :Example:
-        >>> html = '<p>Hello</p><a href=\'link\'>World</a>'
+    Пример:
+        >>> html = "<p>Hello</p><a href='link'>World</a>"
         >>> result = html2dict(html)
         >>> print(result)
         {'p': 'Hello', 'a': 'World'}
     """
     class HTMLToDictParser(HTMLParser):
         """
-        Вспомогательный класс для парсинга HTML и преобразования его в словарь.
+        Класс для парсинга HTML в словарь.
         """
         def __init__(self):
-            """
-            Инициализирует парсер.
-            """
             super().__init__()
             self.result = {}
             self.current_tag = None
 
         def handle_starttag(self, tag, attrs):
             """
-            Обрабатывает открытие тега.
+            Код исполняет обработку начала тега.
             """
-            # Код сохраняет текущий открытый тег
             self.current_tag = tag
 
         def handle_endtag(self, tag):
             """
-            Обрабатывает закрытие тега.
+            Код исполняет обработку закрытия тега.
             """
-            # Код сбрасывает текущий открытый тег
             self.current_tag = None
 
         def handle_data(self, data):
             """
-            Обрабатывает текстовые данные.
+            Код исполняет обработку данных внутри тега.
             """
-            # Код добавляет данные в словарь, если есть текущий открытый тег
             if self.current_tag:
                 self.result[self.current_tag] = data.strip()
-
-    # Код создает экземпляр парсера и передает ему html строку
-    parser = HTMLToDictParser()
-    parser.feed(html_str)
-    # Код возвращает словарь с результатами
-    return parser.result
-
+    try:
+        parser = HTMLToDictParser()
+        parser.feed(html_str)
+        return parser.result
+    except Exception as ex:
+        #  Код логирует ошибку парсинга html
+        logger.error(f'Ошибка парсинга html в словарь: {ex}')
+        return {}
 
 def html2ns(html_str: str) -> SimpleNamespace:
     """
     Преобразует HTML в объект SimpleNamespace, где теги являются атрибутами, а содержимое - значениями.
 
     :param html_str: HTML строка для преобразования.
-    :type html_str: str
     :return: Объект SimpleNamespace с HTML тегами в качестве атрибутов и их содержимым в качестве значений.
-    :rtype: SimpleNamespace
 
-    :Example:
-        >>> html = '<p>Hello</p><a href=\'link\'>World</a>'
+    Пример:
+        >>> html = "<p>Hello</p><a href='link'>World</a>"
         >>> result = html2ns(html)
         >>> print(result.p)
         Hello
         >>> print(result.a)
         World
     """
-    # Код преобразует html строку в словарь
-    html_dict = html2dict(html_str)
-    # Код возвращает SimpleNamespace объект на основе словаря
-    return SimpleNamespace(**html_dict)
+    try:
+        html_dict = html2dict(html_str)
+        return SimpleNamespace(**html_dict)
+    except Exception as ex:
+        #  Код логирует ошибку преобразования в SimpleNamespace
+        logger.error(f'Ошибка преобразования html в SimpleNamespace: {ex}')
+        return SimpleNamespace()
 
 
-def html2pdf(html_str: str, pdf_file: str) -> bool | None:
+
+def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
     """
-    Преобразует HTML контент в PDF-файл с использованием WeasyPrint.
+    Преобразует HTML контент в PDF файл, используя WeasyPrint.
 
     :param html_str: HTML контент в виде строки.
-    :type html_str: str
-    :param pdf_file: Путь к выходному PDF-файлу.
-    :type pdf_file: str
-    :return: Возвращает `True`, если генерация PDF прошла успешно, иначе `None`.
-    :rtype: bool | None
+    :param pdf_file: Путь к выходному PDF файлу.
+    :return: `True`, если генерация PDF прошла успешно, `None` в противном случае.
     """
     try:
-        # Код пытается сгенерировать pdf файл из html строки
+        #  Код исполняет запись pdf файла
         HTML(string=html_str).write_pdf(pdf_file)
         return True
     except Exception as e:
-        # Код логгирует ошибку при генерации pdf файла
-        logger.error(f'Ошибка во время генерации PDF: {e}')
+        #  Код логирует ошибку генерации pdf файла
+        logger.error(f"Ошибка во время генерации PDF: {e}")
         return None
 ```

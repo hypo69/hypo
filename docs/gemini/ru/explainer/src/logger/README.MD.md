@@ -1,185 +1,279 @@
-## Анализ кода `src.logger`
+## <алгоритм>
 
-### <алгоритм>
+**1. Инициализация логгера:**
 
-1.  **Инициализация Logger:**
-    *   Создается экземпляр класса `Logger`. Так как класс использует `SingletonMeta`,  второй экземпляр не будет создан, если он уже существует.
-    *   Вызывается метод `initialize_loggers` с параметрами, указывающими пути к файлам для разных уровней логирования (info, debug, errors, json).
+   - Создается экземпляр класса `Logger`.
+   - Вызывается метод `initialize_loggers` с параметрами путей к файлам логов (`info_log_path`, `debug_log_path`, `errors_log_path`, `json_log_path`).
+   - Внутри `initialize_loggers` вызывается `_configure_logger` для каждого типа логгера (консоль, info, debug, error, json), создавая отдельные логгеры `logging.Logger`.
 
-    ```python
-    logger: Logger = Logger()
-    config = {
-        'info_log_path': 'logs/info.log',
-        'debug_log_path': 'logs/debug.log',
-        'errors_log_path': 'logs/errors.log',
-        'json_log_path': 'logs/log.json'
-    }
-    logger.initialize_loggers(**config)
-    ```
+   *Пример:*
+   ```python
+   logger: Logger = Logger()
+   config = {
+       'info_log_path': 'logs/info.log',
+       'debug_log_path': 'logs/debug.log',
+       'errors_log_path': 'logs/errors.log',
+       'json_log_path': 'logs/log.json'
+   }
+   logger.initialize_loggers(**config)
+   ```
+   *Данные*: Передаются пути к файлам логов.
+   *Результат*: Создаются и настраиваются отдельные логгеры.
 
-2.  **Конфигурирование Логгеров:**
-    *   Метод `initialize_loggers` вызывает внутренний метод `_configure_logger` для каждого типа логгера (console, file, json), передавая ему имя логгера, путь к файлу, уровень логирования, форматтер (если необходимо) и режим работы с файлом.
+**2. Конфигурация логгера:**
 
-        *   **Пример для `info` логгера:**
+   - Функция `_configure_logger` получает имя логгера, путь к файлу лога, уровень логгирования, форматтер и режим открытия файла.
+   - Создается объект `logging.Logger` с указанным именем.
+   - Создается обработчик (handler) в зависимости от типа логгера (консоль, файл).
+   - К обработчику добавляется форматер (по умолчанию или JSON).
+   - Устанавливается уровень логгирования.
+   - Обработчик добавляется к логгеру.
+   - Возвращается настроенный логгер.
 
-            ```python
-            self._configure_logger(
-                name="info",
-                log_path=info_log_path,
-                level=logging.INFO,
-                formatter=logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'),
-                mode='a',
-             )
-            ```
+   *Пример:*
+   ```python
+   def _configure_logger(name, log_path, level=logging.DEBUG, formatter=None, mode='a'):
+        logger = logging.getLogger(name)
+        handler = logging.FileHandler(log_path, mode=mode) if log_path else logging.StreamHandler()
+        formatter = formatter or logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.setLevel(level)
+        logger.addHandler(handler)
+        return logger
+   ```
+   *Данные*: Имя логгера, путь к файлу, уровень логирования, форматер.
+   *Результат*: Возвращает настроенный объект `logging.Logger`.
 
-        *   **Пример для `json` логгера:**
+**3. Логгирование сообщений:**
 
-            ```python
-            self._configure_logger(
-                name="json",
-                log_path=json_log_path,
-                level=logging.DEBUG,
-                formatter=JsonFormatter(),
-                mode='a',
-             )
-            ```
+   - Вызывается метод `log` с уровнем, сообщением, опциональным исключением, флагом `exc_info` и цветом.
+   - В зависимости от уровня сообщения вызывается метод соответствующего уровня (`info`, `debug`, `error`, `critical` и т.д.).
+   - Метод вызывает `log`, который добавляет цветное форматирование (если указано) и передает сообщение в соответствующие логгеры.
+   - Каждый логгер (консоль, файл) обрабатывает сообщение в соответствии со своей конфигурацией (уровень, формат).
 
-    *   Метод `_configure_logger` создает или получает существующий logger с переданным именем, добавляет хэндлер (file или console) с заданными параметрами и возвращает настроенный объект логгера.
+   *Пример:*
+   ```python
+    def log(self, level, message, ex=None, exc_info=False, color=None):
+        if color:
+            message = f"{color[0]}{color[1]}{message}{colorama.Style.RESET_ALL}"
+        for logger in self._loggers.values():
+            logger.log(level, message, exc_info=exc_info)
+        if ex:
+            for logger in self._loggers.values():
+               logger.exception(ex)
+   ```
+   *Данные*: Уровень логирования, сообщение, опциональное исключение, информация об исключении, цвета.
+   *Результат*: Сообщение записывается в лог в соответствии с уровнем и настройками.
 
-3.  **Логирование Сообщений:**
-    *   Вызываются методы `info`, `success`, `warning`, `debug`, `error`, `critical` класса `Logger` для записи сообщений с соответствующим уровнем.
+**4. Цветное форматирование:**
 
-        *   **Пример вызова `info`:**
+   - Если при вызове `log` указан параметр `color`, сообщение оборачивается в escape-последовательности `colorama` для добавления цветов.
+   - Это работает только для консольного вывода.
 
-            ```python
-             logger.info('This is an info message')
-            ```
-            *   Внутри метод `info` вызывает метод `log` с уровнем логирования `logging.INFO` и переданным сообщением.
+   *Пример:*
+   ```python
+   logger.info('This message will be green', colors=(colorama.Fore.GREEN, colorama.Back.BLACK))
+   ```
+   *Данные*: Цвета текста и фона (`colorama.Fore.GREEN`, `colorama.Back.BLACK`).
+   *Результат*: Сообщение выводится в консоль с указанными цветами.
 
-        *   **Пример вызова `error` с кастомизацией цвета:**
+**Блок-схема (псевдокод):**
 
-            ```python
-             logger.error('This message will have a red background', colors=(colorama.Fore.WHITE, colorama.Back.RED))
-            ```
-            *   Внутри метод `error` вызывает метод `log` с уровнем логирования `logging.ERROR` и переданным сообщением и цветом.
-
-    *   Метод `log` добавляет дополнительную информацию, например, информацию об исключении или цвет (если они были переданы), и передает сообщение соответствующему логгеру, который затем записывает его в файл или выводит в консоль.
-
-4.  **Форматирование сообщений**
-    *   Используется стандартный `logging.Formatter` для форматирования сообщений, или класс `JsonFormatter` для форматирования в JSON.
-    *   При использовании цветов, используется библиотека `colorama` для установки цвета текста и фона.
-
-### <mermaid>
-
-```mermaid
-graph LR
-    A[Logger Instance] --> B(initialize_loggers);
-    B --> C{_configure_logger\n(info)};
-    B --> D{_configure_logger\n(debug)};
-    B --> E{_configure_logger\n(errors)};
-    B --> F{_configure_logger\n(json)};
-    C --> G[logging.Logger\n(info)];
-    D --> H[logging.Logger\n(debug)];
-    E --> I[logging.Logger\n(errors)];
-    F --> J[logging.Logger\n(json)];
-    G --> K[FileHandler\n(info.log)];
-    H --> L[FileHandler\n(debug.log)];
-    I --> M[FileHandler\n(errors.log)];
-    J --> N[FileHandler\n(log.json)];
-    A --> O(info);
-    A --> P(success);
-    A --> Q(warning);
-    A --> R(debug);
-    A --> S(error);
-    A --> T(critical);
-    O --> U{log\n(logging.INFO)};
-    P --> V{log\n(logging.INFO)};
-    Q --> W{log\n(logging.WARNING)};
-    R --> X{log\n(logging.DEBUG)};
-    S --> Y{log\n(logging.ERROR)};
-    T --> Z{log\n(logging.CRITICAL)};
-    U --> G;
-    V --> G;
-    W --> G;
-    X --> H;
-    Y --> I;
-    Z --> I;
-    classDef plain fill:#fff,stroke:#000,stroke-width:1px;
-    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z plain;
+```
+Start
+  |
+  v
+Создать экземпляр Logger
+  |
+  v
+Вызвать initialize_loggers(info_log_path, debug_log_path, errors_log_path, json_log_path)
+  |
+  v
+  Для каждого типа логгера (info, debug, error, json)
+  |  |
+  |  v
+  |  Вызвать _configure_logger(name, log_path, level, formatter, mode)
+  |  |
+  |  v
+  |  Создать объект logging.Logger с именем
+  |  |
+  |  v
+  |  Создать обработчик (FileHandler или StreamHandler)
+  |  |
+  |  v
+  |  Установить форматер для обработчика
+  |  |
+  |  v
+  |  Установить уровень логгирования
+  |  |
+  |  v
+  |  Добавить обработчик к логгеру
+  |  |
+  |  v
+  |  Сохранить настроенный логгер
+  |
+  v
+Вызвать log(level, message, ex, exc_info, color)
+  |
+  v
+  Если color указан, добавить к сообщению цвета
+  |
+  v
+  Для каждого активного логгера
+  |  |
+  |  v
+  |  Записать сообщение в лог
+  |
+  v
+  Если ex указано, записать исключение
+End
 ```
 
-**Объяснение диаграммы:**
+## <mermaid>
 
-*   **Logger Instance (A):** Начальная точка, представляющая экземпляр класса `Logger`. Это главный объект, через который происходит вся работа с логгированием.
-*   **initialize_loggers (B):**  Метод класса Logger, который инициирует процесс настройки логгеров для различных уровней (info, debug, errors, json).
-*   **_configure_logger (C, D, E, F):** Внутренний метод, вызываемый `initialize_loggers` для каждого типа логгера (info, debug, errors, json). Метод конфигурирует и возвращает настроенный экземпляр `logging.Logger`.
-*   **logging.Logger (G, H, I, J):** Экземпляры стандартного класса `logging.Logger` из модуля `logging`, настроенные для разных уровней и целей.
-*   **FileHandler (K, L, M, N):** Хэндлеры, которые записывают логи в соответствующие файлы (`info.log`, `debug.log`, `errors.log`, `log.json`).
-*   **info, success, warning, debug, error, critical (O, P, Q, R, S, T):** Методы класса `Logger`, которые служат интерфейсами для записи сообщений с соответствующим уровнем логирования.
-*    **log (U, V, W, X, Y, Z):** Внутренний метод, который обрабатывает вызовы всех методов логирования (`info`, `success` и т.д.) и передает сообщение в соответствующий настроенный `logging.Logger`.
-*   **Поток управления**: Показывает, как создается логгер, как он настраивается и как сообщения передаются в нужный логгер для записи.
+```mermaid
+flowchart TD
+    Start --> CreateLogger[Create Logger Instance]
+    CreateLogger --> InitializeLoggers[Call initialize_loggers with log paths]
+    InitializeLoggers --> ForEachLoggerType[For each logger type: info, debug, error, json]
+    ForEachLoggerType --> ConfigureLogger[_configure_logger(name, log_path, level, formatter, mode)]
+    ConfigureLogger --> CreateLoggerInstance[Create logging.Logger instance]
+    ConfigureLogger --> CreateHandler[Create FileHandler or StreamHandler]
+    CreateHandler --> SetFormatter[Set Formatter]
+    SetFormatter --> SetLogLevel[Set Log Level]
+    SetLogLevel --> AddHandlerToLogger[Add Handler to Logger]
+    AddHandlerToLogger --> StoreLogger[Store Configured Logger]
+    StoreLogger --> ForEachLoggerType
+    ForEachLoggerType -- All loggers configured --> CallLog[Call log(level, message, ex, exc_info, color)]
+    CallLog --> CheckColor[Check if color is specified]
+    CheckColor -- Yes --> ApplyColorFormatting[Apply Color Formatting]
+    CheckColor -- No --> SkipColorFormatting[Skip Color Formatting]
+    ApplyColorFormatting --> LogMessageToAllLoggers[Log Message to All Loggers]
+    SkipColorFormatting --> LogMessageToAllLoggers
+    LogMessageToAllLoggers --> CheckException[Check if exception (ex) is specified]
+    CheckException -- Yes --> LogExceptionToAllLoggers[Log Exception to All Loggers]
+    CheckException -- No --> End
+    LogExceptionToAllLoggers --> End
+    
+    
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    class CreateLogger, InitializeLoggers, CallLog, ConfigureLogger important
+```
 
-### <объяснение>
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-**Импорты:**
+    Header --> ImportGlobalSettings[Import Global Settings: <br><code>from src import gs</code>]
+     
+    ImportGlobalSettings --> SetProjectSettings[Set Project Settings using <br> <code>gs</code>]
 
-*   `logging`: Стандартный модуль Python для логирования. Используется для создания и настройки логгеров, установки уровней логирования, и форматирования сообщений.
-*   `typing.Optional`: Используется для аннотации типов, указывая, что переменная может иметь значение определенного типа или `None`.
-*   `colorama`: Используется для добавления цветового оформления к выводу в консоль.
+    SetProjectSettings --> Finish[Finish]
+    
+    classDef important fill:#f9f,stroke:#333,stroke-width:2px;
+    class Header, ImportGlobalSettings, SetProjectSettings important
+```
 
-**Классы:**
+**Объяснение:**
 
-*   **SingletonMeta**: Метакласс, реализующий шаблон Singleton. Гарантирует, что будет создан только один экземпляр класса `Logger`.
-    *   Метод `__call__` перехватывает вызов конструктора класса и возвращает ранее созданный экземпляр, если он существует.
-*   **JsonFormatter**: Класс, наследуемый от `logging.Formatter`, переопределяет метод `format` для форматирования логов в JSON формат. Использует  `json.dumps` для сериализации записи.
-*   **Logger**: Основной класс логирования, который использует `SingletonMeta`.
-    *   Атрибуты:
-        *   `_console_logger`, `_file_logger`, `_json_logger`: Экземпляры `logging.Logger` для логирования в консоль, файл и JSON.
-    *   Методы:
-        *   `__init__`: Инициализирует атрибуты `_console_logger`, `_file_logger` и `_json_logger` в `None`.
-        *   `_configure_logger`: Конфигурирует и возвращает `logging.Logger`. Создает или получает логгер по имени, добавляет обработчик (file или console), устанавливает форматтер и уровень логирования.
-        *   `initialize_loggers`: Инициализирует различные логгеры (console, file, JSON) с использованием `_configure_logger`. Принимает пути к файлам в качестве аргументов.
-        *   `log`: Основной метод для логирования сообщений с различными уровнями, цветами и дополнительной информацией (исключения).
-        *   `info`, `success`, `warning`, `debug`, `error`, `critical`: Методы-обертки для `log`, упрощающие логирование сообщений на разных уровнях.
+1. **`Start`**: Начало процесса.
+2.  **`CreateLogger`**: Создается экземпляр класса `Logger`, который является точкой входа в систему логирования.
+3.  **`InitializeLoggers`**: Вызывается метод `initialize_loggers`, который принимает пути к файлам логов. Он инициирует настройку каждого отдельного логгера (console, info, debug, error, json).
+4.  **`ForEachLoggerType`**: Цикл, который проходит по каждому типу логгера.
+5.  **`ConfigureLogger`**: Вызывается функция `_configure_logger`, которая выполняет настройку конкретного логгера. Она принимает имя логгера, путь к файлу, уровень логирования, форматер и режим открытия файла.
+6. **`CreateLoggerInstance`**: Внутри `_configure_logger` создается объект `logging.Logger` с указанным именем.
+7. **`CreateHandler`**: Создается обработчик, который отвечает за запись логов (в файл или в консоль).
+8. **`SetFormatter`**: К обработчику добавляется форматер, который определяет формат сообщения лога.
+9. **`SetLogLevel`**: Устанавливается уровень логирования для данного логгера.
+10. **`AddHandlerToLogger`**: Обработчик добавляется к логгеру.
+11. **`StoreLogger`**: Настроенный логгер сохраняется для дальнейшего использования.
+12.  **`CallLog`**: Вызывается метод `log` для записи сообщения. Метод принимает уровень логирования, сообщение, опциональное исключение, флаг `exc_info`, а также цвет для вывода в консоль.
+13.  **`CheckColor`**: Проверяется, указан ли цвет для форматирования вывода в консоль.
+14. **`ApplyColorFormatting`**: Если цвет указан, то добавляется цветное форматирование к сообщению.
+15. **`SkipColorFormatting`**: Если цвет не указан, то сообщение не форматируется.
+16.  **`LogMessageToAllLoggers`**: Сообщение отправляется во все настроенные логгеры для записи.
+17. **`CheckException`**: Проверяется, было ли передано исключение.
+18. **`LogExceptionToAllLoggers`**: Если исключение было передано, то информация о нём записывается в лог.
+19. **`End`**: Конец процесса логирования.
 
-**Функции:**
+**Зависимости:**
 
-*   `_configure_logger`:
-    *   Аргументы: `name` (имя логгера), `log_path` (путь к файлу), `level` (уровень логирования), `formatter` (форматтер), `mode` (режим работы с файлом).
-    *   Возвращает: `logging.Logger`.
-    *   Назначение: Создает или получает логгер с заданным именем, добавляет обработчик (file или console) и устанавливает форматтер и уровень логирования.
-*   `initialize_loggers`:
-    *   Аргументы: `info_log_path`, `debug_log_path`, `errors_log_path`, `json_log_path`.
-    *   Возвращает: `None`.
-    *   Назначение: Инициализирует логгеры для консоли, файлов и JSON.
-*   `log`:
-    *   Аргументы: `level` (уровень логирования), `message` (сообщение), `ex` (исключение), `exc_info` (флаг для включения информации об исключении), `color` (цвет для консоли).
-    *   Возвращает: `None`.
-    *   Назначение: Логирует сообщение с заданным уровнем, цветом и информацией об исключении.
-*   `info`, `success`, `warning`, `debug`, `error`, `critical`:
-    *   Аргументы: `message`, `ex`, `exc_info`, `colors`.
-    *   Возвращают: `None`.
-    *   Назначение: Упрощенные методы для логирования сообщений на разных уровнях.
+-   `logging`: Встроенный модуль Python для логирования.
+-   `colorama`: Модуль для работы с цветом в консоли.
 
-**Переменные:**
+## <объяснение>
 
-*   `config`: Словарь с путями к файлам для логирования.
-*   `logger`: Экземпляр класса `Logger`.
+### Импорты:
 
-**Потенциальные ошибки и области для улучшения:**
+-   **`logging`**:
+    -   Это встроенный модуль Python, предоставляющий гибкую структуру для логирования событий, происходящих в приложении.
+    -   `logging` позволяет записывать информацию в разные места (консоль, файлы) с разными уровнями детализации (DEBUG, INFO, WARNING, ERROR, CRITICAL).
+    -   Этот модуль используется для создания объектов логгеров, установки уровней логирования, добавления обработчиков и форматирования сообщений.
+-   **`colorama`**:
+    -   Это сторонний модуль, который используется для добавления цветов в консольный вывод.
+    -   `colorama` предоставляет константы для задания цветов текста (`Fore`) и фона (`Back`), а также для сброса стилей (`Style.RESET_ALL`).
+    -   В `src.logger` модуль используется для раскрашивания сообщений в консоли в зависимости от уровня логирования или пользовательских настроек.
 
-*   Отсутствует явная обработка ошибок при записи в файл.
-*   Можно добавить возможность настройки форматов для разных типов логгеров (например, JSON для файла, а другой для консоли).
-*   Можно добавить возможность ротации логов.
+### Классы:
 
-**Взаимосвязи с другими частями проекта:**
+-   **`SingletonMeta`**:
+    -   Это метакласс, реализующий шаблон проектирования Singleton.
+    -   Он гарантирует, что класс `Logger` будет иметь только один экземпляр.
+    -   Метод `__call__` переопределяется, чтобы при каждом вызове возвращать один и тот же экземпляр класса.
+-   **`JsonFormatter`**:
+    -   Это класс, наследуемый от `logging.Formatter`, который переопределяет метод `format` для формирования сообщений лога в формате JSON.
+    -   Он преобразует сообщение лога в словарь и преобразует его в строку JSON.
+    -   Используется для записи логов в файл в формате JSON.
+-   **`Logger`**:
+    -   Это основной класс логгера. Он использует метакласс `SingletonMeta`, чтобы обеспечить создание только одного экземпляра.
+    -   Он содержит методы для инициализации логгеров (`initialize_loggers`), настройки (`_configure_logger`), и записи сообщений (`log`, `info`, `debug`, `error` и т.д.).
+    -   Он хранит все созданные логгеры в словаре `_loggers`, где ключом является имя логгера.
 
-*   Модуль `src.logger` не зависит от других модулей внутри проекта, но он является центральным для всех остальных модулей, так как используется для логирования действий и ошибок.
+### Функции:
 
-**Цепочка взаимосвязей:**
+-   **`__init__`**:
+    -   Конструктор класса `Logger`. Он инициализирует словарь `_loggers`, в котором будут храниться все созданные логгеры.
+-   **`_configure_logger(name, log_path, level=logging.DEBUG, formatter=None, mode='a')`**:
+    -   Создает и настраивает объект `logging.Logger`.
+    -   Принимает имя логгера, путь к файлу, уровень логирования, форматтер и режим открытия файла в качестве аргументов.
+    -   Создает обработчик (`FileHandler` или `StreamHandler`) для записи логов в файл или консоль.
+    -   Устанавливает форматтер для обработчика.
+    -   Устанавливает уровень логирования.
+    -   Возвращает сконфигурированный объект `logging.Logger`.
+-   **`initialize_loggers(info_log_path='', debug_log_path='', errors_log_path='', json_log_path='')`**:
+    -   Инициализирует все логгеры, вызывая `_configure_logger` для каждого из них (консоль, info, debug, error, json).
+    -   Принимает пути к файлам логов для каждого типа.
+    -   Создает и сохраняет логгеры в словаре `_loggers`.
+-   **`log(level, message, ex=None, exc_info=False, color=None)`**:
+    -   Записывает сообщение лога на указанном уровне.
+    -   Принимает уровень логирования, сообщение, опциональное исключение, флаг `exc_info`, а также цвет для вывода в консоль.
+    -   Добавляет цветное форматирование, если указано, и передает сообщение в соответствующие логгеры.
+-   **`info(message, ex=None, exc_info=False, colors=None)`**, **`success(message, ex=None, exc_info=False, colors=None)`**, **`warning(message, ex=None, exc_info=False, colors=None)`**, **`debug(message, ex=None, exc_info=True, colors=None)`**, **`error(message, ex=None, exc_info=True, colors=None)`**, **`critical(message, ex=None, exc_info=True, colors=None)`**:
+    -   Это вспомогательные методы для вызова `log` с разными уровнями логирования.
+    -   Они предоставляют более удобный интерфейс для записи сообщений разных типов.
 
-1.  Другие модули проекта импортируют класс `Logger` из `src.logger`.
-2.  При создании экземпляра `Logger`, гарантируется, что это будет один и тот же экземпляр из-за Singleton.
-3.  Другие модули вызывают методы `info`, `debug`, `error`, и т.д. для записи логов.
-4.  Логи могут быть направлены в консоль, файлы, или в JSON файл в зависимости от конфигурации.
-5.  Таким образом, модуль `src.logger` является центральным для мониторинга состояния проекта и его компонентов.
+### Переменные:
+
+-   **`_loggers`**:
+    -   Словарь, в котором хранятся все созданные объекты `logging.Logger`.
+    -   Ключами словаря являются имена логгеров (`console`, `info`, `debug`, `error`, `json`).
+
+### Потенциальные ошибки и улучшения:
+
+1.  **Отсутствие обработки исключений:** При создании `FileHandler` в `_configure_logger` не обрабатываются возможные исключения (`FileNotFoundError`, `PermissionError`).
+2.  **Жестко заданные имена логгеров:** Имена логгеров (`console`, `info`, `debug`, `error`, `json`) жестко заданы в `initialize_loggers`.
+3.  **Отсутствие проверки путей:** Пути к файлам не проверяются на существование.
+4.  **Возможная потеря сообщений:** Если при создании FileHandler возникнет исключение, то сообщение не запишется.
+
+**Взаимосвязь с другими частями проекта:**
+
+-   Модуль `src.logger` является частью пакета `src` и может использоваться другими модулями проекта для логирования различных событий.
+-   Конфигурация путей к файлам логов может храниться в файле конфигурации проекта, а не задаваться жестко в коде.
+-   `src.logger` может зависеть от `src.header`, чтобы определить корневую директорию проекта, где будут храниться логи.
+
+**Дополнительно:**
+
+-   Можно добавить возможность настраивать форматы логов (например, добавлять время, имя файла, номер строки).
+-   Можно добавить возможность настраивать уровни логирования через конфигурационный файл.
+-   Вместо использования `colorama` можно использовать более продвинутые библиотеки для работы с терминалом.
+-   Можно добавить поддержку ротации лог-файлов (для предотвращения их чрезмерного роста).

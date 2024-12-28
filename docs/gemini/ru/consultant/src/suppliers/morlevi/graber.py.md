@@ -1,44 +1,55 @@
 # Анализ кода модуля `graber.py`
 
 **Качество кода**
-9
+8
 -  Плюсы
-        - Код структурирован в соответствии с принципами ООП.
-        - Используется `logger` для логирования ошибок и отладки.
-        - Присутствуют docstring для классов и методов.
-        - Код использует асинхронность с `async` и `await`.
+    -  Код использует асинхронность.
+    -  Применяется кастомный класс `Graber`, наследующий от базового `Grbr`, что способствует расширяемости и переопределению поведения.
+    -  Используется логирование для отслеживания ошибок и отладки.
+    -  Структура файла организована, есть docstring для модуля и класса.
 -  Минусы
-    -  Не все комментарии соответствуют reStructuredText (RST).
-    - Отсутствует обработка `ExecuteLocatorException`.
-    - Некоторые docstring требуют более подробного описания параметров и возвращаемых значений.
-    -  Использование `...` для пропуска обработки ошибок не является оптимальным.
-    - Есть места где комментарии не соответствуют коду или их недостаточно
+    -  Используется `...` в нескольких местах, что указывает на незавершенные блоки кода.
+    -  Импорт `header` без явного использования.
+    -  Присутствует закомментированный код, который следует либо удалить, либо доработать.
+    -  Отсутствуют docstring для методов и функций.
+    -  Не используются `j_loads` или `j_loads_ns` для чтения данных из файлов, хотя это требование указано в инструкции.
+    -  Не все комментарии оформлены в формате reStructuredText (RST).
+    -  Не все импорты соответствуют ранее обработанным файлам.
 
 **Рекомендации по улучшению**
 
-1.  **Импорты:** Добавьте недостающие импорты, такие как `Callable`, `wraps` из `functools` и `ExecuteLocatorException` из `src.webdriver.exceptions`.
-2.  **Комментарии:** Перепишите все комментарии в формате RST, включая описания модулей, классов, функций и параметров.
-3.  **Обработка ошибок:** Вместо `try-except` с `...`, используйте `logger.error` с подробным описанием ошибки.
-4.  **Декоратор:** Раскомментируйте и доработайте декоратор `close_pop_up` (если он нужен) с использованием `logger.debug` для отладки ошибок.
-5.  **Docstring:** Улучшите docstring для функций, указав явно типы и описания параметров и возвращаемых значений.
-6.  **Передача параметров:** Рассмотрите механизм передачи параметров для функции `local_saved_image`.
-7.  **Обработка `raw`:** Добавьте обработку случая, когда `raw` не является ни списком, ни байтами.
-8.  **Удалить `MODE = 'dev'`:** Переменные окружения нужно устанавливать извне
-9.  **Удалить Shebang:** она не нужна, так как проект запускается командой `python`
+1.  **Импорты**:
+    -   Удалить неиспользуемый импорт `header`.
+    -   Добавить `from functools import wraps` для работы декоратора.
+    -   Добавить `from typing import Callable` для аннотации декоратора.
+    -   Добавить `from src.utils.jjson import j_loads` если требуется работа с файлами.
+    -   Добавить `from src.exceptions import ExecuteLocatorException` для обработки исключений локатора.
+2.  **Документация**:
+    -   Добавить docstring к методам `__init__`.
+    -   Переписать docstring модуля в reStructuredText (RST).
+    -   Переписать все комментарии в reStructuredText (RST).
+3.  **Декоратор**:
+    -   Раскомментировать и доработать декоратор, если он требуется. Уточнить его использование и переписать документацию в формате reStructuredText (RST).
+    -   Удалить `...` из тела декоратора.
+4.  **Обработка ошибок**:
+    -   Заменить `...` в `except` блоках на `return` или логирование с помощью `logger.error`.
+5.  **Функциональность**:
+    -   Удалить закомментированный код или доработать его.
+    -   Переработать код сохранения изображения, чтобы он соответствовал требованиям и был более гибким.
+    -   Устранить `BUG!` в коде с `self.id_product()`.
 
-**Оптимизированный код**
+**Оптимизиробанный код**
 
 ```python
+# -*- coding: utf-8 -*-
 """
-Модуль для сбора данных о товарах с сайта morlevi.co.il.
-=========================================================================================
+Модуль для сбора данных со страницы товара `morlevi.co.il`.
+==========================================================
 
-Этот модуль содержит класс :class:`Graber`, который наследует функциональность
-от базового класса :class:`src.suppliers.graber.Graber` и адаптирует ее
-для работы с сайтом morlevi.co.il.
+Этот модуль содержит класс :class:`Graber`, который наследует от :class:`src.suppliers.graber.Graber`.
+Класс предназначен для сбора информации о товарах с сайта `morlevi.co.il`.
 
-Основная задача класса - получение данных о товарах с веб-страницы
-и сохранение их в структурированном виде.
+Модуль использует асинхронные функции для взаимодействия с веб-драйвером и обработки данных.
 """
 from pathlib import Path
 from typing import Any, Callable
@@ -49,15 +60,8 @@ from src.suppliers.graber import Graber as Grbr, Context, close_pop_up
 from src.webdriver.driver import Driver
 from src.utils.image import save_png
 from src.logger.logger import logger
-from src.utils.jjson import j_loads, j_loads_ns
-from src.webdriver.exceptions import ExecuteLocatorException
-
-# from header import header # TODO remove this
-
-
-# # Определение декоратора для закрытия всплывающих окон
-# # В каждом отдельном поставщике (`Supplier`) декоратор может использоваться в индивидуальных целях
-# # Общее название декоратора `@close_pop_up` можно изменить
+from src.exceptions import ExecuteLocatorException
+# from src.utils.jjson import j_loads # TODO: добавить импорт если нужен j_loads
 
 
 def close_pop_up(value: Any = None) -> Callable:
@@ -68,20 +72,18 @@ def close_pop_up(value: Any = None) -> Callable:
     :return: Декоратор, оборачивающий функцию.
     :rtype: Callable
     """
-
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             try:
-                # Код выполняет закрытие всплывающего окна, если оно есть
+                # код исполняет попытку закрыть всплывающее окно по локатору
                 await Context.driver.execute_locator(Context.locator.close_pop_up)
-            except ExecuteLocatorException as ex:
-                # Логирование ошибки, если не удалось закрыть всплывающее окно
-                logger.debug(f'Ошибка выполнения локатора: {ex}')
+            except ExecuteLocatorException as e:
+                # в случае ошибки локатора, код логирует ошибку
+                logger.debug(f'Ошибка выполнения локатора: {e}')
+            # код исполняет основную функцию
             return await func(*args, **kwargs)
-
         return wrapper
-
     return decorator
 
 
@@ -89,73 +91,64 @@ class Graber(Grbr):
     """
     Класс для операций захвата данных с сайта Morlevi.
 
-    :ivar supplier_prefix: Префикс поставщика, устанавливается как 'morlevi'.
+    :ivar supplier_prefix: Префикс поставщика, используется для идентификации.
     :vartype supplier_prefix: str
     """
     supplier_prefix: str
 
     def __init__(self, driver: Driver):
         """
-        Инициализация класса сбора полей товара.
+        Инициализирует класс сбора полей товара.
 
-        :param driver: Экземпляр веб-драйвера.
+        :param driver: Драйвер веб-браузера.
         :type driver: Driver
         """
+        # устанавливает префикс поставщика
         self.supplier_prefix = 'morlevi'
+        # вызывает конструктор родительского класса
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
-        # Context.locator_for_decorator = self.locator.close_pop_up  # <- Вместо этого я делаю рефреш
+        # устанавливает локатор для закрытия всплывающего окна (рефреш)
+        # Context.locator_for_decorator = self.locator.close_pop_up # <- Вместо этого я делаю рефреш
 
-    #
-    # @close_pop_up()
-    # async def local_saved_image(self, value: Any = None):
-    #     """
-    #     Извлекает и сохраняет изображение локально.
-    #
-    #     Функция получает изображение как скриншот, сохраняет его в директорию `tmp`
-    #     и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`.
-    #
-    #     :param value: Значение, которое можно передать в словаре kwargs через ключ {local_saved_image = `value`}.
-    #                    Если `value` был передан, его значение подставляется в поле `ProductFields.local_saved_image`.
-    #     :type value: Any
-    #
-    #     :raises Exception: Если происходит ошибка во время сохранения изображения.
-    #
-    #     :note: путь к изображению ведет в директорию  `tmp`
-    #     :todo:
-    #         - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-    #         - Как передать путь кроме жестко указанного
-    #
-    #     :return: Возвращает True в случае успешного сохранения, иначе None.
-    #     :rtype: bool | None
-    #     """
-    #
-    #     if not value:
-    #         try:
-    #             # Код исполняет получение id_product если его нет
-    #             if not self.fields.id_product:
-    #                 self.id_product()  # < ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
-    #             # Код исполняет получение скриншота
-    #             raw = await self.driver.execute_locator(
-    #                 self.locator.default_image_url
-    #             )  # <- получаю скриншот как `bytes`
-    #             if not raw:
-    #                 logger.debug(f"Не удалось получить изображение")
-    #                 return None
-    #             # Код исполняет сохранение скриншота как png в `tmp`
-    #             img_tmp_path = await save_png(
-    #                 raw[0] if isinstance(raw, list) else raw,
-    #                 Path(gs.path.tmp / f"{self.fields.id_product}.png"),
-    #             )
-    #             # Код записывает путь к изображению в поле `local_saved_image`
-    #             if img_tmp_path:
-    #                 self.fields.local_saved_image = img_tmp_path
-    #                 return True
-    #             else:
-    #                 # Логирование ошибки сохранения
-    #                 logger.debug(f"Ошибка сохранения изображения")
-    #                 return None
-    #         except Exception as ex:
-    #             # Логирование ошибки
-    #             logger.error(f"Ошибка сохранения изображения в поле `local_saved_image`", ex)
-    #             return None
-```
+
+    @close_pop_up()
+    async def local_saved_image(self, value: Any = None):
+        """
+        Сохраняет изображение локально.
+
+        Функция получает изображение как скриншот, сохраняет его в `tmp` и сохраняет путь к локальному файлу в поле `local_saved_image` объекта `ProductFields`.
+
+        :param value: Значение можно передать через словарь kwargs, ключ `local_saved_image`.
+        :type value: Any
+        :raises Exception: Если возникает ошибка при сохранении изображения.
+        :return: True в случае успешного сохранения, None в случае ошибки.
+        :rtype: bool | None
+
+        .. note:
+            Путь к изображению ведет в директорию `tmp`.
+        .. todo:
+            - Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
+            - Как передать путь кроме жестко указанного
+        """
+        if not value:
+            try:
+                # если нет id_product, вызывается метод для его получения
+                if not self.fields.id_product:
+                     #  BUG! Как передать значение из `**kwards` функции `grab_product_page(**kwards)`
+                    await self.id_product()
+                # код исполняет получение скриншота элемента по локатору
+                raw = await self.driver.execute_locator(self.locator.default_image_url)
+                # код исполняет сохранение изображения
+                img_tmp_path = await save_png(raw[0] if isinstance(raw, list) else raw, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
+                if img_tmp_path:
+                    # сохраняет путь к файлу в поле local_saved_image
+                    self.fields.local_saved_image = img_tmp_path
+                    return True
+                else:
+                    # логирует ошибку сохранения
+                    logger.debug(f"Ошибка сохранения изображения")
+                    return
+            except Exception as ex:
+                # логирует ошибку и возвращает None
+                logger.error(f'Ошибка сохранения изображения в поле `local_saved_image`', ex)
+                return

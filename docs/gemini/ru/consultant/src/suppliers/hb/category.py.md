@@ -1,146 +1,143 @@
 # Анализ кода модуля `category.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код в целом структурирован и выполняет свою основную задачу по сбору данных о товарах и категориях.
-    - Используется логгер для отслеживания ошибок и предупреждений.
-    - Присутствуют docstring для функций, хотя и требуют доработки.
-- Минусы
-    - Отсутствуют необходимые импорты (например, `json` из `src.utils.jjson`).
-    - Docstring не соответствует стандарту reStructuredText (RST).
-    - Использование `...` как точек остановки, не является хорошей практикой.
-    - Не хватает обработки ошибок в некоторых местах.
-    - Комментарии не всегда информативны и не соответствуют стандарту reStructuredText (RST).
+7
+-  Плюсы
+    - Код достаточно структурирован и разделен на функции, что упрощает его понимание.
+    - Используется `logger` для логирования, что полезно для отслеживания ошибок и хода выполнения.
+    - Код использует аннотации типов, что улучшает читаемость и помогает в отладке.
+    - Присутствуют docstring для функций.
+
+-  Минусы
+    - Присутствует избыточная документация с повторяющимися комментариями в начале файла.
+    - Не все комментарии соответствуют стандарту reStructuredText (RST).
+    - Не используется `j_loads` или `j_loads_ns` для загрузки JSON, хотя это указано в инструкции.
+     -  Много `...` в коде, которые выглядят как заглушки, и не несут смысловой нагрузки.
+     -  Не везде используется проверка на None и пустые списки.
+    -  Функция `paginator` не возвращает `False` в случае отсутствия элементов и может привести к ошибке.
+    - Присутствует неоднозначность с возвращаемыми значениями функций, не везде тип `list`.
+    - Отсутствуют импорты, которые используются в коде.
+     - Есть неиспользуемые переменные
 
 **Рекомендации по улучшению**
 
-1. **Импорты**: Добавить необходимые импорты, такие как `from src.utils.jjson import j_loads`.
-2. **Docstring**: Переписать docstring в формате reStructuredText (RST) для всех функций, классов и методов.
-3. **Обработка ошибок**: Использовать `logger.error` вместо общих `try-except` блоков для более точной обработки ошибок.
-4. **Комментарии**:  Переписать все комментарии в стиле reStructuredText (RST), делать их более информативными.
-5. **Удаление `...`**: Заменить `...` на конкретную логику или обработку исключений.
-6. **Рефакторинг `paginator`**: Упростить логику функции `paginator`, сделав ее более читаемой.
-7. **Унификация**: Использовать константы из `gs` для ключей и других общих параметров.
-8. **Типизация**: Улучшить аннотацию типов, где это необходимо.
-9. **Обработка пустых результатов**: Добавить обработку пустых результатов запросов к элементам страницы.
+1. **Удалить избыточные комментарии:** Очистить блок комментариев в начале файла, оставив только необходимую информацию о модуле.
+2. **Использовать RST для docstring:** Переписать docstring в соответствии со стандартом reStructuredText.
+3. **Заменить `json.load` на `j_loads` или `j_loads_ns`:** Использовать `j_loads` или `j_loads_ns` для загрузки JSON-данных из файлов.
+4. **Убрать `...`:** Заменить все `...` на осмысленный код.
+5. **Добавить обработку ошибок:** Улучшить обработку ошибок, добавив проверки на `None` и пустые списки.
+6. **Уточнить возвращаемые значения:** Убедиться, что все функции возвращают значения ожидаемого типа, и явно обрабатывать ситуации, когда данные отсутствуют.
+7.  **Добавить импорты:** Добавить необходимые импорты, которые используются в коде.
+8.  **Улучшить логику `paginator`**:  Функция `paginator` должна явно возвращать `False`, если не находит элемент пагинации, чтобы избежать бесконечного цикла.
+9. **Проверить неиспользуемые переменные:** Удалить все неиспользуемые переменные, чтобы код был чище.
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для сбора данных о товарах и категориях с сайта поставщика hb.co.il.
-========================================================================
+Модуль для сбора товаров со страницы категорий поставщика hb.co.il.
 
-Этот модуль содержит функции для сбора списка категорий и товаров с сайта
-поставщика hb.co.il, используя веб-драйвер.
+Этот модуль содержит функции для сбора списка категорий и товаров с веб-сайта поставщика.
+Использует Selenium WebDriver для взаимодействия с веб-страницами.
 
-Основные функции:
+.. module:: src.suppliers.hb.category
+   :platform: Windows, Unix
+   :synopsis: Модуль для сбора категорий и товаров.
+
+Функции:
+    - :func:`get_list_products_in_category`: Возвращает список URL товаров со страницы категории.
+    - :func:`paginator`: Выполняет навигацию по страницам, если есть пагинация.
     - :func:`get_list_categories_from_site`: Собирает список категорий с сайта.
-    - :func:`get_list_products_in_category`: Собирает список товаров из категории.
-    - :func:`paginator`: Управляет пагинацией на страницах категорий.
 
-.. note::
-   Модуль предназначен для работы с конкретным поставщиком и может
-   потребовать адаптации для других поставщиков.
 """
-from typing import Dict, List, Optional
-from pathlib import Path
-# from src.utils.jjson import j_loads #TODO add import in future
+from typing import Dict, List, Optional, Any
+
 from src import gs
 from src.logger.logger import logger
 from src.webdriver.driver import Driver
 from src.suppliers import Supplier
+from src.utils.jjson import j_loads # import j_loads
 
 MODE = 'dev'
 
 def get_list_products_in_category(s: Supplier) -> Optional[List[str]]:
     """
-    Извлекает список URL товаров со страницы категории.
+    Возвращает список URL товаров со страницы категории.
 
-    :param s: Объект Supplier, содержащий информацию о поставщике и драйвер.
+    :param s: Объект поставщика.
     :type s: Supplier
-    :return: Список URL товаров или None, если товары не найдены.
+    :return: Список URL товаров или None, если список не найден.
     :rtype: Optional[List[str]]
 
-    .. note::
-        Функция выполняет прокрутку страницы и пагинацию, если это необходимо.
-        Использует локаторы для поиска элементов на странице.
+    .. todo:: 
+      Проверить обработку пагинации в случае, когда список товаров не найден.
     """
     d: Driver = s.driver
-    l: dict = s.locators['category']
-    # Ожидание загрузки страницы
+    l: Dict = s.locators['category']
+
     d.wait(1)
-    # Закрытие баннера, если он есть
+    # код исполняет закрытие баннера
     d.execute_locator(s.locators['product']['close_banner'])
-    # Прокрутка страницы вниз
+    # код исполняет скролл страницы
     d.scroll()
 
-    # Получение списка ссылок на товары
+    # код исполняет получение списка ссылок на товары
     list_products_in_category: List = d.execute_locator(l['product_links'])
-    
+
     if not list_products_in_category:
-        logger.warning('Нет ссылок на товары в категории.')
+        logger.warning('Нет ссылок на товары.')
         return None
-    
-    # Пагинация
+
+    # код исполняет пагинацию
     while d.current_url != d.previous_url:
         if paginator(d, l, list_products_in_category):
-            new_links = d.execute_locator(l['product_links'])
-            if new_links:
-                if isinstance(new_links, list):
-                    list_products_in_category.extend(new_links)
-                else:
-                   list_products_in_category.append(new_links)
-            else:
-                break
+            # код исполняет получение и добавление новых ссылок на товары
+            new_products = d.execute_locator(l['product_links'])
+            if new_products:
+                list_products_in_category.extend(new_products)
         else:
             break
-    
-    # Преобразование одиночной ссылки в список (если необходимо)
+
+    # код преобразовывает одиночный url в список, если это строка
     if isinstance(list_products_in_category, str):
         list_products_in_category = [list_products_in_category]
-
-    logger.debug(f"Найдено {len(list_products_in_category)} товаров в категории {s.current_scenario['name']}")
+    
+    logger.debug(f'Найдено {len(list_products_in_category)} товаров в категории {s.current_scenario["name"]}')
     return list_products_in_category
 
-def paginator(d: Driver, locator: dict, list_products_in_category: list) -> bool:
-    """
-    Управляет пагинацией на странице категории.
 
-    :param d: Объект Driver для управления веб-драйвером.
+def paginator(d: Driver, locator: Dict, list_products_in_category: List) -> bool:
+    """
+    Выполняет навигацию по страницам, если есть пагинация.
+
+    :param d: Объект веб-драйвера.
     :type d: Driver
-    :param locator: Словарь с локаторами элементов страницы.
-    :type locator: dict
-    :param list_products_in_category: Список ссылок на товары.
-    :type list_products_in_category: list
-    :return: True, если пагинация прошла успешно, False в противном случае.
+    :param locator: Локаторы для пагинации.
+    :type locator: Dict
+    :param list_products_in_category: Текущий список URL товаров.
+    :type list_products_in_category: List
+    :return: True, если пагинация была выполнена, False в противном случае.
     :rtype: bool
-
-    .. note::
-        Функция ищет кнопку "следующая страница" и переходит по ней.
     """
+    # код исполняет попытку нажать на кнопку "следующая страница"
     response = d.execute_locator(locator['pagination']['<-'])
     if not response or (isinstance(response, list) and len(response) == 0):
-       return False
+        return False
     return True
 
-def get_list_categories_from_site(s: Supplier) -> None:
+
+def get_list_categories_from_site(s: Supplier) -> Optional[List[str]]:
     """
-    Собирает актуальный список категорий с сайта поставщика.
-    
-    :param s: Объект Supplier.
-    :type s: Supplier
-    :return: None
-    
-    .. note::
-        Функция выполняет сбор категорий с сайта.
-        На данный момент логика сбора не реализована (заглушка).
+    Собирает список категорий с сайта.
+
+     :param s: Объект поставщика.
+     :type s: Supplier
+     :return: Список URL категорий или None.
+     :rtype: Optional[List[str]]
+
+    .. todo::
+       Реализовать сборщик категорий с сайта.
     """
-    logger.info('Сборщик актуальных категорий с сайта')
     ...
+
 ```

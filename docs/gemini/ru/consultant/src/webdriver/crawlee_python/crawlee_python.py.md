@@ -3,169 +3,193 @@
 **Качество кода**
 8
 -  Плюсы
-    - Код хорошо структурирован, используется объектно-ориентированный подход.
-    - Присутствуют docstring для классов и методов, описывающие их назначение.
-    - Используется `asyncio` для асинхронных операций, что подходит для веб-скрейпинга.
-    - Применяется `PlaywrightCrawler` из библиотеки `crawlee`.
-    - Включен пример использования в `if __name__ == '__main__':`.
-
--  Минусы
-    - Не все docstring соответствуют стандарту reStructuredText (RST).
-    - Отсутствует описание модуля в формате RST.
-    - Не используется `j_loads` или `j_loads_ns`.
-    - Отсутствует обработка ошибок с помощью `logger.error`.
-    - Комментарии `#` не всегда содержат подробное описание следующего блока кода.
-    - Присутствует дублирование имени класса `CrawleeExperiment` в примере использования (должен быть `CrawleePython`).
-    - Не все импорты используются.
+    - Код хорошо структурирован и использует классы для организации функциональности.
+    - Присутствует документация в формате docstring для классов и методов.
+    - Используется `PlaywrightCrawler` из библиотеки `crawlee` для управления браузером.
+    - Код содержит пример использования в `if __name__ == '__main__'`
+ -  Минусы
+    - Не все комментарии соответствуют стандарту reStructuredText (RST).
+    - Используется стандартный блок `try-except` вместо `logger.error`.
+    - Отсутствуют проверки на типы данных в методах `run_crawler`, `export_data`, `get_data`, `run`.
 
 **Рекомендации по улучшению**
-1. Добавить описание модуля в формате RST.
-2. Переписать все docstring в формате RST.
-3. Заменить стандартный `json.load` на `j_loads` или `j_loads_ns`, если требуется чтение json файлов.
-4. Использовать `logger.error` для обработки исключений.
-5. Добавить более подробные комментарии `#` для каждого блока кода.
-6. Исправить дублирование имени класса в примере использования.
-7. Убрать неиспользуемые импорты.
-8. Добавить логирование ошибок и исключений.
+
+1.  Привести все комментарии к формату reStructuredText (RST), особенно описания модулей, классов и методов.
+2.  Использовать `logger.error` для обработки ошибок вместо стандартного блока `try-except`.
+3.  Добавить проверки типов данных в методы, которые принимают параметры, чтобы предотвратить ошибки времени выполнения.
+4.  Переименовать `file_path` в `export_path` в методе `export_data`, чтобы более точно отражать его назначение.
 
 **Оптимизированный код**
+
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль для веб-скрейпинга с использованием Crawlee и Playwright.
-=========================================================================================
+Модуль для запуска и настройки веб-скрапера с использованием Crawlee и Playwright.
+=================================================================================
 
-Этот модуль содержит класс :class:`CrawleePython`, который используется для настройки и запуска веб-скрейпинга.
-Он использует библиотеку `crawlee` для управления асинхронным сбором данных.
+Этот модуль предоставляет класс :class:`CrawleePython`, который инкапсулирует
+функциональность для настройки и запуска веб-скрапера с использованием
+библиотек `crawlee` и `playwright`.
 
 Пример использования
 --------------------
 
-Пример использования класса `CrawleePython`:
-
 .. code-block:: python
 
-    experiment = CrawleePython(max_requests=5, headless=False, browser_type='firefox')
-    asyncio.run(experiment.run(['https://ksp.co.il']))
+    if __name__ == "__main__":
+        async def main():
+            crawler = CrawleePython(max_requests=5, headless=False, browser_type='firefox')
+            await crawler.run(['https://www.example.com'])
+
+        asyncio.run(main())
 """
+
 MODE = 'dev'
 
 from pathlib import Path
+from typing import Optional, List, Dict, Any
+from src import gs
 import asyncio
 from crawlee.playwright_crawler import PlaywrightCrawler, PlaywrightCrawlingContext
+# Добавлен импорт logger
 from src.logger.logger import logger
+# Добавлен импорт j_loads_ns
+from src.utils.jjson import j_loads_ns
+
 
 class CrawleePython:
     """
-    Класс для настройки и запуска веб-скрейпинга с использованием Crawlee и Playwright.
+    Класс для настройки и запуска веб-скрапера с использованием Crawlee и Playwright.
 
-    :param max_requests: Максимальное количество запросов для сбора данных.
-    :param headless: Запускать ли браузер в фоновом режиме.
-    :param browser_type: Тип используемого браузера ('firefox', 'chromium', 'webkit').
+    :ivar max_requests: Максимальное количество запросов для выполнения во время обхода.
+    :vartype max_requests: int
+    :ivar headless: Запускать ли браузер в режиме без графического интерфейса.
+    :vartype headless: bool
+    :ivar browser_type: Тип используемого браузера ('chromium', 'firefox', 'webkit').
+    :vartype browser_type: str
+    :ivar crawler: Экземпляр PlaywrightCrawler.
+    :vartype crawler: PlaywrightCrawler
     """
-    def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox'):
+
+    def __init__(self, max_requests: int = 5, headless: bool = False, browser_type: str = 'firefox', options: Optional[List[str]] = None):
         """
-        Инициализирует класс CrawleePython с указанными параметрами.
+        Инициализирует класс CrawleePython с заданными параметрами.
+
+        :param max_requests: Максимальное количество запросов для выполнения во время обхода.
+        :type max_requests: int
+        :param headless: Запускать ли браузер в режиме без графического интерфейса.
+        :type headless: bool
+        :param browser_type: Тип используемого браузера ('chromium', 'firefox', 'webkit').
+        :type browser_type: str
+        :param options: Список пользовательских опций для передачи в браузер.
+        :type options: Optional[List[str]]
         """
         self.max_requests = max_requests
         self.headless = headless
         self.browser_type = browser_type
+        self.options = options or []
         self.crawler = None
 
     async def setup_crawler(self):
         """
-        Настраивает экземпляр PlaywrightCrawler.
+        Настраивает экземпляр PlaywrightCrawler с заданной конфигурацией.
         """
         self.crawler = PlaywrightCrawler(
             max_requests_per_crawl=self.max_requests,
             headless=self.headless,
             browser_type=self.browser_type,
+            launch_options={"args": self.options}
         )
 
         @self.crawler.router.default_handler
         async def request_handler(context: PlaywrightCrawlingContext) -> None:
             """
-            Обработчик запросов по умолчанию, вызывается для каждой страницы.
+            Обработчик запросов по умолчанию для обработки веб-страниц.
 
-            :param context: Контекст обхода Playwright.
+            :param context: Контекст обхода.
+            :type context: PlaywrightCrawlingContext
             """
             context.log.info(f'Processing {context.request.url} ...')
 
-            # Код ставит в очередь все ссылки, найденные на странице.
+            # Добавляет все найденные на странице ссылки в очередь.
             await context.enqueue_links()
 
-            # Код извлекает данные со страницы с помощью API Playwright.
+            # Извлекает данные со страницы с использованием Playwright API.
             data = {
                 'url': context.request.url,
                 'title': await context.page.title(),
                 'content': (await context.page.content())[:100],
             }
 
-            # Код отправляет извлеченные данные в набор данных по умолчанию.
+            # Отправляет извлеченные данные в набор данных по умолчанию.
             await context.push_data(data)
 
-    async def run_crawler(self, urls: list[str]):
+    async def run_crawler(self, urls: List[str]):
         """
-        Запускает сканер с начальным списком URL-адресов.
+        Запускает обход с начальным списком URL-адресов.
 
-        :param urls: Список URL-адресов для запуска обхода.
+        :param urls: Список URL-адресов для начала обхода.
+        :type urls: List[str]
         """
-        try:
-            await self.crawler.run(urls)
-        except Exception as e:
-            logger.error(f"Ошибка при запуске сканера: {e}")
+        # Проверка типа данных для `urls`
+        if not isinstance(urls, list):
+            logger.error(f'Ожидается список URL, получен {type(urls)}')
+            return
+        await self.crawler.run(urls)
 
-    async def export_data(self, file_path: str):
+    async def export_data(self, export_path: str):
         """
         Экспортирует весь набор данных в JSON-файл.
 
-        :param file_path: Путь для сохранения экспортированного JSON-файла.
+        :param export_path: Путь для сохранения экспортированного JSON-файла.
+        :type export_path: str
         """
-        try:
-            await self.crawler.export_data(file_path)
-        except Exception as e:
-            logger.error(f"Ошибка при экспорте данных: {e}")
+        # Проверка типа данных для `export_path`
+        if not isinstance(export_path, str):
+             logger.error(f'Ожидается строка для пути экспорта, получен {type(export_path)}')
+             return
+        await self.crawler.export_data(export_path)
 
-    async def get_data(self) -> dict:
+    async def get_data(self) -> Dict[str, Any]:
         """
-        Получает извлеченные данные.
+        Возвращает извлеченные данные.
 
         :return: Извлеченные данные в виде словаря.
+        :rtype: Dict[str, Any]
+        """
+        data = await self.crawler.get_data()
+        return data
+
+    async def run(self, urls: List[str]):
+        """
+        Основной метод для настройки, запуска обхода и экспорта данных.
+
+        :param urls: Список URL-адресов для начала обхода.
+        :type urls: List[str]
         """
         try:
-            data = await self.crawler.get_data()
-            return data
-        except Exception as e:
-             logger.error(f"Ошибка при получении данных: {e}")
-             return {}
-
-    async def run(self, urls: list[str]):
-        """
-        Основной метод для настройки, запуска сканера и экспорта данных.
-
-        :param urls: Список URL-адресов для запуска обхода.
-        """
-        try:
+            # Настройка и запуск краулера
             await self.setup_crawler()
             await self.run_crawler(urls)
+            # Экспорт данных в файл
             await self.export_data(str(Path(gs.path.tmp / 'results.json')))
+            # Получение данных
             data = await self.get_data()
             logger.info(f'Extracted data: {data.items()}')
-        except Exception as e:
-            logger.error(f"Общая ошибка при выполнении: {e}")
+        except Exception as ex:
+            # Логирование ошибки
+            logger.critical('Crawler failed with an error:', exc_info=ex)
 
 
 # Пример использования
 if __name__ == '__main__':
     async def main():
-        # Код создает экземпляр класса CrawleePython
-        experiment = CrawleePython(max_requests=5, headless=False, browser_type='firefox')
-        # Код запускает процесс сканирования
-        await experiment.run(['https://ksp.co.il'])
+        # Пример запуска краулера
+        crawler = CrawleePython(max_requests=5, headless=False, browser_type='firefox', options=["--headless"])
+        await crawler.run(['https://www.example.com'])
 
-    # Код запускает асинхронную функцию main
     asyncio.run(main())
 ```

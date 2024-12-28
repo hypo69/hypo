@@ -1,41 +1,40 @@
-# Анализ кода модуля `aliexpress`
+# Анализ кода модуля aliexpress
 
 **Качество кода**
-9
+8
 -  Плюсы
-    - Код хорошо структурирован и разбит на логические блоки, что облегчает понимание и сопровождение.
-    - Наличие документации в формате Markdown улучшает понимание функциональности модуля и его компонентов.
-    - Приведены примеры использования класса `Aliexpress`, что помогает пользователям быстро начать работу.
-    - Описан алгоритм работы, что упрощает понимание логики инициализации класса.
-
+    -   Код предоставляет четкое описание класса `Aliexpress` и его метода `__init__`.
+    -   Документация в формате Markdown подробная и структурированная.
+    -   Приведены примеры использования, что облегчает понимание и применение класса.
+    -   Описан алгоритм работы класса `Aliexpress`, что помогает понять логику его инициализации.
+    -   Выделены потенциальные ошибки и области для улучшений, что является хорошей практикой.
 -  Минусы
     - Отсутствуют явные импорты, что затрудняет понимание зависимостей модуля.
-    - Не хватает подробностей об обработке ошибок при инициализации вебдрайвера и взаимодействии с AliExpress.
-    - Документация в формате Markdown, а не RST, как того требуют инструкции.
-    - Отсутствует логирование ошибок.
-    - Не хватает docstring в стиле RST для класса и его методов.
+    -  Не используется reStructuredText (RST) для документирования кода.
+    - Отсутствует логирование ошибок, что может усложнить отладку.
+    - Отсутствует обработка исключений в явном виде.
+    -   Описание алгоритма дано в Markdown, что не соответствует требованию reStructuredText.
 
 **Рекомендации по улучшению**
+1. **Импорты**: Добавить необходимые импорты в начале файла.
+2. **Формат документации**: Перевести все комментарии и docstring в формат reStructuredText (RST).
+3. **Обработка ошибок**: Реализовать обработку ошибок с помощью `logger.error` вместо стандартных `try-except`.
+4. **Логирование**: Добавить логирование важных событий и ошибок.
+5. **Абстракция**: Рассмотреть возможность модульной инициализации компонентов `Supplier`, `AliRequests` и `AliApi`.
+6. **Docstrings**: Оформить docstrings для всех функций и методов с использованием reStructuredText.
+7. **Алгоритм**: Переписать описание алгоритма в формате RST.
+8. **Улучшение стиля комментариев**: Переписать комментарии в коде, чтобы они соответствовали стандарту RST и были более информативными.
 
-1.  **Добавить импорты**: Необходимо добавить явные импорты для `Supplier`, `AliRequests`, `AliApi` и `logger`.
-2.  **Использовать RST**: Перевести документацию из Markdown в reStructuredText (RST).
-3.  **Добавить docstring**: Добавить docstring для класса `Aliexpress` и его метода `__init__` в формате RST.
-4.  **Логирование ошибок**: Добавить логирование ошибок с использованием `logger.error` при инициализации вебдрайвера и других компонентах.
-5.  **Обработка исключений**: Добавить обработку исключений при инициализации для более надежной работы.
-6.  **Консистентность**: Использовать единый стиль кавычек для строк.
-7. **Улучшить комментарии**: Переформулировать комментарии в стиле RST, объясняя цель каждого блока кода.
-8. **Использовать `j_loads`**: Заменить `json.load` на `j_loads` или `j_loads_ns` при работе с JSON.
-9. **Убрать дублирование**: Переработать текст документации так, чтобы не было дублирования информации.
-
-**Оптимизиробанный код**
+**Оптимизированный код**
 
 ```python
 """
-Модуль для работы с поставщиком Aliexpress.
+Модуль для работы с AliExpress.
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`Aliexpress`, который объединяет функциональность классов
-:class:`Supplier`, :class:`AliRequests` и :class:`AliApi` для взаимодействия с AliExpress.
+Этот модуль предоставляет класс :class:`Aliexpress`, который интегрирует функциональность
+из классов :class:`Supplier`, :class:`AliRequests` и :class:`AliApi` для взаимодействия
+с AliExpress.
 
 Пример использования
 --------------------
@@ -44,81 +43,85 @@
 
 .. code-block:: python
 
-    from src.suppliers.aliexpress import Aliexpress
-
-    # Запуск без вебдрайвера
-    a = Aliexpress()
-
-    # Вебдрайвер Chrome
-    a = Aliexpress('chrome')
-
-    # Режим Requests
-    a = Aliexpress(requests=True)
+    a = Aliexpress()  # Запуск без вебдрайвера
+    a = Aliexpress('chrome')  # Запуск с вебдрайвером Chrome
+    a = Aliexpress(requests=True) # Запуск в режиме requests
 """
-from typing import Dict, Any, Optional, Union
-from src.suppliers.supplier import Supplier
-from src.suppliers.aliexpress.ali_requests import AliRequests
-from src.suppliers.aliexpress.ali_api import AliApi
+from typing import Dict, Any, Optional
+# TODO: Добавить импорты из src.suppliers.supplier, src.suppliers.ali_requests, src.suppliers.ali_api
+# TODO: from src.suppliers.supplier import Supplier
+# TODO: from src.suppliers.ali_requests import AliRequests
+# TODO: from src.suppliers.ali_api import AliApi
 from src.logger.logger import logger
+
 
 class Aliexpress:
     """
-    Базовый класс для работы с AliExpress. Объединяет возможности классов
-    :class:`Supplier`, :class:`AliRequests` и :class:`AliApi` для удобного
-    взаимодействия с AliExpress.
-    
+    Базовый класс для работы с AliExpress.
+
+    Объединяет возможности классов :class:`Supplier`, :class:`AliRequests` и
+    :class:`AliApi` для удобного взаимодействия с AliExpress.
+
     :param webdriver: Определяет режим использования вебдрайвера. Возможные значения:
-        - `False` (по умолчанию): Без вебдрайвера.
-        - `'chrome'`: Вебдрайвер Chrome.
-        - `'mozilla'`: Вебдрайвер Mozilla.
-        - `'edge'`: Вебдрайвер Edge.
-        - `'default'`: Системный вебдрайвер по умолчанию.
-    :type webdriver: Union[bool, str], optional
-    :param locale: Настройки языка и валюты. По умолчанию `{'EN': 'USD'}`.
-    :type locale: Union[str, dict], optional
+        - ``False``: Без вебдрайвера.
+        - ``'chrome'``: Вебдрайвер Chrome.
+        - ``'mozilla'``: Вебдрайвер Mozilla.
+        - ``'edge'``: Вебдрайвер Edge.
+        - ``'default'``: Системный вебдрайвер по умолчанию.
+    :type webdriver: bool | str, optional
+    :param locale: Настройки языка и валюты. По умолчанию ``{'EN': 'USD'}``.
+    :type locale: str | dict, optional
     :param *args: Дополнительные позиционные аргументы.
     :param **kwargs: Дополнительные именованные аргументы.
+
+    Примеры использования:
+
+    .. code-block:: python
+
+        # Запуск без вебдрайвера
+        a = Aliexpress()
+
+        # Вебдрайвер Chrome
+        a = Aliexpress('chrome')
+
+        # Режим Requests
+        a = Aliexpress(requests=True)
     """
-    def __init__(self, webdriver: Optional[Union[bool, str]] = False, locale: Optional[Union[str, Dict[str, str]]] = {'EN': 'USD'}, *args, **kwargs):
+    def __init__(self, webdriver: Optional[bool | str] = False, locale: Optional[str | Dict[str, str]] = None, *args, **kwargs):
         """
         Инициализирует класс `Aliexpress`.
 
-        :param webdriver: Определяет режим использования вебдрайвера. Возможные значения:
-            - `False` (по умолчанию): Без вебдрайвера.
-            - `'chrome'`: Вебдрайвер Chrome.
-            - `'mozilla'`: Вебдрайвер Mozilla.
-            - `'edge'`: Вебдрайвер Edge.
-            - `'default'`: Системный вебдрайвер по умолчанию.
-        :type webdriver: Union[bool, str], optional
-        :param locale: Настройки языка и валюты. По умолчанию `{'EN': 'USD'}`.
-        :type locale: Union[str, dict], optional
+        :param webdriver: Определяет режим использования вебдрайвера.
+        :type webdriver: bool | str, optional
+        :param locale: Настройки языка и валюты.
+        :type locale: str | dict, optional
         :param *args: Дополнительные позиционные аргументы.
         :param **kwargs: Дополнительные именованные аргументы.
         """
-        # Проверка и установка типа вебдрайвера.
-        if webdriver in ('chrome', 'mozilla', 'edge', 'default'):
-            self.webdriver = webdriver
-        elif webdriver is False:
-            self.webdriver = False
-        else:
-             logger.error(f'Неверное значение webdriver: {webdriver}')
-             self.webdriver = False
-        # Установка локали.
-        self.locale = locale or {'EN': 'USD'}
-
-
-        # Создание экземпляров классов Supplier, AliRequests, AliApi.
         try:
-            self.supplier = Supplier(*args, **kwargs)
-            self.ali_requests = AliRequests(*args, **kwargs)
-            self.ali_api = AliApi(*args, **kwargs)
+            # Определяет режим вебдрайвера
+            if webdriver in ('chrome', 'mozilla', 'edge', 'default'):
+                # TODO: Код инициализирует вебдрайвер
+                # self.driver = WebDriver(webdriver)
+                ...
+            elif webdriver is not False:
+                 logger.error(f'Неверный тип вебдрайвера {webdriver=}')
+                 return
         except Exception as ex:
-            logger.error('Ошибка при инициализации внутренних компонентов', ex)
-            ...
+            logger.error(f'Ошибка при инициализации вебдрайвера {webdriver=}', ex)
             return
 
-        # Передача дополнительных аргументов внутренним компонентам
-        for obj in (self.supplier, self.ali_requests, self.ali_api):
-             if hasattr(obj, '__dict__'):
-                obj.__dict__.update(kwargs)
+        # Устанавливает локаль или использует значение по умолчанию
+        self.locale = locale or {'EN': 'USD'}
+        # TODO: Код создает экземпляры классов `Supplier`, `AliRequests` и `AliApi`
+        # self.supplier = Supplier(*args, **kwargs)
+        # self.ali_requests = AliRequests(*args, **kwargs)
+        # self.ali_api = AliApi(*args, **kwargs)
+        ...
+
+        # передает дополнительные аргументы внутренним компонентам
+        # TODO: self.supplier.set_args(*args, **kwargs)
+        # TODO: self.ali_requests.set_args(*args, **kwargs)
+        # TODO: self.ali_api.set_args(*args, **kwargs)
+        ...
 ```

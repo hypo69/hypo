@@ -1,90 +1,83 @@
-# Анализ кода модуля `AliexpressAffiliateLinkGenerateRequest`
+# Анализ кода модуля `AliexpressAffiliateLinkGenerateRequest.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код соответствует базовым требованиям к структуре класса и методу.
-    - Используется наследование от `RestApi`, что предполагает наличие базового функционала.
-    - Присутствует docstring для модуля, хотя и минимальный.
-- Минусы
-    - Отсутствует полноценная документация в формате reStructuredText (RST) для класса и методов.
-    - Отсутствуют импорты из `src.logger.logger` и `src.utils.jjson`, которые необходимы согласно инструкции.
-    - Использование `RestApi.__init__` вместо `super().__init__`.
-    - Нет обработки ошибок.
+9
+-  Плюсы
+    - Код имеет базовую структуру класса.
+    - Присутствует docstring модуля, хотя и минимальный.
+    - Используется наследование от `RestApi`.
+-  Минусы
+    - Отсутствуют docstring для класса, методов и переменных.
+    - Нет обработки ошибок и логирования.
+    - Не используется `j_loads` или `j_loads_ns`.
+    - Нет явного указания типов для переменных.
+    - Используется старый стиль комментариев, не соответствующий RST.
 
 **Рекомендации по улучшению**
 
-1. **Импорты:** Добавить необходимые импорты `from src.logger.logger import logger` и `from src.utils.jjson import j_loads, j_loads_ns`.
-2. **Документация:** Полностью переписать docstring в формате reStructuredText (RST) для модуля, класса и методов.
-3. **Инициализация:** Заменить устаревший способ инициализации родительского класса `RestApi.__init__(self, domain, port)` на `super().__init__(domain, port)`.
-4. **Логирование:**  Добавить обработку ошибок с использованием `logger.error`, хотя в текущей реализации нет кода, где это необходимо, добавить для будущих улучшений.
-5. **Комментарии:** Добавить подробные комментарии к каждой строке кода в формате RST.
+1.  Добавить docstring в формате reStructuredText (RST) для класса `AliexpressAffiliateLinkGenerateRequest`, его метода `__init__` и `getapiname`, а также для переменных экземпляра класса.
+2.  Использовать `from src.logger.logger import logger` для логирования ошибок (хотя в данном коде пока нет обработки ошибок, стоит подготовиться к ее добавлению в будущем).
+3.  Добавить проверку типов переменных в `__init__` если это необходимо.
+4.  Избегать `...` в коде и добавить комментарии к ним.
+5.  Заменить старый стиль комментариев на reStructuredText.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~
 """
 Модуль для генерации партнерских ссылок AliExpress.
-=====================================================
+=========================================================================================
 
 Этот модуль содержит класс :class:`AliexpressAffiliateLinkGenerateRequest`,
-который используется для создания запросов на генерацию партнерских ссылок
-через AliExpress API.
+который используется для создания запросов на генерацию партнерских ссылок через API AliExpress.
 
 Пример использования
 --------------------
 
+Пример создания экземпляра класса `AliexpressAffiliateLinkGenerateRequest`:
+
 .. code-block:: python
 
-    from src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGenerateRequest
-
-    request = AliexpressAffiliateLinkGenerateRequest()
+    request = AliexpressAffiliateLinkGenerateRequest(domain="api-sg.aliexpress.com", port=80)
     request.app_signature = "your_app_signature"
-    request.promotion_link_type = "promotion"
-    request.source_values = ["item_id1", "item_id2"]
+    request.promotion_link_type = "1"
+    request.source_values = "your_source_values"
     request.tracking_id = "your_tracking_id"
-
-    print(request.getapiname())
+    api_name = request.getapiname()
 """
-from src.logger.logger import logger # импортируем logger для логирования ошибок
-from src.utils.jjson import j_loads, j_loads_ns # импортируем j_loads, j_loads_ns
-from ..base import RestApi # импортируем RestApi из ..base
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~
+from ..base import RestApi
+from src.logger.logger import logger #  Импортируем logger
 
 class AliexpressAffiliateLinkGenerateRequest(RestApi):
     """
-    Класс для генерации партнерских ссылок AliExpress.
+    Класс для создания запросов на генерацию партнерских ссылок AliExpress.
 
-    :param domain: Домен AliExpress API.
+    :param domain: Домен API AliExpress.
     :type domain: str
-    :param port: Порт AliExpress API.
+    :param port: Порт API AliExpress.
     :type port: int
-
-    :ivar app_signature: Подпись приложения.
-    :vartype app_signature: str
-    :ivar promotion_link_type: Тип партнерской ссылки.
-    :vartype promotion_link_type: str
-    :ivar source_values: Идентификаторы товаров или других источников.
-    :vartype source_values: list
-    :ivar tracking_id: Идентификатор отслеживания.
-    :vartype tracking_id: str
     """
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Инициализирует объект класса AliexpressAffiliateLinkGenerateRequest.
+        Инициализирует объект AliexpressAffiliateLinkGenerateRequest.
 
-        :param domain: Домен AliExpress API, по умолчанию "api-sg.aliexpress.com".
+        :param domain: Домен API AliExpress.
         :type domain: str
-        :param port: Порт AliExpress API, по умолчанию 80.
+        :param port: Порт API AliExpress.
         :type port: int
         """
-        super().__init__(domain, port) # вызываем конструктор родительского класса
-        self.app_signature = None # инициализация подписи приложения
-        self.promotion_link_type = None # инициализация типа партнерской ссылки
-        self.source_values = None # инициализация идентификаторов товаров или других источников
-        self.tracking_id = None # инициализация идентификатора отслеживания
+        RestApi.__init__(self, domain, port)
+        #: Подпись приложения.
+        self.app_signature = None
+        #: Тип партнерской ссылки.
+        self.promotion_link_type = None
+        #: Значения источников.
+        self.source_values = None
+        #: Идентификатор отслеживания.
+        self.tracking_id = None
 
     def getapiname(self):
         """
@@ -93,6 +86,5 @@ class AliexpressAffiliateLinkGenerateRequest(RestApi):
         :return: Имя API метода.
         :rtype: str
         """
-        return 'aliexpress.affiliate.link.generate' # возвращаем имя API метода
-
+        return 'aliexpress.affiliate.link.generate'
 ```

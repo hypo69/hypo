@@ -1,32 +1,37 @@
 # Анализ кода модуля `edge`
 
 **Качество кода**
-7
+9
 - Плюсы
-    - Код хорошо структурирован и использует классы для инкапсуляции логики.
-    - Используются `EdgeOptions` для настройки браузера.
-    - Логирование ошибок с помощью `logger`.
-    - Использование `fake_useragent` для генерации случайного `user-agent`.
-    - Применение `j_loads_ns` для загрузки JSON-конфигурации.
+    - Код хорошо структурирован, используется ООП подход.
+    - Присутствует логирование ошибок и критических ситуаций.
+    - Используется `fake_useragent` для генерации user-agent, что полезно для избежания блокировок.
+    - Конфигурация Edge driver загружается из JSON файла, что обеспечивает гибкость.
+    - Использование кастомного класса `Edge` для расширения возможностей `WebDriver`.
+    - Присутствуют docstring для функций и классов, что делает код более понятным.
+    - Применён reStructuredText в docstring.
 - Минусы
-    - Отсутствуют подробные docstring для класса и методов.
-    - Не все методы имеют аннотации типов.
-    - Использование `...` в блоках `except` не является информативным.
-    - Некоторые имена переменных не соответствуют стандарту (например, `j` в `_payload`).
-    - Не хватает обработки `user_agent` в конструкторе.
+    - Используется `j_loads_ns`, но не импортирован из `src.utils.jjson` - исправлено
+    - В некоторых местах код использует `hasattr`, что может быть заменено на более явные проверки.
+    -  Дублирование логики добавления параметров из конфигурационного файла в опции браузера.
+    - Методы, которые выполняют схожие действия (например, `send_message` и `send_key_to_webelement`) имеют одинаковую реализацию.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring к классам и методам в формате reStructuredText.
-2.  Добавить аннотации типов для переменных и параметров функций.
-3.  Заменить `...` на более конкретную логику логирования и обработки ошибок.
-4.  Переименовать переменные для соответствия стандартам (например, `j` на `js_executor`).
-5.  Уточнить обработку `user_agent` в конструкторе, чтобы использовать дефолтное значение, если передан `None`.
-6.  Добавить проверку существования `edgedriver_path` перед созданием `EdgeService`.
-7.  Добавить обработку случая, когда `edgedriver_path` не найден в JSON-файле.
-8.  Использовать более информативные сообщения при логировании ошибок.
-9.  Добавить проверки для входных параметров, где это необходимо.
-10. Привести в соответствие имя метода `send_message = self.send_key_to_webelement = execute_locator.send_message`
+1. **Импорты**: Добавить недостающие импорты.
+2. **Обработка ошибок**:  Использовать `logger.error` вместо стандартного `try-except` в `__init__` для упрощения кода.
+3. **Рефакторинг**:
+   - Объединить логику добавления опций из `settings.options` и `options` в один цикл.
+   - Повторное использование `EdgeOptions` можно вынести в отдельный метод.
+   -  Сделать явным использование `vars(settings.headers)` для понимания, что используется атрибуты обьекта, а не просто словарь.
+4. **Документация**:
+   - Улучшить docstring для метода `set_options`.
+   - Добавить комментарии в reStructuredText для переменных и методов.
+5. **Унификация**:
+    - `self.send_message = self.send_key_to_webelement = execute_locator.send_message` можно упростить, указав на один метод, то есть, `self.send_message = execute_locator.send_message`
+    - Привести в соответсвие имена переменных, в соответсвии с предыдущими файлами.
+6. **Проверка JSON**:
+    - добавить проверку на существование и корректность данных в файле `edge.json`
 
 **Оптимизированный код**
 
@@ -36,26 +41,11 @@
 #! venv/bin/python/python3.12
 
 """
-Модуль для управления браузером Microsoft Edge.
-=========================================================================================
+.. module:: src.webdriver.edge
+   :platform: Windows, Unix
+   :synopsis: Custom Edge WebDriver class with simplified configuration using fake_useragent.
 
-Этот модуль предоставляет класс :class:`Edge`, который является расширением стандартного
-WebDriver для Edge. Он упрощает настройку и использование WebDriver, включая
-возможность использования случайного User-Agent.
-
-Пример использования
---------------------
-
-Пример использования класса `Edge`:
-
-.. code-block:: python
-
-    edge_driver = Edge()
-    edge_driver.get("https://www.example.com")
-    edge_driver.quit()
 """
-
-MODE = 'dev'
 
 import os
 from pathlib import Path
@@ -71,100 +61,111 @@ from src import gs
 from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
+MODE = 'dev'
+
 
 class Edge(WebDriver):
     """
-    Расширенный класс WebDriver для Microsoft Edge.
+    Custom Edge WebDriver class for enhanced functionality.
 
-    Предоставляет дополнительные возможности для управления браузером Edge,
-    включая установку пользовательского User-Agent и упрощенную настройку.
-
-    :param user_agent: Словарь для настройки User-Agent. Если `None`, User-Agent генерируется случайным образом.
-    :type user_agent: Optional[dict]
-    :ivar driver_name: Имя драйвера, по умолчанию 'edge'.
+    :ivar driver_name: Name of the WebDriver used, defaults to 'edge'.
     :vartype driver_name: str
     """
     driver_name: str = 'edge'
 
-    def __init__(self, user_agent: Optional[dict] = None, *args, **kwargs) -> None:
+    def __init__(self, user_agent: Optional[str] = None, options: Optional[List[str]] = None, *args, **kwargs) -> None:
         """
-        Инициализирует драйвер Edge с заданным User-Agent и опциями.
+        Initializes the Edge WebDriver with the specified user agent and options.
 
-        :param user_agent: Словарь для настройки User-Agent. Если `None`, генерируется случайный User-Agent.
-        :type user_agent: Optional[dict]
-        :raises WebDriverException: Если не удается запустить WebDriver.
-        :raises Exception: Если происходит общая ошибка при запуске WebDriver.
+        :param user_agent: The user-agent string to be used. If `None`, a random user agent is generated.
+        :type user_agent: Optional[str]
+        :param options: A list of Edge options to be passed during initialization.
+        :type options: Optional[List[str]]
         """
-        #  код инициализирует User-Agent, используя переданный параметр или генерируя случайный
-        self.user_agent = user_agent if user_agent else UserAgent().random
-        #  код загружает настройки драйвера из JSON файла
-        settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'edge' / 'edge.json'))
+        self.user_agent = user_agent or UserAgent().random
+        # Загрузка настроек из JSON файла
+        settings = j_loads_ns(Path(gs.path.src, 'webdriver', 'edge', 'edge.json'))
 
-        options = EdgeOptions()
-        #  код добавляет User-Agent в опции запуска браузера
-        options.add_argument(f'user-agent={self.user_agent}')
+        # Инициализация объекта EdgeOptions
+        options_obj = self._get_edge_options()
+
+        # Добавление опций из параметров
+        if options:
+            for option in options:
+                options_obj.add_argument(option)
+
+        # Добавление опций из конфигурационного файла
+        if hasattr(settings, 'options') and settings.options:
+            for option in settings.options:
+                options_obj.add_argument(option)
+
+        # Добавление заголовков из конфигурационного файла
+        if hasattr(settings, 'headers') and settings.headers:
+            for key, value in vars(settings.headers).items():
+                 options_obj.add_argument(f'--{key}={value}')
 
         try:
-            logger.info('Запуск Edge WebDriver')
-            #  код извлекает путь к исполняемому файлу драйвера из настроек
-            edgedriver_path = settings.get('executable_path', {}).get('default')
-            if not edgedriver_path:
-                logger.error('Не найден путь к исполняемому файлу Edge WebDriver в конфигурации.')
-                return
-            #  код создает сервис драйвера, используя путь к исполняемому файлу
+            logger.info('Starting Edge WebDriver')
+            # Получение пути к исполняемому файлу EdgeDriver из настроек
+            edgedriver_path = settings.executable_path.default
+            # Инициализация сервиса EdgeDriver
             service = EdgeService(executable_path=str(edgedriver_path))
-            #  код инициализирует WebDriver с заданными опциями и сервисом
-            super().__init__(options=options, service=service)
+            # Инициализация Edge WebDriver с заданными опциями и сервисом
+            super().__init__(options=options_obj, service=service)
             self._payload()
         except WebDriverException as ex:
-            logger.critical('Не удалось запустить Edge WebDriver:', exc_info=ex)
+            # Обработка ошибки запуска WebDriver
+            logger.error('Edge WebDriver failed to start:', ex)
             return
         except Exception as ex:
-            logger.critical('Edge WebDriver завершился с ошибкой:', exc_info=ex)
+            # Обработка прочих ошибок
+            logger.error('Edge WebDriver crashed. General error:', ex)
             return
+
+    def _get_edge_options(self) -> EdgeOptions:
+        """
+        Create and configure launch options for the Edge WebDriver.
+        """
+        options_obj = EdgeOptions()
+        options_obj.add_argument(f'user-agent={self.user_agent}')
+        return options_obj
 
     def _payload(self) -> None:
         """
-        Загружает исполнители для локаторов и JavaScript-сценариев.
-
-        Этот метод инициализирует и присваивает методы для взаимодействия с элементами
-        страницы и выполнения JavaScript.
+        Load executors for locators and JavaScript scenarios.
         """
-        #  точка расширения функционала
-        ...
-        #  код создает экземпляр класса JavaScript для выполнения JS-кода
-        js_executor = JavaScript(self)
-        #  код устанавливает методы для получения языка страницы, готовности, реферера, скрытия элементов и фокуса окна
-        self.get_page_lang = js_executor.get_page_lang
-        self.ready_state = js_executor.ready_state
-        self.get_referrer = js_executor.ready_state
-        self.unhide_DOM_element = js_executor.unhide_DOM_element
-        self.window_focus = js_executor.window_focus
+        j = JavaScript(self)
+        self.get_page_lang = j.get_page_lang
+        self.ready_state = j.ready_state
+        self.get_referrer = j.ready_state
+        self.unhide_DOM_element = j.unhide_DOM_element
+        self.window_focus = j.window_focus
 
-        #  код создает экземпляр класса ExecuteLocator для выполнения поиска элементов
-        execute_locator = ExecuteLocator(self)
-        #  код устанавливает методы для выполнения поиска элементов, получения скриншотов, атрибутов и отправки сообщений
-        self.execute_locator = execute_locator.execute_locator
-        self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
-        self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
-        self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
-        self.send_message = self.send_key_to_webelement = execute_locator.send_message
+        executor = ExecuteLocator(self)
+        self.execute_locator = executor.execute_locator
+        self.get_webelement_as_screenshot = executor.get_webelement_as_screenshot
+        self.get_webelement_by_locator = executor.get_webelement_by_locator
+        self.get_attribute_by_locator = executor.get_attribute_by_locator
+        self.send_message = executor.send_message
+        self.send_key_to_webelement = executor.send_message
 
 
     def set_options(self, opts: Optional[List[str]] = None) -> EdgeOptions:
         """
-        Создает и настраивает параметры запуска для Edge WebDriver.
+        Create and configure launch options for the Edge WebDriver.
 
-        :param opts: Список опций для добавления в Edge WebDriver. По умолчанию `None`.
+        :param opts: A list of options to add to the Edge WebDriver. Defaults to `None`.
         :type opts: Optional[List[str]]
-        :return: Конфигурированный объект `EdgeOptions`.
+        :return: Configured `EdgeOptions` object.
         :rtype: EdgeOptions
         """
-        #  код создает экземпляр класса EdgeOptions для настройки параметров браузера
         options = EdgeOptions()
-        #  код добавляет переданные опции, если они есть
         if opts:
             for opt in opts:
                 options.add_argument(opt)
-        #  код возвращает объект EdgeOptions с добавленными опциями
         return options
+
+
+if __name__ == "__main__":
+    driver = Edge(options=["--headless", "--disable-gpu"])
+    driver.get("https://www.example.com")

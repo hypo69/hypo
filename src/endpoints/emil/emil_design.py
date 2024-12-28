@@ -1,3 +1,4 @@
+from __future__ import annotations
 ## \file hypotez/src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -11,29 +12,6 @@
 """
 MODE = 'dev'
 
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""MODE = 'dev'
-  
-""" module: src.endpoints.emil """
 
 
 """ Module for managing and processing images and promoting to Facebook and PrestaShop. """
@@ -44,7 +22,7 @@ from types import SimpleNamespace
 import time
 
 from src import gs, logger
-from src.endpoints.PrestaShop.api.api import PrestaShop
+from src.endpoints.prestashop.api.api import PrestaShop
 from src.webdriver.driver import Driver, Chrome
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
@@ -59,9 +37,11 @@ class EmilDesign:
 
     # Base path for the module data
     base_path: Path = (
-        gs.path.google_drive
+        gs.path.external_storage
         / "emil"
     )
+    gemini: GoogleGenerativeAI
+    openai: OpenAIModel
 
     def __init__(self):
         """ Initialize the EmilDesign class. """

@@ -1,75 +1,46 @@
 # Анализ кода модуля `readme.md`
 
 **Качество кода**
-8
+9
 - Плюсы
-    - Хорошее описание модуля и его функций.
-    - Использование reStructuredText (RST) для документации.
-    - Наличие примеров использования функций.
-    - Описание требований и логирования.
+    - Документация хорошо структурирована и понятна.
+    - Присутствует подробное описание каждой функции, включая аргументы и возвращаемые значения.
+    - Предоставлены примеры использования для каждой функции.
+    - Четко выделены разделы с описанием, функциями, примерами использования и требованиями.
 - Минусы
-    - Неполное соответствие требованиям к оформлению кода в формате RST.
-    - Нет явного указания на импорт `logger` из `src.logger.logger`.
-    - Отсутствие docstring для модуля в начале файла.
-    - Некоторые формулировки в описаниях функций не соответствуют требованиям.
-    - Отсутствует обрамление блоков кода в markdown для примеров использования
+    -  Файл `readme.md` не содержит исполняемый код, а является только документацией в формате `markdown`,  поэтому не требуется применять инструкции, предназначенные для Python кода.
+    - Отсутствует раздел с установкой и настройкой окружения, а также информацией о зависимостях (кроме упоминания `src.logger`).
+    - В примере использования указан импорт из `src.utils.string.normalizer`, но это `readme.md`, а не файл с кодом.
 
 **Рекомендации по улучшению**
-1. Добавить docstring для модуля в начале файла в формате RST.
-2. Явно указать импорт `logger` из `src.logger.logger` в разделе "Requirements".
-3. Переформулировать описания функций, избегая слов типа "получаем", "делаем".
-4. Добавить docstring к каждой функции, описывая параметры и возвращаемые значения.
-5. Обернуть примеры кода в markdown блоки для подсветки синтаксиса.
-6. Добавить более подробные примеры использования в формате RST.
 
-**Оптимизированный код**
+1.  **Добавить информацию об установке и зависимостях:**
+    -  Включить раздел о том, как установить необходимую библиотеку или настроить окружение для работы с кодом.
+    -  Указать все необходимые зависимости, включая их версии.
+2.  **Уточнить информацию о логировании:**
+    - Указать, как именно настроен `src.logger` (например, формат логов, куда они записываются).
+3.  **Улучшить примеры:**
+   - В примерах можно указать крайние случаи и пограничные значения.
+4.  **Разделить секции:**
+   - Использовать более четкие разделители между секциями.
+5.  **Добавить раздел о тестировании:**
+  - Добавить информацию как запускать тесты для данного модуля.
+
+**Оптимизиробанный код**
 
 ```markdown
-"""
-Модуль для нормализации данных
-=========================================================================================
+# Анализ модуля `src.utils.string`
 
-Модуль `normalizer` предоставляет функциональность для нормализации различных типов данных,
-включая строки, булевы значения, целые числа и числа с плавающей точкой.
-Он также включает вспомогательные функции для обработки текста.
+## Описание
 
-Пример использования
---------------------
-
-Пример использования функций нормализации:
-
-.. code-block:: python
-
-    from src.utils.string.normalizer import normalize_string, normalize_boolean, normalize_int, normalize_float
-    
-    clean_str = normalize_string(['<h1>Header</h1>', '  text with spaces  '])
-    print(clean_str)
-    
-    is_active = normalize_boolean('Yes')
-    print(is_active)
-    
-    integer_value = normalize_int('42')
-    print(integer_value)
-
-    float_value = normalize_float('3.14159')
-    print(float_value)
-
-"""
-
-.. module:: src.utils.string
-```
-
-Data Normalizer Module Documentation
-====================================
-
-The `normalizer` module provides functionality for normalizing various data types, including strings, booleans, integers, and floating-point numbers. It also includes helper functions for text processing.
+Модуль `normalizer` предоставляет функциональность для нормализации различных типов данных, включая строки, булевы значения, целые числа и числа с плавающей точкой. Также включает вспомогательные функции для обработки текста.
 
 ---
 
-## Table of Contents
+## Содержание
 
-1. [Overview](#overview)
-2. [Module Functions](#module-functions)
+1. [Обзор](#обзор)
+2. [Функции модуля](#функции-модуля)
    - [normalize_boolean](#normalize_boolean)
    - [normalize_string](#normalize_string)
    - [normalize_int](#normalize_int)
@@ -78,218 +49,270 @@ The `normalizer` module provides functionality for normalizing various data type
    - [remove_html_tags](#remove_html_tags)
    - [remove_special_characters](#remove_special_characters)
    - [normalize_sql_date](#normalize_sql_date)
-3. [Usage Example](#usage-example)
-4. [Requirements](#requirements)
+3. [Пример использования](#пример-использования)
+4. [Требования](#требования)
+5. [Установка](#установка)
+6. [Логирование](#логирование)
+7. [Тестирование](#тестирование)
 
 ---
 
-## Overview
+## Обзор
 
-The module provides convenient data normalization and processing utilities. It can be used to:
-- Remove HTML tags from strings.
-- Convert strings to numeric or boolean values.
-- Clean strings from special characters.
-- Convert lists of strings into a single normalized string.
+Модуль предоставляет удобные утилиты для нормализации и обработки данных. Его можно использовать для:
+
+- Удаления HTML-тегов из строк.
+- Преобразования строк в числовые или логические значения.
+- Очистки строк от специальных символов.
+- Преобразования списков строк в одну нормализованную строку.
 
 ---
 
-## Module Functions
+## Функции модуля
 
 ### `normalize_boolean`
 
-**Description:**
-Converts the input value into a boolean.
+**Описание:**
 
-**Arguments:**
-- `input_data (Any)`: The data that can represent a boolean value (string, number, boolean type).
+Преобразует входное значение в булево значение.
 
-**Returns:**
-- `bool`: The converted boolean value.
+**Аргументы:**
 
-**Example:**
+- `input_data (Any)`: Данные, которые могут представлять булево значение (строка, число, булевый тип).
+
+**Возвращает:**
+
+- `bool`: Преобразованное булево значение.
+
+**Пример:**
 
 ```python
-normalize_boolean('yes')  # Result: True
-normalize_boolean(0)      # Result: False
+normalize_boolean('yes')  # Результат: True
+normalize_boolean(0)      # Результат: False
 ```
 
 ---
 
 ### `normalize_string`
 
-**Description:**
-Converts a string or a list of strings into a normalized string by removing extra spaces, HTML tags, and special characters.
+**Описание:**
 
-**Arguments:**
-- `input_data (str | list)`: A string or list of strings.
+Преобразует строку или список строк в нормализованную строку, удаляя лишние пробелы, HTML-теги и специальные символы.
 
-**Returns:**
-- `str`: A cleaned UTF-8 string.
+**Аргументы:**
 
-**Example:**
+- `input_data (str | list)`: Строка или список строк.
+
+**Возвращает:**
+
+- `str`: Очищенная строка в кодировке UTF-8.
+
+**Пример:**
 
 ```python
-normalize_string(['  Example string  ', '<b>with HTML</b>'])  # Result: 'Example string with HTML'
+normalize_string(['  Пример строки  ', '<b>с HTML</b>'])  # Результат: 'Пример строки с HTML'
 ```
 
 ---
 
 ### `normalize_int`
 
-**Description:**
-Converts the input value into an integer.
+**Описание:**
 
-**Arguments:**
-- `input_data (str | int | float | Decimal)`: A number or its string representation.
+Преобразует входное значение в целое число.
 
-**Returns:**
-- `int`: The converted integer value.
+**Аргументы:**
 
-**Example:**
+- `input_data (str | int | float | Decimal)`: Число или его строковое представление.
+
+**Возвращает:**
+
+- `int`: Преобразованное целое число.
+
+**Пример:**
 
 ```python
-normalize_int('42')  # Result: 42
-normalize_int(3.14)  # Result: 3
+normalize_int('42')  # Результат: 42
+normalize_int(3.14)  # Результат: 3
 ```
 
 ---
 
 ### `normalize_float`
 
-**Description:**
-Converts the input value into a floating-point number.
+**Описание:**
 
-**Arguments:**
-- `value (Any)`: A number, string, or list of numbers.
+Преобразует входное значение в число с плавающей точкой.
 
-**Returns:**
-- `float | List[float] | None`: A floating-point number, a list of floating-point numbers, or `None` in case of error.
+**Аргументы:**
 
-**Example:**
+- `value (Any)`: Число, строка или список чисел.
+
+**Возвращает:**
+
+- `float | List[float] | None`: Число с плавающей точкой, список чисел с плавающей точкой или `None` в случае ошибки.
+
+**Пример:**
 
 ```python
-normalize_float('3.14')         # Result: 3.14
-normalize_float([1, '2.5', 3])  # Result: [1.0, 2.5, 3.0]
+normalize_float('3.14')         # Результат: 3.14
+normalize_float([1, '2.5', 3])  # Результат: [1.0, 2.5, 3.0]
 ```
 
 ---
 
 ### `remove_line_breaks`
 
-**Description:**
-Removes newline characters from a string.
+**Описание:**
 
-**Arguments:**
-- `input_str (str)`: The input string.
+Удаляет символы новой строки из строки.
 
-**Returns:**
-- `str`: The string without line breaks.
+**Аргументы:**
 
-**Example:**
+- `input_str (str)`: Входная строка.
+
+**Возвращает:**
+
+- `str`: Строка без разрывов строк.
+
+**Пример:**
 
 ```python
-remove_line_breaks('String\\nwith line breaks\\r')  # Result: 'String with line breaks'
+remove_line_breaks('Строка\nс разрывами\r')  # Результат: 'Строка с разрывами'
 ```
 
 ---
 
 ### `remove_html_tags`
 
-**Description:**
-Removes HTML tags from a string.
+**Описание:**
 
-**Arguments:**
-- `input_html (str)`: The input string with HTML tags.
+Удаляет HTML-теги из строки.
 
-**Returns:**
-- `str`: The string without HTML tags.
+**Аргументы:**
 
-**Example:**
+- `input_html (str)`: Входная строка с HTML-тегами.
+
+**Возвращает:**
+
+- `str`: Строка без HTML-тегов.
+
+**Пример:**
 
 ```python
-remove_html_tags('<p>Example text</p>')  # Result: 'Example text'
+remove_html_tags('<p>Пример текста</p>')  # Результат: 'Пример текста'
 ```
 
 ---
 
 ### `remove_special_characters`
 
-**Description:**
-Removes special characters from a string or a list of strings.
+**Описание:**
 
-**Arguments:**
-- `input_str (str | list)`: A string or list of strings.
+Удаляет специальные символы из строки или списка строк.
 
-**Returns:**
-- `str | list`: A string or list of strings without special characters.
+**Аргументы:**
 
-**Example:**
+- `input_str (str | list)`: Строка или список строк.
+
+**Возвращает:**
+
+- `str | list`: Строка или список строк без специальных символов.
+
+**Пример:**
 
 ```python
-remove_special_characters('Hello@World!')  # Result: 'HelloWorld'
+remove_special_characters('Привет@Мир!')  # Результат: 'ПриветМир'
 ```
 
 ---
 
 ### `normalize_sql_date`
 
-**Description:**
-Converts a string or datetime object into a standard SQL date format (`YYYY-MM-DD`).
+**Описание:**
 
-**Arguments:**
-- `input_data (str | datetime)`: A string or datetime object representing a date.
+Преобразует строку или объект datetime в стандартный формат SQL-даты (`YYYY-MM-DD`).
 
-**Returns:**
-- `str`: The normalized SQL date as a string in `YYYY-MM-DD` format.
+**Аргументы:**
 
-**Example:**
+- `input_data (str | datetime)`: Строка или объект datetime, представляющие дату.
+
+**Возвращает:**
+
+- `str`: Нормализованная SQL-дата в формате `YYYY-MM-DD`.
+
+**Пример:**
 
 ```python
-normalize_sql_date('2024-12-06')  # Result: '2024-12-06'
-normalize_sql_date(datetime(2024, 12, 6))  # Result: '2024-12-06'
+normalize_sql_date('2024-12-06')  # Результат: '2024-12-06'
+normalize_sql_date(datetime(2024, 12, 6))  # Результат: '2024-12-06'
 ```
 
 ---
 
-## Usage Example
+## Пример использования
 
 ```python
 from src.utils.string.normalizer import normalize_string, normalize_boolean, normalize_int, normalize_float, normalize_sql_date
 
-# Normalizing a string
-clean_str = normalize_string(['<h1>Header</h1>', '  text with spaces  '])
-print(clean_str)  # 'Header text with spaces'
+# Нормализация строки
+clean_str = normalize_string(['<h1>Заголовок</h1>', '  текст с пробелами  '])
+print(clean_str)  # 'Заголовок текст с пробелами'
 
-# Normalizing a boolean value
-is_active = normalize_boolean('Yes')
+# Нормализация булевого значения
+is_active = normalize_boolean('Да')
 print(is_active)  # True
 
-# Normalizing an integer
+# Нормализация целого числа
 integer_value = normalize_int('42')
 print(integer_value)  # 42
 
-# Normalizing a floating-point number
+# Нормализация числа с плавающей точкой
 float_value = normalize_float('3.14159')
 print(float_value)  # 3.14159
 
-# Normalizing a SQL date
+# Нормализация SQL-даты
 sql_date = normalize_sql_date('2024-12-06')
 print(sql_date)  # '2024-12-06'
 ```
 
 ---
 
-## Requirements
+## Требования
 
-- Python 3.10 or higher.
-- The `src.logger.logger` module for logging.
-- The module is used in development mode (`MODE = 'dev'`).
+- Python 3.10 или выше.
+- Модуль `src.logger` для логирования.
+- Модуль используется в режиме разработки (`MODE = 'dev'`).
 
 ---
 
-## Logging
+## Установка
 
-All errors and warnings are logged via `logger`:
-- Errors are logged using `logger.error`.
-- Unexpected values are logged using `logger.debug` or `logger.warning`.
+1. Убедитесь, что у вас установлен Python 3.10 или выше.
+2. Скопируйте файлы модуля `src/utils/string` в ваш проект.
+3. Убедитесь, что у вас есть настроенный модуль `src.logger`.
+
+```bash
+   # Пример установки
+    pip install -r requirements.txt
+```
+
+---
+
+## Логирование
+
+Все ошибки и предупреждения логируются через `logger`:
+
+- Ошибки логируются с помощью `logger.error`.
+- Неожиданные значения логируются с помощью `logger.debug` или `logger.warning`.
+
+Настройка `src.logger` должна быть произведена в соответствии с требованиями проекта. Формат логов и место их хранения настраиваются в конфигурационном файле логгера.
+
+---
+## Тестирование
+Для запуска тестов используйте `pytest`.
+Пример команды:
+```bash
+    pytest tests/unit/test_string_normalizer.py
+```
 ```

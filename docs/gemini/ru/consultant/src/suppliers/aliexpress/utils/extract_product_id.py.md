@@ -1,87 +1,74 @@
-# Анализ кода модуля `extract_product_id.py`
+# Анализ кода модуля `extract_product_id`
 
 **Качество кода**
-9
+8
 -  Плюсы
-    - Код хорошо структурирован и соответствует PEP 8.
-    - Присутствует подробная документация в формате reStructuredText (RST) для модуля и функций, включая примеры использования.
-    - Код содержит type hints, что облегчает понимание и отладку.
-    - Используются регулярные выражения для извлечения ID, что является эффективным подходом.
-    - Код обрабатывает как одиночные URL, так и списки URL.
-    - Есть валидация и обработка ошибок: при отсутствии ID в URL или невалидном ID возвращается `None`.
+    -  Код хорошо структурирован и логически понятен.
+    -  Используются `docstring` для описания функций и модуля.
+    -  Код обрабатывает как отдельные URL, так и списки URL.
+    -  Есть примеры использования функций в docstring.
 -  Минусы
-    - Отсутствует импорт `Any` из модуля `typing`, что не позволяет использовать этот тип в аннотации.
-    - Нет обработки исключений (try-except) с использованием `logger.error` при поиске и извлечении ID, что может привести к неопределенному поведению при непредвиденных ошибках.
-    - В некоторых местах код можно сделать более лаконичным (например, объединить проверки)
-    - Отсутствует явное логирование.
+    -  Отсутствует обработка ошибок с использованием `logger`.
+    -  Не все комментарии соответствуют формату reStructuredText.
+    -  Некоторые docstring можно улучшить для большей ясности.
 
 **Рекомендации по улучшению**
-1. **Добавить импорт `Any`**:
-   - В начале файла добавить `from typing import Any` для корректной работы аннотаций типов.
-2. **Обработка ошибок с использованием `logger.error`**:
-   - Обновить функцию `extract_id` так, чтобы в случае ошибки при поиске ID с помощью регулярного выражения, ошибка логировалась, а функция возвращала `None`.
-3. **Упростить логику проверки и возврата значений**:
-   - Код `return extracted_ids if extracted_ids else None` в функции `extract_prod_ids` можно упростить, вернув `extracted_ids or None`.
-4. **Добавить логирование**
-   - Логировать начало и завершение функции а так же все ошибки.
+1. Добавить обработку ошибок с помощью `logger.error` в функции `extract_id`, для записи в журнал, если не удалось извлечь идентификатор.
+2.  Переписать все комментарии и `docstring` в соответствии с форматом reStructuredText.
+3.  Улучшить `docstring` для более точного описания параметров и возвращаемых значений.
+4.  Добавить проверку входных данных, чтобы избежать ошибок при использовании.
+5.  Импортировать `logger` из `src.logger.logger` как рекомендовано в инструкции.
+6.  Использовать `isinstance(urls, str)` вместо `else`, для более явной проверки, что `urls` является строкой.
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-Модуль для извлечения идентификаторов продуктов из URL-адресов.
-=============================================================
+Модуль для извлечения идентификаторов товаров из URL-адресов AliExpress.
+=========================================================================
 
-Этот модуль содержит функции для извлечения идентификаторов продуктов
-из URL-адресов, используемых на сайте AliExpress. Он обрабатывает как
-одиночные URL-адреса, так и списки URL-адресов, возвращая извлеченные
-идентификаторы в виде строк или списков строк.
+Этот модуль содержит функции для извлечения идентификаторов товаров из URL-адресов AliExpress.
+Он поддерживает как отдельные URL-адреса, так и списки URL-адресов.
 
-Примеры использования
+Пример использования
 --------------------
+
+Пример извлечения идентификатора товара из URL-адреса:
 
 .. code-block:: python
 
-   from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
+    from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids
 
-   # Извлечение ID из одиночного URL
-   url = "https://www.aliexpress.com/item/123456.html"
-   product_id = extract_prod_ids(url)
-   print(product_id)  # Вывод: '123456'
+    url = "https://www.aliexpress.com/item/123456.html"
+    product_id = extract_prod_ids(url)
+    print(product_id)
 
-   # Извлечение ID из списка URL
-   urls = ["https://www.aliexpress.com/item/123456.html", "https://www.aliexpress.com/item/789012.html"]
-   product_ids = extract_prod_ids(urls)
-   print(product_ids)  # Вывод: ['123456', '789012']
+Пример извлечения идентификаторов товаров из списка URL-адресов:
 
-   # Обработка невалидного URL или ID
-   invalid_url = "https://www.example.com/item/abcdef.html"
-   invalid_id = extract_prod_ids(invalid_url)
-   print(invalid_id)  # Вывод: None
+.. code-block:: python
 
-   # Обработка ID напрямую
-   direct_id = extract_prod_ids("1234567")
-   print(direct_id) # Вывод: '1234567'
+    urls = ["https://www.aliexpress.com/item/123456.html", "https://www.aliexpress.com/item/789012.html"]
+    product_ids = extract_prod_ids(urls)
+    print(product_ids)
 """
+MODE = 'dev'
 
 import re
-from typing import List, Union, Optional, Any
-from src.logger.logger import logger
+from src.logger.logger import logger # Импортируем logger
 
+def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:
+    """
+    Извлекает идентификаторы товаров из списка URL-адресов или возвращает идентификаторы, если они переданы напрямую.
 
-def extract_prod_ids(urls: Union[str, List[str]]) -> Optional[Union[str, List[str]]]:
-    """Извлекает идентификаторы продуктов из списка URL-адресов или возвращает ID напрямую, если они были переданы.
-
-    :param urls: URL-адрес, список URL-адресов или идентификаторы продуктов.
+    :param urls: URL-адрес, список URL-адресов или идентификаторы товаров.
     :type urls: str | list[str]
-    :return: Список извлеченных идентификаторов продуктов, один ID или None, если не найдено ни одного допустимого ID.
+    :return: Список извлеченных идентификаторов товаров, одиночный идентификатор или None, если не найден допустимый идентификатор.
     :rtype: str | list[str] | None
 
-    :Example:
+    :Examples:
+
+    .. code-block:: python
+
         >>> extract_prod_ids("https://www.aliexpress.com/item/123456.html")
         '123456'
 
@@ -97,20 +84,22 @@ def extract_prod_ids(urls: Union[str, List[str]]) -> Optional[Union[str, List[st
         >>> extract_prod_ids("https://www.example.com/item/abcdef.html")
         None
     """
-    logger.info(f'Начало извлечения ID из {urls=}')
-    # Регулярное выражение для поиска идентификаторов продуктов
+    # Регулярное выражение для поиска идентификаторов товаров
     pattern = re.compile(r"(?:item/|/)?(\d+)\.html")
 
+    def extract_id(url: str) -> str | None:
+        """
+        Извлекает идентификатор товара из заданного URL-адреса или проверяет его валидность.
 
-    def extract_id(url: str) -> Optional[str]:
-        """Извлекает идентификатор продукта из заданного URL-адреса или проверяет идентификатор продукта.
-
-        :param url: URL-адрес или идентификатор продукта.
+        :param url: URL-адрес или идентификатор товара.
         :type url: str
-        :return: Извлеченный идентификатор продукта или сам ввод, если это допустимый ID, или None, если допустимый ID не найден.
+        :return: Извлеченный идентификатор товара или сам ввод, если это допустимый идентификатор, или None, если не найден допустимый идентификатор.
         :rtype: str | None
 
-        :Example:
+        :Examples:
+
+        .. code-block:: python
+
             >>> extract_id("https://www.aliexpress.com/item/123456.html")
             '123456'
 
@@ -120,27 +109,29 @@ def extract_prod_ids(urls: Union[str, List[str]]) -> Optional[Union[str, List[st
             >>> extract_id("https://www.example.com/item/abcdef.html")
             None
         """
-        # Проверка, является ли ввод допустимым идентификатором продукта
+        # Проверяет, является ли ввод допустимым идентификатором товара
         if url.isdigit():
             return url
-        
-        # Пытаемся извлечь ID из URL-адреса
-        try:
-            match = pattern.search(url)
-            if match:
-                return match.group(1)
-            return None
-        except Exception as ex:
-            logger.error(f'Ошибка при извлечении ID из {url=}', exc_info=ex)
-            return None
 
+        # Пытается извлечь идентификатор из URL-адреса
+        match = pattern.search(url)
+        if match:
+            return match.group(1)
+        # Если извлечение не удалось, записываем ошибку в журнал и возвращает None
+        logger.error(f'Не удалось извлечь ID из url: {url}')
+        return None
+
+    # Проверяем, является ли urls списком
     if isinstance(urls, list):
-        # Извлекаем ID из каждого URL, если ID не `None`
+        # Извлекает идентификаторы из списка URL, если они есть
         extracted_ids = [extract_id(url) for url in urls if extract_id(url) is not None]
-        logger.info(f'Извлеченные ID {extracted_ids=}')
-        return extracted_ids or None
-    else:
-        result = extract_id(urls)
-        logger.info(f'Извлеченный ID {result=}')
-        return result
+        # Возвращает список извлеченных идентификаторов или None, если список пуст
+        return extracted_ids if extracted_ids else None
+    # Если urls не список, то это строка
+    if isinstance(urls, str):
+       # Извлекает идентификатор из одной строки
+        return extract_id(urls)
+    # Если тип входных данных не распознан, то логируем ошибку и возвращаем None
+    logger.error(f'Неверный тип данных {type(urls)=}')
+    return None
 ```

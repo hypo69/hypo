@@ -1,96 +1,104 @@
 # Анализ кода модуля `test_upload.py`
 
 **Качество кода**
-8
-- Плюсы
-    - Код содержит пример использования API для загрузки файлов.
-    - Присутствуют комментарии, объясняющие основные шаги.
-- Минусы
-    -  Отсутствует явное указание кодировки файла (`# -*- coding: utf-8 -*-`), хотя она указана в комментариях.
-    -  Код закомментирован, что делает его нерабочим.
-    -  Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -  Отсутствуют docstring и reStructuredText.
-    -  Не используются логирование ошибок через `logger.error`.
-    -  Отсутствуют необходимые импорты.
-    -  Используется устаревший способ открытия файла (без явного закрытия)
-   -   Не адаптирован к требованиям задания по документации и комментариям.
+1/10
+-  Плюсы
+    - Присутствуют комментарии, поясняющие назначение частей кода.
+-  Минусы
+    - Код закомментирован и не является исполняемым.
+    - Отсутствует необходимая структура документации reStructuredText (RST).
+    - Не используются `j_loads` или `j_loads_ns` для чтения файлов (хотя в данном примере нет чтения файлов, это упущение).
+    - Отсутствуют импорты.
+    - Не используются логирование ошибок через `logger`.
 
 **Рекомендации по улучшению**
 
-1.  Раскомментировать код для обеспечения его работоспособности.
-2.  Добавить необходимые импорты, включая `iop` и `logger`.
-3.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` (если требуется работа с JSON).
-4.  Заменить открытие файла с `.read()` на `with open() as f: f.read()`, для автоматического закрытия файла.
-5.  Добавить reStructuredText docstring к модулю и функциям.
-6.  Реализовать логирование ошибок через `logger.error` вместо стандартных `print` и `try-except`.
-7.  Убрать лишние комментарии, которые дублируют код.
-8.  Адаптировать комментарии к формату reStructuredText.
-9.  Добавить проверку наличия необходимых параметров для API запроса
+1. Раскомментировать код и адаптировать его под использование `j_loads` или `j_loads_ns` если это необходимо.
+2. Добавить все необходимые импорты.
+3. Заменить print на логирование с использованием `logger`.
+4. Переписать комментарии в формате reStructuredText (RST).
+5.  Удалить излишние комментарии `# -*- coding: utf-8 -*-`.
+6.  Удалить комментарий `#! venv/Scripts/python.exe # <- venv win`.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для демонстрации загрузки файлов через API AliExpress.
-=========================================================================================
+Модуль для тестирования загрузки файлов через API AliExpress.
+==========================================================
 
-Этот модуль содержит пример использования API для загрузки файлов
-на сервер AliExpress, используя клиент IopClient.
+Этот модуль демонстрирует пример загрузки файла через API AliExpress
+с использованием IopClient.
 
 Пример использования
 --------------------
 
 .. code-block:: python
 
-    from src.suppliers.aliexpress.api._examples.iop.test_upload import upload_file
-    upload_file()
+    # Пример использования модуля (после раскомментирования и настройки)
+    # client = IopClient('https://api.taobao.tw/rest', '${appKey}', '${appSecret}')
+    # request = IopRequest('/xiaoxuan/mockfileupload')
+    # request.add_api_param('file_name','pom.xml')
+    # request.add_file_param('file_bytes', open('/path/to/your/pom.xml').read())
+    # response = client.execute(request)
+    # logger.info(f'Response type: {response.type}')
+    # logger.info(f'Response code: {response.code}')
+    # logger.info(f'Response message: {response.message}')
+    # logger.info(f'Request ID: {response.request_id}')
+    # logger.info(f'Response body: {response.body}')
 """
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-from src.utils.jjson import j_loads, j_loads_ns  # TODO проверить используются ли эти функции здесь
-from src.logger.logger import logger
-import iop
-# from pathlib import Path # TODO требуется если путь к файлу задан как Path
+# # -*- coding: utf-8 -*-  # удалено
+
+# #! venv/Scripts/python.exe # <- venv win # удалено
+
+from src.logger.logger import logger  # импорт модуля логирования
+# from src.utils.jjson import j_loads, j_loads_ns # не используется в данном примере, но добавляется для будущей совместимости.
+# import iop # закомментировано, тк нет примера работы
 
 
-def upload_file():
-    """
-    Выполняет загрузку файла через API AliExpress.
-
-    Создает клиент IopClient, формирует запрос,
-    добавляет параметры и файл, и выполняет запрос.
-    Результат запроса выводится в консоль.
-    """
-    try:
-        # Создание клиента IopClient с параметрами (TODO: заменить на реальные значения)
-        client = iop.IopClient('https://api.taobao.tw/rest', '${appKey}', '${appSecret}')
-
-        # Создание запроса к API
-        request = iop.IopRequest('/xiaoxuan/mockfileupload')
-
-        # Добавление строковых параметров
-        request.add_api_param('file_name', 'pom.xml')
-
-        # Открытие и чтение файла (TODO: заменить путь к файлу)
-        with open('/Users/xt/Documents/work/tasp/tasp/pom.xml', 'r') as file:
-             file_content = file.read()
-             # Добавление файла как параметра
-             request.add_file_param('file_bytes', file_content)
-        
-        # Выполнение запроса к API
-        response = client.execute(request)
-        # response = client.execute(request,access_token) # TODO access_token использовать если нужен
-
-        # Вывод информации о результате запроса
-        print(f'Response type: {response.type}')  # Тип ответа: nil, ISP, ISV, SYSTEM
-        print(f'Response code: {response.code}')  # Код ответа, 0 означает отсутствие ошибки
-        print(f'Response message: {response.message}')  # Сообщение об ошибке
-        print(f'Request ID: {response.request_id}')  # Уникальный ID запроса
-        print(f'Response body: {response.body}')  # Полный ответ
-    except Exception as e:
-         # Логирование ошибки в случае исключения
-         logger.error('Ошибка при выполнении загрузки файла', exc_info=True)
-
-if __name__ == '__main__':
-    upload_file()
+# # params 1 : gateway url
+# # params 2 : appkey
+# # params 3 : appSecret
+# client = iop.IopClient('https://api.taobao.tw/rest', '${appKey}', '${appSecret}') #  Пример создания клиента IopClient.
+#
+# # create a api request
+# request = iop.IopRequest('/xiaoxuan/mockfileupload') # Пример создания запроса к API.
+#
+# # simple type params ,Number ,String
+# request.add_api_param('file_name','pom.xml') # Пример добавления параметра типа String к запросу.
+#
+# # file params, value should be file content
+# try:
+#   #  попытка чтения файла, в данном примере будет вызвано исключение, так как файла не существует
+#   with open('/Users/xt/Documents/work/tasp/tasp/pom.xml', 'r') as f: #  открытие файла
+#      file_content = f.read() #  чтение содержимого файла
+#   request.add_file_param('file_bytes', file_content) #  добавление параметра типа file к запросу
+# except FileNotFoundError as e: #  обработка исключения, если файл не найден
+#    logger.error(f"Файл не найден: {e}") #  логирование ошибки
+#    ...
+#
+#
+# # response = client.execute(request)
+# #response = client.execute(request,access_token) # Закомментировано, пример вызова API с токеном.
+# #  код исполняет получение ответа от API
+# # response type nil,ISP,ISV,SYSTEM
+# # nil ：no error
+# # ISP : API Service Provider Error
+# # ISV : API Request Client Error
+# # SYSTEM : Iop platform Error
+# #  логирование типа ответа
+# # if response: # проверка наличия ответа
+# #   logger.info(f'Response type: {response.type}')
+# #
+# #   # response code, 0 is no error
+# #   logger.info(f'Response code: {response.code}')
+# #
+# #   # response error message
+# #   logger.info(f'Response message: {response.message}')
+# #
+# #   # response unique id
+# #   logger.info(f'Request ID: {response.request_id}')
+# #
+# #   # full response
+# #   logger.info(f'Response body: {response.body}')
 ```

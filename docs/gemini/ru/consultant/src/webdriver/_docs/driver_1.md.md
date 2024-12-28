@@ -1,125 +1,109 @@
 # Анализ кода модуля `driver_1.md`
 
 **Качество кода**
-8
--  Плюсы
-    - Код реализует метакласс для динамического создания драйверов веб-браузеров, что позволяет расширять базовый функционал.
-    -  Используются проверки типов для обеспечения корректности передаваемых параметров.
-    -  Присутствует логирование процесса инициализации драйвера.
-    -  Применяется метод `driver_payload` для дополнительной инициализации.
- -  Минусы
-    -  Отсутствуют docstring для метакласса `DriverMeta` и метода `__call__`.
-    -  Не используется `from src.logger.logger import logger` для логирования ошибок.
-    -  Нет обработки возможных исключений при инициализации драйвера и вызове `driver_payload`.
-    -  Не хватает комментариев в коде, поясняющих назначение конкретных строк.
-    -  Необходимо перевести все комментарии в формат RST.
-    -  Не все импорты указаны в коде.
+7
+- Плюсы
+    - Код использует метакласс для динамического создания классов драйверов, что является гибким и расширяемым решением.
+    - Присутствуют проверки типов для `webdriver_cls`, что предотвращает некорректное использование метакласса.
+    - Используется логирование для отслеживания создания драйвера.
+    - Динамически создаваемый класс `Driver` наследует от базового класса `Driver` и выбранного веб-драйвера (Chrome, Firefox, Edge).
+- Минусы
+    - Отсутствуют импорты для `Chrome`, `Firefox`, `Edge` и `logger`.
+    - Отсутствует reStructuredText (RST) документация для класса `DriverMeta` и его методов, а также для динамически создаваемого класса `Driver`.
+    - Нет обработки исключений при создании драйвера.
+    - Наличие `...` как точек остановки не соответствует конечной цели написания кода.
 
 **Рекомендации по улучшению**
-
-1.  Добавить docstring для метакласса `DriverMeta` и метода `__call__`, описывающие их назначение и параметры.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-3.  Обернуть вызовы `super().__init__` и `self.driver_payload()` в блоки `try-except` для обработки возможных ошибок.
-4.  Добавить комментарии к каждой важной строке кода, чтобы пояснить ее назначение.
-5.  Переписать комментарии в формате RST.
-6.  Добавить необходимые импорты.
-7.  Избегать использования `...` в коде.
+1. Добавить импорты для `Chrome`, `Firefox`, `Edge` и `logger`.
+2. Добавить RST документацию для класса `DriverMeta` и его методов, а также для динамически создаваемого класса `Driver`.
+3. Добавить обработку исключений в `__call__` методе и в конструкторе динамического класса `Driver`.
+4. Использовать `logger.error` вместо общих `try-except`.
+5. Убрать `...` как точки остановки.
+6. Привести в соответствие имена функций и переменных с ранее обработанными файлами (если применимо).
+7. Добавить более подробные комментарии в стиле reStructuredText.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для создания драйвера браузера с использованием метакласса.
-=====================================================================
+Модуль для определения метакласса DriverMeta, используемого для создания драйверов веб-браузеров.
+=====================================================================================================
 
-Этот модуль определяет метакласс `DriverMeta`, который динамически создает
-класс `Driver`, наследующий от базового класса `Driver` и указанного
-класса WebDriver Selenium (Chrome, Firefox или Edge).
+Этот модуль содержит метакласс :class:`DriverMeta`, который динамически создает класс драйвера
+на основе базового класса `Driver` и указанного класса веб-драйвера (Chrome, Firefox, Edge).
 
 Пример использования
 --------------------
 
+Пример использования метакласса `DriverMeta` для создания драйвера Chrome:
+
 .. code-block:: python
 
-    from selenium.webdriver import Chrome, Firefox, Edge
-    from src.webdriver.driver import Driver  # Предполагается, что Driver определен в этом модуле
-    # Здесь необходимо добавить импорты
-    # from src.logger.logger import logger
-    # from src.utils.jjson import j_loads, j_loads_ns
+    from selenium.webdriver import Chrome
+    from src.webdriver.driver import Driver
+    from src.webdriver.driver_meta import DriverMeta
 
-    # Создание экземпляра драйвера с Chrome
-    # chrome_driver = Driver(Chrome, *args, **kwargs)
+    class MyDriver(Driver, metaclass=DriverMeta):
+        ...
 
-    # Создание экземпляра драйвера с Firefox
-    # firefox_driver = Driver(Firefox, *args, **kwargs)
+    chrome_driver = MyDriver(Chrome, *args, **kwargs)
+
 """
+from typing import Type
 from selenium.webdriver import Chrome, Firefox, Edge
-from src.logger.logger import logger # Добавлен импорт logger
+from src.logger.logger import logger
+from src.webdriver.driver import Driver  # Предполагается, что есть базовый класс Driver
+
 
 class DriverMeta(type):
     """
-    Метакласс для динамического создания класса Driver.
+    Метакласс для динамического создания класса драйвера.
 
-    Этот метакласс создает класс `Driver`, который наследует от базового класса
-    `Driver` и одного из классов WebDriver Selenium (Chrome, Firefox или Edge).
+    Этот метакласс создает новый класс `Driver`, который наследует от базового класса
+    `Driver` и указанного класса веб-драйвера (Chrome, Firefox, Edge).
     """
-    def __call__(cls, webdriver_cls, *args, **kwargs):
+    def __call__(cls, webdriver_cls: Type[Chrome | Firefox | Edge], *args, **kwargs):
         """
-        Создает динамический класс `Driver`.
+        Создает экземпляр динамического класса `Driver`.
 
-        :param cls: Класс, для которого создается экземпляр.
-        :param webdriver_cls: Класс WebDriver Selenium (Chrome, Firefox, Edge).
-        :param args: Позиционные аргументы для конструктора.
-        :param kwargs: Именованные аргументы для конструктора.
-        :raises AssertionError: Если `webdriver_cls` не является классом или не является
-            подклассом `Chrome`, `Firefox` или `Edge`.
+        :param webdriver_cls: Класс веб-драйвера, от которого наследуется динамический класс.
+        :type webdriver_cls: Type[Chrome | Firefox | Edge]
+        :param args: Позиционные аргументы, передаваемые конструктору класса драйвера.
+        :param kwargs: Именованные аргументы, передаваемые конструктору класса драйвера.
+        :raises AssertionError: Если `webdriver_cls` не является классом или не является подклассом
+                              `Chrome`, `Firefox` или `Edge`.
         :return: Экземпляр динамически созданного класса `Driver`.
         """
-        # проверка что webdriver_cls это класс
-        assert isinstance(webdriver_cls, type), "webdriver_cls должен быть классом"
-        # проверка что webdriver_cls подкласс Chrome, Firefox, Edge
-        assert issubclass(webdriver_cls, Chrome | Firefox | Edge), \
-            "webdriver_cls должен быть подклассом Chrome, Firefox или Edge"
-
+        assert isinstance(webdriver_cls, type), 'webdriver_cls должен быть классом' # Проверка типа webdriver_cls
+        assert issubclass(webdriver_cls, (Chrome, Firefox, Edge)), 'webdriver_cls должен быть подклассом Chrome, Firefox или Edge' # Проверка что webdriver_cls подкласс нужного класса
 
         class Driver(cls, webdriver_cls):
             """
-            Динамически созданный класс Driver.
+            Динамически созданный класс драйвера.
 
-            Этот класс наследует от базового класса `Driver` и указанного класса
-            WebDriver Selenium.
+            Этот класс наследует от базового класса `Driver` и указанного класса веб-драйвера.
             """
             def __init__(self, *args, **kwargs):
                 """
-                Конструктор динамически созданного класса Driver.
+                Конструктор динамически созданного класса `Driver`.
 
-                :param args: Позиционные аргументы для конструктора.
-                :param kwargs: Именованные аргументы для конструктора.
+                :param args: Позиционные аргументы, передаваемые конструкторам родительских классов.
+                :param kwargs: Именованные аргументы, передаваемые конструкторам родительских классов.
                 """
-                # Логирование инициализации драйвера
-                logger.info(f'Инициализация WebDriver {webdriver_cls.__name__} c args: {args}, kwargs: {kwargs}')
                 try:
-                    # Вызов конструкторов родительских классов
-                    super().__init__(*args, **kwargs)
+                    # Логирование инициализации драйвера
+                    logger.info(f'Инициализация драйвера: {webdriver_cls.__name__} с аргументами {args} {kwargs}')
+                    super().__init__(*args, **kwargs) # Вызов конструкторов родительских классов
+                    self.driver_payload() # Вызов метода driver_payload
                 except Exception as ex:
-                    # Логирование ошибки при инициализации родительского класса
-                    logger.error(f'Ошибка инициализации родительского класса {cls.__name__} или {webdriver_cls.__name__}: {ex}')
-                    raise
-                try:
-                   # вызов метода `driver_payload`
-                   self.driver_payload()
-                except Exception as ex:
-                    # Логирование ошибки при вызове метода `driver_payload`
-                    logger.error(f'Ошибка при вызове метода driver_payload: {ex}')
-                    raise
+                    logger.error(f'Ошибка инициализации драйвера {webdriver_cls.__name__}', exc_info=True) # Логирование ошибки инициализации драйвера
+                    raise  # Проброс исключения
+
             def driver_payload(self):
                 """
-                Вызывает метод `driver_payload` родительского класса.
+                Вызывает метод `driver_payload` из родительского класса `Driver`.
                 """
-                # Вызов метода `driver_payload` из базового класса
-                super().driver_payload()
+                super().driver_payload() # Вызов метода driver_payload из родительского класса
 
+        return Driver(*args, **kwargs) # Создание и возврат экземпляра динамического класса Driver
 
-        # Возвращает экземпляр динамически созданного класса Driver
-        return Driver(*args, **kwargs)
 ```

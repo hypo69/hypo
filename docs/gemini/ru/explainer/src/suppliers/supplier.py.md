@@ -1,242 +1,174 @@
-# Анализ кода `hypotez/src/suppliers/supplier.py`
-
 ## <алгоритм>
+1.  **Инициализация `Supplier`:**
+    *   При создании экземпляра `Supplier` вызывается метод `__init__`.
+    *   В `__init__` вызывается `_payload()`. Если `_payload()` возвращает `False`, выбрасывается исключение `DefaultSettingsException`.
+    *   **Пример:** `supplier = Supplier(supplier_prefix="test_supplier")`
 
-1.  **Инициализация `Supplier`**:
-    *   При создании экземпляра `Supplier` вызывается `__init__`.
-    *   Инициализируются атрибуты класса, такие как `supplier_id`, `supplier_prefix`, `locale`, `price_rule`, `related_modules`, `scenario_files`, `current_scenario`, `locators` и `driver`.
-    *   Вызывается метод `_payload()` для загрузки настроек.
-    *   Если `_payload()` возвращает `False`, выбрасывается исключение `DefaultSettingsException`.
-
-    **Пример**:
-    ```python
-    supplier = Supplier(supplier_prefix="test_supplier")
-    ```
-
-2.  **Загрузка настроек (`_payload`)**:
-    *   Логируется начало загрузки настроек для текущего поставщика.
-    *   Динамически импортируется модуль, связанный с поставщиком (например, `src.suppliers.test_supplier`). Если модуль не найден, возвращается `False` и логируется ошибка.
-    *   Формируется путь к файлу настроек поставщика (например, `src/suppliers/test_supplier_settings.json`).
-    *   Из файла настроек загружаются данные с помощью `j_loads_ns` (предполагается загрузка в `SimpleNamespace`). Если файл не найден или не содержит данных, возвращается `False` и логируется ошибка.
-    *   Загруженные данные (правило расчета цен, локаль, файлы сценариев и локаторы) устанавливаются в качестве атрибутов объекта `Supplier`. Если в файле настроек отсутствуют данные, то используются значения по умолчанию.
-    *   Логируется успешная загрузка настроек, возвращается `True`.
-    *   Если возникает исключение, возвращается `False` и логируется ошибка.
-
-    **Пример**:
-    Предположим, что файл `test_supplier_settings.json` содержит:
-    ```json
-    {
-        "price_rule": "custom_rule",
-        "locale": "ru",
-        "scenario_files": ["scenario1.json", "scenario2.json"],
-        "locators": {
-            "login_button": "#login_button"
-         }
-    }
-    ```
-
-    В этом случае:
-        * `self.price_rule` будет установлен в "custom_rule"
-        * `self.locale` будет установлен в "ru"
-        * `self.scenario_files` будет установлен в `["scenario1.json", "scenario2.json"]`
-        * `self.locators` будет установлен в `{"login_button": "#login_button"}`
+2.  **Загрузка параметров в `_payload()`:**
+    *   Логируется начало загрузки настроек поставщика.
+    *   Импортируется модуль, связанный с поставщиком, используя `importlib.import_module()`, например, `src.suppliers.test_supplier`. Если модуль не найден, логируется ошибка и возвращается `False`.
+    *   **Пример:** `importlib.import_module('src.suppliers.test_supplier')`
+    *   Формируется путь к файлу настроек поставщика:  `src/suppliers/test_supplier_settings.json`
+    *   Вызывается функция `j_loads_ns` для загрузки настроек из JSON файла. Если настройки не загружены, логируется ошибка и возвращается `False`.
+    *   **Пример:** `j_loads_ns('src/suppliers/test_supplier_settings.json')`
+    *   Извлечение и установка атрибутов `price_rule`, `locale`, `scenario_files`, `locators` из загруженных настроек. Если атрибут отсутствует, используются значения по умолчанию.
+    *   Логируется успешная загрузка настроек.
+    *   Возвращается `True`, если все операции успешны.
+    *   В случае любой ошибки на любом из этапов (кроме  `ModuleNotFoundError`), логируется ошибка и возвращается `False`.
     
-3.  **Вход в систему (`login`)**:
-    *   Вызывается метод `login` из динамически загруженного модуля поставщика (например, `src.suppliers.test_supplier.login`).
-    *   Метод `login` модуля поставщика получает экземпляр класса `Supplier` в качестве аргумента, выполняет вход на сайт поставщика и возвращает `True` или `False`.
+3. **Валидация префикса поставщика `check_supplier_prefix`:**
+    *   Перед инициализацией, вызывается валидатор `check_supplier_prefix`.
+    *   Проверяет, что `supplier_prefix` не является пустым. Если пустой, то вызывает `ValueError`.
 
-    **Пример**:
-    ```python
-    supplier.login()  # Вызовет src.suppliers.test_supplier.login(supplier)
-    ```
-4.  **Запуск файлов сценариев (`run_scenario_files`)**:
-    *   Вызывается функция `run_scenario_files` из `src.scenario`.
-    *   Функция получает экземпляр `Supplier` и список файлов сценариев для выполнения.
-    *   Если `scenario_files` не указан, берется список файлов из атрибута `self.scenario_files`.
-    *   Возвращает `True`, если все сценарии успешно выполнены, иначе `False`.
+4.  **Выполнение входа в систему в `login()`:**
+    *   Вызывает метод `login()` из импортированного модуля, связанного с поставщиком.
+    *   **Пример:** `supplier.login()`
+    *   Возвращает результат выполнения `login()` из `related_modules`.
 
-    **Пример**:
-    ```python
-    supplier.run_scenario_files() # Выполнит сценарии из self.scenario_files
-    supplier.run_scenario_files(["new_scenario.json"]) # выполнит сценарии из списка
-    ```
+5.  **Запуск файлов сценариев `run_scenario_files()`:**
+    *   Принимает необязательный параметр `scenario_files` (строка или список строк). Если не передан, используется `self.scenario_files`.
+    *   Вызывает функцию `run_scenario_files` из `src.scenario` передавая текущий экземпляр поставщика и список файлов сценариев.
+    *   **Пример:** `supplier.run_scenario_files(['scenario1.json', 'scenario2.json'])`
+    *   Возвращает результат выполнения `run_scenario_files`.
 
-5.  **Запуск сценариев (`run_scenarios`)**:
-    *   Вызывается функция `run_scenarios` из `src.scenario`.
-    *   Функция получает экземпляр `Supplier` и сценарий (словарь) или список сценариев для выполнения.
-    *   Возвращает `True`, если сценарий(и) успешно выполнен(ы), иначе `False`.
-    
-    **Пример**:
-    ```python
-    supplier.run_scenarios({"step1": "do_something"}) # выполнит сценарий
-    supplier.run_scenarios([{"step1": "do_something"}, {"step2": "do_another_thing"}]) # выполнит список сценариев
-    ```
-    
+6.  **Запуск сценариев `run_scenarios()`:**
+    *   Принимает параметр `scenarios` (словарь или список словарей).
+    *   Вызывает функцию `run_scenarios` из `src.scenario` передавая текущий экземпляр поставщика и список сценариев.
+    *   **Пример:** `supplier.run_scenarios([{'step1': 'data'}, {'step2': 'data2'}])`
+    *   Возвращает результат выполнения `run_scenarios`.
+
 ## <mermaid>
+```mermaid
+flowchart TD
+    Start[Start] --> Init[<code>__init__</code>: Supplier Initialization]
+    Init --> Payload[<code>_payload</code>: Load Supplier Settings]
+    Payload --> ImportModule{Import Supplier Module: <code>importlib.import_module</code>}
+    ImportModule -- Module Found --> SettingsPath[Construct Settings File Path]
+    ImportModule -- Module Not Found --> PayloadErrorLog[Log Error]
+    PayloadErrorLog --> PayloadReturnFalse[Return False]
+    SettingsPath --> LoadSettings[<code>j_loads_ns</code>: Load Settings from JSON]
+    LoadSettings -- Settings Loaded --> ExtractAttributes[Extract Attributes: <code>price_rule</code>, <code>locale</code>, <code>scenario_files</code>, <code>locators</code>]
+    LoadSettings -- Settings Not Loaded --> SettingsErrorLog[Log Error]
+    SettingsErrorLog --> PayloadReturnFalse
+    ExtractAttributes --> PayloadSuccessLog[Log Success]
+    PayloadSuccessLog --> PayloadReturnTrue[Return True]
+    Payload --> PayloadError[Error During Payload Process]
+    PayloadError --> PayloadErrorLog
+    Init -- Payload Failed --> RaiseException[Raise <code>DefaultSettingsException</code>]
+    Init -- Payload Successful --> SupplierReady[Supplier Ready]
+    SupplierReady --> ValidatePrefix[<code>check_supplier_prefix</code>: Validate <code>supplier_prefix</code>]
+    ValidatePrefix -- Invalid Prefix --> PrefixError[Raise ValueError]
+    ValidatePrefix -- Valid Prefix --> LoginCall[<code>login()</code>: Supplier Login]
+    LoginCall --> LoginModuleCall[Call <code>login()</code> from <code>related_modules</code>]
+    LoginModuleCall --> LoginResult[Return Login Result]
+    SupplierReady --> RunScenarioFiles[<code>run_scenario_files()</code>: Execute Scenario Files]
+    RunScenarioFiles --> GetScenarioFiles[Get <code>scenario_files</code>]
+    GetScenarioFiles --> CallRunScenarioFiles[Call <code>run_scenario_files()</code> from <code>src.scenario</code>]
+    CallRunScenarioFiles --> ReturnRunFilesResult[Return Run Files Result]
+    SupplierReady --> RunScenarios[<code>run_scenarios()</code>: Execute Scenarios]
+    RunScenarios --> CallRunScenarios[Call <code>run_scenarios()</code> from <code>src.scenario</code>]
+    CallRunScenarios --> ReturnRunScenariosResult[Return Run Scenarios Result]
+    
+    PayloadReturnTrue --> SupplierReady
+    PayloadReturnFalse --> RaiseException
+```
+### Анализ зависимостей `mermaid` диаграммы:
+
+*   `Start`: Начало процесса.
+*   `Init`: Инициализация экземпляра класса `Supplier` с вызовом метода `__init__`.
+*   `Payload`: Метод `_payload`, отвечающий за загрузку настроек поставщика.
+*   `ImportModule`:  Импорт модуля поставщика с использованием `importlib.import_module`.
+*   `SettingsPath`: Построение пути к файлу настроек поставщика.
+*   `LoadSettings`: Загрузка настроек из JSON файла с использованием `j_loads_ns`.
+*   `ExtractAttributes`: Извлечение и установка атрибутов из загруженных настроек.
+*   `LoginCall`: Вызов метода `login`, отвечающего за вход на сайт поставщика.
+*  `LoginModuleCall`: Вызов функции `login()` из импортированного модуля поставщика `related_modules`.
+*   `RunScenarioFiles`: Вызов метода `run_scenario_files`, отвечающего за выполнение файлов сценариев.
+*   `GetScenarioFiles`: Получение списка файлов сценариев для выполнения.
+*   `CallRunScenarioFiles`: Вызов функции `run_scenario_files()` из модуля `src.scenario`.
+*   `RunScenarios`: Вызов метода `run_scenarios`, отвечающего за выполнение сценариев.
+*   `CallRunScenarios`: Вызов функции `run_scenarios()` из модуля `src.scenario`.
+*   `SupplierReady`: Состояние, когда поставщик инициализирован и готов к работе.
+*   `ValidatePrefix`: Валидация префикса поставщика.
+*   `PayloadReturnTrue`: Возврат `True` из `_payload`, указывая на успешную загрузку настроек.
+*   `PayloadReturnFalse`: Возврат `False` из `_payload`, указывая на ошибку загрузки настроек.
+*   `PayloadErrorLog`: Логирование ошибки при загрузке настроек.
+*   `SettingsErrorLog`: Логирование ошибки, если файл настроек не найден.
+*   `RaiseException`: Возбуждение исключения `DefaultSettingsException` при ошибке загрузки.
+*    `PrefixError`: Выброс исключения `ValueError` если префикс поставщика пустой.
+*   `LoginResult`: Возврат результата выполнения функции `login()`.
+*    `ReturnRunFilesResult`: Возврат результата выполнения функции `run_scenario_files()`.
+*   `ReturnRunScenariosResult`: Возврат результата выполнения функции `run_scenarios()`.
+### `header.py`
 
 ```mermaid
-graph LR
-    A[Supplier Instance] --> B(Supplier.__init__);
-    B --> C{_payload()};
-    C -- Success --> D[Load Settings];
-    D --> E[Set Attributes];
-    E --> F{Return True};
-    C -- Failure --> G[Raise Exception];
-     F-->H[login()];
-      H-->I[Call related_modules.login()]
-     
-     A-->J[run_scenario_files()]
-     J-->K[run_scenario_files(src.scenario)]
-     
-     A-->L[run_scenarios()]
-     L-->M[run_scenarios(src.scenario)]
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
     
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-     style C fill:#ccf,stroke:#333,stroke-width:2px
-     style D fill:#ccf,stroke:#333,stroke-width:2px
-      style E fill:#ccf,stroke:#333,stroke-width:2px
-
+    Header --> ImportSettings[Import Global Settings: <br><code>from src import gs</code>] 
 ```
-### Описание диаграммы Mermaid:
-Диаграмма `mermaid` описывает поток управления и данных в классе `Supplier`.
-
-*   `A[Supplier Instance]` - Начало процесса, создание экземпляра класса `Supplier`.
-*   `B(Supplier.__init__)` - Вызов метода инициализации класса.
-*   `C{_payload()}` - Вызов метода `_payload()` для загрузки настроек.
-    *   `Success` - Успешная загрузка настроек, переход к загрузке и установке аттрибутов.
-    *   `Failure` - Возникновение ошибки во время загрузки настроек.
-*    `D[Load Settings]` - Загрузка настроек поставщика из JSON файла.
-*   `E[Set Attributes]` - Установка атрибутов экземпляра класса `Supplier` из загруженных настроек.
-*  `F{Return True}` - Возврат `True` из метода `_payload()` после успешной загрузки настроек.
-*   `G[Raise Exception]` - Выбрасывание исключения `DefaultSettingsException`, если загрузка настроек не удалась.
-*   `H[login()]` - Вызов метода `login()` для входа в систему.
-*   `I[Call related_modules.login()]` - Вызов метода `login` из модуля, специфичного для поставщика.
-*   `J[run_scenario_files()]` - Вызов метода `run_scenario_files` для выполнения сценариев из файлов.
-*   `K[run_scenario_files(src.scenario)]` - Вызов внешней функции `run_scenario_files` из модуля `src.scenario` для запуска сценариев.
-*    `L[run_scenarios()]` - Вызов метода `run_scenarios` для выполнения сценариев.
-*   `M[run_scenarios(src.scenario)]` - Вызов внешней функции `run_scenarios` из модуля `src.scenario` для запуска сценариев.
-
-### Зависимости:
-
-*   **importlib**: Используется для динамической загрузки модулей поставщиков. Это позволяет гибко добавлять и настраивать поставщиков без изменения основного кода класса `Supplier`.
-*  **typing**: Используется для статической типизации, что делает код более читаемым и понятным. `List`, `Optional`, `Dict`, `Any` для аннотации типов.
-*   **types**: Используется для работы с модулями и простыми пространствами имен (`ModuleType`, `SimpleNamespace`).
-*   **pydantic**: Используется для валидации данных и управления моделями (`BaseModel`, `Field`, `validator`). Обеспечивает проверку типа и корректности данных, поступающих в модель `Supplier`.
-*   **header**:  Предположительно, это пользовательский модуль, возможно, содержащий общие определения или конфигурацию. Неявно используется для работы с зависимостями проекта (возможно, используется для определения констант или путей).
-*   **src.gs**: `gs` используется для доступа к глобальным настройкам проекта, в частности `gs.path.src` для построения пути к файлам конфигурации поставщиков.
-*   **src.utils.jjson**: `j_loads_ns` используется для загрузки данных из JSON-файлов в виде `SimpleNamespace`. Обеспечивает удобный доступ к данным из конфигурационных файлов.
-*   **src.webdriver.driver**: `Driver` - класс, представляющий веб-драйвер.
-*   **src.scenario**:  Содержит функции для запуска сценариев `run_scenarios` и `run_scenario_files`.
-*   **src.logger.logger**: Используется для логирования событий и ошибок.
-*   **src.logger.exceptions**: `DefaultSettingsException` используется для обработки ошибок при инициализации поставщика.
 
 ## <объяснение>
-
 ### Импорты:
+*   `importlib`: Используется для динамической загрузки модулей поставщиков.
+*   `typing`: Используется для аннотации типов, что повышает читаемость и помогает в отладке. `List`, `Optional`, `Dict`, `Any`  - определяют типы данных
+*   `types`: Используется для получения типов модулей.
+*   `pydantic`: Используется для создания модели данных и валидации атрибутов `Supplier`.
+*   `header`: Модуль для определения корневого каталога проекта.
+*   `src.gs`:  Глобальные настройки проекта.
+*   `src.utils.jjson`: Модуль для загрузки данных из JSON файлов.
+*   `src.webdriver.driver`: Модуль для управления веб-драйвером.
+*   `src.scenario`: Модуль для запуска сценариев.
+*    `src.logger.logger`: Модуль для логирования.
+*    `src.logger.exceptions`: Модуль для работы с исключениями.
 
-*   `import importlib`: Позволяет динамически импортировать модули во время выполнения программы. В данном случае используется для загрузки модулей, связанных с конкретными поставщиками.
-*   `from typing import List, Optional, Dict, Any`:  Используется для статической типизации, что делает код более читаемым и понятным.
-    *   `List`: Тип для списков.
-    *   `Optional`: Тип для переменных, которые могут быть либо заданного типа, либо `None`.
-    *   `Dict`: Тип для словарей.
-    *  `Any`: Тип для переменных любого типа.
-*  `from types import ModuleType, SimpleNamespace`:
-    *   `ModuleType`: Тип для модулей Python, используется для аннотации типа `related_modules`.
-    *   `SimpleNamespace`: Простой класс для создания объектов с атрибутами, используемый для хранения загруженных настроек.
-*   `from pydantic import BaseModel, Field, validator`:  `pydantic` используется для валидации данных и управления моделями.
-    *   `BaseModel`: Базовый класс для создания моделей данных.
-    *   `Field`: Используется для определения полей модели.
-    *   `validator`: Используется для определения пользовательских валидаторов.
-*   `import header`: Предположительно, это пользовательский модуль, возможно, содержащий общие определения или конфигурацию.
-*   `from src import gs`:  `gs` используется для доступа к глобальным настройкам проекта, в частности, `gs.path.src`.
-*   `from src.utils.jjson import j_loads_ns`:  `j_loads_ns` используется для загрузки данных из JSON-файлов в виде `SimpleNamespace`.
-*   `from src.webdriver.driver import Driver`:  Импортирует класс веб-драйвера `Driver`.
-*   `from src.scenario import run_scenarios, run_scenario_files`:  Импортирует функции для запуска сценариев.
-*   `from src.logger.logger import logger`:  Используется для логирования событий и ошибок.
-*   `from src.logger.exceptions import DefaultSettingsException`:  Исключение, используемое для обработки ошибок при инициализации поставщика.
-
-### Классы:
-
-*   `class Supplier(BaseModel)`:
-    *   **Роль**: Базовый класс для представления поставщиков. Этот класс управляет загрузкой конфигурации, выполнением сценариев и входом на сайты поставщиков.
-    *   **Атрибуты**:
-        *   `supplier_id`: Идентификатор поставщика (может быть `None`).
-        *   `supplier_prefix`: Префикс поставщика (строка, обязательное поле).
-        *   `locale`: Код локали поставщика (по умолчанию `'en'`).
-        *   `price_rule`: Правило расчета цен (может быть `None`).
-        *   `related_modules`: Модуль, содержащий специфические функции для поставщика (может быть `None`).
-        *   `scenario_files`: Список файлов сценариев для поставщика.
-        *   `current_scenario`: Текущий исполняемый сценарий (словарь).
-        *   `locators`: Локаторы для элементов страницы.
-        *   `driver`: Экземпляр веб-драйвера.
-    *   **Методы**:
-        *   `__init__(self, **data)`: Инициализирует объект поставщика, загружает настройки через метод `_payload()`.
-        *   `_payload(self)`: Загружает настройки поставщика из JSON-файла, используя `j_loads_ns` и динамически импортирует модуль, связанный с поставщиком.
-        *   `login(self)`: Выполняет вход на сайт поставщика, вызывая метод `login` из модуля, связанного с поставщиком.
-        *   `run_scenario_files(self, scenario_files)`: Выполняет сценарии, указанные в файлах.
-        *   `run_scenarios(self, scenarios)`: Выполняет сценарии, переданные как словарь или список словарей.
-        *    `check_supplier_prefix(cls, value)`: Валидатор для проверки, что `supplier_prefix` не пустая строка.
-    *   **Взаимодействие**:
-        *   Использует `pydantic` для валидации и управления данными.
-        *   Динамически загружает модули поставщиков через `importlib`.
-        *   Использует `j_loads_ns` для загрузки настроек из JSON-файлов.
-        *   Использует функции из модуля `src.scenario` для выполнения сценариев.
-        *   Использует `src.logger` для логирования.
-        *   Использует `src.webdriver.driver` для управления веб-драйвером.
-    *    `Config`: Настройки модели, `arbitrary_types_allowed = True` разрешает использовать произвольные типы данных.
-
+### Класс `Supplier`:
+*   **Роль:** Базовый класс для представления поставщика и управления его сценариями.
+*   **Атрибуты:**
+    *   `supplier_id`: (Optional[int]) Идентификатор поставщика (может быть `None`).
+    *   `supplier_prefix`: (str) Префикс поставщика, который используется для импорта модуля и файла настроек поставщика (обязательный атрибут).
+    *   `locale`: (str) Локаль поставщика (по умолчанию 'en').
+    *   `price_rule`: (Optional[str]) Правило расчета цен (может быть `None`).
+    *   `related_modules`: (Optional[ModuleType]) Модуль, связанный с конкретным поставщиком (может быть `None`).
+    *   `scenario_files`: (List[str]) Список файлов сценариев поставщика.
+    *   `current_scenario`: (Dict[str, Any]) Текущий исполняемый сценарий.
+    *   `locators`: (Dict[str, Any]) Локаторы элементов страницы.
+    *   `driver`: (Optional[Driver]) Веб-драйвер (может быть `None`).
+*   **Методы:**
+    *   `__init__`: Конструктор класса, загружает настройки поставщика с помощью метода `_payload`.
+    *   `_payload`: Загружает настройки поставщика из JSON-файла и устанавливает значения атрибутов.
+    *   `check_supplier_prefix`: Валидирует `supplier_prefix`, проверяя, что он не является пустым.
+    *   `login`: Вызывает метод `login` из модуля поставщика.
+    *   `run_scenario_files`: Выполняет сценарии из указанных файлов.
+    *   `run_scenarios`: Выполняет сценарии из переданного словаря или списка словарей.
+*   **Config:** Позволяет устанавливать произвольные типы.
 ### Функции:
-* `_payload(self)`: Метод загружает настройки поставщика из JSON-файла, используя `j_loads_ns`.
-    * **Аргументы**: `self` - экземпляр класса `Supplier`.
-    * **Возвращаемое значение**: `True` в случае успеха, `False` в случае ошибки.
-    * **Назначение**: Загружает конфигурационные данные поставщика (правила цен, локаль, файлы сценариев, локаторы) и сохраняет их в атрибуты объекта поставщика.
-*  `login(self)`: Метод выполняет вход на сайт поставщика.
-     * **Аргументы**: `self` - экземпляр класса `Supplier`.
-     * **Возвращаемое значение**: `True` в случае успеха, `False` в случае ошибки.
-     * **Назначение**: Вызывает метод `login` из динамически загруженного модуля поставщика.
-* `run_scenario_files(self, scenario_files: Optional[str | List[str]] = None)`: Выполняет один или несколько файлов сценариев.
-    * **Аргументы**:
-        * `self`: экземпляр класса `Supplier`.
-        * `scenario_files`: Опциональный список файлов сценариев или путь к одному файлу. Если не указан, использует `self.scenario_files`.
-    * **Возвращаемое значение**: `True` в случае успеха, `False` в случае ошибки.
-    * **Назначение**: Вызывает функцию `run_scenario_files` из модуля `src.scenario` для выполнения сценариев.
-* `run_scenarios(self, scenarios: dict | List[dict])`: Выполняет один или несколько сценариев.
-    * **Аргументы**:
-        * `self`: экземпляр класса `Supplier`.
-        * `scenarios`: Словарь или список словарей, представляющих сценарии.
-    * **Возвращаемое значение**: `True` в случае успеха, `False` в случае ошибки.
-    * **Назначение**: Вызывает функцию `run_scenarios` из модуля `src.scenario` для выполнения сценариев.
+*   `__init__` : Инициализирует класс, вызывет метод `_payload`, при ошибке выбрасывает `DefaultSettingsException`.
+*   `_payload`: Метод загружает модуль поставщика,  путь к файлу настроек, вызывает `j_loads_ns` для загрузки настроек из json файла, извлекает  `price_rule`, `locale`, `scenario_files`, `locators` из загруженных настроек, устанавливает их как атрибуты текущего экземпляра класса, логирует загрузку настроек, возвращает `True` при успехе, `False` при ошибке.
+*   `check_supplier_prefix`: Валидирует `supplier_prefix`, проверяя, что он не является пустым.
+*   `login`: Вызывает функцию `login` из импортированного модуля `related_modules`, возвращает результат ее выполнения.
+*   `run_scenario_files`: Вызывает функцию `run_scenario_files` из `src.scenario`, возвращает результат ее выполнения.
+*   `run_scenarios`: Вызывает функцию `run_scenarios` из `src.scenario`, возвращает результат ее выполнения.
 
 ### Переменные:
-*   `MODE = 'dev'`: Глобальная переменная, определяющая режим работы (например, разработка). Влияние переменной в этом конкретном файле не наблюдается.
-*   `settings_path`: Локальная переменная, представляющая путь к файлу настроек поставщика.
-*   `settings`: Локальная переменная, представляющая настройки поставщика, загруженные из JSON-файла в виде `SimpleNamespace`.
-*   `ex`: Локальная переменная, используемая для хранения информации об исключениях.
-*   `value`: Локальная переменная, используемая в валидаторе `check_supplier_prefix` для хранения значения `supplier_prefix`.
-*   `related_module`: Локальная переменная, представляющая динамически загруженный модуль поставщика.
-*   `scenario_files`: Аргумент функции `run_scenario_files`, может быть как строкой (путь к файлу) так и списком строк.
+*   `MODE`: Определяет режим работы приложения (по умолчанию 'dev').
+*   `settings_path`: Путь к файлу настроек поставщика (формируется динамически).
+*  `related_module` :  Ссылка на импортированный модуль поставщика.
+*   `settings` :  `SimpleNamespace` объект,  содержащий настройки из файла.
+*   `scenario_files`:  Список файлов сценариев, передаваемых для выполнения.
+
+### Взаимосвязь с другими частями проекта:
+*   Зависит от `header` для определения корневого каталога проекта.
+*   Использует `src.gs` для доступа к глобальным настройкам.
+*   Использует `src.utils.jjson` для загрузки настроек из JSON файлов.
+*   Использует `src.webdriver.driver` для управления веб-драйвером.
+*   Использует `src.scenario` для запуска сценариев.
+*   Использует `src.logger.logger` для логирования.
 
 ### Потенциальные ошибки и области для улучшения:
-
-1.  **Обработка ошибок**:
-    *   Хотя используется try-except блоки, обработка ошибок может быть более детальной.
-    *   В блоке `except Exception as ex:` логируется общее исключение, но было бы полезно логировать конкретный тип ошибки для более легкой отладки.
-2.  **Зависимости**:
-    *   Файл `header` не определен, поэтому его назначение неясно.
-    *   В зависимости от сложности проекта может потребоваться более гибкое управление зависимостями.
-3.  **Улучшение валидации:**
-    *   Можно добавить дополнительные валидаторы для других полей.
-
-### Цепочка взаимосвязей с другими частями проекта:
-
-1.  **`src.suppliers.*`**: Данный файл служит базой для всех поставщиков (например, `src.suppliers.test_supplier`). Каждый конкретный поставщик может реализовывать методы `login`, специфичные для этого поставщика.
-2.  **`src.scenario`**: Класс `Supplier` использует `run_scenarios` и `run_scenario_files` для выполнения сценариев, что обеспечивает единый механизм выполнения сценариев для всех поставщиков.
-3.  **`src.webdriver.driver`**:  Класс `Supplier` может использовать `Driver` для управления веб-драйвером.
-4.  **`src.utils.jjson`**: `j_loads_ns` используется для загрузки настроек поставщика, обеспечивая единый механизм работы с JSON-конфигурациями.
-5. **`src.logger`**: Используется для логирования событий, позволяя отслеживать состояние и работу `Supplier` и связанных процессов.
-6.  **`src.gs`**: `gs.path` используется для построения путей к конфигурационным файлам, обеспечивая доступ к глобальным параметрам проекта.
-7.  **`header`**:  Ожидается, что данный модуль используется для общих настроек или конфигурации, но это неявно.
-8.  **`pydantic`**: Используется для валидации данных, обеспечивая корректность работы класса `Supplier`.
-9.  **`types`**: Используется для работы с типами, что делает код более читаемым и понятным.
-10. **`importlib`**: Используется для динамического импорта модулей, что обеспечивает гибкость и расширяемость системы.
+*   **Отсутствие обработки ошибок:**  Метод `_payload`  обрабатывает только `ModuleNotFoundError`  и общие исключения ( `Exception` ),  не обрабатывая другие возможные исключения, которые могут возникнуть при работе с файловой системой,  например `FileNotFoundError` или `JSONDecodeError`.
+*   **Жесткая зависимость от структуры проекта:** Пути к модулям и файлам настроек жестко закодированы, что может затруднить перенос или рефакторинг проекта.
+*   **Использование `object.__setattr__`:**  Использование `object.__setattr__` обходит стандартные механизмы Pydantic, потенциально может привести к проблемам.
+*   **Дублирование логики:** Функции `run_scenario_files` и `run_scenarios` по сути являются обертками для вызовов других функций из `src.scenario`,  возможно, стоит рассмотреть использование их напрямую.
+*   **Отсутствие типизации:**  Атрибуты `current_scenario` и `locators` имеют тип `Dict[str, Any]`, это допускает гибкость, но при этом  делает код менее предсказуемым.  Рассмотреть возможность использования более конкретных типов, или схем валидации Pydantic для них.
+*  **Отсутствие проверок на None:**  В `run_scenario_files`  используется  `scenario_files = scenario_files if scenario_files else self.scenario_files`, стоит добавить проверку на None, например `scenario_files = scenario_files if scenario_files is not None else self.scenario_files` для большей надежности.

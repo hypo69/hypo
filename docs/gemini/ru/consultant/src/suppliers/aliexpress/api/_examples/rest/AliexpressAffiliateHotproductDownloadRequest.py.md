@@ -1,87 +1,95 @@
 # Анализ кода модуля `AliexpressAffiliateHotproductDownloadRequest.py`
 
 **Качество кода**
-9
--  Плюсы
-    - Код структурирован, использует классы для представления API запросов.
-    -  Инициализация параметров запроса выполняется в конструкторе класса.
-    -  Присутствует метод `getapiname` для возврата имени API.
 
+7/10
+-  Плюсы
+    - Код соответствует базовым стандартам Python.
+    - Присутствует docstring в начале файла.
+    - Используется наследование от `RestApi`.
 -  Минусы
-    - Отсутствует документация в формате reStructuredText (RST) для модуля, класса и его методов.
-    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    - Отсутствует логирование ошибок с использованием `src.logger.logger`.
-    - Не используются константы для API name, если требуется.
+    - Отсутствуют docstring для класса и методов.
+    - Не используется `from src.logger.logger import logger` для логирования.
+    - Нет обработки исключений.
+    - Не используется `j_loads` или `j_loads_ns`.
+    - Отсутствуют RST комментарии к функциям, переменным.
 
 **Рекомендации по улучшению**
-1. Добавить reStructuredText (RST) документацию для модуля, класса и методов.
-2. Импортировать и использовать `logger` из `src.logger.logger` для логирования.
-3.  Проверить необходимость использования `j_loads` или `j_loads_ns`.
-4.  Добавить обработку исключений (если необходимо) и логировать их.
-5. Добавить константу для API name.
-6. Привести имена переменных в соответствие с общим стилем (например, `categoryId` -> `category_id`).
+
+1. Добавить docstring в формате RST для класса `AliexpressAffiliateHotproductDownloadRequest` и его методов `__init__` и `getapiname`.
+2. Использовать `from src.logger.logger import logger` для логирования возможных ошибок.
+3. Добавить обработку исключений в методах (хотя бы для примера).
+4. Применить `j_loads` или `j_loads_ns` при чтении файлов, если это требуется в данном контексте.
+5. Добавить RST комментарии к переменным класса.
+6.  Удалить строку `# -*- coding: utf-8 -*-`, она больше не нужна.
+7. Удалить строку `#! venv/Scripts/python.exe # <- venv win`, это не влияет на работу, и это не является частью кода.
 
 **Оптимизированный код**
+
 ```python
 """
-Модуль для создания запроса на скачивание горячих товаров AliExpress.
-====================================================================
+Модуль для работы с API Aliexpress для загрузки горячих продуктов.
+=====================================================================
 
 Этот модуль содержит класс :class:`AliexpressAffiliateHotproductDownloadRequest`,
-который используется для формирования запроса к API AliExpress для скачивания
-списка горячих товаров.
+который используется для выполнения запроса на загрузку горячих продуктов
+через API Aliexpress.
 
 Пример использования
 --------------------
 
-Пример создания и настройки запроса:
-
-.. code-block:: python
+Пример создания экземпляра класса::
 
     request = AliexpressAffiliateHotproductDownloadRequest()
-    request.category_id = 123
-    request.country = "US"
-    # ... другие параметры
-    api_name = request.getapiname()
+    request.category_id = 100
+    request.fields = 'product_id,product_title'
+    ...
+    print(request.getapiname())
 
 """
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~
-from src.suppliers.aliexpress.api.base import RestApi
-from src.logger.logger import logger  # Импорт логгера
+# module: src.suppliers.aliexpress.api._examples.rest
+
+from ..base import RestApi
+from src.logger.logger import logger # Импорт логгера
 
 class AliexpressAffiliateHotproductDownloadRequest(RestApi):
     """
-    Класс для формирования запроса на скачивание горячих товаров AliExpress.
+    Класс для выполнения запроса на загрузку горячих продуктов Aliexpress.
 
-    :param domain: Домен API. По умолчанию "api-sg.aliexpress.com".
-    :type domain: str
-    :param port: Порт API. По умолчанию 80.
-    :type port: int
+    Этот класс наследует от :class:`RestApi` и предоставляет методы
+    для настройки и выполнения запроса к API Aliexpress для загрузки
+    горячих продуктов.
     """
-    API_NAME = 'aliexpress.affiliate.hotproduct.download'
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
         Инициализирует объект запроса.
 
         :param domain: Домен API.
-        :type domain: str
         :param port: Порт API.
-        :type port: int
         """
-        # Инициализация родительского класса RestApi
-        RestApi.__init__(self, domain, port)
-        # Параметры запроса
+        RestApi.__init__(self,domain, port)
+        #: str: Подпись приложения.
         self.app_signature = None
+        #: int: Идентификатор категории.
         self.category_id = None
+        #: str: Код страны.
         self.country = None
+        #: str: Список полей.
         self.fields = None
+        #: str: Языковой сайт сценария.
         self.scenario_language_site = None
+        #: int: Номер страницы.
         self.page_no = None
+        #: int: Размер страницы.
         self.page_size = None
+        #: str: Целевая валюта.
         self.target_currency = None
+        #: str: Целевой язык.
         self.target_language = None
+        #: str: Идентификатор отслеживания.
         self.tracking_id = None
 
     def getapiname(self):
@@ -91,6 +99,5 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
         :return: Имя API метода.
         :rtype: str
         """
-        # возвращает имя API метода
-        return self.API_NAME
+        return 'aliexpress.affiliate.hotproduct.download'
 ```

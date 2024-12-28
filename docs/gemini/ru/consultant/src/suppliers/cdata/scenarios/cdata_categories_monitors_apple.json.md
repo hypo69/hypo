@@ -1,0 +1,84 @@
+# Анализ кода модуля `cdata_categories_monitors_apple.json`
+
+**Качество кода**
+10
+-  Плюсы
+    - Код представляет собой корректный JSON-файл, который соответствует заданной структуре.
+    - Все ключи и значения имеют правильный тип данных.
+    - Структура JSON логична и соответствует назначению.
+-  Минусы
+    - Отсутствует описание модуля.
+    - Отсутствует явное указание версии.
+
+**Рекомендации по улучшению**
+
+1.  Добавить описание модуля в формате RST.
+2.  Добавить информацию о версии.
+3.  Внести изменения в структуру, если это необходимо.
+
+**Оптимизированный код**
+
+```json
+{
+  "__doc__": "Сценарии для мониторов Apple от CData.",
+  "__version__": "1.0.0",
+  "scenarios": {
+    "APPLE 18": {
+      "brand": "APPLE",
+      "url": "---------------------APPLE 18----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+       "presta_categories": "127,241"
+    },
+    "APPLE 21.5": {
+      "brand": "APPLE",
+      "url": "---------------------APPLE 22----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "127,128"
+    },
+    "APPLE 23.5": {
+      "brand": "APPLE",
+      "url": "---------------------APPLE 24----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "127,129"
+    },
+    "APPLE 27": {
+      "brand": "APPLE",
+      "url": "---------------------APPLE 27----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+      "presta_categories": "127,130"
+    },
+    "APPLE 31": {
+      "brand": "APPLE",
+      "url": "https://reseller.c-data.co.il/%D7%9E%D7%A1%D7%9B%D7%99%D7%9D#/specFilters=215m!#-!6360&manFilters=3",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+       "presta_categories": "127,131"
+    },
+    "APPLE 34": {
+      "brand": "APPLE",
+      "url": "---------------------APPLE 34----------------------",
+      "checkbox": false,
+      "active": true,
+      "condition":"new",
+       "presta_categories": "127,132"
+    },
+    "APPLE 49": {
+      "brand": "APPLE",
+      "url": "---------------------APPLE 49----------------------",
+      "checkbox": false,
+      "active": true,
+       "condition":"new",
+      "presta_categories": "127,133"
+    }
+  }
+}
+```

@@ -1,41 +1,41 @@
 # Анализ кода модуля `firefox.py`
 
 **Качество кода**
-9
+8
 - Плюсы
-    - Код хорошо структурирован, используются классы и методы.
-    - Присутствует подробная документация модуля в формате reStructuredText.
-    - Используется кастомный логгер для обработки ошибок и отладки.
-    - Применяются `j_loads_ns` для загрузки JSON.
-    - Код следует принципу DRY (Don't Repeat Yourself), например, при настройке прокси.
-    - Использованы аннотации типов.
-    - Код использует `UserAgent` для генерации случайных user-agent.
-    - Настройки прокси применяются динамически.
-    - Обработка исключений происходит с использованием `logger.critical`.
+    - Код хорошо структурирован и организован в класс `Firefox`, что улучшает его читаемость и повторное использование.
+    - Используется `j_loads_ns` для загрузки JSON-файлов, что соответствует требованиям.
+    - Присутствует логирование ошибок и важной информации с использованием `logger`, что упрощает отладку и мониторинг.
+    - Добавлен функционал для работы с прокси и пользовательскими профилями.
+    - Код соответствует PEP8.
 - Минусы
-    -  Некоторые docstring для методов и класса не в полной мере соответствуют стандартам reStructuredText.
-    -  Обработка ошибок в `__init__` включает `...` как точки остановки, что затрудняет отладку и обслуживание.
-    -  Использование `hasattr` для проверки наличия атрибутов может быть заменено более питоническим подходом.
-    -  Код `_payload` не имеет описания в docstring.
-    -  Некоторые переменные используются только один раз.
-    -  Присваивание методов в `_payload` выглядит несколько избыточно.
+    - Некоторые docstring не соответствуют стандарту RST.
+    - Дублирование кода `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`.
+    - Не везде используется `logger.error` для обработки ошибок, где это было бы уместно.
+    - В функции `set_proxy` используется `random.sample`, что может быть избыточным.
+    - Функция `get_referrer` не используется.
+    - Отсутствует проверка на существование файла `firefox.json`.
+    - Не все комментарии соответствуют формату RST.
 
 **Рекомендации по улучшению**
 
-1.  **Документация:**
-    -   Дополнить docstring для класса, методов и функций, чтобы они соответствовали стандартам RST, включая параметры, возвращаемые значения.
-    -   Добавить описание для метода `_payload`.
-2.  **Обработка ошибок:**
-    -   Удалить все вхождения `...` и заменить их логикой обработки или явными возвратами.
-    -   Избегать использования общих `except Exception` и заменить на специфичные исключения.
-3.  **Код:**
-    -   Использовать `getattr` вместо `hasattr` для более лаконичного кода.
-    -   Устранить создание лишних переменных если это возможно.
-    -   Рефакторинг `_payload` сделать более лаконичным.
+1.  **Документация**: Переписать все docstring в формате RST, включая описания параметров и возвращаемых значений.
+2.  **Импорты**: Проверить и добавить недостающие импорты. Убедиться, что все импорты необходимы и используются.
+3.  **Обработка ошибок**:  Заменить стандартные блоки `try-except` на использование `logger.error` для логирования ошибок, где это возможно.
+4.  **Прокси**: Упростить выбор прокси в `set_proxy`, убрав `random.sample` и добавив проверку на существование и корректность прокси.
+5.  **Комментарии**: Привести комментарии в соответствие с форматом RST.
+6.  **Удаление дублирования**: Убрать дублирование `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`.
+7. **Проверка существования файла**: Добавить проверку на существование файла `firefox.json` перед его загрузкой.
+8.  **Удаление неиспользуемого кода**: Удалить неиспользуемую функцию `get_referrer`.
+9.  **Сообщения logger**: Сделать сообщения в логе более информативными.
 
-**Оптимизированный код**
+**Оптимизиробанный код**
 
 ```python
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
 """
 Модуль для работы с WebDriver Firefox
 =========================================================================================
@@ -66,15 +66,10 @@
         browser.get("https://www.example.com")
         browser.quit()
 """
-
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 import os
 import random
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 from selenium.webdriver import Firefox as WebDriver
 from selenium.webdriver.firefox.options import Options
@@ -109,6 +104,8 @@ class Firefox(WebDriver):
     :type user_agent: Optional[str]
     :param proxy_file_path: Путь к файлу с прокси.
     :type proxy_file_path: Optional[str]
+    :param options: Список опций для Firefox.
+    :type options: Optional[List[str]]
     """
     driver_name: str = 'firefox'
 
@@ -117,37 +114,50 @@ class Firefox(WebDriver):
                  firefox_version: Optional[str] = None,
                  user_agent: Optional[str] = None,
                  proxy_file_path: Optional[str] = None,
+                 options: Optional[List[str]] = None,
                  *args, **kwargs) -> None:
         #  объявление переменных
         service = None
         profile = None
-        options = None
+        options_obj = None
+        #  Путь к файлу настроек
+        settings_path = Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json')
+        #  Проверка наличия файла настроек
+        if not settings_path.exists():
+            logger.error(f'Файл настроек не найден: {settings_path}')
+            return
         #  Загрузка настроек Firefox
-        settings = j_loads_ns(Path(gs.path.src / 'webdriver' / 'firefox' / 'firefox.json'))
+        settings = j_loads_ns(settings_path)
         #  Путь к geckodriver и бинарнику Firefox
         geckodriver_path: str = str(Path(gs.path.root, settings.executable_path.geckodriver))
         firefox_binary_path: str = str(Path(gs.path.root, settings.executable_path.firefox_binary))
         #  Инициализация сервиса
         service = Service(geckodriver_path)
         #  Настройка опций Firefox
-        options = Options()
-        #  Добавление аргументов из настроек
+        options_obj = Options()
+
+        #  Добавление опций из файла настроек
         if hasattr(settings, 'options') and settings.options:
-            for key, value in vars(settings.options).items():
-                options.add_argument(f'--{key}={value}')
+            for option in settings.options:
+                options_obj.add_argument(option)
+
+        #  Добавление опций, переданных при инициализации
+        if options:
+            for option in options:
+                options_obj.add_argument(option)
 
         #  Добавление заголовков из настроек
         if hasattr(settings, 'headers') and settings.headers:
             for key, value in vars(settings.headers).items():
-                 options.add_argument(f'--{key}={value}')
+                options_obj.add_argument(f'--{key}={value}')
 
         #  Установка пользовательского агента
         user_agent = user_agent or UserAgent().random
-        options.set_preference('general.useragent.override', user_agent)
+        options_obj.set_preference('general.useragent.override', user_agent)
 
         #  Установка прокси, если включены
         if hasattr(settings, 'proxy_enabled') and settings.proxy_enabled:
-            self.set_proxy(options)
+            self.set_proxy(options_obj)
 
         #  Настройка директории профиля
         profile_directory = settings.profile_directory.os if settings.profile_directory.default == 'os' else str(Path(gs.path.src, settings.profile_directory.internal))
@@ -155,13 +165,13 @@ class Firefox(WebDriver):
         if profile_name:
             profile_directory = str(Path(profile_directory).parent / profile_name)
         if '%LOCALAPPDATA%' in profile_directory:
-             profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
+            profile_directory = Path(profile_directory.replace('%LOCALAPPDATA%', os.environ.get('LOCALAPPDATA')))
 
         profile = FirefoxProfile(profile_directory=profile_directory)
 
         try:
             logger.info('Запуск Firefox WebDriver')
-            super().__init__(service=service, options=options)
+            super().__init__(service=service, options=options_obj)
             #  Выполнение пользовательских действий после инициализации драйвера
             self._payload()
         except WebDriverException as ex:
@@ -174,7 +184,7 @@ class Firefox(WebDriver):
                 ----------------------------------""", ex)
             return  # Явный возврат при ошибке
         except Exception as ex:
-            logger.critical('Ошибка работы Firefox WebDriver:', ex)
+            logger.error('Ошибка работы Firefox WebDriver:', ex)
             return  # Явный возврат при ошибке
 
     def set_proxy(self, options: Options) -> None:
@@ -188,17 +198,17 @@ class Firefox(WebDriver):
         proxies_dict = get_proxies_dict()
         #  Создание списка всех прокси
         all_proxies = proxies_dict.get('socks4', []) + proxies_dict.get('socks5', [])
-        #  Перебор прокси для поиска рабочего
+         #  Перебор прокси для поиска рабочего
         working_proxy = None
-        for proxy in random.sample(all_proxies, len(all_proxies)):
+        for proxy in all_proxies:
             if check_proxy(proxy):
                 working_proxy = proxy
                 break
-        #  Настройка прокси, если он найден
+         # Настройка прокси, если он найден
         if working_proxy:
             proxy = working_proxy
             protocol = proxy.get('protocol')
-            #  Настройка прокси в зависимости от протокола
+            # Настройка прокси в зависимости от протокола
             if protocol == 'http':
                 options.set_preference('network.proxy.type', 1)
                 options.set_preference('network.proxy.http', proxy['host'])
@@ -225,24 +235,23 @@ class Firefox(WebDriver):
             logger.warning('Нет доступных прокси в предоставленном файле.')
 
     def _payload(self) -> None:
-         """
+        """
         Загружает исполнителей для локаторов и JavaScript сценариев.
-         """
-         j = JavaScript(self)
-         self.get_page_lang = j.get_page_lang
-         self.ready_state = j.ready_state
-         self.get_referrer = j.ready_state
-         self.unhide_DOM_element = j.unhide_DOM_element
-         self.window_focus = j.window_focus
+        """
+        j = JavaScript(self)
+        self.get_page_lang = j.get_page_lang
+        self.ready_state = j.ready_state
+        # self.get_referrer = j.ready_state # Удалена неиспользуемая переменная
+        self.unhide_DOM_element = j.unhide_DOM_element
+        self.window_focus = j.window_focus
 
-         execute_locator = ExecuteLocator(self)
-         self.execute_locator = execute_locator.execute_locator
-         self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
-         self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
-         self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
-         self.send_message = self.send_key_to_webelement = execute_locator.send_message
+        execute_locator = ExecuteLocator(self)
+        self.execute_locator = execute_locator.execute_locator
+        self.get_webelement_as_screenshot = execute_locator.get_webelement_as_screenshot
+        self.get_webelement_by_locator = execute_locator.get_webelement_by_locator
+        self.get_attribute_by_locator = execute_locator.get_attribute_by_locator
+        self.send_message = self.send_key_to_webelement = execute_locator.send_message
 
 if __name__ == "__main__":
     driver = Firefox()
     driver.get(r"https://google.com")
-```

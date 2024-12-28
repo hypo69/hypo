@@ -3,234 +3,250 @@
 **Качество кода**
 8
  -  Плюсы
-     - Код структурирован и разделен на логические блоки, что облегчает понимание.
-     - Приведены примеры кода для основных операций, что помогает в использовании инструкций.
-     - Есть разделение на создание и редактирование рекламных кампаний, что удобно для восприятия.
-     - Присутствуют инструкции по обработке ошибок и логированию.
+        - Код содержит подробные инструкции для создания и редактирования рекламных кампаний.
+        - Инструкции четко структурированы и разделены на логические блоки.
+        - Приведены примеры кода для каждого этапа процесса, что упрощает понимание.
+        -  Присутствуют разделы по обработке ошибок и логированию.
+
  -  Минусы
-    -  Отсутствуют необходимые импорты и определения функций, которые упоминаются в примерах.
-    -  Код не соответствует стандарту docstring RST.
-    -  Комментарии после `#` не полностью соответствуют требованиям.
-    -  Не используется `j_loads` или `j_loads_ns` для загрузки данных.
-    -  Присутствуют общие `try-except` без обработки конкретных ошибок.
-    -  Не используется `logger.error` для логирования ошибок.
+    - Документ не соответствует формату reStructuredText (RST).
+    - В коде используются стандартные `print`, `json.load` и отсутствует импорт логгера.
+    - Отсутствуют docstring к функциям и классам.
+    - Инструкции используют общие формулировки, а не конкретные действия.
+    - Не все блоки кода прокомментированы построчно.
 
 **Рекомендации по улучшению**
-1.  Добавить необходимые импорты (например, `from src.utils.jjson import j_loads, j_loads_ns`, `from src.logger.logger import logger`).
-2.  Переписать все комментарии в формате RST, включая документацию для функций.
-3.  Использовать `j_loads` или `j_loads_ns` для загрузки конфигурационных файлов.
-4.  Заменить общие `try-except` на более конкретную обработку ошибок и использовать `logger.error` для логирования.
-5.  Добавить документацию к функциям `create_campaign` и `edit_campaign` в формате RST.
-6.  Уточнить комментарии в коде, чтобы они соответствовали требованиям.
+- Преобразовать весь документ в формат reStructuredText (RST).
+- Заменить стандартные `json.load` на `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+- Добавить импорт `from src.logger.logger import logger` для логирования ошибок.
+-  Уточнить и детализировать комментарии, используя конкретные формулировки.
+- Добавить docstring в формате RST ко всем функциям.
+- Использовать `logger.error` вместо общих `try-except` блоков.
+- Прокомментировать построчно все блоки кода.
+- Использовать одинарные кавычки `'` вместо двойных `"` в Python коде.
 
-**Оптимизированный код**
-
-```python
-"""
-Инструкция для программиста по поддержке кода для создания и редактирования рекламных кампаний
+**Оптимизиробанный код**
+```markdown
+# ИНСТРУКЦИЯ ДЛЯ ПРОГРАММИСТА ПО ПОДДЕРЖКЕ КОДА ДЛЯ СОЗДАНИЯ И РЕДАКТИРОВАНИЯ РЕКЛАМНЫХ КАМПАНИЙ
 =========================================================================================
 
-Этот модуль содержит инструкции и примеры кода для создания и редактирования рекламных кампаний,
-а также рекомендации по обработке ошибок и логированию.
+Эта инструкция описывает процесс создания и редактирования рекламных кампаний, а также предоставляет рекомендации по поддержке кода.
 
-Пример использования
---------------------
+#### 1. Создание рекламной кампании
 
-Пример создания и редактирования рекламной кампании:
+1.  **Инициализация кампании**
+    -   Введите имя кампании, язык и валюту.
+    -   Пример:
 
-.. code-block:: python
+        ```python
+        campaign_name = 'example_campaign'
+        language = 'EN'
+        currency = 'USD'
+        ```
 
-    create_campaign(
-        campaign_name='example_campaign',
-        language='EN',
-        currency='USD',
-        categories=['electronics', 'fashion'],
-        product_urls=['https://www.aliexpress.com/item/123.html', 'https://www.aliexpress.com/item/456.html']
-    )
+2.  **Создание директорий для кампании**
+    -   Создайте директории для кампании и категорий.
+    -   Пример:
 
-    edit_campaign(
-        campaign_name='example_campaign',
-        language='RU',
-        categories=['home', 'beauty'],
-        product_urls=['https://www.aliexpress.com/item/789.html']
-    )
-"""
-from typing import List
-from src.utils.jjson import j_loads, j_loads_ns
-from src.logger.logger import logger
+        ```python
+        categories = ['electronics', 'fashion']
+        create_directories(campaign_name, categories)
+        ```
 
+3.  **Сохранение конфигурации кампании**
+    -   Создайте и сохраните конфигурационный файл кампании.
+    -   Пример:
 
-def create_directories(campaign_name: str, categories: List[str]) -> None:
-    """
-    Создает директории для кампании и категорий.
+        ```python
+        campaign_config = {'name': campaign_name, 'language': language, 'currency': currency}
+        save_config(campaign_name, campaign_config)
+        ```
 
-    :param campaign_name: Имя кампании.
-    :param categories: Список категорий.
-    :return: None
-    """
-    # TODO: Реализовать создание директорий
-    ...
+4.  **Сбор данных о продуктах**
+    -   Введите URL или ID продуктов для кампании.
+    -   Пример:
 
+        ```python
+        product_urls = ['https://www.aliexpress.com/item/123.html', 'https://www.aliexpress.com/item/456.html']
+        product_data = collect_product_data(product_urls)
+        ```
 
-def save_config(campaign_name: str, campaign_config: dict) -> None:
-    """
-    Сохраняет конфигурацию кампании в файл.
+5.  **Сохранение данных о продуктах**
+    -   Сохраните собранные данные о продуктах.
+    -   Пример:
 
-    :param campaign_name: Имя кампании.
-    :param campaign_config: Словарь с конфигурацией кампании.
-    :return: None
-    """
-    # TODO: Реализовать сохранение конфигурации
-    ...
+        ```python
+        save_product_data(campaign_name, product_data)
+        ```
 
+6.  **Создание рекламных материалов**
+    -   Создайте рекламные материалы на основе собранных данных.
+    -   Пример:
 
-def collect_product_data(product_urls: List[str]) -> List[dict]:
-    """
-    Собирает данные о продуктах по URL.
+        ```python
+        create_promotional_materials(campaign_name, product_data)
+        ```
 
-    :param product_urls: Список URL продуктов.
-    :return: Список словарей с данными о продуктах.
-    """
-    # TODO: Реализовать сбор данных о продуктах
-    ...
+7.  **Просмотр и публикация кампании**
+    -   Просмотрите и опубликуйте кампанию.
+    -   Пример:
 
+        ```python
+        review_campaign(campaign_name)
+        publish_campaign(campaign_name)
+        ```
 
-def save_product_data(campaign_name: str, product_data: List[dict]) -> None:
-    """
-    Сохраняет данные о продуктах.
+#### 2. Редактирование рекламной кампании
 
-    :param campaign_name: Имя кампании.
-    :param product_data: Список словарей с данными о продуктах.
-    :return: None
-    """
-    # TODO: Реализовать сохранение данных о продуктах
-    ...
+1.  **Загрузка существующей конфигурации кампании**
+    -   Загрузите конфигурацию существующей кампании.
+    -   Пример:
 
+        ```python
+        campaign_name = 'example_campaign'
+        campaign_config = load_config(campaign_name)
+        ```
 
-def create_promotional_materials(campaign_name: str, product_data: List[dict]) -> None:
-    """
-    Создает рекламные материалы на основе данных о продуктах.
+2.  **Обновление конфигурации кампании**
+    -   Обновите параметры кампании, такие как язык и валюту.
+    -   Пример:
 
-    :param campaign_name: Имя кампании.
-    :param product_data: Список словарей с данными о продуктах.
-    :return: None
-    """
-    # TODO: Реализовать создание рекламных материалов
-    ...
+        ```python
+        campaign_config['language'] = 'RU'
+        save_config(campaign_name, campaign_config)
+        ```
 
+3.  **Обновление категорий и директорий**
+    -   Обновите список категорий и соответствующие директории.
+    -   Пример:
 
-def review_campaign(campaign_name: str) -> None:
-    """
-    Выполняет просмотр кампании.
+        ```python
+        new_categories = ['home', 'beauty']
+        update_categories(campaign_name, new_categories)
+        ```
 
-    :param campaign_name: Имя кампании.
-    :return: None
-    """
-    # TODO: Реализовать просмотр кампании
-    ...
+4.  **Сбор новых данных о продуктах**
+    -   Введите новые URL или ID продуктов для обновленной кампании.
+    -   Пример:
 
+        ```python
+        new_product_urls = ['https://www.aliexpress.com/item/789.html']
+        updated_product_data = collect_product_data(new_product_urls)
+        ```
 
-def publish_campaign(campaign_name: str) -> None:
-    """
-    Публикует кампанию.
+5.  **Сохранение обновленных данных о продуктах**
+    -   Сохраните новые данные о продуктах.
+    -   Пример:
 
-    :param campaign_name: Имя кампании.
-    :return: None
-    """
-    # TODO: Реализовать публикацию кампании
-    ...
+        ```python
+        save_product_data(campaign_name, updated_product_data)
+        ```
 
+6.  **Обновление рекламных материалов**
+    -   Обновите рекламные материалы на основе новых данных.
+    -   Пример:
 
-def load_config(campaign_name: str) -> dict:
-    """
-    Загружает конфигурацию кампании из файла.
+        ```python
+        update_promotional_materials(campaign_name, updated_product_data)
+        ```
 
-    :param campaign_name: Имя кампании.
-    :return: Словарь с конфигурацией кампании.
-    """
-    # TODO: Реализовать загрузку конфигурации
-    ...
+7.  **Просмотр и публикация обновленной кампании**
+    -   Просмотрите и опубликуйте обновленную кампанию.
+    -   Пример:
 
+        ```python
+        review_campaign(campaign_name)
+        publish_campaign(campaign_name)
+        ```
 
-def update_categories(campaign_name: str, new_categories: List[str]) -> None:
-    """
-    Обновляет список категорий и соответствующие директории.
+#### 3. Обработка ошибок и логирование
 
-    :param campaign_name: Имя кампании.
-    :param new_categories: Новый список категорий.
-    :return: None
-    """
-    # TODO: Реализовать обновление категорий
-    ...
+1.  **Обработка ошибок**
+    -   Используйте `try-except` для обработки ошибок.
+    -   Пример:
 
+        ```python
+        try:
+            # Ваш код
+            ...
+        except Exception as ex:
+            logger.error('Ошибка', ex)
+        ```
 
-def update_promotional_materials(campaign_name: str, updated_product_data: List[dict]) -> None:
-    """
-    Обновляет рекламные материалы на основе новых данных о продуктах.
+2.  **Логирование событий**
+    -   Логируйте важные события и ошибки.
+    -   Пример:
 
-    :param campaign_name: Имя кампании.
-    :param updated_product_data: Список словарей с обновленными данными о продуктах.
-    :return: None
-    """
-    # TODO: Реализовать обновление рекламных материалов
-    ...
+        ```python
+        logger.info('Начало обработки кампании')
+        logger.error('Ошибка при обработке кампании', ex)
+        ```
 
+### Примерный код
 
-def create_campaign(campaign_name: str, language: str, currency: str, categories: List[str], product_urls: List[str]) -> None:
+```python
+from src.logger.logger import logger  # импорт модуля логгера
+
+def create_campaign(campaign_name: str, language: str, currency: str, categories: list, product_urls: list) -> None:
     """
     Создает рекламную кампанию.
 
-    :param campaign_name: Имя кампании.
+    :param campaign_name: Название кампании.
     :param language: Язык кампании.
     :param currency: Валюта кампании.
-    :param categories: Список категорий.
-    :param product_urls: Список URL продуктов.
+    :param categories: Список категорий товаров.
+    :param product_urls: Список URL товаров.
     :return: None
     """
-    # Код создает директории для кампании
+    # код выполняет создание директорий для кампании
     create_directories(campaign_name, categories)
-    # Код формирует словарь конфигурации кампании
+    # код создает конфигурацию кампании
     campaign_config = {'name': campaign_name, 'language': language, 'currency': currency}
-    # Код сохраняет конфигурацию кампании
+    # код сохраняет конфигурацию кампании
     save_config(campaign_name, campaign_config)
-    # Код собирает данные о продуктах
+    # код собирает данные о продуктах
     product_data = collect_product_data(product_urls)
-    # Код сохраняет данные о продуктах
+    # код сохраняет данные о продуктах
     save_product_data(campaign_name, product_data)
-    # Код создает рекламные материалы
+    # код создает рекламные материалы
     create_promotional_materials(campaign_name, product_data)
-    # Код выполняет просмотр кампании
+    # код выполняет просмотр кампании
     review_campaign(campaign_name)
-    # Код публикует кампанию
+    # код публикует кампанию
     publish_campaign(campaign_name)
 
 
-def edit_campaign(campaign_name: str, language: str, categories: List[str], product_urls: List[str]) -> None:
+def edit_campaign(campaign_name: str, language: str, categories: list, product_urls: list) -> None:
     """
     Редактирует существующую рекламную кампанию.
 
-    :param campaign_name: Имя кампании.
+    :param campaign_name: Название кампании.
     :param language: Новый язык кампании.
-    :param categories: Новый список категорий.
-    :param product_urls: Список URL новых продуктов.
+    :param categories: Новый список категорий товаров.
+    :param product_urls: Новый список URL товаров.
     :return: None
     """
-    # Код загружает конфигурацию кампании
+    # код загружает конфигурацию кампании
     campaign_config = load_config(campaign_name)
-    # Код обновляет язык в конфигурации
+    # код обновляет язык кампании
     campaign_config['language'] = language
-    # Код сохраняет обновленную конфигурацию
+    # код сохраняет конфигурацию кампании
     save_config(campaign_name, campaign_config)
-    # Код обновляет список категорий
+    # код обновляет категории кампании
     update_categories(campaign_name, categories)
-    # Код собирает данные о новых продуктах
+    # код собирает данные о продуктах
     updated_product_data = collect_product_data(product_urls)
-    # Код сохраняет новые данные о продуктах
+    # код сохраняет данные о продуктах
     save_product_data(campaign_name, updated_product_data)
-    # Код обновляет рекламные материалы
+    # код обновляет рекламные материалы
     update_promotional_materials(campaign_name, updated_product_data)
-    # Код выполняет просмотр кампании
+    # код выполняет просмотр кампании
     review_campaign(campaign_name)
-    # Код публикует кампанию
+    # код публикует кампанию
     publish_campaign(campaign_name)
+```
+
+### Заключение
+
+Следуя этим инструкциям, вы сможете эффективно создавать и редактировать рекламные кампании, а также поддерживать их актуальность и корректную работу.
 ```

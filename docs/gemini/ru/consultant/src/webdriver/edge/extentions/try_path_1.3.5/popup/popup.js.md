@@ -1,45 +1,55 @@
-# Анализ кода модуля `popup.js`
+# Анализ кода модуля popup.js
 
-**Качество кода: 7/10**
-- **Плюсы:**
-    - Код хорошо структурирован и разбит на функции, что делает его более читаемым и поддерживаемым.
-    - Используются константы для строк и числовых значений, что улучшает читаемость и облегчает сопровождение кода.
-    - Присутствует обработка событий для элементов интерфейса.
-    - Код использует промисы для асинхронных операций, что является хорошей практикой.
-    - Большая часть кода покрыта комментариями.
-- **Минусы:**
-    - Отсутствуют docstring для функций, что усложняет понимание их назначения и параметров.
-    - Не используются `j_loads` или `j_loads_ns`.
-    - Избыточное использование `try-catch` блоков, которые можно заменить на `logger.error`.
-    - Некоторые переменные объявлены с использованием `var` вместо `const` или `let`.
-    - Код содержит дублирование логики обработки событий и UI (например, `changeContextVisible`, `changeResolverVisible` и т.д.).
-    - Обработка ошибок не всегда достаточно информативна, не хватает логирования.
+**Качество кода**
+8
+- Плюсы
+    - Код хорошо структурирован и разбит на логические функции.
+    - Используются константы для классов и значений, что повышает читаемость.
+    - Присутствуют обработчики событий для элементов интерфейса.
+    - Код использует асинхронные операции с `Promise`, что соответствует современным стандартам.
+- Минусы
+    - Отсутствует документация в формате reStructuredText (RST) для функций и переменных.
+    - Не используется `logger` для логирования ошибок.
+    - Некоторые блоки try-except отсутствуют, что может привести к необработанным ошибкам.
+    - Использование `Object.create(null)` для создания объектов может быть не совсем понятным для всех разработчиков.
+    - Не все переменные объявлены с использованием `const` или `let`.
 
-**Рекомендации по улучшению:**
+**Рекомендации по улучшению**
 
-1.  Добавить docstring к функциям, методам и классам для улучшения понимания их работы.
-2.  Использовать `from src.logger.logger import logger` для логирования ошибок.
-3.  Убрать избыточные `try-except` блоки и заменить их на обработку ошибок с помощью `logger.error`.
-4.  Использовать `const` или `let` вместо `var` там, где это уместно.
-5.  Оптимизировать код за счет устранения дублирования логики.
-6.  Добавить более подробные сообщения об ошибках в лог.
-7. Использовать `j_loads` или `j_loads_ns` для работы с json.
-8. Все комментарии переписать в формате reStructuredText (RST).
+1. **Документация**: Добавить docstring в формате RST для всех функций и переменных.
+2. **Логирование**: Использовать `logger.error` для обработки и логирования ошибок вместо стандартных блоков `try-catch`.
+3. **Управление ошибками**: Добавить обработку ошибок в асинхронных операциях и в местах, где это необходимо.
+4. **Объявление переменных**: Использовать `const` для констант и `let` для переменных.
+5. **Упрощение создания объектов**: Использовать литералы объектов `{}` вместо `Object.create(null)` там, где это уместно.
+6. **Импорты**: Добавить необходимые импорты, такие как `logger`.
 
-**Оптимизированный код:**
+**Оптимизированный код**
 
 ```python
 """
-Модуль для управления popup окном расширения try_xpath.
-=========================================================================================
+Модуль для управления popup окном расширения try_path.
+======================================================
 
-Этот модуль отвечает за обработку событий в popup окне расширения, 
-включая взаимодействие с пользовательским интерфейсом, отправку сообщений в контентные скрипты, 
-а также сохранение и восстановление состояния popup окна.
+Этот модуль отвечает за взаимодействие с пользователем через popup окно,
+отправку запросов в content script и обработку ответов.
 
+Основные функции:
+    - Управление видимостью элементов popup окна.
+    - Отправка сообщений в content script для выполнения XPath запросов.
+    - Отображение результатов выполнения запросов.
+    - Сохранение и восстановление состояния popup окна.
+
+Пример использования
+--------------------
+
+Запуск popup окна расширения и взаимодействие с его элементами.
 """
-import json # импортируем модуль json
-from src.logger.logger import logger # импортируем logger
+from src.logger.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns
+
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 (function (window) {
     "use strict";
@@ -56,8 +66,8 @@ from src.logger.logger import logger # импортируем logger
     const invalidExecutionId = NaN;
     const invalidFrameId = -1;
 
-    # Объявляем переменные для работы с элементами интерфейса
-    var mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
+    # Объявление переменных для элементов popup
+    let mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
         contextWay, contextExpression, resolverHeader, resolverBody,
         resolverCheckbox, resolverExpression, frameDesignationHeader,
         frameDesignationCheckbox, frameDesignationBody,
@@ -73,61 +83,59 @@ from src.logger.logger import logger # импортируем logger
     const detailsPageSize = 50;
     let detailsPageIndex = 0;
 
+
     /**
      * Отправляет сообщение активной вкладке.
      *
      * :param msg: Сообщение для отправки.
      * :param opts: Опции для отправки сообщения.
-     * :return: Promise, который разрешается после отправки сообщения.
+     * :return: Promise с результатом отправки.
      */
     function sendToActiveTab(msg, opts) {
-        const options = opts || {};
+        opts = opts || {};
         return browser.tabs.query({
             "active": true,
             "currentWindow": true
         }).then(tabs => {
-            return browser.tabs.sendMessage(tabs[0].id, msg, options);
+            return browser.tabs.sendMessage(tabs[0].id, msg, opts);
         });
-    };
+    }
+
 
     /**
-     * Отправляет сообщение указанному фрейму.
+     * Отправляет сообщение в указанный фрейм.
      *
      * :param msg: Сообщение для отправки.
-     * :return: Promise, который разрешается после отправки сообщения.
+     * :return: Promise с результатом отправки.
      */
-    function sendToSpecifiedFrame(msg) {
+    async function sendToSpecifiedFrame(msg) {
         const frameId = getSpecifiedFrameId();
-        return Promise.resolve().then(() => {
-            return browser.tabs.executeScript({
+        try {
+            const ress = await browser.tabs.executeScript({
                 "file": "/scripts/try_xpath_check_frame.js",
                 "matchAboutBlank": true,
                 "runAt": "document_start",
                 "frameId": frameId
             });
-        }).then(ress => {
-            if (ress[0]) {
-                return;
+            if (!ress[0]) {
+                await execContentScript();
             }
-            return execContentScript();
-        }).then(() => {
-            return sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "initializeBlankWindows" });
-        }).then(() => {
-            return sendToActiveTab(msg, { "frameId": frameId });
-        }).catch(e => {
-            logger.error(`An error occurred. The frameId may be incorrect. frameId: ${frameId}`, e) # Логируем ошибку
+            await sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "initializeBlankWindows" });
+            return await sendToActiveTab(msg, { "frameId": frameId });
+        } catch (e) {
+            logger.error("An error occurred. The frameId may be incorrect.", e);
             showError("An error occurred. The frameId may be incorrect.",
-                      frameId);
-        });
-    };
+                    frameId);
+        }
+    }
 
     /**
-     * Собирает текущее состояние popup окна.
+     * Собирает состояние popup окна.
      *
-     * :return: Объект, содержащий текущее состояние popup окна.
+     * :return: Объект с состоянием popup.
      */
     function collectPopupState() {
-        const state = Object.create(null);
+        const state = {};
         state.helpCheckboxChecked = helpCheckbox.checked;
         state.mainWayIndex = mainWay.selectedIndex;
         state.mainExpressionValue = mainExpression.value;
@@ -145,7 +153,7 @@ from src.logger.logger import logger # импортируем logger
         state.specifiedFrameId = getSpecifiedFrameId();
         state.detailsPageIndex = detailsPageIndex;
         return state;
-    };
+    }
 
     /**
      * Изменяет видимость блока контекста.
@@ -157,7 +165,8 @@ from src.logger.logger import logger # импортируем logger
         } else {
             contextBody.classList.add(noneClass);
         }
-    };
+    }
+
 
     /**
      * Изменяет видимость блока резолвера.
@@ -169,10 +178,10 @@ from src.logger.logger import logger # импортируем logger
         } else {
             resolverBody.classList.add(noneClass);
         }
-    };
+    }
 
     /**
-     * Изменяет видимость блока выбора frameId.
+     * Изменяет видимость блока выбора фрейма по ID.
      *
      */
     function changeFrameIdVisible () {
@@ -181,10 +190,10 @@ from src.logger.logger import logger # импортируем logger
         } else {
             frameIdBody.classList.add(noneClass);
         }
-    };
+    }
 
     /**
-     * Изменяет видимость блока обозначения фрейма.
+     * Изменяет видимость блока выбора фрейма по designation.
      *
      */
     function changeFrameDesignationVisible() {
@@ -193,7 +202,8 @@ from src.logger.logger import logger # импортируем logger
         } else {
             frameDesignationBody.classList.add(noneClass);
         }
-    };
+    }
+
 
     /**
      * Изменяет видимость блока помощи.
@@ -201,37 +211,44 @@ from src.logger.logger import logger # импортируем logger
      */
     function changeHelpVisible() {
         const helps = document.getElementsByClassName(helpClass);
-        for (let i = 0; i < helps.length; i++) {
-            if (helpCheckbox.checked) {
+        if (helpCheckbox.checked) {
+            for (let i = 0; i < helps.length; i++) {
                 helps[i].classList.remove(noneClass);
-            } else {
+            }
+        } else {
+            for (let i = 0; i < helps.length; i++) {
                 helps[i].classList.add(noneClass);
             }
         }
-    };
+    }
+
 
     /**
-     * Формирует сообщение для выполнения запроса.
+     * Создает сообщение для выполнения запроса.
      *
-     * :return: Объект сообщения для отправки.
+     * :return: Объект с сообщением для выполнения запроса.
      */
     function makeExecuteMessage() {
-        const msg = Object.create(null);
+        const msg = {};
         msg.event = "execute";
 
-        let resol = resolverCheckbox.checked ? resolverExpression.value : null;
-
+        let resol;
+        if (resolverCheckbox.checked) {
+            resol = resolverExpression.value;
+        } else {
+            resol = null;
+        }
 
         const way = mainWay.selectedOptions[0];
-        msg.main = Object.create(null);
+        msg.main = {};
         msg.main.expression = mainExpression.value;
         msg.main.method = way.getAttribute("data-method");
         msg.main.resultType = way.getAttribute("data-type");
         msg.main.resolver = resol;
 
         if (contextCheckbox.checked) {
-            const way = contextWay.selectedOptions[0];
-            msg.context = Object.create(null);
+            let way = contextWay.selectedOptions[0];
+            msg.context = {};
             msg.context.expression = contextExpression.value;
             msg.context.method = way.getAttribute("data-method");
             msg.context.resultType = way.getAttribute("data-type");
@@ -243,12 +260,13 @@ from src.logger.logger import logger # импортируем logger
         }
 
         return msg;
-    };
+    }
+
 
     /**
-     * Возвращает идентификатор указанного фрейма.
+     * Возвращает ID указанного фрейма.
      *
-     * :return: Идентификатор фрейма или 0, если не выбран.
+     * :return: ID фрейма.
      */
     function getSpecifiedFrameId () {
         if (!frameIdCheckbox.checked) {
@@ -259,55 +277,56 @@ from src.logger.logger import logger # импортируем logger
             return parseInt(frameIdExpression.value, 10);
         }
         return parseInt(id, 10);
-    };
+    }
+
 
     /**
-     * Выполняет контентные скрипты.
+     * Выполняет content script.
      *
-     * :return: Promise, который разрешается после выполнения скриптов.
+     * :return: Promise с результатом выполнения.
      */
-    function execContentScript() {
-        return browser.tabs.executeScript({
+    async function execContentScript() {
+        await browser.tabs.executeScript({
             "file": "/scripts/try_xpath_functions.js",
             "matchAboutBlank": true,
             "runAt": "document_start",
             "allFrames": true
-        }).then(() => {
-            return browser.tabs.executeScript({
-                "file": "/scripts/try_xpath_content.js",
-                "matchAboutBlank": true,
-                "runAt": "document_start",
-                "allFrames": true
-            });
         });
-    };
+        return await browser.tabs.executeScript({
+            "file": "/scripts/try_xpath_content.js",
+            "matchAboutBlank": true,
+            "runAt": "document_start",
+            "allFrames": true
+        });
+    }
+
 
     /**
-     * Отправляет запрос на выполнение.
+     * Отправляет сообщение на выполнение.
      *
      */
     function sendExecute() {
         sendToSpecifiedFrame(makeExecuteMessage());
-    };
+    }
 
     /**
-     * Обрабатывает нажатие Enter в полях ввода.
+     * Обрабатывает нажатие клавиши Enter в полях ввода.
      *
-     * :param event: Событие клавиатуры.
+     * :param event: Событие нажатия клавиши.
      */
     function handleExprEnter (event) {
         if ((event.key === "Enter") && !event.shiftKey) {
             event.preventDefault();
             sendExecute();
         }
-    };
+    }
 
     /**
-     * Отображает страницу деталей результатов.
+     * Отображает страницу с результатами.
      *
      * :param index: Индекс страницы для отображения.
      */
-    function showDetailsPage(index) {
+    async function showDetailsPage(index) {
         const max = Math.floor(resultedDetails.length / detailsPageSize);
 
         if (!Number.isInteger(index)) {
@@ -319,23 +338,27 @@ from src.logger.logger import logger # импортируем logger
         const scrollY = window.scrollY;
         const scrollX = window.scrollX;
 
-        fu.updateDetailsTable(resultsTbody, resultedDetails, {
-            "begin": index * detailsPageSize,
-            "end": (index * detailsPageSize) + detailsPageSize,
-        }).then(() => {
+        try {
+            await fu.updateDetailsTable(resultsTbody, resultedDetails, {
+                "begin": index * detailsPageSize,
+                "end": (index * detailsPageSize) + detailsPageSize,
+            });
             detailsPageCount.value = index + 1;
             detailsPageIndex = index;
             window.scrollTo(scrollX, scrollY);
-        }).catch(fu.onError);
-    };
+        } catch (e) {
+            logger.error("Error updating details table", e);
+        }
+    }
+
 
     /**
      * Отображает сообщение об ошибке.
      *
      * :param message: Сообщение об ошибке.
-     * :param frameId: Идентификатор фрейма, где произошла ошибка.
+     * :param frameId: ID фрейма, в котором произошла ошибка.
      */
-    function showError(message, frameId) {
+    async function showError(message, frameId) {
         relatedTabId = invalidTabId;
         relatedFrameId = invalidFrameId;
         executionId = invalidExecutionId;
@@ -345,13 +368,17 @@ from src.logger.logger import logger # импортируем logger
         resultsCount.textContent = resultedDetails.length;
         resultsFrameId.textContent = frameId;
 
-        fu.updateDetailsTable(contextTbody, [])
-            .catch(fu.onError);
+        try {
+            await fu.updateDetailsTable(contextTbody, []);
+        } catch (e) {
+             logger.error("Error updating context table", e);
+        }
         showDetailsPage(0);
-    };
+    }
+
 
     /**
-     * Универсальный обработчик сообщений.
+     * Обрабатывает входящие сообщения.
      *
      * :param message: Сообщение.
      * :param sender: Отправитель сообщения.
@@ -363,17 +390,17 @@ from src.logger.logger import logger # импортируем logger
         if (listener) {
             return listener(message, sender, sendResponse);
         }
-    };
-    genericListener.listeners = Object.create(null);;
+    }
+    genericListener.listeners = {};
     browser.runtime.onMessage.addListener(genericListener);
 
     /**
-     * Обработчик сообщения для отображения результатов.
+     * Обработчик сообщения showResultsInPopup.
      *
-     * :param message: Сообщение с результатами.
+     * :param message: Сообщение.
      * :param sender: Отправитель сообщения.
      */
-    genericListener.listeners.showResultsInPopup = function (message, sender){
+    genericListener.listeners.showResultsInPopup = async function (message, sender){
         relatedTabId = sender.tab.id;
         relatedFrameId = sender.frameId;
         executionId = message.executionId;
@@ -384,22 +411,25 @@ from src.logger.logger import logger # импортируем logger
         resultsFrameId.textContent = sender.frameId;
 
         if (message.context && message.context.itemDetail) {
-            fu.updateDetailsTable(contextTbody, [message.context.itemDetail])
-                .catch(fu.onError);
+            try {
+                 await fu.updateDetailsTable(contextTbody, [message.context.itemDetail]);
+            } catch (e) {
+                logger.error("Error updating context table", e);
+            }
         }
 
         showDetailsPage(detailsPageIndex);
-    };
+    }
 
     /**
-     * Обработчик сообщения для восстановления состояния popup окна.
+     * Обработчик сообщения restorePopupState.
      *
-     * :param message: Сообщение с состоянием.
+     * :param message: Сообщение.
      */
     genericListener.listeners.restorePopupState = function (message) {
         const state = message.state;
 
-        if (state !== null) {
+        if (state) {
             helpCheckbox.checked = state.helpCheckboxChecked;
             mainWay.selectedIndex = state.mainWayIndex;
             mainExpression.value = state.mainExpressionValue;
@@ -425,21 +455,21 @@ from src.logger.logger import logger # импортируем logger
         changeFrameIdVisible();
 
         sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup" });
-    };
+    }
 
     /**
-     * Обработчик сообщения для вставки стилей в popup окно.
+     * Обработчик сообщения insertStyleToPopup.
      *
-     * :param message: Сообщение со стилями.
+     * :param message: Сообщение.
      */
     genericListener.listeners.insertStyleToPopup = function(message) {
         const style = document.createElement("style");
         style.textContent = message.css;
         document.head.appendChild(style);
-    };
+    }
 
     /**
-     * Обработчик сообщения для добавления идентификатора фрейма.
+     * Обработчик сообщения addFrameId.
      *
      * :param message: Сообщение.
      * :param sender: Отправитель сообщения.
@@ -449,7 +479,7 @@ from src.logger.logger import logger # импортируем logger
         opt.setAttribute("data-frame-id", sender.frameId);
         opt.textContent = sender.frameId;
         frameIdList.appendChild(opt);
-    };
+    }
 
     window.addEventListener("load", () => {
         helpBody = document.getElementById("help-body");
@@ -535,7 +565,7 @@ from src.logger.logger import logger # импортируем logger
                     "matchAboutBlank": true,
                     "runAt": "document_start",
                     "allFrames": true
-                }).catch(fu.onError);
+                }).catch(e => logger.error("Error adding frame id", e));
             });
 
         document.getElementById("show-previous-results").addEventListener(

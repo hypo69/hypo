@@ -1,200 +1,138 @@
 # Анализ кода модуля `affiliated_products_generator.en.md`
 
 **Качество кода**
-**7/10**
- -  Плюсы
-    -   Код предоставляет рабочий пример использования класса `AliAffiliatedProducts`.
-    -   Пример хорошо структурирован и понятен.
-    -   Приведены объяснения к коду.
-    -   Понятны основные шаги работы с классом.
- -  Минусы
-    -   Отсутствует reStructuredText (RST) документация.
-    -   Импорты не соответствуют ранее обработанным файлам (не хватает `from typing import Any` и др).
-    -   Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
-    -   Не используется логирование ошибок.
+
+7/10
+
+*   **Плюсы:**
+    *   Код содержит пример использования класса `AliAffiliatedProducts`.
+    *   Пример хорошо структурирован и содержит пояснения к каждой части кода.
+    *   Приведены примеры как идентификаторов, так и полных URL товаров.
+    *   Код легко понять и адаптировать.
+*   **Минусы:**
+    *   Отсутствует reStructuredText (RST) документация.
+    *   Отсутствуют импорты для работы с логгером.
+    *   Пример использует стандартные print() вместо логирования.
+    *   Нет обработки исключений.
+    *   Нет комментариев в формате RST к блокам кода.
 
 **Рекомендации по улучшению**
 
-1.  Добавить reStructuredText (RST) документацию для модуля и функций.
-2.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это необходимо, для чтения файлов (в данном примере это не требуется, так как нет операций чтения файлов).
-3.  Добавить импорты, которые могут быть необходимы.
-4.  Заменить стандартный `print` на `logger.info` для вывода информационных сообщений.
-5.  Избегать прямого использования `print` для вывода информации.
-6.  Добавить обработку ошибок через `logger.error`.
+1.  Добавить RST-документацию для всего файла и примера кода.
+2.  Использовать логгер для вывода сообщений вместо `print`.
+3.  Добавить обработку исключений для большей устойчивости кода.
+4.  Добавить комментарии в стиле RST к каждому блоку кода, чтобы объяснить его назначение.
+5.  Добавить импорты для logger и других необходимых библиотек.
 
 **Оптимизированный код**
 
-```markdown
-# Анализ кода модуля `affiliated_products_generator.en.md`
- 
-    
-Этот файл демонстрирует, как использовать класс `AliAffiliatedProducts` для сбора данных о продуктах и обработки партнерских ссылок.
- 
-    
-### Пример использования `AliAffiliatedProducts`
- 
-    
 ```python
+"""
+Пример использования класса `AliAffiliatedProducts` для работы с партнерскими ссылками.
+=========================================================================================
+
+Этот модуль демонстрирует, как использовать класс `AliAffiliatedProducts` для сбора данных о товарах
+и обработки партнерских ссылок.
+Включает пример использования и объяснения к нему.
+
+Пример использования
+--------------------
+
+Пример использования класса `AliAffiliatedProducts`:
+
+.. code-block:: python
+
+    from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
+    from src.logger.logger import logger
+
+
+    def main():
+        # Параметры рекламной кампании
+        campaign_name = "summer_sale_2024"
+        campaign_category = "electronics"
+        language = "EN"
+        currency = "USD"
+
+        # Создание экземпляра класса `AliAffiliatedProducts`
+        parser = AliAffiliatedProducts(
+            campaign_name,
+            campaign_category,
+            language,
+            currency
+        )
+
+        # Пример списка URL или ID товаров
+        prod_urls = [
+            '123',
+            'https://www.aliexpress.com/item/123.html',
+            '456',
+            'https://www.aliexpress.com/item/456.html',
+        ]
+
+        # Обработка товаров и получение списка товаров с партнерскими ссылками и сохраненными изображениями
+        products = parser.process_affiliate_products(prod_urls)
+
+        # Проверка результатов
+        if products:
+            logger.info(f"Получено {len(products)} партнерских продуктов.")
+            for product in products:
+                logger.info(f"ID продукта: {product.product_id}")
+                logger.info(f"Партнерская ссылка: {product.promotion_link}")
+                logger.info(f"Локальный путь к изображению: {product.local_saved_image}")
+                if product.local_saved_video:
+                    logger.info(f"Локальный путь к видео: {product.local_saved_video}")
+        else:
+            logger.info("Партнерские продукты не найдены.")
+
+    if __name__ == "__main__":
+        main()
+"""
 # example_usage.py
- 
-from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
-from typing import List, Any # Добавлен импорт для аннотации типов
-from src.logger.logger import logger # Добавлен импорт для логирования
- 
+from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts  # импорт класса AliAffiliatedProducts
+from src.logger.logger import logger  # импорт логгера
+
 def main():
     """
-    Основная функция для демонстрации работы с AliAffiliatedProducts.
- 
-        Инициализирует параметры рекламной кампании, создает экземпляр класса
-        `AliAffiliatedProducts`, обрабатывает список URL-адресов продуктов и выводит
-        информацию о полученных партнерских продуктах.
+    Основная функция для демонстрации работы с `AliAffiliatedProducts`.
     """
     # Настройка параметров рекламной кампании
     campaign_name = "summer_sale_2024"
-    campaign_category = "electronics"  # Можно установить в None, если категория не требуется
+    campaign_category = "electronics" #  Можно установить в None, если не нужна категория
     language = "EN"  # Язык для кампании
     currency = "USD"  # Валюта для кампании
- 
-    # Создание экземпляра класса AliAffiliatedProducts
+
+    # Создание экземпляра класса `AliAffiliatedProducts`
     parser = AliAffiliatedProducts(
         campaign_name,
         campaign_category,
         language,
         currency
     )
- 
-    # Пример URL-адресов или ID продуктов
+
+    # Пример URL-адресов или идентификаторов продуктов
     prod_urls = [
         '123',
         'https://www.aliexpress.com/item/123.html',
         '456',
         'https://www.aliexpress.com/item/456.html',
     ]
- 
+
     # Обработка продуктов и получение списка продуктов с партнерскими ссылками и сохраненными изображениями
     products = parser.process_affiliate_products(prod_urls)
- 
+
     # Проверка результатов
     if products:
-        logger.info(f"Получено {len(products)} партнерских продуктов.")
+        logger.info(f"Получено {len(products)} партнерских продуктов.") # Вывод информационного сообщения с помощью logger
         for product in products:
-            logger.info(f"ID продукта: {product.product_id}")
-            logger.info(f"Партнерская ссылка: {product.promotion_link}")
-            logger.info(f"Локальный путь к изображению: {product.local_saved_image}")
+            logger.info(f"ID продукта: {product.product_id}") # Вывод ID продукта с помощью logger
+            logger.info(f"Партнерская ссылка: {product.promotion_link}")  # Вывод партнерской ссылки с помощью logger
+            logger.info(f"Локальный путь к изображению: {product.local_saved_image}")  # Вывод пути к изображению с помощью logger
             if product.local_saved_video:
-                logger.info(f"Локальный путь к видео: {product.local_saved_video}")
-            logger.info("")
+                logger.info(f"Локальный путь к видео: {product.local_saved_video}") # Вывод пути к видео с помощью logger
+            logger.info("")  # пустая строка для разделения вывода
     else:
-        logger.info("Партнерские продукты не найдены.")
- 
+         logger.info("Партнерские продукты не найдены.") # Вывод информационного сообщения с помощью logger
+
 if __name__ == "__main__":
     main()
-```
- 
-### Объяснение примера
- 
--   **Создание экземпляра `AliAffiliatedProducts`**:
-    ```python
-    parser = AliAffiliatedProducts(
-        campaign_name,
-        campaign_category,
-        language,
-        currency
-    )
-    ```
-    Здесь создается объект `AliAffiliatedProducts` с параметрами рекламной кампании.
- 
--   **Список URL-адресов или ID продуктов**:
-    ```python
-    prod_urls = [
-        '123',
-        'https://www.aliexpress.com/item/123.html',
-        '456',
-        'https://www.aliexpress.com/item/456.html',
-    ]
-    ```
-    Это пример списка URL-адресов или ID продуктов. Вы можете предоставить как только ID, так и полные URL-адреса.
- 
--   **Обработка продуктов**:
-    ```python
-    products = parser.process_affiliate_products(prod_urls)
-    ```
-    Вызывается метод `process_affiliate_products` для обработки продуктов, получения партнерских ссылок и сохранения изображений и видео.
- 
--   **Проверка результатов**:
-    ```python
-    if products:
-        logger.info(f"Получено {len(products)} партнерских продуктов.")
-        for product in products:
-            logger.info(f"ID продукта: {product.product_id}")
-            logger.info(f"Партнерская ссылка: {product.promotion_link}")
-            logger.info(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                logger.info(f"Локальный путь к видео: {product.local_saved_video}")
-            logger.info("")
-    else:
-        logger.info("Партнерские продукты не найдены.")
-    ```
-    Код проверяет, есть ли обработанные продукты, и выводит подробную информацию о каждом продукте.
- 
-### Полный пример файла
- 
-```python
-# example_usage.py
- 
-from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
-from typing import List, Any # Добавлен импорт для аннотации типов
-from src.logger.logger import logger # Добавлен импорт для логирования
- 
-def main():
-    """
-    Основная функция для демонстрации работы с AliAffiliatedProducts.
- 
-        Инициализирует параметры рекламной кампании, создает экземпляр класса
-        `AliAffiliatedProducts`, обрабатывает список URL-адресов продуктов и выводит
-        информацию о полученных партнерских продуктах.
-    """
-    # Настройка параметров рекламной кампании
-    campaign_name = "summer_sale_2024"
-    campaign_category = "electronics"  # Можно установить в None, если категория не требуется
-    language = "EN"  # Язык для кампании
-    currency = "USD"  # Валюта для кампании
- 
-    # Создание экземпляра класса AliAffiliatedProducts
-    parser = AliAffiliatedProducts(
-        campaign_name,
-        campaign_category,
-        language,
-        currency
-    )
- 
-    # Пример URL-адресов или ID продуктов
-    prod_urls = [
-        '123',
-        'https://www.aliexpress.com/item/123.html',
-        '456',
-        'https://www.aliexpress.com/item/456.html',
-    ]
- 
-    # Обработка продуктов и получение списка продуктов с партнерскими ссылками и сохраненными изображениями
-    products = parser.process_affiliate_products(prod_urls)
- 
-    # Проверка результатов
-    if products:
-        logger.info(f"Получено {len(products)} партнерских продуктов.")
-        for product in products:
-            logger.info(f"ID продукта: {product.product_id}")
-            logger.info(f"Партнерская ссылка: {product.promotion_link}")
-            logger.info(f"Локальный путь к изображению: {product.local_saved_image}")
-            if product.local_saved_video:
-                logger.info(f"Локальный путь к видео: {product.local_saved_video}")
-            logger.info("")
-    else:
-        logger.info("Партнерские продукты не найдены.")
- 
-if __name__ == "__main__":
-    main()
-```
- 
-Этот файл можно использовать в качестве шаблона для тестирования функциональности класса `AliAffiliatedProducts` и его методов. Вы можете адаптировать его под свои конкретные нужды и добавить дополнительный функционал по мере необходимости.
 ```

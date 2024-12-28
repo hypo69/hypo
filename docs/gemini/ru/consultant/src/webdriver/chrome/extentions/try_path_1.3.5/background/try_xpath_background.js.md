@@ -1,276 +1,311 @@
 # Анализ кода модуля try_xpath_background.js
 
-**Качество кода**
-8
--  Плюсы
-    - Код разбит на функции, что улучшает читаемость и поддержку.
-    - Используется `browser.runtime.onMessage.addListener` для обработки сообщений, что соответствует стандартам расширений браузера.
-    - Применяются Promise для асинхронных операций, что способствует более эффективному коду.
-    - Код использует `browser.storage.onChanged.addListener` для отслеживания изменений в хранилище, обеспечивая динамическое обновление.
- -  Минусы
-    - Отсутствуют docstring для функций и переменных, что затрудняет понимание кода.
-    - Не все ошибки обрабатываются с помощью `logger.error`, что может привести к проблемам с отслеживанием ошибок.
-    - Присутствует избыточное использование `try-except`, которое можно заменить на обработку ошибок с помощью `logger.error`.
-    - Код использует  `XMLHttpRequest`  вместо `fetch`, который является более современным.
-    - Отсутствует проверка на наличие `sender.tab` и `sender.frameId` перед их использованием.
+**Качество кода: 7/10**
 
-**Рекомендации по улучшению**
-1. Добавить docstring для всех функций и переменных в формате reStructuredText (RST) для улучшения читаемости и документирования кода.
-2. Использовать `from src.logger.logger import logger` для логирования ошибок и заменить стандартные блоки `try-except` на `logger.error`.
-3. Применить `fetch` вместо `XMLHttpRequest` для загрузки CSS, это сделает код более современным и эффективным.
-4. Добавить проверку на наличие `sender.tab` и `sender.frameId` перед их использованием, чтобы избежать ошибок.
-5. Использовать более современные методы для работы с DOM и CSS, например, `insertCSS` и `removeCSS` с `Promise` для более надежной работы.
-6. Переписать существующие комментарии в формате reStructuredText (RST).
-7. Использовать более конкретные сообщения в логах, чтобы упростить отладку.
+*   **Плюсы:**
+    *   Код разбит на функции, что улучшает читаемость и поддержку.
+    *   Используются `Promises` для асинхронных операций, что способствует более эффективному выполнению задач.
+    *   Применяется `browser.storage.sync.get` для загрузки параметров, что обеспечивает синхронизацию между устройствами.
+    *   Используется `browser.runtime.onMessage` для обработки сообщений от других частей расширения.
+    *   Обработчики сообщений вынесены в `genericListener.listeners`  что упрощает добавление новых обработчиков.
+*   **Минусы:**
+    *   Отсутствуют docstring и комментарии, что затрудняет понимание кода.
+    *   Используется `XMLHttpRequest` вместо `fetch` для загрузки CSS, что не является современным подходом.
+    *   Используется анонимная функция в глобальной области видимости, что не является оптимальным.
+    *   Не используется `j_loads` или `j_loads_ns`.
+    *   Не используется `from src.logger.logger import logger`.
+    *   В некоторых местах отсутствуют обработки ошибок.
+    *   Многократное повторение кода `{"timeout":0,"timeout_for_event":"presence_of_element_located"}`.
 
-**Оптимизированный код**
+**Рекомендации по улучшению:**
+
+1.  **Добавить Docstring:** Добавить docstring к модулю и ко всем функциям.
+2.  **Использовать `fetch`:** Заменить `XMLHttpRequest` на `fetch` для загрузки CSS.
+3.  **Обернуть в IIFE:** Обернуть код в немедленно вызываемое функциональное выражение (IIFE) для избежания загрязнения глобальной области видимости.
+4.  **Использовать `j_loads` или `j_loads_ns`:** Проверить необходимость использования `j_loads` или `j_loads_ns`, хотя здесь это может быть не уместно.
+5.  **Использовать `logger`:** Добавить логирование ошибок через `from src.logger.logger import logger` и использовать его вместо `fu.onError`.
+6.  **Рефакторинг:** Пересмотреть повторяющийся код, вынести константы.
+7.  **Обработка ошибок:** Добавить try-catch в местах где это необходимо с использованием `logger.error`.
+
+**Оптимизированный код:**
+
 ```python
 """
-Модуль фоновой обработки для расширения try_xpath.
-=========================================================================================
+Модуль фонового скрипта для расширения Try Xpath.
+==================================================
 
-Этот модуль обрабатывает сообщения от контентных скриптов и управляет состоянием popup,
-а также загружает и применяет CSS стили.
+Этот модуль отвечает за обработку сообщений от контент-скриптов,
+управление стилями и хранение состояния всплывающего окна.
+
+Основные функции:
+    - Загрузка и применение стилей.
+    - Сохранение и восстановление состояния всплывающего окна.
+    - Управление CSS.
+    - Отправка результатов.
 """
-from src.logger.logger import logger
-# import browser from webextensions-api-types
-# import XMLHttpRequest from webextensions-api-types
-(function (window, undefined) {
-    "use strict";
+import json
+from src.logger.logger import logger  # pylint: disable=import-error
 
-    # Объявление псевдонимов для объектов tryxpath и его функций
-    var tx = tryxpath;
-    var fu = tryxpath.functions;
+_DEFAULT_TIMEOUT_OBJ = {"timeout": 0, "timeout_for_event": "presence_of_element_located"}
+_POPUP_CSS = "body{width:367px;height:auto;}"
+_ATTRIBUTES = {
+    "element": "data-tryxpath-element",
+    "context": "data-tryxpath-context",
+    "focused": "data-tryxpath-focused",
+    "focusedAncestor": "data-tryxpath-focused-ancestor",
+    "frame": "data-tryxpath-frame",
+    "frameAncestor": "data-tryxpath-frame-ancestor",
+}
 
-    # Инициализация переменных для хранения состояния popup, CSS, результатов и атрибутов
-    var popupState = null;
-    var popupCss = "body{width:367px;height:auto;}";
-    var results = {};
-    var css = "";
-    var attributes = {
-        "element": "data-tryxpath-element",
-        "context": "data-tryxpath-context",
-        "focused": "data-tryxpath-focused",
-        "focusedAncestor": "data-tryxpath-focused-ancestor",
-        "frame": "data-tryxpath-frame",
-        "frameAncestor": "data-tryxpath-frame-ancestor"
-    };
 
-    /**
-     * Загружает CSS по умолчанию из файла.
-     *
-     * :return: Promise, который разрешается с загруженным CSS или отклоняется с ошибкой.
-     */
-    function loadDefaultCss() {
-       return fetch(browser.runtime.getURL("/css/try_xpath_insert.css"))
-            .then(response => {
-                if (!response.ok) {
-                     # Логирование ошибки при неудачной загрузке CSS
-                    logger.error(`Ошибка загрузки CSS: ${response.status} ${response.statusText}`);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.text();
-            })
-            .catch(error => {
-                 # Логирование ошибки при загрузке CSS
-                logger.error(`Ошибка загрузки CSS: ${error}`);
-                throw error;
-            });
-    }
-    /**
-     * Слушатель для обработки сообщений из контентных скриптов.
-     *
-     * :param message: Объект сообщения.
-     * :param sender: Объект отправителя.
-     * :param sendResponse: Функция для отправки ответа.
-     */
-    function genericListener(message, sender, sendResponse) {
-        var listener = genericListener.listeners[message.event];
-        if (listener) {
-            return listener(message, sender, sendResponse);
-        }
-    };
-    genericListener.listeners = Object.create(null);
-    browser.runtime.onMessage.addListener(genericListener);
+def _load_default_css() -> str:
+    """
+    Загружает CSS по умолчанию.
 
-    /**
-     * Сохраняет состояние popup.
-     *
-     * :param message: Объект сообщения с состоянием popup.
-     */
-    genericListener.listeners.storePopupState = function (message) {
-        popupState = message.state;
-    }
+    :return: Промис с текстом CSS.
+    """
+    try:
+        req = browser.runtime.getURL("/css/try_xpath_insert.css")
+        response = fetch(req)
+        if response.status == 200:
+            return response.text()
+        else:
+            logger.error(f"Ошибка загрузки CSS: {response.status}")
+            return ""
+    except Exception as ex:
+        logger.error("Ошибка загрузки CSS", ex)
+        return ""
 
-    /**
-     * Запрашивает восстановление состояния popup.
-     *
-     * :param message: Объект сообщения.
-     */
-    genericListener.listeners.requestRestorePopupState = function (message) {
-        browser.runtime.sendMessage({
-            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "restorePopupState",
-            "state": popupState
-        });
-    };
-    /**
-     * Запрашивает вставку CSS в popup.
-     *
-     */
-    genericListener.listeners.requestInsertStyleToPopup = function () {
-        browser.runtime.sendMessage({
-            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "insertStyleToPopup",
-            "css": popupCss
-        });
-    };
-    /**
-     * Отображает все результаты на новой вкладке.
-     *
-     * :param message: Объект сообщения с результатами.
-     * :param sender: Объект отправителя.
-     */
-    genericListener.listeners.showAllResults = function(message, sender) {
-        delete message.event;
-        results = message;
-        results.tabId = sender.tab.id;
-        results.frameId = sender.frameId;
-        browser.tabs.create({ "url": "/pages/show_all_results.html" });
-    };
-    /**
-     * Загружает результаты.
-     *
-     * :param message: Объект сообщения.
-     * :param sender: Объект отправителя.
-     * :param sendResponse: Функция для отправки ответа.
-     * :return: true.
-     */
-    genericListener.listeners.loadResults = function (message, sender,
-                                                      sendResponse) {
-        sendResponse(results);
-        return true;
-    };
-    /**
-     * Обновляет CSS на вкладке.
-     *
-     * :param message: Объект сообщения с CSS.
-     * :param sender: Объект отправителя.
-     */
-    genericListener.listeners.updateCss = async function (message, sender) {
-          # Проверка существования sender.tab и sender.frameId
-        if (!sender || !sender.tab || sender.frameId === undefined) {
-            logger.error("Некорректный отправитель сообщения", sender);
-            return;
-        }
-        var id = sender.tab.id;
-        var frameId = sender.frameId;
 
-        # Удаление устаревших стилей
-        for (let removeCss in message.expiredCssSet) {
-            try {
-                 await browser.tabs.removeCSS(id, {
-                    "code": removeCss,
-                    "matchAboutBlank": true,
-                    "frameId": frameId
-                });
-                # Отправка сообщения об успешном удалении CSS
-                 await browser.tabs.sendMessage(id, {
-                     "timeout":0,"timeout_for_event":"presence_of_element_located","event": "finishRemoveCss",
-                     "css": removeCss
-                 }, {
-                     "frameId": frameId
-                 });
-            } catch (error) {
-                logger.error(`Ошибка при удалении CSS: ${error}`, error)
-            }
+def _generic_listener(message, sender, sendResponse):
+    """
+    Слушатель сообщений для обработки разных событий.
 
-        }
+    :param message: Объект сообщения.
+    :param sender: Объект отправителя.
+    :param sendResponse: Функция для отправки ответа.
+    """
+    listener = _generic_listener.listeners.get(message.event)
+    if listener:
+        return listener(message, sender, sendResponse)
+    return None
 
-         try {
-            # Вставка нового CSS
-            await browser.tabs.insertCSS(id, {
+
+_generic_listener.listeners = {}
+browser.runtime.onMessage.addListener(_generic_listener)
+
+
+def _store_popup_state(message):
+    """
+    Сохраняет состояние всплывающего окна.
+
+    :param message: Объект сообщения, содержащий состояние.
+    """
+    global popupState  # pylint: disable=global-statement
+    popupState = message.state
+
+
+_generic_listener.listeners["storePopupState"] = _store_popup_state
+
+
+def _request_restore_popup_state():
+    """
+    Отправляет запрос на восстановление состояния всплывающего окна.
+    """
+    browser.runtime.sendMessage({
+        **_DEFAULT_TIMEOUT_OBJ,
+        "event": "restorePopupState",
+        "state": popupState,
+    })
+
+
+_generic_listener.listeners["requestRestorePopupState"] = _request_restore_popup_state
+
+
+def _request_insert_style_to_popup():
+    """
+    Отправляет запрос на добавление стилей во всплывающее окно.
+    """
+    browser.runtime.sendMessage({
+        **_DEFAULT_TIMEOUT_OBJ,
+        "event": "insertStyleToPopup",
+        "css": _POPUP_CSS,
+    })
+
+
+_generic_listener.listeners["requestInsertStyleToPopup"] = _request_insert_style_to_popup
+
+
+def _show_all_results(message, sender):
+    """
+    Обрабатывает запрос на отображение всех результатов.
+
+    :param message: Объект сообщения с результатами.
+    :param sender: Объект отправителя.
+    """
+    global results  # pylint: disable=global-statement
+    del message["event"]
+    results = message
+    results["tabId"] = sender.tab.id
+    results["frameId"] = sender.frameId
+    browser.tabs.create({"url": "/pages/show_all_results.html"})
+
+
+_generic_listener.listeners["showAllResults"] = _show_all_results
+
+
+def _load_results(message, sender, sendResponse):
+    """
+    Обрабатывает запрос на загрузку результатов.
+
+    :param message: Объект сообщения.
+    :param sender: Объект отправителя.
+    :param sendResponse: Функция для отправки ответа.
+    :return: True, если запрос обработан.
+    """
+    sendResponse(results)
+    return True
+
+
+_generic_listener.listeners["loadResults"] = _load_results
+
+
+def _update_css(message, sender):
+    """
+    Обновляет CSS в соответствии с сообщением.
+
+    :param message: Объект сообщения с информацией об CSS.
+    :param sender: Объект отправителя.
+    """
+    tab_id = sender.tab.id
+    frame_id = sender.frameId
+
+    for remove_css in message.get("expiredCssSet", []):
+        browser.tabs.removeCSS(
+            tab_id,
+            {
+                "code": remove_css,
+                "matchAboutBlank": True,
+                "frameId": frame_id,
+            },
+        ).then(lambda: browser.tabs.sendMessage(
+            tab_id,
+            {
+                **_DEFAULT_TIMEOUT_OBJ,
+                "event": "finishRemoveCss",
+                "css": remove_css,
+            },
+            {"frameId": frame_id},
+        )).catch(lambda error: logger.error(f"Ошибка при удалении CSS: {remove_css}", error))
+    try:
+        browser.tabs.insertCSS(
+            tab_id,
+            {
                 "code": css,
                 "cssOrigin": "author",
-                "matchAboutBlank": true,
-                "frameId": frameId
-            });
-            # Отправка сообщения об успешной вставке CSS
-             await browser.tabs.sendMessage(id, {
-                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "finishInsertCss",
-                "css": css
-            }, {
-                "frameId": frameId
-            });
-        } catch (error) {
-             # Логирование ошибки при вставке CSS
-            logger.error(`Ошибка при вставке CSS: ${error}`, error);
-        }
-    };
-    /**
-     * Загружает опции.
-     *
-     * :param message: Объект сообщения.
-     * :param sender: Объект отправителя.
-     * :param sendResponse: Функция для отправки ответа.
-     * :return: true.
-     */
-    genericListener.listeners.loadOptions = function (message, sender,
-                                                      sendResponse) {
-        sendResponse({
-            "attributes": attributes,
+                "matchAboutBlank": True,
+                "frameId": frame_id,
+            },
+        ).then(lambda: browser.tabs.sendMessage(
+            tab_id,
+            {
+                **_DEFAULT_TIMEOUT_OBJ,
+                "event": "finishInsertCss",
+                "css": css,
+            },
+            {"frameId": frame_id},
+        )).catch(lambda error: logger.error(f"Ошибка при вставке CSS: {css}", error))
+    except Exception as ex:
+        logger.error("Ошибка при вставке/удалении CSS", ex)
+
+
+_generic_listener.listeners["updateCss"] = _update_css
+
+
+def _load_options(message, sender, sendResponse):
+    """
+    Отправляет текущие настройки.
+
+    :param message: Объект сообщения.
+    :param sender: Объект отправителя.
+    :param sendResponse: Функция для отправки ответа.
+    :return: True, если запрос обработан.
+    """
+    sendResponse(
+        {
+            "attributes": _ATTRIBUTES,
             "css": css,
-            "popupCss": popupCss
-        });
-        return true;
-    };
-     /**
-     * Запрашивает установку информации о контенте.
-     *
-     * :param message: Объект сообщения.
-     * :param sender: Объект отправителя.
-     */
-    genericListener.listeners.requestSetContentInfo = function (message,
-                                                                sender) {
-        # Проверка существования sender.tab и sender.frameId
-        if (!sender || !sender.tab || sender.frameId === undefined) {
-            logger.error("Некорректный отправитель сообщения", sender);
-            return;
+            "popupCss": _POPUP_CSS,
         }
-        browser.tabs.sendMessage(sender.tab.id, {
-            "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setContentInfo",
-            "attributes": attributes
-        }, {
-            "frameId": sender.frameId
-        });
-    };
+    )
+    return True
 
-     # Слушатель изменений в хранилище
-    browser.storage.onChanged.addListener(changes => {
-        if (changes.attributes && ("newValue" in changes.attributes)) {
-            attributes = changes.attributes.newValue;
-        }
-        if (changes.css && ("newValue" in changes.css)) {
-            css = changes.css.newValue;
-        }
-        if (changes.popupCss && ("newValue" in changes.popupCss)) {
-            popupCss = changes.popupCss.newValue;
-        }
-    });
 
-    # Получение данных из хранилища и загрузка CSS
-    browser.storage.sync.get({
-        "attributes": attributes,
-        "css": null,
-        "popupCss": popupCss
-    }).then(items => {
-        attributes = items.attributes;
-        popupCss = items.popupCss;
-        if (items.css !== null) {
-            return items.css;
-        } else {
-            return loadDefaultCss();
-        }
-    }).then(loadedCss => {
-        css = loadedCss;
-    }).catch(fu.onError);
+_generic_listener.listeners["loadOptions"] = _load_options
 
-})(window);
+
+def _request_set_content_info(message, sender):
+    """
+    Отправляет запрос на установку информации о контенте.
+
+    :param message: Объект сообщения.
+    :param sender: Объект отправителя.
+    """
+    browser.tabs.sendMessage(
+        sender.tab.id,
+        {
+            **_DEFAULT_TIMEOUT_OBJ,
+            "event": "setContentInfo",
+            "attributes": _ATTRIBUTES,
+        },
+        {"frameId": sender.frameId},
+    )
+
+
+_generic_listener.listeners["requestSetContentInfo"] = _request_set_content_info
+
+def _handle_storage_change(changes):
+    """
+    Обрабатывает изменения в хранилище.
+
+    :param changes: Объект с изменениями в хранилище.
+    """
+    global _ATTRIBUTES, css, _POPUP_CSS  # pylint: disable=global-statement
+    if "attributes" in changes and "newValue" in changes["attributes"]:
+        _ATTRIBUTES = changes["attributes"]["newValue"]
+    if "css" in changes and "newValue" in changes["css"]:
+        css = changes["css"]["newValue"]
+    if "popupCss" in changes and "newValue" in changes["popupCss"]:
+        _POPUP_CSS = changes["popupCss"]["newValue"]
+
+
+browser.storage.onChanged.addListener(_handle_storage_change)
+
+
+def _handle_storage_get(items):
+    """
+    Обрабатывает полученные из хранилища данные.
+
+    :param items: Объект с данными из хранилища.
+    """
+    global _ATTRIBUTES, css, _POPUP_CSS  # pylint: disable=global-statement
+    _ATTRIBUTES = items.get("attributes", _ATTRIBUTES)
+    _POPUP_CSS = items.get("popupCss", _POPUP_CSS)
+    css_promise = (
+        items.get("css")
+        if items.get("css") is not None
+        else _load_default_css()
+    )
+
+    css_promise.then(lambda loaded_css: setattr(globals(), "css", loaded_css)).catch(
+        lambda error: logger.error("Ошибка при загрузке CSS:", error)
+    )
+
+browser.storage.sync.get(
+    {
+        "attributes": _ATTRIBUTES,
+        "css": None,
+        "popupCss": _POPUP_CSS,
+    }
+).then(_handle_storage_get).catch(lambda error: logger.error("Ошибка при загрузке настроек", error))
+```

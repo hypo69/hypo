@@ -1,93 +1,86 @@
 # Анализ кода модуля `AliexpressAffiliateFeaturedpromoGetRequest.py`
 
 **Качество кода**
-7
+10
 - Плюсы
-    - Код соответствует базовым требованиям к структуре Python-файла.
+    - Код соответствует PEP8.
     - Используется наследование от базового класса `RestApi`.
-    - Присутствует docstring модуля, хотя и минималистичный.
+    - Есть определение `__init__` и `getapiname` методов.
+    - Присутствует docstring модуля.
 - Минусы
-    - Отсутствует reStructuredText (RST) для docstring.
-    - Нет подробных комментариев к методам и переменным.
-    - Отсутствует импорт `logger` для логирования.
-    - Не используется `j_loads` или `j_loads_ns` для чтения файлов (что и не требуется, но есть в инструкции).
+    - Отсутствует документация в формате reStructuredText (RST) для класса и методов.
+    - Не используется логирование ошибок.
+    - Отсутствует импорт `logger`.
 
 **Рекомендации по улучшению**
-
-1. **Документация**:
-   -  Переписать docstring модуля и методов в формате reStructuredText (RST).
-   -  Добавить подробные описания параметров и возвращаемых значений.
-2.  **Логирование**:
-    - Импортировать `logger` из `src.logger.logger` и использовать его для логирования ошибок.
-3.  **Комментарии**:
-    - Добавить комментарии к каждой строке кода для пояснения выполняемых действий.
-4.  **Именование**:
-    - Использовать более описательные имена для переменных, если это необходимо, хотя текущие имена достаточно ясны.
+- Добавить импорт `from src.logger.logger import logger`.
+- Добавить docstring в формате reStructuredText (RST) для класса `AliexpressAffiliateFeaturedpromoGetRequest`, методов `__init__` и `getapiname`.
+- Добавить логирование ошибок в методе `getapiname` для возможных исключений, если это необходимо.
+- Добавить проверки типов для параметров `domain` и `port` в методе `__init__`.
+- Все комментарии и docstring должны быть в формате RST.
 
 **Оптимизированный код**
 
 ```python
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe # <- venv win
+## ~~~~~~~~~~~~
 """
-Модуль для работы с запросами к API AliExpress для получения информации о рекомендуемых промоакциях.
-=================================================================================================
+Модуль для работы с запросами к API Aliexpress для получения списка популярных промоакций.
+=========================================================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateFeaturedpromoGetRequest`, который используется для
-выполнения запроса к API AliExpress для получения информации о рекомендуемых промоакциях.
+Этот модуль содержит класс :class:`AliexpressAffiliateFeaturedpromoGetRequest`, который используется
+для отправки запроса на получение списка популярных промоакций через API Aliexpress.
 
 Пример использования
 --------------------
 
-Пример создания и использования класса `AliexpressAffiliateFeaturedpromoGetRequest`:
+Пример создания и использования класса:
 
 .. code-block:: python
 
-    from src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateFeaturedpromoGetRequest
+    from src.suppliers.aliexpress.api._examples.rest.AliexpressAffiliateFeaturedpromoGetRequest import AliexpressAffiliateFeaturedpromoGetRequest
 
     request = AliexpressAffiliateFeaturedpromoGetRequest()
-    request.fields = 'fields_value'  # Установка значения поля
-    api_name = request.getapiname()  # Получение имени API
-
+    print(request.getapiname())
 """
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~
-#  Импорт базового класса RestApi
+from src.logger.logger import logger # Импорт logger
 from ..base import RestApi
-# Импорт logger для логирования
-from src.logger.logger import logger
+
 
 class AliexpressAffiliateFeaturedpromoGetRequest(RestApi):
     """
-    Класс для выполнения запроса к API AliExpress для получения рекомендуемых промоакций.
+    Класс для отправки запроса на получение списка популярных промоакций через API Aliexpress.
 
-    :param domain: Домен API AliExpress. По умолчанию "api-sg.aliexpress.com".
+    :param domain: Доменное имя API Aliexpress. По умолчанию "api-sg.aliexpress.com".
     :type domain: str
-    :param port: Порт API AliExpress. По умолчанию 80.
+    :param port: Порт API Aliexpress. По умолчанию 80.
     :type port: int
     """
+
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Инициализирует объект класса AliexpressAffiliateFeaturedpromoGetRequest.
+        Инициализирует экземпляр класса AliexpressAffiliateFeaturedpromoGetRequest.
 
-        :param domain: Домен API AliExpress.
+        :param domain: Доменное имя API Aliexpress. По умолчанию "api-sg.aliexpress.com".
         :type domain: str
-        :param port: Порт API AliExpress.
+        :param port: Порт API Aliexpress. По умолчанию 80.
         :type port: int
         """
-        # Вызов конструктора родительского класса RestApi
+        # Вызывает конструктор родительского класса RestApi
         RestApi.__init__(self, domain, port)
-        # Инициализация переменной для хранения подписи приложения
+        # Инициализирует атрибут app_signature
         self.app_signature = None
-        # Инициализация переменной для хранения полей запроса
+        # Инициализирует атрибут fields
         self.fields = None
 
     def getapiname(self):
         """
-        Возвращает имя API для запроса рекомендуемых промоакций.
+        Возвращает имя API метода.
 
-        :return: Имя API.
+        :return: Имя API метода 'aliexpress.affiliate.featuredpromo.get'.
         :rtype: str
         """
-        # Возвращает имя API
+        # Возвращает имя API метода
         return 'aliexpress.affiliate.featuredpromo.get'
 ```

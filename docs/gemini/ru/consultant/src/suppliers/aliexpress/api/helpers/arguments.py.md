@@ -1,95 +1,100 @@
 # Анализ кода модуля `arguments.py`
 
 **Качество кода**
-8
--  Плюсы
-    - Код выполняет поставленные задачи, обрабатывая различные типы аргументов.
-    - Используется `InvalidArgumentException` для обработки некорректных аргументов.
-    - Функции достаточно простые и понятные.
- -  Минусы
-    - Отсутствуют docstring для функций.
-    - Нет обработки возможных ошибок в `get_product_id`.
-    - Нет импорта `logger` для логирования ошибок.
-    - Нет явного возврата None в функции `get_list_as_string`, если `value` is None.
+7
+ - Плюсы
+    - Код достаточно структурирован и выполняет поставленные задачи.
+    - Используются явные проверки типов для входных аргументов.
+    - Присутствует обработка исключений для неверных типов аргументов.
+    - Присутствуют docstring для модуля
+
+ - Минусы
+    - Отсутствуют docstring для функций
+    - Не используется `logger` для обработки исключений.
+    - В функциях недостаточно проверок на валидность данных.
+    - Нарушение snake_case в именах переменных `product_ids`
+    - Не используется `j_loads` или `j_loads_ns`
 
 **Рекомендации по улучшению**
-
-1. Добавить docstring для каждой функции с использованием reStructuredText.
-2. Импортировать `logger` и использовать его для логирования ошибок.
-3. Изменить обработку `None` в `get_list_as_string`, чтобы явно возвращать `None`.
-4. Добавить обработку исключений в `get_product_ids`, чтобы логировать ошибки, если `get_product_id` вернет ошибку.
-5. Использовать одинарные кавычки для строк.
+1. Добавить docstring к каждой функции в формате reStructuredText (RST), включая описание параметров и возвращаемых значений.
+2. Заменить стандартное исключение `raise InvalidArgumentException` на использование `logger.error` для логирования ошибки и возврата `None` или другого значения по умолчанию.
+3. Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это применимо (в данном коде не используется, но рекомендуется к использованию).
+4.  Использовать snake_case для именования переменных.
+5.  Проверять на пустоту входные значения
+6.  Добавить проверки `value` на пустую строку
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
-## ~~~~~~~~~~~~~
-
+## ~~~~~~~~~~~~
 """
 Модуль для обработки аргументов API AliExpress.
 =================================================
 
-Этот модуль содержит функции для обработки различных типов аргументов, 
-используемых в запросах к API AliExpress. Включает функции для преобразования списков в строки и извлечения идентификаторов продуктов.
+Этот модуль содержит функции для обработки входных аргументов,
+таких как преобразование списка в строку и извлечение идентификаторов продуктов.
 """
-
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 from src.logger.logger import logger
 from ..tools.get_product_id import get_product_id
 from ..errors.exceptions import InvalidArgumentException
 
-
 def get_list_as_string(value: Optional[Union[str, List]]) -> Optional[str]:
     """
-    Преобразует значение в строку, если это список.
+    Преобразует список или строку в строку с разделителями.
 
-    :param value: Значение для преобразования (строка, список или None).
+    :param value: Список строк, строка или None.
     :type value: Optional[Union[str, List]]
-    :return: Строка, полученная из списка, или исходная строка, или None, если значение None.
+    :return: Строка, полученная из списка с разделителями, или None, если входное значение None.
     :rtype: Optional[str]
-    :raises InvalidArgumentException: Если значение не является строкой, списком или None.
+    :raises InvalidArgumentException: Если входное значение не является строкой, списком или None.
     """
     if value is None:
-        return None # Явный возврат None
-    # Проверка типа
+        return None
+
     if isinstance(value, str):
         return value
-    # Если список, преобразуем в строку
-    elif isinstance(value, list):
-        return ','.join(value)
-    # Если не список или строка, выбрасываем исключение
-    else:
-        logger.error(f'Некорректный тип аргумента: {value}')
-        raise InvalidArgumentException(f'Argument should be a list or string: {value}')
+
+    if isinstance(value, list):
+        return ','.join(map(str, value))
 
 
-def get_product_ids(values: Union[str, List[str]]) -> List[str]:
+    logger.error(f'Argument should be a list or string: {value}')
+    raise InvalidArgumentException(f'Argument should be a list or string: {value}')
+
+
+
+def get_product_ids(values: Union[str, List[str]]) -> Optional[List[str]]:
     """
-    Извлекает идентификаторы продуктов из строки или списка.
+    Извлекает и возвращает список идентификаторов продуктов.
 
-    :param values: Список идентификаторов продуктов или строка с идентификаторами, разделенными запятыми.
+    :param values: Список или строка идентификаторов продуктов, разделенных запятыми.
     :type values: Union[str, List[str]]
     :return: Список идентификаторов продуктов.
-    :rtype: List[str]
-    :raises InvalidArgumentException: Если аргумент не является списком или строкой.
+    :rtype: Optional[List[str]]
+    :raises InvalidArgumentException: Если входное значение не является строкой или списком.
     """
-    # Преобразуем строку в список, если это строка
+    if not values:
+        logger.error(f'Argument product_ids should be not empty: {values=}')
+        return None
+
     if isinstance(values, str):
+        if not values.strip():
+            logger.error(f'Argument product_ids should be not empty string: {values=}')
+            return None
         values = values.split(',')
-    # Проверяем, что аргумент является списком
-    elif not isinstance(values, list):
-        logger.error(f'Некорректный тип аргумента: {values}')
+
+
+    if not isinstance(values, list):
+        logger.error(f'Argument product_ids should be a list or string: {values=}')
         raise InvalidArgumentException('Argument product_ids should be a list or string')
 
     product_ids = []
-    # Извлекаем идентификаторы и обрабатываем возможные исключения
     for value in values:
-        try:
-            product_ids.append(get_product_id(value))
-        except Exception as e:
-            logger.error(f'Ошибка при извлечении product_id из {value}: {e}')
+        if not value.strip():
+            logger.error(f'product_id should be not empty string: {value=}')
             continue
+        product_ids.append(get_product_id(value))
     return product_ids
 ```

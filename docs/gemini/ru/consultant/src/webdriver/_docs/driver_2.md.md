@@ -1,293 +1,327 @@
-# Анализ кода модуля `driver`
+# Анализ кода модуля `driver.py`
 
-**Качество кода: 8/10**
--   **Плюсы**
-    -   Хорошая структура, разделение на классы `DriverBase` и `DriverMeta`, что обеспечивает гибкость и расширяемость.
-    -   Используется метакласс для динамического создания классов драйверов.
-    -   Наличие базовых методов для управления браузером, таких как переходы по URL, скроллинг, сохранение куки и т.д.
-    -   Присутствует логирование и обработка исключений.
--   **Минусы**
-    -   Не все методы класса `DriverBase` имеют docstring в формате RST.
-    -   Отсутствуют docstring для класса `Driver`.
-    -   Импорты не отсортированы по алфавиту, и не хватает импорта `Any` из `typing`.
-    -   Используются стандартные блоки `try-except` для обработки исключений, которые можно заменить на `logger.error` для большей читаемости.
-    -   В методе `scroll` используется `time.sleep` для задержки, что не является лучшей практикой в асинхронных операциях.
-    -   Некоторые комментарии могут быть более информативными.
+**Качество кода**
+8
+-   Плюсы
+    -   Код хорошо структурирован и использует объектно-ориентированный подход.
+    -   Присутствует разделение на базовый класс `DriverBase` и метакласс `DriverMeta`, что способствует расширяемости и повторному использованию кода.
+    -   Используются стандартные библиотеки `selenium` для управления браузером, а также собственные модули для логирования, выполнения JavaScript и обработки исключений.
+    -   Логика работы с куками вынесена в отдельный метод.
+    -   В целом код имеет хорошую читаемость.
+-   Минусы
+    -   Отсутствует docstring для модуля, что затрудняет понимание его назначения.
+    -   В некоторых методах отсутствуют подробные docstring, особенно в `DriverBase`, что снижает понимание функциональности класса.
+    -   Не везде используется `logger.error` для обработки исключений, что усложняет отладку.
+    -   Использование `...` в коде в качестве заглушек усложняет отладку.
+    -   Отсутствуют некоторые необходимые импорты.
 
 **Рекомендации по улучшению**
 
-1.  **Документация**:
-    -   Добавить docstring в формате RST ко всем методам и классам.
-    -   Использовать docstring Sphinx для более ясной документации.
-2.  **Импорты**:
-    -   Отсортировать импорты в алфавитном порядке.
-    -   Добавить `Any` из `typing`.
-3.  **Логирование**:
-    -   Заменить стандартные `try-except` на `logger.error` для обработки исключений.
-4.  **Обработка ошибок**:
-    -   Добавить более подробное логирование ошибок.
-5.  **Рефакторинг**:
-    -   Удалить неиспользуемый импорт `sys`.
-    -   Переименовать переменную `to_file` в методе `_save_cookies_localy` на `file_path`, чтобы подчеркнуть ее назначение.
-    -   Избегать использования `time.sleep`, если есть возможность использовать другие методы задержки.
-6.  **Комментарии**:
-    -   В комментариях после `#` давать более подробное объяснение следующего за ними кода.
-    -   Удалить лишние комментарии.
+1.  **Добавить docstring модуля**:
+    -   Добавить подробное описание модуля в формате RST, включая примеры использования.
+2.  **Улучшить docstring методов**:
+    -   Добавить подробные описания для каждого метода в формате RST.
+    -   Указать типы аргументов и возвращаемых значений.
+3.  **Использовать `logger.error` для обработки исключений**:
+    -   Заменить стандартные `try-except` блоки на обработку ошибок с помощью `logger.error`, добавив информацию об исключении.
+4.  **Добавить импорты**:
+    -   Добавить отсутствующие импорты, такие как `Any` из `typing`.
+5.  **Убрать `...`**:
+    -   Убрать `...` из кода и обработать ошибки используя `logger.error`, где это необходимо.
+6.  **Унифицировать код**:
+     -  Убедиться, что все комментарии, переменные и импорты соответствуют ранее обработанным файлам.
+7.  **Добавить закрытие драйвера**:
+    -  Добавить метод для закрытия драйвера.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для создания и управления веб-драйверами.
+Модуль для работы с веб-драйверами.
 =========================================================================================
 
-Этот модуль предоставляет базовый класс `DriverBase` для работы с веб-драйверами,
-а также метакласс `DriverMeta`, позволяющий динамически создавать классы драйверов
-для различных браузеров (например, Chrome, Firefox, Edge).
-
-Класс `Driver` создается с помощью метакласса `DriverMeta`, который принимает класс
-веб-драйвера (например, `Chrome`) и создает класс драйвера, который наследует
-функциональность `DriverBase`.
+Этот модуль предоставляет базовые классы и метакласс для управления веб-драйверами,
+такие как Chrome, Firefox и Edge, на основе библиотеки Selenium.
+Модуль включает функциональность для взаимодействия с веб-страницами, выполнения JavaScript,
+управления куками и обработки исключений.
 
 Пример использования
 --------------------
 
+Пример использования класса `Driver`:
+
 .. code-block:: python
 
-    from src.webdriver.driver import Driver, Chrome, Firefox, Edge
-
-    # Создание экземпляра драйвера для Chrome
-    d = Driver(Chrome)
-    d.get_url("https://example.com")
+    from src.webdriver.driver import Driver, Chrome
+    driver_instance = Driver(Chrome)
+    driver_instance.get_url("https://example.com")
+    driver_instance.scroll(scrolls=3, frame_size=500, direction='forward', delay=0.5)
 
 """
-import copy
+import sys
 import pickle
 import time
-import urllib.parse
+import copy
 from pathlib import Path
-from typing import Any, Type, Union
-
-from selenium.common.exceptions import (
-    ElementClickInterceptedException,
-    ElementNotInteractableException,
-    ElementNotVisibleException,
-    InvalidArgumentException,
-)
+from typing import Type, Union, Any  # Добавлен импорт Any
+import urllib.parse
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import (
+    InvalidArgumentException,
+    ElementClickInterceptedException,
+    ElementNotInteractableException,
+    ElementNotVisibleException
+)
 
 from src import gs
-from src.logger.exceptions import WebDriverException
-from src.logger.logger import logger
-from src.utils.printer import pprint
 from src.webdriver.executor import ExecuteLocator
 from src.webdriver.javascript.js import JavaScript
+from src.utils.printer import pprint
+from src.logger.logger import logger
+from src.logger.exceptions import WebDriverException
 
 
 class DriverBase:
     """
     Базовый класс для веб-драйвера с общими атрибутами и методами.
+    =========================================================================================
 
-    Этот класс содержит методы и атрибуты, общие для всех реализаций веб-драйверов,
-    включая функциональность для взаимодействия со страницей, выполнение JavaScript
-    и управление куками.
+    Этот класс содержит методы и атрибуты, общие для всех реализаций WebDriver,
+    включая функциональные возможности для взаимодействия со страницей,
+    выполнения JavaScript и управления куками.
     """
-
     previous_url: str = ''
     referrer: str = ''
     page_lang: str = ''
+    ready_state: str = 'complete'
+    
+    def get_page_lang(self) -> str:
+        """
+        Код исполняет получение языка текущей страницы.
 
-    def __init__(self):
+        :return: Язык страницы.
         """
-        Инициализирует методы JavaScript и ExecuteLocator.
-        """
-        self.js = JavaScript()
-        self.driver_execute = ExecuteLocator(self)
+        return self.driver.execute_script('return document.documentElement.lang')
 
-    def driver_payload(self) -> None:
+    def get_location(self) -> str:
         """
-        Инициализирует необходимые методы для работы с драйвером.
-        """
-        self.js = JavaScript()
-        self.driver_execute = ExecuteLocator(self)
+        Код исполняет получение текущего URL страницы.
 
-    def scroll(self, scrolls: int = 3, frame_size: int = 500, direction: str = 'forward', delay: float = 0.5) -> None:
+        :return: URL текущей страницы.
         """
-        Прокручивает страницу в указанном направлении.
+        return self.driver.execute_script('return document.location.href')
+
+    def get_title(self) -> str:
+        """
+        Код исполняет получение заголовка текущей страницы.
+
+        :return: Заголовок страницы.
+        """
+        return self.driver.execute_script('return document.title')
+
+    def get_url_without_parameters(self, url: str) -> str:
+        """
+        Код исполняет удаление параметров из URL.
+
+        :param url: URL для обработки.
+        :return: URL без параметров.
+        """
+        return urllib.parse.urljoin(url, urllib.parse.urlparse(url).path)
+
+    def get_url_parameters(self, url: str) -> dict:
+        """
+        Код исполняет извлечение параметров из URL.
+
+        :param url: URL для обработки.
+        :return: Словарь параметров URL.
+        """
+        return dict(urllib.parse.parse_qsl(urllib.parse.urlparse(url).query))
+
+    def get_page_source(self) -> str:
+        """
+        Код исполняет получение исходного кода текущей страницы.
+
+        :return: Исходный код страницы.
+        """
+        return self.driver.page_source
+
+    def driver_payload(self):
+        """
+        Инициализация методов JavaScript и ExecuteLocator.
+        """
+        self.js = JavaScript(self.driver)
+        self.executor = ExecuteLocator(self.driver)
+
+    def scroll(self, scrolls: int = 3, frame_size: int = 500, direction: str = 'forward', delay: float = 0.5):
+        """
+        Выполняет прокрутку страницы.
 
         :param scrolls: Количество прокруток.
         :param frame_size: Размер прокрутки в пикселях.
-        :param direction: Направление прокрутки ('forward' или 'back').
-        :param delay: Задержка между прокрутками.
+        :param direction: Направление прокрутки ('forward' или 'backward').
+        :param delay: Задержка между прокрутками в секундах.
         """
         try:
-            # код исполняет прокрутку страницы
-            for _ in range(scrolls):
-                if direction == 'forward':
-                    self.js.scroll_down(frame_size)
-                elif direction == 'back':
-                    self.js.scroll_up(frame_size)
-                else:
-                   logger.error(f'Неверно указано направление прокрутки: {direction}')
-                   return
-                time.sleep(delay)
+            if direction == 'forward':
+                for _ in range(scrolls):
+                    self.driver.execute_script(f'window.scrollBy(0,{frame_size});')
+                    self.wait(delay)
+            elif direction == 'backward':
+                for _ in range(scrolls):
+                    self.driver.execute_script(f'window.scrollBy(0,-{frame_size});')
+                    self.wait(delay)
+            else:
+                logger.error(f'Неверное направление прокрутки {direction=}')
         except Exception as ex:
-             logger.error(f'Ошибка при прокрутке страницы', ex)
+            logger.error(f'Ошибка при прокрутке страницы: {ex}')
 
     def locale(self) -> str:
         """
-        Определяет язык текущей страницы.
+        Определение языка страницы.
 
         :return: Язык страницы.
         """
         try:
-            # код исполняет получение языка страницы
-            lang = self.js.get_page_lang()
-            if lang:
-                self.page_lang = lang
-            return self.page_lang
+             lang = self.get_page_lang()
+             self.page_lang = lang if lang else  self.page_lang
+             return  self.page_lang
         except Exception as ex:
-             logger.error(f'Ошибка при определении языка страницы', ex)
+            logger.error(f'Ошибка определения языка страницы {ex}')
+            return self.page_lang
 
-    def get_url(self, url: str) -> bool:
+    def get_url(self, url: str):
         """
-        Переходит по указанному URL и проверяет успешность перехода.
+        Код исполняет переход по указанному URL.
 
         :param url: URL для перехода.
-        :return: True, если переход успешен, иначе False.
         """
         try:
-            # код исполняет переход по указанному URL
-            self.referrer = self.current_url
-            self.previous_url = self.current_url
+            self.previous_url = self.get_location() if self.get_location() else self.previous_url
             self.driver.get(url)
-            # Проверка успешности перехода
-            if self.current_url == url:
-                return True
-            else:
-                logger.error(f'Не удалось перейти на страницу {url}')
-                return False
+            if not self.get_location() == url:
+                logger.error(f'Ошибка перехода на {url}')
         except Exception as ex:
-            logger.error(f'Ошибка при переходе на страницу {url}', ex)
-            return False
+            logger.error(f'Ошибка перехода по URL: {url} {ex}')
 
     def extract_domain(self, url: str) -> str:
         """
-        Извлекает доменное имя из URL.
+        Код исполняет извлечение доменного имени из URL.
 
-        :param url: URL для извлечения домена.
+        :param url: URL для обработки.
         :return: Доменное имя.
         """
         try:
-            # код исполняет извлечение доменного имени из URL
-            parsed_url = urllib.parse.urlparse(url)
-            return parsed_url.netloc
+            return urllib.parse.urlparse(url).netloc
         except Exception as ex:
-            logger.error(f'Ошибка при извлечении домена из URL {url}', ex)
+            logger.error(f'Ошибка извлечения домена из URL: {url} {ex}')
             return ''
 
-    def _save_cookies_localy(self, file_path: Union[str, Path]) -> None:
+    def _save_cookies_localy(self, to_file: Union[str, Path]):
         """
-        Сохраняет куки в файл.
+        Код исполняет сохранение куки в локальный файл.
 
-        :param file_path: Путь к файлу для сохранения куки.
+        :param to_file: Путь к файлу для сохранения куки.
         """
         try:
-            # код исполняет сохранение куки в файл
-            with open(file_path, 'wb') as file:
-                pickle.dump(self.driver.get_cookies(), file)
+            cookies = self.driver.get_cookies()
+            pickle.dump(cookies, open(to_file, 'wb'))
         except Exception as ex:
-             logger.error(f'Ошибка при сохранении куки в файл {file_path}', ex)
+             logger.error(f'Ошибка при сохранении куки в файл: {to_file} {ex}')
 
-    def page_refresh(self) -> None:
+    def page_refresh(self):
         """
-        Обновляет текущую страницу.
+        Код исполняет обновление текущей страницы.
         """
         try:
-            # код исполняет обновление текущей страницы
-            self.driver.refresh()
+             self.driver.refresh()
         except Exception as ex:
-            logger.error(f'Ошибка при обновлении страницы', ex)
+            logger.error(f'Ошибка при обновлении страницы {ex}')
 
-    def window_focus(self) -> None:
+    def window_focus(self):
         """
-        Восстанавливает фокус на странице.
+        Код исполняет восстановление фокуса на текущем окне.
         """
         try:
-           # код исполняет восстановление фокуса на странице
-           self.driver.switch_to.window(self.driver.current_window_handle)
+            self.driver.switch_to.window(self.driver.current_window_handle)
         except Exception as ex:
-            logger.error(f'Ошибка при восстановлении фокуса на странице', ex)
+            logger.error(f'Ошибка при переключении фокуса на окно {ex}')
 
-    def wait(self, interval: float) -> None:
+    def wait(self, interval: float):
         """
-        Делает паузу на указанное время.
+        Код исполняет приостановку выполнения на указанное время.
 
-        :param interval: Время паузы в секундах.
+        :param interval: Время приостановки в секундах.
         """
         try:
-            # код исполняет паузу на указанное время
             time.sleep(interval)
         except Exception as ex:
-            logger.error(f'Ошибка при ожидании', ex)
+            logger.error(f'Ошибка паузы {ex}')
 
-    def delete_driver_logs(self) -> None:
+    def delete_driver_logs(self):
         """
-        Удаляет временные файлы и логи WebDriver.
+        Код исполняет удаление временных файлов и логов WebDriver.
         """
         try:
-            # код исполняет удаление временных файлов и логов WebDriver
-            if hasattr(self.driver, 'close'):
-                self.driver.close()
-            if hasattr(self.driver, 'quit'):
-                self.driver.quit()
+            if gs.temp_dir.exists():
+                for item in gs.temp_dir.iterdir():
+                     item.unlink()
         except Exception as ex:
-             logger.error(f'Ошибка при удалении логов и файлов драйвера', ex)
+            logger.error(f'Ошибка при удалении логов драйвера {ex}')
+
+    def close_driver(self):
+        """
+        Код исполняет закрытие драйвера.
+        """
+        try:
+            self.driver.quit()
+        except Exception as ex:
+            logger.error(f'Ошибка закрытия драйвера {ex}')
+
 
 class DriverMeta(type):
     """
-    Метакласс для создания класса Driver.
-
-    Этот метакласс используется для динамического создания класса `Driver`,
-    который наследует от `DriverBase` и указанного класса веб-драйвера.
+    Метакласс для динамического создания класса Driver.
+    =========================================================================================
     """
     def __call__(cls, webdriver_cls: Type, *args, **kwargs):
         """
-        Создает новый класс `Driver`, наследуемый от `DriverBase` и указанного класса веб-драйвера.
-
-        :param webdriver_cls: Класс веб-драйвера (например, Chrome, Firefox).
-        :param args: Позиционные аргументы для конструктора веб-драйвера.
-        :param kwargs: Именованные аргументы для конструктора веб-драйвера.
-        :return: Новый класс `Driver`.
+        Создает новый класс Driver, который наследует от DriverBase и указанного класса WebDriver.
+        
+        :param webdriver_cls: Класс WebDriver, от которого наследовать.
+        :param args: Аргументы для инициализации класса WebDriver.
+        :param kwargs: Именованные аргументы для инициализации класса WebDriver.
         """
         class Driver(DriverBase, webdriver_cls):
             """
-            Динамически созданный класс WebDriver, наследуемый от DriverBase и указанного класса WebDriver.
+            Динамически созданный класс WebDriver, который наследует от DriverBase и указанного класса WebDriver.
             """
             def __init__(self, *args, **kwargs):
                 """
-                Инициализирует новый драйвер и вызывает driver_payload.
+                Инициализация драйвера и вызов метода driver_payload.
+
+                :param args: Аргументы для инициализации класса WebDriver.
+                :param kwargs: Именованные аргументы для инициализации класса WebDriver.
                 """
-                DriverBase.__init__(self)
                 webdriver_cls.__init__(self, *args, **kwargs)
-                self.driver_payload()
+                DriverBase.driver_payload(self)
+
+
         return Driver
 
 
 class Driver(metaclass=DriverMeta):
     """
-    Динамически созданный класс WebDriver, наследуемый от DriverBase и указанного класса WebDriver.
-
-    .. code-block:: python
-
-        from src.webdriver.driver import Driver, Chrome, Firefox, Edge
-        d = Driver(Chrome)
-
+    Динамически созданный класс WebDriver, который наследует от DriverBase и указанного класса WebDriver.
+    
+    :code
+    from src.webdriver.driver import Driver, Chrome, Firefox, Edge
+    d = Driver(Chrome)
+    :endcode
     """
     ...
 ```

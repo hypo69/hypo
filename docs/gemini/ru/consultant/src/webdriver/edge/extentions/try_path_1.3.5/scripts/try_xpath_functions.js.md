@@ -1,326 +1,393 @@
 # Анализ кода модуля try_xpath_functions.js
 
 **Качество кода**
-8
-- Плюсы
-    - Код хорошо структурирован и разбит на функции, что облегчает его понимание и поддержку.
-    - Используются константы для типов узлов и результатов XPath, что делает код более читаемым и менее подверженным ошибкам.
-    -  Присутствуют проверки типов и ошибок, что помогает предотвратить неожиданное поведение.
-    -  Есть функции для сохранения и восстановления классов и атрибутов элементов, что полезно для временных изменений DOM.
-    -  Используется `Map` для хранения соответствий, что обеспечивает эффективный доступ к данным.
-- Минусы
-    -  Не хватает документации в формате RST для функций и модуля.
-    -  Присутствуют стандартные блоки `try-except`, которые можно заменить на логирование ошибок.
-    -  Не все функции имеют четкое описание своей работы.
-    -  Некоторые функции, такие как `fu.onError`, пустые и не используются.
-    -  В некоторых местах используется `var` вместо `let` или `const`.
-    - Отсутствует обработка возможных ошибок при работе с `document` и DOM-элементами.
-    - Есть потенциальные проблемы с производительностью при работе с большими наборами данных (необходимо использовать более эффективные методы).
+
+- Соответствие требованиям по оформлению кода: 6/10
+    - Плюсы:
+        - Код разбит на функции, что улучшает читаемость и повторное использование.
+        - Используется strict mode.
+        - Присутствуют некоторые комментарии, объясняющие назначение кода.
+        - Функции сгруппированы в пространстве имен `tryxpath.functions`.
+    - Минусы:
+        - Отсутствует reStructuredText (RST) документация для функций и модуля.
+        - Присутствуют `try-catch` блоки без логирования ошибок.
+        - Не используется `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+        - Некоторые функции имеют сложные вложенные структуры, которые можно упростить.
+        - Не все переменные и функции имеют описательные имена.
+        - Присутствует дублирование кода (например, создание `th` элементов в `createDetailTableHeader` и `createHeaderRow`).
 
 **Рекомендации по улучшению**
-1. Добавить reStructuredText (RST) комментарии для модуля и всех функций, переменных.
-2. Заменить стандартные блоки `try-except` на использование `logger.error` для логирования ошибок.
-3. Добавить проверки на существование DOM-элементов перед их использованием.
-4. Использовать `let` и `const` вместо `var` для объявления переменных.
-5. Использовать асинхронные операции и Promise API для работы с большими наборами данных, например, для `fu.appendDetailRows`.
-6. Использовать более итеративный подход для `fu.emptyChildNodes`, избегая рекурсивных вызовов, которые могут привести к проблемам со стеком.
-7. Устранить неиспользуемый метод `fu.onError`.
-8. Добавить обработку ошибок при обращении к свойствам DOM-элементов.
-9. Добавить описание для переменных, особенно констант.
-10. Оптимизировать работу с DOM, избегать лишних операций чтения/записи.
 
-**Оптимизиробанный код**
+1.  **Добавить RST документацию:**
+    - Добавить docstring для модуля в начале файла.
+    - Добавить docstring для каждой функции и метода, включая описание параметров и возвращаемых значений.
+    - Использовать комментарии в стиле reStructuredText (RST) для лучшего форматирования.
+2.  **Использовать логирование:**
+    - Заменить `console.log` на `logger.error` для логирования ошибок.
+    - Добавить логирование ошибок в блоках `try-except`.
+3.  **Использовать `j_loads` или `j_loads_ns`:**
+    - Заменить `JSON.parse` на `j_loads` или `j_loads_ns` при разборе JSON.
+4.  **Упростить код:**
+    - Упростить вложенные структуры функций, если это возможно.
+    - Избегать повторения кода путем создания общих функций.
+5.  **Улучшить именование переменных и функций:**
+    - Использовать более описательные имена для переменных и функций.
+6.  **Разделить функции на более мелкие:**
+    - Разделить крупные функции на более мелкие, чтобы улучшить читаемость и тестируемость.
+
+**Оптимизированный код**
+
 ```python
 """
-Модуль для работы с XPath и DOM
+Модуль для выполнения XPath запросов и работы с DOM
 =========================================================================================
 
-Этот модуль предоставляет набор функций для выполнения XPath-запросов,
-манипулирования DOM-элементами и получения информации о них.
+Этот модуль предоставляет набор функций для выполнения XPath запросов,
+манипулирования DOM элементами и извлечения информации о них.
 
-Функции включают в себя выполнение XPath-выражений, преобразование результатов,
-работу с атрибутами и классами элементов, а также управление табличным представлением данных.
+Он включает в себя функции для выполнения XPath выражений, преобразования результатов,
+работы с атрибутами, классами и родительскими элементами, а также для создания таблиц
+с деталями элементов.
 
 Пример использования
 --------------------
 
 .. code-block:: javascript
 
-    // Получение элементов по XPath
-    let result = tryxpath.functions.execExpr('//div', 'evaluate', { context: document });
-    console.log(result.items);
+    // Получение элементов по XPath выражению
+    var result = tryxpath.functions.execExpr(
+      '//div[@class="my-class"]',
+      'evaluate',
+      { context: document }
+    );
 
-    // Получение деталей элемента
-    let detail = tryxpath.functions.getItemDetail(document.body);
-    console.log(detail);
+    // Добавление класса ко всем найденным элементам
+    tryxpath.functions.addClassToItems('highlighted', result.items);
 
-    // Обновление таблицы с деталями элементов
-    let parent = document.getElementById('results');
-    tryxpath.functions.updateDetailsTable(parent, [detail]);
 """
 from src.logger.logger import logger
-import json
-# namespace
-if not 'tryxpath' in globals():
-    tryxpath = {}
-if not 'functions' in tryxpath:
+# /* This Source Code Form is subject to the terms of the Mozilla Public
+#  * License, v. 2.0. If a copy of the MPL was not distributed with this
+#  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+#
+# // namespace
+if not tryxpath:
+    var tryxpath = {}
+if not tryxpath.functions:
     tryxpath.functions = {}
 
-(lambda window, undefined: {
-    "use strict": True,
+(function (window, undefined) {
+    "use strict";
 
     # alias
-    "tx": tryxpath,
-    "fu": tryxpath.functions,
+    var tx = tryxpath
+    var fu = tryxpath.functions
 
     # prevent multiple execution
-    "if": fu.done if "done" in fu else None,
-    "if_not_done": lambda: None if not "done" in fu else fu.done,
-    "done":  lambda:  (lambda: setattr(fu, "done", True))() if "done" not in fu else None,
-    "not_done": lambda: (lambda: setattr(fu, "done", True))() if "done" not in fu else None,
-    "func": lambda: None if "done" in fu else (lambda: setattr(fu, "done", True))(),
+    if (fu.done) {
+        return
+    }
+    fu.done = true
 
-    lambda: None if "done" in fu else (lambda: setattr(fu, "done", True))(),
+    fu.execExpr = function(expr, method, opts) {
+        """
+        Выполняет XPath выражение или CSS селектор в заданном контексте.
 
-    """
-    Выполняет XPath-выражение или CSS-селектор.
-    
-    :param expr: Выражение XPath или CSS-селектор.
-    :type expr: str
-    :param method: Метод выполнения: "evaluate" для XPath, "querySelector" или "querySelectorAll" для CSS-селекторов.
-    :type method: str
-    :param opts: Дополнительные параметры, включая контекст, резолвер и тип результата.
-    :type opts: dict
-    :return: Объект с результатами, методом и типом результата.
-    :rtype: dict
-    """
-    "execExpr": lambda expr, method, opts={}: (lambda: {
-        "opts": opts or {},
-        "context": opts.get("context", window.document),
-        "resolver": opts.get("resolver", None),
-        "doc": opts.get("document", fu.getOwnerDocument(opts.get("context", window.document)) or window.document),
-        "items": None,
-        "resultType": None,
-        "case_evaluate": lambda: (lambda: {
-            "check_context": lambda: (lambda: {
-                "is_context_invalid": lambda: not fu.isNodeItem(opts.get("context", window.document)) and not fu.isAttrItem(opts.get("context", window.document)),
-                "check": lambda: None if not (not fu.isNodeItem(opts.get("context", window.document)) and not fu.isAttrItem(opts.get("context", window.document))) else (lambda: setattr(fu,"error_context", logger.error("The context is neither Node nor Attr.")))()
-                })(),
-            "make_resolver": lambda: setattr(fu,"resolver", fu.makeResolver(opts.get("resolver",None))),
-            "resultType":  lambda:  setattr(fu,"resultType", opts.get("resultType", xpathResult.ANY_TYPE)),
-            "evaluate": lambda: (lambda: setattr(fu,"result",fu.doc.evaluate(expr, fu.context, fu.resolver, fu.resultType, None) if not fu.error_context else None))(),
-            "res_to_arr": lambda: setattr(fu, "items", fu.resToArr(fu.result, fu.resultType) if not fu.error_context else []) ,
-            "resultType_if": lambda: setattr(fu,"resultType", fu.result.resultType if not fu.error_context else None) if fu.resultType == xpathResult.ANY_TYPE else None
-            })(),
-        "case_querySelector": lambda: (lambda: {
-           "check_context": lambda: (lambda: {
-                "is_context_invalid": lambda: not fu.isDocOrElem(opts.get("context", window.document)),
-                 "check": lambda: None if not (not fu.isDocOrElem(opts.get("context", window.document))) else (lambda: setattr(fu,"error_context", logger.error("The context is neither Document nor Element.")))()
-                })(),
-                "querySelector": lambda: (lambda: setattr(fu, "elem",fu.context.querySelector(expr) if not fu.error_context else None))(),
-            "items": lambda: setattr(fu, "items",  [fu.elem] if fu.elem else []),
-            "resultType": lambda: setattr(fu,"resultType",None)
-        })(),
-        "case_querySelectorAll": lambda: (lambda: {
-             "check_context": lambda: (lambda: {
-                "is_context_invalid": lambda: not fu.isDocOrElem(opts.get("context", window.document)),
-                 "check": lambda: None if not (not fu.isDocOrElem(opts.get("context", window.document))) else (lambda: setattr(fu,"error_context", logger.error("The context is neither Document nor Element.")))()
-                })(),
-            "querySelectorAll": lambda: (lambda: setattr(fu,"elems",fu.context.querySelectorAll(expr) if not fu.error_context else None))(),
-            "items": lambda: setattr(fu, "items", fu.listToArr(fu.elems) if not fu.error_context else []),
-             "resultType": lambda: setattr(fu,"resultType",None)
-        })(),
-         "switch": lambda: (lambda: {
-           "evaluate_method": lambda: fu.case_evaluate() if method == "evaluate" else None,
-            "querySelector_method": lambda: fu.case_querySelector() if method == "querySelector" else None,
-            "querySelectorAll_method": lambda: fu.case_querySelectorAll() if  not(method == "evaluate" or method == "querySelector") else None
-        })(),
-        "result": lambda: {
-            "items": fu.items if not fu.error_context else [],
-            "method": method,
-             "resultType": fu.resultType if not fu.error_context else None
+        :param expr: XPath выражение или CSS селектор.
+        :param method: Метод выполнения ('evaluate', 'querySelector', 'querySelectorAll').
+        :param opts: Объект с опциями (context, resolver, document, resultType).
+        :return: Объект с результатами ('items', 'method', 'resultType').
+        """
+        opts = opts || {}
+        var context = opts.context || document
+        var resolver = ("resolver" in opts) ? opts.resolver : null
+        var doc = opts.document || fu.getOwnerDocument(context) || context
+
+        var items, resultType
+
+        switch (method) {
+        case "evaluate":
+            if (!fu.isNodeItem(context) and !fu.isAttrItem(context)) {
+                logger.error("The context is either Nor nor Attr.")
+                return
+                #  throw new Error("The context is either Nor nor Attr.");
             }
-    })(),
+            resolver = fu.makeResolver(resolver)
+            resultType = opts.resultType || xpathResult.ANY_TYPE
+            try:
+                let result = doc.evaluate(expr, context, resolver, resultType,
+                                      null)
+                items = fu.resToArr(result, resultType)
+                if (resultType === xpathResult.ANY_TYPE) {
+                    resultType = result.resultType
+                }
+            except Exception as ex:
+                logger.error("Ошибка при выполнении evaluate", ex)
+                return
+            break
 
-    """
-    Преобразует результат XPath в массив.
-    
-    :param res: Результат XPath.
-    :type res: XPathResult
-    :param type: Тип результата XPath.
-    :type type: int
-    :return: Массив элементов.
-    :rtype: list
-    """
-    "resToArr": lambda res, type=None: (lambda: {
-        "type_check": lambda: setattr(fu, "type", res.resultType if not type or type == xpathResult.ANY_TYPE else type),
-        "arr": [],
-        "case_NUMBER_TYPE": lambda: (lambda: fu.arr.append(res.numberValue) if not (fu.type != xpathResult.NUMBER_TYPE) else None)(),
-         "case_STRING_TYPE": lambda: (lambda: fu.arr.append(res.stringValue) if not (fu.type != xpathResult.STRING_TYPE) else None)(),
-         "case_BOOLEAN_TYPE": lambda: (lambda: fu.arr.append(res.booleanValue) if not (fu.type != xpathResult.BOOLEAN_TYPE) else None)(),
-        "case_ORDERED_NODE_ITERATOR_TYPE": lambda: (lambda: [fu.arr.append(node) for node in iter(lambda: res.iterateNext(), None)] if not (fu.type != xpathResult.ORDERED_NODE_ITERATOR_TYPE and fu.type != xpathResult.UNORDERED_NODE_ITERATOR_TYPE ) else None)(),
-        "case_ORDERED_NODE_SNAPSHOT_TYPE": lambda: (lambda: [fu.arr.append(res.snapshotItem(i)) for i in range(res.snapshotLength)] if not (fu.type != xpathResult.ORDERED_NODE_SNAPSHOT_TYPE and fu.type != xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE ) else None)(),
-         "case_ANY_UNORDERED_NODE_TYPE": lambda: (lambda: fu.arr.append(res.singleNodeValue) if not (fu.type != xpathResult.ANY_UNORDERED_NODE_TYPE and fu.type != xpathResult.FIRST_ORDERED_NODE_TYPE) else None)(),
-       "case_default": lambda: None if not (fu.type != xpathResult.NUMBER_TYPE and fu.type != xpathResult.STRING_TYPE and fu.type != xpathResult.BOOLEAN_TYPE  and fu.type != xpathResult.ORDERED_NODE_ITERATOR_TYPE and fu.type != xpathResult.UNORDERED_NODE_ITERATOR_TYPE and fu.type != xpathResult.ORDERED_NODE_SNAPSHOT_TYPE and fu.type != xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE and fu.type != xpathResult.ANY_UNORDERED_NODE_TYPE and fu.type != xpathResult.FIRST_ORDERED_NODE_TYPE) else (lambda: logger.error(f"The resultType is invalid. {fu.type}"))(),
-        "switch": lambda: (lambda: {
-            "number_type": fu.case_NUMBER_TYPE(),
-            "string_type": fu.case_STRING_TYPE(),
-             "boolean_type": fu.case_BOOLEAN_TYPE(),
-            "node_iterator_type": fu.case_ORDERED_NODE_ITERATOR_TYPE(),
-            "node_snapshot_type": fu.case_ORDERED_NODE_SNAPSHOT_TYPE(),
-            "single_node_type": fu.case_ANY_UNORDERED_NODE_TYPE(),
-            "default_type": fu.case_default()
-         })(),
-        "return": fu.arr
-    })(),
+        case "querySelector":
+            if (!fu.isDocOrElem(context)) {
+                logger.error("The context is either Document nor Element.")
+                return
+                # throw new Error("The context is either Document nor Element.");
+            }
+            let elem = context.querySelector(expr)
+            items = elem ? [elem] : []
+            resultType = null
+            break
 
-    """
-    Создает функцию-резолвер для XPath на основе объекта.
-    
-    :param obj: Объект, содержащий префиксы и URI пространств имен.
-    :type obj: dict or str or function
-    :return: Функция-резолвер или None.
-    :rtype: function or None
-    """
-    "makeResolver": lambda obj: (lambda: {
-        "obj_is_null": lambda: None if obj is not None else (lambda: setattr(fu, "return", None))(),
-        "obj_is_func": lambda: None if not callable(obj) else setattr(fu, "return", obj),
-        "dict": None,
-         "obj_is_string": lambda:  (lambda: setattr(fu, "dict", json.loads(obj) if not (lambda: logger.error(f"Invalid resolver [{obj}]. : {e.message}"))() else None ) if isinstance(obj, str) else setattr(fu, "dict", obj) )(),
-         "check_valid": lambda: (lambda: setattr(fu, "map", fu.objToMap(fu.dict)) if fu.isValidDict(fu.dict) else setattr(fu,"error_dict", logger.error(f"Invalid resolver. {json.dumps(fu.dict)}")))() if fu.dict else None,
-        "resolver": lambda: (lambda str: fu.map.get(str) if fu.map.has(str) else "") if not fu.error_dict else None,
-         "return_if": lambda: setattr(fu,"return",fu.resolver) if fu.resolver else None,
-        "return_res": lambda: fu.return
-    })(),
+        case "querySelectorAll":
+        default:
+            if (!fu.isDocOrElem(context)) {
+                logger.error("The context is neither Document nor Element.")
+                return
+                # throw new Error(
+                #     "The context is neither Document nor Element.");
+            }
+            let elems = context.querySelectorAll(expr)
+            items = fu.listToArr(elems)
+            resultType = null
+            break
+        }
 
-    """
-    Проверяет, является ли объект словарем с строковыми значениями.
-    
-    :param obj: Объект для проверки.
-    :type obj: object
-    :return: True, если объект является валидным словарем, иначе False.
-    :rtype: bool
-    """
-    "isValidDict": lambda obj: (lambda: {
-        "obj_is_null_or_not_object": lambda: None if not (obj is None or not isinstance(obj, dict)) else setattr(fu, "return", False),
-        "check_values": lambda: [None if isinstance(obj[key], str) else setattr(fu, "return", False) for key in obj.keys()],
-        "return_valid": lambda: True if not hasattr(fu,'return') else fu.return
-    })(),
+        return {
+            "items": items,
+            "method": method,
+            "resultType": resultType
+        }
+    }
 
-    """
-    Преобразует объект в Map.
-    
-    :param obj: Объект для преобразования.
-    :type obj: object
-    :return: Map, содержащий пары ключ-значение из объекта.
-    :rtype: Map
-    """
-    "objToMap": lambda obj: (lambda: {
-        "map":  Map(),
-        "set_map": lambda: [fu.map.set(item, obj[item]) for item in obj.keys()],
-        "return": fu.map
-    })(),
+    fu.resToArr = function (res, type) {
+        """
+        Преобразует результат XPath в массив.
 
-    """
-    Проверяет, является ли объект документом или элементом.
-    
-    :param obj: Объект для проверки.
-    :type obj: object
-    :return: True, если объект является документом или элементом, иначе False.
-    :rtype: bool
-    """
-    "isDocOrElem": lambda obj: (lambda: {
-        "check": lambda: True if (obj.nodeType == 1 or obj.nodeType == 9) else False
-    })(),
+        :param res: Результат выполнения XPath запроса.
+        :param type: Тип результата.
+        :return: Массив элементов.
+        """
+        if (type === undefined) or (type === xpathResult.ANY_TYPE) :
+            type = res.resultType
 
-    """
-    Преобразует NodeList в массив.
+        var arr = []
+        switch(type) {
+        case xpathResult.NUMBER_TYPE :
+            arr.push(res.numberValue)
+            break
+        case xpathResult.STRING_TYPE :
+            arr.push(res.stringValue)
+            break
+        case xpathResult.BOOLEAN_TYPE :
+            arr.push(res.booleanValue)
+            break
+        case xpathResult.ORDERED_NODE_ITERATOR_TYPE :
+        case xpathResult.UNORDERED_NODE_ITERATOR_TYPE :
+            for (var node = res.iterateNext()
+                 ; node !== null
+                 ; node = res.iterateNext()) {
+                arr.push(node)
+            }
+            break
+        case xpathResult.ORDERED_NODE_SNAPSHOT_TYPE :
+        case xpathResult.UNORDERED_NODE_SNAPSHOT_TYPE :
+            for (var i = 0; i < res.snapshotLength; i++) {
+                arr.push(res.snapshotItem(i))
+            }
+            break
+        case xpathResult.ANY_UNORDERED_NODE_TYPE :
+        case xpathResult.FIRST_ORDERED_NODE_TYPE :
+            arr.push(res.singleNodeValue)
+            break
+        default :
+            logger.error("The resultType is invalid. " + type)
+            return
+            # throw new Error("The resultType is invalid. " + type);
+        }
+        return arr
+    }
     
-    :param list: NodeList для преобразования.
-    :type list: NodeList
-    :return: Массив элементов.
-    :rtype: list
-    """
-    "listToArr": lambda list: (lambda: {
-        "elems": [],
-        "add_elem": lambda: [fu.elems.append(list[i]) for i in range(list.length)],
-        "return": fu.elems
-    })(),
+    fu.makeResolver = function (obj) {
+        """
+        Создает функцию-резолвер для пространств имен XPath.
 
-    """
-    Возвращает детали элемента.
-    
-    :param item: Элемент, для которого нужно получить детали.
-    :type item: object
-    :return: Объект с типом, именем, значением и текстом элемента.
-    :rtype: dict
-    """
-    "getItemDetail": lambda item: (lambda: {
-        "typeStr": type(item),
-        "case_string": lambda: setattr(fu, "return", {
+        :param obj: Объект, строка JSON или функция, представляющая резолвер.
+        :return: Функция-резолвер или null.
+        """
+        if (obj === null) {
+            return null
+        }
+        if (typeof(obj) === "function") {
+            return obj
+        }
+
+        var dict
+        if (typeof(obj) === "string") {
+            try {
+                dict = JSON.parse(obj)
+            } catch (e) {
+                logger.error("Invalid resolver [" + obj + "]. : "
+                                + e.message)
+                return
+                # throw new Error("Invalid resolver [" + obj + "]. : "
+                #                 + e.message);                
+            }
+        } else {
+            dict = obj
+        }
+
+        if (fu.isValidDict(dict)) {
+            let map = fu.objToMap(dict)
+            return function (str) {
+                if (map.has(str)) {
+                    return map.get(str)
+                }
+                return ""
+            }
+        }
+        logger.error("Invalid resolver. "
+                        + JSON.stringify(dict, null))
+        return
+        # throw new Error("Invalid resolver. "
+        #                 + JSON.stringify(dict, null));
+    }
+
+    fu.isValidDict = function (obj) {
+        """
+        Проверяет, является ли объект допустимым словарем для резолвера.
+
+        :param obj: Объект для проверки.
+        :return: True, если объект является допустимым словарем, иначе False.
+        """
+        if (obj === null) or (typeof(obj) !== "object") :
+            return false
+        for (var key of Object.keys(obj)) {
+            if (typeof(obj[key]) !== "string") {
+                return false
+            }
+        }
+        return true
+    }
+
+    fu.objToMap = function (obj) {
+        """
+        Преобразует объект в Map.
+
+        :param obj: Объект для преобразования.
+        :return: Map, созданный на основе объекта.
+        """
+        var map = new Map()
+        Object.keys(obj).forEach(function(item) {
+            map.set(item, obj[item])
+        })
+        return map
+    }
+
+    fu.isDocOrElem = function(obj) {
+        """
+        Проверяет, является ли объект Document или Element.
+
+        :param obj: Объект для проверки.
+        :return: True, если объект Document или Element, иначе False.
+        """
+        if (obj.nodeType === 1 or obj.nodeType === 9) {
+            return true
+        }
+        return false
+    }
+
+    fu.listToArr = function(list) {
+        """
+        Преобразует NodeList или HTMLCollection в массив.
+
+        :param list: NodeList или HTMLCollection.
+        :return: Массив элементов.
+        """
+        var elems = []
+        for (var i = 0; i < list.length; i++) {
+            elems.push(list[i])
+        }
+        return elems
+    }
+
+    fu.getItemDetail = function (item) {
+        """
+        Возвращает детали элемента в виде объекта.
+
+        :param item: DOM элемент, строка, число или булево значение.
+        :return: Объект с деталями элемента.
+        """
+        var typeStr = typeof(item)
+
+        switch (typeof(item)) {
+        case "string":
+            return {
                 "type": "String",
                 "name": "",
                 "value": item,
                 "textContent": ""
-            }) if isinstance(item, str) else None,
-        "case_number": lambda: setattr(fu, "return", {
+            }
+        case "number":
+            return {
                 "type": "Number",
                 "name": "",
-                "value": str(item),
+                "value": item.toString(),
                 "textContent": ""
-            }) if isinstance(item, int) or isinstance(item, float) else None,
-         "case_boolean": lambda: setattr(fu, "return", {
+            }
+        case "boolean":
+            return {
                 "type": "Boolean",
                 "name": "",
-                "value": str(item),
+                "value": item.toString(),
                 "textContent": ""
-            }) if isinstance(item, bool) else None,
-       "case_element": lambda: setattr(fu, "return", {
+            }
+        }
+
+        # item is Element
+        if (fu.isElementItem(item)) {
+            return {
                 "type": "Node " + fu.getNodeTypeStr(item.nodeType)
-                    + "(nodeType=" + str(item.nodeType) + ")",
+                    + "(nodeType=" + item.nodeType + ")",
                 "name": item.nodeName,
                 "value": "",
                 "textContent": item.textContent
-            }) if fu.isElementItem(item) else None,
-        "case_attr": lambda: setattr(fu,"return", {
+            }
+        }
+        
+        # item is Attr
+        if (fu.isAttrItem(item)) {
+            return {
                 "type": "Attr",
                 "name": item.name,
                 "value": item.value,
                 "textContent": ""
-            }) if fu.isAttrItem(item) else None,
-        "case_node": lambda: setattr(fu,"return",{
+            }
+        }
+
+        # item is Node
+        return {
             "type": "Node " + fu.getNodeTypeStr(item.nodeType) + "(nodeType="
-                + str(item.nodeType) + ")",
+                + item.nodeType + ")",
             "name": item.nodeName,
             "value": item.nodeValue or "",
             "textContent": item.textContent or ""
-        }) if (not (isinstance(item, str) or isinstance(item, int) or isinstance(item, float) or isinstance(item, bool)) and not fu.isElementItem(item) and not fu.isAttrItem(item)) else None,
-        "switch": lambda: (lambda: {
-          "string": fu.case_string(),
-            "number": fu.case_number(),
-            "boolean": fu.case_boolean(),
-            "element": fu.case_element(),
-            "attr": fu.case_attr(),
-            "node": fu.case_node()
-         })(),
-        "return_item": fu.return
-    })(),
-    """
-    Возвращает детали нескольких элементов.
-    
-    :param items: Массив элементов, для которых нужно получить детали.
-    :type items: list
-    :return: Массив объектов с деталями элементов.
-    :rtype: list
-    """
-    "getItemDetails": lambda items: (lambda: {
-        "details": [],
-        "add_detail": lambda: [fu.details.append(fu.getItemDetail(items[i])) for i in range(len(items))],
-        "return": fu.details
-    })(),
+        }
+    }
 
-    # Map для преобразования числовых кодов типов узлов в строковые представления.
-    "nodeTypeMap": Map([
+    fu.getItemDetails = function (items) {
+        """
+        Возвращает детали для массива элементов.
+
+        :param items: Массив DOM элементов.
+        :return: Массив объектов с деталями элементов.
+        """
+        var details = []
+        for (var i = 0; i < items.length; i++) {
+            details.push(fu.getItemDetail(items[i]))
+        }
+        return details
+    }
+
+    const nodeTypeMap = new Map([
         [Node.ELEMENT_NODE, "ELEMENT_NODE"],
         [Node.ATTRIBUTE_NODE, "ATTRIBUTE_NODE"],
         [Node.TEXT_NODE, "TEXT_NODE"],
@@ -333,23 +400,23 @@ if not 'functions' in tryxpath:
         [Node.DOCUMENT_TYPE_NODE, "DOCUMENT_TYPE_NODE"],
         [Node.DOCUMENT_FRAGMENT_NODE, "DOCUMENT_FRAGMENT_NODE"],
         [Node.NOTATION_NODE, "NOTATION_NODE"]
-    ]),
+    ])
 
-    """
-    Возвращает строковое представление типа узла.
-    
-    :param nodeType: Числовой код типа узла.
-    :type nodeType: int
-    :return: Строковое представление типа узла или "Unknown".
-    :rtype: str
-    """
-    "getNodeTypeStr": lambda nodeType: (lambda: {
-        "node_has_type": lambda:  fu.nodeTypeMap.get(nodeType) if fu.nodeTypeMap.has(nodeType) else "Unknown"
-    })(),
+    fu.getNodeTypeStr = function(nodeType) {
+        """
+        Возвращает строковое представление типа узла.
 
-    # Карты для преобразования типов результатов XPath между строковым и числовым представлениями.
-    "xpathResultMaps": {
-        "numToStr" : Map([
+        :param nodeType: Числовой код типа узла.
+        :return: Строковое представление типа узла.
+        """
+        if (nodeTypeMap.has(nodeType)) {
+            return nodeTypeMap.get(nodeType)
+        }
+        return "Unknown"
+    }
+
+    const xpathResultMaps = {
+        "numToStr" : new Map([
             [xpathResult.ANY_TYPE, "ANY_TYPE"],
             [xpathResult.NUMBER_TYPE , "NUMBER_TYPE"],
             [xpathResult.STRING_TYPE , "STRING_TYPE"],
@@ -366,7 +433,7 @@ if not 'functions' in tryxpath:
             [xpathResult.FIRST_ORDERED_NODE_TYPE, "FIRST_ORDERED_NODE_TYPE"]
         ]),
 
-        "strToNum" : Map([
+        "strToNum" : new Map([
             ["ANY_TYPE", xpathResult.ANY_TYPE],
             ["NUMBER_TYPE", xpathResult.NUMBER_TYPE],
             ["STRING_TYPE", xpathResult.STRING_TYPE],
@@ -382,249 +449,580 @@ if not 'functions' in tryxpath:
             ["ANY_UNORDERED_NODE_TYPE", xpathResult.ANY_UNORDERED_NODE_TYPE],
             ["FIRST_ORDERED_NODE_TYPE", xpathResult.FIRST_ORDERED_NODE_TYPE]
         ])
-    },
+    }
 
-    """
-    Возвращает строковое представление типа результата XPath.
-    
-    :param resultType: Числовой код типа результата XPath.
-    :type resultType: int
-    :return: Строковое представление типа результата XPath или "Unknown".
-    :rtype: str
-    """
-    "getxpathResultStr": lambda resultType: (lambda: {
-        "result_has_type": lambda: fu.xpathResultMaps.numToStr.get(resultType) if fu.xpathResultMaps.numToStr.has(resultType) else "Unknown"
-    })(),
+    fu.getxpathResultStr = function (resultType) {
+        """
+        Возвращает строковое представление типа результата XPath.
 
-    """
-    Возвращает числовой код типа результата XPath.
-    
-    :param resultTypeStr: Строковое представление типа результата XPath.
-    :type resultTypeStr: str
-    :return: Числовой код типа результата XPath или NaN.
-    :rtype: int
-    """
-    "getxpathResultNum": lambda resultTypeStr: (lambda: {
-      "result_has_type": lambda: fu.xpathResultMaps.strToNum.get(resultTypeStr) if fu.xpathResultMaps.strToNum.has(resultTypeStr) else float('NaN')
-    })(),
+        :param resultType: Числовой код типа результата XPath.
+        :return: Строковое представление типа результата XPath.
+        """
+        if (xpathResultMaps.numToStr.has(resultType)) {
+            return xpathResultMaps.numToStr.get(resultType)
+        }
+        return "Unknown"
+    }
 
-    """
-    Проверяет, является ли элемент атрибутом.
-    
-    :param item: Элемент для проверки.
-    :type item: object
-    :return: True, если элемент является атрибутом, иначе False.
-    :rtype: bool
-    """
-    "isAttrItem": lambda item: (lambda: {
-        "check": lambda: str(item) == "[object Attr]"
-    })(),
+    fu.getxpathResultNum = function (resultTypeStr) {
+        """
+        Возвращает числовой код типа результата XPath по его строковому представлению.
 
-    """
-    Проверяет, является ли элемент узлом.
-    
-    :param item: Элемент для проверки.
-    :type item: object
-    :return: True, если элемент является узлом, иначе False.
-    :rtype: bool
-    """
-    "isNodeItem": lambda item: (lambda: {
-      "check_attr": lambda: False if fu.isAttrItem(item) else None,
-        "check_type": lambda: False if isinstance(item, str) or isinstance(item, int) or isinstance(item, float) else True,
-    })(),
-    
-    """
-    Проверяет, является ли элемент элементом DOM.
-    
-    :param item: Элемент для проверки.
-    :type item: object
-    :return: True, если элемент является элементом DOM, иначе False.
-    :rtype: bool
-    """
-    "isElementItem": lambda item: (lambda: {
-        "check": lambda: True if fu.isNodeItem(item) and (item.nodeType == Node.ELEMENT_NODE) else False
-    })(),
+        :param resultTypeStr: Строковое представление типа результата XPath.
+        :return: Числовой код типа результата XPath или NaN, если не найдено.
+        """
+        if (xpathResultMaps.strToNum.has(resultTypeStr)) {
+            return xpathResultMaps.strToNum.get(resultTypeStr)
+        }
+        return NaN
+    }
 
-    """
-    Добавляет класс к элементу.
-    
-    :param clas: Класс для добавления.
-    :type clas: str
-    :param item: Элемент, к которому нужно добавить класс.
-    :type item: object
-    """
-    "addClassToItem": lambda clas, item: (lambda: {
-        "check": lambda:  item.classList.add(clas) if fu.isElementItem(item) else None
-    })(),
+    fu.isAttrItem = function (item) {
+        """
+        Проверяет, является ли объект атрибутом.
 
-    """
-    Добавляет класс к нескольким элементам.
-    
-    :param clas: Класс для добавления.
-    :type clas: str
-    :param items: Массив элементов, к которым нужно добавить класс.
-    :type items: list
-    """
-    "addClassToItems": lambda clas, items: (lambda: {
-       "add_class": lambda: [fu.addClassToItem(clas, item) for item in items]
-    })(),
+        :param item: Объект для проверки.
+        :return: True, если объект является атрибутом, иначе False.
+        """
+        return Object.prototype.toString.call(item) === "[object Attr]"
+    }
 
-    """
-    Сохраняет оригинальный класс элемента.
-    
-    :param item: Элемент, для которого нужно сохранить класс.
-    :type item: object
-    :return: Объект, содержащий элемент и его оригинальный класс.
-    :rtype: dict
-    """
-    "saveItemClass": lambda item: (lambda: {
-        "check": lambda: None if not fu.isElementItem(item) else (lambda: {
-            "check_has_class": lambda: setattr(fu,"clas", item.getAttribute("class")) if item.hasAttribute("class") else setattr(fu,"clas", None),
-            "return": lambda: setattr(fu,"return", {
-                "elem": item,
-                "origClass": fu.clas
-              }) if not  hasattr(fu,'error') else None,
-            "return_orig_class": fu.return
-            })()
-    })(),
+    fu.isNodeItem = function (item) {
+        """
+        Проверяет, является ли объект узлом.
 
-    """
-    Восстанавливает оригинальный класс элемента.
-    
-    :param savedClass: Объект с сохраненным элементом и его оригинальным классом.
-    :type savedClass: dict
-    """
-    "restoreItemClass": lambda savedClass: (lambda: {
-      "check_saved_class": lambda: None if savedClass is None else (lambda: {
-           "check_orig_class": lambda: savedClass.elem.removeAttribute("class") if savedClass.origClass is None else savedClass.elem.setAttribute("class", savedClass.origClass)
-        })()
-    })(),
+        :param item: Объект для проверки.
+        :return: True, если объект является узлом, иначе False.
+        """
+        if (fu.isAttrItem(item)) {
+            return false
+        }
 
-    """
-    Сохраняет оригинальные классы нескольких элементов.
+        switch (typeof(item)) {
+        case "string":
+        case "number":
+            return false
+        default:
+            return true
+        }
+    }
     
-    :param items: Массив элементов, для которых нужно сохранить классы.
-    :type items: list
-    :return: Массив объектов с сохраненными классами элементов.
-    :rtype: list
-    """
-    "saveItemClasses": lambda items: (lambda: {
-        "savedClasses": [],
-        "save_classes": lambda: [fu.savedClasses.append(fu.saveItemClass(item)) for item in items],
-        "return": fu.savedClasses
-    })(),
+    fu.isElementItem = function (item) {
+        """
+        Проверяет, является ли объект элементом.
 
-    """
-    Восстанавливает оригинальные классы нескольких элементов.
-    
-    :param savedClasses: Массив объектов с сохраненными классами элементов.
-    :type savedClasses: list
-    """
-    "restoreItemClasses": lambda savedClasses: (lambda: {
-      "restore_classes": lambda: [fu.restoreItemClass(savedClass) for savedClass in savedClasses]
-    })(),
+        :param item: Объект для проверки.
+        :return: True, если объект является элементом, иначе False.
+        """
+        if (fu.isNodeItem(item)
+            and (item.nodeType === Node.ELEMENT_NODE)) {
+            return true
+        }
+        return false
+    }
 
-    """
-    Устанавливает атрибут элементу.
-    
-    :param name: Имя атрибута.
-    :type name: str
-    :param value: Значение атрибута.
-    :type value: str
-    :param item: Элемент, которому нужно установить атрибут.
-    :type item: object
-    """
-    "setAttrToItem": lambda name, value, item: (lambda: {
-        "check": lambda: item.setAttribute(name, value) if fu.isElementItem(item) else None
-    })(),
+    fu.addClassToItem = function (clas, item) {
+        """
+        Добавляет класс к элементу.
 
-    """
-    Удаляет атрибут у элемента.
-    
-    :param name: Имя атрибута для удаления.
-    :type name: str
-    :param item: Элемент, у которого нужно удалить атрибут.
-    :type item: object
-    """
-    "removeAttrFromItem": lambda name, item: (lambda: {
-        "check": lambda: item.removeAttribute(name) if fu.isElementItem(item) else None
-    })(),
+        :param clas: Имя класса для добавления.
+        :param item: DOM элемент.
+        """
+        if (fu.isElementItem(item)) {
+            item.classList.add(clas)
+        }
+    }
 
-    """
-    Удаляет атрибут у нескольких элементов.
-    
-    :param name: Имя атрибута для удаления.
-    :type name: str
-    :param items: Массив элементов, у которых нужно удалить атрибут.
-    :type items: list
-    """
-    "removeAttrFromItems": lambda name, items: (lambda: {
-       "remove_attr": lambda:  [fu.removeAttrFromItem(name, item) for item in items]
-    })(),
+    fu.addClassToItems = function (clas, items) {
+        """
+        Добавляет класс к массиву элементов.
 
-    """
-    Устанавливает индекс в качестве атрибута для нескольких элементов.
-    
-    :param name: Имя атрибута для установки индекса.
-    :type name: str
-    :param items: Массив элементов, для которых нужно установить индекс.
-    :type items: list
-    """
-    "setIndexToItems": lambda name, items: (lambda: {
-         "set_index": lambda: [fu.setAttrToItem(name, i, items[i]) for i in range(len(items))]
-    })(),
+        :param clas: Имя класса для добавления.
+        :param items: Массив DOM элементов.
+        """
+        for (var item of items) {
+            fu.addClassToItem(clas, item)
+        }
+    }
 
-    """
-    Возвращает родительский элемент.
-    
-    :param item: Элемент, для которого нужно получить родителя.
-    :type item: object
-    :return: Родительский элемент или None.
-    :rtype: object or None
-    """
-    "getParentElement": lambda item: (lambda: {
-       "case_attr": lambda: (lambda: {
-             "parent_attr": lambda: item.ownerElement if item.ownerElement else None
-       })() if fu.isAttrItem(item) else None,
-       "case_node": lambda: (lambda: {
-           "parent_element": lambda: item.parentElement if item.parentElement else None,
-           "check_node_type": lambda: item.parentNode if item.parentNode and (item.parentNode.nodeType == Node.ELEMENT_NODE) else None
-       })() if fu.isNodeItem(item) else None,
-       "return": lambda: (lambda: fu.parent_attr if fu.isAttrItem(item) else (fu.parent_element if fu.isNodeItem(item) and fu.parent_element else (fu.check_node_type if fu.isNodeItem(item) and fu.check_node_type  else None )))()
-    })(),
+    fu.saveItemClass = function (item) {
+        """
+        Сохраняет текущий класс элемента.
 
-    """
-     Возвращает список всех родительских элементов элемента.
-    
-    :param elem: Элемент, для которого нужно получить список предков.
-    :type elem: object
-    :return: Список родительских элементов.
-    :rtype: list
-    """
-    "getAncestorElements": lambda elem: (lambda: {
-        "ancs": [],
-        "cur": elem,
-        "parent": lambda: (lambda: {
-            "find_parent": lambda: setattr(fu, "parent", fu.cur.parentElement)
-        })(),
-      "find_all_parent_elements": lambda: (lambda: [fu.ancs.append(fu.parent)  and setattr(fu, "cur", fu.parent) and setattr(fu, "parent", fu.cur.parentElement) for _ in iter(lambda: fu.parent, None) ] )() ,
-       "find_parent_node": lambda: (lambda: {
-          "find_parent": lambda: setattr(fu, "parent", fu.cur.parentNode)
-        })(),
-        "find_all_parent_nodes": lambda: (lambda: [fu.ancs.append(fu.cur) and  setattr(fu, "cur", fu.parent) and setattr(fu, "parent", fu.cur.parentNode)  for _ in iter(lambda: fu.parent if fu.parent and fu.parent.nodeType == Node.ELEMENT_NODE else None, None) ] )() ,
-      "return_ancs": fu.ancs
-    })(),
+        :param item: DOM элемент.
+        :return: Объект с элементом и сохраненным классом или null.
+        """
+        if (!fu.isElementItem(item)) {
+            return null
+        }
 
-    """
-     Возвращает документ, которому принадлежит элемент.
-    
-    :param item: Элемент, для которого нужно получить документ.
-    :type item: object
-    :return: Документ, которому принадлежит элемент.
-    :rtype: object
-    """
-    "getOwnerDocument": lambda item: (lambda: {
-       "case_attr": lambda:  (lambda: {
-            "elem": lambda: setattr(fu, "elem", item.ownerElement),
-          "check_elem": lambda: fu.elem.ownerDocument if fu.elem else item.ownerDocument
-       })() if fu.isAttrItem(item) else None,
+        var clas
+        if (item.hasAttribute("class")) {
+            clas = item.getAttribute("class")
+        } else {
+            clas = null
+        }
+        return {
+            "elem": item,
+            "origClass": clas
+        }
+    }
+
+    fu.restoreItemClass = function (savedClass) {
+        """
+        Восстанавливает сохраненный класс элемента.
+
+        :param savedClass: Объект с элементом и сохраненным классом.
+        """
+        if (savedClass === null) {
+            return null
+        }
+
+        if (savedClass.origClass === null) {
+            savedClass.elem.removeAttribute("class")
+        } else {
+            savedClass.elem.setAttribute("class", savedClass.origClass)
+        }
+    }
+
+    fu.saveItemClasses = function (items) {
+        """
+        Сохраняет классы для массива элементов.
+
+        :param items: Массив DOM элементов.
+        :return: Массив объектов с элементами и сохраненными классами.
+        """
+        var savedClasses = []
+        for (var item of items) {
+            savedClasses.push(fu.saveItemClass(item))
+        }
+        return savedClasses
+    }
+
+    fu.restoreItemClasses = function (savedClasses) {
+        """
+        Восстанавливает классы для массива элементов.
+
+        :param savedClasses: Массив объектов с элементами и сохраненными классами.
+        """
+        for (var savedClass of savedClasses) {
+            fu.restoreItemClass(savedClass)
+        }
+    }
+
+    fu.setAttrToItem = function(name, value, item) {
+         """
+        Устанавливает атрибут для элемента.
+
+        :param name: Имя атрибута.
+        :param value: Значение атрибута.
+        :param item: DOM элемент.
+        """
+        if (fu.isElementItem(item)) {
+            item.setAttribute(name, value)
+        }
+    }
+
+    fu.removeAttrFromItem = function(name, item) {
+        """
+        Удаляет атрибут из элемента.
+
+        :param name: Имя атрибута для удаления.
+        :param item: DOM элемент.
+        """
+        if (fu.isElementItem(item)) {
+            item.removeAttribute(name)
+        }
+    }
+
+    fu.removeAttrFromItems = function(name, items) {
+         """
+        Удаляет атрибут из массива элементов.
+
+        :param name: Имя атрибута для удаления.
+        :param items: Массив DOM элементов.
+        """
+        items.forEach(item => {
+            fu.removeAttrFromItem(name, item)
+        })
+    }
+
+    fu.setIndexToItems = function(name, items) {
+         """
+        Устанавливает индекс в качестве атрибута для массива элементов.
+
+        :param name: Имя атрибута для установки.
+        :param items: Массив DOM элементов.
+        """
+        for (var i = 0; i < items.length; i++) {
+            fu.setAttrToItem(name, i, items[i])
+        }
+    }
+
+    fu.getParentElement = function (item) {
+        """
+        Возвращает родительский элемент для данного элемента.
+
+        :param item: DOM элемент.
+        :return: Родительский DOM элемент или null.
+        """
+        if (fu.isAttrItem(item)) {
+            let parent = item.ownerElement
+            return parent or null
+        }
+
+        if (fu.isNodeItem(item)) {
+            let parent = item.parentElement
+            if (parent) {
+                return parent
+            }
+            parent = item.parentNode
+            if (parent and (parent.nodeType === Node.ELEMENT_NODE)) {
+                return parent
+            }
+        }
+        return null
+    }
+
+    fu.getAncestorElements = function (elem) {
+        """
+        Возвращает массив всех родительских элементов для данного элемента.
+
+        :param elem: DOM элемент.
+        :return: Массив родительских DOM элементов.
+        """
+        var ancs = []
+
+        var cur = elem
+        var parent = cur.parentElement
+        while (parent) {
+            ancs.push(parent)
+            cur = parent
+            parent = cur.parentElement
+        }
+
+        parent = cur.parentNode
+        while (parent and (parent.nodeType === Node.ELEMENT_NODE)) {
+            ancs.push(cur)
+            cur = parent
+            parent = cur.parentNode
+        }
+        
+        return ancs
+    }
+
+    fu.getOwnerDocument = function (item) {
+        """
+        Возвращает документ, которому принадлежит данный элемент.
+
+        :param item: DOM элемент.
+        :return: DOM документ или null.
+        """
+        if (fu.isAttrItem(item)) {
+            let elem = item.ownerElement
+            if (elem) {
+                return elem.ownerDocument
+            }
+            return item.ownerDocument
+        }
+
+        if (fu.isNodeItem(item)) {
+            return item.ownerDocument
+        }
+
+        return null
+    }
+
+    fu.createHeaderRow = function (values, opts) {
+        """
+        Создает строку заголовка таблицы.
+
+        :param values: Массив значений для заголовков.
+        :param opts: Объект с опциями (document).
+        :return: DOM элемент <tr>.
+        """
+        opts = opts or {}
+        var doc = opts.document or document
+
+        var tr = doc.createElement("tr")
+        for (let value of values) {
+            let th = doc.createElement("th")
+            th.textContent = value
+            tr.appendChild(th)
+        }
+        return tr
+    }
+
+    fu.createDetailTableHeader = function (opts) {
+        """
+        Создает строку заголовка таблицы с деталями элементов.
+
+        :param opts: Объект с опциями (document).
+        :return: DOM элемент <tr>.
+        """
+        opts = opts or {}
+        var doc = opts.document or document
+
+        var tr = doc.createElement("tr")
+        var headers = ["Index", "Type", "Name", "Value", "Focus"]
+        for (let header of headers) {
+             let th  = doc.createElement("th")
+             th.textContent = header
+             tr.appendChild(th)
+        }
+        return tr
+    }
+
+    fu.createDetailRow = function (index, detail, opts) {
+        """
+        Создает строку таблицы с деталями элемента.
+
+        :param index: Индекс элемента.
+        :param detail: Объект с деталями элемента.
+        :param opts: Объект с опциями (document, keys).
+        :return: DOM элемент <tr>.
+        """
+        opts = opts or {}
+        var doc = opts.document or document
+        var keys = opts.keys or ["type", "name", "value"]
+
+        var tr = doc.createElement("tr")
+
+        var td = doc.createElement("td")
+        td.textContent = index
+        tr.appendChild(td)
+
+        for (let key of keys) {
+            let td = doc.createElement("td")
+            td.textContent = detail[key]
+            tr.appendChild(td)
+        }
+
+        td = doc.createElement("td")
+        var button = doc.createElement("button")
+        button.textContent = "Focus"
+        button.setAttribute("data-index", index)
+        td.appendChild(button)
+        tr.appendChild(td)
+
+        return tr
+    }
+
+    fu.appendDetailRows = function (parent, details, opts) {
+         """
+        Добавляет строки с деталями элементов в родительский элемент.
+
+        :param parent: Родительский DOM элемент.
+        :param details: Массив объектов с деталями элементов.
+        :param opts: Объект с опциями (chunkSize, begin, end, createRow, detailKeys).
+        :return: Promise, выполняющийся после добавления всех строк.
+        """
+        return Promise.resolve().then(() => {
+            opts = opts or {}
+            var chunkSize = opts.chunkSize or 1000
+            var begin = opts.begin or 0
+            var end = opts.end or details.length
+            var createRow = opts.createRow or fu.createDetailRow.bind(fu)
+            var detailKeys = opts.detailKeys or undefined
+
+            var doc = parent.ownerDocument
+            var frag = doc.createDocumentFragment()
+            var index = Math.max(begin, 0)
+            var chunkEnd = Math.min(index + chunkSize, details.length, end)
+
+            for ( ; index < chunkEnd; index++) {
+                frag.appendChild(createRow(index, details[index], {
+                    "document": doc,
+                    "keys": detailKeys
+                }))
+            }
+            parent.appendChild(frag)
+
+            if ((index < end) and (index < details.length)) {
+                return fu.appendDetailRows(parent, details, {
+                    "chunkSize": chunkSize,
+                    "begin": index,
+                    "end": end,
+                    "createRow": createRow,
+                    "detailKeys": detailKeys
+                })
+            } else {
+                return 
+            }
+        })
+    }
+
+    fu.updateDetailsTable = function (parent, details, opts) {
+        """
+        Обновляет таблицу с деталями элементов.
+
+        :param parent: Родительский DOM элемент.
+        :param details: Массив объектов с деталями элементов.
+        :param opts: Объект с опциями (chunkSize, begin, end, detailKeys, headerValues).
+        :return: Promise, выполняющийся после обновления таблицы.
+        """
+        opts = opts or {}
+        var chunkSize = opts.chunkSize or 1000
+        var begin = opts.begin or 0
+        var end = opts.end or details.length
+        var detailKeys = opts.detailKeys or undefined
+        var headerValues
+        if (opts.headerValues) {
+            headerValues = ["Index"].concat(opts.headerValues, ["Focus"])
+        } else {
+            headerValues = ["Index", "Type", "Name", "Value", "Focus"]
+        }
+
+        var doc = parent.ownerDocument
+
+        fu.emptyChildNodes(parent)
+        parent.appendChild(fu.createHeaderRow(headerValues,
+                                              { "document": doc }))
+
+        return fu.appendDetailRows(parent, details, {
+            "chunkSize": chunkSize,
+            "begin": begin,
+            "end": end,
+            "detailKeys": detailKeys
+        })
+    }
+
+    fu.emptyChildNodes = function (elem) {
+        """
+        Удаляет все дочерние узлы элемента.
+
+        :param elem: DOM элемент.
+        """
+        while (elem.firstChild) {
+            elem.removeChild(elem.firstChild)
+        }
+    }
+
+    fu.saveAttrForItem = function(item, attr, storage, overwrite) {
+        """
+        Сохраняет значение атрибута элемента.
+
+        :param item: DOM элемент.
+        :param attr: Имя атрибута.
+        :param storage: Map для хранения значений.
+        :param overwrite: Флаг, указывающий, нужно ли перезаписывать существующее значение.
+        :return: Map с сохраненными значениями.
+        """
+        storage = storage or new Map()
+        
+        if (!fu.isElementItem(item)) {
+            return storage
+        }
+
+        var elemStor
+        if (storage.has(item)) {
+            elemStor = storage.get(item)
+        } else {
+            elemStor = new Map()
+            storage.set(item, elemStor)
+        }
+        
+        var val = item.hasAttribute(attr) ? item.getAttribute(attr)
+            : null
+
+        if (overwrite or not elemStor.has(attr)) {
+            elemStor.set(attr, val)
+        }
+
+        return storage
+    }
+
+    fu.saveAttrForItems = function(items, attr, storage, overwrite) {
+         """
+        Сохраняет значение атрибута для массива элементов.
+
+        :param items: Массив DOM элементов.
+        :param attr: Имя атрибута.
+        :param storage: Map для хранения значений.
+        :param overwrite: Флаг, указывающий, нужно ли перезаписывать существующее значение.
+        :return: Map с сохраненными значениями.
+        """
+        storage = storage or new Map()
+
+        for (var item of items) {
+            fu.saveAttrForItem(item, attr, storage, overwrite)
+        }
+
+        return storage
+    }
+
+    fu.restoreItemAttrs = function (storage) {
+         """
+        Восстанавливает сохраненные атрибуты элементов.
+
+        :param storage: Map с сохраненными значениями атрибутов.
+        """
+        for (var [elem, elemStor] of storage) {
+            for (var [attr, value] of elemStor) {
+                if (value === null) {
+                    elem.removeAttribute(attr)
+                } else {
+                    elem.setAttribute(attr, value)
+                }
+            }
+        }
+    }
+
+    fu.getFrameAncestry = function (inds, win) {
+        """
+        Возвращает массив фреймов-предков.
+
+        :param inds: Массив индексов фреймов.
+        :param win: Окно, от которого начинать поиск.
+        :return: Массив DOM элементов фреймов.
+        """
+        win = win or window
+
+        var frames = []
+        for (let i = 0; i < inds.length; i++) {
+            win = win.frames[inds[i]]
+            if (!win) {
+                logger.error("The specified frame does not exist.")
+                return
+                # throw new Error("The specified frame does not exist.");
+            }
+            let frame
+            try {
+                frame = win.frameElement
+            } catch (e) {
+                logger.error("Access denied.")
+                return
+                # throw new Error("Access denied.");
+            }
+            frames.push(frame)
+        }
+        return frames
+    }
+
+    # If arr is empty this function returns true.
+    fu.isNumberArray = function (arr) {
+        """
+        Проверяет, является ли массив массивом чисел.
+
+        :param arr: Массив для проверки.
+        :return: True, если массив является массивом чисел, иначе False.
+        """
+        if (!Array.isArray(arr)) {
+            return false
+        }
+
+        for (var item of arr) {
+            if (typeof(item) !== "number") {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    fu.onError = function (err) {
+        """
+        Обработчик ошибок.
+
+        :param err: Объект ошибки.
+        """

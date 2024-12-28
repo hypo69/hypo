@@ -2,100 +2,95 @@
 
 **Качество кода**
 8
-- Плюсы
-    - Код структурирован и следует базовым принципам ООП.
-    - Присутствует необходимая инициализация класса.
-    - Определен метод `getapiname`, что соответствует REST API.
-- Минусы
-    - Отсутствует документация в формате reStructuredText (RST) для модуля, класса и методов.
-    - Не используется `logger` для обработки ошибок.
-    - Отсутствуют импорты из `src.utils.jjson` и `src.logger.logger`.
-    - Отсутствует обработка исключений.
-    - Не все переменные имеют описания в docstring.
+-  Плюсы
+    - Код соответствует PEP8, использует `RestApi` из `base.py`.
+    - Присутствует определение класса `AliexpressAffiliateOrderListRequest`, конструктор `__init__` и метод `getapiname`.
+    - Есть docstring с информацией о создании файла.
+ -  Минусы
+    - Отсутствуют docstring для класса `AliexpressAffiliateOrderListRequest`, конструктора `__init__` и метода `getapiname`.
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Нет логирования ошибок.
+    - Отсутствует импорт `logger` из `src.logger.logger`.
+    - Не все комментарии оформлены в reStructuredText.
+    - Нет явного указания типов для переменных.
 
 **Рекомендации по улучшению**
-
-1.  Добавить описание модуля в формате reStructuredText (RST).
-2.  Добавить документацию к классу `AliexpressAffiliateOrderListRequest` в формате RST.
-3.  Добавить документацию к методу `__init__` и `getapiname` в формате RST.
-4.  Импортировать `logger` из `src.logger.logger` и использовать его для логирования ошибок.
-5.  Удалить строку с путем к интерпретатору `#! venv/Scripts/python.exe`.
-6.  Импортировать `j_loads` или `j_loads_ns` из `src.utils.jjson`, если это необходимо для данного класса.
-7.  Добавить описание всех атрибутов класса в docstring.
-8.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения данных, если это необходимо.
-9.  Удалить строку `#! venv/Scripts/python.exe # <- venv win`
+1.  Добавить docstring для класса `AliexpressAffiliateOrderListRequest`, конструктора `__init__` и метода `getapiname` в формате reStructuredText.
+2.  Импортировать `logger` из `src.logger.logger` и использовать его для логирования ошибок.
+3.  Добавить явное указание типов для переменных в конструкторе `__init__`.
+4.  Удалить избыточную строку `# -*- coding: utf-8 -*-`.
+5.  Использовать `j_loads` или `j_loads_ns` при необходимости чтения данных из файла (в данном примере не применимо, но следует учесть в других местах).
+6.  Сделать комментарии более информативными.
+7.  Удалить комментарии, которые не несут смысловой нагрузки (`#! venv/Scripts/python.exe # <- venv win` и `## ~~~~~~~~~~~~~~`).
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для работы с запросом списка заказов Aliexpress Affiliate API.
-======================================================================
+Модуль для работы с запросами списка заказов AliExpress Affiliate API.
+==================================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateOrderListRequest`, который
-используется для формирования запроса на получение списка заказов через Aliexpress Affiliate API.
+Этот модуль содержит класс :class:`AliexpressAffiliateOrderListRequest`,
+который используется для создания запросов к AliExpress Affiliate API для получения списка заказов.
 
 Пример использования
 --------------------
 
-Пример создания экземпляра класса и вызова метода getapiname:
+Пример создания экземпляра класса:
 
 .. code-block:: python
 
-    from src.suppliers.aliexpress.api._examples.rest import AliexpressAffiliateOrderListRequest
-
     request = AliexpressAffiliateOrderListRequest()
-    api_name = request.getapiname()
-    print(api_name)
+    request.end_time = '2023-12-31 23:59:59'
+    request.start_time = '2023-12-01 00:00:00'
+    # ...
 """
-# -*- coding: utf-8 -*-
-
-from src.logger.logger import logger # Импорт logger
+# from src.utils.jjson import j_loads, j_loads_ns
+from src.logger.logger import logger
 from ..base import RestApi
-
 
 class AliexpressAffiliateOrderListRequest(RestApi):
     """
-    Класс для формирования запроса списка заказов Aliexpress Affiliate API.
+    Класс для создания запросов к AliExpress Affiliate API для получения списка заказов.
 
-    :param domain: Доменное имя API.
+    :param domain: Домен API, по умолчанию "api-sg.aliexpress.com".
     :type domain: str
-    :param port: Порт API.
+    :param port: Порт API, по умолчанию 80.
     :type port: int
     """
-    def __init__(self, domain="api-sg.aliexpress.com", port=80):
+    def __init__(self, domain: str = "api-sg.aliexpress.com", port: int = 80):
         """
-        Инициализирует экземпляр класса AliexpressAffiliateOrderListRequest.
+        Конструктор класса AliexpressAffiliateOrderListRequest.
 
-        :param domain: Доменное имя API.
+        Инициализирует объект, устанавливая значения по умолчанию для параметров запроса.
+
+        :param domain: Домен API, по умолчанию "api-sg.aliexpress.com".
         :type domain: str
-        :param port: Порт API.
+        :param port: Порт API, по умолчанию 80.
         :type port: int
         """
         RestApi.__init__(self, domain, port)
-        #: Подпись приложения
-        self.app_signature = None
-        #: Время окончания периода
-        self.end_time = None
-        #: Список полей
-        self.fields = None
-        #: Локаль сайта
-        self.locale_site = None
-        #: Номер страницы
-        self.page_no = None
-        #: Размер страницы
-        self.page_size = None
-        #: Время начала периода
-        self.start_time = None
-        #: Статус заказа
-        self.status = None
+        #: Подпись приложения.
+        self.app_signature: str | None = None
+        #: Время окончания периода запроса.
+        self.end_time: str | None = None
+        #: Список полей, которые нужно вернуть в ответе.
+        self.fields: str | None = None
+        #: Локаль сайта.
+        self.locale_site: str | None = None
+        #: Номер страницы.
+        self.page_no: int | None = None
+        #: Размер страницы.
+        self.page_size: int | None = None
+        #: Время начала периода запроса.
+        self.start_time: str | None = None
+        #: Статус заказа.
+        self.status: str | None = None
 
-
-    def getapiname(self):
+    def getapiname(self) -> str:
         """
-        Возвращает имя API метода.
+        Возвращает имя API для запроса списка заказов.
 
-        :return: Имя API метода.
+        :return: Имя API 'aliexpress.affiliate.order.list'.
         :rtype: str
         """
         return 'aliexpress.affiliate.order.list'

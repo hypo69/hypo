@@ -1,195 +1,181 @@
 ## Анализ кода модуля popup.html
 
 **Качество кода**
-6
+8
 - Плюсы
-    - Код структурирован и понятен.
-    - Используются стандартные HTML-элементы.
-    - Присутствуют комментарии в HTML.
+    - Код хорошо структурирован и использует HTML5.
+    - Присутствуют комментарии, поясняющие назначение различных секций.
+    - Используются селекторы и выпадающие списки для выбора методов и типов.
+    - Есть хелп-текст, который поясняет использование тех или иных полей.
 - Минусы
-    - Отсутствует описание модуля в формате reStructuredText.
-    - Не везде используется семантическая HTML-разметка.
-    - Некоторые части HTML могут быть переработаны для лучшей читаемости и поддержки.
-    - Некоторые комментарии можно переформулировать для большей ясности.
-    - Отсутствует логирование, необходимое для отладки и понимания работы.
+    -  Отсутствует описание модуля в формате reStructuredText (RST).
+    -  Некоторые комментарии могут быть более информативными.
+    -  Не все элементы имеют четкое описание или purpose.
+    -  Стилизация и логика поведения popup.js вынесены в отдельные файлы.
 
 **Рекомендации по улучшению**
 
-1.  **Добавить описание модуля**: Добавить описание модуля в формате reStructuredText в начале файла.
-2.  **Семантическая разметка**: Использовать более семантически значимые теги HTML, где это уместно. Например, `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` и т.д.
-3.  **Улучшение комментариев**: Переформулировать комментарии в более ясные и конкретные, а также преобразовать их в формат RST.
-4.  **Разделение кода**: Разделить код на более мелкие и логические блоки, если это возможно.
-5.  **Добавить логирование**: Добавить логирование для отслеживания работы скрипта и выявления ошибок.
-6.  **Унификация стилей**: Использовать единый подход к стилизации элементов.
+1.  **Добавить описание модуля**:
+    -   В начале файла добавить описание модуля в формате RST.
+2.  **Уточнить комментарии**:
+    -   Сделать комментарии более ясными и конкретными. Например, добавить информацию о том, для чего используется каждая опция в выпадающих списках.
+3.  **Улучшить хелп-текст**:
+    -   Хелп-текст можно сделать более интерактивным, например, при наведении курсора на элемент.
+4.  **Пересмотреть структуру HTML**:
+    -   Рассмотреть возможность использования семантических тегов HTML5 для улучшения доступности и понимания структуры кода.
+5.  **Улучшение взаимодействия элементов**:
+    -   Например, можно связать label с input с помощью `id` и атрибута `for`, что улучшит доступность для пользователей.
 
-**Оптимизиробанный код**
+**Оптимизированный код**
 ```html
+<!DOCTYPE html>
 <!--
-    Модуль для отображения HTML-страницы с инструментами для работы с XPath и CSS-селекторами
-    =========================================================================================
+    Модуль для реализации popup окна расширения, предоставляющего интерфейс для тестирования xpath и querySelector выражений.
+    ==================================================================================================================
 
-    Этот модуль содержит HTML-структуру для создания пользовательского интерфейса,
-    который позволяет пользователю вводить XPath выражения, CSS селекторы,
-    устанавливать контекст для поиска элементов, а также взаимодействовать с фреймами.
+    Этот модуль содержит HTML-структуру popup окна, которое предоставляет пользователю интерфейс для тестирования xpath и querySelector выражений
+    на текущей веб-странице. Пользователь может вводить xpath выражения, указывать контекст, namespaceResolver, и настройки для фреймов.
+    Результаты выполнения выражений отображаются в нижней части окна.
+    
+    Функции данного модуля:
+    
+    - Предоставляет интерфейс для ввода и выполнения xpath и querySelector выражений.
+    - Позволяет указывать контекст для выполнения выражений.
+    - Поддерживает работу с namespaceResolver.
+    - Позволяет взаимодействовать с фреймами на странице.
+    - Отображает результаты выполнения выражений, включая сообщения, количество результатов и детали.
 
     Пример использования
     --------------------
 
-    Пример использования данной HTML-страницы:
+    Откройте popup окно расширения. Введите xpath или querySelector выражение, укажите необходимые настройки и нажмите кнопку "Execute".
+    Результаты будут отображены в нижней части окна.
 
-    .. code-block:: html
-
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <meta charset="utf-8">
-                <link rel="stylesheet" href="popup.css"/>
-                <script src="../scripts/try_xpath_functions.js"></script>
-                <script src="popup.js"></script>
-            </head>
-            <body>
-                <div><button id="execute">Execute</button></div>
-                ...
-            </body>
-        </html>
 -->
-<!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="popup.css"/>
-    <script src="../scripts/try_xpath_functions.js"></script>
-    <script src="popup.js"></script>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css"/>
+  <script src="../scripts/try_xpath_functions.js"></script>
+  <script src="popup.js"></script>
 </head>
 <body>
-    <header>
-        <!-- Кнопка для выполнения запроса -->
-        <div><button id="execute">Execute</button></div>
-        <!-- Переключатель справки -->
-        <div id="help-body"><input type="checkbox" id="help-switch"><label for="help-switch">Help</label></div>
-    </header>
-
-    <main>
-        <section>
-            <h1>Main</h1>
-            <div id="main-body">
-                <dl>
-                  <dt><label for="main-way">Way</label></dt>
-                  <dd>
-                    <select id="main-way">
-                      <option data-method="evaluate" data-type="ANY_TYPE">xpath ANY_TYPE</option>
-                      <option data-method="evaluate" data-type="NUMBER_TYPE">xpath NUMBER_TYPE</option>
-                      <option data-method="evaluate" data-type="STRING_TYPE">xpath STRING_TYPE</option>
-                      <option data-method="evaluate" data-type="BOOLEAN_TYPE">xpath BOOLEAN_TYPE</option>
-                      <option data-method="evaluate" data-type="UNORDERED_NODE_ITERATOR_TYPE">xpath UNORDERED_NODE_ITERATOR_TYPE</option>
-                      <option data-method="evaluate" data-type="ORDERED_NODE_ITERATOR_TYPE">xpath ORDERED_NODE_ITERATOR_TYPE</option>
-                      <option data-method="evaluate" data-type="UNORDERED_NODE_SNAPSHOT_TYPE">xpath UNORDERED_NODE_SNAPSHOT_TYPE</option>
-                      <option data-method="evaluate" data-type="ORDERED_NODE_SNAPSHOT_TYPE">xpath ORDERED_NODE_SNAPSHOT_TYPE</option>
-                      <option data-method="evaluate" data-type="ANY_UNORDERED_NODE_TYPE">xpath ANY_UNORDERED_NODE_TYPE</option>
-                      <option data-method="evaluate" data-type="FIRST_ORDERED_NODE_TYPE">xpath FIRST_ORDERED_NODE_TYPE</option>
-                      <option data-method="querySelector" data-type="">querySelector</option>
-                      <option data-method="querySelectorAll" data-type="">querySelectorAll</option>
-                    </select>
-                  </dd>
-                  <dt><label for="main-expression">Expression</label></dt>
-                  <dd><textarea id="main-expression"></textarea></dd>
-                </dl>
-              <div class="help">Если вы хотите ввести новую строку, пожалуйста, введите Shift-Enter.</div>
-            </div>
-        </section>
-
-        <section>
-            <h1 id="context-header"><input type="checkbox" id="context-switch"><label for="context-switch">Context</label></h1>
-              <div id="context-body">
-                <div class="help">Вы можете указать контекст. Первый узел из результатов используется как КОНТЕКСТ. (document.evaluate(expr, CONTEXT, ...), CONTEXT.querySelector(...), CONTEXT.querySelectorAll(...))</div>
-                <dl>
-                  <dt><label for="context-way">Way</label></dt>
-                  <dd>
-                    <select id="context-way">
-                      <option data-method="evaluate" data-type="ANY_TYPE">xpath ANY_TYPE</option>
-                      <option data-method="evaluate" data-type="UNORDERED_NODE_ITERATOR_TYPE">xpath UNORDERED_NODE_ITERATOR_TYPE</option>
-                      <option data-method="evaluate" data-type="ORDERED_NODE_ITERATOR_TYPE">xpath ORDERED_NODE_ITERATOR_TYPE</option>
-                      <option data-method="evaluate" data-type="UNORDERED_NODE_SNAPSHOT_TYPE">xpath UNORDERED_NODE_SNAPSHOT_TYPE</option>
-                      <option data-method="evaluate" data-type="ORDERED_NODE_SNAPSHOT_TYPE">xpath ORDERED_NODE_SNAPSHOT_TYPE</option>
-                      <option data-method="evaluate" data-type="ANY_UNORDERED_NODE_TYPE">xpath ANY_UNORDERED_NODE_TYPE</option>
-                      <option data-method="evaluate" data-type="FIRST_ORDERED_NODE_TYPE">xpath FIRST_ORDERED_NODE_TYPE</option>
-                      <option data-method="querySelector" data-type="">querySelector</option>
-                      <option data-method="querySelectorAll" data-type="">querySelectorAll</option>
-                    </select>
-                  </dd>
-                  <dt><label for="context-expression">Expression</label></dt>
-                  <dd><textarea id="context-expression"></textarea></dd>
-                </dl>
-              </div>
-        </section>
-
-        <section>
-            <h1 id="resolver-header"><input type="checkbox" id="resolver-switch"><label for="resolver-switch">namespaceResolver</label></h1>
-            <div id="resolver-body">
-                <div class="help">Вы можете указать поведение функции namespaceResolver. Если вы хотите получить элементы P, которые находятся в пространстве имен "http://www.w3.org/1999/xhtml", пожалуйста, сделайте следующее.
-                <ol>
-                    <li>Введите {"x":"http://www.w3.org/1999/xhtml"} в поле ввода resolver.</li>
-                    <li>Введите //x:p в поле ввода expression.</li>
-                    <li>Нажмите кнопку Execute.</li>
-                </ol>
-            </div>
-              <dl>
-                <dt><label for="resolver-expression">Resolver</label></dt>
-                <dd><input type="text" id="resolver-expression"></dd>
-              </dl>
-            </div>
-        </section>
-
-        <section class="none">
-          <h1 id="frame-designation-header"><input type="checkbox" id="frame-designation-switch"><label for="frame-designation-switch">Frame without id</label></h1>
-            <div id="frame-designation-body">
-              <div class="help">Вы можете указать фрейм, у которого нет frameId. Если вы хотите указать window.frames[1].frames[0], введите [1, 0] в поле ввода frame. Эта спецификация начинается с фрейма, указанного frameId.</div>
-              <dl>
-                <dt><label for="frame-designation-expression">Frame</label></dt>
-                <dd><input type="text" id="frame-designation-expression"></dd>
-              </dl>
-              <div><button id="focus-designated-frame">Focus frame</button></div>
-            </div>
-        </section>
-
-        <section>
-          <h1 id="frame-id-header"><input type="checkbox" id="frame-id-switch"><label for="frame-id-switch">frameId</label></h1>
-            <div id="frame-id-body">
-              <div class="help">Вы можете указать фрейм, в котором выполняется выражение. Если вы хотите указать фрейм, пожалуйста, сделайте следующее.
-                <ol>
-                  <li>Нажмите кнопку Get-all-frameId.</li>
-                  <li>Выберите frameId.</li>
-                  <li>Нажмите кнопку Focus-frame.</li>
-                  <li>Выполните выражение.</li>
-                </ol>
-              </div>
-              <div>
-                <button id="get-all-frame-id">Get all frameId</button><select id="frame-id-list"><option data-frame-id="manual">Manual</option></select>
-              </div>
-              <dl>
-                <dt><label for="frame-id-expression">frameId</label></dt>
-                <dd><input type="text" id="frame-id-expression"></dd>
-              </dl>
-              <div><button id="focus-frame">Focus frame</button><button id="show-previous-results">Show previous results</button></div>
-            </div>
-        </section>
-    </main>
-
-    <section>
-        <h1>Results</h1>
-        <div>Message: <span id="results-message"></span></div>
-        <div>Count: <span id="results-count"></span></div>
-        <div>frameId: <span id="results-frame-id"></span></div>
-        <div><button id="show-all-results">Show all results</button><button id="open-options">Open options</button><button id="set-style">Set style</button><button id="reset-style">Reset style</button><button id="set-all-style">Set style(all frames)</button><button id="reset-all-style">Reset style(all frame)</button></div>
-        <h2>Context detail</h2>
-        <table id="context-detail">
-        <tbody></tbody>
-        </table>
-        <h2>Details</h2>
-        <div><button id="previous-details-page">&lt;</button><button id="move-details-page">Move</button><input type="text" id="details-page-count"><button id="next-details-page">&gt;</button></div>
-        <table id="results-details">
-        <tbody></tbody>
-        </table>
-    </section>
+<div><button id="execute">Execute</button></div>
+<div id="help-body"><input type="checkbox" id="help-switch"><label for="help-switch">Help</label></div>
+<div>
+  <h1>Main</h1>
+  <div id="main-body">
+    <dl>
+      <dt><label for="main-way">Way</label></dt>
+      <dd>
+        <select id="main-way">
+          <option data-method="evaluate" data-type="ANY_TYPE">xpath ANY_TYPE</option>
+          <option data-method="evaluate" data-type="NUMBER_TYPE">xpath NUMBER_TYPE</option>
+          <option data-method="evaluate" data-type="STRING_TYPE">xpath STRING_TYPE</option>
+          <option data-method="evaluate" data-type="BOOLEAN_TYPE">xpath BOOLEAN_TYPE</option>
+          <option data-method="evaluate" data-type="UNORDERED_NODE_ITERATOR_TYPE">xpath UNORDERED_NODE_ITERATOR_TYPE</option>
+          <option data-method="evaluate" data-type="ORDERED_NODE_ITERATOR_TYPE">xpath ORDERED_NODE_ITERATOR_TYPE</option>
+          <option data-method="evaluate" data-type="UNORDERED_NODE_SNAPSHOT_TYPE">xpath UNORDERED_NODE_SNAPSHOT_TYPE</option>
+          <option data-method="evaluate" data-type="ORDERED_NODE_SNAPSHOT_TYPE">xpath ORDERED_NODE_SNAPSHOT_TYPE</option>
+          <option data-method="evaluate" data-type="ANY_UNORDERED_NODE_TYPE">xpath ANY_UNORDERED_NODE_TYPE</option>
+          <option data-method="evaluate" data-type="FIRST_ORDERED_NODE_TYPE">xpath FIRST_ORDERED_NODE_TYPE</option>
+          <option data-method="querySelector" data-type="">querySelector</option>
+          <option data-method="querySelectorAll" data-type="">querySelectorAll</option>
+        </select>
+      </dd>
+      <dt><label for="main-expression">Expression</label></dt>
+      <dd><textarea id="main-expression"></textarea></dd>
+    </dl>
+    <div class="help">If you want to enter a new line, please enter the Shift-Enter.</div>
+  </div>
+</div>
+<div>
+  <h1 id="context-header"><input type="checkbox" id="context-switch"><label for="context-switch">Context</label></h1>
+  <div id="context-body">
+    <div class="help">You can specify a context. The first node of the results is used as the CONTEXT. (document.evaluate(expr, CONTEXT, ...), CONTEXT.querySelector(...), CONTEXT.querySelectorAll(...))</div>
+    <dl>
+      <dt><label for="context-way">Way</label></dt>
+      <dd>
+        <select id="context-way">
+          <option data-method="evaluate" data-type="ANY_TYPE">xpath ANY_TYPE</option>
+          <option data-method="evaluate" data-type="UNORDERED_NODE_ITERATOR_TYPE">xpath UNORDERED_NODE_ITERATOR_TYPE</option>
+          <option data-method="evaluate" data-type="ORDERED_NODE_ITERATOR_TYPE">xpath ORDERED_NODE_ITERATOR_TYPE</option>
+          <option data-method="evaluate" data-type="UNORDERED_NODE_SNAPSHOT_TYPE">xpath UNORDERED_NODE_SNAPSHOT_TYPE</option>
+          <option data-method="evaluate" data-type="ORDERED_NODE_SNAPSHOT_TYPE">xpath ORDERED_NODE_SNAPSHOT_TYPE</option>
+           <option data-method="evaluate" data-type="ANY_UNORDERED_NODE_TYPE">xpath ANY_UNORDERED_NODE_TYPE</option>
+          <option data-method="evaluate" data-type="FIRST_ORDERED_NODE_TYPE">xpath FIRST_ORDERED_NODE_TYPE</option>
+          <option data-method="querySelector" data-type="">querySelector</option>
+          <option data-method="querySelectorAll" data-type="">querySelectorAll</option>
+        </select>
+      </dd>
+      <dt><label for="context-expression">Expression</label></dt>
+      <dd><textarea id="context-expression"></textarea></dd>
+    </dl>
+  </div>
+</div>
+<div>
+  <h1 id="resolver-header"><input type="checkbox" id="resolver-switch"><label for="resolver-switch">namespaceResolver</label></h1>
+  <div id="resolver-body">
+    <div class="help">You can specify the behavior of the namespaceResolver function. If you want to get the P elements which are in the "http://www.w3.org/1999/xhtml" namespace, please do as follows.
+      <ol>
+        <li>Enter {"x":"http://www.w3.org/1999/xhtml"} in the resolver input field.</li>
+        <li>Enter //x:p in the expression input field.</li>
+        <li>Click the Execute button.</li>
+      </ol>
+    </div>
+    <dl>
+      <dt><label for="resolver-expression">Resolver</label></dt>
+      <dd><input type="text" id="resolver-expression"></dd>
+    </dl>
+  </div>
+</div>
+<div class="none">
+  <h1 id="frame-designation-header"><input type="checkbox" id="frame-designation-switch"><label for="frame-designation-switch">Frame without id</label></h1>
+  <div id="frame-designation-body">
+    <div class="help">You can specify the frame which does not have frameId. If you want to specify window.frames[1].frames[0] enter [1, 0] in the frame input field. This specification starts with the frame specified by frameId.</div>
+    <dl>
+      <dt><label for="frame-designation-expression">Frame</label></dt>
+      <dd><input type="text" id="frame-designation-expression"></dd>
+    </dl>
+    <div><button id="focus-designated-frame">Focus frame</button></div>
+  </div>
+</div>
+<div>
+  <h1 id="frame-id-header"><input type="checkbox" id="frame-id-switch"><label for="frame-id-switch">frameId</label></h1>
+  <div id="frame-id-body">
+    <div class="help">You can specify the frame where the expression is executed. If you want to specify a frame, please do as follows.
+      <ol>
+        <li>Click the Get-all-frameId button.</li>
+        <li>Select a frameId.</li>
+        <li>Click the Focus-frame button.</li>
+        <li>Execute a expression.</li>
+      </ol>
+    </div>
+    <div>
+      <button id="get-all-frame-id">Get all frameId</button><select id="frame-id-list"><option data-frame-id="manual">Manual</option></select>
+    </div>
+    <dl>
+      <dt><label for="frame-id-expression">frameId</label></dt>
+      <dd><input type="text" id="frame-id-expression"></dd>
+    </dl>
+    <div><button id="focus-frame">Focus frame</button><button id="show-previous-results">Show previous results</button></div>
+  </div>
+</div>
+<div>
+  <h1>Results</h1>
+  <div>Message: <span id="results-message"></span></div>
+  <div>Count: <span id="results-count"></span></div>
+  <div>frameId: <span id="results-frame-id"></span></div>
+  <div><button id="show-all-results">Show all results</button><button id="open-options">Open options</button><button id="set-style">Set style</button><button id="reset-style">Reset style</button><button id="set-all-style">Set style(all frames)</button><button id="reset-all-style">Reset style(all frame)</button></div>
+  <h2>Context detail</h2>
+  <table id="context-detail">
+    <tbody></tbody>
+  </table>
+  <h2>Details</h2>
+  <div><button id="previous-details-page">&lt;</button><button id="move-details-page">Move</button><input type="text" id="details-page-count"><button id="next-details-page">&gt;</button></div>
+  <table id="results-details">
+    <tbody></tbody>
+  </table>
+</div>
 </body>
 </html>

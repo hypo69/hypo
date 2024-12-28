@@ -3,23 +3,23 @@
 **Качество кода**
 8
 -  Плюсы
-    - Код хорошо структурирован, используются классы исключений для конкретных ошибок.
-    - Имеется базовый класс `AliexpressException`, от которого наследуются другие исключения.
-    - Код соответствует PEP8 по оформлению.
+    -  Код хорошо структурирован и понятен.
+    -  Используются собственные исключения, наследуемые от базового класса `AliexpressException`.
+    -  Есть описание для каждого исключения.
+
 -  Минусы
-    - Отсутствует docstring у модуля.
-    - В классе `AliexpressException` не описаны параметры и возвращаемое значение в docstring.
-    - Отсутствует импорт модуля логирования.
-    - Нет подробных комментариев к коду.
-    - Имена исключений содержат опечатки, например, `ProductsNotFoudException` и `CategoriesNotFoudException`.
+    -  Отсутствует подробная документация в формате reStructuredText (RST) для модуля и классов.
+    -  Нет логирования ошибок.
+    -  Не используется `j_loads` или `j_loads_ns`.
+    -  `__str__` метод класса `AliexpressException` использует устаревший формат `%s`.
 
 **Рекомендации по улучшению**
-1. Добавить docstring для модуля с описанием его назначения.
-2. Добавить docstring для класса `AliexpressException` с описанием параметров и возвращаемых значений.
-3. Исправить опечатки в именах исключений `ProductsNotFoudException` и `CategoriesNotFoudException`.
-4. Добавить импорт модуля `logger` для логирования ошибок.
-5. Добавить более подробные комментарии к коду, объясняющие, что делает каждый блок кода.
-6. Добавить более конкретные исключения, например, `NetworkError`, если это необходимо.
+
+1.  Добавить reStructuredText (RST) документацию для модуля и классов.
+2.  Использовать f-строки вместо `%s` для форматирования строк в методе `__str__`.
+3.  Добавить логирование в случае возникновения исключений.
+4.  Привести в соответствие имена классов с ранее обработанными файлами (если необходимо).
+5.   Использовать  `from src.logger.logger import logger` для логирования ошибок
 
 **Оптимизированный код**
 
@@ -28,58 +28,57 @@
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~
 """
-Модуль для определения пользовательских исключений, используемых в API AliExpress.
-===================================================================================
+Модуль содержит пользовательские исключения для API AliExpress.
+================================================================
 
-Этот модуль содержит набор классов исключений, специфичных для работы с API AliExpress.
-Исключения используются для обработки ошибок, возникающих в процессе запросов к API
-и обработки ответов.
+Этот модуль определяет набор пользовательских исключений, которые могут быть использованы для обработки ошибок,
+возникающих при взаимодействии с API AliExpress.
+
+Исключения включают:
+
+- :class:`AliexpressException`: Базовое исключение для всех исключений API AliExpress.
+- :class:`InvalidArgumentException`: Исключение, возникающее при некорректных аргументах.
+- :class:`ProductIdNotFoundException`: Исключение, возникающее при отсутствии идентификатора продукта.
+- :class:`ApiRequestException`: Исключение, возникающее при сбое запроса к API AliExpress.
+- :class:`ApiRequestResponseException`: Исключение, возникающее при невалидном ответе API.
+- :class:`ProductsNotFoudException`: Исключение, возникающее если продукты не найдены.
+- :class:`CategoriesNotFoudException`: Исключение, возникающее если категории не найдены.
+- :class:`InvalidTrackingIdException`: Исключение, возникающее при некорректном или отсутствующем ID отслеживания.
 
 Пример использования
 --------------------
 
-Пример использования исключений при работе с API:
-
 .. code-block:: python
 
     try:
-        # ... some api call
-        raise ProductIdNotFoundException("Product with given ID not found.")
+        raise ProductIdNotFoundException("Product ID не найден")
     except ProductIdNotFoundException as e:
-        logger.error(f"Ошибка при поиске продукта: {e}")
-
+        print(f"Произошла ошибка: {e}")
 """
-from src.logger.logger import logger  # импорт модуля для логирования
+from src.logger.logger import logger # Импорт logger для логирования
 
 
 class AliexpressException(Exception):
     """
-    Базовый класс для всех исключений, связанных с API AliExpress.
+    Базовый класс для всех исключений API AliExpress.
 
-    :param reason: Строка, описывающая причину возникновения исключения.
+    :param reason: Причина возникновения исключения.
     :type reason: str
-
-    :raises AliexpressException: Если возникает ошибка при работе с API AliExpress.
-
-    :return: Строковое представление причины исключения.
-    :rtype: str
     """
     def __init__(self, reason: str):
-        #  Вызывает конструктор родительского класса Exception
+        # Инициализация базового класса Exception.
         super().__init__()
-        # Присваивает причину ошибки экземпляру класса
+        # Присваивание причины исключения.
         self.reason = reason
 
     def __str__(self) -> str:
-        #  Возвращает строковое представление причины ошибки
-        return '%s' % self.reason
+        # Возвращает строковое представление исключения, используя f-строку.
+        return f'{self.reason}'
 
 
 class InvalidArgumentException(AliexpressException):
     """
     Исключение, возникающее при некорректных аргументах.
-
-    :raises InvalidArgumentException: Если аргументы не соответствуют требованиям.
     """
     pass
 
@@ -87,53 +86,36 @@ class InvalidArgumentException(AliexpressException):
 class ProductIdNotFoundException(AliexpressException):
     """
     Исключение, возникающее, если ID продукта не найден.
-
-    :raises ProductIdNotFoundException: Если продукт с указанным ID не найден.
     """
     pass
-
 
 class ApiRequestException(AliexpressException):
     """
-    Исключение, возникающее при неудачном запросе к API AliExpress.
-
-    :raises ApiRequestException: Если запрос к API завершился неудачей.
+    Исключение, возникающее при сбое запроса к API AliExpress.
     """
     pass
-
 
 class ApiRequestResponseException(AliexpressException):
     """
-    Исключение, возникающее при невалидном ответе от API.
-
-    :raises ApiRequestResponseException: Если ответ от API не соответствует ожидаемому формату.
+    Исключение, возникающее, если ответ API не валиден.
     """
     pass
 
-
-class ProductsNotFoundException(AliexpressException):
+class ProductsNotFoudException(AliexpressException):
     """
-    Исключение, возникающее, если товары не найдены.
-
-    :raises ProductsNotFoundException: Если не найдено ни одного товара.
+    Исключение, возникающее, если продукты не найдены.
     """
     pass
 
-
-class CategoriesNotFoundException(AliexpressException):
+class CategoriesNotFoudException(AliexpressException):
     """
     Исключение, возникающее, если категории не найдены.
-
-    :raises CategoriesNotFoundException: Если не найдено ни одной категории.
     """
     pass
-
 
 class InvalidTrackingIdException(AliexpressException):
     """
-    Исключение, возникающее при недействительном или отсутствующем ID отслеживания.
-
-    :raises InvalidTrackingIdException: Если ID отслеживания отсутствует или является недействительным.
+    Исключение, возникающее при отсутствии или невалидном ID отслеживания.
     """
     pass
 ```

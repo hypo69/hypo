@@ -1,90 +1,106 @@
-# Анализ кода модуля `options.html`
+# Анализ кода модуля options.html
 
 **Качество кода**
-7
+8
 - Плюсы
-    - HTML-структура в целом понятна и логична.
-    - Используется разделение на блоки для атрибутов, стилей и настроек попапа.
-    - Присутствуют подписи для всех полей ввода.
+    - Код HTML структурирован и читаем.
+    - Используются стандартные HTML-теги.
+    - Есть разделение на блоки с атрибутами, стилями и настройками всплывающих окон.
+    - Использованы `dl`, `dt`, `dd` для создания описательных списков.
 - Минусы
-    - Отсутствует описание модуля в формате reStructuredText (RST).
-    - Использование глобальной переменной `MODE` без явного назначения.
-    - Нет обработки ошибок или проверок введенных значений.
-    - Не указано назначение `try_xpath_functions.js`, что затрудняет понимание полной картины.
-    - Нет комментариев о структуре HTML и логике взаимодействия с javascript
+    - Отсутствует явное подключение `css`.
+    - Нет документации.
+    - Отсутствует валидация для вводимых значений.
+    - Не используется `src.utils.jjson`.
+    - Нет обработки ошибок.
+    - Не используются логи.
+    - Отсутствует заголовок, например, `<!DOCTYPE html>`.
 
 **Рекомендации по улучшению**
 
-1.  Добавить описание модуля в формате RST в начале файла.
-2.  Удалить `#! venv/Scripts/python.exe`, так как это не является корректным для HTML файла.
-3.  Удалить переменную `MODE` т.к. она не используется в данном контексте.
-4.  Добавить комментарии к HTML-структуре для лучшего понимания.
-5.  Добавить описание назначения `try_xpath_functions.js` если это необходимо.
-6.  Добавить пояснения по взаимодействию с `options.js`.
-7.  Рассмотреть возможность добавления валидации вводимых значений на javascript.
-8.  Добавить комментарии для блоков кода и HTML элементов в формате RST.
+1.  **Добавить заголовок:** Указать правильный doctype `<!DOCTYPE html>`, добавить  `<title>...</title>` для заголовка страницы.
+2.  **Подключение CSS:** Добавить `<link rel="stylesheet" href="options.css">` для стилизации элементов.
+3.  **Использование `j_loads`:** Использовать `j_loads` для чтения/записи данных, если потребуется (в `options.js`).
+4.  **Логирование:** Внедрить логирование ошибок и важных событий в JavaScript (`options.js`).
+5.  **Валидация:** Реализовать валидацию вводимых данных в `options.js`, например, для размеров всплывающих окон.
+6.  **Улучшить docstring:**  Добавить docstring (комментарии RST) для файла html.
+7.  **Комментарии:** Добавить комментарии к значимым частям кода html, для улучшения понимания.
 
 **Оптимизированный код**
 
 ```html
 <!--
-    Модуль для отображения опций расширения Try Path.
-    ======================================================
-    
-    Данный модуль предоставляет пользовательский интерфейс для настройки параметров расширения.
-    Включает в себя поля для ввода атрибутов, стилей и размеров всплывающего окна.
+    Модуль настроек расширения для Firefox.
+    =========================================================================================
 
-    Использует `options.js` для сохранения и загрузки пользовательских настроек.
--->
+    Этот модуль содержит HTML-структуру для страницы настроек расширения Try Path.
+    Здесь представлены элементы для ввода различных атрибутов, стилей и настроек всплывающих окон.
+
+    Пример использования
+    --------------------
+
+    Пример отображения страницы с настройками:
+
+    .. code-block:: html
+
+       <!DOCTYPE html>
+       <html>
+       <head>
+            ...
+       </head>
+       <body>
+            ...
+       </body>
+       </html>
+    -->
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
-    <script src="../scripts/try_xpath_functions.js"></script> <!--  Подключение скрипта для работы с XPATH -->
-    <script src="options.js"></script> <!-- Подключение скрипта для работы со страницей опций -->
+    <!--  Подключает внешний файл стилей для оформления страницы  -->
+    <link rel="stylesheet" href="options.css">
+    <title>Try Path Options</title>
+    <!--  Подключает скрипт с функциями для работы с XPath  -->
+    <script src="../scripts/try_xpath_functions.js"></script>
+    <!--  Подключает скрипт для управления настройками страницы  -->
+    <script src="options.js"></script>
 </head>
-
 <body>
     <div>
         <h1>Attributes</h1>
-        <!-- Блок для отображения атрибутов элементов -->
         <dl>
             <dt><label for="element-attribute">Resulted elements</label></dt>
-            <dd><input type="text" id="element-attribute"></dd> <!-- Поле ввода для атрибута результирующих элементов -->
+            <dd><input type="text" id="element-attribute"></dd>
             <dt><label for="context-attribute">Context element</label></dt>
-            <dd><input type="text" id="context-attribute"></dd> <!-- Поле ввода для атрибута контекстного элемента -->
+            <dd><input type="text" id="context-attribute"></dd>
             <dt><label for="focused-attribute">Focused element</label></dt>
-            <dd><input type="text" id="focused-attribute"></dd> <!-- Поле ввода для атрибута фокусного элемента -->
+            <dd><input type="text" id="focused-attribute"></dd>
             <dt><label for="ancestor-attribute">Ancestors of the focused element</label></dt>
-            <dd><input type="text" id="ancestor-attribute"></dd> <!-- Поле ввода для атрибута предков фокусного элемента -->
+            <dd><input type="text" id="ancestor-attribute"></dd>
             <dt><label for="frame-attribute">Frame elements</label></dt>
-            <dd><input type="text" id="frame-attribute"></dd> <!-- Поле ввода для атрибута фреймовых элементов -->
+            <dd><input type="text" id="frame-attribute"></dd>
             <dt><label for="frame-ancestor-attribute">Ancestors of the frames</label></dt>
-            <dd><input type="text" id="frame-ancestor-attribute"></dd> <!-- Поле ввода для атрибута предков фреймов -->
+            <dd><input type="text" id="frame-ancestor-attribute"></dd>
         </dl>
     </div>
     <div>
         <h1>Style to be inserted</h1>
-         <!-- Блок для отображения стилей -->
         <dl>
             <dt><label for="style">Style</label></dt>
-            <dd><textarea id="style"></textarea></dd> <!-- Поле ввода для стилей -->
+            <dd><textarea id="style"></textarea></dd>
         </dl>
     </div>
     <div>
         <h1>Popup styles</h1>
-         <!-- Блок для отображения стилей попап -->
         <dl>
             <dt><label for="popup-body-width">Body width(auto or px)</label></dt>
-            <dd><input type="text" id="popup-body-width"></dd> <!-- Поле ввода для ширины попап -->
+            <dd><input type="text" id="popup-body-width"></dd>
             <dt><label for="popup-body-height">Body height(auto or px)</label></dt>
-            <dd><input type="text" id="popup-body-height"></dd> <!-- Поле ввода для высоты попап -->
+            <dd><input type="text" id="popup-body-height"></dd>
         </dl>
     </div>
-    <div>
-        <button id="save">Save</button><button id="show-default">Show default</button> <!-- Кнопки для сохранения и отображения стандартных настроек -->
-    </div>
-    <div id="message"></div> <!-- Сообщение о статусе -->
+    <div><button id="save">Save</button><button id="show-default">Show default</button></div>
+    <div id="message"></div>
 </body>
 </html>
 ```

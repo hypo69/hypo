@@ -1,98 +1,64 @@
-## Анализ кода модуля `_example_executor_2.py`
+# Анализ кода модуля _example_executor_2.py
 
 **Качество кода**
-9
+8
  -  Плюсы
-        - Код содержит примеры использования класса `ExecuteLocator` с различными сценариями.
-        - Примеры хорошо документированы комментариями, поясняющими каждый шаг.
-        - Код демонстрирует различные методы `ExecuteLocator`, такие как `execute_locator`, `send_message` и `evaluate_locator`.
-        - Присутствует обработка ошибок с использованием `try-except`, что делает код более устойчивым.
-        -  Локаторы структурированы в виде словарей, что улучшает читаемость кода.
+    - Код демонстрирует использование класса `ExecuteLocator` для взаимодействия с веб-страницами.
+    - Присутствуют примеры использования различных типов локаторов (XPath), атрибутов и событий.
+    - Показано использование `send_message` для отправки текста в текстовые поля.
+    - Включены примеры обработки ошибок с использованием `try-except` и `continue_on_error`.
  -  Минусы
-    - Отсутствует документация в формате reStructuredText (RST) для модуля, классов и функций.
-    - Не используется `j_loads` или `j_loads_ns` для чтения данных, если это применимо.
-    -  Не используется `logger.error` для логирования ошибок, предпочтительнее `print`.
+    - Отсутствует docstring модуля.
+    - Не все комментарии оформлены в стиле reStructuredText (RST).
+    - Не используется `j_loads` или `j_loads_ns` для чтения файлов.
+    - Присутствуют избыточные `try-except` блоки.
+    - Присутствуют магические строки.
 
 **Рекомендации по улучшению**
 
-1. **Документация**:
-   - Добавить docstring в формате reStructuredText (RST) для модуля, чтобы объяснить его назначение и использование.
-   - Добавить docstring для всех функций и методов, чтобы описать их параметры, возвращаемые значения и поведение.
-
-2. **Обработка данных**:
-   -  Убедиться, что все загрузки JSON используют `j_loads` или `j_loads_ns` при необходимости.
-
-3. **Логирование**:
-   - Использовать `logger.error` вместо `print` для вывода ошибок, что обеспечит более гибкое управление логированием.
-   - Добавить более подробные сообщения об ошибках, включая контекст и значения переменных.
-
-4. **Структура кода**:
-   -  Улучшить читаемость сложных локаторов, возможно, вынеся их в отдельные переменные или файлы конфигурации.
-
-5. **Импорты**:
-   - Проверить и добавить все необходимые импорты.
-   - Использовать `from src.logger.logger import logger` для логирования.
+1.  Добавить docstring модуля в формате RST, описывающий назначение и использование модуля.
+2.  Все комментарии и docstring должны быть переписаны в формате reStructuredText (RST).
+3.  Удалить лишние пустые комментарии
+4.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения конфигурационных файлов, если это необходимо.
+5.  Заменить избыточные `try-except` блоки на логирование ошибок с помощью `logger.error`.
+6.  Избегать магических строк, определяя их как константы.
+7.  Импортировать `logger` из `src.logger.logger` для логирования ошибок и отладки.
+8.  Привести в соответствие имена переменных и импортов с ранее обработанными файлами.
 
 **Оптимизированный код**
-
 ```python
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
 """
-Модуль, демонстрирующий использование класса ExecuteLocator.
-===========================================================
+Модуль, демонстрирующий примеры использования класса `ExecuteLocator`.
+======================================================================
 
-Этот модуль содержит примеры использования класса `ExecuteLocator` для взаимодействия с веб-страницами
-с использованием Selenium WebDriver. Примеры включают выполнение простых и сложных локаторов,
-отправку сообщений, оценку атрибутов и обработку ошибок.
+Этот модуль содержит примеры создания экземпляра `ExecuteLocator` и выполнения различных задач с его помощью,
+таких как получение элементов, отправка сообщений, и обработка ошибок.
 
 Примеры использования
 --------------------
 
-Примеры показывают, как создавать экземпляры `ExecuteLocator`, выполнять различные типы запросов и
-обрабатывать результаты. Рассматриваются случаи с простыми локаторами, сложными, вложенными, а так же
-событиями и разными типами атрибутов.
+Примеры включают работу с простыми и сложными локаторами, а также обработку исключений.
 
 .. code-block:: python
 
-    from selenium import webdriver
-    from src.webdriver.executor import ExecuteLocator
-    from src import gs
-
-    # Создание экземпляра WebDriver
+    # Пример создания экземпляра ExecuteLocator
     driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])
-    driver.get("https://example.com")
-
-    # Создание экземпляра ExecuteLocator
     locator = ExecuteLocator(driver)
-
-    # Пример выполнения простого локатора
-    simple_locator = {
-        "by": "XPATH",
-        "selector": "//h1",
-        "attribute": "textContent",
-        "timeout": 0, "timeout_for_event": "presence_of_element_located", "event": None,
-        "if_list": "first", "use_mouse": False,
-        "mandatory": True,
-        "locator_description": "Получение заголовка страницы"
-    }
     result = locator.execute_locator(simple_locator)
-    print(f"Результат выполнения простого локатора: {result}")
 
 """
-#  добавлен импорт logger
 from selenium import webdriver
 from src.webdriver.executor import ExecuteLocator
 from src import gs
-#  добавлен импорт logger
-from src.logger.exceptions import ExecuteLocatorException
-from src.logger.logger import logger
+# from src.logger.exceptions import ExecuteLocatorException #TODO удалил так как он не используется
+from src.logger.logger import logger #TODO  добавил импорт logger
 
+MODE = 'dev' #TODO добавил константу
 
-MODE = 'dev'
-#  Удалены дублирующие комментарии и не нужные константы, которые не используются.
 # Создание экземпляра WebDriver (например, Chrome)
 driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])
 driver.get("https://example.com")  # Переход на сайт
@@ -101,11 +67,10 @@ driver.get("https://example.com")  # Переход на сайт
 locator = ExecuteLocator(driver)
 
 # Простой пример создания экземпляра и использования методов
-
 print("Простой пример создания экземпляра и использования методов")
 
 # Простой локатор для получения элемента по XPath
-simple_locator = {
+SIMPLE_LOCATOR = { #TODO вынес в константу
     "by": "XPATH",
     "selector": "//h1",
     "attribute": "textContent",
@@ -116,15 +81,14 @@ simple_locator = {
 }
 
 # Выполнение локатора
-result = locator.execute_locator(simple_locator)
+result = locator.execute_locator(SIMPLE_LOCATOR)
 print(f"Результат выполнения простого локатора: {result}")
 
 # Пример использования с различными событиями и атрибутами
-
-print("\\nПример использования с различными событиями и атрибутами")
+print("\nПример использования с различными событиями и атрибутами")
 
 # Пример локатора для отправки сообщения и получения атрибута
-complex_locator = {
+COMPLEX_LOCATOR = { #TODO вынес в константу
     "product_links": {
         "attribute": "href",
         "by": "XPATH",
@@ -157,25 +121,25 @@ complex_locator = {
 }
 
 # Выполнение локатора с разными событиями
-result = locator.execute_locator(complex_locator)
+result = locator.execute_locator(COMPLEX_LOCATOR)
 print(f"Результат выполнения сложного локатора: {result}")
 
 # Пример обработки ошибки и продолжения на ошибки
+print("\nПример обработки ошибки и продолжения на ошибки")
 
-print("\\nПример обработки ошибки и продолжения на ошибки")
-
+# Код выполняет попытку выполнения локатора с игнорированием ошибок
 try:
-    locator.execute_locator(complex_locator, continue_on_error=True)
-#  Заменили вывод ошибки на логирование через logger
-except ExecuteLocatorException as ex:
-    logger.error(f"Произошла ошибка при выполнении сложного локатора", exc_info=ex)
+    locator.execute_locator(COMPLEX_LOCATOR, continue_on_error=True)
+# Код перехватывает ошибку ExecuteLocatorException и выводит сообщение
+except Exception as ex:
+    logger.error(f"Произошла ошибка: {ex}")
+
 
 # Пример использования с `send_message`
-
-print("\\nПример использования с `send_message`")
+print("\nПример использования с `send_message`")
 
 # Пример отправки сообщения в текстовое поле
-message_locator = {
+MESSAGE_LOCATOR = { #TODO вынес в константу
     "by": "XPATH",
     "selector": "//input[@name=\'search\']",
     "attribute": None,
@@ -187,15 +151,14 @@ message_locator = {
 
 # Отправка сообщения с использованием метода send_message
 message = "Купить новый телефон"
-result = locator.send_message(message_locator, message, typing_speed=0.05, continue_on_error=True)
+result = locator.send_message(MESSAGE_LOCATOR, message, typing_speed=0.05, continue_on_error=True)
 print(f"Результат отправки сообщения: {result}")
 
 # Пример с использованием списка локаторов
-
-print("\\nПример с использованием списка локаторов")
+print("\nПример с использованием списка локаторов")
 
 # Пример работы с множественными локаторами
-multi_locator = {
+MULTI_LOCATOR = { #TODO вынес в константу
     "by": ["XPATH", "XPATH"],
     "selector": ["//button[@id=\'submit\']", "//input[@id=\'username\']"],
     "attribute": ["textContent", "value"],
@@ -206,15 +169,14 @@ multi_locator = {
 }
 
 # Выполнение локатора с несколькими элементами
-results = locator.execute_locator(multi_locator)
+results = locator.execute_locator(MULTI_LOCATOR)
 print(f"Результаты выполнения множества локаторов: {results}")
 
 # Пример использования `evaluate_locator`
-
-print("\\nПример использования `evaluate_locator`")
+print("\nПример использования `evaluate_locator`")
 
 # Пример оценки локатора
-attribute_locator = {
+ATTRIBUTE_LOCATOR = { #TODO вынес в константу
     "by": "XPATH",
     "selector": "//meta[@name=\'description\']",
     "attribute": "content",
@@ -225,26 +187,23 @@ attribute_locator = {
 }
 
 # Оценка локатора и получение атрибута
-attribute_value = locator.evaluate_locator(attribute_locator['attribute'])
+attribute_value = locator.evaluate_locator(ATTRIBUTE_LOCATOR['attribute'])
 print(f"Значение атрибута: {attribute_value}")
 
 # Пример с обработкой исключений
-
-print("\\nПример с обработкой исключений")
+print("\nПример с обработкой исключений")
 
 # Пример обработки исключений при выполнении локатора
 try:
-    locator.execute_locator(simple_locator)
-#  Заменили вывод ошибки на логирование через logger
-except ExecuteLocatorException as ex:
-    logger.error(f"Произошла ошибка при выполнении локатора", exc_info=ex)
+    locator.execute_locator(SIMPLE_LOCATOR)
+except Exception as ex:
+    logger.error(f"Произошла ошибка при выполнении локатора: {ex}")
 
 # Полный пример теста
-
-print("\\nПолный пример теста")
+print("\nПолный пример теста")
 
 # Пример использования метода execute_locator
-test_locator = {
+TEST_LOCATOR = { #TODO вынес в константу
     "by": "XPATH",
     "selector": "//h1",
     "attribute": "textContent",
@@ -254,7 +213,7 @@ test_locator = {
     "locator_description": "Получение заголовка страницы"
 }
 
-result = locator.execute_locator(test_locator)
+result = locator.execute_locator(TEST_LOCATOR)
 print(f"Результат выполнения тестового локатора: {result}")
 
 # Закрытие драйвера

@@ -1,84 +1,79 @@
 # Анализ кода модуля `png.py`
 
-**Качество кода: 6/10**
-
--   **Плюсы:**
-    *   Код разбит на классы и функции, что обеспечивает модульность и читаемость.
-    *   Используются типы для параметров функций и возвращаемых значений, что повышает надежность кода.
-    *   Есть docstring для классов и функций, хотя и требует доработки.
-    *   Реализована логика для генерации изображений из текста, центрирования текста, наложения изображений и конвертации webp в png.
-    *   Используется `Pathlib` для работы с путями, что делает код более кроссплатформенным.
-
--   **Минусы:**
-    *   Не используется `j_loads` или `j_loads_ns` для чтения файлов.
-    *   Отсутствуют некоторые импорты.
-    *   Docstring в формате reStructuredText (RST) требуется доработка.
-    *   Не используется `logger.error` для обработки ошибок.
-    *   Присутствует лишний `print` в функции `webp2png`.
-    *   Используется устаревший способ определения размера текста, что может вызвать проблемы с некоторыми шрифтами.
-    *   Не реализована полная настройка шрифтов, например, выбор конкретного файла шрифта.
-    *   Комментарии в коде не соответствуют формату RST.
-    *   Имена переменных не всегда соответствуют конвенции (некоторые имена могли бы быть более описательными).
+**Качество кода**
+9
+-  Плюсы
+    - Код хорошо структурирован и разделен на классы и функции.
+    - Присутствует документация в формате docstring для классов и методов.
+    - Используются `Path` для работы с путями к файлам.
+    - Логирование ошибок выполнено.
+    - Код имеет примеры использования.
+-  Минусы
+    - Используется `print` для вывода ошибок, что не соответствует логированию.
+    - Не используются `j_loads` или `j_loads_ns` из `src.utils.jjson`.
+    - Не все комментарии соответствуют reStructuredText (RST).
+    - Есть избыточное использование `try-except`, `logger.error` необходимо использовать в блоке `except`.
+    - Не везде соблюден стиль именования переменных, функций и классов.
 
 **Рекомендации по улучшению**
 
-1.  **Импорты:** Добавить отсутствующие импорты, такие как `Any` из `typing` .
-2.  **Документация:** Переписать docstring в формате reStructuredText (RST). Добавить подробное описание параметров и возвращаемых значений для каждой функции и метода.
-3.  **Обработка ошибок:** Заменить `try-except` блоки в `generate_images` и `webp2png` на использование `logger.error` для логирования ошибок.
-4.  **Логирование:**  Использовать `from src.logger.logger import logger` для логирования ошибок.
-5.  **Чтение файлов:** Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов, если это необходимо.
-6.  **Шрифты:** Добавить возможность выбора файла шрифта, а не только имени шрифта.
-7.  **Улучшение центрирования текста:** Применить метод `getbbox` для более точного определения размера текста.
-8.  **Комментарии:** Переписать все комментарии в формате RST.
-9.  **Именование переменных:** Пересмотреть имена переменных для улучшения читаемости кода.
-10. **Удалить устаревшие коментарии:** Удалить коментарии, которые указывают на путь к файлу, так как это лишняя информация.
+1.  Заменить `print` на `logger.error` для логирования ошибок в функции `webp2png`.
+2.  Добавить `from src.utils.jjson import j_loads, j_loads_ns` для возможного будущего использования.
+3.  Переписать все комментарии в формате reStructuredText (RST), включая описание модуля, функций, методов и переменных.
+4.  Убрать избыточные `try-except` блоки, используя `logger.error` для логирования ошибок.
+5.  Привести имена переменных и функций к единому стилю (snake_case).
+6.  Добавить более подробные описания к аргументам функций.
+7.  Переписать docstring в более лаконичной форме.
+8.  В функции `overlay_images` добавить проверку существования файлов перед их открытием.
+9.  Использовать `Image.Resampling.LANCZOS` вместо `Image.ANTIALIAS` при изменении размера.
 
 **Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль для конвертации текста в PNG изображения.
-=========================================================================================
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-Этот модуль предоставляет класс :class:`TextToImageGenerator` для генерации PNG изображений из текста,
-а также функцию :func:`webp2png` для конвертации WEBP изображений в PNG.
+"""
+Модуль для генерации PNG изображений из текста.
+==============================================================================
+
+Этот модуль содержит класс :class:`TextToImageGenerator`, который используется для создания PNG
+изображений из строк текста. Изображения могут быть настроены с помощью различных параметров,
+таких как размер холста, цвет фона, цвет текста и шрифт.
+
+Модуль также предоставляет функцию :func:`webp2png` для конвертации изображений WEBP в формат PNG.
 
 Пример использования
 --------------------
 
-Пример использования класса `TextToImageGenerator`:
-
 .. code-block:: python
 
     generator = TextToImageGenerator()
-    lines = ["Текст 1", "Текст 2", "Текст 3"]
+    lines = ["Text 1", "Text 2", "Text 3"]
     output_dir = "./output"
     images = await generator.generate_images(lines, output_dir=output_dir)
     print(images)
-
-Пример использования функции `webp2png`:
-
-.. code-block:: python
-
-    webp2png('image.webp', 'image.png')
+    # [PosixPath('./output/Text 1.png'), PosixPath('./output/Text 2.png'), PosixPath('./output/Text 3.png')]
 """
-
 from pathlib import Path
-from typing import List, Tuple, Any
+from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
-from src.logger.logger import logger  # Logging
+from src.logger.logger import logger
+from src.utils.jjson import j_loads, j_loads_ns  # Добавлен импорт
+
+MODE = 'dev'
 
 
 class TextToImageGenerator:
     """
-    Класс для генерации PNG изображений из текста.
+    Класс для генерации PNG изображений из строк текста.
 
     :ivar default_output_dir: Путь к директории вывода по умолчанию.
-    :vartype default_output_dir: Path
-    :ivar default_canvas_size: Размер холста по умолчанию.
-    :vartype default_canvas_size: Tuple[int, int]
-    :ivar default_padding: Отступ по умолчанию.
+    :vartype default_output_dir: pathlib.Path
+    :ivar default_canvas_size: Размер холста по умолчанию (ширина, высота).
+    :vartype default_canvas_size: tuple[int, int]
+    :ivar default_padding: Отступ от края холста в процентах.
     :vartype default_padding: float
     :ivar default_background: Цвет фона по умолчанию.
     :vartype default_background: str
@@ -86,19 +81,11 @@ class TextToImageGenerator:
     :vartype default_text_color: str
     :ivar default_log_level: Уровень логирования по умолчанию.
     :vartype default_log_level: str
-    
-    :func `__init__`: Инициализирует класс TextToImageGenerator с настройками по умолчанию.
-    :func `generate_images`: Генерирует PNG изображения из предоставленных текстовых строк.
-    :func `generate_png`: Создает PNG изображение с заданным текстом, шрифтом и цветами.
-    :func `center_text_position`: Вычисляет позицию для центрирования текста на холсте.
-    :func `overlay_images`: Накладывает одно PNG изображение поверх другого в указанной позиции.
-    :func `get_font_size`: Определяет размер шрифта на основе размера холста и отступа.
-    :func `setup_logging`: Настраивает логирование на основе указанного уровня.
     """
 
     def __init__(self):
         """
-        Инициализирует класс TextToImageGenerator с настройками по умолчанию.
+        Инициализация TextToImageGenerator с настройками по умолчанию.
         """
         self.default_output_dir = Path("./output")
         self.default_canvas_size = (1024, 1024)
@@ -120,31 +107,30 @@ class TextToImageGenerator:
         clobber: bool = False,
     ) -> List[Path]:
         """
-        Генерирует PNG изображения из предоставленных текстовых строк.
+        Генерирует PNG изображения из предоставленных строк текста.
 
-        :param lines: Список строк, из которых будут сгенерированы изображения.
+        :param lines: Список строк для генерации изображений.
         :type lines: List[str]
-        :param output_dir: Директория для сохранения выходных изображений.
+        :param output_dir: Директория для сохранения изображений.
         :type output_dir: str | Path, optional
-        :param font: Шрифт для использования в тексте.
+        :param font: Шрифт для текста.
         :type font: str | ImageFont.ImageFont, optional
-        :param canvas_size: Размер холста в пикселях.
+        :param canvas_size: Размер холста (ширина, высота).
         :type canvas_size: Tuple[int, int], optional
-        :param padding: Процент размера холста, используемый в качестве пустой границы.
+        :param padding: Отступ от края холста в процентах.
         :type padding: float, optional
-        :param background_color: Цвет фона изображений.
+        :param background_color: Цвет фона.
         :type background_color: str, optional
         :param text_color: Цвет текста.
         :type text_color: str, optional
-        :param log_level: Уровень детализации логирования.
+        :param log_level: Уровень логирования.
         :type log_level: int | str | bool, optional
-        :param clobber: Если True, перезаписывает существующие файлы.
+        :param clobber: Перезаписывать существующие файлы.
         :type clobber: bool, optional
-        :raises Exception: Если возникла ошибка при создании изображения.
         :return: Список путей к сгенерированным PNG изображениям.
         :rtype: List[Path]
 
-        :Example:
+        Пример:
             >>> generator = TextToImageGenerator()
             >>> lines = ["Text 1", "Text 2", "Text 3"]
             >>> output_dir = "./output"
@@ -167,13 +153,9 @@ class TextToImageGenerator:
             if img_path.exists() and not clobber:
                 logger.warning(f"File {img_path} already exists. Skipping...")
                 continue
-            try:
-                 img = self.generate_png(line, canvas_size, padding, background_color, text_color, font)
-                 img.save(img_path)
-                 generated_images.append(img_path)
-            except Exception as e:
-                logger.error(f"Error creating image for line: {line}, error: {e}")
-                continue
+            img = self.generate_png(line, canvas_size, padding, background_color, text_color, font)
+            img.save(img_path)
+            generated_images.append(img_path)
 
         return generated_images
 
@@ -189,28 +171,24 @@ class TextToImageGenerator:
         """
         Создает PNG изображение с заданным текстом, шрифтом и цветами.
 
-        :param text: Текст для рендеринга на изображении.
+        :param text: Текст для отображения на изображении.
         :type text: str
-        :param canvas_size: Размер холста в пикселях.
+        :param canvas_size: Размер холста (ширина, высота).
         :type canvas_size: Tuple[int, int]
-        :param padding: Процент отступа для использования в качестве границы.
+        :param padding: Отступ от края холста в процентах.
         :type padding: float
-        :param background_color: Цвет фона изображения.
+        :param background_color: Цвет фона.
         :type background_color: str
         :param text_color: Цвет текста.
         :type text_color: str
-        :param font: Шрифт для использования в тексте.
+        :param font: Шрифт для текста.
         :type font: str | ImageFont.ImageFont
         :return: Сгенерированное PNG изображение.
         :rtype: Image
         """
         img = Image.new("RGB", canvas_size, background_color)
         draw = ImageDraw.Draw(img)
-        font_size = self.get_font_size(canvas_size, padding)
-        try:
-            font = ImageFont.truetype(font, size=font_size)
-        except OSError:
-            font = ImageFont.load_default(size=font_size)
+        font = ImageFont.truetype(font, size=self.get_font_size(canvas_size, padding))
 
         text_position = self.center_text_position(draw, text, font, canvas_size)
         draw.text(text_position, text, fill=text_color, font=font)
@@ -223,20 +201,18 @@ class TextToImageGenerator:
         """
         Вычисляет позицию для центрирования текста на холсте.
 
-        :param draw: Экземпляр ImageDraw.
+        :param draw: Объект ImageDraw.
         :type draw: ImageDraw.Draw
-        :param text: Текст для рендеринга.
+        :param text: Текст для отображения.
         :type text: str
-        :param font: Шрифт, используемый для текста.
+        :param font: Шрифт текста.
         :type font: ImageFont.ImageFont
-        :param canvas_size: Размер холста в пикселях.
+        :param canvas_size: Размер холста (ширина, высота).
         :type canvas_size: Tuple[int, int]
-        :return: Координаты для центрирования текста.
+        :return: Координаты для центрирования текста (x, y).
         :rtype: Tuple[int, int]
         """
-        text_box = draw.textbbox((0, 0), text, font=font)
-        text_width = text_box[2] - text_box[0]
-        text_height = text_box[3] - text_box[1]
+        text_width, text_height = draw.textsize(text, font=font)
         return (canvas_size[0] - text_width) // 2, (canvas_size[1] - text_height) // 2
 
     def overlay_images(
@@ -247,95 +223,102 @@ class TextToImageGenerator:
         alpha: float = 1.0,
     ) -> Image:
         """
-        Накладывает одно PNG изображение поверх другого в указанной позиции.
+        Накладывает одно PNG изображение на другое в заданной позиции.
 
-        :param background_path: Путь к фоновому PNG изображению.
+        :param background_path: Путь к фоновому изображению.
         :type background_path: str | Path
-        :param overlay_path: Путь к PNG изображению для наложения.
+        :param overlay_path: Путь к накладываемому изображению.
         :type overlay_path: str | Path
-        :param position: Координаты (x, y), где будет размещено наложение.
+        :param position: Координаты (x, y) для наложения.
         :type position: tuple[int, int], optional
-        :param alpha: Уровень прозрачности изображения для наложения (0.0 - 1.0).
+        :param alpha: Уровень прозрачности накладываемого изображения (0.0 - 1.0).
         :type alpha: float, optional
-        :return: Результирующее изображение с наложением.
+        :return: Изображение с наложенным слоем.
         :rtype: Image
 
-        :Example:
+        Пример:
             >>> result_image = overlay_images("background.png", "overlay.png", position=(50, 50), alpha=0.8)
             >>> result_image.save("result.png")
         """
-        # Открывает фоновое и накладываемое изображения
         try:
-           background = Image.open(background_path).convert("RGBA")
-           overlay = Image.open(overlay_path).convert("RGBA")
-        except FileNotFoundError as e:
-            logger.error(f'File not found: {e}')
-            return None
-        except Exception as e:
-            logger.error(f'Error opening images: {e}')
-            return None
+            # проверка существования файлов
+            if not Path(background_path).exists():
+                logger.error(f"Фоновое изображение {background_path} не существует.")
+                return None
+            if not Path(overlay_path).exists():
+                logger.error(f"Накладываемое изображение {overlay_path} не существует.")
+                return None
+            # открываем фоновое и накладываемое изображения
+            background = Image.open(background_path).convert("RGBA")
+            overlay = Image.open(overlay_path).convert("RGBA")
 
-        # Изменяет размер накладываемого изображения, чтобы соответствовать фоновому, если необходимо
-        if overlay.size != background.size:
-            overlay = overlay.resize(background.size, Image.LANCZOS)
+            # Изменяем размер накладываемого изображения, если необходимо
+            if overlay.size != background.size:
+                overlay = overlay.resize(background.size, Image.Resampling.LANCZOS)
 
-        # Регулирует прозрачность накладываемого изображения
-        overlay = overlay.copy()
-        overlay.putalpha(int(alpha * 255))
+            # Устанавливаем прозрачность накладываемого изображения
+            overlay = overlay.copy()
+            overlay.putalpha(int(alpha * 255))
 
-        # Накладывает изображение на фон
-        background.paste(overlay, position, overlay)
+            # Накладываем изображение
+            background.paste(overlay, position, overlay)
 
-        return background
+            return background
+        except Exception as ex:
+             logger.error(f"Ошибка при наложении изображений: {ex}")
+             return None
+
+
+
+def webp2png(webp_path: str, png_path: str) -> bool:
+    """
+    Конвертирует изображение WEBP в формат PNG.
+
+    :param webp_path: Путь к исходному WEBP файлу.
+    :type webp_path: str
+    :param png_path: Путь для сохранения PNG файла.
+    :type png_path: str
+    :return: True если конвертация прошла успешно, False в противном случае.
+    :rtype: bool
+
+    Пример:
+        >>> webp2png('image.webp', 'image.png')
+    """
+    try:
+        with Image.open(webp_path) as img:
+            img.save(png_path, 'PNG')
+        return True
+    except Exception as e:
+        logger.error(f"Ошибка при конвертации WEBP в PNG: {e}", exc_info=True)
+        return False
+
 
     def get_font_size(self, canvas_size: Tuple[int, int], padding: float) -> int:
         """
         Определяет размер шрифта на основе размера холста и отступа.
 
-        :param canvas_size: Размер холста в пикселях.
+        :param canvas_size: Размер холста (ширина, высота).
         :type canvas_size: Tuple[int, int]
-        :param padding: Процент отступа для использования в качестве границы.
+        :param padding: Отступ от края холста в процентах.
         :type padding: float
         :return: Размер шрифта.
         :rtype: int
         """
         canvas_width, canvas_height = canvas_size
-        available_width = canvas_width * (1 - 2 * padding)
-        available_height = canvas_height * (1 - 2 * padding)
-        return int(min(available_width, available_height) / 8)
+        padding_width = canvas_width * padding
+        padding_height = canvas_height * padding
+        available_width = canvas_width - 2 * padding_width
+        available_height = canvas_height - 2 * padding_height
+        return int(min(available_width, available_height) / 8) # TODO: fix magic number 8
 
     def setup_logging(self, level: int | str | bool = None):
-       """
-       Настраивает логирование на основе указанного уровня.
+        """
+        Настраивает уровень логирования.
 
-       :param level: Уровень логирования.
-       :type level: int | str | bool, optional
-       """
-       if level:
+        :param level: Уровень логирования.
+        :type level: int | str | bool, optional
+        """
+        if level:
             logger.setLevel(level)
 
-
-def webp2png(webp_path: str, png_path: str) -> bool:
-    """
-    Конвертирует WEBP изображение в формат PNG.
-
-    :param webp_path: Путь к входному файлу WEBP.
-    :type webp_path: str
-    :param png_path: Путь для сохранения конвертированного файла PNG.
-    :type png_path: str
-    :return: True, если конвертация успешна, иначе False.
-    :rtype: bool
-
-    :Example:
-        webp2png('image.webp', 'image.png')
-    """
-    try:
-        # Открывает webp изображение
-        with Image.open(webp_path) as img:
-            # Конвертирует в PNG и сохраняет
-            img.save(png_path, 'PNG')
-        return True
-    except Exception as e:
-        logger.error(f"Error during conversion: {e}")
-        return False
 ```

@@ -3,75 +3,70 @@
 **Качество кода**
 8
  -  Плюсы
-    - Код разбит на функции, что улучшает читаемость.
-    - Используются константы для магических значений, что улучшает поддержку.
-    -  Есть обработка событий.
-    - Код следует принципу разделения ответственности.
+        - Код разбит на функции, что способствует лучшей читаемости и поддержке.
+        - Используются константы для магических значений, что повышает читаемость.
+        - Обработчики событий добавляются после загрузки DOM, что является хорошей практикой.
+        -  Функции используют `Promise` для асинхронных операций, что улучшает производительность.
+        -  Код использует `Object.create(null)` для создания объектов без прототипа, что может быть полезно в некоторых случаях.
  -  Минусы
-    -  Много повторений кода, особенно в функциях `change...Visible`.
-    -  Используются устаревшие конструкции `var`, лучше `const` и `let`.
-    -  Обработка ошибок не везде явная.
-    -  Функция `collectPopupState` не документирована.
-    -  Не хватает комментариев к функциям.
+    -  Отсутствует документация в формате RST.
+    -  Используется `try-catch` без логирования ошибок.
+    -  Много повторяющегося кода, например, при обработке видимости элементов.
+    -  Некоторые функции и переменные не имеют четкого описания, что затрудняет понимание их назначения.
+    -  Присутствует дублирование кода при отправке сообщений.
 
 **Рекомендации по улучшению**
-
-1. **Улучшить обработку ошибок**:
-    -   Добавить обработку ошибок с использованием `logger.error` для более информативного логирования, а не просто `catch(fu.onError)`.
-2. **Рефакторинг функций**:
-    -   Функции `changeContextVisible`, `changeResolverVisible`, `changeFrameIdVisible` и `changeFrameDesignationVisible` можно объединить в одну более общую функцию для управления видимостью элементов, чтобы убрать дублирование кода.
-3. **Использовать `const` и `let`**:
-    -   Заменить `var` на `const` или `let` там, где это уместно.
-4. **Добавить документацию**:
-    -   Добавить reStructuredText docstrings к функциям и методам, а также к модулю.
-5. **Улучшить читаемость**:
-    -   Разбить длинные цепочки вызовов на несколько строк для улучшения читаемости.
-6. **Убрать дублирование**:
-    -   Удалить дублирование кода в обработке событий `addEventListener`.
-7. **Использовать async/await**:
-     - Там где это возможно, использовать `async/await` для лучшей читаемости асинхронного кода.
-8. **Изменить структуру**:
-    -  Использовать более явную структуру для определения обработчиков событий, чтобы можно было легко добавлять и изменять их.
+1. **Добавить документацию:**
+   -  Добавить docstring для модуля, функций и переменных в формате RST.
+   -  Описать назначение каждой функции и её параметров.
+2. **Улучшить обработку ошибок:**
+   -  Использовать `logger.error` для логирования ошибок вместо `try-catch` без обработки.
+3. **Рефакторинг:**
+   -  Упростить функции `changeContextVisible`, `changeResolverVisible`, `changeFrameIdVisible` и `changeFrameDesignationVisible`, объединив их в одну более общую функцию.
+   -  Вынести дублирующийся код отправки сообщений в отдельную функцию.
+4.  **Улучшить читаемость:**
+   -  Использовать более описательные имена переменных.
+   -  Разделить сложные функции на более мелкие.
+5.  **Унифицировать отправку сообщений**
+     - Создать единую функцию для отправки сообщений, которая будет принимать необходимые параметры.
+     - Это позволит избежать дублирования кода и сделает код более поддерживаемым.
+6. **Использование `j_loads` или `j_loads_ns`**:
+   - В текущем коде нет загрузки JSON, но если она потребуется, следует использовать  `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load`.
 
 **Оптимизиробанный код**
 ```python
 """
-Модуль для управления popup окном расширения Try XPath.
-=========================================================
+Модуль для управления попапом расширения Try XPath.
+=========================================================================================
 
-Этот модуль отвечает за взаимодействие с пользовательским интерфейсом
-popup окна, обработку событий и отправку сообщений в контентные скрипты.
-
-Он включает в себя функциональность для:
-    - Отображения и скрытия различных секций popup окна.
-    - Сбора и сохранения состояния popup окна.
-    - Отправки команд на выполнение XPath выражений.
-    - Отображения результатов выполнения XPath выражений.
-    - Управления стилями элементов.
-    - Переключения между страницами результатов.
+Этот модуль отвечает за логику работы попапа расширения, включая взаимодействие с пользовательским интерфейсом,
+отправку сообщений в контентный скрипт и обработку ответов.
 
 Пример использования
 --------------------
 
 .. code-block:: javascript
 
-    // Инициализация popup окна
-    (function (window) {
-        "use strict";
-        // ... код ...
-    })(window);
+    // Этот код исполняется в контексте popup.html
+    // и обрабатывает взаимодействие пользователя с интерфейсом.
+
 """
-import src.utils.jjson as jjson
+import logging
+
 from src.logger.logger import logger
+
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 (function (window) {
     "use strict";
 
     # alias
-    const tx = tryxpath;
-    const fu = tryxpath.functions;
+    var tx = tryxpath;
+    var fu = tryxpath.functions;
 
-    const document = window.document;
+    var document = window.document;
 
     const noneClass = "none";
     const helpClass = "help";
@@ -79,7 +74,7 @@ from src.logger.logger import logger
     const invalidExecutionId = NaN;
     const invalidFrameId = -1;
 
-    let mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
+    var mainWay, mainExpression, contextCheckbox, contextHeader, contextBody,
         contextWay, contextExpression, resolverHeader, resolverBody,
         resolverCheckbox, resolverExpression, frameDesignationHeader,
         frameDesignationCheckbox, frameDesignationBody,
@@ -88,25 +83,22 @@ from src.logger.logger import logger
         resultsTbody, contextTbody, resultsCount, resultsFrameId,
         detailsPageCount, helpBody, helpCheckbox;
 
-    let relatedTabId = invalidTabId;
-    let relatedFrameId = invalidFrameId;
-    let executionId = invalidExecutionId;
-    let resultedDetails = [];
+    var relatedTabId = invalidTabId;
+    var relatedFrameId = invalidFrameId;
+    var executionId = invalidExecutionId;
+    var resultedDetails = [];
     const detailsPageSize = 50;
-    let detailsPageIndex = 0;
+    var detailsPageIndex = 0;
 
-
-    def sendToActiveTab(msg, opts):
-        """
-        Отправляет сообщение активной вкладке.
-
-        :param msg: Сообщение для отправки.
-        :type msg: dict
-        :param opts: Опции для отправки сообщения.
-        :type opts: dict
-        :return: Promise
-        """
-        opts = opts || {};
+    /**
+     * Отправляет сообщение активной вкладке.
+     *
+     * :param msg: Объект сообщения для отправки.
+     * :param opts: Дополнительные опции для отправки сообщения.
+     * :return: Promise, который разрешается с результатом отправки сообщения.
+     */
+    function sendToActiveTab(msg, opts) {
+        var opts = opts || {};
         return browser.tabs.query({
             "active": true,
             "currentWindow": true
@@ -115,46 +107,45 @@ from src.logger.logger import logger
         });
     };
 
-
-    def sendToSpecifiedFrame(msg):
-        """
-         Отправляет сообщение в указанный фрейм.
-
-        :param msg: Сообщение для отправки.
-        :type msg: dict
-        :return: Promise
-        """
-        const frameId = getSpecifiedFrameId();
-        return Promise.resolve().then(() => {
-            return browser.tabs.executeScript({
+     /**
+      * Отправляет сообщение указанному фрейму.
+      *
+      * :param msg: Объект сообщения для отправки.
+      * :return: Promise, который разрешается после отправки сообщения.
+      */
+    async function sendToSpecifiedFrame(msg) {
+        var frameId = getSpecifiedFrameId();
+         try {
+            # код выполняет проверку, существует ли frame.
+             const res = await browser.tabs.executeScript({
                 "file": "/scripts/try_xpath_check_frame.js",
                 "matchAboutBlank": true,
                 "runAt": "document_start",
                 "frameId": frameId
             });
-        }).then(ress => {
-            if (ress[0]) {
-                return;
+            if (!res[0]) {
+                # если фрейм не существует, код исполняет контентный скрипт.
+                 await execContentScript();
             }
-            return execContentScript();
-        }).then(() => {
-            return sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "initializeBlankWindows" });
-        }).then(() => {
-            return sendToActiveTab(msg, { "frameId": frameId });
-        }).catch(e => {
+            # код отправляет сообщение с фреймом.
+             await sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "initializeBlankWindows" });
+             await sendToActiveTab(msg, { "frameId": frameId });
+        }
+        catch (e) {
+            # если происходит ошибка, код показывает сообщение об ошибке.
             showError("An error occurred. The frameId may be incorrect.",
                       frameId);
-        });
+            logger.error("An error occurred while sending message to specified frame", e)
+        }
     };
 
-    def collectPopupState():
-         """
-        Собирает состояние popup окна.
-
-        :return: Состояние popup окна.
-        :rtype: dict
-        """
-        const state = Object.create(null);
+    /**
+     * Собирает состояние попапа.
+     *
+     * :return: Объект, содержащий состояние попапа.
+     */
+    function collectPopupState() {
+        var state = Object.create(null);
         state.helpCheckboxChecked = helpCheckbox.checked;
         state.mainWayIndex = mainWay.selectedIndex;
         state.mainExpressionValue = mainExpression.value;
@@ -174,80 +165,75 @@ from src.logger.logger import logger
         return state;
     };
 
-    def changeVisible(element, isVisible):
-        """
-        Изменяет видимость элемента.
+    /**
+     * Изменяет видимость элемента.
+     *
+     * :param element: DOM-элемент, видимость которого необходимо изменить.
+     * :param isVisible: Булево значение, определяющее видимость (true - показать, false - скрыть).
+     */
+    function changeVisible(element, isVisible) {
+      if (isVisible) {
+        element.classList.remove(noneClass);
+      } else {
+        element.classList.add(noneClass);
+      }
+    }
 
-        :param element: DOM-элемент.
-        :param isVisible: Флаг видимости.
-        :type isVisible: bool
-        """
-        if (isVisible) {
-            element.classList.remove(noneClass);
-        } else {
-            element.classList.add(noneClass);
-        }
-    };
-
-
-    def changeContextVisible():
-         """
-        Управляет видимостью блока контекста.
-        """
+    /**
+     * Изменяет видимость контекстной панели.
+     */
+    function changeContextVisible () {
         changeVisible(contextBody, contextCheckbox.checked);
     };
 
-
-    def changeResolverVisible():
-         """
-        Управляет видимостью блока резолвера.
-        """
-        changeVisible(resolverBody, resolverCheckbox.checked);
+    /**
+     * Изменяет видимость панели резолвера.
+     */
+    function changeResolverVisible () {
+         changeVisible(resolverBody, resolverCheckbox.checked);
     };
 
-    def changeFrameIdVisible():
-         """
-        Управляет видимостью блока идентификатора фрейма.
-        """
-        changeVisible(frameIdBody, frameIdCheckbox.checked);
+    /**
+     * Изменяет видимость панели ID фрейма.
+     */
+    function changeFrameIdVisible () {
+         changeVisible(frameIdBody, frameIdCheckbox.checked);
     };
 
-    def changeFrameDesignationVisible():
-         """
-        Управляет видимостью блока обозначения фрейма.
-        """
-         changeVisible(frameDesignationBody, frameDesignationCheckbox.checked);
+     /**
+      * Изменяет видимость панели назначения фрейма.
+      */
+    function changeFrameDesignationVisible() {
+       changeVisible(frameDesignationBody, frameDesignationCheckbox.checked);
     };
 
-    def changeHelpVisible():
-         """
-        Управляет видимостью блока помощи.
-        """
-        const helps = document.getElementsByClassName(helpClass);
-        const isChecked = helpCheckbox.checked;
-        for (let i = 0; i < helps.length; i++) {
-            changeVisible(helps[i], isChecked);
+    /**
+     * Изменяет видимость элементов помощи.
+     */
+    function changeHelpVisible() {
+        var helps = document.getElementsByClassName(helpClass);
+        for (var i = 0; i < helps.length; i++) {
+            changeVisible(helps[i], helpCheckbox.checked);
         }
     };
 
-    def makeExecuteMessage():
-        """
-        Создает сообщение для выполнения XPath запроса.
-
-        :return: Сообщение для выполнения.
-        :rtype: dict
-        """
-        const msg = Object.create(null);
+    /**
+     * Создает объект сообщения для выполнения.
+     *
+     * :return: Объект сообщения для выполнения.
+     */
+    function makeExecuteMessage() {
+        var msg = Object.create(null);
         msg.event = "execute";
 
-        let resol;
+        var resol;
         if (resolverCheckbox.checked) {
             resol = resolverExpression.value;
         } else {
             resol = null;
         }
 
-        const way = mainWay.selectedOptions[0];
+        var way = mainWay.selectedOptions[0];
         msg.main = Object.create(null);
         msg.main.expression = mainExpression.value;
         msg.main.method = way.getAttribute("data-method");
@@ -255,7 +241,7 @@ from src.logger.logger import logger
         msg.main.resolver = resol;
 
         if (contextCheckbox.checked) {
-            const way = contextWay.selectedOptions[0];
+            let way = contextWay.selectedOptions[0];
             msg.context = Object.create(null);
             msg.context.expression = contextExpression.value;
             msg.context.method = way.getAttribute("data-method");
@@ -270,29 +256,28 @@ from src.logger.logger import logger
         return msg;
     };
 
-    def getSpecifiedFrameId():
-        """
-         Возвращает идентификатор фрейма.
-
-        :return: Идентификатор фрейма.
-        :rtype: int
-        """
+    /**
+     * Возвращает ID указанного фрейма.
+     *
+     * :return: ID фрейма.
+     */
+    function getSpecifiedFrameId () {
         if (!frameIdCheckbox.checked) {
             return 0;
         }
-        const id = frameIdList.selectedOptions[0].getAttribute("data-frame-id");
+        var id = frameIdList.selectedOptions[0].getAttribute("data-frame-id");
         if (id === "manual") {
             return parseInt(frameIdExpression.value, 10);
         }
         return parseInt(id, 10);
     };
 
-    def execContentScript():
-        """
-        Выполняет контентные скрипты.
-
-        :return: Promise
-        """
+    /**
+     * Выполняет контентные скрипты.
+     *
+     * :return: Promise, который разрешается после выполнения скриптов.
+     */
+    function execContentScript() {
         return browser.tabs.executeScript({
             "file": "/scripts/try_xpath_functions.js",
             "matchAboutBlank": true,
@@ -308,33 +293,32 @@ from src.logger.logger import logger
         });
     };
 
-    def sendExecute():
-         """
-        Отправляет команду на выполнение XPath.
-        """
+    /**
+     * Отправляет сообщение для выполнения.
+     */
+    function sendExecute() {
         sendToSpecifiedFrame(makeExecuteMessage());
     };
 
-    def handleExprEnter(event):
-         """
-        Обрабатывает нажатие Enter в полях ввода.
-
-        :param event: Событие клавиатуры.
-        """
+    /**
+     * Обрабатывает нажатие клавиши Enter в поле выражения.
+     *
+     * :param event: Событие клавиатуры.
+     */
+    function handleExprEnter (event) {
         if ((event.key === "Enter") && !event.shiftKey) {
             event.preventDefault();
             sendExecute();
         }
     };
 
-    def showDetailsPage(index):
-         """
-         Отображает страницу с деталями результатов.
-
-        :param index: Индекс страницы для отображения.
-        :type index: int
-        """
-        const max = Math.floor(resultedDetails.length / detailsPageSize);
+     /**
+      * Отображает страницу с деталями.
+      *
+      * :param index: Индекс страницы для отображения.
+      */
+    function showDetailsPage(index) {
+        var max = Math.floor(resultedDetails.length / detailsPageSize);
 
         if (!Number.isInteger(index)) {
             index = 0;
@@ -342,28 +326,26 @@ from src.logger.logger import logger
         index = Math.max(0, index);
         index = Math.min(index, max);
 
-        const scrollY = window.scrollY;
-        const scrollX = window.scrollX;
+        var scrollY = window.scrollY;
+        var scrollX = window.scrollX;
 
-        fu.updateDetailsTable(resultsTbody, resultedDetails, {
+         fu.updateDetailsTable(resultsTbody, resultedDetails, {
             "begin": index * detailsPageSize,
             "end": (index * detailsPageSize) + detailsPageSize,
         }).then(() => {
             detailsPageCount.value = index + 1;
             detailsPageIndex = index;
             window.scrollTo(scrollX, scrollY);
-        }).catch(e => logger.error('Ошибка при обновлении таблицы деталей', e));
+        }).catch(fu.onError);
     };
 
-    def showError(message, frameId):
-        """
-        Отображает сообщение об ошибке.
-
-        :param message: Сообщение об ошибке.
-        :type message: str
-        :param frameId: Идентификатор фрейма.
-        :type frameId: int
-        """
+    /**
+     * Отображает сообщение об ошибке.
+     *
+     * :param message: Сообщение об ошибке.
+     * :param frameId: ID фрейма, в котором произошла ошибка.
+     */
+    function showError(message, frameId) {
         relatedTabId = invalidTabId;
         relatedFrameId = invalidFrameId;
         executionId = invalidExecutionId;
@@ -374,22 +356,20 @@ from src.logger.logger import logger
         resultsFrameId.textContent = frameId;
 
         fu.updateDetailsTable(contextTbody, [])
-            .catch(e => logger.error('Ошибка при обновлении таблицы контекста', e));
+            .catch(fu.onError);
         showDetailsPage(0);
     };
 
-    def genericListener(message, sender, sendResponse):
-        """
-         Общий обработчик сообщений.
-
-        :param message: Сообщение.
-        :type message: dict
-        :param sender: Отправитель сообщения.
-        :type sender: object
-        :param sendResponse: Функция для отправки ответа.
-        :type sendResponse: function
-        """
-        const listener = genericListener.listeners[message.event];
+     /**
+      * Общий обработчик сообщений.
+      *
+      * :param message: Объект сообщения.
+      * :param sender: Объект отправителя сообщения.
+      * :param sendResponse: Функция для отправки ответа.
+      * :return: Результат обработки сообщения.
+      */
+    function genericListener(message, sender, sendResponse) {
+        var listener = genericListener.listeners[message.event];
         if (listener) {
             return listener(message, sender, sendResponse);
         }
@@ -397,15 +377,13 @@ from src.logger.logger import logger
     genericListener.listeners = Object.create(null);
     browser.runtime.onMessage.addListener(genericListener);
 
+    /**
+     * Обработчик сообщения для отображения результатов в попапе.
+     *
+     * :param message: Объект сообщения.
+     * :param sender: Объект отправителя сообщения.
+     */
     genericListener.listeners.showResultsInPopup = function (message, sender){
-        """
-        Обрабатывает сообщение с результатами XPath запроса.
-
-        :param message: Сообщение с результатами.
-        :type message: dict
-        :param sender: Отправитель сообщения.
-        :type sender: object
-        """
         relatedTabId = sender.tab.id;
         relatedFrameId = sender.frameId;
         executionId = message.executionId;
@@ -416,21 +394,20 @@ from src.logger.logger import logger
         resultsFrameId.textContent = sender.frameId;
 
         if (message.context && message.context.itemDetail) {
-            fu.updateDetailsTable(contextTbody, [message.context.itemDetail])
-                .catch(e => logger.error('Ошибка при обновлении таблицы контекста', e));
+             fu.updateDetailsTable(contextTbody, [message.context.itemDetail])
+                .catch(fu.onError);
         }
 
         showDetailsPage(detailsPageIndex);
     };
 
+    /**
+     * Обработчик сообщения для восстановления состояния попапа.
+     *
+     * :param message: Объект сообщения.
+     */
     genericListener.listeners.restorePopupState = function (message) {
-        """
-         Обрабатывает сообщение о восстановлении состояния popup окна.
-
-        :param message: Сообщение с сохраненным состоянием.
-        :type message: dict
-        """
-        const state = message.state;
+        var state = message.state;
 
         if (state !== null) {
             helpCheckbox.checked = state.helpCheckboxChecked;
@@ -460,37 +437,31 @@ from src.logger.logger import logger
         sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup" });
     };
 
+    /**
+     * Обработчик сообщения для вставки стилей в попап.
+     *
+     * :param message: Объект сообщения.
+     */
     genericListener.listeners.insertStyleToPopup = function(message) {
-        """
-         Обрабатывает сообщение о вставке стилей в popup окно.
-
-        :param message: Сообщение со стилями.
-        :type message: dict
-        """
-        const style = document.createElement("style");
+        var style = document.createElement("style");
         style.textContent = message.css;
         document.head.appendChild(style);
     };
 
+    /**
+     * Обработчик сообщения для добавления ID фрейма.
+     *
+     * :param message: Объект сообщения.
+     * :param sender: Объект отправителя сообщения.
+     */
     genericListener.listeners.addFrameId = function (message, sender) {
-        """
-        Обрабатывает сообщение о добавлении ID фрейма.
-
-        :param message: Сообщение.
-        :type message: dict
-        :param sender: Отправитель сообщения.
-        :type sender: object
-        """
-        const opt = document.createElement("option");
+        var opt = document.createElement("option");
         opt.setAttribute("data-frame-id", sender.frameId);
         opt.textContent = sender.frameId;
         frameIdList.appendChild(opt);
     };
 
     window.addEventListener("load", () => {
-        """
-        Инициализация popup окна при загрузке.
-        """
         helpBody = document.getElementById("help-body");
         helpCheckbox = document.getElementById("help-switch");
         mainWay = document.getElementById("main-way");
@@ -526,168 +497,138 @@ from src.logger.logger import logger
             .getElementsByTagName("tbody")[0];
         detailsPageCount = document.getElementById("details-page-count");
 
-        const eventHandlers = {
-            "help-body": {
-                "click": changeHelpVisible,
-                "keypress": changeHelpVisible
-            },
-            "execute": {
-                 "click": sendExecute
-             },
-            "main-expression": {
-                "keypress": handleExprEnter
-            },
-            "context-header": {
-                "click": changeContextVisible,
-                "keypress": changeContextVisible
-            },
-           "context-expression": {
-               "keypress": handleExprEnter
-           },
-           "resolver-header": {
-               "click": changeResolverVisible,
-               "keypress": changeResolverVisible
-           },
-            "resolver-expression": {
-                 "keypress": handleExprEnter
-             },
-            "frame-designation-header": {
-                "click": changeFrameDesignationVisible,
-                "keypress": changeFrameDesignationVisible
-             },
-            "frame-designation-expression": {
-                "keypress": handleExprEnter
-            },
-           "focus-designated-frame": {
-                 "click": () => {
-                     sendToSpecifiedFrame({
-                         "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusFrame",
-                         "frameDesignation": frameDesignationExpression.value
-                     });
-                 }
-            },
-            "frame-id-header": {
-                "click": changeFrameIdVisible,
-                "keypress": changeFrameIdVisible
-            },
-           "frame-id-expression": {
-                "keypress": handleExprEnter
-            },
-            "get-all-frame-id": {
-                "click": () => {
-                    fu.emptyChildNodes(frameIdList);
-                    const opt = document.createElement("option");
-                    opt.setAttribute("data-frame-id", "manual");
-                    opt.textContent = "Manual";
-                    frameIdList.appendChild(opt);
+        helpBody.addEventListener("click", changeHelpVisible);
+        helpBody.addEventListener("keypress", changeHelpVisible);
 
-                    browser.tabs.executeScript({
-                        "code": "browser.runtime.sendMessage"
-                            + "({\\"event\\":\\"addFrameId\\"});",
-                        "matchAboutBlank": true,
-                        "runAt": "document_start",
-                        "allFrames": true
-                     }).catch(e => logger.error('Ошибка при получении списка frame id', e));
-                }
-             },
-            "show-previous-results": {
-                "click": () => {
-                    sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup"});
-                 }
-            },
-            "focus-frame": {
-                 "click": () => {
-                    sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusFrame"});
-                 }
-            },
-            "show-all-results": {
-                 "click": () => {
-                     sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowAllResults" });
-                  }
-            },
-            "open-options": {
-                 "click": () => {
-                    browser.runtime.openOptionsPage();
-                 }
-            },
-            "set-style": {
-                "click": () => {
-                  sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setStyle" });
-                }
-            },
-            "reset-style": {
-                "click": () => {
-                   sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "resetStyle" });
-                 }
-            },
-            "set-all-style": {
-                "click": () => {
-                     sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setStyle" });
-                }
-            },
-             "reset-all-style": {
-                 "click": () => {
-                      sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "resetStyle" });
-                 }
-            },
-            "previous-details-page": {
-                "click": () => {
-                    showDetailsPage(detailsPageIndex - 1);
-                }
-            },
-            "move-details-page": {
-                "click": () => {
-                    const count = parseInt(detailsPageCount.value, 10);
-                    showDetailsPage(count - 1);
-                }
-            },
-            "next-details-page": {
-                 "click": () => {
-                    showDetailsPage(detailsPageIndex + 1);
-                 }
-            }
-        };
+        document.getElementById("execute").addEventListener("click",
+                                                            sendExecute);
+        mainExpression.addEventListener("keypress", handleExprEnter);
 
+        contextHeader.addEventListener("click", changeContextVisible);
+        contextHeader.addEventListener("keypress", changeContextVisible);
+        contextExpression.addEventListener("keypress", handleExprEnter);
 
-        for (const elementId in eventHandlers) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                for (const eventType in eventHandlers[elementId]) {
-                    element.addEventListener(eventType, eventHandlers[elementId][eventType]);
-                }
-            }
-        }
+        resolverHeader.addEventListener("click", changeResolverVisible);
+        resolverHeader.addEventListener("keypress", changeResolverVisible);
+        resolverExpression.addEventListener("keypress", handleExprEnter);
+
+        frameDesignationHeader.addEventListener(
+            "click", changeFrameDesignationVisible);
+        frameDesignationHeader.addEventListener(
+            "keypress", changeFrameDesignationVisible);
+        frameDesignationExpression.addEventListener(
+            "keypress", handleExprEnter);
+
+        document.getElementById("focus-designated-frame").addEventListener(
+            "click", () => {
+                 sendToSpecifiedFrame({
+                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusFrame",
+                    "frameDesignation": frameDesignationExpression.value
+                });
+            });
+
+        frameIdHeader.addEventListener("click", changeFrameIdVisible);
+        frameIdHeader.addEventListener("keypress", changeFrameIdVisible);
+        frameIdExpression.addEventListener("keypress", handleExprEnter);
+        document.getElementById("get-all-frame-id").addEventListener(
+            "click", () => {
+                fu.emptyChildNodes(frameIdList);
+
+                var opt = document.createElement("option");
+                opt.setAttribute("data-frame-id", "manual");
+                opt.textContent = "Manual";
+                frameIdList.appendChild(opt);
+
+                browser.tabs.executeScript({
+                    "code": "browser.runtime.sendMessage"
+                        + "({\\"event\\":\\"addFrameId\\"});",
+                    "matchAboutBlank": true,
+                    "runAt": "document_start",
+                    "allFrames": true
+                }).catch(fu.onError);
+            });
+
+        document.getElementById("show-previous-results").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowResultsInPopup"});
+            });
+
+        document.getElementById("focus-frame").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusFrame"});
+            });
+
+        document.getElementById("show-all-results").addEventListener(
+            "click", () => {
+                sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestShowAllResults" });
+            });
+
+        document.getElementById("open-options").addEventListener(
+            "click", () => {
+                browser.runtime.openOptionsPage();
+            });
+
+        document.getElementById("set-style").addEventListener("click", () => {
+            sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setStyle" });
+        });
+
+        document.getElementById("reset-style").addEventListener("click",()=> {
+             sendToSpecifiedFrame({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "resetStyle" });
+        });
+
+        document.getElementById("set-all-style").addEventListener(
+            "click", () => {
+                 sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "setStyle" });
+            });
+
+        document.getElementById("reset-all-style").addEventListener(
+            "click",()=> {
+                 sendToActiveTab({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "resetStyle" });
+            });
 
         contextTbody.addEventListener("click", event => {
             if (event.target.tagName.toLowerCase() === "button") {
                 browser.tabs.sendMessage(relatedTabId, {
-                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
+                     "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusContextItem",
                     "executionId": executionId,
                 }, {
                     "frameId": relatedFrameId
-                }).catch(e => logger.error('Ошибка при отправке сообщения о фокусе на контекстный элемент', e));
+                });
             }
         });
 
+        document.getElementById("previous-details-page").addEventListener(
+            "click", () => {
+                showDetailsPage(detailsPageIndex - 1);
+            });
+        document.getElementById("move-details-page").addEventListener(
+            "click", () => {
+                var count = parseInt(detailsPageCount.value, 10);
+                showDetailsPage(count - 1);
+            });
+        document.getElementById("next-details-page").addEventListener(
+            "click", () => {
+                showDetailsPage(detailsPageIndex + 1);
+            });
 
         resultsTbody.addEventListener("click", event => {
-            const target = event.target;
+            var target = event.target;
             if (target.tagName.toLowerCase() === "button") {
-                const ind = parseInt(target.getAttribute("data-index"), 10);
+                let ind = parseInt(target.getAttribute("data-index"), 10);
                 browser.tabs.sendMessage(relatedTabId, {
-                    "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
+                     "timeout":0,"timeout_for_event":"presence_of_element_located","event": "focusItem",
                     "executionId": executionId,
                     "index": ind
                 }, {
                     "frameId": relatedFrameId
-                }).catch(e => logger.error('Ошибка при отправке сообщения о фокусе на элемент', e));
+                });
             }
         });
 
         window.addEventListener("unload", () => {
-            const state = collectPopupState();
+            var state = collectPopupState();
             browser.runtime.sendMessage({
-                "timeout":0,"timeout_for_event":"presence_of_element_located","event": "storePopupState",
+                 "timeout":0,"timeout_for_event":"presence_of_element_located","event": "storePopupState",
                 "state": state
             });
         });
@@ -698,5 +639,4 @@ from src.logger.logger import logger
         browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestInsertStyleToPopup"});
         browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "requestRestorePopupState" });
     });
-
 })(window);

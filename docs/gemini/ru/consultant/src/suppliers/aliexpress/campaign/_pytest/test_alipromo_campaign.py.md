@@ -1,85 +1,69 @@
-# Анализ кода модуля `test_alipromo_campaign`
+# Анализ кода модуля `test_alipromo_campaign.py`
 
-**Качество кода: 8/10**
+**Качество кода**
+7
+- Плюсы
+    - Код хорошо структурирован и разбит на отдельные тестовые функции, каждая из которых проверяет конкретную функциональность.
+    - Использование фикстур `pytest` для создания экземпляра класса `AliPromoCampaign` улучшает читаемость и поддерживаемость тестов.
+    - Применение `mocker` для имитации зависимостей делает тесты более изолированными и предсказуемыми.
+    - Тесты покрывают основные методы класса `AliPromoCampaign`.
+- Минусы
+    - Отсутствует описание модуля в формате reStructuredText (RST).
+    - Не все функции и методы имеют docstring в формате RST.
+    - Не используется `from src.logger.logger import logger` для логирования ошибок.
+    - Некоторые комментарии не соответствуют стилю RST.
+    - Используются избыточные `try-except` блоки.
+    - Не используется `j_loads` или `j_loads_ns` для загрузки данных в тестах, где это применимо.
 
-*   **Плюсы:**
-    *   Код хорошо структурирован и разбит на отдельные тесты для каждой функции класса `AliPromoCampaign`.
-    *   Используются фикстуры для создания экземпляра класса `AliPromoCampaign`, что упрощает написание тестов.
-    *   Используется `mocker` для имитации внешних зависимостей, что делает тесты изолированными и надежными.
-    *   Тесты покрывают основные методы класса, включая инициализацию, обработку продуктов и сохранение данных.
-    *   Для сравнения ожидаемых и фактических значений используются `assert`, что упрощает проверку результатов тестов.
-    *   Имена тестов соответствуют именам тестируемых методов, что упрощает понимание их назначения.
+**Рекомендации по улучшению**
+1.  Добавить описание модуля в формате RST в начале файла.
+2.  Добавить docstring в формате RST для всех тестовых функций и фикстуры.
+3.  Использовать `from src.logger.logger import logger` для логирования ошибок.
+4.  Избегать избыточных `try-except` блоков, использовать `logger.error` для обработки ошибок.
+5.  Использовать `j_loads_ns` для загрузки данных из JSON файлов в тестах.
+6.  Привести комментарии в соответствие со стилем RST.
+7.  Обеспечить соответствие всех имён переменных и функций с ранее обработанными файлами.
 
-*   **Минусы:**
-    *   Отсутствует документация в формате RST для модуля, классов и методов.
-    *   Используется `SimpleNamespace` для создания тестовых данных, что может быть заменено на более явное представление данных.
-    *   Некоторые тесты могут быть более подробными, например, проверять не только длину списка, но и его содержимое.
-    *   Не используется логирование ошибок, что затрудняет отладку в случае проблем.
-    *   Не все моки используют `assert_called_once()`, что снижает уверенность в правильности имитации.
-
-**Рекомендации по улучшению:**
-
-1.  **Добавить reStructuredText (RST) документацию:**
-    *   Добавить docstring для модуля в начале файла.
-    *   Добавить docstring для всех функций и методов, описывая их назначение, параметры и возвращаемые значения.
-
-2.  **Улучшить использование `SimpleNamespace`:**
-    *   Рассмотреть возможность использования словарей для представления данных, что может сделать код более читаемым.
-
-3.  **Расширить тестовое покрытие:**
-    *   Добавить более подробные проверки для списков продуктов, проверяя не только их длину, но и содержимое.
-    *   Добавить тесты для обработки граничных случаев и ошибок.
-
-4.  **Использовать логирование:**
-    *   Добавить логирование ошибок с помощью `logger.error` вместо стандартных блоков `try-except`.
-
-5.  **Добавить проверки вызовов моков:**
-    *   Использовать `assert_called_once()` для всех моков, где это необходимо.
-
-6.  **Переименовать переменные для большей читаемости:**
-    *   Использовать более описательные имена переменных.
-
-**Оптимизированный код:**
+**Оптимизированный код**
 
 ```python
 # -*- coding: utf-8 -*-
-"""
-Модуль содержит тесты для проверки функциональности класса AliPromoCampaign.
-==========================================================================
-
-Этот модуль использует pytest для тестирования методов класса AliPromoCampaign,
-включая инициализацию, получение и обработку данных о продуктах.
-
-Пример использования
---------------------
-
-Для запуска тестов:
-
-.. code-block:: bash
-
-    pytest test_alipromo_campaign.py
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
 """
+Модуль для тестирования класса AliPromoCampaign.
+=========================================================================================
+
+Этот модуль содержит набор тестов для проверки функциональности класса :class:`AliPromoCampaign`,
+который используется для управления рекламными кампаниями AliExpress.
+
+Тесты охватывают различные аспекты, включая инициализацию кампании, обработку данных о продуктах,
+создание пространств имен и сохранение данных.
+
+:platform: Windows, Unix
+:synopsis: Тесты для класса AliPromoCampaign.
+"""
+
 import pytest
 from pathlib import Path
 from types import SimpleNamespace
-#from src.suppliers.aliexpress.campaign.ali_promo_campaign import AliPromoCampaign # исправлено в соответствии с другими файлами
 from src.suppliers.aliexpress.campaign.ali_promo_campaign import AliPromoCampaign
 from src.utils.jjson import j_dumps, j_loads_ns
 from src.utils.file import save_text_file
 from src.logger.logger import logger
 from src import gs
 
+MODE = 'dev'
 
 # Sample data for testing
-campaign_name = 'test_campaign'
-category_name = 'test_category'
-language = 'EN'
-currency = 'USD'
-
+campaign_name = "test_campaign"
+category_name = "test_category"
+language = "EN"
+currency = "USD"
 
 @pytest.fixture
-def campaign():
+def campaign() -> AliPromoCampaign:
     """
     Фикстура для создания экземпляра класса AliPromoCampaign.
 
@@ -87,216 +71,188 @@ def campaign():
     """
     return AliPromoCampaign(campaign_name, category_name, language, currency)
 
-
-def test_initialize_campaign(mocker, campaign):
+def test_initialize_campaign(mocker, campaign: AliPromoCampaign):
     """
     Тест метода initialize_campaign.
 
-    Проверяет, что метод корректно инициализирует данные кампании.
-
-    :param mocker: Mocker fixture для имитации зависимостей.
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет корректность инициализации данных кампании.
     """
     mock_json_data = {
-        'name': campaign_name,
-        'title': 'Test Campaign',
-        'language': language,
-        'currency': currency,
-        'category': {
+        "name": campaign_name,
+        "title": "Test Campaign",
+        "language": language,
+        "currency": currency,
+        "category": {
             category_name: {
-                'name': category_name,
-                'tags': 'tag1, tag2',
-                'products': [],
-                'products_count': 0
+                "name": category_name,
+                "tags": "tag1, tag2",
+                "products": [],
+                "products_count": 0
             }
         }
     }
-    # Мокирование функции j_loads_ns, чтобы вернуть тестовые данные
-    mocker.patch('src.utils.jjson.j_loads_ns', return_value=SimpleNamespace(**mock_json_data))
+    #  Имитация загрузки данных из json
+    mocker.patch("src.utils.jjson.j_loads_ns", return_value=SimpleNamespace(**mock_json_data))
 
     campaign.initialize_campaign()
-    # Проверка корректности инициализации данных кампании
+    #  Проверка, что имя кампании установлено верно
     assert campaign.campaign.name == campaign_name
+    #  Проверка, что имя категории установлено верно
     assert campaign.campaign.category.test_category.name == category_name
 
-
-def test_get_category_products_no_json_files(mocker, campaign):
+def test_get_category_products_no_json_files(mocker, campaign: AliPromoCampaign):
     """
     Тест метода get_category_products при отсутствии JSON файлов.
 
-    Проверяет, что метод возвращает пустой список, если нет файлов с данными о продуктах.
-
-    :param mocker: Mocker fixture для имитации зависимостей.
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод возвращает пустой список, когда нет файлов.
     """
-    # Мокирование функции get_filenames, чтобы вернуть пустой список
-    mocker.patch('src.utils.file.get_filenames', return_value=[])
-    # Мокирование метода fetch_product_data, чтобы вернуть пустой список
-    mocker.patch('src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.fetch_product_data', return_value=[])
+    #  Имитация отсутствия файлов
+    mocker.patch("src.utils.file.get_filenames", return_value=[])
+    #  Имитация того, что нет данных о продуктах
+    mocker.patch("src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.fetch_product_data", return_value=[])
 
-    # Вызов метода get_category_products и проверка результата
     products = campaign.get_category_products(force=True)
+    #  Проверка, что список продуктов пуст
     assert products == []
 
-
-def test_get_category_products_with_json_files(mocker, campaign):
+def test_get_category_products_with_json_files(mocker, campaign: AliPromoCampaign):
     """
     Тест метода get_category_products при наличии JSON файлов.
 
-    Проверяет, что метод корректно загружает данные о продуктах из JSON файлов.
-
-    :param mocker: Mocker fixture для имитации зависимостей.
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод возвращает список продуктов, когда файлы есть.
     """
-    mock_product_data = SimpleNamespace(product_id='123', product_title='Test Product')
-    # Мокирование функции get_filenames, чтобы вернуть список с именем файла
-    mocker.patch('src.utils.file.get_filenames', return_value=['product_123.json'])
-     # Мокирование функции j_loads_ns, чтобы вернуть тестовые данные о продукте
-    mocker.patch('src.utils.jjson.j_loads_ns', return_value=mock_product_data)
+    mock_product_data = SimpleNamespace(product_id="123", product_title="Test Product")
+    #  Имитация наличия файлов
+    mocker.patch("src.utils.file.get_filenames", return_value=["product_123.json"])
+    #  Имитация загрузки данных о продукте из json
+    mocker.patch("src.utils.jjson.j_loads_ns", return_value=mock_product_data)
 
-    # Вызов метода get_category_products и проверка результата
     products = campaign.get_category_products()
+    #  Проверка, что список продуктов не пуст
     assert len(products) == 1
-    assert products[0].product_id == '123'
-    assert products[0].product_title == 'Test Product'
+    #  Проверка идентификатора продукта
+    assert products[0].product_id == "123"
+    #  Проверка заголовка продукта
+    assert products[0].product_title == "Test Product"
 
-
-def test_create_product_namespace(campaign):
+def test_create_product_namespace(campaign: AliPromoCampaign):
     """
     Тест метода create_product_namespace.
 
-    Проверяет, что метод корректно создает пространство имен для продукта.
-
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод правильно создает пространство имен продукта.
     """
     product_data = {
-        'product_id': '123',
-        'product_title': 'Test Product'
+        "product_id": "123",
+        "product_title": "Test Product"
     }
-    # Вызов метода create_product_namespace и проверка результата
     product = campaign.create_product_namespace(**product_data)
-    assert product.product_id == '123'
-    assert product.product_title == 'Test Product'
+    #  Проверка идентификатора продукта в пространстве имен
+    assert product.product_id == "123"
+    #  Проверка заголовка продукта в пространстве имен
+    assert product.product_title == "Test Product"
 
-
-def test_create_category_namespace(campaign):
+def test_create_category_namespace(campaign: AliPromoCampaign):
     """
     Тест метода create_category_namespace.
 
-    Проверяет, что метод корректно создает пространство имен для категории.
-
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод правильно создает пространство имен категории.
     """
     category_data = {
-        'name': category_name,
-        'tags': 'tag1, tag2',
-        'products': [],
-        'products_count': 0
+        "name": category_name,
+        "tags": "tag1, tag2",
+        "products": [],
+        "products_count": 0
     }
-    # Вызов метода create_category_namespace и проверка результата
     category = campaign.create_category_namespace(**category_data)
+    #  Проверка имени категории в пространстве имен
     assert category.name == category_name
-    assert category.tags == 'tag1, tag2'
+    #  Проверка тегов категории в пространстве имен
+    assert category.tags == "tag1, tag2"
 
-
-def test_create_campaign_namespace(campaign):
+def test_create_campaign_namespace(campaign: AliPromoCampaign):
     """
     Тест метода create_campaign_namespace.
 
-    Проверяет, что метод корректно создает пространство имен для кампании.
-
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод правильно создает пространство имен кампании.
     """
     campaign_data = {
-        'name': campaign_name,
-        'title': 'Test Campaign',
-        'language': language,
-        'currency': currency,
-        'category': SimpleNamespace()
+        "name": campaign_name,
+        "title": "Test Campaign",
+        "language": language,
+        "currency": currency,
+        "category": SimpleNamespace()
     }
-    # Вызов метода create_campaign_namespace и проверка результата
     camp = campaign.create_campaign_namespace(**campaign_data)
+    #  Проверка имени кампании в пространстве имен
     assert camp.name == campaign_name
-    assert camp.title == 'Test Campaign'
+    #  Проверка заголовка кампании в пространстве имен
+    assert camp.title == "Test Campaign"
 
-
-def test_prepare_products(mocker, campaign):
+def test_prepare_products(mocker, campaign: AliPromoCampaign):
     """
     Тест метода prepare_products.
 
     Проверяет, что метод вызывает process_affiliate_products.
-
-    :param mocker: Mocker fixture для имитации зависимостей.
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
     """
-    # Мокирование метода get_prepared_products, чтобы вернуть пустой список
-    mocker.patch('src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.get_prepared_products', return_value=[])
-     # Мокирование функции read_text_file, чтобы вернуть тестовые данные
-    mocker.patch('src.utils.file.read_text_file', return_value='source_data')
-    # Мокирование функции get_filenames, чтобы вернуть список с именем файла
-    mocker.patch('src.utils.file.get_filenames', return_value=['source.html'])
-    # Мокирование метода process_affiliate_products
-    mocker.patch('src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.process_affiliate_products')
+    #  Имитация возврата пустого списка подготовленных продуктов
+    mocker.patch("src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.get_prepared_products", return_value=[])
+    #  Имитация чтения исходных данных
+    mocker.patch("src.utils.file.read_text_file", return_value="source_data")
+    #  Имитация наличия исходного файла
+    mocker.patch("src.utils.file.get_filenames", return_value=["source.html"])
+    #  Имитация вызова метода обработки продуктов
+    mocker.patch("src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.process_affiliate_products")
 
     campaign.prepare_products()
-    # Проверка, что метод process_affiliate_products был вызван
+    #  Проверка, что метод обработки продуктов был вызван
     campaign.process_affiliate_products.assert_called_once()
 
-
-def test_fetch_product_data(mocker, campaign):
+def test_fetch_product_data(mocker, campaign: AliPromoCampaign):
     """
     Тест метода fetch_product_data.
 
-    Проверяет, что метод корректно обрабатывает данные продуктов.
-
-    :param mocker: Mocker fixture для имитации зависимостей.
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод возвращает данные о продуктах.
     """
-    product_ids = ['123', '456']
-    mock_products = [SimpleNamespace(product_id='123'), SimpleNamespace(product_id='456')]
-     # Мокирование метода process_affiliate_products, чтобы вернуть список тестовых продуктов
-    mocker.patch('src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.process_affiliate_products', return_value=mock_products)
+    product_ids = ["123", "456"]
+    mock_products = [SimpleNamespace(product_id="123"), SimpleNamespace(product_id="456")]
+    #  Имитация обработки продуктов
+    mocker.patch("src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign.process_affiliate_products", return_value=mock_products)
 
-    # Вызов метода fetch_product_data и проверка результата
     products = campaign.fetch_product_data(product_ids)
+    #  Проверка количества полученных продуктов
     assert len(products) == 2
-    assert products[0].product_id == '123'
-    assert products[1].product_id == '456'
+    #  Проверка идентификатора первого продукта
+    assert products[0].product_id == "123"
+    #  Проверка идентификатора второго продукта
+    assert products[1].product_id == "456"
 
-
-def test_save_product(mocker, campaign):
+def test_save_product(mocker, campaign: AliPromoCampaign):
     """
     Тест метода save_product.
 
-    Проверяет, что метод корректно сохраняет данные продукта.
-
-    :param mocker: Mocker fixture для имитации зависимостей.
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод правильно сохраняет данные продукта.
     """
-    product = SimpleNamespace(product_id='123', product_title='Test Product')
-     # Мокирование функции j_dumps, чтобы вернуть тестовые данные
-    mocker.patch('src.utils.jjson.j_dumps', return_value='{}')
-     # Мокирование метода write_text класса Path
-    mocker.patch('pathlib.Path.write_text')
+    product = SimpleNamespace(product_id="123", product_title="Test Product")
+    #  Имитация преобразования в json
+    mocker.patch("src.utils.jjson.j_dumps", return_value="{}")
+    #  Имитация сохранения в файл
+    mocker.patch("pathlib.Path.write_text")
 
     campaign.save_product(product)
-    # Проверка, что метод write_text был вызван с ожидаемыми аргументами
-    Path.write_text.assert_called_once_with('{}', encoding='utf-8')
+    #  Проверка, что метод сохранения был вызван
+    Path.write_text.assert_called_once_with("{}", encoding='utf-8')
 
-
-def test_list_campaign_products(campaign):
+def test_list_campaign_products(campaign: AliPromoCampaign):
     """
     Тест метода list_campaign_products.
 
-    Проверяет, что метод корректно возвращает список заголовков продуктов.
-
-    :param campaign: Фикстура с экземпляром AliPromoCampaign.
+    Проверяет, что метод правильно возвращает список заголовков продуктов.
     """
-    product1 = SimpleNamespace(product_title='Product 1')
-    product2 = SimpleNamespace(product_title='Product 2')
+    product1 = SimpleNamespace(product_title="Product 1")
+    product2 = SimpleNamespace(product_title="Product 2")
     campaign.category.products = [product1, product2]
 
-    # Вызов метода list_campaign_products и проверка результата
     product_titles = campaign.list_campaign_products()
-    assert product_titles == ['Product 1', 'Product 2']
+    #  Проверка списка заголовков продуктов
+    assert product_titles == ["Product 1", "Product 2"]
 ```

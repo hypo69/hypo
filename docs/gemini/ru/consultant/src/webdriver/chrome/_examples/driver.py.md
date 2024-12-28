@@ -1,113 +1,124 @@
 # Анализ кода модуля `driver.py`
 
 **Качество кода**
-8
+9
 - Плюсы
     - Код содержит примеры использования классов `Driver` и `Chrome`.
-    - Функциональность разбита на отдельные примеры, что облегчает понимание.
-    - Присутствует использование `By.CSS_SELECTOR` для поиска элементов.
+    - Присутствуют базовые операции с браузером, такие как навигация, работа с cookie, скролл, поиск элементов.
+    - Использование константы `MODE` в начале файла.
 - Минусы
-    - Отсутствуют docstring для модуля, что затрудняет понимание назначения файла.
-    - Не все комментарии в коде соответствуют стилю reStructuredText.
-    - Не используется `logger` для обработки ошибок.
-    - Имеются множественные дублирующие комментарии вида `"""  :platform: Windows, Unix ... """`
+    - Отсутствует необходимая документация в формате reStructuredText (RST).
+    - Нет описания модуля и функций в виде docstring.
+    - Не хватает обработки ошибок с использованием `logger.error`.
+    - Не все импорты могут быть необходимы, например `webdriver.common.by`.
+    - Присутствуют избыточные комментарии-заглушки.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля в формате RST, описывающий назначение модуля и примеры использования.
-2.  Переписать комментарии в формате RST для всех функций, методов и переменных, используя docstring.
-3.  Использовать `logger.error` для обработки исключений вместо стандартных блоков `try-except`.
-4.  Удалить дублирующиеся комментарии.
-5.  Добавить импорт `logger` из `src.logger.logger`.
-6.  Привести в соответствие имена функций, переменных и импортов с ранее обработанными файлами.
-7.  Придерживаться единого стиля кавычек (`'`) в коде.
-8.  Удалить неиспользуемые переменные `MODE`.
+1.  Добавить docstring к модулю в формате RST, чтобы описать его назначение и примеры использования.
+2.  Добавить docstring к функции `main`, описывая её функциональность.
+3.  Использовать `from src.logger.logger import logger` для логирования ошибок и добавить обработку ошибок с помощью `logger.error`.
+4.  Удалить ненужные комментарии-заглушки.
+5.  Обеспечить единообразие в использовании кавычек (использовать только одинарные).
+6.  Убрать лишние импорты.
+7.  Проверить и добавить недостающие импорты в код.
 
 **Оптимизированный код**
 
 ```python
-"""
-Модуль содержит примеры использования классов `Driver` и `Chrome`
-==================================================================
-
-Этот модуль демонстрирует, как использовать классы :class:`Driver` и :class:`Chrome`
-для автоматизации браузера Chrome. Он включает в себя примеры навигации по URL, извлечения
-домена, работы с куками, перезагрузки страницы, прокрутки, получения языка страницы,
-установки пользовательского агента и поиска элементов.
-
-Пример использования
---------------------
-
-Пример использования функций из данного модуля::
-
-    python driver.py
-
-"""
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
+"""
+Модуль содержит примеры использования классов `Driver` и `Chrome` для управления браузером.
+==========================================================================================
+
+Этот модуль демонстрирует основные операции с браузером, такие как навигация,
+работа с cookie, скролл страницы, поиск элементов и т.д.
+
+Пример использования
+--------------------
+
+Пример запуска функции `main` для демонстрации возможностей:
+
+.. code-block:: python
+
+    if __name__ == "__main__":
+        main()
+"""
+
+MODE = 'dev'
+
 from src.webdriver.driver import Driver, Chrome
-from selenium.webdriver.common.by import By
+from selenium.webdriver.common.by import By # TODO: проверить необходимость импорта
 from src.logger.logger import logger
 
 
 def main():
     """
-    Главная функция для демонстрации примеров использования классов Driver и Chrome.
+    Демонстрирует примеры использования классов `Driver` и `Chrome`.
 
-    Эта функция демонстрирует различные варианты использования классов `Driver` и `Chrome`,
-    включая навигацию по URL, извлечение домена, сохранение куки, перезагрузку страницы,
-    прокрутку, получение языка страницы, установку пользовательского агента и поиск элементов.
+    Функция выполняет ряд действий, таких как:
+        - открытие URL
+        - извлечение домена из URL
+        - сохранение cookie
+        - обновление страницы
+        - скролл страницы
+        - получение языка страницы
+        - задание пользовательского User-Agent
+        - поиск элемента
+        - получение текущего URL
+        - фокусировка окна
     """
     # Пример 1: Создание экземпляра Chrome драйвера и навигация по URL
     chrome_driver = Driver(Chrome)
-    if chrome_driver.get_url("https://www.example.com"):
-        print("Успешная навигация по URL")
+    if chrome_driver.get_url('https://www.example.com'):
+        print('Successfully navigated to the URL')
 
     # Пример 2: Извлечение домена из URL
-    domain = chrome_driver.extract_domain("https://www.example.com/path/to/page")
-    print(f"Извлеченный домен: {domain}")
+    domain = chrome_driver.extract_domain('https://www.example.com/path/to/page')
+    print(f'Extracted domain: {domain}')
 
     # Пример 3: Сохранение куки в локальный файл
     success = chrome_driver._save_cookies_localy()
     if success:
-        print("Куки успешно сохранены")
+        print('Cookies were saved successfully')
 
     # Пример 4: Обновление текущей страницы
     if chrome_driver.page_refresh():
-        print("Страница успешно обновлена")
+        print('Page was refreshed successfully')
 
-    # Пример 5: Прокрутка страницы вниз
+    # Пример 5: Скролл страницы вниз
     if chrome_driver.scroll(scrolls=3, direction='forward', frame_size=1000, delay=1):
-        print("Страница успешно прокручена вниз")
+        print('Successfully scrolled the page down')
 
     # Пример 6: Получение языка текущей страницы
     page_language = chrome_driver.locale
-    print(f"Язык страницы: {page_language}")
+    print(f'Page language: {page_language}')
 
-    # Пример 7: Установка пользовательского агента для Chrome драйвера
+    # Пример 7: Настройка пользовательского User-Agent для Chrome драйвера
     user_agent = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
     }
     custom_chrome_driver = Driver(Chrome, user_agent=user_agent)
-    if custom_chrome_driver.get_url("https://www.example.com"):
-        print("Успешная навигация по URL с пользовательским агентом")
+    if custom_chrome_driver.get_url('https://www.example.com'):
+        print('Successfully navigated to the URL with custom user agent')
 
     # Пример 8: Поиск элемента по CSS селектору
     element = chrome_driver.find_element(By.CSS_SELECTOR, 'h1')
     if element:
-        print(f"Найден элемент с текстом: {element.text}")
+        print(f'Found element with text: {element.text}')
 
     # Пример 9: Получение текущего URL
     current_url = chrome_driver.current_url
-    print(f"Текущий URL: {current_url}")
+    print(f'Current URL: {current_url}')
 
     # Пример 10: Фокусировка окна для снятия фокуса с элемента
     chrome_driver.window_focus()
-    print("Окно сфокусировано")
+    print('Focused the window')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 ```

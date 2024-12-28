@@ -1,40 +1,34 @@
-## Анализ кода модуля `test_ali_campaign_editor_jupyter_widgets.py`
+# Анализ кода модуля `test_ali_campaign_editor_jupyter_widgets.py`
 
 **Качество кода**
 8
--  Плюсы
-    - Код содержит тесты для основных функций работы с файлами.
-    - Используются `patch` для мокирования зависимостей.
-    - Присутствует документация для функций.
-    - Присутствуют примеры использования функций.
--  Минусы
-    - Отсутствует docstring для модуля.
-    - Присутствуют дублирующие комментарии.
-    - Не используется `j_loads` или `j_loads_ns`.
-    - Не используется `logger` для логирования ошибок.
-    - Не стандартизированы комментарии в reStructuredText (RST).
+- Плюсы
+    - Код содержит тесты для функций `save_text_file`, `read_text_file`, `get_filenames`, и `get_directory_names`.
+    - Используются `patch` для мокирования зависимостей, что упрощает тестирование.
+    - Присутствуют docstring для функций, описывающие их назначение и параметры.
+- Минусы
+    - Отсутствует описание модуля в начале файла в формате reStructuredText (RST).
+    - Не используется `j_loads` или `j_loads_ns` для работы с json. (не требуется в данном модуле)
+    - Не используется `from src.logger.logger import logger` для логирования.
+    - В docstring отсутствует информация о возможных исключениях.
+    - Не все комментарии соответствуют формату RST.
 
 **Рекомендации по улучшению**
 
-1.  Добавить docstring для модуля, чтобы описать его назначение и использование.
-2.  Удалить дублирующиеся комментарии.
-3.  Использовать `j_loads` или `j_loads_ns` если бы в коде были операции чтения json файлов.
-4.  Добавить логирование с помощью `logger` в случае ошибок.
-5.  Привести в соответствие имена функций и переменных с ранее обработанными файлами.
-6.  Привести все комментарии к стандарту reStructuredText (RST).
-7.  В комментариях избегать слов 'получаем', 'делаем' и подобных. Использовать конкретные формулировки, такие как 'проверка', 'отправка', 'код исполняет ...'.
+1.  **Добавить описание модуля в формате RST:** В начале файла добавить docstring, описывающий назначение модуля.
+2.  **Использовать `from src.logger.logger import logger`:** Импортировать и использовать `logger` для логирования ошибок. В данном модуле не используются логи, но это нужно сделать для общего соблюдения стандартов.
+3.  **Улучшить docstring:** Добавить описание возвращаемых значений, параметров и возможных исключений для каждой функции в формате RST.
+4.  **Привести в соответствие комментарии:** Переписать все комментарии в формате RST.
+5.  **Удалить лишние комментарии**: Удалить дублирующиеся и избыточные комментарии.
 
 **Оптимизированный код**
 
 ```python
-# -*- coding: utf-8 -*-
 """
 Модуль содержит тесты для функций работы с файлами.
-==================================================
+===================================================
 
-Этот модуль содержит набор тестов для проверки корректности функций,
-предназначенных для сохранения, чтения, получения имен файлов и директорий.
-Используются моки для изоляции тестируемых функций от файловой системы.
+Этот модуль тестирует функции для сохранения, чтения, получения имен файлов и директорий.
 
 Пример использования
 --------------------
@@ -43,7 +37,17 @@
 
     pytest.main([__file__])
 """
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+
+MODE = 'dev'
+
+""" file.py tests """
+
 import pytest
+# import header # нет в коде
 from unittest.mock import patch, mock_open, MagicMock
 from pathlib import Path
 from src.utils.file.file import (
@@ -52,7 +56,7 @@ from src.utils.file.file import (
     get_filenames,
     get_directory_names,
 )
-from src.logger.logger import logger  # подключаем logger
+from src.logger.logger import logger
 
 
 # Tests for save_text_file function
@@ -61,25 +65,26 @@ from src.logger.logger import logger  # подключаем logger
 @patch("src.utils.file.file.logger")
 def test_save_text_file(mock_logger, mock_mkdir, mock_file_open):
     """
-    Тестирует функцию сохранения текста в файл.
+    Тестирует сохранение текста в файл.
 
-    :param mock_logger: Мок logger.
+    :param mock_logger: Mocked logger instance.
     :type mock_logger: MagicMock
-    :param mock_mkdir: Мок mkdir.
+    :param mock_mkdir: Mocked mkdir instance.
     :type mock_mkdir: MagicMock
-    :param mock_file_open: Мок file open.
+    :param mock_file_open: Mocked file open instance.
     :type mock_file_open: MagicMock
+    :raises Exception: Если происходит ошибка при записи в файл или создании директории.
 
-    Пример использования:
+    :Example:
         >>> test_save_text_file()
     """
-    # Код вызывает функцию сохранения текста в файл с тестовыми данными
+    # Вызов функции save_text_file с тестовыми данными
     save_text_file("test.txt", "This is a test.")
-    # Проверка, что файл был открыт на запись с правильной кодировкой
+    # Проверка, что метод open был вызван с нужными параметрами
     mock_file_open.assert_called_once_with("w", encoding="utf-8")
-    # Проверка, что в файл был записан правильный текст
+    # Проверка, что метод write был вызван с нужным текстом
     mock_file_open().write.assert_called_once_with("This is a test.")
-    # Проверка, что директория была создана
+    # Проверка, что метод mkdir был вызван
     mock_mkdir.assert_called_once()
 
 
@@ -89,69 +94,72 @@ def test_save_text_file(mock_logger, mock_mkdir, mock_file_open):
 )
 def test_read_text_file(mock_file_open):
     """
-    Тестирует функцию чтения текста из файла.
+    Тестирует чтение текста из файла.
 
-    :param mock_file_open: Мок file open.
+    :param mock_file_open: Mocked file open instance.
     :type mock_file_open: MagicMock
     :return: None
     :rtype: None
+    :raises Exception: Если происходит ошибка при чтении файла.
 
-    Пример использования:
+    :Example:
         >>> content: str = test_read_text_file()
         >>> print(content)
-        \'This is a test.\'
+        'This is a test.'
     """
-    # Код вызывает функцию чтения текста из файла
+    # Вызов функции read_text_file для чтения содержимого файла
     content = read_text_file("test.txt")
-    # Проверка, что содержимое файла было прочитано корректно
+    # Проверка соответствия прочитанного содержимого ожидаемому
     assert content == "This is a test."
-    # Проверка, что файл был открыт на чтение с правильной кодировкой
+    # Проверка вызова метода open с нужными параметрами
     mock_file_open.assert_called_once_with("r", encoding="utf-8")
 
 
 # Tests for get_filenames function
 def test_get_filenames():
     """
-    Тестирует функцию получения имен файлов из директории.
+    Тестирует получение списка имен файлов из директории.
 
     :return: None
     :rtype: None
+    :raises Exception: Если происходит ошибка при обходе директории.
 
-    Пример использования:
+    :Example:
         >>> filenames: list[str] = test_get_filenames()
         >>> print(filenames)
-        [\'file1.txt\', \'file2.txt\']
+        ['file1.txt', 'file2.txt']
     """
-    # Код мокирует итерацию по директории, возвращая Path объекты для имитации файлов
+    # Мокирование метода iterdir класса Path
     with patch(
         "src.utils.file.file.Path.iterdir",
         return_value=[Path(f"file{i}.txt") for i in range(1, 3)],
     ):
-        # Код вызывает функцию получения имен файлов
+        # Вызов функции get_filenames для получения списка имен файлов
         filenames = get_filenames(Path("/some/dir"))
-        # Проверка, что функция вернула правильный список имен файлов
+        # Проверка соответствия полученного списка ожидаемому
         assert filenames == ["file1.txt", "file2.txt"]
 
 
 # Tests for get_directory_names function
 def test_get_directory_names():
     """
-    Тестирует функцию получения имен директорий из пути.
+    Тестирует получение списка имен директорий из пути.
 
     :return: None
     :rtype: None
+    :raises Exception: Если происходит ошибка при обходе директории.
 
-    Пример использования:
+    :Example:
         >>> directories: list[str] = test_get_directory_names()
         >>> print(directories)
-        [\'dir1\', \'dir2\']
+        ['dir1', 'dir2']
     """
-    # Код мокирует итерацию по директории, возвращая Path объекты для имитации директорий
+    # Мокирование метода iterdir класса Path
     with patch(
         "src.utils.file.file.Path.iterdir",
         return_value=[Path(f"dir{i}") for i in range(1, 3)],
     ):
-        # Код вызывает функцию получения имен директорий
+        # Вызов функции get_directory_names для получения списка имен директорий
         directories = get_directory_names(Path("/some/dir"))
-        # Проверка, что функция вернула правильный список имен директорий
+        # Проверка соответствия полученного списка ожидаемому
         assert directories == ["dir1", "dir2"]

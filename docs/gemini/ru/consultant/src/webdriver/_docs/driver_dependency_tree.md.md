@@ -2,134 +2,97 @@
 
 **Качество кода**
 8
--   Плюсы
-    -   Представлена структурированная схема зависимостей.
-    -   Хорошо читаемая древовидная структура.
--   Минусы
-    -   Отсутствует подробное описание каждого элемента дерева (комментарии в формате reStructuredText).
-    -   Не хватает ссылок на исходный код, что затрудняет понимание контекста.
-    -   Формат markdown не позволяет в полной мере продемонстрировать иерархию зависимостей, как это можно сделать, например, в формате `dot`.
+- Плюсы
+    - Код хорошо структурирован и представляет собой дерево зависимостей модуля `driver`.
+    - Наглядно показаны связи между классами, методами, импортами.
+    - Есть пример использования модуля.
+- Минусы
+    - Отсутствуют docstring и комментарии в формате RST.
+    - Нет описания назначения модуля.
 
 **Рекомендации по улучшению**
 
-1.  **Преобразование в reStructuredText (RST):**
-    -   Переписать структуру зависимостей в формате RST для лучшей интеграции с документацией проекта.
-    -   Использовать блоки `.. code-block::` для представления кода и структуры.
-2.  **Добавление описаний:**
-    -   К каждому модулю, классу и методу добавить краткое описание в формате RST.
-    -   Это поможет лучше понимать роль каждого элемента в системе.
-3.  **Ссылки на код:**
-    -   Добавить ссылки на исходные файлы (если это возможно в рамках формата Markdown), чтобы можно было быстро перейти к соответствующему коду.
-4.  **Улучшение визуализации:**
-    -   Рассмотреть возможность использования Graphviz (dot) для создания графического представления дерева зависимостей, что было бы более наглядно.
-5.  **Примеры документации RST:**
-    ```rst
-    .. Модуль driver
-    ===================================================================================================
+1.  Добавить описание модуля в формате RST.
+2.  Добавить docstring в формате RST для всех классов, методов и переменных.
+3.  Включить комментарии в формате RST для пояснения структуры дерева зависимостей.
+4.  Указать типы данных для переменных и возвращаемых значений (например, через type hints).
 
-    Модуль `driver` содержит основные классы для управления веб-драйверами.
-    Он включает в себя базовый класс `DriverBase`, метакласс `DriverMeta` и конкретный класс `Driver`.
-
-    .. Класс DriverBase
-    ---------------------------------------------------------------------------------------------------
-
-    Базовый класс для всех веб-драйверов. Содержит общую логику и методы.
-
-        Атрибуты
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-        *  `previous_url` (str): Предыдущий URL страницы.
-        *  `referrer` (str): Реферер текущей страницы.
-        *  `page_lang` (str): Язык текущей страницы.
-    ```
-    
 **Оптимизированный код**
+
 ```markdown
-# Анализ зависимостей модуля `src.webdriver.driver`
+# Анализ структуры зависимостей модуля `src.webdriver.driver`
 
-## Описание модуля
+Модуль `src.webdriver.driver` представляет собой основу для управления браузером через WebDriver.
+Он включает в себя абстрактный базовый класс `DriverBase`, метакласс `DriverMeta` и класс `Driver` для создания экземпляров драйверов.
+Дерево зависимостей наглядно показывает связи между различными частями модуля.
 
-Модуль `src.webdriver.driver` представляет собой основу для работы с веб-драйверами в проекте.
-Он определяет иерархию классов, необходимых для управления браузерами и взаимодействия с веб-страницами.
+## Дерево зависимостей
 
-## Зависимости
-
-Модуль состоит из следующих основных компонентов:
-
--   **Импорты:**
-    -   `sys`: Модуль для системных операций.
-    -   `pickle`: Модуль для сериализации объектов.
-    -   `time`: Модуль для работы со временем.
-    -   `copy`: Модуль для создания копий объектов.
-    -   `pathlib.Path`: Модуль для работы с путями к файлам.
-    -   `typing.Type`: Модуль для работы с типами.
-    -   `urllib.parse`: Модуль для парсинга URL.
-    -   `selenium.webdriver.common.action_chains.ActionChains`: Класс для выполнения цепочек действий.
-    -   `selenium.webdriver.common.keys.Keys`: Класс для работы с клавишами.
-    -   `selenium.webdriver.common.by.By`: Класс для поиска элементов по локаторам.
-    -   `selenium.webdriver.support.expected_conditions as EC`: Модуль для ожидания условий.
-    -   `selenium.webdriver.support.ui.WebDriverWait`: Класс для ожидания загрузки страницы.
-    -   `selenium.webdriver.remote.webelement.WebElement`: Класс для представления веб-элемента.
-    -   `selenium.common.exceptions`: Исключения Selenium.
-        -   `InvalidArgumentException`: Исключение при неверном аргументе.
-        -   `ElementClickInterceptedException`: Исключение при перекрытии элемента.
-        -   `ElementNotInteractableException`: Исключение при невозможности взаимодействия с элементом.
-        -   `ElementNotVisibleException`: Исключение при невидимости элемента.
-    -   `src.settings.gs`: Модуль для глобальных настроек.
-    -   `src.webdriver.executor.ExecuteLocator`: Модуль для выполнения поиска элементов.
-    -   `src.webdriver.javascript.js.JavaScript`: Модуль для выполнения JavaScript.
-    -   `src.utils.pprint`: Модуль для форматированного вывода.
-    -   `src.logger.logger`: Модуль для логирования.
-    -   `src.exceptions.WebDriverException`: Пользовательское исключение.
-
--   **Класс `DriverBase`:**
-    -   Базовый класс для всех драйверов, включает общую логику.
-        -   **Атрибуты:**
-            -   `previous_url`: (str) Предыдущий URL.
-            -   `referrer`: (str) Реферер.
-            -   `page_lang`: (str) Язык страницы.
-            -   `ready_state`: (str) Готовность страницы.
-            -   `get_page_lang(self)`: (str) Метод для получения языка страницы.
-            -   `unhide_DOM_element(self, locator)`: Метод для показа DOM элемента.
-            -   `get_referrer(self)`: (str) Метод для получения реферера.
-            -   `window_focus(self)`: Метод для фокусировки окна.
-            -   `execute_locator(self, locator)`: Метод для выполнения поиска элементов.
-            -   `click(self, locator)`: Метод для клика по элементу.
-            -   `get_webelement_as_screenshot(self, locator)`: Метод для получения скриншота элемента.
-            -   `get_attribute_by_locator(self, locator, attribute)`: Метод для получения атрибута элемента.
-            -   `send_message(self, locator, value)`: Метод для отправки сообщения элементу.
-            -   `send_key_to_webelement(self, locator, key)`: Метод для отправки клавиши элементу.
-        -   **Методы:**
-            -   `driver_payload(self)`: (dict) Метод для формирования полезной нагрузки для драйвера.
-                -   Содержит методы `JavaScript` и `ExecuteLocator`.
-            -   `scroll(self, scrolls: int, frame_size: int, direction: str, delay: float)`: (None | bool) Метод для прокрутки страницы.
-                -   `carousel(direction: str, scrolls: int, frame_size: int, delay: float)`: (bool) Метод для прокрутки карусели.
-            -   `locale(self)`: (None | str) Метод для определения локали.
-            -   `get_url(self, url: str)`: (bool) Метод для открытия URL.
-            -   `extract_domain(self, url: str)`: (str) Метод для извлечения домена из URL.
-            -   `_save_cookies_localy(self, to_file: str | Path)`: (bool) Метод для сохранения куки.
-            -   `page_refresh(self)`: (bool) Метод для перезагрузки страницы.
-            -   `window_focus(self)`: Метод для фокусировки окна.
-            -   `wait(self, interval: float)`: Метод для ожидания.
-            -   `delete_driver_logs(self)`: (bool) Метод для удаления логов драйвера.
-
--   **Класс `DriverMeta`:**
-    -   Метакласс для управления созданием экземпляров драйверов.
-        -   **Методы:**
-            -   `__call__(cls, webdriver_cls, *args, **kwargs)`: (object) Метод для создания экземпляра драйвера.
-                -   Создаёт экземпляр класса `Driver`.
-                    -   `__init__(self, *args, **kwargs)`: (None) Метод для инициализации драйвера.
-                    -   `driver_payload()`: Метод для получения полезной нагрузки драйвера.
-
--   **Класс `Driver`:**
-    -   Основной класс драйвера.
-        -   **Примеры использования:**
-            -   `from src.webdriver.driver import Driver, Chrome, Firefox, Edge`
-            -   `d = Driver(Chrome)`
-
-## Заключение
-
-Эта структура представляет собой иерархию классов и методов, необходимых для управления веб-драйверами. 
-Она обеспечивает гибкость и расширяемость для различных сценариев автоматизации веб-браузеров.
-
+```
+src.webdriver.driver
+├── Imports
+│   ├── sys
+│   ├── pickle
+│   ├── time
+│   ├── copy
+│   ├── pathlib.Path
+│   ├── typing (Type)
+│   ├── urllib.parse
+│   ├── selenium.webdriver.common.action_chains.ActionChains
+│   ├── selenium.webdriver.common.keys.Keys
+│   ├── selenium.webdriver.common.by.By
+│   ├── selenium.webdriver.support.expected_conditions as EC
+│   ├── selenium.webdriver.support.ui.WebDriverWait
+│   ├── selenium.webdriver.remote.webelement.WebElement
+│   ├── selenium.common.exceptions
+│   │   ├── InvalidArgumentException
+│   │   ├── ElementClickInterceptedException
+│   │   ├── ElementNotInteractableException
+│   │   ├── ElementNotVisibleException
+│   ├── src.settings.gs
+│   ├── src.webdriver.executor.ExecuteLocator
+│   ├── src.webdriver.javascript.js.JavaScript
+│   ├── src.utils.pprint
+│   ├── src.logger.logger
+│   ├── src.exceptions.WebDriverException
+├── DriverBase
+│   ├── Attributes
+│   │   ├── previous_url: str
+│   │   ├── referrer: str
+│   │   ├── page_lang: str
+│   │   ├── ready_state
+│   │   ├── get_page_lang
+│   │   ├── unhide_DOM_element
+│   │   ├── get_referrer
+│   │   ├── window_focus
+│   │   ├── execute_locator
+│   │   ├── click
+│   │   ├── get_webelement_as_screenshot
+│   │   ├── get_attribute_by_locator
+│   │   ├── send_message
+│   │   ├── send_key_to_webelement
+│   ├── Methods
+│   │   ├── driver_payload(self)
+│   │   │   ├── JavaScript methods
+│   │   │   ├── ExecuteLocator methods
+│   │   ├── scroll(self, scrolls: int, frame_size: int, direction: str, delay: float) -> None | bool
+│   │   │   ├── carousel(direction: str, scrolls: int, frame_size: int, delay: float) -> bool
+│   │   ├── locale(self) -> None | str
+│   │   ├── get_url(self, url: str) -> bool
+│   │   ├── extract_domain(self, url: str) -> str
+│   │   ├── _save_cookies_localy(self, to_file: str | Path) -> bool
+│   │   ├── page_refresh(self) -> bool
+│   │   ├── window_focus(self)
+│   │   ├── wait(self, interval: float)
+│   │   ├── delete_driver_logs(self) -> bool
+├── DriverMeta
+│   ├── Methods
+│   │   ├── __call__(cls, webdriver_cls, *args, **kwargs)
+│   │   │   ├── Driver class
+│   │   │   │   ├── __init__(self, *args, **kwargs)
+│   │   │   │   ├── driver_payload()
+└── Driver(metaclass=DriverMeta)
+    ├── Usage Example
+    │   ├── from src.webdriver.driver import Driver, Chrome, Firefox, Edge
+    │   ├── d = Driver(Chrome)
 ```

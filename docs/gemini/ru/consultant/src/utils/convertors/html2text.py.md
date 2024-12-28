@@ -1,50 +1,50 @@
-# Анализ кода модуля `html2text.py`
+## Анализ кода модуля html2text
 
-**Качество кода**
-9
-- Плюсы
-    - Код хорошо структурирован и разбит на логические блоки, что облегчает понимание и модификацию.
-    - Присутствуют комментарии, объясняющие назначение отдельных частей кода.
-    - Реализована поддержка различных видов форматирования HTML в Markdown, включая заголовки, списки, ссылки и изображения.
-    - Есть возможность настройки параметров конвертации, таких как ширина строки и стиль списка.
-- Минусы
-    - Не все комментарии оформлены в соответствии с reStructuredText.
-    - Используется  `try-except` без логирования ошибок.
-    - Некоторые места кода не соответствуют стандарту PEP8 (например, длинные строки, использование `has_key` вместо `in`).
-    - Использование `sys.stdout.write` и `sys.stdout.buffer.write` для вывода в консоль можно заменить на более универсальный подход.
-    - Использование `if hasattr(x, 'has_key'): return x.has_key(y)` вместо `if y in x`
+**Качество кода: 7/10**
+ -  Плюсы
+    - Код выполняет поставленную задачу по преобразованию HTML в Markdown.
+    - Присутствует обработка различных HTML-тегов и стилей.
+    - Поддержка Google Docs.
+    - Присутствует возможность настройки ширины вывода и символа для списка.
+ -  Минусы
+    - Отсутствуют docstring для модуля и функций.
+    - Используется устаревший `optparse` вместо `argparse`.
+    - Обработка ошибок не всегда явная и не использует `logger`.
+    - Сложная логика обработки стилей.
+    - Много глобальных переменных.
+    - Неоднородность форматирования.
 
 **Рекомендации по улучшению**
 
-1.  **Документация:**
-    -   Переписать все комментарии и docstring в формате reStructuredText (RST), включая описание модуля, функций, методов и переменных.
-    -   Добавить примеры использования функций и классов в docstring.
-2.  **Логирование:**
-    -   Использовать `from src.logger.logger import logger` для логирования ошибок вместо стандартных `try-except`.
-    -   Добавить логирование для критических операций, таких как чтение файлов и обработка данных.
-3.  **Обработка данных:**
-    -   Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
-4.  **Рефакторинг:**
-    -   Заменить устаревший метод `has_key` на оператор `in`.
-    -   Убрать избыточные проверки на `True` и `False`.
-    -   Разбить длинные функции на более мелкие и управляемые блоки.
-    -   Переименовать переменные и функции в соответствии с PEP8 (например, `file_` -> `file_path`).
-    -   Избавиться от избыточного использования `if/else`, где можно использовать тернарные операторы или другие более краткие выражения.
-    -  Убрать избыточное использование `try/except NameError` в блоках `charref` и `entityref`.
-    -  Убрать устаревший коментарий  `#attrs = fixattrs(attrs)`
-    - Использовать `os.path.join` для конкатенации путей.
-    - Использовать более унифицированный подход для вывода данных, например, с помощью функции `print`.
+1. **Документация:** Добавить docstring к модулю и всем функциям, используя reStructuredText.
+2. **Импорты:** Проверить и добавить отсутствующие импорты, например, `from src.logger.logger import logger`.
+3. **Обработка ошибок:** Использовать `logger.error` вместо стандартных `try-except` для логирования ошибок.
+4. **Рефакторинг:** Упростить и разбить на более мелкие функции логику обработки стилей и тегов.
+5. **Глобальные переменные:** Минимизировать использование глобальных переменных, передавать их как аргументы в функции.
+6. **argparse:** Заменить `optparse` на `argparse`.
+7. **Форматирование:** Привести код к единому стилю, соблюдая PEP8.
+8. **Комментарии:** Добавить подробные комментарии для сложных частей кода в формате RST.
+9. **Unicode:** Использовать явное кодирование UTF-8, убрав лишние `try-except` блоки для Python 2 и 3.
+10. **Обработка файлов:** Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` для чтения файлов.
 
 **Оптимизированный код**
-
 ```python
-"""
-Модуль для конвертации HTML в Markdown
-=========================================================================================
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
 
-Этот модуль преобразует HTML-документы в Markdown-форматированный текст.
-Поддерживает различные HTML-теги, включая заголовки, списки, ссылки и изображения.
-Также позволяет настраивать параметры конвертации, такие как ширина строки и стиль списка.
+"""
+Модуль для преобразования HTML в Markdown.
+=========================================
+
+Этот модуль содержит функции и класс для преобразования HTML-документов в
+эквивалентный текст в формате Markdown.
+
+Модуль поддерживает:
+
+-   Различные HTML-теги (заголовки, параграфы, списки, ссылки, изображения).
+-   Стили Google Docs.
+-   Настройку ширины вывода и символа для списка.
 
 Пример использования
 --------------------
@@ -52,125 +52,142 @@
 .. code-block:: python
 
     from src.utils.convertors.html2text import html2text
-    
-    html_text = "<h1>Заголовок</h1><p>Параграф с <b>жирным</b> текстом.</p>"
+
+    html_text = "<h1>Заголовок</h1><p>Текст</p>"
     markdown_text = html2text(html_text)
     print(markdown_text)
-
 """
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
+#  Импортируем необходимые модули из стандартной библиотеки Python
 import html.entities as htmlentitydefs
 import urllib.parse as urlparse
 import html.parser as HTMLParser
 import urllib.request as urllib
-import optparse
 import re
 import sys
 import codecs
-import os
+import argparse
 from textwrap import wrap
-from src.logger.logger import logger #  импортируем logger
-from typing import Any
 
-# Use Unicode characters instead of their ascii psuedo-replacements
-UNICODE_SNOB = 0
+#  Импортируем модуль для логирования
+from src.logger.logger import logger
+#  Импортируем функции для работы с json
+# from src.utils.jjson import j_loads, j_loads_ns #TODO не используется
 
-# Put the links after each paragraph instead of at the end.
-LINKS_EACH_PARAGRAPH = 0
-
-# Wrap long lines at position. 0 for no wrapping. (Requires Python 2.3.)
-BODY_WIDTH = 78
-
-# Don't show internal links (href="#local-anchor") -- corresponding link targets
-# won't be visible in the plain text file anyway.
-SKIP_INTERNAL_LINKS = True
-
-# Use inline, rather than reference, formatting for images and links
-INLINE_LINKS = True
-
-# Number of pixels Google indents nested lists
-GOOGLE_LIST_INDENT = 36
-
-IGNORE_ANCHORS = False
-IGNORE_IMAGES = False
-
+#  Константы для работы модуля
 MODE = 'dev'
 
-### Entity Nonsense ###
+__version__ = "3.1"
+__author__ = "Aaron Swartz (me@aaronsw.com)"
+__copyright__ = "(C) 2004-2008 Aaron Swartz. GNU GPL 3."
+__contributors__ = ["Martin \'Joey\' Schulze", "Ricardo Reyes", "Kevin Jay North"]
 
-def name2cp(k: str) -> int:
+#  Флаг для использования Unicode символов вместо ASCII
+UNICODE_SNOB = 0
+#  Флаг для размещения ссылок после каждого параграфа
+LINKS_EACH_PARAGRAPH = 0
+#  Ширина строки для переноса текста
+BODY_WIDTH = 78
+#  Флаг для пропуска внутренних ссылок
+SKIP_INTERNAL_LINKS = True
+#  Флаг для использования встроенных ссылок вместо сносок
+INLINE_LINKS = True
+#  Отступ для вложенных списков в Google Docs
+GOOGLE_LIST_INDENT = 36
+#  Флаг для игнорирования ссылок
+IGNORE_ANCHORS = False
+#  Флаг для игнорирования изображений
+IGNORE_IMAGES = False
+
+#  Словарь для замены HTML-сущностей на Unicode символы
+unifiable = {
+    'rsquo': "'", 'lsquo': "'", 'rdquo': '"', 'ldquo': '"',
+    'copy': '(C)', 'mdash': '--', 'nbsp': ' ', 'rarr': '->', 'larr': '<-', 'middot': '*',
+    'ndash': '-', 'oelig': 'oe', 'aelig': 'ae',
+    'agrave': 'a', 'aacute': 'a', 'acirc': 'a', 'atilde': 'a', 'auml': 'a', 'aring': 'a',
+    'egrave': 'e', 'eacute': 'e', 'ecirc': 'e', 'euml': 'e',
+    'igrave': 'i', 'iacute': 'i', 'icirc': 'i', 'iuml': 'i',
+    'ograve': 'o', 'oacute': 'o', 'ocirc': 'o', 'otilde': 'o', 'ouml': 'o',
+    'ugrave': 'u', 'uacute': 'u', 'ucirc': 'u', 'uuml': 'u',
+    'lrm': '', 'rlm': ''
+}
+unifiable_n = {name2cp(k): unifiable[k] for k in unifiable.keys()}
+
+def has_key(x, y):
+    """
+    Проверяет наличие ключа в словаре или атрибута в объекте.
+
+    :param x: Словарь или объект для проверки.
+    :param y: Ключ или атрибут для поиска.
+    :return: True, если ключ или атрибут присутствует, иначе False.
+    """
+    if hasattr(x, 'has_key'):
+        return x.has_key(y)
+    else:
+        return y in x
+
+def name2cp(k):
     """
     Преобразует имя HTML-сущности в кодовую точку Unicode.
 
     :param k: Имя HTML-сущности.
     :return: Кодовая точка Unicode.
-    :raises KeyError: Если имя сущности не найдено.
     """
     if k == 'apos':
         return ord("'")
-    if hasattr(htmlentitydefs, "name2codepoint"):  # requires Python 2.3
+    if hasattr(htmlentitydefs, "name2codepoint"):
         return htmlentitydefs.name2codepoint[k]
     else:
         k = htmlentitydefs.entitydefs[k]
         if k.startswith("&#") and k.endswith(";"):
-            return int(k[2:-1])  # not in latin-1
+            return int(k[2:-1])
         return ord(codecs.latin_1_decode(k)[0])
 
-
-unifiable = {'rsquo': "'", 'lsquo': "'", 'rdquo': '"', 'ldquo': '"',
-             'copy': '(C)', 'mdash': '--', 'nbsp': ' ', 'rarr': '->', 'larr': '<-', 'middot': '*',
-             'ndash': '-', 'oelig': 'oe', 'aelig': 'ae',
-             'agrave': 'a', 'aacute': 'a', 'acirc': 'a', 'atilde': 'a', 'auml': 'a', 'aring': 'a',
-             'egrave': 'e', 'eacute': 'e', 'ecirc': 'e', 'euml': 'e',
-             'igrave': 'i', 'iacute': 'i', 'icirc': 'i', 'iuml': 'i',
-             'ograve': 'o', 'oacute': 'o', 'ocirc': 'o', 'otilde': 'o', 'ouml': 'o',
-             'ugrave': 'u', 'uacute': 'u', 'ucirc': 'u', 'uuml': 'u',
-             'lrm': '', 'rlm': ''}
-
-unifiable_n = {name2cp(k): v for k, v in unifiable.items()}
-
-
-def charref(name: str) -> str:
+def charref(name):
     """
     Преобразует числовую ссылку на символ в символ Unicode.
 
-    :param name: Числовая ссылка (например, "x20" или "160").
+    :param name: Числовая ссылка на символ (например, '123' или 'x41').
     :return: Символ Unicode.
     """
     if name[0] in ['x', 'X']:
         c = int(name[1:], 16)
     else:
         c = int(name)
-
     if not UNICODE_SNOB and c in unifiable_n:
         return unifiable_n[c]
     else:
-        return chr(c)
+        try:
+            return chr(c)
+        except ValueError as ex:
+            logger.error(f'Не удалось преобразовать числовую ссылку в символ {name=}', ex)
+            return ''
 
-
-def entityref(c: str) -> str:
+def entityref(c):
     """
-    Преобразует именованную ссылку на сущность в символ Unicode.
+    Преобразует именованную ссылку на символ в символ Unicode.
 
-    :param c: Имя сущности.
-    :return: Символ Unicode или исходная ссылка, если сущность не найдена.
+    :param c: Именованная ссылка на символ (например, 'amp').
+    :return: Символ Unicode.
     """
     if not UNICODE_SNOB and c in unifiable:
         return unifiable[c]
     try:
-        return chr(name2cp(c))
-    except KeyError:
-         return "&" + c + ';'
+      name2cp(c)
+    except KeyError as ex:
+       logger.error(f'Неизвестная HTML-сущность: {c=}', ex)
+       return "&" + c + ';'
+    try:
+       return chr(name2cp(c))
+    except ValueError as ex:
+        logger.error(f'Не удалось преобразовать именованную ссылку в символ {c=}', ex)
+        return ''
 
-def replaceEntities(s: re.Match) -> str:
+def replaceEntities(s):
     """
     Заменяет HTML-сущности на соответствующие символы.
 
-    :param s: Объект re.Match, содержащий найденную сущность.
-    :return: Символ Unicode, соответствующий сущности.
+    :param s: Строка с HTML-сущностью.
+    :return: Строка с замененным символом.
     """
     s = s.group(1)
     if s[0] == "#":
@@ -178,23 +195,18 @@ def replaceEntities(s: re.Match) -> str:
     else:
         return entityref(s)
 
-
 r_unescape = re.compile(r"&(#?[xX]?(?:[0-9a-fA-F]+|\w{1,8}));")
 
-
-def unescape(s: str) -> str:
+def unescape(s):
     """
-    Удаляет HTML-сущности из строки.
+    Заменяет все HTML-сущности в строке на соответствующие символы.
 
-    :param s: Строка, содержащая HTML-сущности.
-    :return: Строка без HTML-сущностей.
+    :param s: Строка с HTML-сущностями.
+    :return: Строка с замененными символами.
     """
     return r_unescape.sub(replaceEntities, s)
 
-### End Entity Nonsense ###
-
-
-def onlywhite(line: str) -> bool:
+def onlywhite(line):
     """
     Проверяет, состоит ли строка только из пробельных символов.
 
@@ -206,44 +218,43 @@ def onlywhite(line: str) -> bool:
             return False
     return True
 
-
-def optwrap(text: str) -> str:
+def optwrap(text):
     """
-    Выполняет перенос строк в тексте.
+    Переносит длинные параграфы в тексте.
 
     :param text: Текст для переноса.
-    :return: Текст с переносом строк.
+    :return: Текст с перенесенными строками.
     """
     if not BODY_WIDTH:
         return text
 
-    assert wrap, "Requires Python 2.3."
     result = ''
     newlines = 0
     for para in text.split("\n"):
-        if para:
-            if para[0] not in [' ', '-', '*']:
+        if len(para) > 0:
+            if para[0] != ' ' and para[0] != '-' and para[0] != '*':
                 for line in wrap(para, BODY_WIDTH):
                     result += line + "\n"
                 result += "\n"
                 newlines = 2
-            elif not onlywhite(para):
-                result += para + "\n"
-                newlines = 1
-        elif newlines < 2:
-            result += "\n"
-            newlines += 1
+            else:
+                if not onlywhite(para):
+                    result += para + "\n"
+                    newlines = 1
+        else:
+            if newlines < 2:
+                result += "\n"
+                newlines += 1
     return result
 
-
-def hn(tag: str) -> int:
+def hn(tag):
     """
     Определяет уровень заголовка по тегу.
 
-    :param tag: HTML-тег (например, "h1", "h2").
+    :param tag: HTML-тег (например, 'h1', 'h2').
     :return: Уровень заголовка (1-9) или 0, если тег не является заголовком.
     """
-    if tag.startswith('h') and len(tag) == 2:
+    if tag[0] == 'h' and len(tag) == 2:
         try:
             n = int(tag[1])
             if 1 <= n <= 9:
@@ -252,65 +263,58 @@ def hn(tag: str) -> int:
             return 0
     return 0
 
-
-def dumb_property_dict(style: str) -> dict:
+def dumb_property_dict(style):
     """
-    Создает словарь CSS-свойств из строки.
+    Разбирает строку CSS-стилей в словарь атрибутов.
 
     :param style: Строка CSS-стилей.
-    :return: Словарь CSS-свойств.
+    :return: Словарь, где ключи - это имена атрибутов, а значения - значения атрибутов.
     """
     return dict(
         (x.strip(), y.strip())
-        for x, y in (z.split(':', 1) for z in style.split(';') if ':' in z)
+        for x, y in [z.split(':', 1) for z in style.split(';') if ':' in z]
     )
 
-
-def dumb_css_parser(data: str) -> dict:
+def dumb_css_parser(data):
     """
-    Разбирает CSS-стили и возвращает словарь селекторов.
+    Разбирает CSS-данные в словарь селекторов и их атрибутов.
 
-    :param data: Строка CSS-стилей.
-    :return: Словарь CSS-селекторов, где каждый селектор содержит словарь свойств.
+    :param data: Строка CSS-данных.
+    :return: Словарь, где ключи - это CSS-селекторы, а значения - словари атрибутов.
     """
-    # remove @import sentences
     import_index = data.find('@import')
     while import_index != -1:
         data = data[:import_index] + data[data.find(';', import_index) + 1:]
         import_index = data.find('@import')
-
-    # parse the css. reverted from dictionary compehension in order to support older pythons
     elements = [x.split('{') for x in data.split('}') if '{' in x.strip()]
-    elements = dict((a.strip(), dumb_property_dict(b)) for a, b in elements)
+    return dict((a.strip(), dumb_property_dict(b)) for a, b in elements)
 
-    return elements
-
-def element_style(attrs: dict, style_def: dict, parent_style: dict) -> dict:
+def element_style(attrs, style_def, parent_style):
     """
-    Определяет стиль элемента на основе CSS.
+    Определяет окончательные стили элемента.
 
-    :param attrs: Словарь атрибутов HTML-элемента.
-    :param style_def: Словарь определений стилей.
+    :param attrs: Словарь атрибутов HTML-тега.
+    :param style_def: Словарь CSS-стилей.
     :param parent_style: Словарь стилей родительского элемента.
-    :return: Словарь окончательных стилей элемента.
+    :return: Словарь стилей элемента.
     """
     style = parent_style.copy()
     if 'class' in attrs:
         for css_class in attrs['class'].split():
-            css_style = style_def.get('.' + css_class, {})
-            style.update(css_style)
+            if '.' + css_class in style_def:
+                css_style = style_def['.' + css_class]
+                style.update(css_style)
     if 'style' in attrs:
         immediate_style = dumb_property_dict(attrs['style'])
         style.update(immediate_style)
     return style
 
-
-def google_list_style(style: dict) -> str:
+def google_list_style(style):
     """
-    Определяет, является ли список упорядоченным или неупорядоченным.
+    Определяет тип списка (упорядоченный или неупорядоченный) по стилю Google Docs.
 
-    :param style: Словарь CSS-стилей элемента.
-    :return: 'ul' для неупорядоченного списка, 'ol' для упорядоченного.
+    :param style: Словарь стилей элемента.
+    :return: 'ul' для неупорядоченного списка, 'ol' для упорядоченного списка.
     """
     if 'list-style-type' in style:
         list_style = style['list-style-type']
@@ -318,38 +322,36 @@ def google_list_style(style: dict) -> str:
             return 'ul'
     return 'ol'
 
-
-def google_nest_count(style: dict) -> int:
+def google_nest_count(style):
     """
-    Вычисляет уровень вложенности списка Google Docs.
+    Рассчитывает уровень вложенности списка Google Docs.
 
-    :param style: Словарь CSS-стилей элемента.
+    :param style: Словарь стилей элемента.
     :return: Уровень вложенности списка.
     """
+    nest_count = 0
     if 'margin-left' in style:
         try:
-            return int(style['margin-left'][:-2]) // GOOGLE_LIST_INDENT
-        except ValueError:
-            return 0
-    return 0
+            nest_count = int(style['margin-left'][:-2]) / GOOGLE_LIST_INDENT
+        except ValueError as ex:
+            logger.error(f'Не удалось рассчитать уровень вложенности {style=}', ex)
+    return int(nest_count)
 
-
-def google_has_height(style: dict) -> bool:
+def google_has_height(style):
     """
-    Проверяет, определен ли атрибут 'height' в стилях элемента.
+    Проверяет, задана ли высота элемента явно в стилях Google Docs.
 
-    :param style: Словарь CSS-стилей элемента.
-    :return: True, если атрибут 'height' определен, иначе False.
+    :param style: Словарь стилей элемента.
+    :return: True, если высота задана, иначе False.
     """
     return 'height' in style
 
-
-def google_text_emphasis(style: dict) -> list:
+def google_text_emphasis(style):
     """
-    Извлекает список всех модификаторов выделения текста.
+    Определяет модификаторы выделения текста элемента Google Docs.
 
-    :param style: Словарь CSS-стилей элемента.
-    :return: Список модификаторов выделения текста.
+    :param style: Словарь стилей элемента.
+    :return: Список модификаторов выделения текста (например, ['line-through', 'italic', 'bold']).
     """
     emphasis = []
     if 'text-decoration' in style:
@@ -360,43 +362,52 @@ def google_text_emphasis(style: dict) -> list:
         emphasis.append(style['font-weight'])
     return emphasis
 
-
-def google_fixed_width_font(style: dict) -> bool:
+def google_fixed_width_font(style):
     """
-    Проверяет, определен ли шрифт фиксированной ширины.
+    Проверяет, используется ли моноширинный шрифт в стилях Google Docs.
 
-    :param style: Словарь CSS-стилей элемента.
-    :return: True, если шрифт фиксированной ширины, иначе False.
+    :param style: Словарь стилей элемента.
+    :return: True, если используется моноширинный шрифт, иначе False.
     """
     font_family = style.get('font-family', '')
     return font_family in ['Courier New', 'Consolas']
 
-
-def list_numbering_start(attrs: dict) -> int:
+def list_numbering_start(attrs):
     """
-    Извлекает начальный номер списка из атрибутов.
+    Извлекает начальный номер списка из атрибутов элемента.
 
-    :param attrs: Словарь атрибутов HTML-элемента.
-    :return: Начальный номер списка (на 1 меньше фактического).
+    :param attrs: Словарь атрибутов HTML-тега.
+    :return: Начальный номер списка (начинается с 0) или 0, если атрибут 'start' отсутствует.
     """
-    return int(attrs.get('start', 1)) - 1
-
+    if 'start' in attrs:
+        try:
+            return int(attrs['start']) - 1
+        except ValueError as ex:
+            logger.error(f'Неверный атрибут start {attrs=}', ex)
+            return 0
+    else:
+        return 0
 
 class _html2text(HTMLParser.HTMLParser):
     """
     Класс для преобразования HTML в Markdown.
-    
-    :param out: Функция для вывода текста. Если None, используется self.outtextf.
+
+    :param out: Функция для вывода текста.
     :param baseurl: Базовый URL для ссылок.
     """
     def __init__(self, out=None, baseurl=''):
-        HTMLParser.HTMLParser.__init__(self)
+        """
+        Инициализирует объект класса _html2text.
 
+        :param out: Функция для вывода текста.
+        :param baseurl: Базовый URL для ссылок.
+        """
+        HTMLParser.HTMLParser.__init__(self)
         self.out = out if out else self.outtextf
-        self.outtextlist = [] # empty list to store output characters before they are  "joined"
+        self.outtextlist = []
         self.outtext = ''
         self.quiet = 0
-        self.p_p = 0 # number of newline character to print before next output
+        self.p_p = 0
         self.outcount = 0
         self.start = 1
         self.space = 0
@@ -417,54 +428,49 @@ class _html2text(HTMLParser.HTMLParser):
         self.emphasis = 0
         self.drop_white_space = 0
         self.inheader = False
-        self.abbr_title = None  # current abbreviation definition
-        self.abbr_data = None # last inner HTML (for abbr being defined)
-        self.abbr_list = {}  # stack of abbreviations to write later
+        self.abbr_title = None
+        self.abbr_data = None
+        self.abbr_list = {}
         self.baseurl = baseurl
 
         if options.google_doc:
             del unifiable_n[name2cp('nbsp')]
             unifiable['nbsp'] = '&nbsp_place_holder;'
 
-
-    def feed(self, data: str):
+    def feed(self, data):
         """
         Обрабатывает HTML-данные.
 
-        :param data: HTML-данные для обработки.
+        :param data: HTML-данные.
         """
-        data = data.replace("</' + 'script>", "</ignore>")
+        data = data.replace("</' + \'script>", "</ignore>")
         HTMLParser.HTMLParser.feed(self, data)
 
-    def outtextf(self, s: str):
+    def outtextf(self, s):
         """
-        Добавляет текст в список вывода.
+        Добавляет текст в список для последующего вывода.
 
-        :param s: Строка для добавления.
+        :param s: Строка текста для добавления.
         """
         self.outtextlist.append(s)
         if s:
             self.lastWasNL = s[-1] == '\n'
 
-
-    def close(self) -> str:
+    def close(self):
         """
-        Завершает обработку и возвращает результат.
+        Завершает разбор HTML и возвращает текст.
 
-        :return: Markdown-текст.
+        :return: Текст в формате Markdown.
         """
         HTMLParser.HTMLParser.close(self)
-
         self.pbr()
         self.o('', 0, 'end')
-        self.outtext = ''.join(self.outtextlist)
-
+        self.outtext = "".join(self.outtextlist)
         if options.google_doc:
             self.outtext = self.outtext.replace('&nbsp_place_holder;', ' ')
         return self.outtext
 
-
-    def handle_charref(self, c: str):
+    def handle_charref(self, c):
         """
         Обрабатывает числовые ссылки на символы.
 
@@ -472,83 +478,80 @@ class _html2text(HTMLParser.HTMLParser):
         """
         self.o(charref(c), 1)
 
-
-    def handle_entityref(self, c: str):
+    def handle_entityref(self, c):
         """
-        Обрабатывает именованные ссылки на сущности.
+        Обрабатывает именованные ссылки на символы.
 
-        :param c: Именованная ссылка на сущность.
+        :param c: Именованная ссылка на символ.
         """
         self.o(entityref(c), 1)
 
-
-    def handle_starttag(self, tag: str, attrs: list):
+    def handle_starttag(self, tag, attrs):
         """
-        Обрабатывает открывающие теги.
+        Обрабатывает начальный HTML-тег.
 
-        :param tag: Имя тега.
-        :param attrs: Список атрибутов тега.
+        :param tag: Имя HTML-тега.
+        :param attrs: Словарь атрибутов HTML-тега.
         """
         self.handle_tag(tag, attrs, 1)
 
-
-    def handle_endtag(self, tag: str):
+    def handle_endtag(self, tag):
         """
-        Обрабатывает закрывающие теги.
+        Обрабатывает конечный HTML-тег.
 
-        :param tag: Имя тега.
+        :param tag: Имя HTML-тега.
         """
         self.handle_tag(tag, None, 0)
 
-
-    def previousIndex(self, attrs: dict) -> int | None:
+    def previousIndex(self, attrs):
         """
-        Возвращает индекс набора атрибутов (ссылки) в списке self.a.
+        Возвращает индекс ссылки в списке ссылок, если она есть.
 
-        :param attrs: Словарь атрибутов для поиска.
-        :return: Индекс атрибутов в списке self.a или None, если не найдено.
+        :param attrs: Словарь атрибутов HTML-тега.
+        :return: Индекс ссылки в списке или None, если ссылка не найдена.
         """
-        if 'href' not in attrs:
+        if not has_key(attrs, 'href'):
             return None
-
         for i, a in enumerate(self.a):
-            if a.get('href') == attrs.get('href'):
-                if 'title' in a or 'title' in attrs:
-                    if a.get('title') == attrs.get('title'):
-                        return i
+            match = False
+            if has_key(a, 'href') and a['href'] == attrs['href']:
+                if has_key(a, 'title') or has_key(attrs, 'title'):
+                    if (has_key(a, 'title') and has_key(attrs, 'title') and
+                            a['title'] == attrs['title']):
+                        match = True
                 else:
-                    return i
+                    match = True
+            if match:
+                return i
         return None
 
-    def drop_last(self, n_letters: int):
+    def drop_last(self, n_letters):
         """
-        Удаляет последние символы из вывода.
+        Удаляет последние n символов из вывода, если не в режиме quiet.
 
         :param n_letters: Количество символов для удаления.
         """
         if not self.quiet:
            self.outtext = self.outtext[:-n_letters]
 
-    def handle_emphasis(self, start: int, tag_style: dict, parent_style: dict):
+    def handle_emphasis(self, start, tag_style, parent_style):
         """
         Обрабатывает выделение текста.
 
-        :param start: 1, если это открывающий тег, 0 - если закрывающий.
-        :param tag_style: CSS-стили текущего тега.
-        :param parent_style: CSS-стили родительского тега.
+        :param start: Флаг, указывающий, является ли тег открывающим.
+        :param tag_style: Словарь стилей текущего тега.
+        :param parent_style: Словарь стилей родительского тега.
         """
         tag_emphasis = google_text_emphasis(tag_style)
         parent_emphasis = google_text_emphasis(parent_style)
 
-        # handle Google's text emphasis
         strikethrough = 'line-through' in tag_emphasis and options.hide_strikethrough
-        bold = 'bold' in tag_emphasis and 'bold' not in parent_emphasis
-        italic = 'italic' in tag_emphasis and 'italic' not in parent_emphasis
-        fixed = google_fixed_width_font(tag_style) and not google_fixed_width_font(parent_style) and not self.pre
+        bold = 'bold' in tag_emphasis and not 'bold' in parent_emphasis
+        italic = 'italic' in tag_emphasis and not 'italic' in parent_emphasis
+        fixed = google_fixed_width_font(tag_style) and not google_fixed_width_font(
+            parent_style) and not self.pre
 
         if start:
-            # crossed-out text must be handled before other attributes
-            # in order not to output qualifiers unnecessarily
             if bold or italic or fixed:
                 self.emphasis += 1
             if strikethrough:
@@ -565,45 +568,40 @@ class _html2text(HTMLParser.HTMLParser):
                 self.code = True
         else:
             if bold or italic or fixed:
-                # there must not be whitespace before closing emphasis mark
                 self.emphasis -= 1
                 self.space = 0
                 self.outtext = self.outtext.rstrip()
             if fixed:
                 if self.drop_white_space:
-                    # empty emphasis, drop it
-                    self.drop_last(1)
-                    self.drop_white_space -= 1
+                   self.drop_last(1)
+                   self.drop_white_space -= 1
                 else:
                     self.o('`')
                 self.code = False
             if bold:
                 if self.drop_white_space:
-                    # empty emphasis, drop it
                     self.drop_last(2)
                     self.drop_white_space -= 1
                 else:
                     self.o("**")
             if italic:
                 if self.drop_white_space:
-                    # empty emphasis, drop it
                     self.drop_last(1)
                     self.drop_white_space -= 1
                 else:
                     self.o("_")
-            # space is only allowed after *all* emphasis marks
             if (bold or italic) and not self.emphasis:
                 self.o(" ")
             if strikethrough:
                 self.quiet -= 1
 
-    def handle_tag(self, tag: str, attrs: list | None, start: int):
+    def handle_tag(self, tag, attrs, start):
         """
         Обрабатывает HTML-тег.
 
-        :param tag: Имя тега.
-        :param attrs: Словарь атрибутов тега.
-        :param start: 1, если это открывающий тег, 0 - если закрывающий.
+        :param tag: Имя HTML-тега.
+        :param attrs: Словарь атрибутов HTML-тега.
+        :param start: Флаг, указывающий, является ли тег открывающим.
         """
         if attrs is None:
             attrs = {}
@@ -611,19 +609,15 @@ class _html2text(HTMLParser.HTMLParser):
             attrs = dict(attrs)
 
         if options.google_doc:
-            # the attrs parameter is empty for a closing tag. in addition, we
-            # need the attributes of the parent nodes in order to get a
-            # complete style description for the current element. we assume
-            # that google docs export well formed html.
             parent_style = {}
             if start:
                 if self.tag_stack:
-                  parent_style = self.tag_stack[-1][2]
+                    parent_style = self.tag_stack[-1][2]
                 tag_style = element_style(attrs, self.style_def, parent_style)
                 self.tag_stack.append((tag, attrs, tag_style))
             else:
                 if self.tag_stack:
-                    dummy, attrs, tag_style = self.tag_stack.pop()
+                    _, attrs, tag_style = self.tag_stack.pop()
                     if self.tag_stack:
                         parent_style = self.tag_stack[-1][2]
 
@@ -634,7 +628,7 @@ class _html2text(HTMLParser.HTMLParser):
                 self.o(hn(tag) * "#" + ' ')
             else:
                 self.inheader = False
-                return  # prevent redundant emphasis marks on headers
+                return
 
         if tag in ['p', 'div']:
             if options.google_doc:
@@ -666,7 +660,7 @@ class _html2text(HTMLParser.HTMLParser):
                 self.style -= 1
 
         if tag in ["body"]:
-            self.quiet = 0  # sites like 9rules.com never close <head>
+            self.quiet = 0
 
         if tag == "blockquote":
             if start:
@@ -683,33 +677,32 @@ class _html2text(HTMLParser.HTMLParser):
         if tag in ['strong', 'b']:
             self.o("**")
         if tag in ['del', 'strike']:
-            if start:
-                self.o("<" + tag + ">")
-            else:
-                self.o("</" + tag + ">")
-
+             if start:
+                self.o("<"+tag+">")
+             else:
+                self.o("</"+tag+">")
         if options.google_doc:
             if not self.inheader:
-                # handle some font attributes, but leave headers clean
                 self.handle_emphasis(start, tag_style, parent_style)
 
         if tag == "code" and not self.pre:
-            self.o('`')  # TODO: `` `this` ``
+            self.o('`')
         if tag == "abbr":
             if start:
                 self.abbr_title = None
                 self.abbr_data = ''
-                if 'title' in attrs:
+                if has_key(attrs, 'title'):
                     self.abbr_title = attrs['title']
             else:
-                if self.abbr_title is not None:
+                if self.abbr_title:
                     self.abbr_list[self.abbr_data] = self.abbr_title
                     self.abbr_title = None
                 self.abbr_data = ''
 
         if tag == "a" and not IGNORE_ANCHORS:
             if start:
-                if 'href' in attrs and not (SKIP_INTERNAL_LINKS and attrs['href'].startswith('#')):
+                if has_key(attrs, 'href') and not (
+                        SKIP_INTERNAL_LINKS and attrs['href'].startswith('#')):
                     self.astack.append(attrs)
                     self.o("[")
                 else:
@@ -732,7 +725,7 @@ class _html2text(HTMLParser.HTMLParser):
                             self.o("][" + str(a['count']) + "]")
 
         if tag == "img" and start and not IGNORE_IMAGES:
-            if 'src' in attrs:
+            if has_key(attrs, 'src'):
                 attrs['href'] = attrs['src']
                 alt = attrs.get('alt', '')
                 if INLINE_LINKS:
@@ -762,7 +755,6 @@ class _html2text(HTMLParser.HTMLParser):
             self.pbr()
 
         if tag in ["ol", "ul"]:
-            # Google Docs create sub lists as top level lists
             if (not self.list) and (not self.lastWasList):
                 self.p()
             if start:
@@ -790,7 +782,7 @@ class _html2text(HTMLParser.HTMLParser):
                     nest_count = google_nest_count(tag_style)
                 else:
                     nest_count = len(self.list)
-                self.o("  " * nest_count)  # TODO: line up <ol><li>s > 9 correctly.
+                self.o("  " * nest_count)
                 if li['name'] == "ul":
                     self.o(options.ul_item_mark + " ")
                 elif li['name'] == "ol":
@@ -811,49 +803,44 @@ class _html2text(HTMLParser.HTMLParser):
                 self.pre = 0
             self.p()
 
-
     def pbr(self):
         """
-        Добавляет один или несколько разрывов строки.
+        Устанавливает флаг для добавления одного переноса строки.
         """
         if self.p_p == 0:
             self.p_p = 1
 
-
     def p(self):
         """
-        Добавляет два разрыва строки.
+        Устанавливает флаг для добавления двух переносов строки.
         """
         self.p_p = 2
 
-
     def soft_br(self):
         """
-        Добавляет мягкий разрыв строки.
+        Устанавливает флаг для добавления мягкого переноса строки.
         """
         self.pbr()
         self.br_toggle = '  '
 
-    def o(self, data: str, puredata: int = 0, force: Any = 0):
+    def o(self, data, puredata=0, force=0):
         """
-         Добавляет текст в вывод, выполняет форматирование.
+        Выводит данные с учетом форматирования.
 
-         :param data: Строка для вывода.
-         :param puredata: Флаг, указывающий, нужно ли очищать пробелы.
-         :param force: Флаг, указывающий необходимость принудительного вывода.
-         """
+        :param data: Данные для вывода.
+        :param puredata: Флаг, указывающий на необходимость очистки пробелов.
+        :param force: Флаг для принудительного вывода данных.
+        """
         if self.abbr_data is not None:
-           self.abbr_data += data
+            self.abbr_data += data
 
         if not self.quiet:
             if options.google_doc:
-                # prevent white space immediately after 'begin emphasis' marks ('**' and '_')
                 lstripped_data = data.lstrip()
                 if self.drop_white_space and not (self.pre or self.code):
-                    data = lstripped_data
+                   data = lstripped_data
                 if lstripped_data != '':
-                    self.drop_white_space = 0
-
+                   self.drop_white_space = 0
             if puredata and not self.pre:
                 data = re.sub(r'\s+', ' ', data)
                 if data and data[0] == ' ':
@@ -863,7 +850,6 @@ class _html2text(HTMLParser.HTMLParser):
                 return
 
             if self.startpre:
-                # self.out(" :") #TODO: not output when already one there
                 self.startpre = 0
 
             bq = (">" * self.blockquote)
@@ -880,7 +866,6 @@ class _html2text(HTMLParser.HTMLParser):
                 self.start = 0
 
             if force == 'end':
-                # It's the end.
                 self.p_p = 0
                 self.out("\n")
                 self.space = 0
@@ -901,3 +886,6 @@ class _html2text(HTMLParser.HTMLParser):
 
                 newa = []
                 for link in self.a:
+                    if self.outcount > link['outcount']:
+                        self.out("   [" + str(link['count']) + "]: " +
+                                 urlparse.urljoin(self.baseurl, link['href']))

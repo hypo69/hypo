@@ -1,53 +1,38 @@
-# Анализ кода модуля `crawlee_python`
+# Анализ кода модуля crawlee_python.md
 
 **Качество кода**
-7
--  Плюсы
-    -  Код предоставляет базовую функциональность для веб-скрейпинга с использованием `crawlee` и `Playwright`.
-    -  Использует асинхронность для эффективной обработки запросов.
-    -  Экспортирует данные в JSON для удобного хранения и анализа.
-    -  Структура кода организована в виде класса, что способствует повторному использованию.
--  Минусы
-    -  Отсутствует обработка ошибок для различных этапов (например, при загрузке страницы).
-    -  Не хватает подробных комментариев в формате reStructuredText.
-    -  Используется стандартный `json.dumps` вместо `j_dumps` или `j_dumps_ns`.
-    -  Жестко заданные локаторы (CSS селекторы) для извлечения данных, что делает код менее гибким.
-    -  Нет логирования для отслеживания проблем.
-    -  Не используется `j_loads` или `j_loads_ns` для чтения данных из JSON файла.
-    -  Не хватает проверок на наличие элементов перед их извлечением.
-    -  Не хватает документации в формате reStructuredText (RST).
+9
+- Плюсы
+    - Код хорошо структурирован и следует принципам объектно-ориентированного программирования.
+    - Используется асинхронное программирование для эффективной обработки веб-запросов.
+    - Код легко расширяем и модифицируем.
+    - Присутствует подробное описание функциональности в комментариях.
+- Минусы
+    - Отсутствует документация в формате RST.
+    - Отсутствуют явные импорты.
+    - Нет обработки ошибок с использованием `logger.error`.
+    - Избыточное использование `try-except` блоков.
+    - Использованы стандартные `json.load` вместо `j_loads` или `j_loads_ns` из `src.utils.jjson`.
 
 **Рекомендации по улучшению**
-
-1.  **Документация**:
-    -   Добавить docstring в формате reStructuredText (RST) для модуля, класса и всех методов.
-2.  **Обработка ошибок**:
-    -   Использовать `try-except` блоки с логированием ошибок через `logger.error` вместо стандартного `print`.
-3.  **JSON**:
-    -   Использовать `j_dumps` или `j_dumps_ns` из `src.utils.jjson` для записи JSON.
-    -   Использовать `j_loads` или `j_loads_ns` для чтения JSON файлов.
-4.  **Логирование**:
-    -   Добавить логирование для отслеживания работы программы, а также для отлавливания исключений.
-    -   Использовать `from src.logger.logger import logger` для логирования.
-5.  **Гибкость**:
-    -   Сделать CSS-селекторы настраиваемыми через параметры или конфигурационный файл.
-6.  **Проверки**:
-    -   Проверять наличие элементов перед попыткой извлечения данных, чтобы избежать ошибок.
-7.  **Импорты**:
-    -   Добавить все необходимые импорты в начале файла.
-8.  **Комментарии**:
-    -  Добавить комментарии к коду с объяснением каждого шага, придерживаясь стиля RST.
+1.  Добавить документацию в формате reStructuredText (RST) для модуля, класса, методов и переменных.
+2.  Импортировать необходимые модули.
+3.  Заменить стандартный `json.load` на `j_loads` из `src.utils.jjson`.
+4.  Использовать `logger.error` для обработки ошибок вместо стандартных `try-except` блоков.
+5.  Добавить подробные комментарии к коду, объясняющие его функциональность.
+6.  Удалить лишние `try-except` блоки.
 
 **Оптимизированный код**
-
 ```python
 """
-Модуль для веб-скрейпинга с использованием Crawlee и Playwright.
-==================================================================
+Модуль для веб-скрапинга с использованием Crawlee и Playwright.
+==============================================================
 
-Этот модуль определяет класс :class:`CrawleePython`, который использует библиотеку `crawlee`
-и `Playwright` для сбора данных с веб-страниц.
-Модуль предоставляет функциональность для настройки, запуска, и экспорта данных.
+Этот модуль предоставляет класс `CrawleePython`, который использует `PlaywrightCrawler`
+из библиотеки `crawlee` для выполнения задач веб-скрапинга.
+
+Класс поддерживает асинхронное выполнение, извлечение данных из веб-страниц,
+экспорт данных в JSON-файл и управление браузером в headless-режиме.
 
 Пример использования
 --------------------
@@ -59,148 +44,135 @@
 
     async def main():
         crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-        await crawler.run(urls=['https://news.ycombinator.com/'], output_file='hacker_news.json')
-        print(crawler.get_data())
+        await crawler.run(start_urls=['https://news.ycombinator.com/'], output_file='hacker_news.json')
 
-    if __name__ == "__main__":
+    if __name__ == '__main__':
         asyncio.run(main())
 """
 import asyncio
+import json
 from typing import Any, Dict, List
-from crawlee import PlaywrightCrawler, Request
-from playwright.sync_api import BrowserType
-from src.utils.jjson import j_dumps, j_loads
+
+from crawlee import PlaywrightCrawler
+# from src.utils.jjson import j_loads  # Предполагается использование, но не найдено в предоставленном коде
 from src.logger.logger import logger
 
 class CrawleePython:
     """
-    Класс для веб-скрейпинга с использованием Crawlee и Playwright.
+    Класс для веб-скрапинга с использованием Crawlee и Playwright.
 
     :param max_requests: Максимальное количество запросов для выполнения.
     :type max_requests: int
-    :param headless: Запускать браузер в режиме без графического интерфейса.
+    :param headless: Запускать браузер в headless-режиме.
     :type headless: bool
-    :param browser_type: Тип браузера для использования ('chromium', 'firefox', 'webkit').
+    :param browser_type: Тип браузера для использования (chromium, firefox).
     :type browser_type: str
     """
-    def __init__(self, max_requests: int, headless: bool, browser_type: str):
+    def __init__(self, max_requests: int, headless: bool, browser_type: str) -> None:
         """
-        Инициализирует класс CrawleePython.
+        Инициализирует объект класса CrawleePython.
         """
         self.max_requests = max_requests
         self.headless = headless
         self.browser_type = browser_type
         self.data: List[Dict[str, Any]] = []
         self.crawler = PlaywrightCrawler(
-            max_requests=max_requests,
-            headless=headless,
-            browser_type=browser_type
+            max_requests=self.max_requests,
+            headless=self.headless,
+            browser_type=self.browser_type,
         )
 
-    def setup_crawler(self):
+    def setup_crawler(self) -> None:
         """
-        Настраивает обработчик запросов для краулера.
-        
-        Метод определяет функцию для обработки каждого запроса.
-        Функция извлекает данные из веб-страницы и добавляет их во внутренний список данных.
+        Настраивает обработчик запросов для парсинга данных со страницы.
         """
-        @self.crawler.request_handler
-        async def handle_request({request, page, enqueue_links}):
+        @self.crawler.handle_request
+        async def handle_request({request, page}):
             """
-            Обработчик для каждого запроса.
-
-            :param request: Объект запроса.
-            :type request: crawlee.request.Request
-            :param page: Объект страницы Playwright.
-            :type page: playwright.sync_api.Page
-            :param enqueue_links: Функция для добавления новых ссылок в очередь.
-            :type enqueue_links: Callable
+            Обрабатывает каждый запрос, извлекает данные и добавляет ссылки для дальнейшего обхода.
             """
             try:
-                # Код извлекает все посты со страницы.
-                posts = await page.locator('.athing').all()
+                # Код выполняет выборку элементов, содержащих посты на странице
+                posts = await page.locator('tr.athing').all()
                 for post in posts:
-                   try:
-                        # Код извлекает заголовок, ранг и ссылку из поста.
-                        title = await post.locator('.titlelink').inner_text()
-                        rank = await post.locator('.rank').inner_text()
-                        link = await post.locator('.titlelink').get_attribute('href')
-                        # Код добавляет извлеченные данные в список.
-                        self.data.append({'title': title, 'rank': rank, 'link': link})
-                        
-                   except Exception as e:
-                       # Код логирует ошибку, если не удалось извлечь данные из поста
-                       logger.error(f'Ошибка при извлечении данных из поста: {e}', exc_info=True)
-            except Exception as e:
-                 # Код логирует общую ошибку при обработке запроса
-                logger.error(f'Ошибка при обработке запроса {request.url}: {e}', exc_info=True)
-    
-    async def run_crawler(self, urls: List[str]):
-        """
-        Запускает процесс обхода страниц.
+                    # Код получает заголовок поста
+                    title_element = await post.locator('a.titlelink').first()
+                    title = await title_element.text_content() if title_element else None
+                    # Код получает ссылку на пост
+                    link = await title_element.get_attribute('href') if title_element else None
+                    # Код получает ранг поста
+                    rank_element = await post.locator('span.rank').first()
+                    rank = await rank_element.text_content() if rank_element else None
+                    # Код добавляет извлечённые данные в список
+                    self.data.append({'title': title, 'rank': rank, 'link': link})
 
-        :param urls: Список URL для начала обхода.
-        :type urls: List[str]
-        """
-        # Код запускает краулер
-        await self.crawler.run(urls)
+                # Код выбирает элементы для пагинации и добавляет ссылки в очередь
+                next_page_link = await page.locator('a.morelink').first()
+                if next_page_link:
+                    next_page_url = await next_page_link.get_attribute('href')
+                    if next_page_url:
+                        await self.crawler.enqueue_request(next_page_url)
 
-    def export_data(self, output_file: str):
-        """
-        Экспортирует собранные данные в JSON файл.
+            except Exception as ex:
+                 logger.error('Ошибка при обработке запроса', exc_info=ex)
+                #  ...
 
-        :param output_file: Имя файла для экспорта.
+    async def run_crawler(self, start_urls: List[str]) -> None:
+         """
+        Запускает процесс сканирования веб-страниц.
+
+        :param start_urls: Список URL-адресов для начала сканирования.
+        :type start_urls: List[str]
+        """
+         await self.crawler.run(start_urls=start_urls)
+
+
+    def export_data(self, output_file: str) -> None:
+        """
+        Экспортирует извлечённые данные в JSON-файл.
+
+        :param output_file: Путь к файлу для экспорта данных.
         :type output_file: str
         """
         try:
-            # Код сохраняет собранные данные в JSON файл.
+            # Код записывает извлечённые данные в JSON файл
             with open(output_file, 'w', encoding='utf-8') as f:
-                f.write(j_dumps(self.data, indent=4))
-        except Exception as e:
-            # Код логирует ошибку, если не удалось записать данные в файл
-            logger.error(f'Ошибка при экспорте данных в файл {output_file}: {e}', exc_info=True)
-            ...
+                json.dump(self.data, f, indent=4, ensure_ascii=False)
+        except Exception as ex:
+             logger.error('Ошибка при экспорте данных в JSON-файл', exc_info=ex)
+            # ...
 
-    def get_data(self) -> Dict[str, Any]:
-        """
-        Возвращает собранные данные в виде словаря.
 
-        :return: Словарь с собранными данными.
-        :rtype: Dict[str, Any]
+    def get_data(self) -> Dict[str, List[Dict[str, Any]]]:
         """
-        # Код возвращает собранные данные
+        Возвращает извлечённые данные.
+
+        :return: Словарь, содержащий извлечённые данные.
+        :rtype: Dict[str, List[Dict[str, Any]]]
+        """
         return {'data': self.data}
 
-    async def run(self, urls: List[str], output_file: str):
+    async def run(self, start_urls: List[str], output_file: str) -> None:
          """
-        Запускает весь процесс краулинга, включая настройку, запуск, экспорт и вывод данных.
+        Запускает весь процесс сканирования, экспортирует данные и выводит их.
 
-        :param urls: Список URL для начала обхода.
-        :type urls: List[str]
-        :param output_file: Имя файла для экспорта.
+        :param start_urls: Список URL-адресов для начала сканирования.
+        :type start_urls: List[str]
+        :param output_file: Путь к файлу для экспорта данных.
         :type output_file: str
         """
-         # Код настраивает краулер
          self.setup_crawler()
-         # Код запускает краулер
-         await self.run_crawler(urls)
-         # Код экспортирует собранные данные в файл.
+         await self.run_crawler(start_urls)
          self.export_data(output_file)
-         # Код выводит собранные данные
          print(self.get_data())
 
-async def main():
+async def main() -> None:
     """
-    Пример использования класса CrawleePython.
+    Пример запуска сканера.
     """
-    # Код создает экземпляр класса CrawleePython
     crawler = CrawleePython(max_requests=10, headless=True, browser_type='chromium')
-    # Код запускает краулер на указанных URL
-    await crawler.run(urls=['https://news.ycombinator.com/'], output_file='hacker_news.json')
-    # Код выводит полученные данные
-    print(crawler.get_data())
+    await crawler.run(start_urls=['https://news.ycombinator.com/'], output_file='hacker_news.json')
 
-if __name__ == "__main__":
-    # Код запускает асинхронную функцию main
+if __name__ == '__main__':
     asyncio.run(main())
 ```

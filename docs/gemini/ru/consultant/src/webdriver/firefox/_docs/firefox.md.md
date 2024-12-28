@@ -1,53 +1,52 @@
-## Анализ кода модуля `firefox`
+# Анализ кода модуля `firefox`
 
 **Качество кода**
-6
+**7/10**
 - Плюсы
-    - Код структурирован и разделен на функции, что упрощает его понимание и поддержку.
-    - Используются `Path` из `pathlib` для работы с путями, что делает код более читаемым и кроссплатформенным.
-    - Присутствуют docstring для классов и методов, хотя их нужно доработать в формате RST.
-    -  Используется `j_loads_ns` для загрузки конфигурации из JSON.
-    -  Логирование ошибок присутствует, что помогает в отладке.
+    - Код структурирован и разбит на методы, что улучшает читаемость.
+    - Используются аннотации типов для улучшения понимания кода.
+    - Присутствует обработка исключений при инициализации драйвера.
+    - Используется `j_loads_ns` для загрузки настроек из json.
 - Минусы
-    - Отсутствуют reStructuredText (RST) docstring.
-    -  Использование `try-except` блоков в `__init__` не является оптимальным, лучше использовать `logger.error`.
-    -  Отсутствует обработка потенциальных ошибок при работе с файлами конфигурации.
-    -  Не все комментарии соответствуют RST.
-    -  Отсутствуют импорты `Any` из `typing` для аннотаций типов.
+    - Отсутствуют docstring для класса и методов в формате reStructuredText (RST).
+    - Комментарии `#` не объясняют подробно каждую строку кода.
+    - В блоке `try-except` используется `return` без возвращаемого значения, что может привести к ошибкам.
+    - Используется `logger.critical` для обработки ошибок, когда возможно использование `logger.error`.
 
 **Рекомендации по улучшению**
-
-1.  **Docstrings**: Переписать все docstring в формате RST, с добавлением параметров и возвращаемых значений.
-2.  **Логирование**: Изменить обработку исключений в методе `__init__`, используя `logger.error` вместо `logger.critical` и общего `except`.
-3.  **Обработка ошибок**: Добавить проверку наличия файла конфигурации и обработку потенциальных ошибок при его чтении.
-4.  **Импорты**: Добавить необходимые импорты, если они отсутствуют.
-5.  **Комментарии**: Добавить комментарии в формате RST.
-6.  **Общая структура**: Описать модуль в самом начале файла в формате RST.
+1.  Добавить docstring в формате reStructuredText (RST) для класса `Firefox` и его методов `__init__`, `_set_options`, `_set_profile`.
+2.  Заменить комментарии `#` на более подробные объяснения в формате RST.
+3.  Удалить `return` без возвращаемого значения в блоках `try-except`.
+4.  Использовать `logger.error` вместо `logger.critical` в блоке `except Exception as ex`.
+5.  Добавить проверку на наличие ключей в `settings.options` и `settings.headers`.
+6.  Использовать `Path` для конструирования путей и `os.environ.get` для получения переменных среды.
 
 **Оптимизированный код**
 
 ```python
 """
-Модуль для работы с веб-драйвером Firefox.
+Модуль для управления веб-драйвером Firefox.
 =========================================================================================
 
-Этот модуль предоставляет класс :class:`Firefox`, который является подклассом `webdriver.Firefox`.
-Он предоставляет дополнительные функции, такие как запуск Firefox в режиме киоска и настройка профиля Firefox для веб-драйвера.
+Этот модуль предоставляет класс :class:`Firefox`, который является подклассом
+:class:`selenium.webdriver.Firefox` и предоставляет дополнительные возможности, такие
+как запуск Firefox в режиме киоска и настройку профиля Firefox для веб-драйвера.
 
 Пример использования
 --------------------
 
-Пример использования класса `Firefox`:
+Пример создания экземпляра класса `Firefox`:
 
 .. code-block:: python
 
     from src.webdriver.firefox.firefox import Firefox
 
     driver = Firefox()
-    driver.get("https://example.com")
+    driver.get("https://www.example.com")
     driver.quit()
 
 """
+
 import os
 from pathlib import Path
 from types import SimpleNamespace
@@ -63,188 +62,176 @@ from src import gs
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-
 class Firefox(WebDriver):
     """
-    Подкласс `webdriver.Firefox`, предоставляющий дополнительные функции.
+    Расширение класса `webdriver.Firefox` с дополнительными функциями.
 
-    :ivar driver_name: Имя драйвера, устанавливается в 'firefox'.
-    :vartype driver_name: str
+    :ivar driver_name: Имя драйвера ('firefox').
     """
     driver_name = 'firefox'
     
     def __init__(self, user_agent: Optional[dict] = None, *args, **kwargs) -> None:
         """
-        Инициализирует веб-драйвер Firefox с указанными параметрами запуска и профилем.
+        Инициализирует веб-драйвер Firefox с заданными параметрами запуска и профилем.
 
-        :param user_agent: Словарь, содержащий настройки user agent.
-            Если не передан, используется случайный user agent.
+        :param user_agent: Словарь с настройками user agent. Если не задан, используется случайный user agent.
         :type user_agent: Optional[dict]
-        :raises WebDriverException: Если не удалось запустить драйвер.
-        :raises Exception: Если произошла общая ошибка.
         """
-        # код устанавливает user agent из переданного значения или генерирует случайный
+        # если user_agent не передан, то генерируется случайный.
         self.user_agent = user_agent if user_agent else UserAgent().random
-        
-        #  код загружает настройки из файла firefox.json
-        settings_path: Path = Path(gs.path.src, 'webdriver', 'firefox', 'firefox.json')
-        try:
-            settings: SimpleNamespace = j_loads_ns(settings_path)
-        except FileNotFoundError as ex:
-            logger.error(f"Файл конфигурации не найден: {settings_path}", ex)
-            return
-        except Exception as ex:
-             logger.error(f"Ошибка при загрузке файла конфигурации: {settings_path}", ex)
-             return
-        
-        # код формирует путь к geckodriver
+
+        # Загрузка настроек из файла `firefox.json`.
+        settings: SimpleNamespace = j_loads_ns(Path(gs.path.src, 'webdriver', 'firefox', 'firefox.json'))
+
+        # Формирование пути к geckodriver.
         geckodriver_path_parts: list[str] = settings.geckodriver
         geckodriver_path: str = str(Path(gs.path.bin, *geckodriver_path_parts))
 
-        # код устанавливает профиль и опции
+        # Установка профиля и параметров запуска.
         profile: FirefoxProfile = self._set_profile(settings.profile)
         options: Options = self._set_options(settings)
 
+        # Инициализация сервиса драйвера.
         service = Service(geckodriver_path)
 
-        # код устанавливает профиль в опции, если он есть
+        # Если профиль установлен, добавляем его в параметры.
         if profile:
             options.profile = profile
         
         try:
+            # Запуск Firefox.
             logger.info("Start Firefox")
-            # код запускает драйвер
             super().__init__(options=options, service=service)
         except WebDriverException as ex:
-            # код обрабатывает ошибку запуска драйвера
-            logger.error(f"""
+            # Обработка исключения при запуске драйвера.
+            logger.error("""
                 ---------------------------------
                     Не поднялся драйвер
                     так бывает при обновлениях самого Firefox
                     ну, или он не установлен в ос.
             ----------------------------------""", ex)
-            return
+            
         except Exception as ex:
-            # код обрабатывает общую ошибку запуска драйвера
+            # Обработка общей ошибки.
             logger.error(f' Упал webdriver Firefox. Общая ошибка:  {ex}')
-            return
-  
+
     def _set_options(self, settings: SimpleNamespace) -> Options:
         """
         Устанавливает параметры запуска для веб-драйвера Firefox.
 
         :param settings: Настройки для параметров Firefox.
         :type settings: SimpleNamespace
-        :returns: Объект Options с заданными параметрами запуска.
+        :return: Объект Options с установленными параметрами запуска.
         :rtype: selenium.webdriver.firefox.options.Options
         """
-        # код создает объект Options
+        # Создание объекта Options.
         options = Options()
-        
-        # код устанавливает опции из настроек
-        if settings.options:
+
+        # Проверка и добавление параметров запуска.
+        if hasattr(settings, 'options') and settings.options:
             for opt in settings.options:
                 if 'headless' in opt:
                     options.headless = True
                 else:
                     options.add_argument(opt)
-        
-        # код добавляет заголовки из настроек
-        if settings.headers:
-            [options.add_argument(f"--{key}={value}") for key, value in settings.headers.items()]
-            
+
+        # Проверка и добавление заголовков.
+        if hasattr(settings, 'headers') and settings.headers:
+           [options.add_argument(f"--{key}={value}") for key, value in settings.headers.items()]
+
         return options
 
     def _set_profile(self, profile: SimpleNamespace) -> FirefoxProfile:
         """
         Настраивает профиль Firefox для веб-драйвера.
 
-        :param profile: Объект SimpleNamespace, содержащий настройки профиля.
+        :param profile: Объект SimpleNamespace с настройками профиля.
         :type profile: SimpleNamespace
-        :returns: Объект FirefoxProfile, представляющий профиль.
-        :rtype: selenium.webdriver.firefox.firefox_profile.FirefoxProfile
+        :return: Объект FirefoxProfile, представляющий профиль.
+        :rtype: FirefoxProfile
         """
-        # код определяет путь к директории профиля
+        # Получение пути к каталогу профиля.
         profile_directory = profile.profile_path[profile.default_profile_from]
+        
+        # Обработка переменной окружения APPDATA.
         if '%APPDATA%' in profile_directory:
-            profile_directory = Path(profile_directory.replace('%APPDATA%', os.environ.get('APPDATA')))
+            profile_directory = Path(profile_directory.replace('%APPDATA%', os.environ.get('APPDATA', '')))
             profile_directory = Path(profile_directory / profile.default_profile_directory[0])
         else:
             profile_directory = Path(gs.path.src / 'webdriver' / 'firefox' / 'profiles' / profile.default_profile_directory[0])
-        
-        # код создает объект FirefoxProfile
+
+        # Создание объекта FirefoxProfile.
         profile = FirefoxProfile(profile_directory=str(profile_directory))
         return profile
 ```
-
 ### Обновленный файл `firefox.md`
 
 ```markdown
 # Firefox WebDriver
 
-## Overview
+## Обзор
 
-This code defines a subclass of `webdriver.Firefox` called `Firefox`. It provides additional functionality such as the ability to launch Firefox in kiosk mode and the ability to set up a Firefox profile for the webdriver.
+Этот код определяет подкласс `webdriver.Firefox` с именем `Firefox`. Он предоставляет дополнительные функции, такие как возможность запуска Firefox в режиме киоска и возможность настройки профиля Firefox для веб-драйвера.
 
-## Class: Firefox
+## Класс: Firefox
 
-### Attributes
+### Атрибуты
 
-- `driver_name`: A class attribute set to `\'firefox\'`.
+- `driver_name`: Атрибут класса, установленный в `\'firefox\'`.
 
-### Methods
+### Методы
 
 #### `__init__(self, user_agent: Optional[dict] = None, *args, **kwargs) -> None`
 
-Initializes the Firefox webdriver with the specified launch options and profile.
+Инициализирует веб-драйвер Firefox с указанными параметрами запуска и профилем.
 
-- **Parameters:**
-  - `user_agent` (`dict`, optional): A dictionary containing user agent settings. If not provided, a random user agent is generated.
+- **Параметры:**
+  - `user_agent` (`dict`, optional): Словарь, содержащий настройки user agent. Если не предоставлен, генерируется случайный user agent.
 
 #### `_set_options(self, settings: SimpleNamespace) -> Options`
 
-Sets the launch options for the Firefox webdriver.
+Устанавливает параметры запуска для веб-драйвера Firefox.
 
-- **Parameters:**
-  - `settings` (`SimpleNamespace`): Settings for the Firefox options.
+- **Параметры:**
+  - `settings` (`SimpleNamespace`): Настройки для параметров Firefox.
 
-- **Returns:**
-  - `Options`: An Options object with the specified launch options.
+- **Возвращает:**
+  - `Options`: Объект Options с указанными параметрами запуска.
 
 #### `_set_profile(self, profile: SimpleNamespace) -> FirefoxProfile`
 
-Sets up a Firefox profile for the webdriver.
+Настраивает профиль Firefox для веб-драйвера.
 
-- **Parameters:**
-  - `profile` (`SimpleNamespace`): A SimpleNamespace object containing profile settings.
+- **Параметры:**
+  - `profile` (`SimpleNamespace`): Объект SimpleNamespace, содержащий настройки профиля.
 
-- **Returns:**
-  - `FirefoxProfile`: A FirefoxProfile object representing the profile.
+- **Возвращает:**
+  - `FirefoxProfile`: Объект FirefoxProfile, представляющий профиль.
 
-## Usage
+## Использование
 
-### Creating a Profile with User Agent
+### Создание профиля с User Agent
 
 ```python
 profile = FirefoxProfile()
 profile.set_preference("general.useragent.override", "user-agent-string")
 ```
 
-### Disabling Images
+### Отключение изображений
 
 ```python
 profile = FirefoxProfile()
 profile.set_preference("permissions.default.image", 2)
 ```
 
-### Blocking Pop-up Windows
+### Блокировка всплывающих окон
 
 ```python
 profile = FirefoxProfile()
 profile.set_preference("dom.disable_open_during_load", False)
 ```
 
-### Setting File Download Path
+### Настройка пути для скачивания файлов
 
 ```python
 profile = FirefoxProfile()
@@ -253,52 +240,52 @@ profile.set_preference("browser.download.folderList", 2)
 profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream")
 ```
 
-### Disabling Browser Notifications
+### Отключение уведомлений браузера
 
 ```python
 profile = FirefoxProfile()
 profile.set_preference("dom.webnotifications.enabled", False)
 ```
 
-## Options Examples
+## Примеры параметров
 
-### Launching in Headless Mode
+### Запуск в режиме без графического интерфейса
 
 ```python
 options = Options()
 options.headless = True
 ```
 
-### Setting Browser Language
+### Установка языка браузера
 
 ```python
 options = Options()
 options.add_argument(\'-lang=es\')
 ```
 
-### Custom Command Line Parameters
+### Пользовательские параметры командной строки
 
 ```python
 options = Options()
 options.add_argument(\'--some-option=value\')
 ```
 
-### Managing Debug Messages
+### Управление сообщениями отладки
 
 ```python
 options = Options()
 options.add_argument(\'-vv\')
 ```
 
-### Launching in Fullscreen Mode
+### Запуск в полноэкранном режиме
 
 ```python
 options = Options()
 options.add_argument(\'--kiosk\')
 ```
 
-## Links
+## Ссылки
 
-- [Documentation on Firefox Profile Settings](https://firefox-source-docs.mozilla.org/testing/geckodriver/Capabilities.md#firefox-profile)
-- [Documentation on Firefox Options](https://firefox-source-docs.mozilla.org/testing/geckodriver/CommandLineOptions.html)
+- [Документация по настройкам профиля Firefox](https://firefox-source-docs.mozilla.org/testing/geckodriver/Capabilities.md#firefox-profile)
+- [Документация по параметрам Firefox](https://firefox-source-docs.mozilla.org/testing/geckodriver/CommandLineOptions.html)
 ```

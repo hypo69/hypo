@@ -1,117 +1,107 @@
 # Анализ кода модуля `AliexpressAffiliateHotproductQueryRequest.py`
 
 **Качество кода**
-7
--  Плюсы
-    - Код структурирован и соответствует базовым стандартам Python.
-    - Присутствует docstring для модуля.
-    - Используется наследование от базового класса `RestApi`.
-    - Код достаточно читаемый и понятный.
--  Минусы
-    - Отсутствует документация в формате reStructuredText (RST) для класса и его методов.
-    - Нет обработки исключений или логирования.
-    - Некоторые переменные не имеют docstring.
-    - Нет импорта модуля `logger`
+9
+ - Плюсы
+    - Код соответствует PEP8, за исключением docstring.
+    -  Используется наследование от базового класса `RestApi`.
+    - Присутствует описание модуля в начале файла.
+ - Минусы
+    - Отсутствует docstring для класса и методов.
+    - Не используются `j_loads` или `j_loads_ns`.
+    - Нет обработки ошибок.
+    - Не используется логирование.
 
 **Рекомендации по улучшению**
-
-1.  Добавить подробную документацию в формате RST для класса `AliexpressAffiliateHotproductQueryRequest` и его методов, включая параметры и возвращаемые значения.
-2.  Добавить импорт модуля `logger` для логирования ошибок.
-3.  Убрать избыточное использование `try-except`, где это возможно, и использовать `logger.error` для обработки ошибок.
-4.  Привести все переменные в соответствие с ранее обработанными файлами.
-5.  Использовать консистентное форматирование для параметров в `__init__`.
+1.  Добавить docstring для класса и метода `__init__` с использованием reStructuredText (RST).
+2.  Добавить docstring для метода `getapiname` с использованием reStructuredText (RST).
+3.  Использовать `from src.logger.logger import logger` для логирования.
+4.  Внедрить обработку ошибок с помощью `try-except` и логирования.
+5.  Заменить `# -*- coding: utf-8 -*-` на `# -*- coding: utf-8 -*-.`
+6.  Удалить `# <- venv win` так как это комментарий для конкретной системы.
 
 **Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
 """
-Модуль для запроса горячих товаров через AliExpress API.
-=========================================================================================
+Модуль для работы с запросом горячих товаров Aliexpress.
+=======================================================
 
-Этот модуль содержит класс :class:`AliexpressAffiliateHotproductQueryRequest`,
-который используется для выполнения запроса горячих товаров через AliExpress Affiliate API.
+Этот модуль определяет класс `AliexpressAffiliateHotproductQueryRequest`,
+который используется для формирования запроса к API Aliexpress для получения
+списка горячих товаров.
 
+Пример использования
+--------------------
+
+.. code-block:: python
+
+    request = AliexpressAffiliateHotproductQueryRequest()
+    request.category_ids = '123,456'
+    request.fields = 'product_id,product_title'
+    # ...
+    api_response = request.get_response()
 """
-from src.logger.logger import logger # Импорт модуля logger
+from src.logger.logger import logger
 from ..base import RestApi
 
 
 class AliexpressAffiliateHotproductQueryRequest(RestApi):
     """
-    Класс для выполнения запроса горячих товаров через AliExpress Affiliate API.
+    Класс для формирования запроса горячих товаров Aliexpress.
 
-    :param domain: Домен API.
-    :type domain: str
-    :param port: Порт API.
-    :type port: int
-
-    :ivar app_signature: Подпись приложения.
-    :vartype app_signature: str
-    :ivar category_ids: Идентификаторы категорий.
-    :vartype category_ids: str
-    :ivar delivery_days: Количество дней доставки.
-    :vartype delivery_days: int
-    :ivar fields: Поля для возврата.
-    :vartype fields: str
-    :ivar keywords: Ключевые слова.
-    :vartype keywords: str
-    :ivar max_sale_price: Максимальная цена товара.
-    :vartype max_sale_price: float
-    :ivar min_sale_price: Минимальная цена товара.
-    :vartype min_sale_price: float
-    :ivar page_no: Номер страницы.
-    :vartype page_no: int
-    :ivar page_size: Размер страницы.
-    :vartype page_size: int
-    :ivar platform_product_type: Тип продукта платформы.
-    :vartype platform_product_type: str
-    :ivar ship_to_country: Страна доставки.
-    :vartype ship_to_country: str
-    :ivar sort: Параметр сортировки.
-    :vartype sort: str
-    :ivar target_currency: Целевая валюта.
-    :vartype target_currency: str
-    :ivar target_language: Целевой язык.
-    :vartype target_language: str
-    :ivar tracking_id: Идентификатор отслеживания.
-    :vartype tracking_id: str
+    :param domain: Домен API Aliexpress.
+    :type domain: str, optional
+    :param port: Порт API Aliexpress.
+    :type port: int, optional
     """
     def __init__(self, domain="api-sg.aliexpress.com", port=80):
         """
-        Инициализация экземпляра класса AliexpressAffiliateHotproductQueryRequest.
-
-        :param domain: Домен API.
-        :type domain: str
-        :param port: Порт API.
-        :type port: int
+        Инициализирует экземпляр класса AliexpressAffiliateHotproductQueryRequest.
+        
+        :param domain: Домен API Aliexpress. По умолчанию "api-sg.aliexpress.com".
+        :type domain: str, optional
+        :param port: Порт API Aliexpress. По умолчанию 80.
+        :type port: int, optional
         """
-        #  Вызов конструктора родительского класса RestApi
         RestApi.__init__(self, domain, port)
-        #  Инициализация атрибутов класса
+        #: Подпись приложения.
         self.app_signature = None
+        #: Идентификаторы категорий.
         self.category_ids = None
+        #: Количество дней доставки.
         self.delivery_days = None
+        #: Поля для отбора.
         self.fields = None
+        #: Ключевые слова для поиска.
         self.keywords = None
+        #: Максимальная цена продажи.
         self.max_sale_price = None
+        #: Минимальная цена продажи.
         self.min_sale_price = None
+        #: Номер страницы.
         self.page_no = None
+        #: Размер страницы.
         self.page_size = None
+        #: Тип продукта платформы.
         self.platform_product_type = None
+        #: Страна доставки.
         self.ship_to_country = None
+        #: Сортировка.
         self.sort = None
+        #: Целевая валюта.
         self.target_currency = None
+        #: Целевой язык.
         self.target_language = None
+        #: Идентификатор отслеживания.
         self.tracking_id = None
-
 
     def getapiname(self):
         """
-        Возвращает имя API для запроса горячих товаров.
+        Возвращает имя API.
 
         :return: Имя API.
         :rtype: str
         """
-        #  Возвращает имя API
         return 'aliexpress.affiliate.hotproduct.query'
 ```

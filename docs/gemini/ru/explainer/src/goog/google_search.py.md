@@ -1,237 +1,293 @@
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+    которые импортируются при создании диаграммы.
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    ```
+
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    -   **Переменные**: Их типы и использование.
+    -   Выделите потенциальные ошибки или области для улучшения.
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+```markdown
 ## <алгоритм>
 
-1.  **Инициализация `GoogleHtmlParser`**:
-    *   Принимает на вход HTML-код страницы поиска Google (`html_str`) и тип пользовательского агента (`user_agent`, по умолчанию 'desktop').
-    *   Преобразует HTML-код в дерево элементов (`self.tree`) с помощью `html.fromstring()`.
-    *   Устанавливает атрибут `user_agent` в 'mobile' или 'desktop' (по умолчанию).
-    *   *Пример*: `parser = GoogleHtmlParser(html_code, 'mobile')`
+**1. Инициализация (GoogleHtmlParser.__init__)**
+    *   **Вход**: HTML-строка (`html_str`) и (необязательно) тип user agent (`user_agent`, по умолчанию 'desktop').
+    *   **Действие**:
+        *   Создается дерево документа HTML с помощью `html.fromstring(html_str)`.
+        *   Устанавливается атрибут `user_agent` (проверка на 'mobile' или 'desktop', иначе 'desktop').
+    *   **Выход**: Объект `GoogleHtmlParser` с атрибутами `tree` (дерево HTML) и `user_agent`.
+    *   **Пример:**
+        *   `html_str` = `<html><head><title>Google Search</title></head><body><div id="result-stats">примерно 123,000,000 результатов</div><div class="g"><a href="https://example.com"><h3>Example</h3></a></div></body></html>`
+        *   `user_agent` = 'desktop'
+        *   Создается объект парсера с деревом документа и `user_agent` = 'desktop'
 
-2.  **Очистка текста `_clean(content)`**:
-    *   Принимает на вход строку `content`.
-    *   Удаляет начальные и конечные пробелы (`strip()`).
-    *   Заменяет множественные пробелы на одиночные.
-    *   Возвращает очищенную строку.
-    *   *Пример*: `_clean("   hello  world  ")` вернет `"hello world"`
+**2. Очистка строки (_clean)**
+    *   **Вход**: Строка (`content`).
+    *   **Действие**:
+        *   Удаляет начальные и конечные пробелы.
+        *   Заменяет множественные пробелы на одинарные.
+    *   **Выход**: Очищенная строка или пустая строка, если входная строка пуста.
+    *   **Пример:**
+        *   `content` = "  Пример   строки  "
+        *   Возвращает "Пример строки"
+        *   `content` = None
+        *   Возвращает ""
 
-3.  **Нормализация ключа словаря `_normalize_dict_key(content)`**:
-    *   Принимает строку `content`.
-    *   Заменяет пробелы на подчеркивания.
-    *   Удаляет двоеточия.
-    *   Приводит строку к нижнему регистру.
-    *   Удаляет подчеркивания в начале и конце строки.
-    *   Возвращает нормализованную строку.
-    *   *Пример*: `_normalize_dict_key("  Some Key: Value ")` вернет `"some_key_value"`
+**3. Нормализация ключа словаря (_normalize_dict_key)**
+    *   **Вход**: Строка (`content`).
+    *   **Действие**:
+        *   Заменяет пробелы на подчеркивания.
+        *   Удаляет двоеточия.
+        *   Приводит строку к нижнему регистру.
+        *   Удаляет подчеркивания в начале и конце строки.
+    *   **Выход**: Нормализованная строка.
+    *   **Пример:**
+        *   `content` = "  Пример ключа:  "
+        *   Возвращает "пример_ключа"
 
-4.  **Получение количества результатов `_get_estimated_results()`**:
-    *   Ищет элемент, содержащий общее количество результатов, с помощью XPath (`'//*[@id="result-stats"]/text()'`).
-    *   Извлекает число из текста и возвращает его в виде целого числа.
-    *   *Пример*: Если найдена строка "About 1,234,567 results", вернет `1234567`.
+**4. Получение количества результатов поиска (_get_estimated_results)**
+    *   **Вход**: Нет (использует `self.tree`).
+    *   **Действие**:
+        *   Извлекает текст элемента с id `result-stats` с помощью XPath.
+        *   Извлекает число из текста, удаляя запятые.
+    *   **Выход**: Количество результатов в виде целого числа.
+    *   **Пример:**
+        *   `self.tree` содержит `<div id="result-stats">примерно 123,456,789 результатов</div>`
+        *   Возвращает 123456789
 
-5.  **Получение органических результатов `_get_organic()`**:
-    *   Ищет блоки с органическими результатами с помощью XPath (`'//div[@class="g"]'`).
-    *   Для каждого результата извлекает URL, заголовок и сниппет (включая rich snippet) используя XPath запросы.
-    *   Формирует словарь с ключами `url`, `title`, `snippet` и `rich_snippet` для каждого результата.
-    *   Возвращает список словарей.
-     *   *Пример*: `[{'url': 'https://example.com', 'title': 'Example', 'snippet': 'Description', 'rich_snippet': 'Rich Description'}, ...]`
+**5. Получение органических результатов (_get_organic)**
+    *   **Вход**: Нет (использует `self.tree`).
+    *   **Действие**:
+        *   Извлекает все элементы `div` с классом `g` (контейнеры органических результатов).
+        *   Для каждого результата извлекает URL, заголовок, сниппет и расширенный сниппет (если есть).
+    *   **Выход**: Список словарей с данными органических результатов.
+    *   **Пример:**
+        *   `self.tree` содержит HTML с несколькими результатами поиска
+        *   Возвращает `[{'url': 'https://example.com', 'title': 'Example', 'snippet': 'Описание', 'rich_snippet': None}, ...]`
 
-6.  **Получение featured snippet `_get_featured_snippet()`**:
-    *   Ищет блок featured snippet с помощью XPath (`'//div[contains(@class, "kp-blk")]'`).
-    *   Извлекает заголовок и URL.
-    *   Возвращает словарь с ключами `title` и `url` или `None`, если не найден.
-      *   *Пример*: `{'title': 'Featured Snippet Title', 'url': 'https://featured.example.com'}`
+**6. Получение Featured Snippet (_get_featured_snippet)**
+    *   **Вход**: Нет (использует `self.tree`).
+    *   **Действие**:
+        *   Извлекает элемент `div` с классом, содержащим `kp-blk` (контейнер featured snippet).
+        *   Если элемент есть, извлекает заголовок и URL.
+    *   **Выход**: Словарь с заголовком и URL featured snippet или None.
+    *    **Пример:**
+         *   `self.tree` содержит HTML с featured snippet.
+         *   Возвращает `{'title': 'Заголовок', 'url': 'https://example.com/fs'}`
 
-7.  **Получение карточки знаний `_get_knowledge_card()`**:
-    *   Ищет блок карточки знаний с помощью XPath (`'//div[contains(@class, "kp-wholepage")]'`).
-    *   Извлекает заголовок, подзаголовок, описание и дополнительную информацию.
-    *   Формирует словарь с ключами `title`, `subtitle`, `description`, `more_info`.
-    *   Возвращает словарь или `None`, если не найдена.
-      *   *Пример*: `{'title': 'Knowledge Card Title', 'subtitle': 'Subtitle', 'description': 'Description', 'more_info': [{'key1': 'value1'}, {'key2': 'value2'}]}`
+**7. Получение карточки знаний (_get_knowledge_card)**
+    *   **Вход**: Нет (использует `self.tree`).
+    *   **Действие**:
+        *   Извлекает элемент `div` с классом, содержащим `kp-wholepage` (контейнер карточки знаний).
+        *   Если элемент есть, извлекает заголовок, подзаголовок, описание и дополнительную информацию.
+    *   **Выход**: Словарь с данными карточки знаний или None.
+     *    **Пример:**
+         *  `self.tree` содержит HTML с карточкой знаний.
+         *  Возвращает `{'title': 'Карточка знаний', 'subtitle': 'Подзаголовок', 'description': 'Описание', 'more_info': [{'key1': 'value1'}, {'key2': 'value2'}]}`
 
-8.  **Получение скроллируемых секций `_get_scrolling_sections()`**:
-    *   Ищет скроллируемые секции с помощью XPath (`'//g-section-with-header'`).
-    *   Для каждой секции извлекает заголовок и данные (заголовок и URL).
-    *   Формирует список словарей с ключами `section_title` и `section_data`.
-    *   Возвращает список словарей.
-     *   *Пример*: `[{'section_title': 'Top Stories', 'section_data': [{'title': 'Story Title', 'url': 'https://story.example.com'}, ...]}, ...]`
+**8. Получение скроллируемых секций (_get_scrolling_sections)**
+    *   **Вход**: Нет (использует `self.tree`).
+    *   **Действие**:
+        *   Извлекает все элементы `g-section-with-header` (контейнеры скроллируемых виджетов).
+        *   Для каждой секции извлекает заголовок и данные внутри виджета (заголовок и URL).
+    *   **Выход**: Список словарей с данными скроллируемых виджетов.
+     *    **Пример:**
+         *  `self.tree` содержит HTML со скроллируемыми секциями.
+         *  Возвращает `[{'section_title': 'Top Stories', 'section_data': [{'title': 'Title 1', 'url': 'https://example.com/1'}, {'title': 'Title 2', 'url': 'https://example.com/2'}]}, ...]`
 
-9.  **Получение всех данных `get_data()`**:
-    *   Определяет, какой пользовательский агент (mobile/desktop).
-    *   Вызывает соответствующие методы для извлечения данных:
-        *   Для desktop: `_get_estimated_results()`, `_get_featured_snippet()`, `_get_knowledge_card()`, `_get_organic()`, `_get_scrolling_sections()`.
-    *   Формирует общий словарь с собранными данными.
-    *   Возвращает словарь со всеми данными.
-    *   *Пример*: `{'estimated_results': 1234567, 'featured_snippet': {'title': '...', 'url': '...'}, 'knowledge_card': {'title': '...', 'subtitle': '...', 'description': '...', 'more_info': [...]}, 'organic_results': [{'url': '...', 'title': '...', 'snippet': '...', 'rich_snippet': '...'}, ...], 'scrolling_widgets': [{'section_title': '...', 'section_data': [{'title': '...', 'url': '...'}, ...]}, ...]}`
-
-## <mermaid>
+**9. Получение итоговых данных (get_data)**
+    *   **Вход**: Нет (использует `self` атрибут  `user_agent`).
+    *   **Действие**:
+        *   В зависимости от `user_agent` вызывает методы для извлечения данных (`_get_estimated_results`, `_get_featured_snippet`, `_get_knowledge_card`, `_get_organic`, `_get_scrolling_sections`).
+        *   Формирует словарь со всеми полученными данными.
+    *   **Выход**: Словарь со всеми данными поисковой страницы.
+    *   **Пример:**
+        *   `user_agent` = 'desktop'
+        *   Возвращает `{'estimated_results': 123456789, 'featured_snippet': {'title': 'Заголовок', 'url': 'https://example.com/fs'}, 'knowledge_card': {'title': 'Карточка знаний', 'subtitle': 'Подзаголовок', 'description': 'Описание', 'more_info': [{'key1': 'value1'}]}, 'organic_results': [{'url': 'https://example.com', 'title': 'Example', 'snippet': 'Описание', 'rich_snippet': None}], 'scrolling_widgets': [{'section_title': 'Top Stories', 'section_data': [{'title': 'Title 1', 'url': 'https://example.com/1'}]}]}`
 
 ```mermaid
-graph LR
-    A[GoogleHtmlParser.__init__] --> B(html.fromstring);
-    B --> C[User Agent Check];
-    C -- "user_agent = 'mobile' or 'desktop'" --> D(Set User Agent);
-    C -- "user_agent not in ['mobile', 'desktop']" --> E(Set User Agent to 'desktop');
-    D --> F[GoogleHtmlParser Instance];
-    E --> F
-    F --> G[GoogleHtmlParser._clean];
-    G --> H(String Cleaning);
-    H --> I[Return Cleaned String];
-    F --> J[GoogleHtmlParser._normalize_dict_key];
-     J --> K(String Normalization);
-     K --> L[Return Normalized String];
-    F --> M[GoogleHtmlParser._get_estimated_results];
-    M --> N(XPath: Get Result Count);
-    N --> O(Return Result Count);
-    F --> P[GoogleHtmlParser._get_organic];
-    P --> Q(XPath: Get Organic Results);
-    Q --> R(Extract URL, Title, Snippet);
-    R --> S(Return Organic Results List);
-    F --> T[GoogleHtmlParser._get_featured_snippet];
-     T --> U(XPath: Get Featured Snippet);
-    U --> V(Extract Title, URL);
-     V --> W(Return Featured Snippet Dictionary or None);
-    F --> X[GoogleHtmlParser._get_knowledge_card];
-    X --> Y(XPath: Get Knowledge Card);
-    Y --> Z(Extract Title, Subtitle, Description, More Info);
-    Z --> AA(Return Knowledge Card Dictionary or None);
-    F --> BB[GoogleHtmlParser._get_scrolling_sections];
-    BB --> CC(XPath: Get Scrolling Sections);
-    CC --> DD(Extract Section Title, Data);
-    DD --> EE(Return Scrolling Sections List);
-    F --> FF[GoogleHtmlParser.get_data];
-    FF -- "user_agent == 'desktop'" --> GG(Call all private methods);
-    GG --> HH(Return all results as dictionary)
-    
-    
-    
-    classDef classStyle fill:#f9f,stroke:#333,stroke-width:2px
-    class A,F,G,J,M,P,T,X,BB,FF classStyle
+flowchart TD
+    A[GoogleHtmlParser.__init__] --> B{user_agent == 'mobile' or 'desktop'};
+    B -- Yes --> C[self.user_agent = user_agent];
+    B -- No --> D[self.user_agent = 'desktop'];
+    C --> E[self.tree = html.fromstring(html_str)];
+    D --> E;
+    E --> F[GoogleHtmlParser._clean];
+    F --> G[GoogleHtmlParser._normalize_dict_key];
+    G --> H[GoogleHtmlParser._get_estimated_results];
+    H --> I[GoogleHtmlParser._get_organic];
+    I --> J[GoogleHtmlParser._get_featured_snippet];
+    J --> K[GoogleHtmlParser._get_knowledge_card];
+    K --> L[GoogleHtmlParser._get_scrolling_sections];
+    L --> M{self.user_agent == 'desktop'};
+    M -- Yes --> N[GoogleHtmlParser.get_data: get all data];
+    M -- No --> O[GoogleHtmlParser.get_data: returns empty dict];
+     N --> P[return data];
+     O --> P;
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style N fill:#ccf,stroke:#333,stroke-width:2px
 ```
-
-**Описание диаграммы `mermaid`**:
-
-*   `A[GoogleHtmlParser.\_\_init\_\_]`: Начальный узел, представляющий конструктор класса `GoogleHtmlParser`.
-*   `B(html.fromstring)`: Функция для преобразования HTML-строки в дерево элементов.
-*   `C[User Agent Check]`: Проверка `user_agent` на 'mobile' или 'desktop'.
-*   `D(Set User Agent)`: Установка значения user agent если он правильный.
-*  `E(Set User Agent to 'desktop')`: Установка user agent на default значение.
-*   `F[GoogleHtmlParser Instance]`: Представляет созданный экземпляр класса.
-*   `G[GoogleHtmlParser._clean]`: Метод для очистки строки от лишних пробелов.
-*   `H(String Cleaning)`: Процесс очистки строки.
-*    `I[Return Cleaned String]`: Возвращает очищенную строку.
-*   `J[GoogleHtmlParser._normalize_dict_key]`: Метод для нормализации строки для ключей словаря.
-*   `K(String Normalization)`: Процесс нормализации строки.
-*   `L[Return Normalized String]`: Возвращает нормализованную строку.
-*   `M[GoogleHtmlParser._get_estimated_results]`: Метод для получения количества результатов.
-*   `N(XPath: Get Result Count)`: Извлечение количества результатов с помощью XPath.
-*    `O(Return Result Count)`: Возвращает количество результатов.
-*   `P[GoogleHtmlParser._get_organic]`: Метод для получения органических результатов.
-*   `Q(XPath: Get Organic Results)`: Извлечение органических результатов с помощью XPath.
-*   `R(Extract URL, Title, Snippet)`: Извлечение URL, заголовка и сниппета из результатов.
-*   `S(Return Organic Results List)`: Возвращает список органических результатов.
-*   `T[GoogleHtmlParser._get_featured_snippet]`: Метод для получения featured snippet.
-*   `U(XPath: Get Featured Snippet)`: Извлечение featured snippet с помощью XPath.
-*    `V(Extract Title, URL)`: Извлечение заголовка и URL из featured snippet.
-*   `W(Return Featured Snippet Dictionary or None)`: Возвращает словарь featured snippet или None.
-*   `X[GoogleHtmlParser._get_knowledge_card]`: Метод для получения карточки знаний.
-*  `Y(XPath: Get Knowledge Card)`: Извлечение карточки знаний с помощью XPath.
-* `Z(Extract Title, Subtitle, Description, More Info)`: Извлечение данных из карточки знаний.
-* `AA(Return Knowledge Card Dictionary or None)`: Возвращает словарь карточки знаний или None.
-*   `BB[GoogleHtmlParser._get_scrolling_sections]`: Метод для получения скроллируемых секций.
-*   `CC(XPath: Get Scrolling Sections)`: Извлечение скроллируемых секций с помощью XPath.
-* `DD(Extract Section Title, Data)`: Извлечение данных из скроллируемых секций.
-* `EE(Return Scrolling Sections List)`: Возвращает список скроллируемых секций.
-*   `FF[GoogleHtmlParser.get_data]`: Метод для получения всех данных.
-*   `GG(Call all private methods)`: Вызов всех частных методов для сбора данных.
-*    `HH(Return all results as dictionary)`: Возвращает общий словарь со всеми результатами.
 
 ## <объяснение>
 
-**Импорты**:
+### Импорты:
 
-*   `from lxml import html`: Импортирует модуль `html` из библиотеки `lxml`, используемый для парсинга HTML. `lxml` является сторонней библиотекой, устанавливается с помощью pip, и она является более быстрой и более гибкой чем стандартная библиотека для парсинга html.
+*   **`from lxml import html`**:
+    *   **Назначение**: Импортирует модуль `html` из библиотеки `lxml`, который используется для парсинга HTML-документов.
+    *   **Взаимосвязь**: `lxml` является внешней библиотекой и используется для обработки HTML. Этот импорт позволяет использовать `html.fromstring()` для преобразования HTML-строки в дерево элементов, с которым удобно работать.
 
-**Класс `GoogleHtmlParser`**:
+### Классы:
 
-*   **Роль**: Парсит HTML-код страницы поисковой выдачи Google и извлекает из него данные (количество результатов, органические результаты, featured snippet, карточка знаний, и т.д.).
-*   **Атрибуты**:
-    *   `tree (html.Element)`: Дерево элементов HTML, полученное с помощью `html.fromstring()`.
-    *   `user_agent (str)`: Тип пользовательского агента ('mobile' или 'desktop').
-*   **Методы**:
-    *   `__init__(self, html_str: str, user_agent: str = 'desktop') -> None`: Конструктор класса, инициализирует дерево HTML и устанавливает user agent.
-    *   `_clean(self, content: str) -> str`: Очищает строку от лишних пробелов.
-    *   `_normalize_dict_key(self, content: str) -> str`: Нормализует строку для использования в качестве ключа словаря.
-    *    `_get_estimated_results(self) -> int`: Извлекает количество результатов поиска.
-    *    `_get_organic(self) -> list`: Извлекает органические результаты.
-    *   `_get_featured_snippet(self) -> dict | None`: Извлекает featured snippet.
-    *   `_get_knowledge_card(self) -> dict | None`: Извлекает карточку знаний.
-    *   `_get_scrolling_sections(self) -> list`: Извлекает данные из скроллируемых виджетов.
-    *   `get_data(self) -> dict`: Собирает все данные и возвращает в виде словаря.
+*   **`GoogleHtmlParser`**:
+    *   **Роль**: Класс, предназначенный для парсинга HTML-кода страниц поисковой выдачи Google. Он инкапсулирует всю логику разбора, нормализации и извлечения данных.
+    *   **Атрибуты**:
+        *   `tree` (`html.Element`): Дерево документа, полученное после парсинга HTML-строки.
+        *   `user_agent` (`str`): Тип пользовательского агента (desktop или mobile), используемый при запросе HTML.
+    *   **Методы**:
+        *   `__init__(self, html_str: str, user_agent: str = 'desktop') -> None`: Конструктор класса. Инициализирует парсер, создавая дерево документа и устанавливая `user_agent`.
+        *   `_clean(self, content: str) -> str`: Вспомогательный метод для очистки строки от лишних пробелов.
+        *   `_normalize_dict_key(self, content: str) -> str`: Вспомогательный метод для нормализации строки для использования в качестве ключа словаря.
+        *   `_get_estimated_results(self) -> int`: Метод для получения количества результатов поиска.
+        *   `_get_organic(self) -> list`: Метод для получения органических результатов поиска.
+        *   `_get_featured_snippet(self) -> dict | None`: Метод для получения featured snippet.
+        *   `_get_knowledge_card(self) -> dict | None`: Метод для получения карточки знаний.
+        *   `_get_scrolling_sections(self) -> list`: Метод для получения данных скроллируемых виджетов.
+        *   `get_data(self) -> dict`: Метод для сбора всех данных со страницы поисковой выдачи и возврата в виде словаря.
+    *   **Взаимодействие**: Класс `GoogleHtmlParser` работает как самостоятельная единица. Он принимает HTML-строку на входе и возвращает структурированные данные на выходе.
 
-**Функции**:
+### Функции:
 
-*   `_clean(self, content: str) -> str`:
-    *   **Аргументы**: `content` (строка для очистки).
-    *   **Возвращаемое значение**: Очищенная строка.
-    *   **Назначение**: Удаляет начальные и конечные пробелы, заменяет множественные пробелы на одинарные.
-    *   **Пример**: `_clean("  hello   world  ")` вернет `"hello world"`
-*   `_normalize_dict_key(self, content: str) -> str`:
-    *   **Аргументы**: `content` (строка для нормализации).
-    *   **Возвращаемое значение**: Нормализованная строка.
-    *   **Назначение**: Заменяет пробелы на `_`, удаляет двоеточия, приводит к нижнему регистру.
-    *   **Пример**: `_normalize_dict_key("  Some Key: Value ")` вернет `"some_key_value"`
-*   `_get_estimated_results(self) -> int`:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Целое число (количество результатов).
-    *   **Назначение**: Извлекает и возвращает количество найденных результатов.
-    *   **Пример**: Вернет `1234567` из строки "About 1,234,567 results".
-*   `_get_organic(self) -> list`:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Список словарей с органическими результатами.
-    *   **Назначение**: Извлекает и возвращает список органических результатов.
-    *   **Пример**: `[{'url': 'https://example.com', 'title': 'Example', 'snippet': 'Description', 'rich_snippet': 'Rich Description'}, ...]`
-*   `_get_featured_snippet(self) -> dict | None`:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Словарь с заголовком и URL featured snippet или `None`.
-    *   **Назначение**: Извлекает и возвращает featured snippet, если он есть.
-    *   **Пример**: `{'title': 'Featured Snippet Title', 'url': 'https://featured.example.com'}`
-*   `_get_knowledge_card(self) -> dict | None`:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Словарь с данными карточки знаний или `None`.
-    *   **Назначение**: Извлекает и возвращает карточку знаний, если она есть.
-    *   **Пример**: `{'title': 'Knowledge Card Title', 'subtitle': 'Subtitle', 'description': 'Description', 'more_info': [{'key1': 'value1'}, {'key2': 'value2'}]}`
-*   `_get_scrolling_sections(self) -> list`:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Список словарей с данными из скроллируемых виджетов.
-    *   **Назначение**: Извлекает данные из виджетов (например, "Top Stories").
-    *  **Пример**: `[{'section_title': 'Top Stories', 'section_data': [{'title': 'Story Title', 'url': 'https://story.example.com'}, ...]}, ...]`
-*   `get_data(self) -> dict`:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Словарь со всеми данными.
-    *   **Назначение**: Собирает и возвращает все данные со страницы.
-    *   **Пример**: `{'estimated_results': 1234567, 'featured_snippet': {'title': '...', 'url': '...'}, 'knowledge_card': {'title': '...', 'subtitle': '...', 'description': '...', 'more_info': [...]}, 'organic_results': [{'url': '...', 'title': '...', 'snippet': '...', 'rich_snippet': '...'}, ...], 'scrolling_widgets': [{'section_title': '...', 'section_data': [{'title': '...', 'url': '...'}, ...]}, ...]}`
+*   **`__init__(self, html_str: str, user_agent: str = 'desktop') -> None`**:
+    *   **Аргументы**:
+        *   `html_str` (`str`): HTML-код страницы, которую нужно распарсить.
+        *   `user_agent` (`str`, по умолчанию `'desktop'`): User agent, используемый при получении HTML.
+    *   **Возвращаемое значение**: `None`
+    *   **Назначение**: Инициализация объекта `GoogleHtmlParser`. Создает дерево документа из HTML-строки и устанавливает тип `user_agent`.
+    *   **Пример:**
+        ```python
+        parser = GoogleHtmlParser(html_string, user_agent='mobile')
+        ```
+*   **`_clean(self, content: str) -> str`**:
+    *   **Аргументы**:
+        *   `content` (`str`): Строка, которую нужно очистить.
+    *   **Возвращаемое значение**: `str` : Очищенная строка или пустая строка.
+    *   **Назначение**: Очистка строки от лишних пробелов.
+    *   **Пример:**
+        ```python
+        cleaned_string = parser._clean("  Example   string   ") # Returns "Example string"
+        ```
+*   **`_normalize_dict_key(self, content: str) -> str`**:
+    *   **Аргументы**:
+        *   `content` (`str`): Строка, которую нужно нормализовать.
+    *   **Возвращаемое значение**: `str`: Нормализованная строка.
+    *   **Назначение**: Нормализация строки для использования в качестве ключа словаря.
+    *   **Пример:**
+        ```python
+        normalized_key = parser._normalize_dict_key("  Example key:  ")  # Returns "example_key"
+        ```
+*   **`_get_estimated_results(self) -> int`**:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: `int`: Количество результатов поиска.
+    *   **Назначение**: Извлечение количества результатов поиска со страницы Google.
+    *   **Пример:**
+        ```python
+        estimated_results = parser._get_estimated_results() # Returns 123000000
+        ```
+*   **`_get_organic(self) -> list`**:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: `list`: Список словарей с данными органических результатов.
+    *   **Назначение**: Извлечение органических результатов со страницы.
+    *   **Пример:**
+        ```python
+        organic_results = parser._get_organic() # Returns  [{'url': 'https://example.com', 'title': 'Example', 'snippet': 'Описание', 'rich_snippet': None}, ...]
+        ```
+*   **`_get_featured_snippet(self) -> dict | None`**:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: `dict | None`: Словарь с заголовком и URL featured snippet или None.
+    *   **Назначение**: Извлечение данных о featured snippet (если есть).
+    *    **Пример:**
+        ```python
+        featured_snippet = parser._get_featured_snippet() # Returns {'title': 'Заголовок', 'url': 'https://example.com/fs'}
+        ```
+*   **`_get_knowledge_card(self) -> dict | None`**:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: `dict | None`: Словарь с данными карточки знаний или `None`.
+    *   **Назначение**: Извлечение данных карточки знаний (если есть).
+    *    **Пример:**
+        ```python
+        knowledge_card = parser._get_knowledge_card() # Returns {'title': 'Карточка знаний', 'subtitle': 'Подзаголовок', 'description': 'Описание', 'more_info': [{'key1': 'value1'}, {'key2': 'value2'}]}
+        ```
+*   **`_get_scrolling_sections(self) -> list`**:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: `list`: Список словарей с данными из скроллируемых виджетов.
+    *   **Назначение**: Извлечение данных из скроллируемых виджетов.
+    *    **Пример:**
+        ```python
+         scrolling_sections = parser._get_scrolling_sections() # Returns [{'section_title': 'Top Stories', 'section_data': [{'title': 'Title 1', 'url': 'https://example.com/1'}, {'title': 'Title 2', 'url': 'https://example.com/2'}]}, ...]
+        ```
+*   **`get_data(self) -> dict`**:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: `dict`: Словарь с данными поисковой страницы.
+    *   **Назначение**: Сбор всех данных со страницы поисковой выдачи.
+    *   **Пример:**
+        ```python
+        all_data = parser.get_data()
+        # Returns  {'estimated_results': 123456789, 'featured_snippet': {'title': 'Заголовок', 'url': 'https://example.com/fs'}, 'knowledge_card': {'title': 'Карточка знаний', 'subtitle': 'Подзаголовок', 'description': 'Описание', 'more_info': [{'key1': 'value1'}]}, 'organic_results': [{'url': 'https://example.com', 'title': 'Example', 'snippet': 'Описание', 'rich_snippet': None}], 'scrolling_widgets': [{'section_title': 'Top Stories', 'section_data': [{'title': 'Title 1', 'url': 'https://example.com/1'}]}]}
+        ```
 
-**Переменные**:
+### Переменные:
 
-*   `MODE`: Глобальная переменная, определяющая режим работы (по умолчанию 'dev').
-*   `self.tree`: Дерево HTML-элементов, полученное после парсинга.
-*   `self.user_agent`: Тип пользовательского агента ('mobile' или 'desktop').
-*   Локальные переменные внутри методов используются для промежуточного хранения данных, например `estimated_results`, `organic`, `fs`, `kc_el`, `sections`, `data`.
+*   `MODE = 'dev'`
+    *   **Тип**: `str`
+    *   **Использование**: Указывает на текущий режим работы. Используется для переключения между разными средами исполнения, например, разработкой и продакшеном.
+*   `html_str`:
+    *   **Тип**: `str`
+    *   **Использование**: Содержит HTML-код, полученный от поисковой выдачи Google.
+*   `user_agent`:
+    *   **Тип**: `str`
+    *   **Использование**: Определяет, как браузер представляется серверу Google. Может принимать значения `mobile` или `desktop`.
 
-**Потенциальные ошибки и области для улучшения**:
+### Потенциальные ошибки и области для улучшения:
 
-*   **Зависимость от структуры HTML Google**: Код сильно зависит от HTML-структуры страниц Google Search. Любое изменение в HTML может привести к неработоспособности парсера.
-*   **Обработка ошибок**: Недостаточная обработка ошибок, если какие-либо элементы не найдены, могут возникать исключения.
-*   **Отсутствие обработки mobile версии**: Присутствует обработка `desktop` версии.
-*  **Производительность**: XPath запросы могут быть не оптимальными.
-*   **Масштабируемость**: Код не рассчитан на обработку больших объемов HTML-данных одновременно.
+1.  **XPath-запросы**:
+    *   XPath-запросы могут быть хрупкими и ломаться при изменениях в HTML-структуре Google.
+    *   **Улучшение**: Необходимо предусмотреть обработку ошибок при не нахождении элементов, возможно, использовать более гибкие селекторы и проверять наличие элементов перед обращением к ним.
+2.  **Обработка ошибок**:
+    *   В коде отсутствует явная обработка исключений, таких как ошибки парсинга или отсутствующие элементы.
+    *   **Улучшение**: Добавить блоки `try-except` для обработки возможных исключений.
+3.  **Поддержка мобильной версии**:
+    *   В текущей реализации метод `get_data` не обрабатывает мобильную версию, просто возвращая пустой словарь.
+    *   **Улучшение**:  Разработать логику для парсинга мобильной версии поисковой выдачи.
+4.  **Производительность**:
+    *   XPath-запросы могут быть не самыми быстрыми, особенно на больших HTML-страницах.
+    *   **Улучшение**: Рассмотреть возможность использования более эффективных методов поиска, если это критично.
 
-**Взаимосвязь с другими частями проекта**:
+### Взаимосвязи с другими частями проекта:
+*   **src.**: Этот файл (`google_search.py`) находится в пакете `src.goog`, что предполагает, что он является частью большего проекта. Остальные части проекта могут использовать класс `GoogleHtmlParser` для получения данных с поисковых страниц Google.
+*   **Общая структура проекта**: Вероятно, есть другие модули, отвечающие за получение HTML-кода, который передается в `GoogleHtmlParser`.
+*   **Настройки проекта**: Переменная `MODE` может быть использована для управления поведением всего проекта.
 
-*   Данный модуль `google_search.py` находится в директории `hypotez/src/goog`, что указывает на его принадлежность к функциональности работы с Google.
-*   Он является частью проекта `hypotez`, который, вероятно, занимается анализом или обработкой поисковых данных.
-*   Результаты работы данного парсера могут использоваться в других модулях проекта для дальнейшей обработки или анализа.
-
-**Цепочка взаимосвязей**:
-1.  HTML-код поисковой выдачи Google (полученный, например, через `requests`) поступает в конструктор `GoogleHtmlParser`.
-2.  `GoogleHtmlParser` обрабатывает HTML-код, извлекая необходимые данные.
-3.  Результаты парсинга используются для анализа или отображения в других модулях проекта.
+Данный анализ предоставляет подробное представление о функциональности кода, его структуре и взаимосвязях.
+```
