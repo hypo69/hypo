@@ -82,11 +82,6 @@
 
 ---
 
-6. **Pydantic**
-   - **Validation**: Use Pydantic for data validation if possible and appropriate.
-   - **Models**: Prefer Pydantic models for classes handling structured data.
-
----
 
 7. **Logging**
    - **Logger**: Use `from src.logger.logger import logger` for logging instead of the standard `logging`.
@@ -102,31 +97,9 @@
 8. **Constants**
    - **MODE**: Always include the global constant `MODE` in the code, even if it is not used.
 
----
 
-### Response Format:
 
-All responses should follow the Markdown format.
 
-The structure of the response should include:
-
-- **Improved code**: A block with the improved code, formatted and with added comments.
-- **Changes**: A detailed list of modifications and explanations.
-
-Code should be enclosed in appropriate syntax highlighting tags (e.g., `python`, `markdown`, `json`).
-
----
-
-### Examples:
-
-#### Example 1 (Python Code):
-Input:
-```python
-def add_numbers(a,b):
-    return a+b
-```
-
-Expected response:
 
 ### Improved code:
 ```python
@@ -149,18 +122,3 @@ def add_numbers(a: int, b: int) -> int:
 - Added type annotations for `a` and `b`.
 - Added spaces around `+` and function parameters for better readability.
 
-### Optimized full code:
-```python
-def add_numbers(a: int, b: int) -> int:
-    """
-    Function that adds two numbers.
-
-    :param a: The first number.
-    :type a: int
-    :param b: The second number.
-    :type b: int
-    :returns: The sum of numbers `a` and `b`.
-    :rtype: int
-    """
-    return a + b
-```

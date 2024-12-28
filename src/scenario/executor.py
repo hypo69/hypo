@@ -187,11 +187,8 @@ def insert_grabbed_data(product_fields: ProductFields):
     asyncio.run(execute_PrestaShop_insert(product_fields))
 
 
-async def execute_PrestaShop_insert_async(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
-    await execute_PrestaShop_insert(f, coupon_code, start_date, end_date)
 
-
-def execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
+async def execute_PrestaShop_insert(f: ProductFields, coupon_code: str = None, start_date: str = None, end_date: str = None) -> bool:
     """
     Insert the product into PrestaShop.
 

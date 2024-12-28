@@ -1,75 +1,21 @@
-## \file hypotez/src/endpoints/prestashop/api/api.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
-.. module:: src.endpoints.prestashop.api 
-	:platform: Windows, Unix
-	:synopsis:
+Module for interacting with the PrestaShop API
+=========================================================================================
 
-"""
-MODE = 'dev'
+This module provides a class, `PrestaShop`, to interact with the PrestaShop webservice API,
+using JSON and XML for message formatting. It supports CRUD operations, searching,
+and uploading images, with error handling for responses.
 
+Example usage
+-------------
 
-import os
-import sys
-from enum import Enum
-from http.client import HTTPConnection
-from requests import Session
-from requests.models import PreparedRequest
-from typing import Dict, List
-from pathlib import Path
-from xml.etree import ElementTree
-from xml.parsers.expat import ExpatError
+.. code-block:: python
 
-import header
-from src import gs
-from src.utils.file import save_text_file
-from src.utils.convertors.base64 import  base64_to_tmpfile
-from src.utils.convertors.dict import dict2xml
-from src.utils.convertors.xml2dict import xml2dict
-from src.utils.image import save_png_from_url
-from src.utils.printer import pprint
-from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.logger.logger import logger
-from src.logger.exceptions import PrestaShopException, PrestaShopAuthenticationError
-
-
-class Format(Enum):
-    """Data types return (JSON, XML)
-
-    @details
-    @param Enum (int): 1 => JSON, 2 => XML
-    @deprecated - я предпочитаю JSON 👍 :))
-    """
-    JSON = 'JSON'
-    XML = 'XML'
-
-
-class PrestaShop:
-    """ Interact with PrestaShop webservice API, using JSON and XML for message
-
-    @details
-    This class provides methods to interact with the PrestaShop API, allowing for CRUD operations, searching, and uploading images.
-    It also provides error handling for responses and methods to handle the API's data.
-
-    @param API_KEY `str`: The API key generated from PrestaShop.
-    @param API_DOMAIN `str`: The domain of the PrestaShop shop (e.g., https://myPrestaShop.com).
-    @param data_format `str`: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
-    @param default_lang `int`: Default language ID. Defaults to 1.
-    @param debug `bool`: Activate debug mode. Defaults to True.
-
-    @throws PrestaShopAuthenticationError: When the API key is wrong or does not exist.
-    @throws PrestaShopException: For generic PrestaShop WebServices errors.
-
-    Example usage:
-    @code
-    from PrestaShop import PrestaShop, Format
+    from src.endpoints.prestashop.api.api import PrestaShop
 
     api = PrestaShop(
-        API_DOMAIN = "https://myPrestaShop.com",
-        API_KEY="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        API_DOMAIN='https://your-prestashop-domain.com',
+        API_KEY='your_api_key',
         default_lang=1,
         debug=True,
         data_format='JSON',
@@ -122,11 +68,74 @@ class PrestaShop:
 
     # Create binary (product image)
     api.create_binary('images/products/22', 'img.jpeg', 'image')
-    @endcode
+"""
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+import os
+import sys
+from enum import Enum
+from http.client import HTTPConnection
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple, Union
+from xml.etree import ElementTree
+from xml.parsers.expat import ExpatError
+
+from requests import Session
+from requests.models import PreparedRequest
+
+import header
+from src import gs
+from src.logger.exceptions import PrestaShopAuthenticationError, PrestaShopException
+from src.logger.logger import logger
+from src.utils.convertors.base64 import base64_to_tmpfile
+from src.utils.convertors.dict import dict2xml
+from src.utils.convertors.xml2dict import xml2dict
+from src.utils.file import save_text_file
+from src.utils.image import save_png_from_url
+from src.utils.jjson import j_dumps, j_loads, j_loads_ns
+from src.utils.printer import pprint
+
+MODE = 'dev'
+
+
+class Format(Enum):
+    """Data types return (JSON, XML)
+
+    .. deprecated::
+        I prefer JSON 👍 :))
+
+    :param Enum: (int): 1 => JSON, 2 => XML
+    """
+    JSON = 'JSON'
+    XML = 'XML'
+
+
+class PrestaShop:
+    """ Interact with PrestaShop webservice API, using JSON and XML for message
+
+    This class provides methods to interact with the PrestaShop API, allowing for CRUD
+    operations, searching, and uploading images. It also provides error handling
+    for responses and methods to handle the API's data.
+
+    :param API_KEY: The API key generated from PrestaShop.
+    :type API_KEY: str
+    :param API_DOMAIN: The domain of the PrestaShop shop (e.g., https://myPrestaShop.com).
+    :type API_DOMAIN: str
+    :param data_format: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
+    :type data_format: str
+    :param default_lang: Default language ID. Defaults to 1.
+    :type default_lang: int
+    :param debug: Activate debug mode. Defaults to True.
+    :type debug: bool
+
+    :raises PrestaShopAuthenticationError: When the API key is wrong or does not exist.
+    :raises PrestaShopException: For generic PrestaShop WebServices errors.
     """
     client: Session = Session()
     debug = True
-    language = None
+    language: Optional[int] = None
     data_format = 'JSON'
     ps_version = ''
 
@@ -134,15 +143,14 @@ class PrestaShop:
                  data_format: str = 'JSON',
                  default_lang: int = 1,
                  debug: bool = True) -> None:
-        """ Initialize the PrestaShop class.
+        """Initialize the PrestaShop class.
 
-        @param API_DOMAIN `str`: The API domain of your PrestaShop shop (e.g., https://myPrestaShop.com).
-        @param API_KEY `str`: The API key generated from PrestaShop.
-        @param data_format `str`: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
-        @param default_lang `int`: Default language ID. Defaults to 1.
-        @param debug `bool`: Activate debug mode. Defaults to True.
-
-        @return `None`
+        :param data_format: Default data format ('JSON' or 'XML'). Defaults to 'JSON'.
+        :type data_format: str
+        :param default_lang: Default language ID. Defaults to 1.
+        :type default_lang: int
+        :param debug: Activate debug mode. Defaults to True.
+        :type debug: bool
         """
         self.API_DOMAIN = gs.credentials.presta.client.api_key.rstrip('/') + '/api/'
         self.API_KEY = gs.credentials.presta.client.api_key
@@ -161,9 +169,10 @@ class PrestaShop:
         self.ps_version = response.headers.get('psws-version')
 
     def ping(self) -> bool:
-        """ Test if the webservice is working perfectly.
+        """Test if the webservice is working perfectly.
 
-        @return `bool`: Result of the ping test. Returns `True` if the webservice is working, otherwise `False`.
+        :return: Result of the ping test. Returns `True` if the webservice is working, otherwise `False`.
+        :rtype: bool
         """
         response = self.client.request(
             method='HEAD',
@@ -172,17 +181,25 @@ class PrestaShop:
 
         return self._check_response(response.status_code, response)
 
-    def _check_response(self, status_code, response, method=None, url=None, headers=None, data=None) -> bool:
-        """ Check the response status code and handle errors.
+    def _check_response(self, status_code: int, response, method: Optional[str] = None, url: Optional[str] = None,
+                        headers: Optional[dict] = None, data: Optional[dict] = None) -> bool:
+        """Check the response status code and handle errors.
 
-        @param status_code `int`: HTTP response status code.
-        @param response `requests.Response`: HTTP response object.
-        @param method `str`: HTTP method used for the request.
-        @param url `str`: The URL of the request.
-        @param headers `dict`: The headers used in the request.
-        @param data `dict`: The data sent in the request.
+        :param status_code: HTTP response status code.
+        :type status_code: int
+        :param response: HTTP response object.
+        :type response: requests.Response
+        :param method: HTTP method used for the request.
+        :type method: str, optional
+        :param url: The URL of the request.
+        :type url: str, optional
+        :param headers: The headers used in the request.
+        :type headers: dict, optional
+        :param data: The data sent in the request.
+        :type data: dict, optional
 
-        @return `bool`: `True` if the status code is 200 or 201, otherwise `False`.
+        :return: `True` if the status code is 200 or 201, otherwise `False`.
+        :rtype: bool
         """
         if status_code in (200, 201):
             return True
@@ -190,10 +207,12 @@ class PrestaShop:
             self._parse_response_error(response, method, url, headers, data)
             return False
 
-    def _parse_response_error(self, response, method=None, url=None, headers=None, data=None):
-        """ Parse the error response from PrestaShop API.
+    def _parse_response_error(self, response, method: Optional[str] = None, url: Optional[str] = None,
+                              headers: Optional[dict] = None, data: Optional[dict] = None):
+        """Parse the error response from PrestaShop API.
 
-        @param response `requests.Response`: HTTP response object from the server.
+        :param response: HTTP response object from the server.
+        :type response: requests.Response
         """
         if self.data_format == 'JSON':
             status_code = response.status_code
@@ -220,16 +239,19 @@ class PrestaShop:
                 error = error_answer.find('errors/error')
                 code = error.find('code').text
                 message = error.find('message').text
-            logger.error(f"XML response error: {message} \n Code: {code}")
+            logger.error(f'XML response error: {message} \n Code: {code}')
             return code, message
 
-    def _prepare(self, url, params):
-        """ Prepare the URL for the request.
+    def _prepare(self, url: str, params: dict) -> str:
+        """Prepare the URL for the request.
 
-        @param url `str`: The base URL.
-        @param params `dict`: The parameters for the request.
+        :param url: The base URL.
+        :type url: str
+        :param params: The parameters for the request.
+        :type params: dict
 
-        @return `str`: The prepared URL with parameters.
+        :return: The prepared URL with parameters.
+        :rtype: str
         """
         req = PreparedRequest()
         req.prepare_url(url, params)
@@ -237,35 +259,49 @@ class PrestaShop:
 
     def _exec(self,
               resource: str,
-              resource_id: int |  str = None,
-              resource_ids: int | tuple = None,
+              resource_id: Optional[Union[int, str]] = None,
+              resource_ids: Optional[Union[int, Tuple[int]]] = None,
               method: str = 'GET',
-              data: dict = None,
-              headers: dict = {},
-              search_filter = None,
-              display: str | list = 'full',
-              schema: str | None = None,
-              sort: str = None,
-              limit: str = None,
-              language: int = None,
-              io_format: str = 'JSON') -> dict | None:
-        """ Execute an HTTP request to the PrestaShop API.
+              data: Optional[dict] = None,
+              headers: Optional[dict] = None,
+              search_filter: Optional[Union[str, dict]] = None,
+              display: Optional[Union[str, list]] = 'full',
+              schema: Optional[str] = None,
+              sort: Optional[str] = None,
+              limit: Optional[str] = None,
+              language: Optional[int] = None,
+              io_format: str = 'JSON') -> Optional[dict]:
+        """Execute an HTTP request to the PrestaShop API.
 
-        @param resource `str`: The API resource (e.g., 'products', 'categories').
-        @param resource_id `int |  str`: The ID of the resource.
-        @param resource_ids `int | tuple`: The IDs of multiple resources.
-        @param method `str`: The HTTP method (GET, POST, PUT, DELETE).
-        @param data `dict`: The data to be sent with the request.
-        @param headers `dict`: Additional headers for the request.
-        @param search_filter `str | dict`: Filter for the request.
-        @param display `str | list`: Fields to display in the response.
-        @param schema `str | None`: The schema of the data.
-        @param sort `str`: Sorting parameter for the request.
-        @param limit `str`: Limit of results for the request.
-        @param language `int`: The language ID for the request.
-        @param io_format `str`: The data format ('JSON' or 'XML').
+        :param resource: The API resource (e.g., 'products', 'categories').
+        :type resource: str
+        :param resource_id: The ID of the resource.
+        :type resource_id: int | str, optional
+        :param resource_ids: The IDs of multiple resources.
+        :type resource_ids: int | tuple, optional
+        :param method: The HTTP method (GET, POST, PUT, DELETE).
+        :type method: str, optional
+        :param data: The data to be sent with the request.
+        :type data: dict, optional
+        :param headers: Additional headers for the request.
+        :type headers: dict, optional
+        :param search_filter: Filter for the request.
+        :type search_filter: str | dict, optional
+        :param display: Fields to display in the response.
+        :type display: str | list, optional
+        :param schema: The schema of the data.
+        :type schema: str, optional
+        :param sort: Sorting parameter for the request.
+        :type sort: str, optional
+        :param limit: Limit of results for the request.
+        :type limit: str, optional
+        :param language: The language ID for the request.
+        :type language: int, optional
+        :param io_format: The data format ('JSON' or 'XML').
+        :type io_format: str, optional
 
-        @return `dict | None`: The response from the API or `False` on failure.
+        :return: The response from the API or `False` on failure.
+        :rtype: dict | None
         """
         if self.debug:
             import sys
@@ -297,12 +333,14 @@ class PrestaShop:
         else:
             return self._parse(response.text)
 
-    def _parse(self, text: str) -> dict | ElementTree.Element | bool:
-        """ Parse XML or JSON response from the API.
+    def _parse(self, text: str) -> Union[dict, ElementTree.Element, bool]:
+        """Parse XML or JSON response from the API.
 
-        @param text `str`: Response text.
+        :param text: Response text.
+        :type text: str
 
-        @return `dict | ElementTree.Element | bool`: Parsed data or `False` on failure.
+        :return: Parsed data or `False` on failure.
+        :rtype: dict | ElementTree.Element | bool
         """
         try:
             if self.data_format == 'JSON':
@@ -315,64 +353,84 @@ class PrestaShop:
             logger.error(f'Parsing Error: {str(ex)}')
             return False
 
-    def create(self, resource: str, data: dict) -> dict:
-        """ Create a new resource in PrestaShop API.
+    def create(self, resource: str, data: dict) -> Optional[dict]:
+        """Create a new resource in PrestaShop API.
 
-        @param resource `str`: API resource (e.g., 'products').
-        @param data `dict`: Data for the new resource.
+        :param resource: API resource (e.g., 'products').
+        :type resource: str
+        :param data: Data for the new resource.
+        :type data: dict
 
-        @return `dict`: Response from the API.
+        :return: Response from the API.
+        :rtype: dict
         """
         return self._exec(resource=resource, method='POST', data=data, io_format=self.data_format)
 
-    def read(self, resource: str, resource_id: int |  str, **kwargs) -> dict:
-        """ Read a resource from the PrestaShop API.
+    def read(self, resource: str, resource_id: Union[int, str], **kwargs) -> Optional[dict]:
+        """Read a resource from the PrestaShop API.
 
-        @param resource `str`: API resource (e.g., 'products').
-        @param resource_id `int |  str`: Resource ID.
+        :param resource: API resource (e.g., 'products').
+        :type resource: str
+        :param resource_id: Resource ID.
+        :type resource_id: int | str
 
-        @return `dict`: Response from the API.
+        :return: Response from the API.
+        :rtype: dict
         """
         return self._exec(resource=resource, resource_id=resource_id, method='GET', io_format=self.data_format, **kwargs)
 
-    def write(self, resource: str, data: dict) -> dict:
-        """ Update an existing resource in the PrestaShop API.
+    def write(self, resource: str, data: dict) -> Optional[dict]:
+        """Update an existing resource in the PrestaShop API.
 
-        @param resource `str`: API resource (e.g., 'products').
-        @param data `dict`: Data for the resource.
+        :param resource: API resource (e.g., 'products').
+        :type resource: str
+        :param data: Data for the resource.
+        :type data: dict
 
-        @return `dict`: Response from the API.
+        :return: Response from the API.
+        :rtype: dict
         """
-        return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data, io_format=self.data_format)
+        return self._exec(resource=resource, resource_id=data.get('id'), method='PUT', data=data,
+                          io_format=self.data_format)
 
-    def unlink(self, resource: str, resource_id: int |  str) -> bool:
-        """ Delete a resource from the PrestaShop API.
+    def unlink(self, resource: str, resource_id: Union[int, str]) -> bool:
+        """Delete a resource from the PrestaShop API.
 
-        @param resource `str`: API resource (e.g., 'products').
-        @param resource_id `int |  str`: Resource ID.
+        :param resource: API resource (e.g., 'products').
+        :type resource: str
+        :param resource_id: Resource ID.
+        :type resource_id: int | str
 
-        @return `bool`: `True` if successful, `False` otherwise.
+        :return: `True` if successful, `False` otherwise.
+        :rtype: bool
         """
         return self._exec(resource=resource, resource_id=resource_id, method='DELETE', io_format=self.data_format)
 
-    def search(self, resource: str, filter: str | dict = None, **kwargs) -> List[dict]:
-        """ Search for resources in the PrestaShop API.
+    def search(self, resource: str, filter: Optional[Union[str, dict]] = None, **kwargs) -> List[dict]:
+        """Search for resources in the PrestaShop API.
 
-        @param resource `str`: API resource (e.g., 'products').
-        @param filter `str | dict`: Filter for the search.
+        :param resource: API resource (e.g., 'products').
+        :type resource: str
+        :param filter: Filter for the search.
+        :type filter: str | dict, optional
 
-        @return `List[dict]`: List of resources matching the search criteria.
+        :return: List of resources matching the search criteria.
+        :rtype: List[dict]
         """
         return self._exec(resource=resource, search_filter=filter, method='GET', io_format=self.data_format, **kwargs)
 
     def create_binary(self, resource: str, file_path: str, file_name: str) -> dict:
-        """ Upload a binary file to a PrestaShop API resource.
+        """Upload a binary file to a PrestaShop API resource.
 
-        @param resource `str`: API resource (e.g., 'images/products/22').
-        @param file_path `str`: Path to the binary file.
-        @param file_name `str`: File name.
+        :param resource: API resource (e.g., 'images/products/22').
+        :type resource: str
+        :param file_path: Path to the binary file.
+        :type file_path: str
+        :param file_name: File name.
+        :type file_name: str
 
-        @return `dict`: Response from the API.
+        :return: Response from the API.
+        :rtype: dict
         """
         with open(file_path, 'rb') as file:
             headers = {'Content-Type': 'application/octet-stream'}
@@ -384,20 +442,24 @@ class PrestaShop:
             return response.json()
 
     def _save(self, file_name: str, data: dict):
-        """ Save data to a file.
+        """Save data to a file.
 
-        @param file_name `str`: Name of the file.
-        @param data `dict`: Data to be saved.
+        :param file_name: Name of the file.
+        :type file_name: str
+        :param data: Data to be saved.
+        :type data: dict
         """
         save_text_file(file_name, j_dumps(data, indent=4, ensure_ascii=False))
 
-    def get_data(self, resource: str, **kwargs) -> dict | None:
-        """ Fetch data from a PrestaShop API resource and save it.
+    def get_data(self, resource: str, **kwargs) -> Optional[dict]:
+        """Fetch data from a PrestaShop API resource and save it.
 
-        @param resource `str`: API resource (e.g., 'products').
-        @param **kwargs: Additional arguments for the API request.
+        :param resource: API resource (e.g., 'products').
+        :type resource: str
+        :param **kwargs: Additional arguments for the API request.
 
-        @return `dict | None`: Data from the API or `False` on failure.
+        :return: Data from the API or `False` on failure.
+        :rtype: dict | None
         """
         data = self._exec(resource=resource, method='GET', io_format=self.data_format, **kwargs)
         if data:
@@ -406,43 +468,52 @@ class PrestaShop:
         return False
 
     def remove_file(self, file_path: str):
-        """ Remove a file from the filesystem.
+        """Remove a file from the filesystem.
 
-        @param file_path `str`: Path to the file.
+        :param file_path: Path to the file.
+        :type file_path: str
         """
         try:
             os.remove(file_path)
         except Exception as e:
-            logger.error(f"Error removing file {file_path}: {e}")
+            logger.error(f'Error removing file {file_path}: {e}')
 
-    def get_apis(self) -> dict:
-        """ Get a list of all available APIs.
+    def get_apis(self) -> Optional[dict]:
+        """Get a list of all available APIs.
 
-        @return `dict`: List of available APIs.
+        :return: List of available APIs.
+        :rtype: dict
         """
         return self._exec('apis', method='GET', io_format=self.data_format)
 
-    def get_languages_schema(self) -> dict:
-        """ Get the schema for languages.
+    def get_languages_schema(self) -> Optional[dict]:
+        """Get the schema for languages.
 
-        @return `dict`: Language schema or `None` on failure.
+        :return: Language schema or `None` on failure.
+        :rtype: dict
         """
         try:
             response = self._exec('languages', display='full', io_format='JSON')
             return response
         except Exception as ex:
-            logger.error(f"Error: {ex}")
+            logger.error(f'Error: {ex}')
             return
 
-    def upload_image_async(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
-        """ Upload an image to PrestaShop API asynchronously.
+    def upload_image_async(self, resource: str, resource_id: int, img_url: str,
+                           img_name: Optional[str] = None) -> Optional[dict]:
+        """Upload an image to PrestaShop API asynchronously.
 
-        @param resource `str`: API resource (e.g., 'images/products/22').
-        @param resource_id `int`: Resource ID.
-        @param img_url `str`: URL of the image.
-        @param img_name `str`, optional: Name of the image file.
+        :param resource: API resource (e.g., 'images/products/22').
+        :type resource: str
+        :param resource_id: Resource ID.
+        :type resource_id: int
+        :param img_url: URL of the image.
+        :type img_url: str
+        :param img_name: Name of the image file, defaults to None.
+        :type img_name: str, optional
 
-        @return `dict | None`: Response from the API or `False` on failure.
+        :return: Response from the API or `False` on failure.
+        :rtype: dict | None
         """
         url_parts = img_url.rsplit('.', 1)
         url_without_extension = url_parts[0]
@@ -453,15 +524,21 @@ class PrestaShop:
         self.remove_file(png_file_path)
         return response
 
-    def upload_image(self, resource: str, resource_id: int, img_url: str, img_name: str = None) -> dict | None:
-        """ Upload an image to PrestaShop API.
+    def upload_image(self, resource: str, resource_id: int, img_url: str,
+                     img_name: Optional[str] = None) -> Optional[dict]:
+        """Upload an image to PrestaShop API.
 
-        @param resource `str`: API resource (e.g., 'images/products/22').
-        @param resource_id `int`: Resource ID.
-        @param img_url `str`: URL of the image.
-        @param img_name `str`, optional: Name of the image file.
+        :param resource: API resource (e.g., 'images/products/22').
+        :type resource: str
+        :param resource_id: Resource ID.
+        :type resource_id: int
+        :param img_url: URL of the image.
+        :type img_url: str
+        :param img_name: Name of the image file, defaults to None.
+        :type img_name: str, optional
 
-        @return `dict | None`: Response from the API or `False` on failure.
+        :return: Response from the API or `False` on failure.
+        :rtype: dict | None
         """
         url_parts = img_url.rsplit('.', 1)
         url_without_extension = url_parts[0]
@@ -472,12 +549,13 @@ class PrestaShop:
         self.remove_file(png_file_path)
         return response
 
-    def get_product_images(self, product_id: int) -> dict | None:
-        """ Get images for a product.
+    def get_product_images(self, product_id: int) -> Optional[dict]:
+        """Get images for a product.
 
-        @param product_id `int`: Product ID.
+        :param product_id: Product ID.
+        :type product_id: int
 
-        @return `dict | None`: List of product images or `False` on failure.
+        :return: List of product images or `False` on failure.
+        :rtype: dict | None
         """
         return self._exec(f'products/{product_id}/images', method='GET', io_format=self.data_format)
-

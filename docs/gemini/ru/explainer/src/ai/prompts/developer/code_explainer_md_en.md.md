@@ -1,5 +1,4 @@
-<input code>
-```**Prompt**:  
+**Prompt**:  
 Your task is to help the developer of the code of the project `hypotez` explain to the developer how the code works
 ### Requirements:  
 Analyze the provided code and explain its functionality.
@@ -80,56 +79,103 @@ Example:
 **Possible Improvements**:  
 - Add type checks for the `a` and `b` arguments to prevent errors.  
 - Localize the `calculate_sum` call within the module if it is not reused elsewhere.
+
+
+### Instructions for Creating Mermaid Flowchart Diagrams Using HTML in Node Descriptions
+
+1. **Graph Type:**  
+   - Use `flowchart` (e.g., `flowchart TD` for a top-to-bottom directed graph).  
+   - Other options: `LR` (left-to-right), `BT` (bottom-to-top), `RL` (right-to-left).
+
+2. **Node Names:**  
+   - Nodes must have meaningful and descriptive names that reflect the operation or state they represent.  
+   - Avoid names like `A`, `B`, `C`. Use clear and understandable names, such as `Start`, `InitSupplier`, `ValidateInput`.
+
+3. **Using HTML:**  
+   - Apply HTML tags to style the text in nodes.  
+   - Supported tags include text formatting (e.g., `<b>`, `<i>`, `<h1>`, `<h3>`, `<code>`).  
+   - Use HTML escape codes for special characters when needed:
+     - `(` → `&#40;`  
+     - `)` → `&#41;`  
+     - `\'` → `&#39;`  
+     - `"` → `&quot;`  
+     - `:` → `&#58;`
+
+4. **Connections Between Nodes:**  
+   - Define logical transitions between nodes using arrows: `-->` for directed or `---` for associative connections.  
+   - Add text labels to arrows to clarify transition conditions, e.g., `-->|Success|`.
+
+5. **Example:**
+
+```mermaid
+flowchart TD
+    Start[<html>Start of the process<br><b>Create instance</b></html>] 
+        --> InitSupplier[<html>Initialize Supplier<br><code>_payload&#40;params&#41;</code></html>]
+    InitSupplier --> Validate[<html>Validate parameters<br><i>is_valid&#40;params&#41;</i></html>]
+    Validate -->|Validation passed| Success[<html><b>Success</b><br>Creation completed</html>]
+    Validate -->|Error| Error[<html>Error<br><span style="color:red;">Invalid parameters</span></html>]
+```
+
+6. **Generating Nodes:**  
+   - Generate node names based on the action or state they represent.  
+   - Nodes should be concise but informative. Use HTML tags to enhance readability where needed.
+
+7. **Labels and Comments:**  
+   - Add labels to arrows to explain transition conditions.  
+   - Use comments with `%%` to describe complex connections.
+
+8. **Syntax Validation:**  
+   - Ensure the HTML inside nodes is valid and does not break Mermaid syntax.
+
+**Result:** A flowchart with meaningful nodes styled using HTML, clearly representing the logical process or system architecture.
+
+
 ## Response text format: `UTF-8`
 This instruction is designed to ensure the model analyzes the code in detail and provides a comprehensive description of each element's functionality.
 ```
-<algorithm>
-1. **Import `calculate_sum`**: Импортируется функция `calculate_sum` из модуля `src.utils.calculator`. Эта функция отвечает за сложение двух чисел.
-2. **Define `add_numbers` function**: Определяется функция `add_numbers`, которая принимает два аргумента: `a` и `b`.
-3. **Call `calculate_sum`**: Внутри функции `add_numbers` вызывается функция `calculate_sum` с аргументами `a` и `b`. Результат этого вызова присваивается переменной `result`.
-4. **Return `result`**: Функция `add_numbers` возвращает значение переменной `result`, которое является суммой `a` и `b`, вычисленной функцией `calculate_sum`.
+```
+<input code>
+from src.utils.calculator import calculate_sum
 
-**Пример:**
-- **Ввод:** `a = 2`, `b = 7`
-- **Алгоритм:**
-    1. Вызывается `calculate_sum(2, 7)`
-    2. `calculate_sum` возвращает `9`
-    3. `result` присваивается `9`
-- **Результат:** `9`
-</algorithm>
+def add_numbers(a, b):
+    result = calculate_sum(a, b)
+    return result
+<algorithm>
+1.  Импортируется функция `calculate_sum` из модуля `src.utils.calculator`.
+2.  Определяется функция `add_numbers`, принимающая два аргумента `a` и `b`.
+3.  Вызывается функция `calculate_sum(a, b)` для вычисления суммы `a` и `b`.
+4.  Результат функции возвращается вызывающей стороне.
+
+Пример:
+- Ввод: `a = 3`, `b = 5`.
+- Алгоритм: `calculate_sum(3, 5)`.
+- Результат: `8`.
+
 <mermaid>
-graph LR
-    A[Начало: add_numbers(a, b)] --> B{Вызов: calculate_sum(a, b)};
-    B --> C[Возвращает: result];
-    C --> D[Конец: Return result];
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    
-    linkStyle 0,1,2 stroke-width:2px,stroke:green;
-    classDef class_name fill:#f9f,stroke:#333,stroke-width:2px
+flowchart TD
+    Start[Start]
+    Start --> ImportModule[Import <code>calculate_sum</code> <br> from <code>src.utils.calculator</code>]
+    ImportModule --> AddNumbersFunc[Define function <code>add_numbers(a, b)</code>]
+    AddNumbersFunc --> CallCalculateSum[Call <code>calculate_sum(a, b)</code>]
+    CallCalculateSum --> ReturnResult[Return result]
 </mermaid>
+
 <explanation>
-**Импорты:**
-- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum` из модуля `calculator`, находящегося в пакете `src.utils`. Эта функция используется для выполнения операции сложения двух чисел.
+**Импорты**:
+- `from src.utils.calculator import calculate_sum`: Импортирует функцию `calculate_sum`, которая используется для выполнения сложения. Этот модуль находится в пакете `src.utils`.
 
 **Функция `add_numbers`**:
-- **Назначение:** Функция `add_numbers` предназначена для сложения двух чисел, `a` и `b`, используя вспомогательную функцию `calculate_sum`.
-- **Аргументы:**
-  - `a` (число): Первое число для сложения.
-  - `b` (число): Второе число для сложения.
-- **Возвращаемое значение:** Возвращает результат сложения `a` и `b`, вычисленный с помощью функции `calculate_sum`.
-- **Пример:**
-    - Вызов `add_numbers(5, 3)`:
-       - Функция вызывает `calculate_sum(5, 3)`, которая возвращает 8.
-       - Функция возвращает 8.
+- Назначение: Упрощает сложение двух чисел, используя функцию `calculate_sum`.
+- Аргументы:
+  - `a` (число): Первый операнд.
+  - `b` (число): Второй операнд.
+- Возвращаемое значение: Результат сложения `a` и `b`.
 
-**Переменные:**
-- `result` (число): Внутри функции `add_numbers` переменная `result` хранит результат сложения `a` и `b`, полученный от функции `calculate_sum`.
+**Взаимосвязь с другими пакетами**:
+- Модуль `src.utils.calculator`, вероятно, является частью библиотеки для математических операций.
+- Если `calculate_sum` зависит от других модулей, это может быть уточнено в ее документации.
 
-**Взаимосвязи с другими частями проекта:**
-- Функция `add_numbers` зависит от модуля `src.utils.calculator`, конкретно от функции `calculate_sum`. Эта взаимосвязь предполагает наличие модуля `calculator` в пакете `utils` внутри `src`.
-
-**Потенциальные ошибки и улучшения:**
-- **Отсутствие проверки типов:** Функция `add_numbers` не проверяет типы аргументов `a` и `b`. Для предотвращения ошибок следовало бы добавить проверки типов данных, чтобы убедиться, что `a` и `b` - это числа.
-- **Возможность переиспользования**: Если функция add_numbers используется в нескольких местах, то это хорошо, но если используется только в одном месте, то вызов `calculate_sum` можно было бы локализовать, чтобы не зависеть от импорта.
+**Возможные улучшения**:
+- Добавить проверку типов для аргументов `a` и `b`, чтобы предотвратить ошибки.
+- Локализовать вызов `calculate_sum` внутри модуля, если он не используется в других местах.
 </explanation>
