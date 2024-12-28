@@ -11,4 +11,5 @@
 """
 
 
-from .bot import TelegramBot
+from .bot_long_polling import TelegramBot  as TelegamLongPoolingBot
+from .bot_web_hooks import TelegramBot as TelegramWebHooksBot

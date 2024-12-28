@@ -87,6 +87,5 @@ from .executor import (
     run_scenarios, 
     run_scenario_file, 
     run_scenario_files, 
-    execute_PrestaShop_insert, 
-    execute_PrestaShop_insert_async,
+    insert_grabbed_data_to_prestashop,
 )

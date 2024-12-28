@@ -7,14 +7,10 @@ from __future__ import annotations
 """
 .. module:: src.endpoints.emil 
 	:platform: Windows, Unix
-	:synopsis:
+	:synopsis: Module for managing and processing images and promoting to Facebook and PrestaShop.
 
 """
 
-
-
-
-""" Module for managing and processing images and promoting to Facebook and PrestaShop. """
 
 import header
 from pathlib import Path
@@ -23,7 +19,12 @@ import time
 
 from src import gs, logger
 from src.endpoints.prestashop.api.api import PrestaShop
-from src.webdriver.driver import Driver, Chrome
+
+from src.webdriver.driver import Driver
+from src.webdriver.chrome import Chrome
+from src.webdriver.firefox import Firefox
+## Add  drivers e.g. Fdge, crawlee_python, playwright
+
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 from src.product import Product
@@ -35,13 +36,16 @@ from src.logger.logger import logger
 class EmilDesign:
     """ Class for designing and promoting images through various platforms. """
 
-    # Base path for the module data
-    base_path: Path = (
-        gs.path.external_storage
-        / "emil"
-    )
-    gemini: GoogleGenerativeAI
-    openai: OpenAIModel
+    # ---------------------------------
+    ENDPOINT:str = 'emil'
+    # ---------------------------------
+
+    gemini:'GoogleGenerativeAI'
+    openai:'OpenAIModel'
+    base_path:Path = gs.path.endpoints / ENDPOINT
+    config:SimpleNamespace = j_loads_ns( base_path / f'{ENDPOINT}.json')
+    data_path:Path = getattr( gs.path , config.storage , 'external_storage')  / ENDPOINT
+
 
     def __init__(self):
         """ Initialize the EmilDesign class. """
@@ -146,16 +150,18 @@ class EmilDesign:
             post_message(d, message, without_captions=True)
             ...
 
-    def upload_to_PrestaShop(self):
+    def upload_to_prestashop(self):
         """ Upload product information to PrestaShop.
 
         This function initializes a product and PrestaShop instance for uploading data.
         """
-        p = Product()
-        presta = PrestaShop()
+        products_list: SimpleNamespace | list[SimpleNamespace] = j_loads_ns(self.data_path / "images_descritions_he.json")
+        ...
+        
         
 
 if __name__ == "__main__":
-    e = EmilDesign()
-    # e.describe_images()
-    # e.promote_to_facebook()
+    emil = EmilDesign()
+    emil.upload_to_prestashop()
+    # emil.describe_images()
+    # emil.promote_to_facebook()

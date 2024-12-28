@@ -13,6 +13,7 @@ Telegram-бот для проекта emil-design.com
 	:synopsis: bot for emil-design.com
 
 """
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict, Self
@@ -33,7 +34,7 @@ import header
 from src import gs
 from src.endpoints.bots.telegram.bot_web_hooks import TelegramBot
 # from src.endpoints.bots.telegram.bot_long_polling import TelegramBot
-from src.endpoints.kazarinov.bot_handlers import BotHandler
+from src.endpoints.emil.bot_handlers import BotHandler
 from src.ai.openai import OpenAIModel
 from src.ai.gemini import GoogleGenerativeAI
 from src.utils.file import recursively_read_text_files, save_text_file
@@ -46,7 +47,7 @@ from aiohttp import web
 from src.endpoints.bots.telegram.bot_web_hooks import create_app
 
 
-class EmilTelegramBot(TelegramBot, BotHandler):
+class EmilTelegramBot(TelegramBot):
     """Telegram bot with custom behavior for emil-design."""
 
     token: str
@@ -55,6 +56,7 @@ class EmilTelegramBot(TelegramBot, BotHandler):
         api_key=gs.credentials.gemini.kazarinov, generation_config={"response_mime_type": "text/plain"}
     )
     """This model is used for dialog with the user. For processing scenarios, the model defined in the `BotHandler` class is used."""
+    bot_handler: BotHandler
 
     def __init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox'):
         """
@@ -75,30 +77,38 @@ class EmilTelegramBot(TelegramBot, BotHandler):
         )
 
         # Call parent initializers
-        TelegramBot.__init__(self, self.token)
-        # self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_log))
-        BotHandler.__init__(self, getattr(self.config, 'webdriver_name', 'firefox'))
+        self.bot_handler = BotHandler(webdriver_name=webdriver_name)
+        TelegramBot.__init__(self, self.token, self.bot_handler) # Pass bot_handler to TelegramBot
+
+
+
+    async def handle_message(self, update: Update, context: CallbackContext) -> None:
+         """Handle any text message."""
+         await self.bot_handler.handle_message(update, context)
+
+    async def handle_log(self, update: Update, context: CallbackContext) -> None:
+        """Handle log messages."""
+        log_message = update.message.text
+        logger.info(f"Received log message: {log_message}")
+        await update.message.reply_text("Log received and processed.")
+
+    async def handle_voice(self, update: Update, context: CallbackContext) -> None:
+        """Handle voice messages and transcribe the audio."""
+        await super().handle_voice(update, context)
+        
+    async def transcribe_voice(self, file_path: Path) -> str:
+        """Transcribe voice message using a speech recognition service."""
+        # Пример заглушки, замените это на реальную логику распознавания речи
+        return 'Распознавание голоса ещё не реализовано.'
 
 
 def main() -> None:
-    """Main function to run the Emil Telegram Bot."""
-    parser = argparse.ArgumentParser(description="Run Emil-design Telegram Bot with specified mode.")
-    parser.add_argument('-m', '--mode', type=str, default='test', help="Operating mode: 'test' or 'production'")
-    parser.add_argument('-d', '--driver', type=str, default='firefox', help=f"""Webdriver Name: 
-    'firefox',
-    'chrome',
-    'edge',
-    'playwright',
-    'crawlee_python'""")
+    """Start the bot with webhook."""
+    bot = EmilTelegramBot()
 
-    args = parser.parse_args()
+    # Create and run the aiohttp application
+    app = create_app(bot)
+    web.run_app(app, host=bot.host, port=bot.port)
 
-    emil_bot = EmilTelegramBot(mode=args.mode, webdriver_name=args.webdriver_name)
-
-    app = create_app(emil_bot)
-    web.run_app(app)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-

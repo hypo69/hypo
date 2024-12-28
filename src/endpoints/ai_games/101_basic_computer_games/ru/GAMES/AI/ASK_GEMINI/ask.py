@@ -11,18 +11,21 @@ class GoogleGenerativeAI:
         "gemini-3-20b"
     ]
 
-    def __init__(self, api_key: str, model_name: str = "gemini-2.0-flash-exp"):
+    def __init__(self, api_key: str, system_instruction: str = '', model_name: str = 'gemini-2.0-flash-exp'):
         """
         Инициализация модели GoogleGenerativeAI.
 
-        Аргументы:
-            api_key (str): Ключ API для доступа к генеративной модели.
-            model_name (str, optional): Название модели для использования. По умолчанию "gemini-1.5-flash-8b".
+        :param api_key: Ключ API для доступа к Gemini.
+        :type api_key: str
+        :param system_instruction: Инструкция для модели (системный промпт).
+        :type system_instruction: str
+        :param model_name: Название используемой модели Gemini. По умолчанию 'gemini-2.0-flash-exp'.
+        :type model_name: str
         """
         self.api_key = api_key
         self.model_name = model_name
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model_name=self.model_name)
+        genai.configure(api_key=self.api_key)  # Конфигурация библиотеки с API ключом
+        self.model = genai.GenerativeModel(model_name=self.model_name, system_instruction=system_instruction)  # Инициализация модели с инструкцией
 
     def ask(self, q: str) -> str:
         """

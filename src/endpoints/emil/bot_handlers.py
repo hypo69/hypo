@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/emil/bot_handlers_parser.py
+## \file hypotez/src/endpoints/emil/bot_handlers.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -16,7 +16,7 @@
 Пример использования
 --------------------
 
-Пример использования класса `BotHandler`:
+Пример использования класса `BotHandler`:                                                                           а
 
 .. code-block:: python
 

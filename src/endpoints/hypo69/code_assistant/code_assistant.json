@@ -31,7 +31,13 @@
     "exe",
     "pytest",
     "emil-design.com",
-    "openai-assistants-quickstart"
+    "openai-assistants-quickstart",
+    "arsak-zhak-programmirovanie-igr-i-golovolomok",
+    "getting_started_in_classroom_computing",
+    "more_basic_computer_games",
+    "Understanding_Mathematics_And_Logic_Using_BASIC_Computer_Games",
+    "projecteuler"
+
   ],
   "exclude_files": [
     "version.py",
@@ -107,9 +113,10 @@
     "code_checker_md": "<model>/<lang>/consultant/src",
     "code_explainer_md": "<model>/<lang>/explainer/src",
     "code_explainer_html": "<model>/<lang>explainer/html/src",
+    "doc_writer_md": "<model>/<lang>/doc/src",
+
     "pytest": "../pytest/<model>/src",
     "doc_writer_rst": "<model>/<lang>/doc/rst/src",
-    "doc_writer_md": "<model>/<lang>/doc/src",
     "doc_writer_html": "<model>/<lang>/doc/html/src",
     "how_to_writer": "<model>/<lang>/how_to/src"
   },
@@ -119,10 +126,13 @@
       "code_explainer_md",
       "doc_writer_md",
       "pytest",
-      "how_to_writer_md",
+      "how_to_writer_md"
+    ],
+    "exclude-roles": [
+      "code_explainer_html",
+      "doc_writer_html",
       "doc_writer_rst"
     ],
-    "exclude-roles": [ "code_explainer_html", "doc_writer_html" ],
     "languages": [ "ru", "en" ],
     "model": {
       "default": [ "gemini" ],

@@ -12,7 +12,3 @@
 
 
 
-from .telegram import TelegramBot
-
-
-

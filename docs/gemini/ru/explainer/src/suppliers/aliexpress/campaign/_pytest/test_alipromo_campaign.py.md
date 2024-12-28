@@ -1,274 +1,274 @@
-## <алгоритм>
-### Общий рабочий процесс:
+## ИНСТРУКЦИЯ:
 
-1. **Инициализация кампании:**
-   -  Создается экземпляр `AliPromoCampaign` с именем кампании, категорией, языком и валютой.
-   -  Метод `initialize_campaign` инициализирует данные кампании, загружая их из JSON-файла (если он существует) или создавая новый.
-   -  Пример: 
-      ```python
-      campaign = AliPromoCampaign("test_campaign", "test_category", "EN", "USD")
-      campaign.initialize_campaign()
-      ```
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-2.  **Получение продуктов категории:**
-    - Метод `get_category_products` получает список продуктов для указанной категории.
-    - Если `force` установлен в `True` или нет JSON-файлов, он вызывает `fetch_product_data`, иначе загружает данные из существующих JSON-файлов.
-    -  Пример: 
-        ```python
-        products = campaign.get_category_products(force=True)  # Загрузка новых данных
-        products = campaign.get_category_products() # Загрузка из файлов, если есть
-        ```
-    -  Поток данных:
-       -   Вызов `get_category_products` -> Проверка наличия JSON-файлов -> вызов  `fetch_product_data` или загрузка данных из файла -> возвращает список продуктов
-
-3.  **Создание пространств имен (namespaces):**
-    - Методы `create_product_namespace`, `create_category_namespace` и `create_campaign_namespace` создают `SimpleNamespace` объекты для хранения данных о продукте, категории и кампании соответственно.
-    -   Пример:
-         ```python
-        product_data = {"product_id": "123", "product_title": "Test Product"}
-        product_ns = campaign.create_product_namespace(**product_data)
-        ```
-    -   Поток данных:
-        -   Вход: Словарь данных (например, `product_data`)
-        -   Выход: Объект `SimpleNamespace` (например, `product_ns`)
-
-4. **Подготовка продуктов:**
-    - Метод `prepare_products` подготавливает данные о продуктах, читая исходный HTML файл и вызывая `process_affiliate_products`.
-    -   Пример: 
-        ```python
-        campaign.prepare_products()
-        ```
-    -   Поток данных:
-        -   Вызов `prepare_products` -> чтение HTML файла -> вызов `process_affiliate_products`
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
+    которые импортируются при создании диаграммы. 
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
     
-5. **Получение данных о продукте:**
-    - Метод `fetch_product_data` получает данные о продукте, вызывая `process_affiliate_products`, и возвращает их в виде списка `SimpleNamespace` объектов.
-    -   Пример:
-        ```python
-        product_ids = ["123", "456"]
-        products = campaign.fetch_product_data(product_ids)
-        ```
-    - Поток данных:
-        - Вход: Список идентификаторов продуктов (`product_ids`)
-        - Вызов: `process_affiliate_products`
-        - Выход: Список объектов `SimpleNamespace` (например, `products`)
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
 
-6. **Сохранение продукта:**
-    - Метод `save_product` сохраняет данные о продукте в JSON-файл.
-    -   Пример:
-        ```python
-        product = SimpleNamespace(product_id="123", product_title="Test Product")
-        campaign.save_product(product)
-        ```
-    - Поток данных:
-        -   Вход: Объект `SimpleNamespace`, представляющий продукт (например, `product`)
-        -   Сериализация данных объекта в JSON-формат с помощью `j_dumps`
-        -   Сохранение JSON-данных в файл с помощью `pathlib.Path.write_text`
+3. **<объяснение>**: Предоставьте подробные объяснения:  
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+   - **Переменные**: Их типы и использование.  
+   - Выделите потенциальные ошибки или области для улучшения.  
 
-7. **Получение списка продуктов кампании:**
-    - Метод `list_campaign_products` возвращает список заголовков продуктов из категории.
-    -   Пример:
-         ```python
-        product_titles = campaign.list_campaign_products()
-         ```
-    - Поток данных:
-        -   Вход: Объект кампании с уже загруженными продуктами (например, `campaign`)
-        -   Итерация по продуктам в `campaign.category.products`
-        -   Выход: Список заголовков продуктов (например, `product_titles`)
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+
+## <алгоритм>
+
+1. **Настройка Fixture `campaign`**:
+   - Создается экземпляр `AliPromoCampaign` с заданными `campaign_name`, `category_name`, `language`, и `currency`.
+   - Пример: `AliPromoCampaign("test_campaign", "test_category", "EN", "USD")`.
+   - Этот экземпляр `campaign` используется в каждом тесте для взаимодействия.
+
+2. **Тестирование `test_initialize_campaign`**:
+   - Мокируется функция `j_loads_ns`, чтобы вернуть `SimpleNamespace` с данными кампании.
+   - Вызывается `campaign.initialize_campaign()`, которая загружает данные кампании.
+   - Проверяется, что `campaign.campaign.name` и `campaign.campaign.category.test_category.name` правильно инициализированы.
+
+3. **Тестирование `test_get_category_products_no_json_files`**:
+   - Мокируется `get_filenames`, чтобы вернуть пустой список (нет JSON-файлов).
+   - Мокируется `fetch_product_data`, чтобы вернуть пустой список (нет данных продукта).
+   - Вызывается `campaign.get_category_products(force=True)`.
+   - Проверяется, что возвращаемый список продуктов пуст.
+
+4. **Тестирование `test_get_category_products_with_json_files`**:
+   - Мокируется `get_filenames`, чтобы вернуть список с именем JSON-файла ("product_123.json").
+   - Мокируется `j_loads_ns`, чтобы вернуть `SimpleNamespace` с данными продукта (например, `product_id="123"`).
+   - Вызывается `campaign.get_category_products()`.
+   - Проверяется, что возвращаемый список содержит один продукт с корректными данными.
+
+5. **Тестирование `test_create_product_namespace`**:
+   - Создается словарь `product_data` с данными продукта.
+   - Вызывается `campaign.create_product_namespace(**product_data)`.
+   - Проверяется, что возвращенный `SimpleNamespace` содержит данные продукта.
+
+6. **Тестирование `test_create_category_namespace`**:
+   - Создается словарь `category_data` с данными категории.
+   - Вызывается `campaign.create_category_namespace(**category_data)`.
+   - Проверяется, что возвращенный `SimpleNamespace` содержит данные категории.
+
+7. **Тестирование `test_create_campaign_namespace`**:
+   - Создается словарь `campaign_data` с данными кампании.
+   - Вызывается `campaign.create_campaign_namespace(**campaign_data)`.
+   - Проверяется, что возвращенный `SimpleNamespace` содержит данные кампании.
+
+8. **Тестирование `test_prepare_products`**:
+    - Мокируется метод `get_prepared_products` для возврата пустого списка.
+    - Мокируется метод `read_text_file` для возврата "source_data".
+    - Мокируется метод `get_filenames` для возврата списка с именем HTML-файла ("source.html").
+    - Мокируется метод `process_affiliate_products`.
+    - Вызывается `campaign.prepare_products()`.
+    - Проверяется, что метод `process_affiliate_products` был вызван один раз.
+
+9. **Тестирование `test_fetch_product_data`**:
+   - Создается список `product_ids`.
+   - Мокируется метод `process_affiliate_products` для возврата списка `SimpleNamespace` с данными продуктов.
+   - Вызывается `campaign.fetch_product_data(product_ids)`.
+   - Проверяется, что возвращаемый список содержит продукты с корректными `product_id`.
+
+10. **Тестирование `test_save_product`**:
+    - Создается объект `SimpleNamespace` с данными продукта.
+    - Мокируется метод `j_dumps` для возврата "{}".
+    - Мокируется метод `Path.write_text`.
+    - Вызывается `campaign.save_product(product)`.
+    - Проверяется, что метод `Path.write_text` был вызван один раз с правильными аргументами.
+
+11. **Тестирование `test_list_campaign_products`**:
+    - Создаются два объекта `SimpleNamespace` с `product_title`.
+    - `products` устанавливается как атрибут `campaign.category`.
+    - Вызывается `campaign.list_campaign_products()`.
+    - Проверяется, что возвращаемый список содержит названия продуктов.
 
 ## <mermaid>
-```mermaid
-graph TD
-    A[Начало] --> B(Создание экземпляра AliPromoCampaign);
-    B --> C{Проверка: существует ли файл campaign.json?};
-    C -- Да --> D(Загрузка данных кампании из JSON);
-    C -- Нет --> E(Создание новой структуры данных кампании);
-    D --> F(Инициализация данных кампании);
-    E --> F;
-    F --> G{Вызов get_category_products};
-    G --> H{Проверка: force=True или нет файлов json?};
-    H -- Да --> I(Вызов fetch_product_data);
-    H -- Нет --> J(Загрузка данных о продуктах из json файлов);
-    I --> K(Получение данных о продуктах);
-     K --> L(Создание SimpleNamespace для каждого продукта);
-    J --> L
-    L --> M(Возврат списка продуктов);
-    M --> N{Вызов prepare_products};
-    N --> O(Чтение исходного HTML-файла);
-    O --> P(Вызов process_affiliate_products);
-    P --> Q(Создание SimpleNamespace для каждого продукта);
-     Q --> R{Вызов fetch_product_data с product_ids};
-     R --> S(Вызов process_affiliate_products и создание списка SimpleNamespace);
-    S --> T(Возврат списка продуктов);
-    T --> U{Вызов save_product(product)};
-    U --> V(Сериализация данных продукта в JSON);
-    V --> W(Сохранение JSON данных в файл);
-    W --> X{Вызов list_campaign_products};
-    X --> Y(Извлечение заголовков продуктов из campaign.category.products);
-    Y --> Z(Возврат списка заголовков продуктов);
-    Z --> AA[Конец];
-    
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style AA fill:#f9f,stroke:#333,stroke-width:2px
+```mermaid
+flowchart TD
+    subgraph Fixture `campaign`
+        CampaignFixture[Create AliPromoCampaign Instance]
+    end
+
+    subgraph Test `test_initialize_campaign`
+        T1_Start[Start] --> T1_Mock_j_loads_ns[Mock `j_loads_ns` with campaign data]
+        T1_Mock_j_loads_ns --> T1_Initialize[Call `campaign.initialize_campaign()`]
+        T1_Initialize --> T1_Assert[Assert initialized data]
+        T1_Assert --> T1_End[End]
+    end
+
+    subgraph Test `test_get_category_products_no_json_files`
+        T2_Start[Start] --> T2_Mock_get_filenames[Mock `get_filenames` to return empty list]
+        T2_Mock_get_filenames --> T2_Mock_fetch_product_data[Mock `fetch_product_data` to return empty list]
+        T2_Mock_fetch_product_data --> T2_GetProducts[Call `campaign.get_category_products(force=True)`]
+        T2_GetProducts --> T2_Assert[Assert empty product list]
+        T2_Assert --> T2_End[End]
+    end
+
+    subgraph Test `test_get_category_products_with_json_files`
+        T3_Start[Start] --> T3_Mock_get_filenames[Mock `get_filenames` with JSON file]
+        T3_Mock_get_filenames --> T3_Mock_j_loads_ns[Mock `j_loads_ns` with product data]
+        T3_Mock_j_loads_ns --> T3_GetProducts[Call `campaign.get_category_products()`]
+        T3_GetProducts --> T3_Assert[Assert product data]
+        T3_Assert --> T3_End[End]
+    end
+
+    subgraph Test `test_create_product_namespace`
+        T4_Start[Start] --> T4_CreateProductData[Create product_data dictionary]
+        T4_CreateProductData --> T4_CreateNamespace[Call `campaign.create_product_namespace(**product_data)`]
+        T4_CreateNamespace --> T4_Assert[Assert product namespace]
+        T4_Assert --> T4_End[End]
+    end
+
+    subgraph Test `test_create_category_namespace`
+        T5_Start[Start] --> T5_CreateCategoryData[Create category_data dictionary]
+        T5_CreateCategoryData --> T5_CreateNamespace[Call `campaign.create_category_namespace(**category_data)`]
+        T5_CreateNamespace --> T5_Assert[Assert category namespace]
+        T5_Assert --> T5_End[End]
+    end
+
+    subgraph Test `test_create_campaign_namespace`
+        T6_Start[Start] --> T6_CreateCampaignData[Create campaign_data dictionary]
+        T6_CreateCampaignData --> T6_CreateNamespace[Call `campaign.create_campaign_namespace(**campaign_data)`]
+        T6_CreateNamespace --> T6_Assert[Assert campaign namespace]
+        T6_Assert --> T6_End[End]
+    end
+
+   subgraph Test `test_prepare_products`
+        T7_Start[Start] --> T7_Mock_get_prepared_products[Mock `get_prepared_products`]
+        T7_Mock_get_prepared_products --> T7_Mock_read_text_file[Mock `read_text_file`]
+        T7_Mock_read_text_file --> T7_Mock_get_filenames[Mock `get_filenames`]
+        T7_Mock_get_filenames --> T7_Mock_process_affiliate_products[Mock `process_affiliate_products`]
+        T7_Mock_process_affiliate_products --> T7_PrepareProducts[Call `campaign.prepare_products()`]
+        T7_PrepareProducts --> T7_Assert[Assert `process_affiliate_products` called]
+        T7_Assert --> T7_End[End]
+   end
+   
+    subgraph Test `test_fetch_product_data`
+        T8_Start[Start] --> T8_CreateProductIDs[Create product_ids list]
+        T8_CreateProductIDs --> T8_Mock_process_affiliate_products[Mock `process_affiliate_products` with product data]
+        T8_Mock_process_affiliate_products --> T8_FetchData[Call `campaign.fetch_product_data(product_ids)`]
+        T8_FetchData --> T8_Assert[Assert fetched product data]
+        T8_Assert --> T8_End[End]
+    end
+    
+    subgraph Test `test_save_product`
+        T9_Start[Start] --> T9_CreateProduct[Create SimpleNamespace product object]
+        T9_CreateProduct --> T9_Mock_j_dumps[Mock `j_dumps`]
+        T9_Mock_j_dumps --> T9_Mock_Path_write_text[Mock `Path.write_text`]
+        T9_Mock_Path_write_text --> T9_SaveProduct[Call `campaign.save_product(product)`]
+         T9_SaveProduct --> T9_Assert[Assert `Path.write_text` was called with correct args]
+         T9_Assert --> T9_End[End]
+    end
+
+   subgraph Test `test_list_campaign_products`
+        T10_Start[Start] --> T10_CreateProducts[Create SimpleNamespace product objects]
+        T10_CreateProducts --> T10_SetCategoryProducts[Set `campaign.category.products`]
+        T10_SetCategoryProducts --> T10_ListProducts[Call `campaign.list_campaign_products()`]
+        T10_ListProducts --> T10_Assert[Assert product titles are correct]
+        T10_Assert --> T10_End[End]
+    end
+   
+    CampaignFixture --> T1_Start
+    CampaignFixture --> T2_Start
+    CampaignFixture --> T3_Start
+    CampaignFixture --> T4_Start
+    CampaignFixture --> T5_Start
+    CampaignFixture --> T6_Start
+    CampaignFixture --> T7_Start
+    CampaignFixture --> T8_Start
+    CampaignFixture --> T9_Start
+    CampaignFixture --> T10_Start
 ```
 
-### Описание `mermaid` диаграммы:
+**Импорты:**
 
--   **Начало (A) и Конец (AA):** Указывают на начало и конец процесса.
--   **Создание экземпляра AliPromoCampaign (B):** Создается объект класса `AliPromoCampaign` для управления кампанией.
--   **Проверка: существует ли файл campaign.json? (C):** Проверяет наличие файла с данными кампании.
--   **Загрузка данных кампании из JSON (D):** Загружает данные кампании из JSON файла, если он существует.
--   **Создание новой структуры данных кампании (E):** Создает структуру данных для новой кампании.
--   **Инициализация данных кампании (F):** Инициализирует данные кампании, загруженные или вновь созданные.
--   **Вызов `get_category_products` (G):** Вызывает метод для получения продуктов категории.
--   **Проверка: `force=True` или нет файлов json? (H):** Проверяет, нужно ли загружать данные из файла или принудительно из сети.
--   **Вызов `fetch_product_data` (I):** Вызывает метод для загрузки данных о продуктах.
--    **Загрузка данных о продуктах из json файлов (J):** Загрузка ранее сохраненных данных о продуктах из json файлов.
--   **Получение данных о продуктах (K):** Получает список данных о продуктах.
--    **Создание SimpleNamespace для каждого продукта (L):**  Создает объект SimpleNamespace для каждого продукта.
--   **Возврат списка продуктов (M):** Возвращает список продуктов.
--   **Вызов `prepare_products` (N):** Вызывает метод для подготовки продуктов.
--   **Чтение исходного HTML-файла (O):** Читает HTML файл с исходными данными.
--    **Вызов `process_affiliate_products` (P):** Вызывает метод обработки аффилированных продуктов.
--    **Создание SimpleNamespace для каждого продукта (Q):** Создание  SimpleNamespace объектов для каждого продукта, после обработки.
--   **Вызов `fetch_product_data` с `product_ids` (R):** Вызывает метод `fetch_product_data` с определенными идентификаторами продуктов.
--   **Вызов `process_affiliate_products` и создание списка `SimpleNamespace` (S):** Вызывает метод `process_affiliate_products` для обработки данных о продуктах и возвращает результат в виде списка объектов `SimpleNamespace`.
--   **Возврат списка продуктов (T):** Возвращает список обработанных продуктов.
--   **Вызов `save_product(product)` (U):** Вызывает метод для сохранения данных продукта.
--   **Сериализация данных продукта в JSON (V):** Преобразует данные о продукте в формат JSON.
--   **Сохранение JSON данных в файл (W):** Сохраняет данные продукта в JSON файл.
--   **Вызов `list_campaign_products` (X):** Вызывает метод для получения списка названий продуктов.
--   **Извлечение заголовков продуктов из `campaign.category.products` (Y):** Извлекает заголовки продуктов из категории.
--   **Возврат списка заголовков продуктов (Z):** Возвращает список заголовков продуктов.
--   Диаграмма описывает последовательность выполнения тестов и методов класса `AliPromoCampaign`.
-
-### Зависимости:
-- `pytest`: Фреймворк для тестирования. Используется для написания и запуска тестов.
-- `pathlib`: Модуль для работы с путями файлов. Используется для создания путей и записи в файлы.
-- `types.SimpleNamespace`: Простой класс для создания объектов с произвольными атрибутами. Используется для представления данных.
-- `src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign`: Класс, который тестируется в этом файле.
-- `src.utils.jjson.j_dumps`: Функция для сериализации объектов в JSON.
-- `src.utils.jjson.j_loads_ns`: Функция для десериализации JSON в объект `SimpleNamespace`.
+- `pytest`: Фреймворк для тестирования в Python.
+- `pathlib.Path`: Для работы с путями файлов.
+- `types.SimpleNamespace`: Для создания простых объектов с атрибутами.
+- `src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign`: Класс для управления кампаниями AliExpress.
+- `src.utils.jjson.j_dumps, src.utils.jjson.j_loads_ns`: Функции для работы с JSON.
 - `src.utils.file.save_text_file`: Функция для сохранения текста в файл.
-- `src.utils.file.read_text_file`: Функция для чтения текста из файла.
-- `src.utils.file.get_filenames`: Функция для получения списка файлов по пути.
-- `src`: Указывает на папку с исходными файлами проекта, используется для импорта `gs`.
+- `src.utils.file`: Пакет с утилитами для работы с файлами.
+- `src.gs`: Глобальные настройки проекта.
+
+**Классы:**
+
+- `AliPromoCampaign`: Основной класс для управления кампаниями, используемый для тестирования.
+
+**Функции:**
+
+- `campaign()`: Fixture для создания экземпляра `AliPromoCampaign`.
+- `test_initialize_campaign(mocker, campaign)`: Тестирует инициализацию данных кампании.
+- `test_get_category_products_no_json_files(mocker, campaign)`: Тестирует получение продуктов категории без JSON-файлов.
+- `test_get_category_products_with_json_files(mocker, campaign)`: Тестирует получение продуктов категории с JSON-файлами.
+- `test_create_product_namespace(campaign)`: Тестирует создание пространства имен продукта.
+- `test_create_category_namespace(campaign)`: Тестирует создание пространства имен категории.
+- `test_create_campaign_namespace(campaign)`: Тестирует создание пространства имен кампании.
+- `test_prepare_products(mocker, campaign)`: Тестирует подготовку продуктов для кампании.
+- `test_fetch_product_data(mocker, campaign)`: Тестирует получение данных о продуктах.
+- `test_save_product(mocker, campaign)`: Тестирует сохранение данных продукта.
+- `test_list_campaign_products(campaign)`: Тестирует получение списка названий продуктов кампании.
+
+**Переменные:**
+
+- `campaign_name`: Имя тестовой кампании ("test_campaign").
+- `category_name`: Имя тестовой категории ("test_category").
+- `language`: Язык ("EN").
+- `currency`: Валюта ("USD").
+- `mock_json_data`, `mock_product_data`: Моковые данные для тестов.
 
 ## <объяснение>
 
-### Импорты:
+**Импорты:**
+- `pytest`:  Используется для создания тестовых функций и фикстур, а также для мокирования внешних зависимостей.
+- `pathlib`: Предоставляет удобный способ работы с файловыми путями, что особенно важно при тестировании операций с файловой системой.
+- `types.SimpleNamespace`:  Используется для создания простых объектов, которые ведут себя как обычные объекты, но атрибуты которых можно устанавливать динамически. Это упрощает создание моковых объектов для тестирования.
+- `src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign`: Этот импорт подключает класс `AliPromoCampaign`, который является ключевым компонентом для управления рекламными кампаниями AliExpress. Тесты нацелены на проверку корректности его работы.
+- `src.utils.jjson`: Этот модуль, вероятно, содержит функции для работы с JSON данными, такие как сериализация и десериализация объектов. Это позволяет сохранять и загружать данные кампаний и продуктов.
+- `src.utils.file`: Содержит функции для операций с файлами, такие как чтение и запись файлов, что необходимо для работы с данными кампаний, хранящимися в файлах.
+- `src.gs`: Этот модуль, вероятно, содержит глобальные настройки проекта.
 
--   `pytest`: Импортируется для создания тестовых функций и использования фикстур.
--   `pathlib.Path`: Используется для работы с путями к файлам, в частности для сохранения данных продуктов.
--   `types.SimpleNamespace`: Используется для создания простых объектов с атрибутами, что позволяет имитировать данные продукта, категории и кампании.
--   `src.suppliers.aliexpress.campaign.ali_promo_campaign.AliPromoCampaign`: Импортируется класс, который тестируется. Представляет кампанию AliExpress.
--   `src.utils.jjson.j_dumps` и `src.utils.jjson.j_loads_ns`: Функции для работы с JSON данными, используется для сохранения и загрузки данных о продуктах.
--   `src.utils.file.save_text_file`, `src.utils.file.read_text_file` и `src.utils.file.get_filenames`: Функции для работы с файлами, используются для чтения HTML файлов и списка файлов.
--   `src.gs`: Импортируется глобальная переменная `gs` (не используется в представленном коде).
+**Классы:**
+- `AliPromoCampaign`: Класс, который представляет логику управления рекламной кампанией на AliExpress. Он имеет методы для инициализации кампании, получения продуктов, создания пространств имен для продуктов и кампаний, подготовки данных, сохранения продуктов и получения списка продуктов кампании.
 
-### Классы:
+**Функции:**
+- `campaign()`: Это фикстура pytest, которая создает экземпляр класса `AliPromoCampaign` перед запуском каждого теста. Это позволяет избежать дублирования кода и обеспечивает единообразие окружения для тестов.
+- Функции тестирования (`test_...`): Каждая функция тестирования проверяет конкретный метод или аспект класса `AliPromoCampaign`, используя мокирование для изоляции тестируемого кода и создания необходимых условий для теста.
+   - `mocker`: Модуль `pytest-mock`, для замены объектов и методов моками.
+   -  `campaign`: Экземпляр `AliPromoCampaign` созданный `fixture`.
+- `test_initialize_campaign`: Тестирует метод `initialize_campaign` класса `AliPromoCampaign` который загружает данные кампании.
+- `test_get_category_products_no_json_files` и `test_get_category_products_with_json_files`: Проверяют логику получения продуктов из JSON-файлов в различных ситуациях (есть или нет файлы).
+- `test_create_product_namespace`, `test_create_category_namespace`, `test_create_campaign_namespace`: Проверяют, что методы создания namespace работают корректно, создавая объекты с ожидаемыми атрибутами.
+- `test_prepare_products`: Тестирует метод `prepare_products` который обрабатывает HTML-данные.
+- `test_fetch_product_data`: Проверяет получение данных продукта.
+- `test_save_product`: Тестирует, как сохраняются данные продукта с использованием JSON.
+- `test_list_campaign_products`: Проверяет, что метод правильно формирует список названий продуктов.
 
--   **`AliPromoCampaign`**: Класс, представляющий кампанию AliExpress.
-    -   **Атрибуты:**
-        -   `campaign`: Объект `SimpleNamespace` для хранения данных о кампании.
-        -   `category`: Объект `SimpleNamespace` для хранения данных о категории.
-        -   `language`, `currency`: Язык и валюта кампании.
-    -   **Методы:**
-        -   `initialize_campaign`: Инициализирует данные кампании, загружая их из JSON-файла (если существует) или создавая новые.
-        -   `get_category_products`: Возвращает список продуктов для заданной категории, загружая их из JSON файлов или получая из сети.
-        -   `create_product_namespace`: Создает объект `SimpleNamespace` для хранения данных о продукте.
-        -   `create_category_namespace`: Создает объект `SimpleNamespace` для хранения данных о категории.
-        -   `create_campaign_namespace`: Создает объект `SimpleNamespace` для хранения данных о кампании.
-        -   `prepare_products`: Подготавливает данные о продуктах, читая HTML и вызывая `process_affiliate_products`.
-        -   `fetch_product_data`: Получает данные о продуктах через `process_affiliate_products`.
-        -   `save_product`: Сохраняет данные о продукте в JSON-файл.
-        -   `list_campaign_products`: Возвращает список названий продуктов в категории.
-        -   `process_affiliate_products`:  Функция обработки продуктов (не входит в данный код, но вызывается другими методами)
-        -   `get_prepared_products`: Функция получения подготовленных продуктов (не входит в данный код, но вызывается методом `prepare_products`).
-    -   **Взаимодействие:**
-        -   Использует функции из `src.utils.jjson` для работы с JSON-данными.
-        -   Использует функции из `src.utils.file` для работы с файлами.
+**Переменные:**
+- `campaign_name`, `category_name`, `language`, `currency`: Глобальные переменные, определяющие настройки кампании. Используются в тестах для создания экземпляров `AliPromoCampaign`.
+- `mock_json_data`, `mock_product_data`: Эти переменные содержат данные, которые используются для мокирования поведения внешних функций.
 
-### Функции:
+**Потенциальные ошибки и области для улучшения:**
+- Тесты хорошо охватывают основные функции `AliPromoCampaign`.
+- Мокирование помогает изолировать тесты и проверять логику, не завися от внешних факторов.
+- Можно добавить больше тестов для крайних случаев или ошибок.
+- Можно добавить больше assert для более точных проверок.
+- Можно рассмотреть добавление type hints.
 
--   `campaign()`:
-    -   **Аргументы:** Нет.
-    -   **Возвращает:** Экземпляр `AliPromoCampaign`.
-    -   **Назначение:** Фикстура `pytest`, создающая экземпляр `AliPromoCampaign` для использования в тестах.
--   `test_initialize_campaign(mocker, campaign)`:
-    -   **Аргументы:** `mocker` - фикстура для мокирования, `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `initialize_campaign` на корректную инициализацию данных кампании.
-        -   Пример: Мокирует `j_loads_ns` для возврата заданных данных и проверяет что данные кампании инициализированы.
--   `test_get_category_products_no_json_files(mocker, campaign)`:
-    -   **Аргументы:** `mocker` - фикстура для мокирования, `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `get_category_products`, когда нет JSON-файлов.
-        -   Пример: Мокирует `get_filenames` для возврата пустого списка и проверяет что возвращаемый список продуктов пуст.
--   `test_get_category_products_with_json_files(mocker, campaign)`:
-    -   **Аргументы:** `mocker` - фикстура для мокирования, `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `get_category_products`, когда JSON-файлы есть.
-        -  Пример: Мокирует `get_filenames` для возврата списка файлов и `j_loads_ns` для возврата мок-данных и проверяет, что возвращается список продуктов с корректными данными.
--   `test_create_product_namespace(campaign)`:
-    -   **Аргументы:** `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `create_product_namespace` на корректное создание пространства имен для продукта.
-        -   Пример: Вызывает метод `create_product_namespace` и проверяет, что возвращаемый объект `SimpleNamespace` содержит нужные данные.
--   `test_create_category_namespace(campaign)`:
-    -   **Аргументы:** `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `create_category_namespace` на корректное создание пространства имен для категории.
-        -   Пример: Вызывает метод `create_category_namespace` и проверяет, что возвращаемый объект `SimpleNamespace` содержит нужные данные.
--   `test_create_campaign_namespace(campaign)`:
-    -   **Аргументы:** `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `create_campaign_namespace` на корректное создание пространства имен для кампании.
-        -   Пример: Вызывает метод `create_campaign_namespace` и проверяет, что возвращаемый объект `SimpleNamespace` содержит нужные данные.
--   `test_prepare_products(mocker, campaign)`:
-    -   **Аргументы:** `mocker` - фикстура для мокирования, `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `prepare_products` на вызов метода `process_affiliate_products`.
-        -   Пример: Мокирует `get_prepared_products` для возврата пустого списка, `read_text_file` для возврата текста, `get_filenames` для возврата списка файлов и проверяет, что метод `process_affiliate_products` был вызван.
--   `test_fetch_product_data(mocker, campaign)`:
-    -   **Аргументы:** `mocker` - фикстура для мокирования, `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `fetch_product_data` на корректное получение данных о продуктах.
-        -   Пример: Мокирует `process_affiliate_products` для возврата списка продуктов и проверяет, что метод возвращает правильный список продуктов.
--   `test_save_product(mocker, campaign)`:
-    -   **Аргументы:** `mocker` - фикстура для мокирования, `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `save_product` на корректное сохранение данных о продукте.
-        -   Пример: Мокирует `j_dumps` для возврата JSON строки и `Path.write_text` и проверяет, что метод вызван с нужными данными.
--   `test_list_campaign_products(campaign)`:
-    -   **Аргументы:** `campaign` - фикстура `AliPromoCampaign`.
-    -   **Возвращает:** Ничего.
-    -   **Назначение:** Тестирует метод `list_campaign_products` на корректное получение списка названий продуктов.
-        -   Пример: Добавляет мок-продукты в категорию кампании и проверяет, что возвращаемый список заголовков продуктов соответствует ожидаемому.
-
-### Переменные:
-
--   `MODE`: Глобальная переменная, определяющая режим работы (`dev`), не используется в представленном коде, но возможно используется в других частях проекта.
--  `campaign_name`:  Строка, хранит имя кампании для тестов (`test_campaign`).
--  `category_name`:  Строка, хранит имя категории для тестов (`test_category`).
--  `language`: Строка, хранит язык для тестов (`EN`).
--  `currency`: Строка, хранит валюту для тестов (`USD`).
--   `mock_json_data`, `mock_product_data`, `product_data`, `category_data`, `campaign_data`: Словари, используемые для мокирования и тестирования данных.
--   `product_ids`: Список идентификаторов продуктов, используемый в тестах.
--   `mock_products`: Список объектов `SimpleNamespace`, имитирующих продукты.
--   `product`, `camp`, `products`, `category`, `product_titles` и т.д.: Локальные переменные, используемые для хранения данных в тестах.
-
-### Потенциальные ошибки или области для улучшения:
-
--   **Зависимость от `process_affiliate_products`**: Тесты мокируют этот метод, что делает их менее интеграционными. Было бы полезно иметь тесты, которые проверяют взаимодействие с этим методом.
--   **Отсутствие явной обработки ошибок**: В коде не видно явной обработки ошибок, например, при чтении файлов или работе с сетью.
--   **Жестко закодированные пути**: Пути к файлам могут быть жестко закодированы, что может привести к проблемам при изменении структуры проекта. Лучше использовать переменные среды или относительные пути.
--   **Ограниченное тестирование**: Тесты проверяют в основном вызовы методов и возвращаемые значения, но не проверяют, как эти методы взаимодействуют друг с другом и с другими частями системы.
-
-### Взаимосвязь с другими частями проекта:
-
--   **`src.utils.jjson`**: Используется для работы с JSON данными, позволяя сохранять и загружать данные о продуктах, категориях и кампаниях.
--   **`src.utils.file`**: Используется для работы с файловой системой, чтения и записи файлов, получения списка файлов.
--   **`src.suppliers.aliexpress.campaign.ali_promo_campaign`**: Класс, представляющий логику работы с кампаниями AliExpress и являющийся основным объектом тестирования.
--   Тесты предполагают, что другие части проекта (`process_affiliate_products` и `get_prepared_products`) функционируют корректно.
+**Взаимосвязи с другими частями проекта:**
+- `src.suppliers.aliexpress.campaign.ali_promo_campaign`: Данный модуль зависит от пакетов `src.utils.jjson` и `src.utils.file` для работы с данными и файловой системой, что показывает взаимодействие между компонентами проекта.
+- `src.gs`: Этот модуль представляет общие настройки, что указывает на общую конфигурацию для разных частей проекта.

@@ -2,7 +2,7 @@ import socket
 from typing import Tuple, Optional
 from src.logger.logger import logger
 
-def get_free_port(host: str, port_range: Optional[Tuple[int, int]] = None) -> int:
+def get_free_port(host: str, port_range: Optional[Tuple[int, int] | Tuple[str, str]] = None) -> int:
     """
     Finds and returns a free port within the specified range, or the first available port if no range is given.
 
@@ -39,7 +39,7 @@ def get_free_port(host: str, port_range: Optional[Tuple[int, int]] = None) -> in
              raise ValueError(f'Invalid port range {port_range}')
 
         min_port, max_port = port_range
-        for port in range(min_port, max_port + 1):
+        for port in range(int(min_port), int(max_port) + 1):
             if not _is_port_in_use(host, port):
                 return port
         logger.error(f'Error: No free port found in range {port_range}')

@@ -1,346 +1,295 @@
 ## <алгоритм>
 
-**Общая схема работы `AliPromoCampaign`:**
+1.  **Инициализация `AliPromoCampaign`**:
+    *   При создании экземпляра `AliPromoCampaign` с именем кампании, языком и валютой, проверяется наличие файла конфигурации кампании (`{language}_{currency}.json`) в директории кампании.
+        *   **Пример**: `campaign = AliPromoCampaign("new_campaign", "EN", "USD")`
+    *   Если файл не найден, запускается процесс создания новой рекламной кампании (`process_new_campaign`).
+    *   Если файл найден, загружаются данные кампании, язык и валюта.
 
-1.  **Инициализация (`__init__`)**:
-    *   Принимает имя кампании, язык и валюту.
-    *   Формирует путь к файлу кампании (`{base_path}/{language}_{currency}.json`).
-    *   Пытается загрузить JSON-файл кампании.
-        *   **Пример:** `self.base_path = gs.path.google_drive / "aliexpress" / "campaigns" / "summer_sale"` и `campaign_file_path` может быть `/.../summer_sale/EN_USD.json`.
-    *   Если файл не найден, запускает `process_new_campaign` для создания новой кампании.
-    *   Инициализирует модели ИИ (`_models_payload`).
+2.  **`process_new_campaign`**:
+    *   Создает структуру новой рекламной кампании, если файла конфигурации не существует.
+    *   Определяет языки и валюты для обработки (либо из параметров, либо из глобальных настроек `locales`).
+        *   **Пример**: Вызов `process_new_campaign` при отсутствии файла JSON.
+    *   Для каждой комбинации языка и валюты:
+        *   Инициализирует пустую структуру данных кампании (`self.campaign` как `SimpleNamespace`).
+        *   Вызывает `set_categories_from_directories` для получения списка категорий из поддиректорий `category`.
+        *   Создает копию структуры для AI (`self.campaign_ai`).
+        *   Для каждой категории вызывает `process_category_products` и `process_ai_category` для обработки товаров и данных AI.
+        *   Сохраняет обновленные данные в файл JSON.
 
-2.  **Создание новой кампании (`process_new_campaign`)**:
-    *   Определяет локали для кампании (если не переданы, использует все из `locales`).
-    *   Создаёт структуру данных для кампании (`SimpleNamespace`).
-    *   Вызывает `set_categories_from_directories` для определения категорий.
-    *   Для каждой категории вызывает `process_category_products` и `process_ai_category`.
-        *   **Пример:** Создаётся кампания для EN/USD, затем для RU/ILS если не переданы `language` и `currency`.
-    *   Сохраняет данные кампании в JSON-файл.
+3.  **`set_categories_from_directories`**:
+    *   Сканирует директорию `category` внутри директории кампании.
+    *   Для каждой найденной поддиректории (категории) создает атрибут в `self.campaign.category`, используя `SimpleNamespace`.
+    *   Атрибуты каждого объекта категории - `category_name`, `title` и `description`.
+        *   **Пример**: После сканирования поддиректорий `electronics`, `fashion`, атрибуты станут доступны как  `self.campaign.category.electronics`,  `self.campaign.category.fashion`.
 
-3.  **Обработка всей кампании (`process_campaign`)**:
-    *   Получает список директорий категорий.
-        *   **Пример:** `categories_names_list` может быть `['electronics', 'clothing']` если директории `/.../summer_sale/category/electronics` и `/.../summer_sale/category/clothing` существуют.
-    *   Для каждой категории вызывает `process_category_products` и `process_ai_category`.
+4.  **`process_campaign`**:
+    *   Получает список названий категорий из директории `category`.
+    *   Для каждой категории:
+        *   Вызывает `process_category_products` для обработки товаров.
+        *   Вызывает `process_ai_category` для генерации AI данных.
+        *   **Пример**: Итерация по `electronics`, `fashion`, и т.д.
 
-4.  **Обработка продуктов категории (`process_category_products`)**:
-    *   Вызывает `read_sources` для получения ID товаров.
-    *   Инициализирует `AliAffiliatedProducts` для получения данных по товарам.
-    *   Вызывает `process_affiliate_products` для получения данных по партнерским товарам.
-        *   **Пример:** `read_sources` возвращает `['12345', '67890']`.
-    *   Возвращает список товаров или `None` если не найдены.
+5.  **`process_category_products`**:
+    *   Вызывает `read_sources` для получения ID продуктов из HTML и текстовых файлов.
+    *   Если ID продуктов не найдены, выводит сообщение об ошибке и возвращает `None`.
+    *   Инициализирует `AliAffiliatedProducts` для создания партнерских ссылок.
+    *   Вызывает `process_affiliate_products` (асинхронно) для обработки товаров и получения данных.
+    *   Возвращает список объектов `SimpleNamespace` с информацией о товарах.
+        *  **Пример**: Получает список товаров категории `electronics` с партнерскими ссылками.
 
-5.  **Получение ID товаров (`read_sources`)**:
-    *   Получает список HTML файлов из директории категории.
-    *   Извлекает ID товаров из HTML файлов.
-    *   Читает `sources.txt` (если есть) и извлекает ID от туда.
-    *   Возвращает список ID товаров.
+6. **`read_sources`**:
+    *   Ищет HTML-файлы и `sources.txt` в директории `sources` категории.
+    *   Извлекает идентификаторы товаров из HTML-файлов и `sources.txt`.
+    *   Возвращает список идентификаторов товаров или `None`, если не находит.
 
-6.  **Обработка ИИ для категории (`process_ai_category`)**:
-    *   Копирует данные кампании в `campaign_ai`.
-    *   Для каждой категории (или для указанной) вызывает `_process_category`.
-        *   **Пример:** Если `category_name` равно "electronics", обрабатывается только эта категория, иначе все.
-    *   Сохраняет сгенерированные AI данные в файл.
+7.  **`process_ai_category`**:
+    *   Обрабатывает AI данные для категорий.
+    *   Загружает системные инструкции для AI.
+    *   Инициализирует AI-модели (`GoogleGenerativeAI`, `OpenAIModel`).
+    *   Если `category_name` задан, обрабатывает только эту категорию; иначе обрабатывает все категории.
+    *   Для каждой категории:
+        *   Читает заголовки товаров из `product_titles.txt`.
+        *   Формирует запрос для AI.
+        *   Получает ответ от AI.
+        *   Обновляет данные категории в `self.campaign_ai` на основе ответа AI.
+        *   Сохраняет обновленные данные в JSON файл.
 
-7.  **Внутренняя обработка категории (`_process_category`)**:
-    *   Читает названия товаров из файла `product_titles.txt`.
-    *   Генерирует запрос для ИИ.
-    *   Получает ответ от ИИ (используется `GoogleGenerativeAI`).
-    *   Обновляет или добавляет данные категории в `campaign_ai`.
-        *   **Пример:** Ответ от ИИ - `{"electronics":{"title": "Cool electronics", "description": "Very cool electronics"}}`
-        *   обновляет или создаёт атрибут  `campaign_ai.category.electronics`
-        *   если  `campaign_ai.category.electronics` уже существовал то  обновляются  его атрибуты
+8.  **`_process_category` (внутри `process_ai_category`)**:
+    *   Читает названия продуктов из файла `product_titles.txt`.
+    *   Формирует запрос для AI, включая язык, название категории и список названий товаров.
+    *   Получает ответ от AI и преобразует его в `SimpleNamespace`
+    *   Обновляет или создает атрибуты категории в объекте `campaign_ai.category`.
 
-8.  **Сохранение данных о товарах (`dump_category_products_files`)**:
-    *   Сохраняет информацию о каждом товаре в отдельный JSON-файл.
-        *   **Пример:** Для товара с `product_id` `12345` будет создан файл `12345.json`.
+9. **`generate_output`**:
+    *   Форматирует текущую дату и время для использования в имени файла.
+    *   Преобразует список продуктов если это `SimpleNamespace` в список.
+    *   Инициализирует пустые списки для `_data_for_openai`, `_promotion_links_list`, и `_product_titles`.
+    *   Итерирует по каждому товару:
+        *   Создает словарь `categories_convertor` для конвертации категорий.
+        *   Добавляет словарь `categories_convertor` в данные товара.
+        *   Сохраняет каждый товар в виде `<product_id>.json` файла.
+        *   Добавляет `product_title` и `promotion_link` в соответствующие списки.
+    *   Вызывает  `save_product_titles` для сохранения списка названий продуктов.
+    *   Вызывает  `save_promotion_links` для сохранения списка ссылок.
+    *   Вызывает `generate_html` для генерации HTML-страниц.
 
-9.  **Установка категорий из директорий (`set_categories_from_directories`)**:
-    *   Получает список директорий в `category` директории.
-    *   Создаёт `SimpleNamespace` для каждой категории.
-        *   **Пример:** Если есть директории "electronics" и "clothing", создаст `self.campaign.category.electronics` и `self.campaign.category.clothing`.
-
-10. **Генерация вывода (`generate_output`)**:
-    *   Форматирует временную метку.
-    *   Обрабатывает список продуктов.
-    *   Сохраняет каждый продукт в отдельный JSON файл.
-    *   Сохраняет список названий и ссылок в отдельные текстовые файлы.
-    *   Вызывает `generate_html` для генерации HTML-файлов.
-
-11. **Генерация HTML (`generate_html`)**:
-    *   Формирует HTML для каждой категории на основе списка продуктов.
-    *   Сохраняет HTML-файл категории.
-    *   Создает и сохраняет общий индексный HTML файл.
-
-12. **Генерация HTML для кампании (`generate_html_for_campaign`)**:
-    *   Получает все категории кампании.
-    *   Для каждой категории получает товары.
-    *   Вызывает `ProductHTMLGenerator` и `CategoryHTMLGenerator` для генерации HTML.
-    *   Вызывает `CampaignHTMLGenerator` для генерации HTML для всей кампании.
-
-**Поток данных:**
-
-*   **Входные данные:**
-    *   `campaign_name`, `language`, `currency`.
-    *   HTML файлы или URLS для  товаров
-    *   Названия категорий (из директорий).
-*   **Выходные данные:**
-    *   JSON файлы с данными кампании и товаров.
-    *   HTML файлы для категорий и кампании.
-    *   Текстовые файлы с названиями и ссылками на товары.
-*   **Промежуточные данные:**
-    *   `SimpleNamespace` объекты для хранения данных кампании и товаров.
-    *   Списки ID товаров.
-    *   Ответы от ИИ.
+10. **`generate_html`**:
+     *  Создает HTML-файл для категории и индексный файл.
+     *  Для каждой категории создает html файл с информацией о товарах.
+     *  Собирает ссылки на все HTML-файлы категорий.
+     *  Создает html файл (`index.html`) со списком ссылок на HTML-файлы категорий.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[AliPromoCampaign.__init__] --> B{Campaign file exists?};
-    B -- Yes --> C[Load campaign from JSON];
-    B -- No --> D[AliPromoCampaign.process_new_campaign];
-    C --> E[AliPromoCampaign._models_payload];
-    D --> F[Set campaign properties];
-    F --> G[AliPromoCampaign.set_categories_from_directories];
-    G --> H[Process categories];
-    H --> I{For each category};
-    I -- Yes --> J[AliPromoCampaign.process_category_products];
-    J --> K[AliPromoCampaign.process_ai_category];
-    K --> I;
-        I -- No --> L[End process_new_campaign];
-    E --> M[AliPromoCampaign.process_campaign];
-    M --> N{Get category names};
-        N --> O{For each category};
-        O -- Yes --> P[AliPromoCampaign.process_category_products];
-            P --> Q[AliPromoCampaign.process_ai_category];
-                Q --> O;
-    O -- No --> R[End process_campaign];
+flowchart TD
+    Start(Start) --> Init[Initialize AliPromoCampaign: <br>Load or Create Campaign]
     
-    J --> S[AliPromoCampaign.read_sources];
-    S --> T{Product IDs found?};
-    T -- Yes --> U[AliAffiliatedProducts.process_affiliate_products];
-    T -- No --> V[Log error & Return None];
-    U --> W[Return products list]
-   
-    K --> X[Copy campaign data];
-    X --> Y{For each category};
-         Y -- Yes --> Z[AliPromoCampaign._process_category];
-         Z --> Y
-         Y -- No --> AA[Save AI data to file];
-    Z --> AB[Read product titles];
-    AB --> AC[Generate AI prompt];
-    AC --> AD[GoogleGenerativeAI.ask];
-    AD --> AE{Response OK?};
-        AE -- Yes --> AF[Update category data];
-        AE -- No --> AG[Log error];
+    Init -- File Not Found --> NewCampaign[Process New Campaign]
+    Init -- File Found --> LoadCampaign[Load Campaign Data]
     
-    L --> AH[AliPromoCampaign.generate_html_for_campaign];
-    R --> AH;
-    AH --> AI{For each category};
-        AI -- Yes --> AJ[AliPromoCampaign.get_category_products];
-        AJ --> AK{Products exists?};
-            AK -- Yes --> AL[ProductHTMLGenerator.set_product_html];
-            AL --> AM[CategoryHTMLGenerator.set_category_html];
-           AK -- No --> AN[Log warning];
-           AM --> AI
-        AI -- No --> AO[CampaignHTMLGenerator.set_campaign_html];
+    NewCampaign --> SetLocale[Set Locale & Initialize Campaign Object]
+    SetLocale --> SetCategories[Set Categories from Directories]
+    SetCategories --> CopyCampaign[Copy Campaign Data for AI]
+    CopyCampaign --> ProcessCategories[Process Each Category]
+    ProcessCategories --> SaveCampaignData[Save Campaign JSON]
     
-     W --> AP[AliPromoCampaign.dump_category_products_files];
-    AP --> AQ[For each product];
-    AQ --> AR[Save JSON product file]
-    AR --> AQ
+    LoadCampaign --> SetCampaignLanguage[Set Campaign Language and Currency]
+     SetCampaignLanguage --> InitModels[Initialize AI Models]
+    InitModels --> ProcessCategories
     
-     W --> AS[AliPromoCampaign.generate_output];
-     AS --> AT[Format timestamp];
-     AT --> AU[Check product list type];
-     AU --> AV[Initialize data lists];
-     AV --> AW{For each product};
-        AW -- Yes --> AX[Create category dictionary];
-            AX --> AY[Attach category dict. to product];
-                AY --> AZ[Save product JSON file];
-                    AZ --> BA[Append product data to lists];
-                    BA --> AW
-        AW -- No --> BB[Call save_product_titles];
-        BB --> BC[Call save_promotion_links];
-        BC --> BD[Call generate_html];
+    ProcessCategories -- For each category --> ProcessCategoryProducts[Process Category Products]
+    ProcessCategories -- For each category --> ProcessAICategory[Process AI Category]
+    
+    ProcessCategoryProducts --> ReadSources[Read Product Sources]
+    ReadSources --> CheckProductIDs{Product IDs Found?}
+    CheckProductIDs -- No --> LogErrorNoProducts[Log Error: No Products Found]
+    CheckProductIDs -- Yes --> InitAffiliateGenerator[Initialize AliAffiliatedProducts]
+    InitAffiliateGenerator --> ProcessAffiliateProducts[Process Affiliate Products]
+    ProcessAffiliateProducts --> CheckAffiliatedProducts{Affiliated Products?}
+    CheckAffiliatedProducts -- No --> LogErrorNoAffiliateProducts[Log Error: No Affiliated Products]
+     CheckAffiliatedProducts -- Yes --> ReturnAffiliatedProducts[Return Affiliated Products]
+     ReturnAffiliatedProducts --> DumpProducts[Dump Category Products Files]
+     
+     DumpProducts --> GenerateOutput[Generate Output Files]
+    
+    LogErrorNoProducts --> End(End)
+    LogErrorNoAffiliateProducts --> End
+    GenerateOutput --> End
+
+    ProcessAICategory --> LoadInstructions[Load System Instructions]
+    LoadInstructions --> InitAIModel[Initialize AI Model]
+    InitAIModel --> CheckCategoryName{Category Name Provided?}
+    CheckCategoryName -- Yes --> ProcessSingleCategory[Process Specific Category]
+    CheckCategoryName -- No --> ProcessAllCategories[Iterate Over All Categories]
+    ProcessSingleCategory --> GetProductTitles[Get Product Titles]
+    ProcessAllCategories -- For each category --> GetProductTitles
+    GetProductTitles --> CreateAIPrompt[Create AI Prompt]
+    CreateAIPrompt --> GetAIResponse[Get Response from AI Model]
+    GetAIResponse --> UpdateCategoryData[Update Campaign Category Data]
+    UpdateCategoryData --> SaveAIData[Save AI Data to File]
+    SaveAIData --> End
+    
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#f9f,stroke:#333,stroke-width:2px
+    
+    
+    
+    
 ```
 
-**Описание зависимостей:**
-
-1.  **`AliPromoCampaign`**: Главный класс, управляющий рекламными кампаниями.
-2.  **`AliAffiliatedProducts`**: Класс для обработки партнерских товаров AliExpress.
-3.  **`GoogleGenerativeAI` / `OpenAIModel`**: Классы для взаимодействия с моделями ИИ.
-4.  **`src.utils.file`**: Модуль для работы с файлами (чтение, запись, получение списка файлов).
-5.  **`src.utils.jjson`**: Модуль для работы с JSON (загрузка, сохранение).
-6.  **`src.utils.convertors.csv`**: Модуль для конвертации CSV в словарь.
-7.  **`src.utils.printer`**: Модуль для красивого вывода.
-8.  **`src.suppliers.aliexpress.utils.extract_product_id`**: Модуль для извлечения ID продуктов из HTML или URL.
-9.  **`src.suppliers.aliexpress.campaign.html_generators`**: Модуль для генерации HTML.
-10. **`src.logger.logger`**: Модуль для логирования.
-11. **`src.gs`**: Модуль, содержащий общие настройки проекта.
-12. **`src.suppliers.aliexpress.utils.locales`**: Модуль с настройками локализации.
-
-**Связи:**
-
-*   `AliPromoCampaign` использует классы из `src.ai` для генерации контента с помощью ИИ.
-*   `AliPromoCampaign` использует модули из `src.utils` для работы с файлами, JSON, CSV и логированием.
-*   `AliPromoCampaign` взаимодействует с `AliAffiliatedProducts` для получения данных о товарах.
-*   `AliPromoCampaign` использует `src.suppliers.aliexpress.campaign.html_generators` для генерации HTML страниц.
-*   `src.gs`,  `src.suppliers.aliexpress.utils.locales` - используются для настроек
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
 
 ## <объяснение>
 
 ### Импорты
+* `header`: Определяет корень проекта и устанавливает путь, используется для определения корневой директории проекта
+* `asyncio`: Для асинхронного программирования, используется для параллельного выполнения задач.
+*   `time`: Для работы со временем, например, для замеров производительности.
+*   `copy`: Для создания копий объектов, чтобы избежать нежелательных изменений.
+* `html`: Для работы с HTML, например, для экранирования символов.
+*   `pathlib`: Для работы с путями к файлам и директориям.
+*   `types.SimpleNamespace`: Для создания простых объектов с атрибутами (используется для хранения данных).
+*   `typing.List`, `typing.Optional`, `typing.Dict`: Для аннотации типов, что делает код более понятным и позволяет проводить проверку типов.
+*   `src.gs`: Глобальные настройки проекта, такие как пути, параметры, credentials,  которые используются во всем проекте.
+*   `src.suppliers.aliexpress.campaign`: Текущий модуль.
+*   `src.suppliers.aliexpress.affiliated_products_generator.AliAffiliatedProducts`: Класс для генерации партнерских ссылок на товары AliExpress.
+*   `src.suppliers.aliexpress.utils.locales`: Модуль с информацией о поддерживаемых языках и валютах.
+*  `src.ai.GoogleGenerativeAI`, `src.ai.OpenAIModel`: Классы для работы с AI-моделями Google Gemini и OpenAI.
+*   `src.suppliers.aliexpress.campaign.html_generators.ProductHTMLGenerator`, `src.suppliers.aliexpress.campaign.html_generators.CategoryHTMLGenerator`, `src.suppliers.aliexpress.campaign.html_generators.CampaignHTMLGenerator`:  Классы для генерации HTML-контента.
+*   `src.logger.logger`: Модуль для логирования событий.
+* `src.utils.file.get_filenames`, `src.utils.file.read_text_file`, `src.utils.file.get_directory_names`: Функции для работы с файловой системой.
+*   `src.utils.jjson.j_dumps`, `src.utils.jjson.j_loads_ns`, `src.utils.jjson.j_loads`: Функции для работы с JSON.
+*  `src.utils.convertors.csv.csv2dict`: Функция для конвертации CSV в словарь.
+*   `src.utils.file.save_text_file`: Функция для сохранения текстовых файлов.
+*   `src.utils.printer.pprint`: Функция для красивой печати данных.
+*  `src.suppliers.aliexpress.utils.extract_product_id.extract_prod_ids`: Функция для извлечения идентификаторов товаров из HTML или URL.
 
-*   `header`: Заголовок файла.
-*   `asyncio`: Для асинхронных операций (используется в `process_affiliate_products`).
-*   `time`: Для работы со временем.
-*   `copy`: Для создания копий объектов.
-*   `html`: Для обработки HTML (экранирование).
-*   `pathlib.Path`: Для работы с путями.
-*   `types.SimpleNamespace`: Для создания объектов с произвольными атрибутами.
-*   `typing.List`, `Optional`, `Dict`: Для аннотации типов.
-*   `src.gs`: Глобальные настройки проекта (пути, credentials).
-*   `src.suppliers.aliexpress.campaign`: Модуль для работы с кампаниями AliExpress (этот модуль).
-*   `src.suppliers.aliexpress.affiliated_products_generator`: Для получения данных о партнерских продуктах.
-*   `src.suppliers.aliexpress.utils.locales`: Для локализации (языки, валюты).
-*   `src.ai.GoogleGenerativeAI`, `src.ai.OpenAIModel`: Для интеграции с моделями ИИ.
-*   `src.suppliers.aliexpress.campaign.html_generators`: Модули для генерации HTML.
-*   `src.logger.logger`: Для логирования.
-*   `src.utils.file`: Для работы с файлами.
-*   `src.utils.jjson`: Для работы с JSON.
-*   `src.utils.convertors.csv`: Для конвертации CSV.
-*   `src.utils.printer`: Для красивой печати.
-*    `src.suppliers.aliexpress.utils.extract_product_id`: Для извлечения ID продуктов.
-
-### Класс `AliPromoCampaign`
-
-*   **Назначение**: Управление рекламными кампаниями AliExpress.
-*   **Атрибуты**:
-    *   `language` (str): Язык кампании.
-    *   `currency` (str): Валюта кампании.
-    *   `base_path` (Path): Базовый путь к директории кампании.
-    *   `campaign_name` (str): Название кампании.
-    *   `campaign` (SimpleNamespace): Данные кампании.
-    *   `campaign_ai` (SimpleNamespace): Данные кампании для AI.
-    *   `gemini` (GoogleGenerativeAI): Экземпляр класса для работы с Google Gemini.
-    *   `openai` (OpenAIModel): Экземпляр класса для работы с OpenAI.
-*   **Методы**:
-    *   `__init__`: Инициализация класса, загрузка данных кампании или создание новой.
-    *   `_models_payload`: Инициализация моделей ИИ.
-    *   `process_campaign`: Обработка всех категорий кампании.
-    *   `process_campaign_category`: Обработка конкретной категории.
-    *   `process_new_campaign`: Создание новой кампании.
-    *   `process_ai_category`: Обработка категорий с помощью ИИ.
-    *   `_process_category`: Внутренняя функция для обработки данных категории с помощью ИИ.
-    *   `process_category_products`: Обработка продуктов в категории.
-    *   `read_sources`: Чтение источников для получения ID товаров.
-    *   `dump_category_products_files`: Сохранение данных о товарах в JSON.
-    *    `set_categories_from_directories`:  Установка категорий из названий директорий.
-    *   `generate_output`: Сохранение данных в разных форматах.
-    *   `generate_html`: Создание HTML для категорий.
-    *   `generate_html_for_campaign`: Генерация HTML для всей кампании.
+### Классы
+*   **`AliPromoCampaign`**:
+    *   **Роль**: Управляет рекламной кампанией AliExpress, включая создание, обработку категорий, товаров и генерацию AI-данных.
+    *   **Атрибуты**:
+        *   `language` (str): Язык кампании.
+        *   `currency` (str): Валюта кампании.
+        *   `base_path` (Path): Путь к директории кампании.
+        *   `campaign_name` (str): Имя кампании.
+        *   `campaign` (SimpleNamespace): Объект, хранящий данные кампании.
+        *   `campaign_ai` (SimpleNamespace): Объект для хранения AI-данных кампании.
+        *   `gemini` (GoogleGenerativeAI): Экземпляр AI-модели Google Gemini.
+        *   `openai` (OpenAIModel): Экземпляр AI-модели OpenAI.
+    *   **Методы**:
+        *   `__init__`: Инициализация объекта кампании, загрузка существующих данных или запуск процесса создания новой кампании.
+        *  `_models_payload`: Инициализация AI-моделей.
+        *   `process_campaign`: Обрабатывает все категории кампании.
+        *   `process_campaign_category`: Обрабатывает конкретную категорию в кампании для всех языков и валют.
+        *   `process_new_campaign`: Создает новую рекламную кампанию.
+        *   `process_ai_category`: Обрабатывает AI-данные для категории.
+        *    `process_category_products`: Обрабатывает товары в категории, собирает информацию, генерирует партнерские ссылки.
+        *  `dump_category_products_files`: Сохраняет информацию о товарах в JSON-файлы.
+        *   `set_categories_from_directories`: Устанавливает категории кампании, основываясь на названиях поддиректорий в `category`.
+        *  `generate_output`: Сохраняет данные о товарах в различные форматы, включая JSON и HTML.
+        *  `generate_html`: Создает HTML-файлы для категории.
+        * `generate_html_for_campaign`: Генерирует HTML-страницы для рекламной кампании.
+    *   **Взаимодействие**:
+        *   Использует `AliAffiliatedProducts` для генерации партнерских ссылок.
+        *   Использует `GoogleGenerativeAI` и `OpenAIModel` для работы с AI-моделями.
+        *   Использует классы `ProductHTMLGenerator`, `CategoryHTMLGenerator`, `CampaignHTMLGenerator` для генерации HTML-страниц.
+        *   Взаимодействует с файловой системой через функции из `src.utils.file`.
 
 ### Функции
 
-*   `__init__`:
-    *   **Аргументы**: `campaign_name`, `language`, `currency`, `model`.
-    *   **Назначение**: Инициализация объекта `AliPromoCampaign`.
-    *   **Возвращаемое значение**: Нет.
-    *   **Пример:** `AliPromoCampaign(campaign_name="SummerSale", language="EN", currency="USD")`
-*   `_models_payload`:
-    *   **Аргументы**: Нет.
-    *   **Назначение**: Загрузка инструкций для AI и инициализация моделей.
-    *    **Возвращаемое значение**: Нет.
-*   `process_campaign`:
-    *   **Аргументы**: Нет.
-    *   **Назначение**: Обрабатывает все категории рекламной кампании.
-    *   **Возвращаемое значение**: Нет.
-*   `process_campaign_category`:
-     *   **Аргументы**:  `category_name`
-    *   **Назначение**: Обрабатывает все категории рекламной кампании.
-    *   **Возвращаемое значение**: `list[SimpleNamespace] | None`
-*   `process_new_campaign`:
-    *   **Аргументы**: `campaign_name`, `language`, `currency`.
-    *   **Назначение**: Создаёт новую рекламную кампанию.
-    *   **Возвращаемое значение**: Нет.
-    *   **Пример:** `campaign.process_new_campaign(campaign_name="HolidaySale", language="RU", currency="ILS")`
-*  `process_ai_category`:
-    *   **Аргументы**: `category_name`.
-    *   **Назначение**:  Генерирует AI данные для категорий.
-    *   **Возвращаемое значение**: `None`.
-     *   **Пример:** `campaign.process_ai_category("Electronics")`
-*   `_process_category`:
-    *   **Аргументы**: `category_name`.
-    *   **Назначение**: Обрабатывает AI для одной категории.
-    *   **Возвращаемое значение**: `None`.
-*   `process_category_products`:
-    *   **Аргументы**: `category_name`.
-    *   **Назначение**: Обрабатывает товары в категории.
-    *   **Возвращаемое значение**: `Optional[List[SimpleNamespace]]`.
-    *   **Пример:** `campaign.process_category_products("Electronics")`
-*   `read_sources`:
-    *   **Аргументы**: `category_name`.
-    *   **Назначение**: Получает product ID из файлов HTML и/или из sources.txt.
-    *   **Возвращаемое значение**: `Optional[List[str]]`.
-    *    **Пример:** `read_sources("Electronics")`
-*   `dump_category_products_files`:
-    *   **Аргументы**: `category_name`, `products`.
-    *   **Назначение**: Сохраняет данные о товарах в JSON файлы.
-    *   **Возвращаемое значение**: Нет.
-    *    **Пример:** `dump_category_products_files("Electronics", products)`
-*   `set_categories_from_directories`:
-    *   **Аргументы**: Нет.
-    *   **Назначение**: Устанавливает категории кампании из директорий.
-    *   **Возвращаемое значение**: Нет.
-     *   **Пример:** `self.set_categories_from_directories()`
-*   `generate_output`:
-    *   **Аргументы**: `campaign_name`, `category_path`, `products_list`.
-    *   **Назначение**: Сохраняет данные продуктов в разных форматах (json,txt,html)
+*  `read_sources(category_name: str) -> Optional[List[str]]`:
+    *   **Аргументы**:
+        *   `category_name` (str): Название категории.
+    *   **Возвращаемое значение**:
+        *   `Optional[List[str]]`: Список идентификаторов товаров или None.
+    *   **Назначение**: Читает файлы с источниками товаров и извлекает идентификаторы.
+    *   **Пример**: `read_sources("Electronics")`
+
+*  `_process_category(category_name: str)`:
+    *   **Аргументы**:
+        *   `category_name` (str): Название категории.
     *   **Возвращаемое значение**: None
-     *    **Пример:** `await generate_output("CampaignName", category_path, products_list)`
-*    `generate_html`:
-    *   **Аргументы**: `campaign_name`, `category_path`, `products_list`.
-    *   **Назначение**:  Формирует HTML для каждой категории.
-    *   **Возвращаемое значение**:  None.
-*    `generate_html_for_campaign`:
-    *   **Аргументы**:  `campaign_name`.
-    *   **Назначение**: Генерирует HTML-страницы для рекламной кампании.
-    *   **Возвращаемое значение**: `None`.
-     *   **Пример:** `campaign.generate_html_for_campaign("HolidaySale")`
+    *   **Назначение**: Обрабатывает AI данные для конкретной категории.
+
+*   `dump_category_products_files(category_name: str, products: List[SimpleNamespace])`:
+    *   **Аргументы**:
+        *   `category_name` (str): Имя категории.
+        *   `products` (List[SimpleNamespace]): Список объектов с информацией о товарах.
+    *   **Возвращаемое значение**: None.
+    *   **Назначение**: Сохраняет данные о товарах в JSON-файлы.
+    *    **Пример**:  `dump_category_products_files("Electronics", products)`
+
+* `set_categories_from_directories(self)`:
+    *   **Аргументы**: Нет
+    *   **Возвращаемое значение**: None
+    *   **Назначение**: Устанавливает категории кампании, основываясь на названиях поддиректорий в `category`.
+
+*  `generate_output(campaign_name: str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace)`:
+    *   **Аргументы**:
+        *   `campaign_name` (str): Название кампании.
+        *   `category_path` (str | Path): Путь к директории категории.
+        *    `products_list` (list[SimpleNamespace] | SimpleNamespace): Список объектов SimpleNamespace с информацией о товарах.
+    *   **Возвращаемое значение**: None
+    *   **Назначение**: Сохраняет данные о товарах в различные форматы, включая JSON и HTML.
+    *    **Пример**: `await generate_output("SummerSale", Path("/path/to/electronics"), products)`
+
+* `generate_html(campaign_name:str, category_path: str | Path, products_list: list[SimpleNamespace] | SimpleNamespace)`:
+    *   **Аргументы**:
+        *   `campaign_name` (str): Название кампании.
+        *   `category_path` (str | Path): Путь к директории категории.
+        *    `products_list` (list[SimpleNamespace] | SimpleNamespace): Список объектов SimpleNamespace с информацией о товарах.
+    *   **Возвращаемое значение**: None
+    *   **Назначение**: Создает HTML-файлы для категории и индексный файл кампании.
+
+*  `generate_html_for_campaign(campaign_name: str)`:
+    *   **Аргументы**:
+        *    `campaign_name` (str): Название кампании.
+    *   **Возвращаемое значение**: None
+    *   **Назначение**:  Генерирует HTML-страницы для рекламной кампании.
 
 ### Переменные
-
-*   `MODE`: Режим работы (`dev`).
-*   `language`: Язык кампании (str).
-*   `currency`: Валюта кампании (str).
-*   `base_path`: Путь к директории кампании (Path).
-*   `campaign_name`: Имя кампании (str).
-*   `campaign`: Данные кампании (SimpleNamespace).
-*   `campaign_ai`: Данные кампании для AI (SimpleNamespace).
-*   `gemini`: Экземпляр `GoogleGenerativeAI`.
-*   `openai`: Экземпляр `OpenAIModel`.
-*  `_l`:  внутреняя переменная `process_new_campaign` список кортежей языков и валют
-*  `categories_names_list`:  список названий категорий
-*  `product_ids`:  список id товаров
-*  `promo_generator`: Экземпляр `AliAffiliatedProducts`
-*  `category_path`, `campaign_path` - переменные типа `pathlib.Path`
+*   `language` (str): Язык кампании (например, "EN", "RU").
+*   `currency` (str): Валюта кампании (например, "USD", "ILS").
+*   `base_path` (Path): Путь к директории кампании.
+*   `campaign_name` (str): Имя кампании (например, "SummerSale").
+*   `campaign` (SimpleNamespace): Объект, хранящий данные кампании, категории, товары и тд.
+* `campaign_ai` (SimpleNamespace): Объект, хранящий данные кампании сгенерированные AI.
+*   `gemini` (GoogleGenerativeAI): Экземпляр модели Google Gemini.
+*   `openai` (OpenAIModel): Экземпляр модели OpenAI.
+*   `locales`: Глобальная переменная, определяющая языки и валюты.
+*   `logger`:  Объект для логирования.
+*   `product_ids` (List[str]): Список идентификаторов товаров.
+* `_l` (List): Список кортежей `(language, currency)` для цикла обработки языков и валют.
+* `response` (str): Строка ответа от AI модели.
+*   `product_titles` (list): Список заголовков товаров.
+*   `_product_titles` (list): Временный список для сбора заголовков продуктов перед сохранением.
+*   `_promotion_links_list` (list): Временный список для сбора ссылок на продукты.
+*   `categories_convertor` (dict): Словарь для конвертации категорий.
+*  `timestamp` (str):  Текущая дата и время в формате строки.
+*   `category` (dict): Словарь с данными для HTML категории.
+*   `category_links` (list):  Список ссылок на HTML-файлы категорий.
 
 ### Потенциальные ошибки и области для улучшения
-
-*   **Обработка ошибок**: Некоторые функции имеют базовую обработку исключений, но можно добавить более детальное логирование ошибок и обработку различных сценариев.
-*   **Зависимости**: Модуль сильно зависит от `src` пакета, что может быть проблемой при изменениях структуры проекта.
-*   **Асинхронность**: В основном код синхронный, но в некоторых местах используется `asyncio`. Стоит рассмотреть возможность сделать больше кода асинхронным.
-*   **Конфигурация**: Часть параметров (например, пути, assistant_id) прописаны в коде. Лучше перенести их в конфигурационные файлы.
-*   **Масштабируемость**: Обработка категорий и товаров может стать узким местом при большом количестве данных.
-*   **Тестирование**: Нет тестов.
+*   **Обработка ошибок**: В коде есть места, где обработка ошибок ограничена выводом в лог. Необходимо добавить более надежную обработку ошибок с возможностью повторных попыток или уведомлений.
+*   **Производительность**: При обработке большого количества категорий и товаров можно оптимизировать асинхронную обработку и параллелизацию.
+*   **Управление AI моделями**: Необходимо добавить возможность выбора и настройки используемых AI моделей.
+*   **Гибкость**: Код можно сделать более гибким, добавив параметры для настройки работы с файловой системой, AI моделями и генерацией HTML.
+* **Тестирование**: Требуется написание unit и integration тестов, для обеспечения качества кода и его стабильной работы.
 
 ### Взаимосвязи с другими частями проекта
+*   **`src.gs`**: Используется для доступа к глобальным настройкам, путям, credentials,  которые влияют на все аспекты работы класса, например, пути к файлам и настройки AI.
+*   **`src.ai`**: Модули `GoogleGenerativeAI` и `OpenAIModel`  предоставляют функциональность для взаимодействия с AI-моделями, позволяя генерировать описания кампаний и товаров.
+*  **`src.suppliers.aliexpress.affiliated_products_generator`**: Модуль `AliAffiliatedProducts` обеспечивает генерацию партнерских ссылок на товары AliExpress.
+*   **`src.suppliers.aliexpress.utils`**: Модуль `locales` предоставляет данные о языках и валютах для работы с различными регионами. `extract_product_id` позволяет извлекать id товаров из различных источников.
+*   **`src.utils`**: Модули `src.utils.file`, `src.utils.jjson`, `src.utils.convertors.csv` и `src.utils.printer` предоставляют набор функций для работы с файловой системой, JSON, CSV и вывода данных.
+*  **`src.logger.logger`**: Обеспечивает логирование различных событий и ошибок, которые могут произойти в процессе выполнения кода.
+*   **`src.suppliers.aliexpress.campaign.html_generators`**: Модули `ProductHTMLGenerator`, `CategoryHTMLGenerator`, `CampaignHTMLGenerator` предоставляют функциональность для создания HTML страниц для продуктов и кампаний.
 
-*   **`src.ai`**: Используется для генерации контента с помощью ИИ.
-*   **`src.utils`**: Используется для работы с файлами, JSON, CSV, логированием.
-*   **`src.suppliers.aliexpress`**:  Используется для получения данных о товарах AliExpress.
-*   **`src.gs`**: Общие настройки проекта.
-
-Этот анализ предоставляет подробное описание функциональности и взаимосвязей модуля `ali_promo_campaign.py`, включая его алгоритмы, структуры данных и потенциальные проблемы.
+В целом, этот код образует ядро для управления рекламными кампаниями AliExpress, предоставляя возможность создавать, обрабатывать и автоматизировать многие аспекты работы с кампаниями.

@@ -1,147 +1,149 @@
 ## <алгоритм>
 
-**1. `test_check_and_process_affiliate_products`:**
-   - **Начало:** Вызывается тестовая функция `test_check_and_process_affiliate_products` с фикстурой `ali_affiliated_products` в качестве аргумента.
-   - **Мокирование:** Мокируется метод `process_affiliate_products` объекта `ali_affiliated_products`.
-   - **Вызов тестируемого метода:** Вызывается метод `check_and_process_affiliate_products` объекта `ali_affiliated_products` с входными данными `prod_urls`.
-   - **Проверка:** Утверждается, что мокированный метод `process_affiliate_products` был вызван ровно один раз с аргументом `prod_urls`.
-   - **Завершение:** Тест завершается.
-   
-   _Пример:_
-   ```
-   ali_affiliated_products = AliAffiliatedProducts(...)
-   prod_urls = ["https://www.aliexpress.com/item/123.html", "456"]
-   # Мокирование process_affiliate_products
-   # Вызов ali_affiliated_products.check_and_process_affiliate_products(prod_urls)
-   # Проверка вызова mock_process.assert_called_once_with(prod_urls)
-   ```
+1. **Инициализация параметров:**
+   - Определяются глобальные переменные `campaign_name`, `category_name`, `language`, `currency` и `prod_urls` для использования в тестах.
+   - Создается фикстура `ali_affiliated_products`, которая возвращает экземпляр класса `AliAffiliatedProducts` с заданными параметрами.
 
-**2. `test_process_affiliate_products`:**
-   - **Начало:** Вызывается тестовая функция `test_process_affiliate_products` с фикстурой `ali_affiliated_products` в качестве аргумента.
-   - **Подготовка моков:** Создается моковый список продуктов `mock_product_details`.
-   - **Множественное мокирование:**
-     - Мокируется метод `retrieve_product_details` объекта `ali_affiliated_products`, возвращающий `mock_product_details`.
-     - Мокируется функция `ensure_https` для возвращения входных `prod_urls`.
-     - Мокируются функции `save_png_from_url`, `save_video_from_url` и `j_dumps`.
-   - **Вызов тестируемого метода:** Вызывается метод `process_affiliate_products` объекта `ali_affiliated_products` с входными данными `prod_urls`.
-   - **Проверка:**
-     - Утверждается, что длина возвращенного списка `processed_products` равна 1.
-     - Утверждается, что `product_id` первого элемента списка `processed_products` равен `"123"`.
-   - **Завершение:** Тест завершается.
-   
-    _Пример:_
-    ```
-   ali_affiliated_products = AliAffiliatedProducts(...)
-   prod_urls = ["https://www.aliexpress.com/item/123.html", "456"]
-   mock_product_details = [SimpleNamespace(product_id="123", ...)]
-   # Мокирование retrieve_product_details, ensure_https, save_png_from_url, save_video_from_url, j_dumps
-   # Вызов processed_products = ali_affiliated_products.process_affiliate_products(prod_urls)
-   # Проверка assert len(processed_products) == 1 и assert processed_products[0].product_id == "123"
-   ```
-    
-**3. Общий поток данных:**
-   -  `ali_affiliated_products` (объект класса `AliAffiliatedProducts`) создается фикстурой `ali_affiliated_products`.
-   - В тесте `test_check_and_process_affiliate_products`, `ali_affiliated_products` вызывает  `check_and_process_affiliate_products` с `prod_urls`. `check_and_process_affiliate_products` вызывает `process_affiliate_products` (мокируется для теста).
-   -  В тесте `test_process_affiliate_products`, `ali_affiliated_products` вызывает  `process_affiliate_products` с `prod_urls`. `process_affiliate_products` вызывает `retrieve_product_details` (мокируется), `ensure_https` (мокируется), `save_png_from_url` (мокируется), `save_video_from_url` (мокируется), `j_dumps`(мокируется)
-   - Данные о продуктах из `mock_product_details` обрабатываются и возвращаются в виде `processed_products`.
-   -  Тесты проверяют, что методы вызываются правильно и возвращают ожидаемые данные.
+   *Пример:*
+     - `campaign_name` = "sample_campaign"
+     - `category_name` = "sample_category"
+     - `language` = "EN"
+     - `currency` = "USD"
+     - `prod_urls` = ["https://www.aliexpress.com/item/123.html", "456"]
+2. **`test_check_and_process_affiliate_products`:**
+   - Использует фикстуру `ali_affiliated_products` для получения экземпляра `AliAffiliatedProducts`.
+   - Мокирует метод `process_affiliate_products` объекта `ali_affiliated_products`.
+   - Вызывает метод `check_and_process_affiliate_products` с `prod_urls`.
+   - Проверяет, что мокированный метод `process_affiliate_products` был вызван ровно один раз с переданными `prod_urls`.
+
+    *Пример:*
+     - `ali_affiliated_products.check_and_process_affiliate_products(prod_urls)` вызывает `ali_affiliated_products.process_affiliate_products(prod_urls)`
+
+3.  **`test_process_affiliate_products`:**
+    - Использует фикстуру `ali_affiliated_products`.
+    - Создает мокированные данные `mock_product_details`.
+    - Мокирует следующие методы и функции:
+       - `retrieve_product_details` возвращает `mock_product_details`
+       - `ensure_https` возвращает `prod_urls`
+       - `save_png_from_url`
+       - `save_video_from_url`
+       - `j_dumps` возвращает `True`.
+   - Вызывает метод `process_affiliate_products` с `prod_urls`.
+   - Проверяет, что возвращаемый список `processed_products` имеет длину 1.
+   - Проверяет, что `product_id` первого элемента списка `processed_products` равен "123".
+
+      *Пример:*
+        - `ali_affiliated_products.process_affiliate_products(prod_urls)` возвращает список, содержащий информацию о продукте с `product_id` = "123"
+
+4. **Запуск тестов:**
+    - Проверяет, что скрипт запускается как основная программа, и запускает тесты с помощью `pytest.main()`.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[Начало теста test_check_and_process_affiliate_products] --> B(Создание экземпляра AliAffiliatedProducts);
-    B --> C(Мокирование process_affiliate_products);
-    C --> D(Вызов check_and_process_affiliate_products с prod_urls);
-    D --> E(Проверка вызова мокированного process_affiliate_products);
-    E --> F[Конец теста test_check_and_process_affiliate_products];
+flowchart TD
+    Start[Start Test Execution] --> FixtureSetup[Fixture: ali_affiliated_products<br>Returns AliAffiliatedProducts instance];
     
-    G[Начало теста test_process_affiliate_products] --> H(Создание экземпляра AliAffiliatedProducts);
-    H --> I(Подготовка моковых данных mock_product_details);
-    I --> J(Мокирование retrieve_product_details);
-    J --> K(Мокирование ensure_https);
-    K --> L(Мокирование save_png_from_url);
-    L --> M(Мокирование save_video_from_url);
-        M --> N(Мокирование j_dumps);
-    N --> O(Вызов process_affiliate_products с prod_urls);
-    O --> P(Проверка длины processed_products);
-    P --> Q(Проверка product_id в processed_products);
-    Q --> R[Конец теста test_process_affiliate_products];
-    
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-        style F fill:#ccf,stroke:#333,stroke-width:2px
-        style G fill:#f9f,stroke:#333,stroke-width:2px
-        style R fill:#ccf,stroke:#333,stroke-width:2px
-    
-```
-### Объяснение зависимостей в mermaid:
+    FixtureSetup --> Test_check_and_process[Test: test_check_and_process_affiliate_products<br>Mocks process_affiliate_products method];
+     Test_check_and_process --> Call_check_and_process[Call: ali_affiliated_products.check_and_process_affiliate_products(prod_urls)];
+     Call_check_and_process --> Assert_process_called[Assert: Mocked process_affiliate_products<br>called once with prod_urls];
+     Assert_process_called --> Test_process[Test: test_process_affiliate_products<br>Mocks dependencies and tests product processing];
 
-- **Начало/Конец тестов**: Блоки `Начало теста ...` и `Конец теста ...` обозначают начало и конец выполнения каждого тестового случая.
-- **Создание экземпляра AliAffiliatedProducts**:  `AliAffiliatedProducts` является основным классом, который используется в тестах. 
-- **Мокирование**: Блоки, начинающиеся с `Мокирование`, показывают, что в тестах используются `unittest.mock.patch` для замены реальных зависимостей на моки, чтобы изолировать тестируемый код. Это необходимо, чтобы убедиться, что тест проверяет конкретно метод, который тестируется, а не полагается на работоспособность внешних зависимостей.
-  - `process_affiliate_products` мокируется в первом тесте, чтобы проверить, что `check_and_process_affiliate_products` вызывает его с правильными параметрами.
-  - `retrieve_product_details`, `ensure_https`, `save_png_from_url`, `save_video_from_url`, `j_dumps` мокируются во втором тесте, чтобы контролировать их поведение и убедиться, что `process_affiliate_products` работает с ними правильно.
-- **Вызов метода**: Блоки `Вызов ...` обозначают вызовы тестируемых методов: `check_and_process_affiliate_products` и `process_affiliate_products`.
-- **Проверка**: Блоки `Проверка ...` обозначают проверки (assert), которые выполняются после вызова тестируемых методов для проверки правильности работы.
+    Test_process --> Mock_product_details[Mock: Create mock_product_details]
+    Mock_product_details --> Mock_retrieve[Mock: retrieve_product_details]
+    Mock_retrieve --> Mock_ensure_https[Mock: ensure_https]
+    Mock_ensure_https --> Mock_save_png[Mock: save_png_from_url]
+    Mock_save_png --> Mock_save_video[Mock: save_video_from_url]
+    Mock_save_video --> Mock_j_dumps[Mock: j_dumps]
+    Mock_j_dumps --> Call_process_products[Call: ali_affiliated_products.process_affiliate_products(prod_urls)];
+    Call_process_products --> Assert_len_processed[Assert: len(processed_products) == 1];
+    Assert_len_processed --> Assert_product_id[Assert: processed_products[0].product_id == "123"];
+    Assert_product_id --> End[End Test Execution];
+
+
+    classDef mock fill:#f9f,stroke:#333,stroke-width:2px
+    class Mock_product_details,Mock_retrieve,Mock_ensure_https,Mock_save_png,Mock_save_video,Mock_j_dumps mock;
+```
+
+**Объяснение зависимостей `mermaid`:**
+
+1.  `Start` -> `FixtureSetup`: Начало выполнения тестов, где устанавливается фикстура `ali_affiliated_products`.
+2.  `FixtureSetup` -> `Test_check_and_process`:  Начинается выполнение теста `test_check_and_process_affiliate_products`, который мокирует метод `process_affiliate_products`.
+3.  `Test_check_and_process` -> `Call_check_and_process`: Вызывается метод `check_and_process_affiliate_products` с заданными `prod_urls`.
+4.  `Call_check_and_process` -> `Assert_process_called`: Проверка, что мокированный метод `process_affiliate_products` был вызван корректно.
+5.   `Assert_process_called` -> `Test_process`: Начинается выполнение теста `test_process_affiliate_products`, который мокирует зависимости.
+6.  `Test_process` -> `Mock_product_details`: Создаются мокированные данные `mock_product_details`.
+7.  `Mock_product_details` -> `Mock_retrieve`: Мокируется метод `retrieve_product_details`.
+8. `Mock_retrieve` -> `Mock_ensure_https`: Мокируется метод `ensure_https`.
+9. `Mock_ensure_https` -> `Mock_save_png`: Мокируется функция `save_png_from_url`.
+10. `Mock_save_png` -> `Mock_save_video`: Мокируется функция `save_video_from_url`.
+11. `Mock_save_video` -> `Mock_j_dumps`: Мокируется функция `j_dumps`.
+12. `Mock_j_dumps` -> `Call_process_products`: Вызывается метод `process_affiliate_products`.
+13. `Call_process_products` -> `Assert_len_processed`: Проверяется длина возвращенного списка.
+14. `Assert_len_processed` -> `Assert_product_id`: Проверяется значение `product_id` первого элемента.
+15. `Assert_product_id` -> `End`: Завершение выполнения тестов.
+
+Все блоки с `Mock_` используют `classDef mock`, что выделяет их как мокированные сущности.
 
 ## <объяснение>
 
-### Импорты:
--   `pytest`: Фреймворк для написания тестов.
--   `unittest.mock`: Модуль для создания моков и патчей в тестах.
--   `src.suppliers.aliexpress.affiliated_products_generator.AliAffiliatedProducts`: Класс, который тестируется, для генерации аффилированных продуктов.
--   `types.SimpleNamespace`: Используется для создания простых объектов с атрибутами для моковых данных.
+**Импорты:**
 
-### Классы:
+-   `pytest`: Используется для написания и запуска тестов. Это основной фреймворк для тестирования.
+-   `unittest.mock`: Модуль для создания мок-объектов, позволяющий заменять реальные объекты в тестах для изоляции тестируемого кода.
+    -   `patch`: Декоратор и контекстный менеджер для подмены объектов или методов.
+    -   `MagicMock`: Класс для создания мок-объектов.
+-   `src.suppliers.aliexpress.affiliated_products_generator`: Импортируется класс `AliAffiliatedProducts`, который является целью тестирования. Предположительно, этот класс содержит логику для работы с аффилированными продуктами AliExpress.
+-   `types.SimpleNamespace`: Используется для создания простых объектов с атрибутами, используется для эмуляции ответа от `retrieve_product_details`.
 
--   `AliAffiliatedProducts`:
-    -   **Роль:** Класс для работы с аффилированными продуктами AliExpress. Он обрабатывает ссылки на продукты, извлекает детали и сохраняет информацию.
-    -   **Атрибуты:**
-        -   `campaign_name`: Название кампании.
-        -   `category_name`: Название категории.
-        -   `language`: Язык.
-        -   `currency`: Валюта.
-    -   **Методы:**
-        -   `check_and_process_affiliate_products(prod_urls)`: Проверяет и обрабатывает ссылки на продукты, вызывая `process_affiliate_products`.
-        -   `process_affiliate_products(prod_urls)`: Обрабатывает каждую ссылку на продукт, извлекает детали и возвращает список обработанных продуктов.
-        -   `retrieve_product_details(product_url)`:  Метод, который предположительно извлекает детали продукта по ссылке (в тестах мокируется).
+**Фикстуры:**
 
-### Функции:
+-   `ali_affiliated_products`: Фикстура `pytest`, которая создает и возвращает экземпляр класса `AliAffiliatedProducts`. Она инициализирует класс с заданными параметрами (`campaign_name`, `category_name`, `language`, `currency`). Фикстуры в `pytest` обеспечивают возможность повторного использования тестовых данных и объектов.
 
--   `ali_affiliated_products()`:
-    -   **Аргументы:** Нет.
-    -   **Возвращаемое значение:** Экземпляр класса `AliAffiliatedProducts` с заданными параметрами кампании, категории, языка и валюты.
-    -   **Назначение:** Фикстура Pytest, предоставляющая объект `AliAffiliatedProducts` для тестов.
-    -   **Пример:** `ali_affiliated_products = ali_affiliated_products()`
--   `test_check_and_process_affiliate_products(ali_affiliated_products)`:
-    -   **Аргументы:** Экземпляр `AliAffiliatedProducts` из фикстуры.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Тестирует метод `check_and_process_affiliate_products` класса `AliAffiliatedProducts`, убеждаясь, что он вызывает `process_affiliate_products` с правильными параметрами.
-    -   **Пример:** `test_check_and_process_affiliate_products(ali_affiliated_products)`
--   `test_process_affiliate_products(ali_affiliated_products)`:
-    -   **Аргументы:** Экземпляр `AliAffiliatedProducts` из фикстуры.
-    -   **Возвращаемое значение:** Нет.
-    -   **Назначение:** Тестирует метод `process_affiliate_products` класса `AliAffiliatedProducts`, проверяя, правильно ли он обрабатывает продукты и возвращает результаты.
-    -   **Пример:** `test_process_affiliate_products(ali_affiliated_products)`
+**Тестовые функции:**
 
-### Переменные:
--   `MODE`: Строка, значение `'dev'`. Используется для определения режима работы приложения.
--   `campaign_name`, `category_name`, `language`, `currency`: Строки, определяющие параметры экземпляра `AliAffiliatedProducts`.
--   `prod_urls`: Список строк, содержащий примеры ссылок на товары.
--   `mock_product_details`: Список объектов `SimpleNamespace`, представляющий моковые детали товара.
--   `ali_affiliated_products`: Экземпляр `AliAffiliatedProducts`, полученный с помощью фикстуры `ali_affiliated_products`
--   `processed_products`: Список, полученный в результате вызова `ali_affiliated_products.process_affiliate_products(prod_urls)`.
+1.  `test_check_and_process_affiliate_products(ali_affiliated_products)`:
+    -   **Аргументы:**
+        -   `ali_affiliated_products`: Экземпляр `AliAffiliatedProducts`, полученный из фикстуры.
+    -   **Назначение:** Проверяет, что метод `check_and_process_affiliate_products` вызывает метод `process_affiliate_products` с правильными аргументами.
+    -   **Алгоритм:**
+        1.  Использует `patch.object`, чтобы подменить метод `process_affiliate_products` моком.
+        2.  Вызывает `check_and_process_affiliate_products` с `prod_urls`.
+        3.  Проверяет, что мок `process_affiliate_products` был вызван один раз с `prod_urls`.
 
-### Потенциальные ошибки и области для улучшения:
+2.  `test_process_affiliate_products(ali_affiliated_products)`:
+    -   **Аргументы:**
+        -   `ali_affiliated_products`: Экземпляр `AliAffiliatedProducts`, полученный из фикстуры.
+    -   **Назначение:** Проверяет логику метода `process_affiliate_products`, включая получение деталей продукта и обработку URL-адресов.
+    -   **Алгоритм:**
+        1.  Создает мок-объект `mock_product_details` для представления возвращаемых деталей продукта.
+        2.  Использует `patch.object` для мокирования метода `retrieve_product_details`, который возвращает `mock_product_details`.
+        3.  Использует `patch` для мокирования функций `ensure_https`, `save_png_from_url`, `save_video_from_url` и `j_dumps`. Это необходимо для изоляции метода `process_affiliate_products` от внешних зависимостей.
+        4.  Вызывает `process_affiliate_products` с `prod_urls` и сохраняет результат в `processed_products`.
+        5.  Проверяет, что длина `processed_products` равна 1.
+        6.  Проверяет, что `product_id` первого элемента `processed_products` равен "123".
 
-1.  **Жестко заданные параметры:** Параметры (`campaign_name`, `category_name`, `language`, `currency`, `prod_urls`) в тестах заданы жестко. Можно использовать параметризацию для более гибкого тестирования.
-2.  **Мокирование внешних зависимостей**: Код мокирует функции `ensure_https`, `save_png_from_url`, `save_video_from_url` и `j_dumps`. В реальном коде может понадобиться протестировать их интеграцию.
-3.  **Отсутствие тестов исключений:** Нет тестов, которые бы проверяли, как код обрабатывает исключения при извлечении информации о продукте.
-4.  **Недостаток проверок:** Тесты проверяют только наличие одного продукта в результате и его `product_id`. Хорошо бы добавить проверки других атрибутов продукта.
-5. **Обработка невалидных URL**:  Тесты не покрывают ситуацию, когда в `prod_urls` есть невалидные URL-адреса.
+**Переменные:**
 
-### Цепочка взаимосвязей с другими частями проекта:
+-   `campaign_name`, `category_name`, `language`, `currency`: Строковые константы, представляющие метаданные кампании.
+-   `prod_urls`: Список URL-адресов продуктов.
+-   `mock_product_details`: Список объектов `SimpleNamespace`, представляющий детали продукта, возвращаемые мокированным методом `retrieve_product_details`.
+-   `mock_process`: Мок объекта `process_affiliate_products`.
+-   `processed_products`: Результат вызова метода `process_affiliate_products`, ожидается список обработанных продуктов.
 
--   Этот файл находится в поддиректории `_pytests` и предназначен для тестирования модуля `src.suppliers.aliexpress.affiliated_products_generator`.
--   `AliAffiliatedProducts`  взаимодействует с функциями `ensure_https`, `save_png_from_url`, `save_video_from_url` и `j_dumps`, расположенными, вероятно, в том же модуле или в смежных файлах.
--   Тесты используют фреймворк `pytest` и `unittest.mock` для тестирования функциональности.
+**Потенциальные ошибки и области для улучшения:**
+
+1.  **Жестко закодированные значения:** В тестах используются жестко закодированные значения (например, "123" для `product_id`). Лучше использовать параметризацию или константы для повышения гибкости.
+2.  **Множественные моки:** Тест `test_process_affiliate_products` мокирует несколько зависимостей.  Это может усложнить отладку. Возможно, стоит разбить его на несколько тестов, чтобы упростить проверку каждого компонента по отдельности.
+3.  **Отсутствие проверки деталей обработки**: Тест `test_process_affiliate_products` не проверяет точные данные возвращенных продуктов, только длину списка и product_id.
+4.  **Отсутствие комментариев:** В коде есть несколько комментариев в начале, но нет описания что делают функции в коде.
+
+**Взаимосвязи с другими частями проекта:**
+
+-   `AliAffiliatedProducts` класс взаимодействует с модулями для получения деталей продукта (предположительно), сохранения изображений, видео и преобразования данных в JSON (мокированные функции).
+-   `ensure_https`, `save_png_from_url`, `save_video_from_url`, `j_dumps` : Эти функции импортируются из модуля `src.suppliers.aliexpress.affiliated_products_generator`, что говорит о наличии общего функционала в этом модуле.
+-   Тест проверяет работу класса `AliAffiliatedProducts`, предполагается, что этот класс используется в других частях проекта для обработки аффилированных продуктов AliExpress.
+
+**Дополнительно**
+
+В коде не используется `import header`, поэтому дополнительный `mermaid` блок для `header.py` не требуется.

@@ -8,7 +8,7 @@ from typing import Dict
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 from aiohttp import web
-from aiogram.webhook.aiohttp_server import setup_application
+# from aiogram.webhook.aiohttp_server import setup_application # Удалил эту строку
 
 import header
 from src import gs
@@ -25,8 +25,9 @@ class TelegramBot:
     application: Application
     host: str
     port: int
+    
 
-    def __init__(self, token: str, config_path: Path):
+    def __init__(self, token: str, bot_handler):
         """Initialize the Telegram bot.
 
         :param token: Telegram bot token, e.g., `gs.credentials.telegram.bot.kazarinov`.
@@ -34,16 +35,18 @@ class TelegramBot:
         :param config_path: Path to the JSON configuration file.
         :type config_path: Path
         """
-        config_path = config_path if config_path else Path(__file__).parent / 'config.json'
-        self._load_config()
+        config_path = Path(__file__).parent.parent / 'config.json'
+
+        self._load_config(config_path)
         self.application = Application.builder().token(token).build()
+        self.bot_handler = bot_handler
         self.register_handlers()
 
 
     def _load_config(self, config_path:str | Path) -> None:
         """Load configuration from JSON file."""
         try:
-            with open(self.config_path, 'r') as f:
+            with open(config_path, 'r') as f:
                 config = json.load(f)
                 bot_config = config.get(self.__class__.__name__, {})
                 if bot_config:
@@ -71,6 +74,7 @@ class TelegramBot:
         self.application.add_handler(CommandHandler('start', self.start))
         self.application.add_handler(CommandHandler('help', self.help_command))
         self.application.add_handler(CommandHandler('sendpdf', self.send_pdf))  # обработчик для отправки PDF
+        # Use bot_handler.handle_message for text messages
         self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
         self.application.add_handler(MessageHandler(filters.VOICE, self.handle_voice))
         self.application.add_handler(MessageHandler(filters.Document.ALL, self.handle_document))
@@ -93,10 +97,12 @@ class TelegramBot:
             '/sendpdf - Send a PDF file'
         )
 
-    async def send_pdf(self, pdf_file: str | Path) -> None:
+    async def send_pdf(self, update: Update, context: CallbackContext, pdf_file: str | Path) -> None:
         """Handle the /sendpdf command to generate and send a PDF file."""
         try:
             # Отправка PDF-файла пользователю
+            self.update = update
+            self.context = context
             with open(pdf_file, 'rb') as pdf_file_obj:
                 await self.update.message.reply_document(document=pdf_file_obj)
 
@@ -118,7 +124,7 @@ class TelegramBot:
             await file.download_to_drive(file_path)
 
             # Здесь можно добавить обработку файла (распознавание речи), например, с помощью Google Speech-to-Text
-            transcribed_text = self.transcribe_voice(file_path)
+            transcribed_text = await self.transcribe_voice(file_path)
             
             # Отправляем распознанный текст пользователю
             await self.update.message.reply_text(f'Распознанный текст: {transcribed_text}')
@@ -148,25 +154,31 @@ class TelegramBot:
         tmp_file_path = await file.download_to_drive()  # Save file locally
         return read_text_file(tmp_file_path)
 
-    async def handle_message(self, update: Update, context: CallbackContext) -> str:
-        """Handle any text message.
-
-        :param update: Update object containing the message data.
-        :type update: Update
-        :param context: Context of the current conversation.
-        :type context: CallbackContext
-        :return: Text received from the user.
-        :rtype: str
-        """
-        self.update = update
-        self.context = context
-        return self.update.message.text
+    async def handle_message(self, update: Update, context: CallbackContext) -> None:
+        """Handle any text message."""
+        await self.bot_handler.handle_message(update, context)
 
     async def handle_log(self, update: Update, context: CallbackContext) -> None:
         """Handle log messages."""
         log_message = update.message.text
         logger.info(f"Received log message: {log_message}")
         await update.message.reply_text("Log received and processed.")
+    
+    
+async def update_webhook_handler(request: web.Request) -> web.Response:
+        """Handles incoming webhook updates."""
+        app = request.app
+        bot = app['bot']
+        
+        try:
+            data = await request.json()
+            # logger.debug('Webhook data: %s', data) # Можно залогировать для отладки
+            async with bot.application:
+                await bot.application.process_update(Update.de_json(data, bot.application.bot))
+            return web.Response()
+        except Exception as e:
+            logger.error('Error processing webhook: %s', e)
+            return web.Response(status=500, text=f'Error processing webhook {e}')
 
 async def on_startup(app: web.Application):
     """Perform actions on application startup."""
@@ -180,13 +192,29 @@ async def on_shutdown(app: web.Application):
     await bot.application.bot.delete_webhook()
     logger.info("Bot stopped.")
 
+
+def setup_application(app: web.Application, application: Application):
+     """Setup telegram application to respond via webhook."""
+
+     async def update_webhook_handler(request):
+        """Handles incoming webhook updates."""
+        
+        data = await request.json()
+        # logger.debug('Webhook data: %s', data)
+
+        async with application:
+            await application.process_update(Update.de_json(data, application.bot))
+        return web.Response()
+
+     app['webhook_handler'] = update_webhook_handler
+
 def create_app(bot: TelegramBot) -> web.Application:
     """Create and configure the aiohttp application."""
     app = web.Application()
     app['bot'] = bot
 
     # Register webhook handler
-    app.router.add_post(f'/{gs.credentials.telegram.bot.kazarinov}', bot.application.update_webhook)
+    app.router.add_post(f'/webhook', update_webhook_handler)
 
     # Register startup and shutdown handlers
     app.on_startup.append(on_startup)
@@ -195,17 +223,5 @@ def create_app(bot: TelegramBot) -> web.Application:
     # Setup application with the bot
     setup_application(app, bot.application)
 
+
     return app
-
-def main() -> None:
-    """Start the bot with webhook."""
-    token = gs.credentials.telegram.bot.kazarinov
-    config_path = Path(__file__).parent / 'config.json'
-    bot = TelegramBot(token, config_path)
-
-    # Create and run the aiohttp application
-    app = create_app(bot)
-    web.run_app(app, host=bot.host, port=bot.port)
-
-if __name__ == '__main__':
-    main()
