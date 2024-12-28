@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.gemini.html_chat """
 
@@ -70,7 +70,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для обработки JSON
 
-MODE = 'dev'
+
 
 
 """ Путь к корневой директории проекта. """
@@ -114,7 +114,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для обработки JSON
 
-MODE = 'dev'
+
 
 
 """ Путь к корневой директории проекта. """

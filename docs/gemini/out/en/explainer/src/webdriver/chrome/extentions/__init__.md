@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome.extentions """
 
@@ -57,7 +57,7 @@ No algorithm is present. The code primarily defines a module and imports some el
 ```mermaid
 graph LR
     subgraph Module: src.webdriver.chrome.extentions
-        A[MODE = 'dev'] --> B(from packaging.version import Version);
+        A[] --> B(from packaging.version import Version);
         B --> C(from .version import __version__, __doc__, __details__);
     end
 ```
@@ -75,7 +75,7 @@ This Python file (`hypotez/src/webdriver/chrome/extentions/__init__.py`) serves 
 
 ### Variables:
 
-* `MODE = 'dev'`: A global variable likely controlling the operation mode (e.g., development vs. production). This variable is set and then redefined, possibly in a config or within a higher level module. The repeated docstrings with the same value is likely an error or a leftover from a previous implementation.
+* ``: A global variable likely controlling the operation mode (e.g., development vs. production). This variable is set and then redefined, possibly in a config or within a higher level module. The repeated docstrings with the same value is likely an error or a leftover from a previous implementation.
 
 
 ### Potential Errors and Improvements:

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -91,7 +91,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Загружает настройки из файла settings.json и документацию из README.MD,
 используя функции из модуля src.utils.jjson.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -178,7 +178,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 Загружает настройки из файла settings.json и документацию из README.MD,
 используя функции из модуля src.utils.jjson.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

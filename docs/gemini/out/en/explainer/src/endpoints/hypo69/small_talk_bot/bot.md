@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 ...
 """ t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""

@@ -55,7 +55,7 @@ from src.utils.jjson import j_loads  # Используем j_loads для за�
 from src.logger.logger import logger #  Импорт логгера
 from src import gs
 
-MODE = 'dev'
+
 def set_project_root(marker_files: tuple = ('__root__',)) -> Path:
     """
     Определяет корневой каталог проекта, начиная с каталога текущего файла.

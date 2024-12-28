@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .code_assistant import CodeAssistant
 ```
@@ -66,7 +66,7 @@ The mermaid graph shows that `__init__.py` imports `CodeAssistant` from a submod
 
 
 * **Variables**:
-    * `MODE = 'dev'`: This defines a variable that likely controls the execution mode (e.g., 'dev' for development, 'prod' for production). This is common in Python projects for conditional logic and configuring behaviors based on the environment.
+    * ``: This defines a variable that likely controls the execution mode (e.g., 'dev' for development, 'prod' for production). This is common in Python projects for conditional logic and configuring behaviors based on the environment.
 
 
 * **Classes**:

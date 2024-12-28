@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 
 """ module: src.suppliers.aliexpress.gui """
 
@@ -87,7 +87,7 @@ The mermaid diagram shows the imports from `packaging.version` and the internal 
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A string variable likely setting a mode for the `aliexpress` supplier. `dev` suggests a development mode, as opposed to a `prod` or similar production mode.
+    * ``: A string variable likely setting a mode for the `aliexpress` supplier. `dev` suggests a development mode, as opposed to a `prod` or similar production mode.
     * `__version__`, `__doc__`, `__details__`: These variables are imported from `src.suppliers.aliexpress.gui.version`. These are metadata associated with the package, critical for automated tools.
 
 

@@ -14,7 +14,7 @@
 	:synopsis:модули управления рекламной кампанией Aliexpress
 
 """
-MODE = 'dev'
+
 
 
 from .ali_campaign_editor import AliCampaignEditor
@@ -69,7 +69,7 @@ The `graph LR` syntax creates a directed graph.  The `subgraph` blocks group rel
 * **Functions**: No functions are defined here, only imports.  The actual functionality is in the imported modules.
 
 
-* **Variables**: `MODE = 'dev'` is a global variable that likely controls the configuration of the module (development vs. production).  This variable should be accessible and modifiable from other files.
+* **Variables**: `` is a global variable that likely controls the configuration of the module (development vs. production).  This variable should be accessible and modifiable from other files.
 * **Potential Errors/Improvements**:
     * **Unimplemented Modules**: The `#from ...` lines with comments indicate potentially missing implementations (e.g., `AliCampaignGoogleSheet`, `JupyterCampaignEditorWidgets`).  These are commented-out, which is a good practice.
     * **File Structure**: The use of `src.` suggests a package-based project structure, which is good for organizing code.  All module imports and usages should follow a consistent naming pattern.

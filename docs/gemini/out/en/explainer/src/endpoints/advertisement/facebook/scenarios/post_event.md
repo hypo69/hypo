@@ -15,7 +15,7 @@
 	:synopsis: Публикация календарного события v группах фейсбук
 
 """
-MODE = 'dev'
+
 
 from socket import timeout
 import time

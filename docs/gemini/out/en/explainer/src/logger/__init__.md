@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper
@@ -61,7 +61,7 @@ graph LR
     *   `from .exceptions import ...`: Imports a set of custom exceptions defined within the `exceptions.py` file, all within the `src.logger` sub-package.  These exceptions are likely specific to the project and help organize errors.   The use of parentheses groups the imports and makes reading easier. This demonStartes a module structure focused on grouping relevant components.
 
 *   **Variables:**
-    *   `MODE = 'dev'`: A constant string that likely specifies the current application mode (e.g., 'dev', 'prod'). This is useful for conditional logic and configuration based on the environment.
+    *   ``: A constant string that likely specifies the current application mode (e.g., 'dev', 'prod'). This is useful for conditional logic and configuration based on the environment.
 
 *   **Potential Errors/Improvements:**
 

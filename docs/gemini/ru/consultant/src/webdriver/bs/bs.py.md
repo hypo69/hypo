@@ -55,7 +55,7 @@
         print(elements)
 """
 
-MODE = 'dev'
+
 
 import re
 from pathlib import Path

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -106,7 +106,7 @@ from src.logger import logger
 import src.gs as gs
 
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:
@@ -205,7 +205,7 @@ from src.logger import logger
 import src.gs as gs
 
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:

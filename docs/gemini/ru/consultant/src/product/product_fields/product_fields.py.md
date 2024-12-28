@@ -83,7 +83,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Dict, Optional, Any, Union

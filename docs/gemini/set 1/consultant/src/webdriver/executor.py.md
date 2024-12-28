@@ -61,7 +61,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import asyncio
 import re

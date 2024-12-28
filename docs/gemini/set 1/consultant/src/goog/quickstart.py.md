@@ -47,7 +47,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 from src import gs
 
-MODE = 'dev'
+
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/script.projects']

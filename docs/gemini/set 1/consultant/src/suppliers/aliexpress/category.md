@@ -12,7 +12,7 @@
 	:synopsis:  управление категориями aliexpress
 
 """
-MODE = 'dev'
+
 
 from typing import Union
 from pathlib import Path
@@ -137,7 +137,7 @@ def get_list_categories_from_site(s, scenario_file, brand=''):
 """
 import json
 import requests
-MODE = 'dev'
+
 
 from typing import Union
 from pathlib import Path
@@ -274,7 +274,7 @@ def get_list_categories_from_site(s, scenario_file, brand=''):
 """
 import json
 import requests
-MODE = 'dev'
+
 
 from typing import Union
 from pathlib import Path

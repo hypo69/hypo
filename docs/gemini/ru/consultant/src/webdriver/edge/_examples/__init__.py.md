@@ -33,7 +33,7 @@ from src.logger.logger import logger  # импортируем logger
 from .version import __version__, __doc__, __details__
 
 #: Режим работы модуля (dev или prod)
-MODE = 'dev'
+
 
 ...
 ```

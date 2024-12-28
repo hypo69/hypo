@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для реализации авторизации на Amazon через веб-драйвер.
 """
-MODE = 'dev'
+
 
 
 """
@@ -39,7 +39,7 @@ MODE = 'dev'
   :synopsis:
   Пустой блок документации.
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.amazon """
 
@@ -128,7 +128,7 @@ def login(s) -> bool:
 	:synopsis:
 	Модуль для реализации авторизации на Amazon через веб-драйвер.
 """
-MODE = 'dev'
+
 
 
 """
@@ -155,7 +155,7 @@ MODE = 'dev'
   :synopsis:
   Пустой блок документации.
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.amazon """
 
@@ -249,7 +249,7 @@ def login(s) -> bool:
 	:synopsis:
 	Модуль для реализации авторизации на Amazon через веб-драйвер.
 """
-MODE = 'dev'
+
 
 
 """
@@ -276,7 +276,7 @@ MODE = 'dev'
   :synopsis:
   Пустой блок документации.
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.amazon """
 

@@ -3,7 +3,7 @@
 ### <алгоритм>
 1. **Инициализация переменной `MODE`:**
    - Присваиваем строковое значение `'dev'` переменной `MODE`.
-   - Пример: `MODE = 'dev'` означает, что модуль находится в режиме разработки.
+   - Пример: `` означает, что модуль находится в режиме разработки.
 2. **Импорт класса `GoogleGenerativeAI`:**
    - Импортируем класс `GoogleGenerativeAI` из модуля `generative_ai`, расположенного в текущем пакете.
    - Пример: `from .generative_ai import GoogleGenerativeAI` позволяет использовать функциональность класса `GoogleGenerativeAI`.
@@ -13,7 +13,7 @@
 ### <mermaid>
 ```mermaid
 flowchart TD
-    Start --> InitializeMode[Initialize MODE = 'dev']
+    Start --> InitializeMode[Initialize ]
     InitializeMode --> ImportClass[Import GoogleGenerativeAI from generative_ai]
     ImportClass --> End
 ```

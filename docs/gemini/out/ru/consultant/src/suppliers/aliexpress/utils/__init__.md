@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https
@@ -37,7 +37,7 @@ from .locales import locales
 """
 import json
 
-MODE = 'dev'
+
 
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции из utils
 from .extract_product_id import extract_prod_ids
@@ -73,7 +73,7 @@ from src.logger import logger  # Импорт логгера
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт необходимых функций из других модулей
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции из utils

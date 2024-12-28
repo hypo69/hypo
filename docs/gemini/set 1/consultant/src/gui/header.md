@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 
 """
@@ -103,7 +103,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :platform: Windows, Unix
    :synopsis: Модуль, содержащий начальную настройку проекта.
 """
-MODE = 'dev'
+
 
 
 """
@@ -205,7 +205,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :platform: Windows, Unix
    :synopsis: Модуль, содержащий начальную настройку проекта.
 """
-MODE = 'dev'
+
 
 
 """

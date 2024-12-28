@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -91,7 +91,7 @@ a = AliPromoCampaign(campaign_name,category_name, 'EN','USD'))
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры создания рекламных кампаний на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -115,7 +115,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis:  Не используется.
 """
-MODE = 'dev'
+
 
 """ Модуль для примеров работы с рекламными кампаниями AliExpress. """
 
@@ -202,7 +202,7 @@ create_aliexpress_campaign(campaign_name, category_name, language, currency)
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры создания рекламных кампаний на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -228,7 +228,7 @@ MODE = 'dev'
    :synopsis:  Не используется.
 """
 
-MODE = 'dev'
+
 
 """ Модуль для примеров работы с рекламными кампаниями AliExpress. """
 

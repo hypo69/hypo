@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>
@@ -30,7 +30,7 @@ MODE = 'dev'
 
 ```mermaid
 graph TD
-    A[myai/__init__.py] --> B{MODE = 'dev'};
+    A[myai/__init__.py] --> B{};
     B --> C[Завершение];
 ```
 

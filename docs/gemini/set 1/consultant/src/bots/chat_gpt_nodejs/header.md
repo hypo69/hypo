@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.openai_bots """
 
@@ -118,7 +118,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :synopsis: Модуль для работы с ботами на основе моделей OpenAI.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -236,7 +236,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :synopsis: Модуль для работы с ботами на основе моделей OpenAI.
 
 """
-MODE = 'dev'
+
 
 
 """

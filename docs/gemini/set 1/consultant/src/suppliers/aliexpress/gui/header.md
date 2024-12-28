@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -70,7 +70,7 @@ except (FileNotFoundError, json.JSONDecodeError):
    :platform: Windows, Unix
    :synopsis: Модуль для работы с интерфейсом пользователя (GUI) для поставщика AliExpress.
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -146,7 +146,7 @@ except Exception as e:
    :platform: Windows, Unix
    :synopsis: Модуль для работы с интерфейсом пользователя (GUI) для поставщика AliExpress.
 """
-MODE = 'dev'
+
 
 import sys
 import json

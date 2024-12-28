@@ -30,7 +30,7 @@ if __name__ == "__main__":
     google_sheet_handler.upload_data_to_sheet()
 ```
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path

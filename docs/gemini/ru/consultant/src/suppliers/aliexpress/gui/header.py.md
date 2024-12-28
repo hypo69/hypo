@@ -38,7 +38,7 @@
 """
 # -*- coding: utf-8 -*-
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

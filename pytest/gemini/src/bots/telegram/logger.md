@@ -5,7 +5,7 @@ import logging
 # The user-provided code (assuming you have a logger.py file)
 # Replace with the actual content from logger.py
 # ... (example)
-MODE = 'dev'
+
 
 def configure_logging(mode=MODE):
     """Configures logging based on the mode."""

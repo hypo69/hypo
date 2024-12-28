@@ -27,7 +27,7 @@ import json # Импорт модуля json для работы с JSON
 from src.utils.jjson import j_loads # Импорт функции j_loads для загрузки JSON из файла
 from src.logger.logger import logger # Импорт logger для логирования ошибок
 
-MODE = 'dev' # Режим работы, по умолчанию 'dev'
+ # Режим работы, по умолчанию 'dev'
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
@@ -145,7 +145,7 @@ import json # Импорт модуля json для работы с JSON
 from src.utils.jjson import j_loads # Импорт функции j_loads для загрузки JSON из файла
 from src.logger.logger import logger # Импорт logger для логирования ошибок
 
-MODE = 'dev' # Режим работы, по умолчанию 'dev'
+ # Режим работы, по умолчанию 'dev'
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """

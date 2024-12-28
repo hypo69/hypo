@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Window interface for preparing advertising campaigns """
@@ -225,7 +225,7 @@ class CategoryEditor(QtWidgets.QWidget):
 	:synopsis: Модуль для работы с интерфейсом редактирования категорий рекламных кампаний AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 """ Window interface for preparing advertising campaigns """

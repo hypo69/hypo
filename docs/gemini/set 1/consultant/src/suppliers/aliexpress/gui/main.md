@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Main window interface for managing advertising campaigns """
@@ -46,7 +46,7 @@ from src.logger import logger
     :platform: Windows, Unix
     :synopsis: Главное окно приложения для управления рекламными кампаниями.
 """
-MODE = 'dev'
+
 
 
 """ Главное окно приложения для управления рекламными кампаниями """
@@ -159,7 +159,7 @@ class MainApp(QtWidgets.QMainWindow):
     :platform: Windows, Unix
     :synopsis: Главное окно приложения для управления рекламными кампаниями.
 """
-MODE = 'dev'
+
 
 
 """ Главное окно приложения для управления рекламными кампаниями """

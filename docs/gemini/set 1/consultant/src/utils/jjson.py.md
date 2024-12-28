@@ -51,7 +51,7 @@
 
 Функции в этом модуле обрабатывают различные аспекты работы с JSON и CSV данными, обеспечивая эффективную загрузку, сохранение и объединение данных.
 """
-MODE = 'dev'
+
 from datetime import datetime
 import copy
 from math import log

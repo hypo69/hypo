@@ -19,7 +19,7 @@ print(MODE) # выведет 'dev'
 ### <mermaid>
 ```mermaid
 graph LR
-    A[__init__.py] --> B(MODE = 'dev');
+    A[__init__.py] --> B();
     A --> C(import Graber from .graber);
     C --> D[Graber class];
     D --> E(Class can be used);

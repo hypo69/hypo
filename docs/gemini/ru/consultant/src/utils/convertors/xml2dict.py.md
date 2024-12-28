@@ -62,7 +62,7 @@
     result_dict = xml2dict(xml_string)
     print(result_dict)
 """
-MODE = 'dev'
+
 import re
 #  Импортируем logger
 from src.logger.logger import logger

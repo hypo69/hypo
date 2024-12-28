@@ -23,7 +23,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import re
 import requests
@@ -185,7 +185,7 @@ if __name__ == '__main__':
     # Далее можно использовать полученные прокси в других частях кода.
 """
 
-MODE = 'dev'
+
 
 import re
 import requests

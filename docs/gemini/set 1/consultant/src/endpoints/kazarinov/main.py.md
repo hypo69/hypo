@@ -22,7 +22,7 @@ from src.utils.jjson import j_loads #  Импорт функции для заг
 from src.logger.logger import logger
 from .bot import KazarinovTelegramBot
 
-MODE = 'dev'
+
 
 
 def parse_args() -> dict:
@@ -127,7 +127,7 @@ from src.utils.jjson import j_loads #  Импорт функции для заг
 from src.logger.logger import logger
 from .bot import KazarinovTelegramBot
 
-MODE = 'dev'
+
 
 
 def parse_args() -> dict:

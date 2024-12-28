@@ -17,7 +17,7 @@ sergey_mymaster_co_il при взаимодействии с PrestaShop.
 """
 from src.logger.logger import logger # импортируем logger для логирования ошибок
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 
@@ -59,7 +59,7 @@ sergey_mymaster_co_il при взаимодействии с PrestaShop.
 """
 from src.logger.logger import logger # импортируем logger для логирования ошибок
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 

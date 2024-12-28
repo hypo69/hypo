@@ -69,7 +69,7 @@
     # Загрузка данных и преобразование в SimpleNamespace
     ns_data = j_loads_ns(Path('data.json'))
 """
-MODE = 'dev'
+
 from datetime import datetime
 import copy
 from math import log

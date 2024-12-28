@@ -12,7 +12,7 @@
 	:synopsis: Модуль модели `openai`
 
 """
-MODE = 'dev'
+
 
 from .translator import translate
 from .model import OpenAIModel
@@ -36,7 +36,7 @@ from .model import OpenAIModel
 import os
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 from .translator import translate
 from .model import OpenAIModel
@@ -68,7 +68,7 @@ from .model import OpenAIModel
 import os
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 # Импортируем необходимые функции
 from .translator import translate

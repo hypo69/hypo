@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ebay """
 
@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 def get_product_data(url: str) -> dict:
@@ -125,7 +125,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 def get_product_data(url: str) -> dict:

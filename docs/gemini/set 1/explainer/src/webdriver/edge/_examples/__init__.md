@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -54,7 +54,7 @@ from .version import __version__, __doc__, __details__
 
 ```mermaid
 graph LR
-    A[hypotez/src/webdriver/edge/_examples/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/webdriver/edge/_examples/__init__.py] --> B();
     A --> C[from packaging.version import Version];
     A --> D[from .version import __version__, __doc__, __details__];
 ```
@@ -79,7 +79,7 @@ graph LR
 
 **Переменные:**
 
-* `MODE = 'dev'`:  Строковая константа, вероятно, определяющая режим работы модуля (например, "development", "production").  Значение может влиять на поведение связанных с ним компонентов, но в данном изолированном файле не оказывает влияния.
+* ``:  Строковая константа, вероятно, определяющая режим работы модуля (например, "development", "production").  Значение может влиять на поведение связанных с ним компонентов, но в данном изолированном файле не оказывает влияния.
 
 **Возможные ошибки и улучшения:**
 

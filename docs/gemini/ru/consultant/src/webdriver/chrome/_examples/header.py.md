@@ -49,7 +49,7 @@ import os
 from pathlib import Path
 
 # Константа, определяющая режим работы (разработка или продакшн).
-MODE = 'dev'
+
 """
 :param MODE: Указывает на режим работы приложения ('dev' - разработка, 'prod' - продакшн).
 :type MODE: str

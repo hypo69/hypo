@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .pricelist_generator import ReportGenerator
@@ -51,7 +51,7 @@ This simple diagram shows the single import in the file.
 
 
 * **Variables:**
-    * `MODE = 'dev'`:  This global variable likely controls configuration settings (e.g., development or production modes).  The exact implications depend on how it's used in the rest of the project.
+    * ``:  This global variable likely controls configuration settings (e.g., development or production modes).  The exact implications depend on how it's used in the rest of the project.
 
 * **Potential Errors/Improvements:**
     * **Missing Docstrings:** The `pricelist_generator.py` module (if it exists) and the `ReportGenerator` class should have docstrings.  Explaining the parameters, return values, and usage of the class and its methods would significantly enhance code readability and maintainability.

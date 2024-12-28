@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук
 
 """
-MODE = 'dev'
+
 
 from math import log
 import header

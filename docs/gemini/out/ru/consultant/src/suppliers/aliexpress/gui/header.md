@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -70,7 +70,7 @@ except (FileNotFoundError, json.JSONDecodeError):
    :synopsis: Модуль для работы с интерфейсом поставщика AliExpress.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -143,7 +143,7 @@ except json.JSONDecodeError as e:
    :synopsis: Модуль для работы с интерфейсом поставщика AliExpress.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

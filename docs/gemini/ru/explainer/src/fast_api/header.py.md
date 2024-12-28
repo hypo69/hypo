@@ -29,7 +29,7 @@
 **КОНЕЦ ИНСТРУКЦИИ**
 
 ## <алгоритм>
-1.  **Начало**: Исполнение скрипта начинается с определения `MODE = 'dev'`.
+1.  **Начало**: Исполнение скрипта начинается с определения ``.
 2.  **Импорт модулей**: Импортируются необходимые модули: `sys`, `json`, `Version` из `packaging.version`, и `Path` из `pathlib`.
 3.  **Функция `set_project_root`**:
     *   Начало функции: Получает кортеж `marker_files` (по умолчанию `('__root__')`).
@@ -63,7 +63,7 @@
 ## <mermaid>
 ```mermaid
 flowchart TD
-    Start[Start] --> SetMode[MODE = 'dev']
+    Start[Start] --> SetMode[]
     SetMode --> ImportModules[Import sys, json, Version, Path]
     ImportModules --> SetProjectRootFunc[Function set_project_root()]
     SetProjectRootFunc --> FindCurrentDir[current_path = Path(__file__).resolve().parent]

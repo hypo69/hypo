@@ -62,7 +62,7 @@ from fastapi.staticfiles import StaticFiles
 from typing import Any
 from src.logger.logger import logger # Добавлен импорт logger
 
-MODE = 'dev'
+
 
 app = FastAPI()
 

@@ -17,7 +17,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 # Устанавливает режим работы в 'dev' (разработка).
 ```
 
@@ -45,6 +45,6 @@ MODE = 'dev'
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 # Устанавливает режим работы в 'dev' (разработка).
 ```

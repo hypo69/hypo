@@ -9,7 +9,7 @@
 	:synopsis: Модуль модели `gemini`
 
 """
-MODE = 'dev'
+
 
 
 from .generative_ai import GoogleGenerativeAI

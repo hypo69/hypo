@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates """
 
@@ -75,7 +75,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 import json
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 # Получение настроек проекта из файла settings.json
 def _load_settings() -> dict:
@@ -139,7 +139,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 # Получение настроек проекта из файла settings.json
 def _load_settings() -> dict:

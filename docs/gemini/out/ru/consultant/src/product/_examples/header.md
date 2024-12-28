@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -80,7 +80,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis:  Модуль для примеров работы с продуктами.
 """
-MODE = 'dev'
+
 
 
 """
@@ -163,7 +163,7 @@ from src.utils import StringNormalizer, ProductFieldsValidator # Импорти�
    :platform: Windows, Unix
    :synopsis:  Модуль для примеров работы с продуктами.
 """
-MODE = 'dev'
+
 
 
 """

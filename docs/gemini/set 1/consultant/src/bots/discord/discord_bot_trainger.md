@@ -12,7 +12,7 @@
 	:synopsis:
 	Discord bot for training and testing AI models.
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 
@@ -168,7 +168,7 @@ async def train(ctx, data: str = None, data_dir: str = None, positive: bool = Tr
 +    :synopsis:
 +    Discord bot for training and testing AI models.
  """
- MODE = 'dev'
+ 
  
 @@ -16,12 +16,12 @@
  
@@ -283,7 +283,7 @@ async def train(ctx, data: str = None, data_dir: str = None, positive: bool = Tr
     :synopsis:
     Discord bot for training and testing AI models.
 """
-MODE = 'dev'
+
 
 
 """
@@ -308,7 +308,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 

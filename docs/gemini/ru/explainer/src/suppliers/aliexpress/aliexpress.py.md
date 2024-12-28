@@ -4,7 +4,7 @@
 
 1.  **Инициализация переменных и импорт библиотек**:
     *   Импортируются необходимые библиотеки и модули: `header`, `pickle`, `threading`, `Session`, `UserAgent`, `Path`, `Union`, `RequestsCookieJar`, `urlparse`, `src.gs`, `src.suppliers.supplier.Supplier`, `src.logger.logger.logger`, `alirequests.py`, `aliapi.py`.
-    *   Устанавливается режим работы `MODE = 'dev'`.
+    *   Устанавливается режим работы ``.
 2.  **Создание класса `Aliexpress`**:
     *   Класс `Aliexpress` наследуется от классов `Supplier`, `AliRequests` и `AliApi`, объединяя их функциональность.
 3.  **Инициализация объекта `Aliexpress` (`__init__`)**:

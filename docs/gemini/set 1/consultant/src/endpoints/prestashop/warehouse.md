@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import os,sys
 from attr import attr, attrs
@@ -42,7 +42,7 @@ class PrestaWarehouse(PrestaShop):
    :synopsis: Модуль для работы с хранилищем данных PrestaShop.
 
 """
-MODE = 'dev'
+
 
 import os
 import sys
@@ -129,7 +129,7 @@ class PrestaWarehouse(PrestaShop):
    :synopsis: Модуль для работы с хранилищем данных PrestaShop.
 
 """
-MODE = 'dev'
+
 
 import os
 import sys

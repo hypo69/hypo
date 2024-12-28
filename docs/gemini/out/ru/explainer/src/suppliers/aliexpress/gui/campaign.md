@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Window editor for campaigns """

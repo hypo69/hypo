@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.llama """
 ```
@@ -52,7 +52,7 @@ The provided code snippet is a Python module file (`hypotez/src/ai/llama/model.p
 
 ```mermaid
 graph LR
-    A[Module: model.py] --> B(MODE = 'dev');
+    A[Module: model.py] --> B();
 ```
 
 This mermaid code represents the module's simple structure: a single variable declaration.  It demonStartes a simple data flow where the constant 'MODE' is defined in the `model.py` file.

@@ -10,7 +10,7 @@
 
 Этот модуль содержит объявления для работы с эндпоинтами Emil, включая импорты и настройки.
 """
-MODE = 'dev'
+
 
 from .emil_design import EmilDesign
 ```
@@ -34,6 +34,6 @@ from .emil_design import EmilDesign
 
 Этот модуль содержит объявления для работы с эндпоинтами Emil, включая импорты и настройки.
 """
-MODE = 'dev'
+
 
 from .emil_design import EmilDesign

@@ -1,258 +1,377 @@
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+   которые импортируются при создании диаграммы.
+   **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
+   имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+
+   **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
+   ```mermaid
+   flowchart TD
+       Start --> Header[<code>header.py</code><br> Determine Project Root]
+
+       Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+   ```
+
+3. **<объяснение>**: Предоставьте подробные объяснения:
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+   - **Переменные**: Их типы и использование.
+   - Выделите потенциальные ошибки или области для улучшения.
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+
 ## <алгоритм>
 
-1.  **Инициализация**:
-    *   Импортируются необходимые модули, включая `os`, `openai`, `time`, `json`, `pickle`, `logging`, `configparser`, `tiktoken`, и `tinytroupe.utils`.
-    *   Настраивается логгер.
-    *   Читается конфигурационный файл с помощью `utils.read_config_file()`.
-    *   Инициализируются значения параметров по умолчанию из конфигурационного файла, такие как `model`, `max_tokens`, `temperature` и другие параметры для OpenAI API, а также параметры для кеширования.
+```mermaid
+flowchart TD
+    subgraph Configuration Initialization
+        A[Start] --> B(Read Configuration File)
+        B --> C{Set Default Parameters}
+        C --> D(Initialize Logger)
+        D --> E(Initialize API Clients Registry)
+    end
     
-2.  **LLMCall Class**:
-    *   При инициализации `LLMCall` сохраняется имя системного шаблона и имя пользовательского шаблона (если есть), а также параметры модели.
-        *   Пример: `llm_call = LLMCall(system_template_name="system_template_1", user_template_name="user_template_1", temperature=0.5)`
-    *   Метод `call` формирует сообщения для LLM, используя `utils.compose_initial_LLM_messages_with_templates()` с переданными шаблонами и конфигурациями.
-        *   Пример: `messages = utils.compose_initial_LLM_messages_with_templates(system_template_name="system_template_1", user_template_name="user_template_1", rendering_configs={"input_text":"Hello"})`
-    *   Вызывает LLM модель через `client().send_message()`, передавая сообщения и параметры модели, получая в ответ вывод модели.
-        *   Пример: `model_output = client().send_message(messages, model="gpt-4", temperature=0.5)`
-    *   Возвращает текстовое содержимое из ответа модели.
-        *   Пример: `response = llm_call.call(rendering_configs={"input_text":"Hello"})`
+    subgraph LLM Call Processing
+       F[Start LLM Call] --> G(Compose Messages with Templates)
+       G --> H(Get API Client)
+       H --> I(Send Message to LLM API)
+       I --> J{Cache API Response?}
+       J -- Yes --> K[Return Cached Response]
+       J -- No --> L(Call LLM API)
+       L --> M(Save API Response to Cache)
+       M --> N(Extract Content from Response)
+       K --> N
+       N --> O{Error Handling}
+       O -- Error --> P(Log Error and Return None)
+       O -- Success --> Q[Return Content]
+    end
 
-3.  **OpenAIClient Class**:
-    *   При инициализации `OpenAIClient` настраивается кэш API вызовов на основе переданных параметров `cache_api_calls` и `cache_file_name`.
-    *   Метод `set_api_cache` устанавливает параметры кэширования и загружает кэш, если он включен.
-    *   Метод `_setup_from_config` настраивает клиент OpenAI API, используя ключ API из переменной окружения `OPENAI_API_KEY`.
-    *   Метод `send_message`:
-        *   Принимает список сообщений `current_messages`, а также параметры для вызова модели (модель, температура, максимальное количество токенов и т.д.).
-        *   Подготавливает параметры для API-вызова.
-        *   Пытается получить ответ из кэша, если включен, иначе вызывает метод `_raw_model_call`.
-        *   Обрабатывает возможные ошибки, такие как `InvalidRequestError`, `RateLimitError` и другие, с реализацией экспоненциального отката при ошибках типа `RateLimitError` и `NonTerminalError`.
-        *   Возвращает ответ от модели.
-    *   Метод `_raw_model_call` вызывает OpenAI API, используя `client.chat.completions.create()`.
-        *   Пример: `response = self.client.chat.completions.create(messages=current_messages, model=model, temperature=temperature)`
-    *   Метод `_raw_model_response_extractor` извлекает содержимое ответа из API.
-        *   Пример: `content = self._raw_model_response_extractor(response)`
-    *   Метод `_count_tokens` подсчитывает количество токенов в сообщении, используя `tiktoken`, чтобы оценить стоимость запроса к API.
-    *   Методы `_save_cache` и `_load_cache` сохраняют и загружают кэш API вызовов соответственно, используя pickle.
-    *  Метод `get_embedding` получает эмбеддинг текста.
-        *  Пример: `embedding = client.get_embedding("example text", model="text-embedding-3-small")`
-    *  Метод `_raw_embedding_model_call` вызывает API для получения эмбеддинга.
-        *  Пример: `response = self.client.embeddings.create(input=["example text"], model=model)`
-    *   Метод `_raw_embedding_model_response_extractor` извлекает эмбеддинг из ответа.
+     subgraph API Client Initialization and Usage
+        R[Client Creation] --> S{Check Cache Status}
+        S -- Cache Enabled --> T(Load Cache)
+        S -- Cache Disabled --> U(Set up API Configurations)
+        T --> U
+        U --> V(Send Message to API)
+        V --> W{Handle API Response}
+        W -- Rate Limit Error --> X(Exponential Backoff)
+        W -- Other Error --> Y(Log Error)
+        W -- Success --> Z(Extract Response)
+        X --> V
+        Y --> V
+     end
+     
+    subgraph Token Counting
+        AA[Start Token Counting] --> AB(Get Encoding)
+        AB --> AC{Check Model Type}
+        AC -- Known Model --> AD(Calculate Token Count)
+        AC -- Unknown Model --> AE[Use Default Model for Token Count Calculation]
+        AE --> AD
+        AD --> AF(Return Token Count)
+    end
     
-4.  **AzureClient Class**:
-    *   `AzureClient` наследует от `OpenAIClient` и переопределяет методы `_setup_from_config` и `_raw_model_call` для работы с Azure OpenAI Service.
-    *   Метод `_setup_from_config` настраивает клиент Azure OpenAI API, используя endpoint, версию API и ключ API из переменных окружения `AZURE_OPENAI_ENDPOINT`, `AZURE_API_VERSION` и `AZURE_OPENAI_KEY`, соответственно.
-    *    Метод `_raw_model_call` вызывает Azure OpenAI Service API, используя `client.chat.completions.create()`.
-        *   Пример: `response = self.client.chat.completions.create(messages=current_messages, model=model, temperature=temperature)`
+    subgraph Embedding Generation
+        AG[Start Embedding Generation] --> AH(Call Embedding Model API)
+        AH --> AI(Extract Embedding from Response)
+        AI --> AJ[Return Embedding]
+    end
 
-5.  **Регистрация и получение клиентов**:
-    *   `_api_type_to_client` - это словарь для хранения экземпляров клиентов, связанных с типами API.
-    *   `register_client` регистрирует клиентский класс для конкретного типа API, например, "openai" или "azure".
-    *   `_get_client_for_api_type` возвращает клиентский класс для определенного типа API.
-    *   `client` возвращает экземпляр клиентского класса на основе текущей конфигурации `API_TYPE` или переопределения.
-    *   `force_api_type` позволяет принудительно установить тип API.
-    *   `force_api_cache` позволяет принудительно установить параметры кэширования API.
-    *   `force_default_value` позволяет принудительно установить значения по умолчанию для конфигурации.
+    A --> F
+    A --> R
+    A --> AA
+    A --> AG
 
-6. **Обработка ошибок**:
+    Q --> End
+    Z --> End
+    AF --> End
+    AJ --> End
+     
+    style End fill:#f9f,stroke:#333,stroke-width:2px
+```
 
-*   Определены два кастомных исключения:
-    *   `InvalidRequestError` вызывается, когда запрос к OpenAI API невалиден и нет смысла повторять запрос.
-    *   `NonTerminalError` вызывается при некритических ошибках, когда есть смысл повторить запрос (с экспоненциальным откатом).
+1.  **Конфигурация (Configuration Initialization):**
+    *   **A (Start):** Начало выполнения программы.
+    *   **B (Read Configuration File):** Чтение конфигурационного файла (например, `config.ini`) с помощью `utils.read_config_file()`.
+        *   Пример: Файл `config.ini` содержит параметры для OpenAI, такие как `MODEL`, `MAX_TOKENS`, `TEMPERATURE`, `API_TYPE` и т. д.
+    *   **C (Set Default Parameters):** Установка значений параметров по умолчанию из конфигурационного файла. Например, `default["model"]` устанавливается из `config["OpenAI"].get("MODEL", "gpt-4")`.
+        *   Пример: `default["max_tokens"]` установлено в 1024, если в `config.ini` не указано другое значение.
+    *   **D (Initialize Logger):** Инициализация системы логирования для отслеживания работы программы.
+        *   Пример: Записи о начале работы программы, ошибках, предупреждениях и отладке будут записываться в лог-файл.
+    *   **E (Initialize API Clients Registry):** Регистрация поддерживаемых API-клиентов (OpenAI, Azure) в словаре `_api_type_to_client`.
+
+2.  **Обработка вызова LLM (LLM Call Processing):**
+    *   **F (Start LLM Call):** Начало процесса вызова языковой модели.
+    *   **G (Compose Messages with Templates):** Составление сообщений для LLM с использованием шаблонов (например, системного и пользовательского) с помощью `utils.compose_initial_LLM_messages_with_templates()`.
+        *   Пример: Подстановка переменных в шаблоны и формирование списка сообщений для передачи в OpenAI API.
+    *   **H (Get API Client):** Получение нужного API-клиента (например, `OpenAIClient` или `AzureClient`) в соответствии с типом API, указанным в конфигурации.
+        *   Пример: Если `config["OpenAI"]["API_TYPE"]` равно `"azure"`, то будет возвращён экземпляр `AzureClient`.
+    *   **I (Send Message to LLM API):** Отправка сформированных сообщений и параметров в LLM API через метод `send_message()` API-клиента.
+        *   Пример: Передача списка сообщений, модели, температуры и других параметров в OpenAI API.
+    *   **J (Cache API Response?):** Проверка, нужно ли использовать кэш для API-запросов.
+    *   **K (Return Cached Response):** Если кэширование включено и ответ есть в кэше, то возвращается кэшированный ответ.
+        *   Пример: Если запрос ранее выполнялся с теми же параметрами, возвращается сохранённый ответ.
+    *   **L (Call LLM API):** Если кэширование отключено или ответа нет в кэше, происходит вызов LLM API.
+    *   **M (Save API Response to Cache):** После получения ответа от API, он сохраняется в кэш (если кэширование включено).
+    *   **N (Extract Content from Response):** Извлечение полезного содержимого из ответа API.
+        *   Пример: Извлекается текст из поля `content` в ответе OpenAI.
+    *   **O (Error Handling):** Проверка на наличие ошибок в ответе.
+    *   **P (Log Error and Return None):** Если произошла ошибка, она регистрируется в логе, и функция возвращает `None`.
+    *   **Q (Return Content):** Если запрос выполнен успешно, возвращается извлечённое содержимое.
+
+3.  **Инициализация и использование API-клиента (API Client Initialization and Usage):**
+    *   **R (Client Creation):** Создание экземпляра API-клиента (`OpenAIClient` или `AzureClient`).
+    *   **S (Check Cache Status):** Проверка, включено ли кэширование API-вызовов.
+    *   **T (Load Cache):** Загрузка кэшированных API-ответов из файла, если кэширование включено.
+    *   **U (Set up API Configurations):** Настройка параметров API-клиента (например, API-ключ).
+        *   Пример: Для `OpenAIClient` устанавливается API-ключ из переменной окружения `OPENAI_API_KEY`. Для `AzureClient` - endpoint, api version, key.
+    *   **V (Send Message to API):** Отправка запроса к API.
+    *   **W (Handle API Response):** Обработка ответа от API, включая обработку ошибок.
+    *   **X (Exponential Backoff):** При возникновении ошибки `RateLimitError` применяется экспоненциальная задержка перед повторной отправкой запроса.
+    *   **Y (Log Error):** При возникновении других ошибок, они регистрируются в логе.
+    *   **Z (Extract Response):** Извлечение ответа из API.
+
+4.  **Подсчёт токенов (Token Counting):**
+    *   **AA (Start Token Counting):** Начало процесса подсчёта токенов.
+    *   **AB (Get Encoding):** Получение кодировки токенов для конкретной модели с помощью `tiktoken.encoding_for_model()`.
+    *   **AC (Check Model Type):** Проверка, относится ли модель к известным моделям (например, GPT-3.5 Turbo, GPT-4).
+    *   **AD (Calculate Token Count):** Расчёт количества токенов на основе типа модели.
+    *   **AE (Use Default Model for Token Count Calculation):** Если модель неизвестна, используется модель по умолчанию для подсчёта токенов.
+    *   **AF (Return Token Count):** Возврат количества токенов.
+
+5.  **Генерация вложений (Embedding Generation):**
+    *   **AG (Start Embedding Generation):** Начало процесса генерации вложений.
+    *   **AH (Call Embedding Model API):** Вызов API для получения вложений текста.
+    *   **AI (Extract Embedding from Response):** Извлечение вложения из ответа API.
+    *   **AJ (Return Embedding):** Возврат вложения текста.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[Начало] --> B(Инициализация);
-    B --> C{LLMCall Instance};
-    C -->|Создание LLMCall| D(LLMCall.__init__);
-    D --> E{LLMCall.call()};
-    E --> F(utils.compose_initial_LLM_messages_with_templates);
-    F --> G(client().send_message);
-    G --> H{OpenAIClient Instance};
-    H --> I(OpenAIClient.__init__);
-    I --> J(OpenAIClient.set_api_cache);
-    J --> K(OpenAIClient._setup_from_config);
-    K --> L(OpenAIClient.send_message);
-    L --> M{Cache Hit?};
-    M -- Yes --> N(Retrieve Cached Response);
-    N --> O(OpenAIClient._raw_model_response_extractor);
-    M -- No --> P(OpenAIClient._raw_model_call);
-    P --> Q(openai.chat.completions.create);
-    Q --> R(OpenAIClient._raw_model_response_extractor);
-     R --> S{Cache Enabled?};
-     S -- Yes --> T(Save to Cache);
-     T --> O;
-     S -- No --> O;
-    O --> U(Return Content);
-    U --> V[Конец];
-     style B fill:#f9f,stroke:#333,stroke-width:2px
-     style C fill:#ccf,stroke:#333,stroke-width:2px
-    style H fill:#ccf,stroke:#333,stroke-width:2px
-
-    subgraph LLMCall
-        D
-        E
-        F
+flowchart TD
+    subgraph OpenAI Client
+        OpenAIClient_Start(Start) --> OpenAIClient_Init[__init__]
+        OpenAIClient_Init --> OpenAIClient_SetCache[set_api_cache]
+        OpenAIClient_SetCache --> OpenAIClient_SetupConfig[_setup_from_config]
+        OpenAIClient_SetupConfig --> OpenAIClient_SendMessage[send_message]
+        OpenAIClient_SendMessage --> OpenAIClient_RawModelCall[_raw_model_call]
+        OpenAIClient_RawModelCall --> OpenAIClient_ExtractResponse[_raw_model_response_extractor]
+        OpenAIClient_SendMessage --> OpenAIClient_CountTokens[_count_tokens]
+        OpenAIClient_CountTokens --> OpenAIClient_SendMessage
+        OpenAIClient_ExtractResponse --> OpenAIClient_End(End)
+        OpenAIClient_SendMessage -- "API Error" --> OpenAIClient_SendMessage
+        OpenAIClient_SendMessage --> OpenAIClient_SaveCache[_save_cache]
+        OpenAIClient_SaveCache --> OpenAIClient_End
     end
     
-    subgraph OpenAIClient
-        I
-        J
-        K
-        L
-        M
-        N
-        P
-        Q
-        R
-        S
-        T
+    subgraph Azure Client
+        AzureClient_Start(Start) --> AzureClient_Init[__init__]
+        AzureClient_Init --> AzureClient_SetCache[set_api_cache]
+        AzureClient_SetCache --> AzureClient_SetupConfig[_setup_from_config]
+        AzureClient_SetupConfig --> AzureClient_SendMessage[send_message]
+        AzureClient_SendMessage --> AzureClient_RawModelCall[_raw_model_call]
+        AzureClient_RawModelCall --> AzureClient_ExtractResponse[_raw_model_response_extractor]
+        AzureClient_SendMessage --> AzureClient_CountTokens[_count_tokens]
+        AzureClient_CountTokens --> AzureClient_SendMessage
+        AzureClient_ExtractResponse --> AzureClient_End(End)
+        AzureClient_SendMessage -- "API Error" --> AzureClient_SendMessage
+        AzureClient_SendMessage --> AzureClient_SaveCache[_save_cache]
+         AzureClient_SaveCache --> AzureClient_End
     end
     
-        subgraph utils
-        F
-        end
+    subgraph Client Management
+        ClientRegistry_Start(Start) --> ClientRegistry_Register[register_client]
+        ClientRegistry_Register --> ClientRegistry_GetClient[client]
+        ClientRegistry_GetClient --> ClientRegistry_GetClientForType[_get_client_for_api_type]
+        ClientRegistry_GetClientForType --> ClientRegistry_End(End)
+        
+        ClientRegistry_Start --> ClientRegistry_ForceType[force_api_type]
+        ClientRegistry_ForceType --> ClientRegistry_End
+        
+        ClientRegistry_Start --> ClientRegistry_ForceCache[force_api_cache]
+        ClientRegistry_ForceCache --> ClientRegistry_End
+        
+        ClientRegistry_Start --> ClientRegistry_ForceDefault[force_default_value]
+         ClientRegistry_ForceDefault --> ClientRegistry_End
+    end
+    
+     subgraph LLM Call
+        LLMCall_Start(Start) --> LLMCall_Init[__init__]
+        LLMCall_Init --> LLMCall_Call[call]
+        LLMCall_Call --> LLMCall_ComposeMessages[utils.compose_initial_LLM_messages_with_templates]
+        LLMCall_ComposeMessages --> LLMCall_GetClient[client]
+        LLMCall_GetClient --> LLMCall_SendMessage
+        LLMCall_SendMessage --> LLMCall_ReturnContent
+         LLMCall_ReturnContent --> LLMCall_End(End)
+    end
+    
+      subgraph Embedding Generation
+        Embedding_Start(Start) --> Embedding_GetClient[client]
+        Embedding_GetClient --> Embedding_GetEmbedding[get_embedding]
+         Embedding_GetEmbedding --> Embedding_RawCall[_raw_embedding_model_call]
+        Embedding_RawCall --> Embedding_Extract[_raw_embedding_model_response_extractor]
+        Embedding_Extract --> Embedding_End(End)
+       
+    end
+    
+     ClientRegistry_GetClient --> OpenAIClient_Start
+     ClientRegistry_GetClient --> AzureClient_Start
+     LLMCall_GetClient --> ClientRegistry_Start
+     LLMCall_SendMessage --> OpenAIClient_SendMessage
+     LLMCall_SendMessage --> AzureClient_SendMessage
+     
+     Embedding_GetClient --> ClientRegistry_Start
+    
+    style OpenAIClient_End fill:#f9f,stroke:#333,stroke-width:2px
+    style AzureClient_End fill:#f9f,stroke:#333,stroke-width:2px
+    style ClientRegistry_End fill:#f9f,stroke:#333,stroke-width:2px
+    style LLMCall_End fill:#f9f,stroke:#333,stroke-width:2px
+    style Embedding_End fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
-**Анализ зависимостей `mermaid`:**
+**Анализ зависимостей:**
 
-1.  **Начало (`A`)**: Начальная точка выполнения программы.
-2.  **Инициализация (`B`)**: Этап, на котором происходит чтение конфигурации, инициализация логгера и установка значений по умолчанию. Зависит от `utils.read_config_file()`.
-3.  **LLMCall Instance (`C`)**: Представляет процесс создания и использования экземпляра класса `LLMCall`, который инкапсулирует вызов языковой модели.
-4.  **LLMCall.\_\_init\_\_ (`D`)**: Метод инициализации класса `LLMCall`, где сохраняются шаблоны и параметры модели.
-5.  **LLMCall.call() (`E`)**: Метод, который вызывает языковую модель, передавая подготовленные сообщения.
-6.   **utils.compose\_initial\_LLM\_messages\_with\_templates (`F`)**: Функция, отвечающая за формирование сообщений для модели на основе шаблонов. Эта функция находится в модуле `tinytroupe.utils`.
-7.  **client().send\_message (`G`)**: Метод для отправки сообщений к модели, который обращается к классу клиента (например, `OpenAIClient`).
-8.  **OpenAIClient Instance (`H`)**: Представляет процесс создания и использования экземпляра класса `OpenAIClient`.
-9.  **OpenAIClient.\_\_init\_\_ (`I`)**: Метод инициализации класса `OpenAIClient`.
-10. **OpenAIClient.set\_api\_cache (`J`)**: Метод для установки параметров кеширования API.
-11. **OpenAIClient.\_setup\_from\_config (`K`)**: Метод для настройки API клиента OpenAI.
-12. **OpenAIClient.send\_message (`L`)**: Метод, который отправляет сообщение к API OpenAI и получает ответ.
-13. **Cache Hit? (`M`)**: Условный блок, проверяющий, есть ли в кэше ответ на данный запрос.
-14. **Retrieve Cached Response (`N`)**: Блок, возвращающий закэшированный ответ, если он найден.
-15. **OpenAIClient.\_raw\_model\_response\_extractor (`O`)**: Метод для извлечения содержимого ответа от API.
-16. **OpenAIClient.\_raw\_model\_call (`P`)**: Метод, непосредственно вызывающий API OpenAI для получения ответа.
-17. **openai.chat.completions.create (`Q`)**: Вызов функции API OpenAI для создания ответа модели.
-18. **OpenAIClient.\_raw\_model\_response\_extractor (`R`)**: Метод для извлечения содержимого ответа от API после прямого запроса.
-19. **Cache Enabled? (`S`)**: Условный блок, проверяющий, включен ли кэш.
-20. **Save to Cache (`T`)**: Блок, сохраняющий ответ API в кэш.
-21. **Return Content (`U`)**: Возвращение контента, сгенерированного моделью, пользователю.
-22. **Конец (`V`)**: Конечная точка выполнения программы.
-
-Диаграмма `mermaid` наглядно демонстрирует поток вызовов и данных между различными функциями и классами, подчеркивая ключевые этапы взаимодействия с OpenAI API, включая кэширование и обработку ошибок.
+1.  **`os`**: Используется для доступа к переменным окружения, таким как `OPENAI_API_KEY` и `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_KEY`.  
+2.  **`openai`**: Используется для взаимодействия с OpenAI API.
+3.  **`openai.OpenAI`, `openai.AzureOpenAI`**: Классы для создания клиентов OpenAI и Azure OpenAI.
+4.  **`time`**: Используется для задержек между повторными попытками вызова API (экспоненциальная задержка) и для измерения времени выполнения запросов.
+5.  **`json`**: Используется, но не непосредственно в этом коде, это говорит о том, что класс `utils` вероятно использует этот модуль.
+6.  **`pickle`**: Используется для сериализации и десериализации данных (кэша API-вызовов) в файл, так как некоторые объекты, возвращаемые API, не являются JSON-сериализуемыми.
+7.  **`logging`**: Используется для регистрации событий и отладочной информации.
+8.  **`configparser`**: Используется для чтения конфигурационных файлов (например, `config.ini`).
+9.  **`tiktoken`**: Используется для подсчёта количества токенов в сообщениях, отправляемых в OpenAI API.
+10. **`tinytroupe.utils`**:  Импортируется локальный модуль `utils` из пакета `tinytroupe`, который содержит вспомогательные функции, такие как чтение конфигурации, составление сообщений с шаблонами и санитайзер.  
 
 ## <объяснение>
 
 ### Импорты
 
-*   `os`: Предоставляет функции для взаимодействия с операционной системой, используется для получения переменных окружения, например `OPENAI_API_KEY`.
-*   `openai`: Основная библиотека для взаимодействия с API OpenAI. Содержит классы `OpenAI` и `AzureOpenAI`, которые используются для создания экземпляров клиентов для OpenAI и Azure соответственно.
-*   `time`: Используется для добавления пауз между запросами к API, чтобы избежать ограничений скорости.
-*   `json`: Используется для работы с данными в формате JSON, хотя явно не используется в коде, но может быть полезен для сериализации/десериализации.
-*   `pickle`: Используется для сериализации и десериализации объектов Python, включая кэш API, в бинарный формат.
-*   `logging`: Используется для логирования событий, ошибок и предупреждений.
-*   `configparser`: Используется для чтения конфигурационных файлов (например, `config.ini`).
-*   `tiktoken`: Используется для подсчета токенов в текстовых сообщениях перед их отправкой в API OpenAI.
-*   `tinytroupe.utils`:  Импортируется модуль `utils` из пакета `tinytroupe`, который содержит утилиты, например `read_config_file()`, `compose_initial_LLM_messages_with_templates` и `sanitize_dict`.
+*   `import os`: Обеспечивает взаимодействие с операционной системой, в основном для получения переменных окружения.
+*   `import openai`: Предоставляет основной интерфейс для работы с OpenAI API.
+*   `from openai import OpenAI, AzureOpenAI`: Импортирует классы `OpenAI` и `AzureOpenAI` для создания клиентов для OpenAI и Azure OpenAI соответственно.
+*   `import time`: Используется для работы со временем, особенно для задержек и измерения времени выполнения.
+*   `import json`: Используется для работы с JSON, хотя напрямую не видно в этом коде, вероятно используется в модуле `utils`.
+*   `import pickle`:  Используется для сериализации и десериализации объектов Python, особенно для кэширования API-вызовов.
+*   `import logging`: Используется для регистрации событий, отладочной информации, ошибок и предупреждений.
+*   `import configparser`: Используется для чтения конфигурационных файлов типа `.ini`.
+*   `import tiktoken`: Используется для подсчёта токенов при работе с OpenAI API.
+*   `from tinytroupe import utils`: Импортирует модуль `utils` из пакета `tinytroupe`, который предоставляет общие утилиты, включая чтение конфигурации и составление сообщений с шаблонами, санитайзер и другие.
 
 ### Классы
 
 *   **`LLMCall`**:
-    *   **Роль**: Инкапсулирует вызов языковой модели, объединяя шаблоны сообщений, параметры модели и результат вызова.
+    *   **Роль**: Представляет вызов языковой модели (LLM).
     *   **Атрибуты**:
-        *   `system_template_name` (str): Имя системного шаблона.
-        *   `user_template_name` (str): Имя пользовательского шаблона (опционально).
-        *   `model_params` (dict): Параметры для вызова модели.
+        *   `system_template_name` (str): Имя шаблона для системного сообщения.
+        *   `user_template_name` (str, опционально): Имя шаблона для пользовательского сообщения.
+        *   `model_params` (dict): Параметры модели.
+        *   `messages` (list): Сообщения, отправляемые в LLM.
+        *   `model_output` (dict): Выходные данные от LLM.
     *   **Методы**:
-        *   `__init__`: Конструктор класса.
-        *   `call`: Выполняет вызов модели, возвращает результат. Использует `utils.compose_initial_LLM_messages_with_templates` для подготовки сообщений.
-        *   `__repr__`: Возвращает строковое представление объекта.
-    *   **Взаимодействие**: Создается для каждого конкретного вызова LLM, взаимодействует с классом `OpenAIClient` для выполнения запросов к API.
+        *   `__init__(self, system_template_name:str, user_template_name:str=None, **model_params)`: Инициализирует экземпляр `LLMCall`.
+        *   `call(self, **rendering_configs)`: Вызывает LLM модель с указанными параметрами рендеринга.
+        *   `__repr__(self)`: Возвращает строковое представление объекта `LLMCall`.
+    *   **Взаимодействие**: Использует `utils.compose_initial_LLM_messages_with_templates` для подготовки сообщений и `client().send_message()` для вызова LLM.
+
 *   **`OpenAIClient`**:
-    *   **Роль**: Клиент для взаимодействия с OpenAI API.
+    *   **Роль**: Управляет взаимодействием с OpenAI API.
     *   **Атрибуты**:
-        *   `cache_api_calls` (bool): Флаг для включения/выключения кеширования API.
-        *   `cache_file_name` (str): Имя файла для кеширования.
-        *    `api_cache` (dict): словарь для кеширования.
-        *   `client` (openai.OpenAI): Экземпляр класса `openai.OpenAI` для выполнения API-запросов.
+        *   `cache_api_calls` (bool): Флаг для включения/выключения кэширования API-вызовов.
+        *   `cache_file_name` (str): Имя файла для кэширования.
+        *   `api_cache` (dict): Кэш API-вызовов.
+        *   `client` (openai.OpenAI): Клиент для работы с OpenAI API.
     *   **Методы**:
-        *   `__init__`: Конструктор класса, устанавливает параметры кэширования.
-        *   `set_api_cache`: Устанавливает параметры кэширования API-вызовов.
-        *   `_setup_from_config`: Настраивает API-клиент OpenAI, используя ключ из переменной окружения.
-        *    `send_message`: Отправляет сообщение к API OpenAI, обрабатывает ошибки и кэширует результаты.
-        *    `_raw_model_call`: Выполняет запрос к OpenAI API (метод `chat.completions.create`).
-        *    `_raw_model_response_extractor`: Извлекает текстовый контент из ответа API.
-        *    `_count_tokens`: Подсчитывает количество токенов в списке сообщений.
-        *   `_save_cache`: Сохраняет кэш API-вызовов на диск с использованием pickle.
-        *   `_load_cache`: Загружает кэш API-вызовов с диска с использованием pickle.
-        *    `get_embedding`: Получает эмбеддинг текста через API.
-        *    `_raw_embedding_model_call`: Выполняет запрос к OpenAI API для получения эмбеддинга.
-        *    `_raw_embedding_model_response_extractor`: Извлекает эмбеддинг из ответа API.
-    *   **Взаимодействие**: Используется для отправки сообщений и получения ответов от OpenAI API, взаимодействует с файловой системой для кэширования.
-*    **`AzureClient`**:
-    *   **Роль**:  Клиент для взаимодействия с Azure OpenAI Service API, наследуется от `OpenAIClient`.
+        *   `__init__(self, cache_api_calls=default["cache_api_calls"], cache_file_name=default["cache_file_name"])`: Инициализирует клиент.
+        *   `set_api_cache(self, cache_api_calls, cache_file_name=default["cache_file_name"])`: Настраивает параметры кэширования.
+        *   `_setup_from_config(self)`: Настраивает API-клиент (устанавливает API key).
+        *   `send_message(...)`: Отправляет сообщение в OpenAI API и обрабатывает ответ, включая повторные попытки и кэширование.
+        *   `_raw_model_call(self, model, chat_api_params)`:  Выполняет низкоуровневый вызов API.
+        *   `_raw_model_response_extractor(self, response)`: Извлекает данные из ответа API.
+        *   `_count_tokens(self, messages: list, model: str)`: Подсчитывает количество токенов в сообщениях.
+        *   `_save_cache(self)`: Сохраняет кэш на диск.
+        *   `_load_cache(self)`: Загружает кэш с диска.
+        *   `get_embedding(self, text, model=default["embedding_model"])`: Получает эмбеддинг текста.
+        *   `_raw_embedding_model_call(self, text, model)`: Выполняет низкоуровневый вызов API для получения эмбеддинга.
+        *    `_raw_embedding_model_response_extractor(self, response)`: Извлекает эмбеддинг из ответа API.
+    *   **Взаимодействие**:  Использует `openai.OpenAI` для вызова API, а также `pickle` для кэширования.
+
+*   **`AzureClient`**:
+    *   **Роль**:  Управляет взаимодействием с Azure OpenAI API.
     *   **Атрибуты**:  Наследует атрибуты от `OpenAIClient`.
     *   **Методы**:
-        *   `__init__`: Конструктор класса, вызывает конструктор родительского класса.
-        *   `_setup_from_config`: Настраивает Azure API-клиент, используя endpoint, версию API и ключ API из переменных окружения.
-        *    `_raw_model_call`: Выполняет запрос к Azure API (метод `chat.completions.create`).
-    *   **Взаимодействие**: Используется для отправки сообщений и получения ответов от Azure OpenAI Service API.
-*   **`InvalidRequestError`**: Пользовательское исключение для случаев, когда запрос к API является невалидным.
-*    **`NonTerminalError`**: Пользовательское исключение для случаев, когда API возвращает ошибку, но запрос может быть повторен.
+        *   `__init__(self, cache_api_calls=default["cache_api_calls"], cache_file_name=default["cache_file_name"])`:  Инициализирует клиент.
+        *   `_setup_from_config(self)`:  Настраивает API-клиент Azure.
+        *   `_raw_model_call(self, model, chat_api_params)`: Выполняет низкоуровневый вызов API Azure.
+        *   Остальные методы наследуются от `OpenAIClient`
+    *   **Взаимодействие**: Использует `openai.AzureOpenAI` для вызова API.
+
+*   **`InvalidRequestError`**:
+    *   **Роль**: Пользовательское исключение, которое возникает, когда запрос к OpenAI API является недействительным.
+*   **`NonTerminalError`**:
+    *   **Роль**: Пользовательское исключение, которое возникает при ошибках, допускающих повторные попытки.
 
 ### Функции
 
 *   **`register_client(api_type, client)`**:
     *   **Аргументы**:
-        *   `api_type` (str): Тип API ("openai", "azure", или любой пользовательский тип).
-        *   `client`: Экземпляр клиентского класса.
-    *   **Назначение**: Регистрирует клиентский класс для данного типа API в словаре `_api_type_to_client`.
-    *    **Пример**: `register_client("openai", OpenAIClient())`
-*    **`_get_client_for_api_type(api_type)`**:
-    *    **Аргументы**:
-        *    `api_type` (str): Тип API.
-    *    **Назначение**: Возвращает клиентский класс для данного типа API из словаря `_api_type_to_client`.
-    *    **Возвращаемое значение**: Клиентский класс.
-*    **`client()`**:
-    *   **Назначение**: Возвращает экземпляр клиентского класса, используя текущий `API_TYPE` из конфигурации или переопределение.
-    *   **Возвращаемое значение**: Экземпляр клиентского класса.
-*   **`force_api_type(api_type)`**:
+        *   `api_type` (str): Тип API (например, "openai", "azure").
+        *   `client`: Объект API-клиента.
+    *   **Назначение**:  Регистрирует API-клиент для указанного типа API.
+    *   **Пример**: `register_client("openai", OpenAIClient())` регистрирует клиента OpenAI.
+
+*   **`_get_client_for_api_type(api_type)`**:
     *   **Аргументы**:
         *   `api_type` (str): Тип API.
-    *   **Назначение**: Принудительно устанавливает тип API, переопределяя настройку в конфигурационном файле.
-*   **`force_api_cache(cache_api_calls, cache_file_name=default["cache_file_name"])`**:
+    *   **Назначение**:  Возвращает зарегистрированный клиент для указанного типа API.
+    *   **Возвращаемое значение**: Объект API-клиента.
+    *   **Пример**: `_get_client_for_api_type("openai")` вернёт объект `OpenAIClient`.
+*   **`client()`**:
+    *   **Назначение**: Возвращает текущий активный API-клиент, определённый в конфигурации.
+    *   **Возвращаемое значение**: Объект API-клиента.
+
+*   **`force_api_type(api_type)`**:
     *   **Аргументы**:
-        *   `cache_api_calls` (bool): Включить или выключить кеширование.
-        *   `cache_file_name` (str): Имя файла для кэша.
-    *   **Назначение**: Принудительно устанавливает параметры кэширования, переопределяя настройки конфигурационного файла.
+        *   `api_type` (str): Тип API, который нужно форсировать.
+    *   **Назначение**: Переопределяет тип API, указанный в конфигурации, на переданный тип.
+
+*    **`force_api_cache(cache_api_calls, cache_file_name=default["cache_file_name"])`**:
+    *   **Аргументы**:
+        * `cache_api_calls` (bool): Флаг, указывающий, нужно ли кэшировать API-вызовы.
+        * `cache_file_name` (str): Имя файла кэша.
+    *   **Назначение**: Переопределяет настройки кэширования API-вызовов для всех зарегистрированных клиентов.
+
 *   **`force_default_value(key, value)`**:
     *   **Аргументы**:
-        *   `key` (str): Ключ для переопределения значения по умолчанию.
-        *   `value`: Новое значение.
-    *   **Назначение**: Принудительно устанавливает новое значение для ключа по умолчанию.
+        *   `key` (str): Ключ параметра, который нужно переопределить.
+        *   `value`: Новое значение параметра.
+    *   **Назначение**: Переопределяет значение параметра по умолчанию для указанного ключа.
+    *   **Пример**: `force_default_value("model", "gpt-3.5-turbo")` переопределяет значение параметра по умолчанию для модели.
 
 ### Переменные
 
-*   `logger`: Экземпляр логгера для записи сообщений.
-*   `config`: Словарь с конфигурационными параметрами, полученными из файла `config.ini`.
-*   `default`: Словарь со значениями параметров по умолчанию для API.
-*   `_api_type_to_client`: Словарь для хранения экземпляров классов-клиентов (например, `OpenAIClient`, `AzureClient`).
-*   `_api_type_override`: Переменная для принудительного переопределения `API_TYPE` из конфигурационного файла.
-
-### Цепочка взаимосвязей с другими частями проекта:
-
-1.  **Конфигурация**: Код зависит от `utils.read_config_file()` для загрузки конфигурации из `config.ini`.
-2.  **Утилиты**: Использует `utils.compose_initial_LLM_messages_with_templates` для подготовки сообщений для LLM.
-3.  **Логирование**: Используется логгер для записи событий и ошибок, что помогает в отладке и мониторинге.
-4.  **Кэширование**: Использует `pickle` для сохранения и загрузки кэша API-вызовов, что повышает эффективность и уменьшает затраты на API.
+*   `default` (dict): Словарь, содержащий значения параметров по умолчанию, используемые для вызова API. Инициализируется из `config.ini`.
+*   `config` (configparser.ConfigParser): Объект для чтения конфигурационного файла.
+*   `logger` (logging.Logger): Объект для логирования.
+*   `_api_type_to_client` (dict): Словарь для хранения зарегистрированных клиентов API.
+*   `_api_type_override` (str, optional): Переопределённый тип API, если он установлен.
 
 ### Потенциальные ошибки и области для улучшения
 
-1.  **Обработка ошибок**: Обработка ошибок в `send_message` может быть улучшена, например, можно добавить более специфичные исключения для разных типов ошибок API.
-2.  **Токенизация**: Токенизация в `_count_tokens` сейчас имеет ряд исключений, для которых используется "костыль" с перенаправлением вызова к другой модели. Было бы лучше использовать `tiktoken` для всех моделей.
-3.  **Кэширование**: Можно добавить функциональность для сброса кэша или для его очистки по истечении определенного времени.
-4.  **Конфигурация**: Конфигурация переопределений `force_api_type`, `force_api_cache` и `force_default_value` может быть вынесена в отдельный класс или функцию.
-5.  **Гибкость**: Можно добавить возможность использования прокси для запросов к API.
+1.  **Обработка исключений**:  Код обрабатывает `openai.RateLimitError`, `openai.BadRequestError`,  `InvalidRequestError`, и `NonTerminalError`,  но другие исключения обрабатываются в общем блоке `except Exception as e`,  что может затруднить отладку. Желательно обрабатывать исключения более конкретно.
+2.  **Кэширование**: Кэширование использует `pickle`, который может быть небезопасным для загрузки данных из ненадежных источников. Следует добавить предупреждение о безопасности или использовать другое решение для сериализации (например, `json` для JSON-сериализуемых объектов).
+3.  **Конфигурация**:  Для более гибкой настройки можно было бы использовать более сложную систему конфигурации.
 
-В целом, код представляет собой хорошо структурированный и расширяемый способ взаимодействия с OpenAI и Azure OpenAI API, предоставляющий функциональность кэширования, логирования, и настраиваемые параметры.
+### Взаимосвязи с другими частями проекта
+
+*   **`utils`**: Этот файл импортирует `tinytroupe.utils` для чтения конфигурации, составления сообщений с шаблонами и санитайзера, что указывает на зависимость от других модулей в том же пакете `tinytroupe`.
+*   **Конфигурация**: Код зависит от `config.ini` для настройки параметров, что указывает на связь с файлами конфигурации проекта.
+*   **Логирование**: Код использует систему логирования для записи событий, что связано с общим механизмом логирования проекта.
+
+Этот код предоставляет гибкую структуру для работы с OpenAI API, поддерживая как OpenAI, так и Azure OpenAI. Он также включает в себя функциональность кэширования, повторных попыток вызовов и подсчёта токенов.

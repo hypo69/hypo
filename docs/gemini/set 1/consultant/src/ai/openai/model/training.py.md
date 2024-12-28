@@ -11,7 +11,7 @@
 	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model
 
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path
@@ -423,7 +423,7 @@ It includes functionalities for sending messages, managing assistants, and train
 .. note::
    Ensure that the necessary environment variables and API keys are properly configured before using this module.
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path

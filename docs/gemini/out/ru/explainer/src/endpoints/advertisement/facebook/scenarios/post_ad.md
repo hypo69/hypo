@@ -13,7 +13,7 @@
 	:synopsis: Публикация рекламного сообщения группах фейсбук
 
 """
-MODE = 'dev'
+
 
 from socket import timeout
 import time

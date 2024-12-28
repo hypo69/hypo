@@ -63,7 +63,7 @@ from src.logger.exceptions import ExecuteLocatorException
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 @pytest.fixture(scope="module")

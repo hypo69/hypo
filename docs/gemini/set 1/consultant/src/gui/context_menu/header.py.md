@@ -21,7 +21,7 @@ from pathlib import Path # импортирует модуль для работ
 from src.utils.jjson import j_loads # импортирует функцию для загрузки JSON
 from src.logger.logger import logger # импортирует модуль для логирования
 
-MODE = 'dev' # устанавливает режим разработки
+ # устанавливает режим разработки
 
 """ Абсолютный путь к модулям и бинарным директориям GTK & FFPMEG """
 
@@ -110,7 +110,7 @@ from pathlib import Path # импортирует модуль для работ
 from src.utils.jjson import j_loads # импортирует функцию для загрузки JSON
 from src.logger.logger import logger # импортирует модуль для логирования
 
-MODE = 'dev' # устанавливает режим разработки
+ # устанавливает режим разработки
 
 """ Абсолютный путь к модулям и бинарным директориям GTK & FFPMEG """
 

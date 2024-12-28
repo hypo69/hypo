@@ -38,7 +38,7 @@
 """
 from src.logger.logger import logger #  Импорт модуля логирования
 
-MODE = 'dev' #  Определение режима работы (разработка)
+ #  Определение режима работы (разработка)
 
 # from .code_assistant import CodeAssistant #  Закомментированный импорт класса CodeAssistant
 # from .small_talk_bot import bot as small_talk_bot # Закомментированный импорт бота small_talk_bot

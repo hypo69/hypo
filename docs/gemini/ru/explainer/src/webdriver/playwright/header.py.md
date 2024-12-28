@@ -49,7 +49,7 @@
 
 ```mermaid
 graph TD
-    A[Start] --> B{MODE = 'dev'};
+    A[Start] --> B{};
     B --> C[import sys, json, Version, Path];
     C --> D(set_project_root);
     D --> E{Check marker files};

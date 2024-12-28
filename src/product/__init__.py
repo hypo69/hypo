@@ -14,7 +14,7 @@ External classes and attributes:
 - `translate_presta_fields_dict`: Function that translates multilingual fields of `ProductFields`
 
 """
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы со сценариями Amazon.
 """
-MODE = 'dev'
+
 
 
 """
@@ -39,7 +39,7 @@ MODE = 'dev'
   :synopsis:
   Параметр режима работы.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.amazon """
 
@@ -121,7 +121,7 @@ def get_list_products_in_category(s) -> List[str]:
 	:synopsis:
 	Модуль для работы со сценариями Amazon.
 """
-MODE = 'dev'
+
 
 
 """
@@ -148,7 +148,7 @@ MODE = 'dev'
   :synopsis:
   Параметр режима работы.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.amazon """
 
@@ -241,7 +241,7 @@ def get_list_products_in_category(s: Supplier) -> List[str] or None:
 	:synopsis:
 	Модуль для работы со сценариями Amazon.
 """
-MODE = 'dev'
+
 
 
 """
@@ -268,7 +268,7 @@ MODE = 'dev'
   :synopsis:
   Параметр режима работы.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.amazon """
 

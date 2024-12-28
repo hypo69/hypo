@@ -16,7 +16,7 @@
 
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header

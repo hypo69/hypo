@@ -23,7 +23,7 @@ from src.logger.logger import logger
 from src.db.manager_categories.suppliers_categories import CategoryManager, AliexpressCategory
 from src.utils.tools import send
 
-MODE = 'dev'
+
 
 credentials = gs.db_translations_credentials
 # Создание экземпляра класса CategoryManager
@@ -313,7 +313,7 @@ from src.logger.logger import logger
 from src.db.manager_categories.suppliers_categories import CategoryManager, AliexpressCategory
 from src.utils.tools import send
 
-MODE = 'dev'
+
 
 credentials = gs.db_translations_credentials
 # Создание экземпляра класса CategoryManager

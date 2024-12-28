@@ -12,7 +12,7 @@
  
 """
 ...
-MODE = 'dev'
+
 import re, html
 from urllib.parse import urlparse, parse_qs
 from typing import Union

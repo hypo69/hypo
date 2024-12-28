@@ -14,7 +14,7 @@
 """
 from pathlib import Path
 
-MODE = 'dev'
+
 
 import header
 from src.utils.path import get_relative_path
@@ -43,7 +43,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger  # Импортируем logger для логирования
 
 
-MODE = 'dev'
+
 
 
 import header
@@ -118,7 +118,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger  # Импортируем logger для логирования
 
 
-MODE = 'dev'
+
 
 
 import header

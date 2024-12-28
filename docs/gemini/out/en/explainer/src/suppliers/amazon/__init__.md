@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category
@@ -37,7 +37,7 @@ The algorithm is primarily importing, not performing any significant action. The
 +-----------------+       +-----------------------+       +-----------------+
 |  Initialization  |------>| Import Graber         |------>|  Import           |
 +-----------------+       +-----------------------+       +-----------------+
-|    MODE = 'dev'   |       |       (from .graber)  |       | get_list_products  |
+|       |       |       (from .graber)  |       | get_list_products  |
 +-----------------+       +-----------------------+       |  (from .scenario)|
                                                            +-----------------+
 ```
@@ -66,7 +66,7 @@ The mermaid diagram illuStartes the dependency structure. `__init__.py` imports 
     * `from .scenario import get_list_products_in_category`: Imports the function `get_list_products_in_category` from the `scenario` module.  This function likely encapsulates logic for retrieving a list of products within a specific category from Amazon's inventory.
 
 * **Variables:**
-    * `MODE = 'dev'`: A global variable, likely used for conditional logic or configuration settings, distinguishing between development and production environments.
+    * ``: A global variable, likely used for conditional logic or configuration settings, distinguishing between development and production environments.
 
 * **Classes/Functions/Methods (implied):**
     * `Graber`: A class for interacting with Amazon's services, likely containing methods for fetching product data, handling API requests, and managing potentially complex interactions with Amazon's API (or other data providers).

@@ -24,7 +24,7 @@
     prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
     print(prestalanguage.get_language_details_PrestaShop(5))
 """
-MODE = 'dev'
+
 
 ...
 from types import SimpleNamespace
@@ -110,7 +110,7 @@ class PrestaLanguage(PrestaShop):
     prestalanguage.update_language_PrestaShop(4, 'Updated Language Name')
     print(prestalanguage.get_language_details_PrestaShop(5))
 """
-MODE = 'dev'
+
 
 ...
 from types import SimpleNamespace

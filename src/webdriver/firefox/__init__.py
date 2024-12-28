@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .firefox import Firefox

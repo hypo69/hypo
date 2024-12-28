@@ -55,7 +55,7 @@
     print(gs.config.project_name)
     print(gs.credentials.aliexpress.api_key)
 """
-MODE = 'dev'
+
 
 import datetime
 from datetime import datetime

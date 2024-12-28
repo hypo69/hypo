@@ -43,7 +43,7 @@
 from src.logger.logger import logger
 from src.utils.jjson import j_loads  # TODO: Добавить импорты по мере необходимости
 
-MODE = 'dev'
+
 
 
 def get_banners():

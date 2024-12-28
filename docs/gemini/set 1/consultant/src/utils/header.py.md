@@ -57,7 +57,7 @@
     print(f"Версия: {__version__}")
     print(f"Документация: {__doc__}")
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix

@@ -44,7 +44,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 """str: Режим работы приложения."""
 
 import sys

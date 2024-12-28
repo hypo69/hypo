@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge.extentions """
 
@@ -74,18 +74,18 @@ from src.utils.jjson import j_loads
 logger = logging.getLogger(__name__)
 
 
-MODE = 'dev'
+
 
 
 """ Переменная MODE хранит режим работы (dev/prod). """
-MODE = 'dev'
-
-"""  """
-MODE = 'dev'
 
 
 """  """
-MODE = 'dev'
+
+
+
+"""  """
+
 
 
 """  """
@@ -130,19 +130,19 @@ from src.utils.jjson import j_loads
 logger = logging.getLogger(__name__)
 
 
-MODE = 'dev'
+
 
 
 """ Переменная MODE хранит режим работы (dev/prod). """
-MODE = 'dev'
 
-
-"""  """
-MODE = 'dev'
 
 
 """  """
-MODE = 'dev'
+
+
+
+"""  """
+
 
 
 """  """

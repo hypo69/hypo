@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .manager_translations import ProductTranslationsManager
 from .manager_translations import CategoryTranslationsManager

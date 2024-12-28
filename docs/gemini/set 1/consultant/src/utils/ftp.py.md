@@ -55,7 +55,7 @@ from typing import Union
 from src.logger.logger import logger
 import os
 
-MODE = 'dev'
+
 
 # Connection configuration (assumed to be defined elsewhere)
 _connection = {

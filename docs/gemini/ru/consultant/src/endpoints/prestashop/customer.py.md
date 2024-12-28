@@ -50,7 +50,7 @@
     prestacustomer.update_customer_PrestaShop(4, 'Updated Customer Name')
     print(prestacustomer.get_customer_details_PrestaShop(5))
 """
-MODE = 'dev'
+
 
 import sys
 import os

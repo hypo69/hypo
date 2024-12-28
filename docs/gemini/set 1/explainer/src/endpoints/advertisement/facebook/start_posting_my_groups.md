@@ -15,7 +15,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (my groups?)
 
 """
-MODE = 'dev'
+
 
 
 import header 

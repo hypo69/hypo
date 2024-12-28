@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import os,sys
 from attr import attr, attrs

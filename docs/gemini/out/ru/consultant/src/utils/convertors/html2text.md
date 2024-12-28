@@ -12,7 +12,7 @@
 	:synopsis:  HTML -> MD
 
 """
-MODE = 'dev'
+
 
 
 """html2text: Turn HTML into equivalent Markdown-structured text."""
@@ -64,7 +64,7 @@ from src.logger import logger # Import logger
 
 Преобразует HTML-код в эквивалентный Markdown-формат.
 """
-MODE = 'dev'
+
 
 
 """html2text: Преобразование HTML в Markdown."""
@@ -135,7 +135,7 @@ from src.logger import logger
 
 Преобразует HTML-код в эквивалентный Markdown-формат.
 """
-MODE = 'dev'
+
 
 
 """html2text: Преобразование HTML в Markdown."""

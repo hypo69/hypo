@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -34,11 +34,11 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 #  Инициализация переменной MODE для настроек
-#  MODE = 'dev' # Переменная для выбора режима работы.
+#   # Переменная для выбора режима работы.
 
 
 ```
@@ -70,8 +70,8 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 #  Инициализация переменной MODE для настроек
-#  MODE = 'dev' # Переменная для выбора режима работы.
+#   # Переменная для выбора режима работы.

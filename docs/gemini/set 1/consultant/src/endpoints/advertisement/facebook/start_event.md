@@ -12,7 +12,7 @@
 	:synopsis: Отправка мероприятий в группы фейсбук
 
 """
-MODE = 'dev'
+
 
 from math import log
 import header
@@ -66,7 +66,7 @@ except KeyboardInterrupt:
    :synopsis: Модуль для запуска автоматической отправки рекламных мероприятий в группы Facebook.
 
 """
-MODE = 'dev'
+
 
 import time
 from src.utils.jjson import j_loads
@@ -147,7 +147,7 @@ if __name__ == "__main__":
    :synopsis: Модуль для запуска автоматической отправки рекламных мероприятий в группы Facebook.
 
 """
-MODE = 'dev'
+
 
 import time
 from src.utils.jjson import j_loads

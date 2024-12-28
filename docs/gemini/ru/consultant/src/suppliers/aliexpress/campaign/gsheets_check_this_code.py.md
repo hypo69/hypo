@@ -47,7 +47,7 @@
     campaign_sheet.set_categories_worksheet(category_data)
     campaign_sheet.set_products_worksheet(category_name)
 """
-MODE = 'dev'
+
 
 import time
 from types import SimpleNamespace

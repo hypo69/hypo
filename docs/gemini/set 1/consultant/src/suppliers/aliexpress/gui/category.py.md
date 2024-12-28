@@ -24,7 +24,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.logger.logger import logger  # Добавлен импорт logger
 
-MODE = 'dev'
+
 
 class CategoryEditor(QtWidgets.QWidget):
     """
@@ -220,7 +220,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from src.logger.logger import logger  # Добавлен импорт logger
 
-MODE = 'dev'
+
 
 class CategoryEditor(QtWidgets.QWidget):
     """

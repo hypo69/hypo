@@ -24,7 +24,7 @@ print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_prod
 ```
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
@@ -46,7 +46,7 @@ from .extract_product_id import extract_prod_ids
 
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
@@ -121,7 +121,7 @@ def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
 
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids

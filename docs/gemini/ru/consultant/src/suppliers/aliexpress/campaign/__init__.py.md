@@ -53,7 +53,7 @@
    # ...
 
 """
-MODE = 'dev'
+
 """str: Режим работы модуля (разработка или продакшен)."""
 
 from .ali_campaign_editor import AliCampaignEditor

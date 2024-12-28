@@ -9,7 +9,7 @@
     :synopsis:
 
 """
-MODE = 'dev'
+
 #https://www.gradio.app/guides/quickstart
 import gradio as gr
 

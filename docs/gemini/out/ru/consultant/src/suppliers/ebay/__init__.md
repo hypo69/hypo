@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -33,7 +33,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт необходимых классов из модуля graber.
 from .graber import Graber
@@ -102,7 +102,7 @@ def get_data(file_path: str) -> dict:
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт необходимых классов из модуля graber.
 from .graber import Graber

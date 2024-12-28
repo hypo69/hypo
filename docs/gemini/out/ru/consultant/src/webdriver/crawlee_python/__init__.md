@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .crawlee_python import CrawleePython
 ```
@@ -32,7 +32,7 @@ from .crawlee_python import CrawleePython
 
 """
 import src.utils.jjson as jjson  # Импорт необходимой библиотеки
-MODE = 'dev'
+
 
 
 # Импорт класса CrawleePython из соответствующего файла.
@@ -69,7 +69,7 @@ from .crawlee_python import CrawleePython
 
 """
 import src.utils.jjson as jjson  # Импорт необходимой библиотеки
-MODE = 'dev'
+
 
 
 # Импорт класса CrawleePython из соответствующего файла.

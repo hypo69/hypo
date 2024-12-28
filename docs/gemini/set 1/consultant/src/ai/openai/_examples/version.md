@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -75,7 +75,7 @@ __author__='hypotez '
 """
 
 # Константа, определяющая режим работы.
-MODE = 'dev'
+
 
 
 """
@@ -139,7 +139,7 @@ __annotations__ = {} # Пустой словарь для анотаций
 """
 
 # Константа, определяющая режим работы.
-MODE = 'dev'
+
 
 
 """

@@ -14,7 +14,7 @@
 
 
 
-MODE = 'dev'
+
 
 """
 Module for interactive script execution.
@@ -35,7 +35,7 @@ Usage Example
     python main.py --help # Displays help
 
 """
-MODE = 'dev'
+
 
 
 import argparse

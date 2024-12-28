@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -75,7 +75,7 @@ import sys
 from src.logger import logger  # Импорт logger для логирования
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
-MODE = 'dev'
+
 
 
 """
@@ -99,7 +99,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Конфигурация режима.
 """
-MODE = 'dev'
+
 
 """
 Модуль для работы с версиями в окружении Edge WebDriver.
@@ -154,7 +154,7 @@ import sys
 from src.logger import logger  # Импорт logger для логирования
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
-MODE = 'dev'
+
 
 
 """
@@ -178,7 +178,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Конфигурация режима.
 """
-MODE = 'dev'
+
 
 """
 Модуль для работы с версиями в окружении Edge WebDriver.

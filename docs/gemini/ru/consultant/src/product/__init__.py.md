@@ -50,7 +50,7 @@
 """
 #: Режим работы модуля. Может принимать значения 'dev' для разработки и 'prod' для продакшена.
 #: Влияет на поведение некоторых функций, например, логирование.
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields

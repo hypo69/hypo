@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.locators """
 
@@ -69,7 +69,7 @@ __author__='hypotez '
 """
 
 # from typing import Any # Add necessary type hints if needed
-MODE = 'dev'  # Переменная для определения режима работы
+  # Переменная для определения режима работы
 
 
 """
@@ -121,7 +121,7 @@ from src.logger import logger  # Import logger
 Этот модуль содержит константы, определяющие текущую версию и режим работы.
 """
 
-MODE = 'dev'  # Переменная для определения режима работы
+  # Переменная для определения режима работы
 
 
 """

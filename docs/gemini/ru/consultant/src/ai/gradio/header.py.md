@@ -40,7 +40,7 @@
 версия, автор и т.д.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

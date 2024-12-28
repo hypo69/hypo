@@ -218,7 +218,7 @@ print(sql_date)  # '2024-12-06'
 
 - Python 3.10 or higher.
 - The `src.logger` module for logging.
-- The module is used in development mode (`MODE = 'dev'`).
+- The module is used in development mode (``).
 
 ---
 

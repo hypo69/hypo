@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates._examples """
 
@@ -68,7 +68,7 @@ Output: Global variable MODE is defined and variables from `__version__.py` are 
 
 ```mermaid
 graph LR
-    A[hypotez/src/templates/_examples/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/templates/_examples/__init__.py] --> B();
     B --> C{Imports from packaging.version and .version};
     C --> D[__version__, __doc__, __details__];
 ```

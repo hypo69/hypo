@@ -20,7 +20,7 @@ Example usage:
         browser.start("https://www.example.com")
 """
 
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Optional, Dict, Any, List

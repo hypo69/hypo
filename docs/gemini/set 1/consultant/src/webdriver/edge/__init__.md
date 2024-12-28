@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .edge import Edge
 ```
@@ -33,7 +33,7 @@ from .edge import Edge
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт класса Edge из модуля edge.py
 from .edge import Edge
@@ -61,7 +61,7 @@ from .edge import Edge
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт класса Edge из модуля edge.py
 from .edge import Edge
@@ -87,7 +87,7 @@ from .edge import Edge
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт класса Edge из модуля edge.py
 from .edge import Edge

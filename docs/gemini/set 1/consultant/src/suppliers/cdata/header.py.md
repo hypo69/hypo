@@ -21,7 +21,7 @@
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -127,7 +127,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

@@ -3,7 +3,7 @@
 ### <алгоритм>
 
 1.  **Инициализация**:
-    *   Устанавливается режим работы `MODE = 'dev'`.
+    *   Устанавливается режим работы ``.
     *   Импортируются необходимые модули: `sys`, `json`, `Version` из `packaging.version`, и `Path` из `pathlib`.
 2.  **`set_project_root`**:
     *   Функция `set_project_root` принимает на вход кортеж `marker_files` (по умолчанию `('pyproject.toml', 'requirements.txt', '.git')`).

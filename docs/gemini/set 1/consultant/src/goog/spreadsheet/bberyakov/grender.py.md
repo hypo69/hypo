@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -320,7 +320,7 @@ from goog.helpers import hex_color_to_decimal, decimal_color_to_hex, hex_to_rgb
 
 from spread.utils import ValueInputOption, ValueRenderOption
 
-MODE = 'dev'
+
 
 
 class GSRender():
@@ -567,7 +567,7 @@ from goog.helpers import hex_color_to_decimal, decimal_color_to_hex, hex_to_rgb
 
 from spread.utils import ValueInputOption, ValueRenderOption
 
-MODE = 'dev'
+
 
 
 class GSRender():

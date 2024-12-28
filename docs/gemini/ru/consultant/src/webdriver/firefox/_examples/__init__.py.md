@@ -54,7 +54,7 @@ from src.logger.logger import logger
 from .version import __version__, __doc__, __details__
 #  Импорт переменных из version.py
 
-MODE = 'dev'
+
 #  Определение режима работы
 
 ```

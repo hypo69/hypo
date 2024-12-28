@@ -60,7 +60,7 @@
 
 
 # """
-# MODE = 'dev'
+# 
 
 
 # import json
@@ -243,7 +243,7 @@ The diagram shows various modules being imported, demonStarting the modular stru
 
 **Variables:**
 
-- `MODE = 'dev'`: A configuration variable likely used to control behavior during development versus production.
+- ``: A configuration variable likely used to control behavior during development versus production.
 
 
 **Potential Errors/Improvements:**

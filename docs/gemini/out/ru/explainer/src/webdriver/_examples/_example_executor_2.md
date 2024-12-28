@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -150,7 +150,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`: Переменная, которая, вероятно, задает режим работы (например, `dev` или `prod`).
+* ``: Переменная, которая, вероятно, задает режим работы (например, `dev` или `prod`).
 * `driver`: Экземпляр класса `webdriver.Chrome`, используемый для управления браузером.
 * `locator`: Экземпляр класса `ExecuteLocator`, используемый для поиска элементов.
 * `simple_locator`, `complex_locator`, `message_locator`, `multi_locator`, `attribute_locator`, `test_locator`: Словари, содержащие информацию о локаторах (пути поиска элементов).

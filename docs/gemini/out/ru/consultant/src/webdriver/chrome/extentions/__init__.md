@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome.extentions """
 
@@ -63,7 +63,7 @@ from .version import __version__, __doc__, __details__
 """
 
 # Константа режима работы
-MODE = 'dev'  # Режим разработки
+  # Режим разработки
 
 
 # Документация для константы MODE
@@ -131,7 +131,7 @@ from src.logger import logger # Импорт функции logger для лог
 """
 
 # Константа режима работы
-MODE = 'dev'  # Режим разработки
+  # Режим разработки
 
 
 # Документация для константы MODE

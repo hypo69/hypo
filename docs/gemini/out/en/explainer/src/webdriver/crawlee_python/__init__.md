@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .crawlee_python import CrawleePython
 ```
@@ -31,7 +31,7 @@ There's no complex algorithm or data flow. The function of this file is purely t
 
 ```mermaid
 graph LR
-    A[crawlee_python/__init__.py] --> B(MODE = 'dev');
+    A[crawlee_python/__init__.py] --> B();
     B --> C[from .crawlee_python import CrawleePython];
     C --> D{CrawleePython class};
 ```

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 **Improved Code**
@@ -32,7 +32,7 @@ MODE = 'dev'
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 ```
@@ -62,4 +62,3 @@ MODE = 'dev'
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'

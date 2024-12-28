@@ -47,5 +47,5 @@
 
 from src.category.category import Category # Импортируем класс Category
 
-MODE = 'dev' # Режим работы приложения: 'dev' или 'prod'
+ # Режим работы приложения: 'dev' или 'prod'
 ```

@@ -12,7 +12,7 @@
 	:synopsis: Модуль перевода полей товара на языки клиентской базы данных
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List

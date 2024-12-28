@@ -12,7 +12,7 @@
 	:synopsis: Модуль полей товара
 
 """
-MODE = 'dev'
+
 
 from .product_fields import ProductFields
 from .product_fields_translator import translate_presta_fields_dict
@@ -37,7 +37,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт для логирования ошибок
 
-MODE = 'dev'
+
 
 from .product_fields import ProductFields
 from .product_fields_translator import translate_presta_fields_dict
@@ -99,7 +99,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт для логирования ошибок
 
-MODE = 'dev'
+
 
 from .product_fields import ProductFields
 from .product_fields_translator import translate_presta_fields_dict

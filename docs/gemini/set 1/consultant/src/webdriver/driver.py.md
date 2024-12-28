@@ -58,7 +58,7 @@
     >>> driver.get_url('https://example.com')
 """
 
-MODE = 'dev'
+
 """Режим работы драйвера."""
 
 import pickle

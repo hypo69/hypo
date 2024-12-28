@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TD
-    Start[Начало] --> InitializeMode[Инициализация режима: MODE = 'dev'];
+    Start[Начало] --> InitializeMode[Инициализация режима: ];
     InitializeMode --> ImportVersion[Импорт версий: from .version import __version__, __doc__, __details__];
     ImportVersion --> ImportPackagingVersion[Импорт Version из packaging: from packaging.version import Version];
     ImportPackagingVersion --> End[Конец];
@@ -30,7 +30,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Start --> SetMode[MODE = 'dev']
+    Start --> SetMode[]
     SetMode --> ImportLocalVersion[from .version import __version__, __doc__, __details__]
     ImportLocalVersion --> ImportVersionClass[from packaging.version import Version]
     ImportVersionClass --> End
@@ -60,7 +60,7 @@ flowchart TD
 
 **Переменные:**
 
--   `MODE = 'dev'`:
+-   ``:
     -   **Тип**: Строка (str).
     -   **Использование**: Определяет режим работы модуля. Значение `'dev'` может означать, что модуль находится в режиме разработки, что может влиять на отладочные сообщения, логирование и прочее.
 

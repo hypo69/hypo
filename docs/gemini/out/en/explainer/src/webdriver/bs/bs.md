@@ -13,7 +13,7 @@
 	:platform: Windows, Unix
 	:synopsis: parse pages with `BeautifulSoup` and XPath 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -218,7 +218,7 @@ graph LR
 
 **Variables:**
 
--   `MODE = 'dev'`: A constant indicating the mode (e.g., development).
+-   ``: A constant indicating the mode (e.g., development).
 
 **Potential Errors/Improvements:**
 

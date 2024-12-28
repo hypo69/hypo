@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -168,7 +168,7 @@ graph TD
 
 **Variables:**
 
-*   `MODE = 'dev'`: A global variable likely related to configuration (e.g., 'dev' or 'prod').
+*   ``: A global variable likely related to configuration (e.g., 'dev' or 'prod').
 *   `url = "https://www.example.com"`:  Used for navigation tests.
 *   `scrolls`, `direction`: Configuration options for scrolling.
 

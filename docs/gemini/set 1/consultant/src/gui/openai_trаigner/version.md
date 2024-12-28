@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -72,7 +72,7 @@ from src.logger import logger
 """
 
 
-MODE = 'dev'  # Режим разработки
+  # Режим разработки
 
 __version__ = 'v1.1'  # Версия приложения
 __doc__ = ''  # Документация
@@ -129,7 +129,7 @@ from src.logger import logger
 """
 
 
-MODE = 'dev'  # Режим разработки
+  # Режим разработки
 
 __version__ = 'v1.1'  # Версия приложения
 __doc__ = ''  # Документация

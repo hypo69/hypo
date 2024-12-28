@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -83,7 +83,7 @@ class PrestaCustomer(PrestaShop):
     Этот модуль содержит класс :class:`PrestaCustomer`, который используется
     для взаимодействия с API PrestaShop для управления клиентами.
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -185,7 +185,7 @@ class PrestaCustomer(PrestaShop):
     Этот модуль содержит класс :class:`PrestaCustomer`, который используется
     для взаимодействия с API PrestaShop для управления клиентами.
 """
-MODE = 'dev'
+
 
 
 import sys

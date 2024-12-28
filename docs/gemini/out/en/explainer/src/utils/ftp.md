@@ -28,7 +28,7 @@ Functions:
     - `read`: Retrieves a file from an FTP server.
     - `delete`: Deletes a file from an FTP server.
 """
-MODE = 'dev'
+
 from src.logger import logger
 from typing import Union
 import ftplib
@@ -160,7 +160,7 @@ graph TD
 
 **Variables:**
 
-- `MODE = 'dev'`: A variable likely used for setting modes in the code (e.g., debug mode). This variable is a placeholder and its use is undefined in the provided snippet.
+- ``: A variable likely used for setting modes in the code (e.g., debug mode). This variable is a placeholder and its use is undefined in the provided snippet.
 - `_connection`: A dictionary containing FTP server connection details. This dictionary is assumed to be defined and populated elsewhere in the project. This is a crucial element, as missing or incorrect connection details will prevent the FTP functions from working correctly.
 
 **Potential Errors/Improvements:**

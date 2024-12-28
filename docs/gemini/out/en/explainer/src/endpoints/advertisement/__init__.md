@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .facebook import Facebook
@@ -32,7 +32,7 @@ This file appears to be an initialization module for the `advertisement` endpoin
 
 2. **Initialization:** Defines a global variable `MODE` and sets it to `'dev'`.
 
-   * **Example:** `MODE = 'dev'`
+   * **Example:** ``
 
 
 ## <mermaid>

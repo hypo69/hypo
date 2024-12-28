@@ -17,7 +17,7 @@
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы модуля.
 """
@@ -77,7 +77,7 @@ def login(s) -> bool:
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы модуля.
 """

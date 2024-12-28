@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (
@@ -45,7 +45,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (
@@ -107,7 +107,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (

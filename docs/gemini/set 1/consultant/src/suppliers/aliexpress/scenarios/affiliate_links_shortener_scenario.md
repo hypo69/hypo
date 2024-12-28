@@ -13,7 +13,7 @@
 	:synopsis: Сокращатель ссылок через веббраузер
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Union
@@ -80,7 +80,7 @@ def get_short_affiliate_link(d:Driver, url: str) -> str:
    :synopsis: Модуль для сокращения ссылок на AliExpress.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Union, Optional
@@ -178,7 +178,7 @@ def get_short_affiliate_link(driver: Driver, url: str) -> Optional[str]:
    :synopsis: Модуль для сокращения ссылок на AliExpress.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Union, Optional

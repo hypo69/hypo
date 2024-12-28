@@ -52,7 +52,7 @@ from pathlib import Path
 from src.logger.logger import logger  # импортируем logger
 
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 """

@@ -14,7 +14,7 @@
 Module reads text from a file, generates PNG images for each line of text using Pillow,
 and saves them to an output directory with customizable options for image appearance.
 """
-MODE = 'dev'
+
 from pathlib import Path
 from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont

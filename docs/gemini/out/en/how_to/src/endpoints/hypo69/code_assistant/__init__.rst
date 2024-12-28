@@ -22,7 +22,7 @@ Usage example
 
     # Now, the variable MODE is initialized, this might be used elsewhere to condition
     # the behavior of CodeAssistant instances.
-    MODE = 'dev'
+    
 
     # Create an instance of the CodeAssistant class.
     # Example usage, assuming CodeAssistant constructor is defined:

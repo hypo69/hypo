@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .formatter import StringFormatter
 from .validator import ProductFieldsValidator
@@ -77,7 +77,7 @@ The diagram shows the dependencies within the `utils/string` package. The `__ini
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A global variable likely used to control the behavior of the modules based on the current operating mode (development, testing, production). This is typical of setting flags for different modes of operation.
+    * ``: A global variable likely used to control the behavior of the modules based on the current operating mode (development, testing, production). This is typical of setting flags for different modes of operation.
 
 
 * **Potential Errors/Improvements:**

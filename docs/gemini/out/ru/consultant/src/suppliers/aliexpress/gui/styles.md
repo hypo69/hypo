@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Common styling functions for UI elements """
@@ -42,7 +42,7 @@ import logging
 from PyQt6 import QtWidgets
 from src.logger import logger # Импортируем логгер.
 
-MODE = 'dev'
+
 
 
 """ Функции для управления стилем UI элементов """
@@ -92,7 +92,7 @@ import logging
 from PyQt6 import QtWidgets
 from src.logger import logger # Импортируем логгер.
 
-MODE = 'dev'
+
 
 
 """ Функции для управления стилем UI элементов """

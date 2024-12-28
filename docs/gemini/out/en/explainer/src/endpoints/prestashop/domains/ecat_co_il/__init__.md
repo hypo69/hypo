@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.endpoints.prestashop.domains.ecat_co_il """
 
@@ -61,7 +61,7 @@ No clear algorithm is present in the code. It's a simple Python file containing 
 
 ```mermaid
 graph LR
-    A[__init__.py] --> B(MODE = 'dev');
+    A[__init__.py] --> B();
 ```
 
 This mermaid code shows a very simple dependency graph: the `__init__.py` file containing the definition of `MODE`.

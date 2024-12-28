@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.gtranslater """
 
@@ -95,7 +95,7 @@ if __name__ == "__main__":
     :synopsis: Модуль для перевода текста с помощью Google Translate API.
         Содержит функцию для перевода текста с автоматическим определением языка входного текста, если он не указан.
 """
-MODE = 'dev'
+
 
 
 def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     :synopsis: Модуль для перевода текста с помощью Google Translate API.
         Содержит функцию для перевода текста с автоматическим определением языка входного текста, если он не указан.
 """
-MODE = 'dev'
+
 
 
 def translate(text: str, locale_in: str = None, locale_out: str = 'EN') -> str:

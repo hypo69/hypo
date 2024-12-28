@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.utils.powershell.examples.pprint """
 
@@ -61,7 +61,7 @@ from pprint import pprint as pretty_print
 from src.printer import pprint
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def example_pprint():
@@ -107,7 +107,7 @@ from pprint import pprint as pretty_print
 from src.printer import pprint
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def example_pprint():

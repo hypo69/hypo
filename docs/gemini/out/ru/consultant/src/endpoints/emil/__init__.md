@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .emil_design import EmilDesign
@@ -36,7 +36,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 from .emil_design import EmilDesign
@@ -94,7 +94,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 from .emil_design import EmilDesign

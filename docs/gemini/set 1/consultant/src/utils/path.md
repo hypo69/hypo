@@ -11,7 +11,7 @@ module: src.utils.path
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Optional

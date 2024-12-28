@@ -12,7 +12,7 @@
 	:synopsis: Публикация сообщения
 
 """
-MODE = 'dev'
+
 
 
 import time

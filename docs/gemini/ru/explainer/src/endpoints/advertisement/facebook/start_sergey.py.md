@@ -1,219 +1,233 @@
-## Анализ кода `hypotez/src/endpoints/advertisement/facebook/start_sergey.py`
+## ИНСТРУКЦИЯ:
 
-### 1. <алгоритм>
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
 
-**Блок-схема:**
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,  
+    которые импортируются при создании диаграммы.  
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,  
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
+    
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+    ```mermaid\
+    flowchart TD\
+        Start --> Header[<code>header.py</code><br> Determine Project Root]\
+    \
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] \
+    ```
 
-1. **Инициализация**:
-   - Установка `MODE = 'dev'`.
-   - Импорт необходимых библиотек и модулей (`header`, `random`, `time`, `copy`, `pathlib`, `src.gs`, `src.utils.file`, `src.webdriver.driver`, `src.endpoints.advertisement.facebook`, `src.logger.logger`, `src.utils.date_time`).
-   - Определение путей к файлам групп и объявлений для русского (`ru`) и иврита (`he`) языков:
-     - `group_file_paths_ru = ["sergey_pages.json"]`
-     - `adv_file_paths_ru = ["ru_ils.json"]`
-     - `group_file_paths_he = ["sergey_pages.json"]`
-     - `adv_file_paths_he = ["he_ils.json"]`
-   - Определение категорий групп для рекламы: `group_categories_to_adv = ['sales', 'biz']`
+3. **<объяснение>**: Предоставьте подробные объяснения:  
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+   - **Переменные**: Их типы и использование.  
+   - Выделите потенциальные ошибки или области для улучшения.  
 
-2. **`run_campaign(d, promoter_name, campaigns, group_file_paths, language, currency)`**:
-   - Создается экземпляр `FacebookPromoter` с заданным драйвером `d` и именем рекламодателя `promoter_name`.
-   - Вызывается метод `run_campaigns` объекта `promoter`, которому передаются:
-     - Список кампаний `campaigns`.
-     - Пути к файлам групп `group_file_paths`.
-     - Категории групп для рекламы `group_categories_to_adv`.
-     - Язык `language`.
-     - Валюта `currency`.
-     - Флаг `no_video=False`.
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
 
-3. **`campaign_cycle(d)`**:
-    - Создаются копии списков путей к файлам для русского и иврита:
-        - `file_paths_ru` - копируется `group_file_paths_ru` и расширяется `adv_file_paths_ru`
-        - `file_paths_he` - копируется `group_file_paths_he` и расширяется `adv_file_paths_he`
-    - Создается список словарей, содержащий пары язык-валюта:
-        - `language_currency_pairs = [{"HE": "ILS"},{"RU": "ILS"}]`
-    - Цикл по парам язык-валюта в `language_currency_pairs`:
-        - Внутренний цикл по языку и валюте:
-            - Определение `group_file_paths` в зависимости от языка:
-                - `file_paths_ru` - если язык "RU"
-                - `file_paths_he` - если язык "HE"
-            - Определение списка кампаний `campaigns` в зависимости от языка:
-                - `['kazarinov_ru']` - если язык "RU"
-                - `['kazarinov_he']` - если язык "HE"
-            - Цикл по кампаниям в `campaigns`:
-                - Запуск `run_campaign` для каждой кампании с соответствующими параметрами.
-            - Получение списка кампаний из директории `aliexpress` и вызов `run_campaign` для них.
-    - Возвращается `True` после завершения всех циклов.
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
 
-4. **`main()`**:
-    - Инициализация драйвера `Driver(Chrome)`.
-    - Открытие страницы Facebook: `d.get_url(r"https://facebook.com")`.
-    - Установка флага `aliexpress_adv = True`.
-    - Бесконечный цикл `while True`:
-        - Проверка условия интервала с помощью `interval()`:
-            - Если `True`, то вывод "Good night!" и пауза на 1000 секунд.
-        - Запуск цикла рекламных кампаний `campaign_cycle(d)`.
-        - Логирование времени и пауза на случайное время от 30 до 360 секунд.
-    - Обработка прерывания с клавиатуры `KeyboardInterrupt`:
-        - Логирование сообщения о прерывании.
+# Анализ кода `hypotez/src/endpoints/advertisement/facebook/start_sergey.py`
 
-**Примеры:**
-
-- **Инициализация**: `group_file_paths_ru` становится `["sergey_pages.json"]`.
-- **`run_campaign`**: вызов `promoter.run_campaigns` с параметрами `campaigns=['kazarinov_ru']`, `group_file_paths` (например, `['sergey_pages.json', 'ru_ils.json']`), `language='RU'`, `currency='ILS'`.
-- **`campaign_cycle`**: для пары `{"RU": "ILS"}` переменная `group_file_paths` получит значение `file_paths_ru`.
-- **`main`**: создание драйвера Chrome, открытие facebook.com, запуск бесконечного цикла для рекламных кампаний.
-
-### 2. <mermaid>
+## 1. <алгоритм>
 
 ```mermaid
 graph LR
-    A[start_sergey.py] --> B(main);
-    B --> C{interval()};
-    C -- True --> D[print("Good night!")];
-    D --> E[time.sleep(1000)];
-    E --> F(campaign_cycle);
-    C -- False --> F;
-    F --> G{for language_currency in language_currency_pairs};
-    G -- loop --> H{for language,currency in language_currency.items()};
-    H --> I{group_file_paths = ...};
-    I --> J{campaigns = ...};
-    J --> K{for campaign in campaigns};
-    K --> L(run_campaign);
-    L --> M[FacebookPromoter.run_campaigns];
-    K -- end loop --> N[campaigns = get_directory_names(...)];
-    N --> O(run_campaign);
-    O --> M;
-    H -- end loop --> G;
-    G -- end loop --> P[logger.debug(...)];
-     P --> Q[time.sleep(t)];
-    Q --> C;
-
+    A[Начало программы] --> B(Инициализация драйвера Chrome);
+    B --> C{Цикл while True};
+    C -- True --> D{interval()};
+    D -- True --> E(Вывод "Good night!" и ожидание);
+    D -- False --> F(Запуск campaign_cycle);
+    F --> G(Логирование и задержка);
+    G --> C;
+    C -- KeyboardInterrupt --> H(Логирование прерывания);
+    H --> I[Конец программы];
+    E --> C;
+    
+    subgraph campaign_cycle
+    	F --> F1(Копирование путей к файлам групп);
+    	F1 --> F2(Добавление путей к файлам с объявлениями);
+    	F2 --> F3(Цикл по языковым парам);
+        F3 --> F4{Определение group_file_paths по языку}
+        F4 --> F5(Определение списка кампаний);
+        F5 --> F6{Цикл по кампаниям};
+            F6 --> F7(Запуск run_campaign);
+            F7 --> F6;
+        F6 -- Конец цикла --> F8(Получение списка кампаний из Google Drive);
+        F8 --> F9(Запуск run_campaign для aliexpress);
+        F9 --> F3;
+    F3 -- Конец цикла --> F10(Возврат True);
+    end
+    
+    subgraph run_campaign
+    	F7 --> R1(Создание экземпляра FacebookPromoter);
+    	R1 --> R2(Запуск рекламных кампаний через promoter.run_campaigns);
+    	F9 --> R1
+    end
+    
     style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#ccf,stroke:#333,stroke-width:2px
-    style H fill:#ccf,stroke:#333,stroke-width:2px
-    style I fill:#ccf,stroke:#333,stroke-width:2px
-    style J fill:#ccf,stroke:#333,stroke-width:2px
-    style K fill:#ccf,stroke:#333,stroke-width:2px
-    style L fill:#ccf,stroke:#333,stroke-width:2px
-     style M fill:#ccf,stroke:#333,stroke-width:2px
-    style N fill:#ccf,stroke:#333,stroke-width:2px
-    style O fill:#ccf,stroke:#333,stroke-width:2px
-    style P fill:#ccf,stroke:#333,stroke-width:2px
-    style Q fill:#ccf,stroke:#333,stroke-width:2px
-
+    style I fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
-**Описание `mermaid`:**
+**Примеры:**
+*   **Инициализация драйвера Chrome**: Создается экземпляр драйвера для управления браузером Chrome.
+*   **Цикл `while True`**: Бесконечный цикл, который повторяет рекламную кампанию.
+*   **`interval()`**: Функция, которая проверяет, пора ли прервать цикл на ночное время.
+*   **`campaign_cycle(d)`**: Запускает цикл рекламных кампаний для разных языковых групп.
+    *   Внутри `campaign_cycle` создается список словарей языковых пар `[{"HE": "ILS"},{"RU": "ILS"}]`.
+    *   Для каждой пары определяется список файлов групп и кампаний.
+        *   Например, для языка `"RU"` используются файлы из `file_paths_ru`.
+        *   Для языка `"HE"` используются файлы из `file_paths_he`.
+    *   Затем запускается `run_campaign` для каждого языка, валюты и кампании.
+        *   Например, `run_campaign(d, 'kazarinov', 'kazarinov_ru', group_file_paths=file_paths_ru, language='RU', currency='ILS')`.
+        *   Затем запускается `run_campaign` для кампаний aliexpress.
+*   **`run_campaign(d, promoter_name, campaigns, group_file_paths, language, currency)`**: Создает экземпляр `FacebookPromoter` и запускает рекламные кампании.
+    *  Например, вызывается `promoter.run_campaigns(campaigns=['kazarinov_ru'], group_file_paths=['sergey_pages.json', 'ru_ils.json'], group_categories_to_adv=['sales', 'biz'], language='RU', currency='ILS', no_video=False)`.
+*   **Логирование и задержка**: После цикла `campaign_cycle` выполняется логирование и устанавливается случайная задержка.
 
-- **`start_sergey.py` (A)**: Начало скрипта.
-- **`main` (B)**: Главная функция, запускающая весь процесс.
-- **`interval()` (C)**: Проверка интервала времени, возвращает True или False.
-- **`print("Good night!")` (D)**: Вывод сообщения, если `interval()` вернул True.
-- **`time.sleep(1000)` (E)**: Пауза на 1000 секунд.
-- **`campaign_cycle` (F)**: Функция, управляющая циклом запуска кампаний.
-- **`for language_currency in language_currency_pairs` (G)**: Цикл по парам язык-валюта.
-- **`for language, currency in language_currency.items()` (H)**: Цикл для извлечения языка и валюты из пары.
-- **`group_file_paths = ...` (I)**: Определение путей к файлам групп в зависимости от языка.
-- **`campaigns = ...` (J)**: Определение списка кампаний в зависимости от языка.
-- **`for campaign in campaigns` (K)**: Цикл по кампаниям.
-- **`run_campaign` (L)**: Функция для запуска отдельной рекламной кампании.
-- **`FacebookPromoter.run_campaigns` (M)**: Метод класса `FacebookPromoter`, запускающий рекламные кампании.
-- **`campaigns = get_directory_names(...)` (N)**: Получение списка кампаний из директории aliexpress.
-- **`run_campaign` (O)**: Функция для запуска рекламной кампании aliexpress.
-- **`logger.debug(...)` (P)**: Логирование времени.
-- **`time.sleep(t)` (Q)**: Пауза на случайное время.
-- **Стрелки**: Показывают поток выполнения программы.
-- **Циклы**: Обозначены циклами `for`, которые могут выполнятся несколько раз, пока есть элементы в списке.
-- **Условный переход**: Обозначен блоком `if` с выбором дальнейшего пути исполнения.
+## 2. <mermaid>
 
-### 3. <объяснение>
+```mermaid
+flowchart TD
+    Start[Начало] --> ImportModules[Импорт модулей];
+    ImportModules --> DefineVariables[Определение переменных];
+    DefineVariables --> RunCampaignFunc[Определение функции run_campaign];
+    RunCampaignFunc --> CampaignCycleFunc[Определение функции campaign_cycle];
+    CampaignCycleFunc --> MainFunc[Определение функции main];
+    MainFunc --> DriverInit[Инициализация драйвера];
+    DriverInit --> GetUrl[Открытие URL Facebook];
+    GetUrl --> MainLoop[Главный цикл while True];
+    
+    subgraph Главный цикл
+        MainLoop --> IntervalCheck{Проверка interval()};
+        IntervalCheck -- True --> SleepNight[Сон на ночь];
+        SleepNight --> MainLoop;
+        IntervalCheck -- False --> RunCampaignCycle[Вызов campaign_cycle() ];
+        RunCampaignCycle --> LogAndSleep[Логирование и ожидание];
+        LogAndSleep --> MainLoop;
+    end
+    
+    MainLoop -- KeyboardInterrupt --> InterruptLog[Логирование прерывания];
+    InterruptLog --> End[Конец программы];
+    
+    subgraph Function run_campaign
+        RunCampaignFunc --> CreatePromoter[Создание FacebookPromoter];
+        CreatePromoter --> RunPromoterCampaign[Вызов promoter.run_campaigns() ];
+    end
+        
+    subgraph Function campaign_cycle
+        CampaignCycleFunc --> CopyFilePaths[Копирование путей к файлам групп];
+        CopyFilePaths --> ExtendFilePaths[Расширение путей к файлам с объявлениями];
+        ExtendFilePaths --> LoopLanguageCurrency[Цикл по парам язык-валюта];
+        
+        subgraph Cycle Language Currency
+            LoopLanguageCurrency --> DetermineGroupFilePaths{Определение group_file_paths по языку};
+            DetermineGroupFilePaths --> DefineCampaigns[Определение списка кампаний];
+            DefineCampaigns --> LoopCampaigns[Цикл по кампаниям];
+            subgraph Cycle Campaigns
+                LoopCampaigns --> CallRunCampaign[Вызов run_campaign];
+                CallRunCampaign --> LoopCampaigns;
+            end
+            LoopCampaigns -- Конец цикла --> GetAliExpressCampaigns[Получение кампаний AliExpress из Google Drive];
+            GetAliExpressCampaigns --> CallRunCampaignAliExpress[Вызов run_campaign для AliExpress];
+            CallRunCampaignAliExpress --> LoopLanguageCurrency;
+        end
+         LoopLanguageCurrency -- Конец цикла --> ReturnTrue[Возврат True];
+     end
+
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#f9f,stroke:#333,stroke-width:2px
+```
+```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
+
+**Зависимости (импорты):**
+
+*   `header`: Определяет корень проекта и импортирует глобальные настройки.
+*   `random`: Для генерации случайных чисел, используется для задержки между циклами.
+*   `time`: Для работы со временем, используется для ожидания и логирования.
+*   `copy`: Для создания копий списков, чтобы избежать изменения оригинальных данных.
+*   `pathlib`: Для работы с путями к файлам, упрощает манипуляции с файловой системой.
+*   `src`:
+    *   `gs`: Глобальные настройки проекта.
+    *   `src.utils.file`:  `get_directory_names` - получает список директорий, `get_filenames` - получает список имен файлов.
+    *   `src.webdriver.driver`:  `Driver`, `Chrome` - для управления браузером.
+    *   `src.endpoints.advertisement.facebook`: `FacebookPromoter` - для запуска рекламных кампаний.
+    *   `src.logger.logger`: `logger` - для логирования.
+    *   `src.utils.date_time`: `interval` - для проверки интервала времени.
+
+## 3. <объяснение>
 
 **Импорты:**
 
-- `header`: Возможно, содержит общую информацию или настройки для проекта. Не видно связей с `src`.
-- `random`: Используется для генерации случайных чисел (например, для задержки `time.sleep(t)`).
-- `time`: Используется для работы со временем (задержки, логирование времени).
-- `copy`: Используется для создания копий списков (`copy.copy(group_file_paths_ru)`), чтобы избежать изменения исходных данных.
-- `pathlib`: Используется для работы с путями файлов и директорий.
-- `src.gs`: Содержит глобальные настройки проекта (например, пути к директориям).
-- `src.utils.file`: Содержит функции для работы с файлами и директориями (`get_directory_names`, `get_filenames`).
-- `src.webdriver.driver`: Содержит классы для работы с веб-драйверами (`Driver`, `Chrome`).
-- `src.endpoints.advertisement.facebook`: Содержит класс `FacebookPromoter` для управления рекламными кампаниями Facebook.
-- `src.logger.logger`: Содержит класс `logger` для логирования событий.
-- `src.utils.date_time`: Содержит функции для работы с датой и временем (`interval`).
+*   `header`: Модуль, который, вероятно, отвечает за определение корня проекта и загрузку общих настроек. Это позволяет коду работать независимо от текущего рабочего каталога. Он импортируется для получения доступа к глобальным настройкам проекта через `src.gs`.
+*   `random`: Используется для генерации случайных чисел, которые применяются для создания случайных задержек между циклами выполнения рекламных кампаний. Это позволяет имитировать поведение пользователя и избегать блокировок со стороны Facebook.
+*   `time`: Предоставляет функции для работы со временем, такие как `sleep` для задержки выполнения и `strftime` для форматирования времени в строке.
+*   `copy`: Используется для создания копий списков (например, `group_file_paths_ru`, `group_file_paths_he`) перед их модификацией, чтобы избежать нежелательных изменений оригинальных данных.
+*    `pathlib`:  Предназначен для более удобной работы с путями к файлам и директориям в кроссплатформенном режиме. Это делает код более читаемым и портативным.
+
+**Импорты из `src`:**
+
+*   `src.gs`: Содержит глобальные настройки проекта, такие как пути к файлам, URL-адреса, параметры API и т. д. Это централизованное хранилище конфигураций, которое позволяет легко изменять параметры программы без необходимости редактировать код.
+*   `src.utils.file`: Предоставляет утилиты для работы с файлами и директориями, такие как получение списка имен файлов и директорий.
+    *   `get_directory_names`: Используется для получения списка директорий с кампаниями из Google Drive.
+    *    `get_filenames`: используется для получения списка файлов.
+*   `src.webdriver.driver`: Отвечает за управление веб-браузером.
+    *   `Driver`: Базовый класс для управления браузером.
+    *   `Chrome`: Класс, который наследуется от `Driver` и реализует управление браузером Chrome.
+*   `src.endpoints.advertisement.facebook.FacebookPromoter`: Основной класс, который отвечает за выполнение рекламных кампаний на Facebook. Он использует драйвер браузера для управления интерфейсом Facebook и отправки рекламных объявлений.
+*   `src.logger.logger`: Обеспечивает функциональность логирования. `logger` используется для записи информации о выполнении программы, ошибок и других событий в лог-файл или консоль.
+*   `src.utils.date_time`: Содержит функции для работы с датой и временем, в частности `interval`, которая вероятно проверяет текущее время и возвращает `True` если сейчас нерабочее время.
 
 **Классы:**
 
-- **`Driver` (из `src.webdriver.driver`):**
-  - Роль: Абстрактный класс для управления веб-драйверами (например, Chrome).
-  - Атрибуты: Зависит от конкретной реализации.
-  - Методы: `get_url(url)` для открытия URL в браузере.
-  - Взаимодействие: Используется для управления браузером и навигации по сайту Facebook.
-- **`Chrome` (из `src.webdriver.driver`):**
-  - Роль: Конкретная реализация драйвера для браузера Chrome.
-  - Атрибуты: Зависит от конкретной реализации.
-  - Методы: Зависит от конкретной реализации.
-  - Взаимодействие: Используется для создания экземпляра драйвера Chrome.
-- **`FacebookPromoter` (из `src.endpoints.advertisement.facebook`):**
-  - Роль: Класс для управления рекламными кампаниями Facebook.
-  - Атрибуты: Зависит от реализации, например, экземпляры `Driver`.
-  - Методы: `run_campaigns` для запуска рекламных кампаний.
-  - Взаимодействие: Использует `Driver` для управления браузером и выполняет задачи по продвижению рекламы в Facebook.
+*   `Driver`: Абстрактный класс для управления браузером. Имеет методы для открытия URL, навигации, взаимодействия с элементами страницы. Конкретная реализация `Chrome` наследует этот класс и реализует управление браузером Chrome.
+*   `FacebookPromoter`: Класс, который отвечает за запуск рекламных кампаний в Facebook. Он принимает экземпляр драйвера, имя рекламодателя, пути к файлам с группами и объявлениями и выполняет продвижение рекламных объявлений. У него есть метод `run_campaigns` который запускает рекламные кампании.
 
 **Функции:**
 
-- **`run_campaign(d, promoter_name, campaigns, group_file_paths, language, currency)`:**
-  - Аргументы:
-    - `d` (`Driver`): Экземпляр драйвера.
-    - `promoter_name` (`str`): Имя рекламодателя.
-    - `campaigns` (`list | str`): Список или имя кампаний.
-    - `group_file_paths` (`list`): Пути к файлам с группами.
-    - `language` (`str`): Язык рекламной кампании.
-    - `currency` (`str`): Валюта рекламной кампании.
-  - Возвращаемое значение: Отсутствует (None).
-  - Назначение: Запускает рекламную кампанию с использованием `FacebookPromoter`.
-  - Пример: `run_campaign(d, 'kazarinov', ['kazarinov_ru'], ['sergey_pages.json', 'ru_ils.json'], 'RU', 'ILS')`.
-
-- **`campaign_cycle(d)`:**
-  - Аргументы:
-    - `d` (`Driver`): Экземпляр драйвера.
-  - Возвращаемое значение: `True`.
-  - Назначение: Управляет циклами запуска рекламных кампаний для разных языков и рекламодателей (казаринов и aliexpress).
-  - Пример: `campaign_cycle(d)` запускает цикл обработки всех заданных пар язык-валюта.
-
-- **`main()`:**
-  - Аргументы: Отсутствуют.
-  - Возвращаемое значение: Отсутствует (None).
-  - Назначение: Основная функция для запуска всего процесса, инициализирует драйвер, запускает цикл рекламных кампаний и обрабатывает прерывания с клавиатуры.
-  - Пример: `main()` запускает бесконечный цикл, который запускает рекламные кампании и делает паузы, проверяя временной интервал.
+*   `run_campaign(d, promoter_name, campaigns, group_file_paths, language, currency)`:
+    *   `d`: Экземпляр драйвера браузера.
+    *   `promoter_name`: Имя рекламодателя.
+    *   `campaigns`: Список названий кампаний или имя одной кампании.
+    *   `group_file_paths`: Список путей к файлам с группами.
+    *   `language`: Язык рекламной кампании (`"RU"`, `"HE"`).
+    *   `currency`: Валюта рекламной кампании (`"ILS"`).
+    *   Создает экземпляр `FacebookPromoter` и вызывает метод `run_campaigns`, передавая ему необходимые параметры.
+*   `campaign_cycle(d)`:
+    *   `d`: Экземпляр драйвера браузера.
+    *   Управляет циклом рекламных кампаний. Копирует пути к файлам, расширяет их, итерирует по языковым парам, запускает `run_campaign` для каждой кампании, и для кампаний aliexpress.
+    *  Возвращает `True` если цикл отработал.
+*   `main()`:
+    *   Основная функция запуска. Инициализирует драйвер, открывает страницу Facebook, устанавливает флаг `aliexpress_adv`, запускает бесконечный цикл, вызывая `campaign_cycle`, логирует время и уходит в сон на случайное время.
 
 **Переменные:**
 
-- `MODE` (`str`): Режим работы скрипта (например, 'dev' или 'prod').
-- `group_file_paths_ru` (`list[str]`): Пути к файлам с группами на русском языке.
-- `adv_file_paths_ru` (`list[str]`): Пути к файлам с объявлениями на русском языке.
-- `group_file_paths_he` (`list[str]`): Пути к файлам с группами на иврите.
-- `adv_file_paths_he` (`list[str]`): Пути к файлам с объявлениями на иврите.
-- `group_categories_to_adv` (`list[str]`): Категории групп для рекламы.
-- `language_currency_pairs` (`list[dict]`): Список словарей с парами язык-валюта.
-- `aliexpress_adv` (`bool`): Флаг для определения рекламодателя (используется, но не присваивается внутри цикла).
+*   `MODE`:  Определяет режим работы программы (`'dev'`).
+*   `group_file_paths_ru`, `adv_file_paths_ru`, `group_file_paths_he`, `adv_file_paths_he`: Списки путей к файлам с группами и объявлениями для русского и иврита.
+*   `group_categories_to_adv`: Список категорий групп для продвижения.
+*  `language_currency_pairs`: Список словарей с языковыми парами и валютами.
+*   `aliexpress_adv`: Флаг для переключения между рекламными кампаниями (`True`).
 
 **Потенциальные ошибки и области для улучшения:**
 
-- **Обработка ошибок:** Отсутствует подробная обработка ошибок, кроме `KeyboardInterrupt`. Следует добавить блоки `try...except` для других возможных ошибок.
-- **Управление драйвером:** Драйвер создается в начале `main` и не закрывается явно. Следует добавить закрытие драйвера в блоке `finally`, чтобы избежать утечки ресурсов.
-- **Конфигурация:** Жестко заданные пути к файлам и имена кампаний. Следует использовать конфигурационные файлы или переменные окружения.
-- **Логирование:** Логирование ведется только на уровне debug и info. Следует добавить уровни warning и error для важных событий.
-- **Пауза `time.sleep(1000)`**: Пауза на 1000 секунд (около 16 минут) может быть избыточной. Возможно, стоит уменьшить это время.
-- **Дублирование кода:** Цикл по языкам и валютам может быть вынесен в отдельную функцию, чтобы избежать дублирования кода.
+*   **Обработка ошибок**: В коде присутствует только `KeyboardInterrupt`. Не хватает обработки других возможных исключений.
+*   **Конфигурация**: Пути к файлам и имена кампаний захардкожены, лучше использовать `gs` для конфигурации.
+*   **Масштабируемость**: Код не является гибким, так как все настройки прописаны в переменных, не учитывается количество кампаний и языков.
+*   **Мониторинг**: Отсутствует мониторинг выполнения кампаний, например, отправка отчетов.
+*   **Зависимости**: Сложная структура зависимостей между файлами, можно рассмотреть упрощение и рефакторинг.
+*   **`interval()`**: Функция не определена, необходимо ее реализовывать.
 
 **Взаимосвязь с другими частями проекта:**
+*   Файл `header.py` отвечает за установку корня проекта и импорт глобальных настроек `src.gs`.
+*  Файл `src.webdriver.driver.py` отвечает за создание и управление драйвером браузера, который используется для взаимодействия с Facebook.
+*   `FacebookPromoter` отвечает за запуск рекламных кампаний.
+*   `src.logger` используется для логирования.
 
-- Используются модули из `src.utils` (файлы, даты, время), что говорит о том, что это часть более крупного проекта.
-- Есть зависимость от `src.webdriver` для управления браузером и `src.logger` для логирования, указывая на общую инфраструктуру проекта.
-- Модуль `src.endpoints.advertisement.facebook` показывает, что этот скрипт является частью более крупного модуля, отвечающего за рекламные кампании.
-- Зависимость от `gs.path.google_drive` говорит о том, что скрипт работает с файлами на Google Drive, что указывает на интеграцию с облачными сервисами.
+Этот анализ предоставляет всестороннее понимание функциональности кода, включая алгоритм работы, структуру классов и функций, а также потенциальные области для улучшения.

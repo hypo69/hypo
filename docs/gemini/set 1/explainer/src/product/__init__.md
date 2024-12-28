@@ -17,7 +17,7 @@ External classes and attributes:
 - `translate_presta_fields_dict`: Function that translates multilingual fields of `ProductFields`
 
 """
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields
@@ -85,7 +85,7 @@ graph LR
 
 **Переменные:**
 
-* `MODE = 'dev'`:  Переменная, которая, скорее всего, определяет режим работы приложения (например, 'dev', 'prod').
+* ``:  Переменная, которая, скорее всего, определяет режим работы приложения (например, 'dev', 'prod').
 
 **Возможные ошибки или области для улучшений:**
 

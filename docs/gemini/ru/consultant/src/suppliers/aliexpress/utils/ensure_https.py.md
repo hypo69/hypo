@@ -55,7 +55,7 @@
     print(urls_with_https) # Вывод: ['https://www.aliexpress.com/item/example_product_id1.html', 'https://www.aliexpress.com/item/example_product_id2.html']
 
 """
-MODE = 'dev'
+
 
 from src.logger.logger import logger
 from src.suppliers.aliexpress.utils.extract_product_id import extract_prod_ids

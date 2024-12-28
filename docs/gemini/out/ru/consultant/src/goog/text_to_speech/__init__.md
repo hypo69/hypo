@@ -12,7 +12,7 @@
 	:synopsis: Google TTS 
 
 """
-MODE = 'dev'
+
 
 import header   
 
@@ -50,7 +50,7 @@ _tts = TTS()
    :synopsis: Модуль для работы с Google Text-to-Speech.
 
 """
-MODE = 'dev'
+
 
 import header
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
@@ -113,7 +113,7 @@ _tts = TTS()
    :synopsis: Модуль для работы с Google Text-to-Speech.
 
 """
-MODE = 'dev'
+
 
 import header
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON

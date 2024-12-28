@@ -51,5 +51,5 @@
     'dev'
 """
 # определяет режим работы приложения
-APPLICATION_MODE = 'dev'
+APPLICATION_
 ```

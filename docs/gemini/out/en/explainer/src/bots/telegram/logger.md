@@ -13,7 +13,7 @@
 	:synopsis: Модуль логгирования телеграм ботов
 
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>
@@ -23,7 +23,7 @@ This code snippet is very simple.  It's a Python file defining a single constant
 **Step 1:** Define a constant.
 
 ```
-MODE = 'dev'
+
 ```
 
 

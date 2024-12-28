@@ -47,7 +47,7 @@ campaign_names = get_directory_names(campaigns_directory)
 ### `MODE`
 
 ```python
-MODE = 'dev'
+
 ```
 Переменная `MODE` устанавливает режим работы в `'dev'`, что может влиять на поведение скрипта.
 

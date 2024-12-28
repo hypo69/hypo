@@ -26,7 +26,7 @@
 
 ```mermaid
 graph LR
-    A[src.suppliers.grandadvance.__init__.py] --> B(MODE = 'dev')
+    A[src.suppliers.grandadvance.__init__.py] --> B()
     A --> C[import src.suppliers.grandadvance.graber.Graber]
     C --> D(Class Graber)
     style A fill:#f9f,stroke:#333,stroke-width:2px
@@ -36,7 +36,7 @@ graph LR
 **Анализ зависимостей `mermaid`:**
 
 *   `src.suppliers.grandadvance.__init__.py` (A): Начальная точка модуля, импортирует другие компоненты.
-*   `MODE = 'dev'` (B):  Переменная окружения,  которая устанавливается в начале модуля.
+*   `` (B):  Переменная окружения,  которая устанавливается в начале модуля.
 *  `import src.suppliers.grandadvance.graber.Graber` (C): Импорт класса `Graber` из модуля `graber.py`.
 *   `Class Graber` (D): Класс, предоставляющий функциональность граббера, является зависимостью.
 
@@ -50,7 +50,7 @@ graph LR
 
 **Переменные:**
 
-*   `MODE = 'dev'`:
+*   ``:
     *   Глобальная переменная, устанавливающая режим работы модуля в 'dev' (разработка).
     *   Может использоваться в других частях модуля для включения/выключения различных функций или настроек.
 

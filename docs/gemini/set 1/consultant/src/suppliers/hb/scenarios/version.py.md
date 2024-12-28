@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.scenarios """
 
@@ -82,7 +82,7 @@ __author__='hypotez '
 #! venv/bin/python/python3.12
 
 # Устанавливаем режим работы приложения.
-MODE = 'dev'
+
 
 # Объявление типа переменной __name__.
 __name__: str
@@ -130,7 +130,7 @@ __author__ = 'hypotez '
 #! venv/bin/python/python3.12
 
 # Устанавливаем режим работы приложения.
-MODE = 'dev'
+
 
 # Объявление типа переменной __name__.
 __name__: str

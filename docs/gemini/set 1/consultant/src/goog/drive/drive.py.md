@@ -37,7 +37,7 @@ from src import gs
 from src.utils.printer import pprint
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class GoogleDriveHandler:
@@ -195,7 +195,7 @@ from src import gs
 from src.utils.printer import pprint
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class GoogleDriveHandler:

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -87,7 +87,7 @@ __author__='hypotez '
 from typing import Any
 from src.logger.logger import logger # Добавлен импорт logger
 
-MODE = 'dev'
+
 # TODO: проверить использование, если не используется удалить
 __name__: str # Определяем тип переменной
 __version__: str = "3.12.0.0.0.4" # Определяем тип переменной и присваиваем значение
@@ -137,7 +137,7 @@ __author__: str = 'hypotez ' # Определяем тип переменной 
 from typing import Any
 from src.logger.logger import logger # Добавлен импорт logger
 
-MODE = 'dev'
+
 # TODO: проверить использование, если не используется удалить
 __name__: str # Определяем тип переменной
 __version__: str = "3.12.0.0.0.4" # Определяем тип переменной и присваиваем значение

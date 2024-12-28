@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -26,7 +26,7 @@ This file appears to be an initialization file for a module (`suppliers.hb`) wit
 
 **Step 1:**  Set the `MODE` variable.  No data is taken in. This likely controls operational mode, e.g., `dev`, `prod`, affecting the behavior of subsequent modules.
 
-**Example 1:** `MODE = 'dev'`
+**Example 1:** ``
 
 **Step 2:** Import the `Graber` class. This imports the definition of the `Graber` class from the `graber` module.
 
@@ -38,7 +38,7 @@ This file appears to be an initialization file for a module (`suppliers.hb`) wit
 ```mermaid
 graph LR
     subgraph Init File
-        A[MODE = 'dev'] --> B{Import Graber};
+        A[] --> B{Import Graber};
         B --> C[Graber];
     end
 ```
@@ -57,7 +57,7 @@ The diagram shows a single dependency: the `graber` module.  It imports the `Gra
 
 **Variables:**
 
-- `MODE = 'dev'`: A string variable likely used for configuration. This variable will almost certainly be used elsewhere in the project to influence behavior based on the development or production environment.
+- ``: A string variable likely used for configuration. This variable will almost certainly be used elsewhere in the project to influence behavior based on the development or production environment.
 
 
 **Classes:**

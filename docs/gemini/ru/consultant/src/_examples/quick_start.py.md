@@ -53,7 +53,7 @@
     from src.utils.jjson import j_loads
     from src.logger.logger import logger
 
-    MODE = 'dev'
+    
     data = {'key': 'value'}  # Пример данных
     # Пример кода с использованием j_loads и logger
     try:
@@ -67,7 +67,7 @@
 from src.utils.jjson import j_loads # Импорт функции j_loads из модуля src.utils.jjson
 from src.logger.logger import logger # Импорт logger из модуля src.logger.logger
 
-MODE = 'dev' # Объявление переменной MODE в режиме 'dev'
+ # Объявление переменной MODE в режиме 'dev'
 
 # Пример данных для демонстрации
 data = {'key': 'value'}

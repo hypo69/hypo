@@ -48,7 +48,7 @@
 from src.utils.jjson import j_loads, j_loads_ns # импортируем j_loads, j_loads_ns
 from src.logger.logger import logger # импортируем logger
 
-MODE = 'dev'
+
 
 
 # импортируем класс Firefox из файла firefox.py

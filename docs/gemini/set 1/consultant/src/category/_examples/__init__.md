@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -73,7 +73,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 #from .version import __version__, __doc__, __details__ # Temporary, need to fix imports
 
-MODE = 'dev'  # Переменная конфигурации режима работы.
+  # Переменная конфигурации режима работы.
 
 """
 Документация для переменной MODE.
@@ -148,7 +148,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 #from .version import __version__, __doc__, __details__ # Temporary, need to fix imports
 
-MODE = 'dev'  # Переменная конфигурации режима работы.
+  # Переменная конфигурации режима работы.
 
 """
 Документация для переменной MODE.

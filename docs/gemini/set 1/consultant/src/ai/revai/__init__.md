@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -33,7 +33,7 @@ MODE = 'dev'
 from src.utils.jjson import j_loads  # Импортируем функцию j_loads
 import json # Импортируем стандартную библиотеку json, на всякий случай
 
-MODE = 'dev'
+
 ```
 
 # Changes Made
@@ -61,4 +61,3 @@ from src.utils.jjson import j_loads  # Импортируем функцию j_l
 import json # Импортируем стандартную библиотеку json, на всякий случай
 
 # Настройка режима работы (dev/prod)
-MODE = 'dev'

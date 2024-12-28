@@ -19,7 +19,7 @@
 
 
 """
-MODE = 'dev'
+
 from pathlib import Path
 from typing import Any
 import header
@@ -145,7 +145,7 @@ class Graber(Grbr):
 
 
 """
-MODE = 'dev'
+
 from pathlib import Path
 from typing import Any
 import header

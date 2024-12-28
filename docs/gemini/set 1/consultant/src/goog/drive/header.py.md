@@ -34,7 +34,7 @@ from src.utils.jjson import j_loads
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files: Tuple[str, ...] = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
@@ -163,7 +163,7 @@ from src.utils.jjson import j_loads
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files: Tuple[str, ...] = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

@@ -84,7 +84,7 @@ from src.utils.printer import pprint
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 class PricelistBuilder:

@@ -8,7 +8,7 @@ module: src.suppliers.morlevi._experiments.close_pop_up
 	:platform: Windows, Unix
 	:synopsis: Проверка локатора закрытия поп-ап окна
    """
-MODE = 'dev'
+
 import header
 from src import gs
 from src.webdriver.driver import Driver

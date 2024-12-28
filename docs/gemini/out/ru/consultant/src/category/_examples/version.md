@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -78,7 +78,7 @@ __author__='hypotez '
 import sys
 from src.utils.jjson import j_loads, j_loads_ns # импорт необходимых функций для работы с JSON
 
-MODE = 'dev'
+
 
 """
 .. data:: MODE
@@ -132,7 +132,7 @@ __author__ = 'hypotez'
 import sys
 from src.utils.jjson import j_loads, j_loads_ns # импорт необходимых функций для работы с JSON
 
-MODE = 'dev'
+
 
 """
 .. data:: MODE

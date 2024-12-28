@@ -59,7 +59,7 @@ from pathlib import Path
 # импорт модуля для логирования
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 #: str: Режим работы приложения.
 
 def set_project_root(marker_files=('__root__')) -> Path:

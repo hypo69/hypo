@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 2. **<algorithm>**
@@ -21,7 +21,7 @@ MODE = 'dev'
 
 ```mermaid
 graph TD
-    A[MODE = 'dev'] --> B(Инициализация);
+    A[] --> B(Инициализация);
 ```
 
 Пример: Переменная `MODE` инициализируется со значением 'dev'.
@@ -31,7 +31,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph init
-        A[MODE = 'dev'] --> B{Инициализация};
+        A[] --> B{Инициализация};
     end
 ```
 

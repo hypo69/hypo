@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category
@@ -35,7 +35,7 @@ This file appears to be an initialization module for the `bangood` supplier with
 ```mermaid
 graph LR
     subgraph Bangood Module Initialization
-        A[hypotez/src/suppliers/bangood/__init__.py] --> B(MODE = 'dev');
+        A[hypotez/src/suppliers/bangood/__init__.py] --> B();
         B --> C{Imports};
         C --> D[Graber];
         C --> E[get_list_categories_from_site];
@@ -48,7 +48,7 @@ graph LR
 
 **Dependencies Analysis:**
 
-The mermaid diagram shows that the `__init__.py` file imports `Graber` from `.graber.py` and related functions from `.scenario.py`. This implies a dependency structure where the functions and the class imported are defined in separate modules within the `bangood` supplier directory. These dependencies are essential for utilizing the functionalities of those modules within the `bangood` supplier.  `MODE = 'dev'` is a likely configuration variable for the module.
+The mermaid diagram shows that the `__init__.py` file imports `Graber` from `.graber.py` and related functions from `.scenario.py`. This implies a dependency structure where the functions and the class imported are defined in separate modules within the `bangood` supplier directory. These dependencies are essential for utilizing the functionalities of those modules within the `bangood` supplier.  `` is a likely configuration variable for the module.
 
 
 ## <explanation>
@@ -60,7 +60,7 @@ The mermaid diagram shows that the `__init__.py` file imports `Graber` from `.gr
 
 **Variables:**
 
-- `MODE = 'dev'`: This variable likely defines the operating mode of the `bangood` supplier (e.g., development, testing, production).  Using `dev` as a constant suggests this might be set by a global config in the larger project.
+- ``: This variable likely defines the operating mode of the `bangood` supplier (e.g., development, testing, production).  Using `dev` as a constant suggests this might be set by a global config in the larger project.
 
 
 **Classes:**

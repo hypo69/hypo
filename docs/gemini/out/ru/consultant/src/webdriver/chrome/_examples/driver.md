@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome._examples """
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
    :platform: Windows, Unix
    :synopsis: Модуль предоставляет примеры использования классов `Driver` и `Chrome` для работы с веб-драйвером Chrome.
 """
-MODE = 'dev'
+
 
 
 """
@@ -143,7 +143,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Модуль содержит примеры работы с webdriver.
 """
-MODE = 'dev'
+
 
 
 """
@@ -213,7 +213,7 @@ if __name__ == "__main__":
    :platform: Windows, Unix
    :synopsis: Модуль предоставляет примеры использования классов `Driver` и `Chrome` для работы с веб-драйвером Chrome.
 """
-MODE = 'dev'
+
 
 
 """
@@ -243,7 +243,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Модуль содержит примеры работы с webdriver.
 """
-MODE = 'dev'
+
 
 
 """

@@ -10,7 +10,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -114,7 +114,7 @@ There are no functions defined in this file.
 * `__details__`:  A variable to store more detailed information about the module, which isn't used in the example, and likely should be further detailed.
 * `__annotations__`:  A built-in variable that's a dictionary that can contain type annotations and other metadata.
 * `__author__`: Contains the author's name.  Consider using a consistent format (e.g., a list of authors for multiple contributors).
-* `MODE`: This variable `MODE = 'dev'` is a somewhat unusual example in a module defining metadata. It's important to document what the `MODE` variable is intended for.
+* `MODE`: This variable `` is a somewhat unusual example in a module defining metadata. It's important to document what the `MODE` variable is intended for.
 
 ### Potential Errors or Areas for Improvement:
 

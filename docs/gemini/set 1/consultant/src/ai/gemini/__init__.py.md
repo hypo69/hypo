@@ -51,7 +51,7 @@
 
 from src.logger.logger import logger # Импорт модуля для логирования
 
-MODE = 'dev'
+
 """
     Режим работы модуля.
 

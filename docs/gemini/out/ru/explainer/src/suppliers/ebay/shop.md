@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ebay """
 
@@ -57,7 +57,7 @@ Author(s):
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Файл shop.py);
+    A[] --> B(Файл shop.py);
 ```
 
 # <explanation>

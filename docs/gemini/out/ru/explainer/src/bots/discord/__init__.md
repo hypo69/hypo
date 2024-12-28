@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 
@@ -51,7 +51,7 @@ MODE = 'dev'
 
 ```mermaid
 graph LR
-    A[hypotez/src/bots/discord/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/bots/discord/__init__.py] --> B();
 ```
 
 # <explanation>

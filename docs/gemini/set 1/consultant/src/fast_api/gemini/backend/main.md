@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.fast_api.gemini.backend """
 
@@ -56,7 +56,7 @@ MODE = 'dev'
 import json
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 """
 Модуль для работы с Gemini API.
@@ -76,7 +76,7 @@ MODE = 'dev'
 """
 Переменная MODE
 """
-MODE = 'dev'
+
 
 """
 Этот модуль содержит реализацию функций, взаимодействующих с API Gemini.
@@ -112,7 +112,7 @@ from src.utils.jjson import j_loads
 #from src.logger import logger # Исходный import
 from src.logger import logger  # Добавлен import
 
-MODE = 'dev'
+
 
 """
 Константа, определяющая режим работы.
@@ -128,7 +128,7 @@ MODE = 'dev'
 """
 Переменная MODE
 """
-MODE = 'dev'
+
 
 """
 Этот модуль содержит реализацию функций, взаимодействующих с API Gemini.

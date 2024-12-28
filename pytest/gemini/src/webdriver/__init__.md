@@ -55,7 +55,7 @@ def test_mode_value():
 
 
 # Example testing with a global variable that has a default value
-MODE = 'dev'  # Assuming this variable exists in your original code
+  # Assuming this variable exists in your original code
 
 
 def test_mode_default():

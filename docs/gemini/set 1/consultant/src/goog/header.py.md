@@ -65,7 +65,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 from src import gs
 
-MODE = 'dev'
+
 COFEE_DEFAULT_MESSAGE = "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

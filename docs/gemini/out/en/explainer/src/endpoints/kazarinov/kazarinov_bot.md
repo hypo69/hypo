@@ -28,7 +28,7 @@
 6. Логирование сообщений пользователей и их дальнейшая обработка.
 
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict

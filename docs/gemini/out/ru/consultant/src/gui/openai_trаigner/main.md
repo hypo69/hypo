@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -66,7 +66,7 @@ from src.logger import logger  # Импортируем logger
 	:platform: Windows, Unix
 	:synopsis: Модуль для создания главного окна приложения.
 """
-MODE = 'dev'
+
 
 
 """
@@ -103,7 +103,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Конфигурация режима работы приложения.
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -192,7 +192,7 @@ class AssistantMainWindow(QMainWindow):
 	:platform: Windows, Unix
 	:synopsis: Модуль для создания главного окна приложения.
 """
-MODE = 'dev'
+
 
 
 """
@@ -229,7 +229,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Конфигурация режима работы приложения.
 """
-MODE = 'dev'
+
 
 
 import sys

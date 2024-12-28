@@ -12,7 +12,7 @@
 	:synopsis:
 	
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -77,7 +77,7 @@ from src.logger import logger
 from ..prepare_campaigns import process_campaign_category, process_campaign, process_all_campaigns, get_directory_names # импортируем необходимые функции
 # TODO: импортировать gs.path для работы с Google Drive
 
-MODE = 'dev'
+
 
 
 def example_prepare_campaigns():
@@ -154,7 +154,7 @@ from src.logger import logger
 from ..prepare_campaigns import process_campaign_category, process_campaign, process_all_campaigns, get_directory_names # импортируем необходимые функции
 # TODO: импортировать gs.path для работы с Google Drive
 
-MODE = 'dev'
+
 
 
 def example_prepare_campaigns():

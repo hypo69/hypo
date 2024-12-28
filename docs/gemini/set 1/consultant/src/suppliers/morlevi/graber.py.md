@@ -17,7 +17,7 @@
 необходимо передать значение в `Context.locator`. Для реализации собственного декоратора,
 раскомментируйте соответствующие строки и переопределите его поведение.
 """
-MODE = 'dev'
+
 from pathlib import Path
 from typing import Any, Callable
 from functools import wraps
@@ -163,7 +163,7 @@ class Graber(Grbr):
 необходимо передать значение в `Context.locator`. Для реализации собственного декоратора,
 раскомментируйте соответствующие строки и переопределите его поведение.
 """
-MODE = 'dev'
+
 from pathlib import Path
 from typing import Any, Callable
 from functools import wraps

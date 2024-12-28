@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # from .code_assistant import CodeAssistant
@@ -37,7 +37,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 # Импортируем классы из соответствующих файлов
 # from .code_assistant import CodeAssistant
@@ -93,7 +93,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 # Импортируем классы из соответствующих файлов
 # from .code_assistant import CodeAssistant

@@ -12,7 +12,7 @@
 	:synopsis: Facebook login scenario
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Dict
@@ -160,7 +160,7 @@ graph TD
 
 **Variables:**
 
-- `MODE = 'dev'`: A string defining the execution mode, which is a common approach for configuration settings.
+- ``: A string defining the execution mode, which is a common approach for configuration settings.
 
 
 **Potential Errors/Improvements:**

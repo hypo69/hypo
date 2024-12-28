@@ -9,7 +9,7 @@
 	:synopsis: Модуль интерфейса с моделью от Coogle - generativeai
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -104,7 +104,7 @@ __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boos
 +"""Модуль взаимодействия с моделью generativeai."""
  
  """
- MODE = 'dev'
+ 
 +
  
  
@@ -191,7 +191,7 @@ __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boos
 Модуль для работы с интерфейсом модели generativeai.
 
 """
-MODE = 'dev'
+
 
 
 import sys

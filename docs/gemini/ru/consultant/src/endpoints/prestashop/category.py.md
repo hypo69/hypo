@@ -46,7 +46,7 @@
 .. image:: categories_tree.png
    :alt: Дерево категорий
 """
-MODE = 'dev'
+
 
 import requests
 from attr import attr, attrs

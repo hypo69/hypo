@@ -55,7 +55,7 @@
 
     Исключение, возникающее при ошибках контрольной суммы полезной нагрузки.
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper # удален неиспользуемый импорт

@@ -16,7 +16,7 @@ module: src.endpoints.hypo69.code_assistant.onela_bot
 
 Модуль содержит класс :class:`OnelaBot`, который используется для обработки текстовых сообщений и документов.
 """
-MODE = 'dev'
+
 import header
 import asyncio
 from pathlib import Path
@@ -117,7 +117,7 @@ module: src.endpoints.hypo69.code_assistant.onela_bot
 
 Модуль содержит класс :class:`OnelaBot`, который используется для обработки текстовых сообщений и документов.
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from telegram import Update
@@ -215,7 +215,7 @@ module: src.endpoints.hypo69.code_assistant.onela_bot
 
 Модуль содержит класс :class:`OnelaBot`, который используется для обработки текстовых сообщений и документов.
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from telegram import Update

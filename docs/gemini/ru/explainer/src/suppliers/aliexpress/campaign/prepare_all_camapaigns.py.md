@@ -26,7 +26,7 @@
 
 ```mermaid
 graph LR
-    A[Начало скрипта prepare_all_camapaigns.py] --> B(Инициализация: MODE = 'dev', импорт header, import process_all_campaigns);
+    A[Начало скрипта prepare_all_camapaigns.py] --> B(Инициализация: , импорт header, import process_all_campaigns);
     B --> C[Вызов process_all_campaigns()];
     C --> D{Проверка наличия рекламных кампаний?};
     D -- Нет --> E[Создание новых рекламных кампаний];

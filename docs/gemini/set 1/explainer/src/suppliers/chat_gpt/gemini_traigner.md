@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 ```
 
 ## <algorithm>
@@ -51,7 +51,7 @@ MODE = 'dev'
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B{Нет функциональности};
+    A[] --> B{Нет функциональности};
 ```
 
 ## <explanation>

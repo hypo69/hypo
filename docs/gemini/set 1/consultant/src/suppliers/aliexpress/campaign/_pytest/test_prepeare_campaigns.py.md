@@ -15,7 +15,7 @@
 
 :platform: Windows, Unix
 """
-MODE = 'dev'
+
 
 """
 :platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.aliexpress.campaign._pytest """
 
@@ -254,7 +254,7 @@ async def test_main(mock_get_directory_names):
 
 :platform: Windows, Unix
 """
-MODE = 'dev'
+
 
 """
 :platform: Windows, Unix
@@ -275,7 +275,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.aliexpress.campaign._pytest """
 

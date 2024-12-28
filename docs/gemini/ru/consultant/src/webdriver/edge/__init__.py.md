@@ -42,7 +42,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Добавлен импорт
 from src.logger.logger import logger # Добавлен импорт logger
 
 #: Режим работы приложения. Может принимать значения 'dev' или 'prod'.
-MODE = 'dev'
+
 
 from .edge import Edge
 ```

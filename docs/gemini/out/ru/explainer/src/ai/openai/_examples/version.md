@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -70,7 +70,7 @@ There's no step-by-step algorithm. The code just assigns values to variables.
 
 ```mermaid
 graph LR
-    A[version.py] --> B(MODE = 'dev');
+    A[version.py] --> B();
     A --> C(__name__);
     A --> D(__version__);
     A --> E(__doc__);

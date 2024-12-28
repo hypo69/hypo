@@ -91,7 +91,7 @@ from src.webdriver.js import JavaScript
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class Chrome(webdriver.Chrome):

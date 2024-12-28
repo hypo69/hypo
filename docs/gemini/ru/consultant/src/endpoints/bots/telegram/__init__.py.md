@@ -43,7 +43,7 @@
 #! venv/bin/python/python3.12
 from src.logger.logger import logger  # Импорт логгера
 
-MODE = 'dev' # Указывает режим работы, dev - режим разработки
+ # Указывает режим работы, dev - режим разработки
 # импорт класса TelegramBot
 try:
     from .bot import TelegramBot

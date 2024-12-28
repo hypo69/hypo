@@ -12,7 +12,7 @@
 в рамках проекта Kazarinov.
 
 """
-MODE = 'dev'
+
 import time
 import random
 from typing import Optional, Any
@@ -244,7 +244,7 @@ if __name__ == "__main__":
 в рамках проекта Kazarinov.
 
 """
-MODE = 'dev'
+
 import time
 import random
 from typing import Optional, Any

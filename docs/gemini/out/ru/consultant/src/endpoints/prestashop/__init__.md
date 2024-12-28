@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -42,7 +42,7 @@ import os
 import json
 
 
-MODE = 'dev'
+
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -87,7 +87,7 @@ import os
 import json
 
 
-MODE = 'dev'
+
 
 from .api import PrestaShop
 from .product import PrestaProduct

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module likely contains functions related to processing data for use in HTML generation within a FastAPI application.  It imports functions from the `main` module. The presence of `MODE = 'dev'` suggests this module is for development purposes.
+This module likely contains functions related to processing data for use in HTML generation within a FastAPI application.  It imports functions from the `main` module. The presence of `` suggests this module is for development purposes.
 
 
 ## Modules

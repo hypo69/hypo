@@ -46,7 +46,7 @@
     print(header.__version__)
 """
 
-MODE = 'dev'
+
 SETTINGS_FILE_PATH = 'src/settings.json'
 README_FILE_PATH = 'src/README.MD'
 

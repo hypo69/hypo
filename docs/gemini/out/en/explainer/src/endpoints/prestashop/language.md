@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 ...
 from types import SimpleNamespace
@@ -128,7 +128,7 @@ graph LR
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A constant likely defining the application's mode (development, production, etc.).
+    * ``: A constant likely defining the application's mode (development, production, etc.).
 
 
 * **Potential Errors/Improvements:**

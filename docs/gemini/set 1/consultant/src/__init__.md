@@ -24,7 +24,7 @@ Usage Example
 
     # No usage example available for this module.
 """
-MODE = 'dev'
+
 
 from .credentials import gs
 ```
@@ -56,7 +56,7 @@ Usage Example
     # No usage example available for this module.
 """
 # Установка режима работы.
-MODE = 'dev'
+
 
 # Импорт функций/классов из модуля credentials.
 from .credentials import gs
@@ -99,7 +99,7 @@ Usage Example
     # No usage example available for this module.
 """
 # Установка режима работы.
-MODE = 'dev'
+
 
 # Импорт функций/классов из модуля credentials.
 from .credentials import gs

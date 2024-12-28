@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from lxml import html
@@ -148,7 +148,7 @@ class GoogleHtmlParser:
 	:synopsis:
 
 """
-MODE = 'dev'
+
 from lxml import html
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger

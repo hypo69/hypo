@@ -49,7 +49,7 @@
     else:
         print("Не удалось получить информацию о релизе.")
 """
-MODE = 'dev'
+
 
 import requests
 # Добавлен импорт j_loads из src.utils.jjson

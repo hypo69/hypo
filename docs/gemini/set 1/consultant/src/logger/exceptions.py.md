@@ -47,7 +47,7 @@
 - :class:`PrestaShopAuthenticationError`: Исключение для ошибок аутентификации PrestaShop WebService.
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger.logger import logger

@@ -12,7 +12,7 @@
 	:synopsis: Convert Base64 encoded content to a temporary file
 
 """
-MODE = 'dev'
+
 
 """ This module provides a function to decode Base64 encoded content and write it to a temporary file with the specified extension.
 
@@ -90,7 +90,7 @@ def base64encode(image_path):
    :platform: Windows, Unix
    :synopsis: Преобразование кодированного в Base64 содержимого в временный файл
 """
-MODE = 'dev'
+
 
 """
 Этот модуль предоставляет функцию для декодирования содержимого, закодированного в Base64, 
@@ -187,7 +187,7 @@ def base64encode(image_path: str) -> str:
    :platform: Windows, Unix
    :synopsis: Преобразование кодированного в Base64 содержимого в временный файл
 """
-MODE = 'dev'
+
 
 """
 Этот модуль предоставляет функцию для декодирования содержимого, закодированного в Base64, 

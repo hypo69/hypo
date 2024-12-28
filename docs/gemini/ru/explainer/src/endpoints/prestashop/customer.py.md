@@ -1,109 +1,132 @@
-## hypotez/src/endpoints/prestashop/customer.py
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
+    которые импортируются при создании диаграммы. 
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
+    
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
+
+3. **<объяснение>**: Предоставьте подробные объяснения:  
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+   - **Переменные**: Их типы и использование.  
+   - Выделите потенциальные ошибки или области для улучшения.  
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
 
 ### <алгоритм>
-
 1.  **Инициализация `PrestaCustomer`**:
-    *   При создании экземпляра `PrestaCustomer` вызывается метод `__init__`.
-    *   Метод принимает параметры `credentials` (словарь или `SimpleNamespace`), `api_domain` и `api_key`. Если `credentials` предоставлены, `api_domain` и `api_key` могут быть получены из него.
-    *   Если `api_domain` или `api_key` не переданы или не найдены в `credentials`, выбрасывается исключение `ValueError`.
-    *   Вызывается конструктор родительского класса `PrestaShop` с переданными параметрами `api_domain`, `api_key` и дополнительными аргументами.
-
-    *Пример:*
-
-        ```python
-        credentials = {'api_domain': 'example.com', 'api_key': 'test_key'}
-        customer = PrestaCustomer(credentials=credentials)
-        # Или
-        customer = PrestaCustomer(api_domain='example.com', api_key='test_key')
-        ```
-
-2.  **Родительский класс `PrestaShop`**:
-    *   Конструктор родительского класса `PrestaShop` (не показан в коде) предположительно устанавливает соединение с API PrestaShop с использованием `api_domain` и `api_key`.
-
-3.  **Методы для работы с клиентами (не показаны в коде)**:
-    *   Класс `PrestaCustomer` должен содержать методы, такие как `add_customer_PrestaShop`, `delete_customer_PrestaShop`, `update_customer_PrestaShop` и `get_customer_details_PrestaShop`.
-    *   Эти методы используют установленное соединение с API PrestaShop для выполнения операций над данными клиентов.
+    *   Начало работы с классом `PrestaCustomer`.
+    *   Принимает на вход `credentials` (словарь или SimpleNamespace), `api_domain`, и `api_key` как параметры, либо все параметры в `credentials`.
+    *   Если `credentials` предоставлены, пытается извлечь `api_domain` и `api_key` оттуда.
+    *   Проверяет, что `api_domain` и `api_key` установлены. Если нет, вызывает исключение `ValueError`.
+    *   Вызывает конструктор родительского класса `PrestaShop`, передавая ему `api_domain` и `api_key`.
+        *   **Пример**:
+            ```python
+            prestacustomer = PrestaCustomer(api_domain="your_domain", api_key="your_key")
+            ```
+            или
+            ```python
+            credentials = {"api_domain": "your_domain", "api_key": "your_key"}
+            prestacustomer = PrestaCustomer(credentials=credentials)
+            ```
 
 ### <mermaid>
-
 ```mermaid
-classDiagram
-    class PrestaCustomer {
-        -api_domain: str
-        -api_key: str
-        +__init__(credentials: Optional[dict | SimpleNamespace], api_domain: Optional[str], api_key: Optional[str])
-        +add_customer_PrestaShop()
-        +delete_customer_PrestaShop()
-        +update_customer_PrestaShop()
-        +get_customer_details_PrestaShop()
-    }
-    class PrestaShop {
-        +__init__(api_domain: str, api_key: str)
-    }
+flowchart TD
+    Start[Начало инициализации PrestaCustomer] --> CheckCredentials{Есть credentials?}
+    CheckCredentials -- Да --> ExtractCredentials[Извлечь api_domain и api_key из credentials]
+    CheckCredentials -- Нет --> CheckApiKeys{Проверка api_domain и api_key}
+    ExtractCredentials --> CheckApiKeys
+    CheckApiKeys --> CheckApiKeysConditions{Проверка наличия api_domain и api_key}
+     CheckApiKeysConditions -- Оба есть --> CallSuperConstructor[Вызов __init__ родительского класса PrestaShop]
+    CheckApiKeysConditions -- Нет --> ThrowValueError[Выбросить ValueError]
+    CallSuperConstructor --> End[Конец инициализации PrestaCustomer]
+    ThrowValueError --> End
     
-    PrestaCustomer --|> PrestaShop: наследует
+     style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#ccf,stroke:#333,stroke-width:2px
+
 ```
 
-**Объяснение зависимостей:**
-
-*   `PrestaCustomer` наследует от `PrestaShop`, что указывает на то, что `PrestaCustomer` расширяет или специализирует функциональность `PrestaShop`.
-*   `PrestaShop` представляет собой базовый класс для работы с API PrestaShop, предоставляя основные методы для взаимодействия.
-*   `PrestaCustomer` добавляет специфическую логику для работы с клиентами, используя методы и соединения `PrestaShop`.
-*   Диаграмма показывает, что `PrestaCustomer` зависит от `PrestaShop` для подключения к API PrestaShop.
-*   Переменные `api_domain` и `api_key` определены как приватные (-), т.к. к ним нет доступа извне класса.
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```
 
 ### <объяснение>
 
 **Импорты:**
 
-*   `sys`, `os`: Стандартные модули Python для взаимодействия с системой. Здесь могут быть использованы для различных целей, например, для управления путями или системными операциями, но в представленном коде они явно не используются.
-*   `attr`, `attrs`: Библиотека `attrs` (вероятно, `attr`) используется для более лаконичного создания классов. В представленном коде не используется.
-*   `pathlib.Path`: Модуль для работы с путями файлов. Здесь не используется.
-*   `typing.Union`: Используется для определения типов переменных, которые могут принимать несколько типов (не используется в данном фрагменте, но может быть использовано в других частях модуля).
-*   `types.SimpleNamespace`: Удобный способ для создания объектов, которые могут содержать произвольные атрибуты.
-*   `header`: Предполагается, что это кастомный модуль, но его содержимое и назначение не известны.
-*   `src.gs`: Предполагается, что это внутренний модуль проекта, возможно, для глобальных настроек или данных.
-*   `src.logger.logger`: Модуль для логирования.
-*   `src.utils.jjson`: Модуль для работы с JSON.
-*   `.api.PrestaShop`: Локальный модуль, содержащий класс `PrestaShop`, который используется как базовый класс для `PrestaCustomer`.
-*    `src.logger.exceptions.PrestaShopException`: Модуль для обработки кастомных исключений.
-*   `typing.Optional`: Используется для обозначения переменных, которые могут быть либо определенного типа, либо `None`.
+*   `sys`: Предоставляет доступ к некоторым переменным и функциям, которые взаимодействуют с интерпретатором Python.
+*   `os`: Предоставляет функции для взаимодействия с операционной системой, такие как управление файлами и директориями.
+*   `attr, attrs`: Из библиотеки `attr`, которая используется для создания классов с меньшим количеством шаблонного кода. `attr` используется как декоратор, а `attrs` для создания класса.
+*   `pathlib.Path`: Представляет путь к файлу или каталогу и упрощает операции с путями.
+*   `typing.Union`: Позволяет указывать, что переменная может иметь один из нескольких типов.
+*   `types.SimpleNamespace`: Создает простой объект, к атрибутам которого можно обращаться как к обычным атрибутам.
+*   `header`:  Предположительно, файл `header.py`, который выполняет предварительную настройку проекта, например, определение корневой директории.
+*   `src`: Пакет, включающий модули `gs`, `logger`, `utils`, и др. `src.gs` предоставляет глобальные настройки. `src.logger.logger` - модуль для логирования, `src.utils.jjson` - для работы с JSON.
+*   `src.logger.exceptions`: Определяет кастомные исключения, например, `PrestaShopException`.
+*   `src.endpoints.prestashop.api`: Содержит класс `PrestaShop` для взаимодействия с API PrestaShop.
 
 **Классы:**
 
-*   `PrestaCustomer`:
-    *   **Роль**: Класс для работы с клиентами в PrestaShop.
-    *   **Атрибуты**: `api_domain`, `api_key` — параметры для аутентификации в PrestaShop API.
-    *   **Методы**:
-        *   `__init__`: Конструктор класса, принимает параметры для подключения к API (через `credentials` или отдельные `api_domain` и `api_key`).
-    *   **Взаимодействие**: Наследует от `PrestaShop` и использует его методы для взаимодействия с API. Класс также должен иметь методы для добавления, удаления, обновления и получения деталей клиентов (не показаны в предоставленном коде).
+*   `PrestaCustomer(PrestaShop)`:
+    *   Наследуется от `PrestaShop`.
+    *   Предназначен для работы с клиентами в PrestaShop.
+    *   Содержит методы для добавления, удаления, обновления и получения информации о клиентах.
+    *   `__init__(self, credentials=None, api_domain=None, api_key=None, *args, **kwards)`:
+        *   Инициализирует экземпляр класса.
+        *   Принимает `credentials`, `api_domain`, `api_key`. Если `credentials` передается, пытается извлечь `api_domain` и `api_key` из него.
+        *   Вызывает конструктор базового класса `PrestaShop` для настройки соединения с API.
 
 **Функции:**
 
-*   `__init__(self, credentials: Optional[dict | SimpleNamespace] = None, api_domain: Optional[str] = None, api_key: Optional[str] = None, *args, **kwards)`:
-    *   **Аргументы**:
-        *   `credentials` (опционально): Словарь или `SimpleNamespace`, содержащий `api_domain` и `api_key`.
-        *   `api_domain` (опционально): Домен API.
-        *   `api_key` (опционально): Ключ API.
-        *   `*args`, `**kwards`: Дополнительные аргументы и ключевые слова, передаваемые конструктору родительского класса `PrestaShop`.
-    *   **Возвращаемые значения**: Нет.
-    *   **Назначение**: Инициализация объекта `PrestaCustomer`, проверка наличия параметров для доступа к API, инициализация родительского класса `PrestaShop`.
+*   `__init__`: Конструктор класса `PrestaCustomer`, инициализирующий объект.
+    *   Аргументы:
+        *   `credentials`: `Optional[dict | SimpleNamespace]` - Словарь или объект SimpleNamespace с параметрами `api_domain` и `api_key`.
+        *    `api_domain`: `Optional[str]` - Домен API PrestaShop.
+        *   `api_key`: `Optional[str]` - Ключ API PrestaShop.
+        *   `*args, **kwards`: Дополнительные аргументы, которые передаются в конструктор родительского класса.
+    *   Возвращаемое значение: `None`.
+    *   Назначение: Инициализирует объект `PrestaCustomer`, устанавливая api_domain и api_key, проверяя их наличие, и настраивает подключение к API PrestaShop через родительский класс.
+*   `j_loads`: Функция из `src.utils.jjson` для загрузки JSON из строки.
 
 **Переменные:**
 
-*   `MODE`: Строковая константа, устанавливающая режим работы (здесь `'dev'`).
+*   ``: Указывает режим работы приложения (здесь установлен в 'dev').
+*   `credentials` :  Словарь или SimpleNamespace, содержащий `api_domain` и `api_key`.
+*   `api_domain`: Строка, представляющая домен API PrestaShop.
+*   `api_key`: Строка, представляющая ключ API PrestaShop.
 
-**Потенциальные ошибки или области для улучшения:**
+**Потенциальные ошибки и области для улучшения:**
 
-*   В коде не реализованы методы для работы с клиентами (add, delete, update, get details).
-*   Не хватает валидации данных, полученных от `credentials`.
-*   Взаимодействие с API PrestaShop через `PrestaShop` не показано, и код не может быть запущен.
+*   Использование `` в глобальном пространстве модуля может быть не лучшей практикой, если требуется более гибкое управление окружением. Лучше использовать переменные окружения.
+*   Отсутствуют проверки на корректность данных в `credentials` (например, проверка типа `dict` или `SimpleNamespace`).
+*   Необходимо предусмотреть обработку исключений при обращении к API PrestaShop.
+*   Следует реализовать методы для добавления, удаления, обновления и получения данных о клиентах, используя API PrestaShop.
+*   У класса `PrestaCustomer` нет явных методов для отправки запросов и обработки ответов от PrestaShop API. Эти методы должны быть либо в `PrestaShop`, либо в `PrestaCustomer`
 
-**Цепочка взаимосвязей с другими частями проекта:**
-
-*   `PrestaCustomer` зависит от `PrestaShop` для доступа к API PrestaShop.
-*   Использует `src.logger.logger` для логирования,  `src.utils.jjson` для работы с JSON.
-*   Может использовать `src.gs` для глобальных настроек.
-*   Взаимодействие с `header` неясно.
-
-В итоге, представленный код является частью модуля, ответственного за работу с клиентами в PrestaShop API. `PrestaCustomer` обеспечивает интерфейс для операций с клиентами, опираясь на функциональность, предоставляемую классом `PrestaShop`.
+**Взаимосвязи с другими частями проекта:**
+*  `header.py`: Используется для определения корневой директории проекта и импорта глобальных настроек.
+*  `src.gs`: Содержит глобальные настройки проекта, которые могут использоваться при инициализации класса `PrestaCustomer`.
+*  `src.logger.logger`: Используется для логирования различных действий и ошибок, возникающих при работе с API PrestaShop.
+* `src.utils.jjson`: Используется для обработки данных в формате JSON.
+* `src.endpoints.prestashop.api.PrestaShop`: Базовый класс для `PrestaCustomer`, предоставляет методы для взаимодействия с PrestaShop API.

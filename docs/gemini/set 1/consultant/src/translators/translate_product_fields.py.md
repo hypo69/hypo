@@ -65,7 +65,7 @@ from src.endpoints.PrestaShop import PrestaShop
 # Удаление дубликатов
 # from src import gs
 
-MODE = 'dev'
+
 
 def get_translations_from_presta_translations_table(product_reference: str, credentials: dict, i18n: str = None) -> list:
     """

@@ -65,7 +65,7 @@ from spread_formatting import CellFormat, Color, TextFormat, ConditionalFormatRu
 from spread import Spreadsheet, Worksheet
 from goog.helpers import hex_to_rgb
 
-MODE = 'dev'
+
 
 class GSRender():
     """

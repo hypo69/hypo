@@ -4,7 +4,7 @@
 
 ```python
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.utils.convertors.html \n\t:platform: Windows, Unix\n\t:synopsis: HTML conversion utilities\nFunctions:\n    - `html2escape`: Convert HTML to escape sequences.\n    - `escape2html`: Convert escape sequences to HTML.\n    - `html2dict`: Convert HTML to dictionaries.\n    - `html2ns`: Convert HTML to SimpleNamespace objects.\n    https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err\nhttps://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b\n"""
-MODE = 'dev'
+
 import re
 from typing import Dict
 from pathlib import Path

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -55,7 +55,7 @@ from .version import __version__, __doc__, __details__
 
 Пример:
 ```
-MODE = 'dev'
+
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 ```
@@ -64,7 +64,7 @@ from .version import __version__, __doc__, __details__
 
 ```mermaid
 graph TD
-    A[hypotez/src/ai/openai/_examples/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/ai/openai/_examples/__init__.py] --> B();
     B --> C[from packaging.version import Version];
     B --> D[from .version import __version__, __doc__, __details__];
 ```
@@ -78,7 +78,7 @@ graph TD
 
 **Переменные:**
 
-- `MODE = 'dev'`: Переменная, вероятно, используется для определения режима работы модуля (например, 'dev' для разработки, 'prod' для производства).  Это локальная переменная, имеющая ограниченный доступ.
+- ``: Переменная, вероятно, используется для определения режима работы модуля (например, 'dev' для разработки, 'prod' для производства).  Это локальная переменная, имеющая ограниченный доступ.
 
 **Классы и функции:**
 

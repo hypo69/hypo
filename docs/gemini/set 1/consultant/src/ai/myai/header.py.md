@@ -61,7 +61,7 @@ from packaging.version import Version
 
 from src.logger.logger import logger # Импортируем logger
 from src.utils.jjson import j_loads, j_loads_ns # Импортируем j_loads
-MODE = 'dev'
+
 #: str: Режим работы приложения.
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

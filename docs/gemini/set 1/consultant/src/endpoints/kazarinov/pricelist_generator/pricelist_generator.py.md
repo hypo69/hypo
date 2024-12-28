@@ -26,7 +26,7 @@
     main(mexiron, lang)
 
 """
-MODE = 'dev'
+
 
 # https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     main(mexiron, lang)
 
 """
-MODE = 'dev'
+
 
 # https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
 

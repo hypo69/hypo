@@ -44,7 +44,7 @@ from typing import Optional
 # from src.logger.logger import logger  # TODO: Добавить импорт логгера
 
 #: Режим работы приложения ('dev' - разработка, 'prod' - продакшн).
-MODE = 'dev'
+
 
 
 def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:

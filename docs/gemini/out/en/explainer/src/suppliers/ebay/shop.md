@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ebay """
 
@@ -60,7 +60,7 @@ No meaningful algorithm can be determined from the provided code.  The code cons
 
 ```mermaid
 graph LR
-    A[shop.py] --> B(MODE = 'dev')
+    A[shop.py] --> B()
 ```
 
 **Explanation of Dependencies:**

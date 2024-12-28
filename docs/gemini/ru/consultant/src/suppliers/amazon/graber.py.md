@@ -61,7 +61,7 @@ from src.logger.logger import logger
 from functools import wraps
 
 
-MODE = 'dev'
+
 
 
 #

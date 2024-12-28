@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
@@ -30,7 +30,7 @@ from .grender import GSRenderr
 """
 import json  # Импортируем необходимый модуль
 
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
@@ -62,7 +62,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем фун
 """
 import json  # Импортируем необходимый модуль
 
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet

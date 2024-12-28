@@ -49,7 +49,7 @@
 
     product = PrestaProduct(credentials={'api_domain': 'your_domain', 'api_key': 'your_key'})
 """
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional, Any

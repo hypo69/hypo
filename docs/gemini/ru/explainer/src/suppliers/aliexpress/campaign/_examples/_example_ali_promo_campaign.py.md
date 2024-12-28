@@ -27,7 +27,7 @@ graph LR
     end
     
     subgraph Определение переменных окружения и констант
-        C --> C1[MODE = 'dev']
+        C --> C1[]
         C --> C2[campaigns_directory = Path(...)]
         C --> C3[campaign_names = get_directory_names(...)]
         C --> C4[campaign_name = '280624_cleararanse']

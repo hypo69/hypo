@@ -22,7 +22,7 @@ Functions:
     - `read`: Retrieves a file from an FTP server.
     - `delete`: Deletes a file from an FTP server.
 """
-MODE = 'dev'
+
 from src.logger import logger
 from typing import Union
 import ftplib
@@ -184,7 +184,7 @@ def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
 -** Purpose **:\nAllows for sending media files (images, videos), spreadsheets, and other files to and from an FTP server. \n\n** Modules **:\n- helpers (local): Local helper utilities for FTP operations.\n- typing: Type hints for function parameters and return values.\n- ftplib: Provides FTP protocol client capabilities.\n- pathlib: For handling file system paths.\n\nFunctions:\n    - `write`: Sends a file to an FTP server.\n    - `read`: Retrieves a file from an FTP server.\n    - `delete`: Deletes a file from an FTP server.\n"""
 +Описание:\nПоддержка отправки и получения файлов (изображений, видео, таблиц и других) на/с FTP-сервер.
 +Модули: helpers (local), typing, ftplib, pathlib."""
- MODE = 'dev'
+ 
  from src.logger import logger
  from typing import Union
 
@@ -256,7 +256,7 @@ def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
 Этот модуль предоставляет интерфейс для взаимодействия с FTP-серверами. Он содержит функции для отправки, получения и удаления файлов с FTP-сервера.
 Описание:\nПоддержка отправки и получения файлов (изображений, видео, таблиц и других) на/с FTP-сервер.
 Модули: helpers (local), typing, ftplib, pathlib."""
-MODE = 'dev'
+
 from src.logger import logger
 from typing import Union
 import ftplib

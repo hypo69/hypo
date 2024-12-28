@@ -29,5 +29,5 @@
 :platform: Windows, Unix
 :synopsis: Инициализация пакета iso.
 """
-MODE = 'dev'
+
 ```

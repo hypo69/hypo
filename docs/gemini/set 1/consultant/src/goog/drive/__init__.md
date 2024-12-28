@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive
@@ -37,7 +37,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive
@@ -72,7 +72,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive

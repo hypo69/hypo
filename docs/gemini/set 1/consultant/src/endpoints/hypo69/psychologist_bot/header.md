@@ -17,7 +17,7 @@
 и загружает настройки из файла settings.json.
 """
 
-MODE = 'dev'
+
 
 """
 Настройки режима работы.
@@ -128,7 +128,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 и загружает настройки из файла settings.json.
 """
 
-MODE = 'dev'
+
 
 """
 Настройки режима работы.

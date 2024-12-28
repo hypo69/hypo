@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с категориями поставщика hb.co.il.
 """
-MODE = 'dev'
+
 
 
 """
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb """
 
@@ -146,7 +146,7 @@ def get_list_categories_from_site(s):
     :platform: Windows, Unix
     :synopsis: Модуль для работы с категориями поставщика hb.co.il.
 """
-MODE = 'dev'
+
 
 
 """
@@ -171,7 +171,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.hb """
 
@@ -282,7 +282,7 @@ def get_list_categories_from_site(s):
     :platform: Windows, Unix
     :synopsis: Модуль для работы с категориями поставщика hb.co.il.
 """
-MODE = 'dev'
+
 
 
 """
@@ -307,7 +307,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.hb """
 

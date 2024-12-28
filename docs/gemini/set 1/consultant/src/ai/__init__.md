@@ -11,7 +11,7 @@ module: src.ai
 	:platform: Windows, Unix
 	:synopsis: Модуль интерфейса моделей ИИ.
 	"""
-MODE = 'dev'
+
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel
@@ -33,7 +33,7 @@ import json
 # Импортируем необходимый модуль для логирования
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 # Импортируем классы моделей ИИ.
@@ -67,7 +67,7 @@ import json
 # Импортируем необходимый модуль для логирования
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 # Импортируем классы моделей ИИ.

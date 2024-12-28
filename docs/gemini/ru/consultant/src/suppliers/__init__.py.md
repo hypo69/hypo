@@ -48,7 +48,7 @@
 # from src.suppliers.graber import Graber, Context, close_pop_up #  импортирует классы Graber, Context и функцию close_pop_up из модуля graber
 # TODO: Раскомментировать импорты если они нужны, если нет удалить
 
-MODE = 'dev'
+
 """
 Режим работы приложения: 'dev' - для разработки, 'prod' - для продакшена.
 """

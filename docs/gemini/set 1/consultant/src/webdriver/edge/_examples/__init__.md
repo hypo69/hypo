@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -63,7 +63,7 @@ from .version import __version__, __doc__, __details__
 """
 
 # Переменная MODE не используется, удалена
-# MODE = 'dev'
+# 
 
 
 """
@@ -120,7 +120,7 @@ from src.logger import logger # Импорт для логирования
 """
 
 # Переменная MODE не используется, удалена
-# MODE = 'dev'
+# 
 
 
 """

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -26,7 +26,7 @@ No algorithm is present in the provided code as it's just an initialization file
 
 ```mermaid
 graph LR
-    A[wallashop/__init__.py] --> B(MODE = 'dev');
+    A[wallashop/__init__.py] --> B();
     A --> C[Graber];
     C -.-> D(.graber);
 ```
@@ -41,7 +41,7 @@ The mermaid graph shows a simple relationship.  `wallashop/__init__.py` sets a v
     * `from .graber import Graber`: This line imports the `Graber` class from the `graber.py` module, which is located within the same directory (`suppliers/wallashop`). The `.` prefix indicates that the import is from a submodule within the same package.  This is a standard Python practice.
 
 * **Variables:**
-    * `MODE = 'dev'`: This global variable likely controls the execution mode of the `wallashop` module, potentially enabling different behaviors for development (`dev`), testing (`test`), or production (`prod`) environments.  The value 'dev' suggests a development setting.
+    * ``: This global variable likely controls the execution mode of the `wallashop` module, potentially enabling different behaviors for development (`dev`), testing (`test`), or production (`prod`) environments.  The value 'dev' suggests a development setting.
 
 
 * **Classes (Implicit):**

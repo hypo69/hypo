@@ -58,7 +58,7 @@
    normalized_int = normalize_int(int_value)
 """
 from src.logger.logger import logger # Импортируем logger для логирования
-MODE = 'dev'
+
 """
 Режим работы модуля.
 Может принимать значения 'dev' или 'prod'.

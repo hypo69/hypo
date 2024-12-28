@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Window editor for products """
@@ -45,7 +45,7 @@ from src.logger import logger
    :synopsis: Модуль для создания графического интерфейса редактора товаров с сайта AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 """ Window editor for products """
@@ -195,7 +195,7 @@ class ProductEditor(QtWidgets.QWidget):
    :synopsis: Модуль для создания графического интерфейса редактора товаров с сайта AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 """ Window editor for products """

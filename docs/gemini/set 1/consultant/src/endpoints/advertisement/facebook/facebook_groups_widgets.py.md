@@ -12,7 +12,7 @@
 Этот модуль предоставляет класс :class:`FacebookGroupsWidget`, который создает выпадающий
 список с URL-адресами групп Facebook на основе данных из JSON-файла.
 """
-MODE = 'dev'
+
 
 from IPython.display import display
 from ipywidgets import Dropdown
@@ -102,7 +102,7 @@ class FacebookGroupsWidget:
 Этот модуль предоставляет класс :class:`FacebookGroupsWidget`, который создает выпадающий
 список с URL-адресами групп Facebook на основе данных из JSON-файла.
 """
-MODE = 'dev'
+
 
 from IPython.display import display
 from ipywidgets import Dropdown

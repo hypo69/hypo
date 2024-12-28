@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с Google Диском.
 """
-MODE = 'dev'
+
 
 
 """
@@ -38,7 +38,7 @@ MODE = 'dev'
   :synopsis:
 	Переменная конфигурации.
 """
-MODE = 'dev'
+
 
 """ module: src.goog.drive """
 
@@ -199,7 +199,7 @@ if __name__ == '__main__':
 	:synopsis:
 	Модуль для работы с Google Диском.
 """
-MODE = 'dev'
+
 
 
 """
@@ -225,7 +225,7 @@ MODE = 'dev'
   :synopsis:
 	Переменная конфигурации.
 """
-MODE = 'dev'
+
 
 """ module: src.goog.drive """
 

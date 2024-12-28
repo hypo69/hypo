@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import os,sys
 from attr import attr, attrs
@@ -75,7 +75,7 @@ graph TD
 *   **Classes:**
     *   `PrestaWarehouse(PrestaShop)`: This is a class that inherits from the `PrestaShop` class (defined in `api.py`). It likely encapsulates warehouse-specific operations within the PrestaShop API context.  The `...` indicates the class is incomplete. Without the implementation, its role and interactions cannot be fully described.
 *   **Variables:**
-    *   `MODE = 'dev'`: A global variable specifying the operating mode (likely development mode in this context).
+    *   ``: A global variable specifying the operating mode (likely development mode in this context).
 *   **Functions:** No functions are defined within this snippet.
 
 

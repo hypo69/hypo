@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -44,7 +44,7 @@ from src.logger import logger
 # Добавление импорта для логирования
 
 
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -89,7 +89,7 @@ from src.logger import logger
 # Добавление импорта для логирования
 
 
-MODE = 'dev'
+
 
 
 from .graber import Graber

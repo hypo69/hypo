@@ -58,7 +58,7 @@ Functions:
     >>> get_image_data("saved_image.png")
     b'\x89PNG\r\n...'
 """
-MODE = 'dev'
+
 import aiohttp
 import aiofiles
 from PIL import Image

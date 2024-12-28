@@ -60,7 +60,7 @@
     doc: str = get_project_doc()
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

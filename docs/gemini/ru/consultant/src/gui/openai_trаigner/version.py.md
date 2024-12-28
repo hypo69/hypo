@@ -34,7 +34,7 @@
 """
 from src.logger.logger import logger # Импортирован logger для логирования
 
-MODE = 'dev' # Значение MODE определено в начале файла
+ # Значение MODE определено в начале файла
 
 __version__: str = 'v1.1' # Версия проекта
 __doc__: str = ''

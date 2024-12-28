@@ -60,7 +60,7 @@
     if __name__ == "__main__":
         main()
 """
-MODE = 'dev'
+
 
 # пример_использования.py
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     if __name__ == "__main__":
         main()
 """
-MODE = 'dev'
+
 
 # пример_использования.py
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts

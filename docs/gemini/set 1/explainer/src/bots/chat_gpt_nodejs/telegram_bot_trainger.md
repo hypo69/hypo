@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""

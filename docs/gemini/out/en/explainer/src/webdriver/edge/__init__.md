@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .edge import Edge
 ```
@@ -46,7 +46,7 @@ from hypotez.src.webdriver.edge import Edge
 
 ```mermaid
 graph TD
-    A[hypotez/src/webdriver/edge/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/webdriver/edge/__init__.py] --> B();
     A --> C[from .edge import Edge];
     C --> D(Edge Class);
 ```
@@ -75,7 +75,7 @@ No functions are defined in this `__init__.py`.
 
 ### Variables:
 
-- `MODE = 'dev'`: This global variable stores a string ('dev'). It is likely used for configuring the behaviour or settings of the `Edge` class or the related functions in the `edge` module.   
+- ``: This global variable stores a string ('dev'). It is likely used for configuring the behaviour or settings of the `Edge` class or the related functions in the `edge` module.   
 
 
 ### Potential Errors or Improvements:

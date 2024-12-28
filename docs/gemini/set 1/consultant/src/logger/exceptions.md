@@ -30,7 +30,7 @@ Classes:
 
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger.logger import logger
@@ -72,7 +72,7 @@ from pykeepass.exceptions import (CredentialsError, BinaryError,
 
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger.logger import logger
@@ -157,7 +157,7 @@ class CustomException(Exception):
 
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger.logger import logger

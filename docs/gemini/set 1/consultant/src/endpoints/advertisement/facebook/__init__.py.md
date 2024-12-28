@@ -18,7 +18,7 @@
 
 """
 from src.logger.logger import logger
-MODE = 'dev'
+
 
 
 from .facebook import Facebook
@@ -50,7 +50,7 @@ from .promoter import FacebookPromoter, get_event_url
 
 """
 from src.logger.logger import logger
-MODE = 'dev'
+
 
 
 from .facebook import Facebook

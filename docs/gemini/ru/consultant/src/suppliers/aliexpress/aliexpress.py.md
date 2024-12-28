@@ -15,7 +15,7 @@
         -  Не все функции и методы документированы в формате RST.
         -  Присутствуют `...` как точки остановки, но не во всех случаях это оправдано.
         -  Не везде используется `logger.error` для обработки исключений.
-        -  Используется `MODE = 'dev'`, но неясно как он используется.
+        -  Используется ``, но неясно как он используется.
 
 **Рекомендации по улучшению**
 
@@ -74,7 +74,7 @@ from src.logger.logger import logger  # импорт logger
 from src.utils.jjson import j_loads, j_loads_ns  # импорт j_loads, j_loads_ns
 
 #: str: Defines the mode of the script ('dev' for development, could be 'prod' for production)
-MODE = 'dev'
+
 
 class Aliexpress(Supplier, AliRequests, AliApi):
     """

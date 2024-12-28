@@ -44,7 +44,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional, Union

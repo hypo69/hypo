@@ -16,7 +16,7 @@ and integration with Facebook for product posting.
 ```
 
 """
-MODE = 'dev'
+
 from pathlib import Path
 import re
 import header

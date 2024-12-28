@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.dialogflow """
 
@@ -55,7 +55,7 @@ This file appears to be an initialization module for a Dialogflow related compon
 
 ```mermaid
 graph LR
-    A[hypotez/src/ai/dialogflow/__init__.py] --> B(MODE = 'dev')
+    A[hypotez/src/ai/dialogflow/__init__.py] --> B()
 ```
 
 This simple diagram shows the only significant element: the definition of the `MODE` variable within the file.
@@ -97,4 +97,4 @@ There are no functions defined.
 
 **Relationship with other project parts:**
 
-The `MODE = 'dev'` variable, along with any code interacting with Dialogflow, will likely influence how the project operates.  Missing code implementing logic for production, testing, or alternative modes impacts how this module interfaces with the rest of the application.  Without knowing how it will be integrated, we can only predict that it will impact configuration and potential behavior changes, such as the choice of API endpoint or logging level.  Further investigation into the project's structure and files is needed to fully understand its dependencies and context.
+The `` variable, along with any code interacting with Dialogflow, will likely influence how the project operates.  Missing code implementing logic for production, testing, or alternative modes impacts how this module interfaces with the rest of the application.  Without knowing how it will be integrated, we can only predict that it will impact configuration and potential behavior changes, such as the choice of API endpoint or logging level.  Further investigation into the project's structure and files is needed to fully understand its dependencies and context.

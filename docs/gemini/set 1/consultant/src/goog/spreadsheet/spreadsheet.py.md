@@ -30,7 +30,7 @@
     )
     google_sheet_handler.upload_data_to_sheet()
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import gspread
@@ -261,7 +261,7 @@ class SpreadSheet:
     )
     google_sheet_handler.upload_data_to_sheet()
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import gspread

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.firefox._examples """
 
@@ -98,7 +98,7 @@ No functions are defined.
 
 **Variables:**
 
-* `MODE = 'dev'`: A string variable used to indicate the current mode (likely 'development' mode).  This variable is used for configuration, potentially influencing how the examples behave or what data they use.
+* ``: A string variable used to indicate the current mode (likely 'development' mode).  This variable is used for configuration, potentially influencing how the examples behave or what data they use.
 
 **Potential Errors or Improvements:**
 

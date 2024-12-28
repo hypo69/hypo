@@ -3,13 +3,13 @@
 ### <алгоритм>
 
 1.  **Инициализация:**
-    *   Устанавливается режим работы `MODE = 'dev'`.
+    *   Устанавливается режим работы ``.
     *   Импортируются необходимые библиотеки: `openai`, `src.gs`, `src.logger.logger`.
     *   Устанавливается ключ API OpenAI из глобальных настроек `gs.credentials.openai`.
     
     _Пример:_
     ```python
-    MODE = 'dev'
+    
     import openai
     from src import gs
     from src.logger.logger import logger
@@ -49,7 +49,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> SetMode[MODE = 'dev']
+    Start --> SetMode[]
     SetMode --> ImportLibs[Import Libraries:<br><code>openai</code>, <code>src.gs</code>,<br><code>src.logger.logger</code>]
     ImportLibs --> SetAPIKey[Set OpenAI API Key:<br><code>openai.api_key = gs.credentials.openai</code>]
     SetAPIKey --> TranslateFunc[<code>translate(text, source_language, target_language)</code>]
@@ -100,7 +100,7 @@ flowchart TD
 
 **Переменные:**
 
-*   `MODE = 'dev'`: Определяет режим работы приложения, используется для переключения между режимами разработки и продакшена, влияет на поведение некоторых функций, в данном случае не используется, но может пригодится для вывода более детального лога в режиме разработки.
+*   ``: Определяет режим работы приложения, используется для переключения между режимами разработки и продакшена, влияет на поведение некоторых функций, в данном случае не используется, но может пригодится для вывода более детального лога в режиме разработки.
 *   `openai.api_key`: Ключ API для доступа к сервисам OpenAI, устанавливается из `gs.credentials.openai`, что является частью глобальных настроек проекта.
 
 **Функции:**

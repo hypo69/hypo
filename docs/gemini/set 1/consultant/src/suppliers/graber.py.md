@@ -102,7 +102,7 @@ from src.utils.string.normalizer import (
     normalize_string,
 )
 
-MODE = 'dev'
+
 
 
 # Глобальные настройки через объект `Context`

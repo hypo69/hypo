@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -70,7 +70,7 @@ __cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm
 import src.utils.jjson as jjson # Импортируем нужную библиотеку для работы с JSON
 from src.logger import logger # импорт для логирования
 
-MODE = 'dev'  # Режим работы (разработка по умолчанию)
+  # Режим работы (разработка по умолчанию)
 
 
 __version__ = 'v1.1'  # Версия модуля
@@ -120,7 +120,7 @@ __cofee__ = "Побалуйте разработчика чашкой кофе, 
 import src.utils.jjson as jjson # Импортируем нужную библиотеку для работы с JSON
 from src.logger import logger # импорт для логирования
 
-MODE = 'dev'  # Режим работы (разработка по умолчанию)
+  # Режим работы (разработка по умолчанию)
 
 
 __version__ = 'v1.1'  # Версия модуля

@@ -47,7 +47,7 @@
     print(f"Переведенный текст: {translation}")
 """
 
-MODE = 'dev'
+
 
 import openai
 from src import gs

@@ -41,7 +41,7 @@
 from src.logger.logger import logger # Импорт logger для логирования
 
 #: Режим работы модуля: `dev` для разработки, `prod` для продакшена
-MODE = 'dev'
+
 
 from .api import PrestaShop # Импорт класса PrestaShop из модуля api
 ```

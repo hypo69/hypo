@@ -8,7 +8,7 @@
 	:synopsis: Публикация сообщения
 
 """
-MODE = 'dev'
+
 
 
 import time
@@ -159,7 +159,7 @@ def upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str
 	:synopsis: Публикация сообщения
 
 """
-MODE = 'dev'
+
 
 
 import time

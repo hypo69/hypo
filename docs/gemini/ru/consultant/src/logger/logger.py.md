@@ -54,7 +54,7 @@
     logger.debug('Сообщение debug')
     logger.error('Сообщение error', ex=Exception('Пример ошибки'))
 """
-MODE = 'dev'
+
 
 import logging
 import colorama

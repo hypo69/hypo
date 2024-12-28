@@ -21,7 +21,7 @@ if __name__ == "__main__":
     browser.start("https://www.example.com")
 ```
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -125,7 +125,7 @@ class Playwrid(PlaywrightCrawler):
 https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2
 """
 import json
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -259,7 +259,7 @@ https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2
 """
 import json
 import os
-MODE = 'dev'
+
 
 
 from pathlib import Path

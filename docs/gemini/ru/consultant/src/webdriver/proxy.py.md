@@ -57,7 +57,7 @@ from src.utils.printer import pprint
 from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns # Добавлен импорт j_loads_ns
 
-MODE = 'dev'
+
 
 # URL источника списка прокси
 url: str = 'https://raw.githubusercontent.com/proxifly/free-proxy-list/main/proxies/all/data.txt'

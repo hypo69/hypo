@@ -58,7 +58,7 @@
 from src.logger.logger import logger
 
 #: Режим работы модуля: 'dev' (разработка), 'prod' (продакшен).
-MODE = 'dev'
+
 
 try:
     from .product import Product

@@ -45,7 +45,7 @@
     driver = Driver()
     switch_account(driver)
 """
-MODE = 'dev'
+
 
 # from pathlib import Path # Не используется, можно удалить
 # from types import SimpleNamespace  # Не используется, можно удалить

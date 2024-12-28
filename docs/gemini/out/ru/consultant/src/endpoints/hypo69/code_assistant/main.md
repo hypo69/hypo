@@ -24,7 +24,7 @@
 4. Запуск с указанием роли \'doc_writer\', языка \'en\' и только модели \'openai\':
     python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'dev'
+
 
 import argparse
 import json
@@ -134,7 +134,7 @@ from .assistant import CodeAssistant
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def parse_args() -> dict:
@@ -217,7 +217,7 @@ from .assistant import CodeAssistant
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def parse_args() -> dict:

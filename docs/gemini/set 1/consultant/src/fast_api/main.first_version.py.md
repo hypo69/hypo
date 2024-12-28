@@ -59,7 +59,7 @@ from subprocess import Popen, PIPE
 from fastapi.staticfiles import StaticFiles
 from src.logger.logger import logger  # Import logger
 
-MODE = 'dev'
+
 
 app = FastAPI()
 

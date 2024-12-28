@@ -19,7 +19,7 @@
     - :func:`promote_post`: Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
     - :func:`post_message`: Управляет процессом публикации сообщения с заголовком, описанием и медиафайлами.
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path
@@ -436,7 +436,7 @@ def post_message(d: Driver, message: SimpleNamespace, no_video: bool = False, im
     - :func:`promote_post`: Управляет процессом продвижения поста с заголовком, описанием и медиафайлами.
     - :func:`post_message`: Управляет процессом публикации сообщения с заголовком, описанием и медиафайлами.
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path

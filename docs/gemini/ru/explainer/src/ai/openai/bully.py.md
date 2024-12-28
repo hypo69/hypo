@@ -21,7 +21,7 @@
 
 ```mermaid
 flowchart TD
-    Start[Start] --> Initialize[Initialize Global Settings:  MODE = 'dev', API-KEY]
+    Start[Start] --> Initialize[Initialize Global Settings:  , API-KEY]
     Initialize --> ImportModules[Import Modules: os, src.ai.openai]
     ImportModules --> SetSystemPrompt[Set System Prompt for Model]
     SetSystemPrompt --> BullyFunction[Function: bully(user_message, messages)]

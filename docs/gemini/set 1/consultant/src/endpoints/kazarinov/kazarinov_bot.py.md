@@ -15,7 +15,7 @@ Telegram-бот для проекта Kazarinov
 	:synopsis: KazarinovTelegramBot
 
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict, Self
@@ -124,7 +124,7 @@ if __name__ == "__main__":
    :synopsis: KazarinovTelegramBot
 
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict, Self
@@ -274,7 +274,7 @@ if __name__ == "__main__":
    :synopsis: KazarinovTelegramBot
 
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict, Self

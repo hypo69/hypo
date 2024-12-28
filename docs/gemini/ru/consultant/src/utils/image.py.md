@@ -70,7 +70,7 @@
     random_image("path/to/images")
 
 """
-MODE = 'dev'
+
 import aiohttp
 import aiofiles
 from PIL import Image

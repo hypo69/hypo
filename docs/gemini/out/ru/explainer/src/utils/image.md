@@ -55,7 +55,7 @@ Functions:
     >>> get_image_data("saved_image.png")
     b'\x89PNG\r\n...'
 """
-MODE = 'dev'
+
 import aiohttp
 import aiofiles
 from PIL import Image
@@ -182,7 +182,7 @@ There are no classes defined in this module.
 
 **Variables:**
 
-* `MODE = 'dev'`:  A constant likely used for configuration, e.g., for determining logging level or other settings in a development environment.
+* ``:  A constant likely used for configuration, e.g., for determining logging level or other settings in a development environment.
 
 **Possible Improvements and Errors:**
 

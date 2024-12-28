@@ -53,7 +53,7 @@
     MODE: Режим работы системы. Может принимать значения 'dev', 'test', 'prod'.
 """
 # Константа для определения режима работы
-MODE = 'dev'
+
 
 # Импорт логгера из модуля src.logger.logger
 from .logger import logger

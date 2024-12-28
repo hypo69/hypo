@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 
 """ module: src.webdriver._pytest """
 
@@ -159,7 +159,7 @@ graph LR
 
 **Variables:**
 
-- `MODE = 'dev'`: Likely a configuration variable indicating the testing environment.
+- ``: Likely a configuration variable indicating the testing environment.
 
 
 **Potential Errors/Improvements:**

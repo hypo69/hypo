@@ -30,7 +30,7 @@ from src import gs
 from src.logger.logger import logger
 # from src.utils.jjson import j_loads, j_loads_ns  # TODO: Не используется, но может потребоваться
 
-MODE = 'dev'
+
 
 
 def get_list_products_in_category(s) -> list[str]:
@@ -127,7 +127,7 @@ from src import gs
 from src.logger.logger import logger
 # from src.utils.jjson import j_loads, j_loads_ns  # TODO: Не используется, но может потребоваться
 
-MODE = 'dev'
+
 
 
 def get_list_products_in_category(s) -> list[str]:

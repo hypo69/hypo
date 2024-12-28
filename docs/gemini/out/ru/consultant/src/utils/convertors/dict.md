@@ -12,7 +12,7 @@
 	:synopsis: Converter for converting between dict and SimpleNamespace objects
 
 """
-MODE = 'dev'
+
 
 
 """ This module contains functions to recursively convert dictionaries to SimpleNamespace
@@ -160,7 +160,7 @@ def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
 +from src.logger import logger
  
  """
- MODE = 'dev'
+ 
 @@ -25,7 +28,7 @@
  from typing import Any, Dict, List
  from pathlib import Path
@@ -235,7 +235,7 @@ from reportlab.pdfgen import canvas
 from src.utils.xls import save_xls_file
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
-MODE = 'dev'
+
 """
 This module contains functions to recursively convert dictionaries to SimpleNamespace
 objects and vice versa, as well as exporting data to various formats.

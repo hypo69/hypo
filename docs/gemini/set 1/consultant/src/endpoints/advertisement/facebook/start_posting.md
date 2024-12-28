@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук
 
 """
-MODE = 'dev'
+
 
 from math import log
 import header
@@ -85,7 +85,7 @@ from src.logger import logger
 
 
 #  Константы
-MODE = 'dev'
+
 # Пути к файлам с данными о группах
 FILENAMES = [
     'usa.json',
@@ -182,7 +182,7 @@ from src.logger import logger
 
 
 #  Константы
-MODE = 'dev'
+
 # Пути к файлам с данными о группах
 FILENAMES = [
     'usa.json',

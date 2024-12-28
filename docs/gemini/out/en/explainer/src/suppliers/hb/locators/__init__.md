@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.locators """
 
@@ -98,7 +98,7 @@ This diagram shows the relationship between `__init__.py` and the imported modul
 
 **Variables:**
 
-- `MODE = 'dev'`: This is a global variable likely defining the operational mode (e.g., 'dev', 'prod').  This variable allows the code to adapt to different environments or configurations.
+- ``: This is a global variable likely defining the operational mode (e.g., 'dev', 'prod').  This variable allows the code to adapt to different environments or configurations.
 
 
 **Potential Errors/Improvements:**

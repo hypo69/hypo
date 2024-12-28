@@ -3,7 +3,7 @@ import pytest
 
 # Replace with actual code from hypotez/src/endpoints/__init__.py
 # Example (replace with your code):
-MODE = 'dev'
+
 
 
 def test_mode_is_dev():

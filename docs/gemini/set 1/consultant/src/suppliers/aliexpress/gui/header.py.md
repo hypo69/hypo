@@ -27,7 +27,7 @@
         print("Settings not loaded.")
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -129,7 +129,7 @@ except Exception as ex:
         print("Settings not loaded.")
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

@@ -12,7 +12,7 @@
 	:synopsis: function to check if the current time is within a specified interval with an optional timeout
 
 """
-MODE = 'dev'
+
 
 """ This module contains a function to check if the current time is within a specified interval with an optional timeout.
 
@@ -186,7 +186,7 @@ graph LR
 
 **Переменные:**
 
-* `MODE = 'dev'`: Переменная, вероятно, используется для определения режима работы приложения.  В данном примере не оказывает влияния на код, но может использоваться в других частях проекта.
+* ``: Переменная, вероятно, используется для определения режима работы приложения.  В данном примере не оказывает влияния на код, но может использоваться в других частях проекта.
 
 
 **Возможные ошибки/улучшения:**

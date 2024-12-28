@@ -3,7 +3,7 @@
 ### <алгоритм>
 
 1.  **Инициализация:**
-    *   Устанавливается `MODE = 'dev'`.
+    *   Устанавливается ``.
     *   Импортируются необходимые модули: `sys`, `json`, `Version` (из `packaging.version`), `Path` (из `pathlib`), `header`.
 2.  **Определение корневого каталога проекта (`set_project_root`):**
     *   Функция `set_project_root` принимает кортеж `marker_files` (по умолчанию `('__root__')`), содержащий имена файлов или каталогов, которые определяют корень проекта.
@@ -45,7 +45,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> SetMode[MODE = 'dev']
+    Start --> SetMode[]
     SetMode --> ImportModules[Import: sys, json, Version, Path, header]
     ImportModules --> FindProjectRoot[set_project_root()]
     FindProjectRoot -->  SetRoot[__root__ = result of set_project_root()]
@@ -101,7 +101,7 @@ flowchart TD
 1.  **`flowchart TD`**: Определяет тип диаграммы как блок-схему.
 2.  **Основные блоки:**
     *   `Start`: Начало выполнения программы.
-    *   `SetMode`: Установка режима (`MODE = 'dev'`).
+    *   `SetMode`: Установка режима (``).
     *   `ImportModules`: Импорт необходимых модулей (`sys`, `json`, `Version`, `Path`, `header`).
     *   `FindProjectRoot`: Вызов функции `set_project_root()`.
     *  `SetRoot`: Установка глобальной переменной `__root__`.

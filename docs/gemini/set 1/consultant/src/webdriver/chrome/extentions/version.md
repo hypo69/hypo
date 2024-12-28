@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome.extentions """
 
@@ -75,7 +75,7 @@ __author__='hypotez '
 from src.logger import logger # Импорт logger для логирования
 
 
-MODE = 'dev'  # Режим работы (dev, prod и т.д.)
+  # Режим работы (dev, prod и т.д.)
 
 
 __version__ = "3.12.0.0.0.4"
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 from src.logger import logger # Импорт logger для логирования
 
 
-MODE = 'dev'  # Режим работы (dev, prod и т.д.)
+  # Режим работы (dev, prod и т.д.)
 
 
 __version__ = "3.12.0.0.0.4"

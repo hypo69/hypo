@@ -11,7 +11,7 @@
    Этот модуль предоставляет классы для взаимодействия с Google Sheets API,
    включая чтение и запись данных в таблицы.
 """
-MODE = 'dev'
+
 
 
 from .spreadsheet import SpreadSheet
@@ -41,7 +41,7 @@ from .reach_spreadsheet import ReachSpreadsheet
    включая чтение и запись данных в таблицы.
 """
 #  Объявление режима работы
-MODE = 'dev'
+
 
 
 # Импорт классов для работы с таблицами

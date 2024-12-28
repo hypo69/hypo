@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.kualastyle """
 
@@ -94,7 +94,7 @@ def get_list_products_in_category(s) -> list[str,str,None]:
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from typing import Union # Импорт типа Union из модуля typing
 from src import gs # Импорт модуля gs из пакета src
@@ -146,7 +146,7 @@ def get_list_products_in_category(s) -> list[str, str, None]:
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from typing import Union # Импорт типа Union из модуля typing
 from src import gs # Импорт модуля gs из пакета src

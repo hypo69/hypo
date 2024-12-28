@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -43,7 +43,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads  # Импортируем необходимую функцию для работы с JSON
@@ -86,7 +86,7 @@ from src.logger import logger # Импорт logger для логировани�
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads  # Импортируем необходимую функцию для работы с JSON

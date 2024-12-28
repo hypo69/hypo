@@ -48,7 +48,7 @@
     print(__root__)
     print(settings)
 """
-MODE = 'dev'
+
 from pathlib import Path
 import sys
 from packaging.version import Version

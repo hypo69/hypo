@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -122,7 +122,7 @@ if __name__ == '__main__':
    :synopsis: Модуль для взаимодействия с Google Apps Script API.
 """
 import json
-MODE = 'dev'
+
 
 
 """
@@ -237,7 +237,7 @@ if __name__ == '__main__':
    :synopsis: Модуль для взаимодействия с Google Apps Script API.
 """
 import json
-MODE = 'dev'
+
 
 
 """

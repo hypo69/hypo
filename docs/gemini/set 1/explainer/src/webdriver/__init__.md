@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 ## <algorithm>
@@ -36,7 +36,7 @@ MODE = 'dev'
 
 ```mermaid
 graph LR
-    A[webdriver/__init__.py] --> B(MODE = 'dev');
+    A[webdriver/__init__.py] --> B();
     
 ```
 

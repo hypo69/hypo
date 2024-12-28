@@ -56,7 +56,7 @@
     js_executor.window_focus()
     print(js_executor.ready_state)
 """
-MODE = 'dev'
+
 
 #from src.utils.jjson import j_loads, j_loads_ns #TODO: not used
 import header

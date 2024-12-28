@@ -10,7 +10,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.kualastyle """
 
@@ -134,7 +134,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`:  Переменная, определяющая режим работы (вероятно, 'dev' - девелопмент).
+* ``:  Переменная, определяющая режим работы (вероятно, 'dev' - девелопмент).
 * `_d`: переменная, хранящая webdriver-объект.
 * `_l`: переменная, хранящая словарь локаторов для `close_pop_up_locator`.
 

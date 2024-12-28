@@ -43,7 +43,7 @@
 ## <mermaid>
 ```mermaid
 flowchart TD
-    Start[Start] --> Init[Initialization: <br>MODE = 'dev', <br>Import modules]
+    Start[Start] --> Init[Initialization: <br>, <br>Import modules]
     Init --> TextColors[Define TEXT_COLORS dictionary]
     Init --> BgColors[Define BG_COLORS dictionary]
     Init --> FontStyles[Define FONT_STYLES dictionary]

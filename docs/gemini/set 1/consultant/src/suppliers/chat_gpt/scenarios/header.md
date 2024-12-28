@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.etzmaleh """
 
@@ -63,7 +63,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
    :platform: Windows, Unix
    :synopsis: Модуль для ...
 """
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:

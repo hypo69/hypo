@@ -45,7 +45,7 @@
     from src.suppliers.kualastyle import header
     print(header.__project_name__)
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

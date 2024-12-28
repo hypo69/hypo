@@ -20,7 +20,7 @@ from __future__ import annotations
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header
@@ -105,7 +105,7 @@ from asyncio import run
    :synopsis: Модуль для сбора данных с сайта ksp.co.il.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header
@@ -209,7 +209,7 @@ from asyncio import run
    :synopsis: Модуль для сбора данных с сайта ksp.co.il.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header

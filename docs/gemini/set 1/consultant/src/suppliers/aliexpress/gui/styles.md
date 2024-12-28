@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Common styling functions for UI elements """
@@ -40,7 +40,7 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 """
 import logging
 
-MODE = 'dev'
+
 
 
 """ Функции для стилизации элементов UI """
@@ -106,7 +106,7 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 """
 import logging
 
-MODE = 'dev'
+
 
 
 """ Функции для стилизации элементов UI """

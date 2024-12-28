@@ -51,7 +51,7 @@ import sys
 from src.logger.logger import logger # Импортируем logger
 
 
-MODE = 'dev'
+
 
 def spinning_cursor():
     """

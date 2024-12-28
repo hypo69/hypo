@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.utils.powershell.examples.pprint """
 
@@ -66,7 +66,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
 
-MODE = 'dev'
+
 
 
 def get_absolute_path_to_root() -> Path:
@@ -138,7 +138,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
 
-MODE = 'dev'
+
 
 
 def get_absolute_path_to_root() -> Path:

@@ -60,7 +60,7 @@ from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 from src.webdriver.driver import Driver
 
-MODE = 'dev'
+
 ERROR_URL_PREFIX = 'https://error.taobao.com'
 
 

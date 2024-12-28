@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -96,7 +96,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src import gs
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -187,7 +187,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src import gs
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix

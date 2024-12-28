@@ -261,7 +261,7 @@ flowchart TD
        ```
 
 **Переменные:**
-- `MODE = 'dev'`: Константа, определяющая режим работы (разработка).
+- ``: Константа, определяющая режим работы (разработка).
 - `driver_base`: Экземпляр класса `DriverBase`, используется во всех тестах.
 - `mock_js_instance`, `mock_execute_locator_instance`, `meta_mock`: Экземпляры mock-объектов.
 -  `to_file`:  `Path` object представляющий путь до файла с cookies.

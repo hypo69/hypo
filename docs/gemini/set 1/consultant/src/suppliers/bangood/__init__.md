@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category
@@ -48,7 +48,7 @@ from .scenario import get_list_categories_from_site, get_list_products_in_catego
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category
@@ -93,7 +93,7 @@ from src.utils.jjson import j_loads # Импорт функции для раб�
 """
 import json # Импортируем json, для работы с json.load
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category

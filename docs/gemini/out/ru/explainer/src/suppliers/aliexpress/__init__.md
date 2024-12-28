@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -31,7 +31,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 
 ```mermaid
 graph TD
-    A[MODE = 'dev'] --> B{Импорт Aliexpress};
+    A[] --> B{Импорт Aliexpress};
     B --> C{Импорт AliApi};
     C --> D{Импорт AliRequests};
     D --> E{Импорт AliCampaignEditor};
@@ -85,7 +85,7 @@ graph LR
 
 **Переменные:**
 
-`MODE = 'dev'`: Переменная, которая, вероятно, используется для выбора режима работы (например, `dev` - для разработки, `prod` - для производства).
+``: Переменная, которая, вероятно, используется для выбора режима работы (например, `dev` - для разработки, `prod` - для производства).
 
 
 **Возможные ошибки или области для улучшений:**

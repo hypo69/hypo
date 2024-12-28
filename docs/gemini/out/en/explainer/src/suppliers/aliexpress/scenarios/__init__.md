@@ -14,7 +14,7 @@
 	:synopsis: Сценарии для алиэкспресс
 
 """
-MODE = 'dev'
+
 
 
 from .login import login
@@ -27,7 +27,7 @@ This file acts as an initialization module for the `aliexpress` supplier scenari
 **Step 1:** Define a constant.
 
 ```
-MODE = 'dev'
+
 ```
 
 **Step 2:** Import the `login` function.
@@ -43,7 +43,7 @@ There's no data flow beyond this import operation. The data flow is purely inter
 
 ```mermaid
 graph LR
-    A[hypotez/src/suppliers/aliexpress/scenarios/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/suppliers/aliexpress/scenarios/__init__.py] --> B();
     A --> C(.login);
     C --> D[login function];
 ```
@@ -61,7 +61,7 @@ graph LR
 
 **Variables:**
 
-* `MODE = 'dev'`:  This variable likely controls the mode of operation (e.g., development, production).  It's a simple string constant and is very likely used in conditionals within other modules to determine whether debugging or production code should be run.
+* ``:  This variable likely controls the mode of operation (e.g., development, production).  It's a simple string constant and is very likely used in conditionals within other modules to determine whether debugging or production code should be run.
 
 
 **Classes:**
@@ -85,4 +85,4 @@ This `__init__.py` module acts as a facade for the login scenario code. Other pa
 
 **Overall:**
 
-This file is a basic initialization module for the `aliexpress` supplier-specific login scenario. Its primary role is to import and make available the `login` functionality for later use. The `MODE = 'dev'` declaration suggests that other modules may use this value to switch between development and production logic.
+This file is a basic initialization module for the `aliexpress` supplier-specific login scenario. Its primary role is to import and make available the `login` functionality for later use. The `` declaration suggests that other modules may use this value to switch between development and production logic.

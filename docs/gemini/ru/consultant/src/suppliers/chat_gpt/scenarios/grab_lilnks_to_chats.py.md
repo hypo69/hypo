@@ -57,7 +57,7 @@
 #  :platform: Windows, Unix
 #  :synopsis:
 
-MODE = 'dev'
+
 # module: src.suppliers.chat_gpt.scenarios
 
 import logging

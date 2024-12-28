@@ -33,7 +33,7 @@
 :vartype MODE: str
 
 """
-MODE = 'dev' # Указывает режим работы модуля: dev (разработка) или prod (продакшен)
+ # Указывает режим работы модуля: dev (разработка) или prod (продакшен)
 
 from .translator import translate # Импортирует функцию translate из модуля translator для перевода текста.
 from .model import OpenAIModel # Импортирует класс OpenAIModel из модуля model для работы с моделями OpenAI.

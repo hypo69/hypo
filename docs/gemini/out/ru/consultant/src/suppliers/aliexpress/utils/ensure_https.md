@@ -25,7 +25,7 @@ print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_prod
 ```
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
@@ -45,7 +45,7 @@ from .extract_product_id import extract_prod_ids
    :synopsis: Модуль для проверки и форматирования URL-адресов, добавляя префикс `https://` при необходимости.
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
@@ -131,7 +131,7 @@ def _ensure_https_single(prod_id: str) -> str:
    :synopsis: Модуль для проверки и форматирования URL-адресов, добавляя префикс `https://` при необходимости.
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids

@@ -19,7 +19,7 @@
 2.  Добавить описание модуля в формате reStructuredText (RST).
 3.  Использовать `j_loads` или `j_loads_ns` из `src.utils.jjson` вместо стандартного `json.load`.
 4.  Добавить логирование ошибок при загрузке файла `settings.json`.
-5.  Удалить дублирование `MODE = 'dev'` и других комментариев.
+5.  Удалить дублирование `` и других комментариев.
 
 **Оптимизированный код**
 
@@ -52,7 +52,7 @@ import warnings
 from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 try:
     #  Код загружает настройки проекта из файла settings.json, используя j_loads для обработки данных

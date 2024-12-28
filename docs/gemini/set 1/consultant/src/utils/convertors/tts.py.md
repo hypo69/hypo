@@ -80,7 +80,7 @@ from gtts import gTTS
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 def speech_recognizer(audio_url: str = None, audio_file_path: Path = None, language: str = 'ru-RU') -> str:

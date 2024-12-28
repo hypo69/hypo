@@ -29,7 +29,7 @@ from __future__ import annotations
     graber = Graber(driver=driver)
     product_data = await graber.get_product_fields()
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps
@@ -121,7 +121,7 @@ from __future__ import annotations
     graber = Graber(driver=driver)
     product_data = await graber.get_product_fields()
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps

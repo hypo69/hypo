@@ -17,7 +17,7 @@ This module handles the process of posting advertisements to Facebook groups. It
 ### `MODE`
 
 ```python
-MODE = 'dev'
+
 ```
 
 **Description**: A string variable defining the script's execution mode (e.g., 'dev', 'prod'). Defaults to 'dev'.

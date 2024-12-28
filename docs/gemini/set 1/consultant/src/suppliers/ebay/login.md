@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ebay """
 
@@ -60,7 +60,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт logger
 
-MODE = 'dev'
+
 
 
 def login(driver, login_data_path):
@@ -116,7 +116,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт logger
 
-MODE = 'dev'
+
 
 
 def login(driver, login_data_path):

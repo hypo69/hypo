@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category
@@ -33,7 +33,7 @@ import json
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 # Класс для получения данных с сайта
@@ -109,7 +109,7 @@ import json
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 # Класс для получения данных с сайта

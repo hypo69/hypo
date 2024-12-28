@@ -42,7 +42,7 @@
 #: Режим работы вебдрайвера. Может принимать значения 'dev', 'test' или 'prod'.
 #:
 #: :vartype: str
-MODE = 'dev'
+
 
 # from .driver import Driver
 # from .chrome import Chrome

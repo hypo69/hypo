@@ -9,7 +9,7 @@
 	:synopsis: Module that handles model training using GoogleGenerativeAI for the Kazarinov project
 
 """
-MODE = 'dev'
+
 import header
 import time
 import json

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для извлечения идентификаторов товаров из URL-адресов AliExpress.
 """
-MODE = 'dev'
+
 
 import re
 from src.logger import logger
@@ -114,7 +114,7 @@ def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:
 	:synopsis:
 	Модуль для извлечения идентификаторов товаров из URL-адресов AliExpress.
 """
-MODE = 'dev'
+
 
 import re
 from src.logger import logger

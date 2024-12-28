@@ -46,7 +46,7 @@
     for html_file in chat_gpt_processor.yeld_conversations_htmls():
         print(html_file)
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from src import gs

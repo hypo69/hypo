@@ -20,7 +20,7 @@
 
 
 """
-MODE = 'dev'
+
 
 
 import asyncio

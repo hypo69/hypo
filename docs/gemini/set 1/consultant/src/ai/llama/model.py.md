@@ -57,7 +57,7 @@ from llama_cpp import Llama
 from src.logger.logger import logger
 
 #  Переменная MODE для определения режима работы (dev, prod и т.д.) - не используется в коде
-MODE = 'dev'
+
 MODEL_REPO_ID = "lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF"
 MODEL_FILENAME = "Meta-Llama-3.1-8B-Instruct-IQ4_XS.gguf"
 MAX_TOKENS = 512

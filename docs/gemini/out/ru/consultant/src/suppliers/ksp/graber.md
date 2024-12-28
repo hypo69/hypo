@@ -20,7 +20,7 @@ from __future__ import annotations
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 import header

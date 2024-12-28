@@ -37,7 +37,7 @@
 
         python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'dev'
+
 
 import argparse
 from pathlib import Path
@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
         python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'dev'
+
 
 import argparse
 from pathlib import Path

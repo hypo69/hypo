@@ -73,7 +73,7 @@ from src.utils.normalizer import StringNormalizer
 from src.utils.validator import ProductFieldsValidator
 
 #: Режим работы приложения: 'dev' или 'prod'
-MODE = 'dev'
+
 
 
 # Определяем путь до корневой директории проекта 'hypotez'

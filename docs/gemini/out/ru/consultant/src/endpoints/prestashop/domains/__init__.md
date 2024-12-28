@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains """
 
@@ -59,7 +59,7 @@ MODE = 'dev'
 import json # Необходим для работы с json, но будет заменён на j_loads
 from src.utils.jjson import j_loads # Импорт функции для чтения JSON файлов
 
-MODE = 'dev' # Переменная MODE. Может быть использована для выбора режима работы.
+ # Переменная MODE. Может быть использована для выбора режима работы.
 
 
 """
@@ -124,7 +124,7 @@ import json # Необходим для работы с json, но будет з
 from src.utils.jjson import j_loads # Импорт функции для чтения JSON файлов
 from src.logger import logger  # Импорт модуля логирования
 
-MODE = 'dev' # Переменная MODE. Может быть использована для выбора режима работы.
+ # Переменная MODE. Может быть использована для выбора режима работы.
 
 
 """

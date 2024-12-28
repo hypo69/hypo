@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains """
 
@@ -52,7 +52,7 @@ This file appears to be an initialization file for a module within a larger proj
 
 ```mermaid
 graph LR
-    A[init.py] --> B(MODE = 'dev');
+    A[init.py] --> B();
 ```
 
 **Dependency Analysis**:

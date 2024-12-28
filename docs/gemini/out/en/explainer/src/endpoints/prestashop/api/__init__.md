@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 ```
@@ -57,7 +57,7 @@ The `PrestaShop` class, imported from `.api`, is the only external dependency. T
 
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable is assigned the string value 'dev'. This variable is likely used for configuration, allowing different behaviors in development versus production environments.  It's a simple constant at this level.
+    * ``: This variable is assigned the string value 'dev'. This variable is likely used for configuration, allowing different behaviors in development versus production environments.  It's a simple constant at this level.
 
 
 * **Potential Errors or Improvements:**

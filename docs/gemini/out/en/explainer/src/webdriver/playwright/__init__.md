@@ -14,7 +14,7 @@
 	:synopsis:
 https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2
 """
-MODE = 'dev'
+
 
 from .playwrid import Playwrid
 ```
@@ -34,7 +34,7 @@ The code defines a module `hypotez/src/webdriver/playwright/__init__.py`.  It in
 
 ```mermaid
 graph LR
-    A[hypotez/src/webdriver/playwright/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/webdriver/playwright/__init__.py] --> B();
     A --> C[from .playwrid import Playwrid];
     C --> D[playwrid.py];
     subgraph Playwright Class
@@ -63,7 +63,7 @@ The mermaid diagram shows the primary dependency: `playwrid.py` is imported into
 
 **Variables:**
 
-- `MODE = 'dev'`: A global variable that sets a mode (likely for the application).  Its value ('dev') suggests it's a development mode.
+- ``: A global variable that sets a mode (likely for the application).  Its value ('dev') suggests it's a development mode.
 
 **Potential Errors or Improvements:**
 

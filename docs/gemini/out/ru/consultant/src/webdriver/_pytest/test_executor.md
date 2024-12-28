@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль содержит тесты для класса ExecuteLocator.
 """
-MODE = 'dev'
+
 
 
 """
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._pytest """
 

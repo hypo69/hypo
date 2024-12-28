@@ -13,7 +13,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import os
 from pathlib import Path
@@ -115,7 +115,7 @@ class Edge(WebDriver):
 
 """
 
-MODE = 'dev'
+
 
 import os
 from pathlib import Path
@@ -236,7 +236,7 @@ class Edge(WebDriver):
 
 """
 
-MODE = 'dev'
+
 
 import os
 from pathlib import Path

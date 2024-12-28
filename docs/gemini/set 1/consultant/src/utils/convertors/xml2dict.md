@@ -14,7 +14,7 @@ Functions:
 - `xml2dict`: Parses an XML string into a dictionary.
 - `ET2dict`: Converts an XML element tree into a dictionary.
 """
-MODE = 'dev'
+
 import re
 try:
     import xml.etree.cElementTree as ET
@@ -168,7 +168,7 @@ Functions:
 - `xml2dict`: Parses an XML string into a dictionary.
 - `ET2dict`: Converts an XML element tree into a dictionary.
 """
-MODE = 'dev'
+
 
 def _parse_node(node: ET.Element) -> dict | str:
     """Parse an XML node into a dictionary.

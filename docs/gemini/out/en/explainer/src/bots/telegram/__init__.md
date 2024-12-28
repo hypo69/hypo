@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 ```
@@ -48,7 +48,7 @@ The diagram shows a simple dependency. The `__init__.py` file in the `telegram` 
 
 **Variables:**
 
-- `MODE = 'dev'`: This is a global variable that is likely used to control different modes (e.g., development, production). The value 'dev' suggests that this is used for configuring the bot for development purposes.
+- ``: This is a global variable that is likely used to control different modes (e.g., development, production). The value 'dev' suggests that this is used for configuring the bot for development purposes.
 
 **Functions (Implicit):**
 

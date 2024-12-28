@@ -13,7 +13,7 @@
 
 """
 
-MODE = 'dev'
+
   
 import sys
 import json
@@ -64,7 +64,7 @@ from src import gs
    :synopsis:  Module for initializing project root and paths.
 """
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -140,7 +140,7 @@ from src import gs
    :synopsis:  Module for initializing project root and paths.
 """
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

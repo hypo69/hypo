@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ivory """
 
@@ -335,7 +335,7 @@ from src.logger.logger import logger
 from src.suppliers.Product import Product
 
 
-MODE = 'dev'
+
 
 
 def login(supplier) -> bool:
@@ -688,7 +688,7 @@ from src.logger.logger import logger
 from src.suppliers.Product import Product
 
 
-MODE = 'dev'
+
 
 
 def login(supplier) -> bool:

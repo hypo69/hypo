@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates """
 
@@ -103,7 +103,7 @@ graph LR
 * **Functions:** No functions are defined.
 
 * **Variables:**
-    * `MODE = 'dev'`: A variable that likely controls the mode of operation (e.g., development, production).  The current value is `'dev'`, suggesting this is set up for a development environment.
+    * ``: A variable that likely controls the mode of operation (e.g., development, production).  The current value is `'dev'`, suggesting this is set up for a development environment.
 
 
 * **Potential Errors/Improvements:**

@@ -58,7 +58,7 @@
         print(example_function.__doc__)
 """
 
-MODE = 'dev'
+
 
 import functools
 import time

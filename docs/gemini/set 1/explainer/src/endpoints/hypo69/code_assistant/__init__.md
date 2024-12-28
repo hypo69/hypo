@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .code_assistant import CodeAssistant
 ```
@@ -36,7 +36,7 @@ from .code_assistant import CodeAssistant
 
 ```mermaid
 graph LR
-    A[hypotez/src/endpoints/hypo69/code_assistant/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/endpoints/hypo69/code_assistant/__init__.py] --> B();
     A --> C(.code_assistant);
     C --> D[CodeAssistant];
 ```

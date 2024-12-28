@@ -61,5 +61,5 @@ from .translator import translate # Импортируем функцию transl
 from .model import OpenAIModel  # Импортируем класс OpenAIModel из модуля model
 
 #: Режим работы модуля (например, 'dev' для разработки, 'prod' для продакшена)
-MODE = 'dev'
+
 ```

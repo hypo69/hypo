@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -92,7 +92,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :platform: Windows, Unix
    :synopsis: Модуль для работы с заголовком веб-страницы.
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -179,7 +179,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :platform: Windows, Unix
    :synopsis: Модуль для работы с заголовком веб-страницы.
 """
-MODE = 'dev'
+
 
 import sys
 import json

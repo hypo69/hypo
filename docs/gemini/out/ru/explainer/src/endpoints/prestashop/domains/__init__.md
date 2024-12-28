@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains """
 ```
@@ -53,7 +53,7 @@ MODE = 'dev'
 ```mermaid
 graph TD
     A[Начало] --> B{Проверка MODE};
-    B -- MODE = 'dev' --> C[Завершение];
+    B --  --> C[Завершение];
 ```
 
 Пример: Переменная `MODE`  будет иметь значение `'dev'`, никаких внешних данных не используется и не изменяется.
@@ -64,7 +64,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph Init Module
-        A[MODE = 'dev']
+        A[]
     end
 ```
 

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с Google Диском.
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
   Константа режима работы.
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.drive """
 
@@ -200,7 +200,7 @@ if __name__ == '__main__':
 	:synopsis:
 	Модуль для работы с Google Диском.
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -224,7 +224,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
   Константа режима работы.
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.drive """
 

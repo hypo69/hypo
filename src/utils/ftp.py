@@ -23,7 +23,7 @@ Functions:
     - `read`: Retrieves a file from an FTP server.
     - `delete`: Deletes a file from an FTP server.
 """
-MODE = 'dev'
+
 from src.logger.logger import logger
 from typing import Union
 import ftplib

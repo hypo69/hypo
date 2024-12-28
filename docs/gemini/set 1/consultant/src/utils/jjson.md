@@ -19,7 +19,7 @@
 
 The functions in this module handle various aspects of working with JSON and CSV data, ensuring that data is loaded, saved, and merged efficiently and effectively.
 """
-MODE = 'dev'
+
 from datetime import datetime
 import copy
 from math import log

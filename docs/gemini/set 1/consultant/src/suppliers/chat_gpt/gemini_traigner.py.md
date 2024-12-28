@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 
 ```
@@ -51,7 +51,7 @@ MODE = 'dev'
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 # Объявление режима работы. По умолчанию установлен режим разработки.
-MODE = 'dev'
+
 ```
 
 ## Changes Made
@@ -73,4 +73,3 @@ MODE = 'dev'
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 # Объявление режима работы. По умолчанию установлен режим разработки.
-MODE = 'dev'

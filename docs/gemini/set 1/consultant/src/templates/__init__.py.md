@@ -64,5 +64,5 @@ from packaging.version import Version
 from .version import __version__, __doc__, __details__
 
 #: Режим работы приложения, по умолчанию 'dev' (разработка)
-MODE = 'dev'
+
 ```

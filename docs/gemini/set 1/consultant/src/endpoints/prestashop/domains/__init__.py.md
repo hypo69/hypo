@@ -26,7 +26,7 @@
 """
 from src.logger.logger import logger  # Импорт логгера
 
-MODE = 'dev'
+
 """
     :platform: Windows, Unix
     :synopsis: Переменная, определяющая режим работы приложения.
@@ -44,7 +44,7 @@ MODE = 'dev'
 4.  **Удалены лишние комментарии и пустые строки:**
     *   Удалены повторяющиеся и бессмысленные docstring и пустые строки.
 5. **Убраны дублирования.**
-   *   Убрано дублирование `MODE = 'dev'`.
+   *   Убрано дублирование ``.
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
@@ -73,7 +73,7 @@ MODE = 'dev'
 """
 from src.logger.logger import logger  # Импорт логгера
 
-MODE = 'dev'
+
 """
     :platform: Windows, Unix
     :synopsis: Переменная, определяющая режим работы приложения.

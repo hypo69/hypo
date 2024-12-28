@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.kualastyle """
 
@@ -163,7 +163,7 @@ graph TD
 
 **Variables:**
 
-*   `MODE = 'dev'`: A global variable that probably sets a mode for the application, potentially used for debugging or development.
+*   ``: A global variable that probably sets a mode for the application, potentially used for debugging or development.
 *   `d`: Represents the WebDriver instance extracted from the input `s`.
 *   `l`: Stores the locators for the 'category' page section.
 *   `list_products_in_category`: Stores the list of product URLs found on the page.

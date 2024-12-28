@@ -8,7 +8,7 @@
 # 	:synopsis: Модуль модели `openai`
 #
 """
-MODE = 'dev'
+
 
 from .translator import translate
 from .model import OpenAIModel
@@ -62,7 +62,7 @@ The diagram shows a simple import structure.  `__init__.py` imports `translate` 
     * `from .model import OpenAIModel`: Similarly, this imports the `OpenAIModel` class from the `model.py` module in the same directory.
 
 * **Variables:**
-    * `MODE = 'dev'`: This defines a global variable named `MODE` and sets its value to 'dev'. This likely indicates a development mode, which might influence the behavior of the code (e.g., using different API keys or logging levels).
+    * ``: This defines a global variable named `MODE` and sets its value to 'dev'. This likely indicates a development mode, which might influence the behavior of the code (e.g., using different API keys or logging levels).
 
 * **Classes and Functions (Implied):**
     * `OpenAIModel`:  The `OpenAIModel` class, likely responsible for interacting with the OpenAI API.  Details are not visible from this file alone. It will likely have methods to make API requests, process responses, and manage OpenAI model instances.

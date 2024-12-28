@@ -1,454 +1,410 @@
-## Анализ кода `tinytroupe/control.py`
+## <алгоритм>
 
-### 1. <алгоритм>
+1.  **Инициализация:**
+    *   При первом импорте модуля `control.py`, вызывается функция `reset()`, которая сбрасывает глобальные переменные `_current_simulations` (словарь для хранения объектов `Simulation`) и `_current_simulation_id` в начальное состояние:  `_current_simulations = {"default": None}`, `_current_simulation_id = None`. Это гарантирует, что нет активных симуляций при запуске.
+    *   Создается класс `Simulation`, который управляет ходом симуляции, хранит агентов, окружения, фабрики, а также кеш трасс и трассу выполнения симуляции.
+        *   При создании объекта `Simulation` устанавливаются начальные значения, такие как `id`, `status` (остановлен), списки `agents`, `environments`, `factories`, пустой `cached_trace` и `execution_trace`, путь к кешу и флаги `auto_checkpoint`, `has_unsaved_cache_changes` и `_under_transaction`.
 
-**Общая схема работы:**
+2.  **Начало симуляции:**
+    *   Функция `begin(cache_path, id, auto_checkpoint)`:
+        *   Проверяет, не запущена ли уже другая симуляция, используя `_current_simulation_id`. Если запущена - выбрасывает ошибку, в противном случае, начинает текущую симуляцию.
+        *   Создает или получает существующий объект `Simulation` (если вызывается повторно с тем же `id`).
+        *   Устанавливает статус симуляции в "started".
+        *   Очищает старые данные агентов, окружений и фабрик, вызывая статические методы `clear_agents()`, `clear_environments()` и `clear_factories()` у соответствующих классов.
+        *   Обнуляет счетчик id для новых объектов симуляции.
+        *   Загружает данные из кеш-файла, если `cache_path` указан.
 
-1.  **Инициализация `Simulation`:**
-    *   Создается экземпляр класса `Simulation` с уникальным `id` и опциональным `cached_trace`.
-    *   Инициализируются атрибуты:
-        *   `agents`, `environments`, `factories`: списки для хранения объектов.
-        *   `name_to_agent`, `name_to_environment`, `name_to_factory`: словари для быстрого доступа по имени.
-        *   `status`: начальное состояние симуляции (`STATUS_STOPPED`).
-        *   `cache_path`: путь к файлу кэша.
-        *   `auto_checkpoint`: флаг автоматического сохранения.
-        *   `has_unsaved_cache_changes`: флаг наличия несохраненных изменений.
-        *   `_under_transaction`: флаг, показывающий, выполняется ли транзакция.
-        *   `cached_trace`: история состояний из файла или пустой список.
-        *   `execution_trace`: текущая история выполнения.
+3.  **Управление агентами, средами и фабриками:**
+    *   Методы `add_agent(agent)`, `add_environment(environment)` и `add_factory(factory)`:
+        *   Добавляют агентов, окружения и фабрики в соответствующие списки симуляции.
+        *   Проверяют уникальность имен добавляемых объектов и устанавливают `simulation_id`.
 
-2.  **Начало симуляции `begin()`:**
-    *   Проверяется, что симуляция не запущена.
-    *   Устанавливается `status` в `STATUS_STARTED`.
-    *   Очищаются статические переменные агентов, окружений и фабрик (`TinyPerson.clear_agents()`, `TinyWorld.clear_environments()`, `TinyFactory.clear_factories()`).
-    *   Сбрасывается счетчик `utils._fresh_id_counter`.
-    *   Загружается кэш из файла, если указан `cache_path`.
+4.  **Транзакционное управление:**
+    *   Метод `begin_transaction()` устанавливает флаг `_under_transaction` в `True` и очищает буферы коммуникации агентов и сред.
+    *   Метод `end_transaction()` устанавливает флаг `_under_transaction` в `False`.
+    *   Метод `is_under_transaction()` возвращает текущее состояние флага `_under_transaction`.
+    *   Метод `_clear_communications_buffers()` очищает буферы коммуникации всех агентов и сред в симуляции.
 
-3.  **Добавление агентов, окружений и фабрик (`add_agent()`, `add_environment()`, `add_factory()`):**
-    *   Проверяется уникальность имен добавляемых объектов.
-    *   Добавление объекта в соответствующий список и словарь.
+5.  **Кеширование и выполнение:**
+    *   Метод `_function_call_hash(function_name, *args, **kwargs)`:
+        *   Генерирует hash-код для текущего вызова функции, включая имя функции и аргументы.
+    *   Метод `_is_transaction_event_cached(event_hash)`:
+        *   Проверяет, существует ли сохраненное состояние в `cached_trace` для текущей позиции `execution_trace`, и сравнивает хеш события.
+        *   Если кэш существует и хеш события совпадает, то возвращает `True`, иначе `False`.
+    *   Метод `_skip_execution_with_cache()`:
+        *   Если состояние кэшировано, добавляет это состояние из `cached_trace` в `execution_trace`.
+    *   Метод `_drop_cached_trace_suffix()`:
+        *   Удаляет все элементы из `cached_trace`, находящиеся за текущей позицией `execution_trace`. Это делается для того, чтобы при повторном выполнении кода можно было обновить кэш.
+    *   Метод `_add_to_execution_trace(state, event_hash, event_output)`:
+         *   Добавляет текущее состояние в `execution_trace`, включая hash предыдущего состояния, hash события и результат события.
+    *   Метод `_add_to_cache_trace(state, event_hash, event_output)`:
+        *   Добавляет текущее состояние в `cached_trace`, включая hash предыдущего состояния, hash события и результат события.
+    *   Метод `_load_cache_file(cache_path)`:
+        *   Загружает сохраненный кеш симуляции из файла.
+    *   Метод `_save_cache_file(cache_path)`:
+        *   Сохраняет текущую трассу симуляции в файл.
+    *   Класс `Transaction`:
+        *   Оборачивает вызов функции для управления симуляцией.
+        *   Если симуляция не запущена, функция выполняется без кэширования.
+        *   Если симуляция запущена, проверяется наличие состояния в кэше. Если кэш совпадает, состояние загружается из кэша, иначе выполняется функция, сохраняется результат и состояние, и записывается в кэш и трассу выполнения.
+        *   Функция `execute` также вызывает checkpoint если `auto_checkpoint` установлен.
 
-4.  **Завершение симуляции `end()`:**
-    *   Проверяется, что симуляция запущена.
-    *   Устанавливается `status` в `STATUS_STOPPED`.
-    *   Сохраняется текущее состояние в файл кэша.
+6.  **Управление состоянием симуляции:**
+    *   Метод `_encode_simulation_state()`:
+        *   Кодирует состояние всех агентов, окружений и фабрик в словарь.
+    *   Метод `_decode_simulation_state(state)`:
+        *   Декодирует состояние симуляции из словаря, восстанавливая состояние агентов, окружений и фабрик.
+    *   Методы `_encode_function_output(output)` и `_decode_function_output(encoded_output)`:
+        *   Кодируют и декодируют результат выполнения функции, что позволяет хранить и восстанавливать объекты `TinyPerson`, `TinyWorld` и `TinyFactory`.
 
-5.  **Сохранение состояния `checkpoint()`:**
-    *   Вызывается `_save_cache_file()` только, если есть несохраненные изменения.
+7. **Завершение симуляции:**
+    *  Функция `end(id)`:
+        * Устанавливает статус симуляции в "stopped".
+        * Сохраняет текущую трассу симуляции в файл.
 
-6. **Управление транзакциями:**
-    * `begin_transaction()`: Устанавливает флаг `_under_transaction` в `True` и очищает буферы коммуникаций агентов и окружений.
-    * `end_transaction()`: Устанавливает флаг `_under_transaction` в `False`.
-    * `is_under_transaction()`: Проверяет, находится ли симуляция в транзакции.
-    * `_clear_communications_buffers()`: Очищает буферы коммуникаций агентов и окружений.
+8.  **Декоратор `transactional`**:
+    *   Создает обертку для функций, которая автоматически создает объект `Transaction`, передавая ему объект, над которым совершается транзакция, и саму функцию. Это позволяет кэшировать и контролировать выполнение функций в рамках симуляции.
 
-7.  **Кэширование и выполнение:**
-    *   **`_function_call_hash()`**: Вычисляет хэш вызова функции на основе имени функции и ее параметров.
-    *   **`_execution_trace_position()`**: Возвращает текущую позицию в `execution_trace`.
-    *   **`_is_transaction_event_cached()`**: Проверяет, есть ли кэшированное состояние для текущего события.
-    *   **`_skip_execution_with_cache()`**: Загружает кэшированное состояние и пропускает выполнение.
-    *   **`_drop_cached_trace_suffix()`**: Обрезает `cached_trace` до текущей позиции в `execution_trace`.
-    *   **`_add_to_execution_trace()`**: Добавляет текущее состояние в `execution_trace`.
-    *   **`_add_to_cache_trace()`**: Добавляет текущее состояние в `cached_trace`.
-    *   **`Transaction.execute()`**:
-        *   Если симуляция не запущена, то функция выполняется без кэширования.
-        *   Если есть кэш и событие уже есть в кэше, состояние из кэша восстанавливается.
-        *   Если нет, то начинается транзакция, вызывается функция, результат сохраняется в кэш.
-    *   **`_encode_simulation_state()`**: Собирает состояние симуляции в словарь.
-    *   **`_decode_simulation_state()`**: Восстанавливает состояние симуляции из словаря.
-    *  **`_encode_function_output()`**: Кодирует результат вызова функции. Поддерживает кодирование `TinyPerson`, `TinyWorld` и `TinyFactory` в виде ссылок, а также базовые типы данных JSON.
-    *  **`_decode_function_output()`**: Декодирует результат вызова функции. Восстанавливает объекты `TinyPerson`, `TinyWorld` и `TinyFactory` по их именам.
-    *   **`transactional`**: Декоратор для выполнения функций в рамках транзакции.
+9.  **Утилиты:**
+    *   Функция `current_simulation()`:
+        *   Возвращает текущий объект симуляции, если он существует, иначе `None`.
+    *   Функция `checkpoint(id)`:
+        * Сохраняет состояние симуляции в файл.
+    *   Классы `SkipTransaction`, `CacheOutOfSync`, `ExecutionCached` представляют собой кастомные исключения, которые используются для обработки определенных ситуаций в процессе симуляции.
 
-8.  **Управление файлами кэша:**
-    *   **`_load_cache_file()`**: Загружает состояние симуляции из файла кэша.
-    *   **`_save_cache_file()`**: Сохраняет состояние симуляции в файл кэша.
-
-9.  **Глобальное управление симуляциями:**
-    *   **`reset()`**: Сбрасывает состояние глобальных переменных `_current_simulations` и `_current_simulation_id`.
-    *   **`_simulation()`**: Возвращает или создает экземпляр `Simulation`.
-    *   **`begin()`**: Запускает симуляцию с указанным `id`.
-    *   **`end()`**: Завершает симуляцию с указанным `id`.
-    *   **`checkpoint()`**: Сохраняет состояние симуляции с указанным `id`.
-    *   **`current_simulation()`**: Возвращает текущую активную симуляцию.
-
-**Примеры:**
-
-*   **Начало симуляции:**
-
-    ```python
-    sim = Simulation(id="my_sim")
-    sim.begin(cache_path="./my_sim_cache.json", auto_checkpoint=True)
-    ```
-
-*   **Добавление агента:**
-
-    ```python
-    from tinytroupe.agent import TinyPerson
-    person = TinyPerson(name="Alice")
-    sim.add_agent(person)
-    ```
-
-*   **Выполнение транзакционной функции:**
-
-    ```python
-    from tinytroupe.control import transactional
-    
-    class MyObject:
-      def __init__(self):
-        self.value = 0
-      
-      @transactional
-      def increase(self, amount):
-        self.value += amount
-
-    obj = MyObject()
-    obj.increase(5)
-    ```
-
-*   **Сохранение состояния:**
-
-    ```python
-    sim.checkpoint()
-    ```
-
-*   **Завершение симуляции:**
-
-    ```python
-    sim.end()
-    ```
-
-### 2. <mermaid>
+## <mermaid>
 
 ```mermaid
-graph LR
-    subgraph Simulation
-    A(Simulation) --> B(begin)
-    B --> C{status == STOPPED?}
-    C -- Yes --> D[status = STARTED]
-    C -- No --> E[Raise ValueError]
-    D --> F{cache_path?}
-    F -- Yes --> G(self.cache_path = cache_path)
-    G --> H[clear agents, envs, factories]
-    H --> I[utils._fresh_id_counter = 0]
-    I --> J{self.cache_path?}
-    J -- Yes --> K(_load_cache_file)
-    J -- No --> L
-    K --> L
-    L --> M(end)
-    M --> N{status == STARTED?}
-    N -- Yes --> O[status = STOPPED]
-    O --> P(checkpoint)
-    N -- No --> Q[Raise ValueError]
-    P --> R(_save_cache_file)
-    R --> S
-    A --> T(add_agent)
-    T --> U{agent.name in self.name_to_agent?}
-    U -- Yes --> V[Raise ValueError]
-    U -- No --> W[agent.simulation_id = self.id]
-    W --> X[self.agents.append(agent)]
-    X --> Y[self.name_to_agent[agent.name] = agent]
-    S -- end --> Z
-    A --> AA(add_environment)
-    AA --> AB{environment.name in self.name_to_environment?}
-    AB -- Yes --> AC[Raise ValueError]
-    AB -- No --> AD[environment.simulation_id = self.id]
-    AD --> AE[self.environments.append(environment)]
-    AE --> AF[self.name_to_environment[environment.name] = environment]
-    AF --> Z
-    A --> AG(add_factory)
-    AG --> AH{factory.name in self.name_to_factory?}
-    AH -- Yes --> AI[Raise ValueError]
-    AH -- No --> AJ[factory.simulation_id = self.id]
-    AJ --> AK[self.factories.append(factory)]
-    AK --> AL[self.name_to_factory[factory.name] = factory]
-    AL --> Z
-    A --> AM(_is_transaction_event_cached)
-    AM --> AN{len(self.cached_trace) > self._execution_trace_position() + 1?}
-    AN -- No --> AO[return False]
-    AN -- Yes --> AP{self._execution_trace_position() >= -1?}
-    AP -- No --> AQ[Raise ValueError]
-    AP -- Yes --> AR{event_hash == self.cached_trace[self._execution_trace_position() + 1][1]?}
-    AR -- No --> AS[return False]
-    AR -- Yes --> AT[return True]
-    AT --> Z
-    A --> AU(_drop_cached_trace_suffix)
-    AU --> AV[self.cached_trace = self.cached_trace[:self._execution_trace_position()+1]]
-    AV --> Z
-    A --> AW(_add_to_execution_trace)
-    AW --> AX[self.execution_trace.append( (previous_hash, event_hash, event_output, state) )]
-    AX --> Z
-    A --> AY(_add_to_cache_trace)
-    AY --> AZ{self.cached_trace?}
-    AZ -- Yes --> BA[previous_hash = utils.custom_hash(self.cached_trace[-1])]
-    AZ -- No --> BB
-    BA --> BC[self.cached_trace.append( (previous_hash, event_hash, event_output, state) )]
-    BB --> BC
-    BC --> BD[self.has_unsaved_cache_changes = True]
-    BD --> Z
-    A --> BE(_load_cache_file)
-     BE --> BF{cache file exists?}
-    BF -- Yes --> BG(load cached_trace from file)
-    BF -- No --> BH[cached_trace = []]
-    BG --> Z
-     BH --> Z
-    A --> BI(_save_cache_file)
-    BI --> BJ(save cached_trace to file)
-    BJ --> BK[self.has_unsaved_cache_changes = False]
-    BK --> Z
-    A --> BL(begin_transaction)
-    BL --> BM[self._under_transaction = True]
-    BM --> BN[self._clear_communications_buffers()]
-    BN --> Z
-    A --> BO(end_transaction)
-    BO --> BP[self._under_transaction = False]
-    BP --> Z
-    A --> BQ(is_under_transaction)
-    BQ --> BR[return self._under_transaction]
-    BR --> Z
-    A --> BS(_clear_communications_buffers)
-     BS --> BT[Clear agents communication buffers]
-     BT --> BU[Clear environments communication buffers]
-     BU --> Z
-    A --> BV(_encode_simulation_state)
-    BV --> BW[state = {}]
-    BW --> BX[Encode agents state]
-    BX --> BY[Encode environments state]
-    BY --> BZ[Encode factories state]
-    BZ --> CA[return state]
-    CA --> Z
-    A --> CB(_decode_simulation_state)
-    CB --> CC[Decode factories]
-    CC --> CD[Decode environments]
-    CD --> CE[Decode agents]
-    CE --> CF
-    CF --> Z
-    end
-    subgraph Transaction
-    D(Transaction) --> E(execute)
-    E --> F{simulation.status == STOPPED?}
-    F -- Yes --> G(output = function(*args, **kwargs))
-    F -- No --> H{simulation.status == STARTED?}
-    H -- No --> I[Raise ValueError]
-    H -- Yes --> J(event_hash = self.simulation._function_call_hash())
-    J --> K{self.simulation._is_transaction_event_cached(event_hash)?}
-    K -- Yes --> L[self.simulation._skip_execution_with_cache()]
-    L --> M(state = self.simulation.cached_trace[self.simulation._execution_trace_position()][3])
-    M --> N(self.simulation._decode_simulation_state(state))
-    N --> O(output = self._decode_function_output(encoded_output))
-    O --> P
-    K -- No --> Q{not self.simulation.is_under_transaction()?}
-    Q -- Yes --> R(self.simulation.begin_transaction())
-    R --> S(self.simulation._drop_cached_trace_suffix())
-    S --> T(output = self.function(*self.args, **self.kwargs))
-    T --> U(encoded_output = self._encode_function_output(output))
-    U --> V(state = self.simulation._encode_simulation_state())
-    V --> W(self.simulation._add_to_cache_trace(state, event_hash, encoded_output))
-    W --> X(self.simulation._add_to_execution_trace(state, event_hash, encoded_output))
-     X --> Y(self.simulation.end_transaction())
-    Y --> P
-    Q -- No --> Z(output = self.function(*self.args, **self.kwargs))
-    Z --> P
-    P --> AA(self.simulation.checkpoint() if auto_checkpoint)
-    AA --> AB
-     D --> AC(_encode_function_output)
-     AC --> AD{output is None?}
-     AD -- Yes --> AE[return None]
-     AD -- No --> AF{isinstance(output, TinyPerson)?}
-     AF -- Yes --> AG[return {"type": "TinyPersonRef", "name": output.name}]
-     AF -- No --> AH{isinstance(output, TinyWorld)?}
-     AH -- Yes --> AI[return {"type": "TinyWorldRef", "name": output.name}]
-     AH -- No --> AJ{isinstance(output, TinyFactory)?}
-    AJ -- Yes --> AK[return {"type": "TinyFactoryRef", "name": output.name}]
-    AJ -- No --> AL{isinstance(output, supported JSON type)?}
-    AL -- Yes --> AM[return {"type": "JSON", "value": output}]
-    AL -- No --> AN[Raise ValueError]
-    AN --> AB
-    AG --> AB
-    AI --> AB
-    AK --> AB
-    AM --> AB
-     D --> AO(_decode_function_output)
-     AO --> AP{encoded_output is None?}
-     AP -- Yes --> AQ[return None]
-     AP -- No --> AR{encoded_output["type"] == "TinyPersonRef"?}
-    AR -- Yes --> AS[return TinyPerson.get_agent_by_name(encoded_output["name"])]
-     AR -- No --> AT{encoded_output["type"] == "TinyWorldRef"?}
-    AT -- Yes --> AU[return TinyWorld.get_environment_by_name(encoded_output["name"])]
-     AT -- No --> AV{encoded_output["type"] == "TinyFactoryRef"?}
-     AV -- Yes --> AW[return TinyFactory.get_factory_by_name(encoded_output["name"])]
-     AV -- No --> AX{encoded_output["type"] == "JSON"?}
-     AX -- Yes --> AY[return encoded_output["value"]]
-     AX -- No --> AZ[Raise ValueError]
-     AS --> AB
-     AU --> AB
-     AW --> AB
-     AY --> AB
-     AZ --> AB
-    end
-    subgraph GlobalControl
-    CA(transactional) --> CB(wrapper)
-    CB --> CC(Transaction(obj, simulation, func, *args, **kwargs))
-    CC --> CD(result = transaction.execute())
-    CD --> CE(return result)
-    CF(reset) --> CG(_current_simulations = {"default": None})
-    CG --> CH(_current_simulation_id = None)
-    CI(_simulation(id)) --> CJ{_current_simulations[id] is None?}
-    CJ -- Yes --> CK(_current_simulations[id] = Simulation())
-    CK --> CL(return _current_simulations[id])
-    CJ -- No --> CL
-    CM(begin(cache_path, id, auto_checkpoint)) --> CN{_current_simulation_id is None?}
-    CN -- Yes --> CO(_simulation(id).begin(cache_path, auto_checkpoint))
-    CO --> CP(_current_simulation_id = id)
-     CN -- No --> CQ[Raise ValueError]
-    CR(end(id)) --> CS(_simulation(id).end())
-    CS --> CT(_current_simulation_id = None)
-    CU(checkpoint(id)) --> CV(_simulation(id).checkpoint())
-    CW(current_simulation()) --> CX{_current_simulation_id is not None?}
-    CX -- Yes --> CY(return _simulation(_current_simulation_id))
-    CX -- No --> CZ[return None]
+flowchart TD
+    subgraph Simulation Class
+        A[<code>__init__</code><br>Initialize Simulation] --> B(Set default values for id, agents, environments, factories, status, cache, traces and flags)
+        B --> C{cached_trace is None?}
+        C -- Yes --> D[Initialize empty cached_trace list]
+        C -- No --> E[Assign given cached_trace list]
+        D --> F[Initialize execution_trace list]
+        E --> F
+        F --> G[End of <code>__init__</code>]
 
+
+        H[<code>begin</code><br>Start Simulation] --> I(Set status to started)
+        I --> J(Assign cache path and auto checkpoint)
+        J --> K(Clear agents, environments and factories)
+        K --> L(Reset fresh id counter)
+        L --> M{cache_path is not None?}
+        M -- Yes --> N(Load cache from file)
+        M -- No --> O[End of <code>begin</code>]
+        N --> O
+        
+        P[<code>end</code><br>End Simulation] --> Q(Set status to stopped)
+        Q --> R(Save current trace via <code>checkpoint</code>)
+        R --> S[End of <code>end</code>]
+
+        T[<code>checkpoint</code><br>Save Simulation State] --> U{has_unsaved_cache_changes?}
+        U -- Yes --> V(Save cache to file)
+        U -- No --> W(Log: "No unsaved cache changes to save")
+        V --> X[End of <code>checkpoint</code>]
+        W --> X
+
+        Y[<code>add_agent</code><br>Add Agent to Simulation] --> Z{Agent name is unique?}
+        Z -- Yes --> AA(Set simulation ID to agent and add agent to lists)
+        Z -- No --> AB[Raise ValueError]
+        AA --> AC[End of <code>add_agent</code>]
+
+        AD[<code>add_environment</code><br>Add Environment to Simulation] --> AE{Environment name is unique?}
+        AE -- Yes --> AF(Set simulation ID to environment and add environment to lists)
+        AE -- No --> AG[Raise ValueError]
+        AF --> AH[End of <code>add_environment</code>]
+
+
+         AI[<code>add_factory</code><br>Add Factory to Simulation] --> AJ{Factory name is unique?}
+         AJ -- Yes --> AK(Set simulation ID to factory and add factory to lists)
+         AJ -- No --> AL[Raise ValueError]
+         AK --> AM[End of <code>add_factory</code>]
+
+        AN[<code>_execution_trace_position</code><br>Get Execution Trace Position] --> AO(Get position in the execution trace)
+        AO --> AP[End of <code>_execution_trace_position</code>]
+
+        AQ[<code>_function_call_hash</code><br>Get Hash of Function Call] --> AR(Compute the hash of the function call)
+        AR --> AS[End of <code>_function_call_hash</code>]
+
+        AT[<code>_skip_execution_with_cache</code><br>Skip Execution with Cached State] --> AU{Cached state exists for current position?}
+        AU -- Yes --> AV(Add cached state to execution trace)
+        AU -- No --> AW[Assertion Error]
+        AV --> AX[End of <code>_skip_execution_with_cache</code>]
+
+
+        AY[<code>_is_transaction_event_cached</code><br> Check if Transaction is Cached] --> AZ{Cache exists for current execution position?}
+        AZ -- Yes --> BA{Execution trace position is valid?}
+        BA -- Yes --> BB{Event hash and previous node match?}
+        BB -- Yes --> BC[Return True]
+        BB -- No --> BD[Return False]
+        BA -- No --> BE[Raise ValueError]
+        AZ -- No --> BF[Return False]
+        BC --> BG[End of <code>_is_transaction_event_cached</code>]
+        BD --> BG
+        BF --> BG
+
+
+        BH[<code>_drop_cached_trace_suffix</code><br>Drop Cached Trace Suffix] --> BI(Drop the cached trace suffix starting from current execution trace position)
+        BI --> BJ[End of <code>_drop_cached_trace_suffix</code>]
+
+        BK[<code>_add_to_execution_trace</code><br>Add State to Execution Trace] --> BL(Compute the hash of the previous execution pair, if any)
+        BL --> BM(Add state to execution trace with previous_hash, event_hash, and event_output)
+        BM --> BN[End of <code>_add_to_execution_trace</code>]
+
+        BO[<code>_add_to_cache_trace</code><br>Add State to Cached Trace] --> BP(Compute the hash of the previous cached pair, if any)
+        BP --> BQ(Add state to cached trace with previous_hash, event_hash, and event_output)
+        BQ --> BR(Set has_unsaved_cache_changes to True)
+        BR --> BS[End of <code>_add_to_cache_trace</code>]
+
+        BT[<code>_load_cache_file</code><br>Load Cache File] --> BU{File exists?}
+        BU -- Yes --> BV(Load cached trace from file)
+        BU -- No --> BW(Log: "Cache file not found")
+        BV --> BX[End of <code>_load_cache_file</code>]
+        BW --> BX
+
+        BY[<code>_save_cache_file</code><br>Save Cache File] --> BZ(Create temporary file and save cached trace to it)
+        BZ --> CA(Replace the original cache file with the temporary file)
+        CA --> CB(Set has_unsaved_cache_changes to False)
+        CB --> CC[End of <code>_save_cache_file</code>]
+
+        CD[<code>begin_transaction</code><br>Begin Transaction] --> CE(Set _under_transaction flag to True)
+        CE --> CF(Clear communication buffers of agents and environments)
+        CF --> CG[End of <code>begin_transaction</code>]
+
+        CH[<code>end_transaction</code><br>End Transaction] --> CI(Set _under_transaction flag to False)
+        CI --> CJ[End of <code>end_transaction</code>]
+
+        CK[<code>is_under_transaction</code><br>Check if Under Transaction] --> CL(Return _under_transaction flag)
+        CL --> CM[End of <code>is_under_transaction</code>]
+
+        CN[<code>_clear_communications_buffers</code><br>Clear Communication Buffers] --> CO(Iterate through agents and environments to clear buffers)
+        CO --> CP[End of <code>_clear_communications_buffers</code>]
+
+        CQ[<code>_encode_simulation_state</code><br>Encode Simulation State] --> CR(Encode agents, environments and factories into a state dictionary)
+        CR --> CS[End of <code>_encode_simulation_state</code>]
+
+        CT[<code>_decode_simulation_state</code><br>Decode Simulation State] --> CU(Decode factories)
+        CU --> CV(Decode environments)
+        CV --> CW(Decode agents)
+        CW --> CX[End of <code>_decode_simulation_state</code>]
     end
+
+    subgraph Transaction Class
+        DA[<code>__init__</code><br>Initialize Transaction] --> DB(Set object under transaction, simulation, function, args, and kwargs)
+        DB --> DC{simulation is not None?}
+        DC -- Yes --> DD{object has simulation id?}
+        DD -- Yes --> DE{simulation id matches?}
+        DE -- Yes --> DF[Log: Object is already captured by simulation]
+        DE -- No --> DG[Raise ValueError]
+        DD -- No --> DH{Object is TinyPerson?}
+        DH -- Yes --> DI(Add the agent to the simulation)
+        DH -- No --> DJ{Object is TinyWorld?}
+        DJ -- Yes --> DK(Add the environment to the simulation)
+        DJ -- No --> DL{Object is TinyFactory?}
+        DL -- Yes --> DM(Add the factory to the simulation)
+        DL -- No --> DN[Raise ValueError]
+        DI --> DO[End of <code>__init__</code>]
+        DK --> DO
+        DM --> DO
+        DC -- No --> DO
+        DF --> DO
+
+        DP[<code>execute</code><br>Execute Transaction] --> DQ{simulation is None or stopped?}
+        DQ -- Yes --> DR(Execute the function without caching)
+        DQ -- No --> DS{simulation status is started?}
+        DS -- Yes --> DT(Compute event hash)
+        DT --> DU{is event cached?}
+        DU -- Yes --> DV(Skip execution and load cached state)
+        DV --> DW(Decode the function output and return it)
+        DU -- No --> DX{is under transaction?}
+        DX -- Yes --> DY(Execute function without caching)
+        DX -- No --> DZ(Begin Transaction)
+        DZ --> EA(Drop cached trace suffix)
+        EA --> EB(Execute function and cache the state)
+        EB --> EC(End Transaction)
+        EC --> ED[End of <code>execute</code>]
+        DR --> ED
+        DY --> ED
+        DW --> ED
+
+        EE[<code>_encode_function_output</code><br>Encode Function Output] --> EF{Output is None?}
+        EF -- Yes --> EG[Return None]
+        EF -- No --> EH{Output is TinyPerson?}
+        EH -- Yes --> EI(Encode TinyPerson to JSON)
+        EH -- No --> EJ{Output is TinyWorld?}
+        EJ -- Yes --> EK(Encode TinyWorld to JSON)
+        EJ -- No --> EL{Output is TinyFactory?}
+        EL -- Yes --> EM(Encode TinyFactory to JSON)
+        EL -- No --> EN{Output is primitive JSON type?}
+        EN -- Yes --> EO(Encode as JSON)
+        EN -- No --> EP[Raise ValueError]
+        EI --> EQ[End of <code>_encode_function_output</code>]
+        EK --> EQ
+        EM --> EQ
+        EO --> EQ
+        EG --> EQ
+
+        ER[<code>_decode_function_output</code><br>Decode Function Output] --> ES{Encoded output is None?}
+        ES -- Yes --> ET[Return None]
+        ES -- No --> EU{Encoded output is TinyPersonRef?}
+        EU -- Yes --> EV(Get TinyPerson by name)
+        EU -- No --> EW{Encoded output is TinyWorldRef?}
+        EW -- Yes --> EX(Get TinyWorld by name)
+        EW -- No --> EY{Encoded output is TinyFactoryRef?}
+        EY -- Yes --> EZ(Get TinyFactory by name)
+        EY -- No --> FA{Encoded output is JSON?}
+        FA -- Yes --> FB(Return JSON value)
+        FA -- No --> FC[Raise ValueError]
+        ET --> FD[End of <code>_decode_function_output</code>]
+        EV --> FD
+        EX --> FD
+        EZ --> FD
+        FB --> FD
+     end
+
+    subgraph Global Functions
+        GA[<code>reset</code><br>Reset Simulation Control State] --> GB(Reset _current_simulations and _current_simulation_id)
+        GB --> GC[End of <code>reset</code>]
+
+        GD[<code>_simulation</code><br>Get Simulation by ID] --> GE{Simulation exists for given id?}
+        GE -- Yes --> GF(Return existing Simulation)
+        GE -- No --> GG(Create new Simulation instance)
+        GG --> GH(Assign it to _current_simulations dictionary)
+        GH --> GI(Return newly created Simulation)
+        GF --> GJ[End of <code>_simulation</code>]
+        GI --> GJ
+        
+        GK[<code>begin</code><br>Start Simulation] --> GL{Is any simulation already started?}
+        GL -- Yes --> GM[Raise ValueError]
+        GL -- No --> GN(Start simulation for given id, with optional cache path)
+        GN --> GO[Assign current simulation id]
+        GO --> GP[End of <code>begin</code>]
+        
+        GQ[<code>end</code><br>End Simulation] --> GR(End simulation for given id)
+        GR --> GS[Clear current simulation id]
+        GS --> GT[End of <code>end</code>]
+
+        GU[<code>checkpoint</code><br>Save Current Simulation State] --> GV(Save current simulation state for given id)
+        GV --> GW[End of <code>checkpoint</code>]
+
+         GX[<code>current_simulation</code><br>Get Current Simulation] --> GY{Is any simulation currently active?}
+         GY -- Yes --> GZ(Get the current active simulation)
+         GY -- No --> HA(Return None)
+         GZ --> HB[End of <code>current_simulation</code>]
+         HA --> HB
+
+     end
+     
+     subgraph transactional decorator
+        HC[<code>transactional</code><br>Decorator for transaction handling] --> HD(Defines a wrapper function)
+        HD --> HE(In wrapper function: Get object under transaction and current simulation)
+        HE --> HF(Create transaction object)
+        HF --> HG(Execute transaction and return result)
+        HG --> HH[End of <code>transactional</code>]
+     end
+
+    Start --> GA
+    Start --> A
+    Start --> DA
+    Start --> HC
 ```
 
-**Зависимости в `mermaid`:**
+## <объяснение>
 
-*   `Simulation`: Основной класс для управления симуляцией.
-    *   `begin`, `end`, `checkpoint`, `add_agent`, `add_environment`, `add_factory`: Методы для управления жизненным циклом симуляции и добавления элементов.
-    *   `_is_transaction_event_cached`, `_skip_execution_with_cache`, `_drop_cached_trace_suffix`, `_add_to_execution_trace`, `_add_to_cache_trace`: Методы для работы с кэшем и цепочкой выполнения.
-    *   `_load_cache_file`, `_save_cache_file`: Методы для загрузки и сохранения состояния симуляции.
-    *   `begin_transaction`, `end_transaction`, `is_under_transaction`, `_clear_communications_buffers`: Методы для управления транзакциями.
-    *   `_encode_simulation_state`, `_decode_simulation_state`: Методы для кодирования и декодирования состояния.
-*   `Transaction`: Класс для управления транзакциями.
-    *   `execute`: Метод для выполнения транзакции.
-    *    `_encode_function_output`, `_decode_function_output`: Методы для кодирования и декодирования вывода функции.
-*   `GlobalControl`: Глобальные функции для управления симуляциями.
-    *   `transactional`: Декоратор для функций, выполняющихся в рамках транзакций.
-    *   `reset`: Функция для сброса состояния.
-    *   `_simulation`: Функция для получения текущей симуляции.
-    *   `begin`, `end`, `checkpoint`: Функции для управления жизненным циклом симуляции.
-    *   `current_simulation`: Функция для получения текущей активной симуляции.
-*   `utils`: Модуль с общими утилитами.
-    *   `custom_hash`: Функция для вычисления хэша.
+**Импорты:**
 
-### 3. <объяснение>
+*   `json`: Используется для сериализации и десериализации данных в формате JSON, что необходимо для сохранения и загрузки состояния симуляции в файл.
+*   `os`: Предоставляет функции для взаимодействия с операционной системой, например, для работы с файлами и путями.
+*  `tempfile`: Используется для создания временных файлов для надежного сохранения данных симуляции.
+*   `tinytroupe`: Импортируется для доступа к другим модулям в пакете `tinytroupe`, таким как `tinytroupe.utils`, `tinytroupe.agent`, `tinytroupe.environment` и `tinytroupe.factory`.
+*   `tinytroupe.utils as utils`: Импортирует модуль `utils` из пакета `tinytroupe` для использования вспомогательных функций, таких как `custom_hash`, и переименовывает его в `utils`.
+*   `logging`: Используется для логирования событий в процессе симуляции.
 
-#### Импорты:
+**Класс `Simulation`:**
 
-*   **`json`**: Используется для сериализации и десериализации данных в формате JSON при работе с файлами кэша.
-*   **`os`**:  Используется для операций с файловой системой, в частности для замены файла кэша после записи во временный файл (функция `os.replace`).
-*   **`tempfile`**: Используется для создания временных файлов при сохранении кэша, что обеспечивает атомарность операции записи.
-*   **`tinytroupe`**: Импортируется как основной пакет, предположительно, содержащий другие модули и классы проекта.
-*   **`tinytroupe.utils`**: Импортируется модуль с утилитами, где определена функция `custom_hash` для вычисления хешей.
-*   **`logging`**: Используется для логирования событий и ошибок. Логгер настраивается с именем "tinytroupe".
+*   **Назначение:** Класс `Simulation` является центральным компонентом, который управляет ходом симуляции, включая добавление агентов, сред и фабрик, обработку транзакций, кэширование состояния и сохранение данных.
+*   **Атрибуты:**
+    *   `id` (str): Идентификатор симуляции.
+    *   `agents` (list): Список агентов, участвующих в симуляции.
+    *   `name_to_agent` (dict): Словарь, сопоставляющий имена агентов с их объектами.
+    *   `environments` (list): Список сред, в которых действуют агенты.
+    *   `factories` (list): Список фабрик, которые могут создавать агентов.
+    *   `name_to_factory` (dict): Словарь, сопоставляющий имена фабрик с их объектами.
+    *   `name_to_environment` (dict): Словарь, сопоставляющий имена сред с их объектами.
+    *   `status` (str): Текущий статус симуляции (`stopped` или `started`).
+    *   `cache_path` (str): Путь к файлу кэша симуляции.
+    *   `auto_checkpoint` (bool): Флаг, определяющий, нужно ли автоматически сохранять состояние после каждой транзакции.
+    *   `has_unsaved_cache_changes` (bool): Флаг, показывающий, есть ли несохраненные изменения в кэше.
+    *   `_under_transaction` (bool): Флаг, показывающий, находится ли симуляция в процессе транзакции.
+    *   `cached_trace` (list): Список сохраненных состояний симуляции (кеш).
+    *   `execution_trace` (list): Список выполненных состояний симуляции (трасса выполнения).
+*   **Методы:**
+    *   `__init__(id="default", cached_trace:list=None)`: Конструктор класса, инициализирует состояние симуляции.
+    *   `begin(cache_path:str=None, auto_checkpoint:bool=False)`: Начинает симуляцию, загружает данные из кэша, если есть.
+    *   `end()`: Завершает симуляцию, сохраняет состояние.
+    *   `checkpoint()`: Сохраняет текущее состояние симуляции в файл.
+    *   `add_agent(agent)`, `add_environment(environment)`, `add_factory(factory)`: Добавляют агентов, окружения и фабрики в симуляцию, проверяя их уникальность.
+    *   `_execution_trace_position()`: Возвращает текущую позицию в трассе выполнения.
+    *  `_function_call_hash(function_name, *args, **kwargs)`: Вычисляет хэш для вызова функции с аргументами.
+    *  `_skip_execution_with_cache()`: Пропускает выполнение, если есть кэшированное состояние.
+    *  `_is_transaction_event_cached(event_hash)`: Проверяет, есть ли соответствующее кэшированное состояние для события.
+    * `_drop_cached_trace_suffix()`: Удаляет кэшированные состояния, следующие за текущей позицией в трассе выполнения.
+    *  `_add_to_execution_trace(state: dict, event_hash: int, event_output)`: Добавляет состояние в трассу выполнения.
+    *  `_add_to_cache_trace(state: dict, event_hash: int, event_output)`: Добавляет состояние в кэш.
+    *  `_load_cache_file(cache_path:str)`: Загружает состояние симуляции из файла.
+    *   `_save_cache_file(cache_path:str)`: Сохраняет состояние симуляции в файл.
+    *   `begin_transaction()`, `end_transaction()`, `is_under_transaction()`: Методы для управления транзакциями.
+    *   `_clear_communications_buffers()`: Очищает буферы сообщений агентов и сред.
+    *   `_encode_simulation_state()`: Кодирует состояние симуляции в словарь.
+    *   `_decode_simulation_state(state: dict)`: Декодирует состояние симуляции из словаря.
 
-#### Классы:
+**Класс `Transaction`:**
 
-*   **`Simulation`**:
-    *   **Роль:** Управляет жизненным циклом симуляции, включая ее запуск, остановку, сохранение состояния и управление кэшированием.
-    *   **Атрибуты:**
-        *   `id`: Уникальный идентификатор симуляции.
-        *   `agents`: Список агентов, участвующих в симуляции.
-        *   `name_to_agent`: Словарь для быстрого доступа к агентам по имени.
-        *   `environments`: Список окружений, участвующих в симуляции.
-        *   `name_to_environment`: Словарь для быстрого доступа к окружениям по имени.
-         *   `factories`: Список фабрик, участвующих в симуляции.
-        *   `name_to_factory`: Словарь для быстрого доступа к фабрикам по имени.
-        *   `status`: Текущий статус симуляции (`STATUS_STOPPED` или `STATUS_STARTED`).
-        *   `cache_path`: Путь к файлу кэша.
-        *   `auto_checkpoint`: Флаг автоматического сохранения после каждой транзакции.
-        *   `has_unsaved_cache_changes`: Флаг наличия несохраненных изменений в кэше.
-        *   `_under_transaction`: Флаг, указывающий на выполнение транзакции.
-        *   `cached_trace`: Список кэшированных состояний симуляции.
-        *   `execution_trace`: Список выполненных состояний симуляции.
-    *   **Методы:**
-        *   `__init__`: Конструктор класса, инициализирует атрибуты.
-        *   `begin`: Запускает симуляцию, сбрасывает окружения, агентов, фабрики, загружает кэш.
-        *   `end`: Останавливает симуляцию и сохраняет состояние.
-        *   `checkpoint`: Сохраняет состояние симуляции в кэш.
-        *   `add_agent`, `add_environment`, `add_factory`: Добавляют агентов, окружения и фабрики в симуляцию.
-        *   `_execution_trace_position`: Возвращает текущую позицию в `execution_trace`.
-        *   `_function_call_hash`: Вычисляет хэш вызова функции.
-        *   `_skip_execution_with_cache`: Загружает кэшированное состояние и пропускает выполнение.
-        *   `_is_transaction_event_cached`: Проверяет, есть ли кэшированное состояние для текущего события.
-        *   `_drop_cached_trace_suffix`: Обрезает `cached_trace` до текущей позиции в `execution_trace`.
-        *   `_add_to_execution_trace`: Добавляет текущее состояние в `execution_trace`.
-        *   `_add_to_cache_trace`: Добавляет текущее состояние в `cached_trace`.
-        *   `_load_cache_file`: Загружает кэш из файла.
-        *   `_save_cache_file`: Сохраняет кэш в файл.
-        *   `begin_transaction`: Начинает транзакцию.
-        *   `end_transaction`: Завершает транзакцию.
-        *   `is_under_transaction`: Проверяет, находится ли симуляция в транзакции.
-        *    `_clear_communications_buffers`: Очищает буферы коммуникаций агентов и окружений.
-        *   `_encode_simulation_state`: Собирает состояние симуляции в словарь.
-        *   `_decode_simulation_state`: Восстанавливает состояние симуляции из словаря.
-    *   **Взаимодействие:** Взаимодействует с классами `TinyPerson`, `TinyWorld`, `TinyFactory` и `Transaction`.
-*   **`Transaction`**:
-    *   **Роль:**  Обеспечивает выполнение функций в контексте симуляции с поддержкой кэширования и транзакций.
-    *   **Атрибуты:**
-        *   `obj_under_transaction`: Объект, над которым выполняется транзакция.
-        *   `simulation`:  Экземпляр класса `Simulation`.
-        *   `function_name`: Имя функции, которая выполняется в транзакции.
-        *   `function`: Функция, которая выполняется в транзакции.
-        *   `args`: Позиционные аргументы функции.
-        *   `kwargs`: Именованные аргументы функции.
-    *   **Методы:**
-        *   `__init__`: Конструктор класса, инициализирует атрибуты. Добавляет объект в симуляцию, если это `TinyPerson` или `TinyWorld` и если он еще не связан с симуляцией.
-        *   `execute`: Выполняет транзакцию, проверяет кэш, загружает кэшированное состояние, вызывает функцию и кэширует результат.
-       *   `_encode_function_output`: Кодирует результат вызова функции.
-       *   `_decode_function_output`: Декодирует результат вызова функции.
-    *   **Взаимодействие:** Взаимодействует с `Simulation`,  `TinyPerson`, `TinyWorld` и `TinyFactory`.
+*   **Назначение:** Класс `Transaction` используется для обертки функций, выполняемых в рамках симуляции, и обеспечивает управление кэшированием и выполнением этих функций.
+*   **Атрибуты:**
+    *   `obj_under_transaction`: Объект, над которым совершается транзакция (агент, среда или фабрика).
+    *   `simulation`: Объект `Simulation`, в рамках которого выполняется транзакция.
+    *   `function_name`: Имя функции, выполняемой в транзакции.
+    *   `function`: Функция, выполняемая в транзакции.
+    *   `args`: Позиционные аргументы функции.
+    *   `kwargs`: Именованные аргументы функции.
+*   **Методы:**
+    *   `__init__(obj_under_transaction, simulation, function, *args, **kwargs)`: Конструктор класса.
+    *   `execute()`: Выполняет транзакцию, обеспечивая кэширование и восстановление состояния.
+    *   `_encode_function_output(output)`: Кодирует результат выполнения функции.
+    *   `_decode_function_output(encoded_output)`: Декодирует результат выполнения функции.
 
-#### Функции:
+**Декоратор `transactional`:**
 
-*   **`transactional(func)`**:
-    *   **Аргументы:** `func` - декорируемая функция.
-    *   **Возвращаемое значение:** `wrapper` - функция-обертка, которая выполняет функцию в контексте транзакции.
-    *   **Назначение:**  Декоратор, позволяющий запускать функции в рамках транзакции.
-*   **`reset()`**:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Сбрасывает состояние глобальных переменных, управляющих симуляциями.
-*    **`_simulation(id="default")`**:
-    *   **Аргументы:** `id` - идентификатор симуляции.
-    *   **Возвращаемое значение:** Экземпляр класса `Simulation`.
-    *   **Назначение:**  Возвращает или создает экземпляр `Simulation`.
-*   **`begin(cache_path=None, id="default", auto_checkpoint=False)`**:
-    *   **Аргументы:**
-        *   `cache_path`: Путь к файлу кэша.
-        *   `id`: Идентификатор симуляции.
-        *   `auto_checkpoint`: Флаг автоматического сохранения.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Запускает симуляцию.
-*   **`end(id="default")`**:
-    *   **Аргументы:** `id` - идентификатор симуляции.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Останавливает симуляцию.
-*   **`checkpoint(id="default")`**:
-    *   **Аргументы:** `id` - идентификатор симуляции.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Сохраняет состояние симуляции.
-*   **`current_simulation()`**:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** Текущая активная симуляция или `None`.
-    *   **Назначение:** Возвращает текущую активную симуляцию.
+*   **Назначение:** Декоратор `transactional` преобразует обычную функцию в функцию, которая может быть выполнена в рамках транзакции.
+*   Применение: Оборачивает функции объектов, участвующих в симуляции, что позволяет кэшировать и контролировать их выполнение.
 
-#### Переменные:
+**Глобальные Функции:**
 
-*   **`_current_simulations`**: Словарь, хранящий экземпляры класса `Simulation` по их `id`.
-*   **`_current_simulation_id`**: Идентификатор текущей активной симуляции.
+*   `reset()`: Сбрасывает состояние симуляции.
+*  `_simulation(id="default")`: Создает или получает существующий объект симуляции по его `id`.
+*  `begin(cache_path=None, id="default", auto_checkpoint=False)`: Начинает симуляцию.
+*  `end(id="default")`: Завершает симуляцию.
+*   `checkpoint(id="default")`: Сохраняет состояние симуляции.
+*   `current_simulation()`: Возвращает текущую активную симуляцию.
 
-#### Потенциальные ошибки и области для улучшения:
+**Исключения:**
 
-*   **Circular dependencies**:  В коде используется  `local import` для избежания циклических зависимостей. Это может сигнализировать о проблеме в архитектуре.
-*   **Обработка ошибок**:  Используются общие исключения `Exception` и `ValueError`. Желательно использовать более специфические исключения для более точной обработки ошибок.
-*   **Производительность**:  Кэширование может улучшить производительность, но неоптимизированные операции хеширования или сериализации могут замедлить выполнение.
-*   **Параллелизм**:  Комментарий в функции `reset` говорит о необходимости поддержки нескольких симуляций одновременно, что может быть достигнуто через многопоточность или многопроцессорность.
-*   **Сложность логики кэширования**:  Логика кэширования и транзакций достаточно сложная и может быть усложнена дополнительными функциями или изменениями.
-*   **Проверка типов**: Код использует `isinstance` для проверки типов `TinyPerson`, `TinyWorld` и `TinyFactory`, что может быть заменено на более гибкий подход с помощью абстракций.
+*   `SkipTransaction`:  Исключение, которое может использоваться для пропуска транзакции, если это необходимо.
+*   `CacheOutOfSync`:  Исключение, которое выбрасывается, если кэшированное состояние не соответствует текущему состоянию.
+*   `ExecutionCached`: Исключение, которое выбрасывается, если выполнение функции было пропущено из-за наличия кэшированного результата.
 
-#### Взаимосвязи с другими частями проекта:
+**Взаимосвязи с другими частями проекта:**
 
-*   Модуль `control.py` активно взаимодействует с модулями `agent.py`, `environment.py`, `factory.py` (через импорты и вызовы методов), предполагается, что эти модули содержат классы `TinyPerson`, `TinyWorld` и `TinyFactory` соответственно.
-*   Модуль использует `utils.py` для хеширования состояний, что позволяет отслеживать изменения в симуляции и использовать кэш.
-*   Модуль `control.py` является центральным звеном управления симуляцией, предоставляя механизмы для запуска, остановки, кэширования и управления транзакциями.
+*   Модуль `control.py` активно взаимодействует с другими частями проекта через импорты из `tinytroupe`. Он зависит от классов `TinyPerson`, `TinyWorld` и `TinyFactory`, которые определены в соответствующих модулях `agent.py`, `environment.py` и `factory.py`.
+*   Использует модуль `utils` для расчета хешей.
+*   Логика работы симуляции строится на основе взаимодействия между агентами и окружениями, чье состояние управляется через транзакции.
+
+**Потенциальные ошибки и области для улучшения:**
+
+*   **Обработка ошибок**: В некоторых местах используется `try-except` для обработки ошибок, но не всегда предоставляется достаточно подробная информация об ошибках в логах.
+*   **Параллелизация**: В комментариях указано, что текущая версия поддерживает только одну симуляцию одновременно. В будущих версиях стоит рассмотреть возможность параллелизации.
+*   **Очистка ресурсов**: Необходимо явно обрабатывать ошибки при создании и использовании временных файлов, чтобы не допустить утечку ресурсов.
+
+В целом, `control.py` предоставляет мощный механизм для управления симуляциями, обеспечивая возможность кэширования и повторного использования состояний, что может существенно ускорить процесс разработки и отладки симуляций.

@@ -15,7 +15,7 @@
 .. module:: src.suppliers.chat_gpt
    :synopsis: Модуль для работы с ChatGPT.
 """
-MODE = 'dev'
+
 
 import header
 from pathlib import Path
@@ -74,7 +74,7 @@ class ChatGpt:
 .. module:: src.suppliers.chat_gpt
    :synopsis: Модуль для работы с ChatGPT.
 """
-MODE = 'dev'
+
 
 import header
 from pathlib import Path

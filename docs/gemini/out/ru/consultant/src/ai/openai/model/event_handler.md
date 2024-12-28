@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для обработки событий от модели OpenAI.
 """
-MODE = 'dev'
+
 
 
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
@@ -39,7 +39,7 @@ from src.logger import logger  # Импортируем logger
 	:synopsis:
 	Модуль для обработки событий от модели OpenAI.
 """
-MODE = 'dev'
+
 
 
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """
@@ -131,7 +131,7 @@ class EventHandler(AssistantEventHandler):
 	:synopsis:
 	Модуль для обработки событий от модели OpenAI.
 """
-MODE = 'dev'
+
 
 
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """

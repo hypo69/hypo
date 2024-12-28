@@ -12,7 +12,7 @@
 	:synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`)
 
 """
-MODE = 'dev'
+
 
 """ This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
 
@@ -149,7 +149,7 @@ def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
 	:synopsis: Converter for Excel (`xls`) to JSON and JSON to Excel (`xls`)
 
 """
-MODE = 'dev'
+
 
 """ This module provides functions to convert Excel files to JSON format, handle multiple sheets, and save JSON data back to Excel files.
 

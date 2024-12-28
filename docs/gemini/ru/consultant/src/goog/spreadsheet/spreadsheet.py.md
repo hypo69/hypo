@@ -77,7 +77,7 @@ import pandas as pd
 from src.logger.logger import logger
 from src import gs
 
-MODE = 'dev'
+
 
 
 class SpreadSheet:

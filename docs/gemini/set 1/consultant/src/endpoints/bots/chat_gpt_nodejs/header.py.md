@@ -30,7 +30,7 @@ from src.logger.logger import logger
 from src import gs
 
 
-MODE = 'dev'
+
 """Режим работы приложения."""
 
 
@@ -146,7 +146,7 @@ from src.logger.logger import logger
 from src import gs
 
 
-MODE = 'dev'
+
 """Режим работы приложения."""
 
 

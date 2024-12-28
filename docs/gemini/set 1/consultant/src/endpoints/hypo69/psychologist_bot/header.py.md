@@ -21,7 +21,7 @@ from packaging.version import Version
 from src.logger.logger import logger
 import json  # TODO: перенести импорт наверх
 
-MODE = 'dev'
+
 """Режим работы приложения (например, 'dev' или 'prod')."""
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
@@ -132,7 +132,7 @@ from packaging.version import Version
 from src.logger.logger import logger
 import json  # TODO: перенести импорт наверх
 
-MODE = 'dev'
+
 """Режим работы приложения (например, 'dev' или 'prod')."""
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """

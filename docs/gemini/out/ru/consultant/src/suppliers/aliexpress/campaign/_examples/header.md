@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -61,7 +61,7 @@ sys.path.append (str (dir_root) ) # Добавляю рабочую директ
    :platform: Windows, Unix
    :synopsis: Модуль для работы с кампаниями на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -84,7 +84,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis:  Дополнительные описания.
 """
-MODE = 'dev'
+
 
 
 """
@@ -154,7 +154,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль для работы с кампаниями на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -177,7 +177,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis:  Дополнительные описания.
 """
-MODE = 'dev'
+
 
 
 """

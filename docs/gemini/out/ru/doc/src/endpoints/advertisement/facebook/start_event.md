@@ -19,7 +19,7 @@ from src.logger import logger
 ## Переменные
 
 ```python
-MODE = 'dev'
+
 filenames:list[str] = [ "my_managed_groups.json",
                         "usa.json",
                         "he_il.json",

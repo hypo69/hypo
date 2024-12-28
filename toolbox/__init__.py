@@ -8,7 +8,7 @@ module: toolbx.encoder_decoder_file_names
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 
 import sys
 import json

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -62,7 +62,7 @@ from .version import __version__, __doc__, __details__
    :synopsis: Модуль содержит примеры кода для работы с продуктом.
 
 """
-MODE = 'dev'
+
 
 """
 .. data:: MODE
@@ -126,7 +126,7 @@ from .version import __version__, __doc__, __details__
    :synopsis: Модуль содержит примеры кода для работы с продуктом.
 
 """
-MODE = 'dev'
+
 
 """
 .. data:: MODE

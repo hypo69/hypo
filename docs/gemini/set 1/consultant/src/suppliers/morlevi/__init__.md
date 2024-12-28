@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -33,7 +33,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads, j_loads_ns
@@ -68,7 +68,7 @@ import json
 
 # Переменная, определяющая режим работы (dev, prod).
 # В будущем может быть использована для переключения на различные конфигурации.
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads, j_loads_ns

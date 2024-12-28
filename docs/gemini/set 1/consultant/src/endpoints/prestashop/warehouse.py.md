@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import os,sys
 from attr import attr, attrs
@@ -61,7 +61,7 @@ from .api import PrestaShop
 from src.logger.logger import logger
 
 # устанавливаем режим работы 'dev'
-MODE = 'dev'
+
 
 
 @attrs
@@ -116,7 +116,7 @@ from .api import PrestaShop
 from src.logger.logger import logger
 
 # устанавливаем режим работы 'dev'
-MODE = 'dev'
+
 
 
 @attrs

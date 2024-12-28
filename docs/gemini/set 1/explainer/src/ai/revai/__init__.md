@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>
@@ -24,7 +24,7 @@ MODE = 'dev'
 ```mermaid
 graph TD
     A[Начало] --> B{Определение MODE};
-    B --> C[MODE = 'dev'];
+    B --> C[];
     C --> D[Конец];
 ```
 
@@ -37,7 +37,7 @@ graph TD
 
 ```mermaid
 graph LR
-    A[revai/__init__.py] --> B(MODE = 'dev');
+    A[revai/__init__.py] --> B();
 ```
 
 # <explanation>

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge.extentions """
 
@@ -79,7 +79,7 @@ graph LR
 *   **Functions**: There are no functions defined in this file.
 
 *   **Variables**:
-    *   `MODE = 'dev'`: A string variable likely used to indicate the current mode (e.g., development mode, production mode).  A very basic variable, but important for potential different implementation/configurations within the extension.
+    *   ``: A string variable likely used to indicate the current mode (e.g., development mode, production mode).  A very basic variable, but important for potential different implementation/configurations within the extension.
 
 *   **Potential Errors/Improvements**:
     *   The file contains a lot of empty docstrings.  This might be a placeholder or intentional, to support the extension's future structure.

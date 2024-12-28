@@ -46,7 +46,7 @@ from pathlib import Path
 from .. import main
 from main import process_data
 
-MODE = 'dev'
+
 
 
 

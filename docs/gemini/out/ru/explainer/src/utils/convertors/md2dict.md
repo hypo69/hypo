@@ -12,7 +12,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для конвертации строки Markdown в структурированный словарь, включая извлечение JSON содержимого, если оно присутствует.
 """
-MODE = 'dev'
+
 import re
 from typing import Dict
 from markdown2 import markdown
@@ -171,7 +171,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`:  Переменная, скорее всего, для управления режимами работы приложения (например, debug/release).
+* ``:  Переменная, скорее всего, для управления режимами работы приложения (например, debug/release).
 * `sections: Dict[str, list]`: Словарь для хранения секций Markdown.
 * `current_section: str | None`: Переменная, которая хранит текущую секцию Markdown для добавления в нее текста.
 * `json_content`: Содержимое найденного JSON.

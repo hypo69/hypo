@@ -12,7 +12,7 @@
 	:synopsis:  управление категориями aliexpress
 
 """
-MODE = 'dev'
+
 
 from typing import Union
 from pathlib import Path
@@ -118,7 +118,7 @@ def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
 +	:synopsis: Управление категориями на AliExpress.
  
  """
- MODE = 'dev'
+ 
 @@ -15,8 +15,9 @@
  from src.utils.jjson import j_dumps, j_loads
  from src.logger import logger

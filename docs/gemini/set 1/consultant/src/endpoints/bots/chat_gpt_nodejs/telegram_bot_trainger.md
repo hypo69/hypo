@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""
@@ -169,7 +169,7 @@ async def handle_document(update: Update, context: CallbackContext):
 	:platform: Windows, Unix
 	:synopsis: Модуль для создания телеграм бота, использующего модель OpenAI.
 """
-MODE = 'dev'
+
 
 
 """ Этот скрипт создаёт простой телеграм бот, используя библиотеку python-telegram-bot."""

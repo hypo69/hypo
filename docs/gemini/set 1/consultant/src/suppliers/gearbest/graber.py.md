@@ -9,7 +9,7 @@
 с сайта gearbest.com.
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps
@@ -100,7 +100,7 @@ class Graber(Grbr):
 с сайта gearbest.com.
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates._examples """
 
@@ -65,7 +65,7 @@ This code snippet defines a Python module (likely part of a larger project).  It
 
 ```mermaid
 graph LR
-    A[version.py] --> B(MODE = 'dev');
+    A[version.py] --> B();
     A --> C[__version__ = "3.12.0.0.0.4"];
     A --> D[__name__];
     A --> E[__doc__];

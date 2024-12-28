@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet

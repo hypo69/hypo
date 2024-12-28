@@ -12,7 +12,7 @@
 	:synopsis:  Module for file operations
 
 """
-MODE = 'dev'
+
 
 
 import os
@@ -110,7 +110,7 @@ def read_text_file(
     включая поддержку JSON-формата, чтение файлов в каталоге и рекурсивный поиск файлов.
 
 """
-MODE = 'dev'
+
 
 import os
 import json

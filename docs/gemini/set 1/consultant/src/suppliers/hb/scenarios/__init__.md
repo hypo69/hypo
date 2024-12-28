@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.scenarios """
 
@@ -73,7 +73,7 @@ from .login import login
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции j_loads и j_loads_ns для обработки JSON
 from src.logger import logger  # Импортируем logger для логирования
 
-MODE = 'dev'  # Переменная MODE. Комментарий переписан в RST-формате.
+  # Переменная MODE. Комментарий переписан в RST-формате.
 
 
 def load_data(file_path: str) -> dict:
@@ -129,7 +129,7 @@ from .login import login
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем функции j_loads и j_loads_ns для обработки JSON
 from src.logger import logger  # Импортируем logger для логирования
 
-MODE = 'dev'  # Переменная MODE. Комментарий переписан в RST-формате.
+  # Переменная MODE. Комментарий переписан в RST-формате.
 
 
 def load_data(file_path: str) -> dict:

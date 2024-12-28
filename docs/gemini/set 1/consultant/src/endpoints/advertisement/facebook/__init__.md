@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields
@@ -34,7 +34,7 @@ from .promoter import FacebookPromoter, get_event_url
 """
 import json
 
-MODE = 'dev'
+
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields
@@ -75,7 +75,7 @@ from src.logger import logger  # Импорт для логирования
 """
 import json
 
-MODE = 'dev'
+
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields

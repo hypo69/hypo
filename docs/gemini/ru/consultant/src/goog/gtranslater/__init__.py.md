@@ -58,7 +58,7 @@
    translated_text = translate("Hello, world!", locale_out='ru')
    print(translated_text)
 """
-MODE = 'dev'
+
 
 from googletrans import Translator
 from langdetect import detect

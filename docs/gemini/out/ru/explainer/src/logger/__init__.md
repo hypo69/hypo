@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper
@@ -47,7 +47,7 @@ hypotez.src.logger.logger.info("Данные успешно обработаны
 
 ```mermaid
 graph LR
-    A[hypotez/src/logger/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/logger/__init__.py] --> B();
     A --> C[from .logger import logger];
     A --> D[from .exceptions import ...];
     subgraph Папка exceptions
@@ -80,7 +80,7 @@ graph LR
 
 **Переменные:**
 
-* `MODE = 'dev'`: Глобальная переменная, вероятно, используемая для определения режима работы модуля (например, 'dev', 'prod' и др.).  Её значение может влиять на поведение или настройку логирования.
+* ``: Глобальная переменная, вероятно, используемая для определения режима работы модуля (например, 'dev', 'prod' и др.).  Её значение может влиять на поведение или настройку логирования.
 
 
 **Возможные ошибки и улучшения:**

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы Discord бота.
 """
-MODE = 'dev'
+
 
 
 """
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
   Переменная, определяющая режим работы бота.
-"""MODE = 'dev'
+"""
 
 """ module: src.bots.discord """
 
@@ -113,7 +113,7 @@ async def hi(ctx):
  	:synopsis:
 -
 -"""
- MODE = 'dev'
+ 
  
  
 @@ -18,10 +15,6 @@
@@ -128,7 +128,7 @@ async def hi(ctx):
  """
    :platform: Windows, Unix
 @@ -31,7 +24,7 @@
- """MODE = 'dev'
+ """
  
  """ module: src.bots.discord """
 -
@@ -266,7 +266,7 @@ from pydub import AudioSegment  # Библиотека для конвертац
 from gtts import gTTS  # Библиотека для текстового воспроизведения
 from .chatterbox import *
 
-MODE = 'dev'
+
 PREFIX = '!'
 
 intents = discord.Intents.default()

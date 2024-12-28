@@ -21,7 +21,7 @@ from pathlib import Path
 
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 """
@@ -80,7 +80,7 @@ from pathlib import Path
 
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 """

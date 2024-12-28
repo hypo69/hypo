@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 **Improved Code**
@@ -42,7 +42,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 
 # Переменная для хранения режима работы.
 # Изменили имя на более подходящее.
-HELICONE_MODE = 'dev'
+HELICONE_
 
 
 ```
@@ -87,7 +87,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 
 # Переменная для хранения режима работы.
 # Изменили имя на более подходящее.
-HELICONE_MODE = 'dev'
+HELICONE_
 
 
 # Функции для работы с Helicone API будут добавлены в этом файле.

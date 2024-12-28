@@ -44,7 +44,7 @@
 ## Код
 
 ```python
-MODE = 'dev'
+
 
 import os
 import sys

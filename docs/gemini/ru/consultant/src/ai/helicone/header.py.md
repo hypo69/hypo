@@ -51,7 +51,7 @@
         import src.ai.helicone.header as header
         print(header.__project_name__)
 """
-MODE = 'dev'
+
 """Режим работы приложения (dev/prod)."""
 
 import sys

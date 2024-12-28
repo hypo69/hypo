@@ -1,323 +1,344 @@
 ## <алгоритм>
 
-**1. `ResultsExtractor` Класс:**
+### ResultsExtractor
 
-   - **Инициализация (`__init__`)**:
-     - Загружает шаблон запроса для извлечения результатов из файла `interaction_results_extractor.mustache`.
-     - Инициализирует пустые словари `agent_extraction` и `world_extraction` для кэширования результатов извлечения.
-   - **`extract_results_from_agent`**:
-     - Принимает экземпляр `TinyPerson`, цель извлечения (`extraction_objective`), контекст (`situation`), список полей для извлечения (`fields`), подсказки к полям `fields_hints` и флаг `verbose`.
-     - Формирует системное сообщение для LLM, используя шаблон `interaction_results_extractor.mustache` и переданные поля и подсказки.
-     - Получает историю взаимодействий агента с помощью `tinyperson.pretty_current_interactions()`.
-     - Формирует запрос пользователю, включающий цель извлечения, контекст и историю взаимодействий.
-     - Отправляет запрос в LLM через `openai_utils.client().send_message()`.
-     - Извлекает JSON из ответа LLM с помощью `utils.extract_json()`.
-     - Кэширует результат в `agent_extraction` по имени агента.
-     - Возвращает извлеченный результат.
+1.  **Инициализация (`__init__`)**:
+    *   Загружает шаблон промпта из `prompts/interaction_results_extractor.mustache`.
+    *   Инициализирует пустые словари `agent_extraction` и `world_extraction` для кэширования результатов.
+    
+2.  **Извлечение результатов из агента (`extract_results_from_agent`)**:
+    *   Принимает `tinyperson` (экземпляр `TinyPerson`), `extraction_objective`, `situation`, `fields` и `fields_hints` (опционально).
+    *   Формирует промпт для LLM, используя шаблон и переданные параметры.
+    *   Извлекает историю взаимодействий агента.
+    *   Отправляет промпт в LLM (OpenAI API).
+    *   Извлекает JSON из ответа LLM.
+    *   Кэширует результат в `agent_extraction` с ключом имени агента.
+        *   Пример:
+            ```python
+            extractor = ResultsExtractor()
+            agent = TinyPerson(name="Alice")
+            agent.episodic_memory.append({"role": "user", "content": {"stimuli":[{"type":"greeting", "content":"Hello!"}]}})
+            extracted_data = extractor.extract_results_from_agent(agent, extraction_objective="What happened in the simulation?")
+            print(extracted_data) # Output: {"summary": "Agent Alice received a greeting."}
+            ```
 
-    **Пример:**
-      Представим, что у нас есть агент по имени `Alice` с историей взаимодействий. Вызов `extract_results_from_agent(tinyperson=Alice, extraction_objective="Основные моменты", fields=["действие", "время"])` выполнит шаги, описанные выше, для извлечения основных моментов из истории взаимодействий агента `Alice`,  ограничив извлечение полями `действие` и `время`. Результат будет сохранен в `self.agent_extraction["Alice"]`.
+3.  **Извлечение результатов из мира (`extract_results_from_world`)**:
+    *   Принимает `tinyworld` (экземпляр `TinyWorld`), `extraction_objective`, `situation`, `fields` и `fields_hints` (опционально).
+    *   Формирует промпт для LLM, используя шаблон и переданные параметры.
+    *   Извлекает историю взаимодействий из мира.
+    *   Отправляет промпт в LLM (OpenAI API).
+    *   Извлекает JSON из ответа LLM.
+    *   Кэширует результат в `world_extraction` с ключом имени мира.
+     *   Пример:
+            ```python
+            extractor = ResultsExtractor()
+            world = TinyWorld(name="World1")
+            agent1 = TinyPerson(name="Alice")
+            agent2 = TinyPerson(name="Bob")
+            world.add_agent(agent1)
+            world.add_agent(agent2)
+            agent1.episodic_memory.append({"role": "user", "content": {"stimuli":[{"type":"greeting", "content":"Hello!"}]}})
+            agent2.episodic_memory.append({"role": "user", "content": {"stimuli":[{"type":"greeting", "content":"Hi!"}]}})
 
-   - **`extract_results_from_world`**:
-     - Принимает экземпляр `TinyWorld`, цель извлечения, контекст, список полей для извлечения и флаг `verbose`.
-     - Аналогичен `extract_results_from_agent`, но работает с историей взаимодействий мира (`tinyworld.pretty_current_interactions()`) и сохраняет результат в `world_extraction` по имени мира.
+            extracted_data = extractor.extract_results_from_world(world, extraction_objective="What happened in the simulation?")
+            print(extracted_data) # Output: {"summary": "Agents Alice and Bob received greetings."}
+            ```
 
-    **Пример:**
-      У нас есть мир `World1` с историей взаимодействий между его агентами. Вызов `extract_results_from_world(tinyworld=World1, extraction_objective="Основные темы", fields=["агент", "сообщение"])` выполнит аналогичные шаги, но для мира `World1`, извлекая основные темы по полям `агент` и `сообщение`. Результат будет сохранен в `self.world_extraction["World1"]`.
+4.  **Сохранение результатов в JSON (`save_as_json`)**:
+    *   Принимает `filename`.
+    *   Сохраняет словари `agent_extraction` и `world_extraction` в файл JSON.
 
-   - **`save_as_json`**:
-     - Сохраняет кэшированные результаты извлечения (`agent_extraction`, `world_extraction`) в JSON-файл.
-    **Пример:**
-      Вызов `save_as_json("output.json")` сохранит все извлеченные данные агентов и миров в файл `output.json`.
+### ResultsReducer
 
-**2. `ResultsReducer` Класс:**
+1.  **Инициализация (`__init__`)**:
+    *   Инициализирует пустой словарь `results` и `rules`.
 
-   - **Инициализация (`__init__`)**:
-     - Инициализирует пустые словари `results` и `rules`.
-   - **`add_reduction_rule`**:
-     - Добавляет правило сокращения (функцию) в словарь `rules` по ключу `trigger` (тип сообщения).
-    **Пример:**
-        `add_reduction_rule("chat", function)` добавит функцию сокращения `function` в качестве правила для сообщений типа "chat".
-   - **`reduce_agent`**:
-     - Принимает экземпляр `TinyPerson`.
-     - Проходит по всем сообщениям в эпизодической памяти агента.
-     - Если сообщение системное, пропускает.
-     - Если сообщение от пользователя (`'role' == 'user'`):
-       - Извлекает тип стимула, контент и источник стимула, а так же время стимула.
-       - Если есть правило для типа стимула, применяет его (вызывает функцию из `self.rules`) и добавляет результат в список `reduction`.
-     - Если сообщение от ассистента (`'role' == 'assistant'`):
-       - Извлекает тип действия, контент и цель действия, а так же время действия.
-       - Если есть правило для типа действия, применяет его и добавляет результат в список `reduction`.
-     - Возвращает список сокращенных результатов.
+2.  **Добавление правил редукции (`add_reduction_rule`)**:
+    *   Принимает `trigger` (тип события) и `func` (функция редукции).
+    *   Добавляет правило в словарь `rules`.
+        * Пример:
+          ```python
+          reducer = ResultsReducer()
+          def extract_greeting(focus_agent, source_agent, content, timestamp, **kwargs):
+              return {"event": "greeting", "content": content, "agent_name": focus_agent.name}
+          reducer.add_reduction_rule("greeting", extract_greeting)
+          ```
 
-    **Пример:**
-       Вызов `reduce_agent(agent=Alice)` для агента `Alice` приведет к обработке всей истории взаимодействий агента, применению заданных правил (если они есть) и возвращению списка сокращенных данных.
-   - **`reduce_agent_to_dataframe`**:
-      - Принимает экземпляр `TinyPerson` и список имен колонок.
-      - Вызывает `reduce_agent` для получения списка сокращенных результатов.
-      - Создает и возвращает `pandas.DataFrame` из списка, используя `column_names` как имена столбцов.
-      **Пример:**
-        Вызов `reduce_agent_to_dataframe(agent=Alice, column_names=["type", "event", "content"])` вернет `pandas.DataFrame` с сокращенными данными для агента `Alice` и заголовками колонок `type`, `event`, `content`.
+3.  **Редукция агента (`reduce_agent`)**:
+    *   Принимает `agent` (экземпляр `TinyPerson`).
+    *   Итерируется по эпизодической памяти агента.
+    *   Для каждого сообщения:
+        *   Игнорирует сообщения с ролью 'system'.
+        *   Если роль 'user' (стимул):
+            *   Извлекает тип стимула, контент и источник.
+            *   Вызывает функцию редукции, если правило существует для данного типа стимула.
+        *   Если роль 'assistant' (действие):
+            *   Извлекает тип действия, контент и цель.
+            *   Вызывает функцию редукции, если правило существует для данного типа действия.
+    *   Возвращает список сокращенных данных.
+        *   Пример:
+          ```python
+          reducer = ResultsReducer()
+          def extract_greeting(focus_agent, source_agent, content, timestamp, **kwargs):
+              return {"event": "greeting", "content": content, "agent_name": focus_agent.name}
+          reducer.add_reduction_rule("greeting", extract_greeting)
 
-**3. `ArtifactExporter` Класс:**
+          agent = TinyPerson(name="Alice")
+          agent.episodic_memory.append({"role": "user", "content": {"stimuli":[{"type":"greeting", "content":"Hello!"}]}})
+          reduced_data = reducer.reduce_agent(agent)
+          print(reduced_data) # Output: [{'event': 'greeting', 'content': 'Hello!', 'agent_name': 'Alice'}]
+          ```
+4.  **Редукция агента в DataFrame (`reduce_agent_to_dataframe`)**:
+    *   Принимает `agent` и `column_names` (опционально).
+    *   Вызывает `reduce_agent` и возвращает результат в виде DataFrame.
 
-   - **Инициализация (`__init__`)**:
-     - Принимает путь к базовой папке вывода (`base_output_folder`).
-   - **`export`**:
-     - Принимает имя артефакта, данные артефакта (словарь или строка), тип контента, формат контента, целевой формат и флаг `verbose`.
-     - Очищает имя артефакта от недопустимых символов.
-     - Составляет путь к файлу с помощью `_compose_filepath`.
-     - В зависимости от `target_format`, вызывает соответствующие методы для сохранения (`_export_as_json`, `_export_as_txt`, `_export_as_docx`).
-    **Пример:**
-      Вызов `export(artifact_name="report", artifact_data={"content": "Some text"}, content_type="report", target_format="json")` создаст файл `report.json` в соответствующей папке.
-   - **`_export_as_txt`**:
-     - Сохраняет данные в текстовый файл.
-   - **`_export_as_json`**:
-     - Сохраняет данные в JSON-файл.
-   - **`_export_as_docx`**:
-     - Преобразует данные (сначала в HTML) и сохраняет их в DOCX-файл, используя `pypandoc`.
-   - **`_compose_filepath`**:
-     - Составляет полный путь к файлу, включая имя, расширение и путь к папке.
+### ArtifactExporter
 
-**4. `Normalizer` Класс:**
+1.  **Инициализация (`__init__`)**:
+    *   Принимает `base_output_folder`.
 
-   - **Инициализация (`__init__`)**:
-     - Принимает список элементов для нормализации (`elements`), количество нормализованных элементов (`n`) и флаг `verbose`.
-     - Отправляет запрос в LLM для получения нормализованных элементов.
-     - Сохраняет результат в `self.normalized_elements`.
-   - **`normalize`**:
-     - Принимает один элемент или список элементов для нормализации.
-     - Использует кэш `self.normalizing_map` для ускорения работы.
-     - Если элемент не в кэше, отправляет запрос в LLM и добавляет нормализованные элементы в кэш.
-     - Возвращает нормализованный элемент или список элементов, сохраняя их порядок.
-    **Пример:**
-       После инициализации `normalizer = Normalizer(elements=["cat", "dog", "bird"], n=2)` вызов `normalizer.normalize(["dog", "mouse", "bird"])` вернет список из 2 нормализованных элементов, например `["pet", "unknown", "bird"]`.
+2.  **Экспорт артефакта (`export`)**:
+    *   Принимает `artifact_name`, `artifact_data` (словарь или строка), `content_type`, `content_format` (опционально), `target_format` (по умолчанию "txt") и `verbose`.
+    *   Очищает имя артефакта от недопустимых символов.
+    *   Составляет путь к файлу.
+    *   В зависимости от `target_format`:
+        *   `json`: вызывает `_export_as_json`.
+        *   `txt`, `text`, `md`, `markdown`: вызывает `_export_as_txt`.
+        *   `docx`: вызывает `_export_as_docx`.
+    *   Пример:
+        ```python
+        exporter = ArtifactExporter(base_output_folder="output")
+        exporter.export(artifact_name="my_data", artifact_data={"content":"hello world"}, content_type="simulation", target_format="json")
+        # Creates a file output/simulation/my_data.json with content '{"content": "hello world"}'
+        ```
 
-**5. `default_extractor`:**
-   - Создает экземпляр класса `ResultsExtractor`.
+3.  **Экспорт в txt (`_export_as_txt`)**:
+    *   Принимает `artifact_file_path`, `artifact_data` и `content_type`.
+    *   Сохраняет текстовые данные в файл.
+
+4.  **Экспорт в JSON (`_export_as_json`)**:
+    *   Принимает `artifact_file_path`, `artifact_data` и `content_type`.
+    *   Сохраняет данные в формате JSON.
+
+5.  **Экспорт в DOCX (`_export_as_docx`)**:
+    *   Принимает `artifact_file_path`, `artifact_data` и `content_original_format`.
+    *   Конвертирует текст в HTML, затем в DOCX с использованием `pypandoc`.
+
+6. **Составление пути к файлу (`_compose_filepath`)**:
+    * Принимает `artifact_data`, `artifact_name`, `content_type`, `target_format` и `verbose`.
+    * Определяет расширение файла на основе `target_format` или типа данных.
+    * Создает подпапку на основе `content_type`.
+    * Создает путь к файлу.
+    * Создает промежуточные каталоги, если они не существуют.
+
+### Normalizer
+
+1.  **Инициализация (`__init__`)**:
+    *   Принимает список элементов `elements`, количество `n` нормализованных элементов и `verbose`.
+    *   Удаляет дубликаты из списка элементов.
+    *   Отправляет запрос в LLM для нормализации элементов, используя `normalizer.system.mustache` и `normalizer.user.mustache` шаблоны.
+    *   Извлекает нормализованные элементы из ответа LLM и сохраняет их в `normalized_elements`.
+    *   Инициализирует пустой словарь `normalizing_map` для кэширования.
+    *   Пример:
+        ```python
+        normalizer = Normalizer(elements=["apple", "banana", "orange", "grape"], n=2)
+        print(normalizer.normalized_elements) # Output: {'categories': ['fruit1', 'fruit2'], 'elements': {
+        #   'apple': 'fruit1',
+        #   'banana': 'fruit1',
+        #   'orange': 'fruit2',
+        #   'grape': 'fruit2'
+        # }
+        ```
+
+2.  **Нормализация (`normalize`)**:
+    *   Принимает один элемент или список элементов `element_or_elements`.
+    *   Использует кэш (`normalizing_map`) для избежания повторной нормализации.
+    *   Для новых элементов:
+        *   Отправляет запрос в LLM для их нормализации, используя `normalizer.applier.system.mustache` и `normalizer.applier.user.mustache` шаблоны.
+        *   Обновляет кэш `normalizing_map`.
+    *   Возвращает нормализованные элементы.
+        * Пример:
+        ```python
+        normalizer = Normalizer(elements=["apple", "banana", "orange", "grape"], n=2)
+        normalized_elements = normalizer.normalize(["apple", "banana", "grape"])
+        print(normalized_elements) # Output: ['fruit1', 'fruit1', 'fruit2']
+        ```
+
+### default_extractor
+Создает экземпляр `ResultsExtractor`.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[ResultsExtractor] --> B(extract_results_from_agent);
-    A --> C(extract_results_from_world);
-    A --> D(save_as_json);
-    B --> E[openai_utils.client().send_message()];
-    C --> E;
-    E --> F(utils.extract_json);
-    F --> B;
-    F --> C;
-    G[TinyPerson] --> B;
-    H[TinyWorld] --> C;
+flowchart TD
+    subgraph ResultsExtractor
+        A[<code>__init__</code><br>Load Template and Initialize Cache] --> B[<code>extract_results_from_agent</code><br>Extract from TinyPerson]
+        B --> C[Compose Prompt]
+        C --> D[Get Interaction History]
+        D --> E[Send Prompt to LLM]
+        E --> F[Extract JSON Response]
+        F --> G[Cache Result]
+        A --> H[<code>extract_results_from_world</code><br>Extract from TinyWorld]
+        H --> C
+        H --> D
+        H --> E
+        H --> F
+        H --> I[Cache World Result]
+        A --> J[<code>save_as_json</code><br>Save Results to JSON]
+    end
     
-    I[ResultsReducer] --> J(add_reduction_rule);
-    I --> K(reduce_agent);
-    I --> L(reduce_agent_to_dataframe);
-    K --> M[agent.episodic_memory.retrieve_all()];
-    M --> K;
-    G --> K;
-    K --> N{rules[stimulus_type]};
-    K --> O{rules[action_type]};
-    N --> K;
-    O --> K;
-    K --> L;
+    subgraph ResultsReducer
+        K[<code>__init__</code><br>Initialize Reduction Rules] --> L[<code>add_reduction_rule</code><br>Add New Reduction Rule]
+        K --> M[<code>reduce_agent</code><br>Reduce Agent Data]
+        M --> N[Iterate Through Agent Memory]
+        N --> O{Message Role}
+        O -- 'user' --> P[Extract Stimulus Info]
+        P --> Q{Check Stimulus Rule}
+        Q -- 'Yes' --> R[Apply Reduction Rule]
+        O -- 'assistant' --> S[Extract Action Info]
+         S --> T{Check Action Rule}
+        T -- 'Yes' --> R
+        R --> U[Append Reduced Data]
+        N --> U
+        U --> V[Return Reduced List]
+        K --> W[<code>reduce_agent_to_dataframe</code><br>Convert Reduction to DataFrame]
+        W --> M
+        M --> V
+    end
+    
+    subgraph ArtifactExporter
+        X[<code>__init__</code><br>Set Output Folder] --> Y[<code>export</code><br>Export Artifacts]
+        Y --> Z[Sanitize Artifact Name]
+        Z --> AA[Compose File Path]
+        AA --> AB{Target Format}
+        AB -- 'json' --> AC[<code>_export_as_json</code><br>Save as JSON]
+        AB -- 'txt, text, md, markdown' --> AD[<code>_export_as_txt</code><br>Save as TXT]
+        AB -- 'docx' --> AE[<code>_export_as_docx</code><br>Save as DOCX]
+    end
 
-    P[ArtifactExporter] --> Q(export);
-    Q --> R(_compose_filepath);
-    Q --> S(_export_as_json);
-    Q --> T(_export_as_txt);
-    Q --> U(_export_as_docx);
-    R --> Q;
-    S --> Q;
-    T --> Q;
-    U --> Q;
+    subgraph Normalizer
+        AF[<code>__init__</code><br> Normalize elements using LLM] --> AG[Compose LLM Messages]
+        AG --> AH[Send Messages to LLM]
+        AH --> AI[Extract Normalization Result]
+        AI --> AJ[Cache Normalized elements]
+        AF --> AK[<code>normalize</code><br> Normalize given elements]
+        AK --> AL[Check Cache]
+        AL -- 'Cache Hit' --> AM[Return Cached Result]
+        AL -- 'Cache Miss' --> AN[Compose New LLM Messages]
+        AN --> AO[Send Messages to LLM]
+        AO --> AP[Extract Normalization Result]
+        AP --> AQ[Update Cache]
+        AQ --> AR[Return Normalized Result]
+    end
+    
 
-    V[Normalizer] --> W(normalize);
-    V --> X(openai_utils.client().send_message);
-    X --> Y(utils.extract_json);
-    Y --> V;
-    W --> Z{element in self.normalizing_map};
-    Z -- Yes --> W
-    Z -- No --> AA[openai_utils.client().send_message];
-    AA --> AB(utils.extract_json);
-    AB --> W;
+    Start --> default_extractor[<code>default_extractor</code><br> Instance of ResultsExtractor]
     
-    
-    
-    subgraph Results Extraction
-    B
-    C
-    D
-    E
-    F
-    end
-    subgraph Results Reduction
-    J
-    K
-    L
-    M
-    N
-    O
-    end
-    subgraph Artifact Export
-    Q
-    R
-    S
-    T
-    U
-    end
-    subgraph Normalization
-    W
-    X
-    Y
-    AA
-    AB
-    end
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
 ```
 
-**Описание `mermaid` диаграммы:**
+### Импорты
+*   `os`: Для работы с файловой системой, используется для определения пути к шаблону промпта и создания директорий для вывода артефактов.
+*   `json`: Для работы с данными в формате JSON, используется для сохранения и извлечения данных из LLM, а также сохранения результатов.
+*   `chevron`: Для работы с шаблонами (например, Mustache), используется для формирования промптов для LLM.
+*   `logging`: Для логирования, используется для записи отладочных сообщений и предупреждений.
+*   `pandas` (pd): Для работы с данными в виде DataFrame, используется в `ResultsReducer` для преобразования результатов редукции.
+*   `pypandoc`: Для конвертации документов (например, из Markdown в DOCX), используется в `ArtifactExporter`.
+*   `markdown`: Для конвертации Markdown в HTML, используется перед конвертацией в DOCX.
+*   `typing`: Для аннотации типов, используется для повышения читаемости кода.
+*   `tinytroupe.agent`: Содержит класс `TinyPerson`, который представляет агента в симуляции.
+*   `tinytroupe.environment`: Содержит класс `TinyWorld`, который представляет среду симуляции.
+*   `tinytroupe.factory`: Содержит класс `TinyPersonFactory`, для создания агентов.
+*   `tinytroupe.utils`: Содержит различные утилиты, такие как `JsonSerializableRegistry`, `extract_json`, `dedent` и `compose_initial_LLM_messages_with_templates`.
+*   `tinytroupe.openai_utils`: Содержит утилиты для взаимодействия с OpenAI API.
 
-- **`ResultsExtractor`**:
-    - `extract_results_from_agent`: Извлекает данные из объекта `TinyPerson` с использованием LLM.
-    - `extract_results_from_world`: Извлекает данные из объекта `TinyWorld` с использованием LLM.
-    - `save_as_json`: Сохраняет извлеченные данные в JSON-файл.
-- **`TinyPerson` и `TinyWorld`**:
-    - Представляют собой входные данные для `ResultsExtractor`.
-- **`openai_utils.client().send_message()`**:
-    - Отправляет запросы к LLM для извлечения данных.
-- **`utils.extract_json()`**:
-    - Извлекает JSON из ответа LLM.
-- **`ResultsReducer`**:
-    - `add_reduction_rule`: Добавляет правило для сокращения данных.
-    - `reduce_agent`: Сокращает данные из памяти агента, применяя правила.
-    - `reduce_agent_to_dataframe`: Преобразует сокращенные данные в `pandas.DataFrame`.
-- **`agent.episodic_memory.retrieve_all()`**:
-    - Получает все сообщения из эпизодической памяти агента.
-- **`ArtifactExporter`**:
-    - `export`: Экспортирует данные в файл в зависимости от формата.
-    - `_compose_filepath`: Создает путь к файлу.
-    - `_export_as_json`: Сохраняет данные в JSON-файл.
-    - `_export_as_txt`: Сохраняет данные в текстовый файл.
-    - `_export_as_docx`: Сохраняет данные в DOCX-файл.
-- **`Normalizer`**:
-    - `normalize`: Нормализует текстовые элементы с использованием LLM и кэширования.
-- **`default_extractor`**:
-    - Экземпляр класса `ResultsExtractor`, используемый по умолчанию.
+### Классы
 
-**Импортированные зависимости `mermaid`:**
+*   **`ResultsExtractor`**:
+    *   **Роль**: Извлечение данных из агентов и миров.
+    *   **Атрибуты**:
+        *   `_extraction_prompt_template_path`: Путь к шаблону промпта для LLM.
+        *   `agent_extraction`: Словарь для кэширования результатов извлечения из агентов.
+        *   `world_extraction`: Словарь для кэширования результатов извлечения из миров.
+    *   **Методы**:
+        *   `__init__`: Инициализация класса.
+        *   `extract_results_from_agent`: Извлекает результаты из экземпляра `TinyPerson`.
+        *   `extract_results_from_world`: Извлекает результаты из экземпляра `TinyWorld`.
+        *   `save_as_json`: Сохраняет результаты извлечения в файл JSON.
 
-- `openai_utils` - отправка запросов к LLM.
-- `utils` - утилиты для извлечения JSON и других операций.
-- `pandas` - работа с DataFrame.
-- `markdown` - конвертация markdown в html.
-- `pypandoc` - конвертация в docx.
+*   **`ResultsReducer`**:
+    *   **Роль**: Сокращение данных из эпизодической памяти агентов на основе правил.
+    *   **Атрибуты**:
+        *   `results`: Словарь для хранения промежуточных результатов.
+        *   `rules`: Словарь правил редукции.
+    *   **Методы**:
+        *   `__init__`: Инициализация класса.
+        *   `add_reduction_rule`: Добавляет правило редукции.
+        *   `reduce_agent`: Сокращает данные из эпизодической памяти агента.
+        *   `reduce_agent_to_dataframe`: Сокращает данные и преобразует в DataFrame.
 
-## <объяснение>
+*   **`ArtifactExporter`**:
+    *   **Роль**: Экспорт артефактов из TinyTroupe элементов.
+    *   **Атрибуты**:
+        *   `base_output_folder`: Базовая папка для сохранения артефактов.
+    *   **Методы**:
+        *   `__init__`: Инициализация класса.
+        *   `export`: Экспортирует артефакт в указанный формат.
+        *   `_export_as_txt`: Экспортирует артефакт в текстовый файл.
+        *   `_export_as_json`: Экспортирует артефакт в JSON файл.
+        *   `_export_as_docx`: Экспортирует артефакт в DOCX файл.
+        *   `_compose_filepath`: Составляет путь к файлу.
 
-**Импорты:**
+*   **`Normalizer`**:
+    *   **Роль**: Нормализация текстовых элементов с помощью LLM.
+    *   **Атрибуты**:
+        *   `elements`: Список элементов для нормализации.
+        *   `n`: Количество нормализованных элементов.
+        *   `verbose`: Флаг для вывода отладочных сообщений.
+        *   `normalized_elements`: JSON-структура для хранения нормализованных элементов.
+        *   `normalizing_map`: Словарь для кэширования нормализованных элементов.
+    *   **Методы**:
+        *   `__init__`: Инициализация класса, отправляет запрос в LLM для первичной нормализации.
+        *   `normalize`: Нормализует один элемент или список элементов, используя кэш и при необходимости LLM.
 
--   `os`: Для работы с путями к файлам и директориями.
--   `json`: Для работы с данными в формате JSON.
--   `chevron`: Для рендеринга шаблонов.
--   `logging`: Для логирования событий и отладочных сообщений.
--   `pandas`: Для работы с данными в формате `DataFrame`.
--   `pypandoc`: Для конвертации форматов документов, например, из markdown в docx.
--   `markdown`: Для конвертации markdown в HTML.
--   `typing.Union`, `typing.List`: Для аннотации типов.
--   `tinytroupe.agent.TinyPerson`: Класс агента.
--   `tinytroupe.environment.TinyWorld`: Класс мира.
--   `tinytroupe.factory.TinyPersonFactory`: Фабрика для создания агентов.
--   `tinytroupe.utils.JsonSerializableRegistry`: Базовый класс для реестра сериализуемых объектов.
--    `tinytroupe.openai_utils`: Модуль для взаимодействия с OpenAI API.
--   `tinytroupe.utils`: Модуль с общими утилитами.
+### Функции
 
-**Классы:**
+*   `default_extractor`: Создает экземпляр `ResultsExtractor`.
 
-1.  **`ResultsExtractor`**:
-    -   **Роль**: Извлекает данные из агентов (`TinyPerson`) и миров (`TinyWorld`).
-    -   **Атрибуты**:
-        -   `_extraction_prompt_template_path`: Путь к файлу шаблона для запроса LLM.
-        -   `agent_extraction`: Словарь для кэширования результатов извлечения данных из агентов.
-        -   `world_extraction`: Словарь для кэширования результатов извлечения данных из миров.
-    -   **Методы**:
-        -   `__init__`: Инициализирует класс, загружая шаблон и создавая словари кэширования.
-        -   `extract_results_from_agent`: Извлекает результаты из агента, используя LLM.
-        -   `extract_results_from_world`: Извлекает результаты из мира, используя LLM.
-        -   `save_as_json`: Сохраняет результаты в JSON файл.
-    -   **Взаимодействие**:
-        - Использует `openai_utils` для запросов к LLM.
-        - Использует `utils.extract_json` для обработки результатов.
-        - Использует `chevron` для рендеринга шаблонов.
+### Переменные
+*   `logger`: Объект `logging.Logger` для логирования.
 
-2.  **`ResultsReducer`**:
-    -   **Роль**: Сокращает данные на основе заданных правил.
-    -   **Атрибуты**:
-        -   `results`: Словарь для хранения результатов.
-        -   `rules`: Словарь для хранения правил сокращения.
-    -   **Методы**:
-        -   `__init__`: Инициализирует класс, создавая пустые словари.
-        -   `add_reduction_rule`: Добавляет правило сокращения, связывая тип сообщения с функцией.
-        -   `reduce_agent`: Применяет правила сокращения к истории агента.
-        -   `reduce_agent_to_dataframe`: Преобразует сокращенные результаты в `pandas.DataFrame`.
-    -   **Взаимодействие**:
-        -   Работает с эпизодической памятью агента (`agent.episodic_memory`).
+### Взаимосвязи
+*   `ResultsExtractor` использует `openai_utils.client()` для взаимодействия с OpenAI API.
+*   `ResultsExtractor` использует шаблоны Mustache (`chevron`) для формирования промптов.
+*   `ResultsExtractor` использует `tinytroupe.utils.extract_json` для извлечения JSON из ответов LLM.
+*   `ResultsReducer` использует эпизодическую память `TinyPerson` для редукции данных.
+*   `ResultsReducer` использует правила, которые устанавливаются пользователем, через `add_reduction_rule`.
+*   `ArtifactExporter` использует `tinytroupe.utils.dedent` для удаления отступов.
+*   `ArtifactExporter` использует `os` для работы с файловой системой.
+*   `ArtifactExporter` использует `json` для сохранения в JSON.
+*  `ArtifactExporter` использует `pypandoc` для конвертации в DOCX.
+*   `Normalizer` использует шаблоны Mustache (`chevron`) для формирования промптов.
+*   `Normalizer` использует `tinytroupe.utils.compose_initial_LLM_messages_with_templates` для подготовки промптов.
+*   `Normalizer` использует `tinytroupe.utils.extract_json` для извлечения JSON из ответов LLM.
 
-3.  **`ArtifactExporter`**:
-    -   **Роль**: Экспортирует артефакты (данные) в различные форматы.
-    -   **Атрибуты**:
-        -   `base_output_folder`: Базовая папка для сохранения артефактов.
-    -   **Методы**:
-        -   `__init__`: Инициализирует класс с базовой папкой.
-        -   `export`: Экспортирует данные в файл.
-        -   `_export_as_txt`: Сохраняет данные в текстовый файл.
-        -   `_export_as_json`: Сохраняет данные в JSON-файл.
-        -   `_export_as_docx`: Сохраняет данные в DOCX-файл.
-        -   `_compose_filepath`: Составляет путь к файлу.
-    -   **Взаимодействие**:
-         -  Использует `pypandoc` для конвертации в DOCX.
-         -  Использует `os` для работы с файлами.
+### Потенциальные ошибки и улучшения
 
-4.  **`Normalizer`**:
-    -   **Роль**: Нормализует текстовые элементы с помощью LLM.
-    -   **Атрибуты**:
-        -   `elements`: Список элементов для нормализации.
-        -   `n`: Количество нормализованных элементов для вывода.
-        -   `verbose`: Флаг для включения отладочных сообщений.
-        -   `normalized_elements`: Структура JSON, где ключи – нормализованные элементы, а значения – списки исходных элементов.
-        -   `normalizing_map`: Словарь для кэширования результатов нормализации.
-    -   **Методы**:
-        -   `__init__`: Инициализирует класс, отправляет запрос LLM и сохраняет результат нормализации.
-        -   `normalize`: Нормализует элементы, используя кэш и, при необходимости, LLM.
-    -   **Взаимодействие**:
-        -   Использует `openai_utils` для запросов к LLM.
-        -   Использует `utils.extract_json` для извлечения результатов.
+*   **Ошибки**:
+    *   Некорректная обработка ошибок при взаимодействии с OpenAI API.
+    *   Ошибки при конвертации в DOCX, если `pypandoc` не установлен или не работает корректно.
+    *   Проблемы с извлечением JSON из ответов LLM, если формат ответа не соответствует ожидаемому.
+    *   Отсутствие обработки исключений при добавлении дублирующихся правил редукции в `ResultsReducer`.
+    *   Необходимо добавить обработку исключений в методах экспорта (`_export_as_txt`, `_export_as_json`, `_export_as_docx`).
+*   **Улучшения**:
+    *   Добавить асинхронное взаимодействие с OpenAI API для повышения производительности.
+    *   Расширить возможности экспорта в другие форматы, например, CSV.
+    *   Добавить возможность предварительной обработки или фильтрации данных перед извлечением.
+    *   Добавить возможность настраивать шаблоны промптов через параметры.
+    *   Реализовать более гибкую систему правил редукции, возможно, с использованием шаблонов или DSL.
+    *   Улучшить документацию кода.
+    *   Реализовать механизм обработки ошибок при нормализации.
+    *   Добавить логику для обработки случаев, когда LLM возвращает некорректные данные.
+    *   Увеличить количество тестов для проверки функциональности.
 
-**Функции:**
-
--   **`default_extractor`**:
-    -   Создает экземпляр `ResultsExtractor`.
-    -   Используется как `default_extractor` для извлечения данных по умолчанию.
-
-**Переменные:**
-
--   Переменные внутри классов (атрибуты) описаны выше.
--   Переменные внутри методов: используются локально для обработки данных и запросов.
-
-**Потенциальные ошибки и области для улучшения:**
-
--   Обработка ошибок при отправке запросов к LLM.
--   Улучшение механизма кэширования, например, добавление инвалидации кэша.
--   Более гибкая настройка параметров запроса к LLM (температура и т.д.).
--   Улучшенная обработка ошибок при конвертации файлов (например, в DOCX).
--   Возможны проблемы с большими историями взаимодействий, нужно рассмотреть возможность разделения их на части или суммирования.
--   В `_compose_filepath` нужно добавить проверку на недопустимые символы для `subfolder`.
-
-**Взаимосвязи с другими частями проекта:**
-
--   Используется для извлечения и обработки данных из агентов и миров, созданных в `tinytroupe.agent` и `tinytroupe.environment`.
--   Использует `openai_utils` для взаимодействия с LLM.
--   Использует `tinytroupe.utils` для общих утилитных функций.
--   Результаты извлечения можно использовать для обучения моделей или анализа данных.
-
-Этот анализ обеспечивает подробное понимание кода, его функциональности, структуры и взаимосвязей с другими компонентами проекта.
+Этот код предоставляет мощный и гибкий инструмент для извлечения, преобразования и экспорта данных из TinyTroupe, но требует дальнейшей доработки и усовершенствования.

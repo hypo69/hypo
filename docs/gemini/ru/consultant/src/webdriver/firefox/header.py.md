@@ -48,7 +48,7 @@
     print(f"Project name: {__project_name__}")
 """
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

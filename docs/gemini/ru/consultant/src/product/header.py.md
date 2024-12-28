@@ -49,7 +49,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads # импорт для загрузки json
 from src.logger.logger import logger # импорт для логирования
 
-MODE = 'dev'
+
 """Режим работы приложения (dev, prod)."""
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

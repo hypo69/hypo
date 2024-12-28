@@ -43,7 +43,7 @@
     login(...)
     post_message(...)
 """
-MODE = 'dev'
+
 
 # импортируем функцию login из модуля login
 from .login import login

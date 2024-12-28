@@ -15,7 +15,7 @@
 :platform: Windows, Unix
 
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.templates._examples """
 
@@ -87,7 +87,7 @@ __author__ = 'hypotez '
 :platform: Windows, Unix
 
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -108,7 +108,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.templates._examples """
 

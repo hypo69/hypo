@@ -15,5 +15,5 @@ This module initializes the FastAPI application.  It currently only defines a gl
 
 
 ```python
-MODE = 'dev'
+
 ```

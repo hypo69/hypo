@@ -15,7 +15,7 @@
    :synopsis: Модуль для генерации прайс-листов.
 
 """
-MODE = 'dev'
+
 
 from .pricelist_generator import ReportGenerator
 ```
@@ -43,7 +43,7 @@ from .pricelist_generator import ReportGenerator
    :synopsis: Модуль для генерации прайс-листов.
 
 """
-MODE = 'dev'
+
 
 # Импорт класса ReportGenerator из модуля pricelist_generator
 from .pricelist_generator import ReportGenerator

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -77,7 +77,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры использования драйвера Edge.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -100,7 +100,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Переменная MODE задает режим работы (например, 'dev' или 'prod').
 """
-MODE = 'dev'
+
 
 """ module: src.webdriver.edge._examples """
 
@@ -156,7 +156,7 @@ print(dir_root)
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры использования драйвера Edge.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -179,7 +179,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Переменная MODE задает режим работы (например, 'dev' или 'prod').
 """
-MODE = 'dev'
+
 
 """ module: src.webdriver.edge._examples """
 

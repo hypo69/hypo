@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.gemini.html_chat """
 
@@ -70,7 +70,7 @@ import sys
 from pathlib import Path
 
 # устанавливаем режим работы
-MODE = 'dev'
+
 
 # определяем абсолютный путь до корня проекта
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
@@ -110,7 +110,7 @@ import sys
 from pathlib import Path
 
 # устанавливаем режим работы
-MODE = 'dev'
+
 
 # определяем абсолютный путь до корня проекта
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])

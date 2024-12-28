@@ -12,7 +12,7 @@
 	:synopsis: Список всех доступных ресурсов для API вызовов
 
 """
-MODE = 'dev'
+
 
 resource:list = [
     'products', 
@@ -102,7 +102,7 @@ resource:list = [
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 from src.logger import logger  # Импорт функции для логирования
 
-MODE = 'dev'
+
 
 resource: list = [
     'products', 
@@ -199,7 +199,7 @@ resource: list = [
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 from src.logger import logger  # Импорт функции для логирования ошибок
 
-MODE = 'dev'
+
 
 resource: list = [
     'products', 

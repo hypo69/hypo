@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -61,7 +61,7 @@ The diagram shows the imports within the `aliexpress` package.  Crucially, it il
     The `.` prefix in the import statements indicates that the imported modules are located within the `aliexpress` package.
 
 * **Variables:**
-    * `MODE = 'dev'`: A global variable likely setting the operational mode (e.g., development, testing, production) for the `aliexpress` supplier.  This is a good practice for configuration.
+    * ``: A global variable likely setting the operational mode (e.g., development, testing, production) for the `aliexpress` supplier.  This is a good practice for configuration.
 
 * **Classes:**
     * `Aliexpress`:  Represents the primary interface for interaction with AliExpress.

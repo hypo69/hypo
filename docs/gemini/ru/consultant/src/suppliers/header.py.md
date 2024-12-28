@@ -58,7 +58,7 @@ from src.utils.jjson import j_loads
 # Код импортирует logger для логирования ошибок.
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """str: Режим работы приложения (dev, prod)"""
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

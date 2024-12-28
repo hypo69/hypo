@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для парсинга данных из HTML-файлов, содержащих чат-беседы.
 """
-MODE = 'dev'
+
 
 
 """
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 
 import header
 from src import gs
@@ -94,7 +94,7 @@ def extract_conversations_from_html(file_path: Path):
 	Модуль для парсинга данных из HTML-файлов, содержащих чат-беседы.
 	Использует библиотеку BeautifulSoup для работы с HTML.
 """
-MODE = 'dev'
+
 
 
 """
@@ -118,7 +118,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 
 import header
 from src import gs
@@ -189,7 +189,7 @@ def extract_conversations_from_html(file_path: Path):
 	Модуль для парсинга данных из HTML-файлов, содержащих чат-беседы.
 	Использует библиотеку BeautifulSoup для работы с HTML.
 """
-MODE = 'dev'
+
 
 
 """
@@ -213,7 +213,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 
 import header
 from src import gs

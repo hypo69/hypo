@@ -9,7 +9,7 @@
 	:synopsis: Отправка мероприятий в группы фейсбук
 
 """
-MODE = 'dev'
+
 
 from math import log
 import header

@@ -2,161 +2,133 @@
 
 ### 1. <алгоритм>
 
-**Блок-схема:**
+**Общий рабочий процесс:**
 
-```mermaid
-graph LR
-    A[Начало] --> B(Инициализация PriceListRequester);
-    B --> C{Запрос цен (request_prices)?};
-    C -- Да --> D[Получение списка цен];
-    D --> E{Обновление источника данных (update_source)?};
-     E -- Да --> F[Обновление источника];
-    F --> G{Модификация цены товара (modify_product_price)?};
-     G -- Да --> H[Изменение цены товара];
-     H --> I[Конец]
-      C -- Нет -->E
-      E -- Нет -->G
-       G -- Нет --> I;
-    
-   
-    
-    
-    
+1.  **Инициализация:**
+    *   Создается экземпляр класса `PriceListRequester` с учетными данными API (`api_credentials`), включающими `api_domain` и `api_key`. Эти данные используются для инициализации базового класса `PrestaShop`.
+    *   Пример: `requester = PriceListRequester({'api_domain': 'example.com', 'api_key': 'secret_key'})`
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style I fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style H fill:#ccf,stroke:#333,stroke-width:2px
+2.  **Запрос цен:**
+    *   Вызывается метод `request_prices` со списком товаров.
+    *   Метод отправляет запрос на получение цен. В текущей реализации этот метод заглушка ( `pass` ), но он должен обращаться к API или базе данных для получения цен.
+    *   Пример: `prices = requester.request_prices(['product1', 'product2'])`. Ожидаемый результат: `{'product1': 10.99, 'product2': 5.99}`.
 
+3.  **Обновление источника:**
+    *   Метод `update_source` позволяет изменить источник данных для получения цен. Это может быть полезно, если необходимо переключиться на другой API или базу данных.
+    *   Пример: `requester.update_source('new_api_url')`
 
-```
-**Примеры:**
+4.  **Модификация цены товара:**
+    *   Метод `modify_product_price` используется для изменения цены конкретного товара.
+    *   Пример: `requester.modify_product_price('product1', 12.99)`.  В текущей реализации это также заглушка ( `pass`), но он должен изменять цену в базе данных или API.
 
-1.  **Инициализация `PriceListRequester`:**
-    *   `api_credentials = {'api_domain': 'example.com', 'api_key': 'test_key'}`
-    *   Создается экземпляр `PriceListRequester` с указанными учетными данными.
+**Поток данных:**
 
-2.  **Запрос цен (`request_prices`):**
-    *   `products = ['product1', 'product2']`
-    *   Метод `request_prices` вызывается со списком товаров,  пока возвращает `pass`
-    *   В будущем должен вернуть словарь цен: `{'product1': 10.99, 'product2': 5.99}`.
-
-3.  **Обновление источника данных (`update_source`):**
-    *   `new_source = 'new_data_source'`
-    *   Метод `update_source` обновляет атрибут `self.source` на `new_data_source`.
-
-4.  **Модификация цены товара (`modify_product_price`):**
-    *   `product = 'product1'`, `new_price = 12.99`
-    *   Метод `modify_product_price` должен изменить цену `product1` на `12.99` в источнике данных. пока `pass`
+1.  Учетные данные API (`api_credentials`) передаются в конструктор `PriceListRequester` и используются для инициализации родительского класса `PrestaShop`.
+2.  Список товаров (`products`) передается в метод `request_prices`.
+3.  Новый источник данных (`new_source`) передается в метод `update_source` для обновления атрибута `self.source` экземпляра класса `PriceListRequester`.
+4.  Название товара и новая цена (`product`, `new_price`) передаются в метод `modify_product_price`.
 
 ### 2. <mermaid>
 
 ```mermaid
-classDiagram
-    class PriceListRequester {
-        -api_domain: str
-        -api_key: str
-        -source: str
-        __init__(api_credentials: dict)
-        request_prices(products: list)
-        update_source(new_source: str)
-        modify_product_price(product: str, new_price: float)
-    }
-    class PrestaShop{
-         -api_domain: str
-        -api_key: str
-         __init__(api_domain: str, api_key: str)
-    }
-    PriceListRequester --|> PrestaShop : inherits from
+flowchart TD
+    Start[Start] --> Initialize[Инициализация PriceListRequester<br>с api_credentials]
+    Initialize --> RequestPrices[request_prices(products)<br>Получение цен товаров]
+    RequestPrices --> UpdateSource{Вызван<br>update_source?}
+    UpdateSource -- Yes --> Update[update_source(new_source)<br>Обновление источника]
+    UpdateSource -- No --> ModifyPrice{Вызван<br>modify_product_price?}
+    ModifyPrice -- Yes --> Modify[modify_product_price(product, new_price)<br>Изменение цены товара]
+    ModifyPrice -- No --> End[End]
+    Update --> End
+    Modify --> End
+    
+    classDef highlight fill:#f9f,stroke:#333,stroke-width:2px
+    class Initialize,RequestPrices,Update,Modify highlight
 ```
 
-**Объяснение зависимостей:**
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
 
-*   **`PriceListRequester` наследует от `PrestaShop`**: Класс `PriceListRequester` является подклассом `PrestaShop`, что означает, что он наследует все атрибуты и методы родительского класса. Это подразумевает, что `PriceListRequester` использует функциональность для взаимодействия с API PrestaShop, унаследованную от `PrestaShop`.
+**Описание `mermaid`:**
+
+*   **`flowchart TD`**: Определяет тип диаграммы как блок-схему.
+*   **`Start`**: Начало процесса.
+*   **`Initialize`**: Инициализация объекта `PriceListRequester` с учетными данными API (`api_credentials`).
+*   **`RequestPrices`**: Вызов метода `request_prices` для получения цен товаров.
+*   **`UpdateSource`**: Условный переход, проверяющий, был ли вызван метод `update_source`.
+*   **`Update`**: Обновление источника данных с помощью метода `update_source`.
+*   **`ModifyPrice`**: Условный переход, проверяющий, был ли вызван метод `modify_product_price`.
+*   **`Modify`**: Изменение цены товара с помощью метода `modify_product_price`.
+*   **`End`**: Конец процесса.
+*   `classDef highlight fill:#f9f,stroke:#333,stroke-width:2px` - объявляет стиль `highlight`.
+*   `class Initialize,RequestPrices,Update,Modify highlight` - применяет стиль `highlight` к узлам `Initialize`, `RequestPrices`, `Update`, `Modify`.
+
+**Импорты в `mermaid`:**
+
+*   `PriceListRequester`, `request_prices`, `update_source`, `modify_product_price` - это имена классов и методов, определенные в данном модуле `pricelist.py`.
+*   `api_credentials`, `products`, `new_source`, `product`, `new_price` - переменные, которые передаются как параметры в методы или используются внутри классов.
 
 ### 3. <объяснение>
 
 **Импорты:**
 
-*   `sys`, `os`: Стандартные модули Python для взаимодействия с системными ресурсами и операционной системой. Используются не напрямую в предоставленном коде, но могут быть использованы в других частях проекта.
-*   `attr`, `attrs` из `attr`: Используется для создания классов с атрибутами. В данном коде не используется, но, возможно, будет использовано в будущих расширениях.
-*   `pathlib.Path`: Предоставляет удобный способ работы с путями в файловой системе.
-*    `typing.Union`: Используется для указания, что переменная может иметь один из нескольких типов.
-*   `header`: Предположительно, локальный модуль для работы с заголовками.
-*   `src.gs`: Вероятно, локальный модуль для глобальных настроек.
-*    `src.logger.logger`: Локальный модуль для логирования.
-*   `src.utils.jjson`: Предположительно, локальный модуль для работы с JSON. Содержит функции `j_loads` и `j_loads_ns` для загрузки JSON.
-*   `.api.PrestaShop`: Локальный модуль, содержащий класс `PrestaShop` для работы с API PrestaShop.
-*   `types.SimpleNamespace`: Позволяет создавать объекты с произвольными атрибутами.
+*   `sys`, `os`: Стандартные модули Python для работы с системными параметрами и операционной системой. Здесь они могут быть использованы, но явно не применяются в текущем коде.
+*   `attr`, `attrs`: Библиотека `attrs` для автоматизации создания классов с атрибутами, не используется в текущем примере.
+*   `pathlib.Path`: Для работы с путями к файлам и директориям (не используется).
+*   `typing.Union`:  Для определения типов, допускающих значения разных типов (не используется).
+*   `header`: Пользовательский модуль `header`, вероятно, для определения пути к корню проекта и загрузки общих настроек.
+*   `src.gs`: Модуль `gs` из пакета `src`, вероятно, содержащий глобальные настройки и константы проекта.
+*   `src.logger.logger`: Модуль `logger` для логирования событий.
+*   `src.utils.jjson`: Модуль `jjson` для работы с JSON (загрузка), не используется в этом модуле.
+*   `.api.PrestaShop`: Модуль `PrestaShop` из текущего пакета (`src.endpoints.prestashop`), базовый класс для работы с API PrestaShop.
+*  `types.SimpleNamespace`: Для создания простых объектов с атрибутами, не используется в текущем примере.
 
 **Классы:**
 
-*   **`PriceListRequester`**:
-    *   **Роль**: Класс для запроса и модификации цен товаров в PrestaShop.
+*   `PriceListRequester(PrestaShop)`:
+    *   **Роль**: Класс для запроса и управления ценами товаров через API PrestaShop.
     *   **Атрибуты**:
-        *   `api_domain`: Строка, представляющая домен API PrestaShop.
-        *    `api_key`: Строка, представляющая ключ API PrestaShop.
-        *   `source`:  Источник данных, пока не определен.
+        *   `source`: (не определен в конструкторе)  Источник данных для запроса цен, который может быть установлен через метод `update_source`.
     *   **Методы**:
-        *   `__init__(api_credentials)`: Конструктор, инициализирует объект `PriceListRequester` с учетными данными API.
-        *   `request_prices(products)`: Запрашивает цены для списка товаров. Возвращает словарь цен (пока `pass`, требуется реализация)
-        *   `update_source(new_source)`: Обновляет источник данных для запроса цен.
-        *   `modify_product_price(product, new_price)`: Изменяет цену товара в источнике данных (пока `pass`, требуется реализация).
-        *   **Взаимодействие**:
-                * Наследуется от `PrestaShop`, что позволяет ему использовать методы для работы с API PrestaShop.
-    * **`PrestaShop`**:
-        *   **Роль**: Базовый класс для работы с API PrestaShop.
-         *   **Атрибуты**:
-            *    `api_domain`: Строка, представляющая домен API PrestaShop.
-            *    `api_key`: Строка, представляющая ключ API PrestaShop.
-        *   **Методы**:
-            *    `__init__(api_domain, api_key)`: Конструктор, инициализирует объект `PrestaShop` с учетными данными API.
-        * **Взаимодействие**:
-            *  Является базовым классом для `PriceListRequester`
+        *   `__init__(self, api_credentials)`: Конструктор класса, принимает учетные данные API и инициализирует базовый класс `PrestaShop`.
+        *   `request_prices(self, products)`: Метод для запроса цен на товары (реализация отсутствует).
+        *   `update_source(self, new_source)`: Метод для обновления источника данных.
+        *   `modify_product_price(self, product, new_price)`: Метод для изменения цены товара (реализация отсутствует).
+    *   **Взаимодействие**:
+        *   Наследует от `PrestaShop` (из модуля `src.endpoints.prestashop.api`), получая функциональность для работы с API PrestaShop.
+        *   Взаимодействует с базой данных/API через методы `request_prices` и `modify_product_price` (требуется реализация).
 
 **Функции:**
 
-*   `__init__` (конструктор `PriceListRequester`):
-    *   **Аргументы**: `api_credentials` (словарь с ключами `'api_domain'` и `'api_key'`).
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Инициализирует объект `PriceListRequester`, передавая учетные данные родительскому классу `PrestaShop`.
-    *   **Пример**: `api_credentials = {'api_domain': 'example.com', 'api_key': 'test_key'}`
-*   `request_prices(products)`:
-    *   **Аргументы**: `products` (список товаров).
-    *   **Возвращаемое значение**: Словарь, где ключи - названия товаров, а значения - их цены (пока `pass`).
-    *   **Назначение**: Запрашивает цены для указанных товаров.
-    *   **Пример**: `products = ['product1', 'product2']`, ожидается возврат `{'product1': 10.99, 'product2': 5.99}`.
-*   `update_source(new_source)`:
-    *   **Аргументы**: `new_source` (строка, представляющая новый источник данных).
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Обновляет источник данных для запроса цен.
-    *   **Пример**: `new_source = 'new_data_source'`
-*   `modify_product_price(product, new_price)`:
-    *   **Аргументы**: `product` (название товара), `new_price` (новая цена товара).
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Изменяет цену указанного товара в источнике данных (пока `pass`).
-    *   **Пример**: `product = 'product1'`, `new_price = 12.99`.
+*   В данном коде нет явно определенных функций, но есть методы внутри класса `PriceListRequester`.
 
 **Переменные:**
 
-*   `MODE`: Глобальная переменная, определяет режим работы приложения (здесь `'dev'`).
+*   `MODE`: Строковая переменная, определяющая режим работы (в данном случае, 'dev').
+*   `api_credentials`: Словарь, содержащий данные для доступа к API PrestaShop ('api_domain', 'api_key').
+*   `products`: Список товаров, для которых требуется получить цены.
+*   `new_source`: Новый источник данных для запроса цен.
+*   `product`: Название товара, цену которого нужно изменить.
+*   `new_price`: Новая цена товара.
 
-**Потенциальные ошибки и области для улучшения:**
+**Потенциальные ошибки и улучшения:**
 
-*   Методы `request_prices` и `modify_product_price` имеют `pass` и не содержат реализации. Это требует доработки для реальной работы с данными.
-*   Отсутствует обработка ошибок и исключений.
-*   Отсутствует детальное описание формата `api_credentials`.
-*   Необходимо описать формат данных `source` и `new_source`.
-*   Отсутствует валидация входных данных.
-*   Необходимо подробнее описать как класс `PriceListRequester` связан с другими частями проекта, например, как он используется для обновления цен на сайте.
+1.  **Отсутствие реализации методов**: Методы `request_prices` и `modify_product_price` являются заглушками (`pass`). Необходимо реализовать функциональность для фактического запроса цен и их изменения.
+2.  **Обработка ошибок**: Не хватает обработки ошибок при работе с API и внешними источниками данных.
+3.  **Управление источником**: Метод `update_source` устанавливает атрибут `self.source` напрямую, без какой-либо валидации,  необходимо добавить проверку.
+4.  **Обработка исключений**: Нет обработки возможных исключений при работе с внешними сервисами/API.
 
 **Взаимосвязь с другими частями проекта:**
 
-*   Предполагается, что `PriceListRequester` будет использоваться в связке с API PrestaShop для получения и обновления информации о ценах.
-*   `src.gs` может предоставлять конфигурационные данные, а `src.logger.logger` используется для ведения логов работы.
-*   `src.utils.jjson` используется для работы с JSON, что может быть необходимо для обмена данными с API PrestaShop.
-*  `header` вероятно используется для установки заголовков запроса
+*   Зависит от модуля `PrestaShop` для работы с API PrestaShop.
+*   Использует глобальные настройки из модуля `src.gs`.
+*   Использует логирование через модуль `src.logger.logger`.
+*   Может быть интегрирован с другими модулями проекта для получения списка товаров и дальнейшей обработки цен.
 
-В целом, код предоставляет базовую структуру для работы с ценами PrestaShop, но требует дальнейшей реализации методов для реальной работы.
+**Цепочка взаимосвязей:**
+
+`pricelist.py` --> `PrestaShop` (API взаимодействие) --> `src.gs` (глобальные настройки) --> `src.logger` (логирование).

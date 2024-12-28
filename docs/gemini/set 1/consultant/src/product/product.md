@@ -13,7 +13,7 @@
 Defines the behavior of a product in the project.
 
 """
-MODE = 'dev'
+
 
 import header
 from src import gs
@@ -72,7 +72,7 @@ class Product(ProductFields, PrestaShop):
    This module defines the behavior of a product in the project. It interacts with the website,
    fetches product data, and uses the PrestaShop API.
 """
-MODE = 'dev'
+
 
 import header
 from src import gs
@@ -154,7 +154,7 @@ class Product(ProductFields, PrestaShop):
    This module defines the behavior of a product in the project. It interacts with the website,
    fetches product data, and uses the PrestaShop API.
 """
-MODE = 'dev'
+
 
 import header
 from src import gs

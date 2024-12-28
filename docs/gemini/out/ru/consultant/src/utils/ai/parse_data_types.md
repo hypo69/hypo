@@ -11,7 +11,7 @@ module: src.utils.ai.parse_data_types
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 ...
 import json
 import header
@@ -31,7 +31,7 @@ import header
 
 Этот модуль содержит функции для парсинга данных различных типов.
 """
-MODE = 'dev'
+
 ...
 # Импорт необходимых модулей. Обратите внимание на использование корректного пути.
 from src.utils.jjson import j_loads, j_loads_ns
@@ -88,7 +88,7 @@ def parse_data(data: str, data_type: str) -> object:
 
 Этот модуль содержит функции для парсинга данных различных типов.
 """
-MODE = 'dev'
+
 ...
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # импорт логгера

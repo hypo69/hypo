@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Переменная режима работы, по умолчанию 'dev'
-MODE = 'dev'
+
 
 # Определение корневого пути проекта
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
@@ -51,7 +51,7 @@ import os
 from pathlib import Path
 
 # Переменная режима работы, по умолчанию 'dev'
-MODE = 'dev'
+
 
 # Определение корневого пути проекта
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])

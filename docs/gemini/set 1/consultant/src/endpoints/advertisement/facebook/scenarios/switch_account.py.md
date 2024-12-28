@@ -19,7 +19,7 @@ from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 # Загрузка локаторов из JSON файла.
 locator: SimpleNamespace = j_loads_ns(
@@ -74,7 +74,7 @@ from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 # Загрузка локаторов из JSON файла.
 locator: SimpleNamespace = j_loads_ns(

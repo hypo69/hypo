@@ -49,7 +49,7 @@ from src.logger.logger import logger # Импортируем logger
 import gradio as gr
 
 # переменная MODE не используется
-# MODE = 'dev'
+# 
 
 def greet(name: str) -> str:
     """

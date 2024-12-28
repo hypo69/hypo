@@ -11,7 +11,7 @@ module: src.logger
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 
 import sys
 import json
@@ -94,7 +94,7 @@ from src import gs
 from src.logger import logger  # Импорт логирования
 
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:
@@ -185,7 +185,7 @@ from src import gs
 from src.logger import logger  # Импорт логирования
 
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:

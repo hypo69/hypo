@@ -12,7 +12,7 @@
 	:synopsis:  HTML -> MD
 
 """
-MODE = 'dev'
+
 
 
 """html2text: Turn HTML into equivalent Markdown-structured text."""
@@ -240,7 +240,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 """html2text: Turn HTML into equivalent Markdown-structured text."""

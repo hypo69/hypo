@@ -35,7 +35,7 @@ from src import gs
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 def get_locales(locales_path: Path | str) -> Optional[List[Dict[str, str]]]:
     """
@@ -118,7 +118,7 @@ from src import gs
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 def get_locales(locales_path: Path | str) -> Optional[List[Dict[str, str]]]:
     """

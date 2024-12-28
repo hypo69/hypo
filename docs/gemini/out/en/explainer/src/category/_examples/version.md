@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -118,7 +118,7 @@ There are no functions defined.
 
 **Potential Errors/Improvements:**
 
-- **Redundant `MODE` definitions:** There are multiple `MODE = 'dev'` lines. These could be consolidated to a single definition.
+- **Redundant `MODE` definitions:** There are multiple `` lines. These could be consolidated to a single definition.
 - **Comments:** The excessive use of docstrings as comments might be improved by focusing on the purpose of the variables. The descriptive explanation below those comments could serve as good documentation.
 - **Missing context:**  The purpose of this module in the broader project is unclear without further context.  Knowing how this versioning data will be used in the project will provide better understanding.  (What calls this file or how is it used?)
 

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.kualastyle """
 
@@ -88,7 +88,7 @@ def close_pop_up(s) -> bool:
    :platform: Windows, Unix
    :synopsis: Модуль для работы с авторизацией поставщика Kualastyle.
 """
-MODE = 'dev'
+
 
 
 def login(supplier: object) -> bool:
@@ -163,7 +163,7 @@ def close_pop_up(supplier: object) -> bool:
    :platform: Windows, Unix
    :synopsis: Модуль для работы с авторизацией поставщика Kualastyle.
 """
-MODE = 'dev'
+
 
 
 def login(supplier: object) -> bool:

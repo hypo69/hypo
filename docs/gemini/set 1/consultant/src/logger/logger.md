@@ -12,7 +12,7 @@
     :synopsis: Модуль для логирования.
     :TODO: В дальнейшем перенести конфигурацию в системную переменную
 """
-MODE = 'dev'
+
 
 import logging
 import colorama

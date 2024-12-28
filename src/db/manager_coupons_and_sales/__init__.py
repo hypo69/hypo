@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .product_group_reduction_cache_manager import ProductGroupReductionCacheManager
 from .product_campaigns import ProductCampaignsManager

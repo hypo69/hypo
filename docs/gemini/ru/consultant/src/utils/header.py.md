@@ -63,7 +63,7 @@ from src.logger.logger import logger
 from packaging.version import Version
 from pathlib import Path
 
-# MODE = 'dev' #
+#  #
 # TODO: Убрать неиспользуемую константу.
 
 

@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (my groups?)
 
 """
-MODE = 'dev'
+
 
 
 import header 
@@ -67,7 +67,7 @@ from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger import logger
 from src.utils.jjson import j_loads # Импорт функции для обработки JSON
 
-MODE = 'dev'
+
 
 
 # Переменная для хранения списка путей к файлам с группами.
@@ -149,7 +149,7 @@ from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.logger import logger
 from src.utils.jjson import j_loads # Импорт функции для обработки JSON
 
-MODE = 'dev'
+
 
 
 # Переменная для хранения списка путей к файлам с группами.

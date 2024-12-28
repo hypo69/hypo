@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.fast_api.gemini.backend """
 
@@ -50,7 +50,7 @@ MODE = 'dev'
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B{Пустая функция};
+    A[] --> B{Пустая функция};
 ```
 
 # <explanation>

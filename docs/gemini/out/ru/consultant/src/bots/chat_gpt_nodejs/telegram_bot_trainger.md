@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ This script creates a simple Telegram bot using the python-telegram-bot library."""
@@ -160,7 +160,7 @@ if __name__ == '__main__':
 	:synopsis:
     Модуль для создания Telegram бота, использующего OpenAI модели.
 """
-MODE = 'dev'
+
 
 
 """ Этот скрипт создаёт простой Telegram бот, используя библиотеку python-telegram-bot."""

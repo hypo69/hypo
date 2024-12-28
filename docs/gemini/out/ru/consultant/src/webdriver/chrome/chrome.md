@@ -34,7 +34,7 @@ Example of using the `Chrome` class:
     browser.quit()
 """
 
-MODE = 'dev'
+
 
 import os
 import sys
@@ -228,7 +228,7 @@ Example of using the `Chrome` class:
     browser.quit()
 """
 
-MODE = 'dev'
+
 
 import os
 import sys

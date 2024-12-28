@@ -9,7 +9,7 @@
 	:synopsis: function to check if the current time is within a specified interval with an optional timeout
 
 """
-MODE = 'dev'
+
 
 """ This module contains a function to check if the current time is within a specified interval with an optional timeout.
 

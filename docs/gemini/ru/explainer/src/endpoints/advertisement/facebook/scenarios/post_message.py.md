@@ -1,222 +1,241 @@
-## Анализ кода `post_message.py`
+## АНАЛИЗ КОДА `post_message.py`
 
-### 1. <алгоритм>
+### <алгоритм>
 
-**Общая схема работы:**
-
-1.  **`post_message(d, message, no_video, images, without_captions)`**: Основная функция для публикации сообщения.
-    *   Вызывает `post_title` для ввода заголовка и описания.
-    *   Вызывает `upload_media` для загрузки медиафайлов (изображений или видео).
-    *   Проверяет, является ли сообщение единичным, если да - отправляет `send`, если нет - вызывает `finish_editing_button` и `publish`.
-        *   Если `send` был нажат, завершает работу.
-        *   Если `finish_editing_button` и `publish` отработали успешно, возвращает `True`, в противном случае - `None`.
-
-2.  **`post_title(d, message)`**: Ввод заголовка и описания.
-    *   Прокручивает страницу вниз.
-    *   Открывает окно добавления сообщения.
-    *   Формирует текст сообщения из `message.title` и `message.description` (если `message` – `SimpleNamespace`) или использует строку `message`.
-    *   Отправляет сообщение в поле ввода.
-    *   Возвращает `True` при успехе, `None` в случае ошибки.
-
-3.  **`upload_media(d, media, no_video, without_captions)`**: Загрузка медиафайлов.
-    *   Открывает форму добавления медиа.
-    *   Преобразует `media` в список, если это не список.
-    *   Итерируется по медиафайлам.
-        *   Определяет путь к файлу (`local_saved_video` или `local_saved_image`, если `m` - `SimpleNamespace`).
-        *   Загружает медиафайл.
-    *   Если `without_captions` не установлен, вызывает `update_images_captions` для добавления описаний к загруженным изображениям.
-    *   Возвращает `True` при успехе, `None` в случае ошибки.
-
-4.  **`update_images_captions(d, media, textarea_list)`**: Добавление описаний к медиафайлам.
-    *   Загружает локализованные текстовые строки из `translations.json`.
-    *   Итерируется по списку медиафайлов.
-        *   Для каждого файла вызывает `handle_product`.
-
-5.  **`handle_product(product, textarea_list, i)`**: Добавление описания к одному медиафайлу.
-    *   Формирует сообщение на основе данных из `product` в зависимости от языка и направления текста (LTR/RTL).
-    *   Отправляет сообщение в соответствующий `textarea` по индексу `i`.
-
-6.  **`publish(d, attempts)`**: Функция для публикации сообщения.
-    *   Пытается нажать кнопку `finish_editing_button`.
-    *   Пытается нажать кнопку `publish`. Если не удается:
-        *   Пытается закрыть всплывающее окно или нажать "Не сейчас".
-        *   Делает задержку и повторяет попытку (максимум `attempts` раз).
-    *   После публикации, ожидает пока не станет доступным поле ввода.
-    *   Возвращает `True` при успехе, `None` в случае ошибки.
+**1. `post_title(d: Driver, message: SimpleNamespace | str) -> bool`**:
+   - **Начало:** Функция принимает драйвер `d` и сообщение `message` (либо `SimpleNamespace`, либо строка).
+   - **Прокрутка:** Прокручивает страницу назад (`d.scroll`) на 1200 пикселей.
+   - **Открытие поля ввода:** Открывает поле ввода сообщения, используя локатор `locator.open_add_post_box`.
+   - **Формирование сообщения:** Формирует строку сообщения `m`, объединяя `title` и `description` из `message`, если `message` - `SimpleNamespace`, иначе использует `message` как есть.
+   - **Ввод сообщения:** Вводит сообщение `m` в поле ввода, используя локатор `locator.add_message`.
+   - **Возврат:** Возвращает `True` при успешном выполнении, в противном случае возвращает `None`.
 
 **Пример:**
-Представим, что у нас есть `driver` (экземпляр `src.webdriver.driver.Driver`), `message` (экземпляр `SimpleNamespace` с `title`, `description` и списком `products`), `images` (список путей к изображениям), `no_video = False`, `without_captions = False`.
 
-1.  Вызывается `post_message(driver, message, no_video, images, without_captions)`.
-2.  Внутри `post_message` вызывается `post_title(driver, message)`, который отправляет заголовок и описание в поле ввода, после этого возвращает `True`.
-3.  Затем вызывается `upload_media(driver, message.products, no_video, without_captions)`, который загружает все медиафайлы, затем вызывает `update_images_captions` и возвращает `True`.
-4.  Если на странице присутствует кнопка `send`, то функция `post_message` завершает работу.
-5.  Если кнопки `send` нет, вызывается `finish_editing_button` и `publish`.
-6.  После успешной публикации возвращается `True`.
-
-### 2. <mermaid>
-
-```mermaid
-graph LR
-    A[post_message] --> B{post_title};
-    B --> C{upload_media};
-    C --> D{without_captions};
-    D -- No --> E[update_images_captions];
-     D -- Yes --> F[finish_editing_button];
-     F --> G[publish]
-    E --> F
-    A --> H{send}
-     H -- Yes --> K[Return True]
-    H -- No --> F
-    G --> I[Return True/None]
-    B --> J[Return True/None]
-    C --> L[Return True/None]
-
-   subgraph post_message
-     A
-     H
-    end
-    subgraph post_title
-        B
-        J
-    end
-    subgraph upload_media
-       C
-       D
-       E
-       L
-    end
-     subgraph publish
-      F
-      G
-      I
-    end
-   style A fill:#f9f,stroke:#333,stroke-width:2px
-    style H fill:#f9f,stroke:#333,stroke-width:2px
-
-    classDef actionfill fill:#f9f,stroke:#333,stroke-width:2px;
-    class  B,C,E,F actionfill;
-
+```python
+driver = Driver(...)
+message_data = SimpleNamespace(title="Заголовок", description="Описание")
+post_title(driver, message_data) # Вернёт True если всё успешно
+post_title(driver, "Простое сообщение") # Вернёт True если всё успешно
 ```
 
-**Анализ зависимостей `mermaid`:**
+**2. `upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], no_video: bool = False, without_captions:bool = False) -> bool`**:
+   - **Начало:** Функция принимает драйвер `d` и данные о медиа `media` (может быть `SimpleNamespace`, список `SimpleNamespace`, строка или список строк), а также флаги `no_video` и `without_captions`.
+   - **Проверка медиа:** Проверяет, есть ли медиа, если нет - выход.
+   - **Открытие формы:** Открывает форму добавления медиа, используя локатор `locator.open_add_foto_video_form`.
+   - **Нормализация списка:** Преобразует `media` в список `media_list`.
+   - **Цикл загрузки:** Цикл по `media_list` для загрузки каждого медиафайла.
+       - **Определение пути:** Определяет путь к медиафайлу `media_path` из `SimpleNamespace`(`local_saved_video` если `no_video=False`, иначе `local_saved_image`) или непосредственно из строки или `Path`.
+       - **Загрузка:** Загружает медиа, используя локатор `locator.foto_video_input`.
+       - **Задержка:** Делает паузу (1.5 сек) после загрузки.
+   - **Проверка подписей:** Если `without_captions = True`, функция завершается успешно.
+   - **Редактирование:** Кликает по кнопке редактирования загруженных медиа, используя локатор `locator.edit_uloaded_media_button`.
+   - **Поиск фрейма:** Ищет фрейм, содержащий загруженные медиа, используя локатор `locator.uploaded_media_frame`.
+   - **Поиск текстовых полей:** Ищет текстовые поля для добавления подписей, используя локатор `locator.edit_image_properties_textarea`.
+   - **Обновление подписей:** Вызывает функцию `update_images_captions` для добавления подписей.
+   - **Возврат:** Возвращает `True` при успешном выполнении, в противном случае возвращает `None`.
 
-*   Диаграмма показывает поток управления между основными функциями:
-    *   `post_message` инициирует процесс, вызывая `post_title`, затем `upload_media`, потом проверяет наличие кнопки `send`, и в зависимости от ее наличия - либо завершается, либо вызывает `finish_editing_button` и `publish`.
-    *   `post_title` отвечает за ввод заголовка и описания.
-    *   `upload_media` управляет загрузкой медиафайлов и, при необходимости, вызывает `update_images_captions`.
-    *  `publish` отвечает за публикацию поста.
-*  `without_captions` - условие, которое влияет на вызов `update_images_captions`. Если `without_captions = True`, `update_images_captions` не вызывается.
-*   Стрелки показывают последовательный вызов функций.
-*  Возвратные значения функций `Return True/None` показывают возможный результат выполнения каждой из функций.
-*  Блоки `post_message`, `post_title`, `upload_media`, `publish` показывают логическое разделение кода по функциональным задачам.
-*   В стилях диаграммы выделены блоки-действия (`classDef actionfill`).
+**Пример:**
+```python
+driver = Driver(...)
+media_files = [
+    SimpleNamespace(local_saved_image="path/to/image1.jpg", ...),
+    SimpleNamespace(local_saved_image="path/to/image2.png", ...)
+]
+upload_media(driver, media_files) # Вернёт True если всё успешно
 
-### 3. <объяснение>
+media_video = SimpleNamespace(local_saved_video="path/to/video.mp4", ...)
+upload_media(driver, media_video, no_video=False)  # Вернёт True если всё успешно
+upload_media(driver, "path/to/image.jpg",  without_captions=True) # Вернёт True если всё успешно
+```
+
+**3. `update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None`**:
+   - **Начало:** Принимает драйвер `d`, список медиа `media` и список текстовых полей `textarea_list`.
+    - **Загрузка локализации:** Загружает локализацию из `translations.json`.
+   - **Цикл обработки продуктов:** Итерируется по списку `media` и для каждого элемента вызывает `handle_product`.
+
+**4. `handle_product(product: SimpleNamespace, textarea_list: List[WebElement], i: int) -> None`**:
+   - **Начало:** Принимает продукт `product`, список текстовых полей `textarea_list` и индекс `i`.
+   - **Определение языка:** Определяет язык из `product.language` и направление текста (LTR или RTL) из загруженных локализаций.
+   - **Формирование сообщения:** Создаёт сообщение `message` на основе атрибутов `product` (название, описание, цена, скидка и т.д.) с учётом направления текста.
+   - **Отправка сообщения:** Отправляет сформированное сообщение в соответствующее текстовое поле `textarea_list[i]`.
+
+**5. `publish(d:Driver, attempts = 5) -> bool`**:
+    - **Начало:** Принимает драйвер `d` и количество попыток `attempts`.
+    - **Проверка попыток:** Если `attempts` < 0, то выход.
+    - **Нажатие "Завершить редактирование":** Выполняет клик по `locator.finish_editing_button`.
+    - **Нажатие "Опубликовать":** Выполняет клик по `locator.publish`.
+    - **Обработка попапов:** Если `publish` не удался, то обрабатываются попапы `locator.close_pop_up` и `locator.not_now`, с последующими попытками.
+    - **Ожидание:** Если не удалось опубликовать и попытки не закончились, ждем 5 секунд и повторяем попытку.
+    - **Ожидание открытия поля ввода:** Ждет, пока не откроется поле ввода сообщения, если не открылось, то обрабатываются попапы, и делаются повторные попытки.
+    - **Возврат:** Возвращает `True` при успешном выполнении, в противном случае возвращает `None`.
+
+**6. `promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool`**:
+   - **Начало:** Принимает драйвер `d`, категорию `category` и список продуктов `products`.
+   - **Публикация заголовка:** Вызывает `post_title` для установки заголовка и описания.
+   - **Загрузка медиа:** Вызывает `upload_media` для загрузки медиа.
+   - **Завершение редактирования:** Кликает по `locator.finish_editing_button`.
+   - **Публикация:** Кликает по `locator.publish`.
+   - **Возврат:** Возвращает `True` при успешном выполнении, в противном случае возвращает `None`.
+
+**7. `post_message(d: Driver, message: SimpleNamespace, no_video: bool = False, images:Optional[str | list[str]] = None, without_captions:bool = False) -> bool`**:
+   - **Начало:** Принимает драйвер `d`, сообщение `message`, флаги `no_video`, `images` и `without_captions`.
+   - **Публикация заголовка:** Вызывает `post_title` для установки заголовка и описания.
+   - **Загрузка медиа:** Вызывает `upload_media` для загрузки медиа.
+    - **Проверка на кнопку отправки:** Если есть локатор `send`, то выход из функции (если одно изображение).
+   - **Завершение редактирования:** Кликает по `locator.finish_editing_button`.
+    - **Публикация:** Вызывает `publish` для публикации сообщения.
+   - **Возврат:** Возвращает `True` при успешном выполнении, в противном случае возвращает `None`.
+
+### <mermaid>
+```mermaid
+flowchart TD
+    Start(Start) --> PostTitle[post_title(d, message)]
+    PostTitle -- Success --> UploadMedia[upload_media(d, media, no_video, without_captions)]
+    PostTitle -- Failure --> End(End)
+    UploadMedia -- Success --> CheckSendButton{Check locator.send}
+    UploadMedia -- Failure --> End
+    CheckSendButton -- True --> End
+    CheckSendButton -- False --> FinishEditingButton[d.execute_locator(locator.finish_editing_button)]
+    FinishEditingButton -- Success --> Publish[publish(d)]
+    FinishEditingButton -- Failure --> End
+    Publish -- Success --> End
+    Publish -- Failure --> End
+    End(End)
+
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#ccf,stroke:#333,stroke-width:2px
+```
+
+```mermaid
+flowchart TD
+    Start[Start] --> Header[<code>header.py</code><br> Determine Project Root]
+    
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+```
+### <объяснение>
 
 **Импорты:**
 
-*   `time`: Используется для задержек (`time.sleep`).
-*   `pathlib.Path`: Используется для работы с путями к файлам.
-*   `types.SimpleNamespace`: Используется для создания объектов с произвольными атрибутами.
-*   `typing.Dict`, `typing.List`, `typing.Optional`: Используются для аннотации типов.
-*   `selenium.webdriver.remote.webelement.WebElement`: Представляет веб-элемент на странице.
-*   `src.gs`: Глобальные настройки проекта.
-*   `src.webdriver.driver.Driver`: Класс для управления браузером.
-*   `src.utils.jjson.j_loads_ns`: Функция для загрузки данных из JSON файла в `SimpleNamespace`.
-*   `src.utils.printer.pprint`: Функция для красивого вывода данных.
-*   `src.logger.logger.logger`: Логгер для записи сообщений.
+-   `time`: Используется для задержек (`time.sleep`).
+-   `pathlib.Path`: Используется для работы с путями к файлам.
+-   `types.SimpleNamespace`: Используется для создания объектов с атрибутами, доступ к которым осуществляется через точку.
+-   `typing.Dict, typing.List, typing.Optional`: Используются для аннотации типов, делая код более читаемым и понятным.
+-   `selenium.webdriver.remote.webelement.WebElement`: Тип для элементов веб-страницы.
+-   `src.gs`: Глобальные настройки проекта.
+-   `src.webdriver.driver.Driver`: Класс для управления веб-драйвером Selenium.
+-   `src.utils.jjson.j_loads_ns`: Функция для загрузки JSON-данных в `SimpleNamespace`.
+-   `src.utils.printer.pprint`: Функция для "красивого" вывода данных в консоль.
+-   `src.logger.logger.logger`: Объект для логирования.
 
 **Классы:**
 
-*   `Driver` (из `src.webdriver.driver`):
-    *   **Роль**: Управляет браузером, выполняет действия на странице (скроллинг, ввод текста, клики), работает с локаторами, ожиданиями.
-    *   **Атрибуты**: Различные настройки WebDriver (например, путь к драйверу, опции браузера).
-    *   **Методы**: `scroll`, `execute_locator`, `wait` и др.
-    *   **Взаимодействие**: Вызывается из всех функций для взаимодействия со страницей.
+-   `Driver`: Класс, отвечающий за управление веб-драйвером Selenium. Он содержит методы для взаимодействия с элементами веб-страницы, прокрутки, выполнения JS-скриптов, ожидания и т.д.
 
 **Функции:**
 
-*   `post_title(d, message)`:
-    *   **Аргументы**:
-        *   `d` (`Driver`): Экземпляр `Driver` для взаимодействия с веб-страницей.
-        *   `message` (`SimpleNamespace` | `str`): Объект с атрибутами `title` и `description` или строка с текстом сообщения.
-    *   **Возвращаемое значение**: `True` при успехе, `None` при ошибке.
-    *   **Назначение**: Вводит заголовок и описание сообщения в поле ввода.
-    *   **Пример**: `post_title(driver, SimpleNamespace(title="Заголовок", description="Описание"))`
+-   `post_title(d: Driver, message: SimpleNamespace | str) -> bool`:
+    -   **Аргументы**:
+        -   `d`: Объект драйвера для управления браузером.
+        -   `message`: Сообщение в виде `SimpleNamespace` (с атрибутами `title` и `description`) или строка.
+    -   **Возвращаемое значение**: `bool`. `True` в случае успеха.
+    -   **Назначение**: Публикует заголовок и описание сообщения.
+    -   **Примеры**:
 
-*   `upload_media(d, media, no_video, without_captions)`:
-    *   **Аргументы**:
-        *   `d` (`Driver`): Экземпляр `Driver`.
-        *   `media` (`SimpleNamespace` | `List[SimpleNamespace]` | `str` | `list[str]`): Медиафайлы для загрузки. Может быть путем к одному файлу, списком путей, или списком объектов, где путь указан в `local_saved_image` или `local_saved_video`.
-        *   `no_video` (`bool`): Флаг, указывающий, что видео не загружается.
-        *   `without_captions` (`bool`): Флаг, указывающий, что подписи не должны обновляться.
-    *   **Возвращаемое значение**: `True` при успехе, `None` при ошибке.
-    *   **Назначение**: Загружает медиафайлы на страницу и при необходимости обновляет подписи.
+        ```python
+        post_title(driver, SimpleNamespace(title="Заголовок", description="Описание"))
+        post_title(driver, "Текст сообщения")
+        ```
+-   `upload_media(d: Driver, media: SimpleNamespace | List[SimpleNamespace] | str | list[str], no_video: bool = False, without_captions:bool = False) -> bool`:
+    -   **Аргументы**:
+        -   `d`: Объект драйвера для управления браузером.
+        -   `media`: Данные о медиафайлах (путь, список путей).
+            - Может быть как `SimpleNamespace`, который содержит атрибут  `local_saved_image` (путь к изображению) или `local_saved_video` (путь к видео), так и список таких объектов.
+            -  Так же можно передать путь к изображению/видео в виде строки.
+        -   `no_video`: Флаг для отмены загрузки видео.
+        -   `without_captions`: Флаг отмены подписей к изображениям.
+    -   **Возвращаемое значение**: `bool`. `True` в случае успеха.
+    -   **Назначение**: Загружает медиафайлы и обновляет подписи.
+    -   **Примеры**:
 
-*   `update_images_captions(d, media, textarea_list)`:
-    *   **Аргументы**:
-        *   `d` (`Driver`): Экземпляр `Driver`.
-        *   `media` (`List[SimpleNamespace]`): Список объектов с описаниями для загруженных изображений.
-        *   `textarea_list` (`List[WebElement]`): Список полей ввода для подписей.
-    *   **Возвращаемое значение**: `None`.
-    *   **Назначение**: Обновляет подписи к загруженным медиафайлам.
+        ```python
+        upload_media(driver, [SimpleNamespace(local_saved_image="path/to/image.jpg")])
+        upload_media(driver, SimpleNamespace(local_saved_video="path/to/video.mp4"), no_video=False)
+        upload_media(driver, "path/to/image.jpg", without_captions=True)
+        ```
 
-*    `handle_product(product, textarea_list, i)`:
-    *   **Аргументы**:
-        *    `product` (`SimpleNamespace`): Объект, содержащий информацию о продукте.
-        *    `textarea_list` (`List[WebElement]`): Список текстовых полей.
-        *    `i` (`int`): Индекс текущего элемента.
-    *   **Возвращаемое значение**: `None`
-    *   **Назначение**: Формирует сообщение с информацией о продукте в зависимости от его языка и направления текста и вставляет в соответствующее поле ввода.
+-   `update_images_captions(d: Driver, media: List[SimpleNamespace], textarea_list: List[WebElement]) -> None`:
+    -   **Аргументы**:
+        -   `d`: Объект драйвера для управления браузером.
+        -   `media`: Список объектов `SimpleNamespace` с данными о продуктах для создания подписи.
+        -   `textarea_list`: Список веб-элементов `textarea`, в которые нужно вставить подписи.
+    -   **Возвращаемое значение**: `None`.
+    -   **Назначение**: Обновляет подписи к загруженным медиафайлам, используя данные о продуктах.
 
-*    `publish(d, attempts)`:
-    *   **Аргументы**:
-        *   `d` (`Driver`): Экземпляр `Driver`.
-        *   `attempts` (`int`): Количество попыток для публикации.
-    *   **Возвращаемое значение**: `True` при успехе, `None` в случае ошибки.
-    *   **Назначение**: Осуществляет публикацию сообщения.
+-    `handle_product(product: SimpleNamespace, textarea_list: List[WebElement], i: int) -> None`:
+        -   **Аргументы**:
+            -   `product`: Обьект `SimpleNamespace` с данными о продукте.
+            -   `textarea_list`: Список веб-элементов `textarea`.
+            -  `i`: Индекс для определения, в какой `textarea` нужно вставить подпись.
+        -   **Возвращаемое значение**: `None`.
+        -   **Назначение**: Генерирует строку с информацией о продукте и вставляет её в соответствующий `textarea`.
 
-*   `promote_post(d, category, products, no_video)`:
-    *   **Аргументы**:
-        *   `d` (`Driver`): Экземпляр `Driver`.
-        *   `category` (`SimpleNamespace`): Объект с информацией о категории.
-        *   `products` (`List[SimpleNamespace]`): Список объектов с информацией о продуктах.
-        *   `no_video` (`bool`): Флаг, указывающий, что видео не загружается.
-    *   **Возвращаемое значение**: `True` при успехе, `None` при ошибке.
-    *   **Назначение**: Управляет процессом продвижения поста.
+-   `publish(d:Driver, attempts = 5) -> bool`:
+    -   **Аргументы**:
+         - `d`: Обьект `Driver`.
+         - `attempts`: Количество попыток.
+    -   **Возвращаемое значение**: `bool`. `True` в случае успеха.
+    -   **Назначение**: Нажимает кнопку публикации поста, обрабатывает попапы и пробует несколько раз.
 
-*   `post_message(d, message, no_video, images, without_captions)`:
-    *   **Аргументы**:
-        *   `d` (`Driver`): Экземпляр `Driver`.
-        *   `message` (`SimpleNamespace`): Объект с данными для сообщения.
-        *   `no_video` (`bool`): Флаг, указывающий, что видео не загружается.
-        *   `images` (`Optional[str | list[str]]`): Список путей к изображениям.
-        *   `without_captions` (`bool`): Флаг, указывающий, что подписи не должны обновляться.
-    *   **Возвращаемое значение**: `True` при успехе, `None` при ошибке.
-    *   **Назначение**: Координирует публикацию сообщения.
+-   `promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video: bool = False) -> bool`:
+    -   **Аргументы**:
+        -   `d`: Объект драйвера для управления браузером.
+        -   `category`: Объект `SimpleNamespace` с заголовком и описанием.
+        -   `products`: Список объектов `SimpleNamespace` с путями к медиафайлам.
+        -    `no_video`: Флаг для отмены загрузки видео.
+    -   **Возвращаемое значение**: `bool`. `True` в случае успеха.
+    -   **Назначение**:  Выполняет полный цикл создания поста с заголовком, медиа и публикацией.
+-   `post_message(d: Driver, message: SimpleNamespace, no_video: bool = False, images:Optional[str | list[str]] = None, without_captions:bool = False) -> bool`:
+    -   **Аргументы**:
+        -   `d`: Объект драйвера для управления браузером.
+        -   `message`: Объект `SimpleNamespace` с заголовком и описанием, а так же с массивом  `products` (путями к медиафайлам).
+        -    `no_video`: Флаг для отмены загрузки видео.
+        -    `images`: Путь или массив путей к медиа файлам.
+        -   `without_captions`: Флаг отмены подписей к изображениям.
+    -   **Возвращаемое значение**: `bool`. `True` в случае успеха.
+    -   **Назначение**:  Выполняет полный цикл создания поста с заголовком, медиа и публикацией.
 
 **Переменные:**
+-   `MODE`: Строковая константа для определения режима работы.
+-   `locator`: Объект `SimpleNamespace`, содержащий локаторы для веб-элементов, загруженные из JSON-файла.
+-    `media_path`: Строка или обьект `Path`, путь к медиафайлу.
+-   `local_units`: Объект `SimpleNamespace`, содержащий локализованные строки.
+- `media_list`: Список медиафайлов.
+- `attempts`: Количество попыток для публикации.
+- `textarea_list`: Список веб-элементов `textarea`.
+- `m`: Сообщение для отправки.
 
-*   `MODE`: Строка, определяющая режим работы (например, `dev`).
-*   `locator`:  Объект `SimpleNamespace`, содержащий локаторы элементов, загруженные из JSON файла (`post_message.json`).
+**Потенциальные ошибки и области для улучшения:**
 
-**Потенциальные ошибки и улучшения:**
+-   **Обработка ошибок:**
+    -   В блоках `try-except` не всегда обрабатываются конкретные исключения, что может затруднить отладку.
+    -   Стоит добавить более детальные логи при ошибках с указанием, в каком именно месте возникла проблема, а так же добавить обработку конкретных типов ошибок.
+-   **Повторение кода:**
+    -   Код в `promote_post` и `post_message` очень похож, можно выделить общую логику в отдельную функцию.
+-   **Жестко заданные задержки:**
+    -   Использование `time.sleep()` может замедлить выполнение. Лучше использовать ожидания от Selenium.
+-   **Локаторы:**
+    -   Необходимо убедиться, что локаторы в `locators.json` всегда актуальны.
+- **Улучшения:**
+    - Добавить обработку ошибок в `handle_product`.
+    - Добавить возможность загружать разные типы медиа (не только изображения и видео).
+    - Добавить валидацию входных данных.
 
-*   Обработка ошибок: В некоторых функциях (например, `upload_media`, `handle_product`) есть общая обработка исключений (`except Exception as ex`). Было бы лучше сделать обработку более конкретной, отлавливая более узкие исключения.
-*   `publish` может уйти в бесконечный цикл из за плохого состояния страницы. Необходимо доработать выход из рекурсивного вызова, и/или выставить ограничение на максимальное количество рекурсивных вызовов.
-*   Улучшить логику повторной попытки при неудачной публикации, добавив проверку по конкретному типу ошибки, а не только по наличию элемента на странице.
-*   Использовать `dataclasses` вместо `SimpleNamespace` для более явного определения структуры данных.
-*   В `handle_product` можно улучшить форматирование сообщения с использованием f-строк и более четкой логики для добавления полей (например, используя словарь для соответствия полей и локализованных строк).
-*   В `post_message` - не совсем понятно назначение переменной `images` так как она нигде не используется.
-*   Функции `promote_post` и `post_message` выполняют похожие действия и могут быть объединены.
+**Взаимосвязь с другими частями проекта:**
 
-**Взаимосвязи с другими частями проекта:**
-
-*   `src.webdriver.driver`: Используется для управления браузером и взаимодействия с веб-страницей.
-*   `src.utils.jjson`: Используется для загрузки локаторов из JSON файла и локализованных строк.
-*   `src.logger.logger`: Используется для логирования событий.
-*   `src.gs`: Используется для определения путей к файлам в проекте.
-*   `translations.json` -  данный файл используется для получения локализованных текстовых строк.
-
-Этот анализ дает полное понимание кода, его функциональности, зависимостей и потенциальных улучшений.
+-   **`src.gs`**: Используется для получения путей к файлам и других глобальных настроек.
+-   **`src.webdriver.driver.Driver`**: Используется для взаимодействия с браузером и веб-страницей.
+-   **`src.utils.jjson.j_loads_ns`**: Используется для загрузки локаторов и локализаций из JSON-файлов.
+-   **`src.logger.logger.logger`**: Используется для логирования событий и ошибок.
+-   **`src.advertisement.facebook.locators.post_message.json`**: Содержит локаторы для элементов на странице Facebook.
+-   **`src.advertisement.facebook.scenarios.translations.json`**: Содержит переводы для подписей к изображениям.

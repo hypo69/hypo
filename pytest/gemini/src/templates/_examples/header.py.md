@@ -11,7 +11,7 @@ from src.category import Category
 from src.utils.jjson import j_dumps, j_loads, pprint, save_text_file
 from src.logger.logger import logger, StringNormalizer, ProductFieldsValidator
 # Assuming MODE is defined in the original header.py, if not add a mock
-MODE = 'dev' 
+ 
 
 # Fixture to mock the current working directory to ensure tests are consistent
 @pytest.fixture

@@ -69,7 +69,7 @@ from src.webdriver.driver import Driver
 from src.suppliers import Supplier
 
 
-MODE = 'dev'
+
 
 
 def get_list_products_in_category(supplier: Supplier) -> list[str, str, None]:

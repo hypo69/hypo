@@ -10,9 +10,9 @@ import pytest
 # Example fixtures for potential dependencies or settings, not strictly needed for the given code
 @pytest.fixture
 def setup_mode_dev():
-    """Setup the environment to MODE = 'dev'."""
+    """Setup the environment to ."""
     global MODE
-    MODE = 'dev'
+    
     yield
     # Teardown if necessary, but nothing in this scenario to teardown.
 

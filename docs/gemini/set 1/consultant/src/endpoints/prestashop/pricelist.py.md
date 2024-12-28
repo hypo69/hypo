@@ -11,7 +11,7 @@
 обновления цен товаров через API PrestaShop.
 
 """
-MODE = 'dev'
+
 
 import sys
 import os
@@ -107,7 +107,7 @@ class PriceListRequester(PrestaShop):
 обновления цен товаров через API PrestaShop.
 
 """
-MODE = 'dev'
+
 
 import sys
 import os

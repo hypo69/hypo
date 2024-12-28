@@ -6,7 +6,7 @@
 
 1.  **Начало**: Запуск скрипта `header.py`.
 2.  **Определение `MODE`**: Присваивание переменной `MODE` значения `'dev'`.
-    *   *Пример*: `MODE = 'dev'`
+    *   *Пример*: ``
 3.  **Импорт модулей**: Импорт необходимых модулей, таких как `sys`, `json`, `Version` из `packaging.version` и `Path` из `pathlib`.
     *   *Пример*: `import sys`, `import json`, `from packaging.version import Version`, `from pathlib import Path`
 4.  **Определение функции `set_project_root`**:
@@ -44,7 +44,7 @@
 
 ```mermaid
 graph LR
-    A[Start] --> B(MODE = 'dev');
+    A[Start] --> B();
     B --> C{Import Modules};
     C --> D[set_project_root(marker_files)];
     D --> E{Find Project Root};
@@ -73,7 +73,7 @@ graph LR
 
 1.  `graph LR`: Определение типа диаграммы как "направленный граф" (Left to Right).
 2.  `A[Start]`: Начало процесса. `A` - это имя узла, а `Start` - текст, отображаемый в узле.
-3.  `B(MODE = 'dev')`: Узел, представляющий присвоение переменной `MODE` значения `'dev'`.
+3.  `B()`: Узел, представляющий присвоение переменной `MODE` значения `'dev'`.
 4.  `C{Import Modules}`: Узел-ромб, представляющий импорт модулей.
 5.  `D[set_project_root(marker_files)]`: Узел, представляющий вызов функции `set_project_root` с аргументом `marker_files`.
 6.  `E{Find Project Root}`: Узел-ромб, представляющий логику поиска корня проекта.

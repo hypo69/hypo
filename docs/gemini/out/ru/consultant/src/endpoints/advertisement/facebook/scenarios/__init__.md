@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .login import login
 from .post_message  import *
@@ -50,7 +50,7 @@ from .post_ad import post_ad
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импорт нужных модулей
 from .login import login
@@ -106,7 +106,7 @@ logger = logging.getLogger(__name__)
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импорт нужных модулей
 from .login import login

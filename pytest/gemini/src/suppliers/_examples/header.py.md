@@ -68,6 +68,6 @@ def test_mode_is_dev():
     """
     Check if the MODE variable is set to 'dev'.
     """
-    MODE = 'dev'
+    
     assert MODE == 'dev', "MODE should be set to 'dev'."
 ```

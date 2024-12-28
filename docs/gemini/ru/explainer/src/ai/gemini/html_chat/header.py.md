@@ -4,7 +4,7 @@
 
 1.  **Установка режима `MODE`:**
     *   Присваиваем глобальной переменной `MODE` значение `'dev'`. Это может указывать на то, что код находится в режиме разработки.
-    *   **Пример:** `MODE = 'dev'`
+    *   **Пример:** ``
 
 2.  **Определение корневой директории проекта `__root__`:**
     *   Получаем текущую рабочую директорию с помощью `os.getcwd()`.
@@ -25,7 +25,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> SetMode[Set MODE = 'dev']
+    Start --> SetMode[Set ]
     SetMode --> GetCurrentDir[Get current working directory: <br><code>os.getcwd()</code>]
     GetCurrentDir --> FindHypotezIndex[Find last index of 'hypotez' in path:<br> <code>os.getcwd().rfind(r'hypotez')</code>]
     FindHypotezIndex --> ExtractRootPath[Extract root path :<br> <code>os.getcwd()[:index + 7]</code>]

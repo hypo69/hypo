@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .scenario_pricelist import Mexiron
@@ -61,7 +61,7 @@ graph LR
 
 ### Variables:
 
-- `MODE = 'dev'`: This global variable likely controls aspects of the scenario, setting different behaviours in development ('dev') versus production. Its value is likely used elsewhere within the project.
+- ``: This global variable likely controls aspects of the scenario, setting different behaviours in development ('dev') versus production. Its value is likely used elsewhere within the project.
 
 ### Dependencies and relationships:
 

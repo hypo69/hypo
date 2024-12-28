@@ -12,7 +12,7 @@
     :synopsis: Модуль для перевода текста с использованием OpenAI API.
 """
 
-MODE = 'dev'
+
 
 import openai
 from src import gs
@@ -85,7 +85,7 @@ def translate(text, source_language, target_language):
     Этот модуль предоставляет функцию для перевода текста с использованием API OpenAI.
 """
 
-MODE = 'dev'
+
 
 import openai
 from src import gs
@@ -158,7 +158,7 @@ def translate(text: str, source_language: str, target_language: str) -> str:
     Этот модуль предоставляет функцию для перевода текста с использованием API OpenAI.
 """
 
-MODE = 'dev'
+
 
 import openai
 from src import gs

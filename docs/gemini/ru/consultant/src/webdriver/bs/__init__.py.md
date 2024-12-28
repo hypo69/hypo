@@ -35,7 +35,7 @@
 """
 
 from src.logger.logger import logger # Импортирован логгер для возможного использования в будущем
-MODE = 'dev'
+
 #  импортирует класс BS из модуля bs
 from .bs import BS
 ```

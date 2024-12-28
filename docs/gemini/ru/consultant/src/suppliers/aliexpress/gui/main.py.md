@@ -56,7 +56,7 @@
     if __name__ == "__main__":
         main()
 """
-MODE = 'dev'
+
 
 import asyncio
 import sys

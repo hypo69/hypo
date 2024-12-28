@@ -17,7 +17,7 @@
    :platform: Windows, Unix
    :synopsis: Извлечение ссылок на чаты из ChatGPT.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.chat_gpt.scenarios """
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
    :platform: Windows, Unix
    :synopsis: Извлечение ссылок на чаты из ChatGPT.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -141,7 +141,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.chat_gpt.scenarios """
 

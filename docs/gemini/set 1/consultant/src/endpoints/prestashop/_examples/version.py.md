@@ -16,7 +16,7 @@
 from typing import Dict, Any
 from src.logger.logger import logger  # импортируем logger
 
-MODE = 'dev'
+
 
 __name__: str
 """
@@ -75,7 +75,7 @@ __author__ = 'hypotez '
 from typing import Dict, Any
 from src.logger.logger import logger  # импортируем logger
 
-MODE = 'dev'
+
 
 __name__: str
 """

@@ -20,7 +20,7 @@ from __future__ import annotations
     - upload_media: Загрузка файла или списка файлов
 
 """
-MODE = 'dev'
+
 
 import os, sys
 from pathlib import Path

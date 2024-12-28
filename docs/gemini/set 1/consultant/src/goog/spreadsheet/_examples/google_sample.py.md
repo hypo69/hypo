@@ -32,7 +32,7 @@ from googleapiclient.errors import HttpError
 
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -139,7 +139,7 @@ from googleapiclient.errors import HttpError
 
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -88,7 +88,7 @@ a = AliPromoCampaign(campaign_name,category_name, 'EN','USD'))
    :platform: Windows, Unix
    :synopsis: Модуль для примеров создания рекламных кампаний AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -111,7 +111,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.suppliers.aliexpress.campaign._examples
@@ -205,7 +205,7 @@ except Exception as e:
    :platform: Windows, Unix
    :synopsis: Модуль для примеров создания рекламных кампаний AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -228,7 +228,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.suppliers.aliexpress.campaign._examples

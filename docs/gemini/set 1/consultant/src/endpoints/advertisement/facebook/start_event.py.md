@@ -21,7 +21,7 @@
     python start_event.py
 """
 # Установка режима работы (разработка/production).
-MODE = 'dev'
+
 
 # Импорт необходимых модулей.
 from math import log
@@ -108,7 +108,7 @@ except KeyboardInterrupt:
     python start_event.py
 """
 # Установка режима работы (разработка/production).
-MODE = 'dev'
+
 
 # Импорт необходимых модулей.
 from math import log

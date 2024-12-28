@@ -19,7 +19,7 @@ import os
 from pathlib import Path
 
 # Режим работы приложения. Может быть 'dev' или 'prod'.
-MODE = 'dev'
+
 
 # Получение корневой директории проекта.
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
@@ -53,7 +53,7 @@ import os
 from pathlib import Path
 
 # Режим работы приложения. Может быть 'dev' или 'prod'.
-MODE = 'dev'
+
 
 # Получение корневой директории проекта.
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])

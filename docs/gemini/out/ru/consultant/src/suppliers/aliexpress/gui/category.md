@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Window interface for preparing advertising campaigns """
@@ -42,7 +42,7 @@ from src.suppliers.aliexpress.campaign import AliCampaignEditor
     :platform: Windows, Unix
     :synopsis: Модуль предоставляет интерфейс для подготовки рекламных кампаний на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """ Интерфейс окна для подготовки рекламных кампаний """
@@ -209,7 +209,7 @@ class CategoryEditor(QtWidgets.QWidget):
     :platform: Windows, Unix
     :synopsis: Модуль предоставляет интерфейс для подготовки рекламных кампаний на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """ Интерфейс окна для подготовки рекламных кампаний """

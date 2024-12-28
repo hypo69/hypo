@@ -55,7 +55,7 @@ from src.logger.logger import logger # Импортируем logger
 from packaging.version import Version
 
 
-MODE = 'dev'
+
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Определяет корневую директорию проекта.

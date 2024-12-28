@@ -12,7 +12,7 @@
 	:synopsis: Base class for suppliers
 
 """
-MODE = 'dev'
+
 
 
 import importlib

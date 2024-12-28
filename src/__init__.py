@@ -21,6 +21,6 @@ Usage Example
 
     # No usage example available for this module.
 """
-MODE = 'dev'
+
 
 from .credentials import gs

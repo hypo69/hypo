@@ -32,7 +32,7 @@
 ```md
 ## <алгоритм>
 1. **Начало**:
-   - Задается константа `MODE = 'dev'`, определяющая режим работы.
+   - Задается константа ``, определяющая режим работы.
    - Импортируются необходимые модули: `sys`, `json`, `Version` из `packaging.version`, `Path` из `pathlib`.
 
 2. **`set_project_root(marker_files=('__root__'))`**:
@@ -79,7 +79,7 @@
 ## <mermaid>
 ```mermaid
 flowchart TD
-    Start[Начало] --> SetMode[MODE = 'dev']
+    Start[Начало] --> SetMode[]
     SetMode --> ImportModules[Импорт модулей: sys, json, Version, Path]
     ImportModules --> SetProjectRootFunc[Определение функции `set_project_root`]
     SetProjectRootFunc --> CallSetProjectRoot[Вызов `__root__ = set_project_root()`]

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from global_settingspread import Spreadsheet, Worksheet
@@ -203,7 +203,7 @@ The diagram shows dependencies between:
 
 **Variables:**
 
-- `MODE = 'dev'`: A global variable likely used for configuration, in a development or production context (e.g., for different logging or database interactions).
+- ``: A global variable likely used for configuration, in a development or production context (e.g., for different logging or database interactions).
 
 
 **Potential Errors/Improvements:**

@@ -23,7 +23,7 @@
     products = [SimpleNamespace(local_saved_image="path/to/image.jpg", ...)]
     await promote_post(driver, category, products)
 """
-MODE = 'dev'
+
 
 import time
 import asyncio
@@ -307,7 +307,7 @@ async def promote_post(d: Driver, category: SimpleNamespace, products: List[Simp
     products = [SimpleNamespace(local_saved_image="path/to/image.jpg", ...)]
     await promote_post(driver, category, products)
 """
-MODE = 'dev'
+
 
 import time
 import asyncio

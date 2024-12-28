@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .training import OpenAIModel
@@ -37,7 +37,7 @@ import os
 # # ...
 # # from ... import ...
 
-MODE = 'dev'
+
 
 
 # # Импортируем класс из модуля training
@@ -77,7 +77,7 @@ import os
 # # ...
 # # from ... import ...
 
-MODE = 'dev'
+
 
 
 # # Импортируем класс из модуля training

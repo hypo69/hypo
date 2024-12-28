@@ -12,7 +12,7 @@
 	:synopsis:
 https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2
 """
-MODE = 'dev'
+
 
 from .playwrid import Playwrid
 ```
@@ -30,7 +30,7 @@ from .playwrid import Playwrid
    :platform: Windows, Unix
    :synopsis: Модуль для работы с Playwright.
 """
-MODE = 'dev'
+
 
 # Импорт класса Playwrid. Исправлено название модуля.
 from .playwright import Playwrid
@@ -53,7 +53,7 @@ from .playwright import Playwrid
    :platform: Windows, Unix
    :synopsis: Модуль для работы с Playwright.
 """
-MODE = 'dev'
+
 
 # Импорт класса Playwrid. Исправлено название модуля.
 # Исправлен импорт: from .playwrid import Playwrid -> from .playwright import Playwrid

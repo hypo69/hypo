@@ -10,7 +10,7 @@
 Модуль определяет путь к корневой директории проекта, загружает настройки из файла `settings.json`,
 инициализирует основные переменные проекта, такие как имя, версия, описание и т.д.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -136,7 +136,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Модуль определяет путь к корневой директории проекта, загружает настройки из файла `settings.json`,
 инициализирует основные переменные проекта, такие как имя, версия, описание и т.д.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

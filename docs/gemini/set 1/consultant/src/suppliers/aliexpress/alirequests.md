@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import pickle
 import requests
@@ -174,7 +174,7 @@ class AliRequests:
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import pickle
 import requests

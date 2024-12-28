@@ -42,7 +42,7 @@
         print(f"Project Name: {__project_name__}")
         print(f"Version: {__version__}")
 """
-MODE = 'dev'
+
 
 import sys
 # Импортируем json из src.utils.jjson
@@ -168,7 +168,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
         print(f"Project Name: {__project_name__}")
         print(f"Version: {__version__}")
 """
-MODE = 'dev'
+
 
 import sys
 # Импортируем json из src.utils.jjson

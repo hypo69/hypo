@@ -14,7 +14,7 @@ Functions:
     - `json2xml`: Convert JSON data to XML format.
     - `json2xls`: Convert JSON data to XLS format.
 """
-MODE = 'dev'
+
 import json
 import csv
 from types import SimpleNamespace

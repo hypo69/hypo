@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.chat_gpt """
 
@@ -157,7 +157,7 @@ model.stream_w(data_file_path=Path(gs.path.google_drive / 'chat_gpt' / 'conversa
 и сохранения данных из чатов GPT, а также для определения тональности.
 Модуль использует pandas для работы с данными, а также драйвер для работы с веб-страницами.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -179,7 +179,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.chat_gpt """
 
@@ -361,7 +361,7 @@ model.stream_w(data_file_path=Path(gs.path.google_drive / 'chat_gpt' / 'conversa
 и сохранения данных из чатов GPT, а также для определения тональности.
 Модуль использует pandas для работы с данными, а также драйвер для работы с веб-страницами.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -383,7 +383,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.chat_gpt """
 

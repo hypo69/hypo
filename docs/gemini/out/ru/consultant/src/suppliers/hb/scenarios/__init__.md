@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.scenarios """
 
@@ -67,7 +67,7 @@ from .login import login
 """
 import logging
 
-MODE = 'dev'
+
 
 # TODO: Добавьте документацию к переменной MODE.
 #  Опишите ее назначение и возможные значения.
@@ -128,7 +128,7 @@ def some_function():
 """
 import logging
 
-MODE = 'dev'
+
 # TODO: Добавьте документацию к переменной MODE.
 #  Опишите ее назначение и возможные значения.
 

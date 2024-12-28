@@ -63,7 +63,7 @@
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 AMAZON_URL = 'https://amazon.com/'
 
 def login(s) -> bool:

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .code_assistant import CodeAssistant
 ```
@@ -34,7 +34,7 @@ from .code_assistant import CodeAssistant
 """
 import json
 
-MODE = 'dev'
+
 
 # Импортируем класс CodeAssistant из подпапки.
 from .code_assistant import CodeAssistant
@@ -67,6 +67,6 @@ from .code_assistant import CodeAssistant
 """
 import json  # Импортируем модуль для работы с JSON.
 # # Импортируем класс CodeAssistant из подпапки.
-MODE = 'dev'  # Режим работы (например, 'dev', 'prod').
+  # Режим работы (например, 'dev', 'prod').
 
 from .code_assistant import CodeAssistant

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.cdata """
 
@@ -87,7 +87,7 @@ def login(self):
 import logging
 from src.utils.jjson import j_loads, j_loads_ns  # импорт необходимых функций
 
-MODE = 'dev'
+
 
 def login(self):
     """
@@ -169,7 +169,7 @@ def login(self):
 import logging
 from src.utils.jjson import j_loads, j_loads_ns  # импорт необходимых функций
 
-MODE = 'dev'
+
 
 def login(self):
     """

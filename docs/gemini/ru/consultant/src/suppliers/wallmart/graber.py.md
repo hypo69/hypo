@@ -75,7 +75,7 @@ from src.logger.logger import logger
 from src.webdriver.exceptions import ExecuteLocatorException
 
 
-MODE = 'dev'
+
 SUPPLIER_PREFIX = 'wallmart'
 """Строковый префикс поставщика."""
 

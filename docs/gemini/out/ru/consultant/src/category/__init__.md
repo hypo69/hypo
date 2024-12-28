@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .category import Category
 ```
@@ -35,7 +35,7 @@ import json #Импорт json для совместимости, но не ис
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт logger для логирования
 
-MODE = 'dev'
+
 
 from .category import Category
 
@@ -69,7 +69,7 @@ import json #Импорт json для совместимости, но не ис
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт logger для логирования
 
-MODE = 'dev'
+
 
 from .category import Category
 

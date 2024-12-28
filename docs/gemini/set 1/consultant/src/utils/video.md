@@ -12,7 +12,7 @@
 	:synopsis: Video Saving Utilities
 
 """
-MODE = 'dev'
+
 
 """ This module provides asynchronous functions for downloading and saving video files, as well as retrieving video data.  It includes error handling and logging for robust operation.
 
@@ -162,7 +162,7 @@ if __name__ == "__main__":
 	:synopsis: Video Saving Utilities
 
 """
-MODE = 'dev'
+
 
 """ Этот модуль предоставляет асинхронные функции для загрузки и сохранения видеофайлов, а также извлечения данных из видео. Он включает обработку ошибок и логирование для надежной работы.
 

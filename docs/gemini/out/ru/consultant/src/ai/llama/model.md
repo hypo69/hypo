@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.llama """
 
@@ -58,7 +58,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт функции логирования
 
 
-MODE = 'dev'
+
 
 
 def some_function():
@@ -122,7 +122,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт функции логирования
 
 
-MODE = 'dev'
+
 
 
 def some_function():

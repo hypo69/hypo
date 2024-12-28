@@ -39,7 +39,7 @@
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 def login(s) -> bool:
     """

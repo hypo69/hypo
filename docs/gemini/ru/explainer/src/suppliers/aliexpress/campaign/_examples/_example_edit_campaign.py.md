@@ -3,7 +3,7 @@
 ### <алгоритм>
 
 1.  **Инициализация переменных:**
-    *   Устанавливается `MODE = 'dev'` (режим разработки).
+    *   Устанавливается `` (режим разработки).
 2.  **Импорт необходимых модулей:**
     *   Импортируются стандартные библиотеки `re`, `shutil`, `pathlib`, `typing`, `types`.
     *   Импортируются модули из `src`: `gs`, `AliPromoCampaign`, `AliAffiliatedProducts`, `extract_prod_ids`, `ensure_https`, `j_loads_ns`, `j_loads`, `list2string`, `csv2dict`, `pprint`, `j_dumps`, `logger`.
@@ -25,7 +25,7 @@ campaign_editor = AliCampaignEditor(campaign_name="TestCampaign", category_name=
 
 ```mermaid
 graph TD
-    A[Начало скрипта] --> B(Инициализация MODE = 'dev');
+    A[Начало скрипта] --> B(Инициализация );
     B --> C[Импорт модулей];
     C --> D(class AliCampaignEditor);
     D --> E(def __init__(campaign_name, category_name, language='EN', currency='USD'));
@@ -44,7 +44,7 @@ graph TD
 
 *   **`graph TD`**: Объявляет диаграмму типа "направленный граф" (Top-Down).
 *   **`A[Начало скрипта]`**: Начало выполнения скрипта.
-*   **`B(Инициализация MODE = 'dev')`**: Инициализация переменной `MODE` со значением `'dev'`.
+*   **`B(Инициализация )`**: Инициализация переменной `MODE` со значением `'dev'`.
 *   **`C[Импорт модулей]`**: Этап импорта необходимых библиотек и модулей.
 *   **`D(class AliCampaignEditor)`**: Объявление класса `AliCampaignEditor`.
 *   **`E(def __init__(campaign_name, category_name, language='EN', currency='USD'))`**: Определение метода `__init__` класса `AliCampaignEditor`.

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (
@@ -34,7 +34,7 @@ from .normalizer import (
 ```mermaid
 graph LR
     subgraph "src.utils.string"
-        A[MODE = 'dev'] --> B{Импорт};
+        A[] --> B{Импорт};
         B --> C[ProductFieldsValidator];
         B --> D(normalize_string);
         B --> E(normalize_int);
@@ -75,7 +75,7 @@ graph LR
 
 **Переменные:**
 
-* `MODE = 'dev'`: Глобальная переменная, хранящая строковое значение `'dev'`. Вероятно, используется для настройки поведения программы в различных режимах (разработка, продакшн и т.д.).
+* ``: Глобальная переменная, хранящая строковое значение `'dev'`. Вероятно, используется для настройки поведения программы в различных режимах (разработка, продакшн и т.д.).
 
 
 **Возможные ошибки или области для улучшений:**

@@ -12,7 +12,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -94,7 +94,7 @@ import sys
 from pathlib import Path
 from src.utils.jjson import j_loads  # Импортируем нужную функцию
 
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -184,7 +184,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads  # Импортируем нужную функцию
 from src.logger import logger # Импорт модуля логирования
 
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 ```
@@ -42,7 +42,7 @@ from .bot import TelegramBot
 #! venv/bin/python/python3.12
 
 # Определение режима работы бота. По умолчанию установлен режим разработки.
-MODE = 'dev'
+
 
 # Импорт класса TelegramBot из модуля bot для создания и управления ботом.
 from .bot import TelegramBot
@@ -80,7 +80,7 @@ from .bot import TelegramBot
 #! venv/bin/python/python3.12
 
 # Определение режима работы бота. По умолчанию установлен режим разработки.
-MODE = 'dev'
+
 
 # Импорт класса TelegramBot из модуля bot для создания и управления ботом.
 from .bot import TelegramBot

@@ -12,7 +12,7 @@
 	:platform: Windows, Unix
 	:synopsis: Переключение между аккаунатми
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from types import SimpleNamespace
@@ -52,7 +52,7 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 def switch_account(driver: Driver):
     """
@@ -108,7 +108,7 @@ from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 def switch_account(driver: Driver):
     """

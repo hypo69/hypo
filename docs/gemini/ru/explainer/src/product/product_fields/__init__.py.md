@@ -15,7 +15,7 @@
 
 ```mermaid
 graph LR
-    A[product_fields/__init__.py] --> B(MODE = 'dev');
+    A[product_fields/__init__.py] --> B();
     B --> C(product_fields.py);
     C --> D(ProductFields);
     B --> E(product_fields_translator.py);
@@ -28,7 +28,7 @@ graph LR
 **Объяснение зависимостей `mermaid`:**
 
 *   `A[product_fields/__init__.py]`:  Представляет файл `__init__.py`, который является точкой входа для пакета `product_fields`.
-*   `B(MODE = 'dev')`:  Показывает переменную `MODE`, определенную в файле `__init__.py`.
+*   `B()`:  Показывает переменную `MODE`, определенную в файле `__init__.py`.
 *   `C(product_fields.py)`: Представляет файл `product_fields.py`, из которого импортируется класс `ProductFields`.
 *   `D(ProductFields)`: Обозначает класс `ProductFields`, импортированный из `product_fields.py`.
 *   `E(product_fields_translator.py)`:  Представляет файл `product_fields_translator.py`, из которого импортируется функция `translate_presta_fields_dict`.
@@ -65,7 +65,7 @@ graph LR
 
 **Переменные:**
 
-*   `MODE = 'dev'`:
+*   ``:
     *   Тип: Строка.
     *   Использование: Эта переменная устанавливает режим работы модуля в режим разработки ('dev'). В зависимости от значения этой переменной, в коде могут выполняться различные операции (например, выводиться отладочные сообщения или использоваться тестовые данные).
 

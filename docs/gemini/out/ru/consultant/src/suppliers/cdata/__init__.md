@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -38,7 +38,7 @@ from src.logger import logger
 from typing import Any, Dict
 
 
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -104,7 +104,7 @@ from src.logger import logger
 from typing import Any, Dict
 
 
-MODE = 'dev'
+
 
 
 from .graber import Graber

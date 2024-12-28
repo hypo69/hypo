@@ -25,7 +25,7 @@
     drive = GoogleDrive()
     # Использование методов класса GoogleDrive
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive
@@ -65,7 +65,7 @@ from .drive import GoogleDrive
     drive = GoogleDrive()
     # Использование методов класса GoogleDrive
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive

@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gsheet import GptGs
 ```
@@ -45,7 +45,7 @@ The mermaid code `graph LR` defines a simple graph. `chat_gpt/__init__.py` impor
 
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable likely determines the execution mode (e.g., development, production). Its value is currently set to 'dev'. This variable is defined at the module level; it's accessible throughout the `chat_gpt` module's code.
+    * ``: This variable likely determines the execution mode (e.g., development, production). Its value is currently set to 'dev'. This variable is defined at the module level; it's accessible throughout the `chat_gpt` module's code.
 
 * **Classes (Implicit):**
     * `GptGs`: This class is imported from `gsheet.py`.  Further information is required about this class to explain its function completely. This class likely provides methods for interacting with a Google Sheet or other similar external data source.

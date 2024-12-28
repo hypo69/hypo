@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -58,7 +58,7 @@ The code snippet does not exhibit a complex algorithm. It's primarily a module i
 
 ```mermaid
 graph TD
-    A[__init__.py] --> B(MODE = 'dev');
+    A[__init__.py] --> B();
     B --> C[from packaging.version import Version];
     B --> D[from .version import __version__, __doc__, __details__];
 ```
@@ -77,7 +77,7 @@ graph TD
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A global variable defining the current mode (e.g., development or production).  This is a common practice for configuration settings, allowing different behaviors based on whether the software is in a development or production environment.
+    * ``: A global variable defining the current mode (e.g., development or production).  This is a common practice for configuration settings, allowing different behaviors based on whether the software is in a development or production environment.
 
 * **Classes/Functions:** The file doesn't define any classes or functions beyond initializing a variable `MODE` and importing variables.
 

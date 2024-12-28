@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с поставщиком HB.
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb """
 
@@ -67,7 +67,7 @@ def login(s) -> bool:
    :platform: Windows, Unix
    :synopsis: Модуль для работы с поставщиком HB.
 """
-MODE = 'dev'
+
 
 """
 .. data:: MODE
@@ -145,7 +145,7 @@ def login(supplier: object) -> bool:
    :platform: Windows, Unix
    :synopsis: Модуль для работы с поставщиком HB.
 """
-MODE = 'dev'
+
 
 """
 .. data:: MODE

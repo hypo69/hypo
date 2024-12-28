@@ -12,7 +12,7 @@
 	:synopsis: Модуль интерфейса с моделью от Coogle - generativeai
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -87,7 +87,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: Модуль для взаимодействия с моделью Google Gemini.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -177,7 +177,7 @@ __copyright__ = config.get("copyright", "") if config else ""
    :synopsis: Модуль для взаимодействия с моделью Google Gemini.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

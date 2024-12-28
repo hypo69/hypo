@@ -121,7 +121,7 @@ from xhtml2pdf import pisa
 
 
 
-MODE = 'dev'
+
 
 def html2escape(input_str: str) -> str:
     """
@@ -351,7 +351,7 @@ from xhtml2pdf import pisa
 
 
 
-MODE = 'dev'
+
 
 def html2escape(input_str: str) -> str:
     """

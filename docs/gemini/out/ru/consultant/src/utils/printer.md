@@ -18,7 +18,7 @@ Functions:
     - :func:`pprint`
 """
 
-MODE = 'dev'
+
 
 import json
 import csv
@@ -183,7 +183,7 @@ Functions:
     - :func:`pprint`
 """
 
-MODE = 'dev'
+
 
 import json
 import csv

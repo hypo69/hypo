@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .facebook import Facebook
@@ -34,7 +34,7 @@ from .facebook import Facebook
 В нём импортированы методы для работы с Facebook.
 
 """
-MODE = 'dev'
+
 
 
 # Импорт необходимых модулей.  # Изменён импорт, добавлены необходимые библиотеки
@@ -69,7 +69,7 @@ from src.logger import logger
 В нём импортированы методы для работы с Facebook.
 
 """
-MODE = 'dev'
+
 
 
 # Импорт необходимых модулей.  # Изменён импорт, добавлены необходимые библиотеки
@@ -94,7 +94,7 @@ from src.logger import logger
 -	:synopsis:
 -
 -"""
- MODE = 'dev'
+ 
  
 +# Импорт необходимых модулей.
 +from src.utils.jjson import j_loads
@@ -107,5 +107,5 @@ from src.logger import logger
 +Константа, определяющая режим работы.
 +
 +"""
-+MODE = 'dev'
++
 +

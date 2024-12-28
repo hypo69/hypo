@@ -37,7 +37,7 @@ from src.gemini.gemini_pro import GeminiPro
 from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
-MODE = 'dev'
+
 """Режим работы приложения. По умолчанию 'dev'."""
 
 
@@ -177,7 +177,7 @@ from src.gemini.gemini_pro import GeminiPro
 from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
-MODE = 'dev'
+
 """Режим работы приложения. По умолчанию 'dev'."""
 
 

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .login import login
 from .post_message  import *
@@ -107,7 +107,7 @@ graph LR
 
 **Переменные:**
 
-* `MODE = 'dev'`:  Переменная, вероятно, задающая режим работы (development).
+* ``:  Переменная, вероятно, задающая режим работы (development).
 
 **Возможные ошибки и улучшения:**
 

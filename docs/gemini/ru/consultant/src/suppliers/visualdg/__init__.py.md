@@ -38,7 +38,7 @@
    :synopsis: Инициализация поставщика VisualDG
 """
 #  Удалены лишние shebang.
-MODE = 'dev' #  Режим работы модуля по умолчанию 'dev'
+ #  Режим работы модуля по умолчанию 'dev'
 
 #  Импортируется класс Graber
 from .graber import Graber

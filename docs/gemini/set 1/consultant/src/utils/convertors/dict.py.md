@@ -42,7 +42,7 @@ from src.utils.csv import save_csv_file
 from src.logger.logger import logger
 from src.utils.jjson import j_loads  #TODO: перенести все импорты на верх
 
-MODE = 'dev'
+
 
 
 def replace_key_in_dict(data: dict | list, old_key: str, new_key: str) -> dict:
@@ -442,7 +442,7 @@ from src.utils.csv import save_csv_file
 from src.logger.logger import logger
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 def replace_key_in_dict(data: dict | list, old_key: str, new_key: str) -> dict:

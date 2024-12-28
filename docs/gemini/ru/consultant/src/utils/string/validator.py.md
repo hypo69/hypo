@@ -64,7 +64,7 @@ from src.logger.logger import logger
 from src.utils.string.formatter import StringFormatter
 from src.utils.string.pattern import Ptrn
 
-MODE = 'dev'
+
 
 
 class ProductFieldsValidator:

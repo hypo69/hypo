@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -45,7 +45,7 @@ This mermaid code visualizes the import relationship. `grandadvance/__init__.py`
     * There are no functions directly defined within `__init__.py`.
 
 * **Variables:**
-    * `MODE = 'dev'`: This is a global variable that likely controls the behavior of the package in different environments (e.g., 'dev', 'prod').  It is often used to switch on and off debugging features, or to alter how data is processed.
+    * ``: This is a global variable that likely controls the behavior of the package in different environments (e.g., 'dev', 'prod').  It is often used to switch on and off debugging features, or to alter how data is processed.
 
 * **Potential Errors or Improvements:**
     * The code is quite basic, and it is difficult to identify potential errors or areas for improvement without seeing the contents of `graber.py`.  However, the use of `# -*- coding: utf-8 -*-` is good practice for specifying the encoding of the file to avoid problems with special characters.  Further comments in the code about the purpose of `MODE` and potential values other than 'dev' would be beneficial.

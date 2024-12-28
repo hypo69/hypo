@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .suppliers_categories import CategoryManager
 from .suppliers_categories import AliexpressCategory 

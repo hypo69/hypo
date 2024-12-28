@@ -43,6 +43,6 @@ from src.logger.logger import logger # импортируем логер
 from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester # импортируем PrestaShop endpoints
 from .kazarinov import KazarinovTelegramBot # импортируем KazarinovTelegramBot endpoint
 
-MODE = 'dev'
+
 # Определяем режим работы приложения, может быть 'dev' или 'prod'
 ```

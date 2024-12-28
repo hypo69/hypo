@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge.extentions """
 
@@ -76,7 +76,7 @@ from src.logger import logger  # Импорт модуля логировани�
 import sys
 import os
 
-MODE = 'dev'
+
 
 
 """
@@ -144,7 +144,7 @@ from src.logger import logger  # Импорт модуля логировани�
 import sys
 import os
 
-MODE = 'dev'
+
 
 
 """

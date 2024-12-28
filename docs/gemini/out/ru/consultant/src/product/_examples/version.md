@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -72,7 +72,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-MODE = 'dev'  # Переменная, содержащая режим работы (dev, prod, etc.)
+  # Переменная, содержащая режим работы (dev, prod, etc.)
 
 __version__ = "3.12.0.0.0.4"  # Версия модуля
 __author__ = 'hypotez'
@@ -111,7 +111,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-MODE = 'dev'  # Переменная, содержащая режим работы (dev, prod, etc.)
+  # Переменная, содержащая режим работы (dev, prod, etc.)
 
 __version__ = "3.12.0.0.0.4"  # Версия модуля
 __author__ = 'hypotez'

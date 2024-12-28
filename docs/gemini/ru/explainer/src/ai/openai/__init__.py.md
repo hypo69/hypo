@@ -4,7 +4,7 @@
 1. **Инициализация:**
    - Задается глобальная переменная `MODE` со значением `'dev'`. Это может указывать на режим разработки.
    
-   *Пример:* `MODE = 'dev'`
+   *Пример:* ``
 
 2. **Импорт:**
    - Импортируется функция `translate` из модуля `translator.py`. Эта функция, вероятно, отвечает за перевод текста.
@@ -19,7 +19,7 @@
 ### 2. <mermaid>
 ```mermaid
 flowchart TD
-    Start --> InitMode[Initialize MODE = 'dev'];
+    Start --> InitMode[Initialize ];
     InitMode --> ImportTranslate[Import: <code>from .translator import translate</code>]
     ImportTranslate --> ImportOpenAIModel[Import: <code>from .model import OpenAIModel</code>]
     ImportOpenAIModel --> End

@@ -44,7 +44,7 @@
 :var __cofee__: Сообщение для поддержки разработчика.
 :vartype __cofee__: str
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -173,7 +173,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 :var __cofee__: Сообщение для поддержки разработчика.
 :vartype __cofee__: str
 """
-MODE = 'dev'
+
 
 import sys
 import json

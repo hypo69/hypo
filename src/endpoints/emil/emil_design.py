@@ -10,7 +10,7 @@ from __future__ import annotations
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 
@@ -46,6 +46,7 @@ class EmilDesign:
     def __init__(self):
         """ Initialize the EmilDesign class. """
         ...
+
 
     def describe_images(self, from_url: str = False):
         """ Describe images based on the provided instruction and examples.

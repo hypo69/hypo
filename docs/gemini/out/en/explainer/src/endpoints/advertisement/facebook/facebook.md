@@ -19,7 +19,7 @@
     - upload_media: Загрузка файла или списка файлов
 
 """
-MODE = 'dev'
+
 
 import os, sys
 from pathlib import Path
@@ -145,7 +145,7 @@ graph LR
 
 **Variables:**
 
-- `MODE = 'dev'`:  A global variable, probably for distinguishing between development and production modes.
+- ``:  A global variable, probably for distinguishing between development and production modes.
 - `start_page`:  A string defining the initial Facebook URL.
 
 **Potential Errors/Improvements:**

@@ -31,7 +31,7 @@ from src.suppliers.aliexpress.gui.product import ProductEditor
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.suppliers.aliexpress.gui.styles import set_fixed_size
 
-MODE = 'dev'
+
 
 
 class MainApp(QtWidgets.QMainWindow):
@@ -244,7 +244,7 @@ from src.suppliers.aliexpress.gui.product import ProductEditor
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.suppliers.aliexpress.gui.styles import set_fixed_size
 
-MODE = 'dev'
+
 
 
 class MainApp(QtWidgets.QMainWindow):

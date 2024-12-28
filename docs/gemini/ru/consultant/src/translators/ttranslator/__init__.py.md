@@ -48,7 +48,7 @@
 from translate import Translator # Исправлен импорт Translatorr -> Translator
 from src.logger.logger import logger # Добавлен импорт для логирования
 
-MODE = 'dev'
+
 
 
 ```

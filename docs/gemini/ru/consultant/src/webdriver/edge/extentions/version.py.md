@@ -33,7 +33,7 @@
 
 :platform: Windows, Unix
 """
-MODE = 'dev'
+
 
 __name__: str
 """Имя модуля."""

@@ -32,7 +32,7 @@ from packaging.version import Version
 from src.logger.logger import logger
 from src.utils.jjson import j_loads # Импорт j_loads из src.utils.jjson
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files: Tuple[str, ...] = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
@@ -152,7 +152,7 @@ from packaging.version import Version
 from src.logger.logger import logger
 from src.utils.jjson import j_loads # Импорт j_loads из src.utils.jjson
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files: Tuple[str, ...] = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

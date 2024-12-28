@@ -8,7 +8,7 @@
 	:synopsis:
 	Модуль содержит тесты для WebDriver и ExecuteLocator.
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._pytest """
 
@@ -129,7 +129,7 @@ def test_get_webelement_by_locator_no_element(execute_locator, driver):
 +	Этот модуль предназначен для тестирования взаимодействия с WebDriver
 +	через класс ExecuteLocator.
  """
- MODE = 'dev'
+ 
  
 @@ -49,6 +55,7 @@
  from selenium.webdriver.support.ui import WebDriverWait
@@ -198,7 +198,7 @@ from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 from src.utils.jjson import j_loads  # импорт j_loads
 
-MODE = 'dev'
+
 """Переменная MODE."""
 
 

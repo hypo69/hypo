@@ -43,7 +43,7 @@
     handler = BotHandler(webdriver_name='firefox')
     handler.handle_url(update, context)
 """
-MODE = 'dev'
+
 
 # import header # Удален неиспользуемый импорт
 import random

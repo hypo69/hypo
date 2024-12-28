@@ -17,7 +17,7 @@
 """
 from pathlib import Path
 
-MODE = 'dev'
+
 
 import header
 from src.utils.path import get_relative_path

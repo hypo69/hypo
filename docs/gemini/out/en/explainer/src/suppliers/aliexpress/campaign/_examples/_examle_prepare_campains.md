@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -117,7 +117,7 @@ The code assumes the existence of these functions from the `prepare_campaigns` m
 
 ### Variables:
 
-- `MODE = 'dev'`:  A constant string, likely used for configuration purposes.  It is poorly documented and is repeated.
+- ``:  A constant string, likely used for configuration purposes.  It is poorly documented and is repeated.
 - `campaigns_directory`: A `Path` object representing the directory on Google Drive holding the campaign data, likely using a library like `pathlib`.
 - `campaign_names`: A list of campaign names extracted from the directory.
 - `languages`: A dictionary mapping languages to currencies.

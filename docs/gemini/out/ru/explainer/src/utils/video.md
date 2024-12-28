@@ -13,7 +13,7 @@
 	:synopsis: Video Saving Utilities
 
 """
-MODE = 'dev'
+
 
 """ This module provides asynchronous functions for downloading and saving video files, as well as retrieving video data.  It includes error handling and logging for robust operation.
 

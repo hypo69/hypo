@@ -13,7 +13,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Казаринов?)
 
 """
-MODE = 'dev'
+
 
 import header
 import random

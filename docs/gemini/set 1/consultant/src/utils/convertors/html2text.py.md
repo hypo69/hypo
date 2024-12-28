@@ -61,7 +61,7 @@ import optparse, re, sys, codecs, types
 from textwrap import wrap
 from src.logger.logger import logger # импортируем logger
 
-MODE = 'dev'
+
 
 
 __version__ = "3.1"

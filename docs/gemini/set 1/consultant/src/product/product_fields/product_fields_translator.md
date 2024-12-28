@@ -12,7 +12,7 @@
 	:synopsis: Модуль перевода полей товара на языки клиентской базы данных
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List
@@ -108,7 +108,7 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
    :synopsis: Модуль перевода полей товара на языки клиентской базы данных.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List
@@ -197,7 +197,7 @@ def translate_presta_fields_dict(presta_fields_dict: dict, client_langs_schema: 
    :synopsis: Модуль перевода полей товара на языки клиентской базы данных.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List

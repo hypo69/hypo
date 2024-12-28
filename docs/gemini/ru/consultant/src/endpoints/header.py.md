@@ -60,7 +60,7 @@ from typing import Tuple
 from src.utils.jjson import j_loads  # Импортируем j_loads
 from src.logger.logger import logger # Импортируем logger
 
-MODE = 'dev'
+
 """
 Режим работы приложения. Может принимать значения 'dev' или 'prod'.
 """

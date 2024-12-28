@@ -55,7 +55,7 @@ def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt'
 **Описание**:
 Режим работы приложения. В данном случае установлено значение `'dev'`.
 ```python
-MODE = 'dev'
+
 ```
 
 ### `__root__`

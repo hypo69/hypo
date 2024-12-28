@@ -1,225 +1,207 @@
-## <алгоритм>
+## Анализ кода `post_message_async.py`
 
-1. **`post_title(d, category)`:**
-   - Прокручивает страницу вверх.
-   - Кликает по кнопке "add post" (открыть форму добавления поста).
-   - Формирует сообщение из `category.title` и `category.description`.
-   - Отправляет сообщение в поле ввода текста для поста.
-   - Возвращает `True` в случае успеха, иначе - `None`.
-   - **Пример:**
-     - `driver`: Объект `Driver`, управляющий браузером.
-     - `category`: `SimpleNamespace(title="Заголовок", description="Описание")`
-     - **Действия:** Прокрутка, клик на "add post", ввод "Заголовок; Описание;" в поле.
+### <алгоритм>
 
-2. **`upload_media(d, products, no_video)`:**
-   - Открывает форму добавления медиа.
-   - Проходит по списку продуктов `products`.
-   - Выбирает путь к медиафайлу (видео или изображение).
-   - Загружает медиафайл.
-   - Кликает по кнопке редактирования загруженного медиа.
-   - Получает список текстовых полей для описаний.
-   - Вызывает `update_images_captions` для добавления описаний.
-   - Возвращает `True` в случае успеха, иначе - `None`.
-   - **Пример:**
-     - `driver`: Объект `Driver`.
-     - `products`: `[SimpleNamespace(local_saved_image="image1.jpg", local_saved_video="video1.mp4", ...), ...]`
-     - `no_video`: `False`
-     - **Действия:** Открытие формы, загрузка "video1.mp4" (если есть) или "image1.jpg", клик на "редактировать", получение полей, вызов `update_images_captions`.
+1.  **`post_title(d, category)`**:
+    *   Принимает `Driver` и `SimpleNamespace` с данными категории (заголовок, описание).
+    *   **Пример:** `category = SimpleNamespace(title="Заголовок", description="Описание")`
+    *   Прокручивает страницу назад (`d.scroll`).
+    *   Открывает поле ввода сообщения (`d.execute_locator(locator.open_add_post_box)`).
+    *   Формирует сообщение: `message = f"{category.title}; {category.description};"`.
+    *   Вставляет сообщение в поле (`d.execute_locator(locator.add_message, message)`).
+    *   Возвращает `True` при успехе, иначе `None`.
+2.  **`upload_media(d, products, no_video)`**:
+    *   Принимает `Driver`, список `products` (SimpleNamespace с путями к медиа) и флаг `no_video`.
+    *   **Пример:** `products = [SimpleNamespace(local_saved_image="image1.jpg", local_saved_video="video1.mp4"), SimpleNamespace(local_saved_image="image2.jpg")]`
+    *   Открывает форму добавления медиа (`d.execute_locator(locator.open_add_foto_video_form)`).
+    *   Перебирает `products`:
+        *   Определяет путь к медиа: видео, если есть и `no_video` = `False`, иначе - изображение.
+        *   Загружает медиа (`d.execute_locator(locator.foto_video_input, media_path)`).
+    *   Открывает форму редактирования загруженных медиа (`d.execute_locator(locator.edit_uloaded_media_button)`).
+    *   Получает список полей ввода подписи к изображению (`textarea_list = d.execute_locator(locator.edit_image_properties_textarea)`).
+    *   Вызывает `update_images_captions` для добавления подписей.
+    *   Возвращает `True` при успехе, иначе `None`.
+3.  **`update_images_captions(d, products, textarea_list)`**:
+    *   Принимает `Driver`, список `products`, список `textarea_list` (поля ввода подписи).
+     *   Загружает локальные настройки из `translations.json`.
+    *   Определяет `handle_product`, которая обрабатывает один `product` из списка:
+        *   Формирует текст подписи для `product` в зависимости от его `language` и атрибутов.
+        *   Вставляет подпись в соответствующее поле ввода, используя `send_keys`.
+    *   Итерируется по `products` и вызывает `handle_product` асинхронно (используя `asyncio.to_thread`).
+4.  **`promote_post(d, category, products, no_video)`**:
+    *   Принимает `Driver`, `category` (SimpleNamespace), список `products` и флаг `no_video`.
+     *   Вызывает `post_title` для добавления заголовка и описания.
+    *   Вызывает `upload_media` для загрузки медиа.
+    *    Кликает на кнопку завершения редактирования `d.execute_locator(locator.finish_editing_button)`.
+    *    Кликает на кнопку публикации `d.execute_locator(locator.publish)`.
+    *   Возвращает `True` при успехе.
 
-3. **`update_images_captions(d, products, textarea_list)`:**
-   - Загружает `translations.json` для получения локализованных строк.
-   - Проходит по списку продуктов `products`.
-   - Вызывает `handle_product` для каждого продукта (в отдельном потоке) для формирования и добавления текста в `textarea_list`
-   - **Пример:**
-     - `driver`: Объект `Driver`.
-     - `products`: `[SimpleNamespace(language="ru", product_title="Товар 1", original_price="100", ...), ...]`
-     - `textarea_list`: Список элементов `textarea`.
-     - **Действия:** Загрузка локализации, цикл по продуктам, вызов `handle_product`.
-
-4. **`handle_product(product, textarea_list, i)`:**
-    - Формирует строку описания для одного продукта, используя его атрибуты и локализованные строки.
-    - Определяет направление текста (`LTR` или `RTL`).
-    - Отправляет строку описания в соответствующее поле ввода (`textarea_list[i]`).
-   - **Пример:**
-     - `product`: `SimpleNamespace(language="ru", product_title="Товар 1", original_price="100", ...)`
-     - `textarea_list`: Список элементов `textarea`.
-     - `i`: Индекс `textarea`.
-     - **Действия:** Формирование текста, добавление его в `textarea_list[i]`.
-5. **`promote_post(d, category, products, no_video)`:**
-   - Вызывает `post_title` для добавления заголовка и описания.
-   - Вызывает `upload_media` для загрузки медиафайлов и добавления к ним подписей.
-   - Кликает по кнопке "завершить редактирование".
-   - Кликает по кнопке "публиковать".
-   - Возвращает `True` в случае успеха, иначе - `None`.
-   - **Пример:**
-     - `driver`: Объект `Driver`.
-     - `category`: `SimpleNamespace(title="Заголовок", description="Описание")`
-     - `products`: `[SimpleNamespace(local_saved_image="image1.jpg", ...), ...]`
-     - `no_video`: `True`
-     - **Действия:** Вызовы `post_title`, `upload_media`, клики на "завершить" и "опубликовать".
-
-## <mermaid>
+### <mermaid>
 
 ```mermaid
-graph TD
-    A[promote_post] --> B{post_title};
-    B -- success --> C[upload_media];
-    C -- success --> D{execute_locator:finish_editing_button};
-    D -- success --> E{execute_locator:publish};
-    E -- success --> F[return True];
-    
-    C --> G{update_images_captions};
-    G --> H{handle_product (async)};
-    H -- textarea[i].send_keys() --> I[return True (async)];
-    
-    B -- fail --> J[return None];
-    C -- fail --> K[return None];
-    D -- fail --> L[return None];
-    E -- fail --> M[return None];
-    
+flowchart TD
+    subgraph post_message_async.py
+        Start(Start) --> PostTitleCall[Вызов post_title(d, category)]
+        PostTitleCall -- Success --> UploadMediaCall[Вызов upload_media(d, products, no_video)]
+        PostTitleCall -- Fail --> End(End: Fail)
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style J fill:#fcc,stroke:#333,stroke-width:2px
-     style K fill:#fcc,stroke:#333,stroke-width:2px
-      style L fill:#fcc,stroke:#333,stroke-width:2px
-       style M fill:#fcc,stroke:#333,stroke-width:2px
+        UploadMediaCall -- Success --> FinishEditing[Вызов d.execute_locator(locator.finish_editing_button)]
+        UploadMediaCall -- Fail --> End(End: Fail)
 
-    classDef async fill:#eef,stroke:#333,stroke-dasharray: 5 5;
-    class H,I async;
+        FinishEditing -- Success --> PublishPost[Вызов d.execute_locator(locator.publish)]
+        FinishEditing -- Fail --> End(End: Fail)
+        
+        PublishPost -- Success --> End(End: Success)
+        PublishPost -- Fail --> End(End: Fail)
+
+    end
+
+    subgraph post_title(d, category)
+        StartPostTitle(Start) --> ScrollPage[d.scroll(backward)]
+        ScrollPage -- Success --> OpenPostBox[d.execute_locator(locator.open_add_post_box)]
+        ScrollPage -- Fail --> EndPostTitleFail(End: Fail)
+
+        OpenPostBox -- Success --> CreateMessage[message = f"{category.title}; {category.description};"]
+        OpenPostBox -- Fail --> EndPostTitleFail(End: Fail)
+
+         CreateMessage --> AddMessageToPostBox[d.execute_locator(locator.add_message, message)]
+         AddMessageToPostBox -- Success --> EndPostTitleSuccess(End: Success)
+         AddMessageToPostBox -- Fail --> EndPostTitleFail(End: Fail)
+    end
+        
+    subgraph upload_media(d, products, no_video)
+    	StartUploadMedia(Start) --> OpenMediaForm[d.execute_locator(locator.open_add_foto_video_form)]
+    	OpenMediaForm -- Fail --> EndUploadMediaFail(End: Fail)
+        OpenMediaForm -- Success --> IterateProducts[Iterate through products]
+
+        IterateProducts --> CheckMediaType[Check if product has video and no_video=False]
+    	CheckMediaType -- HasVideo --> GetVideoPath[media_path = product.local_saved_video]
+    	CheckMediaType -- NoVideo --> GetImagePath[media_path = product.local_saved_image]
+
+    	GetVideoPath --> UploadMedia[d.execute_locator(locator.foto_video_input, media_path)]
+        GetImagePath --> UploadMedia
+    	UploadMedia -- Fail --> EndUploadMediaFail(End: Fail)
+    	UploadMedia -- Success -->  CheckNextProduct[Check next product]
+
+    	CheckNextProduct -- NextProduct --> IterateProducts
+    	CheckNextProduct -- NoMoreProducts --> OpenEditForm[d.execute_locator(locator.edit_uloaded_media_button)]
+        OpenEditForm -- Fail --> EndUploadMediaFail(End: Fail)
+    	OpenEditForm -- Success --> GetTextAreaList[textarea_list = d.execute_locator(locator.edit_image_properties_textarea)]
+    	GetTextAreaList -- Fail --> EndUploadMediaFail(End: Fail)
+    	GetTextAreaList -- Success --> UpdateCaptions[await update_images_captions(d, products, textarea_list)]
+        UpdateCaptions --> EndUploadMediaSuccess(End: Success)
+    end
+
+   subgraph update_images_captions(d, products, textarea_list)
+        StartUpdateCaptions(Start) --> LoadTranslations[Load translations from translations.json]
+        LoadTranslations --> IterateProductsForCaptions[Iterate through products and textarea_list]
+        IterateProductsForCaptions --> CallHandleProduct[asyncio.to_thread(handle_product, product, textarea_list, i)]
+        CallHandleProduct --> CheckNextProductForCaptions[Check next product]
+        CheckNextProductForCaptions -- NextProduct --> IterateProductsForCaptions
+        CheckNextProductForCaptions -- NoMoreProducts --> EndUpdateCaptions(End)
+   end
+
+    subgraph handle_product(product, textarea_list, i)
+        StartHandleProduct(Start) --> GetDirection[Determine text direction (LTR/RTL) based on product.language]
+        GetDirection --> GenerateMessage[Generate message based on product details and direction]
+        GenerateMessage --> SendKeysToTextArea[textarea_list[i].send_keys(message)]
+        SendKeysToTextArea -- Success --> EndHandleProduct(End)
+        SendKeysToTextArea -- Fail --> LogErrorSendKeys(Log error: Error in sending keys to textarea)
+         LogErrorSendKeys --> EndHandleProduct(End)
+    end
+   
+    
+    Start --> PostTitleCall
+    
+    
+    PostTitleCall --> StartPostTitle
+    EndPostTitleSuccess --> PostTitleCall
+    EndPostTitleFail --> PostTitleCall
+    
+    UploadMediaCall --> StartUploadMedia
+    EndUploadMediaSuccess --> UploadMediaCall
+    EndUploadMediaFail --> UploadMediaCall
+        
+    UpdateCaptions --> StartUpdateCaptions
+     EndUpdateCaptions --> UpdateCaptions
+
 ```
 
-**Зависимости:**
+```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+    
+```
+### <объяснение>
 
-- **`promote_post`**: Основная функция, координирующая процесс публикации. Зависит от `post_title`, `upload_media`.
-- **`post_title`**: Отвечает за отправку заголовка и описания. Зависит от `Driver` и `locator`.
-- **`upload_media`**: Отвечает за загрузку медиа и обновление подписей. Зависит от `Driver`, `locator` и вызывает `update_images_captions`.
-- **`update_images_captions`**: Отвечает за добавление подписей к медиафайлам. Зависит от `Driver`, списка `WebElement` и вызывает `handle_product`.
-- **`handle_product`**: Отвечает за формирование и добавление подписи для одного продукта. Зависит от `product`, списка `WebElement` и индекса.
+1.  **Импорты:**
+    *   `time`: Используется для добавления пауз в коде (например, `time.sleep()`).
+    *   `asyncio`: Обеспечивает поддержку асинхронного программирования для выполнения операций ввода-вывода без блокировки основного потока.
+    *   `pathlib.Path`: Используется для работы с файловыми путями.
+    *   `types.SimpleNamespace`: Создает простые объекты для хранения атрибутов.
+    *   `typing.Dict, typing.List`: Используются для аннотаций типов.
+    *   `selenium.webdriver.remote.webelement.WebElement`: Представляет веб-элементы на странице, с которыми можно взаимодействовать.
+    *   `src.gs`: Глобальные настройки проекта.
+    *   `src.webdriver.driver.Driver`: Класс для управления браузером через Selenium.
+    *   `src.utils.jjson.j_loads_ns, src.utils.jjson.pprint`: Функции для загрузки JSON и печати данных.
+    *  `src.logger.logger`: Логгер для записи событий и ошибок.
+2.  **Переменные:**
+    *   `MODE`: Строка, указывающая режим работы (`'dev'` для разработки).
+    *   `locator`: `SimpleNamespace`, содержащий локаторы веб-элементов, загруженные из JSON файла.
+3.  **Функции:**
+    *   **`post_title(d, category)`**:
+        *   `d`: Экземпляр класса `Driver` для управления браузером.
+        *   `category`: `SimpleNamespace` с атрибутами `title` (заголовок) и `description` (описание).
+        *   **Назначение:** Публикует заголовок и описание в поле ввода сообщения.
+        *   **Пример:** `post_title(driver, SimpleNamespace(title="Заголовок", description="Описание"))`.
+        *  **Возвращаемое значение**: `True` если успешно, `None` если ошибка.
+    *   **`upload_media(d, products, no_video=False)`**:
+        *   `d`: Экземпляр класса `Driver`.
+        *   `products`: Список объектов `SimpleNamespace`, каждый из которых содержит путь к медиа (`local_saved_image` или `local_saved_video`).
+        *   `no_video`: Флаг, позволяющий игнорировать видео файлы при загрузке.
+        *   **Назначение:** Загружает изображения и видео, обновляет подписи к ним.
+        *   **Пример:** `await upload_media(driver, [SimpleNamespace(local_saved_image="img1.jpg"), SimpleNamespace(local_saved_video="video1.mp4")], no_video=True)`.
+        *   **Возвращаемое значение**: `True` если успешно, `None` если ошибка.
+    *   **`update_images_captions(d, products, textarea_list)`**:
+        *   `d`: Экземпляр класса `Driver`.
+        *    `products`: Список объектов `SimpleNamespace`, каждый из которых содержит данные о продукте (название, цена, скидка и т.д.).
+        *   `textarea_list`: Список `WebElement`, представляющих поля ввода для подписей.
+        *   **Назначение:** Асинхронно обновляет подписи к загруженным медиа, добавляя информацию о продуктах.
+        *    **Пример:** `await update_images_captions(driver, [SimpleNamespace(product_title='Товар 1', original_price='100', language='ru')], [WebElement, WebElement])`
+        *   **Возвращаемое значение**: `None`
+    *    **`handle_product(product, textarea_list, i)`**:
+        *   `product`: Объект `SimpleNamespace`, содержащий данные о продукте.
+        *    `textarea_list`: Список `WebElement`, представляющих поля ввода для подписей.
+         *   `i`: Индекс текущего продукта в списке.
+        *   **Назначение:** Обрабатывает данные о продукте и генерирует подпись, добавляет подпись в поле ввода.
+        *    **Возвращаемое значение**: `None`
+    *   **`promote_post(d, category, products, no_video=False)`**:
+        *   `d`: Экземпляр класса `Driver`.
+        *   `category`: `SimpleNamespace` с атрибутами `title` и `description`.
+        *   `products`: Список объектов `SimpleNamespace`, содержащих данные о медиа.
+         *   `no_video`: Флаг, позволяющий игнорировать видео файлы при загрузке.
+        *   **Назначение:**  Выполняет полный цикл публикации сообщения - добавление заголовка и описания, загрузка медиа, добавление подписей и публикация сообщения.
+        *   **Пример:** `await promote_post(driver, SimpleNamespace(title="Заголовок", description="Описание"), [SimpleNamespace(local_saved_image="img1.jpg")], no_video=True)`.
+        *   **Возвращаемое значение**: `True` если успешно, `None` если ошибка.
+4.  **Классы:**
+    *   `Driver`: Класс, предоставляющий методы для управления браузером (прокрутка, клики, ввод текста и т.д.). Используется для взаимодействия с веб-страницей.
+5.  **Связи с другими частями проекта:**
+    *   Использует `src.gs` для доступа к глобальным настройкам (пути к файлам).
+    *   Использует `src.webdriver.driver.Driver` для взаимодействия с веб-браузером.
+    *   Использует `src.utils.jjson` для загрузки JSON файлов.
+    *   Использует `src.logger.logger` для ведения логов.
+    *   Зависит от структуры локаторов, хранящихся в JSON файле.
+    *   Использует `translations.json` для мультиязычной поддержки.
+6.  **Потенциальные ошибки и области для улучшения:**
+    *   Обработка ошибок загрузки медиа может быть улучшена.
+    *   Отсутствует явная обработка таймаутов.
+    *   Жестко заданные значения таймаутов (`d.wait(0.5)`, `d.wait(1.5)` и т.д.) могут быть сделаны настраиваемыми.
+    *   Код не проверяет наличие атрибутов в `products` перед их использованием, что может вызвать `AttributeError`.
+    *   Код  не обрабатывает ситуацию, когда список `textarea_list` пуст или не соответствует количеству изображений.
+    *   В методе `handle_product` не обрабатываются некоторые возможные ошибки (например, при попытке отправить сообщение в невидимое поле).
+    *    В методе `handle_product` логика формирования сообщения может быть более гибкой.
+    *   В `handle_product` следует добавить обработку ошибок для `send_keys`.
 
-## <объяснение>
-
-**Импорты:**
-
-- `time`: Используется для добавления задержек (например, `time.sleep()`, но здесь используется `driver.wait()`).
-- `asyncio`: Используется для асинхронного выполнения операций, особенно при загрузке и редактировании медиа.
-- `pathlib.Path`: Используется для работы с путями к файлам.
-- `types.SimpleNamespace`: Используется для создания простых объектов с атрибутами, представляющих данные (например, `category`, `product`).
-- `typing.Dict, List`: Используется для аннотации типов, что делает код более читаемым и позволяет выявлять ошибки на ранних этапах разработки.
-- `selenium.webdriver.remote.webelement.WebElement`: Используется для представления элементов веб-страницы, с которыми взаимодействует Selenium.
-- `src.gs`: Предположительно, содержит глобальные переменные и настройки проекта.
-- `src.webdriver.driver.Driver`: Пользовательский класс для управления браузером с помощью Selenium.
-- `src.utils.jjson.j_loads_ns, pprint`: Модуль для загрузки данных из JSON файлов и их форматированного вывода.
-- `src.logger.logger.logger`: Модуль для ведения журнала событий и ошибок.
-
-**Переменная `locator`:**
-
-- Тип: `SimpleNamespace`.
-- Содержит локаторы элементов веб-страницы, загруженные из JSON файла.
-- Используется для поиска и взаимодействия с элементами на странице Facebook.
-
-**Функция `post_title(d: Driver, category: SimpleNamespace) -> bool`:**
-
--   **Аргументы**:
-    -   `d`: Экземпляр класса `Driver` для взаимодействия с браузером.
-    -   `category`: Экземпляр `SimpleNamespace` с атрибутами `title` (заголовок) и `description` (описание) для публикации.
--   **Возвращаемое значение**: `True`, если заголовок и описание были успешно добавлены в сообщение, иначе `None`.
--   **Назначение**: Отправляет заголовок и описание в поле ввода сообщения на странице.
--   **Пример**:
-    ```python
-    driver = Driver(...)
-    category = SimpleNamespace(title="Новая акция", description="Скидка на все товары!")
-    result = post_title(driver, category)
-    if result:
-        print("Заголовок и описание успешно опубликованы")
-    else:
-        print("Не удалось опубликовать заголовок и описание")
-    ```
-
-**Функция `upload_media(d: Driver, products: List[SimpleNamespace], no_video:bool = False) -> bool`:**
-
--   **Аргументы**:
-    -   `d`: Экземпляр класса `Driver`.
-    -   `products`: Список экземпляров `SimpleNamespace`, каждый из которых содержит путь к медиафайлу (`local_saved_image` или `local_saved_video`).
-    -   `no_video`: если `True` - не будет использовать видео, только картинки.
--   **Возвращаемое значение**: `True`, если все медиафайлы успешно загружены, иначе `None`.
--   **Назначение**: Загружает медиафайлы (изображения или видео) и вызывает функцию `update_images_captions`.
--   **Пример**:
-    ```python
-    driver = Driver(...)
-    products = [
-        SimpleNamespace(local_saved_image="image1.jpg"),
-        SimpleNamespace(local_saved_video="video1.mp4")
-    ]
-    result = await upload_media(driver, products, no_video=False)
-    if result:
-        print("Медиафайлы успешно загружены")
-    else:
-        print("Не удалось загрузить медиафайлы")
-    ```
-
-**Функция `update_images_captions(d: Driver, products: List[SimpleNamespace], textarea_list: List[WebElement]) -> None`:**
-
--   **Аргументы**:
-    -   `d`: Экземпляр класса `Driver`.
-    -   `products`: Список экземпляров `SimpleNamespace`, каждый с атрибутами для создания описания (`product_title`, `original_price` и т.д.).
-    -   `textarea_list`: Список `WebElement` - текстовые поля для добавления описаний.
--   **Возвращаемое значение**: `None`.
--   **Назначение**: Добавляет описания к загруженным медиафайлам, используя данные из `products` и локализованные строки.
--  **Пример:**
-    ```python
-    driver = Driver(...)
-    products = [
-        SimpleNamespace(language='ru', product_title="Товар 1", original_price="100", sale_price="80", discount="20%", evaluate_rate="4.5", promotion_link="example.com", tags="#скидка #акция"),
-        SimpleNamespace(language='en', product_title="Product 2", original_price="200", sale_price="160", discount="20%", evaluate_rate="4.8", promotion_link="example2.com", tags="#sale #discount")
-    ]
-    textarea_list = driver.execute_locator(locator.edit_image_properties_textarea)
-    await update_images_captions(driver, products, textarea_list)
-    ```
-
-**Функция `handle_product(product: SimpleNamespace, textarea_list: List[WebElement], i: int) -> None`:**
-    -  **Аргументы:**
-        - `product`: Экземпляр `SimpleNamespace` с данными о продукте.
-        - `textarea_list`: Список `WebElement` - текстовые поля для добавления описаний.
-        - `i`: индекс текущего `textarea`
-    - **Возвращаемое значение:** `None`.
-    - **Назначение:**  Формирует описание продукта с учетом языка и направления текста (LTR или RTL) и отправляет его в текстовое поле.
-
-**Функция `promote_post(d: Driver, category: SimpleNamespace, products: List[SimpleNamespace], no_video:bool = False) -> bool`:**
-
--   **Аргументы**:
-    -   `d`: Экземпляр класса `Driver`.
-    -   `category`: Экземпляр `SimpleNamespace` с заголовком и описанием.
-    -   `products`: Список экземпляров `SimpleNamespace` с информацией о продуктах и путями к медиа.
-    -   `no_video`: если `True` - не будет использовать видео, только картинки.
--   **Возвращаемое значение**: `True`, если пост был успешно опубликован, иначе `None`.
--   **Назначение**: Координирует весь процесс публикации сообщения с заголовком, описанием и медиафайлами.
--   **Пример**:
-    ```python
-    driver = Driver(...)
-    category = SimpleNamespace(title="Акция", description="Скидки до 50%!")
-    products = [SimpleNamespace(local_saved_image="product1.jpg")]
-    result = await promote_post(driver, category, products, no_video=False)
-    if result:
-        print("Пост успешно опубликован")
-    else:
-        print("Не удалось опубликовать пост")
-    ```
-
-**Потенциальные ошибки и области для улучшения:**
-
-- **Обработка ошибок:**  В коде используются `try-except` блоки для обработки ошибок, но их можно сделать более подробными, добавляя логирование исключений.
-- **Ожидания:**  Использование `d.wait()` является базовым решением. Возможно, стоит применять более явные ожидания с условиями, чтобы избежать лишних задержек.
-- **Логирование:**  Можно добавить более подробное логирование для отслеживания состояния выполнения и выявления проблем.
-- **Универсальность:** Код специфичен для Facebook. Можно сделать его более универсальным, если вынести локаторы и логику в отдельные модули.
-- **Управление асинхронностью:** Использование `asyncio.to_thread` для `handle_product` может быть избыточным, если операции в этой функции не блокирующие. В этом случае может быть более эффективно использовать асинхронные операции без потоков.
-
-**Взаимосвязи с другими частями проекта:**
-
--   **`src.webdriver.driver.Driver`**: Класс `Driver` управляет браузером, позволяя выполнять действия на веб-странице, такие как поиск элементов, клики и ввод текста.
--   **`src.utils.jjson`**:  Загружает локаторы из JSON файлов, которые используются для поиска элементов на веб-странице.
--   **`src.logger.logger.logger`**: Ведет журнал событий и ошибок, что позволяет отслеживать выполнение скрипта и выявлять проблемы.
--   **`src.gs`**: Глобальные переменные и пути к файлам.
--   **`translations.json`**: Локализованные строки для формирования подписей.
-
-Этот код представляет собой асинхронный сценарий для автоматизации процесса публикации сообщений с медиафайлами в Facebook, включая загрузку файлов, добавление подписей и текстового описания.
+Этот код является частью системы для автоматической публикации сообщений в Facebook. Он использует Selenium для взаимодействия с веб-страницей, асинхронность для параллельного выполнения задач и разделение логики на отдельные функции для повышения читаемости и поддерживаемости.

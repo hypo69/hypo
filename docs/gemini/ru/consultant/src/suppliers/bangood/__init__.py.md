@@ -58,7 +58,7 @@
         products = get_list_products_in_category(graber, categories[0])
 """
 #  Добавлено описание модуля в формате reStructuredText
-MODE = 'dev' # константа режима работы
+ # константа режима работы
 
 from .graber import Graber # импортируем класс Graber из модуля graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category # импортируем функции из модуля scenario

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -70,7 +70,7 @@ from .version import __version__, __doc__, __details__
 from src.utils.jjson import j_loads, j_loads_ns
 
 
-MODE = 'dev'  # Режим работы
+  # Режим работы
 
 """
 Константа MODE.
@@ -133,7 +133,7 @@ from .version import __version__, __doc__, __details__
 from src.utils.jjson import j_loads, j_loads_ns
 
 
-MODE = 'dev'  # Режим работы
+  # Режим работы
 
 """
 Константа MODE.

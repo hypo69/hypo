@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
@@ -34,7 +34,7 @@ from .grender import GSRenderr
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 from src.logger.logger import logger # добавление импорта для логирования
-MODE = 'dev'
+
 #: Режим работы модуля (dev, prod).
 #  В данном случае установлен режим разработки.
 # Импортирует класс для работы с Google Spreadsheet.
@@ -68,7 +68,7 @@ from .grender import GSRenderr
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 from src.logger.logger import logger # добавление импорта для логирования
-MODE = 'dev'
+
 #: Режим работы модуля (dev, prod).
 #  В данном случае установлен режим разработки.
 # Импортирует класс для работы с Google Spreadsheet.

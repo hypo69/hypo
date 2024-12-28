@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 ## <algorithm>
@@ -25,7 +25,7 @@ There is no algorithm in the sense of a series of steps processing data.  This f
 
 ```mermaid
 graph LR
-    A[utils/iso/__init__.py] --> B(MODE = 'dev');
+    A[utils/iso/__init__.py] --> B();
 ```
 
 ## <explanation>
@@ -44,7 +44,7 @@ There are no functions.
 
 **Variables:**
 
-*   `MODE = 'dev'`: This is a constant string variable.  It likely defines a mode for the `iso` module (e.g., development, testing, production). This mode could influence how the module operates.
+*   ``: This is a constant string variable.  It likely defines a mode for the `iso` module (e.g., development, testing, production). This mode could influence how the module operates.
 
 **Potential Errors/Areas for Improvement:**
 

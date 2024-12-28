@@ -62,7 +62,7 @@ from src.utils.xls import save_xls_file
 from src.utils.csv import save_csv_file
 from src.logger.logger import logger # Импорт логгера
 
-MODE = 'dev'
+
 
 def replace_key_in_dict(data: dict | list, old_key: str, new_key: str) -> dict:
     """

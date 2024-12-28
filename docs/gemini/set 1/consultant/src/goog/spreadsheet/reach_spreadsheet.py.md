@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """ 
    https://habr.com/ru/post/305378/    
@@ -447,7 +447,7 @@ if __name__ == "__main__":
     print(spreadsheet.getSheetURL())
 """
 
-MODE = 'dev'
+
 
 """ 
    https://habr.com/ru/post/305378/    

@@ -12,7 +12,7 @@
 	:synopsis: SMTP Email Interface
 
 """
-MODE = 'dev'
+
 
 
 """ This module provides functionality to send and receive emails using an SMTP or IMAP server.
@@ -128,7 +128,7 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 	:synopsis: Модуль для работы с SMTP и IMAP.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -251,7 +251,7 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 	:synopsis: Модуль для работы с SMTP и IMAP.
 
 """
-MODE = 'dev'
+
 
 
 """

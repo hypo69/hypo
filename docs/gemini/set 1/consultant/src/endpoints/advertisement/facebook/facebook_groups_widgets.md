@@ -12,7 +12,7 @@
 	:synopsis: Раскрывающеся меню выбора групп для подачи объявления
 
 """
-MODE = 'dev'
+
 
 import header 
 from IPython.display import display
@@ -81,7 +81,7 @@ class FacebookGroupsWidget:
    :synopsis: Модуль для создания и отображения виджета выбора групп Facebook для рекламы.
 
 """
-MODE = 'dev'
+
 
 import header
 from IPython.display import display
@@ -171,7 +171,7 @@ class FacebookGroupsWidget:
    :synopsis: Модуль для создания и отображения виджета выбора групп Facebook для рекламы.
 
 """
-MODE = 'dev'
+
 
 import header
 from IPython.display import display

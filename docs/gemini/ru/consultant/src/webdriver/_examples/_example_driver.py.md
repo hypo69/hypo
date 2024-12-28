@@ -53,7 +53,7 @@ from src.webdriver.driver import Driver, Chrome, Firefox, Edge
 from src.logger.logger import logger
 from typing import  Any
 
-MODE = 'dev'
+
 
 def _process_driver(driver_type: Any, url: str, cookies_file: str, scrolls_forward: int, scrolls_backward: int) -> None:
     """

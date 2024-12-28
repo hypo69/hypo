@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -81,7 +81,7 @@ from src.logger import logger
     :platform: Windows, Unix
     :synopsis: Модуль содержит примеры работы с категориями.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -105,7 +105,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:  Дополнительная документация к константе MODE.
 """
-MODE = 'dev'
+
   
 """ module: src.category._examples """
 
@@ -166,7 +166,7 @@ print(dir_root)
     :platform: Windows, Unix
     :synopsis: Модуль содержит примеры работы с категориями.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -190,7 +190,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:  Дополнительная документация к константе MODE.
 """
-MODE = 'dev'
+
   
 """ module: src.category._examples """
 

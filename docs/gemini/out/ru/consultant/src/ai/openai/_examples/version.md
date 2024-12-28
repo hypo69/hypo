@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -78,7 +78,7 @@ __author__='hypotez '
 import sys
 from src.utils.jjson import j_loads
 
-MODE = 'dev'  # Режим работы модуля.
+  # Режим работы модуля.
 
 
 """
@@ -145,7 +145,7 @@ from src.logger import logger
 import sys
 from src.utils.jjson import j_loads
 
-MODE = 'dev'  # Режим работы модуля.
+  # Режим работы модуля.
 
 
 """

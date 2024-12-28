@@ -13,7 +13,7 @@
 	:synopsis: speech recognition and text-to-speech conversion
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile

@@ -1,248 +1,311 @@
 ## <алгоритм>
 
-**Общий рабочий процесс:**
+### Общая схема тестирования TinyPerson
+1. **Инициализация:**
+   - Запускается pytest, который автоматически находит и выполняет тестовые функции.
+   - Логгер `tinytroupe` инициализируется для записи отладочных сообщений.
+   - Добавляются пути к директориям проекта в `sys.path` для корректного импорта модулей (что не рекомендуется, лучше использовать пакетный импорт).
+   - Импортируются функции `create_oscar_the_architect` и `create_lisa_the_data_scientist` для создания тестовых агентов.
+   - Импортируются вспомогательные функции тестирования `testing_utils`.
 
-1.  **Импорт необходимых модулей:** Импортируются модули `pytest`, `logging`, `sys`, а также `create_oscar_the_architect`, `create_lisa_the_data_scientist` из `tinytroupe.examples` и вспомогательные функции тестирования из `testing_utils`. Пути к модулям добавляются для корректного импорта.
+2. **Тесты (основной цикл):**
+   - Для каждой тестовой функции:
+      - Создается экземпляр агента `Oscar` и `Lisa` (оба наследники от `TinyPerson`).
+      - Выполняются действия, специфичные для теста (описаны ниже).
+      - Делаются утверждения (assert), чтобы убедиться, что агенты работают как ожидается.
+   - Тестовые функции включают:
+      - **test_act**: Проверяет, что агент выполняет как минимум одно действие, включая `TALK` и завершающее `DONE`.
+      - **test_listen**: Проверяет, что агент принимает реплики и обновляет свою память.
+      - **test_define**: Проверяет, что агент сохраняет и использует заданные конфигурации.
+      - **test_define_several**: Проверяет, что агент сохраняет несколько параметров в группу.
+      - **test_socialize**: Проверяет, что агент взаимодействует с другими агентами.
+      - **test_see**: Проверяет, что агент реагирует на визуальные стимулы и записывает их в память.
+      - **test_think**: Проверяет, что агент реагирует на свои мысли и формирует намерения.
+      - **test_internalize_goal**: Проверяет, что агент реагирует на цели и формирует планы.
+      - **test_move_to**: Проверяет, что агент изменяет свое местоположение и контекст.
+      - **test_change_context**: Проверяет, что агент меняет контекст.
+      - **test_save_spec**: Проверяет, что агент сохраняет свою спецификацию в файл и загружает ее.
 
-2.  **Определение тестовых функций:** Определяются различные тестовые функции, каждая из которых тестирует определенную функциональность класса `TinyPerson`. Все тесты используют фикстуру `setup`.
+3. **test_act**:
+   - Создаются агенты Оскар и Лиза.
+   - Для каждого агента выполняется запрос `Tell me a bit about your life.` и возвращаются действия.
+   - Проверяется, что количество действий не менее 1, и что они содержат тип `TALK` и завершаются `DONE`.
 
-3.  **Итерирование по агентам:** Большинство тестов выполняются для двух экземпляров `TinyPerson`: `create_oscar_the_architect()` и `create_lisa_the_data_scientist()`.
+4. **test_listen**:
+   - Создаются агенты Оскар и Лиза.
+   - Для каждого агента выполняется действие `listen("Hello, how are you?")`.
+   - Проверяется, что сообщения были добавлены в память, последняя роль была `user` , тип стимула `CONVERSATION` и контент соответствовал ожидаемому.
 
-4.  **Тест `test_act`:**
-    *   **Пример:** Агенту отправляется сообщение "Tell me a bit about your life.".
-    *   **Проверка:** Проверяется, что агент выполняет хотя бы одно действие, и среди этих действий есть "TALK" и "DONE".
+5. **test_define**:
+   - Создаются агенты Оскар и Лиза.
+   - Сохраняется оригинальный промпт.
+   - Выполняется `define('age', 25)`.
+   - Проверяется, что значение `age` добавлено в конфигурацию, промпт изменился и содержит значение `age`.
 
-5.  **Тест `test_listen`:**
-    *   **Пример:** Агент "слушает" сообщение "Hello, how are you?".
-    *   **Проверка:** Проверяется, что сообщение добавляется в `current_messages`, роль сообщения - "user", тип стимула - "CONVERSATION", и содержимое сообщения соответствует ожидаемому.
+6. **test_define_several**:
+   - Создаются агенты Оскар и Лиза.
+   - Выполняется `define_several(group="skills", records=["Python", "Machine learning", "GPT-3"])`.
+   - Проверяется, что каждое значение добавилось в группу `skills`.
 
-6.  **Тест `test_define`:**
-    *   **Пример:** Агенту задается значение "age" = 25.
-    *   **Проверка:** Проверяется, что значение добавлено в конфигурацию агента и что промпт агента изменился и включает новое значение.
+7. **test_socialize**:
+   - Создаются агенты Оскар и Лиза.
+   - Агент Оскар устанавливает Лизу как доступную, и наоборот.
+   - Агенты обмениваются приветствиями.
+   - Проверяется, что агент выполняет как минимум одно действие, тип `TALK` и упоминание имени другого агента.
 
-7.  **Тест `test_define_several`:**
-    *   **Пример:** Агенту добавляются навыки "Python", "Machine learning", "GPT-3" в группу "skills".
-    *   **Проверка:** Проверяется, что все навыки добавлены в конфигурацию агента.
+8. **test_see**:
+   - Создаются агенты Оскар и Лиза.
+   - Для каждого агента выполняется действие `see("A beautiful sunset over the ocean.")`.
+   - Проверяется, что агент выполняет как минимум одно действие, тип `THINK` и упоминание `sunset`.
 
-8.  **Тест `test_socialize`:**
-    *   **Пример:** Агенты взаимодействуют друг с другом, один агент делает другого доступным.
-    *   **Проверка:** Проверяется, что агент выполняет действие "TALK" и упоминает имя другого агента.
+9. **test_think**:
+    - Создаются агенты Оскар и Лиза.
+    - Для каждого агента выполняется действие `think("I will tell everyone right now how awesome life is!")`.
+    - Проверяется, что агент выполняет как минимум одно действие, тип `TALK` и упоминание `life`.
 
-9.  **Тест `test_see`:**
-    *   **Пример:** Агент видит "A beautiful sunset over the ocean.".
-    *   **Проверка:** Проверяется, что агент выполняет действие "THINK" и упоминает "sunset".
+10. **test_internalize_goal**:
+    - Создаются агенты Оскар и Лиза.
+    - Для каждого агента выполняется действие `internalize_goal("I want to learn more about GPT-3.")`.
+    - Проверяется, что агент выполняет как минимум одно действие, тип `SEARCH` и упоминание `GPT-3`.
 
-10. **Тест `test_think`:**
-    *   **Пример:** Агент думает "I will tell everyone right now how awesome life is!".
-    *   **Проверка:** Проверяется, что агент выполняет действие "TALK" и упоминает "life".
+11. **test_move_to**:
+    - Создаются агенты Оскар и Лиза.
+    - Для каждого агента выполняется действие `move_to("New York", context=["city", "busy", "diverse"])`.
+    - Проверяется, что текущее местоположение агента изменилось и контекст также обновился.
 
-11. **Тест `test_internalize_goal`:**
-    *   **Пример:** Агент ставит себе цель "I want to learn more about GPT-3.".
-    *   **Проверка:** Проверяется, что агент выполняет действие "SEARCH" и упоминает "GPT-3".
+12. **test_change_context**:
+     - Создаются агенты Оскар и Лиза.
+     - Для каждого агента выполняется действие `change_context(["home", "relaxed", "comfortable"])`.
+     - Проверяется, что текущий контекст агента изменился.
 
-12. **Тест `test_move_to`:**
-    *   **Пример:** Агент перемещается в "New York" с контекстом ["city", "busy", "diverse"].
-    *   **Проверка:** Проверяется, что местоположение и контекст агента обновлены.
+13. **test_save_spec**:
+    - Создаются агенты Оскар и Лиза.
+    - Спецификация агента сохраняется в файл, и проверяется наличие файла.
+    - Загружается спецификация агента из файла.
+    - Проверяется, что загруженный агент имеет ожидаемое имя, и что его конфигурация соответствует оригиналу.
 
-13. **Тест `test_change_context`:**
-    *   **Пример:** Агент меняет контекст на ["home", "relaxed", "comfortable"].
-    *   **Проверка:** Проверяется, что контекст агента обновлен.
-14. **Тест `test_save_spec`:**
-    *   **Пример:** Агент сохраняет свою спецификацию в JSON файл, затем загружает ее.
-    *   **Проверка:** Проверяется, что файл создан, загруженный агент имеет новое имя и что конфигурация загруженного агента идентична исходной (кроме имени).
-
-**Пример потока данных:**
-
-```
-Начало
-    -> Создание агентов: create_oscar_the_architect(), create_lisa_the_data_scientist()
-    -> Для каждого агента:
-        -> test_act:
-            -> agent.listen_and_act("Tell me a bit about your life.", return_actions=True) -> actions
-            -> Проверка действий
-        -> test_listen:
-            -> agent.listen("Hello, how are you?") -> Сохранение сообщения в episodic_memory
-            -> Проверка сообщения в episodic_memory
-        -> test_define:
-            -> agent.define('age', 25) -> Изменение конфигурации и промпта
-            -> Проверка конфигурации и промпта
-        -> test_define_several:
-            -> agent.define_several(group="skills", records=["Python", ...]) -> Изменение конфигурации
-            -> Проверка конфигурации
-        -> test_socialize:
-            -> agent.make_agent_accessible(other)
-            -> agent.listen(f"Hi {agent.name}, I am {other.name}.")
-            -> actions = agent.act(return_actions=True)
-            -> Проверка действий
-        -> test_see:
-            -> agent.see("A beautiful sunset over the ocean.")
-            -> actions = agent.act(return_actions=True)
-            -> Проверка действий
-        -> test_think:
-            -> agent.think("I will tell everyone right now how awesome life is!")
-            -> actions = agent.act(return_actions=True)
-            -> Проверка действий
-        -> test_internalize_goal:
-            -> agent.internalize_goal("I want to learn more about GPT-3.")
-            -> actions = agent.act(return_actions=True)
-            -> Проверка действий
-        -> test_move_to:
-            -> agent.move_to("New York", context=[...]) -> Изменение конфигурации
-            -> Проверка конфигурации
-        -> test_change_context:
-            -> agent.change_context([...]) -> Изменение конфигурации
-            -> Проверка конфигурации
-        -> test_save_spec:
-            -> agent.save_spec(file, include_memory=True) -> Сохранение спецификации
-            -> loaded_agent = TinyPerson.load_spec(file, new_agent_name=...) -> Загрузка спецификации
-            -> Проверка загруженного агента
-Конец
-```
+### Поток данных
+- Агенты создаются через функции `create_oscar_the_architect` и `create_lisa_the_data_scientist`.
+- Действия агентов (`listen`, `act`, `define`, `define_several`, `make_agent_accessible`, `see`, `think`, `internalize_goal`, `move_to`, `change_context`, `save_spec`, `load_spec`) взаимодействуют с внутренними состояниями агента (сообщения, память, конфигурация).
+- Вспомогательные функции `testing_utils` используются для проверок (например, `contains_action_type`, `terminates_with_action_type`, `contains_action_content`).
+- Результаты тестов выводятся через `assert`.
 
 ## <mermaid>
-
 ```mermaid
-graph LR
-    A[Начало] --> B(Импорт модулей: pytest, logging, sys, tinytroupe.examples, testing_utils)
-    B --> C{Для каждого агента: create_oscar_the_architect(), create_lisa_the_data_scientist()}
-    C --> D[test_act]
-    D -->|agent.listen_and_act| E(Проверка действий: TALK, DONE)
-    C --> F[test_listen]
-    F --> |agent.listen|G(Сохранение сообщения в episodic_memory)
-    G --> H(Проверка сообщения: role, type, content)
-    C --> I[test_define]
-    I --> |agent.define| J(Изменение конфигурации и промпта)
-    J --> K(Проверка конфигурации и промпта)
-    C --> L[test_define_several]
-    L --> |agent.define_several|M(Изменение конфигурации: skills)
-    M --> N(Проверка конфигурации)
-    C --> O[test_socialize]
-    O --> |agent.make_agent_accessible| P(Взаимодействие агентов)
-    P --> |agent.listen|Q(Проверка действий: TALK, упоминание другого агента)
-    C --> R[test_see]
-    R --> |agent.see|S(Обработка визуального стимула)
-    S --> T(Проверка действий: THINK, упоминание стимула)
-    C --> U[test_think]
-    U --> |agent.think|V(Обработка мысли)
-    V --> W(Проверка действий: TALK, упоминание мысли)
-    C --> X[test_internalize_goal]
-    X --> |agent.internalize_goal|Y(Обработка цели)
-    Y --> Z(Проверка действий: SEARCH, упоминание цели)
-    C --> AA[test_move_to]
-    AA --> |agent.move_to|AB(Изменение конфигурации: location, context)
-    AB --> AC(Проверка конфигурации)
-    C --> AD[test_change_context]
-    AD --> |agent.change_context|AE(Изменение контекста)
-    AE --> AF(Проверка контекста)
-    C --> AG[test_save_spec]
-    AG --> |agent.save_spec| AH(Сохранение спецификации)
-    AH --> |TinyPerson.load_spec|AI(Загрузка спецификации)
-     AI --> AJ(Проверка загруженного агента)
-     AJ --> AK[Конец]
-    E --> AK
-    H --> AK
-    K --> AK
-    N --> AK
-    Q --> AK
-    T --> AK
-    W --> AK
-    Z --> AK
-    AC --> AK
-    AF --> AK
+flowchart TD
+    Start[Start Test] --> CreateAgents[Create Oscar and Lisa Agents];
+    
+    subgraph test_act
+    CreateAgents --> testAct_loop[Loop for Each Agent]
+    testAct_loop --> ListenAndAct[agent.listen_and_act("Tell me a bit about your life.", return_actions=True)]
+    ListenAndAct --> AssertActionsLength[assert len(actions) >= 1]
+    AssertActionsLength --> AssertTalkAction[assert contains_action_type(actions, "TALK")]
+    AssertTalkAction --> AssertDoneAction[assert terminates_with_action_type(actions, "DONE")]
+    AssertDoneAction --> testAct_loop_next[Next Agent or End test_act]
+    end
+        testAct_loop_next --> test_listen[Test Listen]
+    
+    subgraph test_listen
+    CreateAgents --> testListen_loop[Loop for Each Agent]
+    testListen_loop --> ListenMethod[agent.listen("Hello, how are you?")]
+    ListenMethod --> AssertMessageLength[assert len(agent.current_messages) > 0]
+    AssertMessageLength --> AssertUserRole[assert agent.episodic_memory.retrieve_all()[-1]['role'] == 'user']
+    AssertUserRole --> AssertConversationType[assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['type'] == 'CONVERSATION']
+    AssertConversationType --> AssertMessageContent[assert agent.episodic_memory.retrieve_all()[-1]['content']['stimuli'][0]['content'] == 'Hello, how are you?']
+    AssertMessageContent --> testListen_loop_next[Next Agent or End test_listen]
+    end
+    testListen_loop_next --> test_define[Test Define]
+    
+    subgraph test_define
+    CreateAgents --> testDefine_loop[Loop for Each Agent]
+    testDefine_loop --> SaveOriginalPrompt[original_prompt = agent.current_messages[0]['content']]
+    SaveOriginalPrompt --> DefineValue[agent.define('age', 25)]
+    DefineValue --> AssertConfigValue[assert agent._configuration['age'] == 25]
+    AssertConfigValue --> AssertPromptChanged[assert agent.current_messages[0]['content'] != original_prompt]
+    AssertPromptChanged --> AssertPromptContainsValue[assert '25' in agent.current_messages[0]['content']]
+    AssertPromptContainsValue --> testDefine_loop_next[Next Agent or End test_define]
+    end
+    testDefine_loop_next --> test_define_several[Test Define Several]
+
+     subgraph test_define_several
+    CreateAgents --> testDefineSeveral_loop[Loop for Each Agent]
+    testDefineSeveral_loop --> DefineSeveralValues[agent.define_several(group="skills", records=["Python", "Machine learning", "GPT-3"])]
+    DefineSeveralValues --> AssertPythonSkill[assert "Python" in agent._configuration["skills"]]
+    AssertPythonSkill --> AssertMachineLearningSkill[assert "Machine learning" in agent._configuration["skills"]]
+    AssertMachineLearningSkill --> AssertGPT3Skill[assert "GPT-3" in agent._configuration["skills"]]
+        AssertGPT3Skill --> testDefineSeveral_loop_next[Next Agent or End test_define_several]
+    end
+     testDefineSeveral_loop_next --> test_socialize[Test Socialize]
+
+    subgraph test_socialize
+    CreateAgents --> Socialize_Setup[an_oscar = create_oscar_the_architect(); a_lisa = create_lisa_the_data_scientist()]
+    Socialize_Setup --> Socialize_loop[Loop for Each Agent]
+        Socialize_loop --> DefineOtherAgent[other = a_lisa if agent.name == "Oscar" else an_oscar]
+    DefineOtherAgent --> MakeAccessible[agent.make_agent_accessible(other, relation_description="My friend")]
+    MakeAccessible --> AgentListen[agent.listen(f"Hi {agent.name}, I am {other.name}.")]
+        AgentListen --> AgentAct[actions = agent.act(return_actions=True)]
+    AgentAct --> AssertSocializeActionsLength[assert len(actions) >= 1]
+    AssertSocializeActionsLength --> AssertSocializeTalkAction[assert contains_action_type(actions, "TALK")]
+        AssertSocializeTalkAction --> AssertSocializeMentionOther[assert contains_action_content(actions, other.name)]
+        AssertSocializeMentionOther --> Socialize_loop_next[Next Agent or End test_socialize]
+    end
+     Socialize_loop_next --> test_see[Test See]
+    
+    subgraph test_see
+     CreateAgents --> testSee_loop[Loop for Each Agent]
+    testSee_loop --> AgentSee[agent.see("A beautiful sunset over the ocean.")]
+     AgentSee --> AgentActSee[actions = agent.act(return_actions=True)]
+    AgentActSee --> AssertSeeActionsLength[assert len(actions) >= 1]
+        AssertSeeActionsLength --> AssertSeeThinkAction[assert contains_action_type(actions, "THINK")]
+    AssertSeeThinkAction --> AssertSeeMentionContent[assert contains_action_content(actions, "sunset")]
+    AssertSeeMentionContent --> testSee_loop_next[Next Agent or End test_see]
+    end
+    testSee_loop_next --> test_think[Test Think]
+   
+   subgraph test_think
+    CreateAgents --> testThink_loop[Loop for Each Agent]
+    testThink_loop --> AgentThink[agent.think("I will tell everyone right now how awesome life is!")]
+        AgentThink --> AgentActThink[actions = agent.act(return_actions=True)]
+    AgentActThink --> AssertThinkActionsLength[assert len(actions) >= 1]
+    AssertThinkActionsLength --> AssertThinkTalkAction[assert contains_action_type(actions, "TALK")]
+        AssertThinkTalkAction --> AssertThinkMentionContent[assert contains_action_content(actions, "life")]
+         AssertThinkMentionContent --> testThink_loop_next[Next Agent or End test_think]
+    end
+    testThink_loop_next --> test_internalize_goal[Test Internalize Goal]
+    
+    subgraph test_internalize_goal
+    CreateAgents --> testInternalize_loop[Loop for Each Agent]
+    testInternalize_loop --> InternalizeGoal[agent.internalize_goal("I want to learn more about GPT-3.")]
+    InternalizeGoal --> AgentActInternalize[actions = agent.act(return_actions=True)]
+    AgentActInternalize --> AssertInternalizeActionsLength[assert len(actions) >= 1]
+        AssertInternalizeActionsLength --> AssertInternalizeSearchAction[assert contains_action_type(actions, "SEARCH")]
+    AssertInternalizeSearchAction --> AssertInternalizeMentionContent[assert contains_action_content(actions, "GPT-3")]
+      AssertInternalizeMentionContent --> testInternalize_loop_next[Next Agent or End test_internalize_goal]
+    end
+    testInternalize_loop_next --> test_move_to[Test Move To]
+    
+    subgraph test_move_to
+    CreateAgents --> testMoveTo_loop[Loop for Each Agent]
+    testMoveTo_loop --> MoveToLocation[agent.move_to("New York", context=["city", "busy", "diverse"])]
+        MoveToLocation --> AssertCurrentLocation[assert agent._configuration["current_location"] == "New York"]
+       AssertCurrentLocation --> AssertCityInContext[assert "city" in agent._configuration["current_context"]]
+        AssertCityInContext --> AssertBusyInContext[assert "busy" in agent._configuration["current_context"]]
+        AssertBusyInContext --> AssertDiverseInContext[assert "diverse" in agent._configuration["current_context"]]
+          AssertDiverseInContext --> testMoveTo_loop_next[Next Agent or End test_move_to]
+    end
+    testMoveTo_loop_next --> test_change_context[Test Change Context]
+    
+    subgraph test_change_context
+    CreateAgents --> testChangeContext_loop[Loop for Each Agent]
+    testChangeContext_loop --> ChangeContextMethod[agent.change_context(["home", "relaxed", "comfortable"])]
+     ChangeContextMethod --> AssertHomeInContext[assert "home" in agent._configuration["current_context"]]
+        AssertHomeInContext --> AssertRelaxedInContext[assert "relaxed" in agent._configuration["current_context"]]
+        AssertRelaxedInContext --> AssertComfortableInContext[assert "comfortable" in agent._configuration["current_context"]]
+         AssertComfortableInContext --> testChangeContext_loop_next[Next Agent or End test_change_context]
+    end
+    testChangeContext_loop_next --> test_save_spec[Test Save Spec]
+    
+   subgraph test_save_spec
+     CreateAgents --> testSaveSpec_loop[Loop for Each Agent]
+    testSaveSpec_loop --> SaveSpecMethod[agent.save_spec(get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json"), include_memory=True)]
+      SaveSpecMethod --> AssertFileExists[assert os.path.exists(get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json"))]
+    AssertFileExists --> LoadSpecMethod[loaded_agent = TinyPerson.load_spec(get_relative_to_test_path(f"test_exports/serialization/{agent.name}.tinyperson.json"), new_agent_name=loaded_name)]
+     LoadSpecMethod --> AssertLoadedAgentName[assert loaded_agent.name == loaded_name]
+        AssertLoadedAgentName --> AssertConfigEqual[assert agents_configs_are_equal(agent, loaded_agent, ignore_name=True)]
+          AssertConfigEqual --> testSaveSpec_loop_next[Next Agent or End test_save_spec]
+    end
+     testSaveSpec_loop_next --> End[End Test]
 ```
 
-**Объяснение `mermaid` диаграммы:**
+### Зависимости `mermaid`:
 
-*   `A`: Начало процесса тестирования.
-*   `B`: Импорт необходимых модулей для тестирования.
-*   `C`: Цикл, который перебирает агентов `create_oscar_the_architect` и `create_lisa_the_data_scientist`. Каждый агент тестируется отдельно в последующих узлах.
-*   `D` - `AG`: Представляют различные тестовые функции.
-*   `E`, `H`, `K`, `N`, `Q`, `T`, `W`, `Z`, `AC`, `AF`, `AJ`: Узлы, которые выполняют проверки результатов действий агента.
-*   Стрелки показывают последовательность выполнения действий и передачи данных между функциями, методами и узлами.
-*   Узлы с названиями типа `Проверка действий: TALK, DONE` показывают, какие проверки выполняются в данном тесте.
-*  `agent.listen_and_act`, `agent.listen`, `agent.define`, `agent.define_several`, `agent.make_agent_accessible` и другие методы агента показывают, как происходит взаимодействие между тестами и агентом.
-*   `AK`: Конец процесса тестирования.
-
-Диаграмма `mermaid` визуально отображает поток выполнения тестов и зависимостей между функциями, делая процесс более понятным.
+1.  `flowchart TD`: Объявляет, что это диаграмма потока.
+2.  `Start[Start Test]`: Начало тестового процесса.
+3.  `CreateAgents[Create Oscar and Lisa Agents]`: Создание экземпляров агентов Oscar и Lisa.
+4.  `testAct_loop`, `testListen_loop`, `testDefine_loop`, `testDefineSeveral_loop`, `Socialize_loop`, `testSee_loop`, `testThink_loop`, `testInternalize_loop`, `testMoveTo_loop`, `testChangeContext_loop`, `testSaveSpec_loop`: циклы для каждого агента в каждой тестовой функции.
+5.  `ListenAndAct`: Вызов метода `listen_and_act` агента и возврат списка действий.
+6.  `AssertActionsLength`, `AssertTalkAction`, `AssertDoneAction`: утверждения, проверяющие длину списка действий, тип действия TALK и завершающее действие DONE.
+7.  `ListenMethod`: Вызов метода `listen` агента для добавления сообщения.
+8.  `AssertMessageLength`, `AssertUserRole`, `AssertConversationType`, `AssertMessageContent`: Утверждения проверяющие длину списка сообщений, роль последнего сообщения, тип стимула и его содержимое.
+9.  `SaveOriginalPrompt`: Сохранение оригинального промпта агента.
+10. `DefineValue`: Вызов метода `define` для установки значения конфигурации.
+11. `AssertConfigValue`, `AssertPromptChanged`, `AssertPromptContainsValue`: Утверждения проверяющие конфигурации агента.
+12. `DefineSeveralValues`: Вызов метода `define_several` для установки нескольких значений конфигурации.
+13. `AssertPythonSkill`, `AssertMachineLearningSkill`, `AssertGPT3Skill`: Утверждения проверяющие конфигурации агента, связанные со скилами.
+14. `Socialize_Setup`: Установка переменных для агентов во время социализации.
+15. `DefineOtherAgent`: Установка переменной с другим агентом.
+16. `MakeAccessible`: Вызов метода `make_agent_accessible` для установки отношений между агентами.
+17. `AgentListen`: Вызов метода `listen` для социального взаимодействия.
+18. `AgentAct`: Вызов метода `act` для возвращения действий.
+19. `AssertSocializeActionsLength`, `AssertSocializeTalkAction`, `AssertSocializeMentionOther`: Утверждения для социальных взаимодействий.
+20. `AgentSee`: Вызов метода `see`.
+21. `AgentActSee`: Вызов метода `act` после `see`.
+22. `AssertSeeActionsLength`, `AssertSeeThinkAction`, `AssertSeeMentionContent`: Утверждения после `see`.
+23. `AgentThink`: Вызов метода `think`.
+24. `AgentActThink`: Вызов метода `act` после `think`.
+25. `AssertThinkActionsLength`, `AssertThinkTalkAction`, `AssertThinkMentionContent`: Утверждения после `think`.
+26. `InternalizeGoal`: Вызов метода `internalize_goal`.
+27. `AgentActInternalize`: Вызов метода `act` после `internalize_goal`.
+28. `AssertInternalizeActionsLength`, `AssertInternalizeSearchAction`, `AssertInternalizeMentionContent`: Утверждения после `internalize_goal`.
+29. `MoveToLocation`: Вызов метода `move_to` для смены локации.
+30. `AssertCurrentLocation`, `AssertCityInContext`, `AssertBusyInContext`, `AssertDiverseInContext`: Утверждения после `move_to`.
+31. `ChangeContextMethod`: Вызов метода `change_context` для смены контекста.
+32. `AssertHomeInContext`, `AssertRelaxedInContext`, `AssertComfortableInContext`: Утверждения после `change_context`.
+33. `SaveSpecMethod`: Вызов метода `save_spec` для сохранения конфигурации.
+34. `AssertFileExists`: Проверка существования файла после сохранения.
+35. `LoadSpecMethod`: Загрузка конфигурации агента из файла.
+36. `AssertLoadedAgentName`: Проверка имени загруженного агента.
+37. `AssertConfigEqual`: Проверка равенства конфигурации оригинального и загруженного агента.
+38. `End[End Test]`: Завершение теста.
 
 ## <объяснение>
 
-**Импорты:**
+### Импорты:
+-   `pytest`: Фреймворк для написания и запуска тестов.
+-   `logging`: Модуль для логирования событий в приложении.
+    -   `logger = logging.getLogger("tinytroupe")`: Создается логгер с именем "tinytroupe" для записи отладочной информации.
+-   `sys`: Модуль для доступа к параметрам и функциям интерпретатора Python.
+    -   `sys.path.insert(0, ...)`: Добавление путей к директориям проекта в `sys.path`. Это необходимо для того, чтобы Python мог находить модули проекта, которые не находятся в стандартных путях. **(Обратите внимание, что изменение sys.path не является лучшей практикой для структурирования проекта. Лучше использовать пакетный импорт)**
+-   `tinytroupe.examples`: Импортируются функции `create_oscar_the_architect` и `create_lisa_the_data_scientist` для создания тестовых агентов.
+-   `testing_utils`: Импортируются вспомогательные функции для тестирования, такие как `contains_action_type`, `terminates_with_action_type`, `contains_action_content` и `agents_configs_are_equal`.
+-  `os`: Импортируется для работы с файловой системой.
 
-*   `pytest`: Фреймворк для тестирования. Используется для создания и запуска тестов, а также для фикстур.
-*   `logging`: Модуль для логирования. Используется для отладки и записи информации о работе агентов.
-*   `sys`: Модуль для работы с системными параметрами, в частности, для добавления путей к модулям. `sys.path.insert(0, ...)` добавляет пути к каталогам `tinytroupe` и `src` для импорта модулей. Это необходимо, поскольку тесты запускаются из подкаталога.
-*   `tinytroupe.examples`: Модуль, содержащий функции `create_oscar_the_architect` и `create_lisa_the_data_scientist`, которые используются для создания экземпляров агентов `TinyPerson`.
-*   `testing_utils`: Кастомный модуль, содержащий вспомогательные функции для тестирования, такие как `contains_action_type`, `contains_action_content`, `terminates_with_action_type`, `get_relative_to_test_path`, и `agents_configs_are_equal`. Эти функции упрощают написание тестов.
+### Классы:
+-   `TinyPerson`: класс агента, который тестируется в данном файле. Он не импортируется явно, но его методы используются через экземпляры, созданные функциями `create_oscar_the_architect` и `create_lisa_the_data_scientist`.
 
-**Классы:**
+### Функции:
 
-*   `TinyPerson`: Класс, который представляет собой агента. Он не импортируется напрямую, но создается через функции из `tinytroupe.examples`, а также используется в методе `load_spec`. Класс содержит в себе основные методы и атрибуты для взаимодействия. (В коде не виден, подразумевается из `tinytroupe`)
-    *   Атрибуты: `name`, `_configuration`, `current_messages`, `episodic_memory`. `_configuration` хранит всю информацию о агенте, `current_messages` - текущие сообщения, `episodic_memory` - память агента.
-    *   Методы: `listen`, `act`, `define`, `define_several`, `socialize`, `see`, `think`, `internalize_goal`, `move_to`, `change_context`, `save_spec`, `load_spec`. Эти методы позволяют взаимодействовать с агентом и моделировать его поведение.
+-   **Тестовые функции**: Все функции, начинающиеся с `test_`, являются тестовыми функциями, которые выполняются pytest.
+    -   Каждая тестовая функция принимает аргумент `setup`, который является фикстурой pytest (не показана в коде, но предоставляется pytest).
+    -   Внутри каждой тестовой функции создаются агенты Оскар и Лиза (экземпляры `TinyPerson`) и выполняются различные проверки с использованием методов агентов.
+-   **`create_oscar_the_architect()`, `create_lisa_the_data_scientist()`:** Функции, создающие и возвращающие экземпляры агентов с предустановленной конфигурацией.
+    -   Эти функции импортируются из `tinytroupe.examples` и используются для создания тестовых агентов.
+-   **`get_relative_to_test_path(path)`:**  Функция, используемая для получения относительного пути к файлу от пути тестирования.
+    -  Этот метод предполагается находиться в `testing_utils`
 
-**Функции:**
+### Переменные:
+-   `logger`: Логгер для записи сообщений.
+-   `agent`:  Переменная, которая используется для хранения текущего агента в циклах.
+-   `actions`:  Переменная, в которой сохраняются действия агента после вызова `act()` или `listen_and_act()`.
+-   `original_prompt`: Переменная, хранящая оригинальный промпт агента перед его изменением.
+-  `loaded_name`: Имя загруженного агента.
+- `loaded_agent`: Загруженный агент из файла.
+- `other`: Другой агент при тестировании социализации.
 
-*   `test_act(setup)`: Тестирует метод `listen_and_act` агента. Проверяет, что агент выполняет действия в ответ на сообщение, что среди действий есть "TALK" и "DONE".
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_listen(setup)`: Тестирует метод `listen` агента. Проверяет, что сообщения корректно добавляются в память агента.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_define(setup)`: Тестирует метод `define` агента. Проверяет, что значения устанавливаются в конфигурацию агента и что промпт изменяется.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_define_several(setup)`: Тестирует метод `define_several` агента. Проверяет, что несколько значений корректно добавляются в конфигурацию.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_socialize(setup)`: Тестирует взаимодействие между двумя агентами. Проверяет, что агент упоминает имя другого агента в ответе.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_see(setup)`: Тестирует метод `see` агента. Проверяет, что агент выполняет действие "THINK" и упоминает то, что он "увидел".
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_think(setup)`: Тестирует метод `think` агента. Проверяет, что агент выполняет действие "TALK" и упоминает свою мысль.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_internalize_goal(setup)`: Тестирует метод `internalize_goal` агента. Проверяет, что агент выполняет действие "SEARCH" и упоминает свою цель.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_move_to(setup)`: Тестирует метод `move_to` агента. Проверяет, что местоположение и контекст агента обновлены.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_change_context(setup)`: Тестирует метод `change_context` агента. Проверяет, что контекст агента обновлен.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*   `test_save_spec(setup)`: Тестирует методы `save_spec` и `load_spec` агента. Проверяет, что спецификация агента сохраняется и загружается корректно.
-    *   Аргументы: `setup` (фистура `pytest`).
-    *   Возвращаемое значение: None.
-*  `create_oscar_the_architect()`, `create_lisa_the_data_scientist()`: Функции из `tinytroupe.examples`, которые создают и возвращают экземпляры агентов `TinyPerson`.
+### Потенциальные ошибки и области для улучшения:
 
-**Переменные:**
+-   **`sys.path.insert`**: Использование `sys.path.insert` не является лучшей практикой, так как это изменяет глобальное состояние интерпретатора Python.
+   -  Рекомендуется использовать пакетную структуру и указывать пути относительно рабочей директории или использовать менеджеры пакетов (например, poetry) для разрешения зависимостей.
+-   **Повторяющийся код**: В каждом тесте создаются агенты, что можно вынести в фикстуру `pytest`. Это сделает код более чистым и уменьшит дублирование.
+-   **Магические строки**: В тестах используются строки, например, `"Tell me a bit about your life."`, `"Hello, how are you?"` и т.д., которые можно вынести в константы, это сделает код более читабельным.
+-   **Сложные утверждения**: Некоторые утверждения можно разбить на более мелкие для облегчения отладки.
+-   **Отсутствие документации:** Код не содержит подробных комментариев, что затрудняет его понимание, особенно для новых разработчиков.
 
-*   `agent`: Экземпляр класса `TinyPerson`, создаваемый через функции `create_oscar_the_architect()` и `create_lisa_the_data_scientist()`.
-*   `actions`: Список действий, возвращаемых методом `agent.act()` или `agent.listen_and_act()`.
-*   `original_prompt`: Строка, представляющая оригинальный промпт агента перед его изменением.
-*   `other`: Другой экземпляр класса `TinyPerson` для теста `test_socialize`.
-*   `loaded_name`: Имя для загруженного агента в тесте `test_save_spec`.
-*   `loaded_agent`: Экземпляр агента `TinyPerson`, загруженный из файла в тесте `test_save_spec`.
-*   `logger`: Экземпляр логгера, используется для записи отладочной информации.
-*  Вспомогательные переменные (например, `an_oscar`, `a_lisa`) используются для наглядности и локализации переменных.
+### Цепочка взаимосвязей с другими частями проекта:
 
-**Потенциальные ошибки и области для улучшения:**
-
-*   **Жестко заданные пути:** Использование `sys.path.insert` с жестко заданными путями может быть проблемой при переносе проекта на другие системы. Желательно использовать более гибкие подходы.
-*   **Дублирование кода:** Код, который используется для итерации по агентам, можно вынести в отдельную функцию для избежания дублирования.
-*   **Слабые проверки:** Некоторые проверки (особенно те, которые проверяют наличие текста в действиях) являются очень общими и могут пропускать ошибки, лучше использовать более точные проверки.
-*   **Отсутствие проверки исключений:** Тесты не проверяют случаи, когда методы агента могут вызывать исключения.
-
-**Цепочка взаимосвязей с другими частями проекта:**
-
-1.  Тестовый модуль `test_tinyperson.py` зависит от:
-    *   `tinytroupe.examples` для создания экземпляров агентов.
-    *   Модуля `tinytroupe`, где расположен класс `TinyPerson`.
-    *   Модуля `testing_utils` для вспомогательных функций тестирования.
-2.  Модуль `tinytroupe` содержит логику класса `TinyPerson` и его методов, которые тестируются в этом файле.
-3.  `testing_utils` упрощает написание тестов и является частью инфраструктуры тестирования проекта.
-
-Этот тестовый файл играет важную роль в проверке корректности работы класса `TinyPerson`, который является ключевым элементом проекта.
+-   Этот файл является частью тестового набора для `tinytroupe`.
+-   Тесты используют функции `create_oscar_the_architect` и `create_lisa_the_data_scientist` из модуля `tinytroupe.examples`, подразумевая, что существует какой-то механизм создания тестовых агентов.
+-   Тесты используют методы класса `TinyPerson` такие как: `listen`, `act`, `define`, `define_several`, `make_agent_accessible`, `see`, `think`, `internalize_goal`, `move_to`, `change_context`, `save_spec`, `load_spec`, предполагая, что данный класс имеет данную функциональность и является основным классом агента в системе `tinytroupe`.
+-   Тесты зависят от вспомогательных функций из `testing_utils`, что говорит о наличии некоторого набора инструментов для тестирования.
+-   Функция `save_spec` сохраняет состояние агента в файл, и `load_spec` его загружает, что подразумевает использование какой-то формы сериализации, вероятно, JSON.
+-   Тесты используют логгер для записи отладочной информации, что является стандартной практикой для отладки приложений.

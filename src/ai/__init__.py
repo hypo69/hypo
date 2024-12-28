@@ -8,7 +8,7 @@ module: src.ai
 	:platform: Windows, Unix
 	:synopsis: Модуль интерфейса моделей ИИ.
 	"""
-MODE = 'dev'
+
 
 from .gemini import GoogleGenerativeAI
 from .openai import OpenAIModel

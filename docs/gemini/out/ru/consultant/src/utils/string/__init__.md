@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (
@@ -42,7 +42,7 @@ from .normalizer import (
 """
 import logging
 
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (
@@ -112,7 +112,7 @@ def example_with_logging():
 """
 import logging
 
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (

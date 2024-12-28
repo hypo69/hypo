@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -64,7 +64,7 @@ from .version import __version__, __doc__, __details__
 """
 import json
 
-MODE = 'dev'
+
 
 """
 Константа, определяющая режим работы.
@@ -83,7 +83,7 @@ MODE = 'dev'
 """
 Документация к этой части кода отсутствует.
 """
-MODE = 'dev'  # Режим работы
+  # Режим работы
 
 """
 Константа, определяющая режим работы.
@@ -129,7 +129,7 @@ from src.logger import logger
 """
 import json
 
-MODE = 'dev'
+
 
 """
 Константа, определяющая режим работы.
@@ -148,7 +148,7 @@ MODE = 'dev'
 """
 Документация к этой части кода отсутствует.
 """
-MODE = 'dev'  # Режим работы
+  # Режим работы
 
 """
 Константа, определяющая режим работы.

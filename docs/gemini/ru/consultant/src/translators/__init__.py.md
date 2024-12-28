@@ -34,7 +34,7 @@
 
 .. code-block:: python
 
-    MODE = 'dev'  # Режим разработки
+      # Режим разработки
 """
 from src.logger.logger import logger
 

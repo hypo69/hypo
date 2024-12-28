@@ -8,5 +8,5 @@ module: src
 	:platform: Windows, Unix
 	:synopsis: Скрипт инсталлятор
 """
-MODE = 'dev'
+
 

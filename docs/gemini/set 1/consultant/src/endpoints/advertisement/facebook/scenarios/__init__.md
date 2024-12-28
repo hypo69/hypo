@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .login import login
 from .post_message  import *
@@ -52,7 +52,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 # Импорты функций для работы с постами
 from .login import login
@@ -100,7 +100,7 @@ import json
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 # Импорты функций для работы с постами
 from .login import login

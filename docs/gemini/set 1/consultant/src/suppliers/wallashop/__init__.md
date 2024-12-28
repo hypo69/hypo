@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 
@@ -38,7 +38,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходи
 from src.logger import logger  # Импорт логгера
 from src.suppliers.wallashop.graber import Graber  # Корректный импорт Graber
 
-MODE = 'dev'
+
 
 
 def get_data(filepath: str) -> dict:
@@ -98,7 +98,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходи
 from src.logger import logger  # Импорт логгера
 from src.suppliers.wallashop.graber import Graber  # Корректный импорт Graber
 
-MODE = 'dev'
+
 
 
 def get_data(filepath: str) -> dict:

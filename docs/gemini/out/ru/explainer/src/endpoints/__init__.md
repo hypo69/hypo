@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
@@ -28,7 +28,7 @@ MODE = 'dev'
 
 ```mermaid
 graph LR
-    A[endpoints/__init__.py] --> B(MODE = 'dev');
+    A[endpoints/__init__.py] --> B();
     subgraph "Зависимости (закомментированы)"
         B --> C[prestashop.py];
         B --> D[kazarinov.py];
@@ -43,7 +43,7 @@ graph LR
 
 * **Функции**: Нет определений функций.
 
-* **Переменные**:  `MODE = 'dev'` - строковая переменная, которая, вероятно, используется для управления режимом работы программы. Значение `'dev'` указывает на режим разработки.
+* **Переменные**:  `` - строковая переменная, которая, вероятно, используется для управления режимом работы программы. Значение `'dev'` указывает на режим разработки.
 
 * **Возможные ошибки или области для улучшений**:
 

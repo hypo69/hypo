@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -47,7 +47,7 @@ from src.db.manager_coupons_and_sales import ProductCampaignsManager
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы с API AliExpress.
 """
-MODE = 'dev'
+
 
 
 import re
@@ -146,7 +146,7 @@ class AliApi(AliexpressApi):
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы с API AliExpress.
 """
-MODE = 'dev'
+
 
 
 import re

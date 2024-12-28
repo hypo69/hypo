@@ -30,7 +30,7 @@ Classes:
 
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger import logger
@@ -163,7 +163,7 @@ Classes:
 
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger import logger  # Импорт logger
@@ -243,7 +243,7 @@ Classes:
 
 """
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger import logger  # Импорт logger

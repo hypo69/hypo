@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates._examples """
 
@@ -73,7 +73,7 @@ __author__='hypotez '
 """
 import sys  # Импортируем модуль sys для потенциального использования
 
-MODE = 'dev'
+
 
 
 def get_version() -> str:
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 """
 import sys  # Импортируем модуль sys для потенциального использования
 
-MODE = 'dev'
+
 
 
 def get_version() -> str:

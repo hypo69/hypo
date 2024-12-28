@@ -27,7 +27,7 @@
     graber = Graber(driver=driver)
     product_data = await graber.get_product_data()
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps # TODO: добавить импорт если нужно
@@ -122,7 +122,7 @@ class Graber(Grbr):
     graber = Graber(driver=driver)
     product_data = await graber.get_product_data()
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps # TODO: добавить импорт если нужно

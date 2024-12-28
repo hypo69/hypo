@@ -38,7 +38,7 @@
 
 ```mermaid
 graph LR
-    A[Начало] --> B{MODE = 'dev'};
+    A[Начало] --> B{};
     B --> C[Импорт модулей (sys, json, Version, Path)];
     C --> D[def set_project_root(marker_files)];
     D --> E{current_path = Path(__file__).resolve().parent};

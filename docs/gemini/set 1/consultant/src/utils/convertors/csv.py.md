@@ -51,7 +51,7 @@ from types import SimpleNamespace
 from src.logger.logger import logger
 from src.utils.csv import read_csv_as_dict, read_csv_as_ns, read_csv_file # Исправлен импорт для соответствия ранее обработанным файлам
 
-MODE = 'dev'
+
 
 
 def csv2dict(csv_file: str | Path, *args, **kwargs) -> dict | None:
@@ -189,7 +189,7 @@ from types import SimpleNamespace
 from src.logger.logger import logger
 from src.utils.csv import read_csv_as_dict, read_csv_as_ns, read_csv_file # Исправлен импорт для соответствия ранее обработанным файлам
 
-MODE = 'dev'
+
 
 
 def csv2dict(csv_file: str | Path, *args, **kwargs) -> dict | None:

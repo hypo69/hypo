@@ -11,7 +11,7 @@
 Этот модуль устанавливает корень проекта, загружает настройки из `settings.json`
 и устанавливает глобальные переменные проекта.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -117,7 +117,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Этот модуль устанавливает корень проекта, загружает настройки из `settings.json`
 и устанавливает глобальные переменные проекта.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

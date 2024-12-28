@@ -12,7 +12,7 @@
 	:synopsis: Публикация сообщения из `aliexpress` промо
 
 """
-MODE = 'dev'
+
 
 import time
 import asyncio
@@ -229,7 +229,7 @@ async def promote_post(d: Driver, category: SimpleNamespace, products: List[Simp
 	:synopsis: Публикация сообщения из `aliexpress` промо
 
 """
-MODE = 'dev'
+
 
 import time
 import asyncio

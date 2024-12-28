@@ -26,7 +26,7 @@
     editor.show()
     sys.exit(app.exec())
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -243,7 +243,7 @@ class ProductEditor(QtWidgets.QWidget):
     editor.show()
     sys.exit(app.exec())
 """
-MODE = 'dev'
+
 
 
 import sys

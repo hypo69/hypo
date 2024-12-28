@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.dialogflow """
 
@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 """
@@ -89,7 +89,7 @@ MODE = 'dev'
 """
 Этот блок требует доработки. Необходимо добавить описание и пример использования.
 """
-MODE = 'dev'  # Режим работы
+  # Режим работы
 
 """
 Константа MODE, определяющая режим работы модуля. Значение по умолчанию 'dev'.
@@ -152,7 +152,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 """
@@ -177,7 +177,7 @@ MODE = 'dev'
 """
 Этот блок требует доработки. Необходимо добавить описание и пример использования.
 """
-MODE = 'dev'  # Режим работы
+  # Режим работы
 
 """
 Константа MODE, определяющая режим работы модуля. Значение по умолчанию 'dev'.

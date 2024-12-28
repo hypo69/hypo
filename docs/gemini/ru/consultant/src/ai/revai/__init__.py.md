@@ -41,5 +41,5 @@
 # #! venv/Scripts/python.exe
 # #! venv/bin/python/python3.12
 # этот файл определяет режим работы приложения
-MODE = 'dev'
+
 ```

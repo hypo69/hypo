@@ -18,7 +18,7 @@
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 import header
@@ -106,7 +106,7 @@ from src.logger import logger
 from collections import namedtuple
 
 
-MODE = 'dev'
+
 
 
 def close_pop_up(locator: Any = None) -> Callable:
@@ -185,7 +185,7 @@ from src.logger import logger
 from collections import namedtuple
 
 
-MODE = 'dev'
+
 
 
 def close_pop_up(locator: Any = None) -> Callable:

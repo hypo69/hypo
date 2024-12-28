@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -170,7 +170,7 @@ The `src.webdriver.driver` module likely defines the `Driver`, `Chrome`, `Firefo
 
 **Variables:**
 
-- `MODE = 'dev'`: This variable likely controls configuration settings, like logging levels or alternative behavior, potentially used in a production or development environment.
+- ``: This variable likely controls configuration settings, like logging levels or alternative behavior, potentially used in a production or development environment.
 
 **Potential Errors/Improvements:**
 

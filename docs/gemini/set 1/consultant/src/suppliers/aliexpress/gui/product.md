@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Window editor for products """
@@ -154,7 +154,7 @@ class ProductEditor(QtWidgets.QWidget):
 	:platform: Windows, Unix
 	:synopsis:  Модуль для редактирования информации о продуктах AliExpress.
 """
-MODE = 'dev'
+
 
 
 """ Виджет для редактирования продуктов """

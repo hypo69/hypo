@@ -58,7 +58,7 @@ from src.logger.logger import logger
 from src.webdriver.exceptions import ExecuteLocatorException
 
 
-MODE = 'dev'
+
 
 
 

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.scenarios """
 
@@ -76,7 +76,7 @@ from src.logger import logger
 # импорт функций для работы с JSON
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 def get_version() -> str:
@@ -128,7 +128,7 @@ from src.logger import logger
 # импорт функций для работы с JSON
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 def get_version() -> str:

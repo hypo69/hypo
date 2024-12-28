@@ -3,7 +3,7 @@
 ### 1. <алгоритм>
 1.  **Инициализация режима:**
     *   Устанавливается переменная `MODE` в значение `'dev'`. Это может использоваться для различных настроек или поведения программы в зависимости от режима работы (например, разработка или продакшн).
-    *   *Пример*: `MODE = 'dev'` - режим разработки, `MODE = 'prod'` - режим продакшн.
+    *   *Пример*: `` - режим разработки, `MODE = 'prod'` - режим продакшн.
 2.  **Получение текущей директории:**
     *   Функция `os.getcwd()` возвращает строку, представляющую текущую рабочую директорию.
         *   *Пример*: Если текущая директория `/home/user/projects/hypotez/src/webdriver/firefox/_examples`, то `os.getcwd()` вернет эту строку.
@@ -19,7 +19,7 @@
 ### 2. <mermaid>
 ```mermaid
 flowchart TD
-    Start --> InitializeMode[Initialize MODE = 'dev']
+    Start --> InitializeMode[Initialize ]
     InitializeMode --> GetCurrentDirectory[GetCurrentDirectory: os.getcwd()]
     GetCurrentDirectory --> FindProjectRoot[FindProjectRoot: os.getcwd().rfind('hypotez')]
     FindProjectRoot --> ExtractProjectRoot[ExtractProjectRoot: os.getcwd()[:index+7]]

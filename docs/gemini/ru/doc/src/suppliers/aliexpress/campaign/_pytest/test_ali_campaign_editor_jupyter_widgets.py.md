@@ -33,7 +33,7 @@ from src.utils.file.file import (
 ## Константы
 
 ```python
-MODE = 'dev'
+
 ```
 
 ## Тесты

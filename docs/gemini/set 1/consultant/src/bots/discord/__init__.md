@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 
@@ -59,7 +59,7 @@ MODE = 'dev'
 import json  # Стандартный импорт для работы с JSON, но мы будем использовать j_loads
 from src.utils.jjson import j_loads  # Импортируем функцию j_loads для работы с JSON
 
-MODE = 'dev'
+
 
 
 def get_something():
@@ -117,7 +117,7 @@ from src.utils.jjson import j_loads  # Импортируем функцию j_l
 from src.logger import logger # Импортируем logger
 
 
-MODE = 'dev'
+
 
 
 def get_something():

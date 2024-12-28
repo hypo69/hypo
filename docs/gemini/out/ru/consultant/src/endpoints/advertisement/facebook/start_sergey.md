@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Казаринов?)
 
 """
-MODE = 'dev'
+
 
 import header
 import random
@@ -180,7 +180,7 @@ if __name__ == "__main__":
    :synopsis: Модуль для запуска рекламных кампаний на Facebook.
 
 """
-MODE = 'dev'
+
 
 import header
 import random

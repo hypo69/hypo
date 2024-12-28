@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
@@ -36,7 +36,7 @@ from .grender import GSRenderr
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 # Импорты для работы с Google Sheets
 from .gspreadsheet import GSpreadsheet
@@ -77,7 +77,7 @@ from src.logger import logger
 import json
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 # Импорты для работы с Google Sheets
 from .gspreadsheet import GSpreadsheet
@@ -102,7 +102,7 @@ from src.logger import logger
  .. module: src.goog.spreadsheet.bberyakov 
 @@ -9,6 +8,11 @@
  """
- MODE = 'dev'
+ 
  
 +# Импортируем необходимые функции для работы с JSON
 +from src.utils.jjson import j_loads, j_loads_ns

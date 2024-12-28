@@ -22,7 +22,7 @@
 @image html supplier-warehouse-client.png
 
 """
-MODE = 'dev'
+
 
 # from .supplier import Supplier
 # from .graber import Graber, Context, close_pop_up
@@ -60,7 +60,7 @@ from src.logger import logger
 # from .supplier import Supplier # Импорт класса Supplier - если он существует
 # from .graber import Graber, Context, close_pop_up # Импорт необходимых классов
 
-MODE = 'dev'
+
 
 def load_supplier_functions(supplier_prefix):
     """Загружает функции для конкретного поставщика.
@@ -123,7 +123,7 @@ from src.logger import logger
 # from .supplier import Supplier # Импорт класса Supplier - если он существует
 # from .graber import Graber, Context, close_pop_up # Импорт необходимых классов
 
-MODE = 'dev'
+
 
 def load_supplier_functions(supplier_prefix):
     """Загружает функции для конкретного поставщика.

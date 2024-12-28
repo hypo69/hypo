@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """ 
    https://habr.com/ru/post/305378/    

@@ -62,7 +62,7 @@ from PIL import Image, ImageDraw, ImageFont
 from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns  # Добавлен импорт
 
-MODE = 'dev'
+
 
 
 class TextToImageGenerator:

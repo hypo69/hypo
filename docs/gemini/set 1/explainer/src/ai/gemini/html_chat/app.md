@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.gemini.html_chat """
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
    - Пример: `from fastapi import FastAPI`.
 
 **Шаг 2**: Определяется константа `MODE` со значением 'dev'.  
-   - Пример: `MODE = 'dev'`.
+   - Пример: ``.
 
 **Шаг 3**: Инициализируется `FastAPI` приложение `app`.  
    - Пример: `app = FastAPI()`.
@@ -154,7 +154,7 @@ if __name__ == "__main__":
 ```mermaid
 graph TD
     A[Запуск приложения] --> B{Загрузка настроек};
-    B -- MODE = 'dev' --> C[Инициализация FastAPI];
+    B --  --> C[Инициализация FastAPI];
     C --> D[Настройка статики];
     C --> E[Инициализация Kazarinov];
     D --> F[Загрузка вопросов];

@@ -20,7 +20,7 @@
     from src.suppliers.etzmaleh.header import __version__
     print(__version__)
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -120,7 +120,7 @@ __cofee__: str = settings.get('cofee', 'Treat the developer to a cup of coffee f
     from src.suppliers.etzmaleh.header import __version__
     print(__version__)
 """
-MODE = 'dev'
+
 
 
 import sys

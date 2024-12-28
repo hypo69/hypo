@@ -43,7 +43,7 @@
 from typing import Any
 from src.logger.logger import logger
 from src.suppliers.supplier import Supplier
-MODE = 'dev' # TODO: добавить описание для MODE
+ # TODO: добавить описание для MODE
 
 def login(s: Supplier) -> bool:
     """

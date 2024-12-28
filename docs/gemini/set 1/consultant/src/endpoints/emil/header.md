@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -107,7 +107,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     from hypotez.src.endpoints.emil.header import __project_name__
     print(__project_name__)
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -210,7 +210,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
     from hypotez.src.endpoints.emil.header import __project_name__
     print(__project_name__)
 """
-MODE = 'dev'
+
 
 
 import sys

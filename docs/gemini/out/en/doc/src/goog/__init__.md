@@ -30,5 +30,5 @@ This module provides a basic interface for interacting with Google Sheets, curre
 
 
 ```python
-MODE = 'dev'
+
 ```

@@ -54,7 +54,7 @@ from src.utils.path import get_relative_path # импорт функции дл�
 # from src.utils.jjson import j_loads
 
 #: Режим работы приложения
-MODE = 'dev'
+
 
 # код вычисляет относительный путь от текущего файла до директории 'hypotez'
 relative_path = get_relative_path(Path(__file__).resolve(), 'hypotez')

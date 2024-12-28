@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category
@@ -34,7 +34,7 @@ from .scenario import get_list_products_in_category
    :synopsis: Модуль для работы с поставщиком Amazon.
    
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category
@@ -103,7 +103,7 @@ def get_list_products_in_category(category_id: str) -> list:
    :synopsis: Модуль для работы с поставщиком Amazon.
    
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category

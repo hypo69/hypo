@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .spreadsheet import SpreadSheet
 ```
@@ -40,7 +40,7 @@ from .spreadsheet import SpreadSheet
 
 ```mermaid
 graph TD
-    A[goog/__init__.py] --> B(MODE = 'dev');
+    A[goog/__init__.py] --> B();
     A --> C[from .spreadsheet import SpreadSheet];
     C --> D(Spreadsheet);
 ```

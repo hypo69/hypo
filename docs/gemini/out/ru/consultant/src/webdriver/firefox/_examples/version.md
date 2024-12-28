@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.firefox._examples """
 
@@ -76,7 +76,7 @@ import sys
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 
-MODE = 'dev'
+
 
 
 """
@@ -168,7 +168,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходи
 from src.logger import logger # Импорт logger
 
 
-MODE = 'dev'
+
 
 
 """

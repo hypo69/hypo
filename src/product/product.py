@@ -10,7 +10,7 @@
 Defines the behavior of a product in the project.
 
 """
-MODE = 'dev'
+
 
 import header
 from src import gs

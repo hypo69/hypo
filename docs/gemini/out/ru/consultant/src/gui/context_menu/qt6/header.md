@@ -22,7 +22,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
 
 
-MODE = 'dev'
+
 
 
 """
@@ -83,7 +83,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
 
 
-MODE = 'dev'
+
 
 
 """

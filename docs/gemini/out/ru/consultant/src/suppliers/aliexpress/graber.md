@@ -18,7 +18,7 @@
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header
@@ -89,7 +89,7 @@ class Graber(Grbr):
     разкомментируйте строки с декоратором и переопределите его поведение.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header
@@ -146,7 +146,7 @@ class Graber(Grbr):
     разкомментируйте строки с декоратором и переопределите его поведение.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header

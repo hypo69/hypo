@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from __future__ import print_function
@@ -104,7 +104,7 @@ from googleapiclient.errors import HttpError
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
 # Константы
-MODE = 'dev'
+
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SAMPLE_SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
 SAMPLE_RANGE_NAME = 'Class Data!A2:E'
@@ -193,7 +193,7 @@ from googleapiclient.errors import HttpError
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
 # Константы
-MODE = 'dev'
+
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SAMPLE_SPREADSHEET_ID = '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'
 SAMPLE_RANGE_NAME = 'Class Data!A2:E'

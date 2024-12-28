@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_categories_from_site, get_list_products_in_category
@@ -45,7 +45,7 @@ graph LR
     * `from .graber import Graber`: Импортирует класс `Graber` из модуля `graber.py` в текущем пакете (`src.suppliers.bangood`).  `Graber` предположительно отвечает за получение данных с сайта Bangood.  `.` указывает на поиск в подпапках.
     * `from .scenario import get_list_categories_from_site, get_list_products_in_category`: Импортирует функции `get_list_categories_from_site` и `get_list_products_in_category` из модуля `scenario.py` в текущем пакете. Эти функции, скорее всего, реализуют логику получения списков категорий и продуктов с Bangood.
 * **Переменные**:
-    * `MODE = 'dev'`:  Переменная, вероятно, определяет режим работы (например, `dev`, `prod`).  Это конфигурационная переменная, её значение может быть использовано в других частях кода для настройки поведения.
+    * ``:  Переменная, вероятно, определяет режим работы (например, `dev`, `prod`).  Это конфигурационная переменная, её значение может быть использовано в других частях кода для настройки поведения.
 * **Классы**:
     * `Graber`:  Класс, реализующий взаимодействие с сайтом Bangood (например, парсинг, отправку запросов).  Подробности реализации скрыты в `graber.py`.
 * **Функции**:

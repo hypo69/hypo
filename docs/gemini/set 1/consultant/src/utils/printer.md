@@ -18,7 +18,7 @@ Functions:
     - :func:`pprint`
 """
 
-MODE = 'dev'
+
 
 import json
 import csv
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     - :func:`pprint`
 """
 
-MODE = 'dev'
+
 
 import json
 import csv

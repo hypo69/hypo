@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -44,7 +44,7 @@ graph LR
     C --> D(.graber);
     D --> E{Graber class};
     subgraph init.py
-        E --> F[MODE = 'dev'];
+        E --> F[];
         F --> G(from .graber import Graber)
     end
 ```

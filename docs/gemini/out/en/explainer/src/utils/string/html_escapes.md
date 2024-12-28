@@ -15,7 +15,7 @@
  Словарь {UTF-8 : HTML ESCAPE}
 """
 ...
-MODE = 'dev'
+
 
 html_escapes = {
     '&': '&amp;',

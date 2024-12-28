@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .code_assistant import CodeAssistant
@@ -34,7 +34,7 @@ The file itself doesn't have a complex data flow.  Import statements simply conn
 
 ```mermaid
 graph LR
-    A[hypotez/src/endpoints/hypo69/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/endpoints/hypo69/__init__.py] --> B();
     A --> C[from .code_assistant import CodeAssistant];
     A --> D[from .small_talk_bot import bot as small_talk_bot];
     

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -36,7 +36,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 :synopsis: Содержит классы для взаимодействия с Aliexpress.
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -67,7 +67,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 :synopsis: Содержит классы для взаимодействия с Aliexpress.
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi

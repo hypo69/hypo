@@ -12,7 +12,7 @@
 	:synopsis:This module provides a FastAPI application for interacting with the OpenAI model.
 It includes API endpoints for querying the model and training it based on provided data.
 """
-MODE = 'dev'
+
 import header
 # Добавлен import для logger
 from fastapi import FastAPI, HTTPException
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 	:synopsis: Модуль предоставляет приложение FastAPI для взаимодействия с моделью OpenAI.
 	Содержит API-эндпоинты для запросов к модели и ее обучения на основе предоставленных данных.
 """
-MODE = 'dev'
+
 import header
 # Добавлен import для logger
 from fastapi import FastAPI, HTTPException
@@ -193,7 +193,7 @@ if __name__ == "__main__":
 	:synopsis: Модуль предоставляет приложение FastAPI для взаимодействия с моделью OpenAI.
 	Содержит API-эндпоинты для запросов к модели и ее обучения на основе предоставленных данных.
 """
-MODE = 'dev'
+
 import header
 # Добавлен import для logger
 from fastapi import FastAPI, HTTPException

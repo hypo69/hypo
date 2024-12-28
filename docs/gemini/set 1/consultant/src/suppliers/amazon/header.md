@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -87,7 +87,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: This module provides initial setup for Amazon supplier.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -167,7 +167,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :synopsis: This module provides initial setup for Amazon supplier.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

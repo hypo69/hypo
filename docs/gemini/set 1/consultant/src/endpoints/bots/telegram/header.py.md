@@ -26,7 +26,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
 
 # Установка режима работы приложения (dev, prod, test)
-MODE = 'dev'
+
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
@@ -138,7 +138,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
 
 # Установка режима работы приложения (dev, prod, test)
-MODE = 'dev'
+
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """

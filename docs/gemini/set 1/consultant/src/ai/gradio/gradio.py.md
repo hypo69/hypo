@@ -43,7 +43,7 @@ import gradio as gr
 from src.logger.logger import logger
 from src.utils.jjson import j_loads # импорт для примера
 
-MODE = 'dev'
+
 # https://www.gradio.app/guides/quickstart
 
 

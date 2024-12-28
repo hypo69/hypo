@@ -9,7 +9,7 @@
 	:synopsis: Раскрывающеся меню выбора групп для подачи объвления
 
 """
-MODE = 'dev'
+
 
 import header 
 from IPython.display import display

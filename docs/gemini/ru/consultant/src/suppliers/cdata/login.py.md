@@ -45,7 +45,7 @@
 """
 from src.logger.logger import logger # Импортируем логгер
 
-MODE = 'dev'
+
 
 def login(self):
     """

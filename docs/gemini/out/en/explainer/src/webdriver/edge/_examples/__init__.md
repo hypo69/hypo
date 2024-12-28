@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -87,7 +87,7 @@ No functions are defined in this file.
 
 **Variables:**
 
-* `MODE = 'dev'`: A global string variable.  It's likely used for setting a mode (e.g., development, production) in other parts of the project. The repeated definitions of this variable are likely remnants of code generation/templating and should be consolidated.
+* ``: A global string variable.  It's likely used for setting a mode (e.g., development, production) in other parts of the project. The repeated definitions of this variable are likely remnants of code generation/templating and should be consolidated.
 
 **Potential Errors/Improvements:**
 

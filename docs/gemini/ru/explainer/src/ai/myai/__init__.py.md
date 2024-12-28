@@ -16,7 +16,7 @@
 ```mermaid
 flowchart TD
     Start --> InitializeMode[Initialize MODE Variable]
-    InitializeMode --> SetMode[Set MODE = 'dev']
+    InitializeMode --> SetMode[Set ]
     SetMode --> End
     
     classDef default fill:#f9f,stroke:#333,stroke-width:2px

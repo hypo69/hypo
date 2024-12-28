@@ -51,7 +51,7 @@ import os
 import openai
 from src.logger.logger import logger  # Импортируем logger
 
-MODE = 'dev'
+
 openai.api_key = os.getenv("OPENAI_API_KEY")  # Используем переменную окружения для API_KEY
 
 system_prompt = """You are an expert on hate speech.

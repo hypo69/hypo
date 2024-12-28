@@ -24,7 +24,7 @@ Usage Example
 
     # No usage example available for this module.
 """
-MODE = 'dev'
+
 
 from .credentials import gs
 ```
@@ -50,7 +50,7 @@ from .credentials import gs
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт необходимых модулей
 from .credentials import gs
@@ -91,7 +91,7 @@ from src.utils.jjson import j_loads
 import json
 import os
 
-MODE = 'dev'
+
 
 # Импорт необходимых модулей
 from .credentials import gs

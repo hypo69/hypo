@@ -55,7 +55,7 @@
 
     save_text_file('data', 'output.txt')
 """
-MODE = 'dev'
+
 
 import os
 import fnmatch

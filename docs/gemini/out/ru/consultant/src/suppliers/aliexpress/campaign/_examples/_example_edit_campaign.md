@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -84,7 +84,7 @@ class AliCampaignEditor(AliPromoCampaign):
    :platform: Windows, Unix
    :synopsis: Модуль для редактирования рекламных кампаний на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -92,7 +92,7 @@ MODE = 'dev'
    :type: str
    :synopsis: Режим работы модуля (например, 'dev', 'prod').
 """
-MODE = 'dev'
+
 
 
 """
@@ -188,7 +188,7 @@ class AliCampaignEditor(AliPromoCampaign):
    :platform: Windows, Unix
    :synopsis: Модуль для редактирования рекламных кампаний на AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -196,7 +196,7 @@ MODE = 'dev'
    :type: str
    :synopsis: Режим работы модуля (например, 'dev', 'prod').
 """
-MODE = 'dev'
+
 
 
 """

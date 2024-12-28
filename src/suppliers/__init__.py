@@ -19,7 +19,7 @@
 @image html supplier-warehouse-client.png
 
 """
-MODE = 'dev'
+
 
 # from .supplier import Supplier
 # from .graber import Graber, Context, close_pop_up

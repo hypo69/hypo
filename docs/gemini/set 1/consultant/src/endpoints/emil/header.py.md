@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 
@@ -89,7 +89,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 :var MODE: Режим работы приложения (например, 'dev', 'prod').
 :vartype MODE: str
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -216,7 +216,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 :var MODE: Режим работы приложения (например, 'dev', 'prod').
 :vartype MODE: str
 """
-MODE = 'dev'
+
 
 import sys
 import json

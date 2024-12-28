@@ -12,7 +12,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 #: Указывает режим работы ('dev' для разработки, 'prod' для продакшена).
 
 from .graber import Graber
@@ -39,7 +39,7 @@ from .graber import Graber
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 #: Указывает режим работы ('dev' для разработки, 'prod' для продакшена).
 
 from .graber import Graber

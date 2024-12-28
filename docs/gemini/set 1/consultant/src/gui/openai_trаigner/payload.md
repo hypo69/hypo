@@ -7,7 +7,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 \n"""
-MODE = 'dev'
+
 \n"""
 	:platform: Windows, Unix
 	:synopsis:
@@ -23,7 +23,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 \n\n

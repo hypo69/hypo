@@ -46,7 +46,7 @@
    
 """
 
-MODE = 'dev'
+
 
 from src.logger.logger import logger
 from typing import List, Optional

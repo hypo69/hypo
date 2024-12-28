@@ -30,7 +30,7 @@ from src.utils.xls import read_xls_as_dict, save_xls_file
 
 
 ```python
-MODE = 'dev'
+
 ```
 
 **Описание**:  Переменная `MODE` хранит значение 'dev', вероятно для обозначения режима разработки.

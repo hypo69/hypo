@@ -12,7 +12,7 @@
 	:synopsis: Facebook login scenario
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Dict

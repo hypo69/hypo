@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .edge import Edge

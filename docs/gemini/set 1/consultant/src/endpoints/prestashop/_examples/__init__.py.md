@@ -17,7 +17,7 @@
    :synopsis: Примеры для интеграции с PrestaShop.
 
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -40,7 +40,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.endpoints.prestashop._examples """
 
@@ -80,7 +80,7 @@ from .version import __version__, __doc__, __details__
    :synopsis: Примеры для интеграции с PrestaShop.
 
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -103,7 +103,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.endpoints.prestashop._examples """
 

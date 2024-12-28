@@ -8,7 +8,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> InitializeMode[Initialize Global Variable:<br><code>MODE = 'dev'</code>]
+    Start --> InitializeMode[Initialize Global Variable:<br><code></code>]
     InitializeMode --> End
 ```
 

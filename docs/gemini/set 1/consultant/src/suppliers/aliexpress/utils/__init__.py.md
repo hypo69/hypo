@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https
@@ -42,7 +42,7 @@ from .locales import locales
     from src.suppliers.aliexpress.utils import extract_prod_ids, ensure_https, locales
 
 """
-MODE = 'dev' # Устанавливает режим работы приложения
+ # Устанавливает режим работы приложения
 
 from .extract_product_id import extract_prod_ids
 # импортирует функцию извлечения идентификаторов продуктов
@@ -81,7 +81,7 @@ from .locales import locales
     from src.suppliers.aliexpress.utils import extract_prod_ids, ensure_https, locales
 
 """
-MODE = 'dev' # Устанавливает режим работы приложения
+ # Устанавливает режим работы приложения
 
 from .extract_product_id import extract_prod_ids
 # импортирует функцию извлечения идентификаторов продуктов

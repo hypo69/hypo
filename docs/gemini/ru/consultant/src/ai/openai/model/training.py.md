@@ -91,7 +91,7 @@ from src.utils.convertors.base64 import base64encode
 from src.utils.convertors.md2dict import md2dict
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class OpenAIModel:

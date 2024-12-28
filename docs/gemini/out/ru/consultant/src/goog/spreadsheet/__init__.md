@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .spreadsheet import SpreadSheet
@@ -33,7 +33,7 @@ from .reach_spreadsheet import ReachSpreadsheet
     :synopsis: Модуль для работы с Google Spreadsheets.
 
 """
-MODE = 'dev'
+
 
 # Импортируем необходимые классы.
 # Также импортируем logger из src.logger.
@@ -63,7 +63,7 @@ from src.logger import logger
     :synopsis: Модуль для работы с Google Spreadsheets.
 
 """
-MODE = 'dev'
+
 
 # Импортируем необходимые классы.
 # Также импортируем logger из src.logger.

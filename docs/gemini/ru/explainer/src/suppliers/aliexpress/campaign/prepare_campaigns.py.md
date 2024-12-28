@@ -10,7 +10,7 @@
 2.  **Инициализация**:
     *   Импортируются необходимые библиотеки (`header`, `argparse`, `copy`, `pathlib`, `typing`, `src.gs`, `src.suppliers.aliexpress.campaign.AliCampaignEditor`, `src.suppliers.aliexpress.utils.locales`, `src.utils.printer`, `src.utils.file`, `src.utils.jjson`, `src.logger.logger`).
     *   Устанавливается путь к директории с кампаниями (`campaigns_directory`).
-    *   Определяется режим (`MODE = 'dev'`).
+    *   Определяется режим (``).
 
 3.  **Разбор аргументов командной строки (`main`):**
     *   Инициализируется `ArgumentParser` для разбора аргументов командной строки.

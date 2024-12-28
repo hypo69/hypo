@@ -2,7 +2,7 @@
 
 1. **Инициализация режима:**
    - Задается глобальная переменная `MODE` и присваивается ей значение `'dev'`.
-   - Пример: `MODE = 'dev'`
+   - Пример: ``
 2. **Описание модуля:**
    - Добавляются строки-комментарии с информацией о модуле, платформе и синопсисом.
    -  Примеры:
@@ -14,16 +14,16 @@
     - Пример: `""" HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION ! \nhttps://habr.com/ru/articles/346606/\n"""`
 4.  **Повторная инициализация режима:**
      - Происходит повторное определение переменной `MODE` и присваивается ей значение `'dev'`. Это избыточно и может привести к путанице.
-     - Пример: `MODE = 'dev'`
+     - Пример: ``
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start --> InitializeMode[Initialize Global Variable: <br><code>MODE = 'dev'</code>]
+    Start --> InitializeMode[Initialize Global Variable: <br><code></code>]
     InitializeMode --> ModuleDescription[Add module description and platform info: <br><code>module:: src.ai.dialogflow</code> <br> <code>platform: Windows, Unix</code>]
     ModuleDescription --> AddDocString[Add Docstring with Module Description Hint: <br><code>HERE SHOULD BE A DESCRIPTION OF THE MODULE OPERATION !</code>]
-    AddDocString --> ReInitializeMode[Re-initialize Mode Variable:<br><code>MODE = 'dev'</code>]
+    AddDocString --> ReInitializeMode[Re-initialize Mode Variable:<br><code></code>]
 ```
 
 **Объяснение зависимостей `mermaid`:**

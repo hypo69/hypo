@@ -53,7 +53,7 @@
 from llama_cpp import Llama
 from src.logger.logger import logger # Импорт логгера
 
-MODE = 'dev'
+
 #: str: Режим работы приложения.
 
 MODEL_REPO_ID = "lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF"

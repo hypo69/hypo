@@ -18,7 +18,7 @@
     from src.suppliers.hb.locators import __version__
     print(__version__)
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -44,7 +44,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 """ module: src.suppliers.hb.locators """
 
 """ Изменения в локаторах. Применять с осторожносастью  """
@@ -88,7 +88,7 @@ from .locator import *
     from src.suppliers.hb.locators import __version__
     print(__version__)
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -114,7 +114,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 """ module: src.suppliers.hb.locators """
 
 """ Изменения в локаторах. Применять с осторожносастью  """

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -59,7 +59,7 @@ import os
     :synopsis: Модуль для работы с данными payload.
 """
 
-MODE = 'dev'
+
 
 
 def load_payload(file_path: str) -> dict:
@@ -122,7 +122,7 @@ import os
     :synopsis: Модуль для работы с данными payload.
 """
 
-MODE = 'dev'
+
 
 
 def load_payload(file_path: str) -> dict:

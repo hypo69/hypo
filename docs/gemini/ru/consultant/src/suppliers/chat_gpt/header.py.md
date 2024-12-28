@@ -50,7 +50,7 @@
    import header
    print(header.__project_name__)
 """
-MODE = 'dev' # Режим работы приложения (разработка или продакшн)
+ # Режим работы приложения (разработка или продакшн)
 
 import sys
 from pathlib import Path

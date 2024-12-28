@@ -35,7 +35,7 @@
 from src.logger.logger import logger # Импортируем logger для логирования
 # MODE: str
 #     Режим работы приложения.
-MODE = 'dev'
+
 
 from .product_fields import ProductFields
 from .product_fields_translator import translate_presta_fields_dict

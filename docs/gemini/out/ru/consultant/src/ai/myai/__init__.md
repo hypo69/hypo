@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -34,7 +34,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 #from src.logger import logger   # Импортируем класс logger для логирования ошибок.
 import json
 
-MODE = 'dev'
+
 
 # Функция для загрузки данных из файла JSON, используя j_loads.
 # Принимает путь к файлу и возвращает загруженные данные или None при ошибке.
@@ -93,7 +93,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 import json
 
 
-MODE = 'dev'
+
 
 # Функция для загрузки данных из файла JSON, используя j_loads.
 # Принимает путь к файлу и возвращает загруженные данные или None при ошибке.

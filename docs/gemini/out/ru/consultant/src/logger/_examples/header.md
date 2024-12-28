@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.logger._examples """
 
@@ -81,7 +81,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры использования логирования.
 """
-MODE = 'dev'
+
 
 
 """
@@ -106,7 +106,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis: Переменная MODE
 """
-MODE = 'dev'
+
 
 """ module: src.logger._examples """
 
@@ -164,7 +164,7 @@ from src.utils import StringNormalizer, ProductFieldsValidator  # Добавле
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры использования логирования.
 """
-MODE = 'dev'
+
 
 
 """
@@ -189,7 +189,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis: Переменная MODE
 """
-MODE = 'dev'
+
 
 """ module: src.logger._examples """
 

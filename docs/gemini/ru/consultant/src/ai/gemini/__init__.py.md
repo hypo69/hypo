@@ -38,7 +38,7 @@ from src.logger.logger import logger # Импортируем logger для ло
 from .generative_ai import GoogleGenerativeAI # Импорт класса для работы с Google Gemini AI
 
 #: Режим работы приложения (dev/prod).
-MODE = 'dev'
+
 
 __all__ = ['GoogleGenerativeAI', 'MODE'] # Явное указание импортируемых символов
 

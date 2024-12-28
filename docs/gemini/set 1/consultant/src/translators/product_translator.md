@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с переводами данных о товарах.
 """
-MODE = 'dev'
+
 
 
 """
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.translators """
 
@@ -214,7 +214,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 	:synopsis:
 	Модуль для работы с переводами данных о товарах.
 """
-MODE = 'dev'
+
 
 
 """
@@ -237,7 +237,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.translators """
 

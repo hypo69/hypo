@@ -23,7 +23,7 @@
     >>> driver.get_url('https://example.com')
 """
 
-MODE = 'dev'
+
 
 import copy
 import pickle

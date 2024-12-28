@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -96,7 +96,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: Модуль содержит вспомогательные функции для работы с Firefox WebDriver.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -208,7 +208,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :synopsis: Модуль содержит вспомогательные функции для работы с Firefox WebDriver.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json

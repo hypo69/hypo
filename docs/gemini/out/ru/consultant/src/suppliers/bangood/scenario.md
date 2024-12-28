@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.bangood """
 
@@ -124,7 +124,7 @@ def get_list_categories_from_site(s):
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы со сценарием сбора данных с сайта bangood.co.il.
 """
-MODE = 'dev'
+
 
 
 """
@@ -144,7 +144,7 @@ MODE = 'dev'
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы со сценарием сбора данных с сайта bangood.co.il.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.suppliers.bangood
@@ -240,7 +240,7 @@ def get_list_categories_from_site(s):
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы со сценарием сбора данных с сайта bangood.co.il.
 """
-MODE = 'dev'
+
 
 
 """
@@ -260,7 +260,7 @@ MODE = 'dev'
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы со сценарием сбора данных с сайта bangood.co.il.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.suppliers.bangood

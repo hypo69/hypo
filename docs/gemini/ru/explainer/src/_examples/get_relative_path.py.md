@@ -28,7 +28,7 @@ flowchart TD
     ImportModules --> ImportPathlib[Импорт pathlib: `from pathlib import Path`]
     ImportModules --> ImportHeader[Импорт header: `import header`]
     ImportModules --> ImportGetRelativePath[Импорт get_relative_path: `from src.utils.path import get_relative_path`]
-    ImportPathlib --> SetMode[Установка MODE = 'dev']
+    ImportPathlib --> SetMode[Установка ]
     SetMode --> GetCurrentFilePath[Получение абсолютного пути текущего файла]
     GetCurrentFilePath --> CallGetRelativePath[Вызов get_relative_path(current_file_path, 'hypotez')]
     CallGetRelativePath --> StoreRelativePath[Сохранение относительного пути в relative_path]
@@ -61,7 +61,7 @@ flowchart TD
     *   **Взаимосвязь**: Функция `get_relative_path` используется для вычисления относительного пути от абсолютного пути текущего файла к заданной целевой директории (`hypotez`).
 
 #### Переменные:
-*   **`MODE = 'dev'`**:
+*   **``**:
     *   **Тип**: Строка.
     *   **Использование**: Указывает на текущий режим работы скрипта (в данном случае 'dev' - режим разработки).  Переменная может использоваться  для управления поведением скрипта в зависимости от окружения.
 *   **`relative_path`**:

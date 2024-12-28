@@ -63,7 +63,7 @@
     gws.header('My Sheet Header', range='A1:F1')
 
 """
-MODE = 'dev'
+
 
 from global_settingspread import Spreadsheet, Worksheet
 from goog.grender import GSRender

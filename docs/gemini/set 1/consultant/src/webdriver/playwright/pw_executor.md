@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -34,7 +34,7 @@ from playwright.sync_api import sync_playwright
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def execute_action(action_data: dict) -> bool:
@@ -105,7 +105,7 @@ from playwright.sync_api import sync_playwright
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def execute_action(action_data: dict) -> bool:

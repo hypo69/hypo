@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.etzmaleh """
 
@@ -74,7 +74,7 @@ def login(s) -> bool:
     :synopsis: Модуль для авторизации на сайте etzmaleh.
 
 """
-MODE = 'dev'
+
 
 
 def login(s) -> bool:
@@ -126,7 +126,7 @@ def login(s) -> bool:
     :synopsis: Модуль для авторизации на сайте etzmaleh.
 
 """
-MODE = 'dev'
+
 
 
 # Импорт нужных библиотек

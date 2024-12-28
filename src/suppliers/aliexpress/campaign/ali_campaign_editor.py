@@ -58,7 +58,7 @@ graph LR
   
 ```
 """
-MODE = 'dev'
+
 
 
 import re

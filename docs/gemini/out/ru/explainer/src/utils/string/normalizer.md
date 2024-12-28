@@ -31,7 +31,7 @@ from decimal import Decimal, InvalidOperation
 from typing import Any, List, Union
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def normalize_boolean(input_data: Any) -> bool:

@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.ecat_co_il """
 
@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 # Конфигурация, которая может быть загружена из файла конфигурации.
@@ -144,7 +144,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 # Конфигурация, которая может быть загружена из файла конфигурации.

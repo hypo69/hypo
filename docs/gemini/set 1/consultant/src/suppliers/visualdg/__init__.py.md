@@ -12,7 +12,7 @@
 :platform: Windows, Unix
 :synopsis: Содержит класс :class:`Graber` для сбора данных с сайта VisualDG.
 """
-MODE = 'dev'
+
 # Объявление переменной `MODE` в режиме разработки.
 
 from .graber import Graber
@@ -38,7 +38,7 @@ from .graber import Graber
 :platform: Windows, Unix
 :synopsis: Содержит класс :class:`Graber` для сбора данных с сайта VisualDG.
 """
-MODE = 'dev'
+
 # Объявление переменной `MODE` в режиме разработки.
 
 from .graber import Graber

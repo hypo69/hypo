@@ -10,7 +10,7 @@ module: src.logger
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 
 import sys
 import json
@@ -84,7 +84,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 :synopsis: Определяет корневой путь к проекту. Все импорты строятся относительно этого пути.
 :TODO: В дальнейшем перенести в системную переменную
 """
-MODE = 'dev'
+
 
 import sys
 # импортируем Path из pathlib для работы с путями
@@ -214,7 +214,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 :synopsis: Определяет корневой путь к проекту. Все импорты строятся относительно этого пути.
 :TODO: В дальнейшем перенести в системную переменную
 """
-MODE = 'dev'
+
 
 import sys
 # импортируем Path из pathlib для работы с путями

@@ -47,7 +47,7 @@ This module contains classes and functions related to product fields. It provide
 
 
 ```python
-MODE = 'dev'
+
 ```
 
 

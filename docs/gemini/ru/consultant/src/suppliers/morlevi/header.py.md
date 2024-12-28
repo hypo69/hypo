@@ -55,7 +55,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads #  Импортирован j_loads
 from src.logger.logger import logger #  Импортирован logger
 
-MODE = 'dev'
+
 """str: Режим работы приложения (например, 'dev' или 'prod')."""
 
 

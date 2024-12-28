@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # Author: Ioann Volkov (volkov.ioann@gmail.com)

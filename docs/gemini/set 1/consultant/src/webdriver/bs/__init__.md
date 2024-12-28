@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bs import BS
 ```
@@ -31,7 +31,7 @@ from .bs import BS
    :synopsis: Модуль для работы с веб-драйвером и BeautifulSoup.
 
 """
-MODE = 'dev'
+
 
 # Импорт необходимых модулей. Обратите внимание на использование from src.utils.jjson import j_loads
 from .bs import BS
@@ -62,7 +62,7 @@ from src.logger import logger
    :synopsis: Модуль для работы с веб-драйвером и BeautifulSoup.
 
 """
-MODE = 'dev'
+
 
 # Импорт необходимых модулей. Обратите внимание на использование from src.utils.jjson import j_loads
 from .bs import BS

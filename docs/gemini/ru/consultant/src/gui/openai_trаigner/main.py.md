@@ -72,7 +72,7 @@ from PyQt6.QtWebEngineCore import QWebEngineProfile
 from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
-MODE = 'dev'
+
 
 #: URL-адреса сервисов Google
 GOOGLE_SERVICES = {

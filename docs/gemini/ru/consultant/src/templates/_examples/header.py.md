@@ -64,7 +64,7 @@ dir_src = Path(dir_root, 'src')
 sys.path.append(str(dir_root))
 
 # Установка режима работы
-MODE = 'dev'
+
 
 # ----------------
 # Импорт основных модулей проекта

@@ -15,7 +15,7 @@
     :note: Если нормализатор не сработал - код вернет ответ без изменений
 """
 
-MODE = 'dev'
+
 
 
 from decimal import Decimal, InvalidOperation

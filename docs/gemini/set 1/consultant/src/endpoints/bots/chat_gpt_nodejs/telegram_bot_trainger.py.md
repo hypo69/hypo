@@ -20,7 +20,7 @@
     if __name__ == '__main__':
         main()
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     if __name__ == '__main__':
         main()
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile

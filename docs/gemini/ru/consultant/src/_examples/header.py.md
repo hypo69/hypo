@@ -53,7 +53,7 @@
     print(__version__)
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

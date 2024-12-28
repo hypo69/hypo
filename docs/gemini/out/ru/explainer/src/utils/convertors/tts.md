@@ -13,7 +13,7 @@
 	:synopsis: speech recognition and text-to-speech conversion
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -214,7 +214,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`:  Вероятно, константа для определения режима работы (например, дебаг или продакшен).
+* ``:  Вероятно, константа для определения режима работы (например, дебаг или продакшен).
 * `audio_url`, `audio_file_path`, `language`, `text`, `lang`:  Переменные, хранящие данные, используемые в функциях.
 
 **Возможные ошибки и улучшения:**

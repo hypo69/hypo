@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -68,7 +68,7 @@ There's no significant workflow beyond defining the constant `MODE` and importin
 
 ```mermaid
 graph LR
-    A[hypotez/src/category/_examples/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/category/_examples/__init__.py] --> B();
     B --> C[from packaging.version import Version];
     B --> D[from .version import __version__, __doc__, __details__];
     

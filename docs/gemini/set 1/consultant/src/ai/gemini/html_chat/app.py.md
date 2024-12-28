@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.gemini.html_chat """
 
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         uvicorn.run(app, host="127.0.0.1", port=8000)
 
 """
-MODE = 'dev'
+
 # from src.logger.logger import logger  # TODO: добавить логирование
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить для чтения файлов
 
@@ -278,7 +278,7 @@ if __name__ == "__main__":
         uvicorn.run(app, host="127.0.0.1", port=8000)
 
 """
-MODE = 'dev'
+
 # from src.logger.logger import logger  # TODO: добавить логирование
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить для чтения файлов
 

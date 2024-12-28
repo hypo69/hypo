@@ -17,7 +17,7 @@ Functions:
 - `xml2dict`: Parses an XML string into a dictionary.
 - `ET2dict`: Converts an XML element tree into a dictionary.
 """
-MODE = 'dev'
+
 import re
 import xml.etree.ElementTree as ET
 from src.utils.jjson import j_loads, j_loads_ns  # импорт j_loads и j_loads_ns

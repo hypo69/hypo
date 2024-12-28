@@ -12,7 +12,7 @@
 	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
 
 """
-MODE = 'dev'
+
 
 
 import datetime
@@ -186,7 +186,7 @@ gs: ProgramSettings = ProgramSettings()
 	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
 
 """
-MODE = 'dev'
+
 
 
 import datetime

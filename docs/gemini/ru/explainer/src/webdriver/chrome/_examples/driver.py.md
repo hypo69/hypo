@@ -6,7 +6,7 @@
 
 ```mermaid
 graph LR
-    A[Start] --> B(Инициализация: MODE = 'dev');
+    A[Start] --> B(Инициализация: );
     B --> C{Импорт: Driver, Chrome из src.webdriver.driver};
     C --> D{Импорт: By из selenium.webdriver.common.by};
     D --> E[Определение: main() function];
@@ -91,7 +91,7 @@ graph LR
 ```
 **Пошаговое объяснение:**
 
-1.  **Инициализация**: Устанавливается режим работы `MODE = 'dev'`.
+1.  **Инициализация**: Устанавливается режим работы ``.
 2.  **Импорт**: Из `src.webdriver.driver` импортируются классы `Driver` и `Chrome`, а из `selenium.webdriver.common.by` импортируется `By`.
 3.  **Функция `main()`**:
     *   Создается экземпляр `chrome_driver` класса `Driver`, используя `Chrome` как драйвер.

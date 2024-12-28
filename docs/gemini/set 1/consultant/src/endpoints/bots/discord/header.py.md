@@ -22,7 +22,7 @@
     print(f"Имя проекта: {__project_name__}")
     print(f"Версия: {__version__}")
 """
-MODE = 'dev'
+
 # MODE (str): Режим работы приложения (разработка или продакшн).
 
 """
@@ -48,7 +48,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.bots.discord """
 import sys
@@ -173,7 +173,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     print(f"Имя проекта: {__project_name__}")
     print(f"Версия: {__version__}")
 """
-MODE = 'dev'
+
 # MODE (str): Режим работы приложения (разработка или продакшн).
 
 """
@@ -199,7 +199,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.bots.discord """
 import sys

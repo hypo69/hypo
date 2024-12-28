@@ -24,7 +24,7 @@
     print(translated_text)
 
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -53,7 +53,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.goog.gtranslater """
 # Этот модуль обрабатывает перевод языка с использованием Google Translate API.
@@ -119,7 +119,7 @@ if __name__ == "__main__":
 6. **Комментарии в коде:**
    - Добавлены комментарии к каждой строке кода, объясняющие её действие.
 7. **Удаление лишних констант**:
-  - Удалена лишняя константа `MODE = 'dev'`.
+  - Удалена лишняя константа ``.
 
 ## FULL Code
 ```python

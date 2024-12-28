@@ -11,7 +11,7 @@
 from src.logger.logger import logger
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 def login(self):
@@ -94,7 +94,7 @@ def login(self):
 from src.logger.logger import logger
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 def login(self):

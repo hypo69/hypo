@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
@@ -35,7 +35,7 @@ MODE = 'dev'
 import importlib
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 # Импорт классов из других файлов.
@@ -95,7 +95,7 @@ except ImportError as e:
 import importlib
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 # Импорт классов из других файлов.

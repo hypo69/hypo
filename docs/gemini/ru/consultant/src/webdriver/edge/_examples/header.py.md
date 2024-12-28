@@ -36,7 +36,7 @@
 6.  **Удалить** неиспользуемые переменные и конструкции.
 7.  **Переменные**:
     - Уточнить тип переменной `dir_root` в docstring.
-    - Присваивание `MODE = 'dev'`  должно быть указано до многострочных комментариев.
+    - Присваивание ``  должно быть указано до многострочных комментариев.
 
 **Оптимизированный код**
 
@@ -59,7 +59,7 @@ from src.category import Category
 from src.utils.jjson import j_dumps, j_loads,   pprint, save_text_file
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
     :platform: Windows, Unix
     :synopsis:

@@ -20,7 +20,7 @@ Key Features:
     2. Retrieve metadata like document ready state, referrer, or page language.
     3. Manage browser window focus programmatically.
 """
-MODE = 'dev'
+
 
 import header
 from src import gs

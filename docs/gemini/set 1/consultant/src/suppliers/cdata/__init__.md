@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -43,7 +43,7 @@ from .graber import Graber
     data = graber.get_data() # код исполняет получение данных
     # ... дальнейшая обработка данных ...
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -84,7 +84,7 @@ from src.logger import logger
     data = graber.get_data() # код исполняет получение данных
     # ... дальнейшая обработка данных ...
 """
-MODE = 'dev'
+
 
 
 # Импорт необходимых классов и модулей

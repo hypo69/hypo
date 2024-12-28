@@ -50,7 +50,7 @@
 # #! venv/bin/python/python3.12
 # #  Удаляем неиспользуемые shebang
 from src.logger.logger import logger  # Добавлен импорт logger
-MODE = 'dev'
+
 
 
 from .facebook import Facebook #  импортирован модуль facebook

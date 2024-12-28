@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -90,7 +90,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: Настройка окружения и загрузка конфигураций.
 
 """
-MODE = 'dev'
+
 
 import sys
 # `import json` удален, так как используется `j_loads` из `src.utils.jjson`
@@ -226,7 +226,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: Настройка окружения и загрузка конфигураций.
 
 """
-MODE = 'dev'
+
 
 import sys
 # `import json` удален, так как используется `j_loads` из `src.utils.jjson`

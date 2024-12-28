@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .emil_design import EmilDesign
@@ -37,7 +37,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 from .emil_design import EmilDesign
@@ -73,7 +73,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger
 
 
-MODE = 'dev' # Константа, определяющая режим работы.
+ # Константа, определяющая режим работы.
 
 
 from .emil_design import EmilDesign

@@ -10,7 +10,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._pytest """
 
@@ -177,7 +177,7 @@ graph LR
 
 **Variables:**
 
-- `MODE = 'dev'`:  A constant string, probably used for configuration or debugging.
+- ``:  A constant string, probably used for configuration or debugging.
 
 **Potential Errors/Improvements:**
 

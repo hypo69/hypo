@@ -21,7 +21,7 @@
     start_campaigns()
 
 """
-MODE = 'dev'
+
 
 from src.utils.jjson import j_loads_ns # импорт функции для загрузки json
 from src.webdriver.driver import Driver, Chrome
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     start_campaigns()
 
 """
-MODE = 'dev'
+
 
 from src.utils.jjson import j_loads_ns # импорт функции для загрузки json
 from src.webdriver.driver import Driver, Chrome

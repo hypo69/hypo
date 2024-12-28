@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 # https://www.rev.com/api/docs
 # https://docs.rev.ai/resources/code-samples/python/
@@ -52,7 +52,7 @@ This file appears to be an initialization file for a package related to the Rev.
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Initialization);
+    A[] --> B(Initialization);
 ```
 
 **Explanation of Dependencies:**

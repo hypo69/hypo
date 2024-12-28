@@ -9,7 +9,7 @@
 	:synopsis:
 	Модуль для работы с звуковыми оповещениями (биперами).
 """
-MODE = 'dev'
+
 """
 	:platform: Windows, Unix
 	:synopsis:
@@ -28,7 +28,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 """ module: src.logger """
 
 

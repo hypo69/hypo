@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -80,7 +80,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль для примеров работы с API PrestaShop.
 """
-MODE = 'dev'
+
 
 
 """
@@ -102,7 +102,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis:  Переменная для хранения пути к корневой директории проекта.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.endpoints.prestashop._examples
@@ -183,7 +183,7 @@ from src.utils.product_fields_validator import ProductFieldsValidator  # Исп�
    :platform: Windows, Unix
    :synopsis: Модуль для примеров работы с API PrestaShop.
 """
-MODE = 'dev'
+
 
 
 """
@@ -205,7 +205,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis:  Переменная для хранения пути к корневой директории проекта.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.endpoints.prestashop._examples

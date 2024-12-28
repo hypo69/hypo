@@ -14,7 +14,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук
 
 """
-MODE = 'dev'
+
 
 from math import log
 import header
@@ -142,7 +142,7 @@ graph TD
 
 **Variables:**
 
-- `MODE = 'dev'`: A variable indicating the execution mode (likely for debugging or production).
+- ``: A variable indicating the execution mode (likely for debugging or production).
 - `filenames`, `excluded_filenames`: Lists defining the JSON file paths for different target groups.
 - `campaigns`: A list of campaign types.
 - `d`: An instance of the `Driver` class (the WebDriver).

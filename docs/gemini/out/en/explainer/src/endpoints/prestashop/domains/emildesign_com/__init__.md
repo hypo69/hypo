@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.emildesign_com """
 
@@ -55,7 +55,7 @@ There is no discernible algorithm or workflow in this code. It's a Python file c
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(File Initialization);
+    A[] --> B(File Initialization);
 ```
 
 **Explanation of Mermaid Diagram:**

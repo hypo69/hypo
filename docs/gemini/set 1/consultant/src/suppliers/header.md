@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -96,7 +96,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Этот модуль загружает настройки проекта из файла settings.json
 и файла README.MD, а также устанавливает корневую директорию проекта.
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -183,7 +183,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 Этот модуль загружает настройки проекта из файла settings.json
 и файла README.MD, а также устанавливает корневую директорию проекта.
 """
-MODE = 'dev'
+
 
 import sys
 import json

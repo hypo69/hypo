@@ -16,7 +16,7 @@
     в `Context.locator`. Если надо реализовать свой декоратор - раскомментируйте строки с декоратором и переопределите его поведение.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 # from functools import wraps # TODO: добавить импорт если используется декоратор
@@ -115,7 +115,7 @@ class Graber(Grbr):
     в `Context.locator`. Если надо реализовать свой декоратор - раскомментируйте строки с декоратором и переопределите его поведение.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 # from functools import wraps # TODO: добавить импорт если используется декоратор

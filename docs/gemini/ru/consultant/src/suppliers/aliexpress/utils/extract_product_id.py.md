@@ -51,7 +51,7 @@
     product_ids = extract_prod_ids(urls)
     print(product_ids)
 """
-MODE = 'dev'
+
 
 import re
 from src.logger.logger import logger # Импортируем logger

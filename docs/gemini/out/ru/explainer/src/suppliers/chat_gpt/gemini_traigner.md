@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 ```
 
 2. **<algorithm>**:
@@ -58,7 +58,7 @@ graph TD
 
 ```mermaid
 graph LR
-    A[gemini_traigner.py] --> B(MODE = 'dev');
+    A[gemini_traigner.py] --> B();
 ```
 
 4. **<explanation>**:

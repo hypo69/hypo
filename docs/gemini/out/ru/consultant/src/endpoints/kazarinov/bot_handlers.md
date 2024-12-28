@@ -27,7 +27,7 @@
     handler.handle_url(update, context)
 """
 
-MODE = 'dev'
+
 
 import random
 import asyncio
@@ -173,7 +173,7 @@ class BotHandler:
     handler.handle_url(update, context)
 """
 
-MODE = 'dev'
+
 
 import random
 import asyncio

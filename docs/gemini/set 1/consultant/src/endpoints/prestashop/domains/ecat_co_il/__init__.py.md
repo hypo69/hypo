@@ -13,7 +13,7 @@
 
 :platform: Windows, Unix
 """
-MODE = 'dev'
+
 
 
 """
@@ -49,7 +49,7 @@ MODE = 'dev'
 
 :platform: Windows, Unix
 """
-MODE = 'dev'
+
 
 
 """

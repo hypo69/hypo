@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from global_settingspread import Spreadsheet, Worksheet

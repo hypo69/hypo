@@ -40,7 +40,7 @@
 # модуль src.endpoints.hypo69.code_assistant.onela_bot
 # :platform: Windows, Unix
 # :synopsis: Модуль диалога с моделью ассистента программиста через чат телеграм.
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import Any

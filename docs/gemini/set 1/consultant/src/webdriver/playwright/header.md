@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -80,7 +80,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: This module contains initial setup for project.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -172,7 +172,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :synopsis: This module contains initial setup for project.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json

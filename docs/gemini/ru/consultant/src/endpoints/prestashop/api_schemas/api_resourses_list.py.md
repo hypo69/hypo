@@ -45,7 +45,7 @@
 """
 from src.logger.logger import logger # Подключаем модуль для логирования
 
-MODE = 'dev' # Указываем режим работы
+ # Указываем режим работы
 
 resource: list = [
     'products',

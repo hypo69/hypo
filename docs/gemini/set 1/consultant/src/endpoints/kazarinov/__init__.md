@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .kazarinov_bot import KazarinovTelegramBot
 ```
@@ -39,7 +39,7 @@ from src.utils.jjson import j_loads  # Импорт функции для раб
 from .kazarinov_bot import KazarinovTelegramBot
 from src.logger import logger  # Импорт логирования
 
-MODE = 'dev'
+
 
 # from src.utils.jjson import j_loads  # Комментарий об импорте
 
@@ -108,7 +108,7 @@ from src.utils.jjson import j_loads  # Импорт функции для раб
 from .kazarinov_bot import KazarinovTelegramBot
 from src.logger import logger  # Импорт логирования
 
-MODE = 'dev'
+
 
 # from src.utils.jjson import j_loads  # Комментарий об импорте
 

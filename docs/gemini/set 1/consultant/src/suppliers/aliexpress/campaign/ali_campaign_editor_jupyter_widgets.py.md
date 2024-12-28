@@ -16,7 +16,7 @@ Testfile:
     file test_ali_campaign_editor_jupyter_widgets.py
 
 """
-MODE = 'dev'
+
 
 
 from types import SimpleNamespace
@@ -314,7 +314,7 @@ class JupyterCampaignEditorWidgets:
     editor_widgets = JupyterCampaignEditorWidgets()
     editor_widgets.display_widgets()
 """
-MODE = 'dev'
+
 
 
 from types import SimpleNamespace
@@ -713,7 +713,7 @@ class JupyterCampaignEditorWidgets:
     editor_widgets = JupyterCampaignEditorWidgets()
     editor_widgets.display_widgets()
 """
-MODE = 'dev'
+
 
 
 from types import SimpleNamespace

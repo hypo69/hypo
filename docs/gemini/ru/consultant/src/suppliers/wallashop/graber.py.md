@@ -70,7 +70,7 @@ from src.logger.logger import logger
 from src.webdriver.exceptions import ExecuteLocatorException # импортируем ExecuteLocatorException
 
 
-MODE = 'dev'
+
 
 
 def close_pop_up(value: Any = None) -> Callable:

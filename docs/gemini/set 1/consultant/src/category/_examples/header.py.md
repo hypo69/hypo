@@ -17,7 +17,7 @@
    :platform: Windows, Unix
    :synopsis: Настройка окружения и импорт зависимостей.
 """
-MODE = 'dev'
+
 """
 Режим работы приложения (`dev` или `prod`).
 
@@ -65,7 +65,7 @@ print(dir_root)
     *   Добавлен docstring в формате reStructuredText (RST) для переменной `MODE`.
 3.  **Удалены избыточные комментарии**:
     *   Удалены избыточные комментарии в виде `"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""`.
-    *   Удален дубликат объявления переменной `MODE = 'dev'`.
+    *   Удален дубликат объявления переменной ``.
     *   Удален избыточный комментарий `""" module: src.category._examples """`.
     *   Удален избыточный комментарий `""" @namespace src.category._examples """`.
 4.  **Упорядочены импорты**:
@@ -96,7 +96,7 @@ print(dir_root)
    :platform: Windows, Unix
    :synopsis: Настройка окружения и импорт зависимостей.
 """
-MODE = 'dev'
+
 """
 Режим работы приложения (`dev` или `prod`).
 

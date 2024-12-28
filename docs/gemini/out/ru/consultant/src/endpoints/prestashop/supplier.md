@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional
@@ -63,7 +63,7 @@ class PrestaSupplier(PrestaShop):
     :platform: Windows, Unix
     :synopsis: Модуль для работы с поставщиками PrestaShop.
 """
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional
@@ -131,7 +131,7 @@ class PrestaSupplier(PrestaShop):
     :platform: Windows, Unix
     :synopsis: Модуль для работы с поставщиками PrestaShop.
 """
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional

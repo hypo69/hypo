@@ -23,7 +23,7 @@
 """
 from typing import List
 
-MODE = 'dev'
+
 
 resource: List[str] = [
     'products',
@@ -130,7 +130,7 @@ resource: List[str] = [
 """
 from typing import List
 
-MODE = 'dev'
+
 
 resource: List[str] = [
     'products', # ресурс API для продуктов

@@ -46,7 +46,7 @@ from src.logger.logger import logger
 from src.utils.file import save_text_file
 
 # Константа для режима работы
-MODE = 'dev'
+
 
 class ProductHTMLGenerator:
     """

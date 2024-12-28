@@ -4,7 +4,7 @@
 
 1. **Инициализация модуля:**
    - Устанавливается переменная `MODE` в значение `'dev'`. Это может указывать на режим разработки и влиять на поведение других частей модуля.
-   - **Пример:** `MODE = 'dev'`
+   - **Пример:** ``
 
 2. **Импорт класса `SpreadSheet`:**
    - Из файла `spreadsheet.py` (находящегося в том же каталоге) импортируется класс `SpreadSheet`. Этот класс, вероятно, отвечает за основную логику работы с Google Spreadsheets.
@@ -21,7 +21,7 @@
 
 ```mermaid
 graph LR
-    A[hypotez/src/goog/spreadsheet/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/goog/spreadsheet/__init__.py] --> B();
     A --> C(import SpreadSheet from spreadsheet.py);
     A --> D(import ReachSpreadsheet from reach_spreadsheet.py);
     
@@ -43,7 +43,7 @@ graph LR
 **Объяснение зависимостей:**
 
 - **`hypotez/src/goog/spreadsheet/__init__.py`**: Это основной файл модуля, который инициализирует его и предоставляет доступ к классам `SpreadSheet` и `ReachSpreadsheet`.
-- **`MODE = 'dev'`**:  Переменная, устанавливающая режим работы модуля.
+- **``**:  Переменная, устанавливающая режим работы модуля.
 - **`import SpreadSheet from spreadsheet.py`**: Импортирует класс `SpreadSheet` из файла `spreadsheet.py`. Зависимость от класса для базовых операций с Google Sheets.
 - **`import ReachSpreadsheet from reach_spreadsheet.py`**: Импортирует класс `ReachSpreadsheet` из файла `reach_spreadsheet.py`. Зависимость от класса для более сложных или специфичных операций с Google Sheets.
 
@@ -75,7 +75,7 @@ graph LR
 
 **Переменные:**
 
--   `MODE = 'dev'`:
+-   ``:
     -   **Тип**: Строка.
     -   **Использование**: Указывает на режим работы модуля. Может использоваться для включения/выключения отладочного режима, выбора альтернативных путей или настроек.
 

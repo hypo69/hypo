@@ -22,7 +22,7 @@ from src.utils.text_utils import cleanup_text
 from selenium.webdriver.remote.webdriver import WebDriver
 
 
-MODE = 'dev'
+
 
 
 class EbayShop(Shop):
@@ -366,7 +366,7 @@ from src.utils.text_utils import cleanup_text
 from selenium.webdriver.remote.webdriver import WebDriver
 
 
-MODE = 'dev'
+
 
 
 class EbayShop(Shop):
@@ -680,7 +680,7 @@ class EbayShop(Shop):
 # 	:synopsis:
 #
 # """
-# MODE = 'dev'
+# 
 #
 # """
 # 	:platform: Windows, Unix
@@ -702,7 +702,7 @@ class EbayShop(Shop):
 #   :platform: Windows, Unix
 #   :platform: Windows, Unix
 #   :synopsis:
-# """MODE = 'dev'
+# """
 #   
 # """ module: src.suppliers.ebay """
 #
@@ -736,7 +736,7 @@ from src.utils.text_utils import cleanup_text
 from selenium.webdriver.remote.webdriver import WebDriver
 
 
-MODE = 'dev'
+
 
 
 class EbayShop(Shop):

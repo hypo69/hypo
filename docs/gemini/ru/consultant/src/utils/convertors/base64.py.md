@@ -42,7 +42,7 @@ import tempfile
 import os
 from src.logger.logger import logger # импортируем логер
 
-MODE = 'dev'
+
 
 
 def base64_to_tmpfile(content: str, file_name: str) -> str:

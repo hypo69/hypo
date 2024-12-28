@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu.tkinter """
 
@@ -63,7 +63,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
-MODE = 'dev'  # Переменная MODE, хранящая режим работы
+  # Переменная MODE, хранящая режим работы
 
 
 def init_path():
@@ -113,7 +113,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
-MODE = 'dev'  # Переменная MODE, хранящая режим работы
+  # Переменная MODE, хранящая режим работы
 
 
 def init_path():

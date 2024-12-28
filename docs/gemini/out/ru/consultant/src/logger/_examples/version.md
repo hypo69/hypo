@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.logger._examples """
 
@@ -73,7 +73,7 @@ __author__='hypotez '
 """
 
 # Конфигурационная переменная, определяющая режим работы.
-MODE = 'dev'
+
 
 
 __version__ = "3.12.0.0.0.4"
@@ -111,7 +111,7 @@ __annotations__ = {} # Словарь для аннотаций типов.
 """
 
 # Конфигурационная переменная, определяющая режим работы.
-MODE = 'dev'
+
 
 
 __version__ = "3.12.0.0.0.4"

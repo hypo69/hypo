@@ -2,7 +2,7 @@
 
 **1. Инициализация:**
 
-   - Задается `MODE = 'dev'`. 
+   - Задается ``. 
    - Импортируются необходимые модули и библиотеки: `re`, `argparse`, `asyncio`, `Path`, `zip_longest`, `pandas`, `aioconsole`, `header`, `gs`, `logger`, `GptGs`, `Driver`, `Model`, `j_dumps`, `j_loads`, `j_loads_ns`, `clean_string`, `dict2csv`, `json2csv`, `pprint`.
    - Загружаются локаторы из `chat.json` в `locator`.
    - Создается экземпляр класса `GPT_Traigner`.

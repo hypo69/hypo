@@ -12,7 +12,7 @@
 	:synopsis:модули управления рекламной кампанией Aliexpress
 
 """
-MODE = 'dev'
+
 
 
 from .ali_campaign_editor import AliCampaignEditor
@@ -43,7 +43,7 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 import logging
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
-MODE = 'dev'
+
 
 from .ali_campaign_editor import AliCampaignEditor
 #from .gsheet import AliCampaignGoogleSheet  # Комментарий о неиспользуемом импорте
@@ -107,7 +107,7 @@ def process_campaign_data(campaign_data_path: str):
 import logging
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
-MODE = 'dev'
+
 
 from .ali_campaign_editor import AliCampaignEditor
 #from .gsheet import AliCampaignGoogleSheet  # Комментарий о неиспользуемом импорте

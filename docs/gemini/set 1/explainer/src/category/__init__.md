@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .category import Category
 ```
@@ -30,7 +30,7 @@ from .category import Category
 
 ```mermaid
 graph TD
-    A[hypotez/src/category/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/category/__init__.py] --> B();
     A --> C[from .category import Category];
     C --> D(Category);
 ```

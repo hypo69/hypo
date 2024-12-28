@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gsheet import GptGs
 ```
@@ -39,7 +39,7 @@ from .gsheet import GptGs
     from hypotez.src.suppliers.chat_gpt import GptGs
     # ... код использования класса GptGs ...
 """
-MODE = 'dev'
+
 
 from .gsheet import GptGs
 ```
@@ -74,7 +74,7 @@ from .gsheet import GptGs
     from hypotez.src.suppliers.chat_gpt import GptGs
     # ... код использования класса GptGs ...
 """
-MODE = 'dev'
+
 
 # Импорт класса GptGs из модуля gsheet
 from .gsheet import GptGs

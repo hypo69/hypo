@@ -17,7 +17,7 @@
 
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 import header

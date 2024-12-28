@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 import header
 from src import gs
@@ -96,7 +96,7 @@ from src import gs
 from src.utils import jjson
 from src.logger import logger
 
-MODE = 'dev'
+
 
 def extract_conversations_from_html(file_path: Path):
     """
@@ -159,7 +159,7 @@ from src import gs
 from src.utils import jjson
 from src.logger import logger
 
-MODE = 'dev'
+
 
 def extract_conversations_from_html(file_path: Path):
     """

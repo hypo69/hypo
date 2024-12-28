@@ -20,7 +20,7 @@ from src.logger.logger import logger
 __version__ = '0.1.0'
 __doc__ = 'Примеры использования категории'
 __details__ = 'Детали реализации примеров'
-MODE = 'dev'
+
 """
     :platform: Windows, Unix
     :synopsis: 
@@ -55,7 +55,7 @@ MODE = 'dev'
 3.  Удалены лишние комментарии, которые не несут смысловой нагрузки.
 4.  Добавлено определение __version__, __doc__, __details__
 5.  Добавлен docstring к модулю в формате RST.
-6.  Удалены дубликаты MODE = 'dev'.
+6.  Удалены дубликаты .
 7.  Удален неиспользуемый импорт `__version__`, `__doc__`, `__details__` из `./version.py`.
 8.  Сохранены все комментарии `#` после кода без изменений.
 
@@ -81,7 +81,7 @@ from src.logger.logger import logger
 __version__ = '0.1.0'
 __doc__ = 'Примеры использования категории'
 __details__ = 'Детали реализации примеров'
-MODE = 'dev'
+
 """
     :platform: Windows, Unix
     :synopsis: 

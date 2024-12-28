@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields
@@ -34,7 +34,7 @@ from .promoter import FacebookPromoter, get_event_url
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорты
 from .facebook import Facebook
@@ -90,7 +90,7 @@ def get_data(file_path: str) -> dict:
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорты
 from .facebook import Facebook

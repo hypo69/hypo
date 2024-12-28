@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 
@@ -38,7 +38,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger  # Импорт logger
 
 
-MODE = 'dev'
+
 
 
 from .graber import Graber  # Импорт Graber
@@ -75,7 +75,7 @@ from src.logger import logger  # Импорт logger
 
 
 # Переменная, определяющая режим работы. Значение 'dev' (разработка)
-MODE = 'dev'
+
 
 
 from .graber import Graber  # Импорт Graber

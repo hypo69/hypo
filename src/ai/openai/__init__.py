@@ -9,7 +9,7 @@
 	:synopsis: Модуль модели `openai`
 
 """
-MODE = 'dev'
+
 
 from .translator import translate
 from .model import OpenAIModel

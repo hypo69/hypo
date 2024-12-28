@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -53,7 +53,7 @@ class FacebookFields:
     :platform: Windows, Unix
     :synopsis: Модуль для работы с полями объявлений и событий Facebook.
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -129,7 +129,7 @@ class FacebookFields:
     :platform: Windows, Unix
     :synopsis: Модуль для работы с полями объявлений и событий Facebook.
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path

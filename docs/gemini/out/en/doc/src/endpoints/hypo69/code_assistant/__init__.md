@@ -31,7 +31,7 @@ This module initializes the code assistant functionality for the hypo69 endpoint
 
 
 ```python
-MODE = 'dev'
+
 
 from .code_assistant import CodeAssistant
 ```

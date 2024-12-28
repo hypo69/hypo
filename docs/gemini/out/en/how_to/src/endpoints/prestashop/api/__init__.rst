@@ -18,7 +18,7 @@ Usage example
 
     from hypotez.src.endpoints.prestashop.api import PrestaShop
 
-    MODE = 'dev'
+    
 
     # Example usage, assuming PrestaShop class methods exist:
     presta_shop_instance = PrestaShop()

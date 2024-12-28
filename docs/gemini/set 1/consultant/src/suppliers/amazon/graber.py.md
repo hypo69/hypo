@@ -20,7 +20,7 @@
 Если требуется свой декоратор, раскомментируйте соответствующие строки и переопределите его поведение.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 # from functools import wraps #  удален неиспользуемый импорт
@@ -126,7 +126,7 @@ class Graber(Grbr):
 Если требуется свой декоратор, раскомментируйте соответствующие строки и переопределите его поведение.
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 from typing import Callable

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для добавления и удаления пунктов контекстного меню для рабочего стола и фона папок.
 """
-MODE = 'dev'
+
 
 
 """
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu.tkinter """
 
@@ -72,7 +72,7 @@ from src import gs, logger  # Импорты для работы с путями
     :platform: Windows, Unix
     :synopsis: Модуль для добавления и удаления пунктов контекстного меню для рабочего стола и фона папок.
 """
-MODE = 'dev'
+
 
 
 def add_context_menu_item():
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     :platform: Windows, Unix
     :synopsis: Модуль для добавления и удаления пунктов контекстного меню для рабочего стола и фона папок.
 """
-MODE = 'dev'
+
 import winreg as reg
 import os
 import tkinter as tk

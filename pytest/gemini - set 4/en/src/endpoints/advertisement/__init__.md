@@ -95,7 +95,7 @@ from .facebook import Facebook
 
 # Example Facebook class methods (replace with your actual implementation)
 class Facebook:
-    MODE = 'dev'
+    
 
     def __init__(self):
         pass

@@ -49,7 +49,7 @@
 # -*- coding: utf-8 -*-
 # #! venv/Scripts/python.exe
 # #! venv/bin/python/python3.12
-MODE = 'dev'
+
 
 import sys
 # import json # стандартный импорт `json`,  требуется заменить на j_loads из src.utils.jjson

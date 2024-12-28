@@ -38,7 +38,7 @@ from src.utils.file import read_text_file, recursively_read_text_files, save_tex
 from src.utils.url import is_url
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """Установка режима работы бота (разработка или продакшн)."""
 
 @dataclass
@@ -274,7 +274,7 @@ from src.utils.file import read_text_file, recursively_read_text_files, save_tex
 from src.utils.url import is_url
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """Установка режима работы бота (разработка или продакшн)."""
 
 @dataclass

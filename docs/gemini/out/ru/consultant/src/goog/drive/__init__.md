@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive
@@ -32,7 +32,7 @@ from .drive import GoogleDrive
 
 Этот модуль предоставляет доступ к функциям работы с Google Drive.
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive
@@ -59,7 +59,7 @@ from .drive import GoogleDrive
 
 Этот модуль предоставляет доступ к функциям работы с Google Drive.
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive

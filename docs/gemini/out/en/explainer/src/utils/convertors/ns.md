@@ -19,7 +19,7 @@ Functions:
     - ns2xml: Convert SimpleNamespace object to XML format.
     - ns2xls: Convert SimpleNamespace object to XLS format.
 """
-MODE = 'dev'
+
 import json
 import csv
 from types import SimpleNamespace
@@ -207,7 +207,7 @@ None.  The file defines functions, not classes.
 
 **Variables:**
 
-* `MODE = 'dev'`:  A global variable, probably for different execution modes (e.g., 'dev', 'prod'), potentially influencing the behavior of logging or other parts of the project.
+* ``:  A global variable, probably for different execution modes (e.g., 'dev', 'prod'), potentially influencing the behavior of logging or other parts of the project.
 
 
 **Potential Errors/Improvements:**

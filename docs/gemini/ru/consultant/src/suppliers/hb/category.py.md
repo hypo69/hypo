@@ -58,7 +58,7 @@ from src.webdriver.driver import Driver
 from src.suppliers import Supplier
 from src.utils.jjson import j_loads # import j_loads
 
-MODE = 'dev'
+
 
 def get_list_products_in_category(s: Supplier) -> Optional[List[str]]:
     """

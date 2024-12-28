@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import os
@@ -220,7 +220,7 @@ class PrestaShop:
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 
 import os

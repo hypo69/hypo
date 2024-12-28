@@ -3,7 +3,7 @@ import pytest
 
 # Replace with the actual code from hypotez/src/endpoints/__init__.py
 # This example demonStartes testing a constant
-MODE = 'dev'
+
 
 
 # Test cases for the MODE constant

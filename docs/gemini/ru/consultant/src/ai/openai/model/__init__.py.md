@@ -41,7 +41,7 @@
 
 """
 from src.logger.logger import logger # импортируем logger
-MODE = 'dev'
+
 """
     Режим работы приложения:
         - 'dev' для режима разработки,

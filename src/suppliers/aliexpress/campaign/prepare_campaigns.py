@@ -17,7 +17,7 @@ To process all campaigns:
 
     python src/suppliers/aliexpress/campaigns/prepare_campaigns.py --all -l EN -cu USD
 """
-MODE = 'dev'
+
 import header
 import argparse
 import copy

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с Google Таблицами.
 """
-MODE = 'dev'
+
 
 
 """
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 	Переменная MODE.
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -232,7 +232,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 	:synopsis:
 	Модуль для работы с Google Таблицами.
 """
-MODE = 'dev'
+
 
 
 """
@@ -258,7 +258,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 	Переменная MODE.
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 

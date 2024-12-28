@@ -38,7 +38,7 @@
 
 """
 from src.logger.logger import logger  # импорт модуля логгирования
-MODE = 'dev'
+
 """
 Режим работы приложения.
 

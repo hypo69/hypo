@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 from src import gs
 
-MODE = 'dev' # Режим работы приложения
+ # Режим работы приложения
 
 def set_project_root(marker_files: tuple =('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """

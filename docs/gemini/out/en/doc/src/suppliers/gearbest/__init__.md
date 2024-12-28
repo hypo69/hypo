@@ -15,7 +15,7 @@ This module provides initialization and import functions for the GearBest suppli
 ## MODE
 
 ```python
-MODE = 'dev'
+
 ```
 
 **Description**: This constant defines the operating mode of the module.  In this case, it's set to 'dev'.

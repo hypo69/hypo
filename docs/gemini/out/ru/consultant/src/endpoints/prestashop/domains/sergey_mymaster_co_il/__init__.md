@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 
@@ -67,13 +67,13 @@ Author(s):
 import json # Необходим для работы с json, но заменён на j_loads в остальных частях кода.
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 """
 Константа MODE.  Значение 'dev' указывает на режим разработки.
 """
-MODE = 'dev'
+
 
 """
 .. automodule:: src.endpoints.prestashop.domains.sergey_mymaster_co_il
@@ -147,13 +147,13 @@ import json # Необходим для работы с json, но заменё�
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 """
 Константа MODE.  Значение 'dev' указывает на режим разработки.
 """
-MODE = 'dev'
+
 
 """
 .. automodule:: src.endpoints.prestashop.domains.sergey_mymaster_co_il

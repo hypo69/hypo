@@ -6,7 +6,7 @@
 
 ```mermaid
 graph LR
-    A[Начало] --> B(Инициализация режима MODE = 'dev');
+    A[Начало] --> B(Инициализация режима );
     B --> C{Импорт AliCampaignEditor};
     C --> D{Импорт process_campaign, process_campaign_category, process_all_campaigns};
     D --> E{Импорт CategoryHTMLGenerator, ProductHTMLGenerator};
@@ -17,7 +17,7 @@ graph LR
 ```
 **Примеры:**
 
-1.  **`MODE = 'dev'`**: Установка режима разработки. Этот режим может влиять на поведение других модулей, например, при включении отладочных сообщений или использовании тестовых данных.
+1.  **``**: Установка режима разработки. Этот режим может влиять на поведение других модулей, например, при включении отладочных сообщений или использовании тестовых данных.
 2.  **`from .ali_campaign_editor import AliCampaignEditor`**: Импорт класса `AliCampaignEditor`, который, предположительно, используется для управления рекламными кампаниями на Aliexpress.
 3.  **`from .prepare_campaigns import process_campaign, process_campaign_category, process_all_campaigns`**: Импорт функций для обработки рекламных кампаний.
     *   `process_campaign` может обрабатывать одну кампанию.
@@ -38,7 +38,7 @@ graph LR
 ```mermaid
 graph LR
     subgraph src.suppliers.aliexpress.campaign
-        MODE[MODE = 'dev']
+        MODE[]
         ali_campaign_editor[AliCampaignEditor]
         prepare_campaigns[process_campaign, process_campaign_category, process_all_campaigns]
         html_generators[CategoryHTMLGenerator, ProductHTMLGenerator]

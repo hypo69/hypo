@@ -35,7 +35,7 @@ class G(Graber):
 ```
 
 """
-MODE = 'dev'
+
 
 import datetime
 import os

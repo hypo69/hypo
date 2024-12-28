@@ -23,7 +23,7 @@
     emil_design.promote_to_facebook()
     emil_design.upload_to_PrestaShop()
 """
-MODE = 'dev'
+
 
 
 """
@@ -56,7 +56,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.endpoints.emil """
 
@@ -265,7 +265,7 @@ if __name__ == "__main__":
     emil_design.promote_to_facebook()
     emil_design.upload_to_PrestaShop()
 """
-MODE = 'dev'
+
 
 
 """
@@ -298,7 +298,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.endpoints.emil """
 

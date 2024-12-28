@@ -12,7 +12,7 @@
 
 Модуль предназначен для работы с рекламными кампаниями и использует API AliExpress для получения данных о продуктах.
 """
-MODE = 'dev'
+
 
 import asyncio
 from datetime import datetime
@@ -200,7 +200,7 @@ class AliAffiliatedProducts(AliApi):
 
 Модуль предназначен для работы с рекламными кампаниями и использует API AliExpress для получения данных о продуктах.
 """
-MODE = 'dev'
+
 
 import asyncio
 # from datetime import datetime # Удален неиспользуемый импорт

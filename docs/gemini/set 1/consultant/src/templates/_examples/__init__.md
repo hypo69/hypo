@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates._examples """
 
@@ -63,7 +63,7 @@ from .version import __version__, __doc__, __details__
 """
 
 #  Константа определяющая режим работы.
-MODE = 'dev'
+
 
 
 """
@@ -122,7 +122,7 @@ from .version import __version__, __doc__, __details__
 """
 
 #  Константа определяющая режим работы.
-MODE = 'dev'
+
 
 
 """

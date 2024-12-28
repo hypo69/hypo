@@ -13,7 +13,7 @@
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 try:
     # импортируем модуль facebook
@@ -45,7 +45,7 @@ except ImportError as e:
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 # Режим работы модуля. Возможные значения: 'dev', 'prod'
 
 try:

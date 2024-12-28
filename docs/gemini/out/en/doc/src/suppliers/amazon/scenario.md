@@ -84,7 +84,7 @@ def get_list_products_in_category(s) -> list[str,str,None]:
 **Description**: Defines the operating mode for the module. Currently set to 'dev'.  This constant can be used to control the behavior of the module in different environments.
 
 ```python
-MODE = 'dev'
+
 ```
 
 

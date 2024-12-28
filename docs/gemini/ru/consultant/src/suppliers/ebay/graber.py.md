@@ -38,7 +38,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps # Добавлен импорт wraps

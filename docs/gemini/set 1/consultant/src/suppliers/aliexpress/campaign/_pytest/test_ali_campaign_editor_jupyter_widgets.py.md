@@ -31,7 +31,7 @@ from src.utils.file.file import (
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 @patch("src.utils.file.file.Path.open", new_callable=mock_open)
@@ -172,7 +172,7 @@ from src.utils.file.file import (
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 @patch("src.utils.file.file.Path.open", new_callable=mock_open)

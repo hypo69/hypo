@@ -5,7 +5,7 @@
 **Блок-схема:**
 
 1.  **Начало**:
-    *   Задается константа `MODE = 'dev'`.
+    *   Задается константа ``.
     *   Импортируются модули `sys`, `json`, `Version` из `packaging.version` и `Path` из `pathlib`.
     *   Определяется функция `set_project_root(marker_files)`.
 

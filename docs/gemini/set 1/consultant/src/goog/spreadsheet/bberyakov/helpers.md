@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -131,7 +131,7 @@ def hex_to_rgb (hex_color: str) -> tuple:
 """
 import logging
 
-MODE = 'dev'
+
 
 logger = logging.getLogger(__name__)
 
@@ -245,7 +245,7 @@ def hex_to_rgb(hex_color: str) -> tuple:
 """
 import logging
 
-MODE = 'dev'
+
 
 logger = logging.getLogger(__name__)
 

@@ -14,7 +14,7 @@
 	:synopsis: Публикация сообщения из `aliexpress` промо
 
 """
-MODE = 'dev'
+
 
 import time
 import asyncio

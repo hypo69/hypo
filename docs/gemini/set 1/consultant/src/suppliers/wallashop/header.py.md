@@ -19,7 +19,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -129,7 +129,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

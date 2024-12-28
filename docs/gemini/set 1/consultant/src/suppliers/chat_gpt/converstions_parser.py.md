@@ -18,7 +18,7 @@ from src.utils.jjson import j_loads, j_loads_ns #TODO проверить нео�
 from src.logger.logger import logger
 from src import gs #TODO проверить необходимость этого импорта
 
-MODE = 'dev'
+
 
 
 def extract_conversations_from_html(file_path: Path):
@@ -83,7 +83,7 @@ from src.utils.jjson import j_loads, j_loads_ns #TODO проверить нео�
 from src.logger.logger import logger
 from src import gs #TODO проверить необходимость этого импорта
 
-MODE = 'dev'
+
 
 
 def extract_conversations_from_html(file_path: Path):

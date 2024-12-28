@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .kazarinov_bot import KazarinovTelegramBot

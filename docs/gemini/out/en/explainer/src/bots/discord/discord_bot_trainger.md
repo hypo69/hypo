@@ -12,7 +12,7 @@ The bot's workflow involves several stages:
 
 1. **Initialization:**
     * Imports necessary libraries (e.g., `discord`, `commands`, `logger`).
-    * Sets up logging, defining a mode (`MODE = 'dev'`).
+    * Sets up logging, defining a mode (``).
     * Creates a `discord.Bot` instance with specified intents (message content, voice states).
     * Creates a `Model` object, likely for AI interaction.
     * Configures the command prefix.

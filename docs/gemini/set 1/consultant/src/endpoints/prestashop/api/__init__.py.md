@@ -144,7 +144,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 ```
@@ -163,7 +163,7 @@ from .api import PrestaShop
 # Импортируем модуль для логирования
 from src.logger.logger import logger # Импортирован logger
 
-MODE = 'dev'
+
 
 # Импортируем класс PrestaShop из модуля api
 from .api import PrestaShop
@@ -190,7 +190,7 @@ from .api import PrestaShop
 # Импортируем модуль для логирования
 from src.logger.logger import logger # Импортирован logger
 
-MODE = 'dev'
+
 
 # Импортируем класс PrestaShop из модуля api
 from .api import PrestaShop

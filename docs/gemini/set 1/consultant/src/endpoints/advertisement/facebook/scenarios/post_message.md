@@ -12,7 +12,7 @@
 	:synopsis: Публикация сообщения
 
 """
-MODE = 'dev'
+
 
 
 import time
@@ -168,7 +168,7 @@ def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
 # -*- coding: utf-8 -*-\
 #! venv/bin/python/python3.12
 """Модуль для публикации сообщений на Facebook."""
-MODE = 'dev'
+
 import time
 from pathlib import Path
 from types import SimpleNamespace

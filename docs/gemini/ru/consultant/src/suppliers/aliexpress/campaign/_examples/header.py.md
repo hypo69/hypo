@@ -53,7 +53,7 @@ from pathlib import Path
 from src.logger.logger import logger # Импорт модуля logger
 
 #: Режим работы приложения, по умолчанию 'dev'
-MODE = 'dev'
+
 
 # Корневая директория проекта
 dir_root: Path = Path(os.getcwd()).parent.parent  # Упрощенное определение корневой директории

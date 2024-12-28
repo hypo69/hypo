@@ -58,7 +58,7 @@ from src.utils.settings import gs
 from src.logger.logger import logger # Добавлен импорт logger
 from ..prepare_campaigns import *
 
-MODE = 'dev'
+
 
 
 # Example 1: Process a Single Campaign Category

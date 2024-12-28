@@ -13,7 +13,7 @@
 	:synopsis: converts DOT files into PNG images using the Graphviz library
 
 """
-MODE = 'dev'
+
 
 import sys
 from graphviz import Source

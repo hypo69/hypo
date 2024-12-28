@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -39,7 +39,7 @@ graber_instance = Graber()
 ```mermaid
 graph LR
     subgraph "gearbest package"
-        A[Graber] --> B(MODE = 'dev');
+        A[Graber] --> B();
         A --> C(.graber);
     end
     C --> D[Graber Class];
@@ -59,7 +59,7 @@ The code imports the `Graber` class from the `.graber` module within the `gearbe
 
 **Variables:**
 
-- `MODE = 'dev'`: This global variable likely controls the operating mode (e.g., development or production) of the module.  The value `'dev'` suggests this module is designed to be used in a development setting.
+- ``: This global variable likely controls the operating mode (e.g., development or production) of the module.  The value `'dev'` suggests this module is designed to be used in a development setting.
 
 **Classes (implicit):**
 

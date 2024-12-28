@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates._examples """
 
@@ -66,7 +66,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
 from .version import __version__, __doc__, __details__  # Импортируем из .version
 
-MODE = 'dev'  # Переменная MODE
+  # Переменная MODE
 
 
 def example_function():
@@ -106,7 +106,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
 from .version import __version__, __doc__, __details__  # Импортируем из .version
 
-MODE = 'dev'  # Переменная MODE
+  # Переменная MODE
 
 
 def example_function():

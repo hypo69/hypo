@@ -61,7 +61,7 @@ from src.suppliers.aliexpress.campaign.prepare_campaigns import (
     main,
 )
 
-MODE = 'dev'
+
 
 
 @pytest.fixture

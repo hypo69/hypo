@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu.qt6 """
 
@@ -69,7 +69,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 
 """
@@ -77,7 +77,7 @@ MODE = 'dev'
 :type: str
 :ivar: dev
 """
-MODE = 'dev'
+
 
 
 """
@@ -130,7 +130,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 
 """
@@ -138,7 +138,7 @@ MODE = 'dev'
 :type: str
 :ivar: dev
 """
-MODE = 'dev'
+
 
 
 """

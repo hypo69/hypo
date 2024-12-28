@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -126,7 +126,7 @@ graph LR
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A global variable likely used for configuration purposes (e.g., different modes for development and production).
+    * ``: A global variable likely used for configuration purposes (e.g., different modes for development and production).
     * `campaigns_directory`:  Represents a path to a directory containing campaign data.
     * `campaign_names`: Will hold the names of campaigns found in the directory.
     * `languages`: A dictionary mapping languages to currencies.  This could be a configuration variable, defining how campaigns in different languages should be treated.

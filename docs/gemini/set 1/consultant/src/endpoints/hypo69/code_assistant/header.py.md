@@ -18,7 +18,7 @@
     from src.logger.header import __root__
     print(__root__) # Выведет корневой каталог проекта
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -148,7 +148,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     from src.logger.header import __root__
     print(__root__) # Выведет корневой каталог проекта
 """
-MODE = 'dev'
+
 
 import sys
 import json

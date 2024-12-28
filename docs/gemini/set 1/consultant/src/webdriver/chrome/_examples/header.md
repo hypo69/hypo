@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome._examples """
 
@@ -80,7 +80,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры использования вебдрайвера Chrome.
 """
-MODE = 'dev'
+
 
 
 """
@@ -104,7 +104,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:  Параметр режима работы.
 """
-MODE = 'dev'
+
   
 """ :module: src.webdriver.chrome._examples """
 
@@ -175,7 +175,7 @@ from src.product_validator import ProductFieldsValidator # Импортируе�
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры использования вебдрайвера Chrome.
 """
-MODE = 'dev'
+
 
 
 """
@@ -205,7 +205,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:  Параметр режима работы.
 """
-MODE = 'dev'
+
   
 """ :module: src.webdriver.chrome._examples """
 

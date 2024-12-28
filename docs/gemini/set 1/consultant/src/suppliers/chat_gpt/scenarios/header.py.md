@@ -17,7 +17,7 @@ from pathlib import Path
 from packaging.version import Version
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger # импортируем логгер
-# MODE = 'dev'  # TODO: удалить неиспользуемую переменную MODE
+#   # TODO: удалить неиспользуемую переменную MODE
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
@@ -131,7 +131,7 @@ from pathlib import Path
 from packaging.version import Version
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger # импортируем логгер
-# MODE = 'dev'  # TODO: удалить неиспользуемую переменную MODE
+#   # TODO: удалить неиспользуемую переменную MODE
 
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """

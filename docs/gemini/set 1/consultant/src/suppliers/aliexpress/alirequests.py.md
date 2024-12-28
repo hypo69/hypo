@@ -34,7 +34,7 @@ from src import gs
 from src.utils.jjson import j_dumps
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class AliRequests:
@@ -238,7 +238,7 @@ from src import gs
 from src.utils.jjson import j_dumps
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class AliRequests:

@@ -12,7 +12,7 @@
 	:synopsis: Публикация сообщения из `aliexpress` промо
 
 """
-MODE = 'dev'
+
 
 import time
 import asyncio
@@ -230,7 +230,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
 	:platform: Windows, Unix
 	:synopsis: Публикация сообщения из `aliexpress` промо
 """
-MODE = 'dev'
+
 
 import time
 import asyncio

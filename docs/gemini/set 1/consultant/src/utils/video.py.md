@@ -64,7 +64,7 @@ import asyncio
 from src.logger.logger import logger
 
 
-MODE = 'dev'  # Режим работы (разработка, продакшн)
+  # Режим работы (разработка, продакшн)
 
 
 async def save_video_from_url(

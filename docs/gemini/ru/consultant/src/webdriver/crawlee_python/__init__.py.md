@@ -29,7 +29,7 @@
 Этот модуль содержит объявления и импорты, необходимые для работы с CrawleePython.
 Он устанавливает режим работы и импортирует основной класс `CrawleePython`.
 """
-MODE = 'dev'
+
 
 # Добавлен импорт logger
 from src.logger.logger import logger

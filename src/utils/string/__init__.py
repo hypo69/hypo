@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .validator import ProductFieldsValidator
 from .normalizer import (

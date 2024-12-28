@@ -61,7 +61,7 @@
     category_editor.show()
     sys.exit(app.exec())
 """
-MODE = 'dev' # TODO: необходимо уточнить назначение константы и возможно переименовать её в UPPER_CASE
+ # TODO: необходимо уточнить назначение константы и возможно переименовать её в UPPER_CASE
 
 import sys
 import asyncio

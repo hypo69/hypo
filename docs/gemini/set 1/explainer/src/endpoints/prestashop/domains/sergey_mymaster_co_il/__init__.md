@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 
@@ -64,7 +64,7 @@ Author(s):
 
 ```mermaid
 graph LR
-    A[__init__.py] --> B(MODE = 'dev');
+    A[__init__.py] --> B();
 ```
 
 # <explanation>

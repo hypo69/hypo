@@ -22,7 +22,7 @@
     graber.process_data()
 """
 
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -57,6 +57,6 @@ from .graber import Graber
     graber.process_data()
 """
 # модуль для работы с поставщиком Kualastyle
-MODE = 'dev'
+
 
 from .graber import Graber

@@ -12,7 +12,7 @@
 	:synopsis: Модуль модели `gemini`
 
 """
-MODE = 'dev'
+
 
 
 from .generative_ai import GoogleGenerativeAI
@@ -55,7 +55,7 @@ The diagram shows a direct dependency of `__init__.py` on `generative_ai.py` wit
     * `from .generative_ai import GoogleGenerativeAI`: This line imports the `GoogleGenerativeAI` class from the `generative_ai.py` module within the `gemini` subpackage. The `.` indicates that the module is located within the current package.  This is a standard Python import pattern.
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable likely controls configuration options for the module.  In a typical application, this would be used to define different behaviors in development or production.
+    * ``: This variable likely controls configuration options for the module.  In a typical application, this would be used to define different behaviors in development or production.
 
 
 * **Classes:**

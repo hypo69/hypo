@@ -22,7 +22,7 @@
 
 ```mermaid
 graph LR
-    A[src.gui.openai_trаiner.__init__.py] --> B(MODE = 'dev');
+    A[src.gui.openai_trаiner.__init__.py] --> B();
     A --> C(import Version from packaging.version);
     A --> D(import __version__, __doc__, __details__ from .version);
     A --> E(import AssistantMainWindow from .main_window);
@@ -42,7 +42,7 @@ graph LR
 **Объяснение `mermaid`:**
 
 -   `A[src.gui.openai_trаiner.__init__.py]`: Это основной узел, представляющий текущий файл `__init__.py`.
--   `B(MODE = 'dev')`:  Узел, обозначающий присваивание значения `'dev'` переменной `MODE`.
+-   `B()`:  Узел, обозначающий присваивание значения `'dev'` переменной `MODE`.
 -   `C(import Version from packaging.version)`: Узел, показывающий импорт класса `Version` для работы с версиями ПО.
 -   `D(import __version__, __doc__, __details__ from .version)`: Узел, показывающий импорт переменных, содержащих информацию о версии, документацию и детали приложения.
 -   `E(import AssistantMainWindow from .main_window)`: Узел, показывающий импорт класса главного окна приложения.
@@ -68,7 +68,7 @@ graph LR
 
 #### Переменные:
 
--   `MODE = 'dev'`:
+-   ``:
     -   **Тип:** Строка (`str`).
     -   **Использование:** Устанавливает режим работы приложения в режим разработки (`dev`). Эта переменная может использоваться для включения/выключения отладочных функций, логгирования или иных настроек, связанных с режимом работы.
 

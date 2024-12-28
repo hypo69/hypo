@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.logger._examples """
 
@@ -69,14 +69,14 @@ from .version import __version__, __doc__, __details__  # Импортируем
 # import json  # Импортируем стандартную библиотеку json для сравнения
 
 
-MODE = 'dev'
+
 
 logger = logging.getLogger(__name__) # Логирование с помощью logger
 
 """
 Константа, определяющая режим работы.
 """
-MODE = 'dev'  # Режим разработки
+  # Режим разработки
 
 
 """
@@ -153,14 +153,14 @@ from .version import __version__, __doc__, __details__  # Импортируем
 # import json  # Импортируем стандартную библиотеку json для сравнения
 
 
-MODE = 'dev'
+
 
 logger = logging.getLogger(__name__) # Логирование с помощью logger
 
 """
 Константа, определяющая режим работы.
 """
-MODE = 'dev'  # Режим разработки
+  # Режим разработки
 
 
 """

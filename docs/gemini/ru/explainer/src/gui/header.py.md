@@ -6,7 +6,7 @@
 
 ```mermaid
 graph TD
-    A[Start] --> B{MODE = 'dev'};
+    A[Start] --> B{};
     B --> C[set_project_root(marker_files=('__root__'))];
     C --> D{Find current directory};
     D --> E{Iterate up through parent directories};
@@ -37,7 +37,7 @@ graph TD
 **Пример:**
 
 1.  **Начало**: Скрипт запускается.
-2.  **`MODE = 'dev'`**: Устанавливается глобальная переменная режима в `'dev'`.
+2.  **``**: Устанавливается глобальная переменная режима в `'dev'`.
 3.  **`set_project_root()`**: Функция вызывается для определения корневой директории проекта.
     *   Начинает с директории, где находится файл `header.py`.
     *   Ищет родительские директории, пока не найдет файл `__root__`.
@@ -65,7 +65,7 @@ graph TD
 
 ```mermaid
 flowchart TD
-    Start[Начало] --> SetMode[MODE = 'dev'];
+    Start[Начало] --> SetMode[];
     SetMode --> SetRoot[set_project_root() Function<br>Determine Project Root using marker files];
     SetRoot --> ImportGS[Import Global Settings: <br><code>from src import gs</code>]
     ImportGS --> TryLoadSettings[Try: Load settings.json<br>from <code>gs.path.root</code>/src/settings.json ];

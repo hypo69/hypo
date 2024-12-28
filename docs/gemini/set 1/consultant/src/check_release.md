@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import requests
@@ -53,7 +53,7 @@ def check_latest_release(owner: str, repo: str):
     :platform: Windows, Unix
     :synopsis: Модуль для проверки последней версии релиза на GitHub.
 """
-MODE = 'dev'
+
 
 import requests
 from src.logger.logger import logger
@@ -117,7 +117,7 @@ def check_latest_release(owner: str, repo: str) -> str | None:
     :platform: Windows, Unix
     :synopsis: Модуль для проверки последней версии релиза на GitHub.
 """
-MODE = 'dev'
+
 
 import requests
 from src.logger.logger import logger

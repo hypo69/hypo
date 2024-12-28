@@ -49,7 +49,7 @@
 """
 
 #: Режим работы приложения ('dev' или 'prod')
-MODE = 'dev'
+
 
 from .graber import Graber
 

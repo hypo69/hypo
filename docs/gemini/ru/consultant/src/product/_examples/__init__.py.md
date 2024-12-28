@@ -43,7 +43,7 @@ from src.utils.jjson import j_loads, j_loads_ns # импортируем нео�
 
 from .version import __version__, __doc__, __details__
 #  Инициализация режима работы
-MODE = 'dev'
+
 
 # ... - точка остановки для отладки
 ...

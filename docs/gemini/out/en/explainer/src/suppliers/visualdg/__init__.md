@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -36,7 +36,7 @@ This is a very basic initialization.  The actual functionality lies within the `
 
 ```mermaid
 graph LR
-    A[visualdg __init__.py] --> B(MODE = 'dev');
+    A[visualdg __init__.py] --> B();
     A --> C[from .graber import Graber];
     C --> D[graber.py];
 ```
@@ -53,7 +53,7 @@ The mermaid graph shows that `visualdg/__init__.py` imports `graber.py`.  This c
 
 **Variables:**
 
-- `MODE = 'dev'`: This global variable is likely used for conditional logic within the package's modules, especially useful for distinguishing development ("dev") from production ("prod") modes.
+- ``: This global variable is likely used for conditional logic within the package's modules, especially useful for distinguishing development ("dev") from production ("prod") modes.
 
 **Classes (Implied):**
 

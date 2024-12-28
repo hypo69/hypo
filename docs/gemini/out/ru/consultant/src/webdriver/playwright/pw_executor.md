@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -35,7 +35,7 @@ from src.logger import logger
 # ...
 
 
-MODE = 'dev'
+
 
 
 def do_something(data):
@@ -104,7 +104,7 @@ from src.logger import logger
 # ...
 
 
-MODE = 'dev'
+
 
 
 def do_something(data):

@@ -8,7 +8,7 @@ This Python code defines a module named `ksp` located within the `suppliers` dir
 
 Execution steps
 -------------------------
-1. **Sets the `MODE` variable:** The line `MODE = 'dev'` assigns the string 'dev' to a global variable named `MODE` within the `ksp` module. This variable likely controls the operation mode of the code (e.g., development, production, testing).
+1. **Sets the `MODE` variable:** The line `` assigns the string 'dev' to a global variable named `MODE` within the `ksp` module. This variable likely controls the operation mode of the code (e.g., development, production, testing).
 
 2. **Imports the `Graber` class:** The line `from .graber import Graber` imports the `Graber` class from the `graber` submodule within the `ksp` module. This likely facilitates the use of a `Graber` object in subsequent code.
 

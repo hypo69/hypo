@@ -8,7 +8,7 @@
     :synopsis:
 
 """
-MODE = 'dev'
+
 
 # https://docs.helicone.ai/guides/overview
 import header 
@@ -163,7 +163,7 @@ if __name__ == "__main__":
     :synopsis:
 
 """
-MODE = 'dev'
+
 
 # https://docs.helicone.ai/guides/overview
 import header 

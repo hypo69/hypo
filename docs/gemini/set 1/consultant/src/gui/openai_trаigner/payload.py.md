@@ -17,7 +17,7 @@
     :type: str
 """
 
-MODE = 'dev'
+
 ```
 # Внесённые изменения
 - Добавлены docstring к модулю и константе `MODE` в формате reStructuredText (RST).
@@ -43,4 +43,3 @@ MODE = 'dev'
     :type: str
 """
 # устанавливаем режим приложения
-MODE = 'dev'

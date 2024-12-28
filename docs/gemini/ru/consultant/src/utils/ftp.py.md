@@ -59,7 +59,7 @@ FTP_SERVER = os.getenv('FTP_SERVER', 'ftp.example.com')
 FTP_PORT = int(os.getenv('FTP_PORT', 21))
 FTP_USER = os.getenv('FTP_USER', 'username')
 FTP_PASSWORD = os.getenv('FTP_PASSWORD', 'password')
-MODE = 'dev'
+
 STOR = 'STOR'
 RETR = 'RETR'
 

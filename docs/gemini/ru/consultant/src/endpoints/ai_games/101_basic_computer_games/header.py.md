@@ -40,7 +40,7 @@
 
 :TODO: В дальнейшем перенести в системную переменную.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

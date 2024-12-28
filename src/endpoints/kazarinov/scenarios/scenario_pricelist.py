@@ -17,7 +17,7 @@ and integration with Facebook for product posting.
 ```
 
 """
-MODE = 'dev'
+
 
 import asyncio
 import random
@@ -95,8 +95,8 @@ class MexironBuilder:
         try:
             storage = gs.path.external_storage if self.config.storage == 'external_storage' else gs.path.data if self.config.storage == 'data' else gs.path.goog
             self.export_path = storage / 'kazarinov' / 'mexironim' / self.mexiron_name
-        except Exception as e:
-            logger.error(f"Error constructing export path: {e}")
+        except Exception as ex:
+            logger.error(f"Error constructing export path:",ex)
             return
 
 

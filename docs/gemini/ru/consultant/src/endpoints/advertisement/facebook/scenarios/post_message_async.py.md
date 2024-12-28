@@ -62,7 +62,7 @@ Selenium WebDriver. Функции обеспечивают загрузку м�
         asyncio.run(main())
 
 """
-MODE = 'dev'
+
 
 import asyncio
 from pathlib import Path

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module provides logging functionalities for Telegram bots.  It currently supports a development mode (`MODE = 'dev'`).
+This module provides logging functionalities for Telegram bots.  It currently supports a development mode (``).
 
 
 ## Constants
@@ -16,4 +16,3 @@ This module provides logging functionalities for Telegram bots.  It currently su
 
 
 ```python
-MODE = 'dev'

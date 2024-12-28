@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -96,7 +96,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads  # Импортируем нужную функцию для работы с JSON
 from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -192,7 +192,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads  # Импортируем нужную функцию для работы с JSON
 from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix

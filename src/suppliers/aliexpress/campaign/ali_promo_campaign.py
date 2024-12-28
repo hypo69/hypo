@@ -38,7 +38,7 @@
     >>> campaign = AliPromoCampaign("new_campaign", "EN", "USD")
     >>> campaign.process_ai_category("Electronics")
 """
-MODE = 'dev'
+
 import header
 import asyncio
 import time

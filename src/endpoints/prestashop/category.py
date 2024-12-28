@@ -17,7 +17,7 @@ Product binding to category is described in supplier scenarios
 """
 ...
 
-MODE = 'dev'
+
 
 import requests
 from attr import attr, attrs

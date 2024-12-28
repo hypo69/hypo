@@ -22,7 +22,7 @@
     from src.endpoints.prestashop import PrestaShop, PrestaProduct
 
 """
-MODE = 'dev'
+
 
 from src.endpoints.prestashop.api import PrestaShop
 # импортирует класс для работы с API PrestaShop
@@ -73,7 +73,7 @@ from src.endpoints.prestashop.customer import PrestaCustomer
     from src.endpoints.prestashop import PrestaShop, PrestaProduct
 
 """
-MODE = 'dev'
+
 
 from src.endpoints.prestashop.api import PrestaShop
 # импортирует класс для работы с API PrestaShop

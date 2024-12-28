@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -74,7 +74,7 @@ __author__='hypotez '
 """
 
 # Переменная для обозначения режима работы.
-MODE = 'dev'
+
 
 
 """
@@ -98,7 +98,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis:  Описание переменной.
 """
-MODE = 'dev'  # Режим работы модуля.
+  # Режим работы модуля.
 
 """ Модуль для работы с версиями """
 
@@ -151,7 +151,7 @@ __author__ = 'hypotez'
 """
 
 # Переменная для обозначения режима работы.
-MODE = 'dev'
+
 
 
 """
@@ -175,7 +175,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis:  Описание переменной.
 """
-MODE = 'dev'  # Режим работы модуля.
+  # Режим работы модуля.
 
 """ Модуль для работы с версиями """
 

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper
@@ -40,7 +40,7 @@ from .exceptions import ( ExecuteLocatorException,
 
 ```mermaid
 graph LR
-    A[hypotez/src/logger/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/logger/__init__.py] --> B();
     A --> C(.logger);
     A --> D(.exceptions);
     B --> E{Константа MODE};
@@ -68,7 +68,7 @@ graph LR
 
 **Переменные:**
 
-- `MODE = 'dev'`: Строковая переменная, которая, скорее всего, определяет режим работы логгера (например, дебаг/производство).
+- ``: Строковая переменная, которая, скорее всего, определяет режим работы логгера (например, дебаг/производство).
 
 
 **Возможные ошибки или улучшения:**

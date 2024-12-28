@@ -10,7 +10,7 @@ Execution steps
 -------------------------
 1. **Import necessary functions:** The `__init__.py` file imports functions from submodules like `login`, `post_message`, `switch_account`, `post_event`, and `post_ad`. This allows you to call these functions later in your application.
 
-2. **Define a mode:** The `MODE = 'dev'` line sets a mode variable, presumably used for different operational configurations (development, testing, or production).
+2. **Define a mode:** The `` line sets a mode variable, presumably used for different operational configurations (development, testing, or production).
 
 3. **Organize function access:** This module imports and organizes various functions for Facebook advertisement operations.  This ensures you can call specific posting functions like `post_message_title`, `upload_post_media`, and `message_publish` without having to navigate through multiple files. The same structure is applied for `post_event` scenarios.
 

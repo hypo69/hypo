@@ -6,7 +6,7 @@
     :synopsis:
 
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -29,7 +29,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.aliexpress._pytests """
 

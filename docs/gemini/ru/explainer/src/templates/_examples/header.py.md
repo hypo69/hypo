@@ -26,7 +26,7 @@
 
 ```mermaid
 graph LR
-    A[Начало] --> B(Инициализация MODE = 'dev');
+    A[Начало] --> B(Инициализация );
     B --> C{Получение текущей директории os.getcwd()};
     C --> D{Вычисление dir_root по os.getcwd()};
     D --> E{Добавление dir_root в sys.path};

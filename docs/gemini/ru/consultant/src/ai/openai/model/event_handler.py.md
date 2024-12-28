@@ -66,7 +66,7 @@ from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 class EventHandler(AssistantEventHandler):

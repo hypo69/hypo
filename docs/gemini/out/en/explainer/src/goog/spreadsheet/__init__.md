@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .spreadsheet import SpreadSheet
@@ -63,7 +63,7 @@ There are no functions defined in this file.
 
 **Variables:**
 
-* `MODE = 'dev'`:  A string variable defining a mode (likely for development or production). This variable is not used in this particular file but might be used elsewhere in the project.
+* ``:  A string variable defining a mode (likely for development or production). This variable is not used in this particular file but might be used elsewhere in the project.
 
 **Potential Errors or Improvements:**
 

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .edge import Edge
 ```
@@ -33,7 +33,7 @@ from .edge import Edge
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импортируем нужный класс из модуля edge
 from .edge import Edge
@@ -65,7 +65,7 @@ logger = logging.getLogger(__name__)
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импортируем нужный класс из модуля edge.
 # Должен быть импортирован соответствующий класс из модуля edge.

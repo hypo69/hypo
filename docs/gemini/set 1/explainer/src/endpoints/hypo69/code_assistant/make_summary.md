@@ -12,7 +12,7 @@ module: src.endpoints.hypo69.code_assistant.make_summary
 	:synopsis: Модуль собирает файл `summary.md` для компиляции средствами `mdbook`
     Подробнее: https://chatgpt.com/share/6742f054-aaa0-800d-9f84-0ab035a2a2c2
     """
-MODE = 'dev'
+
 
 
 from pathlib import Path

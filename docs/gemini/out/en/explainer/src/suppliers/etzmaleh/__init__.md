@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -30,7 +30,7 @@ This file appears to be an initialization module for the `etzmaleh` supplier wit
 +-----------------+
      |
      v
-  MODE = 'dev'
+  
      |
      v
 Import Graber
@@ -48,7 +48,7 @@ The initialization sets `MODE` to 'dev'.  Later code in the project might use th
 
 ```mermaid
 graph LR
-    A[hypotez/src/suppliers/etzmaleh/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/suppliers/etzmaleh/__init__.py] --> B();
     A --> C[from .graber import Graber];
     C --> D{graber.py};
 ```
@@ -65,7 +65,7 @@ The mermaid diagram shows a simple dependency between `etzmaleh/__init__.py` and
 
 - **Functions:** There are no functions defined in this `__init__.py` file.
 
-- **Variables:** `MODE = 'dev'`: This variable is a string storing a configuration setting.  Its use is likely part of the project's infrastructure, possibly determining how certain parts of the code should operate in development ('dev') versus production ('prod') environments.
+- **Variables:** ``: This variable is a string storing a configuration setting.  Its use is likely part of the project's infrastructure, possibly determining how certain parts of the code should operate in development ('dev') versus production ('prod') environments.
 
 - **Potential Errors/Improvements:**
     - **Missing Documentation:** The docstrings are very basic and could be expanded upon.  Adding a description of the purpose of the `MODE` variable and how it's used would be beneficial.

@@ -26,7 +26,7 @@
     print(__root__)
     print(settings)
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -129,7 +129,7 @@ except (FileNotFoundError, json.JSONDecodeError) as e:
     print(__root__)
     print(settings)
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

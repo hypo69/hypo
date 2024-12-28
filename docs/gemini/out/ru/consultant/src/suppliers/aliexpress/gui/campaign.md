@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ Window editor for campaigns """
@@ -181,7 +181,7 @@ class CampaignEditor(QtWidgets.QWidget):
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы с редактором кампаний AliExpress.
 """
-MODE = 'dev'
+
 
 
 """ Window editor for campaigns """

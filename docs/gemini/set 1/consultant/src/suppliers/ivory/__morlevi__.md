@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ivory """
 
@@ -219,7 +219,7 @@ def grab_product_page(s):
 	:synopsis: Модуль для работы с поставщиком Morlevi.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -244,7 +244,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ivory """
 

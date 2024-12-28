@@ -14,7 +14,7 @@
 	:synopsis: Модуль интерфейса с моделью от Coogle - generativeai
 
 """
-MODE = 'dev'
+
 
 
 import sys

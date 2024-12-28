@@ -53,7 +53,7 @@ from src.utils.jjson import j_loads
 from pprint import pprint as pretty_print
 from src.printer import pprint
 
-MODE = 'dev'
+
 
 # Здесь должен быть код, который демонстрирует использование pprint
 # Функция pprint() выводит переданные аргументы в стандартный поток вывода.

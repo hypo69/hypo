@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import argparse
 import asyncio
@@ -107,7 +107,7 @@ from src.logger import logger
 from .bot import KazarinovTelegramBot
 from src.utils.jjson import j_loads  # Импорт необходимой функции
 
-MODE = 'dev'
+
 
 def parse_args() -> dict:
     """Парсинг аргументов командной строки.
@@ -209,7 +209,7 @@ from src.logger import logger
 from .bot import KazarinovTelegramBot
 from src.utils.jjson import j_loads  # Импорт необходимой функции
 
-MODE = 'dev'
+
 
 def parse_args() -> dict:
     """Парсинг аргументов командной строки.

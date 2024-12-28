@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -85,7 +85,7 @@ from src.logger.logger import logger
 #! venv/bin/python/python3.12
 
 
-MODE = 'dev'  #: Режим работы приложения (dev, prod и т.д.).
+  #: Режим работы приложения (dev, prod и т.д.).
 
 
 import sys
@@ -94,7 +94,7 @@ from pathlib import Path
 # from typing import Any # TODO: Добавить typing если нужно
 
 # Объявление константы MODE
-MODE = 'dev'  #: Режим работы приложения (dev, prod и т.д.).
+  #: Режим работы приложения (dev, prod и т.д.).
 
 # Получение пути к корневой директории проекта
 dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])
@@ -162,7 +162,7 @@ from src.logger.logger import logger #, StringNormalizer, ProductFieldsValidator
 #! venv/bin/python/python3.12
 
 
-MODE = 'dev'  #: Режим работы приложения (dev, prod и т.д.).
+  #: Режим работы приложения (dev, prod и т.д.).
 
 
 import sys
@@ -171,7 +171,7 @@ from pathlib import Path
 # from typing import Any # TODO: Добавить typing если нужно
 
 # Объявление константы MODE
-MODE = 'dev'  #: Режим работы приложения (dev, prod и т.д.).
+  #: Режим работы приложения (dev, prod и т.д.).
 
 # Получение пути к корневой директории проекта
 dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])

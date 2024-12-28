@@ -4,7 +4,7 @@
 
 1. **Начало:** Исполнение скрипта `header.py` начинается.
 2. **Определение `MODE`:** Устанавливается глобальная переменная `MODE` со значением `'dev'`.
-    *   Пример: `MODE = 'dev'`.
+    *   Пример: ``.
 3. **Импорт модулей:** Импортируются модули `os`, `sys` и `pathlib.Path`.
     *   `os`: Для работы с операционной системой, включая пути к файлам и каталогам.
     *   `sys`: Для работы с системными параметрами и функциями, включая модификацию `sys.path`.
@@ -29,7 +29,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> DefineMode[Define Global Variable: <br>MODE = 'dev']
+    Start --> DefineMode[Define Global Variable: <br>]
     DefineMode --> ImportModules[Import Modules: <br><code>os</code>, <code>sys</code>, <code>pathlib.Path</code>]
     ImportModules --> GetCWD[Get Current Working Directory: <br><code>os.getcwd()</code>]
     GetCWD --> FindHypotez[Find 'hypotez' Index: <br><code>os.getcwd().rfind('hypotez')</code>]

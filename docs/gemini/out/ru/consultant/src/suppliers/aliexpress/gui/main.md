@@ -58,7 +58,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 """ Main window interface for managing advertising campaigns """
 import header
 import asyncio

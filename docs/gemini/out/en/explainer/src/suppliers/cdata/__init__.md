@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -46,7 +46,7 @@ The diagram shows a single dependency: `cdata/__init__.py` imports `Graber` from
     * `from .graber import Graber`: This line imports the `Graber` class from the file `graber.py`, which is located in the same directory as `__init__.py`.  The `.` prefix indicates a relative import, signifying that `graber.py` resides within the `cdata` sub-package.  This is a standard Python practice for organizing modules within a package structure.
 
 * **Variables:**
-    * `MODE = 'dev'`: This global variable likely controls operational modes (e.g., development vs. production).  It's a string, initialized to 'dev'.  Its purpose is to be used later within the package in different parts to implement different logic conditionally.
+    * ``: This global variable likely controls operational modes (e.g., development vs. production).  It's a string, initialized to 'dev'.  Its purpose is to be used later within the package in different parts to implement different logic conditionally.
 
 * **Classes:**
     * The code defines no classes within `__init__.py`.  It only imports the `Graber` class from `graber.py`. The role and functionality of `Graber` are not present in this `__init__.py` file. Further investigation into `graber.py` is needed to determine its purpose.

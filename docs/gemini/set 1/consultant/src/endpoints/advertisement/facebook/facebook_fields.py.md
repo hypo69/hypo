@@ -22,7 +22,7 @@
     fields = FacebookFields()
     print(fields.ad_name)
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 # импортируем j_loads для загрузки json
@@ -111,7 +111,7 @@ class FacebookFields:
     fields = FacebookFields()
     print(fields.ad_name)
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 # импортируем j_loads для загрузки json

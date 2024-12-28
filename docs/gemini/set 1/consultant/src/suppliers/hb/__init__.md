@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -33,7 +33,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -56,7 +56,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 * Исправлен синтаксис импорта в соответствии с PSR-4.
 * Исправлены закомментированные пути `#!`, поскольку они не нужны в файлах python.
 * Добавлена ссылка на файл логирования `from src.logger import logger`, который необходимо использовать для логирования.
-* Сделана строка комментария `MODE = 'dev'`
+* Сделана строка комментария ``
 
 
 # FULL Code
@@ -74,7 +74,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 """
 import json
 
-MODE = 'dev'
+
 
 
 from .graber import Graber

@@ -60,7 +60,7 @@
 # from src.logger.logger import logger # TODO: добавить логирование если это необходимо
 
 #: Режим работы модуля (dev - для разработки, prod - для продакшена).
-MODE = 'dev'
+
 
 
 from .aliexpress import Aliexpress # Импорт класса для работы с Aliexpress

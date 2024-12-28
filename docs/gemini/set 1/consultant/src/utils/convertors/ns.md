@@ -18,7 +18,7 @@ Functions:
     - ns2xml: Convert SimpleNamespace object to XML format.
     - ns2xls: Convert SimpleNamespace object to XLS format.
 """
-MODE = 'dev'
+
 import json
 import csv
 from types import SimpleNamespace
@@ -224,7 +224,7 @@ Functions:
     - ns2xml: Convert SimpleNamespace object to XML format.
     - ns2xls: Convert SimpleNamespace object to XLS format.
 """
-MODE = 'dev'
+
 import json
 import csv
 from types import SimpleNamespace

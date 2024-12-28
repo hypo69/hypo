@@ -39,7 +39,7 @@
         import asyncio
         asyncio.run(main())
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps #TODO удалить если не используется
@@ -170,7 +170,7 @@ class Graber(Grbr):
         import asyncio
         asyncio.run(main())
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps #TODO удалить если не используется

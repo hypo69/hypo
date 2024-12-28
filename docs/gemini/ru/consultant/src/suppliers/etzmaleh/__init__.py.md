@@ -33,7 +33,7 @@
 from src.utils.jjson import j_loads, j_loads_ns # Импортируем функции для работы с json
 from src.logger.logger import logger # Импортируем логгер
 #: Режим работы приложения ('dev' или 'prod').
-MODE = 'dev'
+
 
 
 from .graber import Graber

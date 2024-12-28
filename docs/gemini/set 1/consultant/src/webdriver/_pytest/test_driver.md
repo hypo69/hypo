@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._pytest """
 
@@ -105,7 +105,7 @@ class TestDriverBase:
 	:synopsis: Модуль для тестирования класса DriverBase.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -130,7 +130,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима.
 """
-MODE = 'dev'
+
   
 """ module: src.webdriver._pytest """
 
@@ -188,7 +188,7 @@ class TestDriverBase:
 	:synopsis: Модуль для тестирования класса DriverBase.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -213,7 +213,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима.
 """
-MODE = 'dev'
+
   
 """ module: src.webdriver._pytest """
 

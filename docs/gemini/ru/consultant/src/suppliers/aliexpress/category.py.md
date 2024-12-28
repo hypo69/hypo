@@ -55,7 +55,7 @@ from src.utils.jjson import j_loads, j_dumps
 from src.logger.logger import logger
 from src.db.manager_categories.suppliers_categories import CategoryManager, AliexpressCategory
 # from src.utils.tools import send #  пока не используется.
-# Удален неиспользуемый MODE = 'dev'
+# Удален неиспользуемый 
 
 credentials = gs.db_translations_credentials
 manager = CategoryManager()

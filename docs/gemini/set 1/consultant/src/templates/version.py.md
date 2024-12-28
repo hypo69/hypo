@@ -48,7 +48,7 @@
 from src.utils.jjson import j_loads_ns # импортируем j_loads_ns для загрузки json
 from src.logger.logger import logger # импортируем logger для логирования ошибок
 
-MODE = 'dev'
+
 
 settings: dict = None
 """

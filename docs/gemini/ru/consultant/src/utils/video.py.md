@@ -68,7 +68,7 @@ from typing import Optional
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 async def save_video_from_url(

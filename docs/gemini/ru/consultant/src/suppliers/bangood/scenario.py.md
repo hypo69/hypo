@@ -58,7 +58,7 @@ from pathlib import Path
 from src import gs
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def get_list_products_in_category(s) -> Union[List[str], None]:

@@ -51,7 +51,7 @@
     driver = Driver()
     graber = Graber(driver=driver)
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps

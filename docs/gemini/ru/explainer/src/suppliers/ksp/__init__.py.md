@@ -4,7 +4,7 @@
 
 1.  **Инициализация:**
     *   Устанавливается переменная `MODE` в значение `'dev'`. Это может указывать на режим разработки, используемый модулем.
-    *   **Пример:** `MODE = 'dev'`
+    *   **Пример:** ``
 
 2.  **Импорт:**
     *   Импортируется класс `Graber` из модуля `graber.py` находящегося в той же директории `ksp`.
@@ -18,7 +18,7 @@
 
 ```mermaid
 graph LR
-    A[suppliers.ksp.__init__.py] --> B(MODE = 'dev');
+    A[suppliers.ksp.__init__.py] --> B();
     A --> C(import Graber from .graber);
     C --> D(class Graber in graber.py);
     D --> E(Instance of Graber class is created somewhere else);
@@ -31,7 +31,7 @@ graph LR
 **Объяснение зависимостей `mermaid`:**
 
 *   `A[suppliers.ksp.__init__.py]`: Представляет текущий файл `__init__.py`, который является точкой входа для пакета `ksp`.
-*   `B(MODE = 'dev')`: Обозначает инициализацию переменной `MODE` значением `'dev'` в текущем файле.
+*   `B()`: Обозначает инициализацию переменной `MODE` значением `'dev'` в текущем файле.
 *   `C(import Graber from .graber)`: Показывает импорт класса `Graber` из модуля `graber.py`, который находится в той же директории, что и `__init__.py`.
 *   `D(class Graber in graber.py)`: Указывает, что класс `Graber` определен в файле `graber.py`.
 *   `E(Instance of Graber class is created somewhere else)`: Показывает, что где-то в другой части проекта будет создан экземпляр класса `Graber`.

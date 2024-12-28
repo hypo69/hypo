@@ -57,7 +57,7 @@ def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt'
 `MODE` - это строковая переменная, определяющая режим работы проекта. В данном случае по умолчанию установлено значение `dev`, что, вероятно, указывает на режим разработки.
 
 ```python
-MODE = 'dev'
+
 ```
 
 ### `__root__`

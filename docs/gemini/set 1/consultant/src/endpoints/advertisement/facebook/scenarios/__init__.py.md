@@ -16,7 +16,7 @@
 :platform: Windows, Unix
 :synopsis: Сценарии для Facebook.
 """
-MODE = 'dev'
+
 
 from .login import login
 # Импорт всех функций и классов из модуля post_message
@@ -71,7 +71,7 @@ from .post_ad import post_ad
 :platform: Windows, Unix
 :synopsis: Сценарии для Facebook.
 """
-MODE = 'dev'
+
 
 from .login import login
 # Импорт всех функций и классов из модуля post_message

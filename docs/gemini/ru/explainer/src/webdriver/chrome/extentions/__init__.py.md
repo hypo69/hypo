@@ -3,7 +3,7 @@
 ### <алгоритм>
 1. **Инициализация**:
    - Объявляется переменная `MODE` и присваивается ей значение `'dev'`. Это, вероятно, используется для определения режима работы приложения (разработка, тестирование, продакшн).
-   - Пример: `MODE = 'dev'` означает, что расширения находятся в режиме разработки.
+   - Пример: `` означает, что расширения находятся в режиме разработки.
 
 2. **Импорт зависимостей**:
    - Из библиотеки `packaging.version` импортируется класс `Version`.
@@ -20,7 +20,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> MODE_Initialization[Initialize MODE: `MODE = 'dev'`]
+    Start --> MODE_Initialization[Initialize MODE: ``]
     MODE_Initialization --> Import_Version_Class[Import `Version` class from `packaging.version`]
     Import_Version_Class --> Import_From_Version_Module[Import `__version__`, `__doc__`, `__details__` from `.version`]
     Import_From_Version_Module --> End

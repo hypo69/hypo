@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.emildesign_com """
 
@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads  # импорт функции j_loads
 from src.logger import logger  # импорт логгера
 
 
-MODE = 'dev'
+
 
 
 def load_config():
@@ -118,7 +118,7 @@ from src.utils.jjson import j_loads  # импорт функции j_loads
 from src.logger import logger  # импорт логгера
 
 
-MODE = 'dev'
+
 
 
 def load_config():

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.fast_api.html """
 
@@ -59,7 +59,7 @@ from main import process_dataa
 from src.logger.logger import logger
 from .. import main
 from main import process_dataa # Импорт функции process_dataa из модуля main
-# MODE = 'dev' # TODO перенести в конфиг если требуется
+#  # TODO перенести в конфиг если требуется
 
 # """
 #  :platform: Windows, Unix
@@ -81,7 +81,7 @@ from main import process_dataa # Импорт функции process_dataa из 
 #   :platform: Windows, Unix
 #   :platform: Windows, Unix
 #   :synopsis:
-# """MODE = 'dev'
+# """
 #
 # """ module: src.fast_api.html """
 #
@@ -96,7 +96,7 @@ from main import process_dataa # Импорт функции process_dataa из 
 - Добавлен импорт `logger` из `src.logger.logger`.
 - Удалены лишние комментарии, включая закомментированный код.
 - Добавлены комментарии к импортам.
-- `MODE = 'dev'` закомментирован как TODO (возможно перенести в конфиг).
+- `` закомментирован как TODO (возможно перенести в конфиг).
 - Приведены в соответствие имена переменных, функций и импортов.
 
 ## FULL Code
@@ -115,7 +115,7 @@ from main import process_dataa # Импорт функции process_dataa из 
 from src.logger.logger import logger
 from .. import main
 from main import process_dataa # Импорт функции process_dataa из модуля main
-# MODE = 'dev' # TODO перенести в конфиг если требуется
+#  # TODO перенести в конфиг если требуется
 
 # """
 #  :platform: Windows, Unix
@@ -137,7 +137,7 @@ from main import process_dataa # Импорт функции process_dataa из 
 #   :platform: Windows, Unix
 #   :platform: Windows, Unix
 #   :synopsis:
-# """MODE = 'dev'
+# """
 #
 # """ module: src.fast_api.html """
 #

@@ -12,7 +12,7 @@
 	:synopsis: CSV and JSON conversion utilities
 
 """
-MODE = 'dev'
+
 
 
 """ Functions:

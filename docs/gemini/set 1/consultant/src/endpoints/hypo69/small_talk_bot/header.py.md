@@ -11,7 +11,7 @@
 Этот модуль содержит основные настройки и метаданные проекта,
 а также обеспечивает загрузку конфигурационных файлов и переменных.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -109,7 +109,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Этот модуль содержит основные настройки и метаданные проекта,
 а также обеспечивает загрузку конфигурационных файлов и переменных.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

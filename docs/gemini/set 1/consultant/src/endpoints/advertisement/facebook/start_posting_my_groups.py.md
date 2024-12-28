@@ -12,7 +12,7 @@
 Использует :class:`FacebookPromoter` для управления процессом публикации.
 
 """
-MODE = 'dev'
+
 
 import copy
 # from src.utils.jjson import j_loads # TODO: не используется, проверить и удалить если так
@@ -81,7 +81,7 @@ except KeyboardInterrupt:
 Использует :class:`FacebookPromoter` для управления процессом публикации.
 
 """
-MODE = 'dev'
+
 
 import copy
 # from src.utils.jjson import j_loads # TODO: не используется, проверить и удалить если так

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для рендеринга Google Таблиц.
 """
-MODE = 'dev'
+
 
 
 """
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Дополнительные константы и настройки.
 """
-MODE = 'dev'
+
 
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -242,7 +242,7 @@ class GSRender():
 	:platform: Windows, Unix
 	:synopsis: Модуль для рендеринга Google Таблиц.
 """
-MODE = 'dev'
+
 from src import gs
 from src.helpers import logger, WebDriverException, pprint
 from src.utils.jjson import j_loads

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.logger._examples """
 
@@ -56,7 +56,7 @@ This file appears to be an initialization file for a module related to logging e
 
 ```mermaid
 graph TD
-    A[hypotez/src/logger/_examples/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/logger/_examples/__init__.py] --> B();
     B --> C[packaging.version];
     C --> D[Version];
     B -- Imports --> E[.version];
@@ -87,12 +87,12 @@ The `mermaid` diagram simply illuStartes the import relationships between the `_
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A string variable defining a mode (likely 'development').  This could be used to control the behavior of the logging examples; for example, more verbose logging in development mode.
+    * ``: A string variable defining a mode (likely 'development').  This could be used to control the behavior of the logging examples; for example, more verbose logging in development mode.
 
 
 * **Potential Errors/Improvements:**
 
-    * **Redundant `MODE` definitions:**  The `MODE = 'dev'` line is repeated several times in comment blocks. This is redundant and should be removed to avoid confusion and potential inconsistencies.  Keeping a single, defined `MODE` variable would be better practice.
+    * **Redundant `MODE` definitions:**  The `` line is repeated several times in comment blocks. This is redundant and should be removed to avoid confusion and potential inconsistencies.  Keeping a single, defined `MODE` variable would be better practice.
 
 
 * **Relationship with other parts of the project:**

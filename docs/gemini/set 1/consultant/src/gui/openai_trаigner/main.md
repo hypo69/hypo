@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для создания графического интерфейса приложения для обучения моделей OpenAI.
 """
-MODE = 'dev'
+
 
 
 """
@@ -39,7 +39,7 @@ MODE = 'dev'
   :synopsis:
   Переменная, определяющая режим работы приложения.
 """
-MODE = 'dev'
+
   
 """ module: src.gui.openai_trаigner """
 
@@ -239,7 +239,7 @@ class AssistantMainWindow(QMainWindow):
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 """Модуль для создания графического интерфейса приложения для обучения моделей OpenAI."""
-MODE = 'dev'
+
 """Переменная, определяющая режим работы приложения."""
 """
 Переменная, определяющая режим работы приложения.
@@ -247,7 +247,7 @@ MODE = 'dev'
 """
 Переменная, определяющая режим работы приложения.
 """
-MODE = 'dev'
+
 """ module: src.gui.openai_trаigner """
 import sys
 import os

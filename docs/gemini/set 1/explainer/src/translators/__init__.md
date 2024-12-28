@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>
@@ -22,7 +22,7 @@ MODE = 'dev'
 ```mermaid
 graph TD
     A[Начало] --> B{Инициализация MODE};
-    B -- MODE = 'dev' --> C[Конец];
+    B --  --> C[Конец];
 ```
 
 В этом примере нет входящих или исходящих данных, так как это всего лишь определение переменной.
@@ -32,7 +32,7 @@ graph TD
 
 ```mermaid
 graph LR
-    A[hypotez/src/translators/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/translators/__init__.py] --> B();
 ```
 
 # <explanation>

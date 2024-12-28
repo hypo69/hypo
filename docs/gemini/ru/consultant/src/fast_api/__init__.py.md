@@ -52,5 +52,5 @@ from src.logger.logger import logger
 
 
 #: Указывает текущий режим работы приложения
-MODE = 'dev'
+
 ```

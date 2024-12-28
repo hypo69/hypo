@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -84,7 +84,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Этот модуль содержит функции и переменные, необходимые для инициализации и настройки проекта,
 включая определение корневой директории, загрузку настроек из JSON-файла и получение информации о проекте.
 """
-MODE = 'dev'
+
 
 import sys
 # Импортируем j_loads_ns из src.utils.jjson для загрузки json файлов
@@ -195,7 +195,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Этот модуль содержит функции и переменные, необходимые для инициализации и настройки проекта,
 включая определение корневой директории, загрузку настроек из JSON-файла и получение информации о проекте.
 """
-MODE = 'dev'
+
 
 import sys
 # Импортируем j_loads_ns из src.utils.jjson для загрузки json файлов

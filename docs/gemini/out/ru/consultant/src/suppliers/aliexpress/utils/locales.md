@@ -24,7 +24,7 @@ Examples:
     [{\'EN\': \'USD\'}, {\'HE\': \'ILS\'}, {\'RU\': \'ILS\'}, {\'EN\': \'EUR\'}, {\'EN\': \'GBR\'}, {\'RU\': \'EUR\'}]
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 
@@ -170,7 +170,7 @@ Examples::
 
     [{\'EN\': \'USD\'}, {\'HE\': \'ILS\'}, {\'RU\': \'ILS\'}, {\'EN\': \'EUR\'}, {\'EN\': \'GBR\'}, {\'RU\': \'EUR\'}]
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from src import gs

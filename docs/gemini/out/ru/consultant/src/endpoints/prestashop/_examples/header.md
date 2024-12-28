@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -78,7 +78,7 @@ from src.logger import logger
     :platform: Windows, Unix
     :synopsis: Модуль содержит примеры кода для работы с PrestaShop.
 """
-MODE = 'dev'
+
 
 
 """
@@ -103,7 +103,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:  Описание константы MODE.
 """
-MODE = 'dev'  # Режим работы (например, 'dev', 'prod')
+  # Режим работы (например, 'dev', 'prod')
 
 """
 .. module:: src.endpoints.prestashop._examples
@@ -162,7 +162,7 @@ print(dir_root)
     :platform: Windows, Unix
     :synopsis: Модуль содержит примеры кода для работы с PrestaShop.
 """
-MODE = 'dev'
+
 
 
 """
@@ -187,7 +187,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:  Описание константы MODE.
 """
-MODE = 'dev'  # Режим работы (например, 'dev', 'prod')
+  # Режим работы (например, 'dev', 'prod')
 
 """
 .. module:: src.endpoints.prestashop._examples

@@ -55,7 +55,7 @@ from src.logger.logger import logger
 from .version import __version__, __doc__, __details__
 from .main_window import AssistantMainWindow
 
-MODE = 'dev' # Режим работы приложения
+ # Режим работы приложения
 
 ...
 ```

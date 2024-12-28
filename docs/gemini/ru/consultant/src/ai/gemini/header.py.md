@@ -52,7 +52,7 @@
     print(f"Version: {__version__}")
     print(f"Documentation: {__doc__}")
 """
-MODE = 'dev'
+
 
 
 import sys

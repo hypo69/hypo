@@ -53,7 +53,7 @@
     supplier.run_scenario_files()
 
 """
-MODE = 'dev'
+
 
 
 import importlib

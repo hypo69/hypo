@@ -21,7 +21,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 
@@ -62,7 +62,7 @@ from .graber import Graber
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 

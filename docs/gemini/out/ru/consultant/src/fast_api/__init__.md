@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -32,7 +32,7 @@ MODE = 'dev'
 import json
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 # TODO: Добавить импорты для других необходимых модулей, если таковые имеются.
 
@@ -63,8 +63,8 @@ MODE = 'dev'
 import json
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-#  MODE = 'dev' # Комментарий
-MODE = 'dev'  # Переменная MODE хранит значение режима работы, например, 'dev' или 'prod'.
+#   # Комментарий
+  # Переменная MODE хранит значение режима работы, например, 'dev' или 'prod'.
 
 
 # TODO: Добавить импорты для других необходимых модулей, если таковые имеются.

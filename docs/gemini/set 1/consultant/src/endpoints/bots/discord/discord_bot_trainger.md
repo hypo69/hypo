@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import discord
@@ -75,7 +75,7 @@ async def hi(ctx):
     :platform: Windows, Unix
     :synopsis: Модуль для управления ботом Discord.
 """
-MODE = 'dev'
+
 
 
 import discord
@@ -152,7 +152,7 @@ async def hi(ctx):
     :platform: Windows, Unix
     :synopsis: Модуль для управления ботом Discord.
 """
-MODE = 'dev'
+
 
 
 import discord

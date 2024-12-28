@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 ```
@@ -33,7 +33,7 @@ from .bot import TelegramBot
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт класса TelegramBot из файла bot.py
 from .bot import TelegramBot
@@ -65,7 +65,7 @@ from src.logger import logger  # Импорт логгера
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт класса TelegramBot из файла bot.py
 from .bot import TelegramBot

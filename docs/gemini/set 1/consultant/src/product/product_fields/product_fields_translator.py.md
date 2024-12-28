@@ -15,7 +15,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Dict, Any
@@ -177,7 +177,7 @@ def translate_presta_fields_dict(presta_fields_dict: Dict,
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Dict, Any

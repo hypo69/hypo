@@ -63,7 +63,7 @@ from src.webdriver.driver import Driver
 from src.logger.logger import logger
 from src.webdriver.exceptions import ExecuteLocatorException # TODO:  Удалить импорт, не используется
 
-MODE = 'dev'
+
 
 def close_pop_up(value: Any = None) -> Callable:
     """

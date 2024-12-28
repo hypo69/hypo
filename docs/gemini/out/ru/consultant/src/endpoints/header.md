@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -96,7 +96,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: Модуль содержит общую функциональность для различных конечных точек приложения.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -192,7 +192,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
    :synopsis: Модуль содержит общую функциональность для различных конечных точек приложения.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json

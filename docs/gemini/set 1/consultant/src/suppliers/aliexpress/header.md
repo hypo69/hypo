@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -77,7 +77,7 @@ from packaging.version import Version
 from src import gs
 from src.utils.jjson import j_loads  # Импорт функции для работы с JSON
 
-MODE = 'dev'
+
 
 settings: dict = None
 
@@ -147,7 +147,7 @@ from src import gs
 from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт logger
 
-MODE = 'dev'
+
 
 settings: dict = None
 

@@ -19,7 +19,7 @@ import json
 # Импортируем необходимый модуль для работы с JSON
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 def process_data(data_file_path: str) -> dict:
@@ -80,7 +80,7 @@ import json
 # Импортируем необходимый модуль для работы с JSON
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 def process_data(data_file_path: str) -> dict:

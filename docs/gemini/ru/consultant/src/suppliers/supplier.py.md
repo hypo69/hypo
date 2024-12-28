@@ -42,7 +42,7 @@
     supplier = Supplier(supplier_prefix='example_supplier', locale='ru')
     supplier.run_scenario_files()
 """
-MODE = 'dev'
+
 
 import importlib
 from typing import List, Optional, Dict, Any

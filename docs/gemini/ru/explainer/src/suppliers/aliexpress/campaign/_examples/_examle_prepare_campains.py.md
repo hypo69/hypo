@@ -6,7 +6,7 @@
    - Импортируются все сущности (`*`) из модуля `prepare_campaigns` в директории `src.suppliers.aliexpress.campaign`.
    - Устанавливается значение `campaigns_directory` как путь к директории кампаний на Google Drive.
      ```python
-        MODE = 'dev'
+        
         from ..prepare_campaigns import *
         campaigns_directory = Path(gs.path.google_drive,'aliexpress','campaigns')
      ```

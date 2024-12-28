@@ -25,7 +25,7 @@ print(urls_with_https)  # Output: ['https://www.aliexpress.com/item/example_prod
 ```
 
 """
-MODE = 'dev'
+
 
 from src.logger import logger
 from .extract_product_id import extract_prod_ids
@@ -150,7 +150,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`:  По-видимому, определяет режим работы (разработка или производство).
+* ``:  По-видимому, определяет режим работы (разработка или производство).
 
 
 **Возможные ошибки/улучшения:**

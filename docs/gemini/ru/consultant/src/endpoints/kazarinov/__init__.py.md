@@ -51,7 +51,7 @@
 from src.logger.logger import logger  # Использование логгера
 
 #: Режим работы приложения (dev, prod, test)
-MODE = 'dev'
+
 
 # Импортируем класс бота Kazarinov
 from .kazarinov_bot import KazarinovTelegramBot

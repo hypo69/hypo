@@ -64,7 +64,7 @@ from src.logger.logger import logger
 from packaging.version import Version
 from src import gs
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files: Tuple[str, ...] = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:

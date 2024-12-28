@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -77,7 +77,7 @@ graph TD
 
 
 *   **Variables:**
-    *   `MODE = 'dev'`: A global variable, likely used for setting configuration modes (development, production, etc.).
+    *   ``: A global variable, likely used for setting configuration modes (development, production, etc.).
 
 
 *   **Classes (None):** No classes are defined in this code snippet.

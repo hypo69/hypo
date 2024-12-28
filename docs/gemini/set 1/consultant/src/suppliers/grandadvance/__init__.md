@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -34,7 +34,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорт класса Graber из модуля graber
 from .graber import Graber
@@ -72,7 +72,7 @@ import json
 #from src.utils.jjson import j_loads_ns  # Комментарий о месте расположения функции j_loads_ns
 
 
-MODE = 'dev'
+
 
 # Импорт класса Graber из модуля graber
 from .graber import Graber

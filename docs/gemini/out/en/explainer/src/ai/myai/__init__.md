@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 ## <algorithm>
@@ -29,7 +29,7 @@ There are no functions or classes defined here.  It's essentially a configuratio
 
 ```mermaid
 graph LR
-    A[myai/__init__.py] --> B(MODE = 'dev');
+    A[myai/__init__.py] --> B();
 ```
 
 This `mermaid` code simply depicts a single relationship: the initialization file `myai/__init__.py` sets the value of the `MODE` variable.  There are no external dependencies in this file other than python's built-in modules.

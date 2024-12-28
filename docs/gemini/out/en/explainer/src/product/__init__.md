@@ -17,7 +17,7 @@ External classes and attributes:
 - `translate_presta_fields_dict`: Function that translates multilingual fields of `ProductFields`
 
 """
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields
@@ -63,7 +63,7 @@ graph LR
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A string variable likely used for configuration purposes (e.g., to differentiate development mode from production mode). This is a simple example of a configuration variable.
+    * ``: A string variable likely used for configuration purposes (e.g., to differentiate development mode from production mode). This is a simple example of a configuration variable.
 
 * **Classes (indirectly mentioned):**
     * `Product`: Likely a class that represents a product with properties and methods.  The comment clearly states that its definition exists in `product.py`.

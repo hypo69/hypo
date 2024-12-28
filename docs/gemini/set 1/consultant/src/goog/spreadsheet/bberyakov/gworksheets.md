@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from global_settingspread import Spreadsheet, Worksheet
@@ -174,7 +174,7 @@ from goog.grender import GSRender
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 class GWorksheet(Worksheet):
@@ -284,7 +284,7 @@ from goog.grender import GSRender
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 class GWorksheet(Worksheet):

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
@@ -34,7 +34,7 @@ MODE = 'dev'
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорты из других модулей
 # Комментарий о том, что импорты из подпапок будут добавлены позже
@@ -74,7 +74,7 @@ from src.logger.logger import logger
 """
 import json
 
-MODE = 'dev'
+
 
 # Импорты из других модулей
 # Комментарий о том, что импорты из подпапок будут добавлены позже

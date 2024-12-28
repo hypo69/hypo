@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 ```
@@ -51,7 +51,7 @@ No algorithm is present in this file. It's an initialization file for the `disco
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Empty initialization);
+    A[] --> B(Empty initialization);
 ```
 
 ## <explanation>

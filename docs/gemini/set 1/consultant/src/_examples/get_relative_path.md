@@ -14,7 +14,7 @@
 """
 from pathlib import Path
 
-MODE = 'dev'
+
 
 import header
 from src.utils.path import get_relative_path
@@ -41,7 +41,7 @@ print(relative_path)
 from pathlib import Path
 from src.logger.logger import logger  # Импорт logger для логирования
 
-MODE = 'dev'
+
 
 import header
 from src.utils.path import get_relative_path  # Импорт функции для получения относительного пути
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 from pathlib import Path
 from src.logger.logger import logger  # Импорт logger для логирования
 
-MODE = 'dev'
+
 
 import header
 from src.utils.path import get_relative_path  # Импорт функции для получения относительного пути

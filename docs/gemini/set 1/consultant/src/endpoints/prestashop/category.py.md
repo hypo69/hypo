@@ -27,7 +27,7 @@
 """
 ...
 
-MODE = 'dev'
+
 
 import requests
 from attr import attr, attrs
@@ -224,7 +224,7 @@ class PrestaCategory(PrestaShop):
 """
 ...
 
-MODE = 'dev'
+
 
 import requests
 from attr import attr, attrs

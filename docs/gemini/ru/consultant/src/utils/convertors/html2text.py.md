@@ -74,7 +74,7 @@ from src.logger.logger import logger
 # from src.utils.jjson import j_loads, j_loads_ns #TODO не используется
 
 #  Константы для работы модуля
-MODE = 'dev'
+
 
 __version__ = "3.1"
 __author__ = "Aaron Swartz (me@aaronsw.com)"

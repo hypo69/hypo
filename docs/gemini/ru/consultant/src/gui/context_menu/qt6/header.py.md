@@ -47,5 +47,5 @@ from src.logger.logger import logger
 __root__: Path = Path(os.getcwd()[:os.getcwd().rfind(r'hypotez') + 7])
 sys.path.append(str(__root__))
 
-MODE = 'dev' # TODO: удалить после определения конечного способа использования константы
+ # TODO: удалить после определения конечного способа использования константы
 ```

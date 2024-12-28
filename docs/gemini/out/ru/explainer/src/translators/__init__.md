@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>
@@ -33,7 +33,7 @@ MODE = 'dev'
 
 ```mermaid
 graph TD
-    A[MODE = 'dev'] --> B{Инициализация};
+    A[] --> B{Инициализация};
 ```
 
 # <explanation>

@@ -23,7 +23,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import re
 import requests

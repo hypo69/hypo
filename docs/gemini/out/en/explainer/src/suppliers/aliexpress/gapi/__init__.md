@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from packaging.version import Version
 from .version import __version__, __doc__, __details__ 
@@ -31,7 +31,7 @@ This code snippet is a module initialization file for the `aliexpress` supplier 
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B{Import Version};
+    A[] --> B{Import Version};
     B --> C[Import __version__, __doc__, __details__];
     subgraph Package
         C --> D(src.suppliers.aliexpress.gapi);
@@ -54,7 +54,7 @@ The diagram shows two main dependencies:
     * `from .version import __version__, __doc__, __details__`: Imports specific variables (`__version__`, `__doc__`, `__details__`) from a sibling module (`./version`). This assumes the `version.py` file exists in the `gapi` directory and contains the definitions for those variables, which likely represent metadata for the `aliexpress` supplier package.
 
 * **Variables:**
-    * `MODE = 'dev'`: A simple string variable, likely used for configuration. It's not expected to change at runtime unless code elsewhere in the project conditionally modifies its value.
+    * ``: A simple string variable, likely used for configuration. It's not expected to change at runtime unless code elsewhere in the project conditionally modifies its value.
 
 * **Classes:** No classes are defined in this file.
 

@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -88,7 +88,7 @@ from src.utils.jjson import j_loads  # Импортируем j_loads для р�
 from src import gs
 from src.logger import logger # Импортируем logger для логирования
 
-MODE = 'dev'
+
 
 def set_project_root(marker_files=('__root__')) -> Path:
     """
@@ -177,7 +177,7 @@ from src.utils.jjson import j_loads  # Импортируем j_loads для р�
 from src import gs
 from src.logger import logger # Импортируем logger для логирования
 
-MODE = 'dev'
+
 
 def set_project_root(marker_files=('__root__')) -> Path:
     """

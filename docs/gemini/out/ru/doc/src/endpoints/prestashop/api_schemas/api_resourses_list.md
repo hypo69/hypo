@@ -35,7 +35,7 @@ products, categories, attachments, addresses, carriers, cart_rules, carts, count
 	:platform: Windows, Unix
 	:synopsis: Список всех доступных ресурсов для API вызовов
 """
-MODE = 'dev'
+
 
 resource:list = [
     'products',

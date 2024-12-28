@@ -53,7 +53,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from typing import Any
 import os
-# MODE = 'dev' # удалил дублирование переменной
+#  # удалил дублирование переменной
 MODE = os.environ.get('MODE', 'dev')  # используем переменную окружения MODE или 'dev' по умолчанию
 
 

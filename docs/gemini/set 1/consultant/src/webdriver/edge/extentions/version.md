@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge.extentions """
 
@@ -73,7 +73,7 @@ import sys  # Необходимо для доступа к sys.version_info
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 
-MODE = 'dev'
+
 
 
 """
@@ -123,7 +123,7 @@ import sys  # Необходимо для доступа к sys.version_info
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций
 
 
-MODE = 'dev'
+
 
 
 """

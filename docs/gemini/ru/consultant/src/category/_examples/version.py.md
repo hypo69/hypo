@@ -38,7 +38,7 @@
 from typing import Dict, Any
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы приложения (dev, prod и т.д.)
 """

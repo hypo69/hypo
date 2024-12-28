@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.ecat_co_il """
 
@@ -66,7 +66,7 @@ Author(s):
 import json
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -90,7 +90,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis: Дополнительные сведения о модуле.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.endpoints.prestashop.domains.ecat_co_il
@@ -161,7 +161,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger import logger # Импорт logger для логирования
 
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -185,7 +185,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis: Дополнительные сведения о модуле.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.endpoints.prestashop.domains.ecat_co_il

@@ -22,7 +22,7 @@
     graber = Graber()
     graber.run()
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -59,7 +59,7 @@ from .graber import Graber
     graber = Graber()
     graber.run()
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber

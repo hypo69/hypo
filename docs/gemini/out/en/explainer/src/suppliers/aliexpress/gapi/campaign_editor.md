@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -40,7 +40,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.gapi """
 
@@ -85,7 +85,7 @@ graph LR
     * No functions are present.
 
 * **Variables:**
-    * `MODE = 'dev'`:  This is a global variable. Its use is likely in controlling the execution mode (e.g., development versus production) by altering configuration files, logs, or other program behavior.
+    * ``:  This is a global variable. Its use is likely in controlling the execution mode (e.g., development versus production) by altering configuration files, logs, or other program behavior.
 
 
 * **Potential Errors/Improvements:**

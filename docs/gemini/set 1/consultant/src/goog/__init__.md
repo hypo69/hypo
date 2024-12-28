@@ -8,7 +8,7 @@
 Этот модуль предоставляет инструменты для взаимодействия с Google сервисами, такими как
 таблицы Google Sheets.  
 """
-MODE = 'dev'
+
 
 # Импортирование нужных библиотек
 from .spreadsheet import SpreadSheet
@@ -33,7 +33,7 @@ from src.logger.logger import logger
 Этот модуль предоставляет инструменты для взаимодействия с Google сервисами, такими как
 таблицы Google Sheets.  
 """
-MODE = 'dev'
+
 
 # Импортирование нужных библиотек
 from .spreadsheet import SpreadSheet
@@ -49,7 +49,7 @@ from src.logger.logger import logger
 Этот модуль предоставляет инструменты для взаимодействия с Google сервисами, такими как
 таблицы Google Sheets.  
 """
-MODE = 'dev'
+
 
 # Импортирование нужных библиотек
 from .spreadsheet import SpreadSheet

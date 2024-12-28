@@ -29,7 +29,7 @@
 import re
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:
@@ -137,7 +137,7 @@ def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:
 import re
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:

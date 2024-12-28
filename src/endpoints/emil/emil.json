@@ -1,0 +1,30 @@
+{
+  "mode": "test",
+  "webdriver_name": "firefox",
+  "webdriver_options": [],
+  "url_handlers": {
+    "suppliers": [
+      "https://morlevi.co.il",
+      "https://www.morlevi.co.il",
+      "https://grandadvance.co.il",
+      "https://www.grandadvance.co.il",
+      "https://ksp.co.il",
+      "https://www.ksp.co.il",
+      "https://ivory.co.il",
+      "https://www.ivory.co.il"
+    ],
+    "onetab": [
+      "https://www.one-tab.com"
+    ]
+  },
+  "generation_config": {
+    "response_mime_type": "text/plain"
+  },
+  "telegram": {
+    "bot_name": "hypo69_kazarinov_bot",
+    "log_path": "bot_logs/<user_id>/<timestamp>.txt"
+  },
+  "storage": "external_storage",
+  "avaiable_storages": [ "data", "google_drive", "external_storage" ]
+
+}

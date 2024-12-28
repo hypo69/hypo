@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper
@@ -39,7 +39,7 @@ from .exceptions import ( ExecuteLocatorException,
     :platform: Windows, Unix
     :synopsis: Модуль содержит настройки режима логирования и импорты исключений.
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper # TODO: Добавить документацию к классу Beeper, если он используется.
@@ -75,7 +75,7 @@ from .exceptions import (
     :platform: Windows, Unix
     :synopsis: Модуль содержит настройки режима логирования и импорты исключений.
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper # TODO: Добавить документацию к классу Beeper, если он используется.

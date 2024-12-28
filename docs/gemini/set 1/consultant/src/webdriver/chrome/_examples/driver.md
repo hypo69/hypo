@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome._examples """
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
    :platform: Windows, Unix
    :synopsis:  Примеры использования классов `Driver` и `Chrome`.
 """
-MODE = 'dev'
+
 
 
 def main():
@@ -195,7 +195,7 @@ if __name__ == "__main__":
    :platform: Windows, Unix
    :synopsis:  Примеры использования классов `Driver` и `Chrome`.
 """
-MODE = 'dev'
+
 
 
 def main():

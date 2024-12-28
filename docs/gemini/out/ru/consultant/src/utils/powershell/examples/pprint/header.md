@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.utils.powershell.examples.pprint """
 
@@ -64,7 +64,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
 
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -89,7 +89,7 @@ MODE = 'dev'
     :synopsis:
     Переменная, определяющая режим работы.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -141,7 +141,7 @@ import os
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON.
 
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -166,7 +166,7 @@ MODE = 'dev'
     :synopsis:
     Переменная, определяющая режим работы.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix

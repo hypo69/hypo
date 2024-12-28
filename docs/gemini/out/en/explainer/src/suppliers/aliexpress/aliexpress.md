@@ -15,7 +15,7 @@
 from `Supplier`, `AliRequests`, and `AliApi` for working with AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 import header

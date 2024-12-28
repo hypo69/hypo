@@ -12,7 +12,7 @@
 	:synopsis:
 		Модуль для работы с категориями товаров поставщика Kualastyle.
 """
-MODE = 'dev'
+
 
 
 """
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 
 """ module: src.suppliers.kualastyle """
 
@@ -144,7 +144,7 @@ def get_list_categories_from_site(s):
 	:synopsis:
 		Модуль для работы с категориями товаров поставщика Kualastyle.  Содержит функции для получения списка категорий и товаров.
 """
-MODE = 'dev'
+
 
 
 """
@@ -167,7 +167,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.kualastyle """
 
@@ -284,7 +284,7 @@ def get_list_categories_from_site(s):
 	:synopsis:
 		Модуль для работы с категориями товаров поставщика Kualastyle.  Содержит функции для получения списка категорий и товаров.
 """
-MODE = 'dev'
+
 
 
 """
@@ -307,7 +307,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.kualastyle """
 

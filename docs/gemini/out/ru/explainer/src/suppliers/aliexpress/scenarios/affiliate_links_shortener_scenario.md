@@ -12,7 +12,7 @@
 	:synopsis: Сокращатель ссылок через веббраузер
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import List, Union

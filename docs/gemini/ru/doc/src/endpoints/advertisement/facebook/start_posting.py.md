@@ -36,7 +36,7 @@ from src.logger.logger import logger
 
 ### `MODE`
 ```python
-MODE = 'dev'
+
 ```
 - **Описание**: Указывает режим работы скрипта (в данном случае, "dev").
 - **Тип**: `str`.

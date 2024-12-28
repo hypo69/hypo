@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
         
 
 # from .driver import Driver
@@ -39,7 +39,7 @@ MODE = 'dev'
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импортируем нужные классы
 from .driver import Driver
@@ -62,7 +62,7 @@ logging.basicConfig(level=logging.INFO)
 * Добавлен docstring для модуля с описанием функциональности.
 * Добавлен import `logging` и настройка уровня logging.
 * Удалены ненужные комментарии и пустые строки.
-* Заменено `MODE = 'dev'` на `MODE = 'dev'` с документированием (docstring)
+* Заменено `` на `` с документированием (docstring)
 
 
 # FULL Code
@@ -80,7 +80,7 @@ logging.basicConfig(level=logging.INFO)
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импортируем нужные классы
 from .driver import Driver

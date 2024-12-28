@@ -21,7 +21,7 @@ if __name__ == "__main__":
 ```
 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -193,7 +193,7 @@ if __name__ == "__main__":
 ```
 
 """
-MODE = 'dev'
+
 
 
 import re

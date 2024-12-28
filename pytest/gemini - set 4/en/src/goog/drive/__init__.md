@@ -80,7 +80,7 @@ def test_module_import(mock_get_mode):
 **Example `hypotez/src/goog/drive/__init__.py` (for testing):**
 
 ```python
-MODE = 'dev'
+
 
 from .drive import GoogleDrive  # Assuming this import exists
 

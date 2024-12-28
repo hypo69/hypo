@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates """
 
@@ -72,7 +72,7 @@ from src.logger import logger # Импортируем функцию для л�
 # ...
 ```
 """
-MODE = 'dev'
+
 
 
 """
@@ -120,7 +120,7 @@ from src.logger import logger # Импортируем функцию для л�
 # ...
 ```
 """
-MODE = 'dev'
+
 
 
 """

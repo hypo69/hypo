@@ -12,7 +12,7 @@
 	:synopsis: Google TTS 
 
 """
-MODE = 'dev'
+
 
 import header   
 

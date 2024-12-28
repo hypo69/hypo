@@ -68,7 +68,7 @@ from src.logger.logger import logger
 from src.utils.jjson import j_loads
 from packaging.version import Version # TODO: пока не используется, но может пригодится
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files: Tuple[str, ...] = ('__root__',)) -> Path:

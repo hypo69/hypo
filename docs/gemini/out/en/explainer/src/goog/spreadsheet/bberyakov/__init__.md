@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet
@@ -57,7 +57,7 @@ This Mermaid diagram illuStartes the import relationships.  `__init__.py` import
 
 ### Variables
 
-- `MODE = 'dev'`:  This variable likely defines the execution mode (e.g., development, production) for the spreadsheet library, potentially affecting configurations or logging.
+- ``:  This variable likely defines the execution mode (e.g., development, production) for the spreadsheet library, potentially affecting configurations or logging.
 
 ### Classes (Implicit)
 

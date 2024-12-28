@@ -41,7 +41,7 @@
     product.get_parent_categories(id_category=1)
 
 """
-MODE = 'dev'
+
 
 from typing import List, Any, Dict
 from src import gs  # Corrected import

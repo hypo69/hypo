@@ -17,7 +17,7 @@ External classes and attributes:
 - `translate_presta_fields_dict`: Function that translates multilingual fields of `ProductFields`
 
 """
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields
@@ -44,7 +44,7 @@ from .product_fields.product_fields_translator import translate_presta_fields_di
     - `translate_presta_fields_dict`: Функция для перевода многоязычных полей `ProductFields`.
 
 """
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields
@@ -122,7 +122,7 @@ def get_product_record(product_id: int) -> dict:
     - `translate_presta_fields_dict`: Функция для перевода многоязычных полей `ProductFields`.
 
 """
-MODE = 'dev'
+
 
 from .product import Product
 from .product_fields.product_fields import ProductFields

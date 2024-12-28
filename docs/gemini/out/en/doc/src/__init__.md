@@ -18,7 +18,7 @@ This module contains functions and classes related to handling credentials, like
 
 
 ```python
-MODE = 'dev'
+
 ```
 
 

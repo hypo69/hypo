@@ -47,7 +47,7 @@
 """
 from src.logger.logger import logger # Импорт logger для логирования ошибок
 
-MODE = 'dev'
+
 """
 Режим работы модуля.
 Может принимать значения 'dev' или 'prod'.

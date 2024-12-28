@@ -14,7 +14,7 @@ flowchart TD
     RelatedFunctions --> SupplierDirectory[Директории с именем `<supplier_prefix>` (например, `amazon`, `aliexpress`, `morlevi`)];
     SupplierDirectory --> SupplierPrefix[`<supplier_prefix>` - задается при создании поставщика];
     SupplierPrefix --> Relationship[Взаимосвязь Supplier, Driver, Product];
-    Relationship --> MODE_Variable[Глобальная переменная `MODE = 'dev'`];
+    Relationship --> MODE_Variable[Глобальная переменная ``];
     MODE_Variable --> End[Конец];
 ```
 
@@ -43,7 +43,7 @@ flowchart TD
         RelatedFunctionsInterface --> SupplierDirectories[Директории `<supplier_prefix>`];
         SupplierDirectories --> SupplierPrefix[`<supplier_prefix>`];
         SupplierPrefix --> EntitiesRelationship[Взаимосвязь `Supplier`, `Driver`, `Product`];
-        EntitiesRelationship --> GlobalModeVariable[Глобальная переменная `MODE = 'dev'`];
+        EntitiesRelationship --> GlobalModeVariable[Глобальная переменная ``];
         GlobalModeVariable --> End[Конец];
     end
     
@@ -96,7 +96,7 @@ flowchart TD
 
 #### Переменные:
 
--   `MODE = 'dev'`: Глобальная переменная, определяющая режим работы модуля. В данном случае установлен режим разработки (`dev`). Это может влиять на различные настройки и параметры приложения.
+-   ``: Глобальная переменная, определяющая режим работы модуля. В данном случае установлен режим разработки (`dev`). Это может влиять на различные настройки и параметры приложения.
     -   Тип: Строка (`str`).
     -   Использование:  Устанавливает режим работы (например, разработка, тестирование, производство).
 

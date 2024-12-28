@@ -34,7 +34,7 @@
 
 from src.logger.logger import logger
 
-MODE = 'dev'  #: Режим работы модуля (dev, prod)
+  #: Режим работы модуля (dev, prod)
 """
 Режим работы модуля.
 

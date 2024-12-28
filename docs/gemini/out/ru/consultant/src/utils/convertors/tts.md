@@ -12,7 +12,7 @@
 	:synopsis: speech recognition and text-to-speech conversion
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -40,7 +40,7 @@ from src.logger import logger
    :synopsis: Модуль для распознавания речи и преобразования текста в речь.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -159,7 +159,7 @@ async def text2speech(text: str, lang: str = 'ru') -> str:
    :synopsis: Модуль для распознавания речи и преобразования текста в речь.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile

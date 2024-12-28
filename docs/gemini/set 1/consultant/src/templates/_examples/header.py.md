@@ -12,7 +12,7 @@
 Этот модуль используется для демонстрации работы с шаблонами,
 включая импорт необходимых библиотек и настройку путей.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.templates._examples """
 
@@ -95,7 +95,7 @@ from src.utils.validator import ProductFieldsValidator
 Этот модуль используется для демонстрации работы с шаблонами,
 включая импорт необходимых библиотек и настройку путей.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -121,7 +121,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.templates._examples """
 

@@ -59,7 +59,7 @@ graph LR
     end
 ```
 """
-MODE = 'dev'
+
 
 
 import re
@@ -95,7 +95,7 @@ from src.logger import logger
     :synopsis: Модуль для редактирования рекламных кампаний AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -202,7 +202,7 @@ class AliCampaignEditor(AliPromoCampaign):
     :synopsis: Модуль для редактирования рекламных кампаний AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 import re

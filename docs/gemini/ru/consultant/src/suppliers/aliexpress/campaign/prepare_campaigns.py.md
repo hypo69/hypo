@@ -59,7 +59,7 @@
 
     python src/suppliers/aliexpress/campaign/prepare_campaigns.py --all -l EN -cu USD
 """
-MODE = 'dev'
+
 import argparse
 import copy
 from pathlib import Path

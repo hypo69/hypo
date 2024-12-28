@@ -43,7 +43,7 @@
     python start_posting_my_groups.py
 """
 
-MODE = 'dev'
+
 
 import copy
 # исправлен импорт

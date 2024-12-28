@@ -32,7 +32,7 @@ from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from styles import set_fixed_size
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class CampaignEditor(QtWidgets.QWidget):
@@ -223,7 +223,7 @@ from src.suppliers.aliexpress.campaign import AliCampaignEditor
 from styles import set_fixed_size
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 class CampaignEditor(QtWidgets.QWidget):

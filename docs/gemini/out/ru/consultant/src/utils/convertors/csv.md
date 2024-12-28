@@ -12,7 +12,7 @@
 	:synopsis: CSV and JSON conversion utilities
 
 """
-MODE = 'dev'
+
 
 """ Functions:
     - `csv2dict`: Convert CSV data to a dictionary.
@@ -69,7 +69,7 @@ from src.utils.csv import read_csv_as_dict, read_csv_as_ns, save_csv_file, read_
    :synopsis: CSV and JSON conversion utilities
 
 """
-MODE = 'dev'
+
 
 
 def csv2dict(csv_file: str | Path, *args, **kwargs) -> dict | None:
@@ -162,7 +162,7 @@ def csv_to_json(
    :synopsis: CSV and JSON conversion utilities
 
 """
-MODE = 'dev'
+
 
 
 def csv2dict(csv_file: str | Path, *args, **kwargs) -> dict | None:

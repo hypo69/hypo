@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль сценария для создания прайлиста.
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -29,7 +29,7 @@ MODE = 'dev'
 """
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 ```
 
 # Changes Made
@@ -53,7 +53,7 @@ MODE = 'dev'
 """
 from src.utils.jjson import j_loads
 
-# MODE = 'dev' # Переменная MODE, скорее всего, должна быть инициализирована в другом месте
+#  # Переменная MODE, скорее всего, должна быть инициализирована в другом месте
 # или использоваться только в определенных условиях.
 # Удалил или закомментировал строку присваивания переменной MODE.
 

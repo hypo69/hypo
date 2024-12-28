@@ -36,7 +36,7 @@
 
 from src.logger.logger import logger # импорт logger
 
-MODE = 'dev' # Константа для режима разработки
+ # Константа для режима разработки
 
 __name__: str = __name__
 """

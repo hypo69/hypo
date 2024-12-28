@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .emil_design import EmilDesign
@@ -67,7 +67,7 @@ graph LR
 
 * **Functions:** No functions are defined in this file; it's primarily concerned with import statements.
 
-* **Variables:** `MODE = 'dev'`:  This global variable likely controls operational mode (e.g., development, production).  This is a simple variable assignment.
+* **Variables:** ``:  This global variable likely controls operational mode (e.g., development, production).  This is a simple variable assignment.
 
 * **Potential Errors/Improvements:**  While no explicit errors are apparent, a missing `__all__` variable within `__init__.py` might cause issues, as importing specific items without `__all__` could break future code additions, in this case you would have to add `__all__ = ['EmilDesign']` to the top of the `emil/__init__.py` file.
 

@@ -12,7 +12,7 @@
 	:synopsis: Модуль модели `gemini`
 
 """
-MODE = 'dev'
+
 
 
 from .generative_ai import GoogleGenerativeAI
@@ -36,7 +36,7 @@ from .generative_ai import GoogleGenerativeAI
 import os
 import sys
 
-MODE = 'dev'  # Режим работы (dev, prod)
+  # Режим работы (dev, prod)
 
 
 # Импортируем нужные классы из подмодулей
@@ -87,7 +87,7 @@ import os
 import sys
 import json
 
-MODE = 'dev'  # Режим работы (dev, prod)
+  # Режим работы (dev, prod)
 
 
 # Импортируем нужные классы из подмодулей

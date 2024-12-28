@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -40,7 +40,7 @@ from .customer import PrestaCustomer
 Этот модуль предоставляет классы для работы с различными ресурсами API Престашоп, 
 такими как продукты, поставщики, категории, склады и т.д.
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 from .product import PrestaProduct
@@ -76,7 +76,7 @@ from src.logger import logger  # Импорт логгера
 Этот модуль предоставляет классы для работы с различными ресурсами API Престашоп, 
 такими как продукты, поставщики, категории, склады и т.д.
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 from .product import PrestaProduct

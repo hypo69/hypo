@@ -24,7 +24,7 @@
 4. Запуск с указанием роли 'doc_writer', языка 'en' и только модели 'openai':
     python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'dev'
+
 
 import argparse
 import json
@@ -145,7 +145,7 @@ if __name__ == '__main__':
 4. Запуск с указанием роли 'doc_writer', языка 'en' и только модели 'openai':
     python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'dev'
+
 
 import argparse
 import json
@@ -200,7 +200,7 @@ from src.logger import logger
 4. Запуск с указанием роли 'doc_writer', языка 'en' и только модели 'openai':
     python main.py --role doc_writer --lang en --models openai
 """
-MODE = 'dev'
+
 
 import argparse
 import json

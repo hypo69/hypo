@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -66,15 +66,7 @@ import logging
 # Импорт logger для логирования
 from src.logger import logger
 
-MODE = 'dev'
 
-
-"""
-.. data:: MODE
-   :type: str
-   :synopsis: Режим работы.
-   :value: 'dev' по умолчанию.
-"""
 
 
 """
@@ -97,8 +89,16 @@ MODE = 'dev'
 .. data:: MODE
    :type: str
    :synopsis: Режим работы.
+   :value: 'dev' по умолчанию.
 """
-MODE = 'dev'
+
+
+"""
+.. data:: MODE
+   :type: str
+   :synopsis: Режим работы.
+"""
+
 
 """
 .. module:: src.endpoints.prestashop._examples
@@ -146,15 +146,7 @@ import logging
 # Импорт logger для логирования
 from src.logger import logger
 
-MODE = 'dev'
 
-
-"""
-.. data:: MODE
-   :type: str
-   :synopsis: Режим работы.
-   :value: 'dev' по умолчанию.
-"""
 
 
 """
@@ -177,8 +169,16 @@ MODE = 'dev'
 .. data:: MODE
    :type: str
    :synopsis: Режим работы.
+   :value: 'dev' по умолчанию.
 """
-MODE = 'dev'
+
+
+"""
+.. data:: MODE
+   :type: str
+   :synopsis: Режим работы.
+"""
+
 
 """
 .. module:: src.endpoints.prestashop._examples

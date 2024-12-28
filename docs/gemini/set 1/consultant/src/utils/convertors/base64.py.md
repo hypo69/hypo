@@ -23,7 +23,7 @@ import tempfile
 import os
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def base64_to_tmpfile(content: str, file_name: str) -> str:
@@ -122,7 +122,7 @@ import tempfile
 import os
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def base64_to_tmpfile(content: str, file_name: str) -> str:

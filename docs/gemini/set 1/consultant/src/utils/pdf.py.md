@@ -51,7 +51,7 @@
     - https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err
     - https://habr.com/ru/companies/bothub/articles/853490/
 """
-MODE = 'dev'
+
 import sys
 import os
 import json

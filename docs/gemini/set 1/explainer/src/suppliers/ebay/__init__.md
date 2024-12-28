@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -34,7 +34,7 @@ graph TD
 
 **Примеры:**
 
-* Инициализация `MODE`:  `MODE = 'dev'`
+* Инициализация `MODE`:  ``
 * Импорт `Graber`: `from .graber import Graber`
 
 Данные не передаются между функциями или классами в этом файле.  Он просто задаёт настройки и импортирует необходимый класс.
@@ -45,7 +45,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph eBay Module
-        A[__init__.py] --> B(MODE = 'dev');
+        A[__init__.py] --> B();
         B --> C[from .graber import Graber];
         C --> D[Graber Class];
     end

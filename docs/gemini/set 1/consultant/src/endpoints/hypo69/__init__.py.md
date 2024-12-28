@@ -15,7 +15,7 @@
 Этот модуль инициализирует переменные и импортирует модули для работы с ассистентом программиста.
 """
 
-MODE = 'dev'
+
 
 # from .code_assistant import CodeAssistant
 # from .small_talk_bot import bot as small_talk_bot
@@ -45,7 +45,7 @@ MODE = 'dev'
 Этот модуль инициализирует переменные и импортирует модули для работы с ассистентом программиста.
 """
 # Объявление переменной режима работы приложения
-MODE = 'dev'
+
 
 # from .code_assistant import CodeAssistant # Закомментированный импорт класса CodeAssistant
 # from .small_talk_bot import bot as small_talk_bot # Закомментированный импорт бота small_talk_bot

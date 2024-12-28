@@ -56,7 +56,7 @@
    # ...
 """
 
-MODE = 'dev'
+
 
 import header   # импорт модуля header
 

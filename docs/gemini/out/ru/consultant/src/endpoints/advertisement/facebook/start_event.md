@@ -12,7 +12,7 @@
 	:synopsis: Отправка мероприятий в группы фейсбук
 
 """
-MODE = 'dev'
+
 
 from math import log
 import header
@@ -73,7 +73,7 @@ from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
 
 #  Константа, определяющая режим работы (например, 'dev' или 'prod')
-MODE = 'dev'
+
 
 #  Инициализация драйвера
 driver: Driver = Driver(Chrome)
@@ -170,7 +170,7 @@ from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger import logger
 
 #  Константа, определяющая режим работы (например, 'dev' или 'prod')
-MODE = 'dev'
+
 
 #  Инициализация драйвера
 driver: Driver = Driver(Chrome)

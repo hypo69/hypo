@@ -39,7 +39,7 @@
     campaign_categories = ['test_category']
     CampaignHTMLGenerator.set_campaign_html(campaign_categories, 'test_campaign')
 """
-MODE = 'dev'
+
 
 import html
 from pathlib import Path
@@ -286,7 +286,7 @@ class CampaignHTMLGenerator:
     campaign_categories = ['test_category']
     CampaignHTMLGenerator.set_campaign_html(campaign_categories, 'test_campaign')
 """
-MODE = 'dev'
+
 
 import html
 from pathlib import Path

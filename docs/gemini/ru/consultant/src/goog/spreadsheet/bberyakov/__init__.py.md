@@ -53,7 +53,7 @@
 # from src.logger.logger import logger  # TODO: Добавить logger если требуется логирование
 
 #: Режим работы приложения: 'dev' для разработки, 'prod' для продакшена.
-MODE = 'dev'
+
 
 from .gspreadsheet import GSpreadsheet
 from .gworksheets import GWorksheet

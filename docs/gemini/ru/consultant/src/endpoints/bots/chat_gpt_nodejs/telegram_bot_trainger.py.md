@@ -71,7 +71,7 @@ from src.utils.convertors.tts import recognizer, text_to_speech
 # from src.utils.jjson import j_loads_ns, j_loads
 # import speech_recognition as sr  # Библиотека для распознавания речи
 
-MODE = 'dev'
+
 model = Model()
 
 # Замените 'YOUR_TOKEN_HERE' на ваш фактический токен бота

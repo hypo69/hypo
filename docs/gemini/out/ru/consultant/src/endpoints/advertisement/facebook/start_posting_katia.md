@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Katia?)
 
 """
-MODE = 'dev'
+
 
 
 import header 
@@ -53,7 +53,7 @@ except KeyboardInterrupt:
    :synopsis: Модуль для запуска рекламных кампаний в группах Facebook.
 
 """
-MODE = 'dev'
+
 
 # Импорты
 import header  # Необходимо проверить содержимое header
@@ -133,7 +133,7 @@ if __name__ == "__main__":
    :synopsis: Модуль для запуска рекламных кампаний в группах Facebook.
 
 """
-MODE = 'dev'
+
 
 # Импорты
 import header  # Необходимо проверить содержимое header

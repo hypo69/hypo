@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -68,7 +68,7 @@ __author__='hypotez '
 
 ```mermaid
 graph LR
-    A[version.py] --> B(MODE = 'dev');
+    A[version.py] --> B();
     A --> C(__version__ = "3.12.0.0.0.4");
     A --> D(__name__);
     A --> E(__doc__);

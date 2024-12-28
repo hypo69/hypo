@@ -38,7 +38,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import functools
 import time
@@ -123,7 +123,7 @@ import functools
 import time
 from src.logger import logger  # Импортируем logger
 
-MODE = 'dev'
+
 
 
 def autodoc(func):
@@ -214,7 +214,7 @@ import functools
 import time
 from src.logger import logger  # Импортируем logger
 
-MODE = 'dev'
+
 
 
 def autodoc(func):

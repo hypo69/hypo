@@ -80,7 +80,7 @@ list_of_scenarios = [scenario1, ...]
 s.run(list_of_scenarios)
 ```
 """
-MODE = 'dev'
+
 from .executor import (
     run_scenario, 
     run_scenarios, 
@@ -113,7 +113,7 @@ from src.logger.logger import logger
     Функции `run_scenario_files`, `run_scenarios` для работы со сценариями.
 """
 
-MODE = 'dev'
+
 # Импортируем необходимые функции из модуля executor
 from .executor import (
     run_scenario,
@@ -203,7 +203,7 @@ from src.logger.logger import logger
     Функции `run_scenario_files`, `run_scenarios` для работы со сценариями.
 """
 
-MODE = 'dev'
+
 # Импортируем необходимые функции из модуля executor
 from .executor import (
     run_scenario,

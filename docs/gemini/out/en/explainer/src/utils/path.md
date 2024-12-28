@@ -13,7 +13,7 @@ module: src.utils.path
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Optional
@@ -116,7 +116,7 @@ The code imports `Path` from `pathlib` and `Optional` from `typing`.  These are 
 
 **Variables:**
 
-*   `MODE`: A string variable. This code defines a variable `MODE = 'dev'`, but it does not utilize this variable.
+*   `MODE`: A string variable. This code defines a variable ``, but it does not utilize this variable.
 *   `path` and `relative_path`: These variables are Path objects, representing file system paths.
 
 

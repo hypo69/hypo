@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -41,7 +41,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 """
 import json # Импорт необходимой библиотеки
 
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -90,7 +90,7 @@ from src.logger import logger
 """
 import json # Импорт необходимой библиотеки
 
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi

@@ -9,7 +9,7 @@
 	:synopsis:This module provides a FastAPI application for interacting with the OpenAI model.
 It includes API endpoints for querying the model and training it based on provided data.
 """
-MODE = 'dev'
+
 import header
 
 from fastapi import FastAPI, HTTPException

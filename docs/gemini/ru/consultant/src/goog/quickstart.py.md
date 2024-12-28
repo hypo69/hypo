@@ -65,7 +65,7 @@ from googleapiclient.discovery import build
 from src.logger.logger import logger # Импортируем logger
 from src import gs
 
-MODE = 'dev'
+
 
 # Области доступа к API Google Apps Script.
 SCOPES = ['https://www.googleapis.com/auth/script.projects']

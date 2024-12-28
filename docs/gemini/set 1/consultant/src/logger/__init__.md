@@ -8,7 +8,7 @@
 
 Этот модуль предоставляет функции для записи логов и обработки исключений.
 """
-MODE = 'dev'
+
 
 from .logger import logger
 #from .beeper import Beeper
@@ -38,7 +38,7 @@ from .exceptions import (
 
 Этот модуль предоставляет функции для записи логов и обработки исключений.
 """
-# MODE = 'dev' # Не используется, удален.
+#  # Не используется, удален.
 
 from .logger import logger
 #from .beeper import Beeper

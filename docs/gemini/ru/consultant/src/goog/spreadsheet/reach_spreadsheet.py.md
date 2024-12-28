@@ -66,7 +66,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.utils.printer import pprint
 from src.logger.logger import logger
 
-MODE = 'dev'  # TODO: проверить необходимость этой переменной
+  # TODO: проверить необходимость этой переменной
 
 
 def htmlColorToJSON(htmlColor: str) -> dict:

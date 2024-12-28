@@ -7,7 +7,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 \n"""
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -26,7 +26,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 	:platform: Windows, Unix
 	:synopsis:  Модуль для демонстрации работы с ExecuteLocator.
 """
-MODE = 'dev'
+
 
 
 def main():
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 	:platform: Windows, Unix
 	:synopsis:  Модуль для демонстрации работы с ExecuteLocator.
 """
-MODE = 'dev'
+
 
 from selenium import webdriver
 from src.webdriver.executor import ExecuteLocator

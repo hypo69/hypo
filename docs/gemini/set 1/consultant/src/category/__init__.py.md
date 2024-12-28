@@ -47,7 +47,7 @@
 from src.logger.logger import logger # Добавлен импорт logger
 from .category import Category
 
-MODE = 'dev'
+
 
 __all__ = ['Category', 'MODE'] # Добавлен __all__ для явного указания экспорта
 ```

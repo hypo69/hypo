@@ -5,7 +5,7 @@
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.utils \n   :platform: Windows, Unix\n   :synopsis: Демонстрация использования декоратора для автоматического обновления docstring функции.\n\nОписание:\n    Этот модуль содержит декоратор `autodoc`, который обновляет строку документации функции с добавлением времени последнего вызова функции.\n    Декоратор используется для того, чтобы автоматически обновлять docstring функции при её вызове.\n\n    Декоратор оборачивает функцию, обновляя её docstring перед вызовом, добавляя в него строку с текущим временем.\n    Для получения текущего времени используется библиотека `time`.\n\nПример использования:\n    Пример функции `example_function`, которая использует декоратор `autodoc`. Каждый раз при её вызове её docstring обновляется, и в неё добавляется информация о времени последнего вызова функции.\n    \n    Пример кода:\n    ```python\n    @autodoc\n    def example_function(param1: int, param2: str) -> None:\n        "\\""Пример функции.\n    \n        Args:\n            param1 (int): Первое значение.\n            param2 (str): Второе значение.\n        "\\""\n        print(f"Processing {param1} and {param2}")\n    \n    example_function(1, "test")\n    print(example_function.__doc__)  # Вывод обновленного docstring\n    example_function(2, "another test")\n    print(example_function.__doc__)  # Вывод обновленного docstring\n    ```\n\n"""
 
-MODE = 'dev'
+
 
 import functools
 import time

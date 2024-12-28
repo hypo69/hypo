@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains.sergey_mymaster_co_il """
 
@@ -59,7 +59,7 @@ No clear algorithm is present in the provided code. It's primarily a Python modu
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Module Initialization);
+    A[] --> B(Module Initialization);
 ```
 
 **Explanation of Dependencies:**

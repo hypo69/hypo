@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.myai """
 
@@ -129,7 +129,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 def set_project_root(marker_files=('__root__')) -> Path:
     """
@@ -219,7 +219,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 def set_project_root(marker_files=('__root__')) -> Path:
     """

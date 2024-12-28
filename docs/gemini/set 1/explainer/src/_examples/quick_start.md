@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src._examples """
 
@@ -68,7 +68,7 @@ graph TD
 
 ```mermaid
 graph LR
-    A[quick_start.py] --> B(MODE = 'dev');
+    A[quick_start.py] --> B();
 ```
 
 

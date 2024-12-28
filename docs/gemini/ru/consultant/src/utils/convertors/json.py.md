@@ -72,7 +72,7 @@
     json2xls(json_data, xls_file_path)
 """
 
-MODE = 'dev'
+
 import csv
 from types import SimpleNamespace
 from pathlib import Path

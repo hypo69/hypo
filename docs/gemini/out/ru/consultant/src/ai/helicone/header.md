@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -106,7 +106,7 @@ cofee_link = settings.get('cofee', "Treat the developer to a cup of coffee for b
    :platform: Windows, Unix
    :synopsis: Модуль для получения и обработки метаданных проекта.
 """
-MODE = 'dev'
+
 
 
 """
@@ -216,7 +216,7 @@ cofee_link = settings.get('cofee', "Treat the developer to a cup of coffee for b
    :platform: Windows, Unix
    :synopsis: Модуль для получения и обработки метаданных проекта.
 """
-MODE = 'dev'
+
 
 
 """

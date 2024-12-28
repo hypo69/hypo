@@ -14,7 +14,7 @@
 :var MODE: Режим работы (dev, prod).
 :vartype MODE: str
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -42,7 +42,7 @@ from .graber import Graber
 :var MODE: Режим работы (dev, prod).
 :vartype MODE: str
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -58,7 +58,7 @@ from .version import __version__, __doc__, __details__
 """
 import os
 
-MODE = 'dev'
+
 
 """
 .. data:: MODE
@@ -148,7 +148,7 @@ def example_function():
 """
 import os
 
-MODE = 'dev'
+
 
 """
 .. data:: MODE

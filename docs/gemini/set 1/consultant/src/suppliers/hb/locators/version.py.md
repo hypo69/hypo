@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.locators """
 
@@ -71,7 +71,7 @@ __author__='hypotez '
 .. moduleauthor:: hypotez
 """
 #  Инициализация переменной MODE в значение 'dev'
-MODE = 'dev'
+
 
 
 """
@@ -94,7 +94,7 @@ MODE = 'dev'
   :synopsis:
 """
 #  Инициализация переменной MODE в значение 'dev'
-MODE = 'dev'
+
   
 """ module: src.suppliers.hb.locators """
 
@@ -149,7 +149,7 @@ __author__='hypotez '
 .. moduleauthor:: hypotez
 """
 #  Инициализация переменной MODE в значение 'dev'
-MODE = 'dev'
+
 
 
 """
@@ -172,7 +172,7 @@ MODE = 'dev'
   :synopsis:
 """
 #  Инициализация переменной MODE в значение 'dev'
-MODE = 'dev'
+
   
 """ module: src.suppliers.hb.locators """
 

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
@@ -32,7 +32,7 @@ MODE = 'dev'
 ```mermaid
 graph TD
     A[Запуск скрипта] --> B{Импорт модулей};
-    B -- success --> C[Инициализация MODE = 'dev'];
+    B -- success --> C[Инициализация ];
     B -- failure --> D[Ошибка импорта];
     C --> E[Дальнейшее выполнение кода];
     D --> E;
@@ -43,7 +43,7 @@ graph TD
 
 ```mermaid
 graph LR
-    A[hypotez/src/endpoints/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/endpoints/__init__.py] --> B();
     A --> C[Import PrestaShop];
     A --> D[Import KazarinovTelegramBot];
     subgraph "Внешние зависимости"
@@ -70,7 +70,7 @@ graph LR
 
 **Переменные:**
 
-`MODE = 'dev'` — глобальная переменная, которая, вероятно, используется для настройки различных режимов работы (разработки, тестирования, производства).
+`` — глобальная переменная, которая, вероятно, используется для настройки различных режимов работы (разработки, тестирования, производства).
 
 **Возможные ошибки и улучшения:**
 

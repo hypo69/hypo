@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 #: Режим работы приложения
-MODE = 'dev'
+
 
 #: Корневая директория проекта.
 dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])
@@ -61,7 +61,7 @@ import sys
 from pathlib import Path
 
 #: Режим работы приложения
-MODE = 'dev'
+
 
 #: Корневая директория проекта.
 dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])

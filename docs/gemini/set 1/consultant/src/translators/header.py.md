@@ -48,7 +48,7 @@
     print(f"Версия: {__version__}")
     print(f"Автор: {__author__}")
 """
-MODE = 'dev'
+
 """str: Режим работы (dev, prod и т.д.)."""
 
 import sys

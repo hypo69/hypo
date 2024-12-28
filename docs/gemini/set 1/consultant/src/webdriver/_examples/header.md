@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -65,7 +65,7 @@ sys.path.append (str (dir_root) ) # Добавляю рабочую директ
     :platform: Windows, Unix
     :synopsis: Модуль содержит вспомогательные функции и константы для работы с веб-драйвером.
 """
-MODE = 'dev'
+
 
 """
 .. data:: MODE
@@ -140,7 +140,7 @@ sys.path.append(str(dir_src)) # Добавляем директорию src в s
     :platform: Windows, Unix
     :synopsis: Модуль содержит вспомогательные функции и константы для работы с веб-драйвером.
 """
-MODE = 'dev'
+
 
 """
 .. data:: MODE

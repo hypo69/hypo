@@ -78,7 +78,7 @@ from src.logger.logger import logger
 from src.suppliers.Product import Product
 
 
-MODE = 'dev'
+
 
 def login(supplier):
     """

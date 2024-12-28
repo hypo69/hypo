@@ -6,7 +6,7 @@
 
 ```mermaid
 graph TD
-    A[Start] --> B{Define MODE = 'dev'};
+    A[Start] --> B{Define };
     B --> C[Import header];
     C --> D[Import Version from packaging.version];
     D --> E[Import __version__, __doc__, __details__ from .version];
@@ -15,7 +15,7 @@ graph TD
 
 **Примеры:**
 
-1. **`MODE = 'dev'`**: Устанавливает режим работы модуля как "dev" (разработка). Этот режим, вероятно, используется для включения отладочных функций или для работы в среде разработки.
+1. **``**: Устанавливает режим работы модуля как "dev" (разработка). Этот режим, вероятно, используется для включения отладочных функций или для работы в среде разработки.
 2. **`import header`**: Импортирует модуль `header`, который, вероятно, содержит общие настройки или функции для всего проекта.
 3. **`from packaging.version import Version`**: Импортирует класс `Version` из библиотеки `packaging.version`. Этот класс используется для работы с версиями пакетов.
 4. **`from .version import __version__, __doc__, __details__`**: Импортирует переменные `__version__`, `__doc__`, и `__details__` из файла `version.py` в той же директории. `__version__` будет содержать строку версии текущего пакета, `__doc__` может содержать описание пакета, а `__details__` – дополнительные сведения.
@@ -31,7 +31,7 @@ graph TD
 
 ```mermaid
 flowchart TD
-    Start --> SetMode[Set MODE = 'dev']
+    Start --> SetMode[Set ]
     SetMode --> ImportHeader[Import header]
     ImportHeader --> ImportVersionClass[Import Version from packaging.version]
     ImportVersionClass --> ImportVersionInfo[Import __version__, __doc__, __details__ from .version]
@@ -68,7 +68,7 @@ flowchart TD
 
 **Переменные:**
 
-1.  **`MODE = 'dev'`**:
+1.  **``**:
     *   **Тип**: Строка
     *   **Использование**: Устанавливает режим работы модуля как "dev" (разработка). Этот режим может использоваться для отладки или активации специфических функций.
 

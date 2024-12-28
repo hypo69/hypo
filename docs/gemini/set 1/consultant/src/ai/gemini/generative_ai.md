@@ -13,7 +13,7 @@
    https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md
 """
 
-MODE = 'dev'
+
 import time
 import json
 from io import IOBase
@@ -207,7 +207,7 @@ class GoogleGenerativeAI:
    https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md
 """
 
-MODE = 'dev'
+
 import time
 import json
 from io import IOBase

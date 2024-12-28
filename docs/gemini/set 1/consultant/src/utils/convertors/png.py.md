@@ -61,7 +61,7 @@ from src.logger.logger import logger # Логирование
 # from src.utils.jjson import j_loads, j_loads_ns  # TODO: Verify if needed and uncomment if needed
 
 
-MODE = 'dev'
+
 
 class TextToImageGenerator:
     """

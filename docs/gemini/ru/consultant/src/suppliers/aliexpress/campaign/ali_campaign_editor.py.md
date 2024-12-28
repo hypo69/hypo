@@ -82,7 +82,7 @@
     products = editor.get_category_products("Electronics")
     print(len(products))
 """
-MODE = 'dev'
+
 
 import re
 import shutil

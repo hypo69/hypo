@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu.tkinter """
 
@@ -94,7 +94,7 @@ No functions are defined.
 
 **Potential Errors/Improvements:**
 
-* **Redundant `MODE` definitions:** The multiple `MODE = 'dev'` lines are likely a mistake and should be consolidated.
+* **Redundant `MODE` definitions:** The multiple `` lines are likely a mistake and should be consolidated.
 * **Error Handling:** The code could benefit from error handling to deal with situations where `r'hypotez'` isn't found in the path, potentially raising an exception, which will crash the application.
 
 **Relationship with Other Parts of the Project:**

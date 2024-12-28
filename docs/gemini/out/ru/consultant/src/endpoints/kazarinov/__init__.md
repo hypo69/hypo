@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .kazarinov_bot import KazarinovTelegramBot
 ```
@@ -41,7 +41,7 @@ from .kazarinov_bot import KazarinovTelegramBot
     bot = KazarinovTelegramBot()
     bot.start()
 """
-MODE = 'dev'
+
 
 # Импорт необходимых модулей.
 from .kazarinov_bot import KazarinovTelegramBot
@@ -86,7 +86,7 @@ from src.logger import logger
     bot.start()
 """
 # Переменная, хранящая режим работы (например, 'dev', 'prod').
-MODE = 'dev'
+
 
 # Импорт необходимых модулей.
 # Добавлена конструкция импорта для логирования.

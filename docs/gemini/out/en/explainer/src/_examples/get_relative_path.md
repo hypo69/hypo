@@ -16,7 +16,7 @@
 """
 from pathlib import Path
 
-MODE = 'dev'
+
 
 import header
 from src.utils.path import get_relative_path
@@ -80,7 +80,7 @@ The mermaid diagram shows a straightforward call flow.  The `get_relative_path` 
 
 ### Variables:
 
-- `MODE = 'dev'`: This variable stores a string value likely representing the application mode ('dev', 'prod', etc.).
+- ``: This variable stores a string value likely representing the application mode ('dev', 'prod', etc.).
 
 - `relative_path`: Stores the calculated relative path from the current file to the `hypotez` directory.
 

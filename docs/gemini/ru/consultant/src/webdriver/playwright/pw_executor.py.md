@@ -56,7 +56,7 @@ from playwright.async_api import Browser, BrowserContext, Page, Playwright, asyn
 from src.utils.jjson import j_loads, j_loads_ns # Импорт для работы с JSON
 from src.logger.logger import logger # Импорт для логирования
 
-MODE = 'dev' # Объявление константы
+ # Объявление константы
 # TODO: Добавить класс для выполнения операций через Playwright
 class PlaywrightExecutor:
     """

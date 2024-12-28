@@ -54,5 +54,5 @@ from .pricelist import PriceListRequester
 from .customer import PrestaCustomer
 
 #: Режим работы приложения (`dev` или `prod`).
-MODE = 'dev'
+
 ```

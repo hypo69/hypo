@@ -20,7 +20,7 @@
         graber = Graber(driver=webdriver)
         product_data = await graber.get_product_fields()
 """
-MODE = 'dev'
+
 
 from typing import Any
 # from functools import wraps # TODO: проверить необходимость и убрать или оставить
@@ -122,7 +122,7 @@ class Graber(Grbr):
         graber = Graber(driver=webdriver)
         product_data = await graber.get_product_fields()
 """
-MODE = 'dev'
+
 
 from typing import Any
 # from functools import wraps # TODO: проверить необходимость и убрать или оставить

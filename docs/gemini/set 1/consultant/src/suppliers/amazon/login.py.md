@@ -10,7 +10,7 @@
 используя предоставленные локаторы и драйвер браузера.
 
 """
-MODE = 'dev'
+
 
 
 from src.logger.logger import logger
@@ -110,7 +110,7 @@ def login(s) -> bool:
 используя предоставленные локаторы и драйвер браузера.
 
 """
-MODE = 'dev'
+
 
 
 from src.logger.logger import logger

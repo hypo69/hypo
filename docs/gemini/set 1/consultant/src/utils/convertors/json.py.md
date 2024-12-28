@@ -42,7 +42,7 @@
     - :func:`json2xml`: Преобразует JSON данные в формат XML.
     - :func:`json2xls`: Преобразует JSON данные в формат XLS.
 """
-MODE = 'dev'
+
 import csv
 from types import SimpleNamespace
 from pathlib import Path
@@ -202,7 +202,7 @@ def json2xls(json_data: str | list | dict | Path, xls_file_path: str | Path) -> 
     - :func:`json2xml`: Преобразует JSON данные в формат XML.
     - :func:`json2xls`: Преобразует JSON данные в формат XLS.
 """
-MODE = 'dev'
+
 import csv
 from types import SimpleNamespace
 from pathlib import Path

@@ -12,7 +12,7 @@
 	:synopsis: Converter for converting between dict and SimpleNamespace objects
 
 """
-MODE = 'dev'
+
 
 
 """ This module contains functions to recursively convert dictionaries to SimpleNamespace

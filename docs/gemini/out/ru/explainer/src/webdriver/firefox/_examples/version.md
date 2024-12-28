@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.firefox._examples """
 
@@ -76,7 +76,7 @@ __author__='hypotez '
 
 
 ```
-MODE = 'dev'
+
 __version__ = "3.12.0.0.0.4"
 ```
 

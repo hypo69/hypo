@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -82,7 +82,7 @@ from src.utils.jjson import j_loads  # Импорт функции j_loads дл�
 :type: str
 :ivar: dev/prod
 """
-MODE = 'dev'
+
 
 
 # Переменная __version__ описывает версию модуля
@@ -147,7 +147,7 @@ from src.utils.jjson import j_loads  # Импорт функции j_loads дл�
 :type: str
 :ivar: dev/prod
 """
-MODE = 'dev'
+
 
 
 # Переменная __version__ описывает версию модуля

@@ -12,7 +12,7 @@
 	:synopsis: Модуль модели `openai`
 
 """
-MODE = 'dev'
+
 
 from .translator import translate
 from .model import OpenAIModel
@@ -32,7 +32,7 @@ from .model import OpenAIModel
    :synopsis: Модуль для работы с моделью OpenAI.
 
 """
-MODE = 'dev'
+
 
 # Импорт необходимых модулей.
 from .translator import translate
@@ -66,7 +66,7 @@ from src.utils.jjson import j_loads
    :synopsis: Модуль для работы с моделью OpenAI.
 
 """
-MODE = 'dev'
+
 # TODO: Добавить документацию для переменной MODE.
 
 # Импорт необходимых модулей.

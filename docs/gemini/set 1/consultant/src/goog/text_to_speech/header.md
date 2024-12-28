@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -108,7 +108,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     project_name = header.__project_name__
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -221,7 +221,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
     project_name = header.__project_name__
 
 """
-MODE = 'dev'
+
 
 import sys
 import json

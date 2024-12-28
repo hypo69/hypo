@@ -41,7 +41,7 @@ get_directory_names = mock_get_directory_names
 
 
 # Define necessary constants for testing
-MODE = 'dev'
+
 group_file_paths_ru = ["sergey_pages.json"]
 adv_file_paths_ru = ["ru_ils.json"]
 group_file_paths_he = ["sergey_pages.json"]

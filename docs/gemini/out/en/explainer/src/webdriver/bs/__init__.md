@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bs import BS
 ```
@@ -40,7 +40,7 @@ The code is a module initializer for a package named `webdriver.bs`.  Its primar
 
 ```mermaid
 graph LR
-    A[webdriver.bs/__init__.py] --> B(MODE = 'dev');
+    A[webdriver.bs/__init__.py] --> B();
     A --> C(.bs);
     C --> D[BS];
     B --> E[Module Initialization];

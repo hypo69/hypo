@@ -40,7 +40,7 @@ from src.logger.logger import logger
 from src.credentials import gs
 
 #: Режим работы приложения, может быть 'dev' (разработка) или 'prod' (продакшн)
-MODE = 'dev'
+
 
 # Этот импорт необходим для работы с учетными данными
 # из файла credentials.py

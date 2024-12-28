@@ -51,7 +51,7 @@ from src.utils.path import get_relative_path
 from src.logger.logger import logger
 
 # Код определяет режим работы приложения (dev, prod)
-MODE = 'dev'
+
 
 # Код получает относительный путь к текущему файлу от директории 'hypotez'
 try:

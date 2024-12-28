@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import requests
@@ -66,7 +66,7 @@ def login(s)->bool:
 в систему AliExpress с использованием WebDriver.
 
 """
-MODE = 'dev'
+
 
 import requests
 import pickle
@@ -146,7 +146,7 @@ def login(s) -> bool:
 в систему AliExpress с использованием WebDriver.
 
 """
-MODE = 'dev'
+
 
 import requests
 import pickle

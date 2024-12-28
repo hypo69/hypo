@@ -25,7 +25,7 @@
     make_summary(docs_dir)
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -137,7 +137,7 @@ def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
     make_summary(docs_dir)
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path

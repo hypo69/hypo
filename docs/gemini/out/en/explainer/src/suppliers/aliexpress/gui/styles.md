@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.gui """
 
@@ -112,13 +112,13 @@ graph LR
 
 
 - **Variables:**
-    - `MODE = 'dev'`: This is a global variable likely used for configuration purposes (e.g., different modes for development versus production).  The `'dev'` value suggests this is a development-mode setting.   The variable's use remains unclear without more context. Its purpose is to serve as a configuration flag.
+    - ``: This is a global variable likely used for configuration purposes (e.g., different modes for development versus production).  The `'dev'` value suggests this is a development-mode setting.   The variable's use remains unclear without more context. Its purpose is to serve as a configuration flag.
 
 
 - **Potential Errors or Improvements:**
     - **Missing Docstrings:**  While the function `set_fixed_size` has a docstring, the overall module, and individual global variables (`MODE`) are lacking complete docstrings. This makes understanding the overall purpose and context of the module and variables more difficult. Comprehensive docstrings help other developers easily understand the code's purpose and intended behavior.
     - **Unnecessary Docstrings**: Multiple blocks of empty docstrings are present in the code.  They should be removed.
-    - **Redundancy**: The multiple occurrences of `MODE = 'dev'` should be consolidated.
+    - **Redundancy**: The multiple occurrences of `` should be consolidated.
     - **Code Style**: Using `#!` in the beginning of the file is generally not good practice, as it is not part of the Python language.
 
 

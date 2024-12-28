@@ -41,7 +41,7 @@
 а также за определение глобальных переменных проекта.
 """
 
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

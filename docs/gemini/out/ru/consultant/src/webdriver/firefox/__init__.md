@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .firefox import Firefox
@@ -33,7 +33,7 @@ from .firefox import Firefox
 Этот модуль предоставляет базовый класс для работы с Firefox WebDriver.
 
 """
-MODE = 'dev'
+
 
 
 # Импортируем класс Firefox из файла firefox.py
@@ -66,7 +66,7 @@ from src.logger import logger
 Этот модуль предоставляет базовый класс для работы с Firefox WebDriver.
 
 """
-MODE = 'dev'
+
 
 
 # Импортируем класс Firefox из файла firefox.py

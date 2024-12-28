@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.gui """
 
@@ -124,7 +124,7 @@ This file is likely part of a larger project.  The `src.suppliers.aliexpress.gui
 
 * **Potential for inconsistent updates:** The `__details__` field could be updated with more information.
 
-* **Redundant `MODE` definition:** There are multiple `MODE = 'dev'` definitions; these should be consolidated.
+* **Redundant `MODE` definition:** There are multiple `` definitions; these should be consolidated.
 
 * **Type hinting**:  The use of `__annotations__` is good practice to signal the types of variables and functions, and could be used to ensure type consistency and improve code readability and maintainability.  Type hints should be used in the code rather than simply annotating variable types.
 

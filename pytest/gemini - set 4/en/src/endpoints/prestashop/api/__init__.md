@@ -31,7 +31,7 @@ The provided code snippet is very minimal, only defining a `MODE` variable and i
 ```python
 # Placeholder for the PrestaShop class (Replace with your actual code)
 class PrestaShop:
-    MODE = 'dev'
+    
 
     def get_products(self, limit=10):
         """

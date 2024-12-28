@@ -8,9 +8,9 @@ from hypotez.src.webdriver.firefox import Firefox  # Assuming Firefox class is i
 def set_mode_to_dev():
     """Sets the MODE variable to 'dev' before running the tests."""
     from hypotez.src.webdriver.firefox import __init__
-    __init__.MODE = 'dev'
+    __init__.
     yield
-    __init__.MODE = 'dev'
+    __init__.
 
 def test_firefox_class_initialization(set_mode_to_dev):
     """

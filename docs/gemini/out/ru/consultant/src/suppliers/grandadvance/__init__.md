@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 
@@ -35,7 +35,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads, j_loads_ns
@@ -102,7 +102,7 @@ def get_data_from_file(file_path: str) -> dict:
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads, j_loads_ns

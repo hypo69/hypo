@@ -25,7 +25,7 @@
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev' # Режим работы приложения
+ # Режим работы приложения
 
 import sys
 import json
@@ -127,7 +127,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev' # Режим работы приложения
+ # Режим работы приложения
 
 import sys
 import json

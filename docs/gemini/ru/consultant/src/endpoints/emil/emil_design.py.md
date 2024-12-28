@@ -76,7 +76,7 @@ from src.utils.jjson import j_loads_ns, j_dumps
 from src.logger.logger import logger
 from src import gs
 
-MODE = 'dev'
+
 
 
 class EmilDesign:

@@ -9,7 +9,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.translators """
 
@@ -118,7 +118,7 @@ cofee_link = settings.get("cofee", "Treat the developer to a cup of coffee for b
    :platform: Windows, Unix
    :synopsis: Модуль для работы с переводом данных.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -140,7 +140,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Дополнительные настройки.
 """
-MODE = 'dev'
+
 
 
 """ Модуль для работы с переводом данных. """
@@ -245,7 +245,7 @@ cofee_link = settings.get("cofee", "Treat the developer to a cup of coffee for b
    :platform: Windows, Unix
    :synopsis: Модуль для работы с переводом данных.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -267,7 +267,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Дополнительные настройки.
 """
-MODE = 'dev'
+
 
 
 """ Модуль для работы с переводом данных. """

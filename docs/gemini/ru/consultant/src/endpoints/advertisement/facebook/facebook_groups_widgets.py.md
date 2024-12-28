@@ -57,7 +57,7 @@ from pathlib import Path
 from src.logger.logger import logger
 
 # константа MODE не используется.
-# MODE = 'dev'
+# 
 
 class FacebookGroupsWidget:
     """

@@ -4,7 +4,7 @@
 
 1. **Инициализация режима `MODE`:**
    - Устанавливается переменная `MODE` в значение `'dev'`. Это, вероятно, указывает на то, что модуль находится в режиме разработки.
-   - Пример: `MODE = 'dev'`
+   - Пример: ``
 
 2. **Определение метаданных модуля:**
    - Определяются переменные для метаданных модуля: `__name__`, `__version__`, `__doc__`, `__details__`, `__annotations__`, `__author__`.
@@ -20,7 +20,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> InitializeMode[Initialize MODE = 'dev']
+    Start --> InitializeMode[Initialize ]
     InitializeMode --> DefineMetadata[Define Module Metadata]
     DefineMetadata --> Name[__name__: str]
     DefineMetadata --> Version[__version__: str = "3.12.0.0.0.4"]

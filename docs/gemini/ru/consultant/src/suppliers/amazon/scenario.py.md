@@ -62,7 +62,7 @@ from pathlib import Path
 from src import gs
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 CATEGORY_LOCATOR_KEY = 'category'
 PRODUCT_LINKS_KEY = 'product_links'
 

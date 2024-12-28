@@ -54,7 +54,7 @@
     print(header.__version__)
     print(header.__doc__)
 """
-MODE = 'dev'
+
 
 import sys
 import json

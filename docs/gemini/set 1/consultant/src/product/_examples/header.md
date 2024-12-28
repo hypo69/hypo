@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -77,7 +77,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры кода для работы с продуктами.
 """
-MODE = 'dev'
+
 
 
 """
@@ -112,7 +112,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis: Режим работы приложения.
 """
-MODE = 'dev'  # Установление значения переменной MODE
+  # Установление значения переменной MODE
 
 """
 .. module:: src.product._examples
@@ -176,7 +176,7 @@ print(dir_root)
    :platform: Windows, Unix
    :synopsis: Модуль содержит примеры кода для работы с продуктами.
 """
-MODE = 'dev'
+
 
 
 """
@@ -211,7 +211,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis: Режим работы приложения.
 """
-MODE = 'dev'  # Установление значения переменной MODE
+  # Установление значения переменной MODE
 
 """
 .. module:: src.product._examples

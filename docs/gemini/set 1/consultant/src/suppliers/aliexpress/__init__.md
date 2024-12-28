@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -36,7 +36,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 Этот модуль предоставляет классы для работы с API AliExpress,
 обработки кампаний и генерации HTML-отчетов.
 """
-MODE = 'dev'
+
 
 # Импорты из модулей AliExpress
 from .aliexpress import Aliexpress
@@ -82,7 +82,7 @@ from src.logger import logger
 Этот модуль предоставляет классы для работы с API AliExpress,
 обработки кампаний и генерации HTML-отчетов.
 """
-MODE = 'dev'
+
 
 # Импорты из модулей AliExpress
 from .aliexpress import Aliexpress

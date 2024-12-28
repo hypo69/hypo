@@ -54,7 +54,7 @@ from src.utils.file import save_text_file
 from src.logger.logger import logger
 from src import gs
 
-MODE = 'dev'
+
 
 # Sample data for testing
 campaign_name = "test_campaign"

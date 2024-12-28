@@ -12,7 +12,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.firefox._pytest """
 
@@ -58,7 +58,7 @@ import pytest
 from src.utils.jjson import j_loads  # Импортируем функцию j_loads
 from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 
 def test_firefox_something():
@@ -107,7 +107,7 @@ import pytest
 from src.utils.jjson import j_loads  # Импортируем функцию j_loads
 from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 
 def test_firefox_something():

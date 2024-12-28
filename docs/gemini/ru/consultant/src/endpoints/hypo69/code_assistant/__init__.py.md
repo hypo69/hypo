@@ -47,7 +47,7 @@
 # from src.logger.logger import logger # Импортируем логгер
 # from src.settings import settings # Импортируем settings
 # MODE = settings.MODE # Получаем режим работы из настроек
-MODE = 'dev' # Константа MODE временно перенесена сюда. TODO: перенести в settings.py
+ # Константа MODE временно перенесена сюда. TODO: перенести в settings.py
 # импортируем класс CodeAssistant
 from .code_assistant import CodeAssistant
 ```

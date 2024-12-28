@@ -1,495 +1,415 @@
 ## <алгоритм>
-
-### `TinyPerson` Class
+### Класс `TinyPerson`
 1.  **Инициализация (`__init__`)**:
-    *   Принимает `name`, `episodic_memory`, `semantic_memory` и `mental_faculties` как аргументы.
-    *   Сохраняет переданные значения памяти, если они предоставлены.
-    *   Инициализирует имя агента, вызывая `assert name is not None`.
-    *   Вызывает метод `_post_init` после завершения `__init__`.
-
+    *   Принимает `name`, `episodic_memory`, `semantic_memory`, и `mental_faculties` в качестве аргументов.
+    *   Инициализирует атрибуты агента, включая его имя, память и ментальные способности.
+    *   Использует декоратор `@post_init`, чтобы гарантировать вызов `_post_init` после завершения инициализации.
 2.  **Пост-инициализация (`_post_init`)**:
-    *   Инициализирует списки `current_messages`, `_actions_buffer`, `_accessible_agents` и `_displayed_communications_buffer`.
-    *   Инициализирует `episodic_memory` и `semantic_memory`, если они не были переданы.
-    *   Инициализирует список `_mental_faculties`, если он не был передан.
-    *   Создает словарь `_configuration` со всеми необходимыми полями конфигурации агента, включая имя, возраст, национальность, профессию, навыки и т.д.
-    *   Определяет путь к файлу шаблона подсказок `tinyperson.mustache`.
-    *   Устанавливает `_init_system_message` в `None`.
-    *   Проверяет, нужно ли переименовать агента или добавить его в глобальный список агентов.
-    *   Сбрасывает подсказку.
-    *   Устанавливает `simulation_id`, если агент был создан в рамках симуляции.
-
-3.  **Генерация подсказки (`generate_agent_prompt`)**:
-    *   Читает шаблон подсказки из файла `tinyperson.mustache`.
-    *   Создает копию словаря `_configuration`.
-    *   Формирует строку с определениями и ограничениями действий из ментальных способностей агента.
-    *   Добавляет дополнительные переменные шаблона, если включена опция RAI.
-    *   Рендерит шаблон с помощью `chevron.render` и возвращает результат.
-
-4.  **Сброс подсказки (`reset_prompt`)**:
+    *   Устанавливает значения по умолчанию для атрибутов, таких как `current_messages`, `environment`, `_actions_buffer`, `_accessible_agents`, и `_displayed_communications_buffer`.
+    *   Создаёт экземпляры `EpisodicMemory` и `SemanticMemory`, если они не были переданы.
+    *   Создаёт словарь `_configuration` для хранения различных параметров агента.
+    *   Устанавливает путь к файлу шаблона `mustache` для генерации системного сообщения.
+    *   Переименовывает агента, если заданы параметры `new_agent_name` или `auto_rename`.
+    *   Регистрирует агента в глобальном списке `all_agents`.
+    *   Сбрасывает системное сообщение агента с помощью `reset_prompt`.
+    *   Добавляет агента в текущую симуляцию, если таковая имеется.
+3.  **Генерация промпта (`generate_agent_prompt`)**:
+    *   Читает шаблон промпта из файла `mustache`.
+    *   Копирует текущую конфигурацию агента в `template_variables`.
+    *   Создает строки `actions_definitions_prompt` и `actions_constraints_prompt` на основе ментальных способностей.
+    *   Добавляет эти строки в `template_variables`.
+    *   Добавляет переменные для RAI, если это необходимо.
+    *   Рендерит шаблон с помощью `chevron` и возвращает получившийся промпт.
+4.  **Сброс промпта (`reset_prompt`)**:
     *   Генерирует системное сообщение с помощью `generate_agent_prompt`.
-    *   Сбрасывает `current_messages`, устанавливая системное сообщение в качестве первого сообщения.
-    *   Добавляет в `current_messages` последние сообщения из эпизодической памяти.
-
-5.  **Определение конфигурации (`define`)**:
-    *   Принимает `key`, `value` и `group` как аргументы.
-    *   Удаляет отступы из значения, если оно является строкой.
-    *   Добавляет значение в словарь конфигурации в указанный `group` (если есть), или в корень, если `group` не указан.
-    *   Сбрасывает подсказку после изменения конфигурации.
-
-6.  **Действие (`act`)**:
-    *   Принимает `until_done`, `n`, `return_actions`, `max_content_length`.
-    *   Вызывает вспомогательную функцию `aux_act_once` (с возможностью повтора), либо `n` раз, либо до тех пор, пока действие не будет типа `DONE`.
-        *   Внутри `aux_act_once`
-        *    Вызывает `think` с сообщением "I will now act a bit, and then issue DONE."
-        *    Вызывает `_produce_message`, получает `role` и `content`.
-        *    Сохраняет сообщение в эпизодическую память.
-        *    Извлекает когнитивное состояние и действие из `content`.
-        *    Добавляет действие в буфер действий.
-        *    Обновляет когнитивное состояние агента с помощью `_update_cognitive_state`.
-        *   Отображает коммуникацию.
-        *   Вызывает `process_action` для каждой из ментальных способностей.
-    *   Возвращает список действий, если `return_actions` имеет значение `True`.
-
-7.  **Слушание (`listen`)**:
-    *   Принимает речь (`speech`) и источник (`source`).
-    *   Вызывает `_observe` с типом стимула `CONVERSATION`.
-
-8.  **Социализация (`socialize`)**:
-    *   Принимает социальное описание (`social_description`) и источник (`source`).
-    *   Вызывает `_observe` с типом стимула `SOCIAL`.
-
-9.  **Зрение (`see`)**:
-    *   Принимает визуальное описание (`visual_description`) и источник (`source`).
-    *   Вызывает `_observe` с типом стимула `VISUAL`.
-
-10. **Мышление (`think`)**:
-     *   Принимает мысль (`thought`).
-     *   Вызывает `_observe` с типом стимула `THOUGHT`.
-
-11. **Интернализация цели (`internalize_goal`)**:
-     *    Принимает цель (`goal`).
-     *    Вызывает `_observe` с типом стимула `INTERNAL_GOAL_FORMULATION`.
-
-12. **Наблюдение (`_observe`)**:
-    *   Принимает стимул.
-    *   Добавляет стимул в эпизодическую память.
+    *   Устанавливает `current_messages` в список, содержащий системное сообщение и последние сообщения из эпизодической памяти.
+5.  **Определение значения (`define`)**:
+    *   Принимает `key`, `value`, и `group` в качестве аргументов.
+    *   Деденит значение, если оно является строкой.
+    *   Добавляет значение к конфигурации агента, либо на верхний уровень, либо в указанную группу.
+    *   Сбрасывает промпт после изменения конфигурации.
+6. **Определение нескольких значений (`define_several`)**:
+   * Принимает `group` и `records` в качестве аргументов.
+   * Проходит по всем записям и добавляет их в указанную группу через `define`
+7.  **Определение отношений (`define_relationships`)**:
+    *   Принимает `relationships` (список или словарь) и `replace` (логическое значение) в качестве аргументов.
+    *   Либо заменяет текущие отношения, либо добавляет новые.
+    *   Использует `replace=True` для замены и `replace=False` для добавления.
+8.  **Очистка отношений (`clear_relationships`)**:
+    *   Очищает список отношений агента.
+9.  **Установление связи (`related_to`)**:
+    *   Принимает другого агента, описание отношения и симметричное описание отношения в качестве аргументов.
+    *   Определяет отношение между агентами и, если требуется, устанавливает симметричное отношение.
+10. **Добавление ментальных способностей (`add_mental_faculties`, `add_mental_faculty`)**:
+    *   Принимает список или отдельную ментальную способность в качестве аргумента.
+    *   Добавляет ментальную способность к агенту, проверяя, не присутствует ли она уже.
+11. **Действие (`act`)**:
+    *   Принимает `until_done`, `n`, и `return_actions` в качестве аргументов.
+    *   Использует `_produce_message` для создания следующего сообщения.
+    *   Обновляет эпизодическую память и когнитивное состояние агента.
+    *   Обрабатывает побочные эффекты действия с помощью ментальных способностей.
+    *   Действует либо пока не будет выдано действие "DONE", либо фиксированное количество раз.
+12. **Слушание (`listen`)**:
+    *   Принимает `speech` и `source` в качестве аргументов.
+    *   Вызывает `_observe` с типом стимула "CONVERSATION".
+13. **Социализация (`socialize`)**:
+    *   Принимает `social_description` и `source` в качестве аргументов.
+    *   Вызывает `_observe` с типом стимула "SOCIAL".
+14. **Зрение (`see`)**:
+    *   Принимает `visual_description` и `source` в качестве аргументов.
+    *   Вызывает `_observe` с типом стимула "VISUAL".
+15. **Мышление (`think`)**:
+    *   Принимает `thought` в качестве аргумента.
+    *   Вызывает `_observe` с типом стимула "THOUGHT".
+16. **Внутреннее усвоение цели (`internalize_goal`)**:
+    *   Принимает `goal` в качестве аргумента.
+    *   Вызывает `_observe` с типом стимула "INTERNAL_GOAL_FORMULATION".
+17. **Наблюдение (`_observe`)**:
+    *   Принимает `stimulus` в качестве аргумента.
+    *   Сохраняет стимул в эпизодической памяти.
     *   Отображает коммуникацию.
-
-13. **Комбинации `listen`, `see` и `think` с `act`**:
-    *   Методы `listen_and_act`, `see_and_act` и `think_and_act` объединяют соответствующие методы наблюдения (`listen`, `see`, `think`) с методом действия (`act`).
-
-14. **Чтение документов (`read_documents_from_folder`, `read_documents_from_web`)**:
-    *   Загружает документы из указанных папок или веб-страниц в семантическую память.
-
-15. **Перемещение (`move_to`)**:
+18. **Действие после прослушивания, видения, мышления (`listen_and_act`, `see_and_act`, `think_and_act`)**:
+    *   Комбинируют соответствующие методы наблюдения и `act`.
+19. **Чтение документов (`read_documents_from_folder`, `read_documents_from_web`)**:
+    *   Загружают документы из папки или веб-сайтов в семантическую память.
+20. **Перемещение (`move_to`)**:
+    *   Принимает `location` и `context` в качестве аргументов.
     *   Обновляет текущее местоположение и контекст агента.
+21. **Смена контекста (`change_context`)**:
+    *   Принимает `context` в качестве аргумента.
+    *   Обновляет контекст агента.
+22. **Установление доступности агента (`make_agent_accessible`, `make_agent_inaccessible`, `make_all_agents_inaccessible`)**:
+    *   Управляют списком агентов, с которыми данный агент может взаимодействовать.
+23. **Создание сообщения (`_produce_message`)**:
+    *   Получает последние сообщения из памяти и отправляет их в API OpenAI для генерации следующего сообщения.
+24. **Обновление когнитивного состояния (`_update_cognitive_state`)**:
+    *   Обновляет различные аспекты когнитивного состояния агента, такие как цели, контекст, внимание и эмоции.
+25. **Отображение коммуникации (`_display_communication`, `_push_and_display_latest_communication`, `pop_and_display_latest_communications`, `clear_communications_buffer`)**:
+    *   Управляет отображением коммуникаций агента.
+26. **Извлечение последних действий (`pop_latest_actions`, `pop_actions_and_get_contents_for`)**:
+    *   Извлекает и возвращает действия, произведенные агентом.
+27. **Форматирование (`__repr__`, `minibio`, `pp_current_interactions`, `pretty_current_interactions`, `_pretty_stimuli`, `_pretty_action`, `_pretty_timestamp`, `iso_datetime`)**:
+    *   Форматируют вывод для лучшей читаемости.
+28. **Сохранение и загрузка (`save_spec`, `load_spec`)**:
+    *   Сохраняют и загружают спецификации агента в формате JSON.
+29. **Кодирование и декодирование полного состояния (`encode_complete_state`, `decode_complete_state`)**:
+    *   Управляет сериализацией и десериализацией полного состояния агента.
+30. **Создание нового агента из текущего (`create_new_agent_from_current_spec`)**:
+    * Создаёт нового агента на основе текущего.
+31. **Управление агентами (`add_agent`, `has_agent`, `set_simulation_for_free_agents`, `get_agent_by_name`, `clear_agents`)**:
+    *   Управляет глобальным списком агентов.
 
-16. **Изменение контекста (`change_context`)**:
-    *   Изменяет контекст агента и вызывает `_update_cognitive_state`.
-
-17. **Управление доступностью агентов (`make_agent_accessible`, `make_agent_inaccessible`, `make_all_agents_inaccessible`)**:
-    *   Позволяют делать агентов доступными или недоступными для взаимодействия.
-
-18. **Производство сообщения (`_produce_message`)**:
-    *   Сбрасывает подсказку.
-    *   Преобразует `current_messages` в формат для OpenAI API.
-    *   Отправляет сообщение в OpenAI API.
-    *   Возвращает роль и контент из ответа.
-
-19. **Обновление когнитивного состояния (`_update_cognitive_state`)**:
-    *   Обновляет когнитивное состояние агента, включая цели, контекст, внимание и эмоции.
-    *   Сбрасывает подсказку.
-
-20. **Отображение коммуникации (`_display_communication`)**:
-    *   Форматирует стимулы или действия с помощью `_pretty_stimuli` или `_pretty_action`.
-    *   Сохраняет и отображает коммуникацию.
-
-21. **Получение действий (`pop_latest_actions`)**:
-    *   Возвращает и очищает буфер последних действий.
-
-22. **Получение содержимого действий (`pop_actions_and_get_contents_for`)**:
-     *    Получает действия, отфильтровывает их по типу и возвращает содержимое.
-
-23. **Визуализация (мини-биография, текущих взаимодействий, и т.д.)**:
-    *   Форматирует текстовое представление агента и его действий.
-
-24. **Сохранение и загрузка состояния (`save_spec`, `load_spec`, `encode_complete_state`, `decode_complete_state`)**:
-     *   Позволяют сохранять и загружать состояние агента, включая конфигурацию, память и т.д.
-
-25. **Управление списком агентов (`add_agent`, `has_agent`, `set_simulation_for_free_agents`, `get_agent_by_name`, `clear_agents`)**:
-     *   Позволяют управлять глобальным списком агентов.
-
-### `TinyMentalFaculty` Class
+### Класс `TinyMentalFaculty`
 1.  **Инициализация (`__init__`)**:
-    *   Принимает `name` и `requires_faculties`.
+    *   Принимает `name` и `requires_faculties` в качестве аргументов.
+    *   Устанавливает атрибуты ментальной способности, включая ее имя и список требуемых способностей.
+2.  **Строковое представление (`__str__`)**:
+    *   Возвращает строковое представление объекта.
+3.  **Сравнение на равенство (`__eq__`)**:
+    *   Сравнивает ментальные способности на равенство по их имени.
+4.  **Обработка действий (`process_action`)**:
+    *   Абстрактный метод, который должен быть реализован в подклассах.
+5.  **Определение действий (`actions_definitions_prompt`)**:
+    *   Абстрактный метод, который должен быть реализован в подклассах.
+6.  **Ограничение действий (`actions_constraints_prompt`)**:
+    *   Абстрактный метод, который должен быть реализован в подклассах.
 
+### Класс `RecallFaculty`
+1.  **Инициализация (`__init__`)**:
+    *   Вызывает конструктор базового класса с именем "Memory Recall".
 2.  **Обработка действия (`process_action`)**:
-    *   Метод, который должен быть переопределен в подклассах.
+    *   Проверяет, является ли действие "RECALL" и не является ли содержимое None.
+    *   Если условие соблюдается, ищет в семантической памяти соответствующие воспоминания.
+    *   Если соответствующие воспоминания найдены, создаёт мысль, в которой уведомляет об этом.
+    *   Если ничего не найдено, создаёт мысль о том, что ничего не было найдено.
+3.  **Определение действий (`actions_definitions_prompt`)**:
+    *   Возвращает строку, определяющую действие "RECALL".
+4.  **Ограничение действий (`actions_constraints_prompt`)**:
+    *   Возвращает строку с ограничениями на действие "RECALL".
 
-3. **Определения и ограничения действий (`actions_definitions_prompt`, `actions_constraints_prompt`)**:
-    *   Методы, которые должны быть переопределены в подклассах.
+### Класс `FilesAndWebGroundingFaculty`
+1.  **Инициализация (`__init__`)**:
+    *   Вызывает конструктор базового класса с именем "Local Grounding".
+2.  **Обработка действия (`process_action`)**:
+    *   Проверяет, является ли действие "CONSULT" или "LIST_DOCUMENTS" и не является ли содержимое None.
+    *   Если это действие "CONSULT", то извлекает из семантической памяти содержимое документа по имени.
+    *   Если это действие "LIST_DOCUMENTS", то извлекает список названий доступных документов.
+    *   Если документ найден, то создаёт мысль об этом и его содержании.
+    *   Если ничего не найдено, создаёт мысль о том, что ничего не было найдено.
+3.  **Определение действий (`actions_definitions_prompt`)**:
+    *   Возвращает строку, определяющую действия "LIST\_DOCUMENTS" и "CONSULT".
+4.  **Ограничение действий (`actions_constraints_prompt`)**:
+    *   Возвращает строку с ограничениями на действия "LIST\_DOCUMENTS" и "CONSULT".
 
-### `RecallFaculty` Class
-1. **Инициализация (`__init__`)**:
-     *   Вызывает конструктор родительского класса `TinyMentalFaculty` с именем "Memory Recall".
+### Класс `TinyToolUse`
+1.  **Инициализация (`__init__`)**:
+     *   Вызывает конструктор базового класса с именем "Tool Use".
+     *   Сохраняет список инструментов.
 2. **Обработка действия (`process_action`)**:
-     *   Если действие типа `RECALL` и содержит содержимое:
-        *  Извлекает информацию из семантической памяти с помощью `retrieve_relevant`.
-        *  Вызывает `agent.think` с найденной информацией.
-     *   В противном случае возвращает `False`.
+    *   Проходит по всем инструментам и вызывает их метод `process_action`.
+3.  **Определение действий (`actions_definitions_prompt`)**:
+    *   Проходит по всем инструментам и вызывает их метод `actions_definitions_prompt`.
+4.  **Ограничение действий (`actions_constraints_prompt`)**:
+    *   Проходит по всем инструментам и вызывает их метод `actions_constraints_prompt`.
 
-3. **Определения и ограничения действий (`actions_definitions_prompt`, `actions_constraints_prompt`)**:
-    *   Возвращает текстовые описания действий и ограничений для `RECALL`.
-
-### `FilesAndWebGroundingFaculty` Class
-1.  **Инициализация (`__init__`)**:
-     *   Вызывает конструктор родительского класса `TinyMentalFaculty` с именем "Local Grounding".
-2.  **Обработка действия (`process_action`)**:
-    *   Если действие типа `CONSULT` и содержит содержимое, пытается получить содержимое документа по его имени.
-    *   Если действие типа `LIST_DOCUMENTS` и содержит содержимое, выводит список доступных документов.
-    *   В противном случае возвращает `False`.
-3.  **Определения и ограничения действий (`actions_definitions_prompt`, `actions_constraints_prompt`)**:
-    *   Возвращает текстовые описания действий и ограничений для `CONSULT` и `LIST_DOCUMENTS`.
-
-### `TinyToolUse` Class
-1.  **Инициализация (`__init__`)**:
-    *   Принимает список инструментов `tools`.
-    *    Вызывает конструктор родительского класса `TinyMentalFaculty` с именем "Tool Use".
-2.  **Обработка действия (`process_action`)**:
-    *   Итерирует по списку инструментов и вызывает их метод `process_action`.
-3.  **Определения и ограничения действий (`actions_definitions_prompt`, `actions_constraints_prompt`)**:
-    *   Собирает и возвращает описания действий и ограничений из всех инструментов.
-
-### `TinyMemory` Class
+### Класс `TinyMemory`
 1.  **Хранение (`store`)**:
-    *   Метод для сохранения значения в памяти, который должен быть переопределен в подклассах.
+    *   Абстрактный метод, который должен быть реализован в подклассах.
+2.  **Извлечение (`retrieve`)**:
+    *   Абстрактный метод, который должен быть реализован в подклассах.
+3.  **Извлечение последних (`retrieve_recent`)**:
+    *   Абстрактный метод, который должен быть реализован в подклассах.
+4.  **Извлечение всех (`retrieve_all`)**:
+    *   Абстрактный метод, который должен быть реализован в подклассах.
+5.   **Извлечение релевантных (`retrieve_relevant`)**:
+     * Абстрактный метод, который должен быть реализован в подклассах.
 
-2.  **Извлечение (`retrieve`, `retrieve_recent`, `retrieve_all`, `retrieve_relevant`)**:
-    *   Методы для извлечения значений из памяти, которые должны быть переопределены в подклассах.
-
-### `EpisodicMemory` Class
+### Класс `EpisodicMemory`
 1.  **Инициализация (`__init__`)**:
-    *   Принимает длину фиксированного префикса `fixed_prefix_length` и длину просмотра `lookback_length`.
-    *   Инициализирует пустой список `memory`.
+    *   Принимает `fixed_prefix_length` и `lookback_length` в качестве аргументов.
+    *   Инициализирует атрибуты памяти.
 2.  **Хранение (`store`)**:
-    *   Добавляет значение в конец списка `memory`.
-3.  **Извлечение (`retrieve`, `retrieve_recent`, `retrieve_all`, `retrieve_first`, `retrieve_last`)**:
-    *   Реализует методы для извлечения значений из памяти по разным критериям.
+    *   Добавляет значение в память.
+3.  **Подсчет (`count`)**:
+    *   Возвращает количество значений в памяти.
+4.  **Извлечение (`retrieve`)**:
+    *   Возвращает запрошенное количество первых и/или последних значений из памяти, включая информацию о пропущенных сообщениях.
+5.  **Извлечение последних (`retrieve_recent`)**:
+    *   Возвращает последние значения из памяти, используя фиксированную длину префикса и длину просмотра назад.
+6. **Извлечение всех (`retrieve_all`)**:
+    * Возвращает копию всех значений из памяти.
+7.  **Извлечение релевантных (`retrieve_relevant`)**:
+    *   Пока не реализовано, выводит ошибку.
+8. **Извлечение первых (`retrieve_first`)**:
+    * Возвращает первые N элементов из памяти.
+9. **Извлечение последних (`retrieve_last`)**:
+    * Возвращает последние N элементов из памяти.
 
-### `SemanticMemory` Class
+### Класс `SemanticMemory`
 1.  **Инициализация (`__init__`)**:
-    *   Принимает список путей к документам `documents_paths` и веб-адресов `web_urls`.
-    *   Инициализирует пустой `index`, списки документов, и словари соответствия имен документам.
-2.  **Извлечение релевантной информации (`retrieve_relevant`)**:
-    *   Извлекает релевантную информацию из документов на основе запроса.
-3. **Извлечение содержимого документа (`retrieve_document_content_by_name`)**:
-    *   Извлекает содержимое документа по имени.
-4. **Получение списка имен документов (`list_documents_names`)**:
-     *   Возвращает список имен документов в памяти.
-5.  **Добавление документов (`add_documents_paths`, `add_documents_path`, `add_web_urls`, `add_web_url`, `_add_documents`)**:
-    *   Добавляет документы из указанных папок или веб-страниц в семантическую память.
-    *   Индексирует документы для семантического поиска.
+    *   Принимает `documents_paths` и `web_urls` в качестве аргументов.
+    *   Инициализирует атрибуты семантической памяти, включая пути к документам и URL-адреса.
+    *   Загружает документы и веб-страницы в память.
+2.  **Извлечение релевантных (`retrieve_relevant`)**:
+    *   Извлекает из памяти релевантные документы на основе целевого запроса.
+3.  **Извлечение содержимого документа по имени (`retrieve_document_content_by_name`)**:
+    *   Извлекает содержимое документа по его имени.
+4.  **Перечисление названий документов (`list_documents_names`)**:
+    *   Возвращает список имен документов, хранящихся в памяти.
+5.  **Добавление путей к документам (`add_documents_paths`, `add_documents_path`)**:
+    *   Добавляют пути к файлам и загружают их в семантическую память.
+6.  **Добавление веб-адресов (`add_web_urls`, `add_web_url`)**:
+    *   Добавляют веб-адреса и загружают их содержимое в семантическую память.
+7. **Добавление документов (`_add_documents`)**:
+     * Добавляет документы в память и создаёт индекс для семантического поиска.
+8.  **Пост-инициализация после десериализации (`_post_deserialization_init`)**:
+    *   Загружает документы и веб-страницы после десериализации.
 
 ## <mermaid>
-
 ```mermaid
-classDiagram
-    class TinyPerson {
-        -name: str
-        -episodic_memory: EpisodicMemory
-        -semantic_memory: SemanticMemory
-        -_mental_faculties: list
-        -_configuration: dict
-        -current_messages: list
-        -_actions_buffer: list
-        -_accessible_agents: list
-        -_displayed_communications_buffer: list
-        -_prompt_template_path: str
-        -_init_system_message: str
-        +__init__(name: str, episodic_memory: EpisodicMemory, semantic_memory: SemanticMemory, mental_faculties: list)
-        +_post_init()
-        +generate_agent_prompt(): str
-        +reset_prompt()
-        +get(key: str): Any
-        +define(key: str, value: Any, group: str): None
-        +define_relationships(relationships: list, replace: bool): None
-        +clear_relationships(): TinyPerson
-        +related_to(other_agent: TinyPerson, description: str, symmetric_description: str): TinyPerson
-        +add_mental_faculties(mental_faculties: list): TinyPerson
-        +add_mental_faculty(faculty: TinyMentalFaculty): TinyPerson
-        +act(until_done: bool, n: int, return_actions: bool, max_content_length: int): list
-        +listen(speech: str, source: AgentOrWorld, max_content_length: int): TinyPerson
-        +socialize(social_description: str, source: AgentOrWorld, max_content_length: int): TinyPerson
-        +see(visual_description: str, source: AgentOrWorld, max_content_length: int): TinyPerson
-        +think(thought: str, max_content_length: int): TinyPerson
-        +internalize_goal(goal: str, max_content_length: int): TinyPerson
-        +_observe(stimulus: dict, max_content_length: int): TinyPerson
-        +listen_and_act(speech: str, return_actions: bool, max_content_length: int): list
-        +see_and_act(visual_description: str, return_actions: bool, max_content_length: int): list
-        +think_and_act(thought: str, return_actions: bool, max_content_length: int): list
-        +read_documents_from_folder(documents_path: str): None
-        +read_documents_from_web(web_urls: list): None
-        +move_to(location: str, context: list): None
-        +change_context(context: list): None
-        +make_agent_accessible(agent: TinyPerson, relation_description: str): None
-        +make_agent_inaccessible(agent: TinyPerson): None
-        +make_all_agents_inaccessible(): None
-        +_produce_message(): tuple
-        +_update_cognitive_state(goals: list, context: list, attention: str, emotions: str): None
-        +_display_communication(role: str, content: dict, kind: str, simplified: bool, max_content_length: int): None
-        +_push_and_display_latest_communication(rendering: str): None
-        +pop_and_display_latest_communications(): list
-        +clear_communications_buffer(): None
-        +pop_latest_actions(): list
-        +pop_actions_and_get_contents_for(action_type: str, only_last_action: bool): list
-        +minibio(): str
-        +pp_current_interactions(simplified: bool, skip_system: bool, max_content_length: int): None
-        +pretty_current_interactions(simplified: bool, skip_system: bool, max_content_length: int, first_n: int, last_n: int, include_omission_info: bool): str
-        +_pretty_stimuli(role: str, content: dict, simplified: bool, max_content_length: int): str
-        +_pretty_action(role: str, content: dict, simplified: bool, max_content_length: int): str
-        +_pretty_timestamp(role: str, timestamp: str): str
-        +iso_datetime(): str
-        +save_spec(path: str, include_mental_faculties: bool, include_memory: bool): None
-        +load_spec(path: str, suppress_mental_faculties: bool, suppress_memory: bool, auto_rename_agent: bool, new_agent_name: str): TinyPerson
-        +encode_complete_state(): dict
-        +decode_complete_state(state: dict): TinyPerson
-        +create_new_agent_from_current_spec(new_name: str): TinyPerson
-        +add_agent(agent: TinyPerson): None
-        +has_agent(agent_name: str): bool
-        +set_simulation_for_free_agents(simulation: Any): None
-        +get_agent_by_name(name: str): TinyPerson
-        +clear_agents(): None
-    }
-    class TinyMentalFaculty {
-         -name: str
-         -requires_faculties: list
-         +__init__(name: str, requires_faculties: list)
-         +process_action(agent: TinyPerson, action: dict): bool
-         +actions_definitions_prompt(): str
-         +actions_constraints_prompt(): str
-    }
-    class RecallFaculty {
-       +__init__()
-       +process_action(agent: TinyPerson, action: dict): bool
-       +actions_definitions_prompt(): str
-       +actions_constraints_prompt(): str
-    }
-    class FilesAndWebGroundingFaculty {
-        +__init__()
-        +process_action(agent: TinyPerson, action: dict): bool
-        +actions_definitions_prompt(): str
-        +actions_constraints_prompt(): str
-    }
-   class TinyToolUse{
-        -tools: list
-         +__init__(tools: list)
-        +process_action(agent: TinyPerson, action: dict): bool
-        +actions_definitions_prompt(): str
-        +actions_constraints_prompt(): str
-    }
-    class TinyMemory {
-        +store(value: Any): None
-        +retrieve(first_n: int, last_n: int, include_omission_info:bool): list
-        +retrieve_recent(): list
-        +retrieve_all(): list
-        +retrieve_relevant(relevance_target:str, top_k: int): list
-    }
-    class EpisodicMemory {
-        -fixed_prefix_length: int
-        -lookback_length: int
-        -memory: list
-        +__init__(fixed_prefix_length: int, lookback_length: int)
-        +store(value: Any): None
-        +count(): int
-        +retrieve(first_n: int, last_n: int, include_omission_info:bool): list
-        +retrieve_recent(include_omission_info:bool): list
-        +retrieve_all(): list
-        +retrieve_relevant(relevance_target: str): list
-        +retrieve_first(n: int, include_omission_info:bool): list
-        +retrieve_last(n: int, include_omission_info:bool): list
-    }
-    class SemanticMemory {
-        -index: Any
-        -documents_paths: list
-        -documents_web_urls: list
-        -documents: list
-         -filename_to_document: dict
-        +__init__(documents_paths: list, web_urls: list)
-        +retrieve_relevant(relevance_target:str, top_k: int): list
-        +retrieve_document_content_by_name(document_name: str): str
-        +list_documents_names(): list
-        +add_documents_paths(documents_paths: list): None
-        +add_documents_path(documents_path: str): None
-        +add_web_urls(web_urls: list): None
-        +add_web_url(web_url: str): None
-        +_add_documents(new_documents: list, doc_to_name_func: Any): list
-    }
-    TinyPerson --|> TinyMentalFaculty: has mental faculties
-     TinyPerson --|> EpisodicMemory : has episodic memory
-     TinyPerson --|> SemanticMemory : has semantic memory
-     RecallFaculty --|> TinyMentalFaculty: is a
-    FilesAndWebGroundingFaculty --|> TinyMentalFaculty: is a
-    TinyToolUse --|> TinyMentalFaculty: is a
-    EpisodicMemory --|> TinyMemory: is a
-    SemanticMemory --|> TinyMemory: is a
+flowchart TD
+    subgraph TinyPerson
+        A[<code>__init__</code><br>Инициализация агента] --> B[<code>_post_init</code><br>Пост-инициализация];
+        B --> C[Инициализация атрибутов];
+        C --> D{Создание памяти<br>и ментальных способностей?};
+        D -- Да --> E[Создание<br>памяти и способностей];
+        D -- Нет --> F[Установка<br>значений по умолчанию];
+        F --> G[Регистрация агента];
+        G --> H[Сброс промпта];
+        H --> I[Обновление<br>состояния];
+    
+        I --> J[<code>generate_agent_prompt</code><br>Генерация промпта];
+        J --> K[<code>reset_prompt</code><br>Сброс промпта];
+        K --> L[<code>define</code><br>Определение значения];
+        L --> M[<code>define_relationships</code><br>Определение отношений];
+        M --> N[<code>related_to</code><br>Установление связи];
+        N --> O[<code>add_mental_faculties</code><br>Добавление способностей];
+        O --> P[<code>act</code><br>Действие];
+        P --> Q[<code>listen</code><br>Слушание];
+         Q --> R[<code>socialize</code><br>Социализация];
+        R --> S[<code>see</code><br>Зрение];
+        S --> T[<code>think</code><br>Мышление];
+        T --> U[<code>internalize_goal</code><br>Усвоение цели];
+        U --> V[<code>_observe</code><br>Наблюдение];
+        V --> W[<code>listen_and_act</code><br>Слушание и действие];
+        W --> X[<code>see_and_act</code><br>Зрение и действие];
+        X --> Y[<code>think_and_act</code><br>Мышление и действие];
+        Y --> Z[<code>read_documents_from_folder</code><br>Чтение документов];
+        Z --> AA[<code>read_documents_from_web</code><br>Чтение веб-документов];
+        AA --> AB[<code>move_to</code><br>Перемещение];
+        AB --> AC[<code>change_context</code><br>Смена контекста];
+        AC --> AD[<code>make_agent_accessible</code><br>Установление доступности агента];
+        AD --> AE[<code>_produce_message</code><br>Создание сообщения];
+        AE --> AF[<code>_update_cognitive_state</code><br>Обновление когнитивного состояния];
+        AF --> AG[<code>_display_communication</code><br>Отображение коммуникации];
+        AG --> AH[<code>pop_latest_actions</code><br>Извлечение последних действий];
+        AH --> AI[<code>save_spec</code><br>Сохранение];
+        AI --> AJ[<code>load_spec</code><br>Загрузка];
+        AJ --> AK[<code>encode_complete_state</code><br>Кодирование состояния];
+         AK --> AL[<code>decode_complete_state</code><br>Декодирование состояния];
+         AL --> AM[<code>create_new_agent_from_current_spec</code><br>Создание нового агента];
+         AM --> AN[<code>add_agent</code><br>Добавление агента];
+        AN --> AO[<code>get_agent_by_name</code><br>Получение агента по имени];
+    end
+    
+        subgraph TinyMentalFaculty
+        B1[<code>__init__</code><br>Инициализация способности] --> C1[Установка атрибутов];
+        C1 --> D1[<code>process_action</code><br>Обработка действий];
+        D1 --> E1[<code>actions_definitions_prompt</code><br>Определение действий];
+        E1 --> F1[<code>actions_constraints_prompt</code><br>Ограничение действий];
+    end
+
+        subgraph RecallFaculty
+        B2[<code>__init__</code><br>Инициализация способности "Recall"] --> C2[Вызов конструктора<br>базового класса];
+        C2 --> D2[<code>process_action</code><br>Обработка действия "RECALL"] ;
+        D2 --> E2[<code>actions_definitions_prompt</code><br>Определение действий] ;
+        E2 --> F2[<code>actions_constraints_prompt</code><br>Ограничение действий] ;
+    end
+
+        subgraph FilesAndWebGroundingFaculty
+       B3[<code>__init__</code><br>Инициализация способности "Grounding"] --> C3[Вызов конструктора<br>базового класса];
+        C3 --> D3[<code>process_action</code><br>Обработка действий "CONSULT" или "LIST_DOCUMENTS"] ;
+        D3 --> E3[<code>actions_definitions_prompt</code><br>Определение действий] ;
+        E3 --> F3[<code>actions_constraints_prompt</code><br>Ограничение действий] ;
+    end
+     subgraph TinyToolUse
+        B4[<code>__init__</code><br>Инициализация инструмента] --> C4[Вызов конструктора<br>базового класса];
+        C4 --> D4[<code>process_action</code><br>Обработка действий инструментом] ;
+        D4 --> E4[<code>actions_definitions_prompt</code><br>Определение действий] ;
+        E4 --> F4[<code>actions_constraints_prompt</code><br>Ограничение действий] ;
+     end
+       subgraph TinyMemory
+         B5[<code>store</code><br>Хранение] --> C5[<code>retrieve</code><br>Извлечение];
+         C5 --> D5[<code>retrieve_recent</code><br>Извлечение последних];
+         D5 --> E5[<code>retrieve_all</code><br>Извлечение всех];
+         E5 --> F5[<code>retrieve_relevant</code><br>Извлечение релевантных];
+       end
+    
+       subgraph EpisodicMemory
+          B6[<code>__init__</code><br>Инициализация эпизодической памяти] --> C6[Установка параметров памяти];
+          C6 --> D6[<code>store</code><br>Хранение];
+          D6 --> E6[<code>retrieve</code><br>Извлечение];
+         E6 --> F6[<code>retrieve_recent</code><br>Извлечение последних];
+        F6 --> G6[<code>retrieve_all</code><br>Извлечение всех];
+        G6 --> H6[<code>retrieve_relevant</code><br>Извлечение релевантных];
+        H6 --> I6[<code>retrieve_first</code><br>Извлечение первых];
+        I6 --> J6[<code>retrieve_last</code><br>Извлечение последних];
+     end
+        subgraph SemanticMemory
+           B7[<code>__init__</code><br>Инициализация семантической памяти] --> C7[Установка атрибутов памяти];
+           C7 --> D7[Загрузка документов и веб-страниц];
+           D7 --> E7[<code>retrieve_relevant</code><br>Извлечение релевантных документов];
+           E7 --> F7[<code>retrieve_document_content_by_name</code><br>Извлечение документа по имени];
+           F7 --> G7[<code>list_documents_names</code><br>Список названий документов];
+           G7 --> H7[<code>add_documents_paths</code><br>Добавление путей к документам];
+           H7 --> I7[<code>add_web_urls</code><br>Добавление веб-адресов];
+           I7 --> J7[<code>_add_documents</code><br>Добавление документов];
+           J7 --> K7[<code>_post_deserialization_init</code><br>Пост-инициализация после десериализации];
+
+    end
+
+
+     style TinyPerson fill:#f9f,stroke:#333,stroke-width:2px
+     style TinyMentalFaculty fill:#ccf,stroke:#333,stroke-width:2px
+     style RecallFaculty fill:#aaf,stroke:#333,stroke-width:2px
+     style FilesAndWebGroundingFaculty fill:#afa,stroke:#333,stroke-width:2px
+     style TinyToolUse fill:#faa,stroke:#333,stroke-width:2px
+    style TinyMemory fill:#ddd,stroke:#333,stroke-width:2px
+     style EpisodicMemory fill:#ada,stroke:#333,stroke-width:2px
+    style SemanticMemory fill:#dda,stroke:#333,stroke-width:2px
 ```
 
-**Анализ зависимостей:**
-
-*   **`TinyPerson`** зависит от `EpisodicMemory` и `SemanticMemory` для управления памятью, а также от `TinyMentalFaculty` для управления ментальными способностями. Кроме того, он импортирует `JsonSerializableRegistry` для сериализации и десериализации.
-*   **`TinyMentalFaculty`** является абстрактным базовым классом, от которого наследуются `RecallFaculty`, `FilesAndWebGroundingFaculty` и `TinyToolUse`. Он не зависит от других классов, но является частью иерархии классов ментальных способностей.
-*   **`RecallFaculty`** расширяет `TinyMentalFaculty` и предоставляет функциональность для вызова информации из памяти.
-*   **`FilesAndWebGroundingFaculty`** расширяет `TinyMentalFaculty` и предоставляет функциональность для консультации документов.
-*   **`TinyToolUse`** расширяет `TinyMentalFaculty` и предоставляет функциональность для использования инструментов.
-*  **`TinyMemory`**  является абстрактным базовым классом для `EpisodicMemory` и `SemanticMemory`.
-*   **`EpisodicMemory`** расширяет `TinyMemory` и реализует функциональность для управления эпизодической памятью.
-*   **`SemanticMemory`** расширяет `TinyMemory` и реализует функциональность для управления семантической памятью, включая возможность загрузки и поиска документов.
+### Зависимости
+1.  **`os`**: Модуль используется для работы с путями к файлам (например, для получения пути к файлу шаблона `mustache` и доступа к файловой системе).
+2.  **`csv`**: Не используется в данном коде, но импортируется. Возможно, планируется использовать в будущем для работы с CSV-файлами.
+3.  **`json`**: Модуль используется для сериализации и десериализации данных в формате JSON, например, при сохранении и загрузке состояния агента.
+4. **`ast`**: Не используется в данном коде, но импортируется. Возможно, планируется использовать для абстрактного синтаксического дерева.
+5.  **`textwrap`**: Модуль используется для работы с текстом, например, для удаления лишних отступов (`dedent`) и форматирования текста.
+6.  **`datetime`**: Модуль используется для работы с датой и временем, например, для получения текущей даты и времени.
+7.  **`chevron`**: Модуль используется для рендеринга шаблонов `mustache`, используемых для создания системных сообщений агентов.
+8.  **`logging`**: Модуль используется для ведения журнала событий, таких как ошибки и отладочные сообщения.
+9.  **`tinytroupe.utils`**: Содержит утилиты, общие для всего проекта, например, `read_config_file`, `post_init`, `name_or_empty`, `break_text_at_length`, `repeat_on_error`, `JsonSerializableRegistry`, `fresh_id`, `add_rai_template_variables_if_enabled`, `sanitize_raw_string`.
+10. **`tinytroupe.control`**: Содержит функции для управления симуляцией и транзакциями, например, `transactional`, `current_simulation`.
+11. **`rich`**: Модуль используется для форматирования вывода в консоль, например, для раскрашивания текста.
+12. **`copy`**: Модуль используется для создания глубоких копий объектов, например, при сериализации состояния агента.
+13. **`typing`**: Модуль используется для аннотации типов, например, для указания типов аргументов и возвращаемых значений функций.
+14.  **`llama_index.embeddings.openai`**: Используется для интеграции с OpenAI Embedding API.
+15. **`llama_index.core`**: Используется для работы с индексами и документами.
+16. **`llama_index.readers.web`**: Используется для загрузки данных с веб-страниц.
+17. **`tinytroupe.openai_utils`**: Содержит утилиты для работы с API OpenAI, например, `client`.
 
 ## <объяснение>
-
 ### Импорты
-- **`os`**:
-    -   **Назначение**: Модуль предоставляет функции для взаимодействия с операционной системой, такие как работа с путями к файлам.
-    -   **Взаимосвязь с `src`**: Используется для формирования путей к файлам шаблонов подсказок, которые являются частью проекта `src`.
-- **`csv`**:
-    -   **Назначение**: Модуль для работы с CSV файлами.
-    -   **Взаимосвязь с `src`**: Не используется напрямую, может быть задействован в других модулях.
-- **`json`**:
-    -   **Назначение**: Модуль для работы с JSON данными.
-    -   **Взаимосвязь с `src`**: Используется для сохранения и загрузки состояния агента, а также для взаимодействия с OpenAI API.
-- **`ast`**:
-    -   **Назначение**: Модуль для работы с абстрактными синтаксическими деревьями.
-    -   **Взаимосвязь с `src`**: Не используется напрямую в этом модуле, но может использоваться в других частях проекта.
-- **`textwrap`**:
-    -   **Назначение**: Модуль для работы с текстом, например, для удаления отступов.
-    -   **Взаимосвязь с `src`**: Используется для форматирования текста в подсказках и сообщениях.
-- **`datetime`**:
-    -   **Назначение**: Модуль для работы с датой и временем.
-    -   **Взаимосвязь с `src`**: Используется для отметки времени событий в симуляции.
-- **`chevron`**:
-    -   **Назначение**: Модуль для работы с шаблонами Mustache.
-    -   **Взаимосвязь с `src`**: Используется для рендеринга подсказок для агентов из файлов шаблонов.
-- **`logging`**:
-    -   **Назначение**: Модуль для логирования событий.
-    -   **Взаимосвязь с `src`**: Используется для отладки и мониторинга работы агентов.
-- **`tinytroupe.utils`**:
-    -   **Назначение**: Модуль с утилитами для проекта TinyTroupe.
-    -   **Взаимосвязь с `src`**: Содержит вспомогательные функции для работы с конфигурацией, текстом, датой и временем.
--  **`tinytroupe.utils.post_init`**:
-    -   **Назначение**: Декоратор, вызывающий метод `_post_init` после конструктора класса.
-    -   **Взаимосвязь с `src`**: Используется для инициализации агентов после создания.
-- **`tinytroupe.control.transactional`**:
-    -   **Назначение**: Декоратор, обеспечивающий транзакционность методов.
-    -   **Взаимосвязь с `src`**: Используется для управления состоянием агента и обеспечения консистентности операций.
-- **`tinytroupe.control.current_simulation`**:
-    -   **Назначение**: Функция для доступа к текущей симуляции.
-    -   **Взаимосвязь с `src`**: Позволяет агентам знать, в какой симуляции они находятся.
-- **`rich`**:
-    -   **Назначение**: Модуль для форматированного вывода в терминал.
-    -   **Взаимосвязь с `src`**: Используется для отображения коммуникаций агентов.
-- **`copy`**:
-    -   **Назначение**: Модуль для создания копий объектов.
-    -   **Взаимосвязь с `src`**: Используется для создания копий конфигурации агента и других объектов для избежания побочных эффектов.
-- **`tinytroupe.utils.JsonSerializableRegistry`**:
-    -    **Назначение**: Базовый класс для сериализации и десериализации JSON.
-    -   **Взаимосвязь с `src`**: Используется для сохранения и загрузки состояния агентов, ментальных способностей и т.д.
-- **`typing.Any`, `typing.TypeVar`, `typing.Union`**:
-     -  **Назначение**: Модуль для аннотации типов.
-     -  **Взаимосвязь с `src`**: Используется для более строгой проверки типов и улучшения читаемости кода.
-- **`llama_index.embeddings.openai.OpenAIEmbedding`**,
-    **`llama_index.core.Settings`, `llama_index.core.VectorStoreIndex`**,
-    **`llama_index.readers.web.SimpleWebPageReader`**,
-    **`llama_index.readers.SimpleDirectoryReader`**:
-     -   **Назначение**: Модули для работы с Llama-Index, который используется для семантического поиска.
-     -   **Взаимосвязь с `src`**: Используется для создания векторных представлений текста и поиска релевантной информации.
-- **`tinytroupe.openai_utils`**:
-     -  **Назначение**: Утилиты для работы с OpenAI API.
-     -  **Взаимосвязь с `src`**: Используется для отправки сообщений в OpenAI API и получения ответов.
-- **`tinytroupe.utils.name_or_empty`, `tinytroupe.utils.break_text_at_length`, `tinytroupe.utils.repeat_on_error`**:
-    - **Назначение**: Утилиты для работы с текстом и обработки ошибок.
-    -  **Взаимосвязь с `src`**: Используются в различных местах кода для форматирования текста и обработки ошибок при вызове API.
+*   `os`: Для операций с файловой системой, например, для определения пути к файлу.
+*   `csv`: Хотя и импортирован, в текущем коде не используется. Возможно, планируется использование для работы с CSV-файлами.
+*   `json`: Для работы с JSON, например, сериализации и десериализации объектов.
+*   `ast`: Хотя и импортирован, в текущем коде не используется. Возможно, планируется использование для работы с синтаксическими деревьями.
+*   `textwrap`: Для форматирования текста, например, удаления отступов (`dedent`) и переноса длинных строк.
+*   `datetime`: Для работы с датой и временем, например, для получения текущего времени.
+*   `chevron`: Для работы с шаблонами, например, для создания текстовых промптов.
+*   `logging`: Для логирования (записи событий), например, сообщений об ошибках и отладочных данных.
+*   `tinytroupe.utils`: Содержит различные утилиты, используемые в проекте, такие как чтение конфигурационных файлов, декоратор `post_init` и т.д. Эти утилиты обеспечивают общие функциональности, которые используются в разных модулях проекта. Например, `read_config_file` используется для загрузки конфигурации, `post_init` для выполнения кода после инициализации, `name_or_empty` для получения имени или пустой строки и т.д.
+*   `tinytroupe.control`: Содержит функции для управления симуляцией, в частности `transactional` - декоратор для управления транзакциями и `current_simulation` - для доступа к текущей симуляции.
+*   `rich`: Для форматированного вывода в консоль, например, раскраски текста.
+*   `copy`: Для создания копий объектов, например, глубокого копирования словарей.
+*  `typing`: Для аннотаций типов, улучшая читаемость и поддерживаемость кода.
+*   `llama_index.embeddings.openai`: Используется для получения эмбеддингов из OpenAI, что необходимо для семантического поиска.
+*   `llama_index.core`: Предоставляет основные классы и функции для работы с индексами и документами в LlamaIndex.
+*   `llama_index.readers.web`: Позволяет загружать данные из веб-страниц для использования в семантической памяти.
+* `tinytroupe.openai_utils`: Содержит утилиты для работы с OpenAI API, например, для отправки сообщений и получения ответов.
 
 ### Классы
 
 #### `TinyPerson`
-- **Роль**: Представляет собой агента в симуляции TinyTroupe. Агент имеет имя, память, ментальные способности и может взаимодействовать с другими агентами и средой.
-- **Атрибуты**:
-    -   `name`: Имя агента.
-    -   `episodic_memory`: Эпизодическая память агента.
-    -   `semantic_memory`: Семантическая память агента.
-    -   `_mental_faculties`: Список ментальных способностей агента.
-    -   `_configuration`: Словарь с конфигурацией агента.
-    -   `current_messages`: Список текущих сообщений.
-    -   `_actions_buffer`: Буфер действий агента.
-    -   `_accessible_agents`: Список доступных агентов.
-    -   `_displayed_communications_buffer`: Буфер отображенных коммуникаций.
-    -   `_prompt_template_path`: Путь к файлу шаблона подсказок.
-    -   `_init_system_message`: Исходное системное сообщение.
-    -   `all_agents`: Словарь всех инстанцированных агентов.
-    -   `communication_style`: Стиль коммуникации.
-    -   `communication_display`: Флаг, определяющий, отображать ли коммуникации.
--   **Методы**:
-    -   `__init__`: Конструктор класса.
-    -   `_post_init`: Метод, выполняющийся после конструктора для инициализации.
-    -   `generate_agent_prompt`: Генерирует подсказку для агента.
-    -   `reset_prompt`: Сбрасывает подсказку агента.
-    -   `get`: Получает значение из конфигурации агента.
-    -   `define`: Устанавливает значение в конфигурации агента.
-    -    `define_relationships`: Определяет или обновляет отношения агента.
-    -    `clear_relationships`: Очищает отношения агента.
-    -    `related_to`: Определяет отношения между агентами.
-    -   `add_mental_faculties`: Добавляет список ментальных способностей.
-    -   `add_mental_faculty`: Добавляет ментальную способность.
-    -   `act`: Выполняет действие в среде.
-    -   `listen`: Слушает сообщение от другого агента или мира.
-    -   `socialize`: Воспринимает социальный стимул.
-    -   `see`: Воспринимает визуальный стимул.
-    -   `think`: Заставляет агента думать.
-    -   `internalize_goal`: Заставляет агента интернализировать цель.
-    -   `_observe`: Наблюдает стимул.
-    -   `listen_and_act`: Комбинация `listen` и `act`.
-    -   `see_and_act`: Комбинация `see` и `act`.
-    -   `think_and_act`: Комбинация `think` и `act`.
-    -    `read_documents_from_folder`: Загружает документы из папки.
-    -    `read_documents_from_web`: Загружает документы из веб-страниц.
-    -   `move_to`: Перемещает агента в новое место.
-    -   `change_context`: Изменяет контекст агента.
-    -   `make_agent_accessible`: Делает агента доступным для взаимодействия.
-    -   `make_agent_inaccessible`: Делает агента недоступным для взаимодействия.
-    -   `make_all_agents_inaccessible`: Делает всех агентов недоступными для взаимодействия.
-    -   `_produce_message`: Генерирует сообщение для OpenAI API.
-    -   `_update_cognitive_state`: Обновляет когнитивное состояние агента.
-    -   `_display_communication`: Отображает коммуникацию.
-    -  `_push_and_display_latest_communication`: Добавляет и отображает последнюю коммуникацию.
-    -   `pop_and_display_latest_communications`: Отображает и удаляет последнии коммуникации.
-    -   `clear_communications_buffer`: Очищает буфер коммуникаций.
-    -   `pop_latest_actions`: Получает последние действия агента.
-    -   `pop_actions_and_get_contents_for`: Получает содержимое действий определенного типа.
-    -   `minibio`: Возвращает мини-биографию агента.
-    -   `pp_current_interactions`: Выводит в терминал текущие взаимодействия в формате rich text.
-    -   `pretty_current_interactions`: Возвращает строку с текущими взаимодействиями.
-    -   `_pretty_stimuli`: Форматирует вывод стимулов.
-    -   `_pretty_action`: Форматирует вывод действий.
-    -   `_pretty_timestamp`: Форматирует вывод времени.
-    -   `iso_datetime`: Возвращает текущее время в формате ISO.
-    -   `save_spec`: Сохраняет конфигурацию агента в файл.
-    -   `load_spec`: Загружает конфигурацию агента из файла.
-    -   `encode_complete_state`: Кодирует полное состояние агента.
-    -   `decode_complete_state`: Декодирует полное состояние агента.
-    -   `create_new_agent_from_current_spec`: Создает нового агента из спецификации текущего агента.
-    -   `add_agent`: Добавляет агента в глобальный список.
-    -   `has_agent`: Проверяет наличие агента в списке.
-    -   `set_simulation_for_free_agents`: Устанавливает симуляцию для свободных агентов.
-    -   `get_agent_by_name`: Получает агента по имени.
-    -   `clear_agents`: Очищает глобальный список агентов.
--   **Взаимодействие**: Взаимодействует с `EpisodicMemory`, `SemanticMemory`, `TinyMentalFaculty`, OpenAI API и средой симуляции.
-
-#### `TinyMentalFaculty`
--   **Роль**: Абстрактный базовый класс для ментальных способностей агентов.
--   **Атрибуты**:
-    -   `name`: Имя ментальной способности.
-    -   `requires_faculties`: Список ментальных способностей, которые необходимы для работы этой способности.
--   **Методы**:
-    -   `__init__`: Конструктор класса.
-    -   `process_action`: Обрабатывает действие.
-    -   `actions_definitions_prompt`: Возвращает подсказку для определения действий.
+*   **Роль**: Представляет агента в симуляции, который может действовать, слушать, думать, социализировать, и иметь свои цели, эмоции и когнитивные состояния.
+*   **Атрибуты**:
+    *   `name` (str): Имя агента.
+    *   `episodic_memory` (`EpisodicMemory`): Память для хранения событий.
+    *   `semantic_memory` (`SemanticMemory`): Память для хранения знаний.
+    *   `_mental_faculties` (list): Список ментальных способностей агента.
+    *   `_configuration` (dict): Словарь конфигурации агента, включающий возраст, национальность, профессию и т.д.
+    *   `current_messages` (list): Список текущих сообщений для взаимодействия с моделью.
+    *   `environment`: Ссылка на текущую среду, в которой действует агент.
+    *   `_actions_buffer` (list): Список действий, которые еще не обработаны средой.
+    *  `_accessible_agents` (list): Список агентов, доступных для взаимодействия.
+    *   `_displayed_communications_buffer` (list): Буфер отображенных сообщений.
+    *   `MAX_ACTIONS_BEFORE_DONE`: Максимальное количество действий перед тем, как агент должен остановиться.
+    *   `PP_TEXT_WIDTH`: Ширина текста для pretty printing.
+    *   `serializable_attributes`: Список атрибутов, которые можно сериализовать.
+    *  `all_agents`: Словарь всех агентов, созданных к настоящему моменту.
+    * `communication_style`: Стиль общения агента.
+    * `communication_display`: Включает или выключает отображение сообщений агента.
+*   **Методы**:
+    *   `__init__`: Конструктор для создания агента.
+    *   `_post_init`: Завершает инициализацию агента после его создания или десериализации.
+    *  `generate_agent_prompt`: Создает промпт для агента на основе его текущей конфигурации и ментальных способностей.
+    *   `reset_prompt`: Сбрасывает промпт агента, генерируя новое системное сообщение.
+    *   `define`: Определяет или изменяет параметры конфигурации агента.
+    *  `define_several`: Определяет несколько значений в конфигурации агента.
+    *   `define_relationships`: Определяет отношения агента с другими агентами.
+    *   `clear_relationships`: Очищает список отношений.
+    *   `related_to`: Устанавливает двусторонние отношения между агентами.
+    *   `add_mental_faculties`: Добавляет список ментальных способностей агенту.
+    *  `add_mental_faculty`: Добавляет одну ментальную способность агенту.
+    *   `act`: Позволяет агенту совершать действия.
+    *  `listen`: Позволяет агенту слушать другого агента.
+    *   `socialize`: Позволяет агенту воспринимать социальные стимулы.
+    *   `see`: Позволяет агенту воспринимать визуальные стимулы.
+    *  `think`: Позволяет агенту думать.
+    * `internalize_goal`: Позволяет агенту усваивать цели.
+    *   `_observe`: Основной метод для обработки стимулов, который сохраняет стимулы в памяти агента.
+    *   `listen_and_act`: Комбинирует `listen` и `act`.
+    *   `see_and_act`: Комбинирует `see` и `act`.
+    *   `think_and_act`: Комбинирует `think` и `act`.
+    *   `read_documents_from_folder`: Загружает документы из папки в семантическую память.
+    *   `read_documents_from_web`: Загружает документы из интернета в семантическую память.
+    *   `move_to`: Позволяет агенту перемещаться в новое место.
+    *   `change_context`: Изменяет контекст агента.
+    *   `make_agent_accessible`: Делает другого агента доступным для взаимодействия.
+    *   `make_agent_inaccessible`: Делает другого агента недоступным для взаимодействия.
+    *   `make_all_agents_inaccessible`: Делает всех агентов недоступными для взаимодействия.
+    *   `_produce_message`: Генерирует сообщение для модели, используя OpenAI API.
+    *   `_update_cognitive_state`: Обновляет когнитивное состояние агента.
+    *   `_display_communication`: Отображает и сохраняет сообщение.
+    *   `_push_and_display_latest_communication`: Сохраняет и отображает сообщение.
+    *   `pop_and_display_latest_

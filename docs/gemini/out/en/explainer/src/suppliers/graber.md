@@ -32,7 +32,7 @@ class G(Graber):
 ```
 
 """
-MODE = 'dev'
+
 
 
 import os

@@ -22,7 +22,7 @@
     print(campaign_data)
 
 """
-MODE = 'dev'
+
 
 """
   :platform: Windows, Unix
@@ -510,7 +510,7 @@ class GptGs(SpreadSheet):
     print(campaign_data)
 
 """
-MODE = 'dev'
+
 
 """
   :platform: Windows, Unix

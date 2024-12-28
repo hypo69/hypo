@@ -14,7 +14,7 @@
 
 """
 
-MODE = 'dev'
+
   
 
 import sys

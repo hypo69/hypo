@@ -69,7 +69,7 @@ langdetect в Python используется для определения яз
   ... (rest of the product fields table description)
 """
 
-MODE = 'dev'
+
 from pathlib import Path
 from typing import List, Dict, Optional, Callable, Any
 from pydantic import BaseModel, Field, validator

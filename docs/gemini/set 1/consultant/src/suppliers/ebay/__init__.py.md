@@ -14,7 +14,7 @@
     - `MODE`: Переменная режима работы (разработка или продакшн).
     - импорт :class:`Graber` для сбора данных с eBay.
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 
@@ -42,7 +42,7 @@ from .graber import Graber
     - `MODE`: Переменная режима работы (разработка или продакшн).
     - импорт :class:`Graber` для сбора данных с eBay.
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```

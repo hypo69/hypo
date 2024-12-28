@@ -9,6 +9,6 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gsheet import GptGs

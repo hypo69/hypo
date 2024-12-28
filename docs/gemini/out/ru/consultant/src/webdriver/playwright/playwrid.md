@@ -21,7 +21,7 @@ if __name__ == "__main__":
     browser.start("https://www.example.com")
 ```
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -138,7 +138,7 @@ This code defines a subclass of `PlaywrightCrawler` called `Playwrid`.
 It provides additional functionality such as the ability to set custom browser settings, profiles, and launch options using Playwright.
 https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Optional, Dict, Any

@@ -12,7 +12,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль сценария для создания прайлиста.
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>

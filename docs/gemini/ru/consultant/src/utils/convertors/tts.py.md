@@ -60,7 +60,7 @@
     audio_path = await text2speech('Привет', lang='ru')
     print(audio_path)
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile

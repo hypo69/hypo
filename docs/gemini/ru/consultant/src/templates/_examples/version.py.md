@@ -33,7 +33,7 @@
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы приложения. Может быть 'dev', 'test' или 'prod'.
 """

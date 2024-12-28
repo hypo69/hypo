@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 2. **<algorithm>**
@@ -26,7 +26,7 @@ MODE = 'dev'
 
 ```mermaid
 graph TD
-    A[Инициализация MODE] --> B{MODE = 'dev'};
+    A[Инициализация MODE] --> B{};
     B --> C[Конец];
 ```
 
@@ -35,7 +35,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph Инициализация модуля
-        A[MODE = 'dev'] --> B(Модуль src.utils.iso);
+        A[] --> B(Модуль src.utils.iso);
     end
 ```
 
@@ -58,7 +58,7 @@ graph LR
 	This module contains constants for different operational modes.
 
 """
-DEV_MODE = 'dev'
+DEV_
 PROD_MODE = 'prod'
 
 MODE = DEV_MODE # or PROD_MODE

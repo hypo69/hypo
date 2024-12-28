@@ -12,7 +12,7 @@
 	:synopsis: utility to show a spinning cursor
 
 """
-MODE = 'dev'
+
 
 """
 This module provides a utility to show a spinning cursor in the console 
@@ -83,7 +83,7 @@ import time
 import sys
 from src.logger import logger  # Import logger
 
-MODE = 'dev'
+
 
 
 def spinning_cursor():
@@ -153,7 +153,7 @@ import time
 import sys
 from src.logger import logger  # Import logger
 
-MODE = 'dev'
+
 
 
 def spinning_cursor():

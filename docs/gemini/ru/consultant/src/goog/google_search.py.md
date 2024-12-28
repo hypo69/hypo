@@ -53,7 +53,7 @@
     data = parser.get_data()
     print(data)
 """
-MODE = 'dev'
+
 
 from lxml import html
 from typing import Dict, List, Optional

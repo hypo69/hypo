@@ -35,7 +35,7 @@
 
 ```mermaid
 graph LR
-    Start[Начало] --> InitializeMode[Инициализация MODE = 'dev']
+    Start[Начало] --> InitializeMode[Инициализация ]
     InitializeMode --> DefineName[Определение __name__ (тип: str)]
     DefineName --> DefineVersion[Определение __version__ = "3.12.0.0.0.4"]
     DefineVersion --> DefineDoc[Определение __doc__ (тип: str)]
@@ -68,7 +68,7 @@ graph LR
 
 ```mermaid
 flowchart TD
-    Start --> DefineMode[Define MODE: <br> <code>MODE = 'dev'</code>]
+    Start --> DefineMode[Define MODE: <br> <code></code>]
     DefineMode --> DefineName[Define __name__ : <br> <code>__name__: str</code>]
     DefineName --> DefineVersion[Define __version__: <br><code>__version__ = "3.12.0.0.0.4"</code>]
     DefineVersion --> DefineDoc[Define __doc__ : <br> <code>__doc__: str</code>]
@@ -102,7 +102,7 @@ flowchart TD
 *   **`MODE`**:
     *   Тип: `str`
     *   Использование: Указывает режим работы программы (в данном случае, `dev`). Может влиять на поведение программы во время выполнения, но в данном контексте это значение не используется.
-    *   Пример: `MODE = 'dev'`
+    *   Пример: ``
 *   **`__name__`**:
     *   Тип: `str`
     *   Использование: Автоматическая переменная Python, содержащая имя текущего модуля.

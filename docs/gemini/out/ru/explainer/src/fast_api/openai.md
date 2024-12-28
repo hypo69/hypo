@@ -12,7 +12,7 @@
 	:synopsis:This module provides a FastAPI application for interacting with the OpenAI model.
 It includes API endpoints for querying the model and training it based on provided data.
 """
-MODE = 'dev'
+
 import header
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -191,7 +191,7 @@ graph LR
 
 **Переменные:**
 
-*   `MODE = 'dev'`:  Поле для указания режима работы (разработка или производство).
+*   ``:  Поле для указания режима работы (разработка или производство).
 
 **Возможные ошибки и улучшения:**
 

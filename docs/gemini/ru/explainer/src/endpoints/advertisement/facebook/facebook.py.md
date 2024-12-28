@@ -1,126 +1,216 @@
-## Анализ кода `facebook.py`
+## АНАЛИЗ КОДА: `hypotez/src/endpoints/advertisement/facebook/facebook.py`
 
-### <алгоритм>
-1.  **Инициализация:**
-    *   Создается экземпляр класса `Facebook`.
-    *   Принимаются аргументы: `driver` (веб-драйвер), `promoter` (имя промоутера), `group_file_paths` (пути к файлам групп) и дополнительные `*args` и `**kwargs`.
-    *   Сохраняются `driver`, `promoter`.
-    *   (Временно закомментирован) Переход по начальному URL `start_page` и (временно закомментировано) переключение аккаунта.
-    *   *Пример:* `fb_instance = Facebook(driver=webdriver.Chrome(), promoter="test_promoter", group_file_paths=["path/to/file1.txt", "path/to/file2.txt"])`
-2.  **Логин:**
-    *   Вызывается метод `login()`.
-    *   Метод `login()` вызывает функцию `login()` из модуля `facebook.scenarios.login`, передавая `self` в качестве аргумента.
-    *   Функция `login()` выполняет сценарий входа в фейсбук.
-    *   *Пример:* `success = fb_instance.login()`
-3.  **Продвижение поста:**
-    *   Вызывается метод `promote_post()`, принимая объект `item` типа `SimpleNamespace`, содержащий данные для публикации.
-    *   Метод `promote_post()` вызывает функцию `promote_post()` из модуля `facebook.scenarios`, передавая `self.d` (веб-драйвер) и объект `item` в качестве аргументов.
-    *   Функция `promote_post()` выполняет сценарий продвижения поста, используя переданные данные.
-    *   *Пример:*
-        ```python
-        item = SimpleNamespace(message="Hello World!", images=["image1.jpg", "image2.png"])
-        success = fb_instance.promote_post(item)
-        ```
-4.  **Продвижение события:**
-    *   Вызывается метод `promote_event()`, принимая объект `event` типа `SimpleNamespace`, содержащий данные для события.
-    *   В текущей версии метод `promote_event()` имеет заглушку `...`
-    *   *Пример:* `fb_instance.promote_event(event=SimpleNamespace(title="My Event", date="2024-12-31"))`
+### 1. <алгоритм>
 
-### <mermaid>
 ```mermaid
-graph LR
-    A[Facebook Instance] --> B(login Method);
-    B --> C[login Function (scenarios.login)];
-    A --> D(promote_post Method);
-    D --> E[promote_post Function (scenarios)];
-    A --> F(promote_event Method);
+flowchart TD
+    Start[Начало] --> Init[Инициализация класса Facebook: <br><code>__init__</code><br> Сохранение драйвера, промоутера, путей к файлам групп]
+    Init --> LoginCheck{Проверка страницы: <br>Текущая страница = Страница логина?}
+    LoginCheck -- Да --> LoginCall[Вызов метода login: <br><code>login()</code> <br> (Переход к сценарию логина)]
+    LoginCall --> LoginScenario[Сценарий логина: <br><code>scenarios.login.login()</code>]
+    LoginScenario --> AfterLogin[Действия после логина]
+    LoginCheck -- Нет -->  AfterLogin[Действия после логина]
 
-    classDef classStyle fill:#f9f,stroke:#333,stroke-width:2px
-    class A,B,D,F classStyle
+    AfterLogin --> PromotePostCheck{Проверка вызова promote_post}
+    PromotePostCheck -- Да --> PromotePostCall[Вызов метода promote_post:<br><code>promote_post(item)</code>]
+    PromotePostCall --> PromotePostScenario[Сценарий публикации сообщения:<br><code>scenarios.promote_post.promote_post()</code>]
+    PromotePostScenario --> PostPromoted[Сообщение опубликовано]
+    PromotePostCheck -- Нет --> PromoteEventCheck{Проверка вызова promote_event}
+
+    PromoteEventCheck -- Да --> PromoteEventCall[Вызов метода promote_event: <br><code>promote_event(event)</code>]
+    PromoteEventCall --> PromoteEventScenario[Сценарий продвижения события]
+    PromoteEventScenario --> EventPromoted[Событие продвинуто]
+
+    PromoteEventCheck -- Нет --> End[Конец]
+
+    PostPromoted --> End
+    EventPromoted --> End
     
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-    
-    
-    subgraph src/endpoints/advertisement/facebook
-    C
-    E
-    end
     
 ```
 
-**Описание зависимостей:**
+**Примеры:**
 
-*   `Facebook Instance` (A) -  Главный класс, который управляет всеми взаимодействиями с Facebook.
-*   `login Method` (B) - Метод, который инициирует процесс входа в систему Facebook.
-*    `login Function (scenarios.login)` (C) - Вспомогательная функция из модуля `scenarios.login`, выполняющая фактический вход в систему Facebook.
-*   `promote_post Method` (D) - Метод, который инициирует процесс продвижения сообщения в Facebook.
-*   `promote_post Function (scenarios)` (E) - Функция из модуля `scenarios`, которая выполняет фактическое продвижение поста.
-*  `promote_event Method` (F) - Метод, который инициирует процесс продвижения события в Facebook.
+*   **Инициализация:**
+    `fb_instance = Facebook(driver=my_driver, promoter="my_promoter", group_file_paths=["path/to/group1", "path/to/group2"])`
+    
+    *   Создается экземпляр класса `Facebook` с передачей объекта `webdriver` (предположительно `my_driver`), имени `promoter` и списка путей к файлам групп.
+*   **Логин:**
+    `fb_instance.login()`
+    
+    *   Метод `login()` вызывает сценарий логина `scenarios.login.login()`, который взаимодействует с веб-драйвером для аутентификации пользователя.
+*   **Продвижение поста:**
+    `item_data = SimpleNamespace(message="Hello, world!", image_paths=["image1.jpg", "image2.png"])`
+    `fb_instance.promote_post(item=item_data)`
+    
+    *   Метод `promote_post()` принимает объект `SimpleNamespace` содержащий данные поста, и вызывает сценарий `scenarios.promote_post.promote_post()`, который публикует сообщение на Facebook.
 
-### <объяснение>
+### 2. <mermaid>
+
+```mermaid
+flowchart TD
+    Start[<code>facebook.py</code><br> Start] --> FacebookClass[Facebook Class<br> <code>class Facebook():</code>]
+    FacebookClass --> InitMethod[<code>__init__</code><br> Initialize Driver, Promoter, Group Files]
+    InitMethod --> DriverInstance[Driver Instance: <code>driver</code>]
+    InitMethod --> PromoterStr[Promoter String: <code>promoter</code>]
+    InitMethod --> GroupFilesList[Group Files List: <code>group_file_paths</code>]
+   
+    FacebookClass --> LoginMethod[<code>login()</code><br> Handles Login Scenario]
+     LoginMethod --> LoginScenario[Login Scenario: <code>scenarios.login.login()</code>]
+    
+    FacebookClass --> PromotePostMethod[<code>promote_post(item)</code><br> Handles Post Promotion Scenario]
+    PromotePostMethod --> PromotePostScenario[Promote Post Scenario: <code>scenarios.promote_post.promote_post()</code>]
+    PromotePostMethod --> ItemData[Item Data: <code>SimpleNamespace</code>]
+    
+    FacebookClass --> PromoteEventMethod[<code>promote_event(event)</code><br> Handles Event Promotion Scenario]
+    PromoteEventMethod --> PromoteEventScenario[Promote Event Scenario]
+    PromoteEventMethod --> EventData[Event Data: <code>SimpleNamespace</code>]
+    
+    
+    classDef import fill:#f9f,stroke:#333,stroke-width:2px
+    DriverInstance -- импорт --> ImportDriver[<code>Driver</code>]
+    PromotePostScenario  -- импорт --> ImportPromotePost[<code>from .scenarios import promote_post</code>]
+    LoginScenario  -- импорт --> ImportLogin[<code>from .scenarios.login import login</code>]
+    FacebookClass -- импорт --> ImportSimpleNamespace[<code>from types import SimpleNamespace</code>]
+    FacebookClass -- импорт --> ImportGs[<code>from src import gs</code>]
+    FacebookClass -- импорт --> ImportLogger[<code>from src.logger.logger import logger</code>]
+    FacebookClass -- импорт --> ImportPath[<code>from pathlib import Path</code>]
+    FacebookClass -- импорт --> ImportOs[<code>import os</code>]
+    FacebookClass -- импорт --> ImportTyping[<code>from typing import Dict, List</code>]
+    FacebookClass -- импорт --> ImportJjson[<code>from src.utils.jjson import j_loads, j_dumps</code>]
+    ImportDriver:::import
+    ImportPromotePost:::import
+    ImportLogin:::import
+    ImportSimpleNamespace:::import
+    ImportGs:::import
+    ImportLogger:::import
+    ImportPath:::import
+    ImportOs:::import
+    ImportTyping:::import
+    ImportJjson:::import
+```
+
+```mermaid
+flowchart TD
+    Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+```
+**Объяснение зависимостей `mermaid`:**
+
+1.  **`FacebookClass`**: Главный класс, инкапсулирующий функциональность взаимодействия с Facebook.
+2.  **`InitMethod`**: Метод инициализации `__init__`, который принимает `Driver` (экземпляр вебдрайвера), `promoter` (строку с именем промоутера) и `group_file_paths` (список путей к файлам групп) в качестве параметров.
+3.  **`DriverInstance`**: Экземпляр веб-драйвера, необходимый для взаимодействия с браузером.
+4.  **`PromoterStr`**: Строка, представляющая промоутера.
+5.  **`GroupFilesList`**: Список строк с путями к файлам групп.
+6.  **`LoginMethod`**: Метод `login()`, запускающий сценарий авторизации.
+7. **`LoginScenario`**: Импортируемый сценарий логина `scenarios.login.login()`.
+8.  **`PromotePostMethod`**: Метод `promote_post()`, запускающий сценарий публикации поста.
+9.  **`PromotePostScenario`**: Импортируемый сценарий публикации поста `scenarios.promote_post.promote_post()`.
+10. **`ItemData`**: Данные поста, передаваемые в метод `promote_post`, объект `SimpleNamespace`.
+11.  **`PromoteEventMethod`**: Метод `promote_event()`, запускающий сценарий продвижения события.
+12. **`PromoteEventScenario`**: Сценарий продвижения события.
+13. **`EventData`**: Данные события, передаваемые в метод `promote_event`, объект `SimpleNamespace`.
+14.  **Импорты**:
+    *   `Driver`: Тип для аннотации, представляет вебдрайвер.
+    *   `scenarios.promote_post`: Сценарий для продвижения поста.
+    *   `scenarios.login.login`: Сценарий для логина.
+    *   `SimpleNamespace`: Класс для создания объектов с атрибутами.
+    *   `src`: Пакет верхнего уровня проекта.
+    *   `gs`: Глобальные настройки.
+    *   `logger`: Логгер для записи событий.
+    *    `Path`: Класс для работы с путями файловой системы
+    *   `os`: Модуль для взаимодействия с операционной системой.
+    *   `typing`: Модуль для работы с аннотациями типов.
+    *   `j_loads, j_dumps`: Функции для работы с JSON.
+15. **`header.py`**: Скрипт определяет корень проекта и импортирует глобальные настройки.
+
+### 3. <объяснение>
 
 **Импорты:**
 
-*   `from __future__ import annotations`: Позволяет использовать строковые аннотации типов, которые могут ссылаться на классы, еще не определенные во время компиляции.
-*   `import os, sys`:  Стандартные модули Python для работы с операционной системой и интерпретатором.
-*   `from pathlib import Path`:  Модуль для работы с путями к файлам в виде объектов.
-*   `from types import SimpleNamespace`: Класс для создания простых объектов с атрибутами, к которым можно обращаться по имени.
-*   `from typing import Dict, List`:  Модули для аннотации типов, позволяющие указать типы данных для переменных и параметров функций.
-*   `from src import gs`: Импортируется `gs` из пакета `src`. `gs` скорее всего, содержит глобальные настройки и переменные проекта.
-*    `from src.utils.jjson import j_loads, j_dumps`: Импортируются функции для работы с JSON,  `j_loads` для загрузки из JSON,  `j_dumps` для сохранения в JSON.
-*   `from src.utils.printer import pprint`: Импортируется функция `pprint` для красивого вывода данных.
-*   `from src.logger.logger import logger`: Импортируется объект `logger` для логирования событий.
-*    `from .scenarios.login import login`: Импортируется функция `login` для сценария входа в фейсбук
-*    `from .scenarios import  switch_account, promote_post,  post_title, upload_media, update_images_captions`: Импортируются функции для различных сценариев работы с Facebook, такие как: переключение аккаунта, продвижение поста, создание заголовка поста, загрузка медиафайлов и обновление подписей к изображениям.
+*   `from __future__ import annotations`: Позволяет использовать строковые аннотации типов, что особенно полезно для циклических зависимостей типов.
+*   `import os, sys`:  `os` для работы с файловой системой и `sys` для параметров командной строки и других системных операций, хотя в коде явно не используются.
+*   `from pathlib import Path`: Для работы с путями к файлам и директориям.
+*    `from types import SimpleNamespace`: Создает простой объект с атрибутами, удобно для передачи данных.
+*   `from typing import Dict, List`:  Используется для аннотации типов.
+*   `from src import gs`: Импортирует глобальные настройки проекта, определенные в пакете `src`.
+*   `from src.utils.jjson import j_loads, j_dumps`: Импортирует функции для работы с JSON (`j_loads` для загрузки из JSON, `j_dumps` для сохранения в JSON).
+*   `from src.utils.printer import pprint`: Импортирует функцию `pprint` для "красивой печати" данных.
+*   `from src.logger.logger import logger`: Импортирует объект `logger` для логирования событий.
+*   `from .scenarios.login import login`: Импортирует функцию `login` из модуля `login.py` в текущей директории для выполнения сценария логина.
+*   `from .scenarios import switch_account, promote_post,  post_title, upload_media, update_images_captions`: Импортирует функции сценариев для переключения аккаунта, публикации поста, установки заголовка, загрузки медиа, и обновления подписей.
 
 **Классы:**
 
-*   `Facebook`:
-    *   **Роль:**  Класс для управления взаимодействием с Facebook через веб-драйвер.
-    *   **Атрибуты:**
-        *   `d`:  Объект веб-драйвера.  Строковая аннотация типа `'Driver'` используется для отложенного импорта, пока тип `Driver` не будет известен.
-        *   `start_page`: URL начальной страницы Facebook.
-        *   `promoter`:  Имя пользователя, который продвигает контент.
-    *   **Методы:**
-        *   `__init__`: Конструктор класса. Принимает `driver`, `promoter`, `group_file_paths`, а так же `*args` и `**kwards` для дополнительных параметров. Инициализирует атрибуты класса.
-        *    `login`: Вызывает функцию `login` из модуля `facebook.scenarios.login`, для реализации сценария входа в фейсбук.
-        *   `promote_post`: Вызывает функцию `promote_post` из модуля `facebook.scenarios`, для реализации сценария продвижения поста в фейсбук.
-        *   `promote_event`: (Не полностью реализован) Заглушка для метода продвижения событий.
+*   `class Facebook()`:
+    *   **Назначение**: Класс для управления взаимодействием с Facebook через вебдрайвер.
+    *   **Атрибуты**:
+        *   `d: 'Driver'`: Объект веб-драйвера (строковая аннотация).
+        *   `start_page: str`: URL начальной страницы Facebook.
+        *   `promoter: str`: Строка с именем промоутера.
+    *   **Методы**:
+        *   `__init__(self, driver: 'Driver', promoter: str, group_file_paths: list[str], *args, **kwards)`:
+            *   **Назначение**: Конструктор класса, принимает драйвер, имя промоутера и список путей к файлам групп.
+            *   **Пример**: `fb = Facebook(driver=webdriver.Chrome(), promoter="my_user", group_file_paths=["path/to/file.txt"])`
+        *   `login(self) -> bool`:
+            *   **Назначение**: Вызывает сценарий логина.
+            *   **Возвращает**: `True`, если логин успешен.
+        *   `promote_post(self, item: SimpleNamespace) -> bool`:
+            *   **Назначение**: Отправляет текст и медиа в форму сообщения.
+            *   **Аргументы**: `item` - объект `SimpleNamespace` содержащий информацию о посте.
+            *   **Возвращает**: `True`, если пост успешно опубликован.
+        * `promote_event(self, event: SimpleNamespace)`:
+            *   **Назначение**: Обрабатывает продвижение события.
+            *   **Аргументы**: `event` - объект `SimpleNamespace` содержащий информацию о событии.
+    *   **Взаимодействие**:
+        *   Использует объект веб-драйвера `d` для взаимодействия с браузером.
+        *   Использует импортированные сценарии из `scenarios/` для выполнения конкретных задач.
 
 **Функции:**
 
-*   `login(self: Facebook) -> bool`: Функция для выполнения сценария входа в Facebook, импортирована из `facebook.scenarios.login`. Принимает экземпляр класса `Facebook` в качестве аргумента и возвращает `True` в случае успеха.
-*   `promote_post(driver: 'Driver', item: SimpleNamespace) -> bool`: Функция для выполнения сценария продвижения поста, импортирована из `facebook.scenarios`. Принимает веб-драйвер и объект `SimpleNamespace`, содержащий данные для публикации. Возвращает `True` при успехе, `False` в противном случае.
-*   `promote_event(event: SimpleNamespace)`: Заглушка для метода продвижения событий,  принемает объект `SimpleNamespace` с данными о событии.
+*   `login(self) -> bool`:
+    *   **Аргументы**: Принимает экземпляр класса `Facebook`.
+    *   **Назначение**: Вызывает сценарий логина (импортируется из `scenarios/login.py`) и выполняет его.
+    *   **Возвращает**: `True` при успешном логине.
+*   `promote_post(self, item: SimpleNamespace) -> bool`:
+    *   **Аргументы**: `self` - экземпляр класса `Facebook`, `item` - данные поста в виде `SimpleNamespace`.
+    *   **Назначение**: Вызывает сценарий публикации поста (импортируется из `scenarios/promote_post.py`).
+    *   **Возвращает**: `True` если публикация успешна.
+*   `promote_event(self, event: SimpleNamespace)`:
+    *   **Аргументы**: `self` - экземпляр класса `Facebook`, `event` - данные события в виде `SimpleNamespace`.
+    *   **Назначение**: Вызывает сценарий продвижения события.
+    *   **Возвращает**: нет.
 
 **Переменные:**
 
-*   `MODE`:  Строковая переменная, обозначающая текущий режим работы (`'dev'`).
-*   `self.d`: Объект веб-драйвера, который устанавливается в конструкторе `__init__`.
-*   `self.start_page`: URL начальной страницы Facebook.
-*   `self.promoter`: Строка, хранящая имя промоутера.
-*    `item`: Объект `SimpleNamespace` , содержащий данные для поста в методе `promote_post`.
-*    `event`: Объект `SimpleNamespace`, содержащий данные для события в методе `promote_event`.
+*   ``: Глобальная переменная, определяющая режим работы (здесь "dev" для разработки).
+*   `d`: Объект веб-драйвера.
+*   `start_page`: URL стартовой страницы Facebook.
+*   `promoter`: Строка с именем промоутера.
+*   `group_file_paths`: Список путей к файлам групп.
 
-**Потенциальные ошибки и улучшения:**
+**Потенциальные ошибки и области для улучшения:**
 
-*   **Отложенная инициализация `driver`:** Использование строковой аннотации типа для `driver` говорит о том что класс `Driver` может импортироваться в процессе работы программы. Возможно следует пересмотреть зависимость и убедится что все импорты происходят в начале работы программы.
-*   **Неполная реализация `promote_event`:**  Метод `promote_event` имеет только заглушку. Необходима реализация.
-*   **Закомментированный код:**  В конструкторе закомментирована инициализация перехода на страницу и переключение профиля.  Необходимо решить, стоит ли их оставить закомментированными, или необходимо раскоментировать и корректно реализовать.
-*   **Обработка ошибок:** Отсутствует явная обработка исключений (например, при работе с веб-драйвером).
-*   **Логирование:**  Добавить больше логирования для отслеживания работы программы.
-*   **Конфигурация:** Значение `MODE` лучше вынести в конфигурационный файл или передавать как переменную окружения.
-
-**Взаимосвязи с другими частями проекта:**
-
-*   `src.gs`: Используется для доступа к глобальным настройкам проекта.
-*   `src.utils.jjson`: Используется для сериализации и десериализации JSON данных.
-*   `src.utils.printer`: Используется для отладочного вывода данных.
-*   `src.logger.logger`: Используется для логирования действий.
-*   `src.endpoints.advertisement.facebook.scenarios`:  Используется для выполнения различных сценариев в Facebook.
+*   **Обработка исключений**: Отсутствует обработка исключений при работе с веб-драйвером и сценариями, что может привести к сбоям.
+*   **Типизация**: Отсутствует конкретная типизация для `Driver`, что может привести к ошибкам во время выполнения.
+*   **Комментарии**: Не все методы и сценарии имеют подробные docstring, что затрудняет понимание кода.
+*   **Проверка логина**: В коде закомментирована проверка на то, что пользователь на странице логина. Она необходима для автоматического запуска процесса логина если это нужно.
+*   **Недостаточно описанные сценарии**: Класс полагается на внешние сценарии, детали которых не видны в текущем файле, что может усложнить отладку и модификацию.
+*   **Асинхронность**: Код не использует асинхронность, что может замедлить выполнение при выполнении задач, связанных с веб-драйвером.
+*   **Конфигурация**: В коде нет конфигурации, такой как логины, пароли. Они могут браться из `gs`.
 
 **Цепочка взаимосвязей:**
 
-`Facebook` -> `scenarios` -> `driver` -> `webpage`.
-`Facebook` <- `src.gs`, `src.utils.jjson`, `src.utils.printer`, `src.logger.logger`.
+*   Класс `Facebook` зависит от:
+    *   Объекта `Driver` (веб-драйвера), который должен быть создан вне этого класса.
+    *   Модулей сценариев `scenarios/login.py`, `scenarios/promote_post.py` и других.
+    *   Глобальных настроек `gs` из пакета `src`.
+    *   Модуля логирования `logger` для записи событий.
+    *   Модулей `jjson` для работы с JSON.
+*   Сценарии (`scenarios/`) будут зависеть от объекта `Driver` и других библиотек, необходимых для взаимодействия с веб-страницами.
+*   Глобальные настройки `gs` могут влиять на работу класса `Facebook` и сценариев.
+*   Модули `logger` и `jjson` используются для логирования и работы с данными.
+* `header.py` является начальным скриптом который определяет корень проекта и импортирует глобальные настройки.
+
+Этот анализ предоставляет полное представление о структуре, функциональности и зависимостях кода в `facebook.py`.

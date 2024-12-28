@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -92,7 +92,7 @@ from ..prepare_campaigns import process_campaign_category, process_campaign, pro
 from src.logger.logger import logger # импортируем logger для логирования
 gs = GSheets() # инициализируем GSheets
 
-MODE = 'dev' # устанавливаем режим
+ # устанавливаем режим
 
 # Пример 1: Обработка категории одиночной кампании
 # Вызываем функцию process_campaign_category для обработки категории "Electronics" кампании "SummerSale"
@@ -170,7 +170,7 @@ from ..prepare_campaigns import process_campaign_category, process_campaign, pro
 from src.logger.logger import logger # импортируем logger для логирования
 gs = GSheets() # инициализируем GSheets
 
-MODE = 'dev' # устанавливаем режим
+ # устанавливаем режим
 
 # Пример 1: Обработка категории одиночной кампании
 # Вызываем функцию process_campaign_category для обработки категории "Electronics" кампании "SummerSale"

@@ -51,7 +51,7 @@ MODE:
     print(f"Версия шаблонов: {__version__}")
 '''
 # Определение режима работы
-MODE = 'dev'
+
 
 # импортируем из библиотеки для работы с версиями
 from packaging.version import Version

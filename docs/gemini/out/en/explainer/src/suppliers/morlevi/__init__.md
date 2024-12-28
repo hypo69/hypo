@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -64,7 +64,7 @@ The mermaid diagram illuStartes a simple dependency. The `morlevi` package impor
 
 **Variables:**
 
-- `MODE = 'dev'`: This variable likely holds a configuration value, in this case set to 'dev'. It is often used to distinguish between development (`dev`) and production (`prod`) environments, affecting behavior of subsequent code (e.g., logging, data sources).
+- ``: This variable likely holds a configuration value, in this case set to 'dev'. It is often used to distinguish between development (`dev`) and production (`prod`) environments, affecting behavior of subsequent code (e.g., logging, data sources).
 
 
 **Potential Errors/Improvements:**

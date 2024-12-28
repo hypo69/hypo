@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.firefox._examples """
 
@@ -54,7 +54,7 @@ from .version import __version__, __doc__, __details__
 3. <mermaid>
 ```mermaid
 graph LR
-    A[__init__.py] --> B(MODE = 'dev');
+    A[__init__.py] --> B();
     A --> C[from packaging.version import Version];
     A --> D[from .version import __version__, __doc__, __details__];
 ```
@@ -70,7 +70,7 @@ graph LR
 * **Функции**: Нет определенных функций.
 
 * **Переменные**:
-    * `MODE = 'dev'`: Строковая переменная, вероятно, хранящая константу, определяющую режим работы (например, `'dev'` для разработки или `'prod'` для производства).  Использование этой константы в дальнейшем может управлять поведением.
+    * ``: Строковая переменная, вероятно, хранящая константу, определяющую режим работы (например, `'dev'` для разработки или `'prod'` для производства).  Использование этой константы в дальнейшем может управлять поведением.
 
 
 * **Возможные ошибки или области для улучшений**:

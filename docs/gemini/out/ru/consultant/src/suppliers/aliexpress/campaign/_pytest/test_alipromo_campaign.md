@@ -7,7 +7,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 \n"""
-MODE = 'dev'
+
 
 
 """
@@ -29,7 +29,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._pytest """
 
@@ -80,7 +80,7 @@ from src import gs
 from src.logger import logger # импорт логгера
 
 
-MODE = 'dev'
+
 
 
 @pytest.fixture
@@ -147,7 +147,7 @@ from src import gs
 from src.logger import logger # импорт логгера
 
 
-MODE = 'dev'
+
 
 
 @pytest.fixture

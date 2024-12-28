@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 ...
 from types import SimpleNamespace
@@ -39,7 +39,7 @@ from typing import Optional
     :platform: Windows, Unix
     :synopsis: Модуль для работы с языками в PrestaShop API.
 """
-MODE = 'dev'
+
 
 ...
 from types import SimpleNamespace
@@ -122,7 +122,7 @@ class PrestaLanguage(PrestaShop):
     :platform: Windows, Unix
     :synopsis: Модуль для работы с языками в PrestaShop API.
 """
-MODE = 'dev'
+
 
 ...
 from types import SimpleNamespace

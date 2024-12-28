@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .pricelist_generator import ReportGenerator
@@ -33,7 +33,7 @@ from .pricelist_generator import ReportGenerator
 Этот модуль предоставляет класс `ReportGenerator` для генерации отчетов о ценах.
 
 """
-MODE = 'dev'
+
 
 # Импортируем класс ReportGenerator из соответствующего файла.
 from .pricelist_generator import ReportGenerator
@@ -65,7 +65,7 @@ from .pricelist_generator import ReportGenerator
 Этот модуль предоставляет класс `ReportGenerator` для генерации отчетов о ценах.
 
 """
-MODE = 'dev'
+
 
 # Импортируем класс ReportGenerator из соответствующего файла.
 from .pricelist_generator import ReportGenerator

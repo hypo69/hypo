@@ -72,7 +72,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 import header # импорт модуля header
 from pathlib import Path # импорт класса Path из модуля pathlib

@@ -42,7 +42,7 @@
    from src.goog.spreadsheet.header import __project_name__, __version__, __doc__
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -188,7 +188,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    from src.goog.spreadsheet.header import __project_name__, __version__, __doc__
 
 """
-MODE = 'dev'
+
 
 
 import sys

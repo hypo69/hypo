@@ -11,7 +11,7 @@
     :synopsis: module handles the promotion of messages and events in Facebook groups.
 It processes campaigns and events, posting them to Facebook groups while avoiding duplicate promotions.
 """
-MODE = 'dev'
+
 
 import random
 from datetime import datetime, timedelta
@@ -237,7 +237,7 @@ class FacebookPromoter:
 Он обрабатывает кампании и события, публикуя их в группах Facebook, избегая дублирования.
 
 """
-MODE = 'dev'
+
 
 import random
 from datetime import datetime
@@ -551,7 +551,7 @@ class FacebookPromoter:
 Он обрабатывает кампании и события, публикуя их в группах Facebook, избегая дублирования.
 
 """
-MODE = 'dev'
+
 
 import random
 from datetime import datetime

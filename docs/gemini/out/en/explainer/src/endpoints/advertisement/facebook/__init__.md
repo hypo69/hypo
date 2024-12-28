@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields
@@ -25,7 +25,7 @@ from .promoter import FacebookPromoter, get_event_url
 
 This file appears to be an initialization module for a Facebook advertisement endpoint.  It imports necessary classes and functions from sub-modules within the same directory structure.
 
-* **Step 1: Initialization:** The module initializes itself, potentially setting a mode variable (`MODE = 'dev'`).  This variable likely controls how the module interacts with the Facebook API in development versus production.
+* **Step 1: Initialization:** The module initializes itself, potentially setting a mode variable (``).  This variable likely controls how the module interacts with the Facebook API in development versus production.
 * **Step 2: Import:** The module imports crucial classes and functions.
 
 
@@ -38,7 +38,7 @@ This file appears to be an initialization module for a Facebook advertisement en
 ```mermaid
 graph TD
     subgraph Initialization
-        A[MODE = 'dev'] --> B(Import);
+        A[] --> B(Import);
     end
     subgraph Imports
         B --> C[Facebook];

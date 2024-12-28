@@ -13,7 +13,7 @@
 таких как имя проекта, версия, путь к корню проекта и другие параметры,
 которые могут быть использованы в других частях приложения.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -113,7 +113,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 таких как имя проекта, версия, путь к корню проекта и другие параметры,
 которые могут быть использованы в других частях приложения.
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

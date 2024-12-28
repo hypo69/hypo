@@ -21,7 +21,7 @@
 - Метод `create_report`: Запускает полный цикл генерации отчёта.
 
 """
-MODE = 'dev'
+
 
 #https://dev.to/kboskin/building-web-applications-with-react-and-python-2d8c
 

@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .training import OpenAIModel
@@ -29,7 +29,7 @@ This file acts as an initialization module for the `openai` model components wit
 
 
 ```
-MODE = 'dev'
+
 ```
 
 
@@ -62,7 +62,7 @@ graph LR
     * `from .training import OpenAIModel`: This line imports the `OpenAIModel` class from the `training` submodule within the `openai` package. The `.` in front of the `training` submodule indicates that the `training` module is located within the same package as the current file. This is a common Python practice for organizing related modules in a package. The `training` module is expected to contain the implementation details for the `OpenAIModel`.
 
 * **Variables:**
-    * `MODE = 'dev'`:  This global variable likely controls the behavior of the model.  In a development environment, 'dev' mode might enable different logging configurations or use debug versions of dependencies.
+    * ``:  This global variable likely controls the behavior of the model.  In a development environment, 'dev' mode might enable different logging configurations or use debug versions of dependencies.
 
 * **Classes (indirect):**
     * `OpenAIModel`: This class definition is not present in the provided code snippet. It will be defined in `hypotez/src/ai/openai/model/training.py`. It would presumably implement the logic for interacting with the OpenAI API, potentially handling training, inference, or other functionalities.

@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import requests
@@ -160,7 +160,7 @@ graph TD
 
 ### Variables:
 
-- `MODE = 'dev'`:  Indicates the current operation mode (presumably development). This can be used for conditional behavior or logging.
+- ``:  Indicates the current operation mode (presumably development). This can be used for conditional behavior or logging.
 - `_d`, `_l`: Internal variables used within the `login` function, representing the WebDriver instance and locator dictionary retrieved from the `Supplier` object.
 
 

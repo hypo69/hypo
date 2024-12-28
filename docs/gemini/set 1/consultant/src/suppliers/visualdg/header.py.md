@@ -26,7 +26,7 @@
    print(f"Версия: {__version__}")
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -174,7 +174,7 @@ __cofee__: str = settings.get('cofee', 'Treat the developer to a cup of coffee f
    print(f"Версия: {__version__}")
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -306,7 +306,7 @@ __cofee__: str = settings.get('cofee', 'Treat the developer to a cup of coffee f
    print(f"Версия: {__version__}")
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

@@ -22,7 +22,7 @@
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -136,7 +136,7 @@ __cofee__: str = settings.get("cofee",
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev'
+
 
 import sys
 import json

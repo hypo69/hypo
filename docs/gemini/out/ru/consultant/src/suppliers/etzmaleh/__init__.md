@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .graber import Graber
@@ -36,7 +36,7 @@ from .graber import Graber
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импорт класса Graber из модуля graber.py
 from .graber import Graber
@@ -73,7 +73,7 @@ logger = logging.getLogger(__name__)
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импорт класса Graber из модуля graber.py
 from .graber import Graber

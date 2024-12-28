@@ -58,7 +58,7 @@
 from src.logger.logger import logger  #  Импорт логгера
 
 #: Указывает режим работы модуля ('dev' для разработки, 'prod' для продакшена).
-MODE = 'dev'
+
 
 #  Импорт функции для извлечения ID продуктов
 from .extract_product_id import extract_prod_ids

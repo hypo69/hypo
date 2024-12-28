@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb """
 
@@ -68,7 +68,7 @@ def login(s) -> bool:
     :platform: Windows, Unix
     :synopsis: Модуль для работы с поставщиком HB.
 """
-MODE = 'dev'
+
 
 
 """
@@ -93,7 +93,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis:  Дополнительные настройки.
 """
-MODE = 'dev'
+
 
 """ Модуль для работы с поставщиком HB. """
 
@@ -158,7 +158,7 @@ def login(s) -> bool:
     :platform: Windows, Unix
     :synopsis: Модуль для работы с поставщиком HB.
 """
-MODE = 'dev'
+
 
 
 """
@@ -183,7 +183,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis:  Дополнительные настройки.
 """
-MODE = 'dev'
+
 
 """ Модуль для работы с поставщиком HB. """
 

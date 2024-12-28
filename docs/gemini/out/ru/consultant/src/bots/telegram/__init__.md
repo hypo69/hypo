@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 ```
@@ -35,7 +35,7 @@ from .bot import TelegramBot
 
 
 # Константа, определяющая режим работы (например, dev или prod).
-MODE = 'dev'
+
 ```
 
 # Changes Made
@@ -65,6 +65,6 @@ from .bot import TelegramBot
 
 
 # Константа, определяющая режим работы (например, dev или prod).
-MODE = 'dev'
+
 ```
 ```

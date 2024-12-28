@@ -216,7 +216,7 @@ empty fields template
             f.width = None
 """
 
-MODE = 'dev'
+
 from pathlib import Path
 from typing import List, Dict, Optional, Callable, Any
 from pydantic import BaseModel, Field, validator

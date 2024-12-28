@@ -38,7 +38,7 @@
 """
 from packaging.version import Version
 
-MODE = 'dev'
+
 """
 Режим работы приложения: 'dev' - для разработки, 'prod' - для продакшена
 """

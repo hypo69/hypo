@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -76,7 +76,7 @@ from .main_window import AssistantMainWindow
 from src.logger import logger # Импорт для логирования
 
 
-MODE = 'dev'  # Переменная для режима работы
+  # Переменная для режима работы
 
 
 def load_config(file_path: str) -> dict:
@@ -140,7 +140,7 @@ from .main_window import AssistantMainWindow
 from src.logger import logger # Импорт для логирования
 
 
-MODE = 'dev'  # Переменная для режима работы
+  # Переменная для режима работы
 
 
 def load_config(file_path: str) -> dict:

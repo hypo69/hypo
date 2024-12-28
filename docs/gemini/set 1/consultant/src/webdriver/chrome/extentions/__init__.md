@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome.extentions """
 
@@ -66,7 +66,7 @@ import logging
 from packaging.version import Version
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 # Переменная MODE, скорее всего, должна быть константой
 # Используем logger для вывода сообщений об ошибках.
@@ -90,7 +90,7 @@ logger = logging.getLogger(__name__)
   :synopsis:  Детали версии.
 """
 
-MODE = 'dev'  # Конфигурация режима работы.  
+  # Конфигурация режима работы.  
 
 """ module: src.webdriver.chrome.extentions """
 
@@ -141,7 +141,7 @@ import logging
 from packaging.version import Version
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 
-MODE = 'dev'
+
 
 # Переменная MODE, скорее всего, должна быть константой
 # Используем logger для вывода сообщений об ошибках.
@@ -165,7 +165,7 @@ logger = logging.getLogger(__name__)
   :synopsis:  Детали версии.
 """
 
-MODE = 'dev'  # Конфигурация режима работы.  
+  # Конфигурация режима работы.  
 
 """ module: src.webdriver.chrome.extentions """
 

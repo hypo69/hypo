@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .pricelist_generator import ReportGenerator
@@ -37,7 +37,7 @@ from src.utils.jjson import j_loads  # Импортируем функцию j_l
 from src.logger import logger
 import os
 
-MODE = 'dev'
+
 
 
 from .pricelist_generator import ReportGenerator
@@ -73,7 +73,7 @@ from src.utils.jjson import j_loads  # Импортируем функцию j_l
 from src.logger import logger
 import os
 
-MODE = 'dev'
+
 
 
 from .pricelist_generator import ReportGenerator

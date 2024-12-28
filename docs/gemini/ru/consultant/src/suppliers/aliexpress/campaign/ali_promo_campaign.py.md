@@ -92,7 +92,7 @@
     campaign = AliPromoCampaign("new_campaign", "EN", "USD")
     campaign.process_ai_category("Electronics")
 """
-MODE = 'dev'
+
 import asyncio
 import copy
 import html

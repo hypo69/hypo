@@ -13,7 +13,7 @@
 	:platform: Windows, Unix
 	:synopsis: Переключение между аккаунатми
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from types import SimpleNamespace
@@ -81,7 +81,7 @@ graph TD
     * `switch_account(driver: Driver)`: Takes a `Driver` object as input, and attempts to locate and click the "Switch Account" button. This is a scenario function likely intended to automate a specific part of the Facebook account switching process within a larger web automation framework.
 
 * **Variables:**
-    * `MODE = 'dev'`: A simple string variable, likely used for configuration differences between development and production environments.
+    * ``: A simple string variable, likely used for configuration differences between development and production environments.
     * `locator`: A `SimpleNamespace` object containing the locator for the "Switch Account" button, loaded from the JSON file.
 
 * **Potential Errors/Improvements:**

@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.dialogflow """
 
@@ -63,7 +63,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'  # Режим работы (dev, prod и т.д.)
+  # Режим работы (dev, prod и т.д.)
 
 
 def load_config(file_path: str) -> dict:
@@ -121,7 +121,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'  # Режим работы (dev, prod и т.д.)
+  # Режим работы (dev, prod и т.д.)
 
 
 def load_config(file_path: str) -> dict:

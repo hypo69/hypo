@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -88,7 +88,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 	:synopsis: Модуль для ...
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -178,7 +178,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 	:synopsis: Модуль для ...
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path

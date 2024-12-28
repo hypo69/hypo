@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -92,7 +92,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger # Импорт для логирования ошибок
 
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:
@@ -181,7 +181,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 from src.logger import logger # Импорт для логирования ошибок
 
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:

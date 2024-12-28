@@ -28,7 +28,7 @@
     # Выполнение сбора данных
     ...
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # TODO: from functools import wraps  # Добавить недостающий импорт
@@ -130,7 +130,7 @@ class Graber(Grbr):
     # Выполнение сбора данных
     ...
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 from functools import wraps # Добавлен недостающий импорт

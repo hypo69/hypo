@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.locators """
 
@@ -64,7 +64,7 @@ from .locator import
 
 Этот модуль содержит объявления локаторов для элементов веб-страницы поставщика hb.
 """
-MODE = 'dev'
+
 
 """
 Константа MODE, определяющая режим работы.
@@ -89,7 +89,7 @@ MODE = 'dev'
 """
 Дополнительные данные.
 """
-MODE = 'dev'
+
 
 """
 Константа MODE, определяющая режим работы.
@@ -136,7 +136,7 @@ from src.logger import logger # Импорт функции logger
 
 Этот модуль содержит объявления локаторов для элементов веб-страницы поставщика hb.
 """
-MODE = 'dev'
+
 
 """
 Константа MODE, определяющая режим работы.
@@ -161,7 +161,7 @@ MODE = 'dev'
 """
 Дополнительные данные.
 """
-MODE = 'dev'
+
 
 """
 Константа MODE, определяющая режим работы.

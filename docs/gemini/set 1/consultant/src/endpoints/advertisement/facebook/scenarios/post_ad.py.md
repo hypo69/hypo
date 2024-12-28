@@ -11,7 +11,7 @@
 	:synopsis: Публикация рекламного сообщения группах фейсбук
 
 """
-MODE = 'dev'
+
 
 from socket import timeout
 import time
@@ -88,7 +88,7 @@ def post_ad(d: Driver, message:SimpleNamespace) -> bool:
 :platform: Windows, Unix
 :synopsis: Публикация рекламного сообщения группах фейсбук
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path
@@ -177,7 +177,7 @@ def post_ad(d: Driver, message: SimpleNamespace) -> bool:
 :platform: Windows, Unix
 :synopsis: Публикация рекламного сообщения группах фейсбук
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path

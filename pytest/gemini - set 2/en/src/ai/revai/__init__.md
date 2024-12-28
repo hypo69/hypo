@@ -4,7 +4,7 @@ import sys
 
 # Replace with the actual file content if available.
 # Assuming MODE is a global variable
-MODE = 'dev'
+
 
 
 def test_mode_is_dev():

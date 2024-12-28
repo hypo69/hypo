@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.logger._examples """
 
@@ -76,7 +76,7 @@ __author__='hypotez '
 import sys
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 """
@@ -156,7 +156,7 @@ __author__ = 'hypotez'
 import sys
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 """

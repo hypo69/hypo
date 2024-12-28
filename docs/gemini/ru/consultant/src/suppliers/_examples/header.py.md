@@ -47,7 +47,7 @@ from pathlib import Path
 from src.logger.logger import logger #  Импорт модуля логирования
 
 #  Константа для определения режима работы.
-MODE = 'dev'
+
 
 #  Определение корневой директории проекта.
 try:

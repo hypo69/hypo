@@ -39,7 +39,7 @@
 from src.logger.logger import logger # Добавлен импорт logger
 from .graber import Graber # Импорт класса Graber из пакета
 
-MODE = 'dev'
+
 """
 Режим работы приложения.
 

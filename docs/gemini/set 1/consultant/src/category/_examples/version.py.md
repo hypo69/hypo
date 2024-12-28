@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -73,7 +73,7 @@ __author__='hypotez '
 
 """
 #: Режим работы приложения (разработка или продакшн)
-MODE = 'dev'
+
 
 
 #: Версия модуля.
@@ -113,7 +113,7 @@ __author__ = 'hypotez '
 
 """
 #: Режим работы приложения (разработка или продакшн)
-MODE = 'dev'
+
 
 
 #: Версия модуля.

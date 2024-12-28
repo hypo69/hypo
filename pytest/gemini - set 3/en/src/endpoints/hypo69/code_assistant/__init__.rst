@@ -33,7 +33,7 @@ If the code were:
 ```python
 # hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 class CodeAssistant:
-    MODE = 'dev'
+    
 
     def __init__(self, input_data):
         if not isinstance(input_data, str):

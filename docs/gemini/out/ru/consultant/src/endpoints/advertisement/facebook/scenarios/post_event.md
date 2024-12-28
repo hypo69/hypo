@@ -12,7 +12,7 @@
 	:synopsis: Публикация календарного события v группах фейсбук
 
 """
-MODE = 'dev'
+
 
 from socket import timeout
 import time
@@ -152,7 +152,7 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
 	:synopsis: Публикация календарного события v группах фейсбук
 
 """
-MODE = 'dev'
+
 
 from socket import timeout
 import time

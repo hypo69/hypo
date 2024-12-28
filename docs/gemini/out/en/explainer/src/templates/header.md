@@ -12,7 +12,7 @@
 
 """
 
-MODE = 'dev'
+
 
 
 import sys

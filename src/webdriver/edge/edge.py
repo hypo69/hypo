@@ -10,7 +10,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import os
 from pathlib import Path

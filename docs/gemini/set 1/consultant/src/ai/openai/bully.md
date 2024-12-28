@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai """
 
@@ -80,7 +80,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходи
 import openai
 from src.logger import logger  # Импорт логгера
 
-MODE = 'dev'
+
 
 
 def bully(user_message: str = "Hello!", messages: list = None) -> list:
@@ -146,7 +146,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходи
 import openai
 from src.logger import logger  # Импорт логгера
 
-MODE = 'dev'
+
 
 
 def bully(user_message: str = "Hello!", messages: list = None) -> list:

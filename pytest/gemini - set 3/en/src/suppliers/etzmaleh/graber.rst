@@ -24,7 +24,7 @@ except ImportError:
     # Handle potential import errors if running in different environments
     class Graber:
         pass
-    MODE = 'dev'
+    
 
 
 # Mock the necessary classes and functions for testing

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .telegram import TelegramBot
@@ -38,7 +38,7 @@ import json  # импорт необходимой библиотеки
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns # импортируем нужные функции
 
-MODE = 'dev'
+
 
 
 from .telegram import TelegramBot
@@ -91,7 +91,7 @@ import json  # импорт необходимой библиотеки
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns # импортируем нужные функции
 
-MODE = 'dev'
+
 
 
 from .telegram import TelegramBot

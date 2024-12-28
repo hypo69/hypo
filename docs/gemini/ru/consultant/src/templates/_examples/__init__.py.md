@@ -47,7 +47,7 @@ from packaging.version import Version
 from .version import __version__, __doc__, __details__
 
 # Константа для определения режима работы (разработка)
-MODE = 'dev'
+
 """
 Режим работы приложения, по умолчанию 'dev'.
 """

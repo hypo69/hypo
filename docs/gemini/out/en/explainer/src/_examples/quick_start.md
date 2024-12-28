@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src._examples """
 
@@ -57,7 +57,7 @@ No algorithm is present in this code. It only contains comments and a variable d
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Quick start to `hypotez`)
+    A[] --> B(Quick start to `hypotez`)
 ```
 
 **Dependencies:**

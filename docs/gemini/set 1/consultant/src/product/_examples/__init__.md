@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -63,7 +63,7 @@ import sys
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 
-#MODE = 'dev'  # Переменная MODE не используется, удалена
+#  # Переменная MODE не используется, удалена
 
 """
 Этот модуль содержит примеры кода.
@@ -125,7 +125,7 @@ import sys
 from packaging.version import Version
 from .version import __version__, __doc__, __details__
 
-#MODE = 'dev'  # Переменная MODE не используется, удалена
+#  # Переменная MODE не используется, удалена
 
 """
 Этот модуль содержит примеры кода.

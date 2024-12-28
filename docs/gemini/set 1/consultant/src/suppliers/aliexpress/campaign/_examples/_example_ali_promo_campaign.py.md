@@ -33,7 +33,7 @@
     # Создание объекта с параметрами в виде строк
     a = AliPromoCampaign(campaign_name, category_name, 'EN', 'USD')
 """
-MODE = 'dev'
+
 # Пример создания рекламной кампании
 
 ...
@@ -133,7 +133,7 @@ a = AliPromoCampaign(campaign_name, category_name, 'EN', 'USD')
     # Создание объекта с параметрами в виде строк
     a = AliPromoCampaign(campaign_name, category_name, 'EN', 'USD')
 """
-MODE = 'dev'
+
 # Пример создания рекламной кампании
 
 ...

@@ -38,7 +38,7 @@
 
 """
 
-MODE = 'dev'
+
 
 import functools
 import time

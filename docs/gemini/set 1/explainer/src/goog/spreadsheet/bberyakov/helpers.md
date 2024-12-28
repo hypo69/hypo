@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -198,7 +198,7 @@ graph TD
 
 **Переменные:**
 
-* **`MODE = 'dev'`:**  Глобальная переменная, вероятно, используется для управления режимом работы программы (например, 'dev', 'prod').
+* **``:**  Глобальная переменная, вероятно, используется для управления режимом работы программы (например, 'dev', 'prod').
 
 
 **Возможные ошибки или области для улучшений:**

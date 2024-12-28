@@ -2,7 +2,7 @@
 
 ## Overview
 
-This module, located in the `hypotez/src/logger/_examples` directory, defines variables related to a logging system, likely for development (`MODE = 'dev'`).  It also contains version information and documentation strings, including details about the module.
+This module, located in the `hypotez/src/logger/_examples` directory, defines variables related to a logging system, likely for development (``).  It also contains version information and documentation strings, including details about the module.
 
 ## Variables
 

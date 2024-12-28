@@ -22,7 +22,7 @@
     graber = Graber()
     graber.process_data()
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -60,6 +60,6 @@ from .graber import Graber
     graber = Graber()
     graber.process_data()
 """
-MODE = 'dev'
+
 
 from .graber import Graber

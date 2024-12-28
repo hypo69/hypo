@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -131,7 +131,7 @@ if __name__ == '__main__':
 	:platform: Windows, Unix
 	:synopsis: Модуль для выполнения веб-скрапинга с использованием Playwright.
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path

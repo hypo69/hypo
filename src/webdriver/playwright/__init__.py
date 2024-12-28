@@ -9,6 +9,6 @@
 	:synopsis:
 https://chatgpt.com/share/67428d3f-6b18-800d-a585-eb414eef60e2
 """
-MODE = 'dev'
+
 
 from .playwrid import Playwrid

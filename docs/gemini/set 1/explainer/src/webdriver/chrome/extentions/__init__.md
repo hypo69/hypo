@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome.extentions """
 
@@ -63,7 +63,7 @@ from .version import __version__, __doc__, __details__
 
 ```mermaid
 graph TD
-    A[init.py] --> B(MODE = 'dev');
+    A[init.py] --> B();
     B --> C[Import Version];
     C --> D[Import __version__, __doc__, __details__];
     
@@ -94,7 +94,7 @@ graph TD
 
 **Переменные:**
 
-- `MODE = 'dev'`: Переменная, вероятно, хранит режим работы модуля.  В данном случае, `'dev'` предполагает режим разработки.
+- ``: Переменная, вероятно, хранит режим работы модуля.  В данном случае, `'dev'` предполагает режим разработки.
 
 **Возможные ошибки и улучшения:**
 

@@ -6,7 +6,7 @@
 
 1.  **Начало:** Инициализация модуля `src.suppliers.aliexpress.utils`.
 2.  **Определение `MODE`:** Переменной `MODE` присваивается значение `'dev'`.
-    *   _Пример:_ `MODE = 'dev'`.
+    *   _Пример:_ ``.
 3.  **Импорт `extract_prod_ids`:** Импортируется функция `extract_prod_ids` из модуля `extract_product_id.py`.
     *   _Пример:_ `from .extract_product_id import extract_prod_ids`.
 4.  **Импорт `ensure_https`:** Импортируется функция `ensure_https` из модуля `ensure_https.py`.
@@ -23,7 +23,7 @@
 
 ```mermaid
 graph LR
-    A[src.suppliers.aliexpress.utils/__init__.py] --> B(MODE = 'dev')
+    A[src.suppliers.aliexpress.utils/__init__.py] --> B()
     A --> C(import extract_prod_ids)
     A --> D(import ensure_https)
     A --> E(import locales)
@@ -63,7 +63,7 @@ graph LR
 
 **Переменные:**
 
--   `MODE = 'dev'`:
+-   ``:
     -   Глобальная переменная `MODE`, установленная в значение `'dev'`.
     -   Определяет режим работы модуля или всего приложения (разработка, тестирование, продакшн).
     -   Может влиять на логику выполнения кода (например, использование мок-данных в режиме разработки).

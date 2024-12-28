@@ -16,7 +16,7 @@ import sys
 from graphviz import Source
 from src.logger.logger import logger # добавление импорта для логирования
 
-MODE = 'dev'
+
 
 
 def dot2png(dot_file: str, png_file: str) -> None:
@@ -110,7 +110,7 @@ import sys
 from graphviz import Source
 from src.logger.logger import logger # добавление импорта для логирования
 
-MODE = 'dev'
+
 
 
 def dot2png(dot_file: str, png_file: str) -> None:

@@ -29,7 +29,7 @@ from __future__ import annotations
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 import os
 import sys
@@ -150,7 +150,7 @@ from __future__ import annotations
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 import os
 import sys

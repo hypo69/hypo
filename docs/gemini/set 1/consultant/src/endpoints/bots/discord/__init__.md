@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 
@@ -62,7 +62,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт модуля логирования
 
 
-MODE = 'dev'
+
 
 
 def some_function():
@@ -114,7 +114,7 @@ def another_function():
 from src.utils.jjson import j_loads
 from src.logger import logger  # Импорт модуля логирования
 
-MODE = 'dev'
+
 
 
 def some_function():

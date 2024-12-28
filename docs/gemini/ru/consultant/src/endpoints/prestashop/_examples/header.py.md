@@ -67,7 +67,7 @@ from src.utils.jjson import j_dumps, j_loads
 from src.logger.logger import logger
 # ----------------
 
-MODE = 'dev' # Указывает режим работы приложения: 'dev' (разработка) или 'prod' (production).
+ # Указывает режим работы приложения: 'dev' (разработка) или 'prod' (production).
 
 dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+11]) # Вычисляет корневой каталог проекта, обрезая текущий путь до 'hypotez'
 sys.path.append (str (dir_root) ) # Добавляет корневой каталог в список путей для импорта модулей.

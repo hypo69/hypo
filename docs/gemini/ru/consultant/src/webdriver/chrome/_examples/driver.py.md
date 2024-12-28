@@ -48,7 +48,7 @@
         main()
 """
 
-MODE = 'dev'
+
 
 from src.webdriver.driver import Driver, Chrome
 from selenium.webdriver.common.by import By # TODO: проверить необходимость импорта

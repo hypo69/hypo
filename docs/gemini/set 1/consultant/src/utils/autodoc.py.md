@@ -60,7 +60,7 @@
         print(example_function.__doc__)  # Вывод обновленного docstring
 """
 
-MODE = 'dev'
+
 
 import functools
 import time

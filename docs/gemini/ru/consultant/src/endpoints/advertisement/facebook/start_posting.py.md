@@ -60,7 +60,7 @@ from src.endpoints.advertisement.facebook import FacebookPromoter
 from src.logger.logger import logger
 # from src.utils.jjson import j_loads # TODO: если нужно, добавьте импорт
 
-MODE = 'dev'
+
 #: Режим работы приложения (разработка или продакшн).
 
 d = Driver(Chrome)

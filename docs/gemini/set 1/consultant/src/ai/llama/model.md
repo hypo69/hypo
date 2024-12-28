@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.llama """
 
@@ -60,7 +60,7 @@ MODE = 'dev'
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 from src.logger import logger  # Импортируем функцию логирования
 
-MODE = 'dev'
+
 
 
 """
@@ -87,7 +87,7 @@ MODE = 'dev'
   :synopsis:  Комментарии к модулю.
 """
 
-MODE = 'dev'
+
   
 ```
 
@@ -118,7 +118,7 @@ MODE = 'dev'
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции для работы с JSON
 from src.logger import logger  # Импортируем функцию логирования
 
-MODE = 'dev'
+
 
 
 """
@@ -145,4 +145,4 @@ MODE = 'dev'
   :synopsis:  Комментарии к модулю.
 """
 
-#MODE = 'dev'
+#

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb """
 
@@ -132,7 +132,7 @@ def get_list_categories_from_site(s):
     Модуль использует специфичные локаторы для сайта hb.co.il и требует корректной настройки
     драйвера и поставщика.
 """
-MODE = 'dev'
+
 
 from typing import Dict, List
 from pathlib import Path
@@ -252,7 +252,7 @@ def get_list_categories_from_site(s: Supplier) -> None:
     Модуль использует специфичные локаторы для сайта hb.co.il и требует корректной настройки
     драйвера и поставщика.
 """
-MODE = 'dev'
+
 
 from typing import Dict, List
 from pathlib import Path

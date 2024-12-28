@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -74,7 +74,7 @@ __author__='hypotez '
 """
 from src.logger import logger # Импортируем logger для логирования
 
-MODE = 'dev'
+
 
 """
 Переменная, содержащая режим работы модуля.
@@ -141,7 +141,7 @@ __doc__ = __doc__
 """
 from src.logger import logger # Импортируем logger для логирования
 
-MODE = 'dev'
+
 
 """
 Переменная, содержащая режим работы модуля.

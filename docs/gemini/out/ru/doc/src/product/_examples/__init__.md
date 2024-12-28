@@ -30,7 +30,7 @@ from .version import __version__, __doc__, __details__
 ```
 ```
 ```python
-MODE = 'dev'
+
 ```
 **Описание**: Переменная, хранящая текущий режим работы продукта.
 

@@ -70,7 +70,7 @@ from datetime import datetime, time
 import threading
 from src.logger.logger import logger  #  Импортирован logger
 
-MODE = 'dev'
+
 
 DEFAULT_START_TIME = time(23, 0)
 DEFAULT_END_TIME = time(6, 0)

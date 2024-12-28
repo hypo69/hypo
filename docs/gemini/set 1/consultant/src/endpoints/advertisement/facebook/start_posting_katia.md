@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Katia?)
 
 """
-MODE = 'dev'
+
 
 
 import header 
@@ -60,7 +60,7 @@ from src.logger import logger
 from src.utils.jjson import j_loads  # Импорт для работы с JSON
 
 # Переменная для режима работы.
-MODE = 'dev'
+
 
 
 def start_facebook_posting() -> None:
@@ -129,7 +129,7 @@ from src.logger import logger
 from src.utils.jjson import j_loads  # Импорт для работы с JSON
 
 # Переменная для режима работы.
-MODE = 'dev'
+
 
 
 def start_facebook_posting() -> None:

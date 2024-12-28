@@ -4,7 +4,7 @@
 ## \file hypotez/src/logger/beeper.py
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.logger \n\t:platform: Windows, Unix\n\t:synopsis: Бииип\n\n"""
-MODE = 'dev'
+
 
 
 import asyncio

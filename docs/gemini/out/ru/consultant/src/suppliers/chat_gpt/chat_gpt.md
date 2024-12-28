@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 import header
 from pathlib import Path
@@ -114,7 +114,7 @@ class ChatGpt:
 *   Проверка существования директории `conversation_directory`.
 *   Обработка потенциальной ошибки открытия файла.
 *   Добавлены типы данных для функций.
-*   Исправлен случайный дубликат `MODE` и `MODE = 'dev'`.
+*   Исправлен случайный дубликат `MODE` и ``.
 
 
 # FULL Code

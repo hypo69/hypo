@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive
@@ -29,7 +29,7 @@ from .drive import GoogleDrive
 
 ```mermaid
 graph LR
-    A[hypotez/src/goog/drive/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/goog/drive/__init__.py] --> B();
     A --> C[from .drive import GoogleDrive];
     C --> D(GoogleDrive);
 ```
@@ -54,7 +54,7 @@ The mermaid diagram shows a single dependency: `src.goog.drive.drive`. This modu
 
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable likely controls the behavior of code depending on the execution environment (development, production).  This type of flag or variable is useful for configuration.
+    * ``: This variable likely controls the behavior of code depending on the execution environment (development, production).  This type of flag or variable is useful for configuration.
 
 
 * **Potential Errors/Improvements:**

@@ -49,7 +49,7 @@
 """
 from src.logger.logger import logger
 #: Режим работы модуля, по умолчанию установлен в 'dev'.
-MODE = 'dev'
+
 
 # Импорт класса SpreadSheet из модуля spreadsheet.
 from .spreadsheet import SpreadSheet

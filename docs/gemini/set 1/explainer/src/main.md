@@ -15,7 +15,7 @@
                     #################################################################################################
 
 
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ Usage Example
     python main.py --help # Displays help
 
 """
-MODE = 'dev'
+
 
 
 import argparse

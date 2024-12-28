@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -66,7 +66,7 @@ from .main_window import AssistantMainWindow
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 # Установка режима разработки.
-MODE = 'dev'
+
 # .. module:: src.gui.openai_trаigner
 # 	:platform: Windows, Unix
 # 	:synopsis:
@@ -112,7 +112,7 @@ from .main_window import AssistantMainWindow
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 # Установка режима разработки.
-MODE = 'dev'
+
 # .. module:: src.gui.openai_trаigner
 # 	:platform: Windows, Unix
 # 	:synopsis:

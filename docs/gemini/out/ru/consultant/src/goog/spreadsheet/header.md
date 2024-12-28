@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -96,7 +96,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Этот модуль содержит константы и переменные,
 необходимые для работы с Google Spreadsheets.
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -204,7 +204,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 Этот модуль содержит константы и переменные,
 необходимые для работы с Google Spreadsheets.
 """
-MODE = 'dev'
+
 
 
 import sys

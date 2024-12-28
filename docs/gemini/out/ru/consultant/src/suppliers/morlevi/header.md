@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -91,7 +91,7 @@ from packaging.version import Version
 from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 
-MODE = 'dev'
+
 
 def set_project_root(marker_files=('__root__')) -> Path:
     """
@@ -183,7 +183,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
 from src.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 def set_project_root(marker_files=('__root__')) -> Path:
     """

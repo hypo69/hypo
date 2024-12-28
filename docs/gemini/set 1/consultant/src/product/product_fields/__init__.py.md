@@ -19,7 +19,7 @@
    :synopsis: Модуль полей товара
 """
 
-MODE = 'dev'
+
 
 # Импорт класса ProductFields, определяющего структуру полей товара
 from .product_fields import ProductFields
@@ -60,7 +60,7 @@ from .product_fields_translator import translate_presta_fields_dict
    :synopsis: Модуль полей товара
 """
 
-MODE = 'dev'
+
 
 # Импорт класса ProductFields, определяющего структуру полей товара
 from .product_fields import ProductFields

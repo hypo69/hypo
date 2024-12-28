@@ -65,7 +65,7 @@ Functions:
     'path/to/images/subfolder/random_image.png'
 """
 
-MODE = 'dev'
+
 import aiohttp
 import aiofiles
 from PIL import Image

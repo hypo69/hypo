@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -30,7 +30,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src._examples """
 
@@ -59,7 +59,7 @@ from src.utils.jjson import j_loads
 """
 
 
-MODE = 'dev'
+
 
 """
 Константа определяющая режим работы.
@@ -131,7 +131,7 @@ from src.logger import logger
 """
 
 
-MODE = 'dev'
+
 
 """
 Константа определяющая режим работы.

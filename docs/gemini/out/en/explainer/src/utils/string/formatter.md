@@ -25,7 +25,7 @@ Data transformation:
     - extract_value_from_parentheses_with_lead_dollar(input_str: str) -> str | list | bool
     - clean_url_from_protocols(url: str) -> str
 """
-MODE = 'dev'
+
 import re
 import html
 from typing import List, Dict

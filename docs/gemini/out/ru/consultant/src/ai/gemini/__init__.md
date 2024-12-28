@@ -12,7 +12,7 @@
 	:synopsis: Модуль модели `gemini`
 
 """
-MODE = 'dev'
+
 
 
 from .generative_ai import GoogleGenerativeAI
@@ -35,7 +35,7 @@ from src.logger import logger  # Импортируем логгер
 #  Проверка корректности json-данных, обработка ошибок
 #  Использование logger.error для вывода сообщений об ошибках
 
-MODE = 'dev'
+
 
 
 from .generative_ai import GoogleGenerativeAI  # Импорт класса GoogleGenerativeAI
@@ -68,7 +68,7 @@ from src.logger import logger  # Импортируем логгер
 #  Проверка корректности json-данных, обработка ошибок
 #  Использование logger.error для вывода сообщений об ошибках
 
-MODE = 'dev'  # Тип MODE - строка
+  # Тип MODE - строка
 
 
 from .generative_ai import GoogleGenerativeAI  # Импорт класса GoogleGenerativeAI

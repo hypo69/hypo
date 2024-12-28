@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.amazon """
 
@@ -153,7 +153,7 @@ def get_list_products_in_category(s) -> list[str, str, None]:
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 """
 	:platform: Windows, Unix
 	:synopsis:
@@ -173,7 +173,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.amazon """
 """  Модуль сбора товаров со страницы категорий поставщика aliexpress.com через вебдрайвер

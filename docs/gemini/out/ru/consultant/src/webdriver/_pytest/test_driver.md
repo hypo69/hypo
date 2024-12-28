@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._pytest """
 
@@ -80,7 +80,7 @@ from pathlib import Path  # Импортируем необходимый мод
    :synopsis: Тестовый модуль для класса DriverBase.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -193,7 +193,7 @@ class TestDriverBase:
    :synopsis: Тестовый модуль для класса DriverBase.
 
 """
-MODE = 'dev'
+
 
 
 """

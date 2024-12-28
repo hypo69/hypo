@@ -64,7 +64,7 @@ from src.logger.logger import logger
 # from src.utils.jjson import j_loads # # не используется в данном файле
 # from src.utils.jjson import j_loads_ns # # не используется в данном файле
 
-# MODE = 'dev'  # не используется
+#   # не используется
 
 def read_xls_as_dict(
     xls_file: str,

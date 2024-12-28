@@ -12,7 +12,7 @@
 	:synopsis:модули управления рекламной кампанией Aliexpress
 
 """
-MODE = 'dev'
+
 
 
 from .ali_campaign_editor import AliCampaignEditor
@@ -41,7 +41,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 from .ali_campaign_editor import AliCampaignEditor
@@ -114,7 +114,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 
 from .ali_campaign_editor import AliCampaignEditor

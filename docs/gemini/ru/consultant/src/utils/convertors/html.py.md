@@ -85,7 +85,7 @@ except Exception as ex:
     ...
 
 
-MODE = 'dev'
+
 
 
 class StringFormatter:

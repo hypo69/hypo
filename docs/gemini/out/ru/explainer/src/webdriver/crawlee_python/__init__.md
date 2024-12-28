@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .crawlee_python import CrawleePython
 ```
@@ -40,7 +40,7 @@ from .crawlee_python import CrawleePython
 
 ```mermaid
 graph TD
-    A[crawlee_python/__init__.py] --> B(MODE = 'dev');
+    A[crawlee_python/__init__.py] --> B();
     A --> C[from .crawlee_python import CrawleePython];
     B -- константа -- C;
     C -- импорт -- D[CrawleePython];
@@ -71,7 +71,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`: Глобальная переменная, вероятно, используемая для выбора режима работы программы (например, разработки или производства).
+* ``: Глобальная переменная, вероятно, используемая для выбора режима работы программы (например, разработки или производства).
 
 
 **Возможные ошибки и улучшения:**

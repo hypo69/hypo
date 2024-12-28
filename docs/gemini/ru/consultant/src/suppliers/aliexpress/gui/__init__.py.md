@@ -40,7 +40,7 @@
     print(MODE)
 """
 # from src.logger.logger import logger # TODO: пример импорта
-MODE = 'dev'
+
 """
 Режим работы приложения. Может принимать значения 'dev' для разработки и 'prod' для продакшена.
 :type: str

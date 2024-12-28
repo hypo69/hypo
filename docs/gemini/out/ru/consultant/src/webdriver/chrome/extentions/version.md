@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome.extentions """
 
@@ -74,7 +74,7 @@ from src.logger import logger  # Импортируем logger из модуля
 """
 
 # Режим работы (например, 'dev', 'prod').
-MODE = 'dev'
+
 
 # Версия модуля.
 __version__ = "3.12.0.0.0.4"
@@ -115,7 +115,7 @@ from src.logger import logger  # Импортируем logger из модуля
 """
 
 # Режим работы (например, 'dev', 'prod').
-MODE = 'dev'
+
 
 # Версия модуля.
 __version__ = "3.12.0.0.0.4"

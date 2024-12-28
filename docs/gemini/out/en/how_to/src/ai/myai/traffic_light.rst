@@ -4,7 +4,7 @@ How to use this code block
 
 Description
 -------------------------
-This Python code defines a module named `traffic_light.py` within the `myai` package.  The code currently lacks a substantive description of its intended function.  It appears to be a placeholder or a starting point for a project related to traffic light simulation or control, potentially with an AI component.  The presence of `MODE = 'dev'` suggests it's intended for development or testing environments. The code includes numerous multiline strings (docstrings), but these are empty or incomplete. The comments direct users to external documentation (`https://habr.com/ru/articles/849414/`).
+This Python code defines a module named `traffic_light.py` within the `myai` package.  The code currently lacks a substantive description of its intended function.  It appears to be a placeholder or a starting point for a project related to traffic light simulation or control, potentially with an AI component.  The presence of `` suggests it's intended for development or testing environments. The code includes numerous multiline strings (docstrings), but these are empty or incomplete. The comments direct users to external documentation (`https://habr.com/ru/articles/849414/`).
 
 
 Execution steps

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с переводами данных товаров.
 """
-MODE = 'dev'
+
 
 
 """
@@ -39,7 +39,7 @@ MODE = 'dev'
   :synopsis:
 	Настройка режима работы.
 """
-MODE = 'dev'
+
 
 """ module: src.translators """
 
@@ -148,7 +148,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
  	:synopsis:
  	Модуль для работы с переводами данных товаров.
 -"""
--MODE = 'dev'
+-
 -
 -
 -"""
@@ -170,7 +170,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 -  :synopsis:
 +  :platform: Windows, Unix  :synopsis: Настройка режима работы.
  """
- MODE = 'dev'
+ 
  
 -""" module: src.translators """
 -
@@ -286,7 +286,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
    :synopsis: Модуль для работы с переводами данных товаров.
 """
 
-MODE = 'dev'
+
 
 
 """
@@ -294,7 +294,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Настройка режима работы.
 """
-MODE = 'dev'
+
 
 """ module: src.translators """
 

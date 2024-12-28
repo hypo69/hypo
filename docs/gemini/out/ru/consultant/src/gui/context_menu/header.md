@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu """
 
@@ -92,7 +92,7 @@ import sys
 from pathlib import Path
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 # --- Логирование ---
 from src.logger import logger
@@ -175,7 +175,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 
-MODE = 'dev'
+
 
 def _update_system_path(paths_to_add):
     """Обновляет переменную среды PATH, добавляя необходимые пути.

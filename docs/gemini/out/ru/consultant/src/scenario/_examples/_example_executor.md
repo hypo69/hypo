@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.scenario._examples """
 
@@ -171,7 +171,7 @@ def example_run_scenario():
  
 -"""
 -.. module: src.scenario._examples \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""
- MODE = 'dev'
+ 
  
 -"""
 -	:platform: Windows, Unix
@@ -197,7 +197,7 @@ def example_run_scenario():
    :platform: Windows, Unix
    :platform: Windows, Unix
    :synopsis:
- """MODE = 'dev'
+ """
 -  
 +
  """ module: src.scenario._examples """
@@ -355,7 +355,7 @@ def example_run_scenario():
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 
 """ module: src.scenario._examples """

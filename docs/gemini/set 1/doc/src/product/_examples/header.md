@@ -51,7 +51,7 @@
 ## Код
 
 ```python
-MODE = 'dev'
+
 
 import sys
 import os

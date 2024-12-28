@@ -12,7 +12,7 @@
 Этот модуль содержит классы для управления различными ботами, такими как TelegramBot.
 
 """
-MODE = 'dev'
+
 
 
 from src.endpoints.bots.telegram import TelegramBot
@@ -38,7 +38,7 @@ from src.endpoints.bots.telegram import TelegramBot
 Этот модуль содержит классы для управления различными ботами, такими как TelegramBot.
 
 """
-MODE = 'dev'
+
 
 
 from src.endpoints.bots.telegram import TelegramBot

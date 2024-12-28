@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from global_settingspread import Spreadsheet, Worksheet
@@ -166,7 +166,7 @@ class GWorksheet (Worksheet):
     worksheet = GWorksheet(sh, ws_title='MySheet', rows=100, cols=20)
     worksheet.header('Заголовок таблицы')
 """
-MODE = 'dev'
+
 
 from global_settingspread import Spreadsheet, Worksheet
 # from goog.gspreadsheet import GSpreadsheet
@@ -349,7 +349,7 @@ class GWorksheet(Worksheet):
     worksheet = GWorksheet(sh, ws_title='MySheet', rows=100, cols=20)
     worksheet.header('Заголовок таблицы')
 """
-MODE = 'dev'
+
 
 from global_settingspread import Spreadsheet, Worksheet
 # from goog.gspreadsheet import GSpreadsheet

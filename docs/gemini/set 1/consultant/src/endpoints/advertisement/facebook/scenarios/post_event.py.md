@@ -30,7 +30,7 @@
     )
     post_event(driver, event_data)
 """
-MODE = 'dev'
+
 
 from socket import timeout # импорт не используется
 import time
@@ -233,7 +233,7 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
     )
     post_event(driver, event_data)
 """
-MODE = 'dev'
+
 
 #from socket import timeout # импорт не используется
 import time

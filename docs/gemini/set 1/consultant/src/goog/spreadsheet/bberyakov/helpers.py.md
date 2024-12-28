@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -142,7 +142,7 @@ def hex_to_rgb (hex: str) -> tuple:
 from src.logger.logger import logger
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить когда будет нужно
 
-MODE = 'dev'
+
 
 def hex_color_to_decimal(letters: str) -> int:
     """Преобразует шестнадцатеричный цвет в десятичный.
@@ -252,7 +252,7 @@ def hex_to_rgb(hex: str) -> tuple:
 from src.logger.logger import logger
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: добавить когда будет нужно
 
-MODE = 'dev'
+
 
 def hex_color_to_decimal(letters: str) -> int:
     """Преобразует шестнадцатеричный цвет в десятичный.

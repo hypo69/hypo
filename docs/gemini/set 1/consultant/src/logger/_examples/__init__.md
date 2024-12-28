@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.logger._examples """
 
@@ -65,7 +65,7 @@ from .version import __version__, __doc__, __details__
 from src.utils.jjson import j_loads
 
 
-MODE = 'dev'  # Режим работы (dev, prod, etc.).
+  # Режим работы (dev, prod, etc.).
 
 
 def example_function():
@@ -119,7 +119,7 @@ from .version import __version__, __doc__, __details__
 from src.utils.jjson import j_loads
 
 
-MODE = 'dev'  # Режим работы (dev, prod, etc.).
+  # Режим работы (dev, prod, etc.).
 
 
 def example_function():

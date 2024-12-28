@@ -119,7 +119,7 @@ from src.utils.image import save_png
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint
 
-MODE = 'dev'
+
 
 
 @dataclass

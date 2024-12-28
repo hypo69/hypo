@@ -42,6 +42,6 @@ from src.webdriver.crawlee_python import CrawleePython
 
 
 #: Режим работы вебдрайвера. Может быть 'dev' или 'prod'
-MODE = 'dev'
+
 
 ```

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для работы с категориями поставщика hb.co.il.
 """
-MODE = 'dev'
+
 
 
 """
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.hb """
 
@@ -133,15 +133,7 @@ def get_list_categories_from_site(s):
    Этот модуль содержит функции для получения списка категорий и товаров
    с сайта поставщика hb.co.il.
 """
-MODE = 'dev'
 
-
-"""
-.. data:: MODE
-   :platform: Windows, Unix
-   :type: str
-   :synopsis: Режим работы (например, 'dev', 'prod').
-"""
 
 
 """
@@ -158,7 +150,15 @@ MODE = 'dev'
    :type: str
    :synopsis: Режим работы (например, 'dev', 'prod').
 """
-MODE = 'dev'
+
+
+"""
+.. data:: MODE
+   :platform: Windows, Unix
+   :type: str
+   :synopsis: Режим работы (например, 'dev', 'prod').
+"""
+
   
 """ module: src.suppliers.hb """
 
@@ -269,15 +269,7 @@ def get_list_categories_from_site(s):
    Этот модуль содержит функции для получения списка категорий и товаров
    с сайта поставщика hb.co.il.
 """
-MODE = 'dev'
 
-
-"""
-.. data:: MODE
-   :platform: Windows, Unix
-   :type: str
-   :synopsis: Режим работы (например, 'dev', 'prod').
-"""
 
 
 """
@@ -294,7 +286,15 @@ MODE = 'dev'
    :type: str
    :synopsis: Режим работы (например, 'dev', 'prod').
 """
-MODE = 'dev'
+
+
+"""
+.. data:: MODE
+   :platform: Windows, Unix
+   :type: str
+   :synopsis: Режим работы (например, 'dev', 'prod').
+"""
+
   
 """ module: src.suppliers.hb """
 

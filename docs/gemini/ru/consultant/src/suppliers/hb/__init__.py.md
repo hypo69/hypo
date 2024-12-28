@@ -49,7 +49,7 @@ from src.logger.logger import logger
 
 # Режим работы: 'dev' для разработки, 'prod' для продакшена
 #: Указывает режим работы модуля
-MODE = 'dev'
+
 
 # Импортируем класс Graber из модуля graber
 from .graber import Graber

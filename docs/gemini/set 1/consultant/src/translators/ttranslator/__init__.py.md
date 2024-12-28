@@ -11,7 +11,7 @@
 Этот модуль инициализирует переменную `MODE` для определения режима работы.
 Модуль использует библиотеку `translate-python` для выполнения переводов.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.translators.ttranslator
@@ -40,7 +40,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.translators.ttranslator """
 
@@ -68,7 +68,7 @@ from translate import Translator
 Этот модуль инициализирует переменную `MODE` для определения режима работы.
 Модуль использует библиотеку `translate-python` для выполнения переводов.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.translators.ttranslator
@@ -97,7 +97,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.translators.ttranslator """
 
@@ -118,7 +118,7 @@ from translate import Translator
 Этот модуль инициализирует переменную `MODE` для определения режима работы.
 Модуль использует библиотеку `translate-python` для выполнения переводов.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.translators.ttranslator
@@ -147,7 +147,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
 
 """ module: src.translators.ttranslator """
 

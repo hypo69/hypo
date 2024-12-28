@@ -62,7 +62,7 @@
     else:
         print('Не удалось получить версию релиза.')
 """
-MODE = 'dev'
+
 
 
 import requests

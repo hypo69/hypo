@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 
@@ -35,7 +35,7 @@ from .graber import Graber
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
@@ -69,7 +69,7 @@ from src.logger import logger  # Импорт логирования
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
@@ -81,7 +81,7 @@ from src.logger import logger  # Импорт логирования
 # from .graber import Graber  # Удалил повторный импорт
 ```
 ```python
-# MODE = 'dev' # Удалено, т.к. это не функция, а константа.
+#  # Удалено, т.к. это не функция, а константа.
 ```
 
 ```python
@@ -111,4 +111,4 @@ from src.logger import logger  # Импорт логирования
 ```
 
 ```python
-# #MODE = 'dev' # Исправлен стиль написания константы
+# # # Исправлен стиль написания константы

@@ -16,7 +16,7 @@ import os
 # from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 # TODO: Добавить реализацию функции
 def get_banners() -> bool:
     """
@@ -62,7 +62,7 @@ import os
 # from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 # TODO: Добавить реализацию функции
 def get_banners() -> bool:
     """

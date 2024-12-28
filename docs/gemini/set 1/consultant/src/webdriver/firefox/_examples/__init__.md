@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.firefox._examples """
 
@@ -63,7 +63,7 @@ from .version import __version__, __doc__, __details__
 """
 
 # Конфигурационная переменная, определяет режим работы.
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -87,7 +87,7 @@ MODE = 'dev'
    :synopsis: Пустая строка документации.
 """
 # Переменная MODE, определяет режим работы.  # Закомментировано, так как значение не используется.
-# MODE = 'dev'
+# 
 
 """
    module: src.webdriver.firefox._examples
@@ -129,7 +129,7 @@ from src.logger import logger  # Импортируем logger для логир
 """
 
 # Конфигурационная переменная, определяет режим работы.
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -153,7 +153,7 @@ MODE = 'dev'
    :synopsis: Пустая строка документации.
 """
 # Переменная MODE, определяет режим работы.  # Закомментировано, так как значение не используется.
-# MODE = 'dev'
+# 
 
 """
    module: src.webdriver.firefox._examples

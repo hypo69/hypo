@@ -15,7 +15,7 @@
 Он также загружает настройки из файла `settings.json` и документацию из `README.MD`.
 
 """
-MODE = 'dev'
+
 
 import sys
 # импортирует  модуль json
@@ -131,7 +131,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 Он также загружает настройки из файла `settings.json` и документацию из `README.MD`.
 
 """
-MODE = 'dev'
+
 
 import sys
 # импортирует  модуль json

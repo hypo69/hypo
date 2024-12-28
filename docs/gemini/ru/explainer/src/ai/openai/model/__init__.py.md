@@ -4,7 +4,7 @@
 
 1. **Инициализация режима:**
    - Устанавливается переменная `MODE` в значение `'dev'`. Это, вероятно, указывает на режим разработки.
-   - **Пример:** `MODE = 'dev'`.
+   - **Пример:** ``.
 
 2. **Импорт класса `OpenAIModel`:**
    - Из файла `training.py`, находящегося в текущей директории, импортируется класс `OpenAIModel`. Это предполагает, что класс `OpenAIModel` используется для работы с моделями OpenAI.
@@ -14,7 +14,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> ModeInitialization[Initialize Mode: MODE = 'dev']
+    Start --> ModeInitialization[Initialize Mode: ]
     ModeInitialization --> ImportOpenAIModel[Import OpenAIModel: from .training import OpenAIModel]
 ```
 

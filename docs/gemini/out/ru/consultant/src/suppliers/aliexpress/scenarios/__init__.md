@@ -12,7 +12,7 @@
 	:synopsis: Сценарии для алиэкспресс
 
 """
-MODE = 'dev'
+
 
 
 from .login import login
@@ -35,7 +35,7 @@ from .login import login
 """
 import logging
 
-MODE = 'dev'
+
 
 
 # Импортируем функцию логирования
@@ -96,7 +96,7 @@ def main():
 """
 import logging
 
-MODE = 'dev'
+
 
 
 # Импортируем функцию логирования

@@ -20,7 +20,7 @@ Functions:
     - :func:`pprint`
 """
 
-MODE = 'dev'
+
 
 import json
 import csv

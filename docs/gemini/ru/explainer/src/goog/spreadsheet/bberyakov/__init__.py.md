@@ -4,7 +4,7 @@
 
 1. **Инициализация:**
    - Устанавливается глобальная переменная `MODE` в значение `'dev'`. Это, вероятно, определяет режим работы модуля (разработка, тестирование, продакшн и т.д.).
-   - `MODE = 'dev'`
+   - ``
    - Пример: В режиме `'dev'` может включаться отладочная информация.
 
 2. **Импорт модуля `gspreadsheet`:**
@@ -28,7 +28,7 @@
 ### <mermaid>
 ```mermaid
 graph LR
-    A[hypotez/src/goog/spreadsheet/bberyakov/__init__.py] --> B(MODE = 'dev')
+    A[hypotez/src/goog/spreadsheet/bberyakov/__init__.py] --> B()
     A --> C(from .gspreadsheet import GSpreadsheet)
     A --> D(from .gworksheets import GWorksheet)
     A --> E(from .grender import GSRenderr)

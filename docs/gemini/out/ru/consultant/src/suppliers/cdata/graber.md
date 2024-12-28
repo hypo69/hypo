@@ -18,7 +18,7 @@
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header
@@ -92,7 +92,7 @@ from src.webdriver.driver import Driver
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 class Graber(Grbr):
@@ -178,7 +178,7 @@ from src.webdriver.driver import Driver
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 class Graber(Grbr):

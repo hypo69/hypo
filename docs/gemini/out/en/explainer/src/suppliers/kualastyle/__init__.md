@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -29,7 +29,7 @@ There isn't enough code to create a complete algorithm diagram.  The current `ku
 ```mermaid
 graph LR
     subgraph Module: kualastyle
-        A[MODE = 'dev'] --> B{Import Graber};
+        A[] --> B{Import Graber};
         B --> C[Graber Class];
     end
 ```
@@ -46,7 +46,7 @@ The mermaid code defines a simple graph where the `kualastyle` module is the roo
 
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable likely controls the operational mode of the system (e.g., development, production).   This is a simple global variable that could affect behavior in other modules or parts of the system.
+    * ``: This variable likely controls the operational mode of the system (e.g., development, production).   This is a simple global variable that could affect behavior in other modules or parts of the system.
 
 
 * **Classes (Partial):**
@@ -59,7 +59,7 @@ The mermaid code defines a simple graph where the `kualastyle` module is the roo
 
     * **Missing documentation:**  While the docstring is present, it's very basic.  Adding more detail to describe the `Graber` class's function, arguments, and return values is highly recommended.
 
-    * **Unclear purpose of MODE:** The usage of `MODE = 'dev'` is unclear without context from other modules.  Consider if this variable actually needs to be set, and if so, add more detail to the docstring or a configuration file.
+    * **Unclear purpose of MODE:** The usage of `` is unclear without context from other modules.  Consider if this variable actually needs to be set, and if so, add more detail to the docstring or a configuration file.
 
 
 * **Relationships to Other Parts of the Project:**

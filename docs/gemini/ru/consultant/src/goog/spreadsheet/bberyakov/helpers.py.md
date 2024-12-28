@@ -49,7 +49,7 @@
 """
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 
 def letter_to_number(letter: str) -> int:

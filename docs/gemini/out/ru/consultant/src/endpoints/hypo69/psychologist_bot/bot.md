@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы бота-психолога.
 """
-MODE = 'dev'
+
 
 
 """
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
   Переменная MODE.
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.hypo69.psychologist_bot """
 
@@ -175,7 +175,7 @@ class PsychologistTelgrambot(TelegramBot):
    :platform: Windows, Unix
    :synopsis: Модуль для работы бота-психолога.
 """
-MODE = 'dev'
+
 
 
 """
@@ -198,7 +198,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis: Переменная MODE.
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.hypo69.psychologist_bot """
 

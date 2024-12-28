@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -153,7 +153,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций �
 from src.logger import logger  # Импорт модуля для логирования
 
 
-MODE = 'dev'
+
 
 
 def hex_color_to_decimal(letters: str) -> int:
@@ -262,7 +262,7 @@ def hex_to_rgb (hex_color: str) -> tuple:
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def hex_color_to_decimal(letters: str) -> int:

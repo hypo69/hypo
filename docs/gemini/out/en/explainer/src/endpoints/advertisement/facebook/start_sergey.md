@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Казаринов?)
 
 """
-MODE = 'dev'
+
 
 import header
 import random
@@ -142,7 +142,7 @@ if __name__ == "__main__":
 ```mermaid
 graph LR
     subgraph Initialization
-        A[MODE = 'dev'] --> B{group_file_paths_ru};
+        A[] --> B{group_file_paths_ru};
         B --> C{adv_file_paths_ru};
         C --> D;
     end

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import os
@@ -88,7 +88,7 @@ class PriceListRequester(PrestaShop):
    :synopsis: Модуль для запроса и модификации цен товаров в PrestaShop.
 
 """
-MODE = 'dev'
+
 
 import sys
 import os
@@ -197,7 +197,7 @@ class PriceListRequester(PrestaShop):
    :synopsis: Модуль для запроса и модификации цен товаров в PrestaShop.
 
 """
-MODE = 'dev'
+
 
 import sys
 import os

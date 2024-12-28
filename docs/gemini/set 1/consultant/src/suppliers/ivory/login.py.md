@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.ivory """
 
@@ -67,7 +67,7 @@ MODE = 'dev'
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'  #: Указывает режим работы поставщика (dev - разработка, prod - рабочий)
+  #: Указывает режим работы поставщика (dev - разработка, prod - рабочий)
 
 """ module: src.suppliers.ivory """
 
@@ -107,7 +107,7 @@ MODE = 'dev'  #: Указывает режим работы поставщика
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'  #: Указывает режим работы поставщика (dev - разработка, prod - рабочий)
+  #: Указывает режим работы поставщика (dev - разработка, prod - рабочий)
 
 """ module: src.suppliers.ivory """
 

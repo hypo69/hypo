@@ -32,7 +32,7 @@ class G(Graber):
         )
 ```
 """
-MODE = 'dev'
+
 
 import datetime
 import os
@@ -206,7 +206,7 @@ class G(Graber):
         )
 ```
 """
-MODE = 'dev'
+
 
 import datetime
 import os

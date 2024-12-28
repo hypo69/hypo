@@ -47,7 +47,7 @@
 .. note::
    Для корректной работы требуется наличие настроенных параметров доступа к API AliExpress.
 """
-MODE = 'dev'
+
 
 import re
 import asyncio

@@ -58,7 +58,7 @@ import os
 from pathlib import Path
 from src.logger.logger import logger # Добавлен импорт для логгирования
 
-MODE = 'dev' # Код устанавливает режим работы приложения
+ # Код устанавливает режим работы приложения
 
 try:
     # Код вычисляет корневой путь проекта

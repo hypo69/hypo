@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 # https://www.rev.com/api/docs
 # https://docs.rev.ai/resources/code-samples/python/
@@ -61,7 +61,7 @@ from src.utils.jjson import j_loads
 
 # Инициализация логирования
 logger = logging.getLogger(__name__)
-MODE = 'dev'
+
 
 
 def some_function():
@@ -130,7 +130,7 @@ from src.utils.jjson import j_loads
 
 # Инициализация логирования
 logger = logging.getLogger(__name__)
-MODE = 'dev'
+
 
 
 def some_function():

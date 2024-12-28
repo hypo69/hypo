@@ -12,7 +12,7 @@ module: src.category
 	:platform: Windows, Unix
 	:synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
     :TODO: В дальнейшем перенести в системную переменную"""
-MODE = 'dev'
+
 
 import sys
 import json
@@ -95,7 +95,7 @@ import sys
 from pathlib import Path
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:
@@ -190,7 +190,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def set_project_root(marker_files=('__root__')) -> Path:

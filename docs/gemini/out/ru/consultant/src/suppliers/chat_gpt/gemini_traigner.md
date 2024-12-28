@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
 ```
 
 # Improved Code
@@ -55,7 +55,7 @@ import json
 from src.utils.jjson import j_loads  # Импорт функции для работы с JSON
 from src.logger import logger  # Импорт логгера
 
-MODE = 'dev'
+
 
 
 def train_gemini(data_file: str) -> None:
@@ -121,7 +121,7 @@ import json
 from src.utils.jjson import j_loads  # Импорт функции для работы с JSON
 from src.logger import logger  # Импорт логгера
 
-MODE = 'dev'
+
 
 
 def train_gemini(data_file: str) -> None:

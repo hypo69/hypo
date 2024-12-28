@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .category import Category
 ```
@@ -37,7 +37,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 
 from .category import Category  # Импорт класса Category
@@ -74,7 +74,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger.logger import logger  # Импорт функции логирования
 
-MODE = 'dev'
+
 
 
 from .category import Category  # Импорт класса Category

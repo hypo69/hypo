@@ -48,7 +48,7 @@
 #! venv/bin/python/python3.12
 from typing import Any
 
-MODE = 'dev'
+
 
 
 __name__: str = __name__

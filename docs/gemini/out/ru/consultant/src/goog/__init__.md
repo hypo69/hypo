@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .spreadsheet import SpreadSheet
 ```
@@ -34,7 +34,7 @@ from .spreadsheet import SpreadSheet
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импорт класса SpreadSheet из модуля spreadsheet
 from .spreadsheet import SpreadSheet
@@ -72,7 +72,7 @@ from .spreadsheet import SpreadSheet
 import logging
 from src.logger import logger  # Подключение к logger
 
-MODE = 'dev'
+
 
 # Импорт класса SpreadSheet из модуля spreadsheet
 from .spreadsheet import SpreadSheet

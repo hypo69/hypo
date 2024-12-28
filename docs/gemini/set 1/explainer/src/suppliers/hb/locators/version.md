@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.locators """
 
@@ -80,7 +80,7 @@ graph LR
 
 This Python file appears to be a module defining metadata for a package or module within the `hypotez` project. It doesn't contain executable code, but instead sets variables that define the module's properties.
 
-* **`MODE = 'dev'`**: This variable likely defines the current operating mode (e.g., development, production). This is a very common variable in development or deployment.
+* **``**: This variable likely defines the current operating mode (e.g., development, production). This is a very common variable in development or deployment.
 
 
 * **`__version__ = "3.12.0.0.0.4"`**: This is a critical module attribute, it stores the version number of the module.

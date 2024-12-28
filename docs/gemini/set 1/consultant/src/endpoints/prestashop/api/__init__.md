@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 ```
@@ -32,7 +32,7 @@ from .api import PrestaShop
 
 """
 import json # импорт модуля json
-MODE = 'dev'
+
 
 # Импорт класса PrestaShop из модуля .api
 from .api import PrestaShop
@@ -67,7 +67,7 @@ from src.logger import logger # Импорт для логирования
 
 """
 import json # импорт модуля json
-MODE = 'dev' # Переменная MODE определяет режим работы (например, dev, prod)
+ # Переменная MODE определяет режим работы (например, dev, prod)
 # ...
 
 # Импорт класса PrestaShop из модуля .api

@@ -20,7 +20,7 @@ from __future__ import annotations
 
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header

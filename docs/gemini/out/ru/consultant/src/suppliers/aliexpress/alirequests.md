@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import pickle
 import requests
@@ -181,7 +181,7 @@ class AliRequests:
    :synopsis:  Модуль для работы с запросами к AliExpress.
 
 """
-MODE = 'dev'
+
 
 import pickle
 import requests

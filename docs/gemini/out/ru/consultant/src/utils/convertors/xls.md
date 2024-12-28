@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -41,7 +41,7 @@ def xls2dict(xls_file: str | Path) -> dict | None:
 """
 import json
 
-MODE = 'dev'
+
 
 
 from pathlib import Path
@@ -113,7 +113,7 @@ def xls2dict(xls_file: str | Path) -> dict | None:
 """
 import json
 
-MODE = 'dev'
+
 
 
 from pathlib import Path

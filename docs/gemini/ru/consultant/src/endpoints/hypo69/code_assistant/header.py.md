@@ -44,7 +44,7 @@ from packaging.version import Version
 
 from pathlib import Path
 
-MODE = 'dev'
+
 def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
     Находит корневую директорию проекта, начиная с директории текущего файла.

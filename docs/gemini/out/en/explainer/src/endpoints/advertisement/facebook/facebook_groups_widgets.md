@@ -10,7 +10,7 @@
 	:platform: Windows, Unix
 	:synopsis: Раскрывающеся меню выбора групп для подачи объявления\n
 """
-MODE = 'dev'
+
 
 import header 
 from IPython.display import display

@@ -48,7 +48,7 @@
 """
 from src.logger.logger import logger # Импорт логгера
 from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для работы с JSON
-MODE = 'dev' # Режим работы ('dev' или 'prod').
+ # Режим работы ('dev' или 'prod').
 """
 Режим работы.
 :vartype: str

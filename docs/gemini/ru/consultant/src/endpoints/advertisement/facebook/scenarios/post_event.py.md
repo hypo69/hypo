@@ -68,7 +68,7 @@
         print("Ошибка при публикации события.")
 """
 
-MODE = 'dev'
+
 
 import time
 from pathlib import Path

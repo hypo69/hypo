@@ -29,5 +29,5 @@ This module defines the `Supplier` class and related functionality for extractin
 
 
 ```python
-MODE = 'dev'
+
 ```

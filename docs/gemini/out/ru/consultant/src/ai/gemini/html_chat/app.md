@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для веб-чата с моделью Gemini.
 """
-MODE = 'dev'
+
 
 
 """
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Константа, определяющая режим работы.
 """
-MODE = 'dev'
+
   
 """ module: src.ai.gemini.html_chat """
 
@@ -158,7 +158,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'  # Режим работы приложения
+  # Режим работы приложения
 
 
 """
@@ -299,7 +299,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 
-MODE = 'dev'  # Режим работы приложения
+  # Режим работы приложения
 
 
 """

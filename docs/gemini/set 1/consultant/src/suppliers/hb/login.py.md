@@ -13,7 +13,7 @@
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 def login(s) -> bool:
@@ -61,7 +61,7 @@ def login(s) -> bool:
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 def login(s) -> bool:

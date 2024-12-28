@@ -19,7 +19,7 @@
     kt = PsychologistTelgrambot()
     asyncio.run(kt.application.run_polling())
 """
-MODE = 'dev'
+
 
 ...
 """ t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""
@@ -240,7 +240,7 @@ if __name__ == "__main__":
     kt = PsychologistTelgrambot()
     asyncio.run(kt.application.run_polling())
 """
-MODE = 'dev'
+
 
 ...
 """ t.me/hypo69_psychologist_bot_bot's specific bot with customized behavior."""

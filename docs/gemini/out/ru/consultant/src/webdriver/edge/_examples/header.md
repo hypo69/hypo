@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge._examples """
 
@@ -77,7 +77,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль для работы с Edge WebDriver, примеры.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -99,7 +99,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Конфигурационные параметры.
 """
-MODE = 'dev'
+
   
 """ module: src.webdriver.edge._examples """
 
@@ -157,7 +157,7 @@ from src.logger import logger
    :platform: Windows, Unix
    :synopsis: Модуль для работы с Edge WebDriver, примеры.
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -179,7 +179,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Конфигурационные параметры.
 """
-MODE = 'dev'
+
   
 """ module: src.webdriver.edge._examples """
 

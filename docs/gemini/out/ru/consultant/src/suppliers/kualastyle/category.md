@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.kualastyle """
 
@@ -178,7 +178,7 @@ def get_list_categories_from_site(s):
     :platform: Windows, Unix
     :synopsis: Модуль для работы с категориями и товарами на сайте поставщика.
 """
-MODE = 'dev'
+
 """
     :platform: Windows, Unix
     :synopsis: Параметр режима работы.
@@ -196,7 +196,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
 """
-MODE = 'dev'
+
 """ module: src.suppliers.kualastyle """
 """
 Модуль сбора товаров со страницы категорий поставщика hb.co.il через вебдрайвер.

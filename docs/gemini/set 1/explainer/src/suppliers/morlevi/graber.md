@@ -20,7 +20,7 @@
 
 
 """
-MODE = 'dev'
+
 from pathlib import Path
 from typing import Any
 import header

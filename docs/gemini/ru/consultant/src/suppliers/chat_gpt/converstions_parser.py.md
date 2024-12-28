@@ -60,7 +60,7 @@ from bs4 import BeautifulSoup
 from src.utils.jjson import j_loads # импортируем j_loads для чтения файла
 from src.logger.logger import logger # импортируем логгер
 
-MODE = 'dev'
+
 
 def extract_conversations_from_html(file_path: Path):
     """Генератор, который читает HTML файл и извлекает все div элементы с классом "conversation".

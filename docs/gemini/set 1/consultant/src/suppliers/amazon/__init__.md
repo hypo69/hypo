@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category
@@ -37,7 +37,7 @@ from .scenario import get_list_products_in_category
 """
 import json
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category
@@ -110,7 +110,7 @@ import json
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-MODE = 'dev'
+
 
 from .graber import Graber
 from .scenario import get_list_products_in_category

@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/kualastyle/login.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.suppliers.kualastyle \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = 'dev'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = 'dev'\n  \n""" module: src.suppliers.kualastyle """\n\n\n\n"""  Функции авторизации поставщика """\n\nfrom src.logger import logger\n\ndef login(s) -> bool:\n    """ Функция логин. \n   @param\n        s - Supplier\n    @returns\n        True if login else False\n\n   """\n    close_pop_up(s)\n    return True \n\ndef close_pop_up(s) -> bool:\n    """ Функция логин\n   @param\n        s - Supplier\n    @returns\n        True if login else False\n\n   """\n    _d = s.driver\n    _l : dict = s.locators['close_pop_up_locator']\n    \n    _d.get_url('https://www.kualastyle.com')\n    _d.window_focus(_d)\n    _d.wait(5)\n    #_d.page_refresh()\n    try:\n        _d.execute_locator(_l)\n    except Exception as e:\n        logger.warning(f"Не закрыл попап")\n    \n    ...\n\n```
+# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.suppliers.kualastyle \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""\n  \n""" module: src.suppliers.kualastyle """\n\n\n\n"""  Функции авторизации поставщика """\n\nfrom src.logger import logger\n\ndef login(s) -> bool:\n    """ Функция логин. \n   @param\n        s - Supplier\n    @returns\n        True if login else False\n\n   """\n    close_pop_up(s)\n    return True \n\ndef close_pop_up(s) -> bool:\n    """ Функция логин\n   @param\n        s - Supplier\n    @returns\n        True if login else False\n\n   """\n    _d = s.driver\n    _l : dict = s.locators['close_pop_up_locator']\n    \n    _d.get_url('https://www.kualastyle.com')\n    _d.window_focus(_d)\n    _d.wait(5)\n    #_d.page_refresh()\n    try:\n        _d.execute_locator(_l)\n    except Exception as e:\n        logger.warning(f"Не закрыл попап")\n    \n    ...\n\n```
 
 **Improved Code**
 
@@ -13,7 +13,7 @@
     :platform: Windows, Unix
     :synopsis: Модуль для работы с поставщиком Kualastyle.
 """
-MODE = 'dev'
+
 
 
 """
@@ -119,7 +119,7 @@ def close_pop_up(supplier: object) -> bool:
     :platform: Windows, Unix
     :synopsis: Модуль для работы с поставщиком Kualastyle.
 """
-MODE = 'dev'
+
 
 
 """

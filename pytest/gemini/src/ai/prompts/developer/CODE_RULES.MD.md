@@ -139,7 +139,7 @@ def test_code_rules_logger():
 
 def test_code_rules_constants():
     """Checks that MODE constant is included."""
-    code_with_mode = "MODE = 'dev'"
+    code_with_mode = ""
     # Simulate checking if MODE constant is present
     assert "MODE" in code_with_mode
 

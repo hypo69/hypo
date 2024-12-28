@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -49,7 +49,7 @@ graph LR
     * `from .graber import Graber`: This line imports the `Graber` class from the `graber.py` file located in the same directory. The `.` indicates a relative import within the `ebay` package.  This is a crucial part of Python's module system for managing package dependencies.
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable is likely used for configuration purposes.  In a development environment (MODE = 'dev'), different settings or behaviors might be enabled compared to a production environment (e.g., 'prod'). This variable is not used in the given code excerpt, but its presence suggests a potential for conditional logic in other parts of the project.
+    * ``: This variable is likely used for configuration purposes.  In a development environment (), different settings or behaviors might be enabled compared to a production environment (e.g., 'prod'). This variable is not used in the given code excerpt, but its presence suggests a potential for conditional logic in other parts of the project.
 
 * **Classes:**
     * **No direct class definition:**  This file doesn't define a class.  It's importing an existing class from a separate module. The `Graber` class (likely in `graber.py`) will contain the methods and attributes related to eBay data interactions.

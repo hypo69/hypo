@@ -63,7 +63,7 @@ from typing import Any, Optional
 from src.logger.logger import logger
 
 
-MODE = 'dev' # This line is not used in the code
+ # This line is not used in the code
 
 
 class TimeoutCheck:

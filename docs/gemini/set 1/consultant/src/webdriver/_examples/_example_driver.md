@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -185,7 +185,14 @@ if __name__ == "__main__":
    :platform: Windows, Unix
    :synopsis: Модуль предоставляет примеры использования класса Driver для работы с веб-драйверами.
 """
-MODE = 'dev'
+
+
+"""
+.. data:: MODE
+   :type: str
+   :platform: Windows, Unix
+   :synopsis: Режим работы.
+"""
 
 """
 .. data:: MODE
@@ -201,13 +208,6 @@ MODE = 'dev'
    :synopsis: Режим работы.
 """
 
-"""
-.. data:: MODE
-   :type: str
-   :platform: Windows, Unix
-   :synopsis: Режим работы.
-"""
-
 
 """
 .. data:: MODE
@@ -215,7 +215,7 @@ MODE = 'dev'
    :platform: Windows, Unix
    :synopsis: Режим работы.
 """
-MODE = 'dev'
+
 
 """
 .. module:: src.webdriver._examples

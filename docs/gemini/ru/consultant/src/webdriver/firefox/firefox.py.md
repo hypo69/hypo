@@ -87,7 +87,7 @@ from src.logger.logger import logger
 from fake_useragent import UserAgent
 import header
 
-MODE = 'dev'
+
 
 
 class Firefox(WebDriver):

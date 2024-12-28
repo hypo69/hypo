@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._examples """
 
@@ -109,7 +109,7 @@ from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
 
-MODE = 'dev'
+
 
 
 def main():
@@ -189,7 +189,7 @@ from src.logger import logger
 from src.logger.exceptions import ExecuteLocatorException
 
 
-MODE = 'dev'
+
 
 
 def main():

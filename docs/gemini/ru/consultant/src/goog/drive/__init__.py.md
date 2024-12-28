@@ -52,7 +52,7 @@
 """
 
 from src.logger.logger import logger  # Импорт logger
-MODE = 'dev'
+
 
 
 from .drive import GoogleDrive

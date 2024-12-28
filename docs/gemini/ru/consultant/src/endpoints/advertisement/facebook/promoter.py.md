@@ -61,7 +61,7 @@
     promoter.process_groups(campaign_name='test_campaign', group_categories_to_adv=['sales'], language='en', currency='USD')
 """
 
-MODE = 'dev'
+
 
 import random
 from datetime import datetime, timedelta

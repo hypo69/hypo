@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.product._examples """
 
@@ -65,7 +65,7 @@ from packaging.version import Version # импорт для работы с ве
 from .version import __version__, __doc__, __details__ # импорт переменных из модуля version
 
 #: Режим работы, по умолчанию 'dev'
-MODE = 'dev'
+
 ...
 ```
 
@@ -101,6 +101,6 @@ from packaging.version import Version # импорт для работы с ве
 from .version import __version__, __doc__, __details__ # импорт переменных из модуля version
 
 #: Режим работы, по умолчанию 'dev'
-MODE = 'dev'
+
 ...
 ```

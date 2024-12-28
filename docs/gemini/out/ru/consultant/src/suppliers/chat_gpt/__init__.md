@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .gsheet import GptGs
 ```
@@ -34,7 +34,7 @@ from .gsheet import GptGs
 """
 import json
 
-MODE = 'dev'  # Режим работы (dev, prod).
+  # Режим работы (dev, prod).
 
 from .gsheet import GptGs  # Импорт класса для работы с Google Sheets.
 
@@ -66,7 +66,7 @@ from .gsheet import GptGs  # Импорт класса для работы с Go
 """
 import json
 
-MODE = 'dev'  # Режим работы (dev, prod).
+  # Режим работы (dev, prod).
 
 from .gsheet import GptGs  # Импорт класса для работы с Google Sheets.
 

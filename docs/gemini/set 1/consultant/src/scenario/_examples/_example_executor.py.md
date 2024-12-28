@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.scenario._examples """
 
@@ -213,7 +213,7 @@ from src.product.product_fields import ProductFields
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 class MockSupplier:
@@ -467,7 +467,7 @@ from src.product.product_fields import ProductFields
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 class MockSupplier:

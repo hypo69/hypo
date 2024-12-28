@@ -21,7 +21,7 @@ and integration with Facebook for product posting.
 ```
 
 """
-MODE = 'dev'
+
 
 import asyncio
 import random

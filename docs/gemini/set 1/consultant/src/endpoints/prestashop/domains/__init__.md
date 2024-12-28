@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop.domains """
 
@@ -59,7 +59,7 @@ MODE = 'dev'
 from src.utils.jjson import j_loads, j_loads_ns
 from src import logger
 
-MODE = 'dev'
+
 ```
 
 # Changes Made
@@ -68,7 +68,7 @@ MODE = 'dev'
 * Импортирован `j_loads` и `j_loads_ns` из `src.utils.jjson`.
 * Импортирован `logger` из `src.logger`.
 * Удалены неиспользуемые и дублированные строки документации.
-* Убран избыточный комментарий `MODE = 'dev'`.
+* Убран избыточный комментарий ``.
 * Изменен стиль комментариев: использование более точных формулировок, отказ от слов типа "получаем", "делаем".
 * Добавлено описание для переменной `MODE`.
 
@@ -89,6 +89,6 @@ MODE = 'dev'
 from src.utils.jjson import j_loads, j_loads_ns
 from src import logger
 
-#MODE = 'dev'  # Неиспользуемая переменная, удалена
+#  # Неиспользуемая переменная, удалена
 
 ```

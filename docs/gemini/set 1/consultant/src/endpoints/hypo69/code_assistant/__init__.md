@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .code_assistant import CodeAssistant
 ```
@@ -31,7 +31,7 @@ from .code_assistant import CodeAssistant
 
 Этот модуль импортирует класс `CodeAssistant` из подмодуля `code_assistant`.
 """
-MODE = 'dev'
+
 
 # Импорт класса CodeAssistant из соответствующего модуля
 from .code_assistant import CodeAssistant
@@ -58,7 +58,7 @@ from .code_assistant import CodeAssistant
 
 Этот модуль импортирует класс `CodeAssistant` из подмодуля `code_assistant`.
 """
-MODE = 'dev'
+
 
 # Импорт класса CodeAssistant из соответствующего модуля
 # Исходный код:

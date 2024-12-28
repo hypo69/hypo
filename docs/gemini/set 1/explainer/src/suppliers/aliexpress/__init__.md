@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .aliexpress import Aliexpress
 from .aliapi import AliApi
@@ -39,7 +39,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 
 ```mermaid
 graph TD
-    A[hypotez/src/suppliers/aliexpress/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/suppliers/aliexpress/__init__.py] --> B();
     B --> C{Импортирование};
     C --> D[Aliexpress];
     C --> E[AliApi];
@@ -78,7 +78,7 @@ graph TD
 
 **Переменные:**
 
-* `MODE = 'dev'`: Переменная, задающая режим работы (в данном случае, вероятно, "разработка").
+* ``: Переменная, задающая режим работы (в данном случае, вероятно, "разработка").
 
 
 **Возможные ошибки и улучшения:**

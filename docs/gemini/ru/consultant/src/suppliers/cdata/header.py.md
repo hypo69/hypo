@@ -51,7 +51,7 @@
     print(header.__project_name__)
     print(header.__version__)
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

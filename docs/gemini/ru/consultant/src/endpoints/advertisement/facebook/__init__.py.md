@@ -47,7 +47,7 @@
     fb = Facebook()
     # ...
 """
-# MODE = 'dev' #TODO убрать если не используется
+#  #TODO убрать если не используется
 
 from .facebook import Facebook
 from .facebook_fields import FacebookFields

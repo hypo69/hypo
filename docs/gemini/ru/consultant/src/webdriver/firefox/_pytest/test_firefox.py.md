@@ -52,6 +52,6 @@
 # from src.logger.logger import logger #TODO Добавить, если необходимо логирование
 # from src.utils.jjson import j_loads, j_loads_ns  #TODO  Добавить если необходимы
 
-MODE = 'dev' # Инициализация переменной для режима работы.
+ # Инициализация переменной для режима работы.
 
 ```

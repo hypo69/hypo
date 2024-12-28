@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.etzmaleh """
 
@@ -130,7 +130,7 @@ graph TD
 
 **Переменные:**
 
-- `MODE = 'dev'`:  Глобальная константа, вероятно, определяющая режим работы (например, `dev` или `prod`).
+- ``:  Глобальная константа, вероятно, определяющая режим работы (например, `dev` или `prod`).
 
 
 **Возможные ошибки и улучшения:**

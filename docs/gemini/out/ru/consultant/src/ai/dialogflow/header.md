@@ -7,7 +7,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 \n"""
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -87,7 +87,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     :synopsis: Модуль содержит настройки проекта и пути.
 
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -197,7 +197,7 @@ __cofee__ = __settings.get("cofee", "Treat the developer to a cup of coffee...")
     :synopsis: Модуль содержит настройки проекта и пути.
 
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix

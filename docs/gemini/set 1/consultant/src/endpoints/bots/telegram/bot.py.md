@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -185,7 +185,7 @@ if __name__ == '__main__':
    :synopsis: Этот модуль содержит класс TelegramBot для взаимодействия с Telegram API.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -457,7 +457,7 @@ if __name__ == '__main__':
    :synopsis: Этот модуль содержит класс TelegramBot для взаимодействия с Telegram API.
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile

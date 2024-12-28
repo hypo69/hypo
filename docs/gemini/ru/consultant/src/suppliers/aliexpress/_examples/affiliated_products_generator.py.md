@@ -80,7 +80,7 @@
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 from src.logger.logger import logger  # импортируем logger
 
-MODE = 'dev'
+
 
 
 def main():

@@ -47,7 +47,7 @@
         asyncio.run(main())
 """
 
-MODE = 'dev'
+
 
 from pathlib import Path
 from typing import Optional, List, Dict, Any

@@ -51,7 +51,7 @@
     >>> is_url('not a url')
     False
 """
-MODE = 'dev'
+
 
 from urllib.parse import urlparse, parse_qs
 import validators

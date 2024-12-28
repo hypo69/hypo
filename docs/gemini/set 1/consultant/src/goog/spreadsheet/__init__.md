@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .spreadsheet import SpreadSheet
@@ -38,7 +38,7 @@ from .spreadsheet import SpreadSheet
 from .reach_spreadsheet import ReachSpreadsheet
 
 
-MODE = 'dev'
+
 
 
 #from src.utils import jjson # Импортируем необходимый модуль
@@ -80,7 +80,7 @@ from .spreadsheet import SpreadSheet
 from .reach_spreadsheet import ReachSpreadsheet
 
 
-MODE = 'dev'
+
 
 
 #from src.utils import jjson # Импортируем необходимый модуль

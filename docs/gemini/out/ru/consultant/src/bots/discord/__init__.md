@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.bots.discord """
 
@@ -59,7 +59,7 @@ MODE = 'dev'
 # Импортируем необходимый модуль для логирования
 from src.logger import logger
 
-MODE = 'dev'  # Переменная, определяющая режим работы бота
+  # Переменная, определяющая режим работы бота
 
 
 def some_function():
@@ -99,7 +99,7 @@ def some_function():
 # Импортируем необходимый модуль для логирования
 from src.logger import logger
 
-MODE = 'dev'  # Переменная, определяющая режим работы бота
+  # Переменная, определяющая режим работы бота
 
 
 def some_function():

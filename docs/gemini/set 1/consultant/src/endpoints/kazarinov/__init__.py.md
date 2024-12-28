@@ -15,7 +15,7 @@
 .. moduleauthor:: Evgeniy Vasilev <eselev@gmail.com>
 """
 
-MODE = 'dev'
+
 
 from .kazarinov_bot import KazarinovTelegramBot
 ```
@@ -43,6 +43,6 @@ from .kazarinov_bot import KazarinovTelegramBot
 .. moduleauthor:: Evgeniy Vasilev <eselev@gmail.com>
 """
 
-MODE = 'dev'
+
 
 from .kazarinov_bot import KazarinovTelegramBot

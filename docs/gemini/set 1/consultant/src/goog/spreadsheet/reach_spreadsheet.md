@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 #3
@@ -156,7 +156,7 @@ class ReachSpreadsheet:
 	:synopsis: Модуль для работы с Google Spreadsheets API.
 
 """
-MODE = 'dev'
+
 
 
 #3

@@ -49,7 +49,7 @@
 """
 from __future__ import annotations
 
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from pathlib import Path

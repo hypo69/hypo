@@ -11,7 +11,7 @@
 	:synopsis:  Редактор рекламной кампании через гугл таблицами
 
 """
-MODE = 'dev'
+
 
 import time
 from types import SimpleNamespace
@@ -480,7 +480,7 @@ class AliCampaignGoogleSheet(SpreadSheet):
     campaign_gsheet = AliCampaignGoogleSheet(campaign_name='test_campaign', language='ru', currency='USD')
     campaign_gsheet.set_campaign_worksheet(campaign_data)
 """
-MODE = 'dev'
+
 
 import time
 from types import SimpleNamespace

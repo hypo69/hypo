@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -91,7 +91,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :synopsis: Модуль для работы с логами.
 
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix
@@ -197,7 +197,7 @@ __cofee__ = settings.get('cofee', "Treat the developer to a cup of coffee for bo
    :synopsis: Модуль для работы с логами.
 
 """
-MODE = 'dev'
+
 
 """
    :platform: Windows, Unix

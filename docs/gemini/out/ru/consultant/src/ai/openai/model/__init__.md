@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .training import OpenAIModel
@@ -34,7 +34,7 @@ from .training import OpenAIModel
 """
 import json
 
-MODE = 'dev'
+
 
 
 from .training import OpenAIModel
@@ -71,7 +71,7 @@ from src.utils.jjson import j_loads, j_loads_ns # Импорт функций д
 """
 import json
 
-MODE = 'dev' #TODO: Добавьте документацию для MODE.
+ #TODO: Добавьте документацию для MODE.
 
 
 from .training import OpenAIModel

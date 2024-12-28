@@ -12,7 +12,7 @@
 	:synopsis: This module provides the editor for advertising campaigns
 
 """
-MODE = 'dev'
+
 
 
 import re

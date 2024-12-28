@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -39,7 +39,7 @@ import json  # Импорт необходимых модулей.  # TODO: до
 from src.utils.jjson import j_loads  # Импорт функции j_loads для работы с JSON.
 
 
-MODE = 'dev'  # Режим работы (например, 'dev', 'prod').
+  # Режим работы (например, 'dev', 'prod').
 
 
 #TODO: Добавьте документацию для MODE.
@@ -79,6 +79,6 @@ import json  # Импорт необходимых модулей.  # TODO: до
 from src.utils.jjson import j_loads  # Импорт функции j_loads для работы с JSON.
 
 
-MODE = 'dev'  # Режим работы (например, 'dev', 'prod').
+  # Режим работы (например, 'dev', 'prod').
 
 #TODO: Добавьте документацию для MODE.

@@ -58,7 +58,7 @@ from typing import Optional, Dict
 from src.utils.jjson import j_loads_ns
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 """
 Режим работы приложения. Может принимать значения `dev` или `prod`.
 """

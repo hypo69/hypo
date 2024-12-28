@@ -14,7 +14,7 @@
 	:synopsis: Модуль полей товара
 
 """
-MODE = 'dev'
+
 
 from .product_fields import ProductFields
 from .product_fields_translator import translate_presta_fields_dict
@@ -68,7 +68,7 @@ The mermaid diagram shows the imports:
 
 
 * **Variables:**
-    * `MODE = 'dev'`: A global variable likely used for setting application configuration modes.
+    * ``: A global variable likely used for setting application configuration modes.
 
 * **Classes:**
     * `ProductFields`: (Not defined in this file) Represents a class structure to manage product fields in the application.  Its details are found in `hypotez/src/product/product_fields/product_fields.py`.

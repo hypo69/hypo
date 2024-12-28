@@ -39,7 +39,7 @@
     # Удаление товара
     editor.delete_product("12345")
 """
-MODE = 'dev'
+
 
 import re
 import shutil
@@ -367,7 +367,7 @@ class AliCampaignEditor(AliPromoCampaign):
     # Удаление товара
     editor.delete_product("12345")
 """
-MODE = 'dev'
+
 
 import re
 import shutil

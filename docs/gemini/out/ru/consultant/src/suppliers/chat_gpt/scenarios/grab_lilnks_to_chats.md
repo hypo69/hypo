@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы со сценариями для чат-бота ChatGPT.
 """
-MODE = 'dev'
+
 
 
 """
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 	Константа режима работы.
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.chat_gpt.scenarios """
 
@@ -99,12 +99,7 @@ from src.webdriver.firefox import Firefox
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
 
-
-"""
-Константа режима работы.
-"""
 
 
 """
@@ -120,7 +115,12 @@ MODE = 'dev'
 """
 Константа режима работы.
 """
-MODE = 'dev'
+
+
+"""
+Константа режима работы.
+"""
+
 
 """
 Модуль для работы со сценариями для чат-бота ChatGPT.
@@ -204,12 +204,7 @@ from src.webdriver.firefox import Firefox
 from src.utils.jjson import j_loads_ns
 from src.logger import logger
 
-MODE = 'dev'
 
-
-"""
-Константа режима работы.
-"""
 
 
 """
@@ -225,7 +220,12 @@ MODE = 'dev'
 """
 Константа режима работы.
 """
-MODE = 'dev'
+
+
+"""
+Константа режима работы.
+"""
+
 
 """
 Модуль для работы со сценариями для чат-бота ChatGPT.

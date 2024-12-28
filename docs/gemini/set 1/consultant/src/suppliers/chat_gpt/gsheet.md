@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.chat_gpt """
 
@@ -155,7 +155,7 @@ class GptGs(SpreadSheet):
 	:synopsis: Модуль для работы с Google Таблицами.
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -178,7 +178,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:  Константа режима работы.
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.chat_gpt """
 

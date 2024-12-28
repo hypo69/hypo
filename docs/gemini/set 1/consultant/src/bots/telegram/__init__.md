@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 ```
@@ -31,7 +31,7 @@ from .bot import TelegramBot
 
 Этот модуль предоставляет класс :class:`TelegramBot` для взаимодействия с Telegram API.
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 from src.logger import logger # Импорт логгера
@@ -60,7 +60,7 @@ from src.logger import logger # Импорт логгера
 
 Этот модуль предоставляет класс :class:`TelegramBot` для взаимодействия с Telegram API.
 """
-MODE = 'dev'
+
 
 from .bot import TelegramBot
 from src.logger import logger # Импорт логгера

@@ -9,7 +9,7 @@
     :synopsis:
 
 """
-MODE = 'dev'
+
 
 # https://docs.helicone.ai/guides/overview
 import header 

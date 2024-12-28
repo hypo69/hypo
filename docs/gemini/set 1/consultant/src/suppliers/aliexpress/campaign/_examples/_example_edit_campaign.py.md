@@ -23,7 +23,7 @@
     editor.update_settings({"bid": 0.5})
     editor.save_changes(Path("path/to/updated_campaign.json"))
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -49,7 +49,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 

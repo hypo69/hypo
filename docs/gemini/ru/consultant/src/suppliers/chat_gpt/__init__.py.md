@@ -49,7 +49,7 @@
 from src.logger.logger import logger # импортируем logger
 from .gsheet import GptGs
 
-MODE = 'dev'
+
 """
 Режим работы модуля, может принимать значения 'dev' или 'prod'.
 """

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.translators """
 
@@ -227,7 +227,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 Связывает словарь полей товара, таблицу переводов и переводчики.
 """
 
-MODE = 'dev'
+
 
 
 """

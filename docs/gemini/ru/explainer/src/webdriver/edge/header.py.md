@@ -6,7 +6,7 @@
 
 1.  **Начало**: Исполнение скрипта `header.py`.
 2.  **Инициализация `MODE`**: Установка переменной `MODE` в значение `'dev'`.
-    *   *Пример:* `MODE = 'dev'`
+    *   *Пример:* ``
 3.  **Импорт модулей**: Импорт необходимых модулей `sys`, `json`, `Version` из `packaging.version` и `Path` из `pathlib`.
     *   *Пример:* `import sys`, `import json`, `from packaging.version import Version`, `from pathlib import Path`
 4.  **Определение функции `set_project_root`**:

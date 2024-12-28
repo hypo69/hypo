@@ -63,7 +63,7 @@ from src.webdriver.exceptions import ExecuteLocatorException
 
 
 
-MODE = 'dev'
+
 
 
 def close_pop_up(value: Any = None) -> Callable:

@@ -9,7 +9,7 @@
 	:synopsis: Converter for converting between dict and SimpleNamespace objects
 
 """
-MODE = 'dev'
+
 
 
 

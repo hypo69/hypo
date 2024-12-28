@@ -61,7 +61,7 @@ from src import gs
 from src.logger.logger import logger
 from src.utils.jjson import j_loads_ns
 
-MODE = 'dev'
+
 
 
 class Edge(WebDriver):

@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для работы с Google Таблицами для кампаний AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -39,7 +39,7 @@ MODE = 'dev'
   :synopsis:
   Константа MODE.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.chat_gpt """
 
@@ -161,7 +161,7 @@ class GptGs(SpreadSheet):
 	:synopsis:
 	Модуль для работы с Google Таблицами для кампаний AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -188,7 +188,7 @@ MODE = 'dev'
   :synopsis:
   Константа MODE.
 """
-MODE = 'dev'
+
   
 """ module: src.suppliers.chat_gpt """
 

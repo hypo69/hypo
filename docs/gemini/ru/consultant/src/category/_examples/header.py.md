@@ -53,7 +53,7 @@ from pathlib import Path
 from src.logger.logger import logger  # Импорт логгера
 
 #: Режим работы приложения: `dev` (разработка), `test` (тестирование), `prod` (продакшн).
-MODE = 'dev'
+
 
 # Получение абсолютного пути к корневой директории проекта `hypotez`
 dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 11])

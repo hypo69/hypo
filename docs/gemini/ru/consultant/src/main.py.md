@@ -55,7 +55,7 @@
 import argparse
 from src.utils.jjson import j_loads, j_loads_ns
 from src.logger.logger import logger
-# MODE = 'dev' # Переменная не используется, необходимо убрать или добавить применение
+#  # Переменная не используется, необходимо убрать или добавить применение
 
 def script1():
     """

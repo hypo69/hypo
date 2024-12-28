@@ -4,7 +4,7 @@
 
 ```python
 # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.utils.pdf \n    :platform: Windows, Unix\n    :synopsis: Модуль для преобразования HTML-контента или файлов в PDF\n\nМодуль для преобразования HTML-контента или файлов в PDF с использованием различных библиотек.\nДополнительная информация:\n- https://chatgpt.com/share/672266a3-0048-800d-a97b-c38f647d496b\n- https://stackoverflow.com/questions/73599970/how-to-solve-wkhtmltopdf-reported-an-error-exit-with-code-1-due-to-network-err\n- https://habr.com/ru/companies/bothub/articles/853490/\n"""
-MODE = 'dev'
+
 import sys
 import os
 import json

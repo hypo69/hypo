@@ -24,7 +24,7 @@
     handler.handle_url(update, context)
 """
 
-MODE = 'dev'
+
 
 import header
 import random

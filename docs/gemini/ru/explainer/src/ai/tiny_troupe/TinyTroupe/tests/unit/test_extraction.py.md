@@ -1,255 +1,182 @@
-## Анализ кода `test_extraction.py`
+## <алгоритм>
 
-### 1. <алгоритм>
+1.  **`test_export_json(exporter)`**:
+    *   Принимает фикстуру `exporter`, которая инициализирует `ArtifactExporter` с базовой папкой вывода `./test_exports`.
+    *   Определяет словарь `artifact_data`, содержащий тестовые данные (имя, возраст, профессия, контент).
+    *   Вызывает метод `exporter.export()` для сохранения `artifact_data` в формате JSON с типом контента "record" и именем файла "test_artifact".
+    *   Проверяет, что файл `./test_exports/record/test_artifact.json` был создан.
+    *   Открывает созданный JSON-файл, загружает данные и сравнивает их с исходным `artifact_data`.
+2.  **`test_export_text(exporter)`**:
+    *   Принимает фикстуру `exporter`.
+    *   Определяет строку `artifact_data` с тестовым текстом.
+    *   Вызывает `exporter.export()` для сохранения `artifact_data` в формате TXT с типом контента "text" и именем файла "test_artifact".
+    *   Проверяет, что файл `./test_exports/text/test_artifact.txt` был создан.
+    *   Открывает созданный TXT-файл, читает данные и сравнивает их с исходным `artifact_data`.
+3.  **`test_export_docx(exporter)`**:
+    *   Принимает фикстуру `exporter`.
+    *   Определяет многострочную строку `artifact_data` с Markdown-разметкой.
+    *   Вызывает `exporter.export()` для сохранения `artifact_data` в формате DOCX с типом контента "Document", форматом контента "markdown" и именем файла "test_artifact".
+    *   Проверяет, что файл `./test_exports/Document/test_artifact.docx` был создан.
+    *   Импортирует класс `Document` из библиотеки `docx`.
+    *   Открывает созданный DOCX-файл и читает текст из его параграфов, сохраняя в `exported_data`.
+    *   Проверяет, что `exported_data` содержит текст "This is a sample markdown text" и не содержит символа "#" (т.е. Markdown был преобразован).
+4.  **`test_normalizer()`**:
+    *   Определяет список `concepts` со строковыми значениями.
+    *   Преобразует `concepts` в набор уникальных значений и обратно в список `unique_concepts`.
+    *   Создаёт экземпляр `Normalizer` с `unique_concepts`, `n=10` и `verbose=True`.
+    *   Проверяет, что `normalizer.normalized_elements` содержит 10 элементов.
+    *   Создаёт список `random_concepts_buckets`, содержащий 5 подсписков, каждый из которых состоит из 15 случайных элементов из `concepts`.
+    *   Проходит по каждому `bucket` в `random_concepts_buckets`:
+        *   Сохраняет начальный размер `normalizing_map` в `init_cache_size`.
+        *   Вызывает `normalizer.normalize(bucket)` для нормализации и получения `normalized_concept`.
+        *   Проверяет, что `normalized_concept` не `None`.
+        *   Выводит отладочное сообщение.
+        *   Сохраняет конечный размер `normalizing_map` в `next_cache_size`.
+        *   Проверяет, что длина `normalized_concept` равна длине `bucket`.
+        *   Проверяет, что все элементы из `bucket` есть в ключах `normalizer.normalizing_map`.
+        *   Проверяет, что размер кэша (`next_cache_size`) больше нуля и больше или равен `init_cache_size`.
 
-**Блок-схема:**
-
-```mermaid
-graph LR
-    A[Начало тестов] --> B(Фикстура `exporter`: Создание экземпляра `ArtifactExporter`);
-    B --> C{Тест `test_export_json`};
-    C -- Да --> D(Создание данных `artifact_data` в формате JSON);
-    D --> E(Вызов `exporter.export` с параметрами: имя файла, данные, тип контента `record`, формат `json`);
-    E --> F(Проверка наличия JSON-файла в директории экспорта);
-    F -- Файл существует --> G(Чтение данных из экспортированного JSON-файла);
-    G --> H(Сравнение экспортированных данных с исходными);
-    H -- Данные совпадают --> I(Тест `test_export_json` пройден);
-    F -- Файл не существует --> J(Ошибка: Файл не был экспортирован);
-    H -- Данные не совпадают --> K(Ошибка: Экспортированные данные отличаются от исходных);
-    I --> L{Тест `test_export_text`};
-     L -- Да --> M(Создание данных `artifact_data` в формате текста);
-    M --> N(Вызов `exporter.export` с параметрами: имя файла, данные, тип контента `text`, формат `txt`);
-    N --> O(Проверка наличия TXT-файла в директории экспорта);
-    O -- Файл существует --> P(Чтение данных из экспортированного TXT-файла);
-    P --> Q(Сравнение экспортированных данных с исходными);
-    Q -- Данные совпадают --> R(Тест `test_export_text` пройден);
-    O -- Файл не существует --> S(Ошибка: Файл не был экспортирован);
-    Q -- Данные не совпадают --> T(Ошибка: Экспортированные данные отличаются от исходных);
-    R --> U{Тест `test_export_docx`};
-    U -- Да --> V(Создание данных `artifact_data` в формате Markdown);
-     V --> W(Вызов `exporter.export` с параметрами: имя файла, данные, тип контента `Document`, формат контента `markdown`, формат файла `docx`);
-    W --> X(Проверка наличия DOCX-файла в директории экспорта);
-    X -- Файл существует --> Y(Чтение данных из экспортированного DOCX-файла);
-    Y --> Z(Проверка наличия исходного текста в экспортированном файле);
-    Z -- Текст есть --> AA(Проверка отсутствия Markdown-разметки в экспортированном файле);
-    AA -- Разметка отсутствует --> BB(Тест `test_export_docx` пройден);
-    X -- Файл не существует --> CC(Ошибка: Файл не был экспортирован);
-     Z -- Текста нет --> DD(Ошибка: Экспортированные данные не содержат исходного текста);
-    AA -- Разметка есть --> EE(Ошибка: Экспортированные данные содержат Markdown-разметку);
-    BB --> FF{Тест `test_normalizer`};
-    FF -- Да --> GG(Создание списка концептов для нормализации);
-    GG --> HH(Инициализация объекта `Normalizer`);
-    HH --> II(Проверка размера `normalized_elements` объекта `Normalizer`);
-    II --> JJ(Создание 5 наборов случайных концептов);
-     JJ --> KK(Цикл по наборам случайных концептов);
-    KK --> LL(Сохранение размера кэша);
-    LL --> MM(Нормализация набора концептов при помощи `normalizer.normalize`);
-    MM --> NN(Проверка, что возвращенный концепт не является `None`);
-    NN --> OO(Проверка, что длина нормализованного набора равна длине входного);
-   OO --> PP(Проверка, что все концепты из набора есть в ключе кэша нормализатора);
-    PP --> QQ(Проверка размера кэша);
-    QQ --> RR(Проверка, что размер кэша увеличился или остался тем же);
-   RR --> SS(Завершен цикл нормализации набора концептов);
-   SS --> TT{Все тесты пройдены};
-   TT --> UU[Конец тестов];
-
-```
-
-**Примеры для блоков:**
-
-*   **D (Создание данных `artifact_data` в формате JSON):** `artifact_data = {"name": "John Doe", "age": 30, "occupation": "Engineer", "content": "This is a sample JSON data."}`
-*   **M (Создание данных `artifact_data` в формате текста):** `artifact_data = "This is a sample text."`
-*  **V (Создание данных `artifact_data` в формате Markdown):**  ```artifact_data = """ # This is a sample markdown text This is a **bold** text. This is an *italic* text. This is a [link](https://www.example.com). """ ```
-*   **GG (Создание списка концептов для нормализации):** `concepts = ['Antique Book Collection', 'Medical Research', 'Electrical safety', ...]`
-
-**Поток данных:**
-
-1.  Тесты начинаются с создания экземпляра `ArtifactExporter` через фикстуру `exporter`.
-2.  Тесты `test_export_json`, `test_export_text`, и `test_export_docx` используют этот экземпляр для экспорта данных в разных форматах.
-3.  Данные для экспорта подготавливаются в каждом тестовом методе, а затем передаются в метод `exporter.export()`.
-4.  После экспорта, данные читаются из созданных файлов и проверяются на соответствие исходным данным.
-5.  Тест `test_normalizer` создает экземпляр `Normalizer` и использует его для нормализации списка концептов.
-
-### 2. <mermaid>
+## <mermaid>
 
 ```mermaid
-graph LR
-    subgraph Test Suite
-    A[test_export_json]
-    B[test_export_text]
-    C[test_export_docx]
-    D[test_normalizer]
+flowchart TD
+    subgraph test_export_json
+        A[Define artifact_data (dict)] --> B(exporter.export\n"test_artifact", artifact_data,\ncontent_type="record", target_format="json")
+        B --> C{Check if JSON file exists}
+        C -- Yes --> D{Open and load JSON file}
+        D --> E{Compare loaded data\nwith original data}
+        E -- Match --> F[Test Passed]
+        E -- No Match --> G[Test Failed]
+        C -- No --> H[Test Failed]
     end
-    subgraph Artifact Exporter
-        E[ArtifactExporter]
+    
+     subgraph test_export_text
+        I[Define artifact_data (string)] --> J(exporter.export\n"test_artifact", artifact_data,\ncontent_type="text", target_format="txt")
+        J --> K{Check if TXT file exists}
+        K -- Yes --> L{Open and read TXT file}
+        L --> M{Compare loaded data\nwith original data}
+        M -- Match --> N[Test Passed]
+        M -- No Match --> O[Test Failed]
+        K -- No --> P[Test Failed]
     end
-    subgraph Normalizer
-        F[Normalizer]
-    end
-    subgraph Data
-        G[artifact_data]
-         H[concepts]
-        I[random_concepts_buckets]
-    end
-   subgraph File System
-        J[JSON File]
-        K[TXT File]
-        L[DOCX File]
-    end
-    subgraph External Libraries
-        M[os]
-        N[json]
-        O[random]
-        P[logging]
-        Q[pytest]
-        R[docx]
-    end
-    A --> E
-     B --> E
-      C --> E
-    D --> F
-    A --> G
-    B --> G
-     C --> G
-     D --> H
-      D --> I
-    E --> J
-    E --> K
-     E --> L
-    M --> A
-    M --> B
-     M --> C
-    N --> A
-     O --> D
-     P --> D
-     Q --> A
-    Q --> B
-    Q --> C
-    Q --> D
-     R --> C
+    
+     subgraph test_export_docx
+        Q[Define artifact_data (multiline string\nwith markdown)] --> R(exporter.export\n"test_artifact", artifact_data,\ncontent_type="Document", content_format="markdown", target_format="docx")
+        R --> S{Check if DOCX file exists}
+        S -- Yes --> T{Open and read DOCX file}
+        T --> U{Check if DOCX contains\nsome original content\nwithout markdown}
+        U -- Yes --> V[Test Passed]
+        U -- No --> W[Test Failed]
+        S -- No --> X[Test Failed]
+     end
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ffc,stroke:#333,stroke-width:2px
-      style D fill:#cfc,stroke:#333,stroke-width:2px
-    style E fill:#aaf,stroke:#333,stroke-width:2px
-      style F fill:#afa,stroke:#333,stroke-width:2px
-    style G fill:#fcc,stroke:#333,stroke-width:2px
-    style H fill:#fcc,stroke:#333,stroke-width:2px
-        style I fill:#fcc,stroke:#333,stroke-width:2px
-    style J fill:#eee,stroke:#333,stroke-width:2px
-       style K fill:#eee,stroke:#333,stroke-width:2px
-       style L fill:#eee,stroke:#333,stroke-width:2px
-    style M fill:#ddd,stroke:#333,stroke-width:2px
-       style N fill:#ddd,stroke:#333,stroke-width:2px
-       style O fill:#ddd,stroke:#333,stroke-width:2px
-       style P fill:#ddd,stroke:#333,stroke-width:2px
-     style Q fill:#ddd,stroke:#333,stroke-width:2px
-     style R fill:#ddd,stroke:#333,stroke-width:2px
+    subgraph test_normalizer
+        Y[Define concepts (list of strings)] --> Z(Create Normalizer object)
+        Z --> AA{Check length of normalized_elements}
+        AA -- Correct length --> AB[Create random concepts buckets]
+        AB --> AC{Loop through buckets}
+        AC --> AD{Initial cache size}
+        AD --> AE(normalizer.normalize(bucket))
+        AE --> AF{Check if normalized concept is not None}
+        AF -- Yes --> AG[Log normalized concept]
+        AG --> AH{Final cache size}
+        AH --> AI{Check same length as input}
+        AI -- Yes --> AJ{Check all elements in normalizing map}
+        AJ -- All present --> AK{Check if cache size > 0 and >= init cache size}
+        AK -- Yes --> AL{Continue loop}
+        AL --> AC
+        AK -- No --> AM[Test Failed]
+        AJ -- Not all present --> AM
+        AI -- No --> AM
+        AF -- No --> AM
+        AC -- Loop Finished --> AN[Test Passed]
+    end
+        
 ```
 
-**Анализ зависимостей `mermaid`:**
-
-*   **Test Suite:**  Представлены блоки с тестами (`test_export_json`, `test_export_text`, `test_export_docx`, `test_normalizer`).
-*   **Artifact Exporter:** Блок, представляющий класс `ArtifactExporter`, используемый для экспорта артефактов в различные форматы.
-*    **Normalizer:** Блок, представляющий класс `Normalizer`, используемый для нормализации текста.
-*   **Data:** Блок, представляющий переменные, содержащие тестовые данные (`artifact_data`, `concepts`, `random_concepts_buckets`).
-*   **File System:** Блок, представляющий файлы, создаваемые при тестировании (`JSON File`, `TXT File`, `DOCX File`).
-*   **External Libraries:** Блок, представляющий внешние библиотеки, используемые в тесте (`os`, `json`, `random`, `logging`, `pytest`, `docx`).
-
-**Зависимости:**
-
-*   Тестовые функции (`test_export_json`, `test_export_text`, `test_export_docx`) зависят от класса `ArtifactExporter`, чтобы экспортировать данные.
-*   Тестовая функция `test_normalizer` зависит от класса `Normalizer`, чтобы нормализовать концепции.
-*   Класс `ArtifactExporter` взаимодействует с файловой системой (запись и проверка файлов).
-*   Различные тесты используют данные, сохраненные в переменных `artifact_data`, `concepts`, `random_concepts_buckets`.
-*   Импортируются внешние библиотеки `os`, `json`, `random`, `logging`, `pytest`, `docx` для работы с файлами, JSON, случайными числами, логированием, тестированием и файлами DOCX.
-
-### 3. <объяснение>
+## <объяснение>
 
 **Импорты:**
 
-*   `pytest`: Фреймворк для написания и запуска тестов.
-*   `os`: Модуль для работы с операционной системой, в данном случае для проверки существования файлов.
-*   `json`: Модуль для работы с JSON-данными, используется при экспорте данных в JSON-формате.
-*   `random`: Модуль для генерации случайных чисел, используется при генерации случайных наборов концепций.
-*    `logging`: Модуль для логирования, используется для вывода отладочной информации.
-*   `sys`: Модуль для доступа к некоторым переменным и функциям, используемым интерпретатором, используется для добавления путей к директориям проекта.
-*   `testing_utils`: Локальный модуль, содержащий вспомогательные функции для тестов.
-*   `tinytroupe.extraction.ArtifactExporter`: Класс для экспорта артефактов.
-*   `tinytroupe.extraction.Normalizer`: Класс для нормализации текстовых концепций.
-*   `tinytroupe.utils`: Модуль с общими утилитами проекта.
-*   `docx`: Модуль для работы с docx документами, используется для чтения и проверки docx файлов.
+*   `pytest`: Используется для создания и запуска тестов.
+*   `os`: Предоставляет функции для взаимодействия с операционной системой, такие как проверка существования файла.
+*   `json`: Используется для работы с JSON-данными (сериализация и десериализация).
+*   `random`: Используется для генерации случайных данных в тестах.
+*   `logging`: Используется для ведения журнала работы программы.
+*   `sys`: Используется для добавления путей к модулям `tinytroupe`, что позволяет импортировать их.
+*   `testing_utils`: Импортирует утилиты для тестирования. Скорее всего, содержит вспомогательные функции.
+*   `tinytroupe.extraction`: Импортирует классы `ArtifactExporter` и `Normalizer`, которые тестируются в данном файле.
+*   `tinytroupe.utils`: Импортирует утилиты из модуля `tinytroupe`.
+
+**Фикстуры:**
+
+*   `exporter()`: Фикстура Pytest, которая создает экземпляр класса `ArtifactExporter` с базовой папкой вывода `./test_exports`. Эта фикстура используется в тестах для создания и проверки экспорта артефактов.
+
+**Функции тестирования:**
+
+*   `test_export_json(exporter)`:
+    *   Проверяет, что `ArtifactExporter` правильно экспортирует данные в формате JSON.
+    *   Принимает фикстуру `exporter`.
+    *   Создает тестовый словарь `artifact_data`.
+    *   Вызывает метод `export()` класса `ArtifactExporter`, указывая тип контента "record" и целевой формат "json".
+    *   Проверяет, что JSON-файл был создан в ожидаемой папке.
+    *   Проверяет, что экспортированные данные в файле соответствуют исходным данным.
+*   `test_export_text(exporter)`:
+    *   Проверяет, что `ArtifactExporter` правильно экспортирует данные в формате TXT.
+    *   Аналогично `test_export_json`, но с текстовыми данными и форматом TXT.
+*   `test_export_docx(exporter)`:
+    *   Проверяет, что `ArtifactExporter` правильно экспортирует данные в формате DOCX.
+    *   Аналогично предыдущим тестам, но с Markdown-текстом и форматом DOCX.
+    *   Дополнительно проверяет, что при экспорте Markdown-разметка преобразуется в форматирование DOCX.
+    *   Использует `from docx import Document` для чтения данных из docx файла.
+*   `test_normalizer()`:
+    *   Тестирует класс `Normalizer`, который предназначен для нормализации (группировки) списка концепций.
+    *   Создает список `concepts` из строковых значений.
+    *   Создает экземпляр класса `Normalizer`, задает `n=10`, что значит `Normalizer` вернет 10 групп.
+    *   Проверяет, что поле `normalized_elements` содержит 10 элементов.
+    *   Создает список списков случайных концепций `random_concepts_buckets`.
+    *   Проверяет, что `normalizing_map` пустой.
+    *   Запускает цикл, где для каждого бакета `bucket` из `random_concepts_buckets` вызывается метод `normalize`, проверяется что он не пустой, логируется.
+    *   Проверяется, что длина нормализованного списка равна длине входного списка.
+    *   Проверяется, что все элементы из `bucket` присутствуют в ключах `normalizer.normalizing_map`, т.е. все элементы закешированы.
+    *   Проверяется, что размер кэша после нормализации больше 0 и не меньше чем был перед нормализацией.
 
 **Классы:**
 
-*   `ArtifactExporter`:
-    *   **Роль:** Класс отвечает за экспорт данных в различные форматы (JSON, TXT, DOCX).
-    *   **Атрибуты:** `base_output_folder` - базовая директория для экспорта файлов.
-    *   **Методы:** `export` - принимает имя файла, данные, тип контента, формат контента (для docx) и формат файла, а затем сохраняет данные в файл.
-    *   **Взаимодействие:** Используется в тестах для создания файлов различных форматов.
-*   `Normalizer`:
-    *   **Роль:** Класс отвечает за нормализацию списка текстовых концепций.
-    *   **Атрибуты:** `normalized_elements`, `normalizing_map`.
-    *   **Методы:** `normalize` - принимает список концепций и возвращает список нормализованных концепций.
-    *   **Взаимодействие:** Используется в тесте `test_normalizer` для проверки функциональности нормализации.
-
-**Функции:**
-
-*   `exporter()`:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** Экземпляр `ArtifactExporter`.
-    *   **Назначение:**  Фикстура для создания экземпляра `ArtifactExporter` перед каждым тестом.
-    *   **Пример:** `exporter = exporter()`.
-*   `test_export_json(exporter)`:
-    *   **Аргументы:** `exporter` (экземпляр `ArtifactExporter`).
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Тестирует экспорт данных в JSON-формате. Создает JSON-файл, читает данные и сравнивает с исходными данными.
-    *   **Пример:** Вызывает метод `exporter.export()` для записи json файла, затем считывает файл и сравнивает.
-*   `test_export_text(exporter)`:
-    *   **Аргументы:** `exporter` (экземпляр `ArtifactExporter`).
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Тестирует экспорт данных в текстовом формате. Создает TXT-файл, читает данные и сравнивает с исходными данными.
-    *  **Пример:** Вызывает метод `exporter.export()` для записи txt файла, затем считывает файл и сравнивает.
-*   `test_export_docx(exporter)`:
-    *   **Аргументы:** `exporter` (экземпляр `ArtifactExporter`).
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Тестирует экспорт данных в DOCX-формате. Создает DOCX-файл, читает данные и проверяет, что исходный текст содержится в файле без markdown разметки.
-    *   **Пример:** Вызывает метод `exporter.export()` для записи docx файла, затем считывает файл и сравнивает.
-*   `test_normalizer()`:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Тестирует работу нормализатора текста `Normalizer`. Создает нормализатор, нормализует данные и проверяет корректность работы.
-    *   **Пример:** Создает экземпляр `Normalizer`, вызывает метод `normalize()` и проверяет размер кэша и нормализацию.
+*   `ArtifactExporter`: Класс, отвечающий за экспорт артефактов в различных форматах (JSON, TXT, DOCX).
+    *   `__init__`: Принимает `base_output_folder` для указания директории выгрузки.
+    *   `export`: Принимает имя файла, контент, тип контента и формат, экспортирует контент в указанную директорию и формат.
+*   `Normalizer`: Класс для нормализации (группировки) списка концепций.
+    *   `__init__`: Принимает список концепций, количество групп и флаг `verbose`.
+    *   `normalize`: Принимает список концепций, возвращает нормализованные концепции.
 
 **Переменные:**
 
-*   `artifact_data`: Содержит данные для экспорта (JSON, text, markdown).
-*   `exporter`: Экземпляр класса `ArtifactExporter`.
-*   `exported_data`: Содержит данные, прочитанные из экспортированных файлов.
-*   `concepts`: Список концептов для нормализации.
-*   `unique_concepts`: Список уникальных концептов для нормализации.
+*   `artifact_data`: Содержит тестовые данные в разных форматах (словарь, строка, многострочная строка).
+*   `exporter`: Экземпляр класса `ArtifactExporter`, созданный фикстурой `exporter`.
+*   `concepts`: Список строковых концепций для теста `Normalizer`.
+*   `unique_concepts`: Список уникальных строковых концепций.
 *   `normalizer`: Экземпляр класса `Normalizer`.
-*   `random_concepts_buckets`: Набор случайно сгенерированных наборов концепций.
-*  `init_cache_size`: Размер кэша перед нормализацией
-*   `normalized_concept`: Результат нормализации одного набора концептов.
-*   `next_cache_size`: Размер кэша после нормализации.
+*   `random_concepts_buckets`: Список списков случайных концепций.
+*   `exported_data`: Содержит данные, экспортированные в файл и прочитанные для сравнения.
+*   `init_cache_size`: Размер кеша до вызова `normalizer.normalize`.
+*   `next_cache_size`: Размер кеша после вызова `normalizer.normalize`.
 
 **Потенциальные ошибки и улучшения:**
 
-*   **Улучшение:** Можно добавить более детальные проверки в `test_export_docx`, например, проверить форматирование.
-*   **Улучшение:** Можно добавить проверку на отсутствие ошибок при экспорте.
-*   **Улучшение:** Можно вынести путь к тестовым файлам в константы.
-*   **Улучшение:** Можно добавить проверку на корректность создания директорий для экспорта.
-*   **Улучшение:** Использовать параметризацию для более компактной записи тестов экспорта.
-*   **Улучшение:** Добавить обработку ошибок при экспорте и чтении файлов.
-*   **Улучшение:** Улучшить тестирование `Normalizer` для различных типов входных данных.
+*   Тесты не покрывают все возможные кейсы и форматы, которые может обрабатывать `ArtifactExporter`, например, экспорт HTML.
+*   Не проверяется обработка ошибок при экспорте, например, если путь недоступен или файл уже существует.
+*   В `test_normalizer()` не проверяется, что нормализованные элементы принадлежат ожидаемым группам.
+*   Можно добавить больше проверок на корректность работы нормализатора.
+*   Можно добавить параметризацию тестов для проверки экспорта с разными типами данных.
+*   Использование `print` в тестах не является хорошей практикой, лучше использовать `logger` или возможности `pytest` для вывода информации.
+*   Не хватает документации (docstrings) для классов и методов.
+*   Слишком много `assert` в одном тестовом блоке, что затрудняет отладку. Можно разделить на несколько тестов.
 
 **Взаимосвязи с другими частями проекта:**
 
-*   `ArtifactExporter` используется для экспорта данных в рамках проекта, например, результатов анализа или извлечения данных.
-*   `Normalizer` используется для стандартизации текстовых данных, например, перед сохранением в базу данных или обучением модели.
-*   `testing_utils` используется в других тестовых модулях проекта.
-*   `tinytroupe.utils` используется во всем проекте, а не только в тестах.
-*   Модуль `logging` используется во всем проекте для записи информации о работе системы.
-*   Тестируемые классы (`ArtifactExporter`, `Normalizer`) импортируются из модуля `tinytroupe.extraction`.
+*   Данный файл зависит от `tinytroupe.extraction`, который предположительно находится в том же проекте.
+*   Также используется утилиты из `tinytroupe.utils`, а также `testing_utils`.
+*   `ArtifactExporter` и `Normalizer` могут использоваться в других частях проекта для экспорта данных и нормализации.
+
+Этот файл выполняет тестирование функциональности `ArtifactExporter` и `Normalizer`, проверяя их корректную работу с различными форматами данных.

@@ -12,7 +12,7 @@
 	:synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model
 
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path
@@ -197,7 +197,7 @@ class OpenAIModel:
     :synopsis: OpenAI Model Class for handling communication with the OpenAI API and training the model
 
 """
-MODE = 'dev'
+
 
 import time
 from pathlib import Path

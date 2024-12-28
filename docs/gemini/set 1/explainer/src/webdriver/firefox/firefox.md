@@ -37,7 +37,7 @@
         browser.quit()
 """
 
-MODE = 'dev'
+
 
 import os
 import random

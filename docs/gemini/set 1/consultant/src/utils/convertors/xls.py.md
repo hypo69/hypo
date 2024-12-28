@@ -58,7 +58,7 @@ from src.logger.logger import logger
 from src.utils.xls import read_xls_as_dict #, save_xls_file # TODO: добавить save_xls_file
 
 # Устанавливаем режим работы
-MODE = 'dev'
+
 
 
 def xls2dict(xls_file: str | Path) -> dict | None:

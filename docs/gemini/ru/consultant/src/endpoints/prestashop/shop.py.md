@@ -74,7 +74,7 @@ import os
 from .api import PrestaShop # импортируем PrestaShop
 
 
-MODE = 'dev'
+
 
 
 class PrestaShopShop(PrestaShop):

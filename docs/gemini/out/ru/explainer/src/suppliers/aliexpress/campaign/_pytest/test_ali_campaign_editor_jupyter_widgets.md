@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._pytest """
 
@@ -226,7 +226,7 @@ graph TD
 
 **Переменные:**
 
-- `MODE = 'dev'`: Переменная, вероятно, определяет режим работы (например, dev, prod).
+- ``: Переменная, вероятно, определяет режим работы (например, dev, prod).
 
 **Возможные ошибки или области для улучшений:**
 

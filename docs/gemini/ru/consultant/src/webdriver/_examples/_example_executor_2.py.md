@@ -57,7 +57,7 @@ from src import gs
 # from src.logger.exceptions import ExecuteLocatorException #TODO удалил так как он не используется
 from src.logger.logger import logger #TODO  добавил импорт logger
 
-MODE = 'dev' #TODO добавил константу
+ #TODO добавил константу
 
 # Создание экземпляра WebDriver (например, Chrome)
 driver = webdriver.Chrome(executable_path=gs['chrome_driver_path'])

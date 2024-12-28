@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.openai._examples """
 
@@ -52,7 +52,7 @@ from .version import __version__, __doc__, __details__
 
 ```mermaid
 graph LR
-    A[hypotez/src/ai/openai/_examples/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/ai/openai/_examples/__init__.py] --> B();
     A --> C{Import from packaging.version};
     A --> D{Import from .version};
     B -- (Константа режима) --> E[Функционирование модуля];
@@ -77,7 +77,7 @@ graph LR
 
 **Переменные:**
 
-- `MODE = 'dev'`: Глобальная переменная, скорее всего, определяющая режим работы.  Значение `'dev'` предполагает, что это тестовый или разработочной режим.
+- ``: Глобальная переменная, скорее всего, определяющая режим работы.  Значение `'dev'` предполагает, что это тестовый или разработочной режим.
 
 **Возможные ошибки или улучшения:**
 

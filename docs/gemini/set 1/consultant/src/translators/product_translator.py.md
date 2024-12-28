@@ -63,7 +63,7 @@ from src.endpoints.PrestaShop import PrestaShop
 from src.logger.logger import logger
 
 
-MODE = 'dev'
+
 
 
 def get_translations_from_presta_translations_table(product_reference: str, i18n: str = None) -> list:

@@ -8,7 +8,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._pytest """
 
@@ -166,7 +166,7 @@ def test_send_message(execute_locator, driver):
 	:synopsis: Модуль содержит тесты для WebDriver и ExecuteLocator.
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -189,7 +189,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver._pytest """
 

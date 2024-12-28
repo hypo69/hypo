@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -32,7 +32,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.utils.powershell.examples.pprint """
 
@@ -60,7 +60,7 @@ pprint("Hello, world!")
     :platform: Windows, Unix
     :synopsis: Модуль для демонстрации функций форматированного вывода.
 """
-MODE = 'dev'
+
 
 
 """
@@ -77,7 +77,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Дополнительная информация о модуле.
 """
-MODE = 'dev'
+
 
 
 """ Модуль для демонстрации форматированного вывода. """
@@ -127,7 +127,7 @@ pprint_example()
     :platform: Windows, Unix
     :synopsis: Модуль для демонстрации функций форматированного вывода.
 """
-MODE = 'dev'
+
 
 
 """
@@ -144,7 +144,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Дополнительная информация о модуле.
 """
-MODE = 'dev'
+
 
 
 """ Модуль для демонстрации форматированного вывода. """

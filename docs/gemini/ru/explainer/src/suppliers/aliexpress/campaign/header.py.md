@@ -45,7 +45,7 @@
 
 ```mermaid
 graph LR
-    A[Начало] --> B{MODE = 'dev'};
+    A[Начало] --> B{};
     B --> C[set_project_root(marker_files)];
     C --> D[Поиск корня проекта];
     D --> E{Найден корень?};

@@ -44,7 +44,7 @@ def __init__(self, driver: Driver):
 ## Глобальные переменные
 
 ```python
-MODE = 'dev'
+
 ```
 
 ## Зависимости

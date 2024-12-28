@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.fast_api.html """
 
@@ -84,7 +84,7 @@ There are no functions defined in this code.  The code is only concerned with im
 
 **Variables:**
 
-* `MODE = 'dev'`:  This is a global variable (likely a configuration).  Its value ('dev') is irrelevant to the immediate operation of the script, but might play a role in conditional logic in other parts of the application (if any).
+* ``:  This is a global variable (likely a configuration).  Its value ('dev') is irrelevant to the immediate operation of the script, but might play a role in conditional logic in other parts of the application (if any).
 
 
 **Potential Errors/Improvements:**

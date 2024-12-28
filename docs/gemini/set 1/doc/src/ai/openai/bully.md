@@ -29,7 +29,7 @@
 
 
 ```python
-MODE = 'dev'
+
 ```
 
 

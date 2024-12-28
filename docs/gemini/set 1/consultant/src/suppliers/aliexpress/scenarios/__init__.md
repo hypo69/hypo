@@ -12,7 +12,7 @@
 	:synopsis: Сценарии для алиэкспресс
 
 """
-MODE = 'dev'
+
 
 
 from .login import login
@@ -36,7 +36,7 @@ import json
 # Использование logger для логирования
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 from .login import login
@@ -49,7 +49,7 @@ from .login import login
 * Исправлен стиль импорта - теперь используется `.. module::` вместо `.. module:`.
 * Добавлен docstring в формате RST для модуля.
 * Комментарии в формате RST для переменной `MODE`.
-* Код `MODE = 'dev'` теперь прокомментирован для понимания.
+* Код `` теперь прокомментирован для понимания.
 
 **FULL Code**
 
@@ -69,7 +69,7 @@ import json
 # Использование logger для логирования
 from src.logger import logger
 
-MODE = 'dev'  # Переменная, определяющая режим работы (например, dev, prod)
+  # Переменная, определяющая режим работы (например, dev, prod)
 
 
 from .login import login

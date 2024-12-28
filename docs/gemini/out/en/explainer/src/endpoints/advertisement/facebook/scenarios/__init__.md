@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .login import login
 from .post_message  import *
@@ -91,7 +91,7 @@ There are no classes defined directly in this file. The functions imported are l
 
 ### Variables
 
-- `MODE = 'dev'`: A global variable likely used for setting the operational mode (development, testing, production, etc.).
+- ``: A global variable likely used for setting the operational mode (development, testing, production, etc.).
 
 ### Potential Errors & Improvements
 

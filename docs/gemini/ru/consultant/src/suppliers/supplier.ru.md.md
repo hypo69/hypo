@@ -66,7 +66,7 @@ from src.scenario import run_scenarios, run_scenario_files
 from src.logger.logger import logger
 from src.logger.exceptions import DefaultSettingsException
 
-MODE = 'dev' # TODO: перенести в настройки
+ # TODO: перенести в настройки
 
 
 class Supplier(BaseModel):

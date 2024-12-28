@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu.qt6 """
 
@@ -206,7 +206,7 @@ if __name__ == "__main__":
 -	:synopsis:
 -
 -"""
--MODE = 'dev'
+-
 -
 +Модуль для управления контекстным меню в проводнике Windows.
 +"""
@@ -221,7 +221,7 @@ if __name__ == "__main__":
 -  :platform: Windows, Unix
 -  :platform: Windows, Unix
 -  :synopsis:
--"""MODE = 'dev'
+-"""
 -  
 -""" module: src.gui.context_menu.qt6 """
 +import os

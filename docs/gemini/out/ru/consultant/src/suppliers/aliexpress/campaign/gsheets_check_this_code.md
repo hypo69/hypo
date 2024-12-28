@@ -12,7 +12,7 @@
 	:synopsis: Редактор рекламной кампании через гугл таблицами
 
 """
-MODE = 'dev'
+
 
 
 import time
@@ -158,7 +158,7 @@ class AliCampaignGoogleSheet(SpreadSheet):
 	:synopsis: Редактор рекламной кампании через гугл таблицами
 
 """
-MODE = 'dev'
+
 
 
 import time

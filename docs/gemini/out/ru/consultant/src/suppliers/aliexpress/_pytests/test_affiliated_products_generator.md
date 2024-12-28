@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress._pytests """
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 	:platform: Windows, Unix
 	:synopsis: Тестовый модуль для генерации аффилированных продуктов с AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -175,7 +175,7 @@ if __name__ == "__main__":
 	:platform: Windows, Unix
 	:synopsis: Тестовый модуль для генерации аффилированных продуктов с AliExpress.
 """
-MODE = 'dev'
+
 
 
 """

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.locators """
 
@@ -74,7 +74,7 @@ __author__='hypotez '
 
 # from src.utils.jjson import j_loads # Необходим импорт, если используется j_loads
 
-MODE = 'dev'
+
 
 
 """
@@ -154,7 +154,7 @@ __annotations__ = {}  # Добавьте docstring
 
 # from src.utils.jjson import j_loads # Необходим импорт, если используется j_loads
 
-MODE = 'dev'
+
 
 
 """

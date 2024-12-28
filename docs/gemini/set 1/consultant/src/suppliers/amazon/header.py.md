@@ -12,7 +12,7 @@
 загрузку настроек из файла JSON и извлечение информации о проекте.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path
@@ -120,7 +120,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 загрузку настроек из файла JSON и извлечение информации о проекте.
 
 """
-MODE = 'dev'
+
 
 import sys
 from pathlib import Path

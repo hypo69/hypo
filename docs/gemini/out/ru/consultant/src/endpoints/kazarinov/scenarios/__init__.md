@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .scenario_pricelist import Mexiron
@@ -34,7 +34,7 @@ from .scenario_pricelist import Mexiron
 """
 import json
 
-MODE = 'dev'
+
 
 
 from .scenario_pricelist import Mexiron
@@ -71,7 +71,7 @@ from src.logger import logger
 """
 import json
 
-MODE = 'dev'
+
 
 
 from .scenario_pricelist import Mexiron

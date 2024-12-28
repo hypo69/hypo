@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -44,7 +44,7 @@ The mermaid diagram shows the primary dependency. `ivory/__init__.py` imports th
     * `from .graber import Graber`: This line imports the `Graber` class from the `graber.py` module within the same directory (`./graber`). The `.` indicates a relative import, which is a good practice for internal dependencies.  This import makes the `Graber` class available for use in other modules within the `ivory` package. The absence of other imports suggests that this is a very basic initialization file, focusing on making components from a submodule accessible.
 
 * **Variables:**
-    * `MODE = 'dev'`: This variable likely defines the operation mode of the `ivory` supplier, potentially used for configuration or conditional logic in other modules of the project. It's a simple string assignment for configuration, though it's unusual to put this into the `__init__.py` if it's not meant for external use.
+    * ``: This variable likely defines the operation mode of the `ivory` supplier, potentially used for configuration or conditional logic in other modules of the project. It's a simple string assignment for configuration, though it's unusual to put this into the `__init__.py` if it's not meant for external use.
 
 * **Classes (implicitly):**
     * `Graber`: This class is defined in `graber.py` and is imported into this `__init__.py` module.  It will likely encapsulate logic related to fetching or processing data from a source identified as "ivory."  Without seeing `graber.py` we cannot detail the attributes and methods of `Graber`.

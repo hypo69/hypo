@@ -79,5 +79,5 @@ def test_mode_is_not_production():
 
 ```
 # Example hypotez/src/ai/myai/__init__.py
-MODE = 'dev'
+
 ```

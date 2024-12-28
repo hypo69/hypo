@@ -37,7 +37,7 @@
         browser.quit()
 """
 
-MODE = 'dev'
+
 
 import os
 import random
@@ -100,7 +100,7 @@ import header
         browser.quit()
 """
 
-MODE = 'dev'
+
 
 import os
 import random
@@ -194,7 +194,7 @@ class Firefox(WebDriver):
         browser.quit()
 """
 
-MODE = 'dev'
+
 
 import os
 import random

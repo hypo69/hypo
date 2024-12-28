@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -189,7 +189,7 @@ class GSpreadsheet(Spreadsheet):
 :platform: Windows, Unix
 :synopsis:  Предоставляет интерфейс для работы с Google Sheets.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -210,7 +210,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.goog.spreadsheet.bberyakov """
 
@@ -392,7 +392,7 @@ class GSpreadsheet(Spreadsheet):
 :platform: Windows, Unix
 :synopsis:  Предоставляет интерфейс для работы с Google Sheets.
 """
-MODE = 'dev'
+
 
 """
     :platform: Windows, Unix
@@ -413,7 +413,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.goog.spreadsheet.bberyakov """
 

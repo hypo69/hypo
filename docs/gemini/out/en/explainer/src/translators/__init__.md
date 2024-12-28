@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 # <algorithm>
@@ -26,7 +26,7 @@ There is no discernible algorithm in the provided code. It's an initialization f
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Translator Init);
+    A[] --> B(Translator Init);
     subgraph Translator Init
     B
     end
@@ -45,7 +45,7 @@ The mermaid code above shows a simple graph representing a single variable assig
 
 * **Functions:** No functions are defined.
 
-* **Variables:** `MODE = 'dev'` is a global variable.  Its string value ('dev') presumably sets a mode for the translators package, potentially distinguishing between development and production environments.
+* **Variables:** `` is a global variable.  Its string value ('dev') presumably sets a mode for the translators package, potentially distinguishing between development and production environments.
 
 * **Potential Errors/Improvements:**
 

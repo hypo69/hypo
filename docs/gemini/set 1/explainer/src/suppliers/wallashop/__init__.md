@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -26,7 +26,7 @@ from .graber import Graber
 
 ```mermaid
 graph TD
-    A[init.py] --> B{MODE = 'dev'};
+    A[init.py] --> B{};
     B --> C[import Graber];
     C --> D(Graber Class);
 ```
@@ -42,7 +42,7 @@ graph TD
 ```mermaid
 graph LR
     subgraph init.py
-        A[MODE = 'dev'] --> B{import Graber};
+        A[] --> B{import Graber};
         B --> C[Graber Class];
     end
 ```
@@ -63,7 +63,7 @@ graph LR
 
 **Переменные:**
 
-- `MODE = 'dev'`: Строковая переменная, которая, вероятно, используется для выбора режима работы (например, разработка/производство).
+- ``: Строковая переменная, которая, вероятно, используется для выбора режима работы (например, разработка/производство).
 
 **Возможные ошибки и улучшения:**
 

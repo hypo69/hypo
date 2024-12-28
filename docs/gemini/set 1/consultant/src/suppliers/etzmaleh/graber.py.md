@@ -17,7 +17,7 @@
     в `Context.locator`, Если надо реализовать свой декоратор - раскоментируйте строки с декоратором и переопределите его поведение
 
 """
-MODE = 'dev'
+
 
 from typing import Any
 import header
@@ -92,7 +92,7 @@ class Graber(Grbr):
       передать значение в `Context.locator`. Для использования собственного декоратора,
       раскомментируйте соответствующие строки и переопределите его поведение.
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps # TODO добавить если нужен декоратор
@@ -183,7 +183,7 @@ class Graber(Grbr):
       передать значение в `Context.locator`. Для использования собственного декоратора,
       раскомментируйте соответствующие строки и переопределите его поведение.
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps # TODO добавить если нужен декоратор

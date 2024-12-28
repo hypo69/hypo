@@ -12,7 +12,7 @@
 	:synopsis: Отправка рекламных объявлений в группы фейсбук (Казаринов?)
 
 """
-MODE = 'dev'
+
 
 import header
 import random
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     :synopsis: Отправка рекламных объявлений в группы фейсбук (Казаринов?)
 
 """
-MODE = 'dev'
+
 
 import header
 import random

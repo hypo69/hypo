@@ -83,7 +83,7 @@ from src.logger.logger import logger
 from typing import Callable
 from functools import wraps
 
-MODE = 'dev'
+
 
 
 #  DECORATOR TEMPLATE.

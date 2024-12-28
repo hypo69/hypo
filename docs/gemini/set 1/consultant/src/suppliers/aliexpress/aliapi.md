@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -49,7 +49,7 @@ from src.db.manager_coupons_and_sales import ProductCampaignsManager
     :synopsis: Модуль для работы с API AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -155,7 +155,7 @@ class AliApi(AliexpressApi):
     :synopsis: Модуль для работы с API AliExpress.
 
 """
-MODE = 'dev'
+
 
 
 import re

@@ -71,7 +71,7 @@ from src.utils.printer import pprint
 from utils.interface import read_text_file, get_filenames
 from src.logger.logger import logger
 
-MODE = 'dev'
+
 
 class AliCampaignEditor:
     """

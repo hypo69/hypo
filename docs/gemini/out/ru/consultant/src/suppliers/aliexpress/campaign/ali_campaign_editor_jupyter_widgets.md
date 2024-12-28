@@ -17,7 +17,7 @@ Testfile:
     file test_ali_campaign_editor_jupyter_widgets.py
 
 """
-MODE = 'dev'
+
 
 
 from types import SimpleNamespace
@@ -124,7 +124,7 @@ Testfile:
     file test_ali_campaign_editor_jupyter_widgets.py
 
 """
-MODE = 'dev'
+
 
 
 from types import SimpleNamespace
@@ -220,7 +220,7 @@ Testfile:
     file test_ali_campaign_editor_jupyter_widgets.py
 
 """
-MODE = 'dev'
+
 
 
 from types import SimpleNamespace

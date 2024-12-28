@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .firefox import Firefox
@@ -59,7 +59,7 @@ The diagram shows a simple dependency. `init.py` imports the `Firefox` class fro
     - None explicitly defined in `__init__.py`.  Any functions are expected to be defined within the `firefox.py` file to be used by the `Firefox` class.
 
 - **Variables:**
-    - `MODE = 'dev'`:  A string variable representing the current mode of the application (likely 'dev' for development, potentially other values for production).  This is a global variable, accessible within any part of the package.
+    - ``:  A string variable representing the current mode of the application (likely 'dev' for development, potentially other values for production).  This is a global variable, accessible within any part of the package.
 
 
 - **Potential Errors/Improvements:**

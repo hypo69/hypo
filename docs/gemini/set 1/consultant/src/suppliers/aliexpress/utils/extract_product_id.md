@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для извлечения идентификаторов товаров с AliExpress.
 """
-MODE = 'dev'
+
 
 import re
 from src.logger import logger

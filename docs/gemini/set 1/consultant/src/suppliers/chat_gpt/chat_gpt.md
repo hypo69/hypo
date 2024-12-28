@@ -12,7 +12,7 @@
 	:platform: Windows, Unix
 	:synopsis:
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -31,7 +31,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 import header
 from pathlib import Path
@@ -66,7 +66,7 @@ from src import gs
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
 from src.logger import logger  # Импорт для логирования
 
-MODE = 'dev'
+
 
 class ChatGpt:
     """Класс для работы с файлами диалогов ChatGPT."""
@@ -134,7 +134,7 @@ from src import gs
 from src.utils.jjson import j_loads, j_loads_ns  # Импортируем необходимые функции
 from src.logger import logger  # Импорт для логирования
 
-MODE = 'dev'
+
 
 class ChatGpt:
     """Класс для работы с файлами диалогов ChatGPT."""

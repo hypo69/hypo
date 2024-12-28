@@ -74,7 +74,7 @@
     content = read_text_file(file_path)
     print(content)
 """
-MODE = 'dev'
+
 
 import os
 import fnmatch

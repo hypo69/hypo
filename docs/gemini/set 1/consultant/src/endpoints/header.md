@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -93,7 +93,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     :platform: Windows, Unix
     :synopsis: Модуль содержит переменные проекта и настройки.
 """
-MODE = 'dev'
+
 
 
 import sys
@@ -189,7 +189,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
     :platform: Windows, Unix
     :synopsis: Модуль содержит переменные проекта и настройки.
 """
-MODE = 'dev'
+
 
 
 import sys

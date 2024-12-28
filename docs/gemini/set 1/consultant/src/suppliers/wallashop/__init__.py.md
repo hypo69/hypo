@@ -16,7 +16,7 @@
    :synopsis:
 """
 
-MODE = 'dev'
+
 
 from .graber import Graber
 ```
@@ -47,7 +47,7 @@ from .graber import Graber
    :synopsis:
 """
 # Объявляется режим работы модуля
-MODE = 'dev'
+
 
 # Импортируется класс Graber из модуля graber
 from .graber import Graber

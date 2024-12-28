@@ -77,7 +77,7 @@ from src.logger.logger import logger
 from src.utils.jjson import j_loads, j_dumps  # импортируем функции j_loads и j_dumps для работы с json
 
 # Константа MODE не используется
-# MODE = 'dev'
+# 
 
 def read_xls_as_dict(
     xls_file: str,

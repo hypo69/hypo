@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .telegram import TelegramBot
@@ -43,7 +43,7 @@ from .telegram import TelegramBot
     bot = TelegramBot()
     bot.start()
 """
-MODE = 'dev'
+
 
 
 from .telegram import TelegramBot  # Импортируем класс TelegramBot
@@ -82,7 +82,7 @@ from .telegram import TelegramBot  # Импортируем класс TelegramB
     bot = TelegramBot()
     bot.start()
 """
-MODE = 'dev' # Константа режима работы
+ # Константа режима работы
 
 
 from .telegram import TelegramBot  # Импортируем класс TelegramBot

@@ -8,7 +8,7 @@
 	:synopsis:
 	Модуль для тестирования генератора связанных продуктов AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -30,7 +30,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress._pytests """
 
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     :platform: Windows, Unix
     :synopsis: Модуль для тестирования генератора связанных продуктов AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -135,7 +135,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis: Тесты для генератора связанных продуктов.
 """
-MODE = 'dev'
+
   
 """ Модуль для тестирования генератора связанных продуктов AliExpress. """
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     :platform: Windows, Unix
     :synopsis: Модуль для тестирования генератора связанных продуктов AliExpress.
 """
-MODE = 'dev'
+
 
 
 """
@@ -252,7 +252,7 @@ MODE = 'dev'
     :platform: Windows, Unix
     :synopsis: Тесты для генератора связанных продуктов.
 """
-MODE = 'dev'
+
   
 """ Модуль для тестирования генератора связанных продуктов AliExpress. """
 

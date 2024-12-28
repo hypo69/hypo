@@ -24,7 +24,7 @@
     print(product_details)
 
 """
-MODE = 'dev'
+
 
 
 import re
@@ -189,7 +189,7 @@ class AliApi(AliexpressApi):
     print(product_details)
 
 """
-MODE = 'dev'
+
 
 
 import re

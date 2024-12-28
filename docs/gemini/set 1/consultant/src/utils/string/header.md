@@ -19,7 +19,7 @@
 TODO: В дальнейшем перенести в системную
 переменную.
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -111,7 +111,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 TODO: В дальнейшем перенести в системную
 переменную.
 """
-MODE = 'dev'
+
 
 import sys
 import json

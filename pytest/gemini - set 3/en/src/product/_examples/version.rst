@@ -63,7 +63,7 @@ def test_name_main_running():
 
 3. **Edge Case (Running Directly):** The `test_name_main_running` function now *attempts* to verify that `__name__` is `"__main__"`. However, *crucially*, it now incorporates a `try...except` block.  This is essential as we *cannot reliably determine if a Python file is run directly using the current pytest setup* in a testing framework.
 
-4. **Comprehensive Coverage:** The tests cover the string nature of the variables, the expected string values (like `MODE = 'dev'`, `__version__`), and the type of __annotations__ as a dict.
+4. **Comprehensive Coverage:** The tests cover the string nature of the variables, the expected string values (like ``, `__version__`), and the type of __annotations__ as a dict.
 
 5. **Missing Data Handling:**  The example code contained no code that *requires* data inputs. If your module had functions with parameters, additional tests for various types of input and expected outputs would be needed to be properly covered.
 

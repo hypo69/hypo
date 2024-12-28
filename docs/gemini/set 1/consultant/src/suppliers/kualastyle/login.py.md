@@ -14,7 +14,7 @@
 from typing import Any
 
 from src.logger.logger import logger
-MODE = 'dev'
+
 
 
 def login(s: Any) -> bool:
@@ -77,7 +77,7 @@ def close_pop_up(s: Any) -> None:
 from typing import Any
 
 from src.logger.logger import logger
-MODE = 'dev'
+
 
 
 def login(s: Any) -> bool:

@@ -67,7 +67,7 @@
 ```mermaid
 graph LR
     A[Начало] --> B(Импорт модулей: winreg, os, QtWidgets, header, src.gs);
-    B --> C{MODE = 'dev'};
+    B --> C{};
     C --> D(add_context_menu_item());
     C --> E(remove_context_menu_item());
     C --> F(ContextMenuManager class);

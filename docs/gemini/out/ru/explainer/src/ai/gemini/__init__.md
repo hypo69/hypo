@@ -15,7 +15,7 @@
 	:synopsis: Модуль модели `gemini`
 
 """
-MODE = 'dev'
+
 
 
 from .generative_ai import GoogleGenerativeAI
@@ -37,7 +37,7 @@ from .generative_ai import GoogleGenerativeAI
 
 ```mermaid
 graph TD
-    A[hypotez/src/ai/gemini/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/ai/gemini/__init__.py] --> B();
     B --> C[from .generative_ai import GoogleGenerativeAI];
     C --> D(GoogleGenerativeAI Class);
 ```
@@ -50,7 +50,7 @@ graph TD
 4. **<explanation>**
 
 * **Импорты:**  `from .generative_ai import GoogleGenerativeAI` — импортирует класс `GoogleGenerativeAI` из подмодуля `generative_ai`, который находится в той же директории (`./`).  Это типичный импорт модуля внутри текущей директории.  Строка `# -*- coding: utf-8 -*-` указывает на использование кодировки UTF-8 в файле. `#!` строки (shebang) указывают на исполняемый интерпретатор Python, который используется для запуска скрипта. Они важны для работы на Unix-подобных системах.
-* **Переменные:** `MODE = 'dev'` - глобальная переменная, которая вероятно используется для определения режима работы (например, 'dev', 'prod').
+* **Переменные:** `` - глобальная переменная, которая вероятно используется для определения режима работы (например, 'dev', 'prod').
 * **Классы:**  `GoogleGenerativeAI` — это класс, который, предположительно, реализует интерфейс для работы с моделью Gemini от Google.  Более подробная информация о классе доступна в файле `generative_ai.py`.
 * **Функции:**  В данном `__init__.py` нет определенных функций, только импорт класса и инициализация переменной.
 * **Возможные ошибки/улучшения:**

@@ -27,7 +27,7 @@ from src.logger.logger import logger
 ## Константы
 
 ```python
-MODE = 'dev'
+
 ```
 Константа `MODE` устанавливает режим работы (в данном случае, `dev`).
 

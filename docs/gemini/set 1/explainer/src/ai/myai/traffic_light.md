@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.myai """
 
@@ -55,7 +55,7 @@ https://habr.com/ru/articles/849414/
 
 ```mermaid
 graph LR
-    A[MODE = 'dev'] --> B(Описание модуля);
+    A[] --> B(Описание модуля);
 ```
 
 **Объяснение диаграммы:**

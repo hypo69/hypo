@@ -9,7 +9,7 @@
 	:synopsis: Бииип
 
 """
-MODE = 'dev'
+
 
 
 import asyncio

@@ -39,7 +39,7 @@
     :TODO: В дальнейшем перенести в системную переменную
 
 """
-MODE = 'dev'
+
 import sys
 # код исполняет импорт json
 # TODO: import j_loads

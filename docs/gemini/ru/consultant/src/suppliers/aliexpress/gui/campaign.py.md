@@ -51,7 +51,7 @@
     campaign_editor.show()
     sys.exit(app.exec())
 """
-MODE = 'dev'
+
 
 import asyncio
 import sys

@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 # from .prestashop import PrestaShop, PrestaCategory, PrestaCustomer, PrestaLanguage, PrestaProduct, PrestaShopShop, PrestaSupplier, PrestaWarehouse, PriceListRequester 
@@ -34,7 +34,7 @@ MODE = 'dev'
 """
 import logging
 
-MODE = 'dev'
+
 
 # Импорты конечных точек (подставьте правильные пути)
 from .prestashop import (
@@ -88,7 +88,7 @@ except ImportError as e:
     raise
     
 
-MODE = 'dev'
+
 
 # Импорты конечных точек (подставьте правильные пути)
 from .prestashop import (

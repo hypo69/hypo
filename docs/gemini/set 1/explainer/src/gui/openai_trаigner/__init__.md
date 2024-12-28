@@ -15,7 +15,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -39,7 +39,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.openai_trаigner """
 
@@ -83,7 +83,7 @@ graph LR
     C --> G[__doc__];
     C --> H[__details__];
     D --> I[AssistantMainWindow];
-    A --> J[MODE = 'dev'];
+    A --> J[];
 ```
 
 ## <explanation>
@@ -104,7 +104,7 @@ graph LR
 
 **Переменные:**
 
-- `MODE = 'dev'`:  Переменная, вероятно, задает режим работы приложения (например, `dev` или `prod`). Она может влиять на логику приложения или конфигурацию.
+- ``:  Переменная, вероятно, задает режим работы приложения (например, `dev` или `prod`). Она может влиять на логику приложения или конфигурацию.
 
 **Возможные ошибки/улучшения:**
 

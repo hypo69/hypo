@@ -13,7 +13,7 @@
 	:synopsis:  управление категориями aliexpress
 
 """
-MODE = 'dev'
+
 
 from typing import Union
 from pathlib import Path

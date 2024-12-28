@@ -10,7 +10,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 ```
 
 ## <algorithm>
@@ -40,7 +40,7 @@ This module is likely loaded as part of the overall Hypotez application.  When a
 
 ```mermaid
 graph LR
-    A[hypotez/src/ai/helicone/__init__.py] --> B(MODE = 'dev');
+    A[hypotez/src/ai/helicone/__init__.py] --> B();
 ```
 
 **Dependency Analysis and Explanation:**
@@ -64,7 +64,7 @@ There are no functions in this file.
 
 **Variables:**
 
-* `MODE = 'dev'`: This is a global variable that sets the operating mode to `dev`.  It's likely a constant value used throughout the codebase to distinguish development from production environments.   This variable would be used (or at least could be used) to determine different configurations of the code during runtime or for selective logging.
+* ``: This is a global variable that sets the operating mode to `dev`.  It's likely a constant value used throughout the codebase to distinguish development from production environments.   This variable would be used (or at least could be used) to determine different configurations of the code during runtime or for selective logging.
 
 
 **Potential Errors or Areas for Improvement:**

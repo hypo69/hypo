@@ -64,7 +64,7 @@ This module contains the logic for posting advertisements to Facebook groups (Ka
 ## Code Example
 
 ```python
-MODE = 'dev'
+
 
 import header
 from src.webdriver.driver import Driver, Chrome

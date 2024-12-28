@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.chrome._examples """
 
@@ -185,7 +185,7 @@ graph TD
 
 **Variables:**
 
-*   `MODE = 'dev'`: A global variable likely used for configuration purposes.
+*   ``: A global variable likely used for configuration purposes.
 
 **Potential Errors/Improvements:**
 

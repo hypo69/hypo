@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.category._examples """
 
@@ -69,7 +69,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
 from src.logger import logger  # Импорт логгера
 
-MODE = 'dev'  # Переменная для хранения режима работы
+  # Переменная для хранения режима работы
 
 
 def example_function():
@@ -126,7 +126,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads  # Импорт необходимой функции для работы с JSON
 from src.logger import logger  # Импорт логгера
 
-MODE = 'dev'  # Переменная для хранения режима работы
+  # Переменная для хранения режима работы
 
 
 def example_function():

@@ -49,7 +49,7 @@ from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
 from src.logger.logger import logger  # импорт логгера
 
 
-MODE = 'dev'
+
 
 
 class EventHandler(AssistantEventHandler):
@@ -179,7 +179,7 @@ from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
 from src.logger.logger import logger  # импорт логгера
 
 
-MODE = 'dev'
+
 
 
 class EventHandler(AssistantEventHandler):

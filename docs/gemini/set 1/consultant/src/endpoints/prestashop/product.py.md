@@ -14,7 +14,7 @@
 :platform: Windows, Unix
 :synopsis: Модуль для работы с товарами PrestaShop через API.
 """
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional, Any
@@ -184,7 +184,7 @@ class PrestaProduct(PrestaShop):
 :platform: Windows, Unix
 :synopsis: Модуль для работы с товарами PrestaShop через API.
 """
-MODE = 'dev'
+
 
 from types import SimpleNamespace
 from typing import Optional, Any

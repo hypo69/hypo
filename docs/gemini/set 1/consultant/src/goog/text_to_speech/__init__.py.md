@@ -13,7 +13,7 @@
 # файл hypotez/src/goog/text_to_speech/__init__.py
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-MODE = 'dev'
+
 
 import header
 # импортирует класс attr и attrs из библиотеки attr
@@ -81,7 +81,7 @@ _tts = TTS()
 # файл hypotez/src/goog/text_to_speech/__init__.py
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
-MODE = 'dev'
+
 
 import header
 # импортирует класс attr и attrs из библиотеки attr

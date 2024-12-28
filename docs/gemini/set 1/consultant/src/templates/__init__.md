@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.templates """
 
@@ -73,7 +73,7 @@ from src.utils.jjson import j_loads  # Импорт функции j_loads дл�
 # Инициализация логгера
 logger = logging.getLogger(__name__)
 
-MODE = 'dev'  # Переменная MODE
+  # Переменная MODE
 
 # Добавьте описание переменной MODE.
 # ...
@@ -147,7 +147,7 @@ from src.utils.jjson import j_loads  # Импорт функции j_loads дл�
 # Инициализация логгера
 logger = logging.getLogger(__name__)
 
-MODE = 'dev'  # Переменная MODE
+  # Переменная MODE
 
 # Добавьте описание переменной MODE.
 # ...

@@ -47,7 +47,7 @@
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 from typing import Optional
 from src.logger.logger import logger

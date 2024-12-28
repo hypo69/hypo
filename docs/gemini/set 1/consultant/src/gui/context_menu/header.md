@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.gui.context_menu """
 
@@ -95,7 +95,7 @@ import sys
 from pathlib import Path
 from src.utils.jjson import j_loads
 
-MODE = 'dev'
+
 
 def _update_path_for_bin_directories(bin_paths: list) -> None:
     """Обновляет пути в переменной sys.path, если указанные каталоги bin не найдены.
@@ -186,7 +186,7 @@ from pathlib import Path
 from src.utils.jjson import j_loads
 from src.logger import logger
 
-MODE = 'dev'
+
 
 def _update_path_for_bin_directories(bin_paths: list) -> None:
     """Обновляет пути в переменной sys.path, если указанные каталоги bin не найдены.

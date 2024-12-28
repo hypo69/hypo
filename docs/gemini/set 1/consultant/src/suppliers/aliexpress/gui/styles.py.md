@@ -24,7 +24,7 @@
     set_fixed_size(widget, 100, 50)
 
 """
-MODE = 'dev'
+
 
 from PyQt6 import QtWidgets
 from src.logger.logger import logger
@@ -84,7 +84,7 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int) -> None:
     set_fixed_size(widget, 100, 50)
 
 """
-MODE = 'dev'
+
 
 from PyQt6 import QtWidgets
 from src.logger.logger import logger

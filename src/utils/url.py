@@ -9,7 +9,7 @@
 	:synopsis: Модуль для работы с URL строками, включая извлечение параметров запроса и проверку на валидность UR
 
 """
-MODE = 'dev'
+
 
 
 from urllib.parse import urlparse, parse_qs

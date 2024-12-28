@@ -66,7 +66,7 @@ from __future__ import annotations
     https://docs.google.com/spreadsheets/d/14f0PyQa32pur-sW2MBvA5faIVghnsA0hWClYoKpkFBQ/edit?gid=1778506526#gid=1778506526
 """
 
-MODE = 'dev'
+
 DEFAULT_INT_VALUE = 1
 DEFAULT_STRING_VALUE = ''
 DEFAULT_FLOAT_VALUE = 0.0

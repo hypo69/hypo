@@ -15,7 +15,7 @@
 :platform: Windows, Unix
 :synopsis: Модуль для работы с поставщиком Amazon
 """
-MODE = 'dev'
+
 
 from src.suppliers.amazon.graber import Graber
 # Импортируем функцию get_list_products_in_category из модуля scenario
@@ -47,7 +47,7 @@ from src.suppliers.amazon.scenario import get_list_products_in_category
 :platform: Windows, Unix
 :synopsis: Модуль для работы с поставщиком Amazon
 """
-MODE = 'dev'
+
 
 from src.suppliers.amazon.graber import Graber
 # Импортируем функцию get_list_products_in_category из модуля scenario

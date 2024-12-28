@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .facebook import Facebook
@@ -32,7 +32,7 @@ from .facebook import Facebook
    :synopsis: Модуль для работы с рекламными объявлениями.
 
 """
-MODE = 'dev'
+
 
 
 from .facebook import Facebook
@@ -62,7 +62,7 @@ from src.logger import logger
    :synopsis: Модуль для работы с рекламными объявлениями.
 
 """
-MODE = 'dev'
+
 
 
 from .facebook import Facebook

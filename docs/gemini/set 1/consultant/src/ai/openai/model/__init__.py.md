@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .training import OpenAIModel
@@ -32,7 +32,7 @@ from .training import OpenAIModel
 #! venv/bin/python/python3.12
 from src.logger.logger import logger # Импортируем logger для логирования ошибок
 
-MODE = 'dev'
+
 """
 Режим работы.
 """
@@ -69,7 +69,7 @@ from .training import OpenAIModel
 #! venv/bin/python/python3.12
 from src.logger.logger import logger # Импортируем logger для логирования ошибок
 
-MODE = 'dev'
+
 """
 Режим работы.
 """

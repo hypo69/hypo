@@ -37,7 +37,7 @@
 ```
 ```python
 ```python
-MODE = 'dev'
+
 ```
 ```
 

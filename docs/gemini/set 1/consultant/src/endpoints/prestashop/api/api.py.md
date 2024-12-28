@@ -76,7 +76,7 @@
     # Создание бинарного файла (изображения продукта)
     api.create_binary('images/products/22', 'img.jpeg', 'image')
 """
-MODE = 'dev'
+
 
 import os
 import sys
@@ -729,7 +729,7 @@ class PrestaShop:
     # Создание бинарного файла (изображения продукта)
     api.create_binary('images/products/22', 'img.jpeg', 'image')
 """
-MODE = 'dev'
+
 
 import os
 import sys

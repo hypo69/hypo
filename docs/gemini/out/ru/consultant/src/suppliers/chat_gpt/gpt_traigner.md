@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для обучения модели чат-бота на основе данных из чата ChatGPT.
 """
-MODE = 'dev'
+
 
 
 """
@@ -34,7 +34,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.chat_gpt """
 
@@ -195,7 +195,7 @@ model.stream_w(data_file_path=Path(gs.path.google_drive / 'chat_gpt' / 'conversa
 	:platform: Windows, Unix
 	:synopsis: Модуль для обучения модели чат-бота на основе данных из чата ChatGPT.
 """
-MODE = 'dev'
+
 
 
 """
@@ -218,7 +218,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis: Параметр режима работы.
 """
-MODE = 'dev'
+
 
 """ module: src.suppliers.chat_gpt """
 

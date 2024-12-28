@@ -12,7 +12,7 @@
 	:synopsis: Модуль логгирования телеграм ботов
 
 """
-MODE = 'dev'
+
 ```
 
 # Improved Code
@@ -34,7 +34,7 @@ import logging
 from src.utils.jjson import j_loads
 # Импорт функции j_loads для чтения файлов JSON.
 
-MODE = 'dev'
+
 # Переменная, определяющая режим работы.  Можно использовать для настройки уровня логирования.
 
 def setup_logger(log_file_path: str = "telegram_bot.log") -> logging.Logger:
@@ -90,7 +90,7 @@ import logging
 from src.utils.jjson import j_loads
 # Импорт функции j_loads для чтения файлов JSON.
 
-MODE = 'dev'
+
 # Переменная, определяющая режим работы.  Можно использовать для настройки уровня логирования.
 
 def setup_logger(log_file_path: str = "telegram_bot.log") -> logging.Logger:

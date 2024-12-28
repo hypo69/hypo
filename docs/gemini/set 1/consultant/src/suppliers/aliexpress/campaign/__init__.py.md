@@ -11,7 +11,7 @@
 	:synopsis:модули управления рекламной кампанией Aliexpress
 
 """
-MODE = 'dev'
+
 
 
 from .ali_campaign_editor import AliCampaignEditor
@@ -38,7 +38,7 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 
 """
 # Объявляем режим работы модуля. По умолчанию 'dev'
-MODE = 'dev'
+
 
 # Импортируем класс AliCampaignEditor для редактирования кампаний.
 from .ali_campaign_editor import AliCampaignEditor
@@ -73,7 +73,7 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 
 """
 # Объявляем режим работы модуля. По умолчанию 'dev'
-MODE = 'dev'
+
 
 # Импортируем класс AliCampaignEditor для редактирования кампаний.
 from .ali_campaign_editor import AliCampaignEditor

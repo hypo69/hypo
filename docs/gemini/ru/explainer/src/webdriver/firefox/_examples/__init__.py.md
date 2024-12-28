@@ -4,7 +4,7 @@
 
 1. **Объявление MODE:**
    - Определяется переменная `MODE` и ей присваивается строковое значение `'dev'`.
-   - Пример: `MODE = 'dev'`
+   - Пример: ``
    - Эта переменная, вероятно, используется для определения режима работы программы, например, `dev` для режима разработки, а другие значения для других режимов (напр. 'prod' для production).
 2. **Импорт модулей:**
    - Импортируется `Version` из пакета `packaging.version`.
@@ -19,7 +19,7 @@
 ### 2. <mermaid>
 ```mermaid
 flowchart TD
-    Start --> DefineMode[<code>MODE = 'dev'</code><br>Set Development Mode]
+    Start --> DefineMode[<code></code><br>Set Development Mode]
     DefineMode --> ImportVersion[Import Version class from packaging: <br><code>from packaging.version import Version</code>]
     ImportVersion --> ImportVersionData[Import Version Data from .version: <br><code>from .version import __version__, __doc__, __details__</code>]
     ImportVersionData --> End

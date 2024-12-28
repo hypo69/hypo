@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль содержит точки входа FastAPI приложения.
 """
-MODE = 'dev'
+
 
 
 """
@@ -37,7 +37,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :synopsis:
 """
-MODE = 'dev'
+
   
 """ module: src.fast_api """
 

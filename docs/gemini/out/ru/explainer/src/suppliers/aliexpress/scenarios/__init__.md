@@ -13,7 +13,7 @@
 	:synopsis: Сценарии для алиэкспресс
 
 """
-MODE = 'dev'
+
 
 
 from .login import login
@@ -23,7 +23,7 @@ from .login import login
 
 ```mermaid
 graph TD
-    A[Модуль __init__.py] --> B(MODE = 'dev');
+    A[Модуль __init__.py] --> B();
     A --> C[Импорт login];
     C --> D[Функция login];
 ```

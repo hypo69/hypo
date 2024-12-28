@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .api import PrestaShop
 ```
@@ -33,7 +33,7 @@ from .api import PrestaShop
 """
 import json
 
-MODE = 'dev'
+
 
 # Импортируем нужный класс из файла api.py.
 from .api import PrestaShop
@@ -63,7 +63,7 @@ from .api import PrestaShop
 """
 import json
 
-MODE = 'dev'
+
 
 # Импортируем нужный класс из файла api.py.
 from .api import PrestaShop

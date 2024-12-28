@@ -28,7 +28,7 @@
     categories = get_list_categories_from_site()
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 # from .scenario import get_list_categories_from_site, get_list_products_in_category #TODO импорт не используется, пока убрал
@@ -72,7 +72,7 @@ from .scenario import get_list_categories_from_site
     categories = get_list_categories_from_site()
 
 """
-MODE = 'dev'
+
 
 from .graber import Graber
 # from .scenario import get_list_categories_from_site, get_list_products_in_category #TODO импорт не используется, пока убрал

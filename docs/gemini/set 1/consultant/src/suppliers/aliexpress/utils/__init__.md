@@ -11,7 +11,7 @@ Received Code
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https
@@ -29,7 +29,7 @@ Improved Code
 работа с локалями.
 
 """
-MODE = 'dev'
+
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https
@@ -71,7 +71,7 @@ FULL Code
 работа с локалями.
 
 """
-MODE = 'dev'
+
 
 from .extract_product_id import extract_prod_ids
 from .ensure_https import ensure_https

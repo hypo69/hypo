@@ -5,7 +5,7 @@
 **Блок-схема работы `header.py`:**
 
 1.  **Начало**: Запуск скрипта `header.py`.
-2.  **`MODE = 'dev'`**: Установка режима работы (в данном случае, 'dev' для разработки).
+2.  **``**: Установка режима работы (в данном случае, 'dev' для разработки).
 3.  **Импорт модулей**: 
     *   `sys`: Для работы с системными переменными, включая `sys.path`.
     *   `json`: Для работы с файлами `json`.
@@ -49,7 +49,7 @@
 
 ```mermaid
 flowchart TD
-    Start[Начало] --> SetMode[<code>MODE = 'dev'</code>]
+    Start[Начало] --> SetMode[<code></code>]
     SetMode --> ImportModules[Импорт модулей:<br><code>sys</code>, <code>json</code>,<br><code>Version</code>, <code>Path</code>]
     ImportModules --> SetProjectRoot[<code>set_project_root()</code><br>Определение корня проекта]
     SetProjectRoot --> RootPath[<code>__root__</code><br>Сохранение корня проекта]

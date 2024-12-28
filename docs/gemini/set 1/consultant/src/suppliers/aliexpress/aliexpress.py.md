@@ -27,7 +27,7 @@
     # Запуск в режиме запросов
     a = Aliexpress(requests=True)
 """
-MODE = 'dev'
+
 
 import pickle
 import threading
@@ -144,7 +144,7 @@ class Aliexpress(Supplier, AliRequests, AliApi):
     # Запуск в режиме запросов
     a = Aliexpress(requests=True)
 """
-MODE = 'dev'
+
 
 import pickle
 import threading

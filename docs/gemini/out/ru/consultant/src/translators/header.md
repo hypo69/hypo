@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.translators """
 
@@ -115,7 +115,7 @@ from pathlib import Path
 from packaging.version import Version
 from src.utils.jjson import j_loads_ns
 
-MODE = 'dev'  # Режим работы модуля.
+  # Режим работы модуля.
 
 
 def set_project_root(marker_files=('__root__')) -> Path:
@@ -213,7 +213,7 @@ from packaging.version import Version
 from src.utils.jjson import j_loads_ns
 from src.logger import logger  # Импорт модуля для логирования.
 
-MODE = 'dev'  # Режим работы модуля.
+  # Режим работы модуля.
 
 
 def set_project_root(marker_files=('__root__')) -> Path:

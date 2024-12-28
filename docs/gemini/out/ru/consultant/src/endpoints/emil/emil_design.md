@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.emil """
 
@@ -231,7 +231,7 @@ class EmilDesign:
 	:platform: Windows, Unix
 	:synopsis: Модуль для управления и обработки изображений, продвижения на Facebook и PrestaShop.
 """
-MODE = 'dev'
+
 
 
 """
@@ -254,7 +254,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.emil """
 

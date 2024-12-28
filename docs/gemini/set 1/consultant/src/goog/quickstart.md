@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 	:platform: Windows, Unix
 	:synopsis: Модуль для взаимодействия с API Google Apps Script.
 """
-MODE = 'dev'
+
 
 
 """
@@ -224,7 +224,7 @@ if __name__ == '__main__':
 	:platform: Windows, Unix
 	:synopsis: Модуль для взаимодействия с API Google Apps Script.
 """
-MODE = 'dev'
+
 
 
 """

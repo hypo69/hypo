@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -65,7 +65,7 @@ __details__ = {"author": "John Doe"}
 
 **Пример:**
 ```
-MODE = 'dev' 
+ 
 ```
 
 Данные здесь не передаются между функциями или классами.
@@ -80,7 +80,7 @@ graph TD
     C --> E(__version__);
     C --> F(__doc__);
     C --> G(__details__);
-    A --> H[MODE = 'dev'];
+    A --> H[];
 ```
 
 # <explanation>

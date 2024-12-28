@@ -47,7 +47,7 @@
 # from src.logger.logger import logger # TODO: Раскомментировать, если требуется логгирование
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: Раскомментировать, если требуется json
 
-MODE = 'dev' # Определяем режим работы (dev, prod и т.д.)
+ # Определяем режим работы (dev, prod и т.д.)
 
 
 from .spreadsheet import SpreadSheet # Импортируем класс SpreadSheet из модуля spreadsheet

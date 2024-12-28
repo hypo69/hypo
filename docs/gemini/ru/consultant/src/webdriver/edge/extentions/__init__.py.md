@@ -64,6 +64,6 @@ from src.logger.logger import logger
 from .version import __version__, __doc__, __details__
 
 # устанавливаем режим работы
-MODE = 'dev'
+
 ...
 ```

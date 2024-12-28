@@ -13,7 +13,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -36,7 +36,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.utils.powershell.examples.pprint """
 
@@ -87,7 +87,7 @@ graph TD
     * `pprint("Hello, world!")`: Вызов функции `pprint` (импортированной из `src.printer`) для вывода строки "Hello, world!" в консоль.  Функция `pprint` из `src.printer` должна быть определена в другом файле, чтобы иметь смысл.
 
 * **Переменные:**
-    * `MODE = 'dev'`: Переменная, хранящая строку 'dev'.  Вероятно, используется для конфигурации или определения режима работы.
+    * ``: Переменная, хранящая строку 'dev'.  Вероятно, используется для конфигурации или определения режима работы.
 
 
 * **Возможные ошибки/улучшения:**

@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Переключение между аккаунатми
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 from types import SimpleNamespace

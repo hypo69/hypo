@@ -53,5 +53,5 @@ from src.suppliers.graber import Graber, Context, close_pop_up # импорт к
 from src.logger.logger import logger # импорт логгера
 
 #: Режим работы приложения (`dev` или `prod`).
-MODE = 'dev'
+
 ```

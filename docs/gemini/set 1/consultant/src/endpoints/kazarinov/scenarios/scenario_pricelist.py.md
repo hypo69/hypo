@@ -15,7 +15,7 @@ from __future__ import annotations
            various suppliers. The module handles data preparation, AI processing, 
            and integration with Facebook for product posting.
 """
-MODE = 'dev'
+
 
 import asyncio
 import random
@@ -464,7 +464,7 @@ from __future__ import annotations
            various suppliers. The module handles data preparation, AI processing, 
            and integration with Facebook for product posting.
 """
-MODE = 'dev'
+
 
 import asyncio
 import random

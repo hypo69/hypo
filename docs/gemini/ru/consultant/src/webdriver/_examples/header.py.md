@@ -51,7 +51,7 @@ import sys
 from pathlib import Path
 # from src.logger.logger import logger # TODO: добавить импорт логгера, если необходимо
 
-MODE = 'dev'
+
 
 # Определяет корневую директорию проекта
 dir_root: Path = Path(os.getcwd()[:os.getcwd().rfind('hypotez') + 7])  # <- Корневая директория проекта

@@ -42,7 +42,7 @@
 #! venv/bin/python/python3.12
 
 
-MODE = 'dev'
+
 
 """ file.py tests """
 

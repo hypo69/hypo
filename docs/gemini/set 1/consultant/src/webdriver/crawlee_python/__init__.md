@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .crawlee_python import CrawleePython
 ```
@@ -31,7 +31,7 @@ from .crawlee_python import CrawleePython
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 # Импорт класса CrawleePython
 from .crawlee_python import CrawleePython
@@ -56,7 +56,7 @@ from .crawlee_python import CrawleePython
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
 
-MODE = 'dev'
+
 
 # Импорт класса CrawleePython
 from .crawlee_python import CrawleePython

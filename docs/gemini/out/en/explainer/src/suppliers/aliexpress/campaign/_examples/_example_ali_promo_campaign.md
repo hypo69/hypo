@@ -10,7 +10,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress.campaign._examples """
 
@@ -157,7 +157,7 @@ The `mermaid` diagram shows dependencies between the imported modules (e.g., `he
 
 
     * The code lacks error handling.  There is no `try...except` block to catch potential issues (e.g., file not found, invalid format, or missing data). Adding robust error handling is crucial for production-level code.
-    *  The `MODE = 'dev'` variable isn't utilized. It could be used for conditional execution of different code segments based on the current mode (development vs. production).
+    *  The `` variable isn't utilized. It could be used for conditional execution of different code segments based on the current mode (development vs. production).
     * The lack of more detailed comments on the specific functions within `AliPromoCampaign` and `AliAffiliatedProducts` might obscure their usage.
     * The last two examples of `AliPromoCampaign` instantiation are redundant and are probably placeholders for different ways to construct the object (dictionaries or strings). This needs further analysis to determine if they are used for specific functionality.
 

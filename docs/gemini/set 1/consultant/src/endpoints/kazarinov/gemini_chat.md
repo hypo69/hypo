@@ -11,7 +11,7 @@
 	:platform: Windows, Unix
 	:synopsis: Модуль для обучения модели с использованием GoogleGenerativeAI для проекта Kazarinov.
 """
-MODE = 'dev'
+
 import header
 import time
 import json
@@ -143,7 +143,7 @@ class KazarinovAI:
 	:platform: Windows, Unix
 	:synopsis: Модуль для обучения модели с использованием GoogleGenerativeAI для проекта Kazarinov.
 """
-MODE = 'dev'
+
 import header
 import time
 import json

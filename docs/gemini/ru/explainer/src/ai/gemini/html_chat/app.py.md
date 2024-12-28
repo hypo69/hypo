@@ -1,7 +1,7 @@
 ## <алгоритм>
 
 1.  **Инициализация:**
-    *   Устанавливается `MODE = 'dev'`.
+    *   Устанавливается ``.
     *   Импортируются необходимые библиотеки: `header`, `webbrowser`, `threading`, `fastapi`, `pydantic`, `src.ai.gooogle_generativeai.kazarinov`, `random`, `pathlib`, `src.gs`.
     *   Создается экземпляр FastAPI `app`.
     *   Инициализируются шаблоны Jinja2, указывающие на директорию с HTML файлами.

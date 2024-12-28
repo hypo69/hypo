@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile
@@ -158,7 +158,7 @@ if __name__ == '__main__':
 	:platform: Windows, Unix
 	:synopsis: Telegram bot module.
 """
-MODE = 'dev'
+
 
 from pathlib import Path
 import tempfile

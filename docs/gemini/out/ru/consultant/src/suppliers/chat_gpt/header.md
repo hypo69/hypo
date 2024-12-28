@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -96,7 +96,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     :synopsis: Модуль для работы с поставщиком данных ChatGPT.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -187,7 +187,7 @@ __cofee__ = settings.get('cofee', 'Treat the developer to a cup of coffee for bo
     :synopsis: Модуль для работы с поставщиком данных ChatGPT.
 
 """
-MODE = 'dev'
+
 
 import sys
 import json

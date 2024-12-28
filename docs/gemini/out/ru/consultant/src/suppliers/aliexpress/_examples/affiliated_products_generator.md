@@ -12,7 +12,7 @@
 	:synopsis:
 	Модуль для генерации аффилированных продуктов с AliExpress.
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.aliexpress._examples """
 
@@ -113,7 +113,7 @@ from src.utils.jjson import j_loads
 #Добавляем импорт для логирования
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def main():
@@ -187,7 +187,7 @@ from src.utils.jjson import j_loads
 #Добавляем импорт для логирования
 from src.logger import logger
 
-MODE = 'dev'
+
 
 
 def main():

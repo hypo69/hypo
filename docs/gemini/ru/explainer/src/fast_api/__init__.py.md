@@ -5,7 +5,7 @@
 **Начало**
 
 1.  **Инициализация:** Устанавливается переменная `MODE` со значением `'dev'`.
-    *   Пример: `MODE = 'dev'`
+    *   Пример: ``
 
 **Конец**
 
@@ -13,7 +13,7 @@
 
 ```mermaid
 flowchart TD
-    Start --> VariableInitialization[Initialize MODE = 'dev']
+    Start --> VariableInitialization[Initialize ]
 ```
 
 **Объяснение зависимостей:**

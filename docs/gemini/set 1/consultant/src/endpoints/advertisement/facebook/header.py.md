@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 import sys
 import json
@@ -89,7 +89,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :platform: Windows, Unix
    :synopsis: Загрузка основных параметров проекта.
 """
-MODE = 'dev'
+
 
 import sys
 # Стандартный модуль json не используется, поэтому импорт убираем
@@ -248,7 +248,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
    :platform: Windows, Unix
    :synopsis: Загрузка основных параметров проекта.
 """
-MODE = 'dev'
+
 
 import sys
 # Стандартный модуль json не используется, поэтому импорт убираем

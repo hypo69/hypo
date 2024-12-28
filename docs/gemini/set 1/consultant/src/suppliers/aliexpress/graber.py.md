@@ -30,7 +30,7 @@
     product_data = await graber.get_product_data(url='https://example.aliexpress.com/item/1234567890.html')
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps # TODO: проверить необходимость
@@ -130,7 +130,7 @@ class Graber(Grbr):
     product_data = await graber.get_product_data(url='https://example.aliexpress.com/item/1234567890.html')
 
 """
-MODE = 'dev'
+
 
 from typing import Any, Callable
 # from functools import wraps # TODO: проверить необходимость

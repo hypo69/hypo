@@ -32,7 +32,7 @@ from pathlib import Path
 from src.logger.logger import logger
 
 # Устанавливаем режим работы по умолчанию как 'dev'
-MODE = 'dev'
+
 
 def set_project_root(marker_files: tuple =('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """
@@ -155,7 +155,7 @@ from pathlib import Path
 from src.logger.logger import logger
 
 # Устанавливаем режим работы по умолчанию как 'dev'
-MODE = 'dev'
+
 
 def set_project_root(marker_files: tuple =('pyproject.toml', 'requirements.txt', '.git')) -> Path:
     """

@@ -53,7 +53,7 @@
     generated_text = claude_client.generate_text(prompt)
     print('Generated Text:', generated_text)
 """
-MODE = 'dev'
+
 
 from src.logger.logger import logger  # Импортируем logger
 import anthropic

@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -33,7 +33,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.endpoints.prestashop._examples """
 
@@ -107,7 +107,7 @@ from src.logger.logger import logger # импорт логгера из моду
 from src.utils.normalizer import StringNormalizer # импорт класса StringNormalizer из модуля src.utils.normalizer
 from src.utils.validator import ProductFieldsValidator # импорт класса ProductFieldsValidator из модуля src.utils.validator
 
-MODE = 'dev' # устанавливаем режим работы в 'dev'
+ # устанавливаем режим работы в 'dev'
 
 dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+11]) # определение корневой директории проекта
 sys.path.append (str (dir_root) )  # Добавляю корневую папку в sys.path
@@ -180,7 +180,7 @@ from src.logger.logger import logger # импорт логгера из моду
 from src.utils.normalizer import StringNormalizer # импорт класса StringNormalizer из модуля src.utils.normalizer
 from src.utils.validator import ProductFieldsValidator # импорт класса ProductFieldsValidator из модуля src.utils.validator
 
-MODE = 'dev' # устанавливаем режим работы в 'dev'
+ # устанавливаем режим работы в 'dev'
 
 dir_root : Path = Path (os.getcwd()[:os.getcwd().rfind('hypotez')+11]) # определение корневой директории проекта
 sys.path.append (str (dir_root) )  # Добавляю корневую папку в sys.path

@@ -72,7 +72,7 @@
     print(response)
 """
 
-MODE = 'dev'
+
 import time
 import base64
 from io import IOBase

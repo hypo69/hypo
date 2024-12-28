@@ -12,7 +12,7 @@
 	:synopsis: Модуль для обучения модели с использованием Google Generative AI для проекта Kazarinov.
 
 """
-MODE = 'dev'
+
 import header
 import time
 import json
@@ -222,7 +222,7 @@ if __name__ == "__main__":
 	:synopsis: Модуль для обучения модели с использованием Google Generative AI для проекта Kazarinov.
 
 """
-MODE = 'dev'
+
 import header
 import time
 import json

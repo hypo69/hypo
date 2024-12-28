@@ -26,7 +26,7 @@
     main.remove_context_menu_item()
     main.create_gui()
 """
-MODE = 'dev'
+
 
 import winreg as reg  # Модуль для взаимодействия с реестром Windows
 import os  # Модуль для работы с путями ОС
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     main.remove_context_menu_item()
     main.create_gui()
 """
-MODE = 'dev'
+
 
 import winreg as reg  # Модуль для взаимодействия с реестром Windows
 import os  # Модуль для работы с путями ОС

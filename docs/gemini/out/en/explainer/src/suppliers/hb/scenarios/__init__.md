@@ -14,7 +14,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -38,7 +38,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.suppliers.hb.scenarios """
 
@@ -85,7 +85,7 @@ graph TD
 * **Imports:** The file imports necessary modules.  `from packaging.version import Version` is for version handling, while `from .version import __version__, __doc__, __details__` imports version-related data specifically for the hb.co.il supplier. The other imports (`get_list_products_in_category`, `get_list_categories_from_site`, `grab_product_page`, `login`) are functions from other modules within the `src.suppliers.hb.scenarios` package likely dealing with the specific aspects of interaction.
 
 
-* **Variables:** `MODE = 'dev'` is a global variable that likely controls the operational mode of the supplier interaction functions.
+* **Variables:** `` is a global variable that likely controls the operational mode of the supplier interaction functions.
 
 * **Missing Components:** There are several multi-line strings that appear to be docstrings, but they are empty.   Proper docstrings should be added to explain the purpose, arguments, and return values of the imported functions.
 

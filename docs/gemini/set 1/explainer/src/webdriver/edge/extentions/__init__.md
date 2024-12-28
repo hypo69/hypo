@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.webdriver.edge.extentions """
 
@@ -69,7 +69,7 @@ from .version import __version__  # Получаем версию
 ```mermaid
 graph LR
     subgraph "Модуль __init__.py"
-        A[hypotez/src/webdriver/edge/extentions/__init__.py] --> B(MODE = 'dev');
+        A[hypotez/src/webdriver/edge/extentions/__init__.py] --> B();
         B --> C[from packaging.version import Version];
         C --> D[from .version import __version__, __doc__, __details__];
     end
@@ -100,7 +100,7 @@ graph LR
 
 **Переменные:**
 
-- `MODE = 'dev'`:  Переменная глобального уровня, скорее всего, определяет режим работы.   `dev` вероятно, указывает на режим разработки.   Переменная используется для конфигурирования в других частях кода.
+- ``:  Переменная глобального уровня, скорее всего, определяет режим работы.   `dev` вероятно, указывает на режим разработки.   Переменная используется для конфигурирования в других частях кода.
 
 **Возможные ошибки или улучшения:**
 

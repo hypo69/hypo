@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.translators.ttranslator """
 
@@ -64,7 +64,7 @@ import sys
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 def translate_text(text: str, target_language: str) -> str:
@@ -130,7 +130,7 @@ import sys
 from src.logger import logger
 from src.utils.jjson import j_loads, j_loads_ns
 
-MODE = 'dev'
+
 
 
 def translate_text(text: str, target_language: str) -> str:

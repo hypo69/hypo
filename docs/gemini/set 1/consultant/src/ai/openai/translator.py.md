@@ -52,7 +52,7 @@
     print(f"Translated text: {translation}")
 """
 
-MODE = 'dev'
+
 
 import openai
 from src import gs

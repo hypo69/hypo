@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 """ https://github.com/openai/openai-python/blob/main/helpers.md#assistant-events """

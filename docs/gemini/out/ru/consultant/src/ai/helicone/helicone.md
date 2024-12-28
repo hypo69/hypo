@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 """
 	:platform: Windows, Unix
@@ -35,7 +35,7 @@ MODE = 'dev'
   :platform: Windows, Unix
   :platform: Windows, Unix
   :synopsis:
-"""MODE = 'dev'
+"""
   
 """ module: src.ai.helicone """
 
@@ -66,7 +66,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций �
 from src.logger import logger  # Импорт логгера
 
 
-MODE = 'dev'
+
 
 
 """
@@ -121,7 +121,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций �
 from src.logger import logger  # Импорт логгера
 
 
-MODE = 'dev'
+
 
 
 """

@@ -13,7 +13,7 @@
 	:synopsis:  HTML -> MD
 
 """
-MODE = 'dev'
+
 
 
 """html2text: Turn HTML into equivalent Markdown-structured text."""

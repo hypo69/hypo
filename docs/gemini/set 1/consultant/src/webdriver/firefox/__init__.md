@@ -12,7 +12,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 
 from .firefox import Firefox
@@ -39,7 +39,7 @@ from .firefox import Firefox  # Импорт класса Firefox
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
 
-MODE = 'dev'
+
 
 
 # Создание логгера
@@ -80,7 +80,7 @@ from .firefox import Firefox  # Импорт класса Firefox
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций для работы с JSON
 
 
-MODE = 'dev'
+
 
 
 # Создание логгера

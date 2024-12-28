@@ -27,7 +27,7 @@
 6. Логирование сообщений пользователей и их дальнейшая обработка.
 
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict
@@ -158,7 +158,7 @@ if __name__ == "__main__":
 6. Логирование сообщений пользователей и их дальнейшая обработка.
 
 """
-MODE = 'dev'
+
 import asyncio
 from pathlib import Path
 from typing import List, Optional, Dict

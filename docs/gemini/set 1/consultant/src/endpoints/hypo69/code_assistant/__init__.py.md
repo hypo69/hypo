@@ -11,7 +11,7 @@
 	:synopsis:
 
 """
-MODE = 'dev'
+
 
 from .code_assistant import CodeAssistant
 ```
@@ -38,7 +38,7 @@ from .code_assistant import CodeAssistant
     from src.endpoints.hypo69.code_assistant import CodeAssistant
 
 """
-MODE = 'dev'
+
 # Устанавливаем режим работы приложения в 'dev'.
 from .code_assistant import CodeAssistant
 # Импортируем класс CodeAssistant из модуля code_assistant.
@@ -70,7 +70,7 @@ from .code_assistant import CodeAssistant
     from src.endpoints.hypo69.code_assistant import CodeAssistant
 
 """
-MODE = 'dev'
+
 # Устанавливаем режим работы приложения в 'dev'.
 from .code_assistant import CodeAssistant
 # Импортируем класс CodeAssistant из модуля code_assistant.
