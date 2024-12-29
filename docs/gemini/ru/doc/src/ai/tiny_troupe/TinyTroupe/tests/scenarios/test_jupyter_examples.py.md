@@ -2,17 +2,17 @@
 
 ## Обзор
 
-Данный файл содержит тесты для проверки выполнения примеров Jupyter Notebook. Он использует `pytest` для параметризации тестов и `nbformat` для работы с notebook. Файл обеспечивает запуск всех примеров notebook в папке `../examples/` и проверяет, что они выполняются без ошибок.
+Данный файл содержит тесты для выполнения Jupyter Notebooks и проверки отсутствия ошибок при их исполнении. Он использует `pytest` для параметризации тестов и `nbformat` и `nbconvert` для работы с Jupyter Notebooks.
 
-## Содержание
+## Оглавление
 
-1.  [Импорты](#импорты)
-2.  [Константы](#константы)
-3.  [Функции](#функции)
-    *   [`get_notebooks`](#get_notebooks)
-4.  [Тесты](#тесты)
-    *   [`test_notebook_execution`](#test_notebook_execution)
-
+1. [Импорты](#Импорты)
+2. [Константы](#Константы)
+3. [Функции](#Функции)
+    - [`get_notebooks`](#get_notebooks)
+4. [Тесты](#Тесты)
+    - [`test_notebook_execution`](#test_notebook_execution)
+ 
 ## Импорты
 
 ```python
@@ -22,31 +22,33 @@ from nbconvert.preprocessors import ExecutePreprocessor
 import pytest
 
 import sys
+sys.path.insert(0, '../../tinytroupe/')
+sys.path.insert(0, '../../')
+sys.path.insert(0, '..')
 ```
+- `os`: Для работы с файловой системой.
+- `nbformat`: Для чтения и записи Jupyter Notebooks.
+- `nbconvert.preprocessors.ExecutePreprocessor`: Для выполнения Jupyter Notebooks.
+- `pytest`: Для создания тестов.
+- `sys`: Для модификации пути поиска модулей.
 
 ## Константы
 
 ```python
-NOTEBOOK_FOLDER = "../examples/"
+NOTEBOOK_FOLDER = "../examples/"  
 TIMEOUT = 600
 KERNEL_NAME = "python3"
 ```
-- `NOTEBOOK_FOLDER`: Папка, содержащая тестируемые Jupyter Notebook.
-- `TIMEOUT`: Максимальное время выполнения notebook в секундах.
-- `KERNEL_NAME`: Название ядра Jupyter, используемое для выполнения notebook.
+- `NOTEBOOK_FOLDER`: Путь к папке с Jupyter Notebooks для тестирования.
+- `TIMEOUT`: Время ожидания выполнения Jupyter Notebooks в секундах.
+- `KERNEL_NAME`: Имя ядра Jupyter Notebook, которое будет использоваться для выполнения.
 
 ## Функции
 
 ### `get_notebooks`
 
 **Описание**:
-Извлекает все файлы Jupyter Notebook из указанной папки.
-
-**Параметры**:
-- `folder` (str): Путь к папке, содержащей файлы notebook.
-
-**Возвращает**:
-- `list[str]`: Список путей к файлам notebook.
+Извлекает все Jupyter Notebook файлы из указанной папки.
 
 ```python
 def get_notebooks(folder):
@@ -58,18 +60,18 @@ def get_notebooks(folder):
     ]
 ```
 
+**Параметры**:
+- `folder` (str): Путь к папке, в которой ищутся файлы.
+
+**Возвращает**:
+- `list`: Список путей к Jupyter Notebook файлам.
+
 ## Тесты
 
 ### `test_notebook_execution`
 
 **Описание**:
 Выполняет Jupyter Notebook и проверяет, что не возникает исключений.
-
-**Параметры**:
-- `notebook_path` (str): Путь к файлу Jupyter Notebook.
-
-**Вызывает исключения**:
-- `pytest.fail`: Если во время выполнения notebook возникает исключение.
 
 ```python
 @pytest.mark.parametrize("notebook_path", get_notebooks(NOTEBOOK_FOLDER))
@@ -86,12 +88,17 @@ def test_notebook_execution(notebook_path):
 
         except Exception as ex:
             pytest.fail(f"Notebook {notebook_path} raised an exception: {ex}")
-
+        
         finally:
             # save a copy of the executed notebook
             output_path = notebook_path.replace(".ipynb", ".executed.local.ipynb")
             with open(output_path, "w", encoding="utf-8") as out_file:
                 nbformat.write(notebook, out_file)
-
+            
             print(f"Executed notebook saved as: {output_path}")
 ```
+**Параметры**:
+- `notebook_path` (str): Путь к Jupyter Notebook файлу.
+
+**Вызывает исключения**:
+- `pytest.fail`: Вызывается в случае возникновения исключения при выполнении Jupyter Notebook.

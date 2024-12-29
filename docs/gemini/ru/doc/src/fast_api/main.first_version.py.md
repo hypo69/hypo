@@ -1,136 +1,83 @@
-# Модуль `main.first_version.py`
+# `main.first_version.py`
 
 ## Обзор
 
-Данный модуль представляет собой FastAPI приложение, которое обрабатывает данные, отправленные через HTML-форму, и взаимодействует с внешним Python-скриптом для их обработки. Также предоставляет статический доступ к HTML-файлам и открывает `index.html` в браузере при запуске.
+Этот модуль представляет собой FastAPI-приложение, предназначенное для обработки данных, полученных из HTML-формы. Приложение предоставляет эндпоинт `/process_data`, который принимает имя и фамилию, передает их скрипту `script.py` для обработки, а затем возвращает результат. Также приложение автоматически открывает страницу `index.html` в браузере при запуске и имеет эндпоинт для перенаправления на `index.html`.
 
 ## Оглавление
 
-- [Константы](#константы)
+- [Обзор](#обзор)
 - [Импорты](#импорты)
-- [Инициализация FastAPI](#инициализация-fastapi)
-- [Монтирование статических файлов](#монтирование-статических-файлов)
-- [Обработчик POST-запроса `/process_data`](#обработчик-post-запроса-process_data)
-- [Обработчик GET-запроса `/`](#обработчик-get-запроса)
+- [Глобальные переменные](#глобальные-переменные)
+- [Функции](#функции)
+  - [`process_data`](#process_data)
+  - [`open_index`](#open_index)
 
-## Константы
-
-### `MODE`
-
-**Описание**: Указывает режим работы приложения. В данном случае используется значение `'dev'`.
-```python
-
-```
 
 ## Импорты
 
-Модуль импортирует следующие библиотеки:
+В данном файле импортируются следующие модули:
 
-- `os`: Для работы с операционной системой.
-- `subprocess`: Для запуска внешних процессов.
-- `webbrowser`: Для открытия веб-страниц в браузере.
-- `pathlib.Path`: Для удобной работы с путями к файлам.
-- `fastapi.FastAPI`: Основной класс для создания FastAPI приложения.
-- `fastapi.Form`: Для получения данных из HTML-форм.
-- `fastapi.Request`: Для работы с запросами.
-- `fastapi.HTTPException`: Для формирования HTTP-исключений.
-- `subprocess.Popen`: Для создания дочерних процессов.
-- `subprocess.PIPE`: Для управления потоками ввода/вывода дочернего процесса.
-- `fastapi.staticfiles.StaticFiles`: Для обслуживания статических файлов.
+- `os`: для взаимодействия с операционной системой (не используется напрямую в коде, но может использоваться для расширения функционала).
+- `subprocess`: для запуска внешних процессов.
+- `webbrowser`: для открытия веб-страниц в браузере.
+- `pathlib`: для работы с путями в файловой системе.
+- `fastapi`: для создания веб-приложения с использованием FastAPI.
+- `fastapi.staticfiles`: для подачи статических файлов.
 
-```python
-import os
-import subprocess
-import webbrowser
-from pathlib import Path
-from fastapi import FastAPI, Form, Request, HTTPException
-from subprocess import Popen, PIPE
-from fastapi.staticfiles import StaticFiles
-```
+## Глобальные переменные
 
-## Инициализация FastAPI
-
-Создается экземпляр класса FastAPI для работы с HTTP-запросами.
-
-```python
-app = FastAPI()
-```
-
-## Монтирование статических файлов
-
-Подключает каталог `html` как источник статических файлов, чтобы приложение могло их обслуживать.
-
-```python
-app.mount("/", StaticFiles(directory="html"), name="html")
-```
-Открывает браузер со страницей `index.html` при запуске приложения.
-```python
-webbrowser.open("http://localhost:8000/html/index.html")
-```
+- `app`: Экземпляр класса FastAPI, используемый для создания веб-приложения.
 
 ## Функции
 
 ### `process_data`
 
-**Описание**: Обрабатывает POST-запрос `/process_data` для получения данных из HTML-формы.
+**Описание**: 
+Обрабатывает данные, полученные из HTML-формы через POST-запрос на эндпоинт `/process_data`. Принимает имя и фамилию, передает их скрипту `script.py`, возвращает результат обработки.
 
 **Параметры**:
 - `request` (Request): Объект запроса FastAPI.
-- `first_name` (str): Имя, полученное из формы.
-- `last_name` (str): Фамилия, полученная из формы.
+- `first_name` (str, optional): Имя, полученное из формы. По умолчанию `Form(...)`.
+- `last_name` (str, optional): Фамилия, полученная из формы. По умолчанию `Form(...)`.
 
 **Возвращает**:
-- `dict`: Словарь с выходными данными скрипта.
+- `dict`: Словарь с ключом "output", содержащим результат выполнения скрипта `script.py`.
 
 **Вызывает исключения**:
-- `HTTPException`: Возникает, если не указано имя или фамилия, или при ошибке выполнения скрипта.
+- `HTTPException`: Возникает, если имя или фамилия не были предоставлены, или если при выполнении скрипта произошла ошибка.
+
 ```python
 @app.post("/process_data")
 async def process_data(request: Request, first_name: str = Form(...), last_name: str = Form(...)) -> dict:
     """
     Args:
         request (Request): Объект запроса FastAPI.
-        first_name (str, optional): Имя, полученное из формы. По умолчанию `Form(...)`.
-        last_name (str, optional): Фамилия, полученная из формы. По умолчанию `Form(...)`.
+        first_name (str, optional): Имя, полученное из формы. По умолчанию Form(...).
+        last_name (str, optional): Фамилия, полученная из формы. По умолчанию Form(...).
 
     Returns:
-        dict: Словарь с выходными данными скрипта.
+        dict: Словарь с ключом "output", содержащим результат выполнения скрипта `script.py`.
 
     Raises:
-        HTTPException: Возникает, если не указано имя или фамилия, или при ошибке выполнения скрипта.
+        HTTPException: Возникает, если имя или фамилия не были предоставлены, или если при выполнении скрипта произошла ошибка.
     """
-    # Check if first name and last name are provided
-    if not first_name or not last_name:
-        raise HTTPException(status_code=400, detail="First name and last name must be provided")
-    
-    # Formulate the input data string
-    input_data = f"{first_name} {last_name}"
-    
-    # Execute the script with the input data and get the result
-    script_path = Path(__file__).resolve().parent.parent / 'script.py'
-    process = Popen(['python', str(script_path)], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    stdout, stderr = process.communicate(input=input_data.encode())
-    
-    # Check for errors during script execution
-    if process.returncode != 0:
-        raise HTTPException(status_code=500, detail=f"Error executing the script: {stderr.decode()}")
-    
-    return {"output": stdout.decode()}
 ```
-
 ### `open_index`
 
-**Описание**: Обрабатывает GET-запрос `/`. Перенаправляет на страницу `index.html`.
+**Описание**:
+Обрабатывает GET-запрос на корневой эндпоинт `/` и перенаправляет пользователя на страницу `index.html`.
+
+**Параметры**:
+  - Нет.
 
 **Возвращает**:
-- `dict`: Сообщение о перенаправлении.
+- `dict`: Словарь с ключом "message", содержащим сообщение о перенаправлении.
 
 ```python
 @app.get("/")
 async def open_index() -> dict:
     """
     Returns:
-        dict: Сообщение о перенаправлении.
+        dict: Словарь с ключом "message", содержащим сообщение о перенаправлении.
     """
-    # Redirect to index.html
-    return {"message": "Redirecting to index.html..."}

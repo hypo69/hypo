@@ -1,77 +1,63 @@
-# Модуль `__init__.py`
+# tinytroupe/__init__.py
 
 ## Обзор
 
-Этот модуль является точкой входа для библиотеки `tinytroupe`. Он выполняет начальную настройку, включая импорт необходимых модулей, чтение конфигурационного файла, настройку логирования и вывод предупреждения об использовании ИИ.
+Этот файл является точкой входа для пакета `tinytroupe`. Он выполняет начальную настройку, включая чтение конфигурации, настройку логирования и вывод предупреждения об использовании ИИ.
 
-## Содержание
+## Оглавление
 
-- [Импорт библиотек](#Импорт-библиотек)
-- [Предупреждение об ИИ](#Предупреждение-об-ИИ)
-- [Настройка](#Настройка)
-- [Исправление Rich в Jupyter](#Исправление-Rich-в-Jupyter)
+- [Обзор](#обзор)
+- [Импорты](#импорты)
+- [Конфигурация](#конфигурация)
+- [Логирование](#логирование)
+- [Исправление стилей](#исправление-стилей)
+- [Предупреждение ИИ](#предупреждение-ии)
 
-## Импорт библиотек
+## Импорты
 
-В данном разделе происходит импорт необходимых библиотек для работы модуля.
+### `os`
+Модуль `os` используется для взаимодействия с операционной системой.
 
-- `os`: Используется для взаимодействия с операционной системой (не используется напрямую, но может быть использована в зависимостях).
-- `logging`: Используется для настройки и ведения логов.
-- `configparser`: Используется для чтения конфигурационных файлов.
-- `rich`: Используется для улучшения вывода в консоль.
-- `rich.jupyter`: Используется для настройки вывода `rich` в Jupyter.
-- `sys`: Используется для добавления текущей директории в `sys.path`.
-- `tinytroupe.utils`: Модуль утилит, содержащий функции для чтения конфигураций, логирования и т.д.
+### `logging`
+Модуль `logging` используется для записи событий во время выполнения программы.
 
-```python
-import os
-import logging
-import configparser
-import rich
-import rich.jupyter
-import sys
-sys.path.append('.')
-from tinytroupe import utils
-```
+### `configparser`
+Модуль `configparser` используется для чтения конфигурационных файлов.
 
-## Предупреждение об ИИ
+### `rich`
+Модуль `rich` используется для красивого вывода в консоль.
 
-Этот раздел содержит вывод предупреждения для пользователей о том, что `tinytroupe` использует модели ИИ для генерации контента, и что результаты могут быть неточными или неуместными.
+### `rich.jupyter`
+Модуль `rich.jupyter` используется для работы с `rich` в Jupyter Notebook.
 
-```python
-print(
-"""
-!!!!
-DISCLAIMER: TinyTroupe relies on Artificial Intelligence (AI) models to generate content. 
-The AI models are not perfect and may produce inappropriate or inacurate results. 
-For any serious or consequential use, please review the generated content before using it.
-!!!!
-"""
-)
-```
+### `sys`
+Модуль `sys` используется для добавления текущего пути в `sys.path` для импорта локальных модулей.
 
-## Настройка
+### `tinytroupe.utils`
+Модуль `tinytroupe.utils` используется для работы с конфигурацией, логированием и пр.
 
-В данном разделе происходит чтение конфигурационного файла, вывод конфигурации и запуск системы логирования.
+## Конфигурация
 
-```python
-config = utils.read_config_file()
-utils.pretty_print_config(config)
-utils.start_logger(config)
-```
+### `config = utils.read_config_file()`
 
-- `utils.read_config_file()`: Функция чтения конфигурационного файла.
-- `utils.pretty_print_config(config)`: Функция вывода конфигурации.
-- `utils.start_logger(config)`: Функция для запуска системы логирования.
+**Описание**: Чтение конфигурационного файла.
 
-## Исправление Rich в Jupyter
+**Возвращает**:
+- `configparser.ConfigParser`: Объект конфигурации.
 
-В данном разделе происходит настройка вывода `rich` в Jupyter, для удаления отступов.
+### `utils.pretty_print_config(config)`
+**Описание**: Красиво выводит конфигурацию на экран.
+**Параметры**:
+- `config` (configparser.ConfigParser): Объект конфигурации.
 
-```python
-rich.jupyter.JUPYTER_HTML_FORMAT = \
-    utils.inject_html_css_style_prefix(rich.jupyter.JUPYTER_HTML_FORMAT, "margin:0px;")
-```
+## Логирование
+### `utils.start_logger(config)`
+**Описание**: Настраивает и запускает систему логирования.
+**Параметры**:
+- `config` (configparser.ConfigParser): Объект конфигурации.
+## Исправление стилей
+### `rich.jupyter.JUPYTER_HTML_FORMAT = utils.inject_html_css_style_prefix(rich.jupyter.JUPYTER_HTML_FORMAT, "margin:0px;")`
+**Описание**: Убирает отступы в выводе `rich` в Jupyter Notebook.
 
-- `rich.jupyter.JUPYTER_HTML_FORMAT`: Строка формата HTML для Jupyter.
-- `utils.inject_html_css_style_prefix`: Функция для вставки CSS-стиля в строку HTML.
+## Предупреждение ИИ
+Выводит предупреждение о том, что `TinyTroupe` использует ИИ для генерации контента, и что сгенерированный контент необходимо проверять.

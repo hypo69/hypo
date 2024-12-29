@@ -1,16 +1,23 @@
-# Модуль `src.endpoints.bots`
+# Документация для модуля `src.endpoints.bots`
 
 ## Обзор
 
-Этот раздел документации описывает содержимое модуля `src.endpoints.bots`, предоставляя общую информацию и ссылки на более подробную информацию.
+Данный модуль содержит информацию об эндпоинтах, связанных с ботами.
 
-## Содержание
+## Оглавление
 
 1. [Обзор](#обзор)
-2. [Ссылки](#ссылки)
+2. [Файлы](#файлы)
+3. [Ссылки](#ссылки)
+
+## Файлы
+
+В данном разделе перечислены файлы, относящиеся к модулю:
+
+*   Отсутствуют файлы, так как предоставлен только текст README.md
 
 ## Ссылки
 
-- [Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.MD)
-- [src](https://github.com/hypo69/hypo/blob/master/src/bots/REDAME.MD)
-- [Русский](https://github.com/hypo69/hypo/blob/master/src/bots/readme.ru.md)
+*   [Root ↑](https://github.com/hypo69/hypo/blob/master/REDAME.MD) - Ссылка на корневой README.md
+*   [src](https://github.com/hypo69/hypo/blob/master/src/bots/REDAME.MD) - Ссылка на README.md директории `src/bots`
+*   [Русский](https://github.com/hypo69/hypo/blob/master/src/bots/readme.ru.md) - Ссылка на русскоязычный README.md директории `src/bots`

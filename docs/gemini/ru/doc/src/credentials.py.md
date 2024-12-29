@@ -1,77 +1,278 @@
-# `credentials.py`
+# `hypotez/src/credentials.py`
 
 ## Обзор
 
-Модуль `credentials.py` содержит глобальные настройки проекта, включая пути, логины, пароли и настройки API. Он использует `pydantic` для управления настройками и `PyKeePass` для безопасного хранения учетных данных. Также реализован паттерн Singleton для класса `ProgramSettings`.
+Модуль `credentials.py` предназначен для управления глобальными настройками проекта, такими как пути, пароли, логины и настройки API. Он использует класс `ProgramSettings` для хранения этих настроек и обеспечивает их загрузку из конфигурационных файлов и базы данных KeePass.
 
-## Содержание
+## Оглавление
 
-- [Классы](#Классы)
-    - [`ProgramSettings`](#ProgramSettings)
-- [Функции](#Функции)
+- [Функции](#функции)
     - [`set_project_root`](#set_project_root)
     - [`singleton`](#singleton)
-
-## Классы
-
-### `ProgramSettings`
-
-**Описание**:
-
-`ProgramSettings` - класс настроек программы. Это синглтон, который хранит основные параметры и настройки проекта. Он отвечает за загрузку конфигурации, учетных данных и управление путями проекта.
-
-**Параметры**:
-
-- `host_name` (str): Имя хоста, на котором запущена программа. По умолчанию получается с помощью `socket.gethostname()`.
-- `base_dir` (Path): Корневой каталог проекта. По умолчанию определяется с помощью `set_project_root()`.
-- `config` (SimpleNamespace): Конфигурация проекта, загружается из `config.json`.
-- `credentials` (SimpleNamespace): Учетные данные для различных сервисов, таких как AliExpress, PrestaShop, OpenAI, и др.
-- `MODE` (str): Режим работы программы (например, `dev`, `prod`). По умолчанию `dev`.
-- `path` (SimpleNamespace): Пути к различным директориям проекта, таким как `root`, `src`, `bin`, `log`, `tmp` и другие.
-
-**Методы**:
-
-- `__init__(self, **kwargs)`: Инициализирует экземпляр класса, загружает конфигурацию, устанавливает пути и загружает учетные данные.
-- `_load_credentials(self) -> None`: Загружает учетные данные из KeePass.
-- `_open_kp(self, retry: int = 3) -> PyKeePass | None`: Открывает базу данных KeePass.
-- `_load_aliexpress_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для AliExpress.
-- `_load_openai_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для OpenAI.
-- `_load_gemini_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для Google Gemini.
-- `_load_telegram_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для Telegram.
-- `_load_discord_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для Discord.
-- `_load_PrestaShop_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для PrestaShop.
-- `_load_presta_translations_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для PrestaShop Translations.
-- `_load_smtp_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для SMTP.
-- `_load_facebook_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для Facebook.
-- `_load_gapi_credentials(self, kp: PyKeePass) -> bool`: Загружает учетные данные для Google API.
-- `now(self) -> str`: Возвращает текущую метку времени в формате год-месяц-день-часы-минуты-секунды-милисекунды.
+- [Классы](#классы)
+    - [`ProgramSettings`](#programsettings)
+        - [`__init__`](#__init__)
+        - [`_load_credentials`](#_load_credentials)
+        - [`_open_kp`](#_open_kp)
+        - [`_load_aliexpress_credentials`](#_load_aliexpress_credentials)
+        - [`_load_openai_credentials`](#_load_openai_credentials)
+        - [`_load_gemini_credentials`](#_load_gemini_credentials)
+        - [`_load_telegram_credentials`](#_load_telegram_credentials)
+        - [`_load_discord_credentials`](#_load_discord_credentials)
+        - [`_load_PrestaShop_credentials`](#_load_prestashop_credentials)
+        - [`_load_presta_translations_credentials`](#_load_presta_translations_credentials)
+        - [`_load_smtp_credentials`](#_load_smtp_credentials)
+        - [`_load_facebook_credentials`](#_load_facebook_credentials)
+        - [`_load_gapi_credentials`](#_load_gapi_credentials)
+        - [`now`](#now)
+- [Глобальные переменные](#глобальные-переменные)
+    - [`gs`](#gs)
 
 ## Функции
 
 ### `set_project_root`
 
 **Описание**:
-
-Функция `set_project_root` находит корневой каталог проекта, начиная с текущей директории файла и двигаясь вверх по структуре каталогов. Поиск останавливается при нахождении одного из маркерных файлов.
+Находит корневой каталог проекта, начиная с каталога текущего файла и поднимаясь вверх, пока не будет найден каталог, содержащий один из файлов-маркеров.
 
 **Параметры**:
-
-- `marker_files` (tuple): Кортеж имен файлов или каталогов, которые являются маркерами корневого каталога проекта. По умолчанию `('pyproject.toml', 'requirements.txt', '.git')`.
+- `marker_files` (tuple, optional): Имена файлов или каталогов, которые используются для идентификации корня проекта. По умолчанию `('__root__', '.git')`.
 
 **Возвращает**:
-
-- `Path`: Путь к корневому каталогу проекта. Если маркерные файлы не найдены, возвращает директорию, где расположен скрипт.
+- `Path`: Путь к корневому каталогу, если он найден, в противном случае каталог, в котором находится скрипт.
 
 ### `singleton`
 
 **Описание**:
-
-Декоратор `singleton` реализует паттерн Singleton. Он гарантирует, что класс будет иметь только один экземпляр.
+Декоратор для реализации Singleton.
 
 **Параметры**:
-
-- `cls`: Класс, к которому применяется декоратор.
+- `cls`: Класс, для которого применяется паттерн Singleton.
 
 **Возвращает**:
+- `function`: Функция, которая возвращает единственный экземпляр класса.
 
-- `Callable`: Функция, которая возвращает единственный экземпляр класса.
+## Классы
+
+### `ProgramSettings`
+
+**Описание**:
+Класс `ProgramSettings` - это синглтон, который хранит основные параметры и настройки проекта.
+
+**Параметры**:
+- `host_name` (str): Имя хоста текущей машины.
+- `base_dir` (Path): Корневой каталог проекта.
+- `config` (SimpleNamespace): Пространство имен для хранения настроек проекта, загруженных из `config.json`.
+- `credentials` (SimpleNamespace): Пространство имен для хранения учетных данных для различных сервисов.
+- `MODE` (str): Режим работы приложения (например, 'dev', 'prod').
+- `path` (SimpleNamespace): Пространство имен для хранения путей к различным директориям проекта.
+
+**Методы**:
+- [`__init__`](#__init__): Инициализация экземпляра класса и загрузка настроек.
+- [`_load_credentials`](#_load_credentials): Загружает учетные данные из KeePass.
+- [`_open_kp`](#_open_kp): Открывает базу данных KeePass.
+- [`_load_aliexpress_credentials`](#_load_aliexpress_credentials): Загружает учетные данные для Aliexpress API.
+- [`_load_openai_credentials`](#_load_openai_credentials): Загружает учетные данные для OpenAI API.
+- [`_load_gemini_credentials`](#_load_gemini_credentials): Загружает учетные данные для GoogleAI API.
+- [`_load_telegram_credentials`](#_load_telegram_credentials): Загружает учетные данные для Telegram API.
+- [`_load_discord_credentials`](#_load_discord_credentials): Загружает учетные данные для Discord API.
+- [`_load_PrestaShop_credentials`](#_load_prestashop_credentials): Загружает учетные данные для PrestaShop API.
+- [`_load_presta_translations_credentials`](#_load_presta_translations_credentials): Загружает учетные данные для PrestaShop Translations API.
+- [`_load_smtp_credentials`](#_load_smtp_credentials): Загружает учетные данные для SMTP.
+- [`_load_facebook_credentials`](#_load_facebook_credentials): Загружает учетные данные для Facebook API.
+- [`_load_gapi_credentials`](#_load_gapi_credentials): Загружает учетные данные для Google API.
+- [`now`](#now): Возвращает текущую метку времени.
+
+#### `__init__`
+
+**Описание**:
+Инициализирует объект `ProgramSettings`. Загружает конфигурацию из `config.json`, устанавливает пути к директориям, добавляет пути к `sys.path`, и загружает учетные данные.
+
+**Параметры**:
+- `kwargs` : Произвольные ключевые аргументы.
+
+#### `_load_credentials`
+
+**Описание**:
+Загружает учетные данные из KeePass для различных сервисов.
+
+**Параметры**:
+- Нет
+
+**Возвращает**:
+- `None`
+
+#### `_open_kp`
+
+**Описание**:
+Открывает базу данных KeePass.
+
+**Параметры**:
+- `retry` (int, optional): Количество попыток открытия базы данных. По умолчанию `3`.
+
+**Возвращает**:
+- `PyKeePass | None`: Экземпляр `PyKeePass` или `None`, если открытие не удалось.
+
+**Вызывает исключения**:
+- `Exception`: В случае неудачного открытия базы данных после нескольких попыток.
+
+#### `_load_aliexpress_credentials`
+
+**Описание**:
+Загружает учетные данные Aliexpress API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_openai_credentials`
+
+**Описание**:
+Загружает учетные данные OpenAI API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_gemini_credentials`
+
+**Описание**:
+Загружает учетные данные GoogleAI API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_telegram_credentials`
+
+**Описание**:
+Загружает учетные данные Telegram API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_discord_credentials`
+
+**Описание**:
+Загружает учетные данные Discord API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_PrestaShop_credentials`
+
+**Описание**:
+Загружает учетные данные PrestaShop API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_presta_translations_credentials`
+
+**Описание**:
+Загружает учетные данные для PrestaShop Translations API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_smtp_credentials`
+
+**Описание**:
+Загружает учетные данные SMTP из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_facebook_credentials`
+
+**Описание**:
+Загружает учетные данные Facebook API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `_load_gapi_credentials`
+
+**Описание**:
+Загружает учетные данные Google API из KeePass.
+
+**Параметры**:
+- `kp` (PyKeePass): Экземпляр `PyKeePass`.
+
+**Возвращает**:
+- `bool`: `True`, если загрузка прошла успешно, `False` в противном случае.
+
+**Вызывает исключения**:
+- `Exception`: В случае ошибки при извлечении данных из KeePass.
+
+#### `now`
+
+**Описание**:
+Возвращает текущую метку времени в формате, определенном в конфигурации.
+
+**Параметры**:
+- Нет
+
+**Возвращает**:
+- `str`: Текущая метка времени в строковом формате.
+
+## Глобальные переменные
+
+### `gs`
+
+**Описание**:
+Глобальный экземпляр класса `ProgramSettings`.
+
+**Тип**:
+- `ProgramSettings`

@@ -1,238 +1,217 @@
-## <алгоритм>
+## Анализ кода `driver.py`
 
-**1. Инициализация драйвера:**
+### 1. **<алгоритм>**
 
-   - Пользователь вызывает `Driver(WebDriver_Class)`, где `WebDriver_Class` - класс конкретного веб-драйвера (например, `Chrome`, `Firefox`).
-   - Метакласс `DriverMeta` перехватывает вызов.
-   - `DriverMeta.__call__()` создает динамический класс `Driver`, который наследуется от `DriverBase` и переданного класса `WebDriver_Class`.
-   - Создается экземпляр динамического класса `Driver`.
-   - В методе `__init__()` созданного класса вызывается метод `driver_payload()`, который инициализирует объекты `JavaScript` и `ExecuteLocator`.
+#### Блок-схема работы кода:
 
-**Пример:**
-    ```python
-    from src.webdriver.driver import Driver, Chrome
-    driver_instance = Driver(Chrome) 
-    ```
+1. **Импорт модулей:**
+   - Импортируются стандартные библиотеки Python (`sys`, `pickle`, `time`, `copy`, `pathlib`, `typing`, `urllib`).
+   - Импортируются модули `selenium` для взаимодействия с браузером (`ActionChains`, `Keys`, `By`, `EC`, `WebDriverWait`, `WebElement`, `exceptions`).
+   - Импортируются модули из пакета `src`:
+     - `gs` (глобальные настройки).
+     - `executor` (для выполнения JS-кода).
+     - `javascript.js` (для JS-кода).
+     - `utils.printer` (для форматированного вывода).
+     - `logger.logger` (для логирования).
+     - `logger.exceptions` (для кастомных исключений).
+2. **Определение класса `DriverBase`:**
+   - Объявляется базовый класс `DriverBase` для управления веб-драйверами.
+   - Инициализация атрибутов:
+     - `previous_url`: URL предыдущей страницы (изначально None).
+     - `referrer`: Реферер (изначально None).
+     - `page_lang`: Язык страницы (изначально None).
+   -  Метод `driver_payload()`:
+     - Инициализирует объекты `JavaScript` и `ExecuteLocator`, которые используются для выполнения JavaScript и поиска элементов на странице.
+   -  Метод `scroll()`:
+      - Выполняет прокрутку страницы на заданное количество шагов в указанном направлении.
+   - Метод `locale()`:
+       - Определяет язык текущей страницы, выполняя JS-код.
+   - Метод `get_url(url: str)`:
+      - Переходит по указанному URL.
+      - Проверяет успешность перехода и если переход не удался, выбрасывает исключение.
+   - Метод `extract_domain(url: str)`:
+      - Извлекает доменное имя из URL.
+   - Метод `_save_cookies_localy(to_file: Union[str, Path])`:
+      - Сохраняет куки браузера в указанный файл.
+   - Метод `page_refresh()`:
+      - Обновляет текущую страницу.
+   - Метод `window_focus()`:
+      - Возвращает фокус на текущее окно браузера.
+   - Метод `wait(interval: float)`:
+       - Делает паузу на указанное время.
+   - Метод `delete_driver_logs()`:
+        - Удаляет временные файлы и логи WebDriver.
+3. **Определение метакласса `DriverMeta`:**
+   - Метакласс `DriverMeta` используется для динамического создания класса `Driver`.
+   - Метод `__call__`:
+     - Создает новый класс `Driver`, наследующий от `DriverBase` и указанного класса веб-драйвера.
+     - Вызывает метод `driver_payload()` для инициализации.
+4. **Определение класса `Driver`:**
+   - Класс `Driver` создается с использованием метакласса `DriverMeta`.
+   - Он динамически наследует от `DriverBase` и класса веб-драйвера (например, `Chrome`, `Firefox`).
+   - Инициализация класса через метакласс `DriverMeta`.
 
-**2. Переход по URL:**
+#### Пример потока данных:
 
-   - Пользователь вызывает `driver_instance.get_url(url)`.
-   - Метод `get_url` устанавливает `referrer` и `previous_url`.
-   - Метод использует `driver.get(url)` для перехода по URL.
-   - Вызывается `wait_for_page_load()` для ожидания полной загрузки страницы.
-   - В случае неудачного перехода выбрасывается исключение `WebDriverException`.
+1. **Создание драйвера:**
+   - `Driver(Chrome)`: Вызывается метод `__call__` метакласса `DriverMeta`, который создает класс `Driver` с наследованием от `DriverBase` и `Chrome`, и возвращает его экземпляр.
+2. **Переход на URL:**
+   - `driver_instance.get_url("https://example.com")`: Метод `get_url` класса `DriverBase` (унаследованный классом `Driver`) получает URL, использует `selenium` для перехода на страницу.
+3. **Прокрутка страницы:**
+   - `driver_instance.scroll(scrolls=3, frame_size=500, direction='forward', delay=0.5)`: Метод `scroll` класса `DriverBase` (унаследованный классом `Driver`)  использует JavaScript для прокрутки страницы.
+4. **Сохранение куки:**
+   - `driver_instance._save_cookies_localy('cookies.pkl')`: Метод `_save_cookies_localy` класса `DriverBase` (унаследованный классом `Driver`) сохраняет куки в файл, полученные от текущего экземпляра драйвера.
+5. **Получение языка:**
+   - `language = driver_instance.locale()`: Метод `locale` класса `DriverBase` (унаследованный классом `Driver`) получает язык страницы, выполняя JS-код.
+6. **Удаление логов:**
+    - `driver_instance.delete_driver_logs()`: Метод `delete_driver_logs` класса `DriverBase` (унаследованный классом `Driver`) удаляет временные файлы и логи.
 
-**Пример:**
-    ```python
-    driver_instance.get_url("https://example.com")
-    ```
-
-**3. Прокрутка страницы:**
-
-   - Пользователь вызывает `driver_instance.scroll(scrolls, frame_size, direction, delay)`.
-   - Метод вызывает JavaScript-метод `scroll_by_frame(frame_size, direction)`, передавая ему параметры.
-   -  В цикле, повторяющемся `scrolls` раз, выполняется прокрутка и задержка `delay`.
-
-**Пример:**
-   ```python
-   driver_instance.scroll(scrolls=3, frame_size=500, direction='forward', delay=0.5)
-   ```
-
-**4. Определение языка страницы:**
-
-   - Пользователь вызывает `driver_instance.locale()`.
-   - Метод выполняет JavaScript-код для получения языка страницы.
-   - Возвращает язык страницы или `None`, если не удалось получить.
-
-**Пример:**
-   ```python
-   page_language = driver_instance.locale()
-   ```
-
-**5. Сохранение куки:**
-
-   - Пользователь вызывает `driver_instance._save_cookies_localy(filepath)`.
-   - Метод получает куки драйвера.
-   - Сохраняет куки в файл pickle по указанному пути.
-
-**Пример:**
-    ```python
-    driver_instance._save_cookies_localy('cookies.pkl')
-    ```
-**6. Обновление страницы:**
-
-   - Пользователь вызывает `driver_instance.page_refresh()`.
-   - Метод обновляет текущую страницу.
-
-**Пример:**
-   ```python
-   driver_instance.page_refresh()
-   ```
-
-## <mermaid>
+### 2. **<mermaid>**
 
 ```mermaid
-graph LR
-    A[Пользователь] --> B(Driver(WebDriver_Class));
-    B --> C(DriverMeta.__call__);
-    C --> D[Создание класса Driver];
-    D --> E(Driver.__init__);
-    E --> F(driver_payload());
-    F --> G[Инициализация JavaScript];
-    F --> H[Инициализация ExecuteLocator];
-    A --> I(driver_instance.get_url(url));
-    I --> J[Установка referrer и previous_url];
-    J --> K(driver.get(url));
-    K --> L(wait_for_page_load());
-     L -- Успешно --> M[Загрузка страницы];
-     L -- Ошибка --> N[WebDriverException];
-    A --> O(driver_instance.scroll(scrolls, frame_size, direction, delay));
-     O --> P[Цикл прокрутки];
-      P -- Прокрутка --> Q(JavaScript.scroll_by_frame);
-       Q --> P
-    A --> R(driver_instance.locale());
-     R --> S(JavaScript.get_page_lang);
-       S --> T[Возвращение языка страницы]
-    A --> U(driver_instance._save_cookies_localy(filepath));
-    U --> V[Получение куки];
-    V --> W[Сохранение куки в файл];
-    A --> X(driver_instance.page_refresh());
-    X --> Y[Обновление страницы];
+flowchart TD
+    subgraph  "driver.py"
+      Start[Start] --> ImportModules[Import Modules];
+        ImportModules --> DriverBaseClass[Define class: <br><code>DriverBase</code>]
+        DriverBaseClass --> InitAttributes[Initialize attributes:<br><code>previous_url</code>,<br> <code>referrer</code>, <br><code>page_lang</code>]
+        InitAttributes --> driver_payload[<code>driver_payload()</code>: Setup <code>JavaScript</code> and <code>ExecuteLocator</code>]
+        driver_payload --> scroll[<code>scroll()</code>: Scroll page]
+        driver_payload --> locale[<code>locale()</code>: Get page language using JS]
+        driver_payload --> get_url[<code>get_url()</code>: Navigate to URL]
+        driver_payload --> extract_domain[<code>extract_domain()</code>: Extract domain from URL]
+        driver_payload --> save_cookies[<code>_save_cookies_localy()</code>: Save browser cookies]
+        driver_payload --> page_refresh[<code>page_refresh()</code>: Refresh page]
+        driver_payload --> window_focus[<code>window_focus()</code>: Focus current browser window]
+        driver_payload --> wait_pause[<code>wait()</code>: Pause execution]
+        driver_payload --> delete_logs[<code>delete_driver_logs()</code>: Delete logs and temp files]
+        DriverBaseClass --> DriverMetaClass[Define metaclass: <br><code>DriverMeta</code>]
+        DriverMetaClass --> DriverCallMethod[<code>__call__</code>: Dynamically create <code>Driver</code> class]
+        DriverCallMethod --> DriverClass[Define class: <br><code>Driver</code> using <code>DriverMeta</code>]
+        DriverClass --> End[End];
+    end
+
+    style Start fill:#f9f,stroke:#333,stroke-width:2px
+    style End fill:#ccf,stroke:#333,stroke-width:2px
     
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
-    style E fill:#ccf,stroke:#333,stroke-width:2px
-    style F fill:#ccf,stroke:#333,stroke-width:2px
-    style G fill:#eef,stroke:#333,stroke-width:2px
-    style H fill:#eef,stroke:#333,stroke-width:2px
-    style I fill:#f9f,stroke:#333,stroke-width:2px
-    style J fill:#eef,stroke:#333,stroke-width:2px
-    style K fill:#eef,stroke:#333,stroke-width:2px
-    style L fill:#eef,stroke:#333,stroke-width:2px
-     style M fill:#eef,stroke:#333,stroke-width:2px
-     style N fill:#eef,stroke:#333,stroke-width:2px
-    style O fill:#f9f,stroke:#333,stroke-width:2px
-     style P fill:#eef,stroke:#333,stroke-width:2px
-      style Q fill:#eef,stroke:#333,stroke-width:2px
-      style R fill:#f9f,stroke:#333,stroke-width:2px
-       style S fill:#eef,stroke:#333,stroke-width:2px
-     style T fill:#eef,stroke:#333,stroke-width:2px
-      style U fill:#f9f,stroke:#333,stroke-width:2px
-      style V fill:#eef,stroke:#333,stroke-width:2px
-      style W fill:#eef,stroke:#333,stroke-width:2px
-       style X fill:#f9f,stroke:#333,stroke-width:2px
-      style Y fill:#eef,stroke:#333,stroke-width:2px
+  
+  subgraph "header.py"
+      HeaderStart[Start] --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> HeaderImport[Import Global Settings: <br><code>from src import gs</code>] 
+   end
 ```
 
-**Зависимости диаграммы:**
+#### Анализ диаграммы `mermaid`:
 
--   **Пользователь**: Инициирует создание драйвера и вызывает методы для взаимодействия с веб-страницей.
--   **Driver(WebDriver_Class)**: Создает экземпляр драйвера для конкретного браузера. Зависит от класса WebDriver (например, Chrome).
--   **DriverMeta.\_\_call\_\_**: Метакласс, создает динамический класс `Driver`.
--   **Создание класса Driver**:  Динамическое создание класса, наследованного от `DriverBase` и  `WebDriver_Class`.
--  **Driver.\_\_init\_\_**: Инициализация экземпляра драйвера и вызов `driver_payload()`
--   **driver\_payload()**: Инициализирует `JavaScript` и `ExecuteLocator`, создает экземпляры этих объектов, чтобы работать с веб-страницей.
--   **JavaScript**: Класс для выполнения JavaScript-кода на странице.
--   **ExecuteLocator**: Класс для выполнения поиска элементов на странице.
--  **driver_instance.get_url(url)**: Метод класса `DriverBase`, вызываемый для перехода на URL.
--   **Установка referrer и previous\_url**: В методе `get_url`,  установка соответствующих значений для отслеживания истории переходов
--  **driver.get(url)**: Метод selenium для перехода на страницу.
-- **wait_for_page_load()**: Ожидание загрузки страницы.
-- **WebDriverException**: Исключение, выбрасываемое в случае проблем с загрузкой.
-- **driver\_instance.scroll(scrolls, frame\_size, direction, delay)**: Метод для прокрутки страницы.
--   **Цикл прокрутки**: Цикл, выполняющий множественную прокрутку.
--   **JavaScript.scroll\_by\_frame**: Метод JavaScript для прокрутки.
--   **driver\_instance.locale()**: Метод для получения языка страницы.
--  **JavaScript.get_page_lang**: Метод JavaScript для получения языка.
--   **Возвращение языка страницы**: Результат работы функции.
-- **driver_instance.\_save\_cookies\_localy(filepath)**: Метод для сохранения куки в файл.
-- **Получение куки**: получение куки текущего драйвера.
-- **Сохранение куки в файл**: Сохранение куки в файл pickle.
-- **driver_instance.page_refresh()**: Метод для обновления текущей страницы.
-- **Обновление страницы**: Перезагрузка текущей страницы.
+1.  **`Start`**: Начало процесса.
+2.  **`ImportModules`**: Импорт необходимых модулей.
+3.  **`DriverBaseClass`**: Определение базового класса `DriverBase`, который содержит общую логику для всех драйверов.
+4.  **`InitAttributes`**: Инициализация атрибутов класса `DriverBase`, таких как `previous_url`, `referrer`, и `page_lang`.
+5.  **`driver_payload`**: Инициализация `JavaScript` и `ExecuteLocator`, которые отвечают за взаимодействие с веб-страницей.
+6.  **`scroll`**: Метод `scroll()` для прокрутки страницы.
+7.  **`locale`**: Метод `locale()` для получения языка страницы.
+8.  **`get_url`**: Метод `get_url()` для перехода на указанный URL.
+9.  **`extract_domain`**: Метод `extract_domain()` для извлечения доменного имени из URL.
+10. **`save_cookies`**: Метод `_save_cookies_localy()` для сохранения куки.
+11. **`page_refresh`**: Метод `page_refresh()` для обновления страницы.
+12. **`window_focus`**: Метод `window_focus()` для фокусировки текущего окна.
+13. **`wait_pause`**: Метод `wait()` для приостановки выполнения.
+14. **`delete_logs`**: Метод `delete_driver_logs()` для удаления временных файлов и логов.
+15. **`DriverMetaClass`**: Определение метакласса `DriverMeta`, который используется для создания динамического класса `Driver`.
+16. **`DriverCallMethod`**: Метод `__call__` метакласса `DriverMeta`, который создает динамический класс `Driver`.
+17. **`DriverClass`**: Определение класса `Driver`, созданного с использованием метакласса `DriverMeta`.
+18. **`End`**: Конец процесса.
+19. **`HeaderStart`**: Начало процесса `header.py`.
+20. **`Header`**: Определение корневой директории проекта в `header.py`.
+21. **`HeaderImport`**: Импорт глобальных настроек `gs` из `src` в `header.py`.
 
-## <объяснение>
+#### Импорты, представленные на диаграмме:
+-   `src.gs` (из `header.py`) : Глобальные настройки проекта.
+-   `src.webdriver.executor` (непосредственно не на диаграмме, но используется в `driver_payload`): Модуль для выполнения JS кода.
+-  `src.webdriver.javascript.js` (непосредственно не на диаграмме, но используется в `driver_payload`): Модуль для формирования и выполнения JS кода.
 
-**Импорты:**
+### 3. **<объяснение>**
 
--   `sys`: Используется для доступа к параметрам командной строки и системным функциям. В данном коде не используется напрямую.
--   `pickle`: Используется для сериализации и десериализации объектов Python, например, куки, для сохранения их в файл и загрузки из него.
--   `time`: Используется для работы со временем, например, для добавления пауз в процессе выполнения скрипта.
--   `copy`: Используется для создания копий объектов. В коде не используется, вероятно, может быть использовано в будущем.
--   `pathlib.Path`: Используется для работы с файловыми путями в кроссплатформенном режиме.
--   `typing.Type, typing.Union`: Используется для аннотации типов, что улучшает читаемость и поддержку кода, а также позволяет использовать статические анализаторы кода.
--   `urllib.parse`: Используется для разбора и конструирования URL-адресов.
--   `selenium.webdriver.common.action_chains.ActionChains`: Используется для выполнения сложных действий, таких как перемещение мыши, двойные клики и т.д.
--   `selenium.webdriver.common.keys.Keys`: Используется для представления специальных клавиш на клавиатуре, таких как Enter, Escape и т.д.
--   `selenium.webdriver.common.by.By`: Используется для указания метода поиска элемента на странице, например, по ID, CSS-селектору и т.д.
--   `selenium.webdriver.support.expected_conditions as EC`: Используется для определения условий, которые должны быть выполнены перед продолжением работы, например, ожидание появления элемента на странице.
--   `selenium.webdriver.support.ui.WebDriverWait`: Используется для ожидания появления элемента на странице с заданным тайм-аутом.
--   `selenium.webdriver.remote.webelement.WebElement`: Используется для представления веб-элементов на странице.
--   `selenium.common.exceptions.*`: Используется для обработки исключений, которые могут возникнуть при взаимодействии с веб-драйвером.
--  `src.gs`:  Импортируется  модуль `gs` из каталога `src`, может содержать глобальные настройки или константы.
--  `src.webdriver.executor.ExecuteLocator`: Импортируется класс `ExecuteLocator` из `src/webdriver/executor`,  предназначен для поиска элементов с помощью локаторов.
--  `src.webdriver.javascript.js.JavaScript`: Импортируется класс `JavaScript` из `src/webdriver/javascript`,  предназначен для управления и выполнения js на странице.
--   `src.utils.printer.pprint`: Импортируется функция `pprint` из `src/utils/printer`, для красивого вывода данных.
--   `src.logger.logger.logger`: Импортируется объект `logger` из `src/logger/logger`, используется для логирования событий.
--   `src.logger.exceptions.WebDriverException`: Импортируется класс `WebDriverException` из `src/logger/exceptions`, используется для создания кастомных исключений WebDriver.
+#### Импорты:
 
-**Классы:**
+*   `sys`: Используется для доступа к некоторым переменным и функциям, специфичным для интерпретатора Python (например, для управления выходом из программы).
+*   `pickle`: Используется для сериализации и десериализации объектов Python, в данном случае для сохранения и загрузки куки.
+*   `time`: Предоставляет функции для работы со временем, например для задержек.
+*   `copy`: Используется для создания копий объектов.
+*   `pathlib`: Предоставляет классы для работы с файловыми путями, упрощая работу с файловой системой.
+*   `typing`: Используется для аннотации типов, что улучшает читаемость и помогает при статической проверке кода.
+*   `urllib.parse`: Используется для разбора URL-адресов.
+*   `selenium.webdriver.common.action_chains`: Предоставляет возможность выполнять сложные последовательности действий пользователя.
+*   `selenium.webdriver.common.keys`:  Предоставляет символьные представления клавиш клавиатуры для эмуляции ввода.
+*   `selenium.webdriver.common.by`: Используется для выбора элементов на веб-странице по различным критериям (например, по ID, классу, CSS-селектору).
+*   `selenium.webdriver.support.expected_conditions as EC`: Предоставляет набор готовых условий ожидания для использования с `WebDriverWait`.
+*   `selenium.webdriver.support.ui.WebDriverWait`: Используется для явного ожидания появления элемента на странице.
+*   `selenium.webdriver.remote.webelement.WebElement`: Представляет собой элемент на веб-странице, с которым можно взаимодействовать.
+*   `selenium.common.exceptions`: Предоставляет набор исключений, которые могут возникнуть при взаимодействии с Selenium.
+*   `src.gs`:  Модуль с глобальными настройками проекта, используемый для доступа к параметрам конфигурации.
+*   `src.webdriver.executor`:  Модуль для выполнения JavaScript на странице, предоставляющий методы для выполнения JS-кода.
+*   `src.webdriver.javascript.js`:  Модуль, содержащий JS код для взаимодействия со страницей.
+*   `src.utils.printer`: Модуль для форматированного вывода информации в консоль.
+*   `src.logger.logger`: Модуль для логирования событий, происходящих в программе.
+*   `src.logger.exceptions`: Модуль, определяющий собственные исключения, специфичные для проекта.
 
--   **`DriverBase`**:
-    -   **Роль**: Базовый класс для всех веб-драйверов, предоставляющий общие методы и атрибуты.
-    -   **Атрибуты**:
-        -   `previous_url`: Хранит URL предыдущей страницы.
-        -   `referrer`: Хранит реферер страницы.
-        -   `page_lang`: Хранит язык страницы.
-        -  `js`: экземпляр `JavaScript` для выполнения JavaScript на странице.
-        - `locator`: экземпляр `ExecuteLocator` для поиска элементов на странице.
-    -   **Методы**:
-        -   `driver_payload()`: Инициализирует атрибуты `js` и `locator`.
-        -   `scroll()`: Прокручивает страницу.
-        -   `locale()`: Определяет язык страницы.
-        -   `get_url(url: str)`: Переходит по указанному URL.
-        -   `extract_domain(url: str)`: Извлекает доменное имя из URL.
-        -   `_save_cookies_localy(to_file: Union[str, Path])`: Сохраняет куки в файл.
-        -   `page_refresh()`: Обновляет страницу.
-        -   `window_focus()`: Восстанавливает фокус окна.
-        -   `wait(interval: float)`: Делает паузу.
-        -  `wait_for_page_load`: Ожидание загрузки страницы
-        -  `delete_driver_logs`: Удаление логов и временных файлов
+#### Классы:
 
--   **`DriverMeta`**:
-    -   **Роль**: Метакласс, создающий динамические классы `Driver`.
-    -   **Метод `__call__`**: Создает новый класс `Driver`, наследующий от `DriverBase` и переданного класса веб-драйвера.
+*   **`DriverBase`**:
+    *   **Роль**: Базовый класс для всех веб-драйверов. Предоставляет общие методы и атрибуты для управления браузером.
+    *   **Атрибуты**:
+        *   `previous_url`: URL предыдущей страницы.
+        *   `referrer`: Реферер текущей страницы.
+        *   `page_lang`: Язык текущей страницы.
+    *   **Методы**:
+        *   `driver_payload()`: Инициализирует JS и Executor.
+        *   `scroll()`:  Прокручивает страницу.
+        *   `locale()`: Получает язык страницы, выполняя JS-код.
+        *   `get_url(url: str)`: Переходит по URL и проверяет успешность.
+        *   `extract_domain(url: str)`: Извлекает доменное имя из URL.
+        *   `_save_cookies_localy(to_file: Union[str, Path])`: Сохраняет куки в файл.
+        *   `page_refresh()`: Обновляет текущую страницу.
+        *   `window_focus()`: Фокусируется на текущем окне.
+        *   `wait(interval: float)`: Делает паузу на заданное время.
+        *   `delete_driver_logs()`: Удаляет временные файлы и логи WebDriver.
+    *  **Взаимодействие**: Является базовым классом для `Driver`, обеспечивает основной функционал для взаимодействия с браузером.
 
--   **`Driver`**:
-    -   **Роль**: Динамический класс, представляющий конкретный веб-драйвер.
-    -   **Атрибуты**: Наследует атрибуты и методы от `DriverBase` и конкретного веб-драйвера.
+*   **`DriverMeta`**:
+    *   **Роль**: Метакласс для создания класса `Driver`.
+    *   **Атрибуты**: Нет.
+    *   **Методы**:
+        *   `__call__(cls, webdriver_cls: Type, *args, **kwargs)`: Создает новый класс `Driver`, наследующий от `DriverBase` и указанного класса веб-драйвера.
+    *   **Взаимодействие**: Создает класс `Driver` динамически.
 
-**Функции:**
+*   **`Driver`**:
+    *   **Роль**: Динамически созданный класс веб-драйвера.
+    *   **Атрибуты**: Нет.
+    *   **Методы**: Наследует все методы из `DriverBase` и указанного класса веб-драйвера.
+    *   **Взаимодействие**:  Экземпляр этого класса используется для взаимодействия с конкретным браузером.
 
--   Все методы внутри классов `DriverBase`, `DriverMeta` и `Driver` выполняют специфические действия, связанные с управлением веб-драйвером и взаимодействием со страницей.
+#### Функции:
+В данном коде нет отдельных функций, кроме методов классов.
 
-**Переменные:**
+#### Переменные:
 
--   Переменные внутри методов используются для хранения промежуточных значений, таких как URL, параметры прокрутки, и т.д.
--   Атрибуты класса хранят состояние объекта, такое как `previous_url`, `referrer`, `page_lang`.
+*   `previous_url`: Хранит URL предыдущей страницы (тип `str` или `None`).
+*   `referrer`: Хранит реферер (тип `str` или `None`).
+*   `page_lang`: Хранит язык страницы (тип `str` или `None`).
 
-**Потенциальные ошибки и области для улучшения:**
+#### Потенциальные ошибки и улучшения:
 
--   **Обработка исключений**: В некоторых методах могут отсутствовать полные блоки `try...except` для обработки исключений. Например, в методе `_save_cookies_localy` не обрабатываются ошибки при работе с файловой системой.
--   **Управление драйвером**: Методы `delete_driver_logs()` и `quit()` не представлены, необходимо их включить для более полного управления драйвером.
--   **Логирование**: Добавить более детальное логирование действий.
--   **Конфигурация**: Можно добавить параметры для конфигурации времени ожидания, путей к драйверам и т.д.
+1.  **Обработка исключений**: В методе `get_url` проверяется успешность перехода, но можно расширить обработку исключений для различных случаев сбоя загрузки страницы.
+2. **Типизация:**  Можно более подробно типизировать возвращаемые значения методов, чтобы повысить надежность кода.
+3.  **Логирование**: Можно добавить больше логов для более детального отслеживания работы драйвера.
+4.  **Расширяемость**: Класс `DriverBase` можно расширить новыми методами для поддержки большего количества операций с браузером.
+5.  **Управление сессией**: Можно добавить методы для управления сессией браузера, например, для закрытия или перезапуска сессии.
 
-**Взаимосвязи с другими частями проекта:**
+#### Взаимосвязи с другими частями проекта:
 
--   `src.webdriver.executor.ExecuteLocator`:  Используется для поиска элементов на странице.
--   `src.webdriver.javascript.js.JavaScript`: Используется для выполнения JavaScript-кода на странице.
--   `src.utils.printer`: Используется для форматированного вывода.
--   `src.logger`: Используется для логирования действий и ошибок.
+*   **`src.gs`**: Используется для доступа к глобальным настройкам проекта, что может включать настройки браузера, тайм-ауты, и прочее.
+*   **`src.webdriver.executor` и `src.webdriver.javascript.js`**: Используются для выполнения JavaScript-кода на веб-странице, что позволяет автоматизировать взаимодействие со сложными элементами.
+*   **`src.utils.printer`**: Используется для вывода форматированной информации, упрощая отладку и понимание работы кода.
+*   **`src.logger`**: Используется для логирования событий, позволяя отслеживать и анализировать работу драйвера.
+*  **`header.py`**: Определяет корень проекта и импортирует глобальные настройки `gs`.
 
-**Дополнительные замечания:**
-- Код предоставляет гибкую структуру для работы с различными веб-драйверами, используя метаклассы для динамического создания классов.
--  Методы предоставляют базовые возможности для навигации, прокрутки, взаимодействия со страницей и работы с куками.
-- Код является частью более крупного проекта, и его функциональность должна быть расширена в соответствии с потребностями проекта.
+Этот код обеспечивает гибкий и расширяемый подход к управлению различными веб-драйверами, инкапсулируя общую логику в базовом классе и предоставляя возможность создания драйверов для разных браузеров.

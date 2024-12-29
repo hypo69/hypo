@@ -151,7 +151,10 @@ class EmilDesign:
             ...
 
     def upload_to_prestashop(self):
-        """ Upload product information to PrestaShop.
+        """
+        Поднимаю на сервер изображения из сохраненного файла описаний
+        
+        Upload product information to PrestaShop.
 
         This function initializes a product and PrestaShop instance for uploading data.
         """

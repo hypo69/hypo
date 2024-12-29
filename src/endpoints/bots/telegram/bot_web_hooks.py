@@ -17,7 +17,9 @@ from src.logger.logger import logger
 from src.utils.convertors.tts import speech_recognizer, text2speech
 from src.utils.file import read_text_file
 from src.utils.get_free_port import get_free_port
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class TelegramBot:
     """Telegram bot interface class."""
@@ -25,6 +27,7 @@ class TelegramBot:
     application: Application
     host: str
     port: int
+    webhook_url: str
     
 
     def __init__(self, token: str, bot_handler):
@@ -41,6 +44,7 @@ class TelegramBot:
         self.application = Application.builder().token(token).build()
         self.bot_handler = bot_handler
         self.register_handlers()
+        self.webhook_url = os.getenv('WEBHOOK_URL')
 
 
     def _load_config(self, config_path:str | Path) -> None:
@@ -48,7 +52,7 @@ class TelegramBot:
         try:
             with open(config_path, 'r') as f:
                 config = json.load(f)
-                bot_config = config.get(self.__class__.__name__, {})
+                bot_config = config.get('telegram_bot', {})
                 if bot_config:
                     self.host = bot_config.get('host', '127.0.0.1')
                     port_range = bot_config.get('port_range', ['9000','9100'])
@@ -183,8 +187,8 @@ async def update_webhook_handler(request: web.Request) -> web.Response:
 async def on_startup(app: web.Application):
     """Perform actions on application startup."""
     bot = app['bot']
-    await bot.application.bot.set_webhook(url=gs.settings.get_webhook_url)
-    logger.info("Bot started with webhook.")
+    await bot.application.bot.set_webhook(url=bot.webhook_url)
+    logger.info(f"Bot started with webhook: {bot.webhook_url}")
 
 async def on_shutdown(app: web.Application):
     """Perform actions on application shutdown."""

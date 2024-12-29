@@ -1,372 +1,288 @@
-## ИНСТРУКЦИЯ:
+## АНАЛИЗ КОДА: `src/webdriver/executor.py`
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+### <алгоритм>
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+1. **Инициализация `ExecuteLocator`:**
+   - При создании экземпляра `ExecuteLocator` передается объект `webdriver` и создается экземпляр `ActionChains`.
+     ```python
+     executor = ExecuteLocator(driver) 
+     ```
+   -  `driver`: Объект WebDriver для управления браузером.
+   - `actions`: Объект для выполнения цепочки действий.
+
+2. **`execute_locator(locator, message, typing_speed, continue_on_error)`**:
+   - Принимает словарь `locator`, сообщение `message`, скорость набора `typing_speed`, флаг продолжения при ошибке `continue_on_error`.
+   - **Пример:**
+     ```python
+     locator_data = {
+        "by": "id",
+        "selector": "my_element",
+        "action": "click",
+        "message": "Нажали на элемент"
+     }
+     executor.execute_locator(locator_data, message="Нажимаем кнопку", continue_on_error=False)
+     ```
+   -  Проверяет наличие ключа `action` в словаре `locator`.
+   -  В зависимости от значения `action` вызывает соответствующие методы:
+      - `action == "click"`: Вызывает `get_webelement_by_locator` для поиска элемента, затем выполняет клик.
+      - `action == "send_keys"`: Вызывает `send_message` для ввода текста.
+      - `action == "get_attribute"`: Вызывает `get_attribute_by_locator` для получения атрибута.
+      - Если `action` не указан или не соответствует ни одному из условий, возвращает `None`.
+   - Обрабатывает исключения: `NoSuchElementException`, `TimeoutException`, `ExecuteLocatorException`.
+   - Если `continue_on_error` равен `False`, то поднимает исключение.
+   - Возвращает результат выполнения операции.
+
+3. **`get_webelement_by_locator(locator, message)`**:
+   -  Принимает словарь `locator` и сообщение `message`.
+     ```python
+     locator_data = {
+         "by": "xpath",
+         "selector": "//div[@id='myDiv']",
+         "timeout": 10
+     }
+     element = executor.get_webelement_by_locator(locator_data, message="Ищем элемент")
+     ```
+   - Определяет метод поиска элемента (например, `By.ID`, `By.XPATH`, и т.д.) из значения ключа `by` словаря `locator`.
+   -  Использует `WebDriverWait` для ожидания появления элемента.
+   -   Если `locator` имеет ключ `if_list` со значением "first", возвращает первый элемент из списка, иначе возвращает список элементов.
+   - Обрабатывает исключения: `NoSuchElementException`, `TimeoutException`, `ExecuteLocatorException`.
+   -  Возвращает найденный элемент (WebElement), список элементов или False.
+
+4. **`get_attribute_by_locator(locator, message)`**:
+   - Принимает словарь `locator` и сообщение `message`.
+   -  Использует `get_webelement_by_locator` для получения элемента.
+   -  Если элемент найден, извлекает атрибут (если в `locator` есть ключ `attribute`).
+   -  Если `locator` имеет ключ `if_list` со значением "first", возвращает первый атрибут из списка, иначе возвращает список атрибутов.
+   -  Возвращает значение атрибута, список атрибутов или `False`.
+
+5. **`_get_element_attribute(element, attribute)`**:
+   - Принимает `WebElement` и имя атрибута.
+   - Получает значение атрибута у элемента или `None` если атрибут не найден.
+
+6. **`send_message(locator, message, typing_speed, continue_on_error)`**:
+   - Принимает словарь `locator`, сообщение `message`, скорость набора `typing_speed`, флаг продолжения при ошибке `continue_on_error`.
+   - Использует `get_webelement_by_locator` для поиска элемента.
+   - Очищает текстовое поле, отправляет `message`, печатая каждый символ с паузой, которая зависит от `typing_speed`.
+
+7. **`evaluate_locator(attribute)`**:
+   - Принимает атрибут (строку, список или словарь) и вызывает метод `_evaluate`.
+    ```python
+    locator_data = {
+       "attribute": {
+           "type": "xpath",
+           "selector": "//div[@id='myDiv']"
+       }
+    }
+    result = executor.evaluate_locator(locator_data["attribute"])
     ```
+   -  Если атрибут является строкой, возвращает его.
+   - Если атрибут является списком, перебирает его и вызывает метод `_evaluate` для каждого элемента списка.
+   - Если атрибут является словарем, проходит по всем ключам словаря и вызывает метод `_evaluate` для каждого значения словаря.
+   -  Возвращает строку с результатом.
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
+8. **`_evaluate(attribute)`**:
+   - Принимает строку `attribute`, проверяет, содержит ли строка `{...}`. Если да, то удаляет `{` и `}`.
+   - Возвращает результат или None
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+9. **`get_locator_keys()`**:
+   - Статический метод, возвращает список ключей, которые могут быть использованы в словаре локатора.
+   - Пример: `['by', 'selector', 'selector 2', 'attribute', 'action', 'message', 'if_list', 'use_mouse', 'mandatory', 'timeout', 'timeout_for_event', 'event']`
 
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
-```
-
-## <алгоритм>
-
-**`ExecuteLocator` Класс**
-
-1.  **Инициализация (`__init__`)**:
-    *   Создается экземпляр класса `ExecuteLocator` с переданным драйвером `webdriver` (`driver`).
-    *   Инициализируется объект `ActionChains` с использованием `driver`.
-    *   Пример:
-        ```python
-        driver = webdriver.Chrome()
-        executor = ExecuteLocator(driver)
-        ```
-
-2.  **Выполнение локатора (`execute_locator`)**:
-    *   Получает `locator` (словарь с параметрами), `message` (сообщение для отправки), `typing_speed` (скорость набора текста), `continue_on_error` (флаг для продолжения при ошибках).
-    *   Определяет тип действия, используя параметры из `locator` (например, `attribute`, `send_keys`).
-    *   Вызывает соответствующий метод:
-        *   `get_webelement_by_locator` для поиска элемента.
-        *   `get_attribute_by_locator` для получения атрибута элемента.
-        *   `send_message` для отправки сообщения элементу.
-        *   `evaluate_locator` для оценки значения.
-    *   Обрабатывает ошибки в зависимости от значения `continue_on_error`.
-    *   Возвращает результат действия или `False` при ошибке.
-    *   Пример:
-        ```python
-        locator = {"by": "id", "selector": "my_element_id", "action":"send_keys", "value":"my_text"}
-        executor.execute_locator(locator, message="Test Message", typing_speed=0.1)
-        ```
-        
-3.  **Получение веб-элемента (`get_webelement_by_locator`)**:
-    *   Получает словарь `locator`, `message` (сообщение об ошибке)
-    *   Использует `WebDriverWait` для ожидания элемента (с использованием параметров `timeout` и `timeout_for_event` из `locator`).
-    *   Ищет элемент на странице, используя `locator["by"]` и `locator["selector"]`.
-        *   Если `if_list` присутствует в `locator`, возвращает первый или последний элемент (если `if_list` равен "first" или "last" соответсвенно)
-        *   Если `if_list` отсутствует возвращает `WebElement`.
-        *   Если элемент не найден, возвращает `False`.
-        *    Если элемент не один возвращает список элементов `List[WebElement]`.
-    *   Пример:
-        ```python
-         locator = {"by": "id", "selector": "my_element_id",  "timeout":10,"timeout_for_event":"presence_of_element_located" }
-        element = executor.get_webelement_by_locator(locator, "Element not found")
-        ```
-4. **Получение атрибута (`get_attribute_by_locator`)**:
-    *   Получает словарь `locator`, `message` (сообщение об ошибке).
-    *   Вызывает `get_webelement_by_locator` для получения веб-элемента.
-    *   Итерируется по списку атрибутов в `locator["attribute"]`.
-    *   Для каждого атрибута вызывает `_get_element_attribute`.
-    *   Собирает результат и возвращает его.
-    *   Пример:
-        ```python
-        locator = {"by": "id", "selector": "my_element_id", "attribute": ["href", "class"],  "timeout":10,"timeout_for_event":"presence_of_element_located"}
-        attributes = executor.get_attribute_by_locator(locator, "Error getting attribute")
-        ```
-
-5.  **Получение значения атрибута (`_get_element_attribute`)**:
-    *   Получает `WebElement` и имя атрибута.
-    *   Возвращает значение атрибута с помощью `element.get_attribute(attribute)`.
-    *   Пример:
-        ```python
-        element = driver.find_element(By.ID, "my_element_id")
-        value = executor._get_element_attribute(element, "href")
-        ```
-
-6.  **Отправка сообщения (`send_message`)**:
-    *   Получает словарь `locator`, `message` (сообщение для отправки), `typing_speed` (скорость печати), `continue_on_error` (флаг для продолжения при ошибке).
-    *   Получает веб-элемент через `get_webelement_by_locator`.
-    *   Очищает поле и отправляет сообщение с заданной скоростью `typing_speed` (с использованием цикла).
-    *   Возвращает `True` если сообщение отправлено, `False` в противном случае.
-    *   Пример:
-        ```python
-        locator = {"by": "id", "selector": "my_input_field",  "timeout":10,"timeout_for_event":"presence_of_element_located"}
-        executor.send_message(locator, message="Input text", typing_speed=0.2, continue_on_error = True )
-        ```
-
-7. **Оценка локатора (`evaluate_locator`)**:
-   *  Получает `attribute` (строку, список или словарь).
-   *  Если `attribute` строка, вызывает `_evaluate` напрямую.
-   *  Если `attribute` список, то для каждого элемента списка вызывается `_evaluate` и результаты собираются в список.
-   *  Если `attribute` словарь, для каждого ключа словаря вызывается `_evaluate` и результаты собираются в словарь.
-   *  Возвращает результат обработки.
-   *   Пример:
-        ```python
-        attribute = "window.location.href"
-        value = executor.evaluate_locator(attribute)
-         attribute = ["window.location.href","document.title"]
-        value = executor.evaluate_locator(attribute)
-        attribute = {"url":"window.location.href","title":"document.title"}
-        value = executor.evaluate_locator(attribute)
-        ```
-
-8.  **Оценка атрибута (`_evaluate`)**:
-    *   Получает строку атрибута.
-    *   Выполняет JavaScript `driver.execute_script` и возвращает результат.
-    *   Пример:
-        ```python
-        value = executor._evaluate("return window.location.href")
-        ```
-9. **Получение ключей локаторов (`get_locator_keys`)**:
-    *   Возвращает список всех возможных ключей (параметров) для локатора.
-
-## <mermaid>
+### <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph ExecuteLocator Class
-        A[<code>__init__</code><br> Initialize WebDriver and ActionChains]
-         --> B(<code>execute_locator</code><br> Execute action based on locator configuration)
-        B --> C{Determine action type}
-        C -- "get_webelement" --> D(<code>get_webelement_by_locator</code><br> Retrieve WebElement(s) by locator)
-        C -- "get_attribute" --> E(<code>get_attribute_by_locator</code><br> Retrieve attribute(s) of the element(s))
-        C -- "send_message" --> F(<code>send_message</code><br> Send message to the element)
-        C -- "evaluate" --> G(<code>evaluate_locator</code><br> Evaluate locator attribute or javascript )
-        
-        D --> H{Is list required ?}
-         H -- "Yes" -->I(Return list of WebElement)
-        H -- "No" -->J(Return WebElement)
-        H -- "Error" --> K(Return False)
-
-
-        E --> L(<code>get_webelement_by_locator</code><br> Get WebElement )
-        L --> M{Iterate attributes}
-        M --> N(<code>_get_element_attribute</code><br> Get attribute value )
-        N --> O(Return attributes values)
-
-        F -->P(<code>get_webelement_by_locator</code><br> Get WebElement)
-          P --> Q(Send Message with type speed)
-          Q--> R( Return True)
-           Q-->S( Return False)
-           
-        G --> T{Attribute Type}
-        T -- "String"-->U(<code>_evaluate</code><br> Execute Javascript and Return value )
-        T -- "List" -->V(Iterate and call <code>_evaluate</code>)
-        T -- "Dictionary" --> W(Iterate and call <code>_evaluate</code>)
+    Start[Start] --> Init[<code>ExecuteLocator</code><br> Initialize Driver and Actions]
+    Init --> ExecuteLocatorMethod[<code>execute_locator</code><br> Main method to execute locator actions]
     
+    ExecuteLocatorMethod --> CheckAction[Check if Action exist in Locator]
+    CheckAction -- Yes --> ActionSwitch[Switch on Action Type: <br>click, send_keys, get_attribute]
+    CheckAction -- No --> ReturnNone[Return None]
+
+    ActionSwitch -- click --> GetElementForClick[<code>get_webelement_by_locator</code><br> Get WebElement for click]
+    ActionSwitch -- send_keys --> SendMessage[<code>send_message</code><br> Send keys to element]
+    ActionSwitch -- get_attribute --> GetAttribute[<code>get_attribute_by_locator</code><br> Get Attribute from element]
+    ActionSwitch --> ReturnResult
+    
+    GetElementForClick --> ClickElement[Click WebElement]
+    ClickElement --> ReturnResult
+    
+    SendMessage --> SendKeysToElement[Send Keys to WebElement]
+    SendKeysToElement --> ReturnResult
+    
+    GetAttribute --> ReturnResult
+    
+    ReturnResult --> CheckError[Check if an Error has Occurred]
+    CheckError -- Yes --> HandleError[Handle the Error based on continue_on_error flag]
+    CheckError -- No --> End[End]
+    
+    HandleError -- continue_on_error=True --> End
+    HandleError -- continue_on_error=False --> RaiseError[Raise Error]
+    
+    RaiseError --> End
+
+    ExecuteLocatorMethod --> End
+    
+    subgraph "get_webelement_by_locator"
+        GetElementStart[Start] --> GetBy[Determine the search method (By.ID, By.XPATH, etc)]
+        GetBy --> WaitElement[Wait for the Element with <code>WebDriverWait</code>]
+        WaitElement --> GetElement[Get the WebElement]
+        GetElement --> CheckIfList[Check <code>if_list</code> Key]
+        CheckIfList -- 'first' --> GetFirstElement[Return First Element]
+        CheckIfList -- Other --> GetListElement[Return List of Elements]
+        GetFirstElement --> GetElementEnd[Return Element]
+        GetListElement --> GetElementEnd
     end
-        
-    classDef grey fill:#f9f,stroke:#333,stroke-width:2px
-    A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W  :::grey
-```
+    
+    subgraph "get_attribute_by_locator"
+        GetAttrStart[Start] --> GetWebElement[Call <code>get_webelement_by_locator</code>]
+        GetWebElement --> GetAttrFromElement[Get Attribute from WebElement]
+        GetAttrFromElement --> CheckIfList2[Check <code>if_list</code> Key]
+        CheckIfList2 -- 'first' --> GetFirstAttr[Return First Attribute]
+        CheckIfList2 -- Other --> GetListAttr[Return List of Attribute]
+        GetFirstAttr --> GetAttrEnd[Return Attribute]
+        GetListAttr --> GetAttrEnd
+    end
+    
+    subgraph "send_message"
+        SendMessageStart[Start] --> GetWebElementForSend[Call <code>get_webelement_by_locator</code>]
+        GetWebElementForSend --> ClearTextField[Clear the text field]
+        ClearTextField --> SendMessageToElement[Send Message to the Element]
+        SendMessageToElement --> SendMessageEnd[Return True]
+    end
 
-### Объяснение зависимостей `mermaid`
+     subgraph "evaluate_locator"
+        EvaluateStart[Start] --> EvaluateCheckType[Check the type of the attribute]
+        EvaluateCheckType -- String --> ReturnString[Return string attribute]
+        EvaluateCheckType -- List --> EvaluateList[Loop through elements in the List, calling method _evaluate ]
+        EvaluateCheckType -- Dictionary --> EvaluateDict[Loop through values in Dictionary, calling method _evaluate]
+        ReturnString --> EvaluateEnd[Return String]
+        EvaluateList --> EvaluateEnd
+        EvaluateDict --> EvaluateEnd
+    end
 
-*   **`ExecuteLocator Class`**: Представляет собой класс `ExecuteLocator`, который содержит логику для работы с веб-элементами.
-    *   **`__init__`**: Метод инициализации класса, который принимает `driver` и инициализирует `ActionChains`.
-    *   **`execute_locator`**: Основной метод, который вызывает другие методы в зависимости от типа действия, определенного в локаторе.
-    *    **`Determine action type`**: Условный блок, который решает, какой метод вызвать, в зависимости от конфигурации локатора.
-    *   **`get_webelement_by_locator`**: Метод для получения веб-элемента(ов) с использованием заданного локатора.
-     *  **`Is list required ?`**: Условный блок, для проверки, необходимо ли вернуть список элементов
-      *  **`Return list of WebElement`**: Вернуть список элементов
-      * **`Return WebElement`**: Вернуть  элемент
-      *  **`Return False`**: Возвращает `False` в случае ошибки
-    *    **`get_attribute_by_locator`**: Метод для получения атрибута(ов)  веб-элемента(ов) с использованием заданного локатора.
-    *    **`Iterate attributes`**: Условный блок, для перебора  атрибутов
-    *   **`_get_element_attribute`**: Метод для получения значения атрибута элемента.
-    *  **`Return attributes values`**: Вернуть  значение(я) атрибута
-    *   **`send_message`**: Метод для отправки сообщения в элемент.
-    *  **`Send Message with type speed`**: Условный блок, который перебирает строку и отправляет посимвольно
-    * **`Return True`**: Сообщения отправлено
-    * **`Return False`**: Сообщения не отправлено
-    *   **`evaluate_locator`**: Метод для вычисления выражения JavaScript
-    *   **`Attribute Type`**: Условный блок, который определяет тип атрибута
-    *   **`_evaluate`**: Метод для выполнения JavaScript и получения результата
+     subgraph "_evaluate"
+       EvaluateMethodStart[Start] --> EvaluateMethodCheck[Check if Attribute has "{...}"]
+       EvaluateMethodCheck -- Yes --> EvaluateMethodRemoveBraces[Remove { and } from Attribute]
+       EvaluateMethodCheck -- No --> EvaluateMethodReturn[Return String]
+       EvaluateMethodRemoveBraces --> EvaluateMethodReturn
+       EvaluateMethodReturn --> EvaluateMethodEnd[Return Attribute]
+
+     end
+    
    
-*   **Зависимости**:
-    *   Все методы в классе `ExecuteLocator` работают с `driver`, полученным при инициализации, и `ActionChains`.
-    *   Метод `execute_locator` вызывает другие методы класса в зависимости от типа действия.
-
+    
+    Start --> Init
+    
+   
+```
 ```mermaid
 flowchart TD
-    Start --> Header[<code>header.py</code><br> Determine Project Root]
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
 
-    Header --> import[Import Global Settings: <br><code>from src import gs</code>]
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>]
 ```
 
-## <объяснение>
+### <объяснение>
 
-### Импорты
+#### Импорты:
 
-*   **`from selenium import webdriver`**: Импортирует модуль `webdriver` из библиотеки Selenium для управления браузером.
-*   **`from selenium.webdriver.common.keys import Keys`**: Импортирует модуль `Keys` для отправки специальных клавиш (например, Enter, Tab).
-*   **`from selenium.webdriver.common.by import By`**: Импортирует модуль `By` для определения типа локатора (например, `By.ID`, `By.XPATH`).
-*   **`from selenium.webdriver.remote.webelement import WebElement`**: Импортирует класс `WebElement` для представления элементов на веб-странице.
-*   **`from selenium.webdriver.support.ui import WebDriverWait`**: Импортирует класс `WebDriverWait` для ожидания определенных условий (например, появления элемента) на странице.
-*   **`from selenium.webdriver.support import expected_conditions as EC`**: Импортирует модуль `expected_conditions` для определения ожидаемых условий.
-*   **`from selenium.webdriver.common.action_chains import ActionChains`**: Импортирует класс `ActionChains` для выполнения сложных действий с элементами (например, перемещение мыши, drag-and-drop).
-*   **`from selenium.common.exceptions import NoSuchElementException, TimeoutException`**: Импортирует исключения, которые могут возникнуть при взаимодействии с Selenium.
-*   **`from src import gs`**: Импортирует глобальные настройки из модуля `gs`, расположенного в пакете `src`. Этот модуль, вероятно, содержит настройки проекта и переменные среды.
-*   **`from src.utils.printer import pprint, j_loads, j_loads_ns, j_dumps, save_png`**: Импортирует функции для красивого вывода данных, загрузки и сохранения JSON, а также сохранения скриншотов из модуля `printer` пакета `src.utils`.
-*    **`from src.logger.logger import logger`**: Импортирует объект `logger` для ведения логов.
-*   **`from src.logger.exceptions import DefaultSettingsException, WebDriverException, ExecuteLocatorException`**: Импортирует пользовательские исключения, определенные в проекте, для обработки специфических ошибок.
+1.  **`from selenium import webdriver`**:
+    -   Импортирует модуль `webdriver` из библиотеки Selenium, предоставляя интерфейс для управления браузером. Это основной модуль для взаимодействия с веб-страницами.
+2.  **`from selenium.webdriver.common.keys import Keys`**:
+    -   Импортирует `Keys` для отправки специальных клавиш (например, `ENTER`, `TAB`, `CTRL`) элементам на веб-странице.
+3.  **`from selenium.webdriver.common.by import By`**:
+    -   Импортирует `By` для указания способа поиска элементов на странице (например, `By.ID`, `By.XPATH`, `By.CLASS_NAME`).
+4.  **`from selenium.webdriver.remote.webelement import WebElement`**:
+    -   Импортирует `WebElement`, который представляет элемент веб-страницы, с которым можно взаимодействовать.
+5.  **`from selenium.webdriver.support.ui import WebDriverWait`**:
+    -   Импортирует `WebDriverWait` для ожидания загрузки или появления элемента на странице с использованием заданного таймаута.
+6.  **`from selenium.webdriver.support import expected_conditions as EC`**:
+    -   Импортирует `expected_conditions` для определения ожидаемых условий, таких как появление элемента, его кликабельность, и т.д., которые используются с `WebDriverWait`.
+7.  **`from selenium.webdriver.common.action_chains import ActionChains`**:
+    -   Импортирует `ActionChains` для выполнения сложных действий с элементами веб-страницы, таких как перетаскивание, наведение курсора, и т.д.
+8.  **`from selenium.common.exceptions import NoSuchElementException, TimeoutException`**:
+    -   Импортирует исключения, которые могут возникнуть при поиске элементов или при ожидании условий.
+    - `NoSuchElementException`: Возникает, когда элемент не найден на странице.
+    - `TimeoutException`: Возникает, когда таймаут ожидания элемента истек.
+9. **`from src import gs`**:
+    - Импортирует глобальные настройки из `src`. `gs` (Global Settings) используется для доступа к различным настройкам проекта.
+10. **`from src.utils.printer import pprint, j_loads, j_loads_ns, j_dumps, save_png`**:
+     - Импортирует функции из модуля `src.utils.printer`:
+        - `pprint`: Для красивого вывода данных в консоль.
+        - `j_loads`: Для загрузки данных из JSON-строки.
+        - `j_loads_ns`: Для загрузки данных из JSON-строки в `SimpleNamespace`.
+        - `j_dumps`: Для преобразования данных в JSON-строку.
+        - `save_png`: Для сохранения скриншота веб-страницы в файл PNG.
+11. **`from src.logger.logger import logger`**:
+    -   Импортирует объект `logger` для логирования событий и ошибок из модуля `src.logger.logger`.
+12. **`from src.logger.exceptions import DefaultSettingsException, WebDriverException, ExecuteLocatorException`**:
+    -   Импортирует пользовательские исключения из модуля `src.logger.exceptions`.
+     - `DefaultSettingsException`: Исключение, связанное с настройками по умолчанию.
+     - `WebDriverException`: Исключение, связанное с ошибками WebDriver.
+     - `ExecuteLocatorException`: Исключение, связанное с ошибками при выполнении действий по локаторам.
 
-### Классы
+#### Класс `ExecuteLocator`
 
-*   **`ExecuteLocator`**:
-    *   **Роль**: Основной класс для выполнения действий с веб-элементами на основе переданных локаторов.
-    *   **Атрибуты**:
-        *   `driver`: Экземпляр `webdriver` для управления браузером.
-        *   `actions`: Экземпляр `ActionChains` для выполнения сложных действий.
-    *   **Методы**:
-        *   `__init__`: Инициализирует класс, принимает `driver` и создает объект `ActionChains`.
-        *   `execute_locator`: Основной метод для выполнения действия с элементом. Выбор действия зависит от параметров в словаре `locator`.
-        *   `get_webelement_by_locator`: Возвращает веб-элемент на основе локатора, используя ожидания.
-        *   `get_attribute_by_locator`: Возвращает значение атрибута элемента.
-        *    `_get_element_attribute`: Получает значение атрибута элемента.
-        *    `send_message`: Отправляет сообщение в элемент с заданной скоростью набора текста.
-        *   `evaluate_locator`: Оценивает значение атрибута локатора.
-        *   `_evaluate`:  Выполняет javascript и возвращает результат.
-        *   `get_locator_keys`: Возвращает список возможных ключей локатора.
-    *   **Взаимодействие**:
-        *   Использует `webdriver` для взаимодействия с браузером.
-        *   Использует `ActionChains` для сложных взаимодействий.
-        *   Использует `WebDriverWait` для ожидания элементов.
-        *   Обрабатывает исключения, связанные с Selenium и логирует их.
-        *   Использует `src.utils.printer` для вывода и обработки данных.
-        *   Использует `src.logger` для логирования.
-        *   Использует `src.gs` для получения глобальных настроек.
+- **Роль**: Предоставляет интерфейс для выполнения действий с веб-элементами, используя локаторы.
+- **Атрибуты**:
+    - `driver`: Объект WebDriver, управляющий браузером.
+    - `actions`: Объект `ActionChains` для выполнения сложных действий.
+    - `by_mapping`: (Неявно инициализируется внутри методов) - словарь для преобразования строковых представлений локаторов в объекты Selenium `By`.
+- **Методы**:
+    - **`__init__(self, driver)`**: Конструктор, инициализирует `driver` и `actions`.
+    - **`execute_locator(self, locator, message, typing_speed, continue_on_error)`**:
+        -   Основной метод для выполнения действий на основе локатора.
+        -   Принимает словарь локатора, сообщение, скорость ввода и флаг продолжения при ошибке.
+        -   Выбирает метод в зависимости от значения ключа 'action' словаря `locator`.
+        -   Возвращает результат действия или None.
+    -   **`get_webelement_by_locator(self, locator, message)`**:
+        -   Получает веб-элемент или список элементов на основе словаря локатора.
+        -   Использует `WebDriverWait` для ожидания загрузки элемента.
+        -   Возвращает WebElement или список WebElement или False.
+    -   **`get_attribute_by_locator(self, locator, message)`**:
+        -   Получает атрибут элемента на основе словаря локатора.
+        -   Использует `get_webelement_by_locator` для поиска элемента.
+        -   Возвращает значение атрибута, список атрибутов или False.
+    -   **`_get_element_attribute(self, element, attribute)`**:
+        -   Вспомогательный метод для получения атрибута элемента.
+        -   Возвращает значение атрибута или `None`.
+    -   **`send_message(self, locator, message, typing_speed, continue_on_error)`**:
+        -   Отправляет сообщение в текстовое поле.
+        -   Использует `typing_speed` для имитации набора текста.
+    -  **`evaluate_locator(self, attribute)`**:
+        -  Оценивает атрибут локатора, возвращая строковое представление.
+    -  **`_evaluate(self, attribute)`**:
+        - Вспомогательный метод для оценки одного атрибута, удаляя `{}`.
+    - **`get_locator_keys() -> list`**:
+        -  Статический метод, возвращает список ключей, которые могут быть использованы в словаре локатора.
 
-### Функции
+#### Функции
+   -   Все функциональные блоки, по сути, являются методами класса `ExecuteLocator`.
 
-*   `__init__(self, driver, *args, **kwargs)`: Конструктор класса, инициализирующий `driver` и `ActionChains`.
-*   `execute_locator(self, locator: dict, message: str = None, typing_speed: float = 0, continue_on_error: bool = True) -> Union[str, list, dict, WebElement, bool]`: Основной метод для выполнения действий с веб-элементами на основе словаря `locator`.
-    *   **Аргументы**:
-        *   `locator`: Словарь, определяющий, как найти элемент и какое действие с ним выполнить.
-        *   `message`: Сообщение для отправки в элемент (если применимо).
-        *   `typing_speed`: Скорость печати сообщения (если применимо).
-        *   `continue_on_error`: Флаг, указывающий, нужно ли продолжать выполнение при возникновении ошибки.
-    *   **Возвращаемое значение**: Результат действия, элемент, список элементов, словарь или `False` в случае ошибки.
-    *   **Назначение**: Координирует выполнение действий с веб-элементами на основе переданных параметров.
-    *    **Пример**:
-        ```python
-        locator = {"by": "id", "selector": "my_element_id", "action":"send_keys", "value":"my_text"}
-        result = executor.execute_locator(locator, message="Test Message", typing_speed=0.1)
-        ```
-*   `get_webelement_by_locator(self, locator: dict | SimpleNamespace, message: str = None) -> WebElement | List[WebElement] | bool`: Метод для получения веб-элементов на основе переданного локатора.
-    *   **Аргументы**:
-        *   `locator`: Словарь или `SimpleNamespace`, содержащий параметры локатора.
-        *   `message`: Сообщение, выводимое в случае ошибки.
-    *   **Возвращаемое значение**: `WebElement`, список `WebElement` или `False` если элемент не найден.
-    *   **Назначение**: Поиск элемента на веб-странице с ожиданием, которое задано в  параметрах `locator`.
-     *    **Пример**:
-        ```python
-         locator = {"by": "id", "selector": "my_element_id",  "timeout":10,"timeout_for_event":"presence_of_element_located" }
-        element = executor.get_webelement_by_locator(locator, "Element not found")
-        ```
+#### Переменные
 
-*   `get_attribute_by_locator(self, locator: dict | SimpleNamespace, message: str = None) -> str | list | dict | bool`: Метод для получения значения атрибута элемента.
-    *   **Аргументы**:
-        *   `locator`: Словарь или `SimpleNamespace`, содержащий параметры локатора.
-        *   `message`: Сообщение, выводимое в случае ошибки.
-    *   **Возвращаемое значение**: Строка, список, словарь со значениями атрибута или `False` если элемент не найден.
-    *   **Назначение**: Поиск элемента на веб-странице, получение его атрибута.
-      *    **Пример**:
-        ```python
-        locator = {"by": "id", "selector": "my_element_id", "attribute": ["href", "class"],  "timeout":10,"timeout_for_event":"presence_of_element_located"}
-        attributes = executor.get_attribute_by_locator(locator, "Error getting attribute")
-        ```
-*   `_get_element_attribute(self, element: WebElement, attribute: str) -> str | None`: Метод для получения значения одного атрибута веб-элемента.
-    *   **Аргументы**:
-        *   `element`: Экземпляр `WebElement`.
-        *   `attribute`: Имя атрибута.
-    *   **Возвращаемое значение**: Значение атрибута в виде строки или `None`.
-    *   **Назначение**: Получение значения конкретного атрибута у элемента.
-    *    **Пример**:
-        ```python
-        element = driver.find_element(By.ID, "my_element_id")
-        value = executor._get_element_attribute(element, "href")
-        ```
+-   `driver`: Экземпляр `webdriver.Chrome` (или другого браузера), используемый для управления браузером.
+-   `actions`: Экземпляр `ActionChains`, используется для создания и выполнения сложных действий пользователя.
+-   `locator`: Словарь, содержащий информацию о том, как найти элемент на странице, например: `{"by": "id", "selector": "my_button", "action": "click"}`.
+-   `message`: Строка сообщения, передаваемая элементу (например, для ввода текста).
+-  `typing_speed`: Скорость набора текста при отправке сообщения, например: `0.1` для задержки в 0.1 секунды между символами.
+- `continue_on_error`: Булевая переменная, определяющая, продолжать ли выполнение при возникновении ошибки (`True`) или нет (`False`).
+-  `attribute`: строка, список или словарь - атрибут, который необходимо оценить.
 
-*   `send_message(self, locator: dict | SimpleNamespace, message: str, typing_speed: float, continue_on_error:bool) -> bool`: Метод для отправки сообщения в текстовое поле.
-    *   **Аргументы**:
-        *   `locator`: Словарь или `SimpleNamespace`, содержащий параметры локатора.
-        *   `message`: Сообщение для отправки.
-        *   `typing_speed`: Скорость печати сообщения.
-        *   `continue_on_error`: Флаг, указывающий, нужно ли продолжать выполнение при возникновении ошибки.
-    *   **Возвращаемое значение**: `True`, если сообщение успешно отправлено, `False` в противном случае.
-    *   **Назначение**: Имитация ввода текста в поле с заданной скоростью печати.
-      *    **Пример**:
-        ```python
-        locator = {"by": "id", "selector": "my_input_field",  "timeout":10,"timeout_for_event":"presence_of_element_located"}
-        executor.send_message(locator, message="Input text", typing_speed=0.2, continue_on_error = True )
-        ```
+#### Ошибки и улучшения
 
-*  `evaluate_locator(self, attribute: str | list | dict) -> str`: Метод для оценки javascript  выражения.
-    *   **Аргументы**:
-        *   `attribute`: Строка, список или словарь javascript выражений.
-    *   **Возвращаемое значение**: Результат выполнения JavaScript-кода.
-    *   **Назначение**: Возвращает результат выполнения JavaScript-кода.
-       *    **Пример**:
-        ```python
-        attribute = "window.location.href"
-        value = executor.evaluate_locator(attribute)
-         attribute = ["window.location.href","document.title"]
-        value = executor.evaluate_locator(attribute)
-        attribute = {"url":"window.location.href","title":"document.title"}
-        value = executor.evaluate_locator(attribute)
-        ```
-*   `_evaluate(self, attribute: str) -> str | None`: Метод для выполнения javascript кода.
-    *   **Аргументы**:
-        *   `attribute`: Строка  javascript выражения.
-    *   **Возвращаемое значение**: Результат выполнения JavaScript-кода.
-    *   **Назначение**: Выполняет JavaScript-код.
-    *    **Пример**:
-        ```python
-        value = executor._evaluate("return window.location.href")
-        ```
-*   `get_locator_keys() -> list`: Статический метод, возвращающий список всех возможных ключей локатора.
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Список ключей локатора.
-    *   **Назначение**: Получение списка всех доступных ключей локатора.
+-   **Обработка ошибок**: Код правильно обрабатывает исключения `NoSuchElementException` и `TimeoutException`, но можно добавить более подробное логирование ошибок.
+-  **Улучшение `evaluate_locator`**: Метод `evaluate_locator` можно улучшить, чтобы он более гибко обрабатывал различные типы данных и предоставлял возможность расширять его функциональность.
+-   **Использование `SimpleNamespace`**: В коде иногда принимаются `dict | SimpleNamespace`. Стоит унифицировать использование типов данных.
+-   **Расширение `get_locator_keys`**: Можно добавить документацию и примеры использования для каждого ключа локатора.
+-   **Добавление документации**: Можно добавить docstrings ко всем методам для лучшей читаемости и понимания кода.
 
-### Переменные
+#### Взаимосвязь с другими частями проекта
 
-*   `driver`: Экземпляр `webdriver`, используемый для управления браузером.
-*   `actions`: Экземпляр `ActionChains` для выполнения сложных действий с элементами.
-*   `by_mapping`: Словарь для преобразования строковых представлений локаторов в объекты `By` (не показано в предоставленном коде, но подразумевается).
-*   `locator`: Словарь, содержащий параметры локатора для поиска элементов.
-*   `message`: Сообщение для отправки в элемент.
-*   `typing_speed`: Скорость печати сообщения.
-*   `continue_on_error`: Флаг, определяющий, нужно ли продолжать выполнение при ошибке.
-*   `element`: Переменная для хранения экземпляра `WebElement`
+-   **`src.gs`**: Используется для получения настроек проекта, которые могут влиять на поведение WebDriver.
+-   **`src.utils.printer`**: Используется для вывода информации в консоль и для сохранения отладочных данных.
+-   **`src.logger`**: Используется для логирования событий, ошибок и других важных сообщений.
+-   **Конфигурация локаторов**:  Локаторы обычно определяются в отдельных файлах конфигурации (JSON или YAML), что позволяет легко менять стратегии поиска элементов без изменения кода.
 
-### Потенциальные Ошибки и Области для Улучшения
-
-*   **Обработка ошибок**: В методе `execute_locator` обрабатываются общие ошибки. Можно добавить более специфичную обработку ошибок (например, `NoSuchElementException`).
-*   **Динамические локаторы**: Код может быть уязвим к динамическим изменениям веб-страницы. Можно внедрить механизмы для адаптации к изменениям DOM.
-*   **Расширяемость**: Код поддерживает разные виды действий, но их можно расширить (например, добавление выбора из выпадающего списка).
-*   **Логирование**: Можно добавить больше логов, особенно для проблемных ситуаций.
-*  **Рефакторинг**: Метод `execute_locator` слишком большой, можно разделить на несколько небольших методов, что улучшит читаемость и сопровождение кода.
-*  **Сложность**: Функция `send_message` может быть упрощена, применив встроенные функции для отправки текста в поле
-*  **Типизация**: Желательно добавить типизацию для всех атрибутов класса и переменных в методах.
-
-### Взаимосвязи с другими частями проекта
-
-*   **`src.gs`**: Используется для получения глобальных настроек проекта, таких как пути к файлам, тайм-ауты и другие параметры.
-*   **`src.utils.printer`**: Используется для вывода информации, загрузки/сохранения JSON, сохранения скриншотов.
-*   **`src.logger`**: Используется для логирования событий и ошибок.
-*   **`src.webdriver`**:  Включает в себя  данный модуль, который используется для взаимодействия с веб-страницами.
-*   **Логика проекта**: Этот класс является частью системы автоматизации тестирования и обеспечивает взаимодействие с веб-элементами в тестах.
-
-В целом, класс `ExecuteLocator` представляет собой мощный инструмент для автоматизации взаимодействия с веб-элементами, предоставляя гибкость и расширяемость для создания robust-тестов.
+Этот анализ предоставляет полное понимание структуры, функций и взаимосвязей класса `ExecuteLocator` в рамках проекта.

@@ -12,7 +12,7 @@
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
+
         Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
 
@@ -29,504 +29,274 @@
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
 
-### <алгоритм>
-1.  **Инициализация и настройка окружения:**
-    *   Код начинается с определения глобальных объектов и функций, которые будут использоваться на протяжении всего скрипта.
-    *   Происходит определение совместимости с ES6 символами.
-    *   Создается объект `ea`, который будет использоваться для хранения глобальных переменных.
-    *   Определяются вспомогательные функции для работы с массивами, строками, объектами и т.д.
-        *   Например, `ia` для безопасного задания свойств объектов, `xa` для удаления пробелов, `ya` для сравнения версий, и т.д.
-    *   Настраиваются параметры для сбора информации об окружении (браузер, ОС).
-    
-2.  **Работа с флагами и настройками:**
-    *   Функции `ja` и `ka` используются для получения значений флагов, которые могут влиять на поведение кода.
-    *   Определяются различные константы и переменные на основе полученных флагов.
-    *   Например, `Aa`, `Ba`, `Ca`, `Da`, `Ea` – флаги, определяющие поведение кода в разных условиях.
-        
-3.  **Обработка строк и кодирование:**
-    *   Определяются функции для сравнения строк (`ya`, `za`), поиска подстрок (`Qa`), фильтрации массивов (`Ra`), маппинга (`Sa`), проверки наличия элемента в массиве (`Ta`), поиска последнего индекса (`Ua`), проверки вхождения подстроки (`Va`).
-    *   Функция `ab` и `bb` используются для декодирования base64 строк.
-    *   Инициализируется алфавит для декодирования base64 через функцию `cb`.
-    
-4.  **Работа с числами и битами:**
-    *   Функции `fb` и `hb` служат для преобразования целых чисел в 64-битные представления.
-    *   Функция `jb` преобразует 64-битное представление в строку.
-    *   Функция `Sb` для округления чисел до целого, а `Tb` преобразует число в строку безопасно.
-    
-5.  **Работа с объектами и типами данных:**
-    *   Определяется ряд функций для работы с объектами:
-        *   `ub`, `vb` – проверки на тип объекта.
-        *   `wb` - проверка массива
-        *   `pb`, `qb`, `rb` – для управления флагами объектов.
-    *   `zb` проверяет флаги объекта
-    *   Определены константы `Ab`, `Bb`, `Cb`
-    *   Функции для вызова ошибок `Fb`, `Gb`
-    *   `Cb` задает контекст ошибки, `Hb` бросает ошибку, `Ib` бросает предупреждение.
-    *   Определяются функции для валидации типов `Jb`, `Lb`, `w`, `Mb`, `Nb`, `Ob`, `Pb`, `Qb`, `Rb` , `Vb`, `Wb`, `Xb` .
-    *    Функции `Sb` и `Ub` служат для безопасного преобразования чисел в строку
-    
-6.  **Работа со структурированными данными:**
-    *  Определяются функции для работы с массивами, объектами, Uint8Array:
-        * `Yb`, `$b` - создание объектов
-        * `bc` - создает новый объект с заданной структурой
-        * `cc`, `dc` - преобразования в различные форматы
-        * `ec` - применяет функцию к каждому элементу массива
-        * `fc`, `gc` - рекурсивное преобразование
-        * `hc`, `ic` - методы для JSON, бинарных данных.
-        * `jc` - клонирование объекта
-        * `kc`, `lc`, `mc` - работа с флагами объектов.
-    *   Определяется механизм для создания прокси-объектов `nc`, `pc`, `qc`.
-    *   Функции `sc`, `tc` и `uc` служат для работы со значениями по смещению.
-    *   Функции `y` и `z` служат для изменения значений у объектов по ключу и добавляют флаги.
-    *   Функции `wc` и `A` служат для извлечения значений.
-    *   Функции `yc`, `zc`, `Bc`, `Cc`, `Ec`, `B`, `Fc`, `Gc`, `Jc`, `Kc`, `Hc`, `Ic`, `Lc`, `xc`, `Mc`, `D`, `E`, `Oc`, `Pc`, `Qc`, `Ac`, `Dc`, `Rc`, `Sc`, `Uc`, `Vc`, `F`, `G`, `H`, `Wc`, `Xc`, `Yc`, `I`, `J`, `Zc`, `$c`, `ad`, `K`, `bd`, `cd` - функции для работы с объектами.
-    
-7.  **Классы для работы со структурированными данными:**
-    *   Определяется класс `M`, базовый класс для работы с данными
-    *   Функции `ed`, `fd` служат для работы с экземплярами класса `M`.
-    *   Функции `gd` служит для проверки валидации.
-    
-8.  **Работа с функциями и событиями:**
-    *   Определяются функции для управления событиями `qd`, `rd`, `sd`, `td`, `ud`, `vd`, `pd`, `od`.
-    *   Функции `ra`, `sa` и `ta` служат для привязки контекста.
-    
-9.  **Работа с URL:**
-    *   Определяется класс `xd` для работы с URL.
-    *   Функции `yd`, `Ad`, `Bd`, `Cd` служат для безопасной работы с URL.
-    *   Функция `Ed` используется для создания URL.
-    
-10. **Работа с размерами и стилями:**
-    *   Определяется класс `Fd` для работы с размерами.
-    *   Функции `Hd`, `Id` и `Jd` служат для работы с DOM.
-    *   Функции `Kd` и `Ld` для определения типа устройства.
-    *   Функции `Od` для работы с параметрами URL.
-    *   Функции `Rd` служат для вставки скриптов в DOM.
-    *    Функции `Td` для получения стилей элементов, `Ud` для генерации случайных чисел, `Vd` для работы с объектами.
-    *   Функция `Wd` для вычисления hash строк, `Xd`, `Yd`, `Zd` и `$d` служат для работы с CSS.
-    *   Функция `ae` проверяет тип устройства, `be` - скрывает элемент, `de` для работы с очередью задач.
-    *  Функция `ee` вставляет origin-trial metatag
-    *  Функции `he` и `ie` для работы с уникальными id
-    *  Функция `ke` и `le` для асинхронной загрузки картинок.
-    *  Функция `ne` выполняет GET запрос.
-    
-11. **Работа с куки и хранилищем:**
-    *   Определяется класс `qe` для работы с куками.
-    *   Функции `re`, `se` служат для работы с localStorage.
-    
-12. **Работа с логами:**
-     *   Функция `ue` используется для отправки логов.
-     *  Функция `ve` и `we` для получения контекста страницы
-     *   Функции `xe` и `ye` генерирует id.
-     *   Функция `ze` определяет standalone
-     *   Функция `Ae` нормализует название клиента.
-     *   Класс `Be` служит для управления ошибками.
-     *    Класс `Ee` и `Fe` служат для работы с URL, `Ge` и `He` для работы с hash
-    *  Функции `Ie` и `Je` служат для получения текущего времени
-    *   Класс `Ke` - данные о тайминге.
-    *   Класс `Qe` - механизм сбора таймингов.
-    *   Функции `Oe` и `Pe` очищают тайминги.
-    *   Функции `Re`, `Se`, `Te` для работы с параметрами URL.
-    *   Функция `Ue` и `Ve` для создания URL.
-    *   Класс `We` для работы с параметрами URL.
-    *   Функция `Xe` форматирует стек ошибок.
-    *  Класс `Ze` для обработки ошибок, `ck` для отправки данных на сервер.
+## АНАЛИЗ КОДА:
 
-13. **Различные классы для обработки данных:**
-    *  Классы `$e`, `af`, `bf`, `df`, `ef`, `ff`, `gf` и `hf` - для структур данных.
-    *  Функции `jf` и `kf` используются для обработки данных в разных форматах.
-    *   Функция `lf` - для управления логикой.
-    *  Классы `Nc`, `mf`, `nf`, `of`, `pf`, `qf`, `tf`, `uf`, `vf`, `wf`, `xf`, `yf`, `Af`, `Bf`, `Cf`, `Df`, `Ef`, `Ff`, `Gf`, `If`, `Jf`, `Kf`, `Lf`, `Mf`, `Tf`, `Uf`, `Yf`, `$f`, `ag`, `bg`, `cg`, `eg`.
+### 1.  **<алгоритм>**
 
-14. **Механизм отправки данных:**
-     *  Класс `jg`, `kg` и `gg` служат для отправки данных на сервер.
-     *  Класс `ng` и `og` - для управления запросами.
-     *  Функция `lg` служит для отправки логов на сервер.
+Код представляет собой обфусцированный JavaScript, который выполняет множество операций, включая:
 
-15.  **Сбор данных и логика обработки:**
-     *  Классы `tg` и `N`, `ug`, `Ag` - для управлении состояниями, хранение настроек.
-     *  Функции `wg`, `xg`, `yg`, `zg`, `Cg`, `Dg`, `Gg`, `Hg`, `Ig`, `Jg`, `Bg`, `Kg`, `Lg`, `Mg`, `Ng`, `Og`, `P`, `Pg`, `Qg`, `Rg`, `Sg`, `Tg`, `Ug`, `Ye`, `Vg`, `Wg`, `Xg`, `Yg` и `Zg` служат для работы с конфигурацией и определения условий.
+1.  **Инициализация и настройка:**
+    *   Определение глобального объекта (`globalThis`, `window`, `self`, `global`).
+    *   Создание и модификация свойств объектов (например, `Object.defineProperty`).
+    *   Генерация уникальных идентификаторов.
+    *   Установка таймаутов.
 
-16.  **Работа с Promise:**
-    *   Определяется класс `eh` и `ch` для управления Promise.
-    *   Функция `dh` для управления состоянием Promise
-    *   Определяется класс `fh` - для работы с массивами.
-    *   Функция `gh` для перебора массива.
+2.  **Работа с базовыми типами:**
+    *   Преобразование строк, чисел и массивов.
+    *   Сравнение версий.
+    *   Работа с регулярными выражениями.
+    *   Манипуляция с кодировкой base64.
 
-17. **Работа с Map:**
-    *   Определяется класс `ih` и `rh` - для управления Map.
-    *   Функция `hh` - для работы с ключами Map.
-    
-18.  **Работа с значениями:**
-    *    Функции `jh`, `lh`, `mh`, `nh`, `oh` и `ph` служат для работы с значениями.
-    *    Определяется класс `kh` - контейнер для значений
-    
-19.  **Работа с наборами:**
-     *   Определяется класс `qh` для работы с наборами.
-    
-20. **Сбор и обработка ошибок:**
-    *   Определяется класс `Q` и `sh` для работы с ошибками.
-    *   Функции `uh`, `th`, `vh`, `Ah`, `xh`, `zh`, `Ah`, `yh` служат для работы с ошибками.
-    *   Определяются классы `Ch`, `Dh`, `Eh`, `Fh`, `Gh`, `Hh`, `R`, `Jh`, `Kh`, `$h`, `fe`, `Fi`  –  для работы с данными и для параметров логирования.
-    *   Функция `S`, `T`, `Gi` – для получения конфигураций
-   
-21. **Работа с DOM:**
-    *   Функции `Hi`, `Ii`, `Ji`, `Ki` служат для работы с DOM.
-    *   Классы `Li` и `Mi` - для работы с разными типами объявлений.
-    *  Функции `Ni`, `U`, `Oi`, `Pi`, `Qi`, `Ri`, `Si`, `Ti`, `Ui`, `Vi`, `Wi`, `Xi`, `Yi`.
-    
-22. **Обработка размеров и позиционирования:**
-    *  Классы `Zi`, `Y`, `Y`, `lo`, `qo` и `so` - для управления размерами и позиционированием элементов
-    * Функции `bj`, `ej`, `fj`, `cj`, `gj`, `dj`, `eo`, `go`, `ho` служат для работы с размерами элементов.
-    * Функции `mo`, `po`, `no`, `oo`, `to`, `uo`, `vo` для определения размеров, логики позиционирования.
-     * Функция `no` проверяет ширину элемента.
-     * Функция `oo` устанавливает значение атрибутов.
-    
-23. **Настройки для объявлений:**
-    *   Определяются различные константы и переменные для работы с настройками объявлений, включая `hj`, `ij`, `jj`.
-    *   Классы `kj`, `lj`, `mj`, `nj`, `oj`, `pj`, `qj`, `rj`, `sj`, `tj`, `vj`, `wj`, `xj`, `yj` - для описания структуры данных объявлений.
-    *   Функции `zj`, `Aj`, `Bj`, `Cj`, `Dj` и класс `Ej` для работы с текстовым контентом.
+3.  **Работа с браузерными API:**
+    *   Получение информации о браузере (`navigator.userAgent`).
+    *   Работа с DOM (создание, вставка и удаление элементов).
+    *   Получение стилей элементов (`getComputedStyle`).
+    *   Работа с `localStorage` и `sessionStorage`.
+    *   Отправка запросов на сервер (изображения, `fetch`).
+    *   Работа с `performance` API для измерения производительности.
 
-24. **Работа с обработкой ошибок (Fj):**
-    *   Класс `Fj` используется для обработки ошибок в JavaScript.
-    *   Функции `T`, `ha`, `sa` и `da` используются для обработки ошибок и отправки сообщений об ошибках.
-    
-25. **Работа с отчетами:**
-   *  Функция `Gj` для сбора отчетов.
-   *  Функции `Hj` и `Ij` для обертки функций.
-   *  Функция `Jj` для вызова функций
-   *  Функция `Kj` и классы `Q`, `sh` для работы с ID элемента
-   * Функции `Lj` и `Nj` для преобразования ID.
-   *  Функция `Oj` для управления состоянием.
-   *  Функция `Pj` для управление параметрами.
-   *  Функция `Qj` для получения идентификаторов.
-    *   Функция `Rj` для перемещения по DOM дереву, `Sj`, `Uj`, `Vj`, `Tj` и `Xj` служат для сбора информации о позициях элементов.
-    *   Класс `Wj` - обертка для позиций элементов
-    
-26. **Основная логика:**
-    *   Определяются константы `Yj` и `W`.
-    *    Функции `ak` для управления таймингами
-    *   Класс `V` служит для обработки ошибок, `bk` и `ck` для записи логов.
-    *  Функции `dk` и `ek` служат для обработки ошибок.
-    
-27. **Классы и функции для работы с пользовательским интерфейсом:**
-    *    Класс `fk`, `lk`, `xk`, `tk`, `uk`, `yk`, `Ak`, `Ck`, `Dk`, `Gk`, `Hk`, `Ik`, `Jk`, `Kk`, `Lk`, `Mk`, `Nk`, `Ok`, `Pk`, `Qk`, `Rk`, `Sk`, `Xk`, `Tk`, `Yk`, `Uk`, `Zk`, `$k`, `al`, `Vk`, `Wk` - работа с локальным хранилищем, CMP, GDPR.
-    *    Классы `bl`, `cl`, `dl`, `el`, `gl`, `hl` для управления состояниями.
-    *  Функция `fl` для обработки ошибок.
-    *  Функции `il`, `jl`, `kl`, `ll`, `ml` для преобразования строк.
-    *   Классы `xl`, `rl`, `Cn`, `Dl`, `El`, `Fl`, `Gl`, `Hl`, `Il`, `Ll`, `Ol`, `Pl`, `Ql`, `Rl`, `Vl`.
-    *   Функции `zl`, `yl`, `Al`, `Sl`
-    *   Функции `Jl` и `Kl` - для работы с postMessage API
-    *   Функции `Ml` и `Nl` - для работы с USP API
-   
-28. **Основные параметры и функции:**
-    *   Определяются переменные `nl`, `ol`, `pl`
-    *   Функции `ql`, `sl`, `tl`, `ul`, `vl`, `wl` для работы со строками
-    *   Функция `zl` служит для декодирования данных.
-    *   Классы `Vl` и `Ol` для работы с API.
-    *   Функции `Al`, `Bl`, `Cl`, `Dl`, `El`, `Fl`, `Gl`, `Hl`, `Il`, `Jl` для работы с различными типами данных.
-    *   Функции `Sl` для декодирования строк, `Tl` для создания iframe, `Ul`, `Wl`, `Xl` для работы с CMP.
-    *   Функция `Yl` для получения данных.
-    *   Функции `$l`, `Zl` и класс `Vl` служат для работы с данными.
-    *  Функции `am`, `bm`, `cm`, `dm`, `em`, `fm`, `gm`, `hm` и классы `im` и `jm` служат для работы с доменом, URL.
-    *   Классы `km`, `mm`, `nm`, `om`, `pm`, `rm` служат для описания структур данных.
-    *   Функция `tm`, `X`, `um`, `vm`, `wm`, `xm`, `ym` и `zm` служат для управления состоянием.
-    *   Функции `Am`, `Bm`, `Cm`, `Dm`, `Em`, `Fm`, `Gm`, `Hm`, `Im`, `Jm`, `Km`, `Lm`, `Mm`, `Nm`, `Om`, `Pm`, `Rm`, `Sm`, `Tm`, `Vm`, `Wm`, `Xm`, `Um` и класс `Qm` - для управления логикой.
-    *  Функция `$`m для инициализации объявлений
-    *  Функция `Ym` и `Zm` для логирования
-    * Функции `an` и `cn` для работы с url.
-    *  Классы `dn`, `en`, `fn`, `gn` служат для асинхронной работы, promise
-    *   Функция `hn` - сбора параметров URL.
-    *   Классы `jn` и `kn` служат для загрузки частей кода
-    *   Класс `mn` и `nn` для управления состоянием глобального объекта.
-    *   Функция `on` создает объект для PLA, `pn` для управления запуском механизма, `qn` - для обработки логики PLA, `rn` - обертка для инициализации.
-    *   Функция `sn` и `tn` - для создания div, `un` - для получения имени лоадера, `vn` - список параметров для copy
-    *   Функция `wn` и `xn` - для парсинга параметров из script тега.
-    *   Функция `yn` - для работы с параметрами.
-    *  Функция `zn` - для получения client id.
-    *   Классы `An` и `Bn` - для определения размера
-    *   Класс `Cn` для работы с версиями, `Dn`, `En`, `Fn`, `Gn`, `Hn`, `In`, `Jn`, `Kn`, `Ln`, `Mn`, `Nn`, `On`, `Pn`, `Qn` для сбора информации о браузере.
-    *  Функции `Rn`, `Sn`, `Tn`, `Vn`, `Un`, `Wn`, `Xn`, `Yn`, `Zn` служат для работы с DOM и iframe.
-    *   Класс `$n`, `Y` служат для управления размером, `ao`, `bo`, `co` служат для параметров объявлений.
-    *   Функции `eo`, `fo`, `go`, `ho` служат для работы с параметрами объявлений.
-    *   Класс `jo` - для объявления, `ko`, `lo` - для контейнера.
-     *  Классы `mo`, `po`, `no`, `oo`, `qo`, `ro`, `so` - для работы с разными типами объявлений.
-    *   Функция `to` для вычисления размера контейнера, `uo` для проверки условий, `vo` - для фильтрации.
-     * Переменные `Z` и `wo` служат для хранения предустановленных размеров.
-     * Функции `xo`, `zo`, `yo`, `Ao`, `Bo`, `Co`, `Eo`, `Do`, `Fo` для определения размера и типа объявления
-    *  Функция `Jo` для создания контейнера объявлений, `Io`, `Go`, `Ko` - для управления форматом объявления.
-    *   Функция `Lo` - вычисление ширины, `Mo` - нормализация типов данных.
-    *   Функции `No`, `Oo`, `Po` для нормализации параметров, `Qo` - уровень вложенности.
-    *    Функции `mg`, `So`, `To`, `Ro`, `Uo` - для управления таймаутами и видимостью.
-    *   Класс `Vo` - для управления таймаутами.
-    *    Функция `Wo` для асинхронного ожидания.
-    *    Функции `Xo`, `Yo`, `Zo` для работы с ID, `$`o для проверки готовности.
-    *  Функции `ap`, `cp`, `dp`, `ep`, `fp`, `gp`, `bp` для работы с логикой отчетов.
-    *   Функции `hp`, `ip`, `jp`, `kp`, `lp`, `mp`, `np`, `op`, `pp`, `qp`, `rp`, `sp`, `tp` для настройки логики работы.
-    *  Класс `Ap` и функции `zp`, `Bp`, `Cp`, `Dp`, `Ep`, `Fp`, `Gp` служат для управления конфигурацией
-    *   Функции `Hp`, `Ip`, `Jp`, `Kp`, `Lp`, `Mp` служат для работы с ID и типами объявлений
-    *    Функции `Np`, `Op` служат для получения размера экрана и работы с postMessage.
-    *   Функции `Pp`, `Qp`, `Rp`, `Sp`, `Tp`, `Up`, `Xp`, `Vp`, `Yp`, `Wp`, `Zp`, `cq`, `gq`, `eq`, `fq`, `jq`, `hq`, `iq`, `kq` и класс `dq` - для сбора и обработки аналитики о загрузке объявлений.
-    *  Переменные `$p`, `aq`, `bq` служат для работы с аналитикой.
-    *  Функции `lq`, `mq`, `nq` для управления очередью, `pq` - проверка объявления
-    *  Функции `qq`, `rq` и `sq` - управление отображением объявлений.
-    *  Функции `tq`, `uq`, `wq`, `xq`, `zq` и `vq` служат для обработки данных в DOM дереве
-    *   Функции `Bq`, `Cq`, `Dq`, `Fq`, `Aq` - для работы с тегами в head и body.
-    *    Функции `Gq`, `yq`, `Iq`, `Mq`, `Jq`, `Kq`, `Lq`, `Oq`, `Pq`, `Qq`, `Rq`, `Eq` и `Sq` для управление объявлением, обработкой callback, загрузкой js.
-    *   Функция `Hq` создает timeout.
-    *  Анонимная функция в конце кода является точкой входа и инициализирует весь скрипт.
+4.  **Разбор параметров и конфигураций:**
+    *   Разбор URL и параметров.
+    *   Обработка cookie.
+    *   Разбор и анализ JSON.
+    *   Работа с DOM-атрибутами и CSS-свойствами.
 
-### <mermaid>
+5.  **Работа с Promise:**
+    *   Создание и разрешение промисов.
+    *   Использование `async/await`.
+
+6.  **Функциональное программирование:**
+    *   Использование функций высшего порядка (например, `map`, `filter`, `forEach`, `reduce`).
+    *   Создание замыканий.
+
+7.  **Общая логика:**
+    *   Регистрация и удаление событий.
+    *   Управление таймерами.
+    *   Обработка ошибок и логирование.
+
+8.  **Взаимодействие с другими скриптами:**
+    *   Поиск и разбор скриптов на странице.
+    *   Взаимодействие с `adsbygoogle`.
+    *   Взаимодействие с AMP.
+
+**Примеры по блокам:**
+
+*   **Инициализация:** `var ca=ba(this);` - определяет глобальный объект. `let va=(new Date).getTime();` - получает текущее время.
+*   **Типы:** `a=xa(String(a));` - обрезает пробелы у строки. `a=parseInt(a,10);` - преобразует строку в число.
+*   **Браузерные API:** `Sd("IMG",a.document);` - создает элемент `IMG`. `b.fetch(a)` - отправляет запрос.
+*   **Разбор параметров:** `Od(a,"client");` - извлекает параметры из URL. `(this.g.cookie||"").split(";")` - разбивает cookie на пары ключ-значение.
+*   **Promise:** `Promise.resolve().then(de);` - создает промис и вызывает функцию `de` в асинхронном режиме.
+*   **Функции высшего порядка:** `a.forEach(c=>{b[c[0]]=c[1]});` - итерирует по массиву.
+*   **Общая логика:** `qd(f,"load",g);` - добавляет слушателя события. `setTimeout(()=>{throw a;},0)` - отложенное выбрасывание исключения.
+*   **Взаимодействие со скриптами:** `Rd(p.document,this.C)` - загружает внешний JS-скрипт.
+
+### 2.  **<mermaid>**
 
 ```mermaid
 flowchart TD
-    subgraph Initial Setup
-        Start[Начало]
-        InitializeGlobalObjects[Инициализация глобальных объектов и функций]
-        SetCompatibility[Определение совместимости с ES6]
-        CreateGlobalObject[Создание объекта ea для хранения глобальных переменных]
-        DefineHelperFunctions[Определение вспомогательных функций]
-        InitializeEnvironment[Настройка параметров окружения]
+    subgraph Global Scope
+        Start[Start Script Execution]
+        GlobalObj(Determine Global Object)
+        GlobalVars[Initialize Global Variables]
+        StringOps(String Manipulation Functions)
+        TypeOps(Type Conversions and Validation)
+        BrowserAPI[Browser API Calls (DOM, Fetch, etc.)]
+        Parser(Parsing Logic)
+        ErrorHandling[Error Logging and Reporting]
+        AsyncOps[Async Operations (Promises, Timers)]
+        FunctionalUtils[Functional Programming Utilities]
+        MainLogic[Main Control Flow Logic]
+         ExternalScripts[Interaction with External Scripts]
+         AdConfig[Handling Ad Configurations]
+          PerformanceTracking[Performance Measurement]
+        
     end
-
-    Start --> InitializeGlobalObjects
-    InitializeGlobalObjects --> SetCompatibility
-    SetCompatibility --> CreateGlobalObject
-    CreateGlobalObject --> DefineHelperFunctions
-    DefineHelperFunctions --> InitializeEnvironment
-
-    subgraph Feature Flags and Config
-        GetFlagValues[Получение значений флагов]
-        ApplySettings[Применение настроек на основе флагов]
+        
+        
+    Start --> GlobalObj
+        GlobalObj --> GlobalVars
+        GlobalVars --> StringOps
+        StringOps --> TypeOps
+        TypeOps --> BrowserAPI
+        BrowserAPI --> Parser
+        Parser --> ErrorHandling
+        ErrorHandling --> AsyncOps
+         AsyncOps --> FunctionalUtils
+        FunctionalUtils --> MainLogic
+        MainLogic --> ExternalScripts
+        ExternalScripts-->AdConfig
+        AdConfig-->PerformanceTracking
+        PerformanceTracking-->End[End Script Execution]
+       
+     subgraph ClosureLibrary 
+        CLOSURE_START[Closure Library Start]
+        CLOSURE_FLAGS[Handle Closure Flags]
+        CLOSURE_BIND[Closure Bind Functions]
+        CLOSURE_BASE[Closure Base Functions]
+        CLOSURE_ARRAY[Closure Array and String Functions]
+        CLOSURE_OBJECT[Closure Object Functions]
+        CLOSURE_UID[Closure UID Generation]
+       CLOSURE_END[Closure Library End]
+       
     end
-    InitializeEnvironment --> GetFlagValues
-    GetFlagValues --> ApplySettings
-
-
-    subgraph String and Encoding
-        StringProcessing[Обработка строк]
-        Base64Decoding[Декодирование base64 строк]
-        Base64EncodingSetup[Настройка алфавита base64]
+         CLOSURE_START-->CLOSURE_FLAGS
+         CLOSURE_FLAGS-->CLOSURE_BIND
+         CLOSURE_BIND-->CLOSURE_BASE
+         CLOSURE_BASE-->CLOSURE_ARRAY
+        CLOSURE_ARRAY-->CLOSURE_OBJECT
+         CLOSURE_OBJECT-->CLOSURE_UID
+         CLOSURE_UID-->CLOSURE_END
+          
+        
+  subgraph StructuredData
+        StartSD[Start Structred Data]
+         ClassM[Class M: Base class for structured data]
+         JSONSerial[toJSON method: Serialize structured data to JSON]
+          CreateStruct[Create Structured data object]
+        TransformStruct[Transform structured data]
+        SD_END[End structured data operations]
+        
     end
-     ApplySettings --> StringProcessing
-    StringProcessing --> Base64Decoding
-    Base64Decoding --> Base64EncodingSetup
-
-    subgraph Numerical and Bit Operations
-         NumberConversion[Преобразование чисел в 64-битное представление]
-        NumberToStringConversion[Преобразование чисел в строку]
-        SafeIntegerConversion[Безопасное преобразование в строку и целое число]
+        StartSD-->ClassM
+         ClassM-->JSONSerial
+         JSONSerial-->CreateStruct
+        CreateStruct-->TransformStruct
+        TransformStruct-->SD_END
+        
+        
+ subgraph AdHandling
+    AdHandling_start[Start Ad Handling]
+       PlacementAnalysis[Analyze and Validate Ad Placements]
+        AdRendering[Render Ad Slots]
+        AdConfigApply[Apply Ad Configurations]
+       AdSetup[Setup Ad Elements]
+       AdEvents[Register and Handle Ad Events]
+       AdReporting[Report Ad Performance]
+     AdHandling_end[End Ad Handling]
     end
-    Base64EncodingSetup --> NumberConversion
-    NumberConversion --> NumberToStringConversion
-    NumberToStringConversion --> SafeIntegerConversion
+        AdHandling_start-->PlacementAnalysis
+       PlacementAnalysis-->AdRendering
+        AdRendering-->AdConfigApply
+       AdConfigApply-->AdSetup
+       AdSetup-->AdEvents
+       AdEvents-->AdReporting
+       AdReporting-->AdHandling_end
+        
+        
 
-    subgraph Data Types and Objects
-        ObjectValidation[Проверки типов объектов]
-        ObjectManipulation[Управление флагами объектов]
-        ErrorHandling[Обработка ошибок]
-        TypeValidation[Проверка типов данных]
-         ObjectCreation[Создание объектов]
-    end
-    SafeIntegerConversion --> ObjectValidation
-    ObjectValidation --> ObjectManipulation
-    ObjectManipulation --> ErrorHandling
-     ErrorHandling --> TypeValidation
-     TypeValidation --> ObjectCreation
+```
 
+**Объяснение зависимостей `mermaid`:**
 
-    subgraph Structured Data Handling
-        ArrayObjectManipulation[Работа с массивами и объектами]
-        ObjectCloning[Клонирование объектов]
-        FlagManagement[Управление флагами объектов]
-        ProxySetup[Настройка прокси-объектов]
-        OffsetValueAccess[Доступ к значениям по смещению]
-        DataModification[Изменение значений объектов по ключу]
-        ValueExtraction[Извлечение значений]
-    end
-    ObjectCreation --> ArrayObjectManipulation
-    ArrayObjectManipulation --> ObjectCloning
-    ObjectCloning --> FlagManagement
-    FlagManagement --> ProxySetup
-    ProxySetup --> OffsetValueAccess
-    OffsetValueAccess --> DataModification
-    DataModification --> ValueExtraction
+*   **`Global Scope`:**  Представляет собой основной поток выполнения скрипта, включая все глобальные переменные и функции.
+    *   **`Start Script Execution`**: Точка начала выполнения скрипта.
+    *   **`GlobalObj`**: Определяет глобальный объект, например, window или globalThis.
+    *   **`GlobalVars`**:  Инициализирует глобальные переменные, необходимые для работы скрипта.
+    *   **`StringOps`**: Группа функций, предназначенных для манипуляции со строками (обрезание, сравнение и т.д.).
+    *   **`TypeOps`**: Набор функций для преобразования и проверки типов данных.
+    *   **`BrowserAPI`**:  Содержит вызовы API браузера, такие как работа с DOM, fetch, storage и пр.
+    *   **`Parser`**:  Различные функции для разбора входных данных (URL, JSON, cookie и пр.).
+    *   **`ErrorHandling`**:  Отвечает за перехват, обработку и логирование ошибок.
+    *   **`AsyncOps`**:  Содержит логику для работы с асинхронными операциями, включая промисы и таймеры.
+    *   **`FunctionalUtils`**:  Различные утилиты для работы в функциональном стиле.
+    *    **`MainLogic`**: Основная логика управления потоком выполнения скрипта.
+     *  **`ExternalScripts`**: Логика взаимодействия с внешними скриптами, например, через динамическую загрузку и вызов функций.
+     *  **`AdConfig`**: Логика обработки конфигурационных данных для рекламных блоков.
+     *    **`PerformanceTracking`**: Функции для измерения и отслеживания производительности.
+      * **`End Script Execution`**: Точка завершения выполнения скрипта.
+*   **`ClosureLibrary`**: Представляет собой набор функций, используемых в Closure Library, обычно для управления флагами, биндинга функций и т.д.
+    *   **`CLOSURE_START`**: Начальная точка Closure Library.
+    *   **`CLOSURE_FLAGS`**: Инициализация и обработка флагов Closure Library.
+    *   **`CLOSURE_BIND`**: Управление привязкой функций (bind, apply).
+    *   **`CLOSURE_BASE`**: Базовые функции Closure Library.
+    *   **`CLOSURE_ARRAY`**:  Функции для работы с массивами и строками.
+    *   **`CLOSURE_OBJECT`**:  Функции для работы с объектами.
+    *   **`CLOSURE_UID`**: Функции для генерации уникальных идентификаторов.
+     *  **`CLOSURE_END`**: Конечная точка Closure Library.
+*    **`StructuredData`**: Представляет собой механизмы для работы со структурированными данными, включая создание, сериализацию и трансформацию.
+    *  **`Start Structred Data`**: Начальная точка работы со структурированными данными.
+     * **`ClassM`**: Базовый класс для создания структурированных данных.
+     *   **`JSONSerial`**: Сериализация данных в формат JSON.
+     *   **`CreateStruct`**: Создание объектов структурированных данных.
+     *    **`TransformStruct`**: Трансформация структурированных данных.
+     *   **`SD_END`**: Конечная точка работы со структурированными данными.
+*  **`AdHandling`**: Логика работы с рекламными блоками, включая загрузку конфигураций и рендеринг.
+    *   **`AdHandling_start`**: Начальная точка логики обработки рекламы.
+    *   **`PlacementAnalysis`**: Логика для анализа и валидации мест размещения рекламы.
+    *   **`AdRendering`**: Логика для отрисовки рекламных блоков.
+    *   **`AdConfigApply`**: Применение конфигураций к рекламным блокам.
+    *   **`AdSetup`**: Настройка элементов для отображения рекламы.
+    *   **`AdEvents`**: Регистрация и обработка событий, связанных с рекламой.
+    *  **`AdReporting`**: Логика отправки отчетов о производительности рекламных блоков.
+    *    **`AdHandling_end`**: Конечная точка логики обработки рекламы.
 
+### 3. **<объяснение>**
 
-     subgraph Core Data Classes
-        DataClassDefinition[Определение класса M для работы с данными]
-        InstanceHandling[Работа с экземплярами класса M]
-        DataValidationClass[Работа с валидацией]
-    end
-    ValueExtraction --> DataClassDefinition
-    DataClassDefinition --> InstanceHandling
-    InstanceHandling --> DataValidationClass
-    
+**Общее:**
 
-     subgraph Event and Function Handling
-        EventManagement[Управление событиями]
-        ContextBinding[Привязка контекста]
-    end
-    DataValidationClass --> EventManagement
-    EventManagement --> ContextBinding
+*   Код представляет собой обфусцированный JavaScript, вероятно, сгенерированный компилятором Closure Compiler, что объясняет использование сокращенных имен переменных и функций.
+*   Основная цель кода — управление и отображение рекламы на веб-странице, включая логику для определения размеров слотов, загрузки и применения конфигураций, а также обработку событий, связанных с рекламой.
+*   В коде используется как императивный, так и функциональный стили программирования, что характерно для скомпилированного JavaScript.
+*   Множество функций и классов предназначены для управления состоянием, обработки ошибок и измерения производительности.
+*   Код активно использует браузерные API и DOM-манипуляции.
 
+**Импорты:**
 
-    subgraph URL Management
-        URLClassDefinition[Определение класса xd для работы с URL]
-        SecureURLHandling[Безопасная работа с URL]
-        URLCreation[Создание URL]
-    end
-    ContextBinding --> URLClassDefinition
-    URLClassDefinition --> SecureURLHandling
-    SecureURLHandling --> URLCreation
+*   Код не содержит явных `import` в классическом JavaScript, как в ES модулях. Однако в начале кода есть обфусцированные вызовы функций, которые, вероятно, являются частями Closure Library, используемые для работы со свойствами объектов и обработки флагов.
 
+**Классы:**
 
-    subgraph Styling and DOM
-       DimensionsClassDefinition[Определение класса Fd для работы с размерами]
-        DOMManipulation[Работа с DOM]
-        DeviceTypeDetection[Определение типа устройства]
-        URLParameterHandling[Работа с параметрами URL]
-        ScriptInsertion[Вставка скриптов в DOM]
-        StyleExtraction[Получение стилей элементов]
-        RandomNumberGeneration[Генерация случайных чисел]
-        ObjectIteration[Работа с объектами]
-        StringHash[Вычисление hash строк]
-        CSSHandling[Работа с CSS]
-        DeviceDetection[Определение типа устройства]
-        QueueManagement[Управление очередью]
-         OriginTrial[Вставка origin-trial metatag]
-       UniqueId[Генерация уникальных ID]
-       AsyncImgRequest[Асинхронный запрос]
-       GETRequest[Отправка GET запроса]
-    end
-    URLCreation --> DimensionsClassDefinition
-    DimensionsClassDefinition --> DOMManipulation
-    DOMManipulation --> DeviceTypeDetection
-    DeviceTypeDetection --> URLParameterHandling
-    URLParameterHandling --> ScriptInsertion
-    ScriptInsertion --> StyleExtraction
-     StyleExtraction --> RandomNumberGeneration
-     RandomNumberGeneration --> ObjectIteration
-     ObjectIteration --> StringHash
-     StringHash --> CSSHandling
-     CSSHandling --> DeviceDetection
-     DeviceDetection --> QueueManagement
-     QueueManagement --> OriginTrial
-     OriginTrial --> UniqueId
-      UniqueId --> AsyncImgRequest
-     AsyncImgRequest --> GETRequest
+*   **`M` (и производные)**: Классы `M` и его производные (например, `ld`, `md`, `df`, `gf`, `If` и т.д.) представляют собой базовую структуру для работы со структурированными данными. Они имеют метод `toJSON`, который используется для сериализации данных в JSON. Эти классы используют обфусцированный метод `D`, который, вероятно, выполняет операции получения/установки данных.
+*   **`Zi` (и производные):**  Классы `Zi` (и его производные, например, `Y`, `lo`, `qo`, `so`) представляют собой логику для управления размером рекламных блоков, включая высоту, ширину, а также некоторые логические зависимости, используемые для расчетов и принятия решений о размере.
+*   **`R` (и производные):** Классы `R`, `Jh` и `Kh` используются для определения глобальных констант и настроек, имеющих значение по умолчанию и представляющие собой настройки для конкретных рекламных блоков или технологий.
+*   **`Q`**: Базовый класс для определения идентификатора рекламного места.
+*   **`sh`**: Класс для управления настройками и порядком рекламных мест.
+*   **`rh`, `qh`:** Классы для реализации работы с хэш-таблицами и сетами.
+*   **`kh`:** Класс для представления результата операций в формате Either.
+*   **`Sk`:** Класс для работы с TCF API.
+*   **`Vl`:** Класс для работы с UCP API.
+*   **`xk`:** Класс для управления логикой вставки рекламы.
+*   **`tf`:** Базовый класс для таймеров.
+*   **`ng`**: Класс для организации очередей запросов к бекенду.
+*   **`tg`**: Класс для управления логикой установки рекламы.
+*  **`W`:** Класс для обработки ошибок и их отправки.
 
-    subgraph Storage and Cookies
-        CookieManagement[Работа с куками]
-        LocalStorageHandling[Работа с localStorage]
-     end
-    GETRequest --> CookieManagement
-    CookieManagement --> LocalStorageHandling
+**Функции:**
 
-     subgraph Log Management
-        LogSending[Отправка логов]
-        ContextExtraction[Получение контекста страницы]
-        IdGeneration[Генерация ID]
-        StandaloneDetection[Определение standalone]
-        ClientNormalization[Нормализация названия клиента]
-        ErrorClassDefinition[Определение класса Be для работы с ошибками]
-        URLDataExtraction[Работа с URL]
-        TimeTracking[Отслеживание времени]
-        TimingData[Сбор таймингов]
-        ReportHandling[Сбор и отправка данных]
-        StackTraceFormatting[Форматирование стека ошибок]
-        ErrorProcessing[Обработка ошибок]
-    end
-    LocalStorageHandling --> LogSending
-    LogSending --> ContextExtraction
-     ContextExtraction --> IdGeneration
-      IdGeneration --> StandaloneDetection
-      StandaloneDetection --> ClientNormalization
-     ClientNormalization --> ErrorClassDefinition
-     ErrorClassDefinition --> URLDataExtraction
-      URLDataExtraction --> TimeTracking
-       TimeTracking --> TimingData
-       TimingData --> ReportHandling
-        ReportHandling --> StackTraceFormatting
-        StackTraceFormatting --> ErrorProcessing
+*   Множество функций для преобразования типов (`Nb`, `Ob`, `Pb`, `Qb`, `Rc`, `Uc`, и т.д.).
+*   Функции для работы со строками (`xa`, `ya`, `Qa`, `Ra`, и т.д.).
+*   Функции для работы с DOM (`Sd`, `le`, `Td`, `Hi`).
+*   Функции для отправки запросов на сервер (`pe`, `oe`, `ue`).
+*   Функции для работы с cookie (`qe`).
+*   Функции для работы с localStorage и sessionStorage (`re`, `se`).
+*   Множество вспомогательных функций для управления логикой показа рекламы (например, `uk`, `vk`, `wk`, `sk`).
 
-     subgraph Data Structure Classes
-        DataStructureClassDefinition[Определение классов для структур данных]
-        DataProcessingLogic[Реализация логики для работы со структурами данных]
-    end
-    ErrorProcessing --> DataStructureClassDefinition
-    DataStructureClassDefinition --> DataProcessingLogic
+**Переменные:**
 
-     subgraph Data Sending Mechanism
-       LogSendingClass[Определение класса для отправки данных]
-       DataPreparation[Подготовка данных]
-       DataSendMechanism[Механизм отправки]
-    end
-    DataProcessingLogic --> LogSendingClass
-    LogSendingClass --> DataPreparation
-    DataPreparation --> DataSendMechanism
+*   Многочисленные переменные используются для хранения глобальных параметров, констант и промежуточных результатов.
+*   Переменные с префиксом `google_` (например, `google_ad_client`) хранят параметры рекламных блоков.
+*   Переменные, созданные Closure Compiler (сокращенные имена), используются для уменьшения размера кода.
 
-    subgraph Configuration and Logic
-        ConfigurationManagement[Управление состоянием и хранение настроек]
-        ParameterNormalization[Нормализация параметров]
-        LogicInitialization[Инициализация логики]
-    end
-     DataSendMechanism --> ConfigurationManagement
-    ConfigurationManagement --> ParameterNormalization
-    ParameterNormalization --> LogicInitialization
+**Потенциальные ошибки и области для улучшения:**
 
-    subgraph Promises and Async
-       PromiseManagement[Создание и управление Promise]
-       AsyncOperations[Выполнение асинхронных операций]
-    end
-    LogicInitialization --> PromiseManagement
-    PromiseManagement --> AsyncOperations
+*   **Обфускация:** Из-за обфускации кода очень сложно понять его точную функциональность и взаимосвязи. Это затрудняет отладку и сопровождение.
+*   **Сложность:**  Код очень сложный, содержит много уровней абстракции. Это затрудняет понимание логики и выявление проблем.
+*   **Обработка ошибок:** Некоторые блоки `try-catch` содержат пустые `catch`, что может привести к проглатыванию ошибок.
+*   **Неэффективность:**  Множество манипуляций со строками и DOM могут привести к снижению производительности.
 
-     subgraph Map Handling
-        MapManagement[Управление Map]
-         KeyHandling[Обработка ключей Map]
-    end
-   AsyncOperations --> MapManagement
-   MapManagement --> KeyHandling
+**Взаимосвязи с другими частями проекта:**
 
-    subgraph Values Management
-       ValueDefinition[Определение контейнера значений]
-        ValueManipulation[Работа со значениями]
-    end
-    KeyHandling --> ValueDefinition
-     ValueDefinition --> ValueManipulation
-     
-    subgraph Set Handling
-         SetManagement[Работа с наборами]
-    end
-     ValueManipulation --> SetManagement
+*   Код является частью инфраструктуры управления рекламой, взаимодействует с другими скриптами, фреймворками и API, предоставляемыми Google AdSense.
+*   Он является клиентом для различных серверов Google, таких как `pagead2.googlesyndication.com`.
 
-      subgraph Error Handling
-        ErrorDefinition[Определение класса Q для работы с ошибками]
-       ErrorDataProcessing[Работа с данными ошибок]
-    end
-    SetManagement --> ErrorDefinition
-    ErrorDefinition --> ErrorDataProcessing
-    
-   subgraph Dimension Classes
-       DimensionClassDefinition[Определение класса Fd для работы с размерами]
-    end
-     ErrorDataProcessing --> DimensionClassDefinition
-     
-    subgraph Core Settings
-      SettingsDataDefinition[Определение классов настроек]
-        ConfigAccess[Получение конфигураций]
-    end
-     DimensionClassDefinition --> SettingsDataDefinition
-      SettingsDataDefinition --> ConfigAccess
-      
-     subgraph DOM Element Check
-       HTMLElementCheck[Проверка element]
-    end
-    ConfigAccess --> HTMLElementCheck
-
-    subgraph CSS Dimension and Style Handling
-        StyleHandling[Определение стилей]
-        DimensionCalculation[Вычисление размеров]
-    end
-     HTMLElementCheck --> StyleHandling
-    StyleHandling --> DimensionCalculation
+**Цепочка взаимосвязей:**
+1. **Загрузка скрипта:** Скрипт загружается в контексте веб-страницы, которая настраивается для отображения рекламы.
+2. **Инициализация:** После загрузки скрипт проводит инициализацию, определяет глобальный контекст, параметры и утилиты.
+3. **Разбор параметров:** Скрипт разворачивает параметры конфигурации рекламных блоков и применяет их.
+4.  **Работа с DOM:** Ищет и обрабатывает рекламные блоки на странице (`ins.adsbygoogle`), устанавливает размеры и стили.
+5.  **Получение конфигураций:**  Загружает конфигурации рекламы (возможно, из `localStorage` или сессии).
+6.  **Загрузка внешних ресурсов:** Динамически загружает дополнительные скрипты, если требуется.
+7.  **Установка рекламы:**  Вставляет рекламные блоки, настраивает их и отображает на странице.
+8.  **Обработка событий:**  Устанавливает слушатели событий для отслеживания действий пользователя и состояния рекламных блоков.
+9.  **Отслеживание производительности:**  Использует `performance` API для измерения времени загрузки, взаимодействия и отрисовки.
+10. **Логирование и отчетность:**  Собирает данные и отправляет их на сервер для логирования и анализа.

@@ -1,769 +1,875 @@
-# Модуль `graber`
+# Модуль `graber.py`
 
 ## Обзор
 
-Модуль `graber` представляет собой базовый класс для сбора данных со страниц HTML поставщиков. Он использует веб-драйвер для извлечения целевых полей, таких как название, описание, спецификация, артикул и цена. Местоположение полей определяется локаторами, хранящимися в JSON-файлах в директории `locators` каждого поставщика. Модуль также предоставляет возможность переопределения функций для нестандартной обработки полей товара.
+Модуль `graber.py` представляет собой базовый класс `Graber` для сбора данных о товарах со страниц HTML поставщиков. Этот класс использует веб-драйвер для извлечения целевых полей, таких как название, описание, спецификация, артикул, цена и т.д. Местоположение каждого поля определяется с помощью локаторов, которые хранятся в JSON-файлах в директории `locators` каждого поставщика.
 
 ## Оглавление
-- [Класс `Context`](#класс-context)
-- [Декоратор `close_pop_up`](#декоратор-close_pop_up)
-- [Класс `Graber`](#класс-graber)
-    - [Метод `__init__`](#метод-__init__)
-    - [Метод `error`](#метод-error)
-    - [Метод `set_field_value`](#метод-set_field_value)
-    - [Метод `grab_page`](#метод-grab_page)
-    - [Метод `additional_shipping_cost`](#метод-additional_shipping_cost)
-    - [Метод `delivery_in_stock`](#метод-delivery_in_stock)
-    - [Метод `active`](#метод-active)
-    - [Метод `additional_delivery_times`](#метод-additional_delivery_times)
-    - [Метод `advanced_stock_management`](#метод-advanced_stock_management)
-    - [Метод `affiliate_short_link`](#метод-affiliate_short_link)
-    - [Метод `affiliate_summary`](#метод-affiliate_summary)
-    - [Метод `affiliate_summary_2`](#метод-affiliate_summary_2)
-    - [Метод `affiliate_text`](#метод-affiliate_text)
-    - [Метод `affiliate_image_large`](#метод-affiliate_image_large)
-    - [Метод `affiliate_image_medium`](#метод-affiliate_image_medium)
-    - [Метод `affiliate_image_small`](#метод-affiliate_image_small)
-    - [Метод `available_date`](#метод-available_date)
-    - [Метод `available_for_order`](#метод-available_for_order)
-    - [Метод `available_later`](#метод-available_later)
-    - [Метод `available_now`](#метод-available_now)
-    - [Метод `additional_categories`](#метод-additional_categories)
-    - [Метод `cache_default_attribute`](#метод-cache_default_attribute)
-    - [Метод `cache_has_attachments`](#метод-cache_has_attachments)
-    - [Метод `cache_is_pack`](#метод-cache_is_pack)
-    - [Метод `condition`](#метод-condition)
-    - [Метод `customizable`](#метод-customizable)
-    - [Метод `date_add`](#метод-date_add)
-    - [Метод `date_upd`](#метод-date_upd)
-    - [Метод `delivery_out_stock`](#метод-delivery_out_stock)
-    - [Метод `depth`](#метод-depth)
-    - [Метод `description`](#метод-description)
-    - [Метод `description_short`](#метод-description_short)
-    - [Метод `id_category_default`](#метод-id_category_default)
-    - [Метод `id_default_combination`](#метод-id_default_combination)
-    - [Метод `id_product`](#метод-id_product)
-    - [Метод `locale`](#метод-locale)
-    - [Метод `id_default_image`](#метод-id_default_image)
-    - [Метод `ean13`](#метод-ean13)
-    - [Метод `ecotax`](#метод-ecotax)
-    - [Метод `height`](#метод-height)
-    - [Метод `how_to_use`](#метод-how_to_use)
-    - [Метод `id_manufacturer`](#метод-id_manufacturer)
-    - [Метод `id_supplier`](#метод-id_supplier)
-    - [Метод `id_tax`](#метод-id_tax)
-    - [Метод `id_type_redirected`](#метод-id_type_redirected)
-    - [Метод `images_urls`](#метод-images_urls)
-    - [Метод `indexed`](#метод-indexed)
-    - [Метод `ingredients`](#метод-ingredients)
-    - [Метод `meta_description`](#метод-meta_description)
-    - [Метод `meta_keywords`](#метод-meta_keywords)
-    - [Метод `meta_title`](#метод-meta_title)
-    - [Метод `is_virtual`](#метод-is_virtual)
-    - [Метод `isbn`](#метод-isbn)
-    - [Метод `link_rewrite`](#метод-link_rewrite)
-    - [Метод `location`](#метод-location)
-    - [Метод `low_stock_alert`](#метод-low_stock_alert)
-    - [Метод `low_stock_threshold`](#метод-low_stock_threshold)
-    - [Метод `minimal_quantity`](#метод-minimal_quantity)
-    - [Метод `mpn`](#метод-mpn)
-    - [Метод `name`](#метод-name)
-    - [Метод `online_only`](#метод-online_only)
-    - [Метод `on_sale`](#метод-on_sale)
-    - [Метод `out_of_stock`](#метод-out_of_stock)
-    - [Метод `pack_stock_type`](#метод-pack_stock_type)
-    - [Метод `price`](#метод-price)
-    - [Метод `product_type`](#метод-product_type)
-    - [Метод `quantity`](#метод-quantity)
-    - [Метод `quantity_discount`](#метод-quantity_discount)
-    - [Метод `redirect_type`](#метод-redirect_type)
-    - [Метод `reference`](#метод-reference)
-    - [Метод `show_condition`](#метод-show_condition)
-    - [Метод `show_price`](#метод-show_price)
-     - [Метод `state`](#метод-state)
-    -  [Метод `text_fields`](#метод-text_fields)
-    -  [Метод `unit_price_ratio`](#метод-unit_price_ratio)
-    -  [Метод `unity`](#метод-unity)
-    -  [Метод `upc`](#метод-upc)
-    -  [Метод `uploadable_files`](#метод-uploadable_files)
-    -   [Метод `default_image_url`](#метод-default_image_url)
-    -  [Метод `visibility`](#метод-visibility)
-    -  [Метод `weight`](#метод-weight)
-    -  [Метод `wholesale_price`](#метод-wholesale_price)
-    -  [Метод `width`](#метод-width)
-    -  [Метод `specification`](#метод-specification)
-    - [Метод `link`](#метод-link)
-    - [Метод `byer_protection`](#метод-byer_protection)
-    -  [Метод `customer_reviews`](#метод-customer_reviews)
-    -  [Метод `link_to_video`](#метод-link_to_video)
-    -  [Метод `local_saved_image`](#метод-local_saved_image)
-    -  [Метод `local_saved_video`](#метод-local_saved_video)
 
-## Класс `Context`
+- [Классы](#классы)
+    - [`Context`](#context)
+    - [`Graber`](#graber)
+- [Декораторы](#декораторы)
+    - [`close_pop_up`](#close_pop_up)
+- [Функции](#функции)
+    - [`set_field_value`](#set_field_value)
+    - [`grab_page`](#grab_page)
+    - [`error`](#error)
+- [Методы Graber](#методы-graber)
+    - [`additional_shipping_cost`](#additional_shipping_cost)
+    - [`delivery_in_stock`](#delivery_in_stock)
+    - [`active`](#active)
+    - [`additional_delivery_times`](#additional_delivery_times)
+    - [`advanced_stock_management`](#advanced_stock_management)
+    - [`affiliate_short_link`](#affiliate_short_link)
+    - [`affiliate_summary`](#affiliate_summary)
+    - [`affiliate_summary_2`](#affiliate_summary_2)
+    - [`affiliate_text`](#affiliate_text)
+    - [`affiliate_image_large`](#affiliate_image_large)
+    - [`affiliate_image_medium`](#affiliate_image_medium)
+    - [`affiliate_image_small`](#affiliate_image_small)
+    - [`available_date`](#available_date)
+    - [`available_for_order`](#available_for_order)
+    - [`available_later`](#available_later)
+    - [`available_now`](#available_now)
+    - [`additional_categories`](#additional_categories)
+    - [`cache_default_attribute`](#cache_default_attribute)
+    - [`cache_has_attachments`](#cache_has_attachments)
+    - [`cache_is_pack`](#cache_is_pack)
+    - [`condition`](#condition)
+    - [`customizable`](#customizable)
+    - [`date_add`](#date_add)
+    - [`date_upd`](#date_upd)
+    - [`delivery_out_stock`](#delivery_out_stock)
+    - [`depth`](#depth)
+    - [`description`](#description)
+    - [`description_short`](#description_short)
+    - [`id_category_default`](#id_category_default)
+    - [`id_default_combination`](#id_default_combination)
+    - [`id_product`](#id_product)
+    - [`locale`](#locale)
+    - [`id_default_image`](#id_default_image)
+    - [`ean13`](#ean13)
+    - [`ecotax`](#ecotax)
+    - [`height`](#height)
+    - [`how_to_use`](#how_to_use)
+    - [`id_manufacturer`](#id_manufacturer)
+    - [`id_supplier`](#id_supplier)
+    - [`id_tax`](#id_tax)
+    - [`id_type_redirected`](#id_type_redirected)
+    - [`images_urls`](#images_urls)
+    - [`indexed`](#indexed)
+    - [`ingredients`](#ingredients)
+    - [`meta_description`](#meta_description)
+    - [`meta_keywords`](#meta_keywords)
+    - [`meta_title`](#meta_title)
+    - [`is_virtual`](#is_virtual)
+    - [`isbn`](#isbn)
+    - [`link_rewrite`](#link_rewrite)
+    - [`location`](#location)
+    - [`low_stock_alert`](#low_stock_alert)
+    - [`low_stock_threshold`](#low_stock_threshold)
+    - [`minimal_quantity`](#minimal_quantity)
+    - [`mpn`](#mpn)
+    - [`name`](#name)
+    - [`online_only`](#online_only)
+    - [`on_sale`](#on_sale)
+    - [`out_of_stock`](#out_of_stock)
+    - [`pack_stock_type`](#pack_stock_type)
+    - [`price`](#price)
+    - [`product_type`](#product_type)
+    - [`quantity`](#quantity)
+    - [`quantity_discount`](#quantity_discount)
+    - [`redirect_type`](#redirect_type)
+    - [`reference`](#reference)
+    - [`show_condition`](#show_condition)
+    - [`show_price`](#show_price)
+    - [`state`](#state)
+    - [`text_fields`](#text_fields)
+    - [`unit_price_ratio`](#unit_price_ratio)
+    - [`unity`](#unity)
+    - [`upc`](#upc)
+    - [`uploadable_files`](#uploadable_files)
+    - [`default_image_url`](#default_image_url)
+    - [`visibility`](#visibility)
+    - [`weight`](#weight)
+    - [`wholesale_price`](#wholesale_price)
+    - [`width`](#width)
+    - [`specification`](#specification)
+     - [`link`](#link)
+    -   [`byer_protection`](#byer_protection)
+    -   [`customer_reviews`](#customer_reviews)
+     - [`link_to_video`](#link_to_video)
+    - [`local_saved_image`](#local_saved_image)
+    - [`local_saved_video`](#local_saved_video)
+    
+## Классы
 
-### Описание
-Класс `Context` предназначен для хранения глобальных настроек, используемых в процессе сбора данных.
+### `Context`
 
-### Атрибуты
+**Описание**: Класс для хранения глобальных настроек.
 
-- `driver` (`'Driver'`): Объект драйвера, используемый для управления браузером.
-- `locator_for_decorator` (`SimpleNamespace`): Пространство имен для хранения локаторов, используемых декоратором `@close_pop_up`.
+**Атрибуты**:
+- `driver` (`'Driver'`): Объект драйвера, используется для управления браузером или другим интерфейсом.
+- `locator` (`SimpleNamespace`): Пространство имен для хранения локаторов.
 - `supplier_prefix` (`str`): Префикс поставщика.
+- `locator_for_decorator` (`SimpleNamespace`): Локатор для использования в декораторе `@close_pop_up`.
 
-## Декоратор `close_pop_up`
+### `Graber`
 
-### Описание
-Декоратор `close_pop_up` используется для закрытия всплывающих окон перед выполнением основной логики функции.
+**Описание**: Базовый класс сбора данных со страницы для всех поставщиков.
 
-### Параметры
+**Методы**:
+- `__init__`: Инициализирует экземпляр класса `Graber`.
+- `set_field_value`: Универсальная функция для установки значений полей с обработкой ошибок.
+- `grab_page`: Асинхронная функция для сбора полей продукта.
+- `error`: Обработчик ошибок для полей.
 
-- `value` (`'Driver'`, optional): Дополнительное значение для декоратора. По умолчанию `None`.
+## Декораторы
 
-### Возвращает
+### `close_pop_up`
 
+**Описание**: Создает декоратор для закрытия всплывающих окон перед выполнением основной логики функции.
+
+**Параметры**:
+- `value` (`'Driver'`, optional): Дополнительное значение для декоратора.
+
+**Возвращает**:
 - `Callable`: Декоратор, оборачивающий функцию.
 
-## Класс `Graber`
+## Функции
 
-### Описание
-Базовый класс для сбора данных со страницы для всех поставщиков.
-
-### Методы
-
-#### `__init__`
-
-**Описание**: Инициализация класса `Graber`.
-
-**Параметры**:
-- `supplier_prefix` (`str`): Префикс поставщика.
-- `driver` (`'Driver'`): Экземпляр класса `Driver`.
-
-#### `error`
-
-**Описание**: Обработчик ошибок для полей.
-
-**Параметры**:
-- `field` (`str`): Название поля, для которого возникла ошибка.
-
-#### `set_field_value`
-
+### `set_field_value`
 **Описание**: Универсальная функция для установки значений полей с обработкой ошибок.
-
+    
 **Параметры**:
 - `value` (`Any`): Значение для установки.
 - `locator_func` (`Callable[[], Any]`): Функция для получения значения из локатора.
 - `field_name` (`str`): Название поля.
 - `default` (`Any`, optional): Значение по умолчанию. По умолчанию пустая строка.
-
+    
 **Возвращает**:
 - `Any`: Установленное значение.
 
-#### `grab_page`
-
+### `grab_page`
 **Описание**: Асинхронная функция для сбора полей продукта.
-
+    
 **Параметры**:
 - `args` (`tuple`): Кортеж с названиями полей для сбора.
 - `kwards` (`dict`): Словарь с ключами и значениями для каждого поля.
-
+    
 **Возвращает**:
 - `ProductFields`: Собранные поля продукта.
 
-#### `additional_shipping_cost`
-
-**Описание**: Извлекает и устанавливает стоимость дополнительной доставки.
-
+### `error`
+**Описание**: Обработчик ошибок для полей.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `field` (`str`): Название поля.
 
-#### `delivery_in_stock`
+## Методы Graber
 
+### `additional_shipping_cost`
+**Описание**: Извлекает и устанавливает дополнительную стоимость доставки.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `delivery_in_stock`
 **Описание**: Извлекает и устанавливает статус наличия на складе.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `active`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает статус активности товара.
-
+### `active`
+**Описание**: Извлекает и устанавливает статус активности.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs. Принимаемое значение: 1/0
 
-#### `additional_delivery_times`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `additional_delivery_times`
 **Описание**: Извлекает и устанавливает дополнительное время доставки.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `advanced_stock_management`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `advanced_stock_management`
 **Описание**: Извлекает и устанавливает статус расширенного управления запасами.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_short_link`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает партнерскую короткую ссылку.
-
+### `affiliate_short_link`
+**Описание**: Извлекает и устанавливает короткую партнерскую ссылку.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_summary`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `affiliate_summary`
 **Описание**: Извлекает и устанавливает партнерскую сводку.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_summary_2`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `affiliate_summary_2`
 **Описание**: Извлекает и устанавливает партнерскую сводку 2.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_text`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `affiliate_text`
 **Описание**: Извлекает и устанавливает партнерский текст.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_image_large`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `affiliate_image_large`
 **Описание**: Извлекает и устанавливает большое партнерское изображение.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_image_medium`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `affiliate_image_medium`
 **Описание**: Извлекает и устанавливает среднее партнерское изображение.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `affiliate_image_small`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `affiliate_image_small`
 **Описание**: Извлекает и устанавливает маленькое партнерское изображение.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `available_date`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `available_date`
 **Описание**: Извлекает и устанавливает дату доступности.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `available_for_order`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `available_for_order`
 **Описание**: Извлекает и устанавливает статус доступности для заказа.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `available_later`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `available_later`
 **Описание**: Извлекает и устанавливает статус доступности позже.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `available_now`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `available_now`
 **Описание**: Извлекает и устанавливает статус доступности сейчас.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `additional_categories`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `additional_categories`
 **Описание**: Устанавливает дополнительные категории.
-
+    
 **Параметры**:
-- `value` (`str | list`, optional): Строка или список категорий. По умолчанию `None`.
+- `value` (`Optional[str | list]`, optional): Строка или список категорий.
 
 **Возвращает**:
 - `dict`: Словарь с ID категорий.
 
-#### `cache_default_attribute`
-
-**Описание**: Извлекает и устанавливает атрибут кэша по умолчанию.
-
+### `cache_default_attribute`
+**Описание**: Извлекает и устанавливает кэшированный атрибут по умолчанию.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `cache_has_attachments`
-
-**Описание**: Извлекает и устанавливает статус наличия вложений в кэше.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `cache_is_pack`
-
-**Описание**: Извлекает и устанавливает статус того, является ли товар комплектом.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `condition`
-
-**Описание**: Извлекает и устанавливает условие товара.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `customizable`
-
-**Описание**: Извлекает и устанавливает статус настраиваемости.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `date_add`
-
-**Описание**: Извлекает и устанавливает дату добавления.
-
-**Параметры**:
-- `value` (`Optional[str  | datetime.date]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `date_upd`
-
-**Описание**: Извлекает и устанавливает дату обновления.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `delivery_out_stock`
-
-**Описание**: Извлекает и устанавливает статус доставки при отсутствии на складе.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `depth`
-
-**Описание**: Извлекает и устанавливает глубину товара.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `description`
-
-**Описание**: Извлекает и устанавливает описание товара.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `description_short`
-
-**Описание**: Извлекает и устанавливает краткое описание товара.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `id_category_default`
-
-**Описание**: Извлекает и устанавливает ID категории по умолчанию.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `id_default_combination`
-
-**Описание**: Извлекает и устанавливает ID комбинации по умолчанию.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `id_product`
-
-**Описание**: Извлекает и устанавливает ID продукта.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
 **Возвращает**:
-- `bool`: Возвращает `True` при успешном выполнении.
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-#### `locale`
+### `cache_has_attachments`
+**Описание**: Извлекает и устанавливает статус кэширования наличия вложений.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `cache_is_pack`
+**Описание**: Извлекает и устанавливает статус кэширования, является ли товар упаковкой.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `condition`
+**Описание**: Извлекает и устанавливает состояние товара.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `customizable`
+**Описание**: Извлекает и устанавливает статус настраиваемости.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `date_add`
+**Описание**: Извлекает и устанавливает дату добавления.
+    
+**Параметры**:
+- `value` (`Optional[str | datetime.date]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `date_upd`
+**Описание**: Извлекает и устанавливает дату обновления.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `delivery_out_stock`
+**Описание**: Извлекает и устанавливает статус доставки при отсутствии на складе.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `depth`
+**Описание**: Извлекает и устанавливает глубину товара.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `description`
+**Описание**: Извлекает и устанавливает описание товара.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `description_short`
+**Описание**: Извлекает и устанавливает краткое описание товара.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `id_category_default`
+**Описание**: Устанавливает ID категории по умолчанию.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха.
+
+### `id_default_combination`
+**Описание**: Извлекает и устанавливает ID комбинации по умолчанию.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `id_product`
+**Описание**: Извлекает и устанавливает ID товара.
+    
+**Параметры**:
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
+
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
+
+### `locale`
 **Описание**: Извлекает и устанавливает локаль.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `id_default_image`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.locale`.
 
+### `id_default_image`
 **Описание**: Извлекает и устанавливает ID изображения по умолчанию.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `ean13`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `ean13`
 **Описание**: Извлекает и устанавливает код EAN13.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `ecotax`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает экотакс.
-
+### `ecotax`
+**Описание**: Извлекает и устанавливает эконалог.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `height`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `height`
 **Описание**: Извлекает и устанавливает высоту товара.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `how_to_use`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает инструкцию по использованию.
-
+### `how_to_use`
+**Описание**: Извлекает и устанавливает информацию о том, как использовать товар.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `id_manufacturer`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.how_to_use`.
 
+### `id_manufacturer`
 **Описание**: Извлекает и устанавливает ID производителя.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `id_supplier`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.id_manufacturer`.
 
+### `id_supplier`
 **Описание**: Извлекает и устанавливает ID поставщика.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `id_tax`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `id_tax`
 **Описание**: Извлекает и устанавливает ID налога.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `id_type_redirected`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.id_tax`.
 
-**Описание**: Извлекает и устанавливает ID перенаправленного типа.
-
+### `id_type_redirected`
+**Описание**: Извлекает и устанавливает ID типа перенаправления.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `images_urls`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.id_type_redirected`.
 
-**Описание**: Извлекает и устанавливает URL-адреса изображений.
-
+### `images_urls`
+**Описание**: Извлекает и устанавливает URL изображений.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `indexed`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.images_urls`.
 
+### `indexed`
 **Описание**: Извлекает и устанавливает статус индексации.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `ingredients`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает ингредиенты.
-
+### `ingredients`
+**Описание**: Извлекает и устанавливает ингредиенты товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `meta_description`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает мета-описание.
-
+### `meta_description`
+**Описание**: Извлекает и устанавливает мета-описание товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `meta_keywords`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает мета-ключевые слова.
-
+### `meta_keywords`
+**Описание**: Извлекает и устанавливает мета-ключевые слова товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `meta_title`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает мета-заголовок.
-
+### `meta_title`
+**Описание**: Извлекает и устанавливает мета-заголовок товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `is_virtual`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает статус виртуальности товара.
-
+### `is_virtual`
+**Описание**: Извлекает и устанавливает статус виртуального товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `isbn`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает ISBN.
-
+### `isbn`
+**Описание**: Извлекает и устанавливает ISBN товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `link_rewrite`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает ссылку.
-
+### `link_rewrite`
+**Описание**: Извлекает и устанавливает переписанную ссылку товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `location`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает местоположение.
-
+### `location`
+**Описание**: Извлекает и устанавливает местоположение товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `low_stock_alert`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает оповещение о низком запасе.
-
+### `low_stock_alert`
+**Описание**: Извлекает и устанавливает статус оповещения о низком запасе.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `low_stock_threshold`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `low_stock_threshold`
 **Описание**: Извлекает и устанавливает порог низкого запаса.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `minimal_quantity`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает минимальное количество.
-
+### `minimal_quantity`
+**Описание**: Извлекает и устанавливает минимальное количество товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `mpn`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `mpn`
 **Описание**: Извлекает и устанавливает MPN (номер детали производителя).
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `name`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает имя товара.
-
+### `name`
+**Описание**: Извлекает и устанавливает название товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `online_only`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `online_only`
 **Описание**: Извлекает и устанавливает статус "только онлайн".
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `on_sale`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `on_sale`
 **Описание**: Извлекает и устанавливает статус "в продаже".
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `out_of_stock`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `out_of_stock`
 **Описание**: Извлекает и устанавливает статус "нет в наличии".
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `pack_stock_type`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает тип запаса комплекта.
-
+### `pack_stock_type`
+**Описание**: Извлекает и устанавливает тип запаса упаковки.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `price`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает цену.
-
+### `price`
+**Описание**: Извлекает и устанавливает цену товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `product_type`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает тип продукта.
-
+### `product_type`
+**Описание**: Извлекает и устанавливает тип товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `quantity`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает количество.
-
+### `quantity`
+**Описание**: Извлекает и устанавливает количество товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `quantity_discount`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает скидку на количество.
-
+### `quantity_discount`
+**Описание**: Извлекает и устанавливает скидку по количеству товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `redirect_type`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `redirect_type`
 **Описание**: Извлекает и устанавливает тип перенаправления.
-
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `reference`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает артикул.
-
+### `reference`
+**Описание**: Извлекает и устанавливает артикул товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `show_condition`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает отображение условия.
-
+### `show_condition`
+**Описание**: Извлекает и устанавливает статус отображения состояния товара.
+    
 **Параметры**:
-- `value` (`Optional[int]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[int]`, optional): Значение, которое можно передать в kwargs.
 
-#### `show_price`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает отображение цены.
-
+### `show_price`
+**Описание**: Извлекает и устанавливает статус отображения цены товара.
+    
 **Параметры**:
-- `value` (`Optional[int]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[int]`, optional): Значение, которое можно передать в kwargs.
 
-#### `state`
-**Описание**: Извлекает и устанавливает состояние.
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `state`
+**Описание**: Извлекает и устанавливает состояние товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `text_fields`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает текстовые поля.
-
+### `text_fields`
+**Описание**: Извлекает и устанавливает текстовые поля товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `unit_price_ratio`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает соотношение цены за единицу.
-
+### `unit_price_ratio`
+**Описание**: Извлекает и устанавливает отношение цены за единицу товара.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `unity`
-**Описание**: Извлекает и устанавливает единицу измерения.
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `unity`
+**Описание**: Извлекает и устанавливает единицу измерения товара.
+    
 **Параметры**:
-- `value` (`Optional[str]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[str]`, optional): Значение, которое можно передать в kwargs.
 
-#### `upc`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает UPC.
-
+### `upc`
+**Описание**: Извлекает и устанавливает код UPC товара.
+    
 **Параметры**:
-- `value` (`Optional[str]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[str]`, optional): Значение, которое можно передать в kwargs.
 
-#### `uploadable_files`
-**Описание**: Извлекает и устанавливает загружаемые файлы.
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `uploadable_files`
+**Описание**: Извлекает и устанавливает информацию о загружаемых файлах.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `default_image_url`
-**Описание**: Извлекает и устанавливает URL-адрес изображения по умолчанию.
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
+### `default_image_url`
+**Описание**: Извлекает и устанавливает URL изображения по умолчанию.
+    
 **Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[Any]`, optional): Значение, которое можно передать в kwargs.
 
-#### `visibility`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает видимость.
-
+### `visibility`
+**Описание**: Извлекает и устанавливает видимость товара.
+   
 **Параметры**:
-- `value` (`Optional[str]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[str]`, optional): Значение, которое можно передать в kwargs.
 
-#### `weight`
+**Возвращает**:
+- `None`: устанавливает значение в `ProductFields.visibility`.
 
-**Описание**: Извлекает и устанавливает вес.
-
+### `weight`
+**Описание**: Извлекает и устанавливает вес товара.
+    
 **Параметры**:
-- `value` (`Optional[float]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[float]`, optional): Значение, которое можно передать в kwargs.
 
-#### `wholesale_price`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает оптовую цену.
-
+### `wholesale_price`
+**Описание**: Извлекает и устанавливает оптовую цену товара.
+    
 **Параметры**:
-- `value` (`Optional[float]`, optional): Значение, которое можно передать в словаре `kwargs`.
+- `value` (`Optional[float]`, optional): Значение, которое можно передать в kwargs.
 
-#### `width`
+**Возвращает**:
+- `bool`: `True` в случае успеха, `None` в случае ошибки.
 
-**Описание**: Извлекает и устанавливает ширину.
-
-**Параметры**:
-- `value` (`Optional[float]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `specification`
-
-**Описание**: Извлекает и устанавливает спецификацию.
-
-**Параметры**:
-- `value` (`Optional[str | list]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `link`
-
-**Описание**: Извлекает и устанавливает ссылку.
-
-**Параметры**:
-- `value` (`Optional[str]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `byer_protection`
-**Описание**: Извлекает и устанавливает защиту покупателя.
-
-**Параметры**:
-- `value` (`Optional[str | list]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `customer_reviews`
-**Описание**: Извлекает и устанавливает отзывы клиентов.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `link_to_video`
-**Описание**: Извлекает и устанавливает ссылку на видео.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `local_saved_image`
-**Описание**: Извлекает, сохраняет изображение локально и устанавливает путь к нему.
-
-**Параметры**:
-- `value` (`Optional[str]`, optional): Значение, которое можно передать в словаре `kwargs`.
-
-#### `local_saved_video`
-**Описание**: Извлекает и сохраняет видео локально.
-
-**Параметры**:
-- `value` (`Optional[Any]`, optional): Значение, которое можно передать в словаре `kwargs`.
+### `width`
+**Описание**: Извлекает и устанавли

@@ -1,171 +1,170 @@
 ## <алгоритм>
 
-**Функция `md2dict(md_string: str)`:**
+1.  **`md2dict(md_string: str)`**:
+    *   Принимает строку `md_string` в формате Markdown.
+    *   Пытается извлечь JSON содержимое с помощью `extract_json_from_string(md_string)`.
+        *   **Пример:** Если `md_string = "Some text {\\"key\\": \\"value\\"}"`, то будет вызван `extract_json_from_string`.
+    *   Если JSON найден, возвращает словарь `{"json": json_content}`.
+        *   **Пример:**  `return {"json": {"key": "value"}}`.
+    *   Если JSON не найден, преобразует `md_string` в HTML с помощью `markdown(md_string)`.
+        *   **Пример:** Если `md_string = "# Section\nText"`, то  `html` будет `<h1>Section</h1>\n<p>Text</p>`.
+    *   Инициализирует пустой словарь `sections` и переменную `current_section`.
+    *   Разбивает HTML на строки и итерируется по ним.
+        *   Для каждой строки проверяет, начинается ли она с тега заголовка `<h`.
+        *   Если это заголовок, извлекает уровень заголовка и его текст.
+            *   **Пример:** Для `<h1 class="some_class">Section Title</h1>`,  `heading_level` будет 1, `section_title` будет "Section Title".
+        *   Если уровень заголовка 1, создает новую секцию в `sections`.
+            *   **Пример:** `sections = {"Section Title": []}`.
+        *   Если уровень заголовка больше 1, добавляет текст заголовка в текущую секцию, если она есть.
+            *    **Пример:** Если  `sections = {"Section Title": []}` и  `line = "<h2>Sub Section</h2>"`
+                 то `sections = {"Section Title": ["Sub Section"]}`.
+        *   Если строка не заголовок, и текущая секция есть, добавляет текст строки в текущую секцию.
+            *   **Пример:** Если `sections = {"Section Title": []}` и  `line = "<p>Some text</p>"`, то  `sections = {"Section Title": ["Some text"]}`.
+    *   Возвращает словарь `sections`.
+        *   **Пример:** `return {"Section Title": ["Some text", "Sub Section"]}`.
+    *   При возникновении ошибки логирует её и возвращает пустой словарь.
 
-1.  **Входные данные:** Строка `md_string` в формате Markdown.
-2.  **Попытка извлечения JSON:** Вызывает функцию `extract_json_from_string(md_string)` для поиска JSON-контента в строке.
-    *   **Пример:** Если `md_string` содержит `"{'key': 'value'}"`, то `extract_json_from_string` вернет `{'key': 'value'}`.
-3.  **Проверка наличия JSON:**
-    *   **Если JSON найден:** Функция возвращает словарь `{"json": json_content}` и завершает работу.
-        *   **Пример:** Если `json_content` это `{'key': 'value'}`, то функция вернет `{"json": {'key': 'value'}}`.
-    *   **Если JSON не найден:** Продолжает обработку Markdown.
-4.  **Конвертация Markdown в HTML:** Вызывает функцию `markdown(md_string)` из библиотеки `markdown2` для конвертации Markdown в HTML.
-    *   **Пример:** Если `md_string` это `"## Заголовок"`, то `markdown(md_string)` вернет `"<h2>Заголовок</h2>"`.
-5.  **Инициализация:** Создает пустой словарь `sections: Dict[str, list] = {}`, который будет хранить структурированный контент, и переменную `current_section = None` для отслеживания текущей секции.
-6.  **Разбор HTML:** Разделяет HTML на строки и начинает их обработку в цикле.
-    *   **Обработка заголовков:** Если строка начинается с `<h`, это может быть заголовок.
-        *   Извлекает уровень заголовка (h1, h2 и т.д.) с помощью регулярного выражения `r'h(\\d)'`.
-            *   **Пример:** Для строки `"<h1>Заголовок</h1>"` регулярное выражение выделит `1`.
-        *   Извлекает текст заголовка, удаляя HTML-теги.
-            *   **Пример:** Для строки `"<h1>Заголовок</h1>"` будет извлечено `"Заголовок"`.
-        *   **Если это заголовок h1:** Создает новую секцию в словаре `sections` с заголовком в качестве ключа и пустым списком в качестве значения, обновляет `current_section`.
-            *   **Пример:** Если заголовок `"Раздел 1"`, создастся элемент `sections["Раздел 1"] = []`.
-        *   **Если это заголовок h2 и выше:** Добавляет текст заголовка в список текущей секции, если `current_section` не равен `None`.
-             *   **Пример:** Если `current_section` это `"Раздел 1"`, а текст заголовка `"Подраздел 1"`, то `sections["Раздел 1"].append("Подраздел 1")`.
-    *   **Обработка текста:** Если строка не пустая и `current_section` не равен `None`, добавляет текст в список текущей секции.
-        *   Удаляет HTML-теги из строки.
-             *   **Пример:** Для строки `"<p>Текст</p>"` будет извлечено `"Текст"`.
-         *   Добавляет текст в текущую секцию.
-            *   **Пример:** Если `current_section` это `"Раздел 1"`, а текст `"Пример текста"`, то `sections["Раздел 1"].append("Пример текста")`.
-7.  **Возврат результата:** Возвращает словарь `sections`.
-8.  **Обработка ошибок:** В случае возникновения исключения при парсинге, логирует ошибку и возвращает пустой словарь `{}`.
-
-**Функция `extract_json_from_string(text: str)`:**
-
-1.  **Входные данные:** Строка `text`, в которой нужно найти JSON.
-2.  **Поиск JSON:** Ищет JSON-строку, используя регулярное выражение `r"\\{.*\\}"`.
-    *   **Пример:** Для строки `"Some text {\"key\": \"value\"} more text"` регулярка выделит `{\\"key\\": \\"value\\"}`.
-3.  **Извлечение JSON:** Если JSON найден, извлекает его с помощью `json_match.group()`
-4.  **Десериализация:** преобразует строку JSON в словарь python с помощью `eval()`.
-5.  **Возврат результата:** Возвращает словарь (JSON) если JSON найден, иначе `None`.
-6.  **Обработка ошибок:** В случае возникновения исключения при извлечении или десериализации JSON, логирует ошибку и возвращает `None`.
+2.  **`extract_json_from_string(text: str)`**:
+    *   Принимает строку `text`.
+    *   Пытается найти JSON контент в строке с помощью регулярного выражения `r"\\{.*\\}"`.
+        *   **Пример:**  Если `text = "Some text {\\"key\\": \\"value\\"}"`, то JSON будет найден.
+    *   Если JSON найден, преобразует его в словарь с помощью `eval()` и возвращает.
+        *   **Пример:**  `return {"key": "value"}`.
+    *   Если JSON не найден, возвращает `None`.
+    *   При возникновении ошибки логирует её и возвращает `None`.
 
 ## <mermaid>
 
 ```mermaid
-graph LR
-    A[Начало md2dict] --> B{Извлечь JSON};
-    B -- JSON найден --> C{Вернуть {"json": json_content}};
-    B -- JSON не найден --> D{Markdown в HTML};
-    D --> E{Инициализация словаря sections и current_section};
-    E --> F{Разбор HTML по строкам};
-    F -- Строка - заголовок h1 --> G{Создать секцию sections[section_title]};
-    G --> H{Обновить current_section};
-    H --> F;
-    F -- Строка - заголовок h2+ --> I{Добавить заголовок в current_section};
-    I --> F;
-    F -- Строка - текст --> J{Добавить текст в current_section};
-    J --> F;
-     F -- Конец HTML --> K{Вернуть sections};
-    K --> L[Конец md2dict];
-    F -- Строка не заголовок не текст --> F
-    A --> Z[Начало extract_json_from_string];
-    Z --> AA{Поиск JSON по регулярному выражению};
-    AA -- JSON найден --> AB{Извлечь JSON};
-    AB --> AC{Десериализация JSON в словарь}
-    AC --> AD{Вернуть JSON словарь};
-    AD --> AE[Конец extract_json_from_string];
-    AA -- JSON не найден --> AF{Вернуть None};
-    AF --> AE;
-    C --> L;
+flowchart TD
+    Start(Start) --> Md2DictFunc[<code>md2dict(md_string)</code><br>Convert Markdown to Dict];
+    Md2DictFunc --> ExtractJsonCall{Call <code>extract_json_from_string(md_string)</code>};
+    ExtractJsonCall -- JSON Found --> ReturnJson{"Return <code>{'json': json_content}</code>"};
+    ExtractJsonCall -- JSON Not Found --> MarkdownConvert[<code>html = markdown(md_string)</code><br>Convert Markdown to HTML];
+    MarkdownConvert --> InitSections[<code>sections = {}</code><br>Initialize Sections Dictionary];
+     InitSections --> IterateHTML[Iterate through <code>html.splitlines()</code>];
+     IterateHTML -- Line is Heading --> HeadingLevelCheck{Check Heading Level};
+     HeadingLevelCheck -- Level 1 --> CreateNewSection[Create New Section in <code>sections</code>];
+      CreateNewSection --> IterateHTML
+    HeadingLevelCheck -- Level > 1 --> AddSubheadingToSection{Add Subheading to current section if exists};
+    AddSubheadingToSection --> IterateHTML
+    IterateHTML -- Line is not Heading and has text --> AddTextToSection{Add text to current section};
+    AddTextToSection --> IterateHTML
+      IterateHTML -- No More Lines --> ReturnSections[Return <code>sections</code>];
+      IterateHTML -- Exception --> LogErrorMd2Dict[Log Error];
+    LogErrorMd2Dict --> ReturnEmptyDict[Return <code>{}</code>];
+    ReturnSections --> End(End);
+    ReturnJson --> End;
     
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-     style L fill:#f9f,stroke:#333,stroke-width:2px
-    style Z fill:#ccf,stroke:#333,stroke-width:2px
-    style AE fill:#ccf,stroke:#333,stroke-width:2px
+   
+    
+    ExtractJsonCall -- Exception --> LogErrorExtractJson[Log Error];
+    LogErrorExtractJson --> ReturnNoneExtractJson[Return <code>None</code>];
+    ReturnNoneExtractJson --> MarkdownConvert;
+   
 ```
 
-**Разбор `mermaid` диаграммы:**
+```mermaid
+flowchart TD
+    Start(Start) --> ExtractJsonFunc[<code>extract_json_from_string(text)</code><br>Extract JSON from String];
+    ExtractJsonFunc --> FindJson{Find JSON using Regex};
+    FindJson -- JSON Found --> EvalJson[<code>json_match.group()</code><br>Convert JSON with eval];
+    EvalJson --> ReturnJsonContent[Return JSON Dict];
+    FindJson -- JSON Not Found --> ReturnNone[Return <code>None</code>];
+      ExtractJsonFunc -- Exception --> LogErrorExtractJsonString[Log Error];
+    LogErrorExtractJsonString --> ReturnNoneString[Return <code>None</code>];
+    ReturnJsonContent --> End(End);
+    ReturnNone --> End;
+    ReturnNoneString --> End
+```
+### Импорты в mermaid диаграмме:
 
-*   `Начало md2dict` (A): Начало функции `md2dict`.
-*   `Извлечь JSON` (B): Вызов функции `extract_json_from_string` для извлечения JSON.
-*   `Вернуть {"json": json_content}` (C): Возврат словаря с JSON-контентом.
-*   `Markdown в HTML` (D): Конвертация Markdown в HTML.
-*   `Инициализация словаря sections и current_section` (E): Создание переменных для хранения данных.
-*   `Разбор HTML по строкам` (F): Итерация по строкам HTML.
-*   `Создать секцию sections[section_title]` (G): Создание новой секции при нахождении заголовка h1.
-*   `Обновить current_section` (H): Обновление текущей секции.
-*   `Добавить заголовок в current_section` (I): Добавление заголовка в текущую секцию.
-*   `Добавить текст в current_section` (J): Добавление текста в текущую секцию.
-*   `Вернуть sections` (K): Возврат словаря со структурированными данными.
-*   `Конец md2dict` (L): Конец функции `md2dict`.
-*   `Начало extract_json_from_string` (Z): Начало функции `extract_json_from_string`.
-*   `Поиск JSON по регулярному выражению` (AA): Поиск JSON в тексте с помощью регулярного выражения.
-*   `Извлечь JSON` (AB): Извлечение JSON из найденного фрагмента.
-*   `Десериализация JSON в словарь` (AC): Преобразование JSON-строки в словарь Python.
-*   `Вернуть JSON словарь` (AD): Возврат JSON-словаря.
-*  `Конец extract_json_from_string` (AE): Конец функции `extract_json_from_string`.
-*  `Вернуть None` (AF): Возврат None, если JSON не найден.
-
-**Импорты в `mermaid`:**
-
-*   Нет явных импортов библиотек в коде `mermaid`.
+*   `markdown`:  Импортируется из библиотеки `markdown2`. Используется для преобразования Markdown текста в HTML.
+*   `re`:  Импортируется из стандартной библиотеки Python. Используется для работы с регулярными выражениями, в частности, для извлечения JSON и анализа заголовков HTML.
+*   `logger`:  Импортируется из `src.logger.logger`. Используется для логирования ошибок в функциях.
 
 ## <объяснение>
 
-### Импорты
+### Импорты:
+*   **`import re`**:
+    *   **Назначение:** Модуль `re` (regular expressions) используется для работы с регулярными выражениями.
+    *   **Взаимосвязь:** В этом модуле `re` применяется для:
+        *   Поиска JSON объектов в тексте с помощью `re.search(json_pattern, text, re.DOTALL)`.
+        *   Извлечения уровня заголовка HTML с помощью `re.search(r'h(\\d)', line)`.
+        *   Удаления HTML тегов из текста с помощью `re.sub(r'<.*?>', '', line)`.
+*   **`from typing import Dict`**:
+    *   **Назначение:** Модуль `typing` используется для статической типизации.
+    *   **Взаимосвязь:** `Dict` используется для указания типов данных возвращаемых словарей.
+*   **`from markdown2 import markdown`**:
+    *   **Назначение:** Функция `markdown` из библиотеки `markdown2` преобразует Markdown текст в HTML.
+    *  **Взаимосвязь:**  Используется в `md2dict` для конвертации входной строки `md_string` в HTML перед дальнейшей обработкой.
+*   **`from src.logger.logger import logger`**:
+    *   **Назначение:**  Импортирует объект `logger` для логирования ошибок.
+    *   **Взаимосвязь:**  Используется для записи ошибок в лог в функциях `md2dict` и `extract_json_from_string`.
 
-*   `import re`: Модуль `re` используется для работы с регулярными выражениями. Он применяется для поиска заголовков в HTML (`re.search`) и удаления HTML-тегов (`re.sub`).
-*   `from typing import Dict`: Импортирует `Dict` для статической типизации словарей, что повышает читаемость и помогает в отладке кода.
-*   `from markdown2 import markdown`: Импортирует функцию `markdown` из библиотеки `markdown2`, которая конвертирует Markdown-текст в HTML.
-*   `from src.logger.logger import logger`: Импортирует объект `logger` из модуля `src.logger.logger`, который используется для записи ошибок и отладочной информации. Это часть системы логирования проекта.
+### Функции:
 
-### Классы
+*   **`md2dict(md_string: str) -> Dict[str, dict | list]`**:
+    *   **Аргументы**:
+        *   `md_string (str)`: Строка Markdown для конвертации.
+    *   **Возвращаемое значение**:
+        *   `Dict[str, dict | list]`: Словарь, представляющий структуру Markdown. Если найден JSON, то ключ `json` будет содержать JSON. В противном случае структура markdown будет представлена в виде словаря секций.
+    *   **Назначение**: Конвертирует строку Markdown в структурированный словарь. Извлекает JSON, если он есть, или делит Markdown на секции, основываясь на заголовках.
+    *   **Пример:**
+        ```python
+        md_string_with_json = "Some text {\\"key\\": \\"value\\"}"
+        result_with_json = md2dict(md_string_with_json) # result_with_json = {"json": {"key": "value"}}
 
-В данном коде нет классов.
+        md_string_with_markdown = "# Section 1\nSome Text\n## Sub Section\nMore Text"
+        result_with_markdown = md2dict(md_string_with_markdown)
+        # result_with_markdown = {"Section 1": ["Some Text", "Sub Section", "More Text"]}
 
-### Функции
+        md_string_with_nested_markdown = "# Section 1\nSome Text\n## Sub Section\nMore Text\n### Sub-sub section\nSub-sub text"
+        result_with_nested_markdown = md2dict(md_string_with_nested_markdown)
+        # result_with_nested_markdown = {"Section 1": ["Some Text", "Sub Section", "More Text", "Sub-sub section", "Sub-sub text"]}
+        ```
+*   **`extract_json_from_string(text: str) -> dict | None`**:
+    *   **Аргументы**:
+        *   `text (str)`: Строка для извлечения JSON.
+    *   **Возвращаемое значение**:
+        *   `dict | None`: Извлеченный JSON (словарь) или `None`, если JSON не найден.
+    *   **Назначение**: Извлекает JSON из строки.
+    *   **Пример**:
+        ```python
+        text_with_json = "Some text {\\"key\\": \\"value\\"}"
+        extracted_json = extract_json_from_string(text_with_json) # extracted_json = {"key": "value"}
 
-1.  **`md2dict(md_string: str) -> Dict[str, dict | list]`**:
-    *   **Аргументы:**
-        *   `md_string` (str): Строка Markdown для конвертации.
-    *   **Возвращаемое значение:**
-        *   `Dict[str, dict | list]`: Структурированный словарь, содержащий либо JSON-контент (если он есть), либо структуру разделов Markdown.
-    *   **Назначение:** Конвертирует строку Markdown в словарь. Если в строке есть JSON, извлекает его и возвращает в виде словаря `{"json": json_content}`. В противном случае, парсит HTML, полученный из Markdown, и строит словарь со структурой разделов (заголовки и их содержимое).
-    *   **Примеры:**
-        *   `md2dict("# Заголовок\nТекст")` вернет `{'Заголовок': ['Текст']}`.
-        *   `md2dict("{'key': 'value'}")` вернет `{'json': {'key': 'value'}}`.
-        *   `md2dict("## Заголовок2\nТекст2")` вернет `{}`.
-        *    `md2dict("# Заголовок1\nТекст1\n## Заголовок2\nТекст2")` вернет `{'Заголовок1': ['Текст1', 'Заголовок2','Текст2']}`.
-            *   Заголовки h2 и выше добавляются в текущую секцию, как текст.
-            *    Заголовок h1 создает новую секцию.
-2.  **`extract_json_from_string(text: str) -> dict | None`**:
-    *   **Аргументы:**
-        *   `text` (str): Строка для поиска JSON-контента.
-    *   **Возвращаемое значение:**
-        *   `dict | None`: Извлеченный JSON контент в виде словаря, если найден, или `None` в противном случае.
-    *   **Назначение:** Извлекает JSON из строки, используя регулярное выражение. Если JSON найден, возвращает его в виде словаря python.
-    *   **Примеры:**
-        *   `extract_json_from_string("Some text {'key': 'value'} more text")` вернет `{'key': 'value'}`.
-        *   `extract_json_from_string("No JSON here")` вернет `None`.
+        text_without_json = "Some text"
+        extracted_none = extract_json_from_string(text_without_json) # extracted_none = None
+        ```
 
-### Переменные
+### Переменные:
 
-*   ``: Глобальная переменная, определяющая режим работы скрипта.
-*   `sections: Dict[str, list]`: Словарь, хранящий структуру Markdown в виде пар "заголовок секции" : "список строк".
-*   `current_section: str | None`: Переменная, отслеживающая текущую обрабатываемую секцию.
-*   `json_pattern: str`: Регулярное выражение для поиска JSON в тексте.
-*   `json_match`: Результат поиска по регулярному выражению.
-*   `html: str`: HTML, полученный из Markdown.
-*   `heading_level_match`: Результат поиска уровня заголовка.
-*   `heading_level: int`: Уровень заголовка.
-*    `section_title: str`: Текст заголовка без HTML тегов.
-*   `line: str`: Строка HTML.
-*   `clean_text: str`: Строка текста без HTML тегов.
+*   `md_string` (в `md2dict`): Строка с Markdown текстом.
+*   `html` (в `md2dict`): HTML строка, полученная после конвертации Markdown.
+*   `sections` (в `md2dict`): Словарь, где ключами являются названия секций, а значениями - список строк секции (либо подзаголовки, либо текст).
+*   `current_section` (в `md2dict`): Текущая секция, в которую добавляется текст или подзаголовок.
+*    `line` (в `md2dict`):  Строка HTML кода.
+*   `heading_level_match` (в `md2dict`): Результат поиска уровня заголовка в HTML теге.
+*   `heading_level` (в `md2dict`): Уровень заголовка.
+*   `section_title` (в `md2dict`):  Текст заголовка.
+*   `clean_text` (в `md2dict`):  Строка текста без HTML тегов.
+*   `json_pattern` (в `extract_json_from_string`): Регулярное выражение для поиска JSON.
+*   `json_match` (в `extract_json_from_string`): Результат поиска JSON с помощью регулярного выражения.
+*   `text` (в `extract_json_from_string`): Строка, из которой извлекается JSON.
+*  `json_content`: Результат извлечения JSON из строки
 
-### Потенциальные ошибки и области для улучшения
+### Потенциальные ошибки и области для улучшения:
 
-1.  **Безопасность `eval()`**: Использование `eval()` в функции `extract_json_from_string` небезопасно, так как может привести к выполнению произвольного кода, если входящая строка содержит вредоносный код. Вместо `eval` следует использовать `json.loads()`.
-2.  **Обработка различных типов контента**: Код обрабатывает только текст и заголовки. Хорошо бы добавить поддержку для списков, таблиц и других элементов Markdown.
-3.  **Улучшение разбора HTML**: Парсинг HTML на основе строк может быть хрупким. Использование библиотеки для парсинга HTML, например BeautifulSoup, сделает код более надежным.
-4.  **Обработка вложенных секций**: Текущий алгоритм не поддерживает вложенные секции.
-5.  **Отсутствие обработки ошибок в функции** `extract_json_from_string`:  Если не найден json по регулярному выражению, возвращается `None`, а не пустой словарь.
-6.  **Неоднозначность:** Функция `md2dict` возвращает либо структуру разделов Markdown, либо JSON. Хорошо бы сделать возвращаемую структуру более унифицированной.
+*   **Безопасность `eval`:** Функция `extract_json_from_string` использует `eval` для преобразования JSON, что является потенциально небезопасным. В рабочей среде следует использовать `json.loads` для безопасного преобразования JSON.
+*   **Обработка ошибок:** В `extract_json_from_string` обрабатывается только общее исключение. Возможно, следует обрабатывать `json.JSONDecodeError` для более точного логирования ошибок при парсинге JSON.
+*   **Сложная структура Markdown:** Код обрабатывает только заголовки и текст. Он не обрабатывает сложные структуры Markdown, такие как таблицы, списки и т.д.
+*   **Оптимизация:**  Регулярное выражение для поиска JSON может быть оптимизировано.
+* **Обработка вложенности:** Алгоритм не предусматривает вложенности секций. Подзаголовки добавляются как элементы в текущую секцию.
 
-### Цепочка взаимосвязей
+### Взаимосвязь с другими частями проекта:
 
-*   `src.utils.convertors.md2dict` использует `src.logger.logger` для логирования, что является частью системы логирования проекта.
-*   Функция `markdown` из библиотеки `markdown2` используется для конвертации Markdown в HTML, эта библиотека импортируется из внешнего проекта.
-*   Результаты работы `md2dict` могут использоваться в других частях проекта, где требуется структурированное представление Markdown или JSON, например, для извлечения метаданных из описания задач, или для вывода отчетов.
+*   **`src.logger.logger`**: Используется для логирования ошибок в модуле `src.utils.convertors.md2dict`. Это позволяет отслеживать проблемы, возникающие при конвертации Markdown в словарь.
+*   **`markdown2`**: Внешняя библиотека, необходимая для конвертации Markdown в HTML.
 
-Таким образом, код `md2dict.py` обеспечивает функциональность конвертации Markdown-текста в структурированный формат (словарь), что может быть использовано в разных частях проекта для обработки и хранения текстовых данных.
+Этот модуль `md2dict.py` служит важным звеном в конвейере обработки текстовых данных, позволяя извлекать структурированную информацию из Markdown файлов. Он может быть частью более крупной системы, где Markdown используется для хранения данных, конфигураций или пользовательского контента, который нужно автоматически обработать.

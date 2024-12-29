@@ -1,160 +1,123 @@
-# Модуль `src.ai.dialogflow`
+# Модуль интеграции с Google Dialogflow
 
 ## Обзор
 
-Модуль `src.ai.dialogflow` предоставляет интеграцию с Google Dialogflow, обеспечивая возможности обработки естественного языка (NLU) и создания разговорных ИИ-приложений. Он включает в себя функции определения намерений, работы с сущностями, контекстами, интеграции с различными платформами и Webhook-интеграции.
+Модуль `dialogflow` предоставляет возможности для интеграции с Google Dialogflow, обеспечивая обработку естественного языка (NLU) и создание разговорных ИИ-приложений. Он включает в себя функции определения намерений, работы с сущностями, управления контекстами и интеграции с различными платформами.
 
 ## Оглавление
 
 1. [Обзор](#обзор)
-2. [Функции](#функции)
-   - [`detect_intent`](#detect_intent)
-   - [`list_intents`](#list_intents)
-   - [`create_intent`](#create_intent)
-   - [`delete_intent`](#delete_intent)
-3. [Класс `Dialogflow`](#класс-dialogflow)
-   - [Метод `__init__`](#__init__)
-   - [Метод `detect_intent`](#detect_intent-1)
-   - [Метод `list_intents`](#list_intents-1)
-   - [Метод `create_intent`](#create_intent-1)
-   - [Метод `delete_intent`](#delete_intent-1)
+2. [Классы](#классы)
+   - [`Dialogflow`](#dialogflow)
+3. [Пример использования](#пример-использования)
 
-## Функции
+## Классы
 
-### `detect_intent`
+### `Dialogflow`
 
-**Описание**:
-   Эта функция отправляет запрос на обнаружение намерения в Dialogflow.
+**Описание**: Класс для взаимодействия с Google Dialogflow API.
+
+**Методы**:
+
+- `__init__`: Инициализирует экземпляр класса Dialogflow.
+- `detect_intent`: Определяет намерение пользователя на основе введенного текста.
+- `list_intents`: Возвращает список всех доступных намерений.
+- `create_intent`: Создает новое намерение.
+- `delete_intent`: Удаляет намерение.
+
+#### `__init__`
+
+**Описание**: Инициализирует экземпляр класса Dialogflow.
 
 **Параметры**:
-- `text` (str): Текст, который нужно проанализировать.
+- `project_id` (str): Идентификатор проекта Google Cloud.
+- `session_id` (str): Идентификатор сессии пользователя.
 
 **Возвращает**:
-- `dict | None`: Ответ от Dialogflow в виде словаря или `None` в случае ошибки.
+- `None`: Ничего не возвращает.
+
+#### `detect_intent`
+
+**Описание**: Определяет намерение пользователя на основе введенного текста.
+
+**Параметры**:
+- `text` (str): Текст для анализа.
+- `language_code` (str, optional): Код языка. По умолчанию `'ru-RU'`.
+
+**Возвращает**:
+- `dict`: Ответ от Dialogflow API.
 
 **Вызывает исключения**:
-- `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-- `Exception`: Если возникла любая другая ошибка.
+- `Exception`:  Возникает в случае ошибки при взаимодействии с Dialogflow API.
 
-### `list_intents`
+#### `list_intents`
 
-**Описание**:
-   Эта функция извлекает список доступных интентов из Dialogflow.
+**Описание**: Возвращает список всех доступных намерений.
 
 **Параметры**:
-   - Нет
+- `language_code` (str, optional): Код языка. По умолчанию `'ru-RU'`.
 
 **Возвращает**:
-   - `list[dict] | None`: Список интентов в виде словаря или `None`, если не удалось получить список интентов.
+- `list[dict]`: Список словарей, представляющих намерения.
 
 **Вызывает исключения**:
-   - `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-   - `Exception`: Если возникла любая другая ошибка.
+- `Exception`:  Возникает в случае ошибки при взаимодействии с Dialogflow API.
 
-### `create_intent`
+#### `create_intent`
 
-**Описание**:
-   Эта функция создает новый интент в Dialogflow.
+**Описание**: Создает новое намерение.
 
 **Параметры**:
-   - `display_name` (str): Отображаемое имя интента.
-   - `training_phrases_parts` (list[str]): Список фраз для обучения модели.
-   - `message_texts` (list[str]): Список текстовых ответов для интента.
+- `display_name` (str): Имя намерения.
+- `training_phrases_parts` (list[str]): Список фраз для обучения.
+- `message_texts` (list[str]): Список ответов на намерение.
+- `language_code` (str, optional): Код языка. По умолчанию `'ru-RU'`.
 
 **Возвращает**:
-   - `dict | None`: Словарь с данными созданного интента или `None` в случае ошибки.
+- `dict`: Ответ от Dialogflow API.
 
 **Вызывает исключения**:
-   - `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-   - `Exception`: Если возникла любая другая ошибка.
+- `Exception`:  Возникает в случае ошибки при взаимодействии с Dialogflow API.
 
-### `delete_intent`
+#### `delete_intent`
 
-**Описание**:
-   Эта функция удаляет интент из Dialogflow по его идентификатору.
+**Описание**: Удаляет намерение.
 
 **Параметры**:
-   - `intent_id` (str): Идентификатор удаляемого интента.
+- `intent_id` (str): Идентификатор намерения.
 
 **Возвращает**:
-   - `None`: Ничего не возвращает.
+- `None`: Ничего не возвращает.
 
 **Вызывает исключения**:
-   - `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-   - `Exception`: Если возникла любая другая ошибка.
+- `Exception`: Возникает в случае ошибки при взаимодействии с Dialogflow API.
 
-## Класс `Dialogflow`
+## Пример использования
 
-### `__init__`
+Пример использования подмодуля **dialogflow**:
 
-**Описание**:
-   Конструктор класса `Dialogflow`. Инициализирует клиента Dialogflow.
+```python
+from src.ai.dialogflow import Dialogflow
 
-**Параметры**:
-   - `project_id` (str): Идентификатор проекта Dialogflow.
-   - `session_id` (str): Идентификатор сессии Dialogflow.
+project_id = "your-project-id"
+session_id = "unique-session-id"
 
-**Возвращает**:
-   - `None`: Ничего не возвращает.
+dialogflow_client = Dialogflow(project_id, session_id)
 
-### `detect_intent`
+# Пример использования методов
+intent_response = dialogflow_client.detect_intent("Hello")
+print("Detected Intent:", intent_response)
 
-**Описание**:
-   Отправляет запрос на обнаружение намерения в Dialogflow.
+intents = dialogflow_client.list_intents()
+print("List of Intents:", intents)
 
-**Параметры**:
-   - `text` (str): Текст, который нужно проанализировать.
+new_intent = dialogflow_client.create_intent(
+    display_name="NewIntent",
+    training_phrases_parts=["new phrase", "another phrase"],
+    message_texts=["This is a new intent"]
+)
+print("Created Intent:", new_intent)
 
-**Возвращает**:
-   - `dict | None`: Ответ от Dialogflow в виде словаря или `None` в случае ошибки.
-
-**Вызывает исключения**:
-- `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-- `Exception`: Если возникла любая другая ошибка.
-
-### `list_intents`
-
-**Описание**:
-   Извлекает список доступных интентов из Dialogflow.
-
-**Параметры**:
-   - Нет.
-
-**Возвращает**:
-   - `list[dict] | None`: Список интентов в виде словаря или `None`, если не удалось получить список интентов.
-
-**Вызывает исключения**:
-   - `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-   - `Exception`: Если возникла любая другая ошибка.
-
-### `create_intent`
-
-**Описание**:
-   Создает новый интент в Dialogflow.
-
-**Параметры**:
-   - `display_name` (str): Отображаемое имя интента.
-   - `training_phrases_parts` (list[str]): Список фраз для обучения модели.
-   - `message_texts` (list[str]): Список текстовых ответов для интента.
-
-**Возвращает**:
-   - `dict | None`: Словарь с данными созданного интента или `None` в случае ошибки.
-
-**Вызывает исключения**:
-   - `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-   - `Exception`: Если возникла любая другая ошибка.
-
-### `delete_intent`
-
-**Описание**:
-   Удаляет интент из Dialogflow по его идентификатору.
-
-**Параметры**:
-   - `intent_id` (str): Идентификатор удаляемого интента.
-
-**Возвращает**:
-   - `None`: Ничего не возвращает.
-
-**Вызывает исключения**:
-   - `google.api_core.exceptions.GoogleAPIError`: Если произошла ошибка при вызове API Dialogflow.
-   - `Exception`: Если возникла любая другая ошибка.
+# Удаление намерения (не забудьте заменить intent_id на реальный ID)
+# dialogflow_client.delete_intent("your-intent-id")
+```

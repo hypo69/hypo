@@ -2,24 +2,23 @@
 
 ## Обзор
 
-Модуль `src.ai.gemini` предоставляет функциональность для работы с моделью `gemini`. Он включает в себя класс `GoogleGenerativeAI` для взаимодействия с Google Generative AI API.
+Модуль `src.ai.gemini` предоставляет функциональность для работы с моделью `gemini` через класс `GoogleGenerativeAI`.
 
-## Содержание
+## Оглавление
 
-- [Обзор](#обзор)
-- [Переменные](#переменные)
-- [Импортированные модули](#импортированные-модули)
+- [Классы](#классы)
+    - [`GoogleGenerativeAI`](#googlegenerativeai)
 
-## Переменные
+## Классы
 
-### `MODE`
-- **Описание**: Определяет режим работы приложения.
-- **Тип**: `str`
-- **Значение по умолчанию**: `'dev'`
+### `GoogleGenerativeAI`
 
-## Импортированные модули
+**Описание**: Класс `GoogleGenerativeAI` предоставляет интерфейс для взаимодействия с моделью Gemini.
 
-### `generative_ai`
-- **Описание**: Модуль содержит класс `GoogleGenerativeAI`, который используется для взаимодействия с Google Generative AI API.
-- **Импортированные классы**:
-    - `GoogleGenerativeAI`: Класс для работы с API Google Generative AI.
+**Импортированные модули**
+- `generative_ai` : Модуль, содержащий класс `GoogleGenerativeAI`.
+
+**Пример:**
+```python
+from .generative_ai import GoogleGenerativeAI
+```

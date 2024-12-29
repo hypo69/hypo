@@ -1,578 +1,485 @@
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
+
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, которые импортируются при создании диаграммы.
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
+    
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
+
+3.  **<объяснение>**: Предоставьте подробные объяснения:
+    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    *   **Переменные**: Их типы и использование.
+    *   Выделите потенциальные ошибки или области для улучшения.
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+
 ## <алгоритм>
 
-1. **Инициализация**:
-   - Проверяется наличие глобального объекта `tryxpath` и его свойства `functions`. Если их нет, они создаются. Это обеспечивает изоляцию кода и предотвращает конфликты имен.
-   - Создаются псевдонимы `tx` и `fu` для `tryxpath` и `tryxpath.functions` соответственно для удобства работы.
-   - Проверяется, не была ли функция `tryxpath.functions` уже выполнена (свойство `done`). Если да, то функция завершается. Это предотвращает многократное выполнение кода.
+### Основной алгоритм:
+
+1. **Инициализация:**
+    - Проверяется, существует ли пространство имен `tryxpath`. Если нет, оно создается.
+    - Проверяется, существует ли пространство имен `tryxpath.functions`. Если нет, оно создается.
+    - Устанавливаются псевдонимы `tx` для `tryxpath` и `fu` для `tryxpath.functions`.
+    - Проверяется, была ли уже выполнена инициализация `fu.done`. Если да, функция завершается.
 
 2. **`fu.execExpr(expr, method, opts)`**:
-   - Принимает XPath-выражение (`expr`), метод выполнения (`method`: "evaluate", "querySelector", "querySelectorAll") и опции (`opts`).
-   - Извлекает контекст (`context`), резолвер пространства имен (`resolver`), и документ (`doc`) из `opts` или использует значения по умолчанию.
-   - В зависимости от метода (`method`):
-     - **"evaluate"**:
-       - Проверяет, что контекст - узел (`Node`) или атрибут (`Attr`).
-       - Создает резолвер имен с помощью `fu.makeResolver`.
-       - Выполняет XPath-выражение с помощью `doc.evaluate()`.
-       - Преобразует результат в массив с помощью `fu.resToArr()`.
-       - Пример: `fu.execExpr("//div", "evaluate", {context: document.body});`
-     - **"querySelector"**:
-       - Проверяет, что контекст - документ (`Document`) или элемент (`Element`).
-       - Использует `context.querySelector()` для поиска первого совпадения.
-       - Преобразует результат в массив.
-       - Пример: `fu.execExpr("div.myclass", "querySelector", {context: document});`
-     - **"querySelectorAll" (default)**:
-       - Проверяет, что контекст - документ (`Document`) или элемент (`Element`).
-       - Использует `context.querySelectorAll()` для поиска всех совпадений.
-       - Преобразует результат в массив с помощью `fu.listToArr()`.
-       - Пример: `fu.execExpr("div", "querySelectorAll", {context: document});`
-   - Возвращает объект с массивом результатов `items`, методом `method`, и типом результата `resultType`.
+    - Принимает XPath выражение `expr`, метод `method` (evaluate, querySelector, querySelectorAll) и опции `opts`.
+    - Устанавливает контекст выполнения `context` (по умолчанию `document`) и ресолвер `resolver`.
+    - Получает документ `doc` из контекста.
+    - Выполняет XPath запрос или CSS-селектор в зависимости от метода:
+        - **"evaluate"**: Выполняет XPath запрос, преобразует результат в массив.
+            *   Пример: `fu.execExpr('//div', 'evaluate', { context: document.body })` - ищет все div внутри body.
+        - **"querySelector"**: Выполняет CSS-селектор, возвращает первый элемент.
+            *   Пример: `fu.execExpr('.my-class', 'querySelector', { context: document.getElementById('my-container') })` - ищет первый элемент с классом my-class внутри элемента с id my-container.
+        - **"querySelectorAll"**: Выполняет CSS-селектор, возвращает все элементы.
+             *   Пример:  `fu.execExpr('li', 'querySelectorAll', { context: document.getElementById('my-list') })` - ищет все элементы li внутри элемента с id my-list.
+    - Возвращает объект с массивом найденных элементов `items`, методом `method` и типом результата `resultType`.
 
 3. **`fu.resToArr(res, type)`**:
-   - Принимает результат XPath (`res`) и тип результата (`type`).
-   - Если `type` не указан, то берется `res.resultType`.
-   - В зависимости от `type` результат преобразуется в массив:
-     - `NUMBER_TYPE`, `STRING_TYPE`, `BOOLEAN_TYPE`: Значение помещается в массив.
-       Пример: `[123]`, `["text"]`, `[true]`
-     - `ORDERED_NODE_ITERATOR_TYPE`, `UNORDERED_NODE_ITERATOR_TYPE`: Перебираются все узлы с помощью `res.iterateNext()` и добавляются в массив.
-     - `ORDERED_NODE_SNAPSHOT_TYPE`, `UNORDERED_NODE_SNAPSHOT_TYPE`: Перебираются все узлы с помощью `res.snapshotItem(i)` и добавляются в массив.
-     - `ANY_UNORDERED_NODE_TYPE`, `FIRST_ORDERED_NODE_TYPE`: Первый узел помещается в массив.
-   - Возвращает массив результатов.
+    - Принимает результат XPath запроса `res` и тип `type`.
+    - Преобразует результат в массив в зависимости от `resultType` (число, строка, булево, итератор, снимок, один узел).
+    - Возвращает массив.
+    *   Пример: Если res это `xpathResult.ORDERED_NODE_ITERATOR_TYPE`, функция  перебирает элементы и помещает их в массив.
 
 4. **`fu.makeResolver(obj)`**:
-   - Принимает объект резолвера (`obj`).
-   - Если `obj` равен `null`, то возвращает `null`.
-   - Если `obj` - функция, то возвращает ее.
-   - Если `obj` - строка, то пытается распарсить JSON и создать словарь. Если парсинг не удается, то выбрасывается ошибка.
-   - Если `obj` - словарь, то проверяется его валидность с помощью `fu.isValidDict`. Если не валидный, выбрасывается ошибка.
-   - Преобразует словарь в `Map` с помощью `fu.objToMap` и возвращает функцию-резолвер, которая ищет значения в `Map`.
+    - Принимает объект `obj`, который может быть функцией или строкой/объектом JSON.
+    - Если `obj` функция, возвращает ее.
+    - Если `obj` строка, пытается ее распарсить как JSON. Если не удается, возвращает ошибку.
+    - Если `obj` объект, преобразует его в Map и возвращает функцию, которая может разрешать префиксы.
+    - Если `obj` не является допустимым, возвращает ошибку.
 
-5.  **`fu.isValidDict(obj)`**:
-    - Проверяет, является ли `obj` валидным словарем (объект, у которого все значения - строки).
-    - Возвращает `true` если все значения объекта являются строками.
-    - Возвращает `false` если `obj` не является объектом или если хоть одно из значений не является строкой.
+5. **`fu.isValidDict(obj)`**:
+    - Проверяет, является ли объект `obj` допустимым словарем для преобразования в ресолвер (все значения должны быть строками).
 
 6. **`fu.objToMap(obj)`**:
-   - Принимает объект (`obj`).
-   - Создает `Map` и для каждой пары ключ-значение в `obj` добавляет ее в `Map`.
-   - Возвращает `Map`.
+    - Преобразует объект в Map.
 
 7. **`fu.isDocOrElem(obj)`**:
-   - Проверяет, является ли `obj` узлом типа Document (9) или Element (1).
-   - Возвращает `true` если `obj` является Document или Element.
-   - Возвращает `false` если `obj` не является Document или Element.
+    - Проверяет, является ли объект `obj` документом или элементом.
 
-8. **`fu.listToArr(list)`**:
-   - Преобразует псевдомассив (NodeList) в массив.
-   - Перебирает `list` и добавляет каждый элемент в массив.
-   - Возвращает массив.
+8.  **`fu.listToArr(list)`**:
+    - Преобразует HTMLCollection или NodeList в массив.
 
-9. **`fu.getItemDetail(item)`**:
-    - Определяет тип элемента (`item`) и возвращает объект с информацией о типе, имени, значении и текстовом содержимом.
-    - Для строк, чисел и булевых значений возвращает объект с соответствующей информацией.
-    - Для элементов (`Element`) возвращает объект с типом узла, именем тега, и текстом.
-    - Для атрибутов (`Attr`) возвращает объект с типом "Attr", именем атрибута и его значением.
-    - Для остальных типов узлов возвращает объект с типом, именем узла, значением узла и текстовым содержимым.
+9.  **`fu.getItemDetail(item)`**:
+     - Принимает элемент `item` любого типа.
+     - Возвращает объект с информацией о типе, имени, значении и тексте элемента.
+     *   Пример: Если `item` это `Element`, то возвращаются его nodeName, textContent, type.
 
 10. **`fu.getItemDetails(items)`**:
-    - Принимает массив элементов (`items`) и возвращает массив объектов с детальной информацией о каждом элементе.
-    - Использует `fu.getItemDetail` для получения информации о каждом элементе.
+    - Принимает массив элементов `items`.
+    - Возвращает массив объектов с детальной информацией для каждого элемента, используя `fu.getItemDetail()`.
 
 11. **`fu.getNodeTypeStr(nodeType)`**:
-    - Принимает числовой код типа узла (`nodeType`) и возвращает его строковое представление.
-    - Использует `nodeTypeMap` для поиска строкового представления.
-    - Возвращает строку "Unknown", если код типа узла не найден.
+    - Преобразует числовой код типа узла в строковое представление (например, `Node.ELEMENT_NODE` в `"ELEMENT_NODE"`).
 
 12. **`fu.getxpathResultStr(resultType)`**:
-    - Принимает числовой код типа результата XPath (`resultType`) и возвращает его строковое представление.
-    - Использует `xpathResultMaps.numToStr` для поиска строкового представления.
-    - Возвращает строку "Unknown", если код не найден.
+    - Преобразует числовой код типа результата XPath в строковое представление (например, `xpathResult.NUMBER_TYPE` в `"NUMBER_TYPE"`).
 
 13. **`fu.getxpathResultNum(resultTypeStr)`**:
-    - Принимает строковое представление типа результата XPath (`resultTypeStr`) и возвращает его числовой код.
-    - Использует `xpathResultMaps.strToNum` для поиска числового кода.
-    - Возвращает `NaN`, если строка не найдена.
+    - Преобразует строковое представление типа результата XPath в числовой код.
 
 14. **`fu.isAttrItem(item)`**:
-   - Проверяет, является ли `item` атрибутом `Attr`.
-   - Возвращает `true`, если `item` является атрибутом.
+    - Проверяет, является ли объект `item` атрибутом (Attr).
 
 15. **`fu.isNodeItem(item)`**:
-   - Проверяет, является ли `item` узлом (не строкой, не числом).
-   - Возвращает `true` если `item` является узлом.
+    - Проверяет, является ли объект `item` узлом (не атрибутом, числом или строкой).
 
 16. **`fu.isElementItem(item)`**:
-    - Проверяет, является ли `item` элементом (`Element`).
-    - Проверяет, что `item` является узлом и его `nodeType` равен `Node.ELEMENT_NODE`.
-    - Возвращает `true` если `item` является элементом.
+    - Проверяет, является ли объект `item` элементом (Element).
 
 17. **`fu.addClassToItem(clas, item)`**:
-    - Добавляет класс (`clas`) к элементу (`item`), если `item` является элементом.
+    - Добавляет класс `clas` к элементу `item`.
 
 18. **`fu.addClassToItems(clas, items)`**:
-    - Добавляет класс (`clas`) ко всем элементам в массиве `items`.
-    - Использует `fu.addClassToItem` для добавления класса к каждому элементу.
+    - Добавляет класс `clas` ко всем элементам в массиве `items`.
 
 19. **`fu.saveItemClass(item)`**:
-    - Сохраняет класс элемента (`item`).
-    - Возвращает объект с элементом и его оригинальным классом или `null`, если `item` не является элементом.
+    - Сохраняет класс элемента `item` в объекте, чтобы потом можно было восстановить.
 
 20. **`fu.restoreItemClass(savedClass)`**:
-   - Восстанавливает сохраненный класс элемента.
-   - Удаляет класс, если `origClass` равен `null`.
-   - Если `savedClass` равен `null`, то возвращает `null`.
-   - Устанавливает сохраненный класс, если `origClass` не равен `null`.
+    - Восстанавливает класс элемента из сохраненных данных.
 
 21. **`fu.saveItemClasses(items)`**:
-    - Сохраняет классы для всех элементов в массиве `items`.
-    - Возвращает массив объектов с сохраненными классами.
-    - Использует `fu.saveItemClass` для сохранения класса каждого элемента.
+    - Сохраняет классы массива элементов `items`.
 
 22. **`fu.restoreItemClasses(savedClasses)`**:
-    - Восстанавливает сохраненные классы для всех элементов в массиве `savedClasses`.
-    - Использует `fu.restoreItemClass` для восстановления класса каждого элемента.
+    - Восстанавливает классы массива элементов из сохраненных данных.
 
 23. **`fu.setAttrToItem(name, value, item)`**:
-   - Устанавливает атрибут `name` со значением `value` для элемента `item`.
+    - Устанавливает атрибут `name` со значением `value` для элемента `item`.
 
 24. **`fu.removeAttrFromItem(name, item)`**:
-   - Удаляет атрибут `name` из элемента `item`.
+    - Удаляет атрибут `name` из элемента `item`.
 
 25. **`fu.removeAttrFromItems(name, items)`**:
-    - Удаляет атрибут `name` у всех элементов в массиве `items`.
-    - Использует `fu.removeAttrFromItem` для удаления атрибута у каждого элемента.
+    - Удаляет атрибут `name` из всех элементов в массиве `items`.
 
 26. **`fu.setIndexToItems(name, items)`**:
-    - Устанавливает атрибут `name` с индексом элемента в массиве `items` для каждого элемента.
-    - Использует `fu.setAttrToItem` для установки атрибута.
+    - Устанавливает атрибут `name` со значением индекса для каждого элемента в массиве `items`.
 
 27. **`fu.getParentElement(item)`**:
-   - Возвращает родительский элемент для `item`.
-   - Для атрибутов используется `ownerElement`.
-   - Для узлов используется `parentElement`, если он существует. Если нет, то используется `parentNode`, если он является элементом.
+     - Принимает элемент `item`, и возвращает его родительский элемент.
 
 28. **`fu.getAncestorElements(elem)`**:
-   - Возвращает массив всех родительских элементов для элемента `elem`.
-   - Перебирает элементы вверх по дереву, пока не дойдет до корня.
+     - Принимает элемент `elem`, и возвращает массив всех его родительских элементов.
 
 29. **`fu.getOwnerDocument(item)`**:
-    - Возвращает документ, которому принадлежит узел `item`.
-    - Для атрибутов используется `ownerElement.ownerDocument`.
-    - Для узлов используется `ownerDocument`.
+    - Возвращает документ, которому принадлежит элемент.
 
 30. **`fu.createHeaderRow(values, opts)`**:
-    - Создает строку заголовка таблицы (`<tr>`) с ячейками заголовков (`<th>`) для каждого значения в массиве `values`.
-    - Используется для создания заголовка таблицы.
+    - Создает строку таблицы `<tr>` с заголовками `<th>` из массива значений `values`.
 
 31. **`fu.createDetailTableHeader(opts)`**:
-   - Создает заголовок таблицы с колонками: "Index", "Type", "Name", "Value", "Focus".
-   - Используется для создания заголовка таблицы с деталями элемента.
+    - Создает строку таблицы с заголовками для детальной информации об элементах.
 
 32. **`fu.createDetailRow(index, detail, opts)`**:
-    - Создает строку таблицы (`<tr>`) с данными об элементе (`detail`).
-    - Создает ячейки таблицы (`<td>`) для индекса, типа, имени и значения элемента.
-    - Добавляет кнопку "Focus" с индексом элемента.
-    - Используется для создания строки таблицы с деталями элемента.
+     - Принимает индекс `index`, объект с деталями элемента `detail`, и опции `opts`.
+     - Создает строку таблицы `<tr>` с деталями элемента `detail`.
+     *   Пример: создает строку для элемента с индексом 0 и деталями {type: "Node", name: "div", value: ""}
 
 33. **`fu.appendDetailRows(parent, details, opts)`**:
-    - Добавляет строки с деталями элемента в родительский элемент (`parent`).
-    - Использует рекурсию для обработки большого количества деталей (`details`) чанками.
-    - Вызывает `fu.createDetailRow` для создания каждой строки таблицы и добавляет её в `DocumentFragment`.
-    - Добавляет фрагмент в `parent`.
+    - Асинхронно добавляет строки таблицы с деталями элементов в родительский элемент `parent`, использует DocumentFragment для оптимизации.
+    - Разбивает добавление на чанки для избежания блокировки UI.
+     *   Пример: если есть 2000 элементов, то с `chunkSize: 1000` в начале 1000 элементов добавится, а затем остальные 1000.
 
 34. **`fu.updateDetailsTable(parent, details, opts)`**:
-    - Обновляет таблицу с деталями элемента.
-    - Очищает родительский элемент `parent`, добавляет заголовок и строки с деталями.
-    - Использует `fu.emptyChildNodes`, `fu.createHeaderRow`, `fu.appendDetailRows`.
+    - Обновляет таблицу с деталями элементов, создавая заголовок и добавляя строки с деталями.
+    - Очищает таблицу перед добавлением данных.
 
 35. **`fu.emptyChildNodes(elem)`**:
-    - Удаляет все дочерние узлы из элемента `elem`.
+     - Очищает все дочерние узлы элемента `elem`.
 
 36. **`fu.saveAttrForItem(item, attr, storage, overwrite)`**:
-    - Сохраняет атрибут `attr` элемента `item` в `storage`.
-    - Если `overwrite` равен true, то значение атрибута перезаписывается.
+    - Сохраняет значение атрибута `attr` элемента `item` в Map `storage`.
+    - `overwrite` указывает, перезаписывать ли атрибут.
 
 37. **`fu.saveAttrForItems(items, attr, storage, overwrite)`**:
-   - Сохраняет атрибут `attr` для всех элементов в массиве `items`.
-   - Использует `fu.saveAttrForItem` для сохранения атрибута каждого элемента.
+    - Сохраняет значения атрибута `attr` для массива элементов `items` в Map `storage`.
 
 38. **`fu.restoreItemAttrs(storage)`**:
-    - Восстанавливает сохраненные атрибуты для всех элементов в `storage`.
+    - Восстанавливает атрибуты элементов из сохраненных данных в Map `storage`.
 
 39. **`fu.getFrameAncestry(inds, win)`**:
-   - Получает массив фреймов по индексам `inds`, начиная с окна `win`.
-   - Если фрейм не найден, выбрасывается ошибка.
+     - Принимает массив индексов `inds` и окно `win`.
+     - Возвращает массив фреймов, полученных путем последовательного доступа через `win.frames` по индексам в `inds`.
 
 40. **`fu.isNumberArray(arr)`**:
-   - Проверяет, является ли `arr` массивом чисел.
-   - Если `arr` пустой, то возвращает `true`.
+    - Проверяет, является ли `arr` массивом чисел.
 
 41. **`fu.onError(err)`**:
-   - Функция-заглушка для обработки ошибок.
+    - Функция для обработки ошибок (в данном случае пустая).
 
 42. **`fu.isBlankWindow(win)`**:
-    - Проверяет, является ли окно (`win`) пустым (содержит "about:blank").
+    - Проверяет, является ли окно `win` пустым (about:blank).
 
 43. **`fu.collectBlankWindows(top)`**:
-   - Собирает все пустые окна (`about:blank`) в иерархии фреймов, начиная с `top`.
-   - Рекурсивно проходит по всем фреймам.
+    - Собирает все пустые окна (about:blank) из текущего окна и его фреймов рекурсивно.
 
 44. **`fu.findFrameElement(win, parent)`**:
-   - Находит элемент фрейма `iframe` для окна `win` в родительском элементе `parent`.
+    - Находит iframe-элемент, содержащий окно `win` в родительском элементе `parent`.
 
 45. **`fu.findFrameIndex(win, parent)`**:
-    - Находит индекс окна `win` в массиве фреймов `parent`.
+     - Принимает окно `win` и родительский элемент `parent`.
+     - Находит индекс фрейма, содержащего окно `win`, среди фреймов родительского элемента `parent`.
 
 46. **`fu.makeDetailText(detail, keys, separator, replacers)`**:
-    - Создает текстовое представление данных из объекта `detail`, используя ключи `keys`.
-    - Использует разделитель `separator` и функции замены из `replacers`.
+     - Принимает объект с деталями `detail`, массив ключей `keys`, разделитель `separator` и объект с функциями замены `replacers`.
+     - Создает строку с деталями элемента, используя ключи, разделитель и функции замены.
+
+### Поток данных:
+
+1.  **`execExpr`**: Принимает XPath выражение и контекст, возвращает результаты в виде массива элементов и метаданных.
+2.  **`resToArr`**: Преобразует результаты XPath в массив.
+3.  **`getItemDetail`**:  Преобразует элементы в объекты с подробной информацией.
+4.  **`getItemDetails`**:  Преобразует массив элементов в массив объектов с подробной информацией.
+5.  **`createDetailRow`**: Создает строку таблицы на основе данных.
+6.  **`appendDetailRows`**: Асинхронно добавляет строки в таблицу, разбивая процесс на чанки.
+7.  **`updateDetailsTable`**: Обновляет таблицу с деталями, вызывая `appendDetailRows`.
 
 ## <mermaid>
 
 ```mermaid
 graph TD
-    A[Start] --> B{fu.done?};
-    B -- Yes --> C[Return];
-    B -- No --> D[fu.done = true];
-    D --> E[fu.execExpr];
-    E --> F[fu.resToArr];
-    E --> G[context.querySelector];
-    E --> H[context.querySelectorAll];
-    F --> I[switch(type)];
-    I --> J[push(res.numberValue)];
-    I --> K[push(res.stringValue)];
-     I --> L[push(res.booleanValue)];
-     I --> M[res.iterateNext()];
-     I --> N[res.snapshotItem(i)];
-     I --> O[push(res.singleNodeValue)];
-     M --> P[arr.push(node)];
-     N --> Q[arr.push(item)];
-    E --> R[Return {items, method, resultType}];
-    D --> S[fu.makeResolver];
-    S --> T{obj is null?};
-    T -- Yes --> U[return null];
-    T -- No --> V{obj is function?};
-    V -- Yes --> W[return obj];
-    V -- No --> X{obj is string?};
-    X -- Yes --> Y[JSON.parse(obj)];
-     Y --> Z{isValidDict};
-      Z -- No --> AA[throw Error];
-      Z --> AB[objToMap];
-     AB --> AC[return function(str)];
-      AC --> AD{map.has(str)?};
-      AD -- Yes --> AE[return map.get(str)];
-      AD -- No --> AF[return ""];
-    X -- No --> AG[dict = obj];
-      AG --> Z;
-    D --> AH[fu.isValidDict];
-    AH --> AI{obj is null or not obj?};
-      AI -- Yes --> AJ[return false];
-      AI -- No --> AK[for key of obj.keys];
-      AK --> AL{typeof(obj[key]) is not string};
-      AL -- Yes --> AM[return false];
-      AL -- No --> AN[return true];
-    D --> AO[fu.objToMap];
-     AO --> AP[create map];
-      AP --> AQ[Object.keys(obj).forEach()];
-      AQ --> AR[map.set(item, obj[item])];
-      AR --> AS[return map];
-    D --> AT[fu.isDocOrElem];
-     AT --> AU{obj.nodeType is 1 or 9};
-     AU -- Yes --> AV[return true];
-     AU -- No --> AW[return false];
-     D --> AX[fu.listToArr];
-     AX --> AY[create elems];
-       AY --> AZ[for i < list.length];
-       AZ --> BA[elems.push(list[i])];
-     BA --> BB[return elems];
-    D --> BC[fu.getItemDetail];
-    BC --> BD{typeof(item)};
-     BD --> BE[return String detail];
-     BD --> BF[return Number detail];
-    BD --> BG[return Boolean detail];
-     BG --> BH{isElementItem};
-     BH -- Yes --> BI[return Element detail];
-     BH -- No --> BJ{isAttrItem};
-     BJ -- Yes --> BK[return Attr detail];
-      BJ -- No --> BL[return Node detail];
-    D --> BM[fu.getItemDetails];
-     BM --> BN[create details];
-      BN --> BO[for i < items.length];
-      BO --> BP[push(fu.getItemDetail)];
-      BP --> BQ[return details];
-   D --> BR[fu.getNodeTypeStr];
-      BR --> BS{nodeTypeMap.has(nodeType)};
-      BS -- Yes --> BT[return nodeTypeMap.get(nodeType)];
-      BS -- No --> BU[return "Unknown"];
-   D --> BV[fu.getxpathResultStr];
-      BV --> BW{xpathResultMaps.numToStr.has(resultType)};
-      BW -- Yes --> BX[return xpathResultMaps.numToStr.get(resultType)];
-      BW -- No --> BY[return "Unknown"];
-   D --> BZ[fu.getxpathResultNum];
-      BZ --> CA{xpathResultMaps.strToNum.has(resultTypeStr)};
-      CA -- Yes --> CB[return xpathResultMaps.strToNum.get(resultTypeStr)];
-      CA -- No --> CC[return NaN];
-   D --> CD[fu.isAttrItem];
-       CD --> CE[return Object.prototype.toString.call(item) === "[object Attr]"];
-  D --> CF[fu.isNodeItem];
-      CF --> CG{isAttrItem};
-      CG -- Yes --> CH[return false];
-      CG -- No --> CI{typeof(item)};
-      CI --> CJ[return false];
-      CI --> CK[return true];
-   D --> CL[fu.isElementItem];
-       CL --> CM{isNodeItem and nodeType is ELEMENT_NODE};
-       CM -- Yes --> CN[return true];
-       CM -- No --> CO[return false];
-   D --> CP[fu.addClassToItem];
-        CP --> CQ{isElementItem};
-        CQ -- Yes --> CR[item.classList.add(clas)];
-   D --> CS[fu.addClassToItems];
-        CS --> CT[for item of items];
-        CT --> CU[fu.addClassToItem];
-   D --> CV[fu.saveItemClass];
-       CV --> CW{isElementItem};
-       CW -- No --> CX[return null];
-       CW -- Yes --> CY{item.hasAttribute("class")};
-       CY -- Yes --> CZ[clas = item.getAttribute("class")];
-       CY -- No --> DA[clas = null];
-       DA --> DB[return {elem, origClass}];
-   D --> DC[fu.restoreItemClass];
-        DC --> DD{savedClass is null};
-         DD -- Yes --> DE[return null];
-         DD -- No --> DF{savedClass.origClass is null};
-         DF -- Yes --> DG[savedClass.elem.removeAttribute("class")];
-         DF -- No --> DH[savedClass.elem.setAttribute("class", savedClass.origClass)];
-    D --> DI[fu.saveItemClasses];
-    DI --> DJ[create savedClasses];
-    DJ --> DK[for item of items];
-    DK --> DL[push(fu.saveItemClass)];
-    DL --> DM[return savedClasses];
-    D --> DN[fu.restoreItemClasses];
-      DN --> DO[for savedClass of savedClasses];
-      DO --> DP[fu.restoreItemClass];
-   D --> DQ[fu.setAttrToItem];
-   DQ --> DR{isElementItem};
-     DR -- Yes --> DS[item.setAttribute(name, value)];
-   D --> DT[fu.removeAttrFromItem];
-     DT --> DU{isElementItem};
-     DU -- Yes --> DV[item.removeAttribute(name)];
-   D --> DW[fu.removeAttrFromItems];
-   DW --> DX[items.forEach()];
-   DX --> DY[fu.removeAttrFromItem];
-    D --> DZ[fu.setIndexToItems];
-    DZ --> EA[for i < items.length];
-    EA --> EB[fu.setAttrToItem];
-   D --> EC[fu.getParentElement];
-    EC --> ED{isAttrItem};
-    ED -- Yes --> EE[return item.ownerElement];
-    ED -- No --> EF{isNodeItem};
-    EF -- Yes --> EG[return item.parentElement];
-      EG --> EH{parent exists?};
-      EH -- Yes --> EI[return parent];
-      EH -- No --> EJ[parent = item.parentNode];
-      EJ --> EK{parent is ELEMENT_NODE};
-      EK -- Yes --> EL[return parent];
-      EK -- No --> EM[return null];
-   D --> EN[fu.getAncestorElements];
-    EN --> EO[create ancs];
-    EO --> EP[cur = elem];
-    EP --> EQ[parent = cur.parentElement];
-    EQ --> ER{parent exists};
-    ER -- Yes --> ES[push(parent) ancs];
-     ES --> ET[cur = parent];
-     ET --> EU[parent = cur.parentElement];
-      EU --> ER;
-    ER -- No --> EV[parent = cur.parentNode];
-      EV --> EW{parent is ELEMENT_NODE};
-    EW -- Yes --> EX[push(cur)];
-     EX --> EY[cur = parent];
-      EY --> EZ[parent = cur.parentNode];
-      EZ --> EW;
-    EW -- No --> FA[return ancs];
-   D --> FB[fu.getOwnerDocument];
-    FB --> FC{isAttrItem};
-     FC -- Yes --> FD[elem = item.ownerElement];
-    FD --> FE{elem exists};
-     FE -- Yes --> FF[return elem.ownerDocument];
-     FE -- No --> FG[return item.ownerDocument];
-    FC -- No --> FH{isNodeItem};
-    FH -- Yes --> FI[return item.ownerDocument];
-    FH -- No --> FJ[return null];
-   D --> FK[fu.createHeaderRow];
-    FK --> FL[create tr];
-    FL --> FM[for value of values];
-    FM --> FN[create th];
-    FN --> FO[th.textContent = value];
-    FO --> FP[tr.appendChild(th)];
-    FP --> FQ[return tr];
-    D --> FR[fu.createDetailTableHeader];
-    FR --> FS[create tr];
-    FS --> FT[create th for Index];
-    FT --> FU[create th for Type];
-    FU --> FV[create th for Name];
-    FV --> FW[create th for Value];
-    FW --> FX[create th for Focus];
-    FX --> FY[return tr];
-    D --> FZ[fu.createDetailRow];
-    FZ --> GA[create tr];
-    GA --> GB[create td for index];
-    GB --> GC[create td for keys];
-    GC --> GD[create td for focus button];
-    GD --> GE[return tr];
-    D --> GF[fu.appendDetailRows];
-     GF --> GG[Promise.resolve().then()];
-     GG --> GH[opts = opts || {}];
-      GH --> GI[chunkSize, begin, end, createRow];
-      GI --> GJ[doc = parent.ownerDocument];
-      GJ --> GK[create DocumentFragment];
-      GK --> GL[index = Math.max(begin, 0)];
-      GL --> GM[chunkEnd = Math.min(index+chunkSize, details.length, end)];
-      GM --> GN[for index < chunkEnd];
-      GN --> GO[frag.appendChild(createRow)];
-      GO --> GP[parent.appendChild(frag)];
-      GP --> GQ{index < end and index < details.length};
-       GQ -- Yes --> GR[Recursive fu.appendDetailRows];
-       GQ -- No --> GS[return];
-    D --> GT[fu.updateDetailsTable];
-     GT --> GU[opts = opts || {}];
-      GU --> GV[chunkSize, begin, end];
-       GV --> GW{opts.headerValues exists};
-      GW -- Yes --> GX[headerValues = ["Index"].concat(...)];
-      GW -- No --> GY[headerValues = ["Index", "Type", "Name", "Value", "Focus"]];
-      GY --> GZ[doc = parent.ownerDocument];
-       GZ --> HA[fu.emptyChildNodes(parent)];
-       HA --> HB[parent.appendChild(fu.createHeaderRow(...))];
-       HB --> HC[fu.appendDetailRows(parent, details, ...)];
-   D --> HD[fu.emptyChildNodes];
-      HD --> HE[while(elem.firstChild)];
-       HE --> HF[elem.removeChild(elem.firstChild)];
-   D --> HG[fu.saveAttrForItem];
-    HG --> HH[storage = storage || new Map()];
-       HH --> HI{isElementItem};
-       HI -- No --> HJ[return storage];
-       HI -- Yes --> HK{storage.has(item)};
-        HK -- Yes --> HL[elemStor = storage.get(item)];
-        HK -- No --> HM[elemStor = new Map(); storage.set(item, elemStor)];
-        HM --> HN[val = item.hasAttribute(attr) ? item.getAttribute(attr) : null;];
-        HN --> HO{overwrite or !elemStor.has(attr)};
-        HO -- Yes --> HP[elemStor.set(attr, val)];
-        HP --> HQ[return storage];
-    D --> HR[fu.saveAttrForItems];
-      HR --> HS[storage = storage || new Map()];
-       HS --> HT[for item of items];
-        HT --> HU[fu.saveAttrForItem()];
-       HU --> HV[return storage];
-     D --> HW[fu.restoreItemAttrs];
-       HW --> HX[for [elem, elemStor] of storage];
-        HX --> HY[for [attr, value] of elemStor];
-        HY --> HZ{value is null};
-         HZ -- Yes --> IA[elem.removeAttribute(attr)];
-         HZ -- No --> IB[elem.setAttribute(attr, value)];
-    D --> IC[fu.getFrameAncestry];
-     IC --> ID[win = win || window];
-     ID --> IE[create frames];
-       IE --> IF[for i < inds.length];
-        IF --> IG[win = win.frames[inds[i]]];
-          IG --> IH{win exists};
-          IH -- No --> II[throw Error];
-          IH -- Yes --> IJ[frame = win.frameElement];
-           IJ --> IK{frameElement exists};
-            IK -- Yes --> IL[frames.push(frame)];
-          IK -- No --> IM[throw Error];
-        IM --> IN[return frames];
-    D --> IO[fu.isNumberArray];
-      IO --> IP[!Array.isArray(arr)];
-      IP -- Yes --> IQ[return false];
-      IP -- No --> IR[for item of arr];
-      IR --> IS{typeof(item) !== "number"};
-      IS -- Yes --> IT[return false];
-       IS -- No --> IU[return true];
-    D --> IV[fu.onError];
-    D --> IW[fu.isBlankWindow];
-      IW --> IX[return win.location.href === "about:blank"];
-    D --> IY[fu.collectBlankWindows];
-      IY --> IZ[create wins];
-       IZ --> JA[for i < frames.length];
-        JA --> JB[win = frames[i]];
-        JB --> JC{fu.isBlankWindow(win)};
-          JC -- Yes --> JD[wins.push(win)];
-          JD --> JE[wins = wins.concat(fu.collectBlankWindows(win))];
-           JE --> JF[return wins];
-       JC -- No --> JF;
-    D --> JG[fu.findFrameElement];
-    JG --> JH[frames = parent.document.getElementsByTagName("iframe")];
-       JH --> JI[for i < frames.length];
-        JI --> JJ{win === frames[i].contentWindow};
-        JJ -- Yes --> JK[return frames[i]];
-    JK --> JL[return null];
-   D --> JM[fu.findFrameIndex];
-    JM --> JN[wins = parent.frames];
-    JN --> JO[for i < wins.length];
-    JO --> JP{win === wins[i]};
-     JP -- Yes --> JQ[return i];
-      JQ --> JR[return -1];
-    D --> JS[fu.makeDetailText];
-     JS --> JT[create texts];
-     JT --> JU[keys.forEach(key)];
-      JU --> JV[val = detail[key]];
-      JV --> JW{replacers[key]};
-        JW -- Yes --> JX[val = replacers[key](val)];
-         JX --> JY[texts.push(val)];
-       JW -- No --> JY;
-      JY --> JZ[return texts.join(separator)];
+    subgraph tryxpath
+        direction TB
+        
+        subgraph functions
+            
+            execExpr(execExpr) -->|expr, method, opts| resToArr(resToArr)
+            
+            resToArr -->|res, type| items
+            
+            execExpr(execExpr) -->|method| querySelector(querySelector)
+            execExpr(execExpr) -->|method| querySelectorAll(querySelectorAll)
+            
+            querySelector -->|expr, context| items
+            querySelectorAll -->|expr, context| items
+            
+            makeResolver(makeResolver) -->|obj| resolver
+            isValidDict(isValidDict) -->|obj| isValid
+            objToMap(objToMap) -->|obj| map
+            isDocOrElem(isDocOrElem) -->|obj| isDocOrElem_result
+            listToArr(listToArr) -->|list| array
+            getItemDetail(getItemDetail) -->|item| detail
+            getItemDetails(getItemDetails) -->|items| details
+            getNodeTypeStr(getNodeTypeStr) -->|nodeType| nodeTypeString
+            getxpathResultStr(getxpathResultStr) -->|resultType| xpathResultString
+            getxpathResultNum(getxpathResultNum) -->|resultTypeStr| xpathResultNumber
+            isAttrItem(isAttrItem) -->|item| isAttr
+            isNodeItem(isNodeItem) -->|item| isNode
+            isElementItem(isElementItem) -->|item| isElement
+            addClassToItem(addClassToItem) -->|clas, item| addClass
+            addClassToItems(addClassToItems) -->|clas, items| addClasses
+            saveItemClass(saveItemClass) -->|item| savedClass
+            restoreItemClass(restoreItemClass) -->|savedClass| restoreClass
+            saveItemClasses(saveItemClasses) -->|items| savedClasses
+            restoreItemClasses(restoreItemClasses) -->|savedClasses| restoreClasses
+            setAttrToItem(setAttrToItem) -->|name, value, item| setAttribute
+            removeAttrFromItem(removeAttrFromItem) -->|name, item| removeAttribute
+            removeAttrFromItems(removeAttrFromItems) -->|name, items| removeAttributes
+            setIndexToItems(setIndexToItems) -->|name, items| setIndex
+            getParentElement(getParentElement) -->|item| parentElement
+            getAncestorElements(getAncestorElements) -->|elem| ancestorElements
+            getOwnerDocument(getOwnerDocument) -->|item| ownerDocument
+            createHeaderRow(createHeaderRow) -->|values, opts| headerRow
+            createDetailTableHeader(createDetailTableHeader) -->|opts| detailTableHeader
+            createDetailRow(createDetailRow) -->|index, detail, opts| detailRow
+            appendDetailRows(appendDetailRows) -->|parent, details, opts| appendRows
+            updateDetailsTable(updateDetailsTable) -->|parent, details, opts| updateTable
+            emptyChildNodes(emptyChildNodes) -->|elem| empty
+            saveAttrForItem(saveAttrForItem) -->|item, attr, storage, overwrite| attrStorage
+            saveAttrForItems(saveAttrForItems) -->|items, attr, storage, overwrite| attrsStorage
+            restoreItemAttrs(restoreItemAttrs) -->|storage| restoreAttrs
+            getFrameAncestry(getFrameAncestry) -->|inds, win| frames
+            isNumberArray(isNumberArray) -->|arr| isNumberArr
+            onError(onError) -->|err| error
+            isBlankWindow(isBlankWindow) -->|win| isBlank
+            collectBlankWindows(collectBlankWindows) -->|top| blankWindows
+            findFrameElement(findFrameElement) -->|win, parent| frameElement
+            findFrameIndex(findFrameIndex) -->|win, parent| frameIndex
+            makeDetailText(makeDetailText) -->|detail, keys, separator, replacers| detailText
+        end
+    end
+    
+    style tryxpath fill:#f9f,stroke:#333,stroke-width:2px
+    style functions fill:#ccf,stroke:#333,stroke-width:1px
+    
 ```
+
+### Объяснение зависимостей `mermaid`:
+
+*   **`tryxpath`**: Это пространство имен, которое содержит все функции и переменные, относящиеся к функциональности, предоставляемой этим кодом. Оно выделено в отдельный `subgraph`.
+*   **`tryxpath.functions`**: Это вложенное пространство имен, в котором определены все функции, предоставляемые этим кодом. Оно выделено в отдельный `subgraph`.
+*   **`execExpr`**: Главная функция, которая выполняет XPath выражения или CSS селекторы. Она принимает XPath выражение, метод и опции. Её выходные данные - это массив элементов или метаданные и передается к функциям `resToArr`, `querySelector`, `querySelectorAll`.
+*   **`resToArr`**:  Преобразует результат XPath запроса в массив. Принимает результат запроса `res` и тип данных `type`. Возвращает массив `items`.
+*   **`querySelector`**:  Выполняет CSS селектор и возвращает первый найденный элемент. Принимает выражение `expr` и контекст `context`. Возвращает `items`.
+*    **`querySelectorAll`**:  Выполняет CSS селектор и возвращает все найденные элементы. Принимает выражение `expr` и контекст `context`. Возвращает `items`.
+*   **`makeResolver`**: Функция для создания ресолвера пространства имен. Принимает объект `obj` и возвращает `resolver`.
+*  **`isValidDict`**: Проверяет, является ли объект допустимым словарем для ресолвера. Принимает объект `obj`, возвращает булево значение `isValid`.
+*   **`objToMap`**: Преобразует объект в Map. Принимает объект `obj` и возвращает Map `map`.
+*   **`isDocOrElem`**: Проверяет, является ли объект документом или элементом. Принимает объект `obj` и возвращает булево значение `isDocOrElem_result`.
+*   **`listToArr`**: Преобразует HTMLCollection или NodeList в массив. Принимает список `list` и возвращает `array`.
+*  **`getItemDetail`**:  Получает детальную информацию об элементе. Принимает элемент `item` и возвращает его `detail`.
+*   **`getItemDetails`**: Получает детальную информацию о массиве элементов. Принимает массив элементов `items` и возвращает массив деталей `details`.
+*  **`getNodeTypeStr`**: Преобразует числовой код типа узла в строковое представление. Принимает тип узла `nodeType` и возвращает строку `nodeTypeString`.
+*   **`getxpathResultStr`**: Преобразует числовой код типа результата XPath в строку. Принимает тип результата `resultType` и возвращает строку `xpathResultString`.
+*    **`getxpathResultNum`**:  Преобразует строковое представление типа результата XPath в числовой код. Принимает строку `resultTypeStr` и возвращает число `xpathResultNumber`.
+*   **`isAttrItem`**: Проверяет, является ли элемент атрибутом. Принимает элемент `item`, возвращает булево `isAttr`.
+*   **`isNodeItem`**: Проверяет, является ли элемент узлом. Принимает элемент `item`, возвращает булево `isNode`.
+*    **`isElementItem`**: Проверяет, является ли элемент `Element`. Принимает элемент `item`, возвращает булево `isElement`.
+*   **`addClassToItem`**: Добавляет класс к элементу. Принимает класс `clas` и элемент `item`.
+*   **`addClassToItems`**: Добавляет класс к массиву элементов. Принимает класс `clas` и массив элементов `items`.
+*   **`saveItemClass`**: Сохраняет класс элемента для последующего восстановления. Принимает элемент `item` и возвращает объект `savedClass`.
+*   **`restoreItemClass`**: Восстанавливает класс элемента из сохраненных данных. Принимает `savedClass`.
+*   **`saveItemClasses`**: Сохраняет классы массива элементов. Принимает массив элементов `items` и возвращает массив `savedClasses`.
+*   **`restoreItemClasses`**: Восстанавливает классы массива элементов из сохраненных данных. Принимает `savedClasses`.
+*    **`setAttrToItem`**: Устанавливает атрибут для элемента. Принимает имя `name`, значение `value` и элемент `item`.
+*    **`removeAttrFromItem`**: Удаляет атрибут из элемента. Принимает имя атрибута `name` и элемент `item`.
+*   **`removeAttrFromItems`**: Удаляет атрибут из массива элементов. Принимает имя `name` и массив `items`.
+*   **`setIndexToItems`**: Устанавливает атрибут с индексом для массива элементов. Принимает имя атрибута `name` и массив элементов `items`.
+*    **`getParentElement`**: Возвращает родительский элемент. Принимает элемент `item` и возвращает `parentElement`.
+*   **`getAncestorElements`**: Возвращает массив всех родительских элементов. Принимает элемент `elem` и возвращает массив `ancestorElements`.
+*   **`getOwnerDocument`**: Возвращает документ, которому принадлежит элемент. Принимает элемент `item` и возвращает документ `ownerDocument`.
+*  **`createHeaderRow`**: Создает строку таблицы с заголовками. Принимает массив значений `values` и опции `opts`. Возвращает HTML элемент `headerRow`.
+*    **`createDetailTableHeader`**:  Создает строку таблицы с заголовками для деталей. Принимает опции `opts` и возвращает HTML элемент `detailTableHeader`.
+*   **`createDetailRow`**: Создает строку таблицы с детальной информацией. Принимает индекс `index`, детали элемента `detail` и опции `opts`. Возвращает HTML элемент `detailRow`.
+*   **`appendDetailRows`**: Асинхронно добавляет строки в таблицу. Принимает родительский элемент `parent`, детали элементов `details` и опции `opts`. Возвращает промис `appendRows`.
+*  **`updateDetailsTable`**: Обновляет таблицу с деталями элементов. Принимает родительский элемент `parent`, детали элементов `details` и опции `opts`. Возвращает промис `updateTable`.
+*  **`emptyChildNodes`**: Очищает все дочерние узлы элемента. Принимает элемент `elem` и возвращает void `empty`.
+*   **`saveAttrForItem`**: Сохраняет атрибут элемента. Принимает элемент `item`, имя атрибута `attr`, хранилище `storage` и флаг перезаписи `overwrite`. Возвращает хранилище `attrStorage`.
+*   **`saveAttrForItems`**: Сохраняет атрибуты массива элементов. Принимает массив `items`, имя атрибута `attr`, хранилище `storage` и флаг перезаписи `overwrite`. Возвращает хранилище `attrsStorage`.
+*   **`restoreItemAttrs`**: Восстанавливает атрибуты элементов из хранилища. Принимает хранилище `storage` и возвращает void `restoreAttrs`.
+*   **`getFrameAncestry`**: Получает массив родительских фреймов по индексам. Принимает массив индексов `inds` и окно `win`. Возвращает массив `frames`.
+*   **`isNumberArray`**: Проверяет, является ли массив массивом чисел. Принимает массив `arr` и возвращает `isNumberArr`.
+*   **`onError`**: Функция обработки ошибок. Принимает ошибку `err`.
+*   **`isBlankWindow`**: Проверяет, является ли окно пустым. Принимает окно `win` и возвращает булево `isBlank`.
+*   **`collectBlankWindows`**: Собирает пустые окна в текущем окне и фреймах. Принимает текущее окно `top` и возвращает массив `blankWindows`.
+*   **`findFrameElement`**: Находит элемент фрейма по окну. Принимает окно `win` и родительский элемент `parent`, возвращает элемент `frameElement`.
+*   **`findFrameIndex`**: Находит индекс фрейма в родительском окне. Принимает окно `win` и родительский элемент `parent`, возвращает индекс `frameIndex`.
+*    **`makeDetailText`**: Создает текстовую строку из деталей. Принимает детали `detail`, массив ключей `keys`, разделитель `separator` и объект `replacers`. Возвращает `detailText`.
 
 ## <объяснение>
 
-**Импорты:**
+### Импорты
 
-В данном коде нет явных импортов. Код работает в глобальном пространстве `window` браузера. Все необходимые зависимости (например, `Node`, `xpathResult`)  предполагаются как встроенные или определенные в окружении браузера.
+В данном коде нет явных импортов, таких как `import ... from ...`. Этот код предназначен для работы в контексте браузера и использует глобальные объекты, такие как `window`, `document`, `Node`, `xpathResult` и `Map`. Все необходимые зависимости предоставлены браузером и не требуют явного импорта.
 
-**Классы:**
+### Классы
 
-В коде не определены классы. Он использует JavaScript-объекты в качестве контейнеров для функций и данных.
+В данном коде нет определения классов. Вместо этого используется функциональный подход, где все операции выполняются через функции в пространстве имен `tryxpath.functions`.
 
-**Функции:**
+### Функции
 
-- **`fu.execExpr(expr, method, opts)`**:
-    - **Аргументы**:
-        - `expr`: XPath-выражение в виде строки.
-        - `method`: Метод выполнения выражения (строка): "evaluate", "querySelector", "querySelectorAll".
-        - `opts`: Объект с опциями:
-            - `context`: Контекстный узел для выполнения выражения (по умолчанию `document`).
-            - `resolver`: Функция резолвера пространств имен или объект-словарь для резолвера.
-            - `document`: Документ для выполнения выражения (по умолчанию документ контекста или `document`).
-            - `resultType`: Тип результата XPath-выражения для `evaluate`.
-    - **Возвращаемое значение**: Объект со свойствами:
-        - `items`: Массив найденных элементов или значений.
-        - `method`: Переданный метод.
-        - `resultType`: Тип результата XPath-выражения.
-    - **Назначение**: Выполняет XPath-выражение или CSS-селектор на основе заданного контекста и метода. Преобразует результат в массив.
-    - **Пример**: `fu.execExpr("//div[@class='test']", "evaluate", {context: document.body, resolver: {"my": "http://example.com"}});` или `fu.execExpr("div.test", "querySelectorAll", {context: document.body});`.
-- **`fu.resToArr(res, type)`**:
-    - **Аргументы**:
-        - `res`: Результат выполнения XPath-выражения.
-        - `type`: Тип результата XPath-выражения (числовая константа).
-    - **Возвращаемое значение**: Массив с результатами.
-    - **Назначение**: Преобразует результат XPath в массив, в зависимости от типа результата.
-    - **Пример**: Если `res` - это `xpathResult.NUMBER_TYPE` со значением `123`, то функция вернет `[123]`.
-- **`fu.makeResolver(obj)`**:
-    - **Аргументы**: `obj`: Объект резолвера (функция, строка-JSON или словарь).
-    - **Возвращаемое значение**: Функция-резолвер или `null`.
-    - **Назначение**: Создает функцию-резолвер для пространств имен XPath, которая может быть передана в `doc.evaluate()`. Позволяет преобразовывать префиксы пространств имен в URI.
-    - **Пример**: `fu.makeResolver({"my": "http://example.com"})` вернет функцию, которая будет возвращать `"http://example.com"` при вызове с аргументом `"my"`.
-- **`fu.isValidDict(obj)`**:
-    - **Аргументы**: `obj`: Объект для проверки.
-    - **Возвращаемое значение**: `true` или `false`.
-    - **Назначение**: Проверяет, является ли объект допустимым словарем (все значения - строки).
-    - **Пример**: `fu.isValidDict({"a": "1", "b": "2"})` вернет `true`, а `fu.isValidDict({"a": 1, "b": "2"})` вернет `false`.
-- **`fu.objToMap(obj)`**:
-    - **Аргументы**: `obj`: Объект для преобразования.
-    - **Возвращаемое значение**: `Map`.
-    - **Назначение**: Преобразует объект в `Map`.
-    - **Пример**: `fu.objToMap({"a": "1", "b": "2"})` вернет `Map {"a" => "1", "b" => "2"}`.
-- **`fu.isDocOrElem(obj)`**:
-    - **Аргументы**: `obj`: Объект для проверки.
-    - **Возвращаемое значение**: `true` или `false`.
-    - **Назначение**: Проверяет, является ли объект `Document` или `Element`.
-- **`fu.listToArr(list)`**:
+1.  **`fu.execExpr(expr, method, opts)`**:
+    *   **Аргументы**:
+        *   `expr`: строка, представляющая XPath выражение или CSS селектор.
+        *   `method`: строка, определяющая метод выполнения запроса (`"evaluate"`, `"querySelector"`, `"querySelectorAll"`).
+        *   `opts`: объект, содержащий дополнительные опции, такие как:
+            *   `context`: узел, относительно которого выполняется запрос (по умолчанию `document`).
+            *   `resolver`: объект или функция для разрешения пространства имен в XPath.
+            *   `document`: документ, в котором выполняется запрос.
+            *    `resultType`: тип результата для xpath evaluate.
+    *   **Возвращаемое значение**: Объект, содержащий:
+        *   `items`: массив найденных элементов.
+        *   `method`: метод, который использовался для выполнения запроса.
+        *   `resultType`: тип результата xpath запроса (null, если использовался querySelector, querySelectorAll).
+    *   **Назначение**: Выполняет XPath выражения или CSS селекторы и возвращает результаты.
+    *   **Пример**: `fu.execExpr('//div[@class="my-class"]', 'evaluate', { context: document.getElementById('my-container') })` - ищет все div с классом "my-class" внутри элемента с id "my-container", используя XPath.
+
+2.  **`fu.resToArr(res, type)`**:
+    *   **Аргументы**:
+        *   `res`: результат выполнения XPath запроса.
+        *   `type`: (опционально) тип результата.
+    *   **Возвращаемое значение**: массив, содержащий результаты.
+    *   **Назначение**: Преобразует результат XPath запроса в массив, обрабатывая разные типы результатов.
+    *   **Пример**: Если res это `xpathResult.ORDERED_NODE_ITERATOR_TYPE`, то функция перебирает каждый узел и добавляет его в массив.
+
+3.  **`fu.makeResolver(obj)`**:
+    *   **Аргументы**:
+        *   `obj`: объект, функция или строка JSON, представляющая ресолвер пространства имен.
+    *   **Возвращаемое значение**: функция-ресолвер или null.
+    *   **Назначение**: Создает функцию ресолвера для обработки префиксов пространства имен в XPath.
+    *    **Пример**: `fu.makeResolver('{"my":"http://example.com"}')` - создает resolver для префикса "my".
+
+4.  **`fu.isValidDict(obj)`**:
+    *   **Аргументы**:
+        *   `obj`: объект для проверки.
+    *   **Возвращаемое значение**: `true` если объект является корректным словарем, иначе `false`.
+    *   **Назначение**: Проверяет, что объект является допустимым словарем для ресолвера (все значения должны быть строками).
+
+5.  **`fu.objToMap(obj)`**:
+    *   **Аргументы**:
+        *   `obj`: объект для преобразования.
+    *   **Возвращаемое значение**: `Map`.
+    *   **Назначение**: Преобразует объект в Map.
+
+6.  **`fu.isDocOrElem(obj)`**:
+    *   **Аргументы**:
+        *   `obj`: объект для проверки.
+    *   **Возвращаемое значение**: `true`, если объект является `Document` или `Element`, иначе `false`.
+    *   **Назначение**: Проверяет, является ли объект документом или элементом.
+
+7.  **`fu.listToArr(list)`**:
+    *   **Аргументы**:
+        *   `list`: `HTMLCollection` или `NodeList` для преобразования.
+    *   **Возвращаемое значение**: массив.
+    *   **Назначение**: Преобразует `HTMLCollection` или `NodeList` в массив.
+
+8.  **`fu.getItemDetail(item)`**:
+    *   **Аргументы**:
+        *   `item`: элемент для получения информации.
+    *   **Возвращаемое значение**: Объект с типом, именем, значением и текстовым содержимым элемента.
+    *   **Назначение**: Получает детальную информацию об элементе.
+    *   **Пример**: `fu.getItemDetail(document.getElementById('my-div'))` - вернет объект с информацией о div элементе.
+
+9.  **`fu.getItemDetails(items)`**:
+    *   **Аргументы**:
+        *   `items`: массив элементов.
+    *   **Возвращаемое значение**: массив объектов с информацией о каждом элементе.
+    *   **Назначение**: Получает детальную информацию о массиве элементов, вызывая `getItemDetail` для каждого из них.
+
+10. **`fu.getNodeTypeStr(nodeType)`**:
+    *   **Аргументы**:
+        *   `nodeType`: числовой код типа узла.
+    *   **Возвращаемое значение**: строковое представление типа узла.
+    *   **Назначение**: Преобразует числовой код типа узла в строковое представление.
+
+11. **`fu.getxpathResultStr(resultType)`**:
+    *   **Аргументы**:
+        *   `resultType`: числовой код типа результата XPath.
+    *   **Возвращаемое значение**: строковое представление типа результата XPath.
+    *   **Назначение**: Преобразует числовой код типа результата XPath в строковое представление.
+
+12. **`fu.getxpathResultNum(resultTypeStr)`**:
+    *   **Аргументы**:
+        *   `resultTypeStr`: строковое представление типа результата XPath.
+    *   **Возвращаемое значение**: числовой код типа результата XPath.
+    *   **Назначение**: Преобразует строковое представление типа результата XPath в числовой код.
+
+13. **`fu.isAttrItem(item)`**:
+    *   **Аргументы**:
+        *   `item`: элемент для проверки.
+    *   **Возвращаемое значение**: `true`, если элемент является `Attr`, иначе `false`.
+    *   **Назначение**: Проверяет, является ли объект атрибутом.
+
+14. **`fu.isNodeItem(item)`**:
+    *   **Аргументы**:
+        *   `item`: элемент для проверки.
+    *   **Возвращаемое значение**: `true`, если элемент является узлом (не атрибутом, числом или строкой), иначе `false`.
+    *   **Назначение**: Проверяет, является ли объект узлом.
+
+15. **`fu.isElementItem(item)`**:
+    *   **Аргументы**:
+        *   `item`: элемент для проверки.
+    *   **Возвращаемое значение**: `true`, если элемент является `Element`, иначе `false`.
+    *   **Назначение**: Проверяет, является ли объект элементом.
+
+16. **`fu.addClassToItem(clas, item)`**:
+    *   **Аргументы**:
+        *   `clas`: класс для добавления.
+        *   `item`: элемент.
+    *   **Возвращаемое значение**: void.
+    *   **Назначение**: Добавляет класс к элементу.
+
+17. **`fu.addClassToItems(clas, items)`**:
+    *   **Аргументы**:
+        *   `clas`: класс для добавления.
+        *   `items`: массив элементов.
+    *   **Возвращаемое значение**: void.
+    *   **Назначение**: Добавляет класс к массиву элементов.
+
+18. **`fu.saveItemClass(item)`**:
+    *   **Аргументы**:
+        *   `item`: элемент.
+    *   **Возвращаемое значение**: объект с элементом и оригинальным классом или null.
+    *   **Назначение**: Сохраняет класс элемента перед модификацией.
+
+19. **`fu.restoreItemClass(savedClass)`**:
+    *   **Аргументы**:
+        *   `savedClass`: объект с элементом и сохраненным классом.
+    *   **Возвращаемое значение**: void.
+    *   **Назначение**: Восстанавливает класс элемента.
+
+20. **`fu.saveItemClasses(items)`**:
+    *   **Аргументы**:
+        *   `items`: массив элементов.
+    *   **Возвращаемое значение**: массив объектов с элементами и сохраненными классами.
+    *   **Назначение**: Сохраняет классы массива элементов перед модификацией.
+
+21. **`fu.restoreItemClasses(savedClasses)`**:
+    *

@@ -2,48 +2,39 @@
 
 ## Обзор
 
-Модуль `header.py` предназначен для определения корневого пути проекта и загрузки основных настроек проекта из файла `settings.json`. Он также обеспечивает доступ к информации о проекте, такой как название, версия, автор и документация.
+Модуль `header.py` предназначен для определения корневого пути проекта и загрузки основных настроек. Он обеспечивает корректную работу импортов и предоставляет доступ к метаданным проекта, таким как имя, версия и автор.
 
 ## Оглавление
 
-- [Обзор](#обзор)
-- [Константы](#константы)
-- [Функции](#функции)
-    - [`set_project_root`](#set_project_root)
-- [Переменные](#переменные)
-    - [`__root__`](#__root__)
-    - [`settings`](#settings)
-    - [`doc_str`](#doc_str)
-    - [`__project_name__`](#__project_name__)
-    - [`__version__`](#__version__)
-    - [`__doc__`](#__doc__)
-    - [`__details__`](#__details__)
-    - [`__author__`](#__author__)
-    - [`__copyright__`](#__copyright__)
-    - [`__cofee__`](#__cofee__)
-## Константы
-
-### `MODE`
-  
-**Описание**: Режим работы приложения (в данном случае 'dev').
-```python
-
-```
+- [Функции](#Функции)
+  - [`set_project_root`](#set_project_root)
+- [Переменные](#Переменные)
+  - [`__root__`](#__root__)
+  - [`settings`](#settings)
+  - [`doc_str`](#doc_str)
+  - [`__project_name__`](#__project_name__)
+  - [`__version__`](#__version__)
+  - [`__doc__`](#__doc__)
+  - [`__details__`](#__details__)
+  - [`__author__`](#__author__)
+  - [`__copyright__`](#__copyright__)
+  - [`__cofee__`](#__cofee__)
 
 ## Функции
 
 ### `set_project_root`
 
-**Описание**: Находит корневой каталог проекта, начиная с каталога текущего файла, и останавливается в первом каталоге, содержащем любой из файлов-маркеров.
+**Описание**:
+Находит корневой каталог проекта, начиная с текущего каталога файла, выполняя поиск вверх и останавливаясь в первом каталоге, содержащем любой из файлов-маркеров.
 
 **Параметры**:
-- `marker_files` (tuple): Кортеж имен файлов или каталогов, которые идентифицируют корень проекта. По умолчанию `('pyproject.toml', 'requirements.txt', '.git')`.
+- `marker_files` (tuple): Кортеж имен файлов или каталогов для идентификации корня проекта. По умолчанию `('__root__', '.git')`.
 
 **Возвращает**:
-- `Path`: Путь к корневому каталогу, если он найден, иначе путь к каталогу, где расположен скрипт.
+- `Path`: Путь к корневому каталогу, если он найден, иначе каталог, где расположен скрипт.
 
 ```python
-def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt', '.git')) -> Path:
+def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
     """
     Finds the root directory of the project starting from the current file's directory,
     searching upwards and stopping at the first directory containing any of the marker files.
@@ -60,77 +51,94 @@ def set_project_root(marker_files: tuple = ('pyproject.toml', 'requirements.txt'
 
 ### `__root__`
 
-**Описание**: Путь к корневому каталогу проекта. Устанавливается функцией `set_project_root`.
+**Описание**:
+Путь к корневому каталогу проекта.
 
 ```python
-__root__: Path
+__root__ = set_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
 ```
 
 ### `settings`
 
-**Описание**: Словарь с настройками проекта, загруженный из `settings.json`.
+**Описание**:
+Словарь с настройками проекта, загруженными из файла `settings.json`.
 
 ```python
-settings: dict
+settings:dict = None
+try:
+    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
 ```
-
 ### `doc_str`
 
-**Описание**: Строка с документацией проекта, загруженная из `README.MD`.
-```python
-doc_str: str
-```
+**Описание**:
+Строка с содержимым файла `README.MD`.
 
+```python
+doc_str:str = None
+try:
+    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+        doc_str = settings_file.read()
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+```
 ### `__project_name__`
 
-**Описание**: Название проекта. Загружается из `settings.json`, если он существует, иначе используется значение по умолчанию `hypotez`.
+**Описание**:
+Имя проекта, полученное из настроек или по умолчанию `hypotez`.
 
 ```python
-__project_name__: str
+__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
 ```
 
 ### `__version__`
 
-**Описание**: Версия проекта. Загружается из `settings.json`, если он существует, иначе используется пустая строка.
+**Описание**:
+Версия проекта, полученная из настроек или пустая строка.
 
 ```python
-__version__: str
+__version__: str = settings.get("version", '')  if settings  else ''
 ```
-
 ### `__doc__`
 
-**Описание**: Строка с документацией проекта.
+**Описание**:
+Строка документации проекта, считанная из `README.MD` файла.
 
 ```python
-__doc__: str
+__doc__: str = doc_str if doc_str else ''
 ```
-
 ### `__details__`
 
-**Описание**: Детальная информация о проекте. В данном коде остается пустой строкой.
+**Описание**:
+Строка деталей проекта. В данный момент пустая.
 
 ```python
-__details__: str
+__details__: str = ''
 ```
-
 ### `__author__`
 
-**Описание**: Автор проекта. Загружается из `settings.json`, если он существует, иначе используется пустая строка.
+**Описание**:
+Автор проекта, полученный из настроек или пустая строка.
 
 ```python
-__author__: str
+__author__: str = settings.get("author", '')  if settings  else ''
 ```
-
 ### `__copyright__`
 
-**Описание**: Информация об авторских правах проекта. Загружается из `settings.json`, если он существует, иначе используется пустая строка.
+**Описание**:
+Информация об авторских правах, полученная из настроек или пустая строка.
 
 ```python
-__copyright__: str
+__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
 ```
 
 ### `__cofee__`
 
-**Описание**: Сообщение с предложением угостить разработчика кофе. Загружается из `settings.json`, если он существует, иначе используется значение по умолчанию.
+**Описание**:
+Строка с предложением поддержать разработчика, полученная из настроек или стандартная ссылка.
+
 ```python
-__cofee__: str
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"

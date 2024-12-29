@@ -2,42 +2,64 @@
 
 ## Обзор
 
-Модуль предназначен для автоматической отправки рекламных объявлений в группы Facebook, используя заданные конфигурации. Модуль использует `FacebookPromoter` для управления процессом продвижения и `Driver` для управления браузером.
+Модуль предназначен для запуска процесса публикации рекламных объявлений в группы Facebook с использованием настроек, специфичных для пользователя Katia. Он использует веб-драйвер для автоматизации взаимодействия с Facebook и загружает конфигурации из JSON-файлов.
 
 ## Оглавление
 
 1. [Обзор](#обзор)
 2. [Импорты](#импорты)
 3. [Переменные](#переменные)
-4. [Инициализация](#инициализация)
-5. [Обработка исключений](#обработка-исключений)
+4. [Инициализация `FacebookPromoter`](#инициализация-facebookpromoter)
+5. [Запуск кампаний](#запуск-кампаний)
+6. [Обработка прерывания](#обработка-прерывания)
 
 ## Импорты
 
-В данном разделе перечислены все импортированные модули и классы, используемые в коде.
+Модуль импортирует следующие компоненты:
 
-```python
-import header
-from src.webdriver.driver import Driver, Chrome
-from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
-from src.logger.logger import logger
-```
+- `header`: Неизвестный модуль, предположительно содержащий общие заголовки или настройки.
+- `Driver`, `Chrome` из `src.webdriver.driver`: Классы для управления веб-драйвером Chrome.
+- `FacebookPromoter` из `src.endpoints.advertisement.facebook.promoter`: Класс для управления рекламными кампаниями в Facebook.
+- `logger` из `src.logger.logger`: Модуль для ведения журнала событий.
 
 ## Переменные
 
-В данном разделе перечислены основные переменные, используемые в модуле.
+- `d`: Экземпляр класса `Driver` с настроенным драйвером Chrome для взаимодействия с веб-страницами.
+- `filenames`: Список строк, содержащий имена файлов JSON с настройками групп для публикации.
+- `campaigns`: Список строк, содержащий названия кампаний для запуска.
+- `promoter`: Экземпляр класса `FacebookPromoter`, настроенный для запуска рекламных кампаний.
 
-- `MODE` (str): Режим работы, по умолчанию установлен в `'dev'`.
-- `filenames` (list): Список файлов конфигурации для групп.
-- `campaigns` (list): Список кампаний, которые нужно запустить.
-- `d` (Driver): Экземпляр драйвера браузера `Chrome`.
-- `promoter` (FacebookPromoter): Экземпляр класса `FacebookPromoter`, используемый для управления процессом публикации.
+## Инициализация `FacebookPromoter`
 
-## Инициализация
+Создается экземпляр класса `FacebookPromoter` со следующими параметрами:
 
-В данном разделе описывается инициализация основных компонентов, таких как драйвер браузера и промоутер.
+- `d` (экземпляр `Driver`): Веб-драйвер.
+- `group_file_paths`: Список файлов с настройками групп.
+- `no_video`: Отключение публикации видео.
+
+## Запуск кампаний
+
+Метод `run_campaigns` экземпляра `promoter` запускается со списком кампаний `campaigns` в качестве аргумента. Это запускает процесс публикации объявлений в соответствующих группах Facebook.
+
+## Обработка прерывания
+
+В случае прерывания процесса (например, нажатием `Ctrl+C`), будет поймано исключение `KeyboardInterrupt`, и в журнал будет записано сообщение "Campaign promotion interrupted.".
 
 ```python
+# -*- coding: utf-8 -*-
+#! venv/Scripts/python.exe
+#! venv/bin/python/python3.12
+
+"""
+.. module:: src.endpoints.advertisement.facebook
+	:platform: Windows, Unix
+	:synopsis: Отправка рекламных объявлений в группы фейсбук (Katia?)
+"""
+import header 
+from src.webdriver.driver import Driver, Chrome
+from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
+from src.logger.logger import logger
+
 d = Driver(Chrome)
 d.get_url(r"https://facebook.com")
 
@@ -50,22 +72,9 @@ campaigns:list = [ 'sport_and_activity',
                     'house',
                 ]
 promoter = FacebookPromoter(d, group_file_paths = filenames, no_video = False)
-```
-Здесь:
-- Инициализируется драйвер браузера Chrome и переходит на страницу Facebook.
-- Создается список файлов конфигурации для групп `filenames` и список кампаний `campaigns`.
-- Создается экземпляр класса `FacebookPromoter` с настроенным драйвером и параметрами кампании.
 
-## Обработка исключений
-
-В данном разделе описывается блок обработки исключений.
-
-```python
 try:
     promoter.run_campaigns(campaigns)
 except KeyboardInterrupt:
     logger.info("Campaign promotion interrupted.")
 ```
-
-- Пытается запустить кампании с помощью `promoter.run_campaigns(campaigns)`.
-- Если возникает исключение `KeyboardInterrupt` (например, при нажатии Ctrl+C), то регистрируется сообщение об прерывании продвижения кампании.

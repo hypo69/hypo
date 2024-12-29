@@ -1,47 +1,89 @@
-## ИНСТРУКЦИЯ:
+## АНАЛИЗ КОДА:
 
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+Из-за предоставления пустого кода, я не могу предоставить анализ.
+Пожалуйста, предоставьте мне корректный код, чтобы я мог проанализировать его.
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-    ```
+**Инструкция по предоставлению корректного кода:**
 
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
+1. **Убедитесь, что код не пустой**:  Вставьте код, который нужно проанализировать. Это может быть код на Python, JavaScript, или другом языке программирования.
+2. **Проверьте синтаксис**:  Убедитесь, что ваш код имеет правильный синтаксис для соответствующего языка.
 
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+Как только вы предоставите корректный код, я смогу:
+*   Разработать **<алгоритм>**
+*   Сгенерировать диаграмму **<mermaid>**
+*   Предложить **<объяснение>** кода в соответствии с инструкциями.
 
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
+**Пример запроса с корректным кодом (Python):**
+
 ```
-{\rtf1}
+input_code:
+```python
+import os
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+def setup_chrome_driver():
+    """Sets up and returns a Chrome WebDriver instance with specific configurations."""
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+    chrome_options.add_argument("--no-sandbox")  # Disable sandbox for docker
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Disable shared memory
+
+    service = ChromeService(executable_path=ChromeDriverManager().install())
+
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    return driver
+
+if __name__ == '__main__':
+    driver = setup_chrome_driver()
+    driver.get("https://www.google.com")
+    print(driver.title)
+    driver.quit()
 ```
-# Анализ кода
 
-К сожалению, предоставленный код содержит только `{\rtf1}`, что является началом RTF (Rich Text Format) документа. Это не является исполняемым кодом Python или каким-либо другим кодом, который можно анализировать. RTF - это формат для текстовых документов, используемый в основном для текстовых редакторов. 
+**После предоставления кода я отвечу в следующем формате:**
 
-Поэтому я не могу выполнить анализ, как было запрошено в инструкции.
+### 1. <алгоритм>:
+*   Шаг 1: ... (Описание, примеры, поток данных)
+*   Шаг 2: ... (Описание, примеры, поток данных)
+*   ...
 
-## 1. **<алгоритм>**
-Невозможно создать блок-схему, поскольку предоставлен не исполняемый код.
+### 2. <mermaid>:
+```mermaid
+flowchart TD
+    Start --> SetupDriver[<code>setup_chrome_driver()</code>: Configure WebDriver];
+    SetupDriver --> InstallManager[<code>ChromeDriverManager().install()</code>: Install Chrome Driver];
+    InstallManager --> ChromeServiceObj[Create <code>ChromeService</code> object];
+    ChromeServiceObj --> ChromeOptionsObj[<code>Options()</code> : Setup Options];
+    ChromeOptionsObj --> CreateDriver[<code>webdriver.Chrome()</code> : Create WebDriver instance];
+    CreateDriver --> ReturnDriver[Return WebDriver];
+    ReturnDriver --> MainBlock[Main execution block];
+    MainBlock --> OpenURL[<code>driver.get("https://www.google.com")</code> : Open google.com]
+    OpenURL --> PrintTitle[<code>print(driver.title)</code>: Get and print title];
+    PrintTitle --> CloseDriver[<code>driver.quit()</code>: Close WebDriver];
+    CloseDriver --> End;
+```
 
-## 2. **<mermaid>**
-Невозможно создать mermaid диаграмму, поскольку предоставлен не исполняемый код.
-
-## 3. **<объяснение>**
-Невозможно предоставить объяснение кода, так как предоставленный ввод не является кодом.
+### 3. <объяснение>:
+*   **Импорты:**
+    *   `os`: ...
+    *   `selenium.webdriver`: ...
+    *   `selenium.webdriver.chrome.service.Service`: ...
+    *   `webdriver_manager.chrome.ChromeDriverManager`: ...
+    *   `selenium.webdriver.chrome.options.Options`: ...
+*   **Классы:**
+    *   `ChromeService`: ...
+    *   `Options`: ...
+    *   `ChromeDriverManager`: ...
+*   **Функции:**
+    *   `setup_chrome_driver()`: ...
+*   **Переменные:**
+    *   `driver`: ...
+    *   `chrome_options`: ...
+    *    `service`:...
+*   **Потенциальные ошибки или области для улучшения:**
+    *   ...
+*   **Взаимосвязь с другими частями проекта (если применимо):**
+    *   ...

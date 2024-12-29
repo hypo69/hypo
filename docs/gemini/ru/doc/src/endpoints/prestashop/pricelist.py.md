@@ -2,67 +2,68 @@
 
 ## Обзор
 
-Модуль `pricelist.py` предоставляет функциональность для запроса и обновления цен товаров через API PrestaShop. Он включает класс `PriceListRequester`, который наследует функциональность от базового класса `PrestaShop` и реализует методы для работы с ценами товаров.
+Модуль `pricelist.py` предназначен для запроса и управления ценами товаров в системе PrestaShop. Он включает в себя класс `PriceListRequester`, который наследуется от класса `PrestaShop` и предоставляет функциональность для получения, обновления и изменения цен товаров.
 
-## Содержание
+## Оглавление
 
-1. [Классы](#классы)
-    - [`PriceListRequester`](#pricelistrequester)
-2. [Функции](#функции)
-    - [`__init__`](#__init__)
-    - [`request_prices`](#request_prices)
-    - [`update_source`](#update_source)
-    - [`modify_product_price`](#modify_product_price)
+1.  [Классы](#классы)
+    *   [`PriceListRequester`](#pricelistrequester)
+2.  [Функции](#функции)
+    *   [`__init__`](#__init__)
+    *   [`request_prices`](#request_prices)
+    *   [`update_source`](#update_source)
+    *   [`modify_product_price`](#modify_product_price)
 
 ## Классы
 
 ### `PriceListRequester`
 
-**Описание**: Класс для запроса и управления списком цен товаров через API PrestaShop.
+**Описание**: Класс для запроса списка цен.
 
 **Наследует**: `PrestaShop`
 
-#### `__init__`
+**Методы**:
+
+*   [`__init__`](#__init__)
+*   [`request_prices`](#request_prices)
+*   [`update_source`](#update_source)
+*   [`modify_product_price`](#modify_product_price)
+
+## Функции
+
+### `__init__`
 
 **Описание**: Инициализирует объект класса `PriceListRequester`.
 
 **Параметры**:
-- `api_credentials` (dict): Словарь с учетными данными для API, включая `'api_domain'` и `'api_key'`.
 
-**Возвращает**:
-- `None`
+*   `api_credentials` (dict): Словарь с учетными данными для API, включая `'api_domain'` и `'api_key'`.
 
-#### `request_prices`
+### `request_prices`
 
 **Описание**: Запрашивает список цен для указанных товаров.
 
 **Параметры**:
-- `products` (list): Список товаров, для которых требуется получить цены.
+
+*   `products` (list): Список товаров, для которых требуется получить цены.
 
 **Возвращает**:
-- `dict`: Словарь, где ключами являются товары, а значениями - их цены. Пример: `{'product1': 10.99, 'product2': 5.99}`
 
-#### `update_source`
+*   `dict`: Словарь, где ключами являются товары, а значениями - их цены. Например: `{'product1': 10.99, 'product2': 5.99}`.
+
+### `update_source`
 
 **Описание**: Обновляет источник данных для запроса цен.
 
 **Параметры**:
-- `new_source`: Новый источник данных.
 
-**Возвращает**:
-- `None`
+*   `new_source` (any): Новый источник данных.
 
-#### `modify_product_price`
+### `modify_product_price`
 
 **Описание**: Модифицирует цену указанного товара.
 
 **Параметры**:
-- `product`: Название товара.
-- `new_price`: Новая цена товара.
 
-**Возвращает**:
-- `None`
-
-## Функции
-
-_В данном файле отсутствуют отдельные функции, все методы принадлежат классу `PriceListRequester`._
+*   `product` (any): Название товара.
+*   `new_price` (any): Новая цена товара.

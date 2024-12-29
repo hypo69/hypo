@@ -1,18 +1,16 @@
-# Модуль `post_event`
+# Модуль `post_event.py`
 
 ## Обзор
 
-Модуль `post_event` предназначен для публикации календарных событий в группах Facebook. Он предоставляет функции для автоматизации ввода заголовка, даты, времени и описания события, а также отправки его на страницу Facebook. Модуль использует Selenium WebDriver для взаимодействия с веб-страницей и загружает локаторы из JSON-файла.
+Модуль `post_event.py` предназначен для публикации календарных событий в группах Facebook с использованием Selenium WebDriver. Он содержит функции для ввода заголовка, даты, времени и описания события, а также для отправки самого события.
 
-## Содержание
-
-1.  [Обзор](#обзор)
-2.  [Функции](#функции)
-    *   [`post_title`](#post_title)
-    *   [`post_date`](#post_date)
-    *   [`post_time`](#post_time)
-    *   [`post_description`](#post_description)
-    *   [`post_event`](#post_event)
+## Оглавление
+1. [Функции](#Функции)
+    - [`post_title`](#post_title)
+    - [`post_date`](#post_date)
+    - [`post_time`](#post_time)
+    - [`post_description`](#post_description)
+    - [`post_event`](#post_event)
 
 ## Функции
 
@@ -25,14 +23,13 @@
 - `title` (str): Заголовок события для отправки.
 
 **Возвращает**:
-- `bool`: `True`, если заголовок отправлен успешно, иначе `None`.
+- `bool`: `True`, если заголовок успешно отправлен, иначе `None`.
 
-**Пример использования**:
-
+**Примеры**:
 ```python
-driver = Driver(...)
-title = "Название события"
-post_title(driver, title)
+>>> driver = Driver(...)
+>>> post_title(driver, "Заголовок события")
+True
 ```
 
 ### `post_date`
@@ -44,14 +41,13 @@ post_title(driver, title)
 - `date` (str): Дата события для отправки.
 
 **Возвращает**:
-- `bool`: `True`, если дата отправлена успешно, иначе `None`.
+- `bool`: `True`, если дата успешно отправлена, иначе `None`.
 
-**Пример использования**:
-
+**Примеры**:
 ```python
-driver = Driver(...)
-date = "2024-08-15"
-post_date(driver, date)
+>>> driver = Driver(...)
+>>> post_date(driver, "2024-07-24")
+True
 ```
 
 ### `post_time`
@@ -63,14 +59,13 @@ post_date(driver, date)
 - `time` (str): Время события для отправки.
 
 **Возвращает**:
-- `bool`: `True`, если время отправлено успешно, иначе `None`.
+- `bool`: `True`, если время успешно отправлено, иначе `None`.
 
-**Пример использования**:
-
+**Примеры**:
 ```python
-driver = Driver(...)
-time = "14:00"
-post_time(driver, time)
+>>> driver = Driver(...)
+>>> post_time(driver, "12:00")
+True
 ```
 
 ### `post_description`
@@ -82,36 +77,30 @@ post_time(driver, time)
 - `description` (str): Описание события для отправки.
 
 **Возвращает**:
-- `bool`: `True`, если описание отправлено успешно, иначе `None`.
+- `bool`: `True`, если описание успешно отправлено, иначе `None`.
 
-**Пример использования**:
-
+**Примеры**:
 ```python
-driver = Driver(...)
-description = "Описание события"
-post_description(driver, description)
+>>> driver = Driver(...)
+>>> post_description(driver, "Описание события")
+True
 ```
 
 ### `post_event`
 
-**Описание**: Управляет процессом публикации события с заголовком, датой, временем, описанием и ссылкой.
+**Описание**: Управляет процессом публикации события, включая ввод заголовка, даты, времени, описания и отправку события.
 
 **Параметры**:
 - `d` (Driver): Экземпляр драйвера, используемый для взаимодействия с веб-страницей.
-- `event` (SimpleNamespace): Объект с данными о событии, включая заголовок, дату, время, описание и рекламную ссылку.
+- `event` (SimpleNamespace): Объект, содержащий детали события: заголовок (`title`), дата и время начала (`start`), описание (`description`) и рекламная ссылка (`promotional_link`).
 
 **Возвращает**:
-- `bool`: `True`, если событие опубликовано успешно, иначе `None`.
+- `bool`: `True`, если событие успешно опубликовано, иначе `None`.
 
-**Пример использования**:
-
+**Примеры**:
 ```python
-driver = Driver(...)
-event = SimpleNamespace(
-    title="Название события",
-    start="2024-08-15 14:00",
-    description="Описание события",
-    promotional_link="https://example.com"
-)
-post_event(driver, event)
+>>> driver = Driver(...)
+>>> event = SimpleNamespace(title="Заголовок события", start="2024-07-24 12:00", description="Описание события", promotional_link="https://example.com")
+>>> post_event(driver, event)
+True
 ```

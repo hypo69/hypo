@@ -1,291 +1,205 @@
+## ИНСТРУКЦИЯ:
+
+Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
+
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
+    которые импортируются при создании диаграммы. 
+    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
+    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
+    
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+    
+        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
+    ```
+
+3. **<объяснение>**: Предоставьте подробные объяснения:  
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
+   - **Переменные**: Их типы и использование.  
+   - Выделите потенциальные ошибки или области для улучшения.  
+
+Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
+
+Это обеспечивает всесторонний и структурированный анализ кода.
+## Формат ответа: `.md` (markdown)
+**КОНЕЦ ИНСТРУКЦИИ**
+
 ## <алгоритм>
 
-1.  **Инициализация:**
-    *   При загрузке окна (событие `load`):
-        *   Получение элементов DOM (кнопки, поля ввода, переключатели и т.д.) из HTML-документа.
-        *   Установка слушателей событий для элементов (например, `click` для кнопок, `keypress` для полей ввода).
-        *   Добавление заголовка таблицы для результатов и контекстных деталей (`fu.createDetailTableHeader()`).
-        *   Отправка запроса на добавление стилей в popup (`requestInsertStyleToPopup`).
-        *   Отправка запроса на восстановление состояния popup (`requestRestorePopupState`).
+```mermaid
+graph LR
+    A[Начало: Загрузка popup.js] --> B{Событие "load" window};
+    B -- да --> C[Инициализация DOM элементов];
+    C --> D[Установка слушателей событий];
+    D --> E{Событие "click" на "execute"};
+    E -- да --> F[Создание сообщения для выполнения скрипта];
+    F --> G[Отправка сообщения в активную вкладку];
+    G --> H{Обработка сообщения в content.js};
+    H --> I[Выполнение XPath и возврат результатов];
+    I --> J{Событие "message" в popup.js};
+    J -- да --> K[Обновление таблицы результатов];
+    K --> L{Событие "click" на кнопку в таблице результатов};
+    L -- да --> M[Отправка сообщения в content.js о фокусе на элементе];
+    M --> N[Фокус на элементе в content.js];
+    B -- нет --> O[Продолжение ожидания];
+    O --> B;
+    J -- нет --> P{Другие события "message"};
+    P -- "restorePopupState" --> Q[Восстановление состояния popup];
+    P -- "insertStyleToPopup" --> R[Вставка CSS в popup];
+    P -- "addFrameId" --> S[Добавление frameId в список];
+    
+    
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+```
 
-2.  **Обработка событий:**
-    *   **`click` на "execute":**
-        *   Создание сообщения `execute` с данными о выражениях XPath, методах и типах результатов (`makeExecuteMessage()`).
-        *   Отправка сообщения в указанный фрейм (`sendToSpecifiedFrame()`).
-    *   **`keypress` в полях ввода выражений (XPath):**
-        *   Если нажата клавиша Enter (и не Shift), отправляется сообщение `execute`.
-    *   **`click` на заголовках "context", "resolver", "frame designation", "frame id":**
-        *   Изменение видимости соответствующих блоков (скрытие/показ) (`changeContextVisible`, `changeResolverVisible`, `changeFrameDesignationVisible`, `changeFrameIdVisible`).
-    *   **`click` на "help-body":**
-        *   Изменение видимости всех элементов с классом "help" (`changeHelpVisible`).
-    *   **`click` на "focus-designated-frame":**
-        *   Отправка сообщения `focusFrame` в указанный фрейм с выражением для фрейма (`frameDesignationExpression.value`).
-    *   **`click` на "get-all-frame-id":**
-        *   Очистка списка фреймов.
-        *   Добавление опции "Manual".
-        *   Запрос всех фреймов (`browser.tabs.executeScript`) и отправка им сообщения `"addFrameId"`.
-    *   **`click` на "show-previous-results", "focus-frame", "show-all-results", "set-style", "reset-style", "set-all-style", "reset-all-style":**
-        *   Отправка соответствующих сообщений в нужный фрейм или активную вкладку (`sendToSpecifiedFrame` или `sendToActiveTab`).
-    *   **`click` на `contextTbody` (контекстная таблица):**
-        *   Если кликнут `button`, отправляется сообщение `focusContextItem` в связанную вкладку, чтобы выделить элемент в контексте.
-    *   **`click` на "previous-details-page", "move-details-page", "next-details-page":**
-        *   Отображение соответствующей страницы деталей результатов (`showDetailsPage`).
-    *   **`click` на `resultsTbody` (таблица результатов):**
-        *   Если кликнута `button`, отправляется сообщение `focusItem` в связанную вкладку, чтобы выделить элемент результата.
-    *   **`unload` (закрытие окна):**
-        *   Сбор состояния popup (`collectPopupState()`) и отправка сообщения `storePopupState` для сохранения.
-3.  **Взаимодействие с контент-скриптами:**
-    *   Функция `sendToActiveTab(msg, opts)` отправляет сообщение активной вкладке.
-    *   Функция `sendToSpecifiedFrame(msg)` отправляет сообщение в определенный фрейм, предварительно проверяя наличие скриптов.
-    *   Функция `execContentScript()` внедряет скрипты `try_xpath_functions.js` и `try_xpath_content.js` во все фреймы.
-4.  **Обработка сообщений:**
-    *   Функция `genericListener` обрабатывает входящие сообщения, перенаправляя их в соответствующие обработчики:
-        *   **`showResultsInPopup`**: Показывает результаты поиска в popup (сообщение, детали, количество, id фрейма).
-        *   **`restorePopupState`**: Восстанавливает состояние popup из сохраненных данных.
-        *   **`insertStyleToPopup`**: Добавляет стили в popup.
-        *    **`addFrameId`**: Добавляет идентификатор фрейма в список идентификаторов фреймов.
-5.  **Функции `showDetailsPage`:**
-    *   Отображает страницу деталей в таблице результатов с учетом размера страницы и текущего индекса.
-6.  **Функции `collectPopupState`:**
-    *   Собирает состояние элементов интерфейса popup в объект для сохранения.
-7.  **Функции `getSpecifiedFrameId`:**
-    *   Определяет идентификатор фрейма на основе выбранного значения из списка или из поля ввода.
+**Примеры:**
+
+*   **Инициализация DOM элементов:** Нахождение элементов на странице popup.html по их ID (`document.getElementById`).
+*   **Установка слушателей событий:** Назначение функций-обработчиков на события клика и ввода. Например, на кнопке `execute` висит `sendExecute`, на текстовых полях - `handleExprEnter`
+*   **Создание сообщения для выполнения скрипта:** Функция `makeExecuteMessage` создает объект с данными для выполнения XPath, включая сам XPath, метод, тип результата и т.д.
+*   **Отправка сообщения в активную вкладку:** Функция `sendToSpecifiedFrame` или `sendToActiveTab` отправляет сообщение с данными в content script.
+*   **Обработка сообщения в content.js:** Скрипт `try_xpath_content.js` принимает сообщение, выполняет XPath, возвращает результаты.
+*   **Обновление таблицы результатов:** Функция `fu.updateDetailsTable` обновляет HTML таблицу результатами.
+*   **Отправка сообщения в content.js о фокусе на элементе:** При клике на кнопку в таблице popup.js отправляется сообщение о фокусе на определенном элементе.
+*    **Фокус на элементе в content.js:** content.js получает сообщение и подсвечивает/фокусируется на элементе, полученном из XPath.
+*   **Восстановление состояния popup:** При получении сообщения `restorePopupState`, popup.js восстанавливает состояние полей из сохраненных данных.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Начало: Загрузка popup.js] --> Initialize[Инициализация DOM элементов и слушателей событий]
-    Initialize --> AddListeners[Добавление слушателей событий]
-    AddListeners --> GenericListener[Установка слушателя сообщений browser.runtime.onMessage]
+    subgraph Popup Script
+        A[Start: window.onload] --> B(Initialize DOM Elements);
+        B --> C{Event Listeners};
+        C --> D(sendToSpecifiedFrame);
+        D --> E{makeExecuteMessage};
+        E --> F[send to content.js]
+        F --> G{onMessage listener}
+        G -- showResultsInPopup --> H(update results table)
+        G -- restorePopupState --> I(restore form state)
+        G -- insertStyleToPopup --> J(insert style tag to popup)
+        G -- addFrameId --> K(add frame id to list)
+        H --> L{click on context button}
+        L --> M[send message to content.js focusContextItem]
+        I --> C
+        K --> C
+        J --> C
+        L --> C
+        C --> D
+    end
+    subgraph Content Script
+       N[Start] --> O{Receive message from popup}
+       O -- execute --> P(Execute XPath)
+       P --> Q(send result to popup)
+       O -- focusItem --> R[Focus on Item]
+        O -- focusContextItem --> S[Focus on context item]
+        O -- initializeBlankWindows --> T[Initialize Blank Window]
+        O -- setStyle --> U[Set Style to content]
+        O -- resetStyle --> V[Reset Style to content]
+        O -- requestShowResultsInPopup --> W[Send Results To Popup]
+        O -- requestShowAllResults --> X[Send All Results to popup]
+        O -- focusFrame --> Y[Focus on Frame]
+        O --> Z[Send "addFrameId" message to popup]
+       Q --> G
+        R --> O
+        S --> O
+        T --> O
+        U --> O
+        V --> O
+        W --> G
+        X --> G
+        Y --> O
+        Z --> K
+    end
 
-    GenericListener --> CheckMessageEvent{Проверка message.event}
-    CheckMessageEvent -- "showResultsInPopup" --> ShowResults[Отображение результатов в popup]
-    CheckMessageEvent -- "restorePopupState" --> RestoreState[Восстановление состояния popup]
-    CheckMessageEvent -- "insertStyleToPopup" --> InsertStyle[Вставка стилей в popup]
-    CheckMessageEvent -- "addFrameId" --> AddFrameIdToList[Добавление id фрейма в список]
-    CheckMessageEvent -- Другое --> IgnoreMessage[Игнорировать сообщение]
+    linkStyle 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14 stroke:#333,stroke-width:1px
+    linkStyle 15,16,17,18,19,20,21,22,23,24,25,26 stroke:#333,stroke-width:1px
 
-
-    AddListeners --> ExecuteButtonClick{Клик на кнопке "execute"}
-    ExecuteButtonClick --> MakeExecuteMessage[Создание сообщения execute]
-    MakeExecuteMessage --> SendToSpecifiedFrame[Отправка сообщения в определенный фрейм]
-    
-    AddListeners --> KeypressOnExpression{Нажатие клавиши в полях ввода (XPath)}
-     KeypressOnExpression -- Enter --> MakeExecuteMessage
-     KeypressOnExpression -- Другая клавиша --> Continue[Продолжить]
-
-    AddListeners --> ContextHeaderClick{Клик на заголовке "context"}
-    ContextHeaderClick --> ChangeContextVisibility[Изменение видимости блока "context"]
-
-    AddListeners --> ResolverHeaderClick{Клик на заголовке "resolver"}
-    ResolverHeaderClick --> ChangeResolverVisibility[Изменение видимости блока "resolver"]
-
-    AddListeners --> FrameDesignationHeaderClick{Клик на заголовке "frame designation"}
-    FrameDesignationHeaderClick --> ChangeFrameDesignationVisibility[Изменение видимости блока "frame designation"]
-
-     AddListeners --> FrameIdHeaderClick{Клик на заголовке "frame id"}
-    FrameIdHeaderClick --> ChangeFrameIdVisibility[Изменение видимости блока "frame id"]
-
-    AddListeners --> HelpBodyClick{Клик на "help-body"}
-    HelpBodyClick --> ChangeHelpVisibility[Изменение видимости элементов "help"]
-    
-    AddListeners --> FocusDesignatedFrameClick{Клик на "focus-designated-frame"}
-     FocusDesignatedFrameClick --> SendFocusDesignatedFrameMessage[Отправка сообщения focusFrame в определенный фрейм]
-     
-     AddListeners --> GetAllFrameIdClick{Клик на "get-all-frame-id"}
-     GetAllFrameIdClick -->  ClearFrameIdList[Очистка списка id фреймов]
-     ClearFrameIdList -->  AddManualFrameId[Добавление опции "manual"]
-      AddManualFrameId --> RequestAllFrameId[Запрос всех id фреймов]
-
-    AddListeners --> ShowPreviousResultsClick{Клик на "show-previous-results"}
-    ShowPreviousResultsClick --> SendRequestShowResultsInPopup[Отправка запроса на показ предыдущих результатов]
-
-    AddListeners --> FocusFrameClick{Клик на "focus-frame"}
-    FocusFrameClick --> SendFocusFrameMessage[Отправка сообщения focusFrame в определенный фрейм]
-
-    AddListeners --> ShowAllResultsClick{Клик на "show-all-results"}
-     ShowAllResultsClick --> SendRequestShowAllResults[Отправка запроса на показ всех результатов]
-    
-    AddListeners --> SetStyleClick{Клик на "set-style"}
-    SetStyleClick --> SendSetStyleMessageToFrame[Отправка сообщения setStyle в определенный фрейм]
-     
-     AddListeners --> ResetStyleClick{Клик на "reset-style"}
-     ResetStyleClick --> SendResetStyleMessageToFrame[Отправка сообщения resetStyle в определенный фрейм]
-
-    AddListeners --> SetAllStyleClick{Клик на "set-all-style"}
-    SetAllStyleClick --> SendSetStyleMessageToActiveTab[Отправка сообщения setStyle в активную вкладку]
-     
-      AddListeners --> ResetAllStyleClick{Клик на "reset-all-style"}
-     ResetAllStyleClick --> SendResetStyleMessageToActiveTab[Отправка сообщения resetStyle в активную вкладку]
-
-    AddListeners --> ContextTbodyClick{Клик на таблице contextTbody}
-    ContextTbodyClick -- "Клик на button" --> SendFocusContextItemMessage[Отправка сообщения focusContextItem]
-    ContextTbodyClick -- Другой клик --> Continue
-
-    AddListeners --> PreviousDetailsPageClick{Клик на "previous-details-page"}
-    PreviousDetailsPageClick --> ShowPreviousDetailsPage[Отображение предыдущей страницы деталей]
-
-    AddListeners --> MoveDetailsPageClick{Клик на "move-details-page"}
-    MoveDetailsPageClick --> ShowSelectedDetailsPage[Отображение выбранной страницы деталей]
-
-    AddListeners --> NextDetailsPageClick{Клик на "next-details-page"}
-    NextDetailsPageClick --> ShowNextDetailsPage[Отображение следующей страницы деталей]
-
-    AddListeners --> ResultsTbodyClick{Клик на таблице resultsTbody}
-    ResultsTbodyClick -- "Клик на button" --> SendFocusItemMessage[Отправка сообщения focusItem]
-    ResultsTbodyClick -- Другой клик --> Continue
-     
-    AddListeners --> UnloadWindow{Закрытие popup}
-     UnloadWindow --> CollectPopupState[Сбор состояния popup]
-     CollectPopupState --> StorePopupState[Отправка сообщения для сохранения состояния]
-   
-    SendToSpecifiedFrame --> CheckContentScript[Проверка на наличие try_xpath скриптов]
-     CheckContentScript -- "Скрипты не найдены"--> ExecContentScript[Внедрение скриптов try_xpath_functions.js и try_xpath_content.js]
-     CheckContentScript -- "Скрипты найдены"--> SendMessageToFrame[Отправка сообщения в указанный frame]
-     
-    ExecContentScript --> SendMessageToFrame
-    SendMessageToFrame -->  HandleResponseFromFrame[Обработка ответа фрейма]
-    
-    ShowResults --> UpdateResultsDisplay[Обновление интерфейса с результатами]
-    RestoreState --> ApplyPopupState[Применение сохраненного состояния]
-    InsertStyle --> AddStyleToHead[Добавление стилей в head]
-    AddFrameIdToList --> AppendFrameId[Добавление id фрейма в список]
-     ShowPreviousDetailsPage --> ShowDetailsPage
-     ShowSelectedDetailsPage --> ShowDetailsPage
-      ShowNextDetailsPage --> ShowDetailsPage
-
-    SendRequestShowResultsInPopup --> SendMessageToFrame
-     SendFocusDesignatedFrameMessage --> SendMessageToFrame
-    SendRequestShowAllResults --> SendMessageToFrame
-    SendFocusFrameMessage --> SendMessageToFrame
-    SendSetStyleMessageToFrame --> SendMessageToFrame
-    SendResetStyleMessageToFrame --> SendMessageToFrame
-    SendSetStyleMessageToActiveTab --> SendMessageToActiveTab
-     SendResetStyleMessageToActiveTab --> SendMessageToActiveTab
-     SendFocusContextItemMessage --> SendMessageToFrame
-     SendFocusItemMessage --> SendMessageToFrame
-        StorePopupState --> SendMessageToBackground[Отправка сообщения в background.js]
-     
-      SendMessageToActiveTab --> HandleResponseFromActiveTab[Обработка ответа активной вкладки]
-    
 ```
+
+**Разбор зависимостей:**
+
+*   **`popup.js`**: Основной скрипт для управления popup окном. Отвечает за взаимодействие с пользователем, отправку запросов в content script и отображение результатов.
+*   **`try_xpath_content.js`**: Content script, который выполняется на веб-страницах. Он получает сообщения из popup.js, выполняет XPath и отправляет результаты обратно.
+*   **`try_xpath_functions.js`**:  Содержит общие функции для работы со скриптами, в основном для работы с таблицами (создание, обновление).
+*  **`try_xpath_check_frame.js`**: Скрипт проверяет, был ли ранее инициализирован `try_xpath_content.js` в текущем фрейме, если нет - инициализирует.
+*   **`browser.tabs` API**:  Используется для взаимодействия между popup.js и content script. Например, для отправки и получения сообщений, выполнения скриптов и т.д.
+*  **`browser.runtime` API**: Используется для взаимодействия popup.js с фоновым скриптом, для хранения состояния popup.
 
 ## <объяснение>
 
-### Импорты:
--   `tryxpath` и `tryxpath.functions`: Предположительно, это пользовательские модули, которые предоставляют функциональность для работы с XPath и другими операциями, связанными с поиском элементов на веб-странице. Вероятно, что `tryxpath` это основной модуль, а `tryxpath.functions` это модуль с различными утилитами. `tryxpath` в данном коде,  объявлен как `tx`,  а  `tryxpath.functions` как `fu`. Так же, как можно предположить, данные библиотеки располагаются в том же пакете `src`.
--  `browser` - это API браузера, предоставляющее доступ к функциям расширения (вкладки, сообщения и т.д.).
+**Импорты:**
 
-### Переменные:
--   `noneClass`, `helpClass`: Строковые константы для CSS-классов. Используются для управления видимостью элементов (например, `.none` для скрытия).
--   `invalidTabId`, `invalidExecutionId`, `invalidFrameId`: Константы, представляющие некорректные значения для идентификаторов.
--   `mainWay`, `mainExpression`, `contextCheckbox` и др.: Переменные для хранения ссылок на DOM-элементы (поля ввода, кнопки, списки и т. д.).
--   `relatedTabId`, `relatedFrameId`, `executionId`: Переменные для отслеживания текущей вкладки, фрейма и идентификатора выполнения.
--   `resultedDetails`: Массив для хранения деталей результатов XPath.
--   `detailsPageSize`, `detailsPageIndex`: Константы и переменные для пагинации результатов.
--   `window`: Ссылка на глобальный объект `window`.
+*   `browser.tabs`: API для работы с вкладками браузера. Используется для отправки сообщений в контентные скрипты на страницах, открытия новых вкладок и т.д.
+*   `browser.runtime`: API для управления расширением, например, для сохранения данных, открытия страницы опций.
+*   `tryxpath`: Объект `tryxpath` и его свойство `tryxpath.functions`  предположительно, содержат общие функции, используемые в рамках расширения. В данном коде используются только `tryxpath.functions`.
 
-### Функции:
--   `sendToActiveTab(msg, opts)`:
-    *   **Аргументы**:
-        *   `msg` (Object): Объект сообщения для отправки.
-        *   `opts` (Object, опционально): Дополнительные опции для отправки сообщения.
-    *   **Возвращает**: `Promise`: Промис, разрешающийся после отправки сообщения.
-    *   **Назначение**: Отправляет сообщение активной вкладке текущего окна. Сначала получает активную вкладку, а затем отправляет сообщение, используя `browser.tabs.sendMessage`.
-    *   **Пример:**
-        ```javascript
-        sendToActiveTab({ event: "myEvent", data: "someData" })
-          .then(() => console.log("Сообщение отправлено"));
-        ```
--   `sendToSpecifiedFrame(msg)`:
-    *   **Аргументы**:
-        *   `msg` (Object): Объект сообщения для отправки.
-    *   **Возвращает**: `Promise`: Промис, разрешающийся после отправки сообщения или в случае ошибки.
-    *   **Назначение**: Отправляет сообщение в определенный фрейм. Перед отправкой проверяет наличие скрипта `try_xpath_check_frame.js` в указанном фрейме. Если скрипта нет, то внедряет `try_xpath_functions.js` и `try_xpath_content.js` скрипты.
-        *   Если произошла ошибка при отправке сообщения, выводит сообщение об ошибке `showError`.
-    *   **Пример:**
-    ```javascript
-    sendToSpecifiedFrame({event:"doSomething", value: "test"})
-      .then(() => console.log("Сообщение отправлено в определенный frame"));
-    ```
--   `collectPopupState()`:
-    *   **Аргументы**: Нет.
-    *   **Возвращает**: `Object`: Объект с состоянием popup.
-    *   **Назначение**: Собирает состояние всех элементов управления popup для дальнейшего сохранения.
--   `changeContextVisible()`, `changeResolverVisible()`, `changeFrameIdVisible()`, `changeFrameDesignationVisible()`, `changeHelpVisible()`:
-    *   **Аргументы**: Нет.
-    *   **Возвращает**: Нет.
-    *   **Назначение**: Управляют видимостью соответствующих блоков popup, добавляя или удаляя CSS-класс `none`.
--   `makeExecuteMessage()`:
-    *   **Аргументы**: Нет.
-    *   **Возвращает**: `Object`: Объект сообщения для события `execute` с данными из полей ввода.
-    *   **Назначение**: Создает сообщение с данными из полей ввода для отправки контент скрипту. Сообщение содержит выражения XPath, методы и т.д. в зависимости от выбранных опций в popup.
--    `getSpecifiedFrameId()`:
-    *   **Аргументы**: Нет.
-    *   **Возвращает**: `Number`: Идентификатор фрейма.
-    *   **Назначение**: Получает идентификатор фрейма из списка или поля ввода в зависимости от выбранных параметров.
--   `execContentScript()`:
-    *   **Аргументы**: Нет.
-    *   **Возвращает**: `Promise`: Промис, разрешающийся после внедрения скриптов.
-    *   **Назначение**: Внедряет скрипты `try_xpath_functions.js` и `try_xpath_content.js` во все фреймы текущей вкладки.
--   `sendExecute()`:
-    *   **Аргументы**: Нет.
-    *   **Возвращает**: Нет.
-    *   **Назначение**: Отправляет сообщение `execute` в указанный фрейм, вызывая функцию `sendToSpecifiedFrame`.
--   `handleExprEnter(event)`:
-    *   **Аргументы**: `event` (Event): Объект события.
-    *   **Возвращает**: Нет.
-    *   **Назначение**: Обрабатывает нажатие клавиши Enter в полях ввода выражений. Если нажата Enter (и не Shift), вызывает `sendExecute()` для отправки запроса.
--   `showDetailsPage(index)`:
-    *   **Аргументы**: `index` (Number): Индекс страницы для отображения.
-    *   **Возвращает**: Нет.
-    *   **Назначение**: Отображает страницу деталей результатов на основе заданного индекса. Ограничивает индекс, чтобы он не выходил за границы массива результатов. Использует `fu.updateDetailsTable` для обновления таблицы и управляет прокруткой страницы.
--   `showError(message, frameId)`:
-    *   **Аргументы**:
-        *   `message` (String): Сообщение об ошибке.
-        *   `frameId` (Number): Идентификатор фрейма, где произошла ошибка.
-    *   **Возвращает**: Нет.
-    *   **Назначение**: Выводит сообщение об ошибке в popup и сбрасывает связанные данные.
--   `genericListener(message, sender, sendResponse)`:
-    *   **Аргументы**:
-        *   `message` (Object): Объект сообщения.
-        *   `sender` (Object): Объект отправителя сообщения.
-        *   `sendResponse` (Function): Функция для отправки ответа.
-    *   **Возвращает**: Зависит от обработчика
-    *   **Назначение**: Принимает сообщения от `browser.runtime.onMessage` и перенаправляет их в соответствующий обработчик на основе `message.event`.
-    *   **Пример:**
-        ```javascript
-        // ...
-        genericListener.listeners.showResultsInPopup = function (message, sender){
-            // Обработка сообщения
-        };
-        // ...
-        browser.runtime.onMessage.addListener(genericListener);
-        ```
-    - `genericListener.listeners.showResultsInPopup`:
-        *   **Назначение**: Отображает результаты поиска, полученные от контент-скрипта.
-    - `genericListener.listeners.restorePopupState`:
-        *   **Назначение**: Восстанавливает состояние popup из сохраненных данных.
-    - `genericListener.listeners.insertStyleToPopup`:
-        *   **Назначение**: Добавляет стили в popup.
-    - `genericListener.listeners.addFrameId`:
-        *   **Назначение**: Добавляет идентификатор фрейма в список идентификаторов фреймов.
+**Переменные:**
 
-### Потенциальные проблемы и области для улучшения:
--   **Обработка ошибок**: В коде есть обработка ошибок в `sendToSpecifiedFrame`, но в остальных местах, где используются Promise, нет явной обработки ошибок. Это может привести к необработанным исключениям.
--   **Производительность**: Функция `changeHelpVisible` перебирает все элементы с классом `help`, что может быть неэффективно при большом количестве таких элементов.
--   **Код повторяется**:  Много схожего кода для `click` и `keypress` слушателей. Возможно, следует вынести в функцию.
--   **Сложная логика**: Функция `genericListener` имеет сложную логику, которая может стать сложнее с добавлением новых сообщений. Можно было бы использовать более модульный подход.
--   **Зависимость от DOM**: Код имеет сильную зависимость от DOM-структуры popup. Изменение HTML-документа может привести к поломке кода.
+*   `noneClass`, `helpClass`: Строковые константы, используемые для управления видимостью элементов.
+*   `invalidTabId`, `invalidExecutionId`, `invalidFrameId`: Константы, используемые для обозначения невалидных значений.
+*   `mainWay`, `mainExpression`, `contextCheckbox`, `contextHeader`, `contextBody`, `contextWay`, `contextExpression`, `resolverHeader`, `resolverBody`, `resolverCheckbox`, `resolverExpression`, `frameDesignationHeader`, `frameDesignationCheckbox`, `frameDesignationBody`, `frameDesignationExpression`, `frameIdHeader`, `frameIdCheckbox`, `frameIdBody`, `frameIdList`, `frameIdExpression`, `resultsMessage`, `resultsTbody`, `contextTbody`, `resultsCount`, `resultsFrameId`, `detailsPageCount`, `helpBody`, `helpCheckbox`: DOM элементы.
+*   `relatedTabId`, `relatedFrameId`, `executionId`:  Хранят идентификаторы текущей вкладки, фрейма и выполнения.
+*   `resultedDetails`: Массив, содержащий детали результатов выполнения XPath.
+*  `detailsPageSize`: Размер одной страницы результатов.
+*   `detailsPageIndex`: Индекс текущей страницы результатов.
 
-### Цепочка взаимосвязей с другими частями проекта:
-1.  **`popup.js`** -> **`try_xpath_content.js`**: `popup.js` отправляет сообщения с инструкциями для `try_xpath_content.js` (например, execute, focusItem, focusContextItem).  `try_xpath_content.js` отправляет сообщения с результатами обратно в `popup.js`.
-2.  **`popup.js`** -> **`try_xpath_functions.js`**:  `popup.js` внедряет скрипт `try_xpath_functions.js`, но прямого взаимодействия нет. `try_xpath_functions.js` выполняет вспомогательные функции (например, создает структуру таблицы) по запросу от `popup.js`.
-3.  **`popup.js`** -> **`background.js`**:  `popup.js` отправляет сообщения `storePopupState`,  `requestInsertStyleToPopup`, `requestRestorePopupState`  в `background.js` для сохранения состояния и других операций.
-4.  **`popup.js`** -> **`try_xpath_check_frame.js`**: `popup.js` использует `try_xpath_check_frame.js` для проверки, был ли уже внедрен скрипт в iframe перед отправкой сообщения.
-5. **`popup.html`** -> **`popup.js`**: HTML документ (popup) загружает  `popup.js`, которая ищет DOM элементы в HTML и управляет ими.
+**Функции:**
 
-**Общее описание:**
+*   **`sendToActiveTab(msg, opts)`**: Отправляет сообщение `msg` в активную вкладку.
+*   **`sendToSpecifiedFrame(msg)`**: Отправляет сообщение `msg` в указанный фрейм.
+*   **`collectPopupState()`**: Собирает данные из всех полей popup окна и возвращает объект с состоянием.
+*   **`changeContextVisible()`, `changeResolverVisible()`, `changeFrameIdVisible()`, `changeFrameDesignationVisible()`, `changeHelpVisible()`**: Управляют видимостью блоков popup окна.
+*   **`makeExecuteMessage()`**: Создает объект сообщения для отправки в content script.
+*  **`getSpecifiedFrameId()`**: Получает идентификатор фрейма для выполнения XPath.
+*   **`execContentScript()`**: Инжектит контент-скрипты на страницу.
+*   **`sendExecute()`**: Отправляет запрос на выполнение XPath.
+*   **`handleExprEnter(event)`**:  Обрабатывает нажатие Enter в текстовых полях.
+*   **`showDetailsPage(index)`**: Отображает страницу результатов.
+*   **`showError(message, frameId)`**: Отображает сообщение об ошибке.
+*  **`genericListener(message, sender, sendResponse)`**:  Универсальный обработчик входящих сообщений от content script.
+*  **`genericListener.listeners.showResultsInPopup(message, sender)`**: Обрабатывает входящие результаты выполнения XPath.
+*   **`genericListener.listeners.restorePopupState(message)`**: Восстанавливает состояние popup окна.
+*  **`genericListener.listeners.insertStyleToPopup(message)`**: Вставляет стили в popup окно.
+*  **`genericListener.listeners.addFrameId(message, sender)`**: Добавляет `frameId` в список доступных фреймов.
 
-`popup.js` выступает в роли контроллера для popup-интерфейса расширения. Он получает пользовательский ввод, отправляет сообщения в контент-скрипты (вкладки и фреймы), обрабатывает ответы от них и обновляет интерфейс popup. Также сохраняет и восстанавливает состояние popup, взаимодействуя с `background.js`.
+**Объяснение:**
+
+Данный код представляет собой основной скрипт popup окна для расширения TryXPath. Он отвечает за взаимодействие с пользователем, сбор данных, отправку запросов на выполнение XPath в контент-скрипт и отображение результатов.
+
+**Основные моменты:**
+
+1.  **Инициализация**: При загрузке окна скрипт получает ссылки на все DOM-элементы, назначает обработчики событий на кнопки и текстовые поля.
+2.  **Сбор данных**: При нажатии кнопки "execute", скрипт собирает данные из всех полей (XPath, контекст, настройки фрейма и т.д.) и формирует сообщение для контент-скрипта.
+3.  **Взаимодействие с контент-скриптом**: Сообщение отправляется в контент-скрипт, который выполняет XPath запрос и возвращает результаты.
+4.  **Обработка результатов**: Popup скрипт получает результаты, обновляет таблицу с деталями и отображает общее количество результатов.
+5. **Сохранение и восстановление состояния**: Скрипт сохраняет состояние всех полей при закрытии popup и восстанавливает их при открытии. Это достигается путем обмена сообщениями с фоновым скриптом расширения.
+6.  **Управление видимостью**: Код отвечает за управление видимостью различных секций окна (контекст, резолвер, фрейм).
+7.  **Фокус на элементе**: При клике на кнопку в таблице результатов, скрипт отправляет сообщение контент-скрипту с запросом сфокусировать элемент.
+
+**Потенциальные ошибки и улучшения:**
+
+*   **Асинхронность**:  В коде есть множество асинхронных операций (Promise, сообщения). Обработка ошибок и отладка в таких условиях может быть сложной.
+*   **Дублирование кода**: Код для обработки событий `click` и `keypress` на заголовках секций дублируется. Можно создать отдельную функцию.
+*   **Неявные зависимости**: Код тесно связан со структурой HTML popup окна. Любые изменения в HTML могут сломать скрипт.
+*   **Обработка ошибок**:  Обработка ошибок в основном сводится к выводу сообщений. Можно добавить более подробную логику.
+*   **Улучшение производительности**: Можно оптимизировать работу с DOM, минимизировать количество обновлений, особенно для больших наборов результатов.
+*  **Отсутствует типизация**: Код написан на чистом JS, без типизации, что снижает читаемость и увеличивает риск ошибок. Можно добавить JSDoc для документации.
+
+**Взаимосвязи с другими частями проекта:**
+
+*   **`try_xpath_content.js`**: Является ключевым компонентом, принимающим запросы от popup и выполняющим XPath на страницах.
+*   **`try_xpath_functions.js`**: Содержит функции для создания и обновления HTML-таблиц, используемые как в popup, так и в content script.
+*   **Фоновый скрипт**: Используется для сохранения и восстановления состояния popup.
+*   **HTML popup**: Интерфейс, с которым взаимодействует данный скрипт.
+
+**Заключение:**
+
+Код является важной частью расширения TryXPath, обеспечивает интерфейс для пользователей для тестирования XPath запросов и взаимодействия с элементами на веб-страницах.

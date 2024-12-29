@@ -2,138 +2,99 @@
 
 ## Обзор
 
-Модуль `src.scenario.executor` предназначен для выполнения сценариев, загрузки их из файлов и обработки процесса извлечения информации о продуктах и их последующей вставки в PrestaShop.
+Модуль `src.scenario.executor` предназначен для выполнения сценариев, их загрузки из файлов, обработки процесса извлечения информации о продуктах и вставки их в PrestaShop.
 
-## Содержание
+## Оглавление
+1. [Функции](#Функции)
+    * [`dump_journal`](#dump_journal)
+    * [`run_scenario_files`](#run_scenario_files)
+    * [`run_scenario_file`](#run_scenario_file)
+    * [`run_scenarios`](#run_scenarios)
+    * [`run_scenario`](#run_scenario)
+    * [`insert_grabbed_data_to_prestashop`](#insert_grabbed_data_to_prestashop)
 
-- [Функции](#Функции)
-  - [`dump_journal`](#dump_journal)
-  - [`run_scenario_files`](#run_scenario_files)
-  - [`run_scenario_file`](#run_scenario_file)
-  - [`run_scenarios`](#run_scenarios)
-  - [`run_scenario`](#run_scenario)
-  - [`insert_grabbed_data`](#insert_grabbed_data)
-  - [`execute_PrestaShop_insert_async`](#execute_PrestaShop_insert_async)
-  - [`execute_PrestaShop_insert`](#execute_PrestaShop_insert)
-
-<br>
+---
 
 ## Функции
 
 ### `dump_journal`
 
-**Описание**: Сохраняет данные журнала в JSON-файл.
+**Описание**: Сохраняет данные журнала в JSON файл.
 
 **Параметры**:
-- `s` (Supplier): Экземпляр поставщика.
+- `s` (object): Экземпляр поставщика.
 - `journal` (dict): Словарь, содержащий данные журнала.
 
 **Возвращает**:
 - `None`
-
-<br>
 
 ### `run_scenario_files`
 
 **Описание**: Выполняет список файлов сценариев.
 
 **Параметры**:
-- `s` (Supplier): Экземпляр поставщика.
-- `scenario_files_list` (List[Path] | Path): Список путей к файлам сценариев или путь к одному файлу.
-
-**Возвращает**:
-- `bool`: True, если все сценарии были выполнены успешно, False в противном случае.
+- `s` (object): Экземпляр поставщика.
+- `scenario_files_list` (List[Path] | Path): Список путей к файлам сценариев или один путь к файлу.
 
 **Вызывает исключения**:
 - `TypeError`: Если `scenario_files_list` не является списком или объектом `Path`.
 
-<br>
+**Возвращает**:
+- `bool`: `True`, если все сценарии выполнены успешно, `False` в противном случае.
 
 ### `run_scenario_file`
 
 **Описание**: Загружает и выполняет сценарии из файла.
 
 **Параметры**:
-- `s` (Supplier): Экземпляр поставщика.
+- `s` (object): Экземпляр поставщика.
 - `scenario_file` (Path): Путь к файлу сценария.
 
 **Возвращает**:
-- `bool`: True, если сценарий был выполнен успешно, False в противном случае.
+- `bool`: `True`, если сценарий выполнен успешно, `False` в противном случае.
 
 **Вызывает исключения**:
 - `FileNotFoundError`: Если файл сценария не найден.
-- `json.JSONDecodeError`: Если не удалось декодировать JSON из файла сценария.
-
-<br>
+- `json.JSONDecodeError`: Если не удалось декодировать файл сценария в JSON.
 
 ### `run_scenarios`
 
-**Описание**: Выполняет список сценариев (НЕ ФАЙЛОВ).
+**Описание**: Функция для выполнения списка сценариев (НЕ ФАЙЛОВ).
 
 **Параметры**:
-- `s` (Supplier): Экземпляр поставщика.
-- `scenarios` (List[dict] | dict, optional): Список сценариев или один сценарий в виде словаря. По умолчанию `None`.
-- `_journal` (dict, optional): Журнал.
+- `s` (object): Экземпляр поставщика.
+- `scenarios` (Optional[List[dict] | dict], optional): Принимает список сценариев или один сценарий в виде словаря. По умолчанию `None`.
 
 **Возвращает**:
-- `List | dict | False`: Результат выполнения сценариев в виде списка или словаря, в зависимости от типа входных данных, или `False` в случае ошибки.
+- `List | dict | bool`: Результат выполнения сценариев в виде списка или словаря, в зависимости от типа входных данных, или `False` в случае ошибки.
 
-<br>
+**TODO**:
+- Проверить вариант, когда не указаны сценарии со всех сторон. Например, когда `s.current_scenario` не указан и сценарии не указаны.
 
 ### `run_scenario`
 
-**Описание**: Выполняет полученный сценарий.
+**Описание**: Функция для выполнения полученного сценария.
 
 **Параметры**:
-- `supplier` (Supplier): Экземпляр поставщика.
+- `supplier` (object): Экземпляр поставщика.
 - `scenario` (dict): Словарь, содержащий детали сценария.
-- `scenario_name` (str): Название сценария.
-- `_journal` (dict, optional): Журнал.
+- `scenario_name` (str): Имя сценария.
 
 **Возвращает**:
-- `List | dict | False`: Результат выполнения сценария.
+- `List | dict | bool`: Результат выполнения сценария.
 
-<br>
+**TODO**:
+- Проверить необходимость параметра `scenario_name`.
 
-### `insert_grabbed_data`
+### `insert_grabbed_data_to_prestashop`
 
-**Описание**: Вставляет полученные данные о продукте в PrestaShop.
-
-**Параметры**:
-- `product_fields` (ProductFields): Экземпляр `ProductFields`, содержащий информацию о продукте.
-
-**Возвращает**:
-- `None`
-
-<br>
-
-### `execute_PrestaShop_insert_async`
-
-**Описание**: Асинхронно вставляет данные о продукте в PrestaShop.
+**Описание**: Вставляет продукт в PrestaShop.
 
 **Параметры**:
 - `f` (ProductFields): Экземпляр `ProductFields`, содержащий информацию о продукте.
-- `coupon_code` (str, optional): Код купона. По умолчанию `None`.
-- `start_date` (str, optional): Дата начала акции. По умолчанию `None`.
-- `end_date` (str, optional): Дата окончания акции. По умолчанию `None`.
+- `coupon_code` (Optional[str], optional): Опциональный код купона. По умолчанию `None`.
+- `start_date` (Optional[str], optional): Опциональная дата начала акции. По умолчанию `None`.
+- `end_date` (Optional[str], optional): Опциональная дата окончания акции. По умолчанию `None`.
 
 **Возвращает**:
-- `None`
-
-<br>
-
-### `execute_PrestaShop_insert`
-
-**Описание**: Вставляет данные о продукте в PrestaShop.
-
-**Параметры**:
-- `f` (ProductFields): Экземпляр `ProductFields`, содержащий информацию о продукте.
-- `coupon_code` (str, optional): Код купона. По умолчанию `None`.
-- `start_date` (str, optional): Дата начала акции. По умолчанию `None`.
-- `end_date` (str, optional): Дата окончания акции. По умолчанию `None`.
-
-**Возвращает**:
-- `bool`: True, если вставка прошла успешно, False в противном случае.
-
-**Вызывает исключения**:
-- `Exception`: Если вставка данных в PrestaShop не удалась.
+- `bool`: `True`, если вставка прошла успешно, `False` в противном случае.

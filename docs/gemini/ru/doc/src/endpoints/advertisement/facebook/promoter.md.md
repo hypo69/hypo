@@ -2,14 +2,14 @@
 
 ## Обзор
 
-Модуль **Facebook Promoter** автоматизирует продвижение товаров и событий AliExpress в группах Facebook. Модуль обрабатывает публикацию рекламных материалов в Facebook, обеспечивая продвижение категорий и событий без дубликатов. Он использует WebDriver для автоматизации браузера, чтобы эффективно обрабатывать продвижения.
+Модуль **Facebook Promoter** автоматизирует продвижение товаров и событий AliExpress в группах Facebook. Модуль обрабатывает размещение рекламных объявлений в Facebook, обеспечивая продвижение категорий и событий без дубликатов. Он использует WebDriver для автоматизации браузера, чтобы эффективно обрабатывать рекламные акции.
 
 ## Возможности модуля
 
-- Продвижение категорий и событий в группы Facebook.
-- Избегание дубликатов продвижения путем отслеживания ранее продвигаемых элементов.
-- Поддержка конфигурации данных группы через файлы.
-- Возможность отключения загрузки видео в рекламных постах.
+- Продвижение категорий и событий в группах Facebook.
+- Избежание дублирования рекламных акций путем отслеживания ранее продвигавшихся элементов.
+- Поддержка конфигурации данных групп через файлы.
+- Возможность отключения загрузки видео в рекламных объявлениях.
 
 ## Требования
 
@@ -26,11 +26,11 @@
 
 ```mermaid
 flowchart TD
-    A[Start] --> B[Инициализация WebDriver];
+    A[Начало] --> B[Инициализация WebDriver];
     B --> C[Создание экземпляра FacebookPromoter];
     C --> D[Обработка групп для продвижения];
     D --> E[Получение данных группы];
-    E --> F{Данные группы действительны?};
+    E --> F{Действительны ли данные группы?};
     F -- Да --> G[Получение элемента категории для продвижения];
     F -- Нет --> H[Логирование ошибки и выход];
     G --> I{Можно ли продвигать группу?};
@@ -44,14 +44,14 @@ flowchart TD
 
 ## Использование
 
-### Пример использования класса FacebookPromoter
+### Пример использования класса `FacebookPromoter`
 
 ```python
 from src.endpoints.advertisement.facebook.promoter import FacebookPromoter
 from src.webdriver.driver import Driver
 from src.utils.jjson import j_loads_ns
 
-# Настройка экземпляра WebDriver (замените на фактический WebDriver)
+# Настройка экземпляра WebDriver (замените фактическим WebDriver)
 d = Driver()
 
 # Создание экземпляра FacebookPromoter
@@ -61,7 +61,7 @@ promoter = FacebookPromoter(
     group_file_paths=["path/to/group/file1.json", "path/to/group/file2.json"]
 )
 
-# Начало продвижения товаров или событий
+# Начать продвижение товаров или событий
 promoter.process_groups(
     campaign_name="Campaign1",
     events=[], 
@@ -71,7 +71,7 @@ promoter.process_groups(
 )
 ```
 
-## Документация класса
+## Документация по классу
 
 ### Класс `FacebookPromoter`
 
@@ -79,200 +79,93 @@ promoter.process_groups(
 
 #### Методы
 
-##### `__init__`
+##### `__init__(self, d: Driver, promoter: str, group_file_paths: Optional[list[str | Path] | str | Path] = None, no_video: bool = False)`
 
-```python
-def __init__(self, d: Driver, promoter: str, group_file_paths: Optional[list[str | Path] | str | Path] = None, no_video: bool = False) -> None:
-    """
-    Args:
-        d (Driver): Экземпляр WebDriver для автоматизации.
-        promoter (str): Название промоутера (например, "aliexpress").
-        group_file_paths (Optional[list[str | Path] | str | Path], optional): Пути к файлам данных групп. По умолчанию `None`.
-        no_video (bool, optional): Флаг для отключения видео в постах. По умолчанию `False`.
-    """
-```
+Инициализирует промоутер Facebook необходимыми конфигурациями.
 
-Инициализирует промоутер Facebook с необходимыми настройками.
+- **Параметры:**
+    - `d (Driver)`: Экземпляр WebDriver для автоматизации.
+    - `promoter (str)`: Название промоутера (например, "aliexpress").
+    - `group_file_paths (Optional[list[str | Path] | str | Path])`: Пути к файлам с данными групп.
+    - `no_video (bool)`: Флаг для отключения видео в постах. По умолчанию `False`.
 
-**Параметры**:
-
--   `d` (Driver): Экземпляр WebDriver для автоматизации.
--   `promoter` (str): Название промоутера (например, "aliexpress").
--   `group_file_paths` (Optional[list[str | Path] | str | Path], optional): Пути к файлам данных групп. По умолчанию `None`.
--   `no_video` (bool, optional): Флаг для отключения видео в постах. По умолчанию `False`.
-
-##### `promote`
-
-```python
-def promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool:
-    """
-    Args:
-        group (SimpleNamespace): Данные группы.
-        item (SimpleNamespace): Элемент категории или событие для продвижения.
-        is_event (bool, optional): Указывает, является ли элемент событием. По умолчанию `False`.
-        language (str, optional): Язык продвижения. По умолчанию `None`.
-        currency (str, optional): Валюта для продвижения. По умолчанию `None`.
-
-    Returns:
-        bool: Успешно ли прошло продвижение.
-    """
-```
+##### `promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool`
 
 Продвигает категорию или событие в указанной группе Facebook.
 
-**Параметры**:
+- **Параметры:**
+    - `group (SimpleNamespace)`: Данные группы.
+    - `item (SimpleNamespace)`: Элемент категории или события для продвижения.
+    - `is_event (bool)`: Является ли элемент событием.
+    - `language (str)`: Язык продвижения.
+    - `currency (str)`: Валюта для продвижения.
 
--   `group` (SimpleNamespace): Данные группы.
--   `item` (SimpleNamespace): Элемент категории или событие для продвижения.
--   `is_event` (bool, optional): Указывает, является ли элемент событием. По умолчанию `False`.
--   `language` (str, optional): Язык продвижения.
--   `currency` (str, optional): Валюта для продвижения.
+- **Возвращает:**
+    - `bool`: Успешно ли прошло продвижение.
 
-**Возвращает**:
-
--   `bool`: Успешно ли прошло продвижение.
-
-##### `log_promotion_error`
-
-```python
-def log_promotion_error(self, is_event: bool, item_name: str) -> None:
-    """
-    Args:
-        is_event (bool): Указывает, является ли элемент событием.
-        item_name (str): Название элемента.
-    """
-```
+##### `log_promotion_error(self, is_event: bool, item_name: str)`
 
 Логирует ошибку при неудачном продвижении.
 
-**Параметры**:
+- **Параметры:**
+    - `is_event (bool)`: Является ли элемент событием.
+    - `item_name (str)`: Название элемента.
 
--   `is_event` (bool): Указывает, является ли элемент событием.
--   `item_name` (str): Название элемента.
+##### `update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool = False)`
 
-##### `update_group_promotion_data`
+Обновляет данные группы после продвижения, добавляя продвигаемый элемент в список продвинутых категорий или событий.
 
-```python
-def update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool = False) -> None:
-    """
-    Args:
-        group (SimpleNamespace): Данные группы.
-        item_name (str): Название продвигаемого элемента.
-        is_event (bool, optional): Указывает, является ли элемент событием. По умолчанию `False`.
-    """
-```
+- **Параметры:**
+    - `group (SimpleNamespace)`: Данные группы.
+    - `item_name (str)`: Название продвинутого элемента.
+    - `is_event (bool)`: Является ли элемент событием.
 
-Обновляет данные группы после продвижения, добавляя продвинутый элемент в список продвинутых категорий или событий.
+##### `process_groups(self, campaign_name: str = None, events: list[SimpleNamespace] = None, is_event: bool = False, group_file_paths: list[str] = None, group_categories_to_adv: list[str] = ['sales'], language: str = None, currency: str = None)`
 
-**Параметры**:
+Обрабатывает группы для текущей кампании или продвижения события.
 
--   `group` (SimpleNamespace): Данные группы.
--   `item_name` (str): Название продвигаемого элемента.
--   `is_event` (bool, optional): Указывает, является ли элемент событием. По умолчанию `False`.
+- **Параметры:**
+    - `campaign_name (str)`: Название кампании.
+    - `events (list[SimpleNamespace])`: Список событий для продвижения.
+    - `is_event (bool)`: Продвигать события или категории.
+    - `group_file_paths (list[str])`: Пути к файлам с данными групп.
+    - `group_categories_to_adv (list[str])`: Категории для продвижения.
+    - `language (str)`: Язык продвижения.
+    - `currency (str)`: Валюта для продвижения.
 
-##### `process_groups`
+##### `get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace`
 
-```python
-def process_groups(self, campaign_name: str = None, events: list[SimpleNamespace] = None, is_event: bool = False, group_file_paths: list[str] = None, group_categories_to_adv: list[str] = ['sales'], language: str = None, currency: str = None) -> None:
-    """
-    Args:
-        campaign_name (str, optional): Название кампании. По умолчанию `None`.
-        events (list[SimpleNamespace], optional): Список событий для продвижения. По умолчанию `None`.
-        is_event (bool, optional): Флаг для продвижения событий или категорий. По умолчанию `False`.
-        group_file_paths (list[str], optional): Пути к файлам данных групп. По умолчанию `None`.
-        group_categories_to_adv (list[str], optional): Категории для продвижения. По умолчанию `['sales']`.
-        language (str, optional): Язык продвижения. По умолчанию `None`.
-        currency (str, optional): Валюта для продвижения. По умолчанию `None`.
-    """
-```
+Извлекает элемент категории для продвижения на основе кампании и промоутера.
 
-Обрабатывает группы для текущей кампании или продвижения событий.
+- **Параметры:**
+    - `campaign_name (str)`: Название кампании.
+    - `group (SimpleNamespace)`: Данные группы.
+    - `language (str)`: Язык для продвижения.
+    - `currency (str)`: Валюта для продвижения.
 
-**Параметры**:
+- **Возвращает:**
+    - `SimpleNamespace`: Элемент категории для продвижения.
 
--   `campaign_name` (str, optional): Название кампании. По умолчанию `None`.
--   `events` (list[SimpleNamespace], optional): Список событий для продвижения. По умолчанию `None`.
--   `is_event` (bool, optional): Флаг для продвижения событий или категорий. По умолчанию `False`.
--   `group_file_paths` (list[str], optional): Пути к файлам данных групп. По умолчанию `None`.
--   `group_categories_to_adv` (list[str], optional): Категории для продвижения. По умолчанию `['sales']`.
--   `language` (str, optional): Язык продвижения.
--   `currency` (str, optional): Валюта для продвижения.
-
-##### `get_category_item`
-
-```python
-def get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace:
-    """
-    Args:
-        campaign_name (str): Название кампании.
-        group (SimpleNamespace): Данные группы.
-        language (str): Язык для продвижения.
-        currency (str): Валюта для продвижения.
-
-    Returns:
-        SimpleNamespace: Элемент категории для продвижения.
-    """
-```
-
-Получает элемент категории для продвижения на основе кампании и промоутера.
-
-**Параметры**:
-
--   `campaign_name` (str): Название кампании.
--   `group` (SimpleNamespace): Данные группы.
--   `language` (str): Язык для продвижения.
--   `currency` (str): Валюта для продвижения.
-
-**Возвращает**:
-
--   `SimpleNamespace`: Элемент категории для продвижения.
-
-##### `check_interval`
-
-```python
-def check_interval(self, group: SimpleNamespace) -> bool:
-    """
-    Args:
-        group (SimpleNamespace): Данные группы.
-
-    Returns:
-        bool: Подходит ли группа для продвижения.
-    """
-```
+##### `check_interval(self, group: SimpleNamespace) -> bool`
 
 Проверяет, прошло ли достаточно времени для повторного продвижения этой группы.
 
-**Параметры**:
+- **Параметры:**
+    - `group (SimpleNamespace)`: Данные группы.
 
--   `group` (SimpleNamespace): Данные группы.
+- **Возвращает:**
+    - `bool`: Можно ли продвигать группу.
 
-**Возвращает**:
+##### `validate_group(self, group: SimpleNamespace) -> bool`
 
--   `bool`: Подходит ли группа для продвижения.
+Проверяет данные группы на наличие необходимых атрибутов.
 
-##### `validate_group`
+- **Параметры:**
+    - `group (SimpleNamespace)`: Данные группы.
 
-```python
-def validate_group(self, group: SimpleNamespace) -> bool:
-    """
-    Args:
-        group (SimpleNamespace): Данные группы.
-
-    Returns:
-        bool: Действительны ли данные группы.
-    """
-```
-
-Проверяет данные группы, чтобы убедиться, что у них есть необходимые атрибуты.
-
-**Параметры**:
-
--   `group` (SimpleNamespace): Данные группы.
-
-**Возвращает**:
-
--   `bool`: Действительны ли данные группы.
+- **Возвращает:**
+    - `bool`: Являются ли данные группы действительными.
 
 ## Лицензия
 
-Этот модуль является частью более крупного пакета **Facebook Promoter** и лицензирован по лицензии MIT.
+Этот модуль является частью более крупного пакета **Facebook Promoter** и распространяется под лицензией MIT.

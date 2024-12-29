@@ -1,23 +1,38 @@
-# Модуль `kazarinov`
+# Модуль `src.endpoints.kazarinov`
 
 ## Обзор
 
-Модуль `kazarinov` содержит инициализацию и импорт необходимых компонентов для работы с ботом Каzаринова, включая определение режима работы и импорт класса `KazarinovTelegramBot`.
+Модуль `src.endpoints.kazarinov` предоставляет функциональность для работы с ботом Kazarinov в Telegram. Он содержит класс `KazarinovTelegramBot`, который используется для взаимодействия с ботом.
 
 ## Содержание
 
-- [Обзор](#обзор)
-- [Переменные](#переменные)
-- [Импорты](#импорты)
+1. [Классы](#классы)
+    - [`KazarinovTelegramBot`](#kazarinovtelegrambot)
 
-## Переменные
+## Классы
 
-### `MODE`
+### `KazarinovTelegramBot`
 
-**Описание**: Режим работы приложения. По умолчанию установлен в `dev`.
-   
-## Импорты
+**Описание**: 
+Класс `KazarinovTelegramBot` представляет собой реализацию телеграм бота Kazarinov.
 
-### `kazarinov_bot`
+**Методы**:
 
--   `KazarinovTelegramBot`: Класс для работы с телеграм ботом Каzаринова.
+- `__init__`: Инициализирует экземпляр класса `KazarinovTelegramBot`.
+- `run`: Запускает бота.
+- `on_start`: Обрабатывает команду `/start`.
+- `on_message`: Обрабатывает текстовые сообщения от пользователя.
+- `on_error`: Обрабатывает ошибки, возникающие при работе бота.
+- `process_message`: Обрабатывает входящее сообщение.
+- `send_message`: Отправляет сообщение пользователю.
+
+**Параметры**:
+
+- `bot_token` (str): Токен бота для Telegram API.
+- `allowed_user_ids` (List[int]): Список ID пользователей, которым разрешено использовать бота.
+- `ai_client` (Optional[ChatGptClient]): Экземпляр клиента для ChatGPT API, по умолчанию `None`.
+- `allowed_groups` (Optional[List[int]]): Список ID групп, в которых бот может работать, по умолчанию `None`.
+
+```python
+from .kazarinov_bot import KazarinovTelegramBot
+```

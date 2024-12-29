@@ -5,9 +5,9 @@
 2. [Возможности](#Возможности)
 3. [Установка](#Установка)
 4. [Использование](#Использование)
-   - [Инициализация](#Инициализация)
-   - [Chat Completion](#Chat-Completion)
-   - [Streaming Chat Completion](#Streaming-Chat-Completion)
+    - [Инициализация](#Инициализация)
+    - [Завершение чата](#Завершение-чата)
+    - [Потоковое завершение чата](#Потоковое-завершение-чата)
 5. [Пример](#Пример)
 6. [Вклад](#Вклад)
 7. [Лицензия](#Лицензия)
@@ -19,13 +19,13 @@
 
 ## Возможности
 
--   **Аутентификация**: Безопасная аутентификация ваших запросов с использованием вашего API-ключа xAI.
--   **Chat Completion**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
--   **Streaming Responses**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
+-   **Аутентификация**: Безопасная аутентификация ваших запросов с использованием вашего ключа API xAI.
+-   **Завершение чата**: Генерация ответов от моделей xAI с использованием метода `chat_completion`.
+-   **Потоковые ответы**: Потоковая передача ответов от моделей xAI с использованием метода `stream_chat_completion`.
 
 ## Установка
 
-Для использования этого клиента на вашей системе должен быть установлен Python. Вы можете установить необходимые зависимости с помощью pip:
+Для использования этого клиента на вашем компьютере должен быть установлен Python. Вы можете установить необходимые зависимости с помощью pip:
 
 ```bash
 pip install requests
@@ -35,42 +35,42 @@ pip install requests
 
 ### Инициализация
 
-Сначала инициализируйте класс `XAI` с вашим API-ключом:
+Сначала инициализируйте класс `XAI` вашим ключом API:
 
 ```python
 from xai import XAI
 
-api_key = "your_api_key_here"  # Замените на ваш фактический API-ключ
+api_key = "your_api_key_here"  # Замените на ваш фактический ключ API
 xai = XAI(api_key)
 ```
 
-### Chat Completion
+### Завершение чата
 
-Чтобы сгенерировать ответ от модели xAI, используйте метод `chat_completion`:
+Для генерации ответа от модели xAI используйте метод `chat_completion`:
 
 ```python
 messages = [
     {
         "role": "system",
-        "content": "Вы Grok, чат-бот, вдохновленный «Путеводителем по галактике»."
+        "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
     },
     {
         "role": "user",
-        "content": "Какой ответ на жизнь, вселенную и все остальное?"
+        "content": "What is the answer to life and universe?"
     }
 ]
 
 completion_response = xai.chat_completion(messages)
-print("Непотоковый ответ:", completion_response)
+print("Non-streaming response:", completion_response)
 ```
 
-### Streaming Chat Completion
+### Потоковое завершение чата
 
-Чтобы получить потоковые ответы от модели xAI, используйте метод `stream_chat_completion`:
+Для получения потоковых ответов от модели xAI используйте метод `stream_chat_completion`:
 
 ```python
 stream_response = xai.stream_chat_completion(messages)
-print("Потоковый ответ:")
+print("Streaming response:")
 for line in stream_response:
     if line.strip():
         print(json.loads(line))
@@ -78,33 +78,33 @@ for line in stream_response:
 
 ## Пример
 
-Вот полный пример того, как использовать клиент `XAI`:
+Вот полный пример использования клиента `XAI`:
 
 ```python
 import json
 from xai import XAI
 
-api_key = "your_api_key_here"  # Замените на ваш фактический API-ключ
+api_key = "your_api_key_here"  # Замените на ваш фактический ключ API
 xai = XAI(api_key)
 
 messages = [
     {
         "role": "system",
-        "content": "Вы Grok, чат-бот, вдохновленный «Путеводителем по галактике»."
+        "content": "You are Grok, a chatbot inspired by the Hitchhikers Guide to the Galaxy."
     },
     {
         "role": "user",
-        "content": "Какой ответ на жизнь, вселенную и все остальное?"
+        "content": "What is the answer to life and universe?"
     }
 ]
 
 # Непотоковый запрос
 completion_response = xai.chat_completion(messages)
-print("Непотоковый ответ:", completion_response)
+print("Non-streaming response:", completion_response)
 
 # Потоковый запрос
 stream_response = xai.stream_chat_completion(messages)
-print("Потоковый ответ:")
+print("Streaming response:")
 for line in stream_response:
     if line.strip():
         print(json.loads(line))
@@ -112,15 +112,15 @@ for line in stream_response:
 
 ## Вклад
 
-Вклад приветствуется! Пожалуйста, не стесняйтесь отправлять pull request или открывать issue, если вы столкнетесь с какими-либо проблемами или у вас есть предложения по улучшению.
+Вклады приветствуются! Пожалуйста, не стесняйтесь отправлять pull request или открывать issue, если вы столкнулись с какими-либо проблемами или у вас есть предложения по улучшению.
 
 ## Лицензия
 
-Этот проект лицензирован в соответствии с лицензией MIT. Подробности см. в файле [LICENSE](LICENSE).
+Этот проект лицензирован в соответствии с лицензией MIT. См. файл [LICENSE](LICENSE) для получения более подробной информации.
 
 ## Благодарности
 
--   Спасибо xAI за предоставление API, которое поддерживает этот клиент.
+-   Спасибо xAI за предоставление API, на котором работает этот клиент.
 -   Вдохновлено необходимостью простого и эффективного способа взаимодействия с мощными моделями xAI.
 
 ---

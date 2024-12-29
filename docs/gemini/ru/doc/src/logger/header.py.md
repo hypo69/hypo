@@ -2,102 +2,146 @@
 
 ## Обзор
 
-Модуль `header` определяет корневой путь к проекту и загружает основные настройки проекта из файла `settings.json`, а так же документацию из `README.MD`. Все импорты в проекте строятся относительно этого пути.
+Модуль `header.py` предназначен для определения корневого пути проекта и загрузки основных параметров проекта из файла `settings.json`. Он обеспечивает согласованную работу с путями и параметрами проекта, импортируя необходимые модули.
 
 ## Оглавление
 
-- [Функции](#Функции)
-    - [`set_project_root`](#set_project_root)
-- [Переменные](#Переменные)
-    - [`MODE`](#MODE)
-    - [`__root__`](#__root__)
-    - [`settings`](#settings)
-    - [`doc_str`](#doc_str)
-    - [`__project_name__`](#__project_name__)
-    - [`__version__`](#__version__)
-    - [`__doc__`](#__doc__)
-    - [`__details__`](#__details__)
-    - [`__author__`](#__author__)
-    - [`__copyright__`](#__copyright__)
-    - [`__cofee__`](#__cofee__)
-
+1.  [Обзор](#обзор)
+2.  [Функции](#функции)
+    *   [`set_project_root`](#set_project_root)
+3.  [Переменные](#переменные)
+    *   [`__root__`](#__root__)
+    *   [`settings`](#settings)
+    *  [`doc_str`](#doc_str)
+    *   [`__project_name__`](#__project_name__)
+    *   [`__version__`](#__version__)
+    *   [`__doc__`](#__doc__)
+    *   [`__details__`](#__details__)
+    *   [`__author__`](#__author__)
+    *   [`__copyright__`](#__copyright__)
+    *   [`__cofee__`](#__cofee__)
 
 ## Функции
 
 ### `set_project_root`
 
-**Описание**: Находит корневой каталог проекта, начиная с каталога текущего файла, идя вверх по дереву каталогов и останавливаясь на первом каталоге, содержащем любой из файлов-маркеров.
+**Описание**:
+Находит корневой каталог проекта, начиная с каталога текущего файла, и поднимаясь вверх по дереву каталогов, пока не найдет один из маркерных файлов.
 
 **Параметры**:
-- `marker_files` (tuple): Кортеж с именами файлов или каталогов, которые идентифицируют корень проекта. По умолчанию `('pyproject.toml', 'requirements.txt', '.git')`.
+- `marker_files` (tuple, optional): Кортеж имен файлов или каталогов для определения корня проекта. По умолчанию `('__root__', '.git')`.
 
 **Возвращает**:
-- `Path`: Путь к корневому каталогу, если он найден. В противном случае возвращает путь к каталогу, где расположен скрипт.
+- `Path`: Путь к корневому каталогу, если он найден, иначе путь к каталогу, где расположен скрипт.
+
+```python
+def set_project_root(marker_files: tuple = ('__root__', '.git')) -> Path:
+    """
+    Finds the root directory of the project starting from the current file's directory,
+    searching upwards and stopping at the first directory containing any of the marker files.
+
+    Args:
+        marker_files (tuple): Filenames or directory names to identify the project root.
+    
+    Returns:
+        Path: Path to the root directory if found, otherwise the directory where the script is located.
+    """
+```
 
 ## Переменные
 
-### `MODE`
-
-**Описание**: Режим работы приложения (например, 'dev' для разработки).
-- **Тип**: `str`
-- **Значение по умолчанию**: `'dev'`
-
 ### `__root__`
 
-**Описание**:  Абсолютный путь к корневому каталогу проекта.
-- **Тип**: `Path`
-- **Значение**: Определяется функцией `set_project_root`.
+**Описание**:
+Путь к корневому каталогу проекта. Определяется функцией `set_project_root`.
+
+```python
+__root__ = set_project_root()
+"""__root__ (Path): Path to the root directory of the project"""
+```
 
 ### `settings`
 
-**Описание**: Словарь с настройками проекта, загруженный из файла `settings.json`.
-- **Тип**: `dict | None`
-- **Значение**: Словарь с настройками или `None`, если файл не найден или не может быть загружен.
+**Описание**:
+Словарь с настройками проекта, загруженный из файла `settings.json`.
+
+```python
+settings:dict = None
+try:
+    with open(gs.path.root / 'src' /  'settings.json', 'r') as settings_file:
+        settings = json.load(settings_file)
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+```
 
 ### `doc_str`
-
-**Описание**: Содержимое файла документации `README.md`.
-- **Тип**: `str | None`
-- **Значение**: Строка с содержимым файла или `None`, если файл не найден или не может быть загружен.
-
+**Описание**:
+Строка содержащая документацию из файла README.MD
+```python
+doc_str:str = None
+try:
+    with open(gs.path.root / 'src' /  'README.MD', 'r') as settings_file:
+        doc_str = settings_file.read()
+except (FileNotFoundError, json.JSONDecodeError):
+    ...
+```
 ### `__project_name__`
 
-**Описание**: Имя проекта.
-- **Тип**: `str`
-- **Значение**: Значение из `settings.json` или `'hypotez'`, если не найдено.
+**Описание**:
+Имя проекта, извлекается из `settings.json` или установлено значение по умолчанию `hypotez`.
+
+```python
+__project_name__ = settings.get("project_name", 'hypotez') if settings  else 'hypotez'
+```
 
 ### `__version__`
 
-**Описание**: Версия проекта.
-- **Тип**: `str`
-- **Значение**: Значение из `settings.json` или `''`, если не найдено.
+**Описание**:
+Версия проекта, извлекается из `settings.json` или установлено значение по умолчанию `''`.
+
+```python
+__version__: str = settings.get("version", '')  if settings  else ''
+```
 
 ### `__doc__`
 
-**Описание**: Документация проекта, загруженная из `README.md`.
-- **Тип**: `str`
-- **Значение**: Значение `doc_str` или `''`, если `doc_str` не определена.
-
+**Описание**:
+Документация проекта, извлекается из `README.MD` или установлено значение по умолчанию `''`.
+```python
+__doc__: str = doc_str if doc_str else ''
+```
 ### `__details__`
 
-**Описание**: Дополнительные детали проекта (пока не используется).
-- **Тип**: `str`
-- **Значение**: `''`
+**Описание**:
+Строка для подробностей о проекте. Изначально пустая строка.
+
+```python
+__details__: str = ''
+```
 
 ### `__author__`
 
-**Описание**: Автор проекта.
-- **Тип**: `str`
-- **Значение**: Значение из `settings.json` или `''`, если не найдено.
+**Описание**:
+Автор проекта, извлекается из `settings.json` или установлено значение по умолчанию `''`.
+
+```python
+__author__: str = settings.get("author", '')  if settings  else ''
+```
 
 ### `__copyright__`
 
-**Описание**: Информация об авторских правах проекта.
-- **Тип**: `str`
-- **Значение**: Значение из `settings.json` или `''`, если не найдено.
+**Описание**:
+Авторские права проекта, извлекается из `settings.json` или установлено значение по умолчанию `''`.
+
+```python
+__copyright__: str = settings.get("copyrihgnt", '')  if settings  else ''
+```
 
 ### `__cofee__`
 
-**Описание**: Сообщение с призывом поддержать разработчика чашкой кофе.
-- **Тип**: `str`
-- **Значение**: Значение из `settings.json` или "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69" если не найдено.
+**Описание**:
+Сообщение для поддержки разработчика, извлекается из `settings.json` или установлено значение по умолчанию `"Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"`.
+
+```python
+__cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69")  if settings  else "Treat the developer to a cup of coffee for boosting enthusiasm in development: https://boosty.to/hypo69"
+```

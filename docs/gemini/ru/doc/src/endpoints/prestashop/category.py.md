@@ -1,14 +1,14 @@
-# Модуль `category.py`
+# Модуль `src.endpoints.prestashop.category`
 
 ## Обзор
 
-Модуль `category.py` предоставляет класс `PrestaCategory`, который обеспечивает взаимодействие с категориями PrestaShop. Он позволяет добавлять, удалять, обновлять категории, а также получать список родительских категорий для заданной категории. Класс предназначен для работы с API PrestaShop и обеспечивает абстракцию от деталей запросов.
+Модуль `src.endpoints.prestashop.category` представляет собой слой между клиентскими категориями (в данном случае, PrestaShop) и поставщиками. Класс `PrestaCategory` предоставляет методы для добавления, удаления и обновления категорий, а также для получения списка родительских категорий.
 
 ## Оглавление
 
-1. [Классы](#классы)
-    - [`PrestaCategory`](#prestacategory)
-2. [Функции](#функции)
+- [Классы](#классы)
+    - [`PrestaCategory`](#PrestaCategory)
+- [Функции](#функции)
     - [`__init__`](#__init__)
     - [`get_parent_categories_list`](#get_parent_categories_list)
 
@@ -16,53 +16,45 @@
 
 ### `PrestaCategory`
 
-**Описание**: Класс для работы с категориями в PrestaShop. Предоставляет методы для добавления, удаления, обновления категорий, а также получения списка родительских категорий.
+**Описание**: Класс для работы с категориями в PrestaShop.
 
-**Пример использования**:
-
+**Пример использования:**
 ```python
-    prestacategory = PrestaCategory(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
-    prestacategory.add_category_PrestaShop('New Category', 'Parent Category')
-    prestacategory.delete_category_PrestaShop(3)
-    prestacategory.update_category_PrestaShop(4, 'Updated Category Name')
-    print(prestacategory.get_parent_categories_list_PrestaShop(5))
+prestacategory = PrestaCategory(API_DOMAIN=API_DOMAIN, API_KEY=API_KEY)
+prestacategory.add_category_PrestaShop('New Category', 'Parent Category')
+prestacategory.delete_category_PrestaShop(3)
+prestacategory.update_category_PrestaShop(4, 'Updated Category Name')
+print(prestacategory.get_parent_categories_list_PrestaShop(5))
 ```
 
-**Методы**:
-
-- [`__init__`](#__init__): Инициализирует экземпляр класса `PrestaCategory`.
-- [`get_parent_categories_list`](#get_parent_categories_list): Получает список родительских категорий для заданной категории.
+#### Методы
+- [`__init__`](#__init__)
+- [`get_parent_categories_list`](#get_parent_categories_list)
 
 ## Функции
 
 ### `__init__`
 
-**Описание**: Инициализирует экземпляр класса `PrestaCategory`.
+**Описание**: Инициализация категории PrestaShop.
 
 **Параметры**:
-
 - `credentials` (Optional[dict | SimpleNamespace], optional): Словарь или объект `SimpleNamespace` с параметрами `api_domain` и `api_key`. По умолчанию `None`.
 - `api_domain` (Optional[str], optional): Домен API. По умолчанию `None`.
 - `api_key` (Optional[str], optional): Ключ API. По умолчанию `None`.
-- `*args`:  Произвольные позиционные аргументы, передаваемые в родительский класс.
-- `**kwards`: Произвольные именованные аргументы, передаваемые в родительский класс.
 
 **Вызывает исключения**:
-
-- `ValueError`: Если не предоставлены `api_domain` или `api_key`.
+- `ValueError`: Если `api_domain` или `api_key` не переданы и не найдены в `credentials`.
 
 ### `get_parent_categories_list`
 
-**Описание**: Получает список родительских категорий для заданной категории. Функция рекурсивно обходит родительские категории, пока не достигнет корневой категории (с ID = 2).
+**Описание**: Извлекает из базы данных PrestaShop родительские категории для заданной категории.
 
 **Параметры**:
-
-- `id_category` (str | int): ID категории, для которой нужно получить список родительских категорий.
-- `parent_categories_list` (List[int], optional): Список, в который добавляются ID родительских категорий. По умолчанию пустой список `[]`.
+- `id_category` (str | int): Категория, для которой нужно извлечь родительские категории.
+- `parent_categories_list` (List[int], optional): Список родительских категорий. По умолчанию пустой список `[]`.
 
 **Возвращает**:
-
-- `list`: Список ID родительских категорий. Возвращает пустой список, если `id_category` не указан или произошла ошибка при получении категории.
+- `list`: Список родительских категорий.
 
 **Вызывает исключения**:
-- `None`: Если что-то не так с категориями, или `category` is None.
+- `ValueError`: Если `id_category` не передан.

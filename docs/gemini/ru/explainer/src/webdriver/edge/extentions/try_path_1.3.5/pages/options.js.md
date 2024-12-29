@@ -2,360 +2,204 @@
 
 Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
 
-1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
-2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
     которые импортируются при создании диаграммы.
     **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
     имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
 
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid\
-    flowchart TD\
-        Start --> Header[<code>header.py</code><br> Determine Project Root]\
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:
+    ```mermaid
+    flowchart TD
+        Start --> Header[<code>header.py</code><br> Determine Project Root]
+
         Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
-3.  **<объяснение>**: Предоставьте подробные объяснения:
-    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-    *   **Переменные**: Их типы и использование.
-    *   Выделите потенциальные ошибки или области для улучшения.
+
+3. **<объяснение>**: Предоставьте подробные объяснения:
+   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+   - **Переменные**: Их типы и использование.
+   - Выделите потенциальные ошибки или области для улучшения.
 
 Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
 
 Это обеспечивает всесторонний и структурированный анализ кода.
-
 ## Формат ответа: `.md` (markdown)
 **КОНЕЦ ИНСТРУКЦИИ**
 
-```markdown
 ## Анализ кода `hypotez/src/webdriver/edge/extentions/try_path_1.3.5/pages/options.js`
 
 ### 1. <алгоритм>
 
-**Блок-схема работы кода:**
+```mermaid
+graph TD
+    A[Начало: Загрузка страницы опций] --> B{Событие "load"?};
+    B -- Да --> C[Получение элементов DOM (input, message)];
+    C --> D[Отправка сообщения браузеру "loadOptions"];
+    D --> E{Успешный ответ?};
+    E -- Да --> F[Заполнение полей формы значениями из ответа];
+    F --> G[Установка значений ширины и высоты body];
+    E -- Нет --> H[Обработка ошибки];
+    H --> I[Вывод сообщения об ошибке];
+    C --> J[Слушатель "click" на кнопке "save"];
+    J --> K[Получение значений из полей формы];
+    K --> L[Проверка валидности атрибутов];
+        L -- Не валидны --> M[Вывод сообщения об ошибке "There is a invalid attribute."];
+        L -- Валидны --> N[Проверка валидности размеров body (width, height)];
+            N -- Не валидны --> O[Вывод сообщения об ошибке "There is a invalid style."];
+            N -- Валидны --> P[Сохранение настроек в storage];
+            P --> Q{Успешно сохранено?};
+            Q -- Да --> R[Вывод сообщения об успехе];
+            Q -- Нет --> S[Вывод сообщения об ошибке];
+    C --> T[Слушатель "click" на кнопке "show-default"];
+    T --> U[Установка значений полей формы по умолчанию];
+    U --> V[Загрузка CSS по умолчанию];
+        V --> W[Установка CSS в поле style];
+            W --> X[Установка значений ширины и высоты body по умолчанию];
+    B -- Нет --> Y[Конец];
 
-1.  **Инициализация:**
-    *   Определение псевдонимов `tx` (для `tryxpath`) и `fu` (для `tryxpath.functions`).
-    *   Получение объекта `document` из `window`.
-    *   Определение `defaultAttributes` и `defaultPopupBodyStyles` (объекты с дефолтными значениями для атрибутов элементов и стилей попапа).
-    *   Объявление переменных для хранения элементов ввода и сообщений.
-    *   Пример:
-        ```javascript
-        var tx = tryxpath;
-        var fu = tryxpath.functions;
+```
 
-        const defaultAttributes = {
-            "element": "data-tryxpath-element",
-            "context": "data-tryxpath-context",
-        };
-         const defaultPopupBodyStyles = {
-            "width": "367px",
-            "height": "auto"
-        };
-        ```
-2.  **Функция `isValidAttrName(name)`:**
-    *   Принимает имя атрибута `name`.
-    *   Создает временный HTML-элемент `testElement`.
-    *   Пытается установить атрибут с заданным именем для этого элемента.
-    *   Возвращает `true`, если установка атрибута прошла успешно, `false` в противном случае.
-    *   Пример:
-        ```javascript
-        function isValidAttrName(name) {
-            try {
-                testElement.setAttribute(name, "testValue");
-            } catch (e) {
-                return false;
-            }
-            return true;
-        }
-        isValidAttrName("data-test"); // вернет true
-        isValidAttrName("invalid-attr"); // вернет false если атрибут недопустим
-        ```
-3.  **Функция `isValidAttrNames(names)`:**
-    *   Принимает объект `names`, содержащий имена атрибутов.
-    *   Перебирает все свойства объекта `names`.
-    *   Для каждого имени атрибута вызывает `isValidAttrName`.
-    *   Возвращает `false`, если хотя бы одно имя атрибута недопустимо. Иначе `true`.
-    *   Пример:
-        ```javascript
-        function isValidAttrNames(names) {
-            for (var p in names) {
-                if (!isValidAttrName(names[p])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-          isValidAttrNames({"attr1": "data-test", "attr2":"data-other"}); // вернет true
-          isValidAttrNames({"attr1": "data-test", "attr2":"invalid-attr"}); // вернет false
-        ```
-4.  **Функция `isValidStyleLength(len)`:**
-    *   Принимает строку `len`, представляющую длину CSS.
-    *   Проверяет, соответствует ли строка формату "auto" или "Npx" (где N - число).
-    *   Возвращает `true`, если строка соответствует формату, `false` иначе.
-    *   Пример:
-       ```javascript
-        function isValidStyleLength(len) {
-            return /^auto$|^[1-9]\\d*px$/.test(len);
-        }
-          isValidStyleLength("auto"); // вернет true
-          isValidStyleLength("100px"); // вернет true
-          isValidStyleLength("100"); // вернет false
-        ```
-5.  **Функция `loadDefaultCss()`:**
-    *   Создает `XMLHttpRequest` для загрузки CSS из файла `try_xpath_insert.css`.
-    *   Возвращает `Promise`, который разрешается с текстом CSS при успешной загрузке.
-    *   Пример:
-        ```javascript
-        function loadDefaultCss() {
-           return new Promise((resolve, reject) => {
-            var req = new XMLHttpRequest();
-            req.open("GET",
-                     browser.runtime.getURL("/css/try_xpath_insert.css"));
-            req.responseType = "text";
-            req.onreadystatechange = function () {
-                if (req.readyState === XMLHttpRequest.DONE) {
-                    resolve(req.responseText);
-                }
-            };
-            req.send();
-        });
-        }
-        loadDefaultCss().then(css => console.log(css));
-        ```
-6.  **Функция `extractBodyStyles(css)`:**
-    *   Принимает CSS-текст `css` в качестве строки.
-    *   Извлекает из текста значения `width` и `height`, используя регулярное выражение.
-    *   Возвращает объект со свойствами `width` и `height`.
-    *   Если не найдено, то возвращает пустые строки.
-     *   Пример:
-        ```javascript
-          function extractBodyStyles(css) {
-              var styles = {};
-              var res = /width:(.+?);.*height:(.+?);/.exec(css);
-              if (res) {
-                styles.width = res[1];
-                styles.height = res[2];
-              } else {
-                  styles.width = "";
-                  styles.height = "";
-              }
-             return styles;
-          }
-        extractBodyStyles("body{width:367px;height:auto;}"); // вернет {width: "367px", height: "auto"}
-         extractBodyStyles("body{height:auto;}"); // вернет {width: "", height: ""}
-        ```
-7.  **Функция `createPopupCss(bodyStyles)`:**
-    *   Принимает объект `bodyStyles` с `width` и `height`.
-    *   Формирует CSS-строку для стилей body.
-    *   Возвращает CSS-строку.
-    *   Пример:
-        ```javascript
-         function createPopupCss(bodyStyles) {
-            return "body{width:" + bodyStyles.width + ";height:"
-                + bodyStyles.height + ";}";
-         }
-        createPopupCss({width: "367px", height:"auto"}); // вернет "body{width:367px;height:auto;}"
-        ```
-8.  **Событие `load` (window.addEventListener("load", ...)):**
-    *   Выполняется после полной загрузки страницы.
-    *   Получает ссылки на HTML-элементы по их id (`elementAttr`, `contextAttr` и другие).
-    *   Отправляет сообщение `browser.runtime.sendMessage` для получения сохраненных настроек.
-    *   При успешном получении данных:
-        *   Заполняет поля ввода значениями из сохраненных настроек.
-        *   Извлекает стили `width` и `height` из `popupCss`, используя `extractBodyStyles`.
-    *   Обрабатывает ошибки с помощью `fu.onError`.
-    *   Добавляет обработчик события `click` для кнопки "save":
-        *   Собирает значения из полей ввода, создает объекты `attrs` и `bodyStyles`.
-        *   Проверяет допустимость имен атрибутов и стилей.
-        *   Сохраняет настройки в `browser.storage.sync` и выводит сообщение об успехе или ошибке.
-    *   Добавляет обработчик события `click` для кнопки "show-default":
-        *   Заполняет поля ввода значениями из `defaultAttributes` и `defaultPopupBodyStyles`.
-        *   Загружает дефолтный css, используя `loadDefaultCss`.
-9.  **Создание элемента `testElement`:**
-    *   Создается временный `div` элемент, используемый для проверки атрибутов.
-        ```javascript
-         testElement = document.createElement("div");
-        ```
+**Примеры для блоков:**
+
+*   **C (Получение элементов DOM):** `document.getElementById("element-attribute")` возвращает input элемент, где пользователь может ввести пользовательский аттрибут.
+*   **F (Заполнение полей формы):** Из ответа от бэкенда пришло `res.attributes.element = "data-custom-element"`, тогда поле ввода `elementAttr` будет заполнено значением "data-custom-element".
+*   **K (Получение значений из полей формы):** Если пользователь ввел в поле `elementAttr` значение "data-new-element", то  `attrs.element` станет  равным "data-new-element".
+*   **L (Проверка валидности атрибутов):** Если `attrs.element` равно "data-new-element", то функция `isValidAttrName("data-new-element")` вернет true, т.к. "data-new-element" валидное имя атрибута.
+*   **N (Проверка валидности размеров body):** Если `bodyStyles.width` равно "300px", то функция `isValidStyleLength("300px")` вернет true, т.к. "300px" валидная длина, а если "300", то вернет false.
+*   **P (Сохранение настроек в storage):** Сохраняется объект вида `{"attributes": {"element": "data-new-element", ...}, "css": "body { ... }", "popupCss": "body{width:300px;height:auto;}"}`.
+*  **U (Установка значений полей формы по умолчанию):** `elementAttr.value` становится равным `defaultAttributes.element`, который в свою очередь равен `"data-tryxpath-element"`.
+* **V (Загрузка CSS по умолчанию):** Выполняется запрос на получение дефолтного css файла.
 
 ### 2. <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph OptionsPage
-        Start[Начало загрузки страницы] --> GetHTMLElements[Получение ссылок на HTML-элементы]
-        GetHTMLElements --> SendMessage[Отправка сообщения в background script]
-        SendMessage --> ReceiveSettings{Получение сохраненных настроек?}
-        ReceiveSettings -- Yes --> ApplySettings[Применение полученных настроек]
-        ReceiveSettings -- No --> ApplyDefaultSettings[Применение дефолтных настроек]
-        ApplySettings --> EventSave[Установка обработчика на кнопку 'Save']
-        ApplyDefaultSettings --> EventSave
-        EventSave --> ClickSave{Нажатие на кнопку 'Save'?}
-          ClickSave -- Yes --> GetInputValues[Получение значений из полей ввода]
-        ClickSave -- No --> EventShowDefault[Установка обработчика на кнопку 'Show default']
-        EventShowDefault --> ClickShowDefault{Нажатие на кнопку 'Show Default'?}
-        ClickShowDefault -- Yes --> ApplyDefaultValues[Применение дефолтных значений]
-        ClickShowDefault -- No --> EndOptionsPage[Конец работы страницы опций]
-         ApplyDefaultValues --> loadDefaultCssCall[вызов loadDefaultCss]
-        loadDefaultCssCall --> validateCss[проверка валидности css]
-         validateCss --> SaveNewSettings[сохранение дефолтных настроек]
-
-        GetInputValues --> ValidateAttributes[Проверка допустимости имен атрибутов]
-        ValidateAttributes -- Invalid --> ShowInvalidAttrMessage[Показать сообщение об ошибке]
-        ValidateAttributes -- Valid --> ValidateStyles[Проверка допустимости стилей]
-        ValidateStyles -- Invalid --> ShowInvalidStyleMessage[Показать сообщение об ошибке]
-        ValidateStyles -- Valid --> SaveNewSettings[Сохранение новых настроек]
-        SaveNewSettings --> ShowSuccessMessage{Успешно?}
-        ShowSuccessMessage -- Yes --> EndOptionsPage[Конец работы страницы опций]
-        ShowSuccessMessage -- No --> ShowErrorMessage[Показать сообщение об ошибке]
-
-        
+    subgraph options.js
+        A[Start: window.addEventListener("load")] --> B(Get DOM elements);
+        B --> C{browser.runtime.sendMessage <br> event: "loadOptions"};
+        C --> D{Success?};
+        D -- Yes --> E[Update form fields with received data];
+        E --> F[Extract styles from popupCss];
+        F --> G[Set width and height fields];
+        D -- No --> H[Handle error: fu.onError];
+        B --> I[Add "click" listener to "save" button];
+        I --> J(Get form values);
+        J --> K{isValidAttrNames?};
+        K -- No --> L[Show error: invalid attribute];
+        K -- Yes --> M{isValidStyleLength?};
+        M -- No --> N[Show error: invalid style];
+        M -- Yes --> O[browser.storage.sync.set];
+        O --> P{Success?};
+        P -- Yes --> Q[Show success message];
+        P -- No --> R[Show error message];
+        B --> S[Add "click" listener to "show-default" button];
+         S --> T[Set default attributes];
+          T --> U[loadDefaultCss];
+           U --> V[Set style value];
+           V --> W[Set default width/height]
     end
     
-    subgraph Functions
-        isValidAttrName[isValidAttrName(name):<br>Проверка допустимости имени атрибута]
-        isValidAttrNames[isValidAttrNames(names):<br>Проверка допустимости списка атрибутов]
-        isValidStyleLength[isValidStyleLength(len):<br>Проверка допустимости длины CSS]
-        loadDefaultCss[loadDefaultCss():<br>Загрузка CSS по умолчанию]
-        extractBodyStyles[extractBodyStyles(css):<br>Извлечение стилей body]
-        createPopupCss[createPopupCss(bodyStyles):<br>Создание CSS-строки для popup]
-    end
+    style A fill:#f9f,stroke:#333,stroke-width:2px
     
-    
-    GetInputValues --> isValidAttrNames
-    ValidateAttributes --> isValidAttrNames
-    ValidateStyles --> isValidStyleLength
-    loadDefaultCssCall --> loadDefaultCss
-    ReceiveSettings --> extractBodyStyles
-    ApplySettings --> extractBodyStyles
-    SaveNewSettings --> createPopupCss
-    SaveNewSettings --> browserStorageSet
-    ApplyDefaultValues --> loadDefaultCss
-    
-    
-    style[HTML <br> style]
-    elementAttr[HTML <br> element attribute]
-    contextAttr[HTML <br> context attribute]
-    focusedAttr[HTML <br> focused attribute]
-    ancestorAttr[HTML <br> ancestor attribute]
-    frameAttr[HTML <br> frame attribute]
-    frameAncestorAttr[HTML <br> frame ancestor attribute]
-    popupBodyWidth[HTML <br> popup body width]
-    popupBodyHeight[HTML <br> popup body height]
-    message[HTML <br> message]
-    
-     GetHTMLElements --> style
-     GetHTMLElements --> elementAttr
-     GetHTMLElements --> contextAttr
-     GetHTMLElements --> focusedAttr
-     GetHTMLElements --> ancestorAttr
-     GetHTMLElements --> frameAttr
-     GetHTMLElements --> frameAncestorAttr
-    GetHTMLElements --> popupBodyWidth
-    GetHTMLElements --> popupBodyHeight
-     GetHTMLElements --> message
-
-    browserStorageSet[browser.storage.sync.set():<br> Сохранение в локальном хранилище]
+    classDef error fill:#f99,stroke:#333,stroke-width:2px
+     class L,N,H,R error
 ```
+
+**Объяснение зависимостей:**
+
+*   **`window.addEventListener("load", ...)`**:  Обработчик события загрузки страницы, который запускает основную логику инициализации страницы опций.
+*   **`browser.runtime.sendMessage({ "timeout":0,"timeout_for_event":"presence_of_element_located","event": "loadOptions" })`**: Отправляет сообщение браузеру для получения сохраненных настроек расширения. Это асинхронная операция, использующая Promise для обработки ответа.
+*   **`browser.storage.sync.set(...)`**: Используется для сохранения настроек расширения в синхронизированном хранилище браузера.
+*   **`document.getElementById(...)`**: Используется для доступа к элементам DOM.
+*   **`Object.create(null)`**: Создает пустой объект, используемый для хранения атрибутов.
+*   **`isValidAttrName(name)`**: Проверяет, является ли имя атрибута валидным.
+*   **`isValidAttrNames(names)`**: Проверяет валидность всех атрибутов в объекте.
+*  **`isValidStyleLength(len)`**: Проверяет является ли строка валидной длинной для стилей
+*   **`loadDefaultCss()`**: Загружает CSS по умолчанию.
+*   **`extractBodyStyles(css)`**: Извлекает стили ширины и высоты из CSS.
+*   **`createPopupCss(bodyStyles)`**: Создает CSS для всплывающего окна на основе предоставленных стилей.
+*   `tryxpath.functions.onError` это метод для вывода ошибки в консоль.
+* `XMLHttpRequest()` используется для загрузки css по умолчанию.
 
 ### 3. <объяснение>
 
-#### Импорты
+**Импорты:**
 
-В данном коде нет явных импортов. Код использует глобальные переменные `tryxpath`, `browser` и `window`, которые предоставляются средой выполнения расширения браузера.
+*   `var tx = tryxpath; var fu = tryxpath.functions;`:  Это алиасы для доступа к библиотеке `tryxpath` и её функциям. Предполагается, что `tryxpath` – это глобальный объект, предоставленный расширением.
+*   `var document = window.document;`:  Получение ссылки на document.
 
-#### Классы
+**Классы:**
 
-В коде нет объявленных классов.
+*   В коде нет явно определенных классов. Код использует анонимную самовызывающуюся функцию для организации логики, что создает некую инкапсуляцию, но не в виде классов.
 
-#### Функции
+**Функции:**
 
-*   **`isValidAttrName(name)`:**
-    *   **Аргументы:** `name` (string) - имя атрибута.
-    *   **Возвращаемое значение:** `true` если атрибут допустимый, иначе `false`.
-    *   **Назначение:** Проверяет, является ли имя атрибута допустимым для HTML-элемента.
-    *   **Пример:**
-        ```javascript
-        isValidAttrName("data-custom-attribute"); // true
-        isValidAttrName("invalid-attribute!"); // false (может быть)
-        ```
-*   **`isValidAttrNames(names)`:**
-    *   **Аргументы:** `names` (object) - объект, где ключи — имена атрибутов.
-    *   **Возвращаемое значение:** `true` если все атрибуты допустимые, иначе `false`.
-    *   **Назначение:** Проверяет, допустимы ли все имена атрибутов в объекте.
-    *   **Пример:**
-        ```javascript
-        isValidAttrNames({"attr1": "data-attr1", "attr2": "data-attr2"}); // true
-        isValidAttrNames({"attr1": "data-attr1", "attr2": "invalid-attr!"}); // false
-        ```
-*   **`isValidStyleLength(len)`:**
-    *   **Аргументы:** `len` (string) - строка, представляющая длину CSS.
-    *   **Возвращаемое значение:** `true` если длина допустимая, иначе `false`.
-    *   **Назначение:** Проверяет, соответствует ли строка длины формату "auto" или "Npx".
-    *   **Пример:**
-        ```javascript
-        isValidStyleLength("auto"); // true
-        isValidStyleLength("100px"); // true
-        isValidStyleLength("100"); // false
-        ```
-*   **`loadDefaultCss()`:**
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** `Promise` с текстом CSS при успешной загрузке, отклоняется при ошибке.
-    *   **Назначение:** Загружает содержимое CSS-файла по умолчанию для стилей.
-    *   **Пример:**
-        ```javascript
-        loadDefaultCss().then(css => console.log(css)); // выведет содержимое css
-        ```
-*   **`extractBodyStyles(css)`:**
-    *   **Аргументы:** `css` (string) - строка CSS, содержащая стили.
-    *   **Возвращаемое значение:** объект со свойствами `width` и `height` (значения из CSS).
-    *   **Назначение:** Извлекает значения `width` и `height` из CSS-текста.
-    *   **Пример:**
-        ```javascript
-        extractBodyStyles("body {width: 300px; height: auto;}"); // {width: "300px", height: "auto"}
-        extractBodyStyles(""); // {width: "", height: ""}
-        ```
-*   **`createPopupCss(bodyStyles)`:**
-    *   **Аргументы:** `bodyStyles` (object) - объект с `width` и `height`.
-    *   **Возвращаемое значение:** строка CSS для установки ширины и высоты тела popup.
-    *   **Назначение:** Создает CSS для установки ширины и высоты тела popup на основе данных.
-    *   **Пример:**
-        ```javascript
-        createPopupCss({width: "400px", height: "600px"}); // "body{width:400px;height:600px;}"
-        ```
+*   **`isValidAttrName(name)`**:
+    *   **Аргументы**: `name` (строка), имя проверяемого атрибута.
+    *   **Возвращаемое значение**: `true`, если имя атрибута валидно, иначе `false`.
+    *   **Назначение**: Проверяет, может ли браузер установить атрибут с указанным именем для элемента.
+    *   **Пример**:
+        *   `isValidAttrName("data-test")` вернет `true`.
+        *   `isValidAttrName("invalid-attribute-!")` вернет `false`.
+*   **`isValidAttrNames(names)`**:
+    *   **Аргументы**: `names` (объект), содержащий имена атрибутов.
+    *   **Возвращаемое значение**: `true`, если все имена атрибутов валидны, иначе `false`.
+    *   **Назначение**: Проверяет валидность всех имен атрибутов в объекте.
+    *   **Пример**:
+        *   `isValidAttrNames({ "element": "data-test", "context": "data-context" })` вернет `true`.
+        *   `isValidAttrNames({ "element": "data-test", "context": "invalid-attr!" })` вернет `false`.
+*  **`isValidStyleLength(len)`**:
+    *   **Аргументы**: `len` (строка), значение длины.
+    *   **Возвращаемое значение**: `true`, если значение длины валидно, иначе `false`.
+    *   **Назначение**: Проверяет, является ли значение длины валидным для CSS (auto или "px").
+    *   **Пример**:
+        *   `isValidStyleLength("auto")` вернет `true`.
+        *   `isValidStyleLength("100px")` вернет `true`.
+        *   `isValidStyleLength("100")` вернет `false`.
+        *   `isValidStyleLength("100em")` вернет `false`.
+*   **`loadDefaultCss()`**:
+    *   **Аргументы**: нет.
+    *   **Возвращаемое значение**: `Promise` с текстом CSS в случае успеха.
+    *   **Назначение**: Загружает CSS по умолчанию для расширения.
+    *   **Пример**: После выполнения `loadDefaultCss().then(css => { ... })` переменная `css` будет содержать текст CSS файла `/css/try_xpath_insert.css`.
+*   **`extractBodyStyles(css)`**:
+    *   **Аргументы**: `css` (строка), содержащая CSS стили.
+    *   **Возвращаемое значение**: объект вида `{ width: string, height: string }`.
+    *   **Назначение**: Извлекает значения `width` и `height` из предоставленной строки CSS.
+    *    **Пример**: `extractBodyStyles("body{width:300px;height:auto;}")` вернет `{width: "300px", height: "auto"}`
+*   **`createPopupCss(bodyStyles)`**:
+    *   **Аргументы**: `bodyStyles` (объект) со свойствами `width` и `height`.
+    *   **Возвращаемое значение**: строка, содержащая CSS стили для body.
+    *   **Назначение**: Создаёт CSS-строку для элемента `body` с заданными стилями.
+    *   **Пример**: `createPopupCss({ width: "300px", height: "auto" })` вернет `"body{width:300px;height:auto;}"`
 
-#### Переменные
+**Переменные:**
 
-*   `tx`: Псевдоним для `tryxpath`, объекта из расширения.
-*   `fu`: Псевдоним для `tryxpath.functions`.
-*   `document`:  Объект, представляющий DOM текущей страницы.
 *   `defaultAttributes`: Объект с атрибутами по умолчанию.
-*   `defaultPopupBodyStyles`: Объект со стилями по умолчанию для body popup.
-*   `elementAttr`, `contextAttr`, `focusedAttr`, `ancestorAttr`, `frameAttr`, `frameAncestorAttr`, `style`, `popupBodyWidth`, `popupBodyHeight`, `message`: Ссылки на соответствующие HTML-элементы на странице опций.
-*   `testElement`: Временный HTML элемент, используемый для проверки атрибутов.
+*   `defaultPopupBodyStyles`: Объект со стилями body по умолчанию.
+*   `elementAttr`, `contextAttr`, `focusedAttr`, `ancestorAttr`, `frameAttr`, `frameAncestorAttr`, `style`, `popupBodyWidth`, `popupBodyHeight`, `message`, `testElement`: переменные, хранящие ссылки на DOM-элементы или другие значения.
+*   `attrs`: Объект для хранения значений атрибутов, которые пользователь хочет установить.
+*   `bodyStyles`: Объект для хранения значений ширины и высоты body.
 
-#### Потенциальные ошибки и области для улучшения
+**Потенциальные ошибки и области для улучшения:**
 
-1.  **Обработка ошибок:**
-    *   Используется `fu.onError` для обработки ошибок, но не указано, что эта функция делает. Возможно стоит добавить логирование ошибок или более информативные сообщения пользователю.
-2.  **Валидация ввода:**
-    *   Валидация атрибутов проверяет только допустимость имени атрибута, но не его значения.
-    *   Валидация CSS ограничивается проверкой формата `auto` и `Npx`.
-3.  **Пользовательский интерфейс:**
-    *   Сообщения об успехе и ошибке слишком лаконичны. Возможно, стоит сделать их более информативными.
-4.  **Дублирование кода:**
-    *   Код для получения значений из полей ввода и применения дефолтных значений повторяется. Можно вынести в отдельные функции.
-5. **Асинхронность:**
-   *  Не все асинхронные операции (например, получение данных из `browser.storage.sync`) имеют явную обработку ошибок.
-6.  **Зависимости:**
-    *   Код полагается на `tryxpath` и `browser`, но нет явных импортов. Это может усложнить тестирование.
+*   **Обработка ошибок**:  Ошибка при получении сообщений от бэкенда или при сохранении настроек обрабатывается с помощью `fu.onError`, которая просто выводит ошибку в консоль. Нужно предусмотреть более дружелюбную обработку, например вывод ошибки в UI.
+*   **Валидация данных**: Сейчас валидируется только имя атрибута и длина стиля, но не его содержимое. Например, можно проверять, что цвет корректен.
+*   **Код для UI**: Часть кода написана непосредственно в JS. Лучше вынести HTML в отдельный файл и манипулировать DOM через более ясный API.
+* **Улучшение читаемости**: Использование анонимной самовызывающейся функции создает область видимости, но не является классом. Переписать код с использованием классов и модулей может улучшить его читаемость и поддерживаемость.
 
-#### Взаимосвязи с другими частями проекта
+**Цепочка взаимосвязей:**
 
-*   **`background.js`:** Этот скрипт отправляет сообщение  `browser.runtime.sendMessage` для получения текущих настроек. `background.js` взаимодействует с `browser.storage.sync` для сохранения и получения данных.
-*   **`try_xpath_insert.css`:** Этот файл содержит стили по умолчанию, загружается через  `loadDefaultCss`.
-*   **`popup.js`**: Страница `options.js` напрямую влияет на поведение `popup.js`, поскольку именно на странице опций пользователь меняет параметры, которые влияют на то, как `popup.js` работает с `tryxpath`.
+1.  **Загрузка страницы опций**:  `options.js` загружается в контексте страницы опций расширения.
+2.  **Инициализация DOM**:  Получение элементов формы (`input` и `message`).
+3.  **Запрос данных от бэкенда**: Отправка сообщения `loadOptions` в бэкграунд скрипт расширения.
+4.  **Получение сохраненных настроек**: Бэкграунд скрипт отвечает с сохраненными настройками (`attributes`, `css`, `popupCss`).
+5.  **Заполнение полей формы**: Настройки загружаются в форму.
+6.  **Сохранение настроек**: При нажатии кнопки "save", данные собираются и отправляются в `browser.storage.sync`.
+7.  **Взаимодействие с CSS**:  `options.js` управляет `css` и `popupCss`, которые влияют на внешний вид инъектируемого контента расширения.
+8.  **Применение настроек**: Для применения настроек, пользователь должен нажать кнопку "Set style" во всплывающем окне. Таким образом, настройки из `storage` используются для изменения стилей в контенте страницы.
 
-**В заключении** код является частью страницы настроек расширения, позволяющей пользователю настраивать атрибуты и стили, используемые при работе с `tryxpath`. Он выполняет валидацию введенных пользователем данных и сохраняет их в локальное хранилище расширения.
-```
+Этот анализ предоставляет подробное описание работы кода, а также описывает его связи с другими компонентами расширения.

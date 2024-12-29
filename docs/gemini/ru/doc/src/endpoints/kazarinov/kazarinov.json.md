@@ -1,126 +1,117 @@
-# Конфигурационный файл `kazarinov.json`
+# Документация файла `kazarinov.json`
 
 ## Обзор
 
-Этот файл содержит конфигурационные настройки для проекта, включая режимы работы, настройки веб-драйвера, пути к файлам, обработчики URL, конфигурацию генерации, параметры Telegram-бота и настройки хранилища.
+Файл `kazarinov.json` содержит конфигурационные параметры для работы системы, включая настройки веб-драйвера, пути к файлам, URL-адреса поставщиков, параметры генерации ответов, настройки телеграм-бота, а также настройки хранения данных.
 
-## Оглавление
+## Содержание
 
-1. [Обзор](#обзор)
-2. [Структура JSON](#структура-json)
-3. [Параметры конфигурации](#параметры-конфигурации)
-    - [mode](#mode)
-    - [webdriver_name](#webdriver_name)
-    - [webdriver_options](#webdriver_options)
-    - [system_instruction](#system_instruction)
-    - [questions_list_path](#questions_list_path)
-    - [url_handlers](#url_handlers)
-        - [suppliers](#suppliers)
-        - [onetab](#onetab)
-    - [generation_config](#generation_config)
-        - [response_mime_type](#response_mime_type)
-    - [telegram](#telegram)
-        - [bot_name](#bot_name)
-        - [log_path](#log_path)
-    - [storage](#storage)
-    - [avaiable_storages](#avaiable_storages)
-4. [Пример использования](#пример-использования)
+- [Обзор](#обзор)
+- [Структура файла](#структура-файла)
+    - [`mode`](#mode)
+    - [`webdriver_name`](#webdriver_name)
+    - [`webdriver_options`](#webdriver_options)
+    - [`system_instruction`](#system_instruction)
+    - [`questions_list_path`](#questions_list_path)
+    - [`url_handlers`](#url_handlers)
+        - [`suppliers`](#suppliers)
+        - [`onetab`](#onetab)
+    - [`generation_config`](#generation_config)
+        - [`response_mime_type`](#response_mime_type)
+    - [`telegram`](#telegram)
+        - [`bot_name`](#bot_name)
+        - [`log_path`](#log_path)
+    - [`storage`](#storage)
+    - [`avaiable_storages`](#avaiable_storages)
 
-## Структура JSON
-
-JSON-файл содержит объект с набором ключей и их соответствующих значений.
-
-## Параметры конфигурации
+## Структура файла
 
 ### `mode`
-**Описание**: Режим работы приложения.
+
+**Описание**: Режим работы системы.
 **Тип**: `str`
-**Значение**: `"test"`
+**Возможные значения**: `"test"`, `"production"`.
+В данном случае: `"test"`
 
 ### `webdriver_name`
-**Описание**: Название используемого веб-драйвера.
+
+**Описание**: Имя используемого веб-драйвера.
 **Тип**: `str`
-**Значение**: `"firefox"`
+**Возможные значения**: `"chrome"`, `"firefox"`, `"safari"`, `"edge"`.
+В данном случае: `"firefox"`
 
 ### `webdriver_options`
+
 **Описание**: Список дополнительных опций для веб-драйвера.
 **Тип**: `list`
-**Значение**: `[]` (пустой список)
+**Пример**: `["--headless", "--disable-gpu"]`.
+В данном случае: `[]` (пустой список)
 
 ### `system_instruction`
-**Описание**: Путь к файлу с системными инструкциями.
+
+**Описание**: Путь к файлу, содержащему системные инструкции.
 **Тип**: `str`
-**Значение**: `"system_instruction.txt"`
+**Пример**: `"system_instruction.txt"`
 
 ### `questions_list_path`
-**Описание**: Путь к директории со списком вопросов.
+
+**Описание**: Путь к директории, содержащей файлы со списком вопросов.
 **Тип**: `str`
-**Значение**: `"kazarinov/prompts/train_data/q"`
+**Пример**: `"kazarinov/prompts/train_data/q"`
 
 ### `url_handlers`
-**Описание**: Объект, содержащий обработчики URL.
-**Тип**: `dict`
 
+**Описание**: Объект, содержащий URL-адреса для различных целей.
+**Тип**: `dict`
 #### `suppliers`
-**Описание**: Список URL поставщиков.
+
+**Описание**: Список URL-адресов поставщиков.
 **Тип**: `list`
-**Значение**: 
-```
-[
-    "https://morlevi.co.il",
-    "https://www.morlevi.co.il",
-    "https://grandadvance.co.il",
-    "https://www.grandadvance.co.il",
-    "https://ksp.co.il",
-    "https://www.ksp.co.il",
-    "https://ivory.co.il",
-    "https://www.ivory.co.il"
-]
-```
+**Пример**: `["https://morlevi.co.il", "https://www.ksp.co.il"]`
 
 #### `onetab`
-**Описание**: Список URL для OneTab.
+
+**Описание**: Список URL-адресов для OneTab.
 **Тип**: `list`
-**Значение**: 
-```
-[
-    "https://www.one-tab.com"
-]
-```
+**Пример**: `["https://www.one-tab.com"]`
 
 ### `generation_config`
-**Описание**: Объект, содержащий конфигурацию генерации ответов.
-**Тип**: `dict`
 
+**Описание**: Объект, содержащий настройки генерации ответов.
+**Тип**: `dict`
 #### `response_mime_type`
-**Описание**: MIME-тип генерируемого ответа.
+
+**Описание**: MIME-тип ответа.
 **Тип**: `str`
-**Значение**: `"text/plain"`
+**Возможные значения**: `"text/plain"`, `"application/json"`.
+В данном случае: `"text/plain"`
 
 ### `telegram`
-**Описание**: Объект, содержащий настройки Telegram-бота.
+
+**Описание**: Объект, содержащий настройки телеграм-бота.
 **Тип**: `dict`
 
 #### `bot_name`
-**Описание**: Имя Telegram-бота.
+
+**Описание**: Имя телеграм-бота.
 **Тип**: `str`
-**Значение**: `"hypo69_kazarinov_bot"`
+**Пример**: `"hypo69_kazarinov_bot"`
 
 #### `log_path`
+
 **Описание**: Шаблон пути для сохранения логов бота.
 **Тип**: `str`
-**Значение**: `"bot_logs/<user_id>/<timestamp>.txt"`
+**Пример**: `"bot_logs/<user_id>/<timestamp>.txt"`
 
 ### `storage`
-**Описание**: Тип используемого хранилища данных.
+
+**Описание**: Указание на текущий тип хранилища.
 **Тип**: `str`
-**Значение**: `"external_storage"`
+**Возможные значения**: `"data"`, `"google_drive"`, `"external_storage"`.
+В данном случае: `"external_storage"`
 
 ### `avaiable_storages`
-**Описание**: Список доступных типов хранилищ данных.
+
+**Описание**: Список доступных типов хранилищ.
 **Тип**: `list`
-**Значение**: `["data", "google_drive", "external_storage"]`
-
-## Пример использования
-
-Этот файл используется для конфигурации различных компонентов приложения. Например, `webdriver_name` и `webdriver_options` определяют, какой браузер и с какими параметрами будет использоваться для автоматизации веб-страниц. `url_handlers` указывает, какие URL-адреса следует обрабатывать. Раздел `telegram` содержит настройки для взаимодействия с Telegram-ботом, включая имя бота и путь для сохранения логов.
+**Пример**: `["data", "google_drive", "external_storage"]`

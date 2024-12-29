@@ -1,4 +1,4 @@
-# Модуль `kazarinov_bot.py`
+# Модуль `kazarinov_bot`
 
 ## Обзор
 
@@ -14,33 +14,31 @@
 
 ### `KazarinovTelegramBot`
 
-**Описание**: Класс `KazarinovTelegramBot` реализует Telegram-бота с пользовательским поведением для проекта Kazarinov. Наследует функциональность от `TelegramBot` и `BotHandler`.
+**Описание**: Класс `KazarinovTelegramBot` реализует Telegram-бота с пользовательским поведением для проекта Kazarinov. Наследуется от `TelegramBot` и `BotHandler`.
 
-**Наследует от**: `TelegramBot`, `BotHandler`
-
-**Атрибуты**:
-- `token` (str): Токен Telegram-бота.
-- `config` (SimpleNamespace): Конфигурация бота, загружаемая из файла `kazarinov.json`.
+**Параметры**:\
+- `token` (str): Токен Telegram-бота.\
+- `config` (SimpleNamespace): Конфигурация бота, загружаемая из `kazarinov.json`.\
 - `model` (GoogleGenerativeAI): Модель Google Generative AI для диалога с пользователем.
 
 **Методы**:
 
-#### `__init__`
+- `__init__(self, mode: Optional[str] = None, webdriver_name: Optional[str] = 'firefox')`
+    
+    **Описание**: Инициализирует экземпляр `KazarinovTelegramBot`.
 
-**Описание**: Инициализирует экземпляр класса `KazarinovTelegramBot`.
+    **Параметры**:
+    - `mode` (Optional[str], optional): Режим работы ('test' или 'production'). По умолчанию `None`, используется значение из конфигурации.
+    - `webdriver_name` (Optional[str], optional): Имя веб-драйвера для `BotHandler`. По умолчанию `'firefox'`.
 
-**Параметры**:
-- `mode` (Optional[str], optional): Режим работы бота: `test` или `production`. По умолчанию `None`.
-- `webdriver_name` (Optional[str], optional): Имя веб-драйвера для `BotHandler`. По умолчанию `firefox`.
+- `handle_message(self, update: Update, context: CallbackContext) -> None`
+    
+    **Описание**: Обрабатывает текстовые сообщения, направляя URL на соответствующую обработку,  остальные сообщения обрабатываются моделью.
 
-#### `handle_message`
-
-**Описание**: Обрабатывает текстовые сообщения, осуществляя маршрутизацию на основе URL.
-
-**Параметры**:
-- `update` (Update): Объект Telegram Update.
-- `context` (CallbackContext): Контекст обратного вызова.
+    **Параметры**:
+    - `update` (Update): Объект `Update` от Telegram.
+    - `context` (CallbackContext): Объект `CallbackContext` от Telegram.
 
 ## Функции
-
-В данном файле нет отдельных функций, описанных вне класса.
+   
+   Нет функций

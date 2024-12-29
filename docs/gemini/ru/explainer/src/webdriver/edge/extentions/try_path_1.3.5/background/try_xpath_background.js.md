@@ -1,276 +1,253 @@
-## <алгоритм>
+## Анализ кода `try_xpath_background.js`
 
-1.  **Инициализация:**
-    *   Объявляются переменные:
-        *   `tx` (alias для `tryxpath`).
-        *   `fu` (alias для `tryxpath.functions`).
-        *   `popupState` (изначально `null`).
-        *   `popupCss` (CSS для попапа, по умолчанию `body{width:367px;height:auto;}`).
-        *   `results` (объект для хранения результатов, изначально пустой).
-        *   `css` (строка для хранения CSS, изначально пустая).
-        *   `attributes` (объект с атрибутами, такими как `element`, `context`, `focused` и т.д.).
-    *   Создается функция `loadDefaultCss`, которая асинхронно загружает CSS из файла `/css/try_xpath_insert.css` и возвращает Promise.
-
-2.  **Обработчик сообщений `genericListener`:**
-    *   Создается функция `genericListener`, которая служит общим обработчиком для сообщений.
-    *   `genericListener.listeners` - это объект, который хранит функции-обработчики для конкретных событий.
-    *   Функция `genericListener` проверяет, есть ли обработчик для полученного события `message.event` в `genericListener.listeners`. Если есть, то вызывает его.
-    *   Событие `browser.runtime.onMessage` добавляет слушателя `genericListener` для обработки сообщений.
-
-3.  **Обработчики конкретных сообщений (в `genericListener.listeners`):**
-    *   `storePopupState`:
-        *   Принимает сообщение `message` и сохраняет значение `message.state` в `popupState`.
-        *   Пример: сообщение `{"event": "storePopupState", "state": "someState"}` сохранит `"someState"` в `popupState`.
-    *   `requestRestorePopupState`:
-        *   Отправляет сообщение обратно в runtime с событием `restorePopupState` и текущим `popupState`.
-        *   Пример: отправляет `{"timeout":0,"timeout_for_event":"presence_of_element_located","event": "restorePopupState", "state": "someState"}`.
-    *   `requestInsertStyleToPopup`:
-        *   Отправляет сообщение обратно в runtime с событием `insertStyleToPopup` и текущим `popupCss`.
-        *   Пример: отправляет `{"timeout":0,"timeout_for_event":"presence_of_element_located","event": "insertStyleToPopup", "css": "body{width:367px;height:auto;}"}`.
-    *   `showAllResults`:
-        *   Получает результаты, удаляет из сообщения поле `event`, сохраняет результаты в переменную `results`, добавляет `tabId` и `frameId` и открывает новую вкладку с `show_all_results.html`.
-        *   Пример: сообщение `{"event": "showAllResults", "xpath": "//div", "elements": ["element1", "element2"]}` приведет к открытию новой вкладки.
-    *   `loadResults`:
-        *   Отправляет текущие результаты `results` в ответ на запрос.
-        *   Пример: сообщение `{"event": "loadResults"}` вернет объект `results`.
-    *   `updateCss`:
-        *   Получает `expiredCssSet` и `css`.
-        *   Удаляет старый CSS (если есть) из вкладки, затем вставляет новый CSS.
-        *   После удаления и добавления CSS отправляет подтверждающие сообщения `finishRemoveCss` и `finishInsertCss` соответственно.
-        *   Пример: сообщение `{"event": "updateCss", "expiredCssSet": ["oldCss"], "css": "body{background:red}"}` удалит `oldCss` и добавит новый.
-    *   `loadOptions`:
-        *   Отправляет в ответ текущие значения `attributes`, `css` и `popupCss`.
-        *   Пример: сообщение `{"event": "loadOptions"}` вернет объект со значениями.
-    *   `requestSetContentInfo`:
-        *   Отправляет сообщение `setContentInfo` с текущими `attributes` во вкладку, с которой пришел запрос.
-        *   Пример: сообщение `{"event": "requestSetContentInfo"}` отправит `attributes` в активную вкладку.
-
-4.  **Слушатель изменений хранилища `browser.storage.onChanged`:**
-    *   Слушает изменения в `browser.storage`.
-    *   Если изменились `attributes`, `css` или `popupCss`, обновляет соответствующие переменные.
-    *   Пример: если в `browser.storage` изменится `attributes` то обновиться и локальная переменная `attributes`.
-
-5.  **Загрузка настроек из хранилища `browser.storage.sync.get`:**
-    *   Загружает настройки из `browser.storage.sync`.
-    *   Если `css` равно `null`, то загружает CSS по умолчанию через `loadDefaultCss()`.
-    *   Обновляет переменные `attributes`, `popupCss` и `css` на основе загруженных значений.
-    *   Пример: после загрузки из `browser.storage` значения сохранятся в переменные `attributes`, `popupCss` и `css`.
-
-## <mermaid>
+### 1. <алгоритм>
+**Блок-схема:**
 
 ```mermaid
-flowchart TD
-    Start[Start: Background Script] --> LoadSettings[Load Settings from Storage];
-    LoadSettings --> CheckCSS[Check if CSS is null];
-    CheckCSS -- Yes --> LoadDefaultCSS[Load Default CSS];
-    CheckCSS -- No --> UseStoredCSS[Use Stored CSS];
-    LoadDefaultCSS --> SetCSS[Set CSS variable];
-    UseStoredCSS --> SetCSS
-    SetCSS --> SetAttributes[Set Attributes from Storage];
-    SetAttributes --> SetPopupCss[Set Popup CSS from Storage];
-    SetPopupCss --> ListenForMessages[Listen for Messages];
-    ListenForMessages --> GenericListener[Generic Listener Function];
-    GenericListener --> CheckEvent[Check Message Event];
-    CheckEvent -- "storePopupState" --> StorePopupState[Store Popup State];
-    CheckEvent -- "requestRestorePopupState" --> RequestRestoreState[Request Restore Popup State];
-    CheckEvent -- "requestInsertStyleToPopup" --> RequestInsertStyle[Request Insert Style];
-    CheckEvent -- "showAllResults" --> ShowResults[Show All Results];
-    CheckEvent -- "loadResults" --> LoadResults[Load Results];
-    CheckEvent -- "updateCss" --> UpdateCSS[Update CSS];
-    CheckEvent -- "loadOptions" --> LoadOptions[Load Options];
-     CheckEvent -- "requestSetContentInfo" --> RequestSetInfo[Request Set Content Info];
-   CheckEvent -- Other --> IgnoreMessage[Ignore Message];
+graph LR
+    A[Начало] --> B(Инициализация переменных);
+    B --> C{Загрузка CSS из storage};
+    C -- CSS есть в storage --> D(Присвоить CSS);
+     D --> G{Загрузка атрибутов и popupCss из storage};
+    C -- CSS нет в storage --> E(Загрузка CSS по умолчанию);
+    E --> F(Присвоить загруженный CSS);
+    F --> G;
+     G --> H{Подписка на события storage};
+        H --> I{Слушатель сообщений браузера};
+        I --> J{Обработка события};
+        J -- "storePopupState" --> K(Сохранить состояние попапа);
+         K --> I
+        J -- "requestRestorePopupState" --> L(Отправить состояние попапа);
+         L --> I
+        J -- "requestInsertStyleToPopup" --> M(Отправить CSS попапа);
+         M --> I
+        J -- "showAllResults" --> N(Создать вкладку с результатами);
+         N --> I
+        J -- "loadResults" --> O(Отправить результаты);
+         O --> I
+        J -- "updateCss" --> P(Удалить старый CSS и вставить новый);
+         P --> Q(Отправить уведомление о завершении вставки/удаления CSS);
+         Q --> I
+        J -- "loadOptions" --> R(Отправить опции);
+         R --> I
+         J -- "requestSetContentInfo" --> S(Отправить атрибуты);
+        S --> I
 
-    StorePopupState --> ListenForMessages
-    RequestRestoreState --> SendRestoreMessage[Send Restore Message];
-    SendRestoreMessage --> ListenForMessages
-    RequestInsertStyle --> SendInsertStyleMessage[Send Insert Style Message];
-    SendInsertStyleMessage --> ListenForMessages
-    ShowResults --> CreateTab[Create New Tab with Results];
-     CreateTab --> ListenForMessages
-    LoadResults --> SendResults[Send Results to Sender];
-    SendResults --> ListenForMessages
-     UpdateCSS --> RemoveOldCSS[Remove Expired CSS];
-     RemoveOldCSS --> InsertNewCSS[Insert New CSS];
-      InsertNewCSS --> ListenForMessages
-     LoadOptions --> SendOptions[Send Options to Sender];
-     SendOptions --> ListenForMessages
-    RequestSetInfo --> SendSetContentMessage[Send Set Content Info Message];
-    SendSetContentMessage --> ListenForMessages;
-    IgnoreMessage --> ListenForMessages
+       
     
-     style LoadSettings fill:#f9f,stroke:#333,stroke-width:2px
-     style CheckCSS fill:#ccf,stroke:#333,stroke-width:2px
-     style LoadDefaultCSS fill:#ccf,stroke:#333,stroke-width:2px
-     style UseStoredCSS fill:#ccf,stroke:#333,stroke-width:2px
-     style SetCSS fill:#ccf,stroke:#333,stroke-width:2px
-    style SetAttributes fill:#ccf,stroke:#333,stroke-width:2px
-    style SetPopupCss fill:#ccf,stroke:#333,stroke-width:2px
-     style ListenForMessages fill:#f9f,stroke:#333,stroke-width:2px
-      style GenericListener fill:#ccf,stroke:#333,stroke-width:2px
-       style CheckEvent fill:#f9f,stroke:#333,stroke-width:2px
-    style StorePopupState fill:#ccf,stroke:#333,stroke-width:2px
-        style RequestRestoreState fill:#ccf,stroke:#333,stroke-width:2px
-         style RequestInsertStyle fill:#ccf,stroke:#333,stroke-width:2px
-      style ShowResults fill:#ccf,stroke:#333,stroke-width:2px
-     style LoadResults fill:#ccf,stroke:#333,stroke-width:2px
-      style UpdateCSS fill:#ccf,stroke:#333,stroke-width:2px
-      style LoadOptions fill:#ccf,stroke:#333,stroke-width:2px
-       style RequestSetInfo fill:#ccf,stroke:#333,stroke-width:2px
-     style SendRestoreMessage fill:#ccf,stroke:#333,stroke-width:2px
-      style SendInsertStyleMessage fill:#ccf,stroke:#333,stroke-width:2px
-     style CreateTab fill:#ccf,stroke:#333,stroke-width:2px
-      style SendResults fill:#ccf,stroke:#333,stroke-width:2px
-     style RemoveOldCSS fill:#ccf,stroke:#333,stroke-width:2px
-       style InsertNewCSS fill:#ccf,stroke:#333,stroke-width:2px
-      style SendOptions fill:#ccf,stroke:#333,stroke-width:2px
-       style SendSetContentMessage fill:#ccf,stroke:#333,stroke-width:2px
-    style IgnoreMessage fill:#ccf,stroke:#333,stroke-width:2px
-    
+        style A fill:#f9f,stroke:#333,stroke-width:2px
+        style C fill:#ccf,stroke:#333,stroke-width:2px
+        style G fill:#ccf,stroke:#333,stroke-width:2px
+        style H fill:#ccf,stroke:#333,stroke-width:2px
+        style I fill:#ccf,stroke:#333,stroke-width:2px
 ```
+**Примеры для блоков:**
+1. **Инициализация переменных:**
+   - `popupState`: Изначально `null`.
+   - `popupCss`: Строка с CSS для попапа.
+   - `results`: Пустой объект для хранения результатов.
+   - `css`: Пустая строка для хранения CSS.
+   - `attributes`: Объект с атрибутами для DOM.
+2. **Загрузка CSS из storage**:
+    - Проверяется наличие `css` в `storage.sync`. Если есть, присваивается переменной css, иначе загружается стандартный CSS,
+3. **Загрузка атрибутов и popupCss из storage**:
+    - Загружаются атрибуты `attributes` и `popupCss` из `storage.sync`.
+4. **Подписка на события storage**:
+   - При изменении значений в `storage.sync`, если изменились `attributes`, `css` или `popupCss`, они обновляются в переменных.
+5. **Слушатель сообщений браузера**:
+   - `genericListener` слушает сообщения от других частей расширения.
+6. **Обработка события**:
+   -  **`storePopupState`**: Сохраняет состояние попапа в `popupState`.
+   -  **`requestRestorePopupState`**: Отправляет сохраненное состояние попапа.
+   -  **`requestInsertStyleToPopup`**: Отправляет `popupCss` для вставки в попап.
+   -  **`showAllResults`**: Сохраняет результаты и открывает новую вкладку с `show_all_results.html`.
+   -  **`loadResults`**: Отправляет сохраненные результаты запросившему.
+   -  **`updateCss`**: Удаляет устаревший и вставляет новый CSS в указанной вкладке и фрейме, отправляя уведомления о завершении.
+   -  **`loadOptions`**: Отправляет опции, включая `attributes`, `css` и `popupCss`.
+   - **`requestSetContentInfo`**: Отправляет `attributes` для установки в контенте.
 
-**Объяснение зависимостей `mermaid`:**
+**Поток данных:**
 
-*   **`Start`**: Начало выполнения скрипта.
-*   **`LoadSettings`**: Загрузка настроек, включая `attributes`, `css` и `popupCss`, из хранилища `browser.storage.sync`.
-*    **`CheckCSS`**: Проверяет, является ли `css` `null` или нет.
-*    **`LoadDefaultCSS`**: Загружает CSS по умолчанию, если в хранилище `css` был `null`.
-*    **`UseStoredCSS`**: Использует загруженный из хранилища `css`.
-*   **`SetCSS`**: Устанавливает CSS переменную.
-*   **`SetAttributes`**: Устанавливает переменную `attributes` из загруженных настроек.
-*    **`SetPopupCss`**: Устанавливает переменную `popupCss` из загруженных настроек.
-*   **`ListenForMessages`**: Устанавливает слушатель сообщений `browser.runtime.onMessage` для обработки входящих сообщений.
-*   **`GenericListener`**: Функция-обработчик входящих сообщений, которая определяет тип сообщения и вызывает соответствующий обработчик.
-*    **`CheckEvent`**: Проверяет тип сообщения.
-*   **`StorePopupState`**: Сохраняет состояние попапа.
-*   **`RequestRestoreState`**: Отправляет запрос на восстановление состояния попапа.
-*   **`RequestInsertStyle`**: Отправляет запрос на вставку CSS в попап.
-*   **`ShowResults`**: Обрабатывает запрос на отображение всех результатов, открывая новую вкладку.
-*   **`LoadResults`**: Отправляет текущие результаты по запросу.
-*    **`UpdateCSS`**: Обрабатывает запрос на обновление CSS, удаляя старый и добавляя новый.
-*    **`LoadOptions`**: Отправляет текущие опции по запросу.
-*    **`RequestSetInfo`**: Отправляет запрос на установку информации о контенте.
-*   **`SendRestoreMessage`**: Отправляет сообщение с запросом на восстановление состояния.
-*   **`SendInsertStyleMessage`**: Отправляет сообщение с запросом на вставку CSS.
-*   **`CreateTab`**: Создает новую вкладку для отображения результатов.
-*   **`SendResults`**: Отправляет результаты отправителю сообщения.
-*    **`RemoveOldCSS`**: Удаляет старый CSS.
-*    **`InsertNewCSS`**: Вставляет новый CSS.
-*   **`SendOptions`**: Отправляет опции отправителю сообщения.
-*    **`SendSetContentMessage`**: Отправляет сообщение с информацией о контенте.
-*   **`IgnoreMessage`**: Игнорирует сообщения, которые не соответствуют ни одному из условий.
+-   **Storage:** Инициализация переменных происходит при загрузке скрипта из `storage.sync`.
+-   **Сообщения браузера:** Принимаются от других частей расширения (content script, popup) и обрабатываются.
+-   **`browser.tabs`:** Используется для управления CSS и отправки сообщений во вкладки.
+-   **`XMLHttpRequest`:** Используется для загрузки CSS по умолчанию.
 
-## <объяснение>
+### 2. <mermaid>
+```mermaid
+flowchart TD
+    A[background.js: Start] --> B(Initialize Variables);
+    B --> C{Check Storage for CSS};
+    C -- CSS found --> D(Assign CSS from Storage);
+    D --> E{Check Storage for Attributes and Popup CSS};
+     E --> F(Assign Attributes and Popup CSS from Storage);
+    C -- CSS not found --> G(Load Default CSS via XMLHttpRequest);
+    G --> H(Assign Loaded CSS);
+     H --> E;
+        F --> I{Set up Storage Change Listener};
+         I --> J{Set up Message Listener};
+        J --> K{Process Message: storePopupState};
+        K --> L(Update popupState variable);
+        L-->J;
+        J --> M{Process Message: requestRestorePopupState};
+          M --> N(Send popupState to content script);
+        N-->J;
+        J --> O{Process Message: requestInsertStyleToPopup};
+         O --> P(Send popupCss to content script);
+        P-->J;
+        J --> Q{Process Message: showAllResults};
+            Q --> R(Save Results);
+            R --> S(Create new tab with show_all_results.html);
+        S -->J;
+        J --> T{Process Message: loadResults};
+         T --> U(Send Results to content script);
+          U -->J;
+        J --> V{Process Message: updateCss};
+            V --> W(Remove expired CSS from tab);
+            W --> X(Insert new CSS into tab);
+             X --> Y(Send notification to content script);
+            Y-->J;
+         J --> Z{Process Message: loadOptions};
+           Z --> AA(Send attributes, css, popupCss to content script);
+        AA --> J
+         J --> AB{Process Message: requestSetContentInfo};
+           AB --> AC(Send attributes to content script);
+        AC --> J;
+    
+     style A fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#ccf,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:2px
+   style I fill:#ccf,stroke:#333,stroke-width:2px
+    style J fill:#ccf,stroke:#333,stroke-width:2px
+```
+**Объяснение зависимостей:**
+
+- **`background.js: Start`**: Начальная точка скрипта, где начинается выполнение кода.
+- **`Initialize Variables`**: Инициализация переменных, таких как `popupState`, `popupCss`, `results`, `css`, и `attributes`.
+- **`Check Storage for CSS`**: Проверка наличия CSS в `browser.storage.sync`.
+- **`Assign CSS from Storage`**: Присвоение CSS из storage переменной `css`.
+- **`Load Default CSS via XMLHttpRequest`**: Загрузка CSS по умолчанию, если нет в storage.
+- **`Check Storage for Attributes and Popup CSS`**:  Проверка наличия атрибутов и `popupCss` в `browser.storage.sync`.
+- **`Assign Attributes and Popup CSS from Storage`**: Присвоение атрибутов и `popupCss` из storage переменным.
+- **`Set up Storage Change Listener`**: Установка слушателя для отслеживания изменений в storage.
+- **`Set up Message Listener`**: Установка слушателя для сообщений от других частей расширения.
+- **`Process Message: storePopupState`**: Обработка сообщения для сохранения состояния попапа.
+- **`Process Message: requestRestorePopupState`**:  Обработка запроса на отправку состояния попапа.
+- **`Process Message: requestInsertStyleToPopup`**:  Обработка запроса на вставку CSS для попапа.
+- **`Process Message: showAllResults`**: Обработка сообщения для отображения всех результатов.
+-  **`Process Message: loadResults`**: Обработка запроса на отправку сохраненных результатов.
+-   **`Process Message: updateCss`**: Обработка сообщения для обновления CSS на вкладке.
+-   **`Process Message: loadOptions`**: Обработка сообщения для отправки настроек.
+-   **`Process Message: requestSetContentInfo`**: Обработка сообщения для отправки информации о контенте.
+- **`Send popupState to content script`**: Отправка `popupState` в content script.
+- **`Send popupCss to content script`**: Отправка `popupCss` в content script.
+- **`Save Results`**: Сохранение результатов в переменную results.
+- **`Create new tab with show_all_results.html`**: Создание новой вкладки для отображения результатов.
+- **`Send Results to content script`**: Отправка результатов в content script.
+- **`Remove expired CSS from tab`**: Удаление устаревшего CSS из вкладки.
+- **`Insert new CSS into tab`**: Вставка нового CSS во вкладку.
+- **`Send notification to content script`**: Отправка уведомления об окончании обновления CSS в content script.
+-  **`Send attributes, css, popupCss to content script`**: Отправка настроек в content script.
+-   **`Send attributes to content script`**: Отправка атрибутов в content script.
+### 3. <объяснение>
 
 **Импорты:**
+-   В коде нет явных импортов, используется только глобальный объект `browser` и `window`. `browser` это API для работы с расширениями.
+-   `tryxpath` - это, видимо, объект, доступный в глобальном пространстве имен, который представляет собой основную функциональность расширения. 
+-   `fu` - псевдоним для `tryxpath.functions`, содержащий, скорее всего, вспомогательные функции.
 
-*   `browser.runtime`: API для взаимодействия с расширением, включает в себя отправку и прослушивание сообщений, управление вкладками и т.д.
-*   `browser.storage`: API для хранения настроек расширения, как в локальном хранилище, так и в синхронизированном хранилище.
-*   `browser.tabs`: API для взаимодействия со вкладками.
-
-**Глобальные Переменные:**
-
-*   `tx`: Псевдоним для пространства имен `tryxpath`, предполагается, что оно определено в другом месте и содержит функциональность для работы с XPath.
-*   `fu`: Псевдоним для `tryxpath.functions`, также предполагается, что это объект с функциями, используемыми в данном коде (например, `onError`).
-*   `popupState`: Состояние попапа (например, раскрыт или нет), используется для восстановления состояния.
-*   `popupCss`: CSS стили для попапа.
-*   `results`: Объект, содержащий результаты поиска XPath.
-*   `css`: CSS стили для выделения элементов на странице.
-*   `attributes`: Объект, содержащий имена атрибутов, которые используются для идентификации элементов (например, `data-tryxpath-element`).
+**Классы:**
+-   В коде нет классов.
 
 **Функции:**
 
-*   **`loadDefaultCss()`**:
-    *   **Аргументы:** Нет.
-    *   **Возвращаемое значение:** `Promise`, который разрешается со строкой CSS (текст файла `try_xpath_insert.css`).
-    *   **Назначение:** Асинхронно загружает CSS из файла, используя `XMLHttpRequest`, и возвращает `Promise`, позволяя использовать `.then()` для обработки результата.
-    *   **Пример**: Вызывается при первой загрузке или если CSS не был сохранен в `browser.storage`.
-*   **`genericListener(message, sender, sendResponse)`**:
-    *   **Аргументы:**
-        *   `message`: Объект, содержащий сообщение от контент скрипта или другого компонента расширения.
-        *   `sender`: Объект, содержащий информацию об отправителе сообщения.
-        *   `sendResponse`: Функция для отправки ответа на сообщение.
-    *   **Возвращаемое значение:** Возвращает результат вызова обработчика или ничего, если обработчик не найден.
-    *   **Назначение:** Является общим обработчиком сообщений. Она определяет, есть ли функция-обработчик для определенного события (`message.event`) и вызывает ее.
-    *   **Пример**: Когда контент-скрипт отправляет сообщение с событием `storePopupState`, `genericListener` вызывает `genericListener.listeners.storePopupState`.
+1.  **`loadDefaultCss()`**:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: `Promise`, который разрешается с текстом CSS из файла `try_xpath_insert.css`.
+    -   **Назначение**: Загружает CSS по умолчанию из файла, если он не найден в `storage.sync`.
+    -   **Пример**: Вызывается при первом запуске расширения или при отсутствии сохраненного CSS.
+2.  **`genericListener(message, sender, sendResponse)`**:
+    -   **Аргументы**:
+        -   `message`: Объект с данными сообщения.
+        -   `sender`: Объект, содержащий информацию об отправителе сообщения.
+        -   `sendResponse`: Функция для отправки ответа на сообщение.
+    -   **Возвращаемое значение**: Результат выполнения соответствующего слушателя или `undefined`.
+    -   **Назначение**: Слушает сообщения от других частей расширения и вызывает соответствующую функцию-обработчик.
+    -   **Пример**: При получении сообщения с `event: 'storePopupState'`, вызывается `genericListener.listeners.storePopupState`.
+3.  **`genericListener.listeners.storePopupState(message)`**:
+    -   **Аргументы**: `message` - объект, содержащий состояние попапа.
+    -   **Возвращаемое значение**: Нет.
+    -   **Назначение**: Сохраняет состояние попапа в переменную `popupState`.
+    -   **Пример**: `genericListener.listeners.storePopupState({"state": true})`
+4.   **`genericListener.listeners.requestRestorePopupState(message)`**:
+    -  **Аргументы**: `message` - объект сообщения.
+    -   **Возвращаемое значение**: Нет.
+    -   **Назначение**: Отправляет текущее состояние `popupState` в `content script` для восстановления состояния попапа.
+    -   **Пример**: При запросе из `content script` отправляет  `{"timeout":0,"timeout_for_event":"presence_of_element_located","event": "restorePopupState","state": popupState}`
+5.  **`genericListener.listeners.requestInsertStyleToPopup()`**:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: Нет.
+    -   **Назначение**: Отправляет `popupCss` для вставки в попап.
+    -   **Пример**: Отправляет сообщение `{"timeout":0,"timeout_for_event":"presence_of_element_located","event": "insertStyleToPopup", "css": popupCss}` в `content script`.
+6.  **`genericListener.listeners.showAllResults(message, sender)`**:
+    -   **Аргументы**:
+        -   `message`: Объект с результатами.
+        -   `sender`: Объект, содержащий информацию об отправителе сообщения.
+    -   **Возвращаемое значение**: Нет.
+    -   **Назначение**: Сохраняет результаты и открывает новую вкладку с страницей результатов.
+    -   **Пример**: `genericListener.listeners.showAllResults({"results": [...]}, sender)`
+7.  **`genericListener.listeners.loadResults(message, sender, sendResponse)`**:
+    -   **Аргументы**:
+        -   `message`: Объект сообщения.
+        -   `sender`: Объект, содержащий информацию об отправителе сообщения.
+        -   `sendResponse`: Функция для отправки ответа.
+    -   **Возвращаемое значение**: `true` (необходимо для асинхронных ответов).
+    -   **Назначение**: Отправляет сохраненные результаты запросившей стороне.
+    -   **Пример**: `genericListener.listeners.loadResults({}, sender, sendResponse)`
+8.  **`genericListener.listeners.updateCss(message, sender)`**:
+    -   **Аргументы**:
+        -   `message`: Объект с информацией об устаревшем и новом CSS.
+        -   `sender`: Объект, содержащий информацию об отправителе сообщения.
+    -   **Возвращаемое значение**: Нет.
+    -   **Назначение**: Удаляет устаревший CSS и вставляет новый CSS в указанной вкладке и фрейме.
+    -  **Пример**:  `genericListener.listeners.updateCss({"expiredCssSet": ["css1", "css2"]}, sender)`
+9.  **`genericListener.listeners.loadOptions(message, sender, sendResponse)`**:
+    -   **Аргументы**:
+        -    `message`: Объект сообщения.
+        -   `sender`: Объект, содержащий информацию об отправителе сообщения.
+        -    `sendResponse`: Функция для отправки ответа.
+    -   **Возвращаемое значение**: `true` (необходимо для асинхронных ответов).
+    -   **Назначение**: Отправляет опции, включая `attributes`, `css` и `popupCss` запросившей стороне.
+    -   **Пример**: `genericListener.listeners.loadOptions({}, sender, sendResponse)`
+10. **`genericListener.listeners.requestSetContentInfo(message, sender)`**:
+    -   **Аргументы**:
+        -    `message`: Объект сообщения.
+        -   `sender`: Объект, содержащий информацию об отправителе сообщения.
+    -   **Возвращаемое значение**: Нет.
+    -   **Назначение**: Отправляет атрибуты `attributes` для установки в DOM контента.
+    -   **Пример**: `genericListener.listeners.requestSetContentInfo({}, sender)`
 
-**Обработчики сообщений (в `genericListener.listeners`):**
-
-*   **`storePopupState(message)`**:
-    *   **Аргументы:** `message` - сообщение с новым состоянием попапа.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Сохраняет состояние попапа (раскрыт или закрыт).
-    *   **Пример**: `genericListener.listeners.storePopupState({"event": "storePopupState", "state": "opened"})` установит `popupState` в `"opened"`.
-*   **`requestRestorePopupState(message)`**:
-    *   **Аргументы:** `message` - входящее сообщение.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Отправляет сообщение обратно в runtime с текущим состоянием `popupState`.
-    *   **Пример**:  Отправляет сообщение с событием `restorePopupState` и текущим значением `popupState` в runtime.
-*   **`requestInsertStyleToPopup()`**:
-    *    **Аргументы:** Нет.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Отправляет запрос на вставку CSS для попапа.
-    *    **Пример**: Отправляет сообщение с событием `insertStyleToPopup` и текущим значением `popupCss` в runtime.
-*   **`showAllResults(message, sender)`**:
-    *   **Аргументы:**
-        *   `message`: Объект сообщения с результатами.
-        *   `sender`: Объект с информацией об отправителе.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Сохраняет результаты поиска XPath и открывает новую вкладку с HTML для показа результатов.
-    *   **Пример**: `genericListener.listeners.showAllResults({"event": "showAllResults", "xpath": "//div", "elements": ["element1", "element2"]}, sender)` откроет новую вкладку с `show_all_results.html`.
-*   **`loadResults(message, sender, sendResponse)`**:
-    *   **Аргументы:**
-        *   `message`: Сообщение.
-        *   `sender`: Информация об отправителе.
-        *   `sendResponse`: Функция для отправки ответа.
-    *   **Возвращаемое значение:** `true` для указания, что ответ будет отправлен асинхронно.
-    *   **Назначение:** Отправляет ранее сохраненные результаты `results`.
-    *   **Пример**: `genericListener.listeners.loadResults({"event": "loadResults"}, sender, sendResponse)` отправит `results` обратно.
-*   **`updateCss(message, sender)`**:
-    *   **Аргументы:**
-        *   `message`: Объект сообщения, содержащий `expiredCssSet` (CSS для удаления) и `css` (CSS для вставки).
-        *   `sender`: Информация об отправителе.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Удаляет старый CSS из вкладки и добавляет новый, а также отправляет сообщения о завершении операций.
-    *   **Пример**: `genericListener.listeners.updateCss({"event": "updateCss", "expiredCssSet": ["oldCss"], "css": "body{background:red}"}, sender)` удалит старый CSS и добавит новый.
-*   **`loadOptions(message, sender, sendResponse)`**:
-    *   **Аргументы:**
-        *   `message`: Сообщение.
-        *   `sender`: Информация об отправителе.
-        *   `sendResponse`: Функция для отправки ответа.
-    *   **Возвращаемое значение:** `true` для указания, что ответ будет отправлен асинхронно.
-    *   **Назначение:** Отправляет текущие опции (атрибуты, CSS) отправителю.
-    *   **Пример**: `genericListener.listeners.loadOptions({"event": "loadOptions"}, sender, sendResponse)` отправит объект с `attributes`, `css` и `popupCss`.
-*  **`requestSetContentInfo(message, sender)`**:
-    *   **Аргументы:**
-        *   `message`: Сообщение.
-         *   `sender`: Информация об отправителе.
-    *   **Возвращаемое значение:** Нет.
-    *   **Назначение:** Отправляет атрибуты `attributes` во вкладку, которая запросила информацию.
-    *   **Пример**: `genericListener.listeners.requestSetContentInfo({"event": "requestSetContentInfo"}, sender)` отправит `attributes` в контент скрипт.
-
-**Слушатель изменений `browser.storage.onChanged`:**
-
-*   **Назначение:** Отслеживает изменения в хранилище `browser.storage` и обновляет локальные переменные `attributes`, `css` и `popupCss` при их изменении.
-
-**Загрузка из `browser.storage.sync.get`:**
-
-*   **Назначение:** При запуске скрипта загружает сохраненные настройки, включая `attributes`, `css` и `popupCss`. Если `css` не задан, загружает CSS по умолчанию.
+**Переменные:**
+-   `tx`: Псевдоним для `tryxpath` для удобства доступа.
+-   `fu`: Псевдоним для `tryxpath.functions`.
+-   `popupState`: Состояние попапа (может быть `null`, `true` или `false`).
+-   `popupCss`: Строка, содержащая CSS для попапа.
+-   `results`: Объект для хранения результатов.
+-   `css`: Строка, содержащая CSS.
+-   `attributes`: Объект, содержащий атрибуты для DOM элементов.
+-   `genericListener.listeners`: Объект, содержащий функции-обработчики сообщений.
 
 **Потенциальные ошибки и области для улучшения:**
+- Обработка ошибок при загрузке CSS: В коде используется `catch(fu.onError)`, но конкретная обработка ошибки не показана. Возможно, следует добавить более детальное логирование или уведомление пользователя.
+- Асинхронность:  Множество асинхронных операций в `genericListener.listeners.updateCss`.
+-  Использование `timeout` и `timeout_for_event`:  Возможно, стоит рассмотреть более стандартизированный способ обработки асинхронных событий, вместо использования `timeout` и `timeout_for_event`.
+-  Отсутствует явная обработка ошибок при взаимодействии с `storage`.
 
-*   **Обработка ошибок**: Используется `fu.onError` для обработки ошибок, но нет детального логирования или оповещения об ошибках. Стоит добавить более детальную обработку.
-*   **Асинхронность:** Код активно использует `Promises`, но в некоторых местах обработка ошибок может быть не совсем корректной, например, пропущен `catch` после `browser.tabs.sendMessage`.
-*   **Использование `timeout_for_event`:** Выглядит как константа и, вероятно, должна быть вынесена в отдельную переменную или константу, либо убрана, если не используется.
-*   **Зависимость от `tryxpath`:** Без контекста `tryxpath`, трудно оценить полную функциональность и потенциальные проблемы, но предполагается, что этот код зависит от его корректной работы.
-*   **Отсутствует проверка на ошибки** в `browser.storage.sync.get`.
-*  **Сообщения**: Не все сообщения обрабатываются, и возможно, некоторые из них нужно добавить, в зависимости от логики работы расширения.
+**Взаимосвязь с другими частями проекта:**
 
-**Цепочка взаимосвязей с другими частями проекта:**
+-   **Content script:** `background.js` взаимодействует с content scripts для вставки CSS, отправки состояния попапа и получения результатов.
+-   **Popup:** `background.js` предоставляет данные для попапа, такие как CSS и атрибуты, а также получает запросы от попапа.
+-   **Storage:** `background.js` использует `browser.storage.sync` для сохранения и загрузки настроек (CSS, атрибуты).
+-  **`show_all_results.html`**: `background.js` открывает страницу с результатами, передавая данные.
 
-1.  **Контент-скрипты:** Контент-скрипты используют `browser.runtime.sendMessage` для отправки сообщений в этот background script и получают от него данные о результатах поиска, CSS, и т.д.
-2.  **Попап:** Попап также взаимодействует с background script для получения и установки состояния, CSS стилей и других параметров.
-3.  **Страница результатов:** Страница `show_all_results.html` запрашивает у этого скрипта результаты поиска через сообщение `loadResults`.
-4.  **Хранилище (`browser.storage`)**: Background script сохраняет и загружает настройки, такие как `attributes`, `css`, `popupCss` из хранилища, чтобы настройки сохранялись между сессиями.
-5.  **Модуль `tryxpath`:** Этот код зависит от `tryxpath`, который, вероятно, предоставляет основную логику для работы с XPath и выделением элементов.
-6.  **`header.py`**: В данном коде нет импорта `header`, поэтому диаграмма `header.py` не требуется.
+Этот код является центральным управляющим скриптом расширения, который координирует работу между различными частями, обрабатывает события и управляет состоянием.

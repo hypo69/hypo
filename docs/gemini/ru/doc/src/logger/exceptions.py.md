@@ -1,129 +1,89 @@
-# src.logger.exceptions
+# Модуль `src.logger.exceptions`
 
 ## Обзор
 
-Модуль `src.logger.exceptions` определяет пользовательские исключения, используемые в приложении. Эти исключения предназначены для обработки ошибок, связанных с различными компонентами приложения, включая файловые операции, поля продуктов, подключения к базе данных KeePass и ошибки PrestaShop WebService.
+Модуль `src.logger.exceptions` определяет пользовательские исключения, используемые в приложении. Эти исключения предназначены для обработки ошибок, связанных с различными компонентами приложения, такими как файловые операции, поля продуктов, соединения с базами данных KeePass и ошибки PrestaShop WebService.
 
 ## Оглавление
 
-- [Классы](#классы)
-  - [`CustomException`](#customexception)
-  - [`FileNotFoundError`](#filenotfounderror)
-  - [`ProductFieldException`](#productfieldexception)
-  - [`KeePassException`](#keepassexception)
-  - [`DefaultSettingsException`](#defaultsettingsexception)
-  - [`WebDriverException`](#webdriverexception)
-  - [`ExecuteLocatorException`](#executelocatorexception)
-  - [`PrestaShopException`](#prestashopexception)
-  - [`PrestaShopAuthenticationError`](#prestashopauthenticationerror)
+1. [Классы](#классы)
+    - [`CustomException`](#customexception)
+    - [`FileNotFoundError`](#filenotfounderror)
+    - [`ProductFieldException`](#productfieldexception)
+    - [`KeePassException`](#keepassexception)
+    - [`DefaultSettingsException`](#defaultsettingsexception)
+    - [`WebDriverException`](#webdriverexception)
+    - [`ExecuteLocatorException`](#executelocatorexception)
+    - [`PrestaShopException`](#prestashopexception)
+    - [`PrestaShopAuthenticationError`](#prestashopauthenticationerror)
 
 ## Классы
 
 ### `CustomException`
 
-**Описание**: Базовый класс для всех пользовательских исключений в приложении. Он обрабатывает логирование исключения и предоставляет механизм для работы с исходным исключением, если оно существует.
-
-**Атрибуты**:
-- `original_exception` (Optional[Exception]): Исходное исключение, вызвавшее это пользовательское исключение, если таковое имеется.
-- `exc_info` (bool): Флаг, указывающий, следует ли логировать информацию об исключении.
-
-**Методы**:
-
-#### `__init__`
-
-**Описание**: Инициализирует `CustomException` сообщением и необязательным исходным исключением.
+**Описание**: Базовый класс для всех пользовательских исключений в приложении. Обрабатывает логирование исключения и предоставляет механизм для работы с исходным исключением, если оно существует.
 
 **Параметры**:
 - `message` (str): Сообщение об ошибке.
-- `e` (Optional[Exception], optional): Исходное исключение. По умолчанию `None`.
-- `exc_info` (bool, optional): Флаг для указания, нужно ли логировать информацию об исключении. По умолчанию `True`.
+- `e` (Optional[Exception], optional): Исходное исключение, вызвавшее текущее. По умолчанию `None`.
+- `exc_info` (bool, optional): Флаг, указывающий, следует ли логировать информацию об исключении. По умолчанию `True`.
 
-#### `handle_exception`
-
-**Описание**: Обрабатывает исключение, логируя ошибку и исходное исключение, если оно доступно.
-
-**Параметры**:
-- нет
+**Методы**:
+- `__init__(message: str, e: Optional[Exception] = None, exc_info: bool = True)`: Инициализирует `CustomException` с сообщением и исходным исключением.
+- `handle_exception()`: Обрабатывает исключение, логируя ошибку и исходное исключение, если оно есть.
 
 ### `FileNotFoundError`
 
-**Описание**: Исключение, возникающее, когда файл не найден.
+**Описание**: Исключение, вызываемое, когда файл не найден.
 
-**Наследует от**:
-- `CustomException`
-- `IOError`
+**Наследуется от**: `CustomException`, `IOError`
 
 ### `ProductFieldException`
 
-**Описание**: Исключение, возникающее при ошибках, связанных с полями продукта.
+**Описание**: Исключение, вызываемое при ошибках, связанных с полями продукта.
 
-**Наследует от**:
-- `CustomException`
+**Наследуется от**: `CustomException`
 
 ### `KeePassException`
 
-**Описание**: Исключение, возникающее при проблемах с подключением к базе данных KeePass.
+**Описание**: Исключение, вызываемое при ошибках соединения с базой данных KeePass.
 
-**Наследует от**:
-- `CredentialsError`
-- `BinaryError`
-- `HeaderChecksumError`
-- `PayloadChecksumError`
-- `UnableToSendToRecycleBin`
+**Наследуется от**: `CredentialsError`, `BinaryError`, `HeaderChecksumError`, `PayloadChecksumError`, `UnableToSendToRecycleBin`
 
 ### `DefaultSettingsException`
 
-**Описание**: Исключение, возникающее при проблемах с настройками по умолчанию.
+**Описание**: Исключение, вызываемое при проблемах с настройками по умолчанию.
 
-**Наследует от**:
-- `CustomException`
+**Наследуется от**: `CustomException`
 
 ### `WebDriverException`
 
-**Описание**: Исключение, возникающее при проблемах, связанных с WebDriver.
+**Описание**: Исключение, вызываемое при проблемах, связанных с WebDriver.
 
-**Наследует от**:
-- `WDriverException`
+**Наследуется от**: `WDriverException`
 
 ### `ExecuteLocatorException`
 
-**Описание**: Исключение, возникающее при ошибках, связанных с исполнителями локаторов.
+**Описание**: Исключение, вызываемое при ошибках, связанных с исполнителями локаторов.
 
-**Наследует от**:
-- `CustomException`
+**Наследуется от**: `CustomException`
 
 ### `PrestaShopException`
 
-**Описание**: Общее исключение для ошибок PrestaShop WebService. Используется для обработки ошибок, возникающих при взаимодействии с PrestaShop WebService.
-
-**Атрибуты**:
-- `msg` (str): Пользовательское сообщение об ошибке.
-- `error_code` (Optional[int]): Код ошибки, возвращенный PrestaShop.
-- `ps_error_msg` (str): Сообщение об ошибке от PrestaShop.
-- `ps_error_code` (Optional[int]): Код ошибки PrestaShop.
-
-**Методы**:
-
-#### `__init__`
-
-**Описание**: Инициализирует `PrestaShopException` с предоставленным сообщением и деталями ошибки.
+**Описание**: Общее исключение для ошибок PrestaShop WebService.
 
 **Параметры**:
-- `msg` (str): Пользовательское сообщение об ошибке.
-- `error_code` (Optional[int], optional): Код ошибки. По умолчанию `None`.
-- `ps_error_msg` (str, optional): Сообщение об ошибке от PrestaShop. По умолчанию `''`.
+- `msg` (str): Сообщение об ошибке.
+- `error_code` (Optional[int], optional): Код ошибки, возвращенный PrestaShop. По умолчанию `None`.
+- `ps_error_msg` (str, optional): Сообщение об ошибке от PrestaShop. По умолчанию ''.
 - `ps_error_code` (Optional[int], optional): Код ошибки PrestaShop. По умолчанию `None`.
 
-#### `__str__`
-
-**Описание**: Возвращает строковое представление исключения.
-
-**Возвращает**:
-- `str`: Строковое представление ошибки (`ps_error_msg` если есть, иначе `msg`).
+**Методы**:
+- `__init__(msg: str, error_code: Optional[int] = None, ps_error_msg: str = '', ps_error_code: Optional[int] = None)`: Инициализирует `PrestaShopException` с сообщением и деталями ошибки.
+- `__str__()`: Возвращает строковое представление исключения.
 
 ### `PrestaShopAuthenticationError`
 
-**Описание**: Исключение, возникающее при ошибках аутентификации PrestaShop (не авторизовано).
+**Описание**: Исключение, вызываемое при ошибках аутентификации PrestaShop (Unauthorized).
 
-**Наследует от**:
-- `PrestaShopException`
+**Наследуется от**: `PrestaShopException`

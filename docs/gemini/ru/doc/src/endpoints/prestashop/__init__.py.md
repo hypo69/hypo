@@ -2,73 +2,53 @@
 
 ## Обзор
 
-Модуль `src.endpoints.prestashop` предназначен для взаимодействия с API PrestaShop. Он предоставляет классы для работы с различными сущностями PrestaShop, такими как продукты, поставщики, категории, склады, языки, магазины, прайс-листы и клиенты.
+Модуль `src.endpoints.prestashop` предоставляет набор классов для взаимодействия с API PrestaShop, включая работу с продуктами, поставщиками, категориями, складами, языками, магазинами, прайс-листами и клиентами.
 
 ## Оглавление
 
-1. [Обзор](#обзор)
-2. [Переменные](#переменные)
-3. [Импортированные модули и классы](#импортированные-модули-и-классы)
+- [Классы](#классы)
+  - [`PrestaShop`](#prestashop)
+  - [`PrestaProduct`](#prestaproduct)
+  - [`PrestaSupplier`](#prestasuplier)
+  - [`PrestaCategory`](#prestacategory)
+  - [`PrestaWarehouse`](#prestawarehouse)
+  - [`PrestaLanguage`](#prestalanguage)
+  - [`PrestaShopShop`](#prestashopshop)
+  - [`PriceListRequester`](#pricelistrequester)
+    - [`PrestaCustomer`](#prestaCustomer)
 
-## Переменные
-
-### `MODE`
-
-**Описание**:
-Режим работы модуля, по умолчанию установлен в `dev`.
-
-## Импортированные модули и классы
+## Классы
 
 ### `PrestaShop`
-
-**Описание**:
-Класс для взаимодействия с API PrestaShop.
-- Расположение: `.api`
-
+**Описание**: Класс для взаимодействия с API PrestaShop. 
+    
+    
 ### `PrestaProduct`
-
-**Описание**:
-Класс для работы с продуктами PrestaShop.
-- Расположение: `.product`
-
+**Описание**: Класс для работы с продуктами PrestaShop.
+    
+    
 ### `PrestaSupplier`
-
-**Описание**:
-Класс для работы с поставщиками PrestaShop.
-- Расположение: `.supplier`
-
+**Описание**: Класс для работы с поставщиками PrestaShop.
+    
+    
 ### `PrestaCategory`
-
-**Описание**:
-Класс для работы с категориями PrestaShop.
-- Расположение: `.category`
-
+**Описание**: Класс для работы с категориями PrestaShop.
+   
+    
 ### `PrestaWarehouse`
-
-**Описание**:
-Класс для работы со складами PrestaShop.
-- Расположение: `.warehouse`
-
+**Описание**: Класс для работы со складами PrestaShop.
+    
+    
 ### `PrestaLanguage`
-
-**Описание**:
-Класс для работы с языками PrestaShop.
-- Расположение: `.language`
-
+**Описание**: Класс для работы с языками PrestaShop.
+   
+    
 ### `PrestaShopShop`
-
-**Описание**:
-Класс для работы с магазинами PrestaShop.
-- Расположение: `.shop`
-
+**Описание**: Класс для работы с магазинами PrestaShop.
+    
+    
 ### `PriceListRequester`
-
-**Описание**:
-Класс для запросов прайс-листов PrestaShop.
-- Расположение: `.pricelist`
+**Описание**: Класс для работы с прайс-листами PrestaShop.
 
 ### `PrestaCustomer`
-
-**Описание**:
-Класс для работы с клиентами PrestaShop.
-- Расположение: `.customer`
+**Описание**: Класс для работы с клиентами PrestaShop.

@@ -2,26 +2,25 @@
 
 Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:
 
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
+1.  **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.
+2.  **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости,
     которые импортируются при создании диаграммы.
     **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`,
     имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!
 
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
+    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`
     ```mermaid
     flowchart TD
         Start --> Header[<code>header.py</code><br> Determine Project Root]
 
         Header --> import[Import Global Settings: <br><code>from src import gs</code>]
     ```
-
 3.  **<объяснение>**: Предоставьте подробные объяснения:
-    *   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
-    *   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
-    *   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
-    *   **Переменные**: Их типы и использование.
-    *   Выделите потенциальные ошибки или области для улучшения.
+    -   **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.
+    -   **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.
+    -   **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.
+    -   **Переменные**: Их типы и использование.
+    -   Выделите потенциальные ошибки или области для улучшения.
 
 Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).
 
@@ -31,202 +30,198 @@
 
 ## <алгоритм>
 
-1.  **Загрузка страницы:**
-    *   Браузер загружает `popup.html`.
-    *   Подключаются стили `popup.css` для визуального оформления.
-    *   Подключаются скрипты `try_xpath_functions.js` и `popup.js` для динамического поведения.
-2.  **Отображение интерфейса:**
-    *   Отображаются элементы управления:
-        *   Кнопка "Execute" для запуска XPath/CSS-запросов.
-        *   Чекбокс "Help" для отображения/скрытия подсказок.
-        *   Выпадающие списки для выбора метода и типа запроса (например, xpath ANY_TYPE, querySelector).
-        *   Текстовые поля для ввода XPath/CSS выражений и resolver namespace.
-        *   Интерфейс для работы с контекстом, resolver namespace, фреймами.
-        *   Раздел "Results" для отображения результатов запросов.
-3.  **Ввод данных пользователем:**
-    *   Пользователь выбирает метод (xpath, querySelector, querySelectorAll) и тип запроса из выпадающих списков в секциях "Main" и "Context".
-    *   Пользователь вводит XPath или CSS выражение в текстовое поле "Expression" в секциях "Main" и "Context".
-    *   При необходимости, пользователь может указать namespace resolver в поле "Resolver".
-    *   Пользователь может указать frameId или frame designation.
-4.  **Обработка события "Execute":**
-    *   При нажатии кнопки "Execute", скрипт `popup.js` считывает данные из полей ввода.
-    *   Данные: выбранные метод и тип запроса, выражения XPath/CSS, значения для контекста (если есть), frameId, namespace resolver и прочие опции.
-    *   Скрипт формирует запрос к контентному скрипту, работающему на текущей вкладке.
-5.  **Выполнение запроса на странице:**
-    *   Контентный скрипт, получив запрос, выполняет XPath или CSS запрос на текущей странице с использованием DOM API.
-        *   Пример: `document.evaluate(expression, context, namespaceResolver, resultType)` или `context.querySelector(expression)`
-    *   В запросе может быть указан `frameId` или `frame designation` для выполнения запроса внутри конкретного фрейма.
-6.  **Получение и отображение результатов:**
-    *   Контентный скрипт отправляет результаты обратно в `popup.js`.
-    *   Скрипт `popup.js` обрабатывает результаты и отображает их в секции "Results":
-        *   Сообщение об ошибке или успехе запроса.
-        *   Количество найденных элементов.
-        *   frameId, в котором был выполнен запрос.
-        *   Детализированная информация о результатах, разбитая на страницы (если необходимо).
-        *   Детализированная информация о контексте.
-    *   Кнопки "Show all results", "Open options", кнопки для стилизации.
-7.  **Работа с фреймами:**
-    *   Кнопка "Get all frameId" позволяет получить список `frameId` текущей страницы.
-    *   Кнопка "Focus frame" переключает фокус на выбранный фрейм.
-    *   Возможность указать `frame designation` для фреймов без `id`.
-8.  **Вспомогательные функции:**
-    *   Кнопки стилизации позволяют применить/сбросить стили к результатам на странице.
-    *   Кнопки постраничной навигации (`<`, `>`) для перемещения между страницами с результатами.
-    *   Кнопка "Open options" открывает страницу настроек расширения.
+1.  **Инициализация HTML**:
+    *   Загружается `popup.html`, который представляет собой пользовательский интерфейс расширения.
+    *   Подключаются стили `popup.css` и скрипты `try_xpath_functions.js` и `popup.js`.
+    *   Определяется режим `MODE = 'debug'`. Этот режим может влиять на поведение скриптов.
 
-**Примеры для каждого логического блока:**
+2.  **Основной интерфейс**:
+    *   Кнопка "Execute": запускает выполнение запроса, введенного пользователем.
+    *   Чекбокс "Help": включает/выключает отображение справочной информации.
+    *   Раздел "Main":
+        *   Выпадающий список "Way":  выбор метода выполнения запроса: `xpath`, `querySelector`, `querySelectorAll`.  Примеры значений: `xpath ANY_TYPE`, `querySelector`. Атрибуты `data-method` и `data-type` передаются в скрипт.
+        *   Текстовое поле "Expression": ввод запроса (например, xpath: `//div[@class='some-class']`, CSS selector: `.some-class`).
+    *   Раздел "Context":
+        *   Чекбокс "Context":  позволяет включить/выключить использование контекстного элемента.
+        *   Выпадающий список "Way": выбор метода для поиска контекстного элемента (аналогично основному). Примеры: `xpath UNORDERED_NODE_ITERATOR_TYPE`, `querySelector`.
+        *   Текстовое поле "Expression": ввод запроса для поиска контекстного элемента.
+    *   Раздел "namespaceResolver":
+        *   Чекбокс "namespaceResolver":  включает/выключает использование namespace resolver.
+        *   Текстовое поле "Resolver": ввод namespace resolver в формате JSON (например, `{"x":"http://www.w3.org/1999/xhtml"}`).
+    *   Раздел "Frame without id":
+        *   Чекбокс "Frame without id":  включает/выключает использование frame без id.
+        *   Текстовое поле "Frame": ввод массива индексов фреймов (например, `[1, 0]`).
+        *   Кнопка "Focus frame":  переключает фокус на фрейм, заданный  в "Frame" .
+    *   Раздел "frameId":
+        *   Чекбокс "frameId": включает/выключает использование frameId.
+        *   Кнопка "Get all frameId":  получает все id фреймов на странице и заполняет выпадающий список "frame-id-list".
+        *   Выпадающий список "frame-id-list": выбор фрейма по его id.
+        *   Текстовое поле "frameId": ручной ввод id фрейма
+        *   Кнопка "Focus frame": переключает фокус на фрейм, id которого выбран в списке или введен вручную.
+        *   Кнопка "Show previous results": отображает предыдущие результаты для выбранного фрейма.
 
-*   **Ввод данных пользователем:** Пользователь вводит `//div[@class='example']` в поле "Expression" и выбирает `xpath ANY_TYPE`.
-*   **Обработка события "Execute":** Скрипт получает данные и формирует запрос: `{method: "evaluate", expression: "//div[@class='example']", type: "ANY_TYPE"}`
-*   **Выполнение запроса на странице:** Контентный скрипт выполняет `document.evaluate("//div[@class='example']", document, null, XPathResult.ANY_TYPE)`
-*   **Получение и отображение результатов:** `popup.js` получает результаты в виде массива DOM-элементов и отображает их количество в секции "Results".
+3.  **Раздел "Results"**:
+    *   Сообщения об ошибках или успехе выполнения запроса.
+    *   Счетчик результатов.
+    *   Id текущего фрейма, если установлен.
+    *   Кнопки управления результатами и стилем: `Show all results`, `Open options`, `Set style`, `Reset style`, `Set style(all frames)`, `Reset style(all frame)`.
+    *   Таблица "Context detail": отображение деталей о контексте.
+    *   Кнопки навигации по страницам и поле ввода номера страницы в таблице "Details": `<`,`Move`, `page count`,`>`
+    *   Таблица "Details": отображение детальных результатов запроса.
+
+4.  **Взаимодействие со скриптами**:
+    *   `popup.js`: обрабатывает события элементов интерфейса, собирает данные, отправляет запросы в фоновый скрипт, отображает результаты.
+    *   `try_xpath_functions.js`: содержит функции для выполнения запросов с использованием `xpath`, `querySelector`, `querySelectorAll` с учетом контекста, namespace resolver, фреймов.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Начало: Загрузка popup.html] --> LoadCSS[Загрузка popup.css];
-    LoadCSS --> LoadScripts[Загрузка try_xpath_functions.js и popup.js];
-    LoadScripts --> DisplayUI[Отображение UI (кнопки, поля ввода, результаты)];
+    Start[Начало загрузки popup.html] --> InitializeUI[Инициализация UI: <br> Загрузка popup.css, try_xpath_functions.js, popup.js]
+    InitializeUI --> UserAction[Ожидание действий пользователя: <br>клик на Execute, change inputs]
 
-    DisplayUI --> InputData[Пользователь вводит данные (XPath, CSS, метод, контекст)];
-    InputData --> ClickExecute[Пользователь нажимает кнопку "Execute"];
-    ClickExecute --> GetInputValues[popup.js: Считывание данных из UI];
-    GetInputValues --> CreateRequest[popup.js: Формирование запроса к content script];
-    CreateRequest --> SendRequest[popup.js: Отправка запроса контент скрипту];
-    SendRequest --> ContentScriptExecutes[content script: Выполнение XPath/CSS запроса];
-    ContentScriptExecutes --> SendResults[content script: Отправка результатов в popup.js];
-    SendResults --> ProcessResults[popup.js: Обработка полученных результатов];
-    ProcessResults --> DisplayResults[popup.js: Отображение результатов в UI];
+    UserAction --"Клик Execute"--> CollectData[Сбор данных из UI: <br> method, type, expression, context, resolver, frame, frameId]
+    UserAction --"Изменение input, select"--> CollectData
+    CollectData --> ValidateData[Валидация и подготовка данных]
+    ValidateData --> SendMessageToBackground[Отправка сообщения в background script <br> (popup.js -> background.js)]
 
-    DisplayUI --> InputFrameId[Пользователь выбирает frameId];
-    InputFrameId --> ClickFocusFrame[Пользователь нажимает кнопку "Focus frame"];
-    ClickFocusFrame --> SendFrameFocus[popup.js: Передача frameId контент скрипту];
-    SendFrameFocus --> ContentScriptFocus[content script: Фокусировка на выбранном фрейме];
-    ContentScriptFocus -->  ContentScriptExecutes;
+    SendMessageToBackground --"Сообщение содержит запрос"--> BackgroundScriptProcessing[Обработка запроса в background script: <br> выполнение запроса на странице, <br> получение результатов (background.js -> content.js -> result)]
 
-    DisplayUI --> InputResolver[Пользователь вводит namespace resolver];
-    InputResolver --> ClickExecute;
-
-     DisplayUI --> InputFrameDesignation[Пользователь вводит frame designation];
-    InputFrameDesignation --> ClickFocusDesignatedFrame[Пользователь нажимает кнопку "Focus designated frame"];
-    ClickFocusDesignatedFrame --> SendFrameDesignation[popup.js: Передача frame designation контент скрипту];
-    SendFrameDesignation --> ContentScriptFocusDesignated[content script: Фокусировка на выбранном фрейме по designation];
-    ContentScriptFocusDesignated -->  ContentScriptExecutes;
+    BackgroundScriptProcessing --> ReturnResultToPopup[Возврат результатов в popup.js]
+    ReturnResultToPopup --> DisplayResults[Отображение результатов в UI (popup.js)]
+    DisplayResults --> End[Завершение обработки запроса]
     
-
-    DisplayResults --> End[Конец: Отображение результатов пользователю];
-    
-   
-    
-     style Start fill:#f9f,stroke:#333,stroke-width:2px
-     style End fill:#ccf,stroke:#333,stroke-width:2px
-     style  InputData,InputFrameId,InputResolver,InputFrameDesignation fill:#ccf
+     UserAction --"click Get All Frame ID" --> GetAllFrameIDs[Получение всех frame id и заполнение списка]
+     GetAllFrameIDs --> DisplayFrameIDs[Обновление списка фреймов]
+     DisplayFrameIDs --> UserAction
      
+     UserAction --"click Focus frame" --> FocusFrame[Фокус на выбранный frame]
+     FocusFrame --> UserAction
+
+     UserAction --"click Show previous results" --> ShowPreviousResults[Отображение предыдущих результатов]
+     ShowPreviousResults --> UserAction
+     
+      UserAction --"click show all results" --> ShowAllResults[Отображение всех результатов]
+     ShowAllResults --> UserAction
+    
+      UserAction --"click set style" --> SetStyle[Установка стиля для выбранного элемента]
+     SetStyle --> UserAction
+
+      UserAction --"click reset style" --> ResetStyle[Сброс стиля для выбранного элемента]
+     ResetStyle --> UserAction
+     
+      UserAction --"click set all style" --> SetAllStyle[Установка стиля для всех элементов]
+     SetAllStyle --> UserAction
+     
+      UserAction --"click reset all style" --> ResetAllStyle[Сброс стиля для всех элементов]
+     ResetAllStyle --> UserAction
+     
+      UserAction --"click open options" --> OpenOptions[Открытие страницы настроек]
+     OpenOptions --> UserAction
+    
+     UserAction --"click Help checkbox" --> ToggleHelp[Переключение отображения справки]
+     ToggleHelp --> UserAction
+     
+     UserAction --"click Context checkbox" --> ToggleContext[Переключение отображения контекста]
+     ToggleContext --> UserAction
+     
+      UserAction --"click resolver checkbox" --> ToggleResolver[Переключение отображения namespaceResolver]
+     ToggleResolver --> UserAction
+     
+      UserAction --"click Frame without id checkbox" --> ToggleFrameDesignation[Переключение отображения Frame without id]
+     ToggleFrameDesignation --> UserAction
+     
+      UserAction --"click Frame id checkbox" --> ToggleFrameId[Переключение отображения Frame id]
+     ToggleFrameId --> UserAction
+     
+     UserAction --"click detail page buttons" --> DetailPageNavigation[Навигация по страницам деталей]
+     DetailPageNavigation --> DisplayResults
+    
 ```
 
-**Описание зависимостей `mermaid` диаграммы:**
+**Объяснение диаграммы:**
 
-*   **`popup.html` (Start):** Начальная точка загрузки приложения.
-*   **`popup.css` (LoadCSS):**  Стили для визуального оформления.
-*   **`try_xpath_functions.js`, `popup.js` (LoadScripts):** Скрипты для динамического поведения и выполнения запросов.
-*   **UI (DisplayUI):**  Пользовательский интерфейс с элементами управления.
-*   **Ввод данных (InputData, InputFrameId, InputResolver, InputFrameDesignation):** Пользовательские данные, необходимые для выполнения запроса.
-*   **Кнопка "Execute" (ClickExecute):**  Запускает процесс выполнения запроса.
-*   **Считывание данных (GetInputValues):** Функция, собирающая пользовательские данные.
-*   **Формирование запроса (CreateRequest):**  Подготовка данных к отправке контент скрипту.
-*   **Отправка запроса (SendRequest):**  Передача запроса контент скрипту.
-*   **Выполнение запроса (ContentScriptExecutes):**  Выполнение XPath/CSS запроса в контексте страницы.
-*   **Отправка результатов (SendResults):**  Передача результатов в `popup.js`.
-*   **Обработка результатов (ProcessResults):**  Обработка и подготовка результатов к отображению.
-*   **Отображение результатов (DisplayResults):**  Вывод результатов пользователю.
-*  **Выбор frameId (InputFrameId) / frame designation (InputFrameDesignation):** Ввод данных о фрейме, в котором нужно выполнить запрос.
-* **Кнопка "Focus frame" (ClickFocusFrame) / "Focus designated frame" (ClickFocusDesignatedFrame):**  Запускают процесс переключения фрейма.
-* **Передача frameId/Designation (SendFrameFocus, SendFrameDesignation):** Отправка данных о фрейме в content script.
-* **Фокусировка на фрейме (ContentScriptFocus, ContentScriptFocusDesignated):** Выполнение переключения фокуса на выбранный фрейм.
+1.  **Start**: Начальная точка - загрузка `popup.html`.
+2.  **InitializeUI**: Загрузка HTML-страницы и подключение CSS-стилей и JavaScript-файлов.
+3.  **UserAction**: Ожидание действий пользователя. Это ключевая точка, откуда начинаются различные ветви логики в зависимости от действий пользователя.
+4.  **CollectData**: Сбор данных из пользовательского интерфейса (выбранный метод запроса, выражение, контекстное выражение и т. д.).
+5.  **ValidateData**: Валидация собранных данных.
+6.  **SendMessageToBackground**: Отправка сообщения в фоновый скрипт `background.js` для выполнения запроса (например, xpath, querySelector). Сообщение отправляется из popup.js в background.js.
+7.  **BackgroundScriptProcessing**: Обработка запроса в фоновом скрипте. background.js пересылает запрос в content.js, который выполняет код на странице и возвращает результаты.
+8.  **ReturnResultToPopup**: Возврат результатов из фонового скрипта в `popup.js`.
+9.  **DisplayResults**: Отображение результатов на странице popup.html.
+10. **End**: Завершение обработки запроса.
+11. **GetAllFrameIDs**: Получение всех frame id и заполнение выпадающего списка.
+12. **DisplayFrameIDs**: Обновление списка фреймов.
+13. **FocusFrame**: Фокусировка на выбранный фрейм.
+14. **ShowPreviousResults**: Отображение предыдущих результатов для текущего фрейма.
+15. **ShowAllResults**: Отображение всех результатов.
+16. **SetStyle**: Установка стиля для выделенного элемента.
+17. **ResetStyle**: Сброс стиля для выделенного элемента.
+18. **SetAllStyle**: Установка стиля для всех элементов.
+19. **ResetAllStyle**: Сброс стиля для всех элементов.
+20. **OpenOptions**: Открытие страницы с настройками.
+21. **ToggleHelp**: Переключение отображения справки.
+22. **ToggleContext**: Переключение отображения контекста.
+23. **ToggleResolver**: Переключение отображения namespaceResolver.
+24. **ToggleFrameDesignation**: Переключение отображения frame without id.
+25. **ToggleFrameId**: Переключение отображения frame id.
+26. **DetailPageNavigation**: Навигация по страницам деталей.
 
 ## <объяснение>
 
 **Импорты:**
 
-*   В данном коде нет импортов JavaScript модулей.
-*   Скрипты `try_xpath_functions.js` и `popup.js` подключаются через теги `<script>`, что делает их функции и переменные доступными в глобальном пространстве.
-*   `popup.css` подключается через `<link>`, обеспечивая стилизацию элементов.
+В данном коде нет импортов Python, так как это HTML-файл. Однако он импортирует другие ресурсы:
+
+*   `popup.css`: Файл стилей CSS для оформления элементов popup.
+*   `../scripts/try_xpath_functions.js`: JavaScript-файл, содержащий функции для выполнения XPath-запросов и других селекторов. Этот файл является ключевой частью функциональности расширения и используется `popup.js`.
+*   `popup.js`: JavaScript-файл, управляющий логикой popup. Содержит обработчики событий, отправляет запросы и отображает результаты.
 
 **Классы:**
-В представленном `html` коде нет классов JavaScript. Вся логика работы находится в привязанных файлах `try_xpath_functions.js` и `popup.js`
-которые в данном примере отсутствуют.
+
+В данном HTML-коде нет классов JavaScript. HTML-элементы играют роль классов с точки зрения CSS, но в данном случае речь идет о структуре DOM.  Взаимодействие с элементами происходит через их ID, а не через JavaScript классы.
 
 **Функции:**
 
-*   Функции, необходимые для работы приложения, будут определены в файлах `try_xpath_functions.js` и `popup.js`. На основании анализа `html` кода, можно определить, что будут такие функции как:
-    *   Функция для обработки событий нажатия на кнопку "Execute".
-    *   Функции для считывания значений из полей ввода.
-    *   Функции для отправки запросов контент скрипту.
-    *   Функции для обработки ответов от контент скрипта.
-    *   Функции для отображения результатов.
-    *   Функции для управления фокусом фрейма.
-    *   Функции для стилизации элементов на странице.
-*   Пример функции в `popup.js`:
-
-    ```javascript
-    function executeQuery() {
-      //Считывание данных из полей ввода.
-       let mainWay = document.getElementById('main-way').value;
-       let mainExpression = document.getElementById('main-expression').value;
-       let contextWay = document.getElementById('context-way').value;
-       let contextExpression = document.getElementById('context-expression').value;
-       let resolverExpression = document.getElementById('resolver-expression').value;
-       let frameDesignationExpression = document.getElementById('frame-designation-expression').value;
-       let frameIdExpression = document.getElementById('frame-id-expression').value;
-    
-      //Формирование сообщения
-      const message = {
-            action: 'execute',
-            mainWay: mainWay,
-            mainExpression: mainExpression,
-            contextWay: contextWay,
-            contextExpression: contextExpression,
-             resolverExpression: resolverExpression,
-             frameDesignationExpression:frameDesignationExpression,
-            frameIdExpression:frameIdExpression
-      }
-
-      // Отправка сообщения контентному скрипту
-      chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, message, (response) => {
-            if(response) {
-                console.log(response)
-                // Обработка полученных данных.
-            }
-        });
-      });
-    }
-    document.getElementById('execute').addEventListener('click', executeQuery);
-    ```
+В данном файле нет функций. Функции, которые используются для обработки событий и взаимодействия с элементами, находятся в файлах `popup.js` и `try_xpath_functions.js`. Эти файлы не рассматриваются в этом анализе.
 
 **Переменные:**
 
-*   `MODE`: Строковая переменная, определяющая режим работы приложения (`debug` или `production`).
-*   Переменные, связанные с элементами UI, будут динамически считываться из DOM (например, `document.getElementById('main-way').value`) при взаимодействии пользователя с интерфейсом.
-*   Переменные в `popup.js` будут использоваться для хранения введенных данных и результатов запросов.
+*   `MODE = 'debug'`: Глобальная переменная, указывающая режим работы расширения. Этот режим может влиять на вывод отладочной информации.
+*   `input`, `select`, `button`, `checkbox` элементы: представляют интерактивные элементы пользовательского интерфейса для выбора метода, ввода выражений и управления отображением результатов.
+
+**Детальный разбор кода:**
+
+*   Структура HTML определяет пользовательский интерфейс расширения. Он состоит из нескольких секций, каждая из которых отвечает за определенную функцию.
+*   **Раздел "Main"**: Позволяет пользователю ввести XPath выражение или CSS-селектор и выбрать метод их выполнения.
+*   **Раздел "Context"**: Предоставляет возможность задать контекстный элемент для запроса.
+*   **Раздел "namespaceResolver"**: Дает возможность задать namespace resolver для xpath запросов, где это необходимо.
+*   **Раздел "Frame without id"**: Позволяет указывать фрейм, не имеющий id, через массив индексов.
+*   **Раздел "frameId"**: Позволяет задать id фрейма, в котором будет выполнен запрос. Для получения списка доступных frameId, нужно нажать кнопку "Get all frameId".
+*   **Раздел "Results"**: Отображает результаты выполнения запроса, включая сообщения, счетчик, id фрейма и детальную информацию.
+*   Используются элементы `<dl>`, `<dt>`, `<dd>` для структурирования полей ввода.
+*   Используются теги `<select>` и `<option>` для выпадающих списков.
+*   Используются `<textarea>` и `<input type="text">` для ввода текста.
+*   Используются `<input type="checkbox">` и `<label>` для чекбоксов.
+*   Используются `<table>` и `<tbody>` для отображения таблиц с результатами.
+*   Кнопки (`<button>`) используются для запуска действий (выполнение запроса, фокусировка на фрейме, управление стилем).
+*   Атрибуты `data-method` и `data-type` у элементов `<option>` используются для передачи данных в JavaScript.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Обработка ошибок:** Не предусмотрена полноценная обработка ошибок при выполнении XPath/CSS запросов.
-*   **Валидация ввода:** Нет валидации пользовательского ввода (например, проверка синтаксиса XPath).
-*   **Сложность интерфейса:** Интерфейс может быть перегружен множеством опций, что может усложнить использование для начинающих пользователей.
-*   **Отсутствие комментариев:**  В HTML коде отсутствует документация.
-*   **Безопасность**: Отсутствие валидации пользовательского ввода может привести к XSS уязвимостям.
-*   **Производительность**: Выполнение запросов на больших страницах может быть медленным.
-*   **Изолированная среда**: Расширение работает в изолированной среде, поэтому прямой доступ к переменным основной страницы не возможен. Требуется обмен сообщениями с контент скриптом.
+*   Отсутствует валидация данных в HTML.  Скрипт `popup.js` должен выполнять валидацию, а не HTML.
+*   Интерфейс может быть сложным для новых пользователей, требуется более подробная справка.
+*   Желательно добавить возможность сохранения настроек.
+*   Необходима более подробная обработка ошибок в `popup.js` и `try_xpath_functions.js`.
 
-**Цепочка взаимосвязей с другими частями проекта:**
+**Взаимосвязи с другими частями проекта:**
 
-1.  **`popup.html`:** Интерфейс пользователя для взаимодействия с расширением.
-2.  **`popup.js`:** Скрипт, обрабатывающий действия пользователя, отправляет запросы и отображает результаты.
-3.  **`content script` (не показан в коде):** Выполняет запросы на странице и возвращает результаты в `popup.js`.
-4.  **`try_xpath_functions.js`:** Скрипт, содержащий функции для выполнения XPath/CSS запросов.
-5.  **`popup.css`:** Стилизация пользовательского интерфейса.
+*   `popup.html` является частью расширения для Firefox.
+*   Взаимодействует с фоновым скриптом `background.js` через механизм обмена сообщениями между расширениями.
+*   `try_xpath_functions.js` содержит основные функции для выполнения запросов, используется как вспомогательный скрипт.
+*   Результаты выполнения запросов обрабатываются и отображаются в `popup.html`.
 
-Данные, введенные пользователем в `popup.html`, передаются в `popup.js`, затем в контентный скрипт (который работает на странице) для выполнения запросов, а результаты возвращаются обратно для отображения в `popup.html`. Таким образом, есть связь между UI, логикой приложения и DOM-деревом страницы.
+**Заключение:**
+
+`popup.html` является основным HTML-файлом для popup-окна расширения Firefox, предоставляющего интерфейс для выполнения XPath-запросов, CSS селекторов, получения элементов, а также их контекста и namespace. Он использует CSS для стилизации и JavaScript для обработки пользовательских действий и отображения результатов. Логика обработки запросов и выполнения кода находится в связанных JavaScript-файлах.

@@ -1,61 +1,46 @@
-# Модуль `src.endpoints.advertisement.facebook`
+# Модуль `hypotez/src/endpoints/advertisement/facebook/__init__.py`
 
 ## Обзор
 
-Модуль `src.endpoints.advertisement.facebook` предоставляет функциональность для взаимодействия с Facebook API в рамках рекламных кампаний. Он содержит классы и функции для управления рекламными объявлениями и получения связанных данных.
+Данный модуль инициализирует пакет `facebook`, предоставляя доступ к классам и функциям, связанным с интеграцией Facebook для рекламных целей. Он импортирует необходимые компоненты для работы с API Facebook, включая класс `Facebook` для взаимодействия с API, класс `FacebookFields` для работы с полями данных Facebook, и класс `FacebookPromoter`, а также функцию `get_event_url` для продвижения событий.
 
 ## Содержание
 
 - [Обзор](#обзор)
-- [Переменные](#переменные)
-- [Импортированные модули](#импортированные-модули)
+- [Импортируемые модули](#импортируемые-модули)
 - [Классы](#классы)
-    - [`Facebook`](#facebook)
-    -  [`FacebookFields`](#facebookfields)
-    -  [`FacebookPromoter`](#facebookpromoter)
+  - [`Facebook`](#facebook)
+  - [`FacebookFields`](#facebookfields)
+  - [`FacebookPromoter`](#facebookpromoter)
 - [Функции](#функции)
-    - [`get_event_url`](#get_event_url)
+  - [`get_event_url`](#get_event_url)
 
-## Переменные
+## Импортируемые модули
 
-### `MODE`
-- **Описание**: Указывает текущий режим работы (например, 'dev' для разработки).
-- **Тип**: `str`
-
-## Импортированные модули
-
-- `from .facebook import Facebook`: Импортирует класс `Facebook` из модуля `facebook.py`.
-- `from .facebook_fields import FacebookFields`: Импортирует класс `FacebookFields` из модуля `facebook_fields.py`.
-- `from .promoter import FacebookPromoter, get_event_url`: Импортирует класс `FacebookPromoter` и функцию `get_event_url` из модуля `promoter.py`.
+-   `facebook`: Содержит класс `Facebook` для взаимодействия с API Facebook.
+-   `facebook_fields`: Содержит класс `FacebookFields` для работы с полями данных Facebook.
+-   `promoter`: Содержит класс `FacebookPromoter` и функцию `get_event_url` для продвижения событий Facebook.
 
 ## Классы
 
 ### `Facebook`
 
-- **Описание**: Класс для взаимодействия с API Facebook.
-- **Методы**:
-  - Методы класса `Facebook` описаны в файле `facebook.py`.
+**Описание**:
+Класс для взаимодействия с API Facebook. Подробная документация по методам класса находится в модуле `facebook.py`.
 
 ### `FacebookFields`
 
-- **Описание**: Класс для хранения полей Facebook.
-- **Методы**:
-  - Методы класса `FacebookFields` описаны в файле `facebook_fields.py`.
+**Описание**:
+Класс для работы с полями данных Facebook. Подробная документация по методам класса находится в модуле `facebook_fields.py`.
 
 ### `FacebookPromoter`
 
-- **Описание**: Класс для управления рекламными кампаниями в Facebook.
-- **Методы**:
-  - Методы класса `FacebookPromoter` описаны в файле `promoter.py`.
+**Описание**:
+Класс для продвижения событий в Facebook. Подробная документация по методам класса находится в модуле `promoter.py`.
 
 ## Функции
 
 ### `get_event_url`
 
-- **Описание**: Функция для получения URL события.
-- **Параметры**:
-  - Параметры функции `get_event_url` описаны в файле `promoter.py`.
-- **Возвращает**:
-  - Возвращает URL события.
-- **Вызывает исключения**:
-  - Исключения, вызываемые функцией, описаны в файле `promoter.py`.
+**Описание**:
+Функция для получения URL события Facebook. Подробная документация по работе функции находится в модуле `promoter.py`.

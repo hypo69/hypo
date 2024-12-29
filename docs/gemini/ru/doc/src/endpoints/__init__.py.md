@@ -2,35 +2,16 @@
 
 ## Обзор
 
-Модуль `src.endpoints` предназначен для определения и импорта конечных точек (endpoints) для различных внешних сервисов и API. В настоящее время модуль содержит определение режима работы (`MODE`) и закомментированные импорты.
+Модуль `src.endpoints` предназначен для интеграции с различными внешними сервисами и API. В текущей версии модуля содержатся импорты для интеграции с PrestaShop и Telegram-ботом Kazarinov. Модуль обеспечивает централизованную точку доступа для запросов к различным сервисам.
 
 ## Содержание
 
-1. [Переменные](#переменные)
+1. [Обзор](#обзор)
+2. [Импорты](#импорты)
 
-## Переменные
+## Импорты
 
-### `MODE`
+В текущей версии файла импортируются следующие модули:
 
-**Описание**: Режим работы приложения.
-
-**Тип**: `str`
-
-**Значение по умолчанию**: `dev`
-
-## Закомментированные импорты
-
-Следующие импорты в данный момент закомментированы и не используются, но могут быть активированы в будущем:
-
-- `prestashop`:
-  - `PrestaShop`
-  - `PrestaCategory`
-  - `PrestaCustomer`
-  - `PrestaLanguage`
-  - `PrestaProduct`
-  - `PrestaShopShop`
-  - `PrestaSupplier`
-  - `PrestaWarehouse`
-  - `PriceListRequester`
-- `kazarinov`:
-  - `KazarinovTelegramBot`
+-  `PrestaShop`, `PrestaCategory`, `PrestaCustomer`, `PrestaLanguage`, `PrestaProduct`, `PrestaShopShop`, `PrestaSupplier`, `PrestaWarehouse`, `PriceListRequester` из модуля `src.endpoints.prestashop`. Эти импорты позволяют взаимодействовать с API PrestaShop для управления магазинами, категориями, клиентами, продуктами и т.д. (закомментировано в текущей версии файла).
+- `KazarinovTelegramBot` из модуля `src.endpoints.kazarinov`. Этот импорт позволяет взаимодействовать с Telegram-ботом Kazarinov (закомментировано в текущей версии файла).

@@ -1,179 +1,169 @@
 ## <алгоритм>
 
-1. **Начало**: Запускается выполнение скрипта `_example_driver.py`.
-2. **Инициализация**: 
+1. **Начало программы**:
+   - Запускается функция `main()`.
+
+2. **Создание экземпляра `Driver` с `Chrome`**:
    - Выводится сообщение "Creating a Chrome browser instance...".
-   - Создается экземпляр `chrome_driver` класса `Driver` с параметром `Chrome`, инициализируя драйвер Chrome.
-3. **Навигация**:
-   - Задается `url` равный "https://www.example.com".
-   - Вызывается метод `get_url()` объекта `chrome_driver` с заданным URL.
-      - Пример: `chrome_driver.get_url("https://www.example.com")`
-   - Выводится сообщение об успехе или неудаче навигации.
-4. **Извлечение домена**:
-    - Вызывается метод `extract_domain()` объекта `chrome_driver` для извлечения домена из URL.
-    - Пример: `domain = chrome_driver.extract_domain("https://www.example.com")`
-    - Выводится извлеченный домен.
-5. **Прокрутка страницы**:
-    - Вызывается метод `scroll()` объекта `chrome_driver` для прокрутки страницы вниз (`direction='forward'`) трижды.
-     - Пример: `chrome_driver.scroll(scrolls=3, direction='forward')`
-    - Выводится сообщение об успехе или неудаче прокрутки.
-6. **Сохранение куки**:
-    - Вызывается метод `_save_cookies_localy()` объекта `chrome_driver` для сохранения куки в файл `cookies_chrome.pkl`.
-     - Пример: `chrome_driver._save_cookies_localy(to_file='cookies_chrome.pkl')`
-    - Выводится сообщение об успехе или неудаче сохранения.
-7. **Закрытие драйвера**:
-    - Вызывается метод `quit()` объекта `chrome_driver` для закрытия браузера Chrome.
+   - Создается экземпляр класса `Driver`, передавая `Chrome` в качестве аргумента (выбор браузера).
+   - Переменная `chrome_driver` ссылается на созданный объект.
+
+3. **Работа с `chrome_driver`**:
+    - **Навигация по URL**:
+        - Устанавливается переменная `url` на "https://www.example.com".
+        - Вызывается метод `get_url` с `url`.
+        - Если навигация успешна, выводится сообщение "Successfully navigated to {url}", иначе "Failed to navigate to {url}".
+    - **Извлечение домена**:
+        - Вызывается метод `extract_domain` с `url`.
+        - Выводится извлеченный домен.
+    - **Скролл страницы**:
+        - Вызывается метод `scroll` для прокрутки страницы вниз 3 раза.
+        - Если скролл успешен, выводится сообщение "Successfully scrolled down the page", иначе "Failed to scroll down the page".
+    - **Сохранение куки**:
+        - Вызывается метод `_save_cookies_localy` с именем файла "cookies_chrome.pkl".
+         - Если сохранение куки успешно, выводится сообщение "Cookies saved successfully", иначе "Failed to save cookies".
+
+4. **Закрытие `chrome_driver`**:
+    - В блоке `finally` гарантируется, что метод `quit` вызывается для закрытия браузера `Chrome`.
     - Выводится сообщение "Chrome browser closed.".
-8. **Повторение для Firefox**:
+
+5. **Создание экземпляра `Driver` с `Firefox`**:
    - Выводится сообщение "Creating a Firefox browser instance...".
-   - Создается экземпляр `firefox_driver` класса `Driver` с параметром `Firefox`.
-   - Повторяются шаги 3-7 для Firefox, с прокруткой вверх (`direction='backward'`) 2 раза и сохранением в файл `cookies_firefox.pkl`.
-9. **Повторение для Edge**:
-    - Выводится сообщение "Creating an Edge browser instance...".
-    - Создается экземпляр `edge_driver` класса `Driver` с параметром `Edge`.
-    - Повторяются шаги 3-7 для Edge, с прокруткой в обе стороны (`direction='both'`) 2 раза и сохранением в файл `cookies_edge.pkl`.
-10. **Завершение**: Программа завершается.
+   - Создается экземпляр класса `Driver`, передавая `Firefox` в качестве аргумента.
+   - Переменная `firefox_driver` ссылается на созданный объект.
+
+6. **Работа с `firefox_driver`**:
+    - **Навигация по URL**:
+        - Устанавливается переменная `url` на "https://www.example.com".
+        - Вызывается метод `get_url` с `url`.
+        - Если навигация успешна, выводится сообщение "Successfully navigated to {url}", иначе "Failed to navigate to {url}".
+    - **Извлечение домена**:
+        - Вызывается метод `extract_domain` с `url`.
+        - Выводится извлеченный домен.
+    - **Скролл страницы**:
+        - Вызывается метод `scroll` для прокрутки страницы вверх 2 раза.
+        - Если скролл успешен, выводится сообщение "Successfully scrolled up the page", иначе "Failed to scroll up the page".
+    - **Сохранение куки**:
+        - Вызывается метод `_save_cookies_localy` с именем файла "cookies_firefox.pkl".
+         - Если сохранение куки успешно, выводится сообщение "Cookies saved successfully", иначе "Failed to save cookies".
+7.  **Закрытие `firefox_driver`**:
+    - В блоке `finally` гарантируется, что метод `quit` вызывается для закрытия браузера `Firefox`.
+    - Выводится сообщение "Firefox browser closed.".
+
+8. **Создание экземпляра `Driver` с `Edge`**:
+   - Выводится сообщение "Creating an Edge browser instance...".
+   - Создается экземпляр класса `Driver`, передавая `Edge` в качестве аргумента.
+   - Переменная `edge_driver` ссылается на созданный объект.
+
+9. **Работа с `edge_driver`**:
+    - **Навигация по URL**:
+        - Устанавливается переменная `url` на "https://www.example.com".
+        - Вызывается метод `get_url` с `url`.
+        - Если навигация успешна, выводится сообщение "Successfully navigated to {url}", иначе "Failed to navigate to {url}".
+    - **Извлечение домена**:
+        - Вызывается метод `extract_domain` с `url`.
+        - Выводится извлеченный домен.
+    - **Скролл страницы**:
+        - Вызывается метод `scroll` для прокрутки страницы в обоих направлениях 2 раза.
+        - Если скролл успешен, выводится сообщение "Successfully scrolled the page in both directions", иначе "Failed to scroll the page in both directions".
+    - **Сохранение куки**:
+        - Вызывается метод `_save_cookies_localy` с именем файла "cookies_edge.pkl".
+         - Если сохранение куки успешно, выводится сообщение "Cookies saved successfully", иначе "Failed to save cookies".
+
+10. **Закрытие `edge_driver`**:
+    - В блоке `finally` гарантируется, что метод `quit` вызывается для закрытия браузера `Edge`.
+    - Выводится сообщение "Edge browser closed.".
+
+11. **Конец программы**:
+    - Функция `main()` завершается.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Start Script Execution] --> CreateChromeDriver[Create Chrome Driver Instance]
-    CreateChromeDriver --> NavigateChrome[Navigate to URL (Chrome)]
-    NavigateChrome --> ExtractDomainChrome[Extract Domain (Chrome)]
-    ExtractDomainChrome --> ScrollChrome[Scroll Down (Chrome)]
-    ScrollChrome --> SaveCookiesChrome[Save Cookies (Chrome)]
-    SaveCookiesChrome --> CloseChrome[Close Chrome Driver]
-    CloseChrome --> CreateFirefoxDriver[Create Firefox Driver Instance]
-    CreateFirefoxDriver --> NavigateFirefox[Navigate to URL (Firefox)]
-    NavigateFirefox --> ExtractDomainFirefox[Extract Domain (Firefox)]
-    ExtractDomainFirefox --> ScrollFirefox[Scroll Up (Firefox)]
-    ScrollFirefox --> SaveCookiesFirefox[Save Cookies (Firefox)]
-    SaveCookiesFirefox --> CloseFirefox[Close Firefox Driver]
-    CloseFirefox --> CreateEdgeDriver[Create Edge Driver Instance]
-    CreateEdgeDriver --> NavigateEdge[Navigate to URL (Edge)]
-    NavigateEdge --> ExtractDomainEdge[Extract Domain (Edge)]
-    ExtractDomainEdge --> ScrollEdge[Scroll Both Directions (Edge)]
-    ScrollEdge --> SaveCookiesEdge[Save Cookies (Edge)]
-    SaveCookiesEdge --> CloseEdge[Close Edge Driver]
-    CloseEdge --> End[End Script Execution]
-    
-    
-    subgraph Chrome
-    NavigateChrome
-    ExtractDomainChrome
-    ScrollChrome
-    SaveCookiesChrome
-    end
-    
-    subgraph Firefox
-    NavigateFirefox
-    ExtractDomainFirefox
-    ScrollFirefox
-    SaveCookiesFirefox
-    end
-    
-     subgraph Edge
-    NavigateEdge
-    ExtractDomainEdge
-    ScrollEdge
-    SaveCookiesEdge
-    end
-    
-    
-    classDef subprocess fill:#f9f,stroke:#333,stroke-width:2px
-    class Chrome,Firefox,Edge subprocess
+    Start(Start main function) --> CreateChromeDriver[Create Chrome Driver Instance <br> chrome_driver = Driver(Chrome)]
+    CreateChromeDriver --> NavigateChrome[Navigate to URL <br> chrome_driver.get_url(url)]
+    NavigateChrome --> ExtractDomainChrome[Extract domain <br> chrome_driver.extract_domain(url)]
+    ExtractDomainChrome --> ScrollDownChrome[Scroll down page <br> chrome_driver.scroll(scrolls=3, direction='forward')]
+    ScrollDownChrome --> SaveCookiesChrome[Save cookies to file <br> chrome_driver._save_cookies_localy(to_file='cookies_chrome.pkl')]
+    SaveCookiesChrome --> CloseChrome[Close Chrome browser <br> chrome_driver.quit()]
+    CloseChrome --> CreateFirefoxDriver[Create Firefox Driver Instance <br> firefox_driver = Driver(Firefox)]
+    CreateFirefoxDriver --> NavigateFirefox[Navigate to URL <br> firefox_driver.get_url(url)]
+    NavigateFirefox --> ExtractDomainFirefox[Extract domain <br> firefox_driver.extract_domain(url)]
+    ExtractDomainFirefox --> ScrollUpFirefox[Scroll up page <br> firefox_driver.scroll(scrolls=2, direction='backward')]
+    ScrollUpFirefox --> SaveCookiesFirefox[Save cookies to file <br> firefox_driver._save_cookies_localy(to_file='cookies_firefox.pkl')]
+    SaveCookiesFirefox --> CloseFirefox[Close Firefox browser <br> firefox_driver.quit()]
+    CloseFirefox --> CreateEdgeDriver[Create Edge Driver Instance <br> edge_driver = Driver(Edge)]
+    CreateEdgeDriver --> NavigateEdge[Navigate to URL <br> edge_driver.get_url(url)]
+    NavigateEdge --> ExtractDomainEdge[Extract domain <br> edge_driver.extract_domain(url)]
+    ExtractDomainEdge --> ScrollBothEdge[Scroll page in both directions <br> edge_driver.scroll(scrolls=2, direction='both')]
+     ScrollBothEdge --> SaveCookiesEdge[Save cookies to file <br> edge_driver._save_cookies_localy(to_file='cookies_edge.pkl')]
+    SaveCookiesEdge --> CloseEdge[Close Edge browser <br> edge_driver.quit()]
+    CloseEdge --> End(End main function)
 ```
-
-**Зависимости `mermaid`**:
-
--  `Start`: Начало выполнения скрипта.
--  `CreateChromeDriver`, `CreateFirefoxDriver`, `CreateEdgeDriver`: Создание экземпляров драйвера для Chrome, Firefox и Edge соответственно, с использованием класса `Driver`.
-- `NavigateChrome`, `NavigateFirefox`, `NavigateEdge`: Навигация по URL с помощью методов get_url() каждого экземпляра драйвера.
-- `ExtractDomainChrome`, `ExtractDomainFirefox`, `ExtractDomainEdge`: Извлечение домена из URL с помощью методов extract_domain() каждого экземпляра драйвера.
-- `ScrollChrome`, `ScrollFirefox`, `ScrollEdge`: Прокрутка страницы с помощью методов scroll() каждого экземпляра драйвера.
-- `SaveCookiesChrome`, `SaveCookiesFirefox`, `SaveCookiesEdge`: Сохранение куки с помощью методов _save_cookies_localy() каждого экземпляра драйвера.
-- `CloseChrome`, `CloseFirefox`, `CloseEdge`: Закрытие драйвера с помощью методов quit() каждого экземпляра драйвера.
--  `End`: Завершение выполнения скрипта.
-- подграфы `Chrome`, `Firefox` и `Edge` используются для группировки операций относящихся к каждому браузеру.
-- `classDef subprocess`: задает стиль для групп `Chrome`, `Firefox` и `Edge`.
 
 ## <объяснение>
 
-### Импорты:
-
+**Импорты:**
 -   `from src.webdriver.driver import Driver, Chrome, Firefox, Edge`:
-    -   Импортирует класс `Driver` и классы `Chrome`, `Firefox`, `Edge` из модуля `src.webdriver.driver`.
-    -   `Driver`: Класс, который управляет веб-драйверами. Он является абстракцией над конкретными драйверами браузеров.
-    -   `Chrome`, `Firefox`, `Edge`: Классы, представляющие конкретные драйверы браузеров (Chrome, Firefox и Edge). Используются для инициализации экземпляров `Driver`.
+    -   Импортирует класс `Driver`, а также классы `Chrome`, `Firefox` и `Edge` из модуля `src.webdriver.driver`.
+    -   `Driver` - основной класс для управления веб-браузерами, который является абстракцией над конкретными драйверами браузеров.
+    -   `Chrome`, `Firefox` и `Edge` - классы, представляющие конкретные браузеры и необходимые для их запуска. Они вероятно являются классами-адаптерами над Selenium.
 
-### Классы:
+**Функции:**
 
--   **`Driver`**: Класс, предоставляющий интерфейс для управления веб-драйверами (определен в `src.webdriver.driver`).
-    -   Атрибуты:
-        -   `browser`: Экземпляр одного из драйверов браузера (`Chrome`, `Firefox`, `Edge`).
-        -   (предположительно) другие атрибуты, связанные с настройками драйвера (не показано в примере).
+-   `main()`:
+    -   **Назначение**: Основная функция, демонстрирующая использование класса `Driver` с различными веб-браузерами.
+    -   **Аргументы**: Нет аргументов.
+    -   **Возвращаемое значение**: Не возвращает значение (возвращает `None`).
+    -   **Пример использования**:
+        1.  Создание экземпляра `Driver` для `Chrome`, `Firefox` и `Edge`.
+        2.  Навигация по URL, извлечение домена, скролл страницы, сохранение cookies и закрытие браузера для каждого экземпляра.
+        3.  Вывод информационных сообщений о ходе выполнения программы.
+
+**Классы:**
+
+-   `Driver`:
+    -   Роль: Предоставляет интерфейс для управления веб-браузером.
+    -   Атрибуты: (Предположительно) содержит экземпляр веб-драйвера, ассоциированный с конкретным браузером.
     -   Методы:
-        -   `__init__(self, browser_cls)`: Конструктор класса, принимающий класс драйвера браузера и создающий экземпляр драйвера.
-        -   `get_url(self, url)`: Навигирует к указанному URL.
-        -   `extract_domain(self, url)`: Извлекает домен из URL.
-        -   `scroll(self, scrolls, direction)`: Прокручивает страницу.
-        -   `_save_cookies_localy(self, to_file)`: Сохраняет куки в локальный файл.
-        -   `quit(self)`: Закрывает браузер.
-    -   Взаимодействие:
-        -   Класс `Driver` инкапсулирует работу с различными веб-драйверами, позволяя переключаться между ними без изменения основного кода.
-        -   Он использует классы `Chrome`, `Firefox` и `Edge` для создания и управления соответствующими драйверами.
+        -   `__init__(browser_class)`: Конструктор, который принимает класс браузера (например, `Chrome`, `Firefox` или `Edge`) и инициализирует драйвер для соответствующего браузера.
+        -   `get_url(url)`: Переходит по указанному URL.
+        -   `extract_domain(url)`: Извлекает доменное имя из URL.
+        -   `scroll(scrolls, direction)`: Прокручивает страницу вниз или вверх заданное количество раз.
+        -    `_save_cookies_localy(to_file)`: Сохраняет куки в локальный файл.
+        -   `quit()`: Закрывает браузер.
 
--   **`Chrome`, `Firefox`, `Edge`**: Классы, представляющие конкретные драйверы браузеров.
-    -   Они, вероятно, находятся в модуле `src.webdriver.driver` и отвечают за создание и настройку соответствующих экземпляров браузеров (например, `webdriver.Chrome()`).
-    -   Взаимодействие:
-        -   Эти классы используются как аргументы при создании экземпляров `Driver`.
+    -   Взаимодействие: Используется как абстракция для управления разными браузерами, позволяя выполнять одни и те же действия (навигация, скролл и т.д.) с разными браузерами.
 
-### Функции:
+-   `Chrome`, `Firefox`, `Edge`:
+    -   Роль: Представляют конкретные браузеры и предоставляют специфические настройки для их запуска.
+    -   Атрибуты: Вероятно содержат информацию о драйвере, пути к исполняемому файлу браузера и другие специфические опции.
+    -   Методы: Вероятно, имеют методы для запуска браузера и управления им с помощью Selenium.
+    -   Взаимодействие: Передаются в конструктор класса `Driver` для инициализации конкретного драйвера браузера.
 
--   **`main()`**:
-    -   Назначение: Главная функция, демонстрирующая использование класса `Driver` с различными браузерами.
-    -   Логика:
-        1.  Создает экземпляр `chrome_driver` класса `Driver` с драйвером `Chrome`.
-        2.  Навигирует к URL, извлекает домен, прокручивает страницу, сохраняет куки и закрывает браузер.
-        3.  Повторяет аналогичные действия для `firefox_driver` с драйвером `Firefox`.
-        4.  Повторяет аналогичные действия для `edge_driver` с драйвером `Edge`.
-        5.  Использует блоки `try...finally` для корректного закрытия драйверов даже в случае ошибок.
-        6.  Выводит информационные сообщения о выполнении каждой операции.
+**Переменные:**
 
-### Переменные:
+-   `chrome_driver`, `firefox_driver`, `edge_driver`: Объекты класса `Driver`, представляющие экземпляры браузеров Chrome, Firefox и Edge соответственно.
+-   `url`: Строковая переменная, содержащая URL-адрес для навигации.
+-   `domain`: Строковая переменная, содержащая извлеченный домен из URL.
 
--   `MODE`: Глобальная переменная, установленная в `'dev'`.  Предположительно, используется для настройки режима работы приложения.
--   `url`: Строковая переменная, хранящая URL для навигации.
--   `domain`: Строковая переменная, хранящая извлеченный домен.
--  `chrome_driver`, `firefox_driver`, `edge_driver`: Экземпляры класса `Driver` для управления браузерами Chrome, Firefox, и Edge.
+**Потенциальные ошибки и области для улучшения:**
 
-### Потенциальные ошибки и улучшения:
+1.  **Отсутствие обработки исключений**: Код не обрабатывает возможные исключения, такие как `WebDriverException`, возникающие при взаимодействии с браузером.
+2.  **Жесткое кодирование путей**: Имена файлов для сохранения cookies жёстко закодированы, можно вынести в конфигурацию.
+3.  **Ошибки при сохранении cookie**: Имя функции сохранения куки `_save_cookies_localy` начинается с `_`, что предполагает, что это приватный метод,  внешний вызов может нести проблемы.  Метод не обрабатывает возможные исключения.
+4.  **Отсутствие проверок**: Код не проверяет, был ли браузер успешно запущен перед началом выполнения операций.
+5.  **Скрытие деталей**:  Детали реализации драйвера (например, с помощью Selenium) скрыты в классах  `Chrome`, `Firefox`, `Edge` и `Driver`, что затрудняет отладку.
+6.  **Скрытая логика**:  Предполагается, что `Driver` и браузерные классы как-то правильно используют Selenium, но эта логика не показана,  что усложняет понимание полной картины.
+7. **Не все переменные в коде описаны** Например, `scrolls`, `direction`, `to_file`.
+8.  **Дублирование кода**: Логика навигации, извлечения домена, скролла и сохранения cookies почти идентична для разных браузеров. Можно вынести в отдельную функцию и параметризовать ее типом браузера.
 
--   **Обработка ошибок**:
-    -   В коде присутствуют `try...finally` для закрытия драйверов, но нет явной обработки исключений, которые могут возникать при навигации или сохранении куки.
-        -   Предлагается добавить блоки `try...except`, чтобы обрабатывать исключения и логировать их.
-    -   Методы класса `Driver` могут возвращать булевы значения, что немного усложняет отслеживание причины ошибки (например: почему не удалось сохранить cookie или прокрутить страницу). Предлагается сделать ошибку более явной.
--   **Использование переменных**:
-    -   Переменная `MODE` не используется в предоставленном коде, но предполагает наличие общего модуля настроек.
-        -   Следует убедиться, что эта переменная правильно импортируется и используется в других частях проекта (если она необходима).
--   **Пути к файлам**:
-     -   Используются статичные названия файлов `cookies_chrome.pkl`, `cookies_firefox.pkl` и `cookies_edge.pkl`, что может привести к перезаписи файлов, если скрипт будет запущен несколько раз.
-    -   Предлагается использовать более динамические имена (с добавлением timestamp или уникального id) или задавать пути к файлам через настройки.
--   **Дублирование кода**:
-     -   Код для каждого браузера (Chrome, Firefox, Edge) почти идентичен.
-        -   Рекомендуется вынести общую логику в отдельную функцию или метод. Это уменьшит дублирование и упростит поддержку кода.
--   **Скроллинг**:
-      -   Метод `scroll` позволяет скролить в направлениях `forward`, `backward` и `both`.
-      -   Следует добавить возможность задавать шаг скролла или целевую высоту.
-      -   Следует также добавить метод проверки высоты, чтобы скролить до конца.
--  **Локализация**:
-    -   Все текстовые сообщения на английском.
-     -  Нужно добавить возможность задавать язык сообщений через настройки.
+**Цепочка взаимосвязей:**
 
-### Взаимосвязи с другими частями проекта:
+-   `_example_driver.py` использует `src.webdriver.driver.Driver`.
+-   `src.webdriver.driver.Driver` использует (предположительно)  классы `Chrome`, `Firefox` и `Edge` (возможно адаптеры над Selenium) для управления браузерами.
+-  Классы `Chrome`, `Firefox`, и `Edge` взаимодействуют с Selenium.
+-   `src.webdriver.driver` может зависеть от других модулей в `src` для конфигурации.
 
--   Данный скрипт использует классы из `src.webdriver.driver`, что указывает на наличие модуля, отвечающего за управление веб-драйверами.
--  Предполагается наличие модуля `src.gs` для глобальных настроек, но в данном файле он не импортируется.
-
-Данный анализ обеспечивает всестороннее понимание работы предоставленного кода, его зависимостей и потенциальных проблем.
+Данный анализ обеспечивает полное представление о работе и структуре кода.

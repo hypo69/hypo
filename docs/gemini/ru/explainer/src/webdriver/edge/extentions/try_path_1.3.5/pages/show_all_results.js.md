@@ -1,217 +1,301 @@
-## ИНСТРУКЦИЯ:
-
-Анализируй предоставленный код подробно и объясни его функциональность. Ответ должен включать три раздела:  
-
-1. **<алгоритм>**: Опиши рабочий процесс в виде пошаговой блок-схемы, включая примеры для каждого логического блока, и проиллюстрируй поток данных между функциями, классами или методами.  
-2. **<mermaid>**: Напиши код для диаграммы в формате `mermaid`, проанализируй и объясни все зависимости, 
-    которые импортируются при создании диаграммы. 
-    **ВАЖНО!** Убедитесь, что все имена переменных, используемые в диаграмме `mermaid`, 
-    имеют осмысленные и описательные имена. Имена переменных вроде `A`, `B`, `C`, и т.д., не допускаются!  
-    
-    **Дополнительно**: Если в коде есть импорт `import header`, добавьте блок `mermaid` flowchart, объясняющий `header.py`:\
-    ```mermaid
-    flowchart TD
-        Start --> Header[<code>header.py</code><br> Determine Project Root]
-    
-        Header --> import[Import Global Settings: <br><code>from src import gs</code>] 
-    ```
-
-3. **<объяснение>**: Предоставьте подробные объяснения:  
-   - **Импорты**: Их назначение и взаимосвязь с другими пакетами `src.`.  
-   - **Классы**: Их роль, атрибуты, методы и взаимодействие с другими компонентами проекта.  
-   - **Функции**: Их аргументы, возвращаемые значения, назначение и примеры.  
-   - **Переменные**: Их типы и использование.  
-   - Выделите потенциальные ошибки или области для улучшения.  
-
-Дополнительно, постройте цепочку взаимосвязей с другими частями проекта (если применимо).  
-
-Это обеспечивает всесторонний и структурированный анализ кода.
-## Формат ответа: `.md` (markdown)
-**КОНЕЦ ИНСТРУКЦИИ**
-
 ## <алгоритм>
 
-1.  **Инициализация**:
-    *   Код выполняется в анонимной самовызывающейся функции, создавая локальную область видимости.
-    *   Объявляются переменные `tx` (сокращение от `tryxpath`), `fu` (сокращение от `tryxpath.functions`), `document`, `detailKeys`, `headerValues`, `relatedTabId`, `relatedFrameId`, `executionId`.
-
-2.  **`showAllResults(results)`**:
-    *   Принимает объект `results`, содержащий данные для отображения.
-    *   Обновляет текстовое содержимое элементов HTML на странице (сообщения, заголовки, URL, идентификаторы фреймов).
-    *   Если `results.context` существует:
-        *   Извлекает данные контекста и обновляет соответствующие HTML-элементы.
-        *   Обновляет таблицу деталей контекста, используя функцию `fu.updateDetailsTable`, которая, вероятно, форматирует и вставляет данные в таблицу.
-        *   Пример: `results.context` может быть объектом типа
-        `{ method: 'querySelector', expression: '//div', specifiedResultType: 7, resultType: 4, resolver: null, itemDetail: { type: 'element', name: 'DIV', value: '<div>Example</div>', textContent: 'Example' }}`
-    *   Если `results.context` отсутствует, удаляет соответствующий раздел HTML.
-    *   Извлекает данные основного результата (`results.main`) и обновляет соответствующие HTML-элементы, включая количество элементов и таблицу деталей.
-        *   Пример: `results.main` может быть объектом типа
-        `{ method: 'querySelectorAll', expression: '//p', specifiedResultType: 7, resultType: 4, resolver: null, itemDetails: [{ type: 'element', name: 'P', value: '<p>Text1</p>', textContent: 'Text1' }, { type: 'element', name: 'P', value: '<p>Text2</p>', textContent: 'Text2' }] }`
-
-3.  **`makeTextDownloadUrl(text)`**:
-    *   Принимает текстовую строку `text`.
-    *   Создает URL для загрузки файла, используя `URL.createObjectURL` и `Blob`, что позволяет загружать текстовый файл в браузере.
-
-4.  **`makeInfoText(results)`**:
-    *   Принимает объект `results`.
-    *   Формирует текстовое представление данных `results` с основной информацией и деталями в удобочитаемом виде.
-    *   Использует `fu.makeDetailText` для форматирования деталей.
-
-5.  **`makeConvertedInfoText(results)`**:
-    *   Принимает объект `results`.
-    *   Аналогично `makeInfoText`, но преобразует значения `value` и `textContent` в JSON-строки.
-
-6.  **`window.addEventListener("load", function(){ ... })`**:
-    *   Устанавливает обработчик события `load` для окна браузера.
-    *   После загрузки страницы отправляет сообщение `loadResults` в фоновое расширение браузера.
-    *   Получает результаты, устанавливает значения `relatedTabId`, `relatedFrameId`, `executionId`
-    *   Формирует URL-адреса для экспорта данных и устанавливает их в атрибуты ссылок для скачивания (`export-text`, `export-partly-converted`).
-        *   Используются `makeInfoText` и `makeConvertedInfoText` для формирования данных для экспорта.
-        *   Обновляет содержимое HTML с помощью `showAllResults`.
-    *   Добавляет обработчики событий `click` для таблиц деталей контекста и основных результатов.
-        *   При клике на кнопку в этих таблицах отправляется сообщение в расширение браузера для фокуса на соответствующем элементе.
-            *   Сообщение `focusContextItem` для таблицы контекста
-            *   Сообщение `focusItem` для таблицы основных результатов с индексом элемента.
+1. **Инициализация**:
+   - Объявление переменных: `tx`, `fu`, `document`, `detailKeys`, `headerValues`, `relatedTabId`, `relatedFrameId`, `executionId`.
+   - `tx` - алиас для `tryxpath`, `fu` - алиас для `tryxpath.functions`.
+   - `detailKeys` - массив с ключами деталей.
+   - `headerValues` - массив заголовков таблицы деталей.
+   - `relatedTabId`, `relatedFrameId`, `executionId` - идентификаторы для взаимодействия с вкладками браузера.
+2. **`showAllResults(results)`**:
+   - Функция принимает объект `results`, который содержит результаты выполнения XPath запроса.
+   - Обновляет текстовое содержимое элементов HTML: `message`, `title`, `url`, `frame-id`.
+   - **Условный блок:** Проверяет наличие `results.context`.
+     - **Если есть контекст:**
+       - Извлекает данные контекста в переменную `cont`.
+       - Обновляет текстовое содержимое элементов HTML, связанных с контекстом: `context-method`, `context-expression`, `context-specified-result-type`, `context-result-type`, `context-resolver`.
+       - Находит `tbody` элемента `context-detail`.
+       - **Условный блок:** Проверяет наличие `cont.itemDetail`.
+         - Если есть `itemDetail`, вызывает `fu.updateDetailsTable` для обновления таблицы деталей контекста.
+       - Обрабатывает ошибки через `fu.onError`.
+     - **Если нет контекста:**
+       - Находит элемент `context-area` и удаляет его.
+   - Извлекает данные `main` в переменную.
+   - Обновляет текстовое содержимое элементов HTML, связанных с основным запросом: `main-method`, `main-expression`, `main-specified-result-type`, `main-result-type`, `main-resolver`, `main-count`.
+   - Находит `tbody` элемента `main-details`.
+   - Вызывает `fu.updateDetailsTable` для обновления таблицы деталей основного запроса.
+   - Обрабатывает ошибки через `fu.onError`.
+3. **`makeTextDownloadUrl(text)`**:
+   - Функция принимает текст.
+   - Создает URL для скачивания файла на основе переданного текста.
+4. **`makeInfoText(results)`**:
+   - Функция принимает объект `results`.
+   - Формирует текстовое описание результатов, включая информацию из `results`, `context` (если есть), и `main`.
+   - Использует `fu.makeDetailText` для преобразования деталей в текст.
+   - Включает форматированный вывод индексов элементов.
+5. **`makeConvertedInfoText(results)`**:
+   - Функция принимает объект `results`.
+   - Формирует текстовое описание результатов, включая информацию из `results`, `context` (если есть), и `main`.
+   - Использует `fu.makeDetailText` для преобразования деталей в текст, применяя `JSON.stringify` для значений и textContent.
+   - Включает форматированный вывод индексов элементов.
+6. **Событие `load` на `window`**:
+   - Выполняет код после загрузки страницы.
+   - Отправляет сообщение `loadResults` в фоновый скрипт расширения.
+   - **Обработка ответа:**
+     - Если получен ответ `results`:
+       - Сохраняет `tabId`, `frameId`, `executionId`.
+       - Настраивает ссылки на скачивание файлов, используя `makeTextDownloadUrl`, `makeInfoText`, `makeConvertedInfoText`.
+       - Вызывает `showAllResults(results)`.
+   - Обрабатывает ошибки через `fu.onError`.
+   - Добавляет обработчик события `click` на элемент `context-detail`.
+     - **Обработка клика:**
+        - Если клик был на кнопке, отправляет сообщение `focusContextItem` в фоновый скрипт с ID вкладки и фрейма, а также `executionId`.
+   - Добавляет обработчик события `click` на элемент `main-details`.
+     - **Обработка клика:**
+        - Если клик был на кнопке, извлекает индекс `data-index`, отправляет сообщение `focusItem` в фоновый скрипт с ID вкладки и фрейма, а также `executionId` и `index`.
 
 ## <mermaid>
 
 ```mermaid
 flowchart TD
-    Start[Начало загрузки страницы] --> LoadEvent[Событие 'load']
-    LoadEvent --> SendMessage[Отправка сообщения 'loadResults']
-    SendMessage --> Response[Получение данных из background.js]
-    Response -- Данные есть --> SetVars[Установка relatedTabId, relatedFrameId, executionId]
-    Response -- Данных нет --> ErrorHandle[Обработка ошибки]
-    SetVars --> CreateExportUrls[Создание URL для экспорта]
-    CreateExportUrls --> CallShowAllResults[Вызов showAllResults(results)]
-     
-    CallShowAllResults --> UpdateHtml[Обновление HTML элементов с результатами]
-    UpdateHtml --> AddContextListener[Добавление обработчика клика для контекста]
-    UpdateHtml --> AddMainListener[Добавление обработчика клика для основных результатов]    
+    Start(Начало загрузки страницы) --> LoadEvent(window.addEventListener("load", ...))
+    LoadEvent --> SendMessage[Отправка сообщения "loadResults" в background script]
+    SendMessage --> ProcessResults{Получены results?}
+    ProcessResults -- Yes --> StoreIDs[Сохранение tabId, frameId, executionId]
+    StoreIDs --> SetDownloadLinks[Настройка ссылок для скачивания]
+    SetDownloadLinks --> CallShowAllResults[Вызов showAllResults(results)]
+    ProcessResults -- No --> ErrorHandler[fu.onError]
+     ErrorHandler --> End[Конец]
+    CallShowAllResults --> UpdateHTML[Обновление HTML элементов]
+    UpdateHTML --> ContextCheck{results.context?}
+    ContextCheck -- Yes --> UpdateContextDetails[Обновление деталей контекста]
+    UpdateContextDetails --> UpdateMainDetails[Обновление основных деталей]
+     ContextCheck -- No --> RemoveContextArea[Удаление области контекста]
+     RemoveContextArea --> UpdateMainDetails
+    UpdateMainDetails --> End
+   
+    LoadEvent --> ContextDetailClick[Добавление обработчика клика на context-detail]
+     ContextDetailClick --> ClickContextTarget{Клик на кнопку?}
+     ClickContextTarget -- Yes --> SendFocusContextMessage[Отправка сообщения "focusContextItem" в background script]
+     ClickContextTarget -- No --> End
     
-    AddContextListener --> ContextClick[Событие клика в таблице контекста]
-    ContextClick -- Клик на кнопке --> SendContextFocusMsg[Отправка сообщения 'focusContextItem' в background.js]
-     ContextClick -- Клик не на кнопке --> None
-    
-    AddMainListener --> MainClick[Событие клика в таблице основных результатов]
-    MainClick -- Клик на кнопке --> GetIndex[Получение индекса элемента]
-    GetIndex --> SendMainFocusMsg[Отправка сообщения 'focusItem' в background.js с индексом]
-     MainClick -- Клик не на кнопке --> None
-    
-    CreateExportUrls --> MakeText[Формирование текстового представления данных]
-    MakeText --> CreateUrl[Создание URL для скачивания файла]
-     MakeText --> MakeConvertedText[Формирование JSON-представления данных]
-        MakeConvertedText --> CreateJsonUrl[Создание URL для скачивания JSON-файла]
-    CreateUrl --> SetDownloadLink[Установка download link атрибута]
-      CreateJsonUrl --> SetDownloadJsonLink[Установка JSON download link атрибута]
-       SetDownloadLink -->  None
-       SetDownloadJsonLink -->  None
-    ErrorHandle --> None
-    SendContextFocusMsg --> None
-    SendMainFocusMsg --> None
-    
-    subgraph showAllResults
-        UpdateHtml
-    end
-    
-    subgraph Export
-       MakeText
-        CreateUrl
-         MakeConvertedText
-            CreateJsonUrl
-            SetDownloadLink
-             SetDownloadJsonLink
-    end
+    LoadEvent --> MainDetailsClick[Добавление обработчика клика на main-details]
+    MainDetailsClick --> ClickMainTarget{Клик на кнопку?}
+    ClickMainTarget -- Yes --> GetIndex[Получение индекса из data-index]
+    GetIndex --> SendFocusItemMessage[Отправка сообщения "focusItem" в background script с индексом]
+     ClickMainTarget -- No --> End
+
+    SendMessage --> ErrorHandler
+    SendFocusContextMessage --> End
+     SendFocusItemMessage --> End
+
 ```
 
-**Описание зависимостей в `mermaid`:**
+**Описание диаграммы:**
 
-*   **`Start`**: Начальная точка процесса загрузки страницы.
-*   **`LoadEvent`**: Событие `load`, которое запускает основную логику после загрузки страницы.
-*   **`SendMessage`**: Отправка сообщения `loadResults` в фоновое расширение (background.js) для запроса данных.
-*   **`Response`**: Получение данных от фонового расширения.
-*   **`SetVars`**: Установка переменных `relatedTabId`, `relatedFrameId`, `executionId` из полученных данных.
-*   **`CreateExportUrls`**: Функция создает ссылки для скачивания текстовых файлов.
-*   **`CallShowAllResults`**: Вызов функции `showAllResults` для отображения результатов.
-*  **`UpdateHtml`**: Обновление HTML-элементов на странице с полученными результатами.
-*   **`AddContextListener`**: Добавление обработчика событий клика для контекстной таблицы.
-*   **`AddMainListener`**: Добавление обработчика событий клика для таблицы основных результатов.
-*   **`ContextClick`**: Обработка клика в таблице контекста.
-*   **`SendContextFocusMsg`**: Отправка сообщения для фокуса контекстного элемента.
-*   **`MainClick`**: Обработка клика в таблице основных результатов.
-*  **`GetIndex`**: Получение индекса элемента из атрибута.
-*   **`SendMainFocusMsg`**: Отправка сообщения для фокуса элемента с индексом.
-*   **`ErrorHandle`**: Обработка ошибок при получении данных.
-*  **`MakeText`**: Формирует текстовое представление данных для скачивания.
-*    **`MakeConvertedText`**: Формирует JSON представление данных для скачивания.
-*   **`CreateUrl`**: Создает URL для скачивания обычного текстового файла.
-*    **`CreateJsonUrl`**: Создает URL для скачивания JSON текстового файла.
-* **`SetDownloadLink`**: Устанавливает атрибут `download` для ссылки.
-* **`SetDownloadJsonLink`**: Устанавливает атрибут `download` для ссылки с JSON данными.
+*   **Start**: Начало загрузки страницы, когда браузер начинает загружать HTML документ и все связанные с ним ресурсы.
+*   **LoadEvent**: Обработчик события `load`, который срабатывает после полной загрузки страницы. Здесь происходит добавление обработчиков событий.
+*   **SendMessage**: Функция `browser.runtime.sendMessage` отправляет сообщение `loadResults` в фоновый скрипт расширения.
+*   **ProcessResults**: Проверка, получен ли ответ с данными (`results`) от фонового скрипта.
+*   **StoreIDs**: Сохранение идентификаторов (`tabId`, `frameId`, `executionId`) из ответа `results`.
+*   **SetDownloadLinks**: Настройка ссылок для скачивания файлов с использованием функций `makeTextDownloadUrl`, `makeInfoText` и `makeConvertedInfoText`, которые подготавливают текстовое содержимое и формируют URL для скачивания.
+*   **CallShowAllResults**: Вызов функции `showAllResults(results)`, которая отвечает за обновление содержимого HTML-документа данными из `results`.
+*  **UpdateHTML**: Обновление HTML элементов на странице с данными из `results`.
+*   **ContextCheck**: Проверка наличия контекстных данных (`results.context`).
+*   **UpdateContextDetails**: Обновление HTML элементов, связанных с контекстными данными, при их наличии.
+*   **RemoveContextArea**: Удаление области контекстных данных, если они отсутствуют.
+*   **UpdateMainDetails**: Обновление HTML элементов, связанных с основными данными.
+*   **ContextDetailClick**: Установка обработчика события клика на элементе `context-detail`.
+*   **ClickContextTarget**: Проверка, что клик был произведен на кнопке в `context-detail`.
+*  **SendFocusContextMessage**: Отправка сообщения `focusContextItem` в фоновый скрипт при клике на кнопку в `context-detail`, для фокуса на соответствующем элементе.
+*  **MainDetailsClick**: Установка обработчика события клика на элементе `main-details`.
+*  **ClickMainTarget**: Проверка, что клик был произведен на кнопке в `main-details`.
+*  **GetIndex**: Получение значения индекса из атрибута `data-index` кнопки, на которую был произведен клик в `main-details`.
+*  **SendFocusItemMessage**: Отправка сообщения `focusItem` в фоновый скрипт при клике на кнопку в `main-details`, для фокуса на соответствующем элементе, передавая полученный индекс.
+*   **ErrorHandler**: Обработчик ошибок `fu.onError`.
+*   **End**: Конец выполнения скрипта.
 
 ## <объяснение>
 
 **Импорты:**
-
-*   В данном коде нет явных импортов через `import` или `require`. Вместо этого код использует переменные `tryxpath` и `tryxpath.functions`, которые предполагаются уже определенными в глобальной области видимости или предоставлены через контекст выполнения. `tryxpath` предположительно является основным объектом, содержащим логику расширения, а `tryxpath.functions` - объект с утилитарными функциями.
-    *   **`tryxpath`** (сокращено до `tx`):  Это, вероятно, основной объект, содержащий функционал расширения для работы с XPath.
-    *   **`tryxpath.functions`** (сокращено до `fu`): Это объект, который содержит вспомогательные функции, такие как `updateDetailsTable`, `onError`, `makeDetailText`.
+- В данном коде нет явных `import` выражений, так как это скрипт, выполняющийся в контексте веб-страницы, и он использует глобальные переменные и объекты, такие как `window`, `document`, `tryxpath` (предположительно, объект, введенный расширением).
 
 **Классы:**
-
-*   В коде нет явного определения классов. Вся логика реализована с помощью функций и замыканий.
+- В данном коде нет определений классов.
 
 **Функции:**
 
-*   **`showAllResults(results)`**:
-    *   **Аргументы**: `results` - объект, содержащий данные для отображения, включая `message`, `title`, `href`, `frameId`, `context` (опционально), и `main`.
-    *   **Возвращаемое значение**: Нет (функция изменяет DOM).
-    *   **Назначение**: Обновляет HTML-элементы на странице с информацией, полученной из `results`. Отображает результаты выполнения XPath, включая контекст и основные данные.
-    *   **Пример**: `showAllResults({message: "Success", title: "XPath Results", href: "http://example.com", frameId: 1, context: {method: "querySelector", expression: "//div", specifiedResultType: 7, resultType: 4, resolver: null, itemDetail: {type: "element", name: "DIV", value: "<div>Example</div>", textContent: "Example"}}, main: {method: "querySelectorAll", expression: "//p", specifiedResultType: 7, resultType: 4, resolver: null, itemDetails: [{type: "element", name: "P", value: "<p>Text1</p>", textContent: "Text1"}, {type: "element", name: "P", value: "<p>Text2</p>", textContent: "Text2"}]}})`
-*   **`makeTextDownloadUrl(text)`**:
-    *   **Аргументы**: `text` - строка текста, которую нужно сделать доступной для скачивания.
-    *   **Возвращаемое значение**: URL, который можно использовать для скачивания текстового файла.
-    *   **Назначение**: Создает URL для скачивания текстового файла.
-    *   **Пример**: `makeTextDownloadUrl("Hello, world!")` вернет строку типа `"blob:http://localhost:3000/some-unique-id"`
-*   **`makeInfoText(results)`**:
-    *   **Аргументы**: `results` - объект, содержащий данные для форматирования.
-    *   **Возвращаемое значение**: Строка, представляющая собой текстовое описание данных из `results`.
-    *   **Назначение**: Формирует удобочитаемое текстовое представление данных, включая информацию о контексте и основных результатах.
-    *   **Пример**: `makeInfoText({message: "Success", title: "XPath Results", href: "http://example.com", frameId: 1, context: {method: "querySelector", expression: "//div", specifiedResultType: 7, resultType: 4, resolver: null, itemDetail: {type: "element", name: "DIV", value: "<div>Example</div>", textContent: "Example"}}, main: {method: "querySelectorAll", expression: "//p", specifiedResultType: 7, resultType: 4, resolver: null, itemDetails: [{type: "element", name: "P", value: "<p>Text1</p>", textContent: "Text1"}, {type: "element", name: "P", value: "<p>Text2</p>", textContent: "Text2"}]}})`
-*   **`makeConvertedInfoText(results)`**:
-    *   **Аргументы**: `results` - объект, содержащий данные для форматирования.
-    *   **Возвращаемое значение**: Строка, представляющая собой текстовое описание данных из `results` с JSON-преобразованием.
-    *   **Назначение**: Формирует текстовое представление данных, где значения `value` и `textContent` представлены в формате JSON.
-    *   **Пример**: `makeConvertedInfoText({message: "Success", title: "XPath Results", href: "http://example.com", frameId: 1, context: {method: "querySelector", expression: "//div", specifiedResultType: 7, resultType: 4, resolver: null, itemDetail: {type: "element", name: "DIV", value: "<div>Example</div>", textContent: "Example"}}, main: {method: "querySelectorAll", expression: "//p", specifiedResultType: 7, resultType: 4, resolver: null, itemDetails: [{type: "element", name: "P", value: "<p>Text1</p>", textContent: "Text1"}, {type: "element", name: "P", value: "<p>Text2</p>", textContent: "Text2"}]}})`
-*   **`window.addEventListener("load", function() { ... })`**:
-    *   **Аргументы**: Нет.
-    *   **Возвращаемое значение**: Нет.
-    *   **Назначение**: Обработчик события `load` окна браузера. Запускает основную логику: отправляет сообщение для получения результатов, обрабатывает результаты, устанавливает обработчики кликов для таблиц.
+1.  **`showAllResults(results)`**
+    -   **Аргументы:** `results` - объект, содержащий данные для отображения (сообщения, заголовок, URL, идентификатор фрейма, данные контекста и основные данные).
+    -   **Возвращаемое значение:** Нет (функция `void`).
+    -   **Назначение:** Обновляет HTML-содержимое страницы на основе переданных данных `results`. Отображает информацию о контексте и основных результатах XPath запроса.
+    -   **Примеры:**
+        ```javascript
+        showAllResults({
+            message: "XPath query successful",
+            title: "Example",
+            href: "https://example.com",
+            frameId: 0,
+            context: {
+                method: "contextMethod",
+                expression: "xpath/expression",
+                specifiedResultType: "any",
+                resultType: 3,
+                resolver: "resolver",
+                itemDetail: {
+                    type: "node",
+                    name: "div",
+                    value: "<div>example</div>",
+                    textContent: "example"
+                  }
+            },
+            main: {
+                method: "mainMethod",
+                expression: "xpath/expression",
+                specifiedResultType: "any",
+                resultType: 7,
+                resolver: "resolver",
+                itemDetails: [{
+                    type: "node",
+                    name: "span",
+                    value: "<span>test</span>",
+                    textContent: "test"
+                },
+               {
+                    type: "node",
+                    name: "p",
+                    value: "<p>test2</p>",
+                    textContent: "test2"
+                  }]
+            }
+        });
+        ```
+2.  **`makeTextDownloadUrl(text)`**
+    -   **Аргументы:** `text` - строка, которая будет сохранена в файл.
+    -   **Возвращаемое значение:** URL, который можно использовать для скачивания файла с заданным текстом.
+    -   **Назначение:** Создает URL для скачивания текстового файла.
+    -   **Примеры:**
+        ```javascript
+        const downloadUrl = makeTextDownloadUrl("This is test text.");
+        // downloadUrl будет URL, который можно использовать для скачивания файла с содержимым "This is test text."
+        ```
+3.  **`makeInfoText(results)`**
+    -   **Аргументы:** `results` - объект с данными для формирования текстового представления.
+    -   **Возвращаемое значение:** Текстовая строка, отформатированная для отображения результатов.
+    -   **Назначение:** Формирует текстовое представление результатов запроса, включая контекст и основные данные, в удобном для чтения формате.
+    -   **Примеры:**
+        ```javascript
+        const infoText = makeInfoText({
+            message: "XPath query successful",
+            title: "Example",
+             href: "https://example.com",
+            frameId: 0,
+            context: {
+              method: "contextMethod",
+                expression: "xpath/expression",
+                specifiedResultType: "any",
+                resultType: 3,
+                resolver: "resolver",
+                 itemDetail: {
+                    type: "node",
+                    name: "div",
+                    value: "<div>example</div>",
+                    textContent: "example"
+                  }
+            },
+            main: {
+                method: "mainMethod",
+                expression: "xpath/expression",
+                specifiedResultType: "any",
+                resultType: 7,
+                resolver: "resolver",
+                itemDetails: [{
+                    type: "node",
+                    name: "span",
+                    value: "<span>test</span>",
+                    textContent: "test"
+                },
+               {
+                    type: "node",
+                    name: "p",
+                    value: "<p>test2</p>",
+                    textContent: "test2"
+                  }]
+            }
+        });
+        // infoText будет текстовой строкой с форматированным выводом.
+        ```
+4.  **`makeConvertedInfoText(results)`**
+    -   **Аргументы:** `results` - объект с данными для формирования текстового представления.
+    -   **Возвращаемое значение:** Текстовая строка, отформатированная для отображения результатов с JSON преобразованием значений.
+    -   **Назначение:** Аналогично `makeInfoText`, но значения и `textContent` деталей преобразуются в JSON-строки, что позволяет точнее сохранить их структуру.
+    -   **Примеры:**
+        ```javascript
+        const convertedInfoText = makeConvertedInfoText({
+             message: "XPath query successful",
+            title: "Example",
+             href: "https://example.com",
+            frameId: 0,
+            context: {
+              method: "contextMethod",
+                expression: "xpath/expression",
+                specifiedResultType: "any",
+                resultType: 3,
+                resolver: "resolver",
+                 itemDetail: {
+                    type: "node",
+                    name: "div",
+                    value: "<div>example</div>",
+                    textContent: "example"
+                  }
+            },
+            main: {
+                method: "mainMethod",
+                expression: "xpath/expression",
+                specifiedResultType: "any",
+                resultType: 7,
+                resolver: "resolver",
+                itemDetails: [{
+                    type: "node",
+                    name: "span",
+                    value: "<span>test</span>",
+                    textContent: "test"
+                },
+               {
+                    type: "node",
+                    name: "p",
+                    value: "<p>test2</p>",
+                    textContent: "test2"
+                  }]
+            }
+        });
+        // convertedInfoText будет текстовой строкой с JSON преобразованием значений.
+        ```
 
 **Переменные:**
 
-*   **`tx`**: Алиас для `tryxpath`.
-*   **`fu`**: Алиас для `tryxpath.functions`.
-*   **`document`**: Ссылка на объект `document`.
-*   **`detailKeys`**: Массив строк, представляющий ключи для деталей (например, `type`, `name`, `value`, `textContent`).
-*   **`headerValues`**: Массив строк, представляющий заголовки для таблицы деталей.
-*   **`relatedTabId`**: Идентификатор вкладки, с которой связаны результаты.
-*   **`relatedFrameId`**: Идентификатор фрейма, с которого связаны результаты.
-*   **`executionId`**: Идентификатор выполнения запроса.
+-   `tx`: Алиас для `tryxpath`.
+-   `fu`: Алиас для `tryxpath.functions`.
+-   `document`: Объект, представляющий DOM текущей страницы.
+-   `detailKeys`: Массив строк, представляющий ключи для данных деталей (`type`, `name`, `value`, `textContent`).
+-   `headerValues`: Массив строк, представляющий заголовки таблицы деталей (`Type`, `Name`, `Value`, `textContent`).
+-  `relatedTabId`: ID вкладки, на которой было выполнено действие XPath.
+-  `relatedFrameId`: ID фрейма, в котором было выполнено действие XPath.
+-   `executionId`: ID выполнения запроса.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Зависимость от глобальных переменных**: Код полагается на существование глобальных переменных `tryxpath` и `tryxpath.functions`, что может привести к ошибкам, если они не определены. Лучше использовать модульную систему или передавать зависимости.
-*   **Обработка ошибок**: Обработка ошибок ограничена вызовом `fu.onError`. Желательно добавить более детальную обработку ошибок.
-*   **DOM-манипуляции**: Код напрямую манипулирует DOM, что может быть медленным. Можно рассмотреть использование виртуального DOM или библиотеки для эффективного обновления.
-*   **Зависимость от DOM структуры**: Код сильно зависит от конкретной структуры HTML-страницы. Любые изменения в структуре могут привести к сбоям. Можно использовать CSS-селекторы для более надежной привязки к DOM.
-*   **Безопасность**: Использование `URL.createObjectURL` без отзыва URL может привести к утечке памяти.  Желательно после загрузки удалять URL.
+1.  **Обработка ошибок:** Код использует `catch(fu.onError)` для обработки ошибок, но не предоставляет подробностей о том, как `fu.onError` обрабатывает ошибки. Рекомендуется добавить более детальное логирование или уведомление об ошибках.
+2.  **Зависимость от `tryxpath`:** Код сильно зависит от глобального объекта `tryxpath`. Если этот объект не будет доступен или изменится, код не будет работать корректно. Необходимо обеспечить правильную инициализацию и доступность объекта `tryxpath`.
+3.  **Манипуляция DOM:** Код напрямую манипулирует DOM, что может привести к проблемам производительности или нестабильности, особенно при больших объемах данных.
+4.  **Жестко заданные ключи:** Ключи `detailKeys` и `headerValues` жестко заданы в коде. Это может создать проблемы, если структура данных, возвращаемая `tryxpath`, изменится.
+5.  **Обработка кликов:** Обработчики кликов используют прямое сравнение `target.tagName.toLowerCase() === "button"`, что может быть расширено для более гибкого выбора элементов.
 
 **Цепочка взаимосвязей с другими частями проекта:**
 
-1.  **`background.js`**: Фоновый скрипт расширения. Он отвечает за отправку сообщения `loadResults` и получение данных.
-2.  **`tryxpath.js`**: Ядро расширения, которое предоставляет функции для работы с XPath и, вероятно, объект `tryxpath`.
-3.  **`header.py`**: В данном файле отсутствует импорт `header`, но если бы он был, он бы определял корень проекта и загружал глобальные настройки.
-4.  **`content.js`**: Скрипт, выполняющийся на странице, который использует `tryxpath` для выполнения XPath-запросов и отправляет результаты.
+-   Скрипт взаимодействует с фоновым скриптом расширения через `browser.runtime.sendMessage` для получения результатов XPath-запроса и отправки сообщений для фокуса на элементах.
+-   Скрипт использует функции из объекта `tryxpath.functions` (предположительно, это другие части проекта) для манипуляции с деталями и таблицами.
+-  Скрипт, по всей видимости, взаимодействует с `header.py` через общую переменную, которая определяет корень проекта и откуда импортируются настройки.
 
-Данный скрипт `show_all_results.js` является частью пользовательского интерфейса расширения, которое отображает результаты выполнения XPath запросов, полученных из других частей расширения. Он получает данные, отображает их в HTML, позволяет скачать как текст или JSON и позволяет сфокусироваться на найденных элементах.
+**Дополнительно:**
+
+Код представляет собой часть расширения браузера, которое отображает результаты выполнения XPath запросов. Основная цель - предоставить пользователю информацию о контексте и найденных элементах, а также возможность экспорта этих данных. Код достаточно сложный и требует хорошего понимания DOM, асинхронного программирования и механизма расширений браузера.

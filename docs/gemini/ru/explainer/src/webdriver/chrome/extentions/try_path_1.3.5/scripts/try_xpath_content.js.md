@@ -1,267 +1,404 @@
-## АНАЛИЗ КОДА: `try_xpath_content.js`
+## <алгоритм>
+### Общая схема работы скрипта `try_xpath_content.js`
 
-### 1. <алгоритм>
+1.  **Инициализация**:
+    *   Проверка на множественный запуск скрипта `tx.isContentLoaded`.
+    *   Определение констант, переменных (пустые массивы и строки, id для ошибок, стили для элементов, атрибуты `data-tryxpath-*`, переменные для текущих элементов, css и т.д.).
+    *   Инициализация `originalAttributes` для сохранения атрибутов перед изменениями.
+2.  **Функции-утилиты**:
+    *   `setAttr(attr, value, item)`: Сохраняет оригинальный атрибут и устанавливает новый.
+        *   Пример: `setAttr("data-tryxpath-focused", "true", element)`
+    *   `setIndex(attr, items)`: Сохраняет оригинальные атрибуты и устанавливает индексы для списка элементов.
+        *   Пример: `setIndex("data-tryxpath-element", [element1, element2])`
+    *   `isFocusable(item)`: Проверяет, может ли элемент получить фокус.
+        *   Пример: `isFocusable(element)` // true или false
+    *   `focusItem(item)`: Устанавливает фокус на элемент, добавляет атрибуты, прокручивает в видимую область.
+        *   Пример: `focusItem(element)`
+    *   `setMainAttrs()`: Устанавливает атрибуты для текущего контекста и элементов.
+        *   Пример: `setMainAttrs()`
+    *   `restoreAttrs()`: Восстанавливает оригинальные атрибуты элементов.
+        *   Пример: `restoreAttrs()`
+    *   `resetPrev()`: Сбрасывает переменные для нового выполнения, готовит сообщение для попапа.
+        *   Пример: `resetPrev()`
+    *   `makeTypeStr(resultType)`: Формирует строку с типом результата XPath.
+        *   Пример: `makeTypeStr(7)` // "NUMBER_TYPE(7)"
+    *   `updateCss()`: Отправляет сообщение на обновление CSS, если необходимо.
+    *   `getFrames(spec)`: Возвращает массив элементов frame из строки.
+    *   `parseFrameDesignation(frameDesi)`: Парсит строку с индексами фреймов.
+    *  `traceBlankWindows(desi, win)`: Проверяет, являются ли фреймы пустыми окнами.
+    *   `handleCssChange(newCss)`: Обрабатывает изменения CSS.
+    *   `findFrameByMessage(event, win)`: Находит фрейм по сообщению.
+    *   `setFocusFrameListener(win, isBlankWindow)`: Устанавливает слушателя для фреймов.
+    *   `initBlankWindow(win)`: Инициализирует пустые окна.
+    *   `findStyleParent(doc)`: Возвращает родительский элемент для вставки стилей.
+    *   `updateStyleElement(doc)`: Обновляет/вставляет стили в документ.
+    *   `updateAllStyleElements()`: Обновляет стили во всех документах.
+    *   `removeStyleElement(doc)`: Удаляет стили из документа.
+    *   `removeAllStyleElements()`: Удаляет стили из всех документов.
+    *   `createResultMessage()`: Создает шаблон сообщения для результатов.
+3.  **Обработчик сообщений**:
+    *   `genericListener(message, sender, sendResponse)`:
+        *   Получает сообщения от расширения и обрабатывает их.
+        *   Вызывает соответствующий обработчик на основе `message.event`.
+    *   `genericListener.listeners` — объект с обработчиками событий.
+        *   `setContentInfo(message)`: Принимает информацию об атрибутах.
+        *   `execute(message, sender)`:
+            *   Сбрасывает состояние.
+            *   Подготавливает сообщение для попапа,  извлекает параметры из сообщения, вычисляет контекст (если есть) и элементы по xpath, и  отправляет обратно в попап, помечает элементы атрибутами.
+            *   Обработка фреймов.
+            *   Обновление стилей.
+        *   `focusItem(message)`: Устанавливает фокус на элемент.
+        *   `focusContextItem(message)`: Устанавливает фокус на контекстный элемент.
+        *   `focusFrame(message)`: Передает сообщение фрейму для фокуса.
+        *   `requestShowResultsInPopup()`: Отправляет последнее сообщение для отображения результатов в попапе.
+        *    `requestShowAllResults()`:  Отправляет последнее сообщение для отображения всех результатов.
+        *   `resetStyle()`: Восстанавливает атрибуты и удаляет стили.
+        *   `setStyle()`: Применяет стили для отображения элементов.
+        *   `finishInsertCss(message)`: Завершает вставку CSS.
+        *   `finishRemoveCss(message)`: Завершает удаление CSS.
+4.  **Слушатели событий**:
+    *   `browser.storage.onChanged`: Отслеживает изменения в хранилище расширения (атрибуты, css) и обновляет соответствующие переменные.
+        *   Пример: Пользователь изменил цвет подсветки элементов, это изменение применяется скриптом.
+    *   `window.addEventListener("message")`: Отслеживает сообщения, отправленные из фреймов.
+        *   Пример: Получено сообщение о запросе сообщения в попап при ошибке на фрейме.
+5.  **Инициализация**:
+    *   Создание начального сообщения для попапа `prevMsg`.
+    *   Установка слушателя для фреймов `setFocusFrameListener`.
+    *   Запрос начальной информации `browser.runtime.sendMessage` (например, получить `attributes`).
 
-**Блок-схема работы скрипта `try_xpath_content.js`:**
-
-```mermaid
-graph TD
-    A[Начало: Инициализация] --> B{Проверка: `tx.isContentLoaded`};
-    B -- Да --> Z[Конец: Предотвращение повторного запуска];
-    B -- Нет --> C[`tx.isContentLoaded` = true];
-    C --> D[Объявление констант и переменных];
-    D --> E{Определение функций: `setAttr`, `setIndex`, `isFocusable`, `focusItem`, `setMainAttrs`, `restoreAttrs`, `resetPrev`, `makeTypeStr`, `updateCss`, `getFrames`, `parseFrameDesignation`, `traceBlankWindows`, `handleCssChange`, `findFrameByMessage`, `setFocusFrameListener`, `initBlankWindow`, `findStyleParent`, `updateStyleElement`, `updateAllStyleElements`, `removeStyleElement`, `removeAllStyleElements`, `createResultMessage`, `genericListener`];
-   
-   
-    E --> F{Установка слушателей сообщений `browser.runtime.onMessage` и `window.addEventListener`};
-    F --> G{Обработка событий и вызов соответствующих слушателей};
-    G --> H{Обработка `setContentInfo`};
-    H --> I{Обработка `execute`};
-        I --> J{Сброс предыдущего состояния: `resetPrev()`};
-        J --> K{Обновление CSS: `updateCss()`};
-        K --> L{Создание сообщения для отправки в popup};
-        L --> M{Извлечение информации о результате xpath};
-        M --> N{Обработка `frameDesignation` (если есть)};
-            N -- Есть --> O{Получение фрейма по `frameDesignation`};
-                O -- Успех --> P{Установка контекста фрейма};
-                O -- Ошибка --> Q{Отправка сообщения об ошибке в popup};
-            N -- Нет --> P
-        P --> R{Обработка контекста (если есть)};
-            R -- Есть --> S{Выполнение xpath для контекста};
-               S -- Успех --> T{Установка контекста};
-               S -- Ошибка --> Q
-            R -- Нет --> T
-        T --> U{Выполнение основного xpath выражения};
-            U -- Успех --> V{Установка атрибутов для элементов и отправка результатов в popup};
-            U -- Ошибка --> Q
-        V --> W{Установка стилей для элементов};
-    G --> X{Обработка `focusItem`};
-        X --> Y{Вызов функции `focusItem` для выбранного элемента};
-    G --> AA{Обработка `focusContextItem`};
-        AA --> AB{Вызов функции `focusItem` для контекстного элемента};
-    G --> AC{Обработка `focusFrame`};
-        AC --> AD{Фокусировка фрейма (если необходимо)};
-    G --> AE{Обработка `requestShowResultsInPopup`};
-        AE --> AF{Отправка последних результатов в popup};
-    G --> AG{Обработка `requestShowAllResults`};
-         AG --> AH{Отправка всех результатов в popup};
-    G --> AI{Обработка `resetStyle`};
-        AI --> AJ{Сброс стилей};
-    G --> AK{Обработка `setStyle`};
-        AK --> AL{Установка стилей};
-    G --> AM{Обработка `finishInsertCss`};
-        AM --> AN{Обновление всех элементов стилей после добавления css};
-    G --> AO{Обработка `finishRemoveCss`};
-        AO --> AP{Обновление элементов стилей после удаления css};
-    G --> AQ{Слушатель `browser.storage.onChanged`};
-        AQ --> AR{Обновление настроек, если они изменились};
-    G --> AS{Слушатель `window.addEventListener` для `tryxpath-request-message-to-popup`};
-       
-    AS --> AT{Обработка запросов от фреймов};
-    AT -->AU{Отправка сообщения об ошибке если frame не найден};
-   
-   
-    F --> AV[Инициализация: `prevMsg` и установка `setFocusFrameListener`];
-    AV --> AW[Отправка сообщения `requestSetContentInfo`];
-    W --> AW;
-    Y --> AW;
-    AB --> AW;
-    AD --> AW;
-    AF --> AW;
-    AH --> AW;
-    AJ --> AW;
-    AL --> AW;
-    AN --> AW;
-    AP --> AW;
-    AR --> AW;
-    AU --> AW;
-    AW --> AZ[Конец: Готовность к работе];
-```
-
-**Примеры:**
-
-*   **Инициализация:** Скрипт начинает работу с проверки, был ли он уже загружен ранее. Если нет, то инициализирует переменные, устанавливает обработчики событий.
-*   **Обработка `execute`:** При получении сообщения `execute` скрипт:
-    1.  Сбрасывает предыдущее состояние.
-    2.  Обновляет CSS, если необходимо.
-    3.  Создает сообщение для отправки в попап, включая информацию о методе, выражении, типе результата xpath.
-    4.  Обрабатывает `frameDesignation`, чтобы определить контекст выполнения, или использует текущий документ.
-    5.  Выполняет xpath запрос и отправляет результаты в popup, устанавливает атрибуты и стили.
-*   **Обработка `focusItem`:** Когда пользователь нажимает на результат, скрипт фокусируется на этом элементе, добавляя к нему атрибуты `data-tryxpath-focused` и `data-tryxpath-focused-ancestor`.
-*   **Обработка `setStyle`**: При получении сообщения `setStyle`, скрипт восстанавливает предыдущие атрибуты, применяет текущие CSS стили и устанавливает основные атрибуты.
-*   **Слушатель `browser.storage.onChanged`:** Когда меняются настройки в хранилище браузера, скрипт обновляет атрибуты и применяет новые стили, если они изменились.
-
-### 2. <mermaid>
+## <mermaid>
 
 ```mermaid
 flowchart TD
-    subgraph tryxpath_content.js
-        A[Start: Initialize Script] --> B{tx.isContentLoaded?};
-        B -- Yes --> Z[End: Prevent Re-execution];
-        B -- No --> C[Set tx.isContentLoaded = true];
-        C --> D[Declare Constants & Variables];
-        D --> E[Define Functions];
-        E --> F[Set Message Listeners];
-        F --> G[Handle Incoming Messages];
-        G --> H{Event: setContentInfo};
-            H --> H1[Update Attributes];
-        G --> I{Event: execute};
-            I --> I1[Reset Previous State];
-            I1 --> I2[Update CSS];
-            I2 --> I3[Create Result Message];
-            I3 --> I4[Execute XPath (Main & Context)];
-            I4 --> I5[Set Element Attributes];
-            I5 --> I6[Update Style Elements];
-            I6 --> I7[Send Results To Popup];
-        G --> J{Event: focusItem};
-            J --> J1[Focus Selected Element];
-        G --> K{Event: focusContextItem};
-            K --> K1[Focus Context Element];
-        G --> L{Event: focusFrame};
-            L --> L1[Focus Target Frame];
-        G --> M{Event: requestShowResultsInPopup};
-            M --> M1[Resend Last Message];
-        G --> N{Event: requestShowAllResults};
-            N --> N1[Resend Message for All Results];
-        G --> O{Event: resetStyle};
-            O --> O1[Restore Attributes];
-            O1 --> O2[Remove All Style Elements];
-        G --> P{Event: setStyle};
-            P --> P1[Restore Attributes];
-            P1 --> P2[Update CSS];
-            P2 --> P3[Set Main Attributes];
-            P3 --> P4[Update Style Elements]
-        G --> Q{Event: finishInsertCss};
-            Q --> Q1[Update all Style Elements after new css is inserted]
-         G --> R{Event: finishRemoveCss};
-             R --> R1[Update style elements after css is removed]
-        G --> S{Event: browser.storage.onChanged};
-            S --> S1[Update Attributes and CSS];
-        G --> T{Event: window.message (tryxpath-request-message-to-popup)};
-            T --> T1[Handle Frame Requests];
-        F --> U[Initialize: prevMsg, setFocusFrameListener];
-            U --> V[Send requestSetContentInfo];
-    end
+    Start(Start: Initialize) --> checkContentLoaded{Is content loaded?}
+    checkContentLoaded -- Yes --> End(End: Exit)
+    checkContentLoaded -- No --> initVars(Initialize variables: <br> attributes, style, messages)
+    initVars --> setListeners(Set up event listeners: <br>browser.runtime.onMessage, <br>browser.storage.onChanged, <br>window.addEventListener("message"))
+    setListeners --> genericListener(Generic Message Listener: <br>Handle incoming messages from popup)
+    genericListener -- setContentInfo --> setAttributes(Set Attributes from message)
+     genericListener -- execute --> reset(Reset variables: <br>contextItem, currentItems, <br>focusedItem, etc.)
+     reset --> updateCssCall(Update CSS if needed)
+      updateCssCall --> prepareMessage(Prepare result message: <br>executionId, href, title)
+      prepareMessage --> processFrames{Is FrameDesignation present?}
+     processFrames -- Yes --> parseFrames(Parse frame designation)
+     parseFrames --> traceFrames(Trace blank frames)
+     traceFrames -- Success --> setContextFromFrame(Set context from frame)
+     traceFrames -- Fail --> sendErrorMsg(Send error message to popup)
+       setContextFromFrame --> checkContext(Check if context provided)
+     processFrames -- No --> checkContext
+    checkContext -- Yes --> executeContextExpr(Execute context expression)
+    executionContextExpr --> handleContextResult(Handle context result)
+       handleContextResult -- ContextFound --> executeMainExpr(Execute main expression)
+    handleContextResult -- ContextNotFound --> sendErrorMsg
+    checkContext -- No --> executeMainExpr
+      executeMainExpr --> handleMainResult(Handle main result and send to popup)
+    handleMainResult --> setMainAttrCall(Set attributes to items)
+    setMainAttrCall --> updateStyleElementCall(Update style element)
+    
+    genericListener -- focusItem --> focusItemCall(Focus on item)
+    genericListener -- focusContextItem --> focusContextItemCall(Focus on context item)
+     genericListener -- focusFrame --> processFrameFocus(Process frame focus)
+     genericListener -- requestShowResultsInPopup --> sendPrevMessage(Send previous message to popup)
+     genericListener -- requestShowAllResults --> sendPrevMessageAll(Send previous message to popup all result)
+     genericListener -- resetStyle --> resetStyleCall(Reset style and attributes)
+     genericListener -- setStyle --> setStyleCall(Set style)
+     genericListener -- finishInsertCss --> finishInsertCssCall(Finish insert css)
+     genericListener -- finishRemoveCss --> finishRemoveCssCall(Finish remove css)
 
-     H1 --> G;
-     I7 --> G;
-     J1 --> G;
-     K1 --> G;
-     L1 --> G;
-     M1 --> G;
-     N1 --> G;
-     O2 --> G;
-     P4 --> G;
-     Q1 --> G;
-     R1 --> G;
-     S1 --> G;
-    T1 --> G;
-    V --> G;
+    sendErrorMsg --> End
+    focusItemCall --> End
+    focusContextItemCall --> End
+    processFrameFocus --> End
+    sendPrevMessage --> End
+    sendPrevMessageAll --> End
+    resetStyleCall --> End
+     setStyleCall --> End
+    finishInsertCssCall --> End
+    finishRemoveCssCall --> End
+    updateStyleElementCall --> End
+    setAttributes --> End
+   
+    browser.storage.onChanged --> handleStorageChange(Handle storage change)
+    handleStorageChange --> End
+    window.addEventListener("message") --> handleWindowMessage(Handle window message)
+    handleWindowMessage --> End
+     
 ```
 
-**Объяснение зависимостей:**
+### Зависимости `mermaid`
 
-*   **`tryxpath_content.js`**: Основной скрипт, который обрабатывает сообщения, выполняет xpath, устанавливает стили и атрибуты.
-*   **`browser.runtime.onMessage`**: Слушатель сообщений от расширения, который запускает разные функции в зависимости от события (`setContentInfo`, `execute`, `focusItem`, `setStyle` и т.д.)
-*   **`window.addEventListener`**: Слушатель сообщений от фреймов для обработки фокусировки фреймов и ошибок при их получении.
-*   **`browser.storage.onChanged`**: Слушатель изменений в хранилище браузера для динамического обновления настроек, таких как атрибуты и CSS.
-*   **`tryxpath.functions` (в коде `fu`)**: Набор функций, предоставляемых `tryxpath`, который используется для работы с DOM-элементами, атрибутами, xpath выражениями и фреймами.
-*  **`window`**: Используется для доступа к глобальному объекту окна, чтобы устанавливать слушатели сообщений (`window.addEventListener`) и получать доступ к текущему документу (`window.document`).
+*   **flowchart TD**:  Определяет тип диаграммы как блок-схему (flowchart) и направление сверху вниз (TD - top-down).
+*   **Start(Start: Initialize)**:  Начальная точка диаграммы с именем "Start" и описанием "Initialize".
+*   **checkContentLoaded{Is content loaded?}**: Логический блок (ромб) для проверки загрузки контента.
+*   **initVars(Initialize variables: ...)**: Блок с описанием инициализации переменных.
+*   **setListeners(Set up event listeners: ...)**: Блок с описанием установки слушателей событий.
+*   **genericListener(Generic Message Listener: ...)**: Блок с описанием обработки входящих сообщений.
+*   **setAttributes(Set Attributes from message)**: Блок для обработки события `setContentInfo`.
+*    **reset(Reset variables: ...)**: Сбрасывает переменные для нового выполнения.
+*   **updateCssCall(Update CSS if needed)**: Вызов функции для обновления CSS.
+*   **prepareMessage(Prepare result message: ...)**: Подготовка сообщения с результатами.
+*   **processFrames{Is FrameDesignation present?}**: Проверка на наличие информации о фреймах в сообщении.
+*   **parseFrames(Parse frame designation)**: Парсинг строки с индексами фреймов.
+*   **traceFrames(Trace blank frames)**: Проверка на пустые фреймы.
+*   **setContextFromFrame(Set context from frame)**: Установка контекста из фрейма.
+*   **sendErrorMsg(Send error message to popup)**: Отправка сообщения об ошибке в попап.
+*   **checkContext(Check if context provided)**: Проверка наличия контекста.
+*   **executionContextExpr(Execute context expression)**: Выполнение выражения для получения контекста.
+*   **handleContextResult(Handle context result)**: Обработка результата выполнения контекстного выражения.
+*    **executeMainExpr(Execute main expression)**: Выполнение основного выражения.
+*    **handleMainResult(Handle main result and send to popup)**: Обработка результата выполнения основного выражения и отправка сообщения.
+*   **setMainAttrCall(Set attributes to items)**: Установка атрибутов к элементам.
+*   **updateStyleElementCall(Update style element)**: Обновление стилей.
+*   **focusItemCall(Focus on item)**: Вызов функции для фокусировки на элементе.
+*   **focusContextItemCall(Focus on context item)**: Вызов функции для фокусировки на контекстном элементе.
+*    **processFrameFocus(Process frame focus)**: Обработка фокусировки на фрейме.
+*   **sendPrevMessage(Send previous message to popup)**: Отправка предыдущего сообщения в попап.
+*    **sendPrevMessageAll(Send previous message to popup all result)**: Отправка предыдущего сообщения в попап со всеми результатами.
+*   **resetStyleCall(Reset style and attributes)**: Сброс стилей и атрибутов.
+*    **setStyleCall(Set style)**: Установка стилей.
+*   **finishInsertCssCall(Finish insert css)**: Завершение вставки стилей.
+*    **finishRemoveCssCall(Finish remove css)**: Завершение удаления стилей.
+*   **handleStorageChange(Handle storage change)**: Обработчик изменений хранилища.
+*    **handleWindowMessage(Handle window message)**: Обработчик сообщений окна.
+*    **End(End: Exit)**: Конечная точка диаграммы с именем "End" и описанием "Exit".
+*   **-->**: Обозначает поток управления.
+*   **-- Yes -->**: Поток управления при условии "да".
+*   **-- No -->**: Поток управления при условии "нет".
 
-### 3. <объяснение>
+## <объяснение>
 
-#### Импорты:
+### Импорты
 
-В коде нет явных импортов (`import ... from ...`). Однако, есть следующие зависимости:
+В данном коде нет явных операторов `import`. Однако, есть неявные импорты, использующие глобальный объект `tryxpath`:
+-   `tryxpath`: Глобальный объект, который содержит функции и свойства расширения.
+-   `tryxpath.functions`: Содержит набор вспомогательных функций, используемых для манипуляции DOM, выполнения XPath выражений, работы с атрибутами элементов.
 
-*   `tryxpath`: Объект `tryxpath` (alias `tx`) и `tryxpath.functions` (alias `fu`) предполагают, что они предоставлены другим скриптом или частью расширения. Это ядро функциональности, предоставляющее инструменты для работы с DOM и xpath.
+### Классы
 
-#### Переменные:
+В предоставленном коде нет явного определения классов. Однако можно выделить структуры и объекты, которые играют роль классов:
 
-*   `tx` (alias `tryxpath`): Пространство имен, предоставляемое расширением `tryxpath`.
-*   `fu` (alias `tryxpath.functions`): Набор функций для работы с DOM-элементами и xpath.
-*   `isContentLoaded`: Флаг, предотвращающий многократный запуск скрипта.
-*   `dummyItem`, `dummyItems`: Пустые значения для инициализации переменных.
-*   `invalidExecutionId`: Константа, представляющая неверный ID выполнения.
-*   `styleElementHeader`: Строка, добавляемая в начало CSS стилей, устанавливаемых скриптом.
-*   `attributes`: Объект, содержащий имена атрибутов `data-tryxpath-*`, которые скрипт добавляет к элементам.
-*   `prevMsg`: Объект, содержащий последнее сообщение от скрипта.
-*   `executionCount`: Счетчик выполненных xpath-выражений.
-*   `inBlankWindow`: Флаг, указывающий, выполняется ли скрипт в пустом окне (например, во фрейме).
-*   `currentDocument`: Ссылка на текущий документ, в котором выполняется скрипт.
-*   `contextItem`: Контекстный элемент, относительно которого выполняется xpath.
-*   `currentItems`: Массив найденных элементов.
-*   `focusedItem`: Ссылка на сфокусированный элемент.
-*   `focusedAncestorItems`: Массив родительских элементов сфокусированного элемента.
-*   `currentCss`: Текущая строка CSS, используемая скриптом.
-*  `insertedStyleElements`: Map, хранит соответствие между document и style элементом, вставленном в него.
-*   `expiredCssSet`: Объект, отслеживающий устаревшие CSS-стили.
-*   `originalAttributes`: Map, хранит исходные атрибуты элементов до их изменения скриптом.
+-   `originalAttributes`: `Map`, используется для хранения оригинальных атрибутов элементов перед их изменением. Позволяет восстановить исходное состояние.
+-   `insertedStyleElements`: `Map`, хранит `<style>` элементы, которые вставлены в документы. Ключ - документ, значение - элемент `<style>`.
+-   `expiredCssSet`: Объект, используется для отслеживания устаревших CSS стилей.
+-   `genericListener.listeners`: Объект, который хранит обработчики сообщений. Можно рассматривать его как неявный класс для управления и обработки сообщений от расширения.
+-   `attributes`: Объект, содержащий пары ключ-значение для атрибутов.
 
-#### Функции:
+### Функции
 
-*   **`setAttr(attr, value, item)`**: Сохраняет предыдущее значение атрибута элемента в `originalAttributes` и устанавливает новое значение.
-*   **`setIndex(attr, items)`**: Сохраняет предыдущие значения атрибута элементов в `originalAttributes` и устанавливает атрибут `attr` со значением индекса для каждого элемента.
-*   **`isFocusable(item)`**: Проверяет, может ли элемент получить фокус.
-*   **`focusItem(item)`**: Устанавливает фокус на элемент и прокручивает его в видимую область.
-*   **`setMainAttrs()`**: Устанавливает атрибуты на контекстный элемент и найденные элементы.
-*   **`restoreAttrs()`**: Восстанавливает исходные атрибуты элементов.
-*   **`resetPrev()`**: Сбрасывает переменные в начальное состояние перед новым выполнением xpath.
-*   **`makeTypeStr(resultType)`**: Форматирует строку с типом результата xpath.
-*   **`updateCss()`**: Отправляет сообщение для обновления CSS стилей, если они устарели.
-*   **`getFrames(spec)`**: Получает список фреймов на основе строки.
-*   **`parseFrameDesignation(frameDesi)`**: Разбирает строку с описанием фрейма.
-*   **`traceBlankWindows(desi, win)`**: Проверяет, что все фреймы в цепочке являются пустыми окнами.
-*   **`handleCssChange(newCss)`**: Обрабатывает изменения в CSS.
-*   **`findFrameByMessage(event, win)`**: Находит фрейм по сообщению события.
-*   **`setFocusFrameListener(win, isBlankWindow)`**: Устанавливает слушатель сообщений для фрейма.
-*  **`initBlankWindow(win)`**: Инициализирует пустые окна.
-*   **`findStyleParent(doc)`**: Находит родительский элемент для вставки стиля.
-*   **`updateStyleElement(doc)`**: Добавляет или обновляет CSS стили в документе.
-*   **`updateAllStyleElements()`**: Обновляет CSS стили во всех известных документах.
-*   **`removeStyleElement(doc)`**: Удаляет CSS стиль из документа.
-*   **`removeAllStyleElements()`**: Удаляет все CSS стили.
-*   **`createResultMessage()`**: Создает шаблон объекта с результатами.
-*   **`genericListener(message, sender, sendResponse)`**: Общий слушатель для сообщений от расширения, который вызывает специфические обработчики.
-*   **`genericListener.listeners.setContentInfo(message)`**: Устанавливает атрибуты из сообщения.
-*   **`genericListener.listeners.execute(message, sender)`**: Обрабатывает выполнение xpath, включая контекст и фреймы.
-*   **`genericListener.listeners.focusItem(message)`**: Устанавливает фокус на выбранном элементе.
-*   **`genericListener.listeners.focusContextItem(message)`**: Устанавливает фокус на контекстном элементе.
-*   **`genericListener.listeners.focusFrame(message)`**: Фокусирует фрейм.
-*  **`genericListener.listeners.requestShowResultsInPopup()`**: Повторно отправляет последние результаты в popup.
-*  **`genericListener.listeners.requestShowAllResults()`**: Отправляет сообщение в popup для отображения всех результатов.
-*   **`genericListener.listeners.resetStyle()`**: Сбрасывает стили и атрибуты элементов.
-*   **`genericListener.listeners.setStyle()`**: Устанавливает текущие стили и основные атрибуты элементов.
-*   **`genericListener.listeners.finishInsertCss(message)`**: Завершает вставку CSS, обновляет стили.
-*   **`genericListener.listeners.finishRemoveCss(message)`**: Завершает удаление CSS, обновляет стили.
+-   `setAttr(attr, value, item)`:
+    -   **Аргументы**:
+        -   `attr` (string): Атрибут для установки.
+        -   `value` (string): Значение атрибута.
+        -   `item` (HTMLElement|Attr): DOM элемент или атрибут.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает атрибут на элементе, предварительно сохранив его оригинальное значение в `originalAttributes`.
+    -   **Пример**: `setAttr("data-tryxpath-focused", "true", element)`.
+-   `setIndex(attr, items)`:
+    -   **Аргументы**:
+        -   `attr` (string): Атрибут для установки.
+        -   `items` (Array): Массив элементов.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает атрибут `attr` с порядковым номером для каждого элемента в массиве, сохраняя оригинальные значения.
+    -   **Пример**: `setIndex("data-tryxpath-element", [element1, element2])`.
+-   `isFocusable(item)`:
+    -   **Аргументы**:
+        -   `item` (HTMLElement|Attr|null): DOM элемент или атрибут.
+    -   **Возвращаемое значение**: `boolean`.
+    -   **Назначение**: Проверяет, является ли элемент фокусным.
+    -   **Пример**: `isFocusable(element)` // true or false
+-   `focusItem(item)`:
+    -   **Аргументы**:
+        -   `item` (HTMLElement|Attr): DOM элемент или атрибут.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает фокус на элемент, добавляет атрибуты и прокручивает элемент в видимую область.
+    -   **Пример**: `focusItem(element)`.
+-   `setMainAttrs()`:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает атрибуты `data-tryxpath-context` и `data-tryxpath-element` для текущих элементов.
+    -   **Пример**: `setMainAttrs()`.
+-   `restoreAttrs()`:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Восстанавливает оригинальные атрибуты элементов, используя `originalAttributes`.
+    -   **Пример**: `restoreAttrs()`.
+-   `resetPrev()`:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Сбрасывает переменные для новой итерации.
+    -   **Пример**: `resetPrev()`.
+-   `makeTypeStr(resultType)`:
+    -   **Аргументы**:
+        -   `resultType` (number): Тип результата XPath выражения.
+    -   **Возвращаемое значение**: `string`.
+    -   **Назначение**: Формирует строку, описывающую тип результата.
+    -   **Пример**: `makeTypeStr(7)` // "NUMBER_TYPE(7)".
+-    `updateCss()`:
+    -    **Аргументы**: Нет.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**:  Отправляет сообщение на обновление CSS, если есть устаревшие стили.
+-   `getFrames(spec)`:
+    -    **Аргументы**:
+        -   `spec` (string): JSON строка с индексами фреймов.
+    -    **Возвращаемое значение**: `Array<HTMLFrameElement>`: Массив элементов frame.
+    -    **Назначение**: Преобразует строку с индексами во фреймы.
+-   `parseFrameDesignation(frameDesi)`:
+    -    **Аргументы**:
+        -    `frameDesi` (string):  JSON строка с индексами фреймов.
+    -    **Возвращаемое значение**: `Array<number>`: Массив индексов.
+    -    **Назначение**: Преобразует строку с индексами в массив чисел.
+-   `traceBlankWindows(desi, win)`:
+     -   **Аргументы**:
+          -   `desi` (Array<number>): Массив индексов фреймов.
+         -   `win` (Window): Объект окна, в котором искать фреймы.
+     -   **Возвращаемое значение**: `Object`: Объект с информацией об успешности поиска и найденных окнах.
+    -   **Назначение**: Проверяет, являются ли фреймы с указанными индексами пустыми окнами.
+-   `handleCssChange(newCss)`:
+    -   **Аргументы**:
+        -   `newCss` (string): Новый CSS.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Обрабатывает изменения CSS, отслеживая устаревшие стили.
+-   `findFrameByMessage(event, win)`:
+    -   **Аргументы**:
+        -   `event` (MessageEvent): Событие сообщения.
+        -   `win` (Window): Объект окна.
+    -   **Возвращаемое значение**: `HTMLFrameElement|null`.
+    -   **Назначение**: Находит элемент фрейма, отправившего сообщение.
+-   `setFocusFrameListener(win, isBlankWindow)`:
+    -   **Аргументы**:
+        -   `win` (Window): Объект окна.
+        -   `isBlankWindow` (boolean): Является ли окно пустым.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает слушателя для сообщений фокуса фрейма.
+-   `initBlankWindow(win)`:
+    -   **Аргументы**:
+        -   `win` (Window): Объект окна.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Инициализирует пустые окна.
+-  `findStyleParent(doc)`:
+    -  **Аргументы**:
+        -   `doc` (Document): Объект документа.
+    - **Возвращаемое значение**: `HTMLElement|null`.
+    -   **Назначение**: Определяет родительский элемент, в который будут вставлены стили (head или body).
+-   `updateStyleElement(doc)`:
+    -   **Аргументы**:
+        -   `doc` (Document): Объект документа.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Обновляет или вставляет стили в документ.
+-   `updateAllStyleElements()`:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Обновляет стили во всех документах.
+-   `removeStyleElement(doc)`:
+    -   **Аргументы**:
+        -   `doc` (Document): Объект документа.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Удаляет элемент стиля из документа.
+-    `removeAllStyleElements()`:
+    -    **Аргументы**: Нет.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Удаляет все элементы стилей из всех документов.
+-   `createResultMessage()`:
+    -   **Аргументы**: Нет.
+    -   **Возвращаемое значение**: `object`
+    -   **Назначение**: Создает шаблон сообщения для результатов.
+-   `genericListener(message, sender, sendResponse)`:
+    -   **Аргументы**:
+        -   `message` (object): Сообщение от расширения.
+        -   `sender` (object): Информация об отправителе сообщения.
+        -   `sendResponse` (function): Функция для отправки ответа.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Основной обработчик сообщений от расширения, вызывает соответствующий обработчик в `genericListener.listeners`.
+-  `genericListener.listeners.setContentInfo(message)`:
+    -   **Аргументы**:
+        -   `message` (object): Сообщение от расширения.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Принимает информацию об атрибутах, которые необходимо установить.
+-   `genericListener.listeners.execute(message, sender)`:
+    -   **Аргументы**:
+        -   `message` (object): Сообщение от расширения с параметрами выполнения.
+        -   `sender` (object): Информация об отправителе сообщения.
+    -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Выполняет XPath запрос и отправляет результаты в попап.
+-  `genericListener.listeners.focusItem(message)`:
+     -   **Аргументы**:
+         -   `message` (object): Сообщение от расширения.
+     -   **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает фокус на элемент.
+-   `genericListener.listeners.focusContextItem(message)`:
+     -   **Аргументы**:
+         -   `message` (object): Сообщение от расширения.
+    -    **Возвращаемое значение**: `undefined`.
+    -   **Назначение**: Устанавливает фокус на контекстный элемент.
+-  `genericListener.listeners.focusFrame(message)`:
+    -    **Аргументы**:
+        -   `message` (object): Сообщение от расширения.
+    -   **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Фокусируется на фрейме.
+-  `genericListener.listeners.requestShowResultsInPopup()`:
+    -    **Аргументы**: Нет.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Отправляет предыдущее сообщение в попап для отображения результатов.
+-   `genericListener.listeners.requestShowAllResults()`:
+    -    **Аргументы**: Нет.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Отправляет предыдущее сообщение в попап для отображения всех результатов.
+-   `genericListener.listeners.resetStyle()`:
+     -   **Аргументы**: Нет.
+     -   **Возвращаемое значение**: `undefined`.
+     -   **Назначение**: Сбрасывает стили и атрибуты, восстанавливая исходное состояние.
+-   `genericListener.listeners.setStyle()`:
+    -    **Аргументы**: Нет.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Устанавливает стили для отображения элементов.
+-   `genericListener.listeners.finishInsertCss(message)`:
+    -    **Аргументы**:
+        -    `message` (object): Сообщение от расширения с CSS.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Завершает вставку CSS, обновляя стили.
+-  `genericListener.listeners.finishRemoveCss(message)`:
+    -    **Аргументы**:
+        -    `message` (object): Сообщение от расширения с CSS.
+    -    **Возвращаемое значение**: `undefined`.
+    -    **Назначение**: Завершает удаление CSS, убирая устаревший CSS.
 
-#### Потенциальные ошибки и области для улучшения:
+### Переменные
 
-*   **Отсутствие проверки `fu`**: Код не проверяет, существует ли `fu` перед его использованием, что может вызвать ошибку, если объект `tryxpath.functions` не определен.
-*   **Неуправляемое создание стилей**: Скрипт вставляет элементы `<style>` в DOM, но не всегда удаляет их, что может привести к накоплению стилей.
-*   **Обработка ошибок**: Некоторые ошибки обрабатываются отправкой сообщений в popup, но не всегда ясно, как их обрабатывает пользовательская часть интерфейса, или как пользователь сможет интерпретировать сообщения об ошибках.
-*   **Синхронные операции в обработчиках**: Некоторые обработчики могут выполнять синхронные операции, которые могут блокировать поток браузера.
-*   **Обработка пустых строк**: В функции `updateStyleElement` CSS-стили могут быть установлены как пустые строки, это может не соответствовать ожидаемому поведению.
-*   **Магические числа**: В функциях `traceBlankWindows` и `findFrameByMessage` используются магические числа (`-1`, `0`, `1`), которые лучше заменить на именованные константы для улучшения читаемости.
-*   **Код дублируется**:  В обработчиках сообщений `focusFrame` дублируется код для работы с фреймами.
-*   **Не хватает проверок**: В обработчике сообщений `execute` необходимо добавить проверку на наличие значения в  `message.frameDesignation`, перед тем как его парсить.
+*   `tx`: Ссылка на `tryxpath`.
+*    `fu`: Ссылка на `tryxpath.functions`.
+*   `isContentLoaded`: Флаг, который предотвращает многократное выполнение скрипта.
+*   `dummyItem`: Пустая строка, используется как значение по умолчанию.
+*   `dummyItems`: Пустой массив, используется как значение по умолчанию.
+*   `invalidExecutionId`: `NaN`, используется для идентификации некорректных запросов.
+*   `styleElementHeader`: Строка,  содержит комментарий, который вставляется в начало CSS.
+*   `attributes`: Объект, содержит атрибуты для элементов.
+*   `prevMsg`: Последнее сообщение от скрипта в попап.
+*   `executionCount`: Счетчик выполненных запросов.
+*   `inBlankWindow`: Флаг, определяющий, находится ли скрипт в пустом окне.
+*   `currentDocument`: Текущий документ (в контексте фрейма).
+*    `contextItem`: Текущий контекстный элемент.
+*    `currentItems`: Текущий массив элементов.
+*    `focusedItem`: Элемент, на котором установлен фокус.
+*   `focusedAncestorItems`:  Массив родительских элементов `focusedItem`.
+*   `currentCss`: Текущий CSS, применяемый к элементам.
+*    `insertedStyleElements`:  Карта, которая хранит все добавленные `<style>` элементы.
+*   `expiredCssSet`: Объект,  хранит устаревшие css.
+*   `originalAttributes`: Карта,  хранит оригинальные атрибуты элементов.
 
-#### Цепочка взаимосвязей:
+### Потенциальные ошибки и области для улучшения
 
-1.  **`tryxpath` (расширение)**:
-    *   Предоставляет API для работы с xpath и DOM.
-    *   Отправляет сообщения в скрипт `try_xpath_content.js`.
-    *   Получает от скрипта результаты xpath и сообщения об ошибках.
-2.  **`try_xpath_content.js` (скрипт содержимого)**:
-    *   Получает и обрабатывает сообщения от расширения.
-    *   Выполняет xpath и применяет стили.
-    *   Отправляет обратно сообщения с результатами и ошибками.
-3.  **Страница (DOM)**:
-    *   Получает изменения в DOM (атрибуты, стили), выполненные скриптом.
-    *   Генерирует события (`message` для фреймов) для взаимодействия с скриптом.
-4.  **Фреймы**:
-    *   Общаются с родительским окном при фокусировке и ошибках.
-5.  **Хранилище браузера**:
-    *   Хранит настройки, которые могут быть изменены и применены скриптом.
+1.  **Обработка ошибок фреймов**:  Код обрабатывает ошибки при работе с фреймами, отправляя сообщения в попап, но можно сделать обработку ошибок более гранулированной.
+2.  **Сообщения об ошибках**: Текст ошибок часто передаётся непосредственно в `sendMsg.message`. Для улучшения читаемости и поддержки можно вынести эти сообщения в отдельный объект или константы.
+3.  **Работа со стилями**:  Работа со стилями выполняется с помощью прямого манипулирования `textContent`. Можно использовать `CSSStyleSheet` API для более эффективной и безопасной работы со стилями.
+4.  **Управление памятью**:   Управление `originalAttributes` и `insertedStyleElements` с помощью `Map` эффективно, но стоит дополнительно рассмотреть возможность очистки, когда это необходимо.
+5.  **Использование `Object.create(null)`**:  Использование `Object.create(null)` уместно, но нужно помнить, что это создает объекты без прототипов, и поэтому некоторые методы (вроде `hasOwnProperty`) могут быть недоступны.
 
-Таким образом, скрипт `try_xpath_content.js` является ключевым компонентом для взаимодействия расширения с DOM и выполнения основных функций `tryxpath`. Он управляет стилями, атрибутами и фокусом, а также является посредником между расширением и DOM.
+### Цепочка взаимосвязей с другими частями проекта
+
+1.  **`tryxpath.functions`**: Скрипт зависит от функций, определенных в `tryxpath.functions`, для DOM манипуляций, XPath выражений и работы с атрибутами.
+2.  **Расширение браузера**: Скрипт взаимодействует с расширением через `browser.runtime.onMessage` и `browser.runtime.sendMessage`. Это позволяет расширению запускать скрипт, передавать параметры и получать результаты.
+3.  **Хранилище расширения**: Скрипт отслеживает изменения в хранилище расширения через `browser.storage.onChanged` для обновления атрибутов и CSS.
+4.  **HTML-страница**: Скрипт непосредственно манипулирует DOM HTML-страницы.
+5.  **Фреймы**: Скрипт поддерживает взаимодействие со фреймами, обрабатывая сообщения и передавая управление.
+
+В целом, этот скрипт является ключевым компонентом расширения, который позволяет пользователю взаимодействовать со страницей, используя XPath, и отображать результаты в удобном виде.

@@ -1,28 +1,28 @@
-# Документация модуля Facebook Promoter
+# Модуль Facebook Promoter
 
-## Оглавление
+## Обзор
+
+Модуль **Facebook Promoter** автоматизирует продвижение товаров и мероприятий AliExpress в группах Facebook. Модуль управляет публикациями рекламных материалов на Facebook, избегая дублирования. Для эффективного продвижения используется WebDriver для автоматизации браузера.
+
+## Содержание
 
 - [Обзор](#обзор)
 - [Особенности модуля](#особенности-модуля)
 - [Требования](#требования)
 - [Использование](#использование)
-  - [Пример использования класса FacebookPromoter](#пример-использования-класса-facebookpromoter)
+    - [Пример использования класса FacebookPromoter](#пример-использования-класса-facebookpromoter)
 - [Документация классов](#документация-классов)
-  - [Класс `FacebookPromoter`](#класс-facebookpromoter)
-    - [Методы](#методы)
-      - [`__init__`](#__init__self-d-driver-promoter-str-group_file_paths-optionalliststr-path-str-path-none-no_video-bool-false)
-      - [`promote`](#promote-self-group-simplenamespace-item-simplenamespace-is_event-bool-false-language-str-none-currency-str-none--bool)
-      - [`log_promotion_error`](#log_promotion_error-self-is_event-bool-item_name-str)
-      - [`update_group_promotion_data`](#update_group_promotion_data-self-group-simplenamespace-item_name-str-is_event-bool-false)
-      - [`process_groups`](#process_groups-self-campaign_name-str-none-events-listsimplenamespace-none-is_event-bool-false-group_file_paths-liststr-none-group_categories_to_adv-liststr-sales-language-str-none-currency-str-none)
-      - [`get_category_item`](#get_category_item-self-campaign_name-str-group-simplenamespace-language-str-currency-str--simplenamespace)
-      - [`check_interval`](#check_interval-self-group-simplenamespace--bool)
-      - [`validate_group`](#validate_group-self-group-simplenamespace--bool)
+    - [Класс `FacebookPromoter`](#класс-facebookpromoter)
+        - [Методы](#методы)
+            - [`__init__`](#__init__self-d-driver-promoter-str-group_file_paths-optionalliststr-path--str--path-none-no_video-bool-false)
+            - [`promote`](#promoteself-group-simplenamespace-item-simplenamespace-is_event-bool-false-language-str-none-currency-str-none--bool)
+            - [`log_promotion_error`](#log_promotion_errorself-is_event-bool-item_name-str)
+            - [`update_group_promotion_data`](#update_group_promotion_dataself-group-simplenamespace-item_name-str-is_event-bool-false)
+            - [`process_groups`](#process_groupsself-campaign_name-str-none-events-listsimplenamespace-none-is_event-bool-false-group_file_paths-liststr-none-group_categories_to_adv-liststr--sales-language-str-none-currency-str-none)
+            - [`get_category_item`](#get_category_itemself-campaign_name-str-group-simplenamespace-language-str-currency-str--simplenamespace)
+            - [`check_interval`](#check_intervalself-group-simplenamespace--bool)
+            - [`validate_group`](#validate_groupself-group-simplenamespace--bool)
 - [Лицензия](#лицензия)
-
-## Обзор
-
-Модуль **Facebook Promoter** автоматизирует продвижение товаров и мероприятий AliExpress в группах Facebook. Модуль управляет публикациями рекламных материалов на Facebook, избегая дублирования. Для эффективного продвижения используется WebDriver для автоматизации браузера.
 
 ## Особенности модуля
 
@@ -101,88 +101,88 @@ flowchart TD
 
 Инициализирует промоутер для Facebook с необходимыми конфигурациями.
 
-- **Аргументы:**
-    - `d (Driver)`: Экземпляр WebDriver для автоматизации.
-    - `promoter (str)`: Имя промоутера (например, "aliexpress").
-    - `group_file_paths (Optional[list[str | Path] | str | Path])`: Пути к файлам с данными групп.
-    - `no_video (bool)`: Флаг для отключения видео в публикациях. По умолчанию `False`.
+**Параметры:**
+- `d` (Driver): Экземпляр WebDriver для автоматизации.
+- `promoter` (str): Имя промоутера (например, "aliexpress").
+- `group_file_paths` (Optional[list[str | Path] | str | Path], optional): Пути к файлам с данными групп. По умолчанию `None`.
+- `no_video` (bool, optional): Флаг для отключения видео в публикациях. По умолчанию `False`.
 
 ##### `promote(self, group: SimpleNamespace, item: SimpleNamespace, is_event: bool = False, language: str = None, currency: str = None) -> bool`
 
 Продвигает категорию или мероприятие в указанной группе Facebook.
 
-- **Аргументы:**
-    - `group (SimpleNamespace)`: Данные группы.
-    - `item (SimpleNamespace)`: Категория или мероприятие для продвижения.
-    - `is_event (bool)`: Является ли элемент мероприятием.
-    - `language (str)`: Язык публикации.
-    - `currency (str)`: Валюта для продвижения.
+**Параметры:**
+- `group` (SimpleNamespace): Данные группы.
+- `item` (SimpleNamespace): Категория или мероприятие для продвижения.
+- `is_event` (bool, optional): Является ли элемент мероприятием. По умолчанию `False`.
+- `language` (str, optional): Язык публикации. По умолчанию `None`.
+- `currency` (str, optional): Валюта для продвижения. По умолчанию `None`.
 
-- **Возвращает:**
-    - `bool`: Успешно ли прошло продвижение.
+**Возвращает:**
+- `bool`: Успешно ли прошло продвижение.
 
 ##### `log_promotion_error(self, is_event: bool, item_name: str)`
 
 Записывает ошибку, если продвижение не удалось.
 
-- **Аргументы:**
-    - `is_event (bool)`: Является ли элемент мероприятием.
-    - `item_name (str)`: Название элемента.
+**Параметры:**
+- `is_event` (bool): Является ли элемент мероприятием.
+- `item_name` (str): Название элемента.
 
 ##### `update_group_promotion_data(self, group: SimpleNamespace, item_name: str, is_event: bool = False)`
 
 Обновляет данные группы после продвижения, добавляя продвигаемый элемент в список продвигаемых категорий или мероприятий.
 
-- **Аргументы:**
-    - `group (SimpleNamespace)`: Данные группы.
-    - `item_name (str)`: Название продвигаемого элемента.
-    - `is_event (bool)`: Является ли элемент мероприятием.
+**Параметры:**
+- `group` (SimpleNamespace): Данные группы.
+- `item_name` (str): Название продвигаемого элемента.
+- `is_event` (bool, optional): Является ли элемент мероприятием. По умолчанию `False`.
 
 ##### `process_groups(self, campaign_name: str = None, events: list[SimpleNamespace] = None, is_event: bool = False, group_file_paths: list[str] = None, group_categories_to_adv: list[str] = ['sales'], language: str = None, currency: str = None)`
 
 Обрабатывает группы для текущей кампании или продвижения мероприятия.
 
-- **Аргументы:**
-    - `campaign_name (str)`: Название кампании.
-    - `events (list[SimpleNamespace])`: Список мероприятий для продвижения.
-    - `is_event (bool)`: Является ли продвижение мероприятий или категорий.
-    - `group_file_paths (list[str])`: Пути к файлам с данными групп.
-    - `group_categories_to_adv (list[str])`: Категории для продвижения.
-    - `language (str)`: Язык публикации.
-    - `currency (str)`: Валюта для продвижения.
+**Параметры:**
+- `campaign_name` (str, optional): Название кампании. По умолчанию `None`.
+- `events` (list[SimpleNamespace], optional): Список мероприятий для продвижения. По умолчанию `None`.
+- `is_event` (bool, optional): Является ли продвижение мероприятий или категорий. По умолчанию `False`.
+- `group_file_paths` (list[str], optional): Пути к файлам с данными групп. По умолчанию `None`.
+- `group_categories_to_adv` (list[str], optional): Категории для продвижения. По умолчанию `['sales']`.
+- `language` (str, optional): Язык публикации. По умолчанию `None`.
+- `currency` (str, optional): Валюта для продвижения. По умолчанию `None`.
 
 ##### `get_category_item(self, campaign_name: str, group: SimpleNamespace, language: str, currency: str) -> SimpleNamespace`
 
 Получает элемент категории для продвижения в зависимости от кампании и промоутера.
 
-- **Аргументы:**
-    - `campaign_name (str)`: Название кампании.
-    - `group (SimpleNamespace)`: Данные группы.
-    - `language (str)`: Язык для публикации.
-    - `currency (str)`: Валюта для публикации.
+**Параметры:**
+- `campaign_name` (str): Название кампании.
+- `group` (SimpleNamespace): Данные группы.
+- `language` (str): Язык для публикации.
+- `currency` (str): Валюта для публикации.
 
-- **Возвращает:**
-    - `SimpleNamespace`: Элемент категории для продвижения.
+**Возвращает:**
+- `SimpleNamespace`: Элемент категории для продвижения.
 
 ##### `check_interval(self, group: SimpleNamespace) -> bool`
 
 Проверяет, прошло ли достаточно времени, чтобы снова продвигать эту группу.
 
-- **Аргументы:**
-    - `group (SimpleNamespace)`: Данные группы.
+**Параметры:**
+- `group` (SimpleNamespace): Данные группы.
 
-- **Возвращает:**
-    - `bool`: Можно ли снова продвигать группу.
+**Возвращает:**
+- `bool`: Можно ли снова продвигать группу.
 
 ##### `validate_group(self, group: SimpleNamespace) -> bool`
 
 Проверяет данные группы, чтобы убедиться в их корректности.
 
-- **Аргументы:**
-    - `group (SimpleNamespace)`: Данные группы.
+**Параметры:**
+- `group` (SimpleNamespace): Данные группы.
 
-- **Возвращает:**
-    - `bool`: Корректны ли данные группы.
+**Возвращает:**
+- `bool`: Корректны ли данные группы.
 
 ## Лицензия
 

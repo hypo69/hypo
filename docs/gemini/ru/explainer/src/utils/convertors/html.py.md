@@ -1,167 +1,162 @@
-## hypotez/src/utils/convertors/html.py
+## <алгоритм>
 
-### <алгоритм>
+1.  **`html2escape(input_str)`**:
+    *   Принимает HTML-строку `input_str`.
+    *   Вызывает метод `escape_html_tags` из класса `StringFormatter`.
+    *   Метод `escape_html_tags` конвертирует специальные HTML символы (`<`, `>`, `&`, `"` и `'`) в их HTML-эквиваленты.
+    *   Возвращает преобразованную строку.
+    *   _Пример:_ `html2escape("<p>текст</p>")` возвращает `&lt;p&gt;текст&lt;/p&gt;`.
 
-1.  **`html2escape(input_str: str) -> str`**:
-    *   **Вход**: HTML строка (`input_str`).
-    *   **Действие**: Вызывает метод `StringFormatter.escape_html_tags(input_str)` для преобразования HTML-тегов в escape-последовательности.
-    *   **Выход**: Строка с HTML-тегами, замененными на escape-последовательности.
-    *   **Пример**:
-        *   Вход: `<p>Hello, world!</p>`
-        *   Выход: `&lt;p&gt;Hello, world!&lt;/p&gt;`
+2.  **`escape2html(input_str)`**:
+    *   Принимает строку с HTML-последовательностями `input_str`.
+    *   Вызывает метод `unescape_html_tags` из класса `StringFormatter`.
+    *   Метод `unescape_html_tags` конвертирует HTML-эквиваленты (`&lt;`, `&gt;`, `&amp;`, `&quot;` и `&#x27;`) обратно в символы HTML (`<`, `>`, `&`, `"` и `'`).
+    *   Возвращает преобразованную строку.
+    *   _Пример:_ `escape2html("&lt;p&gt;текст&lt;/p&gt;")` возвращает `<p>текст</p>`.
 
-2.  **`escape2html(input_str: str) -> str`**:
-    *   **Вход**: Строка с escape-последовательностями (`input_str`).
-    *   **Действие**: Вызывает метод `StringFormatter.unescape_html_tags(input_str)` для преобразования escape-последовательностей обратно в HTML-теги.
-    *   **Выход**: Строка с HTML-тегами.
-    *   **Пример**:
-        *   Вход: `&lt;p&gt;Hello, world!&lt;/p&gt;`
-        *   Выход: `<p>Hello, world!</p>`
+3.  **`html2dict(html_str)`**:
+    *   Принимает HTML-строку `html_str`.
+    *   Создает экземпляр внутреннего класса `HTMLToDictParser`.
+    *   `HTMLToDictParser` наследует от `HTMLParser` и переопределяет методы обработки:
+        *   `handle_starttag(tag, attrs)`: Записывает текущий открытый тег в `self.current_tag`.
+        *   `handle_endtag(tag)`: Устанавливает `self.current_tag` в `None`.
+        *   `handle_data(data)`: Если есть текущий тег, сохраняет текст (без пробелов по краям) в `self.result` соотвествующем тегу.
+    *   Вызывает `parser.feed(html_str)`, который парсит HTML, вызывая нужные методы.
+    *   Возвращает словарь `parser.result`.
+    *   _Пример:_ `html2dict("<p>текст1</p><a href='link'>текст2</a>")` возвращает `{'p': 'текст1', 'a': 'текст2'}`.
 
-3.  **`html2dict(html_str: str) -> Dict[str, str]`**:
-    *   **Вход**: HTML строка (`html_str`).
-    *   **Действие**: Создает экземпляр вложенного класса `HTMLToDictParser` (наследуется от `HTMLParser`).
-        *   `HTMLToDictParser` парсит HTML:
-            *   `handle_starttag`: сохраняет текущий открывающийся тег (`tag`).
-            *   `handle_endtag`: обнуляет текущий открытый тег (`current_tag`).
-            *   `handle_data`: если есть открытый тег, то сохраняет текст тега в словарь.
-    *   **Выход**: Словарь, где ключи — это HTML-теги, а значения — их содержимое.
-    *   **Пример**:
-        *   Вход: `<p>Hello</p><a href='link'>World</a>`
-        *   Выход: `{'p': 'Hello', 'a': 'World'}`
+4.  **`html2ns(html_str)`**:
+    *   Принимает HTML-строку `html_str`.
+    *   Вызывает `html2dict(html_str)` для получения словаря.
+    *   Создает объект `SimpleNamespace` из словаря и возвращает его.
+    *   _Пример:_ `html2ns("<p>текст1</p><a href='link'>текст2</a>")` возвращает объект `SimpleNamespace`, где `result.p` будет `текст1` и `result.a` будет `текст2`.
 
-4.  **`html2ns(html_str: str) -> SimpleNamespace`**:
-    *   **Вход**: HTML строка (`html_str`).
-    *   **Действие**:
-        *   Вызывает `html2dict(html_str)`, чтобы преобразовать HTML в словарь.
-        *   Создает объект `SimpleNamespace` из полученного словаря, где ключи словаря становятся атрибутами объекта.
-    *   **Выход**: `SimpleNamespace` объект. Атрибутами обьекта являются HTML-теги, а значениями - содержимое тегов.
-    *   **Пример**:
-        *   Вход: `<p>Hello</p><a href='link'>World</a>`
-        *   Выход: `result.p` -> 'Hello', `result.a` -> 'World'
+5.  **`html2pdf(html_str, pdf_file)`**:
+    *   Принимает HTML-строку `html_str` и путь к PDF-файлу `pdf_file`.
+    *   Использует `weasyprint.HTML(string=html_str).write_pdf(pdf_file)` для преобразования HTML в PDF.
+    *   В случае успеха возвращает `True`.
+    *   В случае ошибки выводит сообщение об ошибке и возвращает `None`.
 
-5.  **`html2pdf(html_str: str, pdf_file: str | Path) -> bool | None`**:
-    *   **Вход**: HTML строка (`html_str`) и путь к PDF файлу (`pdf_file`).
-    *   **Действие**:
-        *   Использует библиотеку `weasyprint` для преобразования HTML в PDF.
-        *   Возвращает `True` при успешном создании PDF или `None` в случае ошибки.
-    *   **Выход**: `True` или `None`.
-    *   **Пример**:
-        *   Вход: `html_str`: `<p>Hello</p>`, `pdf_file`: `output.pdf`
-        *   Выход: `True` или `None` (в случае ошибки).
-
-### <mermaid>
+## <mermaid>
 
 ```mermaid
-graph LR
-    A[input_str: str] --> B(html2escape);
-    B --> C[escaped_str: str];
-    C --> D(escape2html);
-    D --> E[html_str: str];
-    F[html_str: str] --> G(html2dict);
-    G --> H[html_dict: Dict[str, str]];
-    H --> I(SimpleNamespace);
-    I --> J[html_ns: SimpleNamespace];
-    K[html_str: str] --> L(html2pdf);
-    M[pdf_file: str | Path] --> L;
-    L --> N[bool | None];
-    
-    classDef function fill:#f9f,stroke:#333,stroke-width:2px;
-    class B,D,G,I,L function;
+flowchart TD
+    subgraph html.py
+        Start(Start) --> html2escape_call[html2escape(input_str)]
+        html2escape_call --> string_formatter_escape[StringFormatter.escape_html_tags(input_str)]
+        string_formatter_escape --> html2escape_return[return escaped_html_string]
 
-     
+        Start --> escape2html_call[escape2html(input_str)]
+        escape2html_call --> string_formatter_unescape[StringFormatter.unescape_html_tags(input_str)]
+        string_formatter_unescape --> escape2html_return[return unescaped_html_string]
+
+        Start --> html2dict_call[html2dict(html_str)]
+        html2dict_call --> html_to_dict_parser_init[HTMLToDictParser.__init__()]
+        html_to_dict_parser_init --> html_to_dict_parser_feed[HTMLToDictParser.feed(html_str)]
+         html_to_dict_parser_feed --> html_to_dict_parser_handle_start_tag[HTMLToDictParser.handle_starttag(tag, attrs)]
+        html_to_dict_parser_handle_start_tag --> html_to_dict_parser_handle_end_tag[HTMLToDictParser.handle_endtag(tag)]
+        html_to_dict_parser_handle_end_tag --> html_to_dict_parser_handle_data[HTMLToDictParser.handle_data(data)]
+         html_to_dict_parser_handle_data --> html2dict_return[return dict_result]
+
+
+        Start --> html2ns_call[html2ns(html_str)]
+        html2ns_call --> html2dict_call_from_ns[html2dict(html_str)]
+        html2dict_call_from_ns --> simple_namespace_create[SimpleNamespace(**html_dict)]
+        simple_namespace_create --> html2ns_return[return simple_namespace_result]
+    
+       Start --> html2pdf_call[html2pdf(html_str, pdf_file)]
+         html2pdf_call --> weasyprint_html[HTML(string=html_str).write_pdf(pdf_file)]
+         weasyprint_html --> html2pdf_return[return success]
+
+    end
+    
+    style html.py fill:#f9f,stroke:#333,stroke-width:2px
+
 ```
 
-**Объяснение зависимостей `mermaid`:**
-
-*   **`input_str`** (string): Строка HTML, которая является входными данными для функций `html2escape` и `escape2html`.
-*   **`escaped_str`** (string): Строка с HTML, преобразованная в escape-последовательности, выход функции `html2escape`.
-*   **`html_str`** (string): Строка HTML, которая является выходными данными функции `escape2html`.
-*   **`html_str`** (string): Строка HTML, которая является входными данными для функций `html2dict` и `html2pdf`.
-*    **`html_dict`** (Dict): Словарь, полученный после преобразования HTML, выход функции `html2dict`.
-*   **`html_ns`** (SimpleNamespace): Объект SimpleNamespace, полученный из словаря HTML, выход функции `html2ns`.
-*   **`pdf_file`** (str | Path): Путь к PDF-файлу, который используется в функции `html2pdf`.
-*   **`bool | None`**: Результат работы функции `html2pdf`, который является `True` при успехе, или `None` в случае ошибки.
-
-### <объяснение>
+## <объяснение>
 
 **Импорты:**
 
-*   `re`: Модуль для работы с регулярными выражениями (не используется в текущей версии `html2pdf`).
-*   `typing.Dict`: Используется для аннотации типов (указания, что функция возвращает словарь).
-*   `pathlib.Path`: Используется для работы с путями к файлам, позволяет оперировать файлами как объектами (не используется в текущем коде).
-*   `venv.logger`: Логгер для отладки (используется в коде, но не в текущем коде).
-*   `src.logger.logger`: Кастомный логгер для приложения (используется для обработки исключений при импорте `weasyprint`).
-*   `types.SimpleNamespace`: Используется для создания объектов, доступ к атрибутам которых осуществляется через точку.
-*   `html.parser.HTMLParser`: Класс для разбора HTML.
-*   `xhtml2pdf.pisa`: Библиотека для преобразования HTML в PDF (не используется в текущем коде).
-*   `weasyprint.HTML`: Библиотека для преобразования HTML в PDF.
-
-**Переменные:**
-
-*   ``: Режим работы (не используется в текущем коде).
+*   `re`: Модуль для работы с регулярными выражениями. В данном коде не используется, возможно, это остаток от закомментированного варианта `html2pdf`.
+*   `typing.Dict`: Для определения типа данных `Dict[str, str]` в функции `html2dict`.
+*   `pathlib.Path`:  Модуль для работы с путями к файлам, используется как вариант типа для параметра `pdf_file`.
+*   `venv.logger`:  Логирование (запись информации о событиях) для `venv`, переопределено в `src.logger.logger`
+*   `src.logger.logger`: Пользовательский модуль для логирования, используется для записи ошибок.
+*   `types.SimpleNamespace`: Класс для создания простых объектов с атрибутами, используется в `html2ns`.
+*   `html.parser.HTMLParser`: Класс для парсинга HTML, используется в `html2dict`.
+*   `xhtml2pdf.pisa`:  Модуль для преобразования HTML в PDF, не используется в активном коде.
+*   `weasyprint.HTML`: Класс для преобразования HTML в PDF, используется в `html2pdf`.
 
 **Функции:**
 
-*   **`html2escape(input_str: str) -> str`**:
+*   `html2escape(input_str: str) -> str`:
     *   **Аргументы**:
-        *   `input_str` (str): Строка HTML для конвертации.
-    *   **Возвращает**: Строку, в которой HTML-теги преобразованы в escape-последовательности.
-    *   **Назначение**: Преобразует HTML в текст, безопасный для отображения в текстовых представлениях или XML.
-    *   **Пример**:  `html2escape("<p>Text</p>")` вернет `&lt;p&gt;Text&lt;/p&gt;`.
+        *   `input_str`: Строка HTML, которую нужно преобразовать.
+    *   **Возвращаемое значение**: Преобразованная строка, где специальные HTML символы заменены на escape-последовательности.
+    *   **Назначение**: Преобразует HTML-код в escape-последовательности, чтобы его можно было, например, безопасно хранить или передавать в текстовом виде.
+    *   **Пример**: `html2escape("<p>Привет</p>")` вернет `&lt;p&gt;Привет&lt;/p&gt;`.
+*   `escape2html(input_str: str) -> str`:
+    *   **Аргументы**:
+        *   `input_str`: Строка, содержащая escape-последовательности HTML.
+    *   **Возвращаемое значение**: Преобразованная строка, где escape-последовательности HTML заменены на соответствующие символы.
+    *   **Назначение**: Преобразует escape-последовательности обратно в HTML-код, чтобы его можно было отображать как HTML.
+    *   **Пример**: `escape2html("&lt;p&gt;Привет&lt;/p&gt;")` вернет `<p>Привет</p>`.
+*   `html2dict(html_str: str) -> Dict[str, str]`:
+    *   **Аргументы**:
+        *   `html_str`: Строка HTML, которую нужно преобразовать.
+    *   **Возвращаемое значение**: Словарь, где ключами являются теги HTML, а значениями - их содержимое.
+    *   **Назначение**: Преобразует HTML в словарь для удобного доступа к данным по тегам.
+    *   **Пример**: `html2dict("<p>Текст</p><a href='link'>Ссылка</a>")` вернет `{'p': 'Текст', 'a': 'Ссылка'}`.
+    *   **Внутренний класс `HTMLToDictParser`**:
+        *   Наследуется от `HTMLParser`.
+        *   `__init__()`: Инициализирует `self.result` как пустой словарь и `self.current_tag` как `None`.
+        *   `handle_starttag(tag, attrs)`: Устанавливает `self.current_tag` на текущий открытый тег.
+        *   `handle_endtag(tag)`: Обнуляет `self.current_tag`.
+        *   `handle_data(data)`: Если есть текущий открытый тег, добавляет в `self.result` запись `тег: текст`, если в словаре его нет
+*   `html2ns(html_str: str) -> SimpleNamespace`:
+    *   **Аргументы**:
+        *   `html_str`: Строка HTML, которую нужно преобразовать.
+    *   **Возвращаемое значение**: Объект `SimpleNamespace`, где атрибутами являются теги HTML, а значениями - их содержимое.
+    *   **Назначение**: Преобразует HTML в объект `SimpleNamespace` для удобного доступа к данным через атрибуты.
+    *   **Пример**: После `result = html2ns("<p>Текст</p><a href='link'>Ссылка</a>")`, `result.p` будет `'Текст'`, а `result.a` будет `'Ссылка'`.
+*   `html2pdf(html_str: str, pdf_file: str | Path) -> bool | None`:
+    *   **Аргументы**:
+        *   `html_str`: Строка HTML, которую нужно преобразовать.
+        *   `pdf_file`: Путь к файлу PDF для сохранения.
+    *   **Возвращаемое значение**: `True`, если PDF успешно создан, `None` в случае ошибки.
+    *   **Назначение**: Преобразует HTML в PDF-файл.
+    *   Использует `weasyprint` для преобразования.
+    *  В случае ошибки, выводит сообщение об ошибке и возвращает `None`.
 
-*   **`escape2html(input_str: str) -> str`**:
-    *   **Аргументы**:
-        *   `input_str` (str): Строка с escape-последовательностями для конвертации.
-    *   **Возвращает**: Строку, в которой escape-последовательности преобразованы обратно в HTML-теги.
-    *   **Назначение**: Преобразует escape-последовательности обратно в HTML.
-    *   **Пример**: `escape2html("&lt;p&gt;Text&lt;/p&gt;")` вернет `<p>Text</p>`.
+**Переменные:**
 
-*   **`html2dict(html_str: str) -> Dict[str, str]`**:
-    *   **Аргументы**:
-        *   `html_str` (str): Строка HTML для конвертации.
-    *   **Возвращает**: Словарь, в котором ключи - это HTML-теги, а значения - текст внутри них.
-    *   **Назначение**: Преобразует HTML в словарь для дальнейшей обработки.
-    *   **Пример**: `html2dict("<p>Hello</p><a>World</a>")` вернет `{'p': 'Hello', 'a': 'World'}`.
-    *   **Вложенный класс `HTMLToDictParser`**:
-        *   **Роль**: Кастомный класс для разбора HTML.
-        *   **Атрибуты**: `result` (словарь), `current_tag` (текущий открытый тег).
-        *   **Методы**: `handle_starttag`, `handle_endtag`, `handle_data`.
+*   `input_str` (str): Входная строка в функциях `html2escape` и `escape2html`.
+*   `html_str` (str): Входная строка HTML в функциях `html2dict`, `html2ns` и `html2pdf`.
+*   `pdf_file` (str | Path): Путь к файлу PDF в функции `html2pdf`.
+*   `parser` (HTMLToDictParser): Экземпляр парсера HTML в `html2dict`.
+*   `html_dict` (Dict[str, str]): Словарь, полученный из `html2dict` в `html2ns`.
+*   `result` (Dict[str, str]):  В `HTMLToDictParser` словарь для хранения результата парсинга HTML.
+*   `current_tag` (str): В `HTMLToDictParser` текущий открытый тег.
 
-*   **`html2ns(html_str: str) -> SimpleNamespace`**:
-    *   **Аргументы**:
-        *   `html_str` (str): Строка HTML для конвертации.
-    *   **Возвращает**: `SimpleNamespace`, в котором HTML-теги становятся атрибутами, а их содержание значениями.
-    *   **Назначение**: Преобразует HTML в `SimpleNamespace` для доступа к тегам как к атрибутам.
-    *   **Пример**: `html2ns("<p>Hello</p><a>World</a>")` вернет объект, где `result.p` будет `Hello`, а `result.a` будет `World`.
+**Взаимосвязи:**
 
-*   **`html2pdf(html_str: str, pdf_file: str | Path) -> bool | None`**:
-    *   **Аргументы**:
-        *   `html_str` (str): Строка HTML для конвертации.
-        *   `pdf_file` (str | Path): Путь к PDF файлу.
-    *   **Возвращает**: `True`, если PDF был успешно создан, `None` в противном случае.
-    *   **Назначение**: Преобразует HTML в PDF файл.
-    *   **Использование `weasyprint`**: используется для преобразования HTML в PDF. Обрабатывает ошибки при преобразовании и выводит сообщение в консоль.
+*   `html2escape` и `escape2html` используют методы `StringFormatter` (не показан в этом коде, но предполагается, что он существует где-то в проекте).
+*   `html2ns` вызывает `html2dict` для получения словаря.
+*   `html2pdf` использует `weasyprint.HTML` для преобразования HTML в PDF.
+*   Все функции используют `src.logger.logger` для записи ошибок.
 
 **Потенциальные ошибки и области для улучшения:**
 
-*   **Отсутствует обработка ошибок**:
-    *   В `html2escape` и `escape2html` используется `StringFormatter`, но сам класс не представлен, соответственно не ясны механизмы обработки ошибок.
-    *   При импорте `weasyprint` есть обработка исключения, но в `html2pdf` обрабатывается только общее исключение, нужно уточнить.
-*   **`html2pdf`**:
-    *   В версии с `xhtml2pdf` был метод `preprocess_css` для удаления неподдерживаемых псевдоклассов, но он не реализован в текущей версии. Это может привести к проблемам при конвертации CSS, а также к отсутсвию гибкости.
-*   **Внешние зависимости**:
-    *   Зависимость от `StringFormatter` не показана, что делает код неполным.
-*  **Логирование**:
-    *   Используется `print` для ошибок, что не является хорошей практикой. Лучше использовать логгер.
-*   **Недостаточно комментариев**:
-    *   В некоторых функциях отсутствуют комментарии, уточняющие определенные шаги.
-*  **Неоднозначность импортов**:
-    *   Импорты `venv.logger` и `src.logger.logger` могут привести к путанице.
+*   **`StringFormatter`**: Отсутствует код для `StringFormatter`. Нужно добавить этот класс для работы функций `html2escape` и `escape2html`.
+*   **`html2dict`**: Метод `html2dict` сохраняет только данные первого вхождения тега, а не все данные тегов. Если в html два одинаковых тега, то во втором данные будут потеряны.
+*   **Обработка ошибок `html2pdf`**:  В `html2pdf` общая обработка исключений, но не проверяется случай, когда `weasyprint` может не сработать и необходимо дать больше контекста по ошибке.
+*   **Закомментированный `html2pdf`**: Есть закомментированный вариант `html2pdf` с использованием `xhtml2pdf`, который удаляет CSS псевдоселекторы. Возможно, стоит его переработать и добавить как альтернативный вариант или удалить.
+*   **Отсутствие тестов**: Не показаны тесты.
 
 **Цепочка взаимосвязей с другими частями проекта:**
 
-*   `src.utils.convertors.html` зависит от `src.logger.logger` для логирования ошибок.
-*   Функции `html2escape` и `escape2html` предположительно зависят от класса `StringFormatter` (не показан в коде), который вероятно находится в другой части проекта.
-*   `html2pdf` использует библиотеку `weasyprint` для генерации PDF.
-*   Данный файл может использоваться в различных частях проекта, где требуется конвертация HTML в различные форматы (словарь, `SimpleNamespace`, PDF).
+*   Этот модуль (`html.py`) зависит от `src.logger.logger` для логирования.
+*   Он также, вероятно, зависит от `StringFormatter` (которого нет в этом коде), который где-то объявлен и используется в других частях проекта.
+
+Данный анализ обеспечивает полное понимание функциональности кода, его зависимостей и потенциальных проблем.
