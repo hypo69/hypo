@@ -64,21 +64,18 @@ class CodeAssistant:
 
     role: str
     lang: str
-    start_dirs: Path | str | list[Path] | list[str]
-    base_path: Path
+
     config: SimpleNamespace
     gemini_model: GoogleGenerativeAI
     openai_model: OpenAIModel
-    start_file_number: int
+
 
     def __init__(self, **kwargs):
         """Инициализация ассистента с заданными параметрами."""
+        self.config: SimpleNamespace = j_loads_ns(gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json")
         self.role:str = kwargs.get("role", "doc_writer_rst")
-        self.lang:str = "en" if self.role == "pytest" else kwargs.get("lang", "ne")
+        self.lang:str = "en" if self.role == "pytest" else kwargs.get("lang", "en")
         self.models_list:list = kwargs.get("model", ["gemini"])
-        self.start_dirs:list = kwargs.get("start_dirs", [".."])
-        self.base_path = gs.path.endpoints / "hypo69" / "code_assistant"
-        self.config = j_loads_ns(self.base_path / "code_assistant.json")
         self._initialize_models(**kwargs)
 
     def _initialize_models(self, **kwargs):
@@ -149,7 +146,9 @@ class CodeAssistant:
         """Чтение инструкции для кода."""
         try:
             return Path(
-                self.base_path
+                gs.path.endpoints 
+                / "hypo69" 
+                / "code_assistant" 
                 / "instructions"
                 / f"instruction_{self.role}_{self.lang}.md"
             ).read_text(encoding="UTF-8")
@@ -169,10 +168,11 @@ class CodeAssistant:
             / "translations.json"
         )
 
-    async def process_files(self, start_file_number: Optional[int] = 1):
+    async def process_files(self, start_dirs:str|Path|list[str,str]|list[Path,Path] = None, start_file_number: Optional[int] = 1 ) -> bool:
         """компиляция, отправка запроса и сохранение результата.
        
         """
+
 
 
         def send_file(file_path: Path) -> bool:
@@ -220,31 +220,40 @@ class CodeAssistant:
                 ...
                 return False
 
-        for i, (file_path, content) in enumerate(self._yield_files_content()):
-            if not any((file_path, content)):    # <- ошибка чтения файла
-                continue
-            if i < start_file_number: # <- старт с номера файла
-                continue
-            if file_path and content:
-                # send_file(file_path) # <- отправить в модель файл
-                content_request = self._create_request(file_path, content)
-                response = await self.gemini_model.ask(content_request)
+        if not start_dirs:
+           start_dirs = self.config.start_dirs
+        if not start_dirs:
+            logger.error("Ошибка иницаилизации стартовой директории")
+            return False
+        start_dirs = start_dirs if isinstance(start_dirs,list) else [start_dirs]
+        for process_driectory in start_dirs:
+            logger.info(f"Start {process_driectory=}")
 
-                if response:
-                    response = self._remove_outer_quotes(response)
+            for i, (file_path, content) in enumerate(self._yield_files_content(process_driectory)):
+                if not any((file_path, content)):    # <- ошибка чтения файла
+                    continue
+                if i < start_file_number: # <- старт с номера файла
+                    continue
+                if file_path and content:
+                    # send_file(file_path) # <- отправить в модель файл
+                    content_request = self._create_request(file_path, content)
+                    response = await self.gemini_model.ask(content_request)
 
-                    if not await self._save_response(file_path, response, "gemini"):
-                        logger.error(f"Файл {file_path} \n НЕ сохранился")
+                    if response:
+                        response = self._remove_outer_quotes(response)
+
+                        if not await self._save_response(file_path, response, "gemini"):
+                            logger.error(f"Файл {file_path} \n НЕ сохранился")
+                            ...
+                            continue
+                        pprint(f"Processed file number: {i + 1}", text_color="yellow")
+                        ...
+                    else:
+                        logger.error("Ошибка ответа модели", None, False)
                         ...
                         continue
-                    pprint(f"Processed file number: {i + 1}", text_color="yellow")
-                    ...
-                else:
-                    logger.error("Ошибка ответа модели", None, False)
-                    ...
-                    continue
 
-            await asyncio.sleep(20) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
+                await asyncio.sleep(20) # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG (change timeout)
 
     def _create_request(self, file_path: str, content: str) -> str:
         """Создание запроса с учетом роли и языка."""
@@ -270,7 +279,7 @@ class CodeAssistant:
 
     def _yield_files_content(
         self,
-        start_dirs: List[Path] = [gs.path.src],
+        process_driectory: str| Path,
     ) -> Iterator[tuple[Path, str]]:
         """
         Генерирует пути файлов и их содержимое по указанным шаблонам.
@@ -278,65 +287,71 @@ class CodeAssistant:
         :param start_dirs: Список директорий для обхода.
         :return: Итератор кортежей из пути файла и его содержимого.
         """
+
         # Компилируем паттерны исключаемых файлов
         try:
             exclude_file_patterns = [
                 re.compile(pattern) for pattern in self.config.exclude_file_patterns
             ]
+            
+
         except Exception as ex:
             logger.error(f"Не удалось скомпилировать регулярки из списка:/n{self.config.exclude_file_patterns=}\n ",ex)
             ...
         include_file_patterns = self.config.include_files
-        for start_dir in start_dirs:
-            # Итерация по всем файлам в директории
-            for file_path in start_dir.rglob("*"):
-                # Проверяем соответствие шаблонам включения
-                if not any(
-                    fnmatch.fnmatch(file_path.name, pattern)
-                    for pattern in include_file_patterns
-                ):
-                    continue
 
-                # Проверяем исключенные директории
-                if any(
-                    exclude_dir in file_path.parts
-                    for exclude_dir in self.config.exclude_dirs
-                ):
-                    # pprint(
-                    #     f"Пропускаю файл в исключенной директории: {file_path}",
-                    #     text_color="cyan",
-                    # )
-                    continue
+        process_driectory = gs.path.src / process_driectory
 
-                # Проверяем исключенные файлы по паттерну
-                if any(
-                    exclude.match(str(file_path)) for exclude in exclude_file_patterns
-                ):
-                    # pprint(
-                    #     f"Пропускаю файл по паттерну исключения: {file_path}",
-                    #     text_color="cyan",
-                    # )
-                    continue
+        # Итерация по всем файлам в директории
+            
+        for file_path in process_driectory.rglob("*"):
+            # Проверяем соответствие шаблонам включения
+            if not any(
+                fnmatch.fnmatch(file_path.name, pattern)
+                for pattern in include_file_patterns
+            ):
+                continue
 
-                # Проверяем конкретные исключенные файлы
-                if str(file_path) in self.config.exclude_files:
-                    # pprint(
-                    #     f"Пропускаю исключенный файл: {file_path}", text_color="cyan"
-                    # )
-                    continue
+            # Проверяем исключенные директории
+            if any(
+                exclude_dir in file_path.parts
+                for exclude_dir in self.config.exclude_dirs
+            ):
+                # pprint(
+                #     f"Пропускаю файл в исключенной директории: {file_path}",
+                #     text_color="cyan",
+                # )
+                continue
 
-                # Чтение содержимого файла
-                try:
-                    content = file_path.read_text(encoding="utf-8")
-                    yield file_path, content
-                    # make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  (create `summary.md`)
-                except Exception as ex:
-                    pprint(
-                        f"Ошибка при чтении файла: {ex}",
-                        text_color="red",
-                        bg_color="light_grey",
-                    )
-                    yield None, None
+            # Проверяем исключенные файлы по паттерну
+            if any(
+                exclude.match(str(file_path)) for exclude in exclude_file_patterns
+            ):
+                # pprint(
+                #     f"Пропускаю файл по паттерну исключения: {file_path}",
+                #     text_color="cyan",
+                # )
+                continue
+
+            # Проверяем конкретные исключенные файлы
+            if str(file_path) in self.config.exclude_files:
+                # pprint(
+                #     f"Пропускаю исключенный файл: {file_path}", text_color="cyan"
+                # )
+                continue
+
+            # Чтение содержимого файла
+            try:
+                content = file_path.read_text(encoding="utf-8")
+                yield file_path, content
+                # make_summary( docs_dir = start_dir.parent / 'docs' )  # <- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG  (create `summary.md`)
+            except Exception as ex:
+                pprint(
+                    f"Ошибка при чтении файла: {ex}",
+                    text_color="red",
+                    bg_color="light_grey",
+                )
+                yield None, None
    
     async def _save_response(self, file_path: Path, response: str, model_name: str) -> None:
         """Сохранение ответа модели в файл с добавлением суффикса.
@@ -461,7 +476,11 @@ if __name__ == "__main__":
     Конфигурация обновляется в каждом цикле, что позволяет динамически изменять настройки во время работы программы.
     Для каждой комбинации языка и роли создается экземпляр класса :class:`CodeAssistant`, который обрабатывает файлы, используя заданную модель ИИ.
     """
-    # Путь к файлу конфигурации
+    
+    ########################################################################################
+    #                               Запуск через конфигурацию 
+    # 
+
     config_path: Path = (
         gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json"
     )
@@ -469,24 +488,22 @@ if __name__ == "__main__":
     while True:
         # Загрузка конфигурации
         config: SimpleNamespace = j_loads_ns(config_path)
-        args = config.argparse
+       
 
         # Обработка файлов для каждой комбинации языков и ролей
-        for lang in args.languages:
-            for role in args.roles:
+        for lang in config.languages:
+            for role in config.roles:
                 logger.debug(f"Start role: {role}, lang: {lang}", None, False)
 
                 assistant_direct = CodeAssistant(
-                    role=role,
-                    lang=lang,
-                    model=["gemini"],
-                    # start_dirs = [Path('suppliers'), Path('webdriver')],
-                    start_dirs=[".."],
+                    role = role,
+                    lang = lang,
+                    model = ["gemini"],
+                   
                 )
-                asyncio.run( assistant_direct.process_files(start_file_number=1))
+                asyncio.run( assistant_direct.process_files( start_dirs=config.start_dirs) )
 
                 # Обновление конфигурации для учёта изменений во время выполнения
                 config: SimpleNamespace = j_loads_ns(config_path)
-                args = config.argparse
 
 
