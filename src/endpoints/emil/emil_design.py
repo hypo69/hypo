@@ -27,7 +27,7 @@ from src.webdriver.firefox import Firefox
 
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
-from src.product import Product
+from src.product.product_fields import ProductFields
 from src.endpoints.advertisement.facebook.scenarios.post_message import post_message, post_title, upload_media
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
@@ -161,6 +161,10 @@ class EmilDesign:
         """
         products_list: SimpleNamespace | list[SimpleNamespace] = j_loads_ns(self.data_path / "images_descritions_he.json")
         ...
+        # convert to ProductFields
+        f:ProductFields = ProductFields()
+        for product_ns in products_list:
+            f.name 
         
         
 
