@@ -152,7 +152,8 @@ class EmilDesign:
 
     def upload_to_prestashop(self):
         """
-        Поднимаю на сервер изображения из сохраненного файла описаний
+        Поднимаю на сервер изображения из сохраненного файла описаний.
+        Файл описаний мне делает телеграм
         
         Upload product information to PrestaShop.
 

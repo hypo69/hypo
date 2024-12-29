@@ -2,7 +2,7 @@
   "role": "doc_writer_md",
   "lang": "EN",
   "model": [ "gemini" ],
-  "start_dirs": [],
+  "start_dirs": [ "src/endpoints/ai_games/101_basic_computer_games/ru" ],
   "gemini_generation_config": {
     "response_mime_type": "text/plain"
   },
@@ -24,6 +24,7 @@
     "__pycache__",
     ".git",
     ".venv",
+    "venv",
     ".vs",
     ".vscode",
     "docs",
