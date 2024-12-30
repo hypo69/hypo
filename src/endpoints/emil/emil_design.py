@@ -28,6 +28,7 @@ from src.webdriver.firefox import Firefox
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
 from src.product.product_fields import ProductFields
+
 from src.endpoints.advertisement.facebook.scenarios.post_message import post_message, post_title, upload_media
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
@@ -42,14 +43,21 @@ class EmilDesign:
 
     gemini:'GoogleGenerativeAI'
     openai:'OpenAIModel'
+
     base_path:Path = gs.path.endpoints / ENDPOINT
     config:SimpleNamespace = j_loads_ns( base_path / f'{ENDPOINT}.json')
     data_path:Path = getattr( gs.path , config.storage , 'external_storage')  / ENDPOINT
+    
 
 
     def __init__(self):
         """ Initialize the EmilDesign class. """
         ...
+
+
+    def ai_find_category_for_image(self) -> bool:
+        """ Находит нужную категорию по описанию """
+        ...                                        
 
 
     def describe_images(self, from_url: str = False):

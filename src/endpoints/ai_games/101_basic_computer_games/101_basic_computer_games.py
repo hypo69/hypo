@@ -17,6 +17,7 @@ from src import gs
 
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai import OpenAIModel
+from src.endpoints.hypo69.code_assistant import CodeAssistant
 
 from src.utils.jjson import j_loads, j_loads_ns
 from src.utils.file import get_filenames
@@ -42,6 +43,8 @@ class Games101Basic():
                 api_key=gs.credentials.gemini.onela,
                 system_instruction = system_instruction,
             )
+
+		code_assistant = CodeAssistant()
 
 
 	@property
@@ -96,6 +99,8 @@ class Games101Basic():
 		output_file:Path = self.base_path / self.lang  / 'TOC.MD'
 		output_file.parent.mkdir(parents=True, exist_ok=True)
 		output_file.write_text(response,encoding='UTF-8')
+
+	async def translate_games()
 
 
 

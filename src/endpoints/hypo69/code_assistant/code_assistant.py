@@ -70,11 +70,11 @@ class CodeAssistant:
     openai_model: OpenAIModel
 
 
-    def __init__(self, **kwargs):
+    def __init__(self, role:Optional[str] = 'doc_writer_md', lang: Optional[str] = 'en', models: Optional[list[str,str] | str] = ["gemini"], **kwargs):
         """Инициализация ассистента с заданными параметрами."""
         self.config: SimpleNamespace = j_loads_ns(gs.path.endpoints / "hypo69" / "code_assistant" / "code_assistant.json")
-        self.role:str = kwargs.get("role", "doc_writer_rst")
-        self.lang:str = "en" if self.role == "pytest" else kwargs.get("lang", "en")
+        self.role:str = role 
+        self.lang:str = lang
         self.models_list:list = kwargs.get("model", ["gemini"])
         self._initialize_models(**kwargs)
 
