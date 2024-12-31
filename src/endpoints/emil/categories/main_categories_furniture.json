@@ -1,112 +1,112 @@
 {
-	"home_categories": [
+	"main_categories_for_furniture": [
 		{
-			"id": 11344,
+			"id_category_default": 11344,
 			"name": "Living room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11345,
+			"id_category_default": 11345,
 			"name": "Bedroom",
 			"parent_id": 11167
 		},
 		{
-			"id": 11346,
+			"id_category_default": 11346,
 			"name": "Children's room/Nursery",
 			"parent_id": 11167
 		},
 		{
-			"id": 11347,
+			"id_category_default": 11347,
 			"name": "Study/Office",
 			"parent_id": 11167
 		},
 		{
-			"id": 11348,
+			"id_category_default": 11348,
 			"name": "Kitchen",
 			"parent_id": 11167
 		},
 		{
-			"id": 11349,
+			"id_category_default": 11349,
 			"name": "Dining room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11350,
+			"id_category_default": 11350,
 			"name": "Hallway/Entrance hall",
 			"parent_id": 11167
 		},
 		{
-			"id": 11351,
+			"id_category_default": 11351,
 			"name": "Bathroom",
 			"parent_id": 11167
 		},
 		{
-			"id": 11352,
+			"id_category_default": 11352,
 			"name": "Toilet",
 			"parent_id": 11167
 		},
 		{
-			"id": 11353,
+			"id_category_default": 11353,
 			"name": "Wardrobe/Dressing room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11354,
+			"id_category_default": 11354,
 			"name": "Pantry/Storage room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11355,
+			"id_category_default": 11355,
 			"name": "Boiler room/Utility room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11356,
+			"id_category_default": 11356,
 			"name": "Library",
 			"parent_id": 11167
 		},
 		{
-			"id": 11357,
+			"id_category_default": 11357,
 			"name": "Greenhouse/Conservatory",
 			"parent_id": 11167
 		},
 		{
-			"id": 11358,
+			"id_category_default": 11358,
 			"name": "Garage",
 			"parent_id": 11167
 		},
 		{
-			"id": 11359,
+			"id_category_default": 11359,
 			"name": "Sauna/Bathhouse",
 			"parent_id": 11167
 		},
 		{
-			"id": 11360,
+			"id_category_default": 11360,
 			"name": "Guest room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11361,
+			"id_category_default": 11361,
 			"name": "Laundry room",
 			"parent_id": 11167
 		},
 		{
-			"id": 11362,
+			"id_category_default": 11362,
 			"name": "Attic",
 			"parent_id": 11167
 		},
 		{
-			"id": 11363,
+			"id_category_default": 11363,
 			"name": "Basement",
 			"parent_id": 11167
 		},
 		{
-			"id": 11364,
+			"id_category_default": 11364,
 			"name": "Terrace",
 			"parent_id": 11167
 		},
 		{
-			"id": 11365,
+			"id_category_default": 11365,
 			"name": "Balcony",
 			"parent_id": 11167
 		}

@@ -1,6 +1,6 @@
 [
     {
-                "parent": [
+                "additional_categories_names": [
                     "Мебель для гостиной",
                     "Столы"
                 ],
@@ -9,7 +9,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0020.jpg"
     },
     {
-                        "parent": [
+                        "additional_categories_names": [
                             "Мебель для гостиной",
                             "Шкафы"
                         ],
@@ -18,7 +18,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0021.jpg"
     },
     {
-                                "parent": [
+                                "additional_categories_names": [
                                     "Мебель для гостиной",
                                     "Столы"
                                 ],
@@ -27,13 +27,13 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0022.jpg"
     },
     {
-        "parent": "Спальня",
+        "additional_categories_names": "Спальня",
         "category": "Кровать",
         "description": "Кровать с белым деревянным каркасом и изголовьем с вертикальными панелями. В нижней части расположены выдвижные ящики для хранения, выполненные в светло-зеленом цвете, что добавляет функциональности и яркости в интерьер.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0023.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "шкафы",
             "Мебель для гостинной"
         ],
@@ -42,13 +42,13 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0024.jpg"
     },
     {
-        "parent": "Спальня",
-        "category": "Кровать",
+        "": "Спальня",
+        "category": "Кровати",
         "description": "Кровать с деревянным каркасом из светлого дерева и черным изголовьем, обитым тканью. В нижней части кровати предусмотрены выдвижные ящики для хранения. Рядом расположены прикроватные тумбочки с гладкими фасадами, что добавляет функциональности и современного стиля.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0025.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Тумбы и комоды",
             "Мебель для гостинной"
         ],
@@ -57,37 +57,37 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0026.jpg"
     },
     {
-        "parent": "шкафы",
+        "additional_categories_names": "шкафы",
         "category": "шкаф с зеркалом",
         "description": "Белый шкаф с четырьмя дверцами, две из которых оснащены зеркалами. Нижняя часть шкафа включает шесть выдвижных ящиков с рифленой текстурой, что придаёт мебели стильный и элегантный вид, а также обеспечивает дополнительное пространство для хранения.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0027.jpg"
     },
     {
-        "parent": "шкафы",
+        "additional_categories_names": "шкафы",
         "category": "шкаф с зеркалом",
         "description": "Белый шкаф с зеркальными дверцами и декоративными панелями. В нижней части расположены несколько выдвижных ящиков, что обеспечивает дополнительное пространство для хранения вещей. Шкаф имеет элегантный дизайн, идеально подходящий для современных интерьеров.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0028.jpg"
     },
     {
-        "parent": "Спальня",
+        "additional_categories_names": "Спальня",
         "category": "Кровати",
         "description": "Двухъярусная кровать с белым деревянным каркасом и изголовьем с декоративными элементами. Верхняя часть кровати предназначена для сна, а нижняя часть выполнена в виде выдвижного ящика, что обеспечивает дополнительное спальное место и экономию пространства. В нижней части также расположены два выдвижных ящика для хранения, добавляющие функциональности.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0029.jpg"
     },
     {
-        "parent": "Спальня",
+        "additional_categories_names": "Спальня",
         "category": "Двухъярусная кровать",
         "description": "Двухъярусная кровать с белым деревянным каркасом и серыми акцентами. Верхняя часть кровати имеет защитные бортики и лестницу для удобного доступа. В нижней части расположена односпальная кровать с выдвижными ящиками для хранения, что обеспечивает дополнительное пространство и функциональность.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0030.jpg"
     },
     {
-        "parent": "Спальня",
+        "additional_categories_names": "Спальня",
         "category": "Кровати",
         "description": "Двухъярусная кровать с белым деревянным каркасом и лестницей. Верхняя часть кровати предназначена для сна, а нижняя часть выполнена в виде выдвижного ящика, что обеспечивает дополнительное спальное место и экономию пространства. Обе части кровати имеют защитные бортики.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0031.jpg"
     },
     {
-        "parent": "Спальня",
+        "additional_categories_names": "Спальня",
         "category": [
             "Кровати",
             "столы"
@@ -96,7 +96,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0032.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Шкафы",
             "Мебель для хранения"
         ],
@@ -105,7 +105,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0033.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Полки",
             "Мебель для гостинной"
         ],
@@ -114,7 +114,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0034.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Шкафы",
             "Мебель для хранения",
             "Мебель для гостинной"
@@ -124,19 +124,19 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0035.jpg"
     },
     {
-        "parent": "Столы",
+        "additional_categories_names": "Столы",
         "category": "Консольные столы",
         "description": "Консольный стол с деревянной поверхностью светлого оттенка и двумя выдвижными ящиками с черными ручками. Ножки стола выполнены из черного металла, создавая стильный контраст. Декоративные элементы на столе и настенные часы придают интерьеру уютный и современный вид.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0036.jpg"
     },
     {
-        "parent": "Ванная и туалет",
+        "additional_categories_names": "Ванная и туалет",
         "category": "Тумба с раковиной",
         "description": "Тумба с раковиной, выполненная в современном стиле. Корпус тумбы белого цвета с рифленой текстурой, что придает ей стильный вид. На верхней части расположена круглая раковина из белого керамического материала, установленная на деревянной столешнице, создающей контраст и добавляющей тепла в интерьер. Рядом находится черный смеситель, гармонично дополняющий общий дизайн.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0037.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Стенки и тумбы для ТВ"
         ],
@@ -145,7 +145,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0038.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Шкафы",
             "Мебель для хранения",
             "Мебель для гостинной"
@@ -155,7 +155,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0039.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Стенки и тумбы для ТВ"
         ],
@@ -164,19 +164,19 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0040.jpg"
     },
     {
-        "parent": "Ванная и туалет",
+        "additional_categories_names": "Ванная и туалет",
         "category": "Тумба с раковиной",
         "description": "Тумба с раковиной, выполненная из светлого дерева с гладкой поверхностью. На ней установлена круглая белая раковина, создающая контраст с темным фоном. Рядом расположена черная смеситель с изогнутым носиком. Тумба имеет дверцу с рифленой текстурой, что добавляет интересный визуальный элемент в интерьер.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0041.jpg"
     },
     {
-        "parent": "Ванная и туалет",
+        "additional_categories_names": "Ванная и туалет",
         "category": "Тумба с раковиной",
         "description": "Тумба с раковиной, выполненная из светлого дерева с гладкой поверхностью. На верхней части расположена черная раковина с округлыми формами, создающая контраст с деревянным основанием. Внизу находятся два выдвижных ящика с черными фасадами, обеспечивающие удобное хранение.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0042.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Шкафы с распашными дверцами"
         ],
@@ -185,7 +185,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0043.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Шкафы с распашными дверцами"
         ],
@@ -194,7 +194,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0044.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Стенки и тумбы для ТВ"
         ],
@@ -203,7 +203,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0045.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной"
         ],
         "category": "Стеллаж",
@@ -211,13 +211,13 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230514-WA0046.jpg"
     },
     {
-        "parent": "Спальня",
+        "additional_categories_names": "Спальня",
         "category": "Кровать",
         "description": "Кровать с серым деревянным каркасом и изголовьем, выполненным в том же цвете. В нижней части расположены выдвижные ящики для хранения, что добавляет функциональности и экономии пространства. Ламели из дерева обеспечивают надежную поддержку.",
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230516-WA0000.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Витрины"
         ],
@@ -226,7 +226,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230516-WA0001.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Шкафы"
         ],
@@ -235,7 +235,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230516-WA0002.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Столы"
         ],
@@ -244,7 +244,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230516-WA0003.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Мебель для хранения"
         ],
@@ -253,7 +253,7 @@
         "image_local_saved_path": "C:\\Users\\user\\Documents\\repos\\hypotez\\data\\emil\\images\\IMG-20230516-WA0004.jpg"
     },
     {
-        "parent": [
+        "additional_categories_names": [
             "Мебель для гостиной",
             "Столы"
         ],

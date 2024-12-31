@@ -54,13 +54,10 @@ class EmilDesign:
         """ Initialize the EmilDesign class. """
         ...
 
-
-    def ai_find_category_for_image(self) -> bool:
-        """ Находит нужную категорию по описанию """
-        ...                                        
+    
 
 
-    def describe_images(self, from_url: str = False):
+    def describe_images(self, lang:str):
         """ Describe images based on the provided instruction and examples.
 
         Args:
@@ -68,70 +65,53 @@ class EmilDesign:
         """
         ...
 
-        # Define paths for system instructions, examples, images directory, and output file
-        system_instruction_path: Path = (
-            self.base_path 
-            / 'instructions'
-            / 'hand_made_furniture_he.txt'
-        )
+        # 1. Define paths for system instructions, examples, images directory, and output file
+        system_instruction: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture_{lang}.txt' ).read_text(encoding='UTF-8')
+        furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8')
+        system_instruction += furniture_categories
+        examples:str =  Path( self.base_path / 'instructions' / f'examples_{lang}.txt' ).read_text(encoding='UTF-8')
 
-        examples_path: Path = ( 
-            self.base_path 
-            / 'instructions'
-            / "examples_he.txt"
-        )
 
-        images_dir: Path = (
-            self.base_path
-            / "images"
-        )
+        output_file: Path = ( self.data_path /  f"images_descritions_{lang}.json" )
 
-        output_file: Path = (
-            self.base_path
-            /  "images_descritions_he.json"
-        )
         
-        base_url: str = r'https://emil-design.com/img/images_emil/'
-        trainig_data = read_text_file(system_instruction_path)
+        # 2. Initialize the AI model with the system instructions
+        use_openai:bool = False
+        if use_openai:
+            self.openai = OpenAIModel(system_instruction = system_instruction, assistant_id='asst_uDr5aVY3qRByRwt5qFiMDk43')
 
-        updated_images_path: Path = self.base_path / 'updated_images.txt'
+        use_gemini:bool = True
+        if use_gemini:
+            self.gemini = GoogleGenerativeAI(
+                    api_key= gs.credentials.telegram.emil ,
+                    system_instruction=system_instruction,
+                    generation_config={'response_mime_type': 'application/json'}
+                )
         
-        system_instruction = read_text_file(system_instruction_path)
-        examples = read_text_file(examples_path)
-        
-        # Prompt for the AI model
-        prompt: str = "איזה רהיטים מוצגים כאן?"
-        
-        # Initialize the AI model with the system instructions
-        model = OpenAIModel(system_instruction=system_instruction, assistant_id='asst_uDr5aVY3qRByRwt5qFiMDk43')
-        
-        # Ask the model to categorize examples
-        response = model.ask(examples, "this is example for build categories")
-        logger.info(response)
+        model = self.openai if use_openai else  use_gemini
 
-        updated_images_list: list = read_text_file(updated_images_path, as_list=True) or []
+        # 3. Define images paths
+        images_dir = self.data_path  / "images"
+        images_files_list: list = get_filenames( images_dir )
 
-        images_path_list: list = get_filenames(images_dir)
-        data: list = []
-        
-        for image_path in images_path_list:
-            if image_path in updated_images_list:
-                continue
+        # 4. Define output file
+        output_json: Path = Path(self.data_path  / f'out_{gs.now}_{lang}.json')
 
-            # Describe the image either from URL or local file
-            if from_url:
-                response = model.describe_image(str(base_url + image_path), prompt, system_instruction)  # <- url
-            else:
-                response = model.describe_image(images_dir / image_path, prompt, system_instruction)  # <- local file
+
+        data: list = [] # <- список всех обработанных данных
+        for img in images_files_list:
+
+            response = self.gemini.describe_image(images_dir / img)  
 
             if not response:
                 continue
 
             # Process the response into a structured format
             res_ns: SimpleNamespace = j_loads_ns(response)
-            setattr(res_ns, 'local_saved_image', str(Path(images_dir / image_path)))
+            
+            setattr(res_ns, 'local_saved_image', str( Path(images_dir / img) ) )
             data.append(res_ns)
-            j_dumps(data, output_file)
+            j_dumps(data, output_json)
             updated_images_list.append(image_path)
             save_text_file(updated_images_list, updated_images_path)
             logger.info(response)
@@ -178,6 +158,6 @@ class EmilDesign:
 
 if __name__ == "__main__":
     emil = EmilDesign()
-    emil.upload_to_prestashop()
-    # emil.describe_images()
+    #emil.upload_to_prestashop()
+    emil.describe_images()
     # emil.promote_to_facebook()
