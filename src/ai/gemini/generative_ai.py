@@ -1,4 +1,3 @@
-## \file hypotez/src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -10,13 +9,13 @@
    https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai.md
 """
 
-
+import asyncio
 import time
 import json
 from io import IOBase
 from pathlib import Path
 from datetime import datetime
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from types import SimpleNamespace
 import base64
 
@@ -41,55 +40,28 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 
 timeout_check = TimeoutCheck()
 
+
 class GoogleGenerativeAI:
     """
     Класс для взаимодействия с моделями Google Generative AI.
-
-    Этот класс используется для настройки и работы с моделью Google Generative AI, включая отправку запросов,
-    получение ответов и сохранение диалогов в текстовых и JSON файлах.
-
-    Атрибуты:
-        MODELS (List[str]): Список доступных моделей AI.
-        api_key (str): Ключ API для доступа к генеративной модели.
-        model_name (str): Название модели для использования.
-        generation_config (Dict): Конфигурация для генерации.
-        mode (str): Режим работы модели (например, 'debug' или 'production').
-        dialogue_log_path (Optional[Path]): Путь для логирования диалогов.
-        dialogue_txt_path (Optional[Path]): Путь для сохранения текстовых файлов диалогов.
-        history_dir (Path): Директория для хранения истории.
-        history_txt_file (Optional[Path]): Путь к файлу для хранения истории в формате текста.
-        history_json_file (Optional[Path]): Путь к файлу для хранения истории в формате JSON.
-        model (Optional[genai.GenerativeModel]): Объект модели Google Generative AI.
-        system_instruction (Optional[str]): Инструкция для системы, которая задает параметры поведения модели.
-
-    Пример использования:
-        >>> ai = GoogleGenerativeAI(api_key="your_api_key", system_instruction="Instruction")
-        >>> response = ai.ask("Как дела?")
-        >>> print(response)
     """
 
     MODELS = [
         "gemini-1.5-flash-8b",
         "gemini-2-13b",
-        "gemini-3-20b"
+        "gemini-3-20b",
     ]
 
-    def __init__(self, 
-                 api_key: str, 
-                 model_name: Optional[str] = None, 
-                 generation_config: Optional[Dict] = None, 
-                 system_instruction: Optional[str] = None, 
-                 **kwargs):
+    def __init__(
+        self,
+        api_key: str,
+        model_name: Optional[str] = None,
+        generation_config: Optional[Dict] = None,
+        system_instruction: Optional[str] = None,
+        **kwargs,
+    ):
         """
         Инициализация модели GoogleGenerativeAI с дополнительными настройками.
-
-        Этот метод настраивает модель AI, а также определяет пути для логирования и истории.
-
-        Аргументы:
-            api_key (str): Ключ API для доступа к генеративной модели.
-            model_name (Optional[str], optional): Название модели для использования. По умолчанию "gemini-1.5-flash-8b".
-            generation_config (Optional[Dict], optional): Конфигурация для генерации. По умолчанию {"response_mime_type": "text/plain"}.
-            system_instruction (Optional[str], optional): Инструкция для системы. По умолчанию None.
         """
         _now = gs.now
         self.api_key = api_key
@@ -97,25 +69,23 @@ class GoogleGenerativeAI:
         self.generation_config = generation_config or {"response_mime_type": "text/plain"}
         self.system_instruction = system_instruction
 
-        self.dialogue_log_path = gs.path.external_storage / 'AI' / 'log'
+        self.dialogue_log_path = gs.path.external_storage / "AI" / "log"
         self.dialogue_txt_path = self.dialogue_log_path / f"gemini_{_now}.txt"
-        self.history_dir = gs.path.external_storage / 'AI' / 'history'
+        self.history_dir = gs.path.external_storage / "AI" / "history"
         self.history_txt_file = self.history_dir / f"gemini_{_now}.txt"
         self.history_json_file = self.history_dir / f"gemini_{_now}.json"
 
         # Инициализация модели
         genai.configure(api_key=self.api_key)
         self.model = genai.GenerativeModel(
-            model_name=self.model_name,
-            generation_config=self.generation_config
+            model_name=self.model_name, generation_config=self.generation_config
         )
         self._chat = self._start_chat()
 
-
     @property
-    def config():
-        """ Получаю конфигурацию из файла настроек"""
-        return j_loads_ns(gs.path.src / 'ai' / 'gemini' / 'generative_ai.json')
+    def config(self):
+        """Получаю конфигурацию из файла настроек"""
+        return j_loads_ns(gs.path.src / "ai" / "gemini" / "generative_ai.json")
 
     def _start_chat(self):
         """"""
@@ -125,48 +95,30 @@ class GoogleGenerativeAI:
     def _save_dialogue(self, dialogue: list):
         """
         Сохранить диалог в текстовый и JSON файл с управлением размером файлов.
-
-        Этот метод сохраняет каждый диалог в текстовом и JSON формате для последующего анализа.
-
-        Аргументы:
-            dialogue (list): Список сообщений, представляющих диалог, который нужно сохранить.
         """
-        save_text_file(dialogue, self.history_txt_file, mode='+a')
+        save_text_file(dialogue, self.history_txt_file, mode="+a")
         for message in dialogue:
-            j_dumps(data=message, file_path=self.history_json_file, mode='+a')
-
+            j_dumps(data=message, file_path=self.history_json_file, mode="+a")
 
     async def ask(self, q: str, attempts: int = 15) -> Optional[str]:
         """
-        метод отправляет текстовый запрос модели и возвращает ответ.
-
-        Аргументы:
-            q (str): Вопрос, который будет отправлен модели.
-            attempts (int, optional): Количество попыток для получения ответа. По умолчанию 3.
-
-        Возвращает:
-            Optional[str]: Ответ от модели или None, если ответ не был получен.
-
-        Пример:
-            >>> ai = GoogleGenerativeAI(api_key="your_api_key")
-            >>> response = ai.ask("Какая погода сегодня?")
-            >>> print(response)
-        TODO: 
-            препарировать `response`
+        Метод отправляет текстовый запрос модели и возвращает ответ.
         """
-        ### self.model.
         for attempt in range(attempts):
             try:
-                response = self.model.generate_content(q)
+                response = await self.model.generate_content_async(q)
+                response = await response.resolve()
 
-                if not response:
-                    logger.debug(f"No response from the model. Attempt: {attempt}\nSleeping for {2 ** attempt}")
-                    time.sleep(2 ** attempt)
+                if not response.text:
+                    logger.debug(
+                        f"No response from the model. Attempt: {attempt}\nSleeping for {2 ** attempt}"
+                    )
+                    time.sleep(2**attempt)
                     continue  # Повторить попытку
 
                 messages = [
                     {"role": "user", "content": q},
-                    {"role": "assistant", "content": response.text}
+                    {"role": "assistant", "content": response.text},
                 ]
 
                 # self._save_dialogue([messages])
@@ -177,7 +129,11 @@ class GoogleGenerativeAI:
                 max_attempts = 5
                 if attempt > max_attempts:
                     break
-                logger.debug(f"Network error. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
+                logger.debug(
+                    f"Network error. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
+                    ex,
+                    None,
+                )
                 time.sleep(timeout)
                 continue  # Повторить попытку
             except (GatewayTimeout, ServiceUnavailable) as ex:
@@ -186,104 +142,173 @@ class GoogleGenerativeAI:
                 max_attempts = 3
                 if attempt > max_attempts:
                     break
-                time.sleep(2 ** attempt)
+                time.sleep(2**attempt)
                 continue
             except ResourceExhausted as ex:
                 timeout = 10800
-                logger.debug(f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
+                logger.debug(
+                    f"Quota exceeded. Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
+                    ex,
+                    None,
+                )
                 time.sleep(timeout)
                 continue
             except (DefaultCredentialsError, RefreshError) as ex:
-                logger.error("Authentication error:",ex,None)
+                logger.error("Authentication error:", ex, None)
                 return  # Прекратить попытки, если ошибка аутентификации
             except (ValueError, TypeError) as ex:
                 max_attempts = 3
                 if attempt > max_attempts:
                     break
                 timeout = 5
-                logger.error(f"Invalid input: Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",ex,None)
+                logger.error(
+                    f"Invalid input: Attempt: {attempt}\nSleeping for {timeout/60} min on {gs.now}",
+                    ex,
+                    None,
+                )
                 time.sleep(timeout)
-                continue  
+                continue
             except (InvalidArgument, RpcError) as ex:
-                logger.error("API error:",ex,None)
+                logger.error("API error:", ex, None)
                 return
             except Exception as ex:
-                logger.error("Unexpected error:",ex,None)
+                logger.error("Unexpected error:", ex, None)
                 return
 
         return
 
-    def chat(self, q:str) -> str:
+    async def chat(self, q: str) -> str:
         """"""
         ...
         response = None
         try:
-            response = self._chat.send_message(q)
+            response = await self._chat.send_message_async(q)
+            response = await response.resolve()
             return response.text
         except Exception as ex:
-            logger.error(f"Ошибка чата {response=}",ex)
+            logger.error(f"Ошибка чата {response=}", ex)
             ...
             return
 
-    def describe_image(self, image_path: Path) -> Optional[str]:
+    async def describe_image(
+        self, image_path: Path, prompt: Optional[str] = None
+    ) -> Optional[str]:
         """
-        Генерирует описание изображения.
+        Отправляет изображение в Gemini Pro Vision и возвращает его текстовое описание.
 
-        Этот метод отправляет изображение в модель для анализа и получает текстовое описание изображения.
-        Формат ответа задается промптом на стороне клиента
+        Args:
+            image_path: Путь к файлу изображения.
 
-        Аргументы:
-            image_path (Path): Путь к изображению, которое нужно описать.
-
-        Возвращает:
-            Optional[str]: Описание изображения или None, если произошла ошибка.
-
-        Пример:
-            >>> ai = GoogleGenerativeAI(api_key="your_api_key")
-            >>> description = ai.describe_image(Path("path/to/image.jpg"))
-            >>> print(description)
+        Returns:
+            str: Текстовое описание изображения.
+            None: Если произошла ошибка.
         """
         try:
-            with image_path.open('rb') as f:
-                encoded_image = base64.b64encode(f.read()).decode('utf-8')
+            # Чтение изображения как байтов
+            with open(image_path, "rb") as image_file:
+                image_data = image_file.read()
 
-            response = self.model.generate_content(encoded_image)
-            return response.text
+            # Подготовка контента для запроса
+            contents = [
+                {
+                    "mime_type": "image/jpeg",  # Измените на mime-тип вашего изображения
+                    "data": image_data,
+                },
+                "Опиши это изображение." if prompt is None else prompt,
+            ]
 
-        except Exception as ex:
-            logger.error(f"Error describing image:" , ex)
-            return
+            # Отправка запроса и получение ответа
+            response = await self.model.generate_content_async(contents)
+            #response = response.resolve()
 
-    def upload_file(self, file: str | Path | IOBase, file_name:Optional[str] = None) -> bool:
+            if response.text:
+                return response.text
+            else:
+                print("Модель вернула пустой ответ.")
+                return None
+
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+            return None
+
+    async def upload_file(
+        self, file: str | Path | IOBase, file_name: Optional[str] = None
+    ) -> bool:
         """
         https://github.com/google-gemini/generative-ai-python/blob/main/docs/api/google/generativeai/upload_file.md
+        response (file_types.File)
         """
-        
+
         response = None
         try:
-            response =  genai.upload_file( 
-                    path = file,
-                    mime_type = None,
-                    name = file_name,
-                    display_name = file_name,
-                    resumable = True
-                )
+            response = await genai.upload_file_async(
+                path=file,
+                mime_type=None,
+                name=file_name,
+                display_name=file_name,
+                resumable=True,
+            )
             logger.debug(f"Файл {file_name} записан", None, False)
             return response
         except Exception as ex:
             logger.error(f"Ошибка записи файла {file_name=}", ex, False)
             try:
-                response = genai.delete_file(file_name)
+                response = await genai.delete_file_async(file_name)
                 logger.debug(f"Файл {file_name} удален", None, False)
-                self.upload_file(file,file_name)
+                await self.upload_file(file, file_name)
             except Exception as ex:
-                logger.error(f"Общая ошибка модели: ", ex, False)   
+                logger.error(f"Общая ошибка модели: ", ex, False)
                 ...
                 return
 
 
+async def main():
+    # Замените на свой ключ API
+    api_key = "YOUR_API_KEY"
+    ai = GoogleGenerativeAI(api_key=api_key)
 
+    # Пример вызова describe_image с промптом
+    image_path = Path(r"test.jpg")  # Замените на путь к вашему изображению
+
+    if not image_path.is_file():
+        print(
+            f"Файл {image_path} не существует. Поместите в корневую папку с программой файл с названием test.jpg"
+        )
+    else:
+        prompt = """Проанализируй это изображение. Выдай ответ в формате JSON, 
+        где ключом будет имя объекта, а значением его описание.
+         Если есть люди, опиши их действия."""
+
+        description = await ai.describe_image(image_path, prompt=prompt)
+        if description:
+            print("Описание изображения (с JSON форматом):")
+            print(description)
+            try:
+                parsed_description = j_loads(description)
+                print("Парсинг json:")
+                pprint(parsed_description)
+
+            except Exception as ex:
+                print("Не удалось распарсить JSON. Получен текст:")
+                print(description)
+
+        else:
+            print("Не удалось получить описание изображения.")
+
+        # Пример без JSON вывода
+        prompt = "Проанализируй это изображение. Перечисли все объекты, которые ты можешь распознать."
+        description = await ai.describe_image(image_path, prompt=prompt)
+        if description:
+            print("Описание изображения (без JSON формата):")
+            print(description)
+    
+    file_path = Path('test.txt')
+    with open(file_path, "w") as f:
+        f.write("Hello, Gemini!")
+
+    file_upload = await ai.upload_file(file_path,'test_file.txt')
+    print(file_upload)
 
 
 if __name__ == "__main__":
-    ...
+    asyncio.run(main())

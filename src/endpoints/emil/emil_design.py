@@ -11,12 +11,12 @@ from __future__ import annotations
 
 """
 
-
-import header
+import asyncio
 from pathlib import Path
 from types import SimpleNamespace
 import time
 
+import header
 from src import gs, logger
 from src.endpoints.prestashop.api.api import PrestaShop
 
@@ -57,7 +57,7 @@ class EmilDesign:
     
 
 
-    def describe_images(self, lang:str):
+    async def describe_images(self, lang:str):
         """ Describe images based on the provided instruction and examples.
 
         Args:
@@ -66,8 +66,8 @@ class EmilDesign:
         ...
 
         # 1. Define paths for system instructions, examples, images directory, and output file
-        system_instruction: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture_{lang}.txt' ).read_text(encoding='UTF-8')
-        furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8')
+        system_instruction: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture_{lang}.md' ).read_text(encoding='UTF-8')
+        furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8').replace(r'\n','').replace(r'\t','')
         system_instruction += furniture_categories
         examples:str =  Path( self.base_path / 'instructions' / f'examples_{lang}.txt' ).read_text(encoding='UTF-8')
 
@@ -83,15 +83,15 @@ class EmilDesign:
         use_gemini:bool = True
         if use_gemini:
             self.gemini = GoogleGenerativeAI(
-                    api_key= gs.credentials.telegram.emil ,
+                    api_key= gs.credentials.gemini.emil ,
                     system_instruction=system_instruction,
                     generation_config={'response_mime_type': 'application/json'}
                 )
         
-        model = self.openai if use_openai else  use_gemini
+
 
         # 3. Define images paths
-        images_dir = self.data_path  / "images"
+        images_dir = self.data_path  / 'images' / 'furniture_images'
         images_files_list: list = get_filenames( images_dir )
 
         # 4. Define output file
@@ -100,8 +100,8 @@ class EmilDesign:
 
         data: list = [] # <- список всех обработанных данных
         for img in images_files_list:
-
-            response = self.gemini.describe_image(images_dir / img)  
+            prompt = Path(self.base_path / 'instructions' / f'describe_image_command_{lang}.md')
+            response = await self.gemini.describe_image(images_dir / img, prompt='')  
 
             if not response:
                 continue
@@ -119,7 +119,7 @@ class EmilDesign:
             # time.sleep(20)
             ...
 
-    def promote_to_facebook(self):
+    async def promote_to_facebook(self):
         """ Promote images and their descriptions to Facebook.
 
         This function logs into Facebook and posts messages derived from the image descriptions.
@@ -138,7 +138,7 @@ class EmilDesign:
             post_message(d, message, without_captions=True)
             ...
 
-    def upload_to_prestashop(self):
+    async def upload_to_prestashop(self):
         """
         Поднимаю на сервер изображения из сохраненного файла описаний.
         Файл описаний мне делает телеграм
@@ -159,5 +159,5 @@ class EmilDesign:
 if __name__ == "__main__":
     emil = EmilDesign()
     #emil.upload_to_prestashop()
-    emil.describe_images()
+    asyncio.run( emil.describe_images(lang='he')  )
     # emil.promote_to_facebook()

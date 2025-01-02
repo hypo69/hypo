@@ -10,5 +10,6 @@
     "gemini-2.0-flash-exp",
     "gemini-1.5-flash-8b-exp-0924",
     "gemini-1.5-flash"
-  ]
+  ],
+  "response_mime_types": [ "plain/text", "application/json", "image/png" ]
 } 
