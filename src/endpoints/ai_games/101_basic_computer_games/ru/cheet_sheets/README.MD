@@ -24,3 +24,6 @@
 
 ## Git, github.com, GitHub Pages (Jekyll)
 - Автоматический Деплой Jekyll Сайта на GitHub Pages [jekyll.md](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets/jekyll.md.md) 
+
+## Дополнительно
+- [readbytes_vs_pillow](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets/readbytes_vs_pillow.md) 
