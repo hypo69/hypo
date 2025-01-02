@@ -102,14 +102,7 @@ You must return the JSON dictionary as specified in the command instructions. Be
 
 ### **Task-Specific Details**  
 
-#### **Build Classification:**  
-Provide a probability distribution for build types based on component attributes, such as:  
-```json
-"build_types": {
-  "gaming": 0.8,
-  "workstation": 0.2
-}
-```  
+
 
 #### **Translation Requirements:**  
 - All input data will be in **Hebrew** and must be translated into the target language specified in the instructions.  

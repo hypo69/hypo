@@ -170,9 +170,8 @@ class ExecuteLocator:
                         return locator.attribute
 
             except Exception as ex:
-                if MODE in ('dev','debug'):
-                    logger.debug(f"Locator Error: {locator=}")
-                    ...
+                logger.debug(f"Locator Error: {locator=}")
+                ...
                 return
 
             if locator.event:
@@ -260,8 +259,7 @@ class ExecuteLocator:
 
         web_element: WebElement = await self.get_webelement_by_locator(locator, timeout, timeout_for_event)
         if not web_element:
-            if MODE in ('dev','debug'):
-                logger.debug(f"Не нашелся : {locator=}\n", None, False)
+            logger.debug(f"Не нашелся : {locator=}\n", None, False)
             ...
             return
 
@@ -280,12 +278,11 @@ class ExecuteLocator:
                     for k, v in (pair.split(":") for pair in attr_string.strip("{}").split(","))
                 }
             except ValueError as ex:
-                if MODE in ('dev','debug'):
-                    logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
+                logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
+                ...
                 return
-            except Exception as ex:
-                if MODE in ('dev','debug'):
-                    logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
+                logger.debug(f"Invalid attribute string format: {pprint(attr_string, text_color='WHITE', bg_color='RED')}\n", ex, False)
+                ...
                 return
 
         def _get_attributes_from_dict(web_element: WebElement, attr_dict: dict) -> dict:
@@ -305,9 +302,7 @@ class ExecuteLocator:
                     attr_value = web_element.get_attribute(value)
                     result[attr_key] = attr_value
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.debug(
-                            f"Error retrieving attributes '{key}' or '{value}' from element.", ex, False)
+                    logger.debug(f"Error retrieving attributes '{key}' or '{value}' from element.", ex, False)
                     ...
                     return
             return result
@@ -328,8 +323,8 @@ class ExecuteLocator:
                         ret.append(f'{e.get_attribute(locator.attribute)}')
                     return ret if len(ret) > 1 else ret[0]
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", ex, False)
+                    logger.debug(f"Error in get_attribute(): {pprint(locator, text_color='YELLOW', bg_color='BLACK')}\n", ex, False)
+                    ...
                     return
             
             return web_element.get_attribute(locator.attribute)
@@ -393,7 +388,9 @@ class ExecuteLocator:
         try:
             # Если timeout = 0, сразу попытаться найти элемент без ожидания
             if timeout == 0:
-                web_elements = driver.find_elements(locator.by, locator.selector)
+                        web_elements = await asyncio.to_thread(
+                            driver.find_elements, locator.by, locator.selector
+                        )
             else:
                 # Выбор условия ожидания
                 condition = (
@@ -411,14 +408,12 @@ class ExecuteLocator:
 
             return await _parse_elements_list(web_elements, locator)
         except TimeoutException as ex:
-            if MODE in ('dev', 'debug'):
-                logger.error(f'Таймаут для локатора: {locator}', ex, False)
-                ...
+            logger.error(f'Таймаут для локатора: {locator}', ex, False)
+            ...
             return None
         except Exception as ex:
-            if MODE in ('dev', 'debug'):
-                logger.error(f'Ошибка локатора: {locator}', ex, False)
-                ...
+            logger.error(f'Ошибка локатора: {locator}', ex, False)
+            ...
             return None
 
 
@@ -509,14 +504,12 @@ class ExecuteLocator:
                     # result.append(True)
                     continue
                 except ElementClickInterceptedException as ex:
-                    if MODE in ('dev','debug'): 
-                        logger.error(f"Element click intercepted:  {locator=}\n", ex, False)
-                        ...
+                    logger.error(f"Element click intercepted:  {locator=}\n", ex, False)
+                    ...
                     return 
                 except Exception as ex:
-                    if MODE in ('dev','debug'): 
-                        logger.error(f"Element click intercepted: {locator=}\n", ex, False)
-                        ...
+                    logger.error(f"Element click intercepted: {locator=}\n", ex, False)
+                    ...
                     return 
 
             elif event.startswith("pause("):
@@ -526,41 +519,38 @@ class ExecuteLocator:
                     await asyncio.sleep(pause_duration)
                     result.append(True)
                     continue
-                if MODE in ('dev','debug'):
-                    logger.debug(f"Должна быть пауза, но что-то не срослось: {locator=}\n")
-                    ...
+                logger.debug(f"Должна быть пауза, но что-то не срослось: {locator=}\n")
+                ...
                 return False
 
             elif event == "upload_media()":
                 if not message:
-                    if MODE in ('dev','debug'):
-                        logger.debug(f"Message is required for upload_media event. Message: {pprint(message, text_color='WHITE',bg_color='RED')}", None, False)
+                    logger.debug(f"Message is required for upload_media event. Message: {pprint(message, text_color='WHITE',bg_color='RED')}", None, False)
+                    ... 
                     return False
                 try:
                     await asyncio.to_thread(webelement.send_keys, message)
                     result.append(True)
                     continue
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.debug(f"Error uploading media: {message=}", ex, False)
-                        ...
+                    logger.debug(f"Error uploading media: {message=}", ex, False)
+                    ...
                     return False
 
             elif event == "screenshot()":
                 try:
                     result.append(await self.get_webelement_as_screenshot(locator, webelement=webelement))
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.error(f"Error taking screenshot: {locator=}", ex, False)
-                        ...
+                    logger.error(f"Error taking screenshot: {locator=}", ex, False)
+                    ...
                     return False
 
             elif event == "clear()":
                 try:
                     await asyncio.to_thread(webelement.clear)
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.error(f"Error clearing element: {locator=}", ex, False)
+                    logger.error(f"Error clearing element: {locator=}", ex, False)
+                    ...
                     return False
 
             elif event.startswith("send_keys("):
@@ -574,8 +564,8 @@ class ExecuteLocator:
                             actions.send_keys(key_to_send)
                     await asyncio.to_thread(actions.perform)
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.error(f"Error sending keys: {locator=}", ex, False)
+                    logger.error(f"Error sending keys: {locator=}", ex, False)
+                    ...    
                     return False
 
             elif event.startswith("type("):
@@ -672,8 +662,7 @@ class ExecuteLocator:
                             self.actions.pause(typing_speed)
                             self.actions.perform()
                 except Exception as ex:
-                    if MODE in ('dev','debug'):
-                        logger.error(f"Error typing message\n{message=}\n{word=}\n{letter=}\n", ex)
+                    logger.error(f"Error typing message\n{message=}\n{word=}\n{letter=}\n", ex)
                     ...
                     continue  # <- если была ошибка в передаче буквы - пока игнорую ёё
                     """ TODO:

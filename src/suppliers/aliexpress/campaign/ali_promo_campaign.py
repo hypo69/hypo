@@ -52,7 +52,8 @@ from src import gs
 from src.suppliers.aliexpress import campaign
 from src.suppliers.aliexpress.affiliated_products_generator import AliAffiliatedProducts
 from src.suppliers.aliexpress.utils import locales
-from src.ai import GoogleGenerativeAI, OpenAIModel
+from src.ai.gemini import GoogleGenerativeAI
+from src.ai.openai import OpenAIModel
 from src.suppliers.aliexpress.campaign.html_generators import (
     ProductHTMLGenerator,
     CategoryHTMLGenerator,

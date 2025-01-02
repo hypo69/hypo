@@ -18,7 +18,7 @@ from __future__ import annotations
 
 """
 
-
+import time
 from typing import Any
 import header
 from src import gs
@@ -60,7 +60,7 @@ class Graber(Grbr):
         """Инициализация класса сбора полей товара."""
         self.supplier_prefix = 'ksp'
         super().__init__(supplier_prefix=self.supplier_prefix, driver=driver)
- 
+        time.sleep(3)
         if '/mob/' in self.driver.current_url: # <- бывет, что подключается к мобильной версии сайта
             self.locator = j_loads_ns(gs.path.src / 'suppliers' / 'ksp' / 'locators' / 'product_mobile_site.json')
             logger.info("Установлены локаторы для мобильной версии сайта KSP")

@@ -17,9 +17,7 @@
   "ru": {
     "title": "Высокопроизводительный игровой компьютер",
     "description": "Современный компьютер для требовательных игр и приложений. Включает Intel i7-14700F, Gigabyte RTX 4070, DDR4 RAM 16GB и SSD Kingston 4TB.",
-    "build_types": {
-      "gaming": 0.9,
-      "workstation": 0.1
+   
     },
     "products": [
       {

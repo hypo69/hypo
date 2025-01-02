@@ -69,12 +69,9 @@ class EmilDesign:
         system_instruction: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture_{lang}.md' ).read_text(encoding='UTF-8')
         furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8').replace(r'\n','').replace(r'\t','')
         system_instruction += furniture_categories
-        examples:str =  Path( self.base_path / 'instructions' / f'examples_{lang}.txt' ).read_text(encoding='UTF-8')
-
-
+        examples:str =  Path( self.base_path / 'instructions' / f'examples_{lang}.md' ).read_text(encoding='UTF-8')
         output_file: Path = ( self.data_path /  f"images_descritions_{lang}.json" )
 
-        
         # 2. Initialize the AI model with the system instructions
         use_openai:bool = False
         if use_openai:
@@ -100,10 +97,12 @@ class EmilDesign:
 
         data: list = [] # <- список всех обработанных данных
         for img in images_files_list:
-            prompt = Path(self.base_path / 'instructions' / f'describe_image_command_{lang}.md')
-            response = await self.gemini.describe_image(images_dir / img, prompt='')  
+            prompt = Path(self.base_path / 'instructions' / f'describe_image_command_{lang}.md').read_text(encoding='UTF-8')
+            img_data = 
+            response = await self.gemini.chat(images_dir / img, prompt = prompt)  
 
             if not response:
+                ...
                 continue
 
             # Process the response into a structured format

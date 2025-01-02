@@ -17,9 +17,6 @@
   "he": {
     "title": "מחשב גיימינג בעל ביצועים גבוהים",
     "description": "מחשב מודרני למשחקים ותוכנות תובעניים. כולל מעבד Intel i7-14700F, כרטיס מסך Gigabyte RTX 4070, זיכרון RAM DDR4 בנפח 16GB ו-SSD Kingston בנפח 4TB.",
-    "build_types": {
-      "gaming": 0.9,
-      "workstation": 0.1
     },
     "products": [
       {

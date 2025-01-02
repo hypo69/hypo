@@ -72,6 +72,9 @@ from PIL import Image
 from pathlib import Path
 import asyncio
 import random
+from pathlib import Path
+from PIL import Image
+from io import BytesIO
 from src.logger.logger import logger
 from src.utils.printer import pprint
 
@@ -145,28 +148,49 @@ async def save_png(image_data: bytes, file_name: str | Path) -> str | None:
     return str(file_path)
 
 
-def get_image_data(file_name: str | Path) -> bytes | None:
-    """Retrieve binary data of a file if it exists.
 
-    :param file_name: The name of the file to read.
-    :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
-
-    :example:
-        >>> get_image_data("saved_image.png")
-        b'\x89PNG\r\n...'
+def get_image_bytes(image_path: Path) -> bytes | None:
     """
-    file_path = Path(file_name)
+    Читает изображение с помощью Pillow и возвращает его как байты JPEG.
 
-    if not file_path.exists():
-        logger.error(f"File {file_path} does not exist.")
-        return
+    Args:
+        image_path: Путь к файлу изображения.
 
+    Returns:
+            bytes: Байты изображения в формате JPEG.
+            None: Если произошла ошибка.
+    """
     try:
-        with open(file_path, "rb") as file:
-            return file.read()
+        img = Image.open(image_path)
+        img_byte_arr = BytesIO()
+        img.save(img_byte_arr, format="JPEG")
+        return img_byte_arr.getvalue()
     except Exception as ex:
-        logger.error(f"Error reading file {file_path}", ex, exc_info=True)
-        return
+        logger.error(f"Ошибка чтения изображения с Pillow:", ex)
+        return None
+
+# def get_image_data(file_name: str | Path) -> bytes | None:
+#     """Retrieve binary data of a file if it exists.
+
+#     :param file_name: The name of the file to read.
+#     :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
+
+#     :example:
+#         >>> get_image_data("saved_image.png")
+#         b'\x89PNG\r\n...'
+#     """
+#     file_path = Path(file_name)
+
+#     if not file_path.exists():
+#         logger.error(f"File {file_path} does not exist.")
+#         return
+
+#     try:
+#         with open(file_path, "rb") as file:
+#             return file.read()
+#     except Exception as ex:
+#         logger.error(f"Error reading file {file_path}", ex, exc_info=True)
+#         return
 
 
 def random_image(root_path: str | Path) -> str | None:

@@ -37,6 +37,7 @@ from src.utils.file import read_text_file, save_text_file
 from src.utils.date_time import TimeoutCheck
 from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
+from src.utils.image import read_image_pillow
 
 timeout_check = TimeoutCheck()
 
@@ -81,6 +82,8 @@ class GoogleGenerativeAI:
             model_name=self.model_name, generation_config=self.generation_config
         )
         self._chat = self._start_chat()
+        self.chat_history = []
+
 
     @property
     def config(self):
@@ -89,8 +92,10 @@ class GoogleGenerativeAI:
 
     def _start_chat(self):
         """"""
-        ...
-        return self.model.start_chat(history=[])
+        if self.system_instruction:
+             return self.model.start_chat(history=[{"role": "user", "parts": [self.system_instruction]}])
+        else:
+            return self.model.start_chat(history=[])
 
     def _save_dialogue(self, dialogue: list):
         """
@@ -107,7 +112,7 @@ class GoogleGenerativeAI:
         for attempt in range(attempts):
             try:
                 response = await self.model.generate_content_async(q)
-                response = await response.resolve()
+                #response = response.resolve()
 
                 if not response.text:
                     logger.debug(
@@ -177,17 +182,22 @@ class GoogleGenerativeAI:
 
         return
 
-    async def chat(self, q: str) -> str:
+    async def chat(self, q: str) -> Optional[str]:
         """"""
-        ...
         response = None
         try:
             response = await self._chat.send_message_async(q)
             response = await response.resolve()
-            return response.text
+            if response and response.text:
+                self.chat_history.append({"role": "user", "parts": [q]})
+                self.chat_history.append({"role": "assistant", "parts": [response.text]})
+                self._save_dialogue(self.chat_history)
+                return response.text
+            else:
+                logger.error("Empty response in chat", None)
+                return
         except Exception as ex:
             logger.error(f"Ошибка чата {response=}", ex)
-            ...
             return
 
     async def describe_image(
@@ -204,18 +214,15 @@ class GoogleGenerativeAI:
             None: Если произошла ошибка.
         """
         try:
-            # Чтение изображения как байтов
-            with open(image_path, "rb") as image_file:
-                image_data = image_file.read()
-
             # Подготовка контента для запроса
             contents = [
                 {
                     "mime_type": "image/jpeg",  # Измените на mime-тип вашего изображения
-                    "data": image_data,
+                    "data":  read_image_pillow(image_path),
                 },
-                "Опиши это изображение." if prompt is None else prompt,
+                prompt if prompt else "Опиши это изображение.",
             ]
+
 
             # Отправка запроса и получение ответа
             response = await self.model.generate_content_async(contents)
@@ -265,7 +272,8 @@ class GoogleGenerativeAI:
 async def main():
     # Замените на свой ключ API
     api_key = "YOUR_API_KEY"
-    ai = GoogleGenerativeAI(api_key=api_key)
+    system_instruction = "Ты - полезный ассистент. Отвечай на все вопросы кратко"
+    ai = GoogleGenerativeAI(api_key=api_key, system_instruction=system_instruction)
 
     # Пример вызова describe_image с промптом
     image_path = Path(r"test.jpg")  # Замените на путь к вашему изображению
@@ -308,6 +316,19 @@ async def main():
 
     file_upload = await ai.upload_file(file_path,'test_file.txt')
     print(file_upload)
+    
+
+    # Пример чата
+    while True:
+        user_message = input("You: ")
+        if user_message.lower() == 'exit':
+            break
+        ai_message = await ai.chat(user_message)
+        if ai_message:
+           print(f"Gemini: {ai_message}")
+        else:
+            print("Gemini: Ошибка получения ответа")
+       
 
 
 if __name__ == "__main__":

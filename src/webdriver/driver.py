@@ -211,7 +211,7 @@ class Driver:
             _previous_url = copy.copy(self.current_url)
         except Exception as ex:
             logger.error("Ошибка при получении текущего URL", ex)
-            return False
+            #return False
         
         try:
             self.driver.get(url)

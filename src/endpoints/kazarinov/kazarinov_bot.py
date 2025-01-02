@@ -99,7 +99,7 @@ class KazarinovTelegramBot(TelegramBot, BotHandler):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Kazarinov Telegram Bot with specified mode.")
-    parser.add_argument('-m', '--mode', type=str, default='test', help="Operating mode: 'test' or 'production'")
+    parser.add_argument('-m', '--mode', type=str, default='prod', help="Operating mode: 'test' or 'production'")
     args = parser.parse_args()
 
     mode = args.mode
