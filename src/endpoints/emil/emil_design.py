@@ -33,6 +33,7 @@ from src.endpoints.advertisement.facebook.scenarios.post_message import post_mes
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
 from src.logger.logger import logger
+from src.utils.image import get_image_bytes
 
 class EmilDesign:
     """ Class for designing and promoting images through various platforms. """
@@ -53,9 +54,6 @@ class EmilDesign:
     def __init__(self):
         """ Initialize the EmilDesign class. """
         ...
-
-    
-
 
     async def describe_images(self, lang:str):
         """ Describe images based on the provided instruction and examples.
@@ -98,22 +96,23 @@ class EmilDesign:
         data: list = [] # <- список всех обработанных данных
         for img in images_files_list:
             prompt = Path(self.base_path / 'instructions' / f'describe_image_command_{lang}.md').read_text(encoding='UTF-8')
-            img_data = 
-            response = await self.gemini.chat(images_dir / img, prompt = prompt)  
+            img_data = get_image_bytes(images_dir / img)
+            response = await self.gemini.chat(img_data, prompt = prompt)  
 
             if not response:
                 ...
                 continue
-
+            logger.info(response)
+            ...
             # Process the response into a structured format
             res_ns: SimpleNamespace = j_loads_ns(response)
             
             setattr(res_ns, 'local_saved_image', str( Path(images_dir / img) ) )
             data.append(res_ns)
             j_dumps(data, output_json)
-            updated_images_list.append(image_path)
-            save_text_file(updated_images_list, updated_images_path)
-            logger.info(response)
+            #updated_images_list.append(image_path)
+            #save_text_file(updated_images_list, updated_images_path)
+            
             # logger.debug("going sleep", None, False)
             # time.sleep(20)
             ...

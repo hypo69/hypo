@@ -6,8 +6,8 @@
 """
 .. module:: src.logger.logger
     :platform: Windows, Unix
-    :synopsis: Модуль определяющий корневой путь к проекту. Все импорты строятся относительно этого пути.
-    :TODO: В дальнейшем перенести в системную переменную
+    :synopsis: Модуль логгера
+   
 """
 
 
@@ -24,7 +24,9 @@ from types import SimpleNamespace
 import header
 from header import __root__
 
-# Словарь для текстовых цветов
+
+
+
 TEXT_COLORS = {
     "black": colorama.Fore.BLACK,
     "red": colorama.Fore.RED,
@@ -83,19 +85,10 @@ class JsonFormatter(logging.Formatter):
 
     def format(self, record):
         """ Format the log record as JSON."""
-        # log_entry = {
-        #     "asctime": self.formatTime(record, self.datefmt),
-        #     "name": record.name,
-        #     "levelname": record.levelname,
-        #     "message": record.getMessage(),
-        #     "exc_info": self.formatException(record.exc_info)
-        #     if record.exc_info
-        #     else None,
-        # }
         log_entry = {
             "asctime": self.formatTime(record, self.datefmt),
             "levelname": record.levelname,
-            "message": record.getMessage().replace('"',"'"),
+            "message": record.getMessage().replace('"', "'"),
             "exc_info": self.formatException(record.exc_info)
             if record.exc_info
             else None,
@@ -106,26 +99,32 @@ class JsonFormatter(logging.Formatter):
 
 class Logger(metaclass=SingletonMeta):
     """ Logger class implementing Singleton pattern with console, file, and JSON logging."""
-    log_files_path:Path
-    info_log_path:Path
-    debug_log_path:Path
-    errors_log_path:Path
-    json_log_path:Path
-    def __init__(self, info_log_path: Optional[str] = None, 
-                 debug_log_path: Optional[str] = None, 
-                 errors_log_path: Optional[str] = None, 
-                 json_log_path: Optional[str] = None):
+    log_files_path: Path
+    info_log_path: Path
+    debug_log_path: Path
+    errors_log_path: Path
+    json_log_path: Path
+
+    def __init__(
+        self,
+        info_log_path: Optional[str] = None,
+        debug_log_path: Optional[str] = None,
+        errors_log_path: Optional[str] = None,
+        json_log_path: Optional[str] = None,
+    ):
         """ Initialize the Logger instance."""
         # Define file paths
-        config = SimpleNamespace(**json.loads(Path(__root__ / 'src' / 'config.json').read_text(encoding='UTF-8')))
+        config = SimpleNamespace(
+            **json.loads(Path(__root__ / "src" / "config.json").read_text(encoding="UTF-8"))
+        )
         timestamp = datetime.datetime.now().strftime("%d%m%y%H%M")
-        base_path:Path = Path(config.path['log'])  
-        self.log_files_path:Path = base_path / timestamp 
+        base_path: Path = Path(config.path["log"])
+        self.log_files_path: Path = base_path / timestamp
 
-        self.info_log_path =  self.log_files_path / (info_log_path or 'info.log')
-        self.debug_log_path = self.log_files_path / (debug_log_path or  'debug.log')
-        self.errors_log_path = self.log_files_path / (errors_log_path or  'errors.log')
-        self.json_log_path =  base_path / (json_log_path or  f'{timestamp}.json')
+        self.info_log_path = self.log_files_path / (info_log_path or "info.log")
+        self.debug_log_path = self.log_files_path / (debug_log_path or "debug.log")
+        self.errors_log_path = self.log_files_path / (errors_log_path or "errors.log")
+        self.json_log_path = base_path / (json_log_path or f"{timestamp}.json")
 
         # Ensure directories exist
         self.log_files_path.mkdir(parents=True, exist_ok=True)
@@ -137,32 +136,30 @@ class Logger(metaclass=SingletonMeta):
         self.json_log_path.touch(exist_ok=True)
 
         # Console logger
-        self.logger_console = logging.getLogger(name= 'logger_console')
+        self.logger_console = logging.getLogger(name="logger_console")
         self.logger_console.setLevel(logging.DEBUG)
-        # console_handler = logging.StreamHandler()
-        # console_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
-        # self.logger_console.addHandler(console_handler)
 
         # Info file logger
-        self.logger_file_info = logging.getLogger(name='logger_file_info')
+        self.logger_file_info = logging.getLogger(name="logger_file_info")
         self.logger_file_info.setLevel(logging.INFO)
         info_handler = logging.FileHandler(self.info_log_path)
         info_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
         self.logger_file_info.addHandler(info_handler)
 
         # Debug file logger
-        self.logger_file_debug = logging.getLogger(name='logger_file_debug')
+        self.logger_file_debug = logging.getLogger(name="logger_file_debug")
         self.logger_file_debug.setLevel(logging.DEBUG)
         debug_handler = logging.FileHandler(self.debug_log_path)
         debug_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
         self.logger_file_debug.addHandler(debug_handler)
 
         # Errors file logger
-        self.logger_file_errors =  logging.getLogger(name='logger_file_errors')
+        self.logger_file_errors = logging.getLogger(name="logger_file_errors")
         self.logger_file_errors.setLevel(logging.ERROR)
         errors_handler = logging.FileHandler(self.errors_log_path)
         errors_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
         self.logger_file_errors.addHandler(errors_handler)
+
 
         # JSON file logger
         self.logger_file_json = logging.getLogger(name='logger_json')
@@ -170,6 +167,8 @@ class Logger(metaclass=SingletonMeta):
         json_handler = logging.FileHandler(self.json_log_path)
         json_handler.setFormatter(JsonFormatter())  # Используем наш кастомный форматтер
         self.logger_file_json.addHandler(json_handler)
+
+
         # Удаляем все обработчики, которые выводят в консоль
         for handler in self.logger_file_json.handlers:
             if isinstance(handler, logging.StreamHandler):
@@ -206,8 +205,8 @@ class Logger(metaclass=SingletonMeta):
 #
 #           Запись логов в файл. Проблема - двойной вывод в косоль
 
-        # if self.logger_file_json:
-        #     self.logger_file_json.log(level, message, exc_info=exc_info)
+        if self.logger_file_json:
+            self.logger_file_json.log(level, message, exc_info=exc_info)
 
         # if level == logging.INFO and self.logger_file_info:
         #     self.logger_file_info.log(level, formatted_message)

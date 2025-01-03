@@ -1,16 +1,9 @@
-## \file hypotez/src/credentials.py
-# -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
-
 """
 .. module:: src 
 	:platform: Windows, Unix
 	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
 
 """
-
-
 
 import datetime
 from datetime import datetime
@@ -23,7 +16,7 @@ import socket
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Optional
+from typing import Optional, List, Dict
 
 from pydantic import BaseModel, Field
 from pykeepass import PyKeePass
@@ -78,21 +71,17 @@ def singleton(cls):
     return get_instance
 
 @singleton
-class ProgramSettings(BaseModel):
+@dataclass(frozen=True)
+class ProgramSettings:
     """ 
     `ProgramSettings` - класс настроек программы.
     
     Синглтон, хранящий основные параметры и настройки проекта.
     """
     
-    class Config:
-        arbitrary_types_allowed = True
-
-    host_name:str = socket.gethostname()
-    print(f'host_name: {host_name}')
-
-    base_dir: Path = Field(default_factory=lambda: set_project_root())
-    config: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace())
+    host_name:str = field(default_factory=lambda: socket.gethostname())
+    base_dir: Path = field(default_factory=lambda: set_project_root())
+    config: SimpleNamespace = field(default_factory=lambda: SimpleNamespace())
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
             api_key=None,
@@ -139,8 +128,8 @@ class ProgramSettings(BaseModel):
         facebook=[],
         gapi={}
     ))
-    MODE: str = Field(default='dev')
-    path: SimpleNamespace = Field(default_factory=lambda: SimpleNamespace(
+    MODE: str = 'dev'
+    path: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         root = None,
         src = None,
         bin = None,
@@ -153,13 +142,10 @@ class ProgramSettings(BaseModel):
         tools = None,
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
-    
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Ваш код для выполнения __post_init__
-
+    def __post_init__(self):
         """ Выполняет инициализацию после создания экземпляра класса."""
+        print(f'host_name: {self.host_name}')
 
         self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
         if not self.config:
@@ -289,7 +275,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract Aliexpress API key from KeePass {ex}" )
             ...
-            return
+            return False
 
     def _load_openai_credentials(self, kp: PyKeePass) -> bool:
         """ Load OpenAI credentials from KeePass
@@ -312,7 +298,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract OpenAI credentials from KeePass {ex}" )
             ...
-            return           
+            return False
 
 
     def _load_gemini_credentials(self, kp: PyKeePass) -> bool:
@@ -332,7 +318,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract GoogleAI credentials from KeePass {ex}")
             ...
-            return 
+            return False
 
     def _load_telegram_credentials(self, kp: PyKeePass) -> bool:
         """Load Telegram credentials from KeePass.
@@ -351,7 +337,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract Telegram credentials from KeePass {ex}")
             ...
-            return 
+            return False
 
     def _load_discord_credentials(self, kp: PyKeePass) -> bool:
         """ Load Discord credentials from KeePass
@@ -370,26 +356,25 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract Discord credentials from KeePass {ex}")
             ...
-            return 
+            return False
 
     def _load_PrestaShop_credentials(self, kp: PyKeePass) -> bool:
-        """ Load PrestaShop credentials from KeePass
-        Args:
+         """ Load PrestaShop credentials from KeePass
+         Args:
             kp (PyKeePass): The KeePass database instance.
-
-        Returns:
+         Returns:
             bool: True if loading was successful, False otherwise.
-        """
-        try:
+         """
+         try:
             entries = kp.find_groups(path=['prestashop']).entries
             for entry in entries:
                 setattr(self.credentials.telegram, entry.title, entry.custom_properties.get('token', None))
             return True
-        except Exception as ex:
+         except Exception as ex:
             print(f"Failed to extract Telegram credentials from KeePass {ex}")
             ...
-            return 
-        try:
+            return False
+         try:
             for entry in kp.find_groups(path=['prestashop', 'clients']).entries:
                 self.credentials.presta.client.append(SimpleNamespace(
                     api_key=entry.custom_properties.get('api_key', None),
@@ -399,10 +384,10 @@ class ProgramSettings(BaseModel):
                     db_password=entry.custom_properties.get('db_password', None),
                 ))
             return True
-        except Exception as ex:
-            print(f"Failed to extract PrestaShop credentials from KeePass {ex}")
-            ...
-            return 
+         except Exception as ex:
+             print(f"Failed to extract PrestaShop credentials from KeePass {ex}")
+             ...
+             return False
         
     def _load_presta_translations_credentials(self, kp: PyKeePass) -> bool:
         """ Load Translations credentials from KeePass
@@ -423,7 +408,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract Translations credentials from KeePass {ex}")
             ...
-            return 
+            return False
         
     def _load_smtp_credentials(self, kp: PyKeePass) -> bool:
         """ Load SMTP credentials from KeePass
@@ -445,7 +430,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract SMTP credentials from KeePass {ex}")
             ...
-            return 
+            return False
 
     def _load_facebook_credentials(self, kp: PyKeePass) -> bool:
         """ Load Facebook credentials from KeePass
@@ -466,7 +451,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract Facebook credentials from KeePass {ex}")
             ...
-            return 
+            return False
 
     def _load_gapi_credentials(self, kp: PyKeePass) -> bool:
         """ Load Google API credentials from KeePass
@@ -483,8 +468,7 @@ class ProgramSettings(BaseModel):
         except Exception as ex:
             print(f"Failed to extract GAPI credentials from KeePass {ex}") 
             ...
-            return 
-
+            return False
 
     @property
     def now(self) -> str:
