@@ -12,28 +12,44 @@ from __future__ import annotations
 """
 
 import asyncio
+import time
 from pathlib import Path
 from types import SimpleNamespace
-import time
 
 import header
+
+# Сторонние библиотеки
 from src import gs, logger
 from src.endpoints.prestashop.api.api import PrestaShop
 
+# Веб-драйверы
 from src.webdriver.driver import Driver
 from src.webdriver.chrome import Chrome
 from src.webdriver.firefox import Firefox
-## Add  drivers e.g. Fdge, crawlee_python, playwright
+# TODO: Add drivers e.g. Edge, crawlee_python, playwright
 
+# AI модели
 from src.ai.gemini import GoogleGenerativeAI
 from src.ai.openai.model import OpenAIModel
+
+# Обработка товаров
 from src.product.product_fields import ProductFields
 
-from src.endpoints.advertisement.facebook.scenarios.post_message import post_message, post_title, upload_media
+# Работа с соцсетями
+from src.endpoints.advertisement.facebook.scenarios.post_message import (
+    post_message,
+    post_title,
+    upload_media,
+)
+
+# Утилиты
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
+from src.utils.image import get_image_bytes, get_image_data
+
+# Логирование
 from src.logger.logger import logger
-from src.utils.image import get_image_bytes
+
 
 class EmilDesign:
     """ Class for designing and promoting images through various platforms. """
@@ -96,8 +112,10 @@ class EmilDesign:
         data: list = [] # <- список всех обработанных данных
         for img in images_files_list:
             prompt = Path(self.base_path / 'instructions' / f'describe_image_command_{lang}.md').read_text(encoding='UTF-8')
-            img_data = get_image_bytes(images_dir / img)
-            response = await self.gemini.chat(img_data, prompt = prompt)  
+            img_bytes = get_image_bytes(images_dir / img)
+            img_data = get_image_data(images_dir / img)
+            ...
+            response = await self.gemini.chat(img_data)  
 
             if not response:
                 ...

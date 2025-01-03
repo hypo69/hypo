@@ -37,7 +37,7 @@ from src.utils.file import read_text_file, save_text_file
 from src.utils.date_time import TimeoutCheck
 from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import read_image_pillow
+from src.utils.image import get_image_bytes
 
 timeout_check = TimeoutCheck()
 
@@ -218,7 +218,7 @@ class GoogleGenerativeAI:
             contents = [
                 {
                     "mime_type": "image/jpeg",  # Измените на mime-тип вашего изображения
-                    "data":  read_image_pillow(image_path),
+                    "data":  get_image_bytes(image_path),
                 },
                 prompt if prompt else "Опиши это изображение.",
             ]

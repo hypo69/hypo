@@ -93,7 +93,7 @@ from src.utils.convertors.base64 import base64_to_tmpfile
 from src.utils.convertors.dict import dict2xml
 from src.utils.convertors.xml2dict import xml2dict
 from src.utils.file import save_text_file
-from src.utils.image import save_png_from_url
+from src.utils.image import save_image_from_url
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint
 
@@ -519,7 +519,7 @@ class PrestaShop:
         url_without_extension = url_parts[0]
         extension = url_parts[1] if len(url_parts) > 1 else ''
         filename = str(resource_id) + f'_{img_name}.{extension}'
-        png_file_path = save_png_from_url(img_url, filename)
+        png_file_path = save_image_from_url(img_url, filename)
         response = self.create_binary(resource, png_file_path, img_name)
         self.remove_file(png_file_path)
         return response
@@ -544,7 +544,7 @@ class PrestaShop:
         url_without_extension = url_parts[0]
         extension = url_parts[1] if len(url_parts) > 1 else ''
         filename = str(resource_id) + f'_{img_name}.{extension}'
-        png_file_path = save_png_from_url(img_url, filename)
+        png_file_path = save_image_from_url(img_url, filename)
         response = self.create_binary(resource, png_file_path, img_name)
         self.remove_file(png_file_path)
         return response

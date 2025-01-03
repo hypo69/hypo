@@ -45,7 +45,7 @@ from src.endpoints.advertisement.facebook.scenarios import (
 
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.file import read_text_file, save_text_file, recursively_get_file_path
-from src.utils.image import save_png_from_url, save_png
+from src.utils.image import save_image_from_url, save_png
 from src.utils.convertors.unicode import decode_unicode_escape
 from src.utils.printer import pprint
 from src.logger.logger import logger

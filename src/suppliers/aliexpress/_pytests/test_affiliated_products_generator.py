@@ -78,7 +78,7 @@ def test_process_affiliate_products(ali_affiliated_products):
     
     with patch.object(ali_affiliated_products, 'retrieve_product_details', return_value=mock_product_details) as mock_retrieve, \
          patch("src.suppliers.aliexpress.affiliated_products_generator.ensure_https", return_value=prod_urls), \
-         patch("src.suppliers.aliexpress.affiliated_products_generator.save_png_from_url"), \
+         patch("src.suppliers.aliexpress.affiliated_products_generator.save_image_from_url"), \
          patch("src.suppliers.aliexpress.affiliated_products_generator.save_video_from_url"), \
          patch("src.suppliers.aliexpress.affiliated_products_generator.j_dumps", return_value=True):
         

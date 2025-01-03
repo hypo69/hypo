@@ -25,7 +25,7 @@ from src.suppliers.aliexpress import AliApi
 from src.suppliers.aliexpress.campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerator, CampaignHTMLGenerator 
 from src.suppliers.aliexpress.utils.ensure_https import ensure_https
 from src.product.product_fields import ProductFields as f
-from src.utils.image import save_png_from_url 
+from src.utils.image import save_image_from_url 
 from src.utils.video import save_video_from_url
 from src.utils.file import get_directory_names, get_filenames, read_text_file, save_text_file
 from src.utils.jjson import j_loads_ns, j_dumps
@@ -198,7 +198,7 @@ class AliAffiliatedProducts(AliApi):
             product.promotion_link = promotion_link
             image_path = Path(category_root) / 'images' / \
                 f"{product.product_id}.png"
-            await save_png_from_url(product.product_main_image_url, image_path)
+            await save_image_from_url(product.product_main_image_url, image_path)
             #pprint(f"Saved image for {product.product_id=}", end=print_flag)
             logger.info(f"Saved image for {product.product_id=}")
             

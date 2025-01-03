@@ -1,7 +1,7 @@
 """
 .. module:: src 
-	:platform: Windows, Unix
-	:synopsis: Global Project Settings: paths, passwords, logins, and API settings
+    :platform: Windows, Unix
+    :synopsis: Global Project Settings: paths, passwords, logins, and API settings
 
 """
 
@@ -18,7 +18,6 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional, List, Dict
 
-from pydantic import BaseModel, Field
 from pykeepass import PyKeePass
 
 from src.check_release import check_latest_release
@@ -71,17 +70,17 @@ def singleton(cls):
     return get_instance
 
 @singleton
-@dataclass(frozen=True)
+@dataclass
 class ProgramSettings:
     """ 
     `ProgramSettings` - класс настроек программы.
     
     Синглтон, хранящий основные параметры и настройки проекта.
     """
-    
     host_name:str = field(default_factory=lambda: socket.gethostname())
     base_dir: Path = field(default_factory=lambda: set_project_root())
     config: SimpleNamespace = field(default_factory=lambda: SimpleNamespace())
+    
     credentials: SimpleNamespace = field(default_factory=lambda: SimpleNamespace(
         aliexpress=SimpleNamespace(
             api_key=None,
@@ -143,16 +142,15 @@ class ProgramSettings:
         dev_null ='nul' if sys.platform == 'win32' else '/dev/null'
     ))
 
-    def __post_init__(self):
-        """ Выполняет инициализацию после создания экземпляра класса."""
-        print(f'host_name: {self.host_name}')
 
+    def __post_init__(self):
+        """Выполняет инициализацию после создания экземпляра класса."""
         self.config = j_loads_ns(self.base_dir / 'src' / 'config.json')
         if not self.config:
             logger.error('Ошибка при загрузке настроек')
             ...
-            return
-
+            sys.exit()
+        self.config.timestamp_format = getattr(self.config, 'timestamp_format', '%y_%m_%d_%H_%M_%S_%f')
         self.config.project_name = self.base_dir.name
         
         self.path = SimpleNamespace(
@@ -165,9 +163,9 @@ class ProgramSettings:
 
             log = Path(getattr(self.config.path, 'log', self.base_dir / 'log')), 
             tmp = Path(getattr(self.config.path, 'tmp', self.base_dir / 'tmp')),
-            data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')), # <- данные от endpoints (hypo69, kazarinov, prestashop, etc ...)
+            data = Path(getattr(self.config.path, 'data', self.base_dir / 'data')), # <- дата от endpoints (hypo69, kazarinov, prestashop, etc ...)
             google_drive = Path(getattr(self.config.path, 'google_drive', self.base_dir / 'google_drive')), # <- GOOGLE DRIVE ЧЕРЕЗ ЛОКАЛЬНЫЙ ДИСК (NOT API) 
-            external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ),
+            external_storage = Path(getattr(self.config.path, 'external_storage',  self.base_dir / 'external_storage') ), # <- Внешний диск 
         )
 
         if check_latest_release(self.config.git_user, self.config.git):
@@ -176,22 +174,22 @@ class ProgramSettings:
         self.MODE = self.config.mode
 
         # Paths to bin directories
-        gtk_bin_dir = self.base_dir / 'bin' / 'gtk' / 'gtk-nsis-pack' / 'bin'
-        ffmpeg_bin_dir = self.base_dir / 'bin' / 'ffmpeg' / 'bin'
-        graphviz_bin_dir = self.base_dir / 'bin' / 'graphviz' / 'bin'
-        wkhtmltopdf_bin_dir = self.base_dir / 'bin' / 'wkhtmltopdf' / 'files' / 'bin'
+        gtk_bin_dir = self.path.bin  / 'gtk' / 'gtk-nsis-pack' / 'bin'
+        ffmpeg_bin_dir = self.base_dir  / 'bin' / 'ffmpeg' / 'bin'
+        graphviz_bin_dir = self.base_dir  / 'bin' / 'graphviz' / 'bin'
+        wkhtmltopdf_bin_dir = self.base_dir  / 'bin' / 'wkhtmltopdf' / 'files' / 'bin'
 
         for bin_path in [self.base_dir, gtk_bin_dir, ffmpeg_bin_dir, graphviz_bin_dir, wkhtmltopdf_bin_dir]:
             if bin_path not in sys.path:
-                sys.path.insert(0, str(bin_path))
+                sys.path.insert(0, str(bin_path))  # <- определяю пути к бунарникам в системных путях
 
         os.environ['WEASYPRINT_DLL_DIRECTORIES'] = str(gtk_bin_dir)
 
         # Suppress GTK log output to the console
         warnings.filterwarnings("ignore", category=UserWarning)
         self._load_credentials()
-
-
+        
+        
     def _load_credentials(self) -> None:
         """ Загружает учетные данные из настроек."""
 
@@ -485,8 +483,6 @@ class ProgramSettings:
         timestamp = datetime.now().strftime(self.config.timestamp_format)
         # Вернём только первые 3 цифры миллисекунд, т.к. %f возвращает микросекунды (6 цифр)
         return f"{timestamp[:-3]}"
-
-
 
 
 # Global instance of ProgamSettings

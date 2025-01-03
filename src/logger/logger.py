@@ -251,4 +251,4 @@ class Logger(metaclass=SingletonMeta):
 
 # Initialize logger with file paths
 #logger = Logger(info_log_path='info.log', debug_log_path='debug.log', errors_log_path='errors.log', json_log_path='log.json')
-logger = Logger()
+logger: Logger = Logger()
