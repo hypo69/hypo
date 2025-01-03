@@ -62,7 +62,7 @@ from src.logger.exceptions import (
 
 from src.utils.jjson import j_dumps, j_loads, j_loads_ns
 from src.utils.printer import pprint
-from src.utils.image import save_png
+from src.utils.image import save_image
 
 
 

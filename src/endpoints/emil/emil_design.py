@@ -115,9 +115,10 @@ class EmilDesign:
             img_bytes = get_image_bytes(images_dir / img)
             img_data = get_image_data(images_dir / img)
             ...
-            response = await self.gemini.chat(img_data)  
+            response = await self.gemini.describe_image(img_data)  
 
             if not response:
+
                 ...
                 continue
             logger.info(response)

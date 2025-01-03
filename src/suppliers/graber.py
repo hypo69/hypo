@@ -52,7 +52,7 @@ from src.product.product_fields import ProductFields
 from src.category import Category
 # from src.webdriver.driver import Driver  # не требуется импортировать здесь
 from src.utils.jjson import j_loads, j_loads_ns, j_dumps
-from src.utils.image import save_image_from_url, save_png
+from src.utils.image import save_image_from_url, save_image
 from src.utils.string.normalizer import( normalize_string, 
                                         normalize_int, 
                                         normalize_float, 
@@ -2132,8 +2132,8 @@ class Graber:
             raw_image = raw_image[0] if isinstance(raw_image, list) else raw_image
 
             if isinstance(raw_image, bytes):
-                # Если это байты, вызываем save_png для сохранения изображения
-                img_tmp_path = await save_png(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
+                # Если это байты, вызываем save_image для сохранения изображения
+                img_tmp_path = await save_image(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
             elif isinstance(raw_image, str):  # если это строка, предполагаем, что это URL изображения
                 img_tmp_path = await save_image_from_url(raw_image, Path(gs.path.tmp / f'{self.fields.id_product}.png'))
             else:

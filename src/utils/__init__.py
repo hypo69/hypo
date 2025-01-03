@@ -96,7 +96,7 @@
 # )
 
 # from .image import (
-#     save_png,
+#     save_image,
 #     save_image_from_url,
 #       random_image,
 # )

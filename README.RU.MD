@@ -52,6 +52,7 @@
   - [Установка Playwright](#установка-playwright)
 - [Конфигурация](#конфигурация)
   - [Настройка учетных данных](#настройка-учетных-данных)
+  - [Директория bin](https://mega.nz/file/VahExTTQ#igYq3AM8W_xUDvONX3VOKM5Nx-m9pLgno-YpqCzWNPo)
 - [Код](https://github.com/hypo69/hypo/blob/master/src/readme.ru.md)
 - [Документация](https://github.com/hypo69/hypo/blob/master/docs/gemini/out/ru/doc/src/toc.ru.md) ( *В процессе* 😕)  
 - [Пользовательские сценарии](https://github.com/hypo69/hypo/blob/master/docs/user_scenarios/readme.ru.md) ( *В процессе* 😕) 
