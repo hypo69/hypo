@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/_pytest/test_executor.py
+## \file /src/webdriver/_pytest/test_executor.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

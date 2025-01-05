@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/ivory/__morlevi__.py
+## \file /src/suppliers/ivory/__morlevi__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

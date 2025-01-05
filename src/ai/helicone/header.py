@@ -1,4 +1,4 @@
-## \file hypotez/src/ai/helicone/header.py
+## \file /src/ai/helicone/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

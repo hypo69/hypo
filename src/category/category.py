@@ -1,4 +1,4 @@
-## \file hypotez/src/category/category.py
+## \file /src/category/category.py
 # -*- coding: utf-8 -*-\
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

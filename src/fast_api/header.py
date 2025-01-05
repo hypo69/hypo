@@ -1,4 +1,4 @@
-## \file hypotez/src/fast_api/header.py
+## \file /src/fast_api/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

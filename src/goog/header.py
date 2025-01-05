@@ -1,4 +1,4 @@
-## \file hypotez/src/goog/header.py
+## \file /src/goog/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

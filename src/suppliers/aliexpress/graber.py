@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/graber.py
+## \file /src/suppliers/aliexpress/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/chat_gpt/converstions_parser.py
+## \file /src/suppliers/chat_gpt/converstions_parser.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

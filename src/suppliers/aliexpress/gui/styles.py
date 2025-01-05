@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/gui/styles.py
+## \file /src/suppliers/aliexpress/gui/styles.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

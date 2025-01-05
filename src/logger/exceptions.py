@@ -1,4 +1,4 @@
-## \file hypotez/src/logger/exceptions.py
+## \file /src/logger/exceptions.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

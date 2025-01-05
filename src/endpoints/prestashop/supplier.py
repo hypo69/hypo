@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/prestashop/supplier.py
+## \file /src/endpoints/prestashop/supplier.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

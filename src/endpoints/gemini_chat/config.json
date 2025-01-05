@@ -1,0 +1,19 @@
+{
+	"path": {
+		"external_storage": "data",
+		"google_drive": "data",
+		"log": "/tmp",
+		"tmp": "/tmp",
+		"src": "/tmp",
+		"root": ".",
+		"endpoints": "."
+	},
+	"templates_path": "",
+	"credentials": {
+		"gemini": {
+			"games": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+			"onela": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+		}
+	},
+	"now": ""
+}

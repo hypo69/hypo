@@ -1,4 +1,4 @@
-## \file hypotez/src/product/_experiments/_experiments_locators.py
+## \file /src/product/_experiments/_experiments_locators.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

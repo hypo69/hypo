@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/gsheets_check_this_code.py
+## \file /src/suppliers/aliexpress/campaign/gsheets_check_this_code.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

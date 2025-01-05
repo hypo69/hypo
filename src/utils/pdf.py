@@ -1,4 +1,5 @@
-## \file hypotez/src/utils/pdf.py
+from __future__ import annotations
+## \file /src/utils/pdf.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -269,3 +270,35 @@ class PDFUtils:
         except Exception as ex:
             print(f"Ошибка при конвертации PDF в HTML: {ex}")
             return False
+
+    # Функция для конвертации словаря в PDF
+    @staticmethod
+    def dict2pdf(data: dict | 'SimpleNamespace', file_path: str | Path) -> None:
+        """
+        Save dictionary data to a PDF file.
+
+        Args:
+            data (dict | SimpleNamespace): The dictionary to convert to PDF.
+            file_path (str | Path): Path to the output PDF file.
+        """
+        if isinstance(data, 'SimpleNamespace'):
+            data = data.__dict__
+
+        pdf = canvas.Canvas(str(file_path), pagesize=A4)
+        width, height = A4
+        x, y = 50, height - 50
+
+        pdf.setFont("Helvetica", 12)
+
+        for key, value in data.items():
+            line = f"{key}: {value}"
+            pdf.drawString(x, y, line)
+            y -= 20
+
+            if y < 50:  # Создать новую страницу, если места недостаточно
+                pdf.showPage()
+                pdf.setFont("Helvetica", 12)
+                y = height - 50
+
+        pdf.save()
+

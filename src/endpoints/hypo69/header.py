@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/hypo69/header.py
+## \file /src/endpoints/hypo69/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -12,8 +12,6 @@
 
 
 import sys
-import json
-from packaging.version import Version
 
 from pathlib import Path
 def set_project_root(marker_files=('__root__','.git')) -> Path:

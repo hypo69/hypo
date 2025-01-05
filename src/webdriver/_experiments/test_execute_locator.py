@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/_experiments/test_execute_locator.py
+## \file /src/webdriver/_experiments/test_execute_locator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

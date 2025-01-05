@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
+## \file /src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/bs/bs.py
+## \file /src/webdriver/bs/bs.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

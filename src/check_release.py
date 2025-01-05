@@ -1,4 +1,4 @@
-## \file hypotez/src/check_release.py
+## \file /src/check_release.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

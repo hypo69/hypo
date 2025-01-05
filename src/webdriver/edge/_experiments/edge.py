@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/edge/_experiments/edge.py
+## \file /src/webdriver/edge/_experiments/edge.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

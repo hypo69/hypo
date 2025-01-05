@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/bots/discord/discord_bot_trainger.py
+## \file /src/endpoints/bots/discord/discord_bot_trainger.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

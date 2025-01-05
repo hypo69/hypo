@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
+## \file /src/suppliers/amazon/_experiments/scenarois/all_scenarios_from_amazon/murano_glass/dict_scenarios.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

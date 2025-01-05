@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/smtp.py
+## \file /src/utils/smtp.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

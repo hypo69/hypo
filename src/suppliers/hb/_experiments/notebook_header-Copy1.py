@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/hb/_experiments/notebook_header-Copy1.py
+## \file /src/suppliers/hb/_experiments/notebook_header-Copy1.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

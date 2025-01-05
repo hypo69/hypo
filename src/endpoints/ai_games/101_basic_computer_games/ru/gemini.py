@@ -1,4 +1,4 @@
-## \file hypotez/src/ai/gemini/generative_ai.py
+## \file /src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-
 
 """

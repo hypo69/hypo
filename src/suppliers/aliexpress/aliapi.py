@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/aliapi.py
+## \file /src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

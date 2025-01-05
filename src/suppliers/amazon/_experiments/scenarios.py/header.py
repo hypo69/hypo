@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/amazon/_experiments/scenarios.py/header.py
+## \file /src/suppliers/amazon/_experiments/scenarios.py/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

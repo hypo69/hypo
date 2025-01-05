@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/advertisement/facebook/start_event.py
+## \file /src/endpoints/advertisement/facebook/start_event.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/ai/openai/model/training.py
+## \file /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

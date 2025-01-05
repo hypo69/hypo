@@ -1,4 +1,4 @@
-## \file hypotez/src/gui/openai_trаigner/version.py
+## \file /src/gui/openai_trаigner/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

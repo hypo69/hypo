@@ -5,7 +5,10 @@
       "role": "string",
       "parts": [
         {
-          // Union field data can be only one of the following:
+
+          "--------------------------------------------------": "// Union field data can be only one of the following:",
+
+
           "text": "string",
           "inlineData": {
             "mimeType": "string",
@@ -15,7 +18,9 @@
             "mimeType": "string",
             "fileUri": "string"
           },
-          // End of list of possible types for union field data.
+
+
+          "---------------------------------------------------": "// End of list of possible types for union field data.",
 
           "videoMetadata": {
             "startOffset": {
@@ -46,7 +51,7 @@
           "name": "string",
           "description": "string",
           "parameters": {
-            "object" 
+            "object"
           }
         }
       ]

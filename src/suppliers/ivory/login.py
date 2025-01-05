@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/ivory/login.py
+## \file /src/suppliers/ivory/login.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

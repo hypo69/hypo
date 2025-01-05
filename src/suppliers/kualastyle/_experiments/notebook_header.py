@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/kualastyle/_experiments/notebook_header.py
+## \file /src/suppliers/kualastyle/_experiments/notebook_header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

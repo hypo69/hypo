@@ -1,4 +1,4 @@
-## \file hypotez/src/product/_examples/version.py
+## \file /src/product/_examples/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

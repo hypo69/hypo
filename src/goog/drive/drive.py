@@ -1,4 +1,4 @@
-## \file hypotez/src/goog/drive/drive.py
+## \file /src/goog/drive/drive.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

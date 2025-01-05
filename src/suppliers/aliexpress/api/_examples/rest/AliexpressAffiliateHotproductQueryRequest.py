@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductQueryRequest.py
+## \file /src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductQueryRequest.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~

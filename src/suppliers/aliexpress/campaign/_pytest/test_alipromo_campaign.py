@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
+## \file /src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

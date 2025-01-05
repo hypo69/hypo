@@ -1,4 +1,4 @@
-## \file hypotez/src/product/product_fields/product_fields.py
+## \file /src/product/product_fields/product_fields.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

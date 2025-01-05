@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
+## \file /src/suppliers/aliexpress/api/helpers/products.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~

@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/api/errors/exceptions.py
+## \file /src/suppliers/aliexpress/api/errors/exceptions.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~

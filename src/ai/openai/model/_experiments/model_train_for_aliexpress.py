@@ -1,4 +1,4 @@
-## \file hypotez/src/ai/openai/model/_experiments/model_train_for_aliexpress.py
+## \file /src/ai/openai/model/_experiments/model_train_for_aliexpress.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

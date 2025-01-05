@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/powershell/examples/pprint/header.py
+## \file /src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/string/url.py
+## \file /src/utils/string/url.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

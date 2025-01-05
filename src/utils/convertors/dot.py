@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/convertors/dot.py
+## \file /src/utils/convertors/dot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

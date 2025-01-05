@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
+## \file /src/endpoints/advertisement/facebook/scenarios/post_message.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

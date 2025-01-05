@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/chrome/_examples/header.py
+## \file /src/webdriver/chrome/_examples/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/autodoc.py
+## \file /src/utils/autodoc.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

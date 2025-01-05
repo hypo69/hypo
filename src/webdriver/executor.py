@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/executor.py
+## \file /src/webdriver/executor.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

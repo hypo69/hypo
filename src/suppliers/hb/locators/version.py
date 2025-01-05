@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/hb/locators/version.py
+## \file /src/suppliers/hb/locators/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

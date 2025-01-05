@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/hypo69/code_assistant/pdf2html.py
+## \file /src/endpoints/hypo69/code_assistant/pdf2html.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

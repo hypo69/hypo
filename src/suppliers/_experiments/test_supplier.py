@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/_experiments/test_supplier.py
+## \file /src/suppliers/_experiments/test_supplier.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/dev_utils/collect_hierarhy.py
+## \file /dev_utils/collect_hierarhy.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

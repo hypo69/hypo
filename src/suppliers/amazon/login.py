@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/amazon/login.py
+## \file /src/suppliers/amazon/login.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

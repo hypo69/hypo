@@ -1,4 +1,4 @@
-## \file hypotez/dev_utils/create_index_rst.py
+## \file /dev_utils/create_index_rst.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

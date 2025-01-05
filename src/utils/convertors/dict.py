@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/convertors/dict.py
+## \file /src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12
@@ -86,8 +86,6 @@ def replace_key_in_dict(data, old_key, new_key) -> dict:
     return data
 
 
-# Функция для конвертации словаря в PDF
-def dict2pdf(data: dict | SimpleNamespace, file_path: str | Path) -> None:
     """
     Save dictionary data to a PDF file.
 

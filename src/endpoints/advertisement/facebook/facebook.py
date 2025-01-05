@@ -1,5 +1,5 @@
 from __future__ import annotations
-## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
+## \file /src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/translators/product_translator.py
+## \file /src/translators/product_translator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

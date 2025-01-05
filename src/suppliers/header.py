@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/header.py
+## \file /src/suppliers/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

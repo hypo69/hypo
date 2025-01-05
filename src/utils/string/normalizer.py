@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/string/normalizer.py
+## \file /src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/ai/gradio/gradio.py
+## \file /src/ai/gradio/gradio.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

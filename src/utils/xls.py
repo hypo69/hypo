@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/xls.py
+## \file /src/utils/xls.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

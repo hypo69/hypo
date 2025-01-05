@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/hb/_experiments/ide_experiments_scenario_.py
+## \file /src/suppliers/hb/_experiments/ide_experiments_scenario_.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

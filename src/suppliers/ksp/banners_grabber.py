@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/ksp/banners_grabber.py
+## \file /src/suppliers/ksp/banners_grabber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

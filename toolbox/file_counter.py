@@ -1,4 +1,4 @@
-## \file hypotez/dev_utils/file_counter.py
+## \file /dev_utils/file_counter.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/firefox/firefox.py
+## \file /src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

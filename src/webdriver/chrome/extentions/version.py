@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/chrome/extentions/version.py
+## \file /src/webdriver/chrome/extentions/version.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

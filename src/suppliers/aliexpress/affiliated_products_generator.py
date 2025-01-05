@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/affiliated_products_generator.py
+## \file /src/suppliers/aliexpress/affiliated_products_generator.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

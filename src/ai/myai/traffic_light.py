@@ -1,4 +1,4 @@
-## \file hypotez/src/ai/myai/traffic_light.py
+## \file /src/ai/myai/traffic_light.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

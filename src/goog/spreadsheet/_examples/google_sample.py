@@ -1,4 +1,4 @@
-## \file hypotez/src/goog/spreadsheet/_examples/google_sample.py
+## \file /src/goog/spreadsheet/_examples/google_sample.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

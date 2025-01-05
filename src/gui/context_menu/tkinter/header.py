@@ -1,4 +1,4 @@
-## \file hypotez/src/gui/context_menu/tkinter/header.py
+## \file /src/gui/context_menu/tkinter/header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

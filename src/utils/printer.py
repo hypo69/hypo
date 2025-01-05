@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/printer.py
+## \file /src/utils/printer.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

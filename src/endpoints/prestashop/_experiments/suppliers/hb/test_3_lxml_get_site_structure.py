@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/prestashop/_experiments/suppliers/hb/test_3_lxml_get_site_structure.py
+## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_3_lxml_get_site_structure.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

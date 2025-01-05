@@ -1,4 +1,4 @@
-## \file hypotez/src/product/_experiments/ping.py
+## \file /src/product/_experiments/ping.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

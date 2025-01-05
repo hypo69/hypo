@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
+## \file /src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe # <- venv win
 ## ~~~~~~~~~~~~~

@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/amazon/_experiments/test_0_amazon.py
+## \file /src/suppliers/amazon/_experiments/test_0_amazon.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

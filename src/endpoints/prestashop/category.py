@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/prestashop/category.py
+## \file /src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

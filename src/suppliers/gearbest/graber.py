@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/gearbest/graber.py
+## \file /src/suppliers/gearbest/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

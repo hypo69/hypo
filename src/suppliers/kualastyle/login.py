@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/kualastyle/login.py
+## \file /src/suppliers/kualastyle/login.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

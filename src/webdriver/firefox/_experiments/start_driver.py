@@ -1,4 +1,4 @@
-## \file hypotez/src/webdriver/firefox/_experiments/start_driver.py
+## \file /src/webdriver/firefox/_experiments/start_driver.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

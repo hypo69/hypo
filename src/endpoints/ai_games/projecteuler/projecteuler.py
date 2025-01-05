@@ -1,6 +1,6 @@
 from __future__ import annotations
 from types import SimpleNamespace
-## \file hypotez/src/endpoints/ai_games/projecteuler/projecteuler.py
+## \file /src/endpoints/ai_games/projecteuler/projecteuler.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

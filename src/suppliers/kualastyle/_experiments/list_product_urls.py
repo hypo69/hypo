@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/kualastyle/_experiments/list_product_urls.py
+## \file /src/suppliers/kualastyle/_experiments/list_product_urls.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

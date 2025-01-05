@@ -1,4 +1,4 @@
-## \file hypotez/dev_utils/prepare_code_for_ai_input.py
+## \file /dev_utils/prepare_code_for_ai_input.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

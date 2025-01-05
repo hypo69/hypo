@@ -1,4 +1,4 @@
-## \file hypotez/src/suppliers/bangood/_experiments/JUPYTER_header.py
+## \file /src/suppliers/bangood/_experiments/JUPYTER_header.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

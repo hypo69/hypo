@@ -1,4 +1,4 @@
-## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
+## \file /src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

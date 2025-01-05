@@ -1,5 +1,5 @@
 from __future__ import annotations
-## \file hypotez/src/suppliers/graber.py
+## \file /src/suppliers/graber.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

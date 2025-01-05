@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/hypo69/code_assistant/_experiments/__init__.py
+## \file /src/endpoints/hypo69/code_assistant/_experiments/__init__.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

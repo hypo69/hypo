@@ -1,4 +1,4 @@
-## \file hypotez/src/endpoints/hypo69/code_assistant/_experiments/openai_bot.py
+## \file /src/endpoints/hypo69/code_assistant/_experiments/openai_bot.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

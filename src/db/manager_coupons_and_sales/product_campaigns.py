@@ -1,4 +1,4 @@
-## \file hypotez/src/db/manager_coupons_and_sales/product_campaigns.py
+## \file /src/db/manager_coupons_and_sales/product_campaigns.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

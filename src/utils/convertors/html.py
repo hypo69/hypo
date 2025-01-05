@@ -1,4 +1,4 @@
-## \file hypotez/src/utils/convertors/html.py
+## \file /src/utils/convertors/html.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
 #! venv/bin/python/python3.12

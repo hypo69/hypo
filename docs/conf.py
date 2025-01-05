@@ -1,4 +1,4 @@
-## \file hypotez/docs/conf.py
+## \file /docs/conf.py
 # -*- coding: utf-8 -*-
 #! C:\Users\user\Documents\repos\hypotez\venv\Scripts\python.exe
 import json
