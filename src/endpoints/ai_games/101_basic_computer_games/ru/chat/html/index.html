@@ -41,7 +41,23 @@
   </style>
 </head>
 <body>
-  <div class="container mt-5">
+  <div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-secondary me-2" onclick="setLocale('en')">English</button>
+            <button class="btn btn-secondary me-2" onclick="setLocale('ru')">Русский</button>
+            <button class="btn btn-secondary me-2" onclick="setLocale('he')">עברית</button>
+              <button class="btn btn-secondary me-2" onclick="setLocale('ua')">Українська</button>
+        </div>
+
+         <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="rulesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Rules
+              </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="rulesDropdown" id="rules-list">
+                </ul>
+        </div>
+    </div>
     <div class="chat-container">
       <h2 class="text-center mb-4" data-i18n="title">Gemini Chatbot</h2>
       <div class="chat-window" id="chat-window"></div>
@@ -50,12 +66,6 @@
         <button class="btn btn-primary" id="send-button" data-i18n="send">Отправить</button>
       </div>
     </div>
-        <div class="mt-2">
-            <button class="btn btn-secondary me-2" onclick="setLocale('en')">English</button>
-            <button class="btn btn-secondary me-2" onclick="setLocale('ru')">Русский</button>
-            <button class="btn btn-secondary me-2" onclick="setLocale('he')">עברית</button>
-              <button class="btn btn-secondary me-2" onclick="setLocale('ua')">Українська</button>
-        </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -156,6 +166,36 @@
 
 
     setLocale(currentLocale)
+
+    async function loadRules() {
+      try {
+          const response = await fetch('/api/rules');
+           if (!response.ok) {
+              throw new Error('Failed to load rules');
+           }
+          const rules = await response.json();
+           const rulesList = document.getElementById('rules-list');
+            rules.forEach(rule => {
+              const ruleItem = document.createElement('li');
+              const link = document.createElement('a');
+              link.classList.add("dropdown-item")
+              link.href = "#"; // Optional - set up link to view rule
+              link.textContent = rule.name;
+             //  link.onclick = () => {
+             //     console.log("rule link clicked", rule)
+             //  }
+              ruleItem.appendChild(link);
+              rulesList.appendChild(ruleItem);
+            });
+      } catch (error) {
+          console.error("Error loading rules:", error);
+          const rulesList = document.getElementById('rules-list');
+          rulesList.innerHTML = `<li><a class="dropdown-item">Error loading rules</a></li>`
+      }
+
+    }
+
+    loadRules();
   </script>
 </body>
 </html>

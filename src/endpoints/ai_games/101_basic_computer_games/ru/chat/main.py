@@ -1,16 +1,18 @@
-# main.py
 from __future__ import annotations
 
 import json
 import sys
 from pathlib import Path
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Depends, Request, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
-from typing import Any
+from typing import Any, Annotated
+from fastapi import Cookie
+from datetime import datetime, timedelta
+import uuid
 
 import header
 from src import gs
@@ -34,6 +36,70 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ============================================================================
+# Аутентификация
+# ============================================================================
+
+# class User(BaseModel):
+#     username: str
+#     password: str
+
+# In real case, this should check against db or similar
+USERS = {
+    "user": "password123"
+}
+
+SESSION_DATA = {}
+
+SESSION_COOKIE_NAME = "session_id"
+SESSION_TTL = timedelta(hours=1)
+
+async def get_current_user(session_id: Annotated[str | None, Cookie()] = None) -> str | None:
+    if session_id is None or session_id not in SESSION_DATA:
+      return None
+    data = SESSION_DATA[session_id]
+    if data["expires"] < datetime.utcnow():
+        logger.warning("Session expired. Remove session")
+        del SESSION_DATA[session_id]
+        return None
+    # extend session expiration
+    data["expires"] = datetime.utcnow() + SESSION_TTL
+    return data["user"]
+
+
+@app.post("/api/login")
+async def login(username: str = Form(), password: str = Form()) -> RedirectResponse:
+    if username not in USERS or USERS[username] != password:
+        logger.warning("Login failed: Invalid username or password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+    session_id: str = str(uuid.uuid4())
+    SESSION_DATA[session_id] = {
+        "user": username,
+        "expires": datetime.utcnow() + SESSION_TTL
+    }
+    logger.info(f"Login successful for user {username}")
+    response: RedirectResponse = RedirectResponse(url='/', status_code=303) # Перенаправление после логина
+    response.set_cookie(key=SESSION_COOKIE_NAME, value=session_id, httponly=True, samesite="none", secure=True)
+    return response
+
+
+@app.post("/api/logout")
+async def logout(session_id: Annotated[str | None, Cookie()] = None) -> JSONResponse:
+    if session_id is None or session_id not in SESSION_DATA:
+        logger.warning("Logout failed: session_id is not valid")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+
+    del SESSION_DATA[session_id]
+    logger.info(f"Logout successful for user with session_id {session_id}")
+    response: JSONResponse = JSONResponse(content={"message": "Logout successful"})
+    response.delete_cookie(SESSION_COOKIE_NAME)
+    return response
+
+
+# ============================================================================
+# Основное приложение
+# ============================================================================
 
 # Chat request model
 class ChatRequest(BaseModel):
@@ -43,23 +109,27 @@ class ChatRequest(BaseModel):
 model: GoogleGenerativeAI | None = None
 api_key: str = gs.credentials.gemini.games
 system_instruction: str = ""
-rules_list: list[str] = recursively_get_file_path(
-    gs.path.endpoints / 'ai_games' / '101_basic_computer_games' / 'ru' / 'rules'
-)
-
-#app.mount("/", StaticFiles(directory=_html), name='html')  # Ensuring mounting at root
 
 
 # Root route
 @app.get("/", response_class=HTMLResponse)
-async def root() -> HTMLResponse:
+async def root(request: Request, current_user: str | None = Depends(get_current_user)) -> HTMLResponse:
     """Serves the main index.html file for the application."""
     try:
-        index_file: Path = _html / 'index.html'
-        if not index_file.exists():
-            raise FileNotFoundError(f"Could not find index.html at path: {index_file}")
-        html_content: str = index_file.read_text(encoding="utf-8")
-        return HTMLResponse(content=html_content)
+        if current_user:
+            index_file: Path = _html / 'index.html'
+            if not index_file.exists():
+                raise FileNotFoundError(f"Could not find index.html at path: {index_file}")
+            html_content: str = index_file.read_text(encoding="utf-8")
+            return HTMLResponse(content=html_content)
+        else:
+             login_file: Path = _html / 'login.html'
+             if not login_file.exists():
+                raise FileNotFoundError(f"Could not find login.html at path: {login_file}")
+             html_content: str = login_file.read_text(encoding="utf-8")
+             return HTMLResponse(content=html_content)
+
+
     except FileNotFoundError as e:
       logger.error(f"Error in root: File not found: {e}", exc_info=True)
       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"index.html not found: {e}")
@@ -70,7 +140,7 @@ async def root() -> HTMLResponse:
 
 # Chat route
 @app.post("/api/chat")
-async def chat(request: ChatRequest) -> dict[str, Any]:
+async def chat(request: ChatRequest, current_user: str = Depends(get_current_user)) -> dict[str, Any]:
     """Handles chat requests and returns a bot response."""
     global model
     try:
@@ -81,12 +151,6 @@ async def chat(request: ChatRequest) -> dict[str, Any]:
     except Exception as ex:
         logger.error(f"Error in chat: {ex}", exc_info=True)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(ex))
-
-
-@app.get("/api/rules")
-async def rules() -> list[str]:
-    """Returns the list of rules."""
-    return rules_list
 
 
 def get_locale_file(lang: str) -> dict[str, str]:
@@ -107,10 +171,18 @@ def get_locale_file(lang: str) -> dict[str, str]:
 
 
 @app.get("/locales/{lang}.json")
-async def locales(lang: str) -> dict[str, str]:
+async def locales(lang: str, current_user: str = Depends(get_current_user)) -> dict[str, str]:
     """Endpoint to retrieve locale files."""
     return get_locale_file(lang)
 
+
+# Chat route
+@app.get("/api/rules")
+async def rules(current_user: str = Depends(get_current_user)) -> list[dict[str, str]]:
+    """Returns the list of rules."""
+    rules_list: list[Path] = recursively_get_file_path(gs.path.endpoints / 'ai_games' / '101_basic_computer_games' / 'ru' / 'rules' )
+    rules_list = [rule.name for rule in rules_list]
+    return rules_list
 
 # Local server execution
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 ## \file /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
 #! venv/Scripts/python.exe
@@ -26,7 +28,7 @@ from src.utils.jjson import j_loads, j_loads_ns, j_dumps
 from src.utils.csv import save_csv_file  
 from src.utils.printer import pprint
 from src.utils.convertors.base64 import base64encode
-from src.utils.convertors.md2dict import md2dict
+from src.utils.convertors.md import md2dict
 from src.logger.logger import logger
 
 class OpenAIModel:
