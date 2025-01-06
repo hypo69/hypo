@@ -84,6 +84,7 @@ class EmilDesign:
         furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8').replace(r'\n','').replace(r'\t','')
         system_instruction += furniture_categories
         examples:str =  Path( self.base_path / 'instructions' / f'examples_{lang}.md' ).read_text(encoding='UTF-8')
+
         output_file: Path = ( self.data_path /  f"images_descritions_{lang}.json" )
 
         # 2. Initialize the AI model with the system instructions
@@ -95,6 +96,7 @@ class EmilDesign:
         if use_gemini:
             self.gemini = GoogleGenerativeAI(
                     api_key= gs.credentials.gemini.emil ,
+                    model_name = 'gemini-1.5-flash-8b',
                     system_instruction=system_instruction,
                     generation_config={'response_mime_type': 'application/json'}
                 )

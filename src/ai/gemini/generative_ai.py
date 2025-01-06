@@ -225,13 +225,13 @@ class GoogleGenerativeAI:
         
 
     async def describe_image(
-        self, image_path: Path, prompt: Optional[str] = None
+        self, image: Path | bytes, mime_type: Optional[str] = 'image/jpeg', prompt: Optional[str] = '', additional_text: Optional[str] = ''
     ) -> Optional[str]:
         """
         Отправляет изображение в Gemini Pro Vision и возвращает его текстовое описание.
 
         Args:
-            image_path: Путь к файлу изображения.
+            image: Путь к файлу изображения или байты изображения
 
         Returns:
             str: Текстовое описание изображения.
@@ -239,17 +239,29 @@ class GoogleGenerativeAI:
         """
         try:
             # Подготовка контента для запроса
-            contents = [
+            if isinstance(image, Path):
+                image =  get_image_bytes(image)
+
+            contents =  \
+            [
                 {
-                    "mime_type": "image/jpeg",  # Измените на mime-тип вашего изображения
-                    "data":  get_image_bytes(image_path),
-                },
-                prompt if prompt else "Опиши это изображение.",
+                "role": "user",
+                "parts": {
+                    "text": additional_text,
+                    "inlineData": [
+                            {
+                                "mimeType": mime_type,  # Измени на mime-тип твоего  изображения ('image/jpeg','image/png')
+                                "data": image,
+                            }
+                        ]
+                    }
+                }
             ]
 
 
             # Отправка запроса и получение ответа
-            response = await self.model.generate_content_async(contents)
+            #response = await self.model.generate_content_async(contents)
+            response = await self.model.generate_content_async(image)
             #response = response.resolve()
 
             if response.text:
@@ -258,8 +270,8 @@ class GoogleGenerativeAI:
                 print("Модель вернула пустой ответ.")
                 return None
 
-        except Exception as e:
-            print(f"Произошла ошибка: {e}")
+        except Exception as ex:
+            print(f"Произошла ошибка: ",ex)
             return None
 
     async def upload_file(
