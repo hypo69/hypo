@@ -205,8 +205,8 @@ class Logger(metaclass=SingletonMeta):
 #
 #           Запись логов в файл. Проблема - двойной вывод в косоль
 
-        if self.logger_file_json:
-            self.logger_file_json.log(level, message, exc_info=exc_info)
+        # if self.logger_file_json:
+        #     self.logger_file_json.log(level, message, exc_info=exc_info)
 
         # if level == logging.INFO and self.logger_file_info:
         #     self.logger_file_info.log(level, formatted_message)

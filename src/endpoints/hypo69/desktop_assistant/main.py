@@ -1,57 +1,59 @@
+# main.py
 from __future__ import annotations
-
-## \file vercel_gemini_chat/main.py
-# -*- coding: utf-8 -*-
-#! venv/bin/python/python3.12
-"""
-.. module:: src.endpoints.hypo69.desktop_assistant.main
-    :platform: Windows, Unix
-    :synopsis: Простой gemini чат
-"""
-import sys, os
-
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
+import json
 
 import header
-from src import gs, logger
-from src.ai import GoogleGenerativeAI
-from src.utils.jjson import j_loads_ns
+from src import gs
 from src.logger import logger
+from src.ai import GoogleGenerativeAI
 
+base_path: Path = gs.path.endpoints / 'hypo69' / 'desktop_assistant'
+templates_path : Path = base_path / 'templates'
+locales_path: Path = base_path / 'translations'
 
 app = FastAPI()
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all domains (for testing purposes)
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allowed methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allowed headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Chat request model
 class ChatRequest(BaseModel):
     message: str
 
+model: GoogleGenerativeAI | None = None
+api_key:str = gs.credentials.gemini.games
+system_instruction:str = ""
 
-model: GoogleGenerativeAI = None
-api_key:str
-system_instruction:str
+
+app.mount("/templates", StaticFiles(directory=templates_path), name="static") # Ensuring mounting at root
+
 
 # Root route
 @app.get("/", response_class=HTMLResponse)
 async def root():
     try:
-        html_content = Path(gs.path.endpoints / 'hypo69' / 'desktop_assistant' / 'templates'  / 'index.html' ).read_text(encoding="utf-8")
+        index_file =  templates_path /  'index.html'
+        if not index_file.exists():
+            raise FileNotFoundError(f"Could not find index.html at path: {index_file}")
+        html_content = index_file.read_text(encoding="utf-8")
         return HTMLResponse(content=html_content)
     except Exception as e:
+        logger.error(f"Error in root: {e}")
         raise HTTPException(status_code=500, detail=f"Error reading templates: {str(e)}")
 
 # Chat route
@@ -60,17 +62,35 @@ async def chat(request: ChatRequest):
     global model
     try:
         if not model:
-            model = GoogleGenerativeAI(api_key=gs.credentials.gemini.games, model_name='gemini-2.0-flash-exp')
+            model = GoogleGenerativeAI(api_key=api_key, model_name='gemini-2.0-flash-exp')
         response = await model.chat(request.message)
         return {"response": response}
     except Exception as ex:
-        logger.error(f"Error in chat: ",ex)
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"Error in chat: {ex}")
+        raise HTTPException(status_code=500, detail=str(ex))
 
 
-    
+def get_locale_file(lang: str):
+    locale_file = locales_path / f'{lang}.json'
+    try:
+        with open(locale_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError as ex:
+        logger.error(f"Error reading locale: {ex}")
+        raise HTTPException(status_code=404, detail="Locale not found")
+    except json.JSONDecodeError as ex:
+        logger.error(f"Error decoding json: {ex}")
+        raise HTTPException(status_code=500, detail="Invalid locale file")
+    except Exception as ex:
+        logger.error(f"Error reading locale: {ex}")
+        raise HTTPException(status_code=500, detail="Error reading locales")
+
+
+@app.get("/locales/{lang}.json")
+async def locales(lang:str):
+    return get_locale_file(lang)
+
 
 # Local server execution
 if __name__ == "__main__":
-
     uvicorn.run(app, host="127.0.0.1", port=8000)

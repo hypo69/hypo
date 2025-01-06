@@ -10,34 +10,6 @@
 
 """
 
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-	:platform: Windows, Unix
-	:synopsis:
-
-"""
-
-"""
-  :platform: Windows, Unix
-
-"""
-"""
-  :platform: Windows, Unix
-  :platform: Windows, Unix
-  :synopsis:
-"""
-  
-""" module: src.fast_api """
-
-
-
-
 """ Start FastAPI 
 uvicorn main:app --reload
 """
