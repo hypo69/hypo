@@ -112,7 +112,7 @@ Legenda:
     OutputEnd - Вывод сообщения "THAT'S ALL FOLKS!" после завершения всех вопросов.
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 # Определение списка вопросов и ответов
 questions = [
     ("What is the capital of France?", "Paris"),

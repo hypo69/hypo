@@ -40,7 +40,7 @@
     ...
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 licence:MIT(../licence)
 

@@ -39,7 +39,7 @@
     python calndr.py
 """
 from src.logger.logger import logger
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Запрашиваем у пользователя номер дня недели, с которого начинается месяц (1 - воскресенье, 7 - суббота)
 while True:

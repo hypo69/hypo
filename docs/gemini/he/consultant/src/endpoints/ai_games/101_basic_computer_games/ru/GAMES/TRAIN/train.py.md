@@ -51,7 +51,7 @@
 from src.logger.logger import logger  # импорт логгера #
 # from src.utils.jjson import j_loads, j_loads_ns  # если бы был нужен json
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 #: Начальная скорость поезда.
 speed = 0

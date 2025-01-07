@@ -69,7 +69,7 @@ Legenda:
     OutputGrandTotal - Вывод полной стоимости заказа (grandTotal).
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Запрашиваем у пользователя количество пицц
 while True:

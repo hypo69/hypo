@@ -17,28 +17,7 @@ HORSES:
 4.  Иначе вывести сообщение "К СОЖАЛЕНИЮ, ВЫ ПРОИГРАЛИ!".
 5. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeWinningHorse["<p align='left'>Инициализация переменной:
-    <code><b>
-    winningHorse = random(1, 7)
-    </b></code></p>"]
-    InitializeWinningHorse --> InputUserHorse["Ввод числа пользователем: <code><b>userHorse</b></code>"]
-    InputUserHorse --> CheckWinner{"Проверка: <code><b>userHorse == winningHorse?</b></code>"}
-    CheckWinner -- Да --> OutputWin["Вывод сообщения: <b>УРА! ВАША ЛОШАДЬ ВЫИГРАЛА!</b>"]
-    OutputWin --> End["Конец"]
-    CheckWinner -- Нет --> OutputLose["Вывод сообщения: <b>К СОЖАЛЕНИЮ, ВЫ ПРОИГРАЛИ!</b>"]
-    OutputLose --> End
-```
-Legenda:
-    Start - Начало программы.
-    InitializeWinningHorse - Инициализация переменной winningHorse (номер лошади-победителя), генерируется случайное число от 1 до 7.
-    InputUserHorse - Запрос у пользователя ввода числа (номера лошади) и сохранение его в переменной userHorse.
-    CheckWinner - Проверка, равно ли введенное пользователем число userHorse загаданному числу winningHorse.
-    OutputWin - Вывод сообщения о победе, если числа равны.
-    OutputLose - Вывод сообщения о проигрыше, если числа не равны.
-    End - Конец программы.
+
 """
 import random
 

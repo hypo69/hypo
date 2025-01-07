@@ -64,7 +64,7 @@ import logging  # импортируем модуль logging #
 from src.logger.logger import logger # импортируем logger для логирования #
 
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 
 def get_player_input(player_number: int) -> int:

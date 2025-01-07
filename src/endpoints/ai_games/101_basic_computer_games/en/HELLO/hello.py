@@ -23,7 +23,7 @@ Legenda:
     OutputHello - Вывод на экран сообщения "HELLO".
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Вывод сообщения "HELLO" на экран
 print("HELLO")

@@ -37,7 +37,7 @@
 import logging
 from src.logger.logger import logger  # Импорт модуля для логирования
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Константы для сообщений
 RIGHT_ANSWER_MESSAGE = "RIGHT"

@@ -49,7 +49,7 @@
     game = Gomoku()
     game.play()
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import random
 from src.logger.logger import logger

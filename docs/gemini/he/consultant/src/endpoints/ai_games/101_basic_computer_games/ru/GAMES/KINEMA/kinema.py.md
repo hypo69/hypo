@@ -93,7 +93,7 @@
         print(f"Текущие координаты: ({x}, {y})")
         time.sleep(0.5)  # небольшая задержка
 """
-__author__ = 'hypo69 (hypo69@davidka.net)' # сохраняем автора
+ # сохраняем автора
 
 import time # импортируем модуль time для использования задержки
 from src.logger.logger import logger # импортируем модуль logger для логирования ошибок

@@ -44,7 +44,7 @@
 ```python
 import sys
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация игрового поля 10x10 нулями
 board = [[0 for _ in range(10)] for _ in range(10)]

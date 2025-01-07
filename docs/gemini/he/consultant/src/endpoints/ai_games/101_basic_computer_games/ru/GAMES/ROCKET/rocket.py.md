@@ -44,7 +44,7 @@ import math # Импортируем модуль math для математич
 from src.logger.logger import logger # Импортируем logger из src.logger.logger #
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: Раскомментировать, если необходимо использовать #
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 # Константа для ускорения свободного падения (в футах в секунду в квадрате) #
 GRAVITY = 32.2
 

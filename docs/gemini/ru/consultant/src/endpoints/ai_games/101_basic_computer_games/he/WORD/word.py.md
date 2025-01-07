@@ -102,7 +102,7 @@ flowchart TD
     CheckFinalPosition - Проверка, достиг ли игрок противоположного берега реки.
     OutputPosition - Вывод текущей позиции игрока.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 #  импортируем модуль sys
 import sys
 # импортируем logger

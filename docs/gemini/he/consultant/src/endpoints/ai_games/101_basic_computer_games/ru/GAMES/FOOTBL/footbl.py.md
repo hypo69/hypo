@@ -55,7 +55,7 @@
    footbl.start_game() # TODO: добавить функцию start_game в будущих реализациях
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # импортируем logger #
 from typing import Any # импортируем Any

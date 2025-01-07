@@ -100,7 +100,7 @@ Legenda:
     OutputGrandTotal - Вывод полной стоимости заказа (grandTotal).
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger #  Импортируем logger для логирования ошибок
 

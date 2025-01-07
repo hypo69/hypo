@@ -66,7 +66,7 @@ Legenda:
     IncreaseSpaceDecreaseStars - Увеличение количества пробелов `spaces` на 1 и уменьшение количества звездочек `stars` на 2.
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Запрашиваем высоту ромба у пользователя
 while True:

@@ -61,7 +61,7 @@
     play_spaceword_game()
 """
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import random
 from src.logger.logger import logger # Импорт logger для записи ошибок
 

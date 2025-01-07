@@ -47,7 +47,7 @@ Legenda:
 import math
 from datetime import date
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 """
 הסברים:
 הקוד הבא מחשב את הביוריתמוסים של משתמש על פי תאריך הלידה שלו ויום מסוים.

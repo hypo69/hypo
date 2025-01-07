@@ -87,7 +87,7 @@ Legenda:
     End - Конец программы.
     DisplayBoardUpdated - Вывод на экран обновленного положения звезды.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 # Добавлен импорт logger
 from src.logger.logger import logger
 

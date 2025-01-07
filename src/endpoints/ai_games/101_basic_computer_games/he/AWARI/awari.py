@@ -80,7 +80,7 @@ Legenda:
     OutputWinner - הצגת המנצח.
     End - סיום המשחק.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import copy
 # הסברים:
 # משחק אווארי בסיסי למשתמש יחיד נגד המחשב

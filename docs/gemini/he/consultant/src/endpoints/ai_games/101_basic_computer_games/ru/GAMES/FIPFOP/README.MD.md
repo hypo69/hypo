@@ -36,7 +36,7 @@
 --------------------
 Запустите этот скрипт, и следуйте инструкциям в консоли для ввода чисел.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # импорт логгера #
 from typing import Any # импорт Any #

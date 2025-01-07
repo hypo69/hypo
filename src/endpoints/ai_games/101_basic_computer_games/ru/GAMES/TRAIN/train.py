@@ -66,7 +66,7 @@ Legenda:
     OutputEnd - Вывод сообщения о достижении целевого расстояния "TARGET DISTANCE REACHED".
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация начальных значений
 speed = 0  # Начальная скорость поезда

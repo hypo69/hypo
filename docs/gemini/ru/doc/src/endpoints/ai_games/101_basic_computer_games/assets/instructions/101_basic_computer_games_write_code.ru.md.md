@@ -108,7 +108,7 @@ flowchart TD
 ```
 ,
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import random
 

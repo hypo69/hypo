@@ -61,7 +61,7 @@ Legenda:
 """
 import math
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 # Константа для ускорения свободного падения (в футах в секунду в квадрате)
 GRAVITY = 32.2
 

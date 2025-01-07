@@ -73,7 +73,7 @@ Legenda:
      CheckFinalPosition - בדיקה האם השחקן הגיע לצד השני של הנהר.
     OutputPosition - הצגת מיקום השחקן הנוכחי.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import sys
 
 """

@@ -39,7 +39,7 @@
     python wekday.py
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger  # Импортируем logger для логирования
 

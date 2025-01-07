@@ -91,7 +91,7 @@ Legenda:
     OutputTowerHeight - Вывод сообщения о высоте башни (floorNumber - 1).
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger  # Импорт модуля logger # Добавлен импорт logger
 

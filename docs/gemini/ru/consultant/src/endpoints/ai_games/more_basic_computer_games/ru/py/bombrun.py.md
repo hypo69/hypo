@@ -80,7 +80,7 @@ flowchart TD
     CheckWin -- Нет --> GameLoopStart
 ```
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from typing import List, Tuple
 # from src.logger.logger import logger #TODO: добавить логирование

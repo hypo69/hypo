@@ -48,7 +48,7 @@
    - Увеличение счетчика вопросов на 1.
 4. Вывод сообщения "THAT'S ALL FOLKS!" по окончанию игры.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger #  Импортируем логгер
 

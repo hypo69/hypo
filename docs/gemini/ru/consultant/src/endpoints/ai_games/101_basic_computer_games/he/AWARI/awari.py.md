@@ -71,7 +71,7 @@
 4. בדוק אם המשחק הסתיים (אחד השחקנים ללא מהלכים או שכל האבנים נאספו)
 5. הצג את המנצח על בסיס כמות האבנים שאסף כל שחקן.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import copy
 import random
 from src.logger.logger import logger

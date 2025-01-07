@@ -47,7 +47,7 @@ import math
 from datetime import date
 from src.logger.logger import logger # импортируем logger для логирования
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 #  Описание автора модуля
 
 def calculate_biorhythm(birth_date: date, check_date: date) -> None:

@@ -42,7 +42,7 @@
 """
 from src.logger.logger import logger  # Добавлен импорт logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 
 def get_valid_height() -> int:

@@ -51,7 +51,7 @@
 import sys
 from src.logger.logger import logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 """
 :moduleauthor: hypo69 (hypo69@davidka.net)
 :license: MIT(../licence)

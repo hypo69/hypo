@@ -103,7 +103,7 @@ Legenda:
 """
 from src.logger.logger import logger # Добавлен импорт logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)' # сохранение автора
+ # сохранение автора
 
 DAYS_IN_WEEK = 7 # константа для дней в недели
 MIN_DAYS_IN_MONTH = 28 # константа для минимального количества дней в месяце

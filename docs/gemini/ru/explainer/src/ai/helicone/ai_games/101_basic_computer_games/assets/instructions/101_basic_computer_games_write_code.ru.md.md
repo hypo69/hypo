@@ -143,7 +143,7 @@ Legenda:
     OutputLow - Вывод сообщения "TOO LOW", если введенное число меньше загаданного.
     OutputHigh - Вывод сообщения "TOO HIGH", если введенное число больше загаданного.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import random
 

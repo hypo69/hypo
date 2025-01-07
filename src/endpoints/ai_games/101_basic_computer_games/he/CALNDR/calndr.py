@@ -47,7 +47,7 @@ Legenda:
     End - סוף התוכנית.
 """
 <code>
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 """
 הסברים:

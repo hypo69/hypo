@@ -53,7 +53,7 @@ Legenda:
     End - Конец программы.
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация переменных
 towerHeight = 0 # текущая высота башни

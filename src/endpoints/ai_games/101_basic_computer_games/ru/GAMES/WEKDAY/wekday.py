@@ -43,7 +43,7 @@ flowchart TD
     OutputDayOfWeek - Вывод дня недели на экран.
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Запрашиваем у пользователя номер дня в году
 try:

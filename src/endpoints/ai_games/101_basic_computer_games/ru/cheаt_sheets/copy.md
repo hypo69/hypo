@@ -83,9 +83,9 @@ graph TD
         shallowCopy --> list_a
     end
     
-    style originalList fill:#ccf,stroke:#333,stroke-width:2px
-    style shallowCopy fill:#ccf,stroke:#333,stroke-width:2px
-    style list_a fill:#fff,stroke:#333,stroke-width:2px
+    style originalList fill:#ccf,stroke:#333,stroke-width:2px,color:#550000
+    style shallowCopy fill:#ccf,stroke:#333,stroke-width:2px,color:#550000
+    style list_a fill:#fff,stroke:#333,stroke-width:2px,color:#550000
 ```
 
 **Диаграмма для глубокого копирования:**
@@ -103,10 +103,11 @@ graph TD
         deepCopy --> list_b
     end
     
-    style originalList fill:#ccf,stroke:#333,stroke-width:2px
-    style deepCopy fill:#ccf,stroke:#333,stroke-width:2px
-    style list_a fill:#fff,stroke:#333,stroke-width:2px
-    style list_b fill:#fff,stroke:#333,stroke-width:2px
+    style originalList fill:#ccf,stroke:#333,stroke-width:2px,color:#550000
+    style deepCopy fill:#ccf,stroke:#333,stroke-width:2px,color:#550000
+    style list_a fill:#fff,stroke:#333,stroke-width:2px,color:#550000
+    style list_b fill:#fff,stroke:#333,stroke-width:2px,color:#550000
+
 ```
 
 В первой диаграмме видно, что и `original_list`, и `shallow_copy` ссылаются на один и тот же вложенный список `list_a`. А во второй диаграмме `deep_copy` имеет свою независимую копию вложенного списка, `list_b`.

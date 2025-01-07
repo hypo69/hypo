@@ -44,7 +44,7 @@
    python kinema.py
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import time
 from src.logger.logger import logger  # Импорт logger

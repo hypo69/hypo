@@ -67,7 +67,7 @@ flowchart TD
     SwitchPlayer - Смена текущего игрока на противоположного.
     End - Конец игры.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import sys
 def print_board(board):
     """Выводит текущее состояние доски."""

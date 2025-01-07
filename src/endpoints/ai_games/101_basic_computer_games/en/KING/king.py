@@ -63,7 +63,7 @@ Legenda:
     OutputWinner - Вывод победителя игры.
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 # Инициализация начальных переменных
 previousWord = ""
 currentPlayer = 1

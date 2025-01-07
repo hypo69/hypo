@@ -30,7 +30,7 @@ CHOMP:
 -----------------
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 def initialize_board(rows, cols):
     """

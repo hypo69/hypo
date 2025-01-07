@@ -24,41 +24,7 @@ GUESS:
 4. Вывести сообщение "YOU GOT IT IN {число попыток} GUESSES!"
 5. Конец игры.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeVariables["<p align='left'>Инициализация переменных:
-    <code><b>
-    numberOfGuesses = 0
-    targetNumber = random(1, 100)
-    </b></code></p>"]
-    InitializeVariables --> LoopStart{"Начало цикла: пока не угадано"}
-    LoopStart -- Да --> IncreaseGuesses["<code><b>numberOfGuesses = numberOfGuesses + 1</b></code>"]
-    IncreaseGuesses --> InputGuess["Ввод числа пользователем: <code><b>userGuess</b></code>"]
-    InputGuess --> CheckGuess{"Проверка: <code><b>userGuess == targetNumber?</b></code>"}
-    CheckGuess -- Да --> OutputWin["Вывод сообщения: <b>YOU GOT IT IN <code>{numberOfGuesses}</code> GUESSES!</b>"]
-    OutputWin --> End["Конец"]
-    CheckGuess -- Нет --> CheckLow{"Проверка: <code><b>userGuess &lt; targetNumber</b></code>?"}
-    CheckLow -- Да --> OutputLow["Вывод сообщения: <b>TOO LOW</b>"]
-    OutputLow --> LoopStart
-    CheckLow -- Нет --> OutputHigh["Вывод сообщения: <b>TOO HIGH</b>"]
-    OutputHigh --> LoopStart
-    LoopStart -- Нет --> End
 
-```
-
-Legenda:
-    Start - Начало программы.
-    InitializeVariables - Инициализация переменных: numberOfGuesses (количество попыток) устанавливается в 0, а targetNumber (загаданное число) генерируется случайным образом от 1 до 100.
-    LoopStart - Начало цикла, который продолжается, пока число не угадано.
-    IncreaseGuesses - Увеличение счетчика количества попыток на 1.
-    InputGuess - Запрос у пользователя ввода числа и сохранение его в переменной userGuess.
-    CheckGuess - Проверка, равно ли введенное число userGuess загаданному числу targetNumber.
-    OutputWin - Вывод сообщения о победе, если числа равны, с указанием количества попыток.
-    End - Конец программы.
-    CheckLow - Проверка, меньше ли введенное число userGuess загаданного числа targetNumber.
-    OutputLow - Вывод сообщения "TOO LOW", если введенное число меньше загаданного.
-    OutputHigh - Вывод сообщения "TOO HIGH", если введенное число больше загаданного.
 """
 import random
 

@@ -105,7 +105,7 @@ flowchart TD
     SwitchPlayer - Смена текущего игрока на противоположного.
     End - Конец игры.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import sys
 from src.logger.logger import logger # импортируем logger

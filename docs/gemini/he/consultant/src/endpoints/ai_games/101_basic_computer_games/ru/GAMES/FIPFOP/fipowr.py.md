@@ -55,7 +55,7 @@ import logging # Импорт модуля logging для логирования
 from src.logger.logger import logger # Импорт logger из src.logger.logger #
 from src.utils.jjson import j_loads_ns # Импорт j_loads_ns из src.utils.jjson #
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 #: Сумма введенных чисел
 total_sum = 0 # Инициализация суммы введенных чисел #

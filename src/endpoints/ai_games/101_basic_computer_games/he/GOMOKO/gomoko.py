@@ -125,7 +125,7 @@ Legenda:
      SwitchPlayer - העברת התור לשחקן השני.
      End - סוף התוכנית.
  """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 """
 הסברים:
 הקוד מממש את משחק הלוח גומוקו (Gomoku) בסיסי.

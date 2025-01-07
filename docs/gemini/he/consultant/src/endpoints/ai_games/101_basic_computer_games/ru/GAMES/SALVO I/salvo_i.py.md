@@ -118,7 +118,7 @@ import sys  # Импортируем sys для выхода из програм
 from src.logger.logger import logger  # Импортируем logger для логирования ошибок
 # from src.utils.jjson import j_loads, j_loads_ns # Импорт j_loads, j_loads_ns #  не используются, комментируем
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация игрового поля 10x10 нулями
 board = [[0 for _ in range(10)] for _ in range(10)]  # Создание двумерного списка (матрицы) 10x10, представляющего игровое поле. Все ячейки изначально заполнены нулями.

@@ -49,7 +49,7 @@ flowchart TD
     CheckWin -- Нет --> GameLoopStart
 ```
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 def initialize_game():
     """Инициализирует игру, создавая карту, устанавливая начальную позицию игрока и количество ходов."""

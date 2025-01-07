@@ -56,7 +56,7 @@
 import random
 from src.logger.logger import logger # импортируем logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 """
 Объяснение кода:
 Этот модуль реализует игру "Угадай число".

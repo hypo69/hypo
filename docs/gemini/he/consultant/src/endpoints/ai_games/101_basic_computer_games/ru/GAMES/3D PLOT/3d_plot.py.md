@@ -53,7 +53,7 @@
     python 3d_plot.py
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger  # Импорт логгера для записи ошибок #
 # from src.utils.jjson import j_loads, j_loads_ns # Импорт функций для работы с json

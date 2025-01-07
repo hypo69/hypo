@@ -72,7 +72,7 @@ flowchart TD
   """
 
   <code>
-  __author__ = 'hypo69 (hypo69@davidka.net)'
+  
 
   
   """

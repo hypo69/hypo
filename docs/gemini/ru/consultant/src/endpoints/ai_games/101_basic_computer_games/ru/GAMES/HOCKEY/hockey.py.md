@@ -131,7 +131,7 @@ Legenda:
     OutputWinner2 - Вывод сообщения, что второй игрок победил.
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # Импорт логгера
 

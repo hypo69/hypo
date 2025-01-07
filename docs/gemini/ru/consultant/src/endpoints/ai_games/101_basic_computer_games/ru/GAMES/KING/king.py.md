@@ -96,7 +96,7 @@
 """
 from src.logger.logger import logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 def get_player_word(player_number: int, previous_word: str) -> str:
     """

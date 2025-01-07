@@ -85,7 +85,7 @@ Legenda:
     End - Конец программы.
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # Подключаем модуль логирования
 # from src.utils.jjson import j_loads, j_loads_ns  # TODO: пока не используем, но может потребоваться в будущем

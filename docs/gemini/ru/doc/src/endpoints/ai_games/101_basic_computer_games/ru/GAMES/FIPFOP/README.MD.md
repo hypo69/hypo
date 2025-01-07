@@ -64,7 +64,7 @@ flowchart TD
 ## Код
 
 ```python
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация суммы и счетчика ходов
 totalSum = 0 # Сумма введенных чисел

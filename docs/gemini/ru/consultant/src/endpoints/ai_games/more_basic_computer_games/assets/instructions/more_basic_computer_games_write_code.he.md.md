@@ -48,7 +48,7 @@ import random
 from src.logger.logger import logger
 # TODO добавить импорт logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 """
 הסברים: מודול זה כולל מימוש של המשחק "נחש את המספר" בשפת Python.

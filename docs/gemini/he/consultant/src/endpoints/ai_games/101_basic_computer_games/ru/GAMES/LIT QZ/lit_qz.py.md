@@ -36,7 +36,7 @@
     python lit_qz.py
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 from src.logger.logger import logger  # Импорт модуля для логирования # Изменен импорт
 from typing import List, Tuple # Импорт типов для подсказок типов
 # Определение списка вопросов и ответов

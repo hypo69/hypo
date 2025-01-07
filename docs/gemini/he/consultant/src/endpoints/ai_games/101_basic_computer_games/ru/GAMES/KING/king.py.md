@@ -44,7 +44,7 @@
 
    king.play()
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger  # Добавлен импорт logger #
 #from src.utils.jjson import j_loads, j_loads_ns  # Пример импорта из jjson, если понадобится #

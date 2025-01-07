@@ -69,7 +69,7 @@
 
 from src.logger.logger import logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 DAYS_IN_WEEK = 7
 DAY_WIDTH = 4

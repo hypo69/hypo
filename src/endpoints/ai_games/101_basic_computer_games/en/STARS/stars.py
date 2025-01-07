@@ -59,7 +59,7 @@ Legenda:
     End - Конец программы.
     DisplayBoardUpdated - Вывод на экран обновленного положения звезды.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация начальной позиции звезды
 starRow = 1

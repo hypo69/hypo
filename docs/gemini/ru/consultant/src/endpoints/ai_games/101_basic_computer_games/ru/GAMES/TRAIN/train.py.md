@@ -93,7 +93,7 @@ Legenda:
     OutputEnd - Вывод сообщения о достижении целевого расстояния "TARGET DISTANCE REACHED".
     End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # Импорт логгера
 

@@ -53,7 +53,7 @@
 import random
 from src.logger.logger import logger #  импорт модуля logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)' # сохранение автора
+ # сохранение автора
 
 
 def play_guessing_game():

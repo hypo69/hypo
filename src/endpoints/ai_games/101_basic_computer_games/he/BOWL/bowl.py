@@ -63,7 +63,7 @@ Legenda:
     OutputTotalScore - הצגת הניקוד הכולל totalScore.
     End - סוף התוכנית.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 
 """

@@ -83,7 +83,7 @@ flowchart TD
    * **End** - Конец игры.
 """
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import random
 
 def choose_word(word_list):

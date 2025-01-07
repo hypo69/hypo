@@ -32,44 +32,7 @@ LIFE:
 5. По завершению симуляции вывести на экран заключительное состояние поля.
 
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InputGridSize["Ввод размеров сетки: <code><b>rows, cols</b></code>"]
-    InputGridSize --> InputGenerations["Ввод количества поколений: <code><b>generations</b></code>"]
-    InputGenerations --> InputInitialConfig{"Ввод начальной конфигурации: <code><b>initial_config</b></code>"}
-    InputInitialConfig --> CreateInitialGrid{"Создание начальной сетки: <code><b>grid</b></code>"}
-    CreateInitialGrid --> LoopStart{"Начало цикла поколений: <code><b>for generation in range(generations)</b></code>"}
-    LoopStart -- Да --> OutputCurrentGrid["Вывод текущей сетки: <code><b>grid</b></code>"]
-    OutputCurrentGrid --> CreateNextGenerationGrid["Создание новой сетки: <code><b>next_grid</b></code>"]
-    CreateNextGenerationGrid --> LoopCellsStart{"Начало цикла по клеткам: <code><b>for row in range(rows): for col in range(cols)</b></code>"}
-    LoopCellsStart --> CountLiveNeighbours["Подсчет живых соседей: <code><b>live_neighbours</b></code>"]
-    CountLiveNeighbours --> ApplyRules["Применение правил игры для определения состояния клетки в <code><b>next_grid</b></code>"]
-    ApplyRules --> LoopCellsEnd{"Конец цикла по клеткам"}
-    LoopCellsEnd --> UpdateCurrentGrid{"Обновление текущей сетки: <code><b>grid = next_grid</b></code>"}
-    UpdateCurrentGrid --> LoopEnd{"Конец цикла поколений"}
-     LoopEnd -- Да --> LoopStart
-    LoopEnd -- Нет --> OutputFinalGrid["Вывод финальной сетки: <code><b>grid</b></code>"]
-    OutputFinalGrid --> End["Конец"]
 
-```
-Legenda:
-    Start - Начало программы.
-    InputGridSize - Ввод размеров сетки (количество строк и столбцов) от пользователя.
-    InputGenerations - Ввод количества поколений для симуляции от пользователя.
-    InputInitialConfig - Ввод начальной конфигурации клеток от пользователя.
-    CreateInitialGrid - Создание начальной сетки (grid) на основе введенных размеров и начальной конфигурации. Если начальная конфигурация не предоставлена, поле заполняется случайным образом.
-    LoopStart - Начало цикла, который выполняется заданное количество раз (количество поколений).
-    OutputCurrentGrid - Вывод на экран текущего состояния сетки (grid).
-    CreateNextGenerationGrid - Создание новой сетки (next_grid), которая будет представлять следующее поколение.
-    LoopCellsStart - Начало цикла для каждой клетки в сетке.
-    CountLiveNeighbours - Подсчет количества живых соседей для текущей клетки.
-    ApplyRules - Применение правил игры (Conway's Game of Life) для определения состояния клетки в следующем поколении (next_grid) на основе количества живых соседей и текущего состояния клетки.
-    LoopCellsEnd - Конец цикла для каждой клетки в сетке.
-    UpdateCurrentGrid - Обновление текущей сетки (grid) новой сеткой (next_grid).
-    LoopEnd - Конец цикла поколений. Если есть еще поколения, цикл повторяется.
-    OutputFinalGrid - Вывод на экран финального состояния сетки (grid) после завершения всех поколений.
-    End - Конец программы.
 """
 import random
 import time

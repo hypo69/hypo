@@ -33,41 +33,7 @@ LIFE 2:
     6.2 Вывести текущее состояние игрового поля.
     6.3 Запросить у пользователя ввод. Если введено "0", завершить игру, иначе продолжить.
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InputRowsCols["Ввод количества строк и столбцов: <code><b>numRows, numCols</b></code>"]
-    InputRowsCols --> InputAliveCells["Ввод количества начальных живых клеток: <code><b>initialAliveCells</b></code>"]
-    InputAliveCells --> InitializeGrid["Инициализация игрового поля: <code><b>grid</b></code> (заполнено мертвыми клетками)"]
-    InitializeGrid --> PlaceAliveCells["Размещение начальных живых клеток: <code><b>grid</b></code>"]
-    PlaceAliveCells --> OutputGrid["Вывод начального состояния игрового поля: <code><b>grid</b></code>"]
-    OutputGrid --> GameLoopStart{"Начало игрового цикла"}
-    GameLoopStart --> ComputeNextGeneration["Вычисление следующего поколения: <code><b>nextGrid</b></code>"]
-    ComputeNextGeneration --> UpdateGrid["Обновление игрового поля: <code><b>grid = nextGrid</b></code>"]
-    UpdateGrid --> OutputCurrentGrid["Вывод текущего состояния игрового поля: <code><b>grid</b></code>"]
-    OutputCurrentGrid --> InputUserContinue{"Ввод пользователя (0 - выход)"}
-    InputUserContinue -- 0 --> End["Конец"]
-    InputUserContinue -- Другое значение --> GameLoopStart
-    ComputeNextGeneration --> CalculateNeighbors{"Для каждой клетки подсчет количества живых соседей"}
-    CalculateNeighbors --> ApplyRules{"Применение правил игры «Жизнь»"}
-    ApplyRules -->|Далее| ComputeNextGeneration
 
-```
-Legenda:
-    Start - Начало программы.
-    InputRowsCols - Запрос у пользователя количества строк и столбцов для игрового поля.
-    InputAliveCells - Запрос у пользователя количества начальных живых клеток.
-    InitializeGrid - Инициализация игрового поля в виде матрицы, заполненной мертвыми клетками (пробелами).
-    PlaceAliveCells - Размещение заданного количества живых клеток (звездочек) на игровом поле в случайных позициях.
-    OutputGrid - Вывод начального состояния игрового поля на экран.
-    GameLoopStart - Начало основного игрового цикла.
-    ComputeNextGeneration - Вычисление следующего поколения клеток на основе текущего состояния поля и правил игры "Жизнь".
-     CalculateNeighbors - Для каждой клетки подсчет количества живых соседей.
-     ApplyRules - Применение правил игры «Жизнь» для определения состояния клетки в следующем поколении.
-    UpdateGrid - Обновление текущего игрового поля, заменяя его новым поколением.
-    OutputCurrentGrid - Вывод текущего состояния игрового поля на экран.
-    InputUserContinue - Запрос у пользователя на продолжение игры (любое значение, кроме "0") или выход из игры ("0").
-    End - Конец программы.
 """
 import random
 import copy

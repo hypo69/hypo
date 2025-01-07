@@ -39,7 +39,7 @@
     python kinema.py
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 #  Импорт модуля для логирования
 from src.logger.logger import logger
 """

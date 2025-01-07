@@ -49,7 +49,7 @@ BATNUM: BATNUM
 """
 from src.logger.logger import logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 
 class BatNumGame:

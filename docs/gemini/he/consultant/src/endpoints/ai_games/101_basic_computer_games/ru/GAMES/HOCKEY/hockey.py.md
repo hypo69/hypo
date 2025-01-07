@@ -52,7 +52,7 @@
    # игра начинается при запуске модуля
    ...
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger  # импортируем logger
 from typing import Optional # импортируем Optional

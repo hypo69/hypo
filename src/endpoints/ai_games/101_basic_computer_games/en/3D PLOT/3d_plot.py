@@ -58,7 +58,7 @@ Legenda:
     End - Конец программы.
 ```
 ```python
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Ввод данных от пользователя
 try:

@@ -94,7 +94,7 @@ flowchart TD
     CheckSum2 - Проверка, не превысила ли сумма 100 после хода игрока 2.
     OutputPlayer2Lose - Вывод сообщения о проигрыше игрока 2, если сумма равна 100 или более.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 from src.logger.logger import logger
 
 #: Инициализация общей суммы

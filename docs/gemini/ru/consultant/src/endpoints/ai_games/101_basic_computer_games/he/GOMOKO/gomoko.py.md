@@ -37,7 +37,7 @@
 import logging
 from src.logger.logger import logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # גודל לוח המשחק
 BOARD_SIZE = 19

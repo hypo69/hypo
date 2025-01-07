@@ -119,7 +119,7 @@ import sys
 from src.logger.logger import logger
 # from src.utils.jjson import j_loads, j_loads_ns # не используется в коде
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 #: Размер игрового поля.
 BOARD_SIZE = 10

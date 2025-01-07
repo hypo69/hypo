@@ -51,7 +51,7 @@
     if __name__ == "__main__":
         play_chomp()
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # Добавлен импорт для логирования
 from typing import List # Добавлен импорт для типизации списков

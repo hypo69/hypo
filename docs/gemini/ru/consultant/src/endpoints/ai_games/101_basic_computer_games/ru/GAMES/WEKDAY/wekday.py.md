@@ -41,7 +41,7 @@
     python wekday.py
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 from src.logger.logger import logger # импортирует logger для логирования
 # from src.utils.jjson import j_loads, j_loads_ns # импортирует j_loads и j_loads_ns если нужно работать с файлами

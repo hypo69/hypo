@@ -58,7 +58,7 @@ Legenda:
     OutputDay - הדפסת היום בשבוע.
     End - סיום התוכנית.
 ```
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 
 """

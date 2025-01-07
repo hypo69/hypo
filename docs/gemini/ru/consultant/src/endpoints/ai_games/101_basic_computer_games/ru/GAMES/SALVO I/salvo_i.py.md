@@ -102,7 +102,7 @@ import sys
 #  импортируем logger для логирования ошибок
 from src.logger.logger import logger
 
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 #  Константы для обозначения состояний ячеек на игровом поле.
 EMPTY = 0

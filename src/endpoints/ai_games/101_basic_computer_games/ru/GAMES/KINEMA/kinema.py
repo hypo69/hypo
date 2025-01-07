@@ -77,7 +77,7 @@ flowchart TD
     MoveDown - Уменьшение координаты y на 1.
     OutputInvalidCommand - Вывод сообщения "Неверная команда", если введенная команда не распознана.
 ```
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import time
 # Инициализация координат

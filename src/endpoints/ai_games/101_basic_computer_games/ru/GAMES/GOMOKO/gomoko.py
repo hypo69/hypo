@@ -76,7 +76,7 @@ Legenda:
     OutputDraw - Вывод сообщения о ничьей и установка флага игры G в 0 для завершения цикла.
     End - Конец игры.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 import random
 

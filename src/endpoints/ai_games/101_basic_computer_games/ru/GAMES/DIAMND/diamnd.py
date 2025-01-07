@@ -30,7 +30,7 @@ DIAMND:
 -----------------
 
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Запрашиваем высоту ромба у пользователя
 while True:

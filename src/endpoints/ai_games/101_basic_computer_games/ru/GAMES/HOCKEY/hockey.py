@@ -33,66 +33,9 @@ HOCKEY:
 3. Если счет первого игрока больше или равен 10, вывести сообщение "ПЕРВЫЙ ИГРОК ПОБЕДИЛ".
 4. Если счет второго игрока больше или равен 10, вывести сообщение "ВТОРОЙ ИГРОК ПОБЕДИЛ".
 -----------------
-Блок-схема:
-```mermaid
-flowchart TD
-    Start["Начало"] --> InitializeScores["Инициализация счетов: <code><b>player1Score = 0, player2Score = 0</b></code>"]
-    InitializeScores --> GameLoopStart{"Начало цикла: <code><b>player1Score < 10 И player2Score < 10</b></code>"}
-    GameLoopStart -- Да --> Player1Input["Ввод хода игрока 1: <code><b>player1Move</b></code> (1-SHOT, 2-SAVE, 3-PASS)"]
-    Player1Input --> Player2Input["Ввод хода игрока 2: <code><b>player2Move</b></code> (1-SHOT, 2-SAVE, 3-PASS)"]
-    Player2Input --> CheckMoves1["Проверка: <code><b>player1Move == 1 И player2Move == 2</b></code>?"]
-    CheckMoves1 -- Да --> Player2ScoreInc1["<code><b>player2Score = player2Score + 1</b></code>"]
-    Player2ScoreInc1 --> CheckMoves2["Проверка: <code><b>player1Move == 1 И player2Move == 3</b></code>?"]
-    CheckMoves1 -- Нет --> CheckMoves2
-    CheckMoves2 -- Да --> Player1ScoreInc2["<code><b>player1Score = player1Score + 2</b></code>"]
-    Player1ScoreInc2 --> CheckMoves3["Проверка: <code><b>player1Move == 2 И player2Move == 1</b></code>?"]
-    CheckMoves2 -- Нет --> CheckMoves3
-    CheckMoves3 -- Да --> Player1ScoreInc1_1["<code><b>player1Score = player1Score + 1</b></code>"]
-    Player1ScoreInc1_1 --> CheckMoves4["Проверка: <code><b>player1Move == 2 И player2Move == 3</b></code>?"]
-    CheckMoves3 -- Нет --> CheckMoves4
-    CheckMoves4 -- Да --> Player1ScoreInc1_2["<code><b>player1Score = player1Score + 1</b></code>"]
-    Player1ScoreInc1_2 --> CheckMoves5["Проверка: <code><b>player1Move == 3 И player2Move == 1</b></code>?"]
-    CheckMoves4 -- Нет --> CheckMoves5
-    CheckMoves5 -- Да --> Player2ScoreInc2["<code><b>player2Score = player2Score + 2</b></code>"]
-    Player2ScoreInc2 --> CheckMoves6["Проверка: <code><b>player1Move == 3 И player2Move == 2</b></code>?"]
-    CheckMoves5 -- Нет --> CheckMoves6
-    CheckMoves6 -- Да --> Player2ScoreInc1["<code><b>player2Score = player2Score + 1</b></code>"]
-    Player2ScoreInc1 --> OutputScores["Вывод счетов: <code><b>player1Score, player2Score</b></code>"]
-    CheckMoves6 -- Нет --> OutputScores
-    OutputScores --> GameLoopStart
-    GameLoopStart -- Нет --> CheckWinner["Проверка: <code><b>player1Score >= 10</b></code>?"]
-    CheckWinner -- Да --> OutputWinner1["Вывод: <b>ПЕРВЫЙ ИГРОК ПОБЕДИЛ</b>"]
-    OutputWinner1 --> End["Конец"]
-    CheckWinner -- Нет --> OutputWinner2["Вывод: <b>ВТОРОЙ ИГРОК ПОБЕДИЛ</b>"]
-    OutputWinner2 --> End
 
-```
-
-Legenda:
-    Start - Начало программы.
-    InitializeScores - Инициализация переменных player1Score и player2Score нулем.
-    GameLoopStart - Начало цикла игры, который продолжается пока счет обоих игроков меньше 10.
-    Player1Input - Запрос у первого игрока ввода хода (1-бросок, 2-защита, 3-пас) и сохранение его в переменной player1Move.
-    Player2Input - Запрос у второго игрока ввода хода (1-бросок, 2-защита, 3-пас) и сохранение его в переменной player2Move.
-    CheckMoves1 - Проверка, что первый игрок бросил (1), а второй защищался (2).
-    Player2ScoreInc1 - Увеличение счета второго игрока на 1.
-    CheckMoves2 - Проверка, что первый игрок бросил (1), а второй пасовал (3).
-    Player1ScoreInc2 - Увеличение счета первого игрока на 2.
-    CheckMoves3 - Проверка, что первый игрок защищался (2), а второй бросил (1).
-    Player1ScoreInc1_1 - Увеличение счета первого игрока на 1.
-    CheckMoves4 - Проверка, что первый игрок защищался (2), а второй пасовал (3).
-    Player1ScoreInc1_2 - Увеличение счета первого игрока на 1.
-    CheckMoves5 - Проверка, что первый игрок пасовал (3), а второй бросил (1).
-    Player2ScoreInc2 - Увеличение счета второго игрока на 2.
-    CheckMoves6 - Проверка, что первый игрок пасовал (3), а второй защищался (2).
-    Player2ScoreInc1 - Увеличение счета второго игрока на 1.
-    OutputScores - Вывод текущего счета игроков.
-    CheckWinner - Проверка, что счет первого игрока больше или равен 10.
-    OutputWinner1 - Вывод сообщения, что первый игрок победил.
-    OutputWinner2 - Вывод сообщения, что второй игрок победил.
-    End - Конец программы.
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 
 # Инициализация счетов игроков
 player1Score = 0

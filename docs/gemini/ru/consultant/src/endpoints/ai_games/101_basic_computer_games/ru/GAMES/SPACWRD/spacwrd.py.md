@@ -51,7 +51,7 @@
     if __name__ == "__main__":
         play_spaceword_game()
 """
-__author__ = 'hypo69 (hypo69@davidka.net)'
+
 import random
 #  Импорт модуля random для выбора случайного слова
 from src.logger.logger import logger
