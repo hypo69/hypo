@@ -261,7 +261,7 @@ class GoogleGenerativeAI:
             # Отправка запроса и получение ответа
             #response = self.model.generate_content(content)
             #response = self.model.generate_content(image)
-            response = await self.model.generate_content_async(
+            response = self.model.generate_content(
                 str(
                     {
                         'text':prompt,

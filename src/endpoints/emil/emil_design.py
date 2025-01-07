@@ -95,7 +95,7 @@ class EmilDesign:
         if use_gemini:
             self.gemini = GoogleGenerativeAI(
                     api_key= gs.credentials.gemini.emil ,
-                    model_name = 'gemini-2.0-flash-exp',
+                    model_name = 'gemini-1.5-flash',
                     system_instruction=system_instruction,
                     generation_config={'response_mime_type': 'application/json'}
                 )

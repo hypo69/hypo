@@ -67,23 +67,23 @@ print(f"Глубокая копия после изменения: {deep_copy}")
 *   **`copy.copy()`** подходит, когда тебе нужно скопировать объект, но не беспокоит, что вложенные изменяемые объекты будут общими. Это может быть быстрее, чем `deepcopy()`, так как не нужно рекурсивно копировать каждый объект.
 *   **`copy.deepcopy()`** необходим, когда тебе нужна полная независимость копии от оригинала, особенно если объект содержит вложенные изменяемые объекты, такие как списки или словари.
 
-Давай я тебе покажу визуально, как это работает.
+
 
 **Диаграмма для поверхностного копирования:**
 
 ```mermaid
-graph LR
+graph TD
     subgraph Оригинальный список
-        originalList([original_list: [1, 2, list_a]])
-        list_a([list_a: [3, 4]])
+        originalList("[original_list: [1, 2, list_a]]")
+        list_a("[list_a: [3, 4]]")
         originalList --> list_a
     end
     subgraph Поверхностная копия
-        shallowCopy([shallow_copy: [1, 2, list_a]])
+        shallowCopy("[shallow_copy: [1, 2, list_a]]")
         shallowCopy --> list_a
     end
     
-    style originalList fill:#f9f,stroke:#333,stroke-width:2px
+    style originalList fill:#ccf,stroke:#333,stroke-width:2px
     style shallowCopy fill:#ccf,stroke:#333,stroke-width:2px
     style list_a fill:#fff,stroke:#333,stroke-width:2px
 ```
@@ -91,19 +91,19 @@ graph LR
 **Диаграмма для глубокого копирования:**
 
 ```mermaid
-graph LR
+graph TD
     subgraph Оригинальный список
-        originalList([original_list: [1, 2, list_a]])
-         list_a([list_a: [3, 4]])
+        originalList("[original_list: [1, 2, list_a]]")
+         list_a("[list_a: [3, 4]]")
         originalList --> list_a
     end
     subgraph Глубокая копия
-        deepCopy([deep_copy: [1, 2, list_b]])
-         list_b([list_b: [3, 4]])
+        deepCopy("[deep_copy: [1, 2, list_b]]")
+         list_b("[list_b: [3, 4]]")
         deepCopy --> list_b
     end
     
-    style originalList fill:#f9f,stroke:#333,stroke-width:2px
+    style originalList fill:#ccf,stroke:#333,stroke-width:2px
     style deepCopy fill:#ccf,stroke:#333,stroke-width:2px
     style list_a fill:#fff,stroke:#333,stroke-width:2px
     style list_b fill:#fff,stroke:#333,stroke-width:2px
