@@ -17,7 +17,7 @@
 Как тут все устроено:
 - В директории [GAMES](https://github.com/hypo69/101_python_computer_games_ru/blob/master/GAMES) находится кодовая база игр, разложеная по директориям. Каждая директория содержат одну игру. 
 - В директории [AI](https://github.com/hypo69/101_python_computer_games_ru/tree/master/GAMES/AI), в GAMES находится своя кодовая база, где я реализую игры с моделью машинного обучения
-- В директории [cheet_sheets](https://github.com/hypo69/101_python_computer_games_ru/tree/master/cheet_sheets) ты найдешь страницы с обучающим матераилом
+- В директории [cheat_sheets](https://github.com/hypo69/101_python_computer_games_ru/tree/master/cheat_sheets) ты найдешь страницы с обучающим матераилом
 [Список игр](https://github.com/hypo69/101_python_computer_games_ru/tree/master/GAMES/TOC.MD)
 
 Нашел ошибку? [Пиши сюда](https://github.com/hypo69/101_python_computer_games_ru/issues)

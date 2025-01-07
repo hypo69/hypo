@@ -81,4 +81,4 @@ while True:
 
 ---
 
-[לתוכן העניינים](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets#readme)
+[לתוכן העניינים](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheat_sheets#readme)

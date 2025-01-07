@@ -32,11 +32,11 @@
     - הסבר על מבנה התיקיות בפרויקט:
         -   **GAMES**: מכילה את בסיס הקוד של המשחקים, מחולק לתיקיות.
         -   **AI**: מכילה משחקים עם מודל למידת מכונה.
-        -   **cheet_sheets**: מכילה חומרי למידה.
+        -   **cheat_sheets**: מכילה חומרי למידה.
         - לדוגמה:
         -  "בספריית [GAMES](https://github.com/hypo69/101_python_computer_games_ru/blob/master/GAMES) נמצא בסיס קוד המשחקים, המסודר בספריות. כל ספריה מכילה משחק אחד."
         -  "בספריית [AI](https://github.com/hypo69/101_python_computer_games_ru/tree/master/GAMES/AI), ב-GAMES, נמצא בסיס קוד משלה, שם אני מיישם משחקים עם מודל של למידת מכונה"
-        -  "בספריית [cheet_sheets](https://github.com/hypo69/101_python_computer_games_ru/tree/master/cheet_sheets) תמצא דפים עם חומרי הדרכה"
+        -  "בספריית [cheat_sheets](https://github.com/hypo69/101_python_computer_games_ru/tree/master/cheat_sheets) תמצא דפים עם חומרי הדרכה"
 
 8.  **קישור לרשימת משחקים**:
     - קישור לקובץ TOC.MD המכיל רשימה של המשחקים בפרויקט.
@@ -58,7 +58,7 @@ flowchart TD
     Code_Explanation --> Folder_Structure[מבנה תיקיות הפרויקט:]
     Folder_Structure --> Games_Folder[תיקיית GAMES: משחקים מחולקים לספריות]
     Folder_Structure --> Ai_Folder[תיקיית AI: משחקים עם למידת מכונה]
-     Folder_Structure --> Cheat_Sheets[תיקיית cheet_sheets: חומר הדרכה]
+     Folder_Structure --> Cheat_Sheets[תיקיית cheat_sheets: חומר הדרכה]
     Games_Folder --> Games_List_Link[קישור לרשימת משחקים (TOC.MD)]
       Ai_Folder --> Games_List_Link
       Cheat_Sheets --> Games_List_Link
@@ -119,7 +119,7 @@ flowchart TD
 
 **שרשרת קשרים עם חלקים אחרים בפרויקט:**
 
-*   הקובץ `README.MD` מקושר לתיקיות `GAMES`, `AI`, ו-`cheet_sheets`.
+*   הקובץ `README.MD` מקושר לתיקיות `GAMES`, `AI`, ו-`cheat_sheets`.
 *   הוא מקושר לקובץ `TOC.MD` המכיל רשימת משחקים.
 *   הוא מקושר למערכת דיווח שגיאות (issues) של GitHub.
 *   הוא מקושר לערוץ Dzen של היוצר.

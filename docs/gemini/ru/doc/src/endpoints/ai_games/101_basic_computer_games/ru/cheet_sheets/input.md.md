@@ -13,7 +13,7 @@
     - [Обработка ошибок](#обработка-ошибок)
     - [Использование в циклах](#использование-в-циклах)
 - [Советы для начинающих](#советы-для-начинающих)
-- [К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets#readme)
+- [К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheat_sheets#readme)
 
 ## Синтаксис
 
@@ -84,4 +84,4 @@ while True:
 
 ---
 
-[К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets#readme)
+[К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheat_sheets#readme)

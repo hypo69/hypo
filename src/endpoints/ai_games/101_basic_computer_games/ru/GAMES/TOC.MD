@@ -568,6 +568,20 @@ QUEEN
 * [Перейти к коду](https://github.com/hypo69/hypo/blob/master/
 
 
+TANKS
+======
+* [Перейти к коду](https://github.com/hypo69/101_python_computer_games_ru/blob/master/GAMES/TANKS)
+
+TEMPCONVERTOR
+======
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Конвертация температур Кельвин - Цельсий - Фаренгейт
+* [Перейти к коду](https://github.com/hypo69/101_python_computer_games_ru/blob/master/GAMES/TEMPCONVERTOR)
+
+TETRIS
+======
+* [Перейти к коду](https://github.com/hypo69/101_python_computer_games_ru/blob/master/GAMES/TANKS)
+
+
 TEN CENT COMPUTER
 ===================
 Сложность 3

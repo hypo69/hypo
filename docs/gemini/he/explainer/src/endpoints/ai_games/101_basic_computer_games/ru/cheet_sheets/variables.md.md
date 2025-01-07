@@ -119,4 +119,4 @@ flowchart TD
 **קשר עם חלקים אחרים בפרויקט:**
 
 -   הבנת משתנים וסוגי הנתונים שלהם היא הבסיס לכל שאר חלקי הפרויקט. כל קוד שכותבים בפרויקט, כולל פונקציות, מחלקות וקובצי קונפיגורציה, משתמש במשתנים וסוגי נתונים אלה.
--   לדוגמה, הקוד `src/endpoints/ai_games/101_basic_computer_games/ru/cheet_sheets/functions.md` ישתמש גם הוא במושגים אלו.
+-   לדוגמה, הקוד `src/endpoints/ai_games/101_basic_computer_games/ru/cheat_sheets/functions.md` ישתמש גם הוא במושגים אלו.

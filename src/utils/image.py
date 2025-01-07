@@ -1,101 +1,16 @@
 ## \file /src/utils/image.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
-#! venv/bin/python/python3.12
 
 """
 .. module::  src.utils
     :platform: Windows, Unix
-    :synopsis: Image Saving Utilities
+    :synopsis: Image Processing Utilities
 
-This module provides asynchronous functions to download, save, and retrieve image data.
-
-Functions:
-    - :func:`save_image_from_url`
-    - :func:`save_image`
-    - :func:`get_image_data`
-    - :func:`random_image`
-    - :func:`add_watermark`
-    - :func:`resize_image`
-    - :func:`convert_image`
-
-.. function:: save_image_from_url(image_url: str, filename: str | Path) -> str | None
-
-    Download an image from a URL and save it locally asynchronously.
-
-    :param image_url: The URL to download the image from.
-    :param filename: The name of the file to save the image to.
-    :return: The path to the saved file or ``None`` if the operation failed.
-
-    Example:
-    >>> asyncio.run(save_image_from_url("https://example.com/image.png", "local_image.png"))
-    'local_image.png'
-
-.. function:: save_image(image_data: bytes, file_name: str | Path, format: str='PNG') -> str | None
-
-    Save an image in the specified format asynchronously.
-
-    :param image_data: The binary image data.
-    :param file_name: The name of the file to save the image to.
-    :param format: The format to save the image in, default is PNG
-    :return: The path to the saved file or ``None`` if the operation failed.
-
-    Example:
-    >>> with open("example_image.png", "rb") as f:
-    ...     image_data = f.read()
-    >>> asyncio.run(save_image(image_data, "saved_image.png"))
-    'saved_image.png'
-
-.. function:: get_image_data(file_name: str | Path) -> bytes | None
-
-    Retrieve binary data of a file if it exists.
-
-    :param file_name: The name of the file to read.
-    :return: The binary data of the file if it exists, or ``None`` if the file is not found or an error occurred.
-
-    Example:
-    >>> get_image_data("saved_image.png")
-    b'\x89PNG\r\n...'
-
-.. function:: random_image(root_path: str | Path) -> str | None
-
-    Recursively search for a random image in the specified directory and return its path.
-
-    :param root_path: The directory to search for images.
-    :return: The path to a random image or ``None`` if no images are found.
-
-    Example:
-    >>> random_image("path/to/images")
-    'path/to/images/subfolder/random_image.png'
-    
-.. function:: add_watermark(image_path: str | Path, watermark_text: str, output_path: str | Path=None) -> str | None
-
-    Adds a text watermark to an image.
-    
-    :param image_path: Path to the image file.
-    :param watermark_text: Text to use as the watermark.
-    :param output_path: Path to save the watermarked image, defaults to original image.
-    :return: Path to the watermarked image or None on failure
-    
-.. function:: resize_image(image_path: str | Path, size: tuple[int, int], output_path: str | Path=None) -> str | None
-    
-    Resizes an image to specified dimensions.
-    
-    :param image_path: Path to the image file.
-    :param size: A tuple containing the desired width and height of the image.
-    :param output_path: Path to save the resized image, defaults to original image.
-    :return: Path to the resized image or None on failure
-
-.. function:: convert_image(image_path: str | Path, format: str, output_path: str | Path=None) -> str | None
-    
-    Converts an image to the specified format.
-    
-    :param image_path: Path to the image file.
-    :param format: Format to convert image to (e.g., "JPEG", "PNG").
-    :param output_path: Path to save the converted image, defaults to original image.
-    :return: Path to the converted image or None on failure
+This module provides asynchronous functions for downloading, saving, and manipulating images. 
+It includes functionalities such as saving images from URLs, saving image data to files, 
+retrieving image data, finding random images within directories, adding watermarks, resizing, 
+and converting image formats.
 """
-
 
 import aiohttp
 import aiofiles
@@ -103,26 +18,32 @@ from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 import asyncio
 import random
-from pathlib import Path
-from PIL import Image
 from io import BytesIO
 from src.logger.logger import logger
-from src.utils.printer import pprint
-
 
 class ImageError(Exception):
     """Custom exception for image related errors."""
     pass
 
 
-async def save_image_from_url(
-    image_url: str, filename: str | Path
-) -> str | None:
-    """Download an image from a URL and save it locally asynchronously."""
+async def save_image_from_url(image_url: str, filename: str | Path) -> str | None:
+    """
+    Downloads an image from a URL and saves it locally asynchronously.
+
+    Args:
+        image_url (str): The URL to download the image from.
+        filename (str | Path): The name of the file to save the image to.
+
+    Returns:
+        str | None: The path to the saved file, or None if the operation failed.
+
+    Raises:
+        ImageError: If the image download or save operation fails.
+    """
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(image_url) as response:
-                response.raise_for_status()
+                response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
                 image_data = await response.read()
     except Exception as ex:
         logger.error(f"Error downloading image from {image_url}", exc_info=True)
@@ -132,11 +53,24 @@ async def save_image_from_url(
 
 
 async def save_image(image_data: bytes, file_name: str | Path, format: str = 'PNG') -> str | None:
-    """Save an image in the specified format asynchronously."""
+    """
+    Saves image data to a file in the specified format asynchronously.
+
+    Args:
+        image_data (bytes): The binary image data.
+        file_name (str | Path): The name of the file to save the image to.
+        format (str): The format to save the image in, default is PNG.
+
+    Returns:
+        str | None: The path to the saved file, or None if the operation failed.
+
+    Raises:
+        ImageError: If the file cannot be created, saved, or if the saved file is empty.
+    """
     file_path = Path(file_name)
 
     try:
-        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.parent.mkdir(parents=True, exist_ok=True)  # Create parent directories if they don't exist
         async with aiofiles.open(file_path, "wb") as file:
             await file.write(image_data)
 
@@ -153,22 +87,20 @@ async def save_image(image_data: bytes, file_name: str | Path, format: str = 'PN
             
         return str(file_path)
 
-
     except Exception as ex:
         logger.critical(f"Failed to save file {file_path}", exc_info=True)
         raise ImageError(f"Failed to save file {file_path}") from ex
 
 
-def get_image_bytes(image_path: Path, raw:bool = True) -> bytes | None:
+def get_image_bytes(image_path: Path, raw: bool = True) -> bytes | None:
     """
-    Читает изображение с помощью Pillow и возвращает его как байты JPEG.
+    Reads an image using Pillow and returns its bytes in JPEG format.
 
     Args:
-        image_path: Путь к файлу изображения.
-
+        image_path (Path): The path to the image file.
+        raw (bool): If True returns BytesIO object else bytes. Defaults to True.
     Returns:
-            bytes: Байты изображения в формате JPEG.
-            None: Если произошла ошибка.
+        bytes | None: The bytes of the image in JPEG format, or None if an error occurs.
     """
     try:
         img = Image.open(image_path)
@@ -176,11 +108,20 @@ def get_image_bytes(image_path: Path, raw:bool = True) -> bytes | None:
         img.save(img_byte_arr, format="JPEG")
         return img_byte_arr if raw else img_byte_arr.getvalue()
     except Exception as ex:
-        logger.error(f"Ошибка чтения изображения с Pillow:", ex)
+        logger.error(f"Error reading image with Pillow:", exc_info=True)
         return None
 
-def get_image_data(file_name: str | Path) -> bytes | None:
-    """Retrieve binary data of a file if it exists."""
+
+def get_raw_image_data(file_name: str | Path) -> bytes | None:
+    """
+    Retrieves the raw binary data of a file if it exists.
+
+    Args:
+        file_name (str | Path): The name or path of the file to read.
+
+    Returns:
+        bytes | None: The binary data of the file, or None if the file does not exist or an error occurs.
+    """
     file_path = Path(file_name)
 
     if not file_path.exists():
@@ -195,7 +136,15 @@ def get_image_data(file_name: str | Path) -> bytes | None:
 
 
 def random_image(root_path: str | Path) -> str | None:
-    """Recursively search for a random image in the specified directory and return its path."""
+    """
+    Recursively searches for a random image in the specified directory.
+
+    Args:
+        root_path (str | Path): The directory to search for images.
+
+    Returns:
+         str | None: The path to a random image, or None if no images are found.
+    """
     root_path = Path(root_path)
     image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
     image_files = []
@@ -211,13 +160,21 @@ def random_image(root_path: str | Path) -> str | None:
     return str(random.choice(image_files))
 
 
-def add_watermark(image_path: str | Path, watermark_text: str, output_path: str | Path=None) -> str | None:
-    """Adds a text watermark to an image."""
+def add_watermark(image_path: str | Path, watermark_text: str, output_path: str | Path = None) -> str | None:
+    """
+    Adds a text watermark to an image.
+
+    Args:
+        image_path (str | Path): Path to the image file.
+        watermark_text (str): Text to use as the watermark.
+        output_path (str | Path, optional): Path to save the watermarked image.
+            Defaults to overwriting the original image.
+
+    Returns:
+        str | None: Path to the watermarked image, or None on failure.
+    """
     image_path = Path(image_path)
-    if output_path is None:
-        output_path = image_path
-    else:
-        output_path = Path(output_path)
+    output_path = image_path if output_path is None else Path(output_path)
 
     try:
         image = Image.open(image_path).convert("RGBA")
@@ -227,7 +184,11 @@ def add_watermark(image_path: str | Path, watermark_text: str, output_path: str 
         draw = ImageDraw.Draw(watermark_layer)
         
         font_size = min(image.size) // 10  # Adjust the font size based on the image
-        font = ImageFont.truetype("arial.ttf", size=font_size)
+        try:
+            font = ImageFont.truetype("arial.ttf", size=font_size)
+        except IOError:
+            font = ImageFont.load_default(size=font_size)
+            logger.warning("Font arial.ttf not found using default font")
         
         text_width, text_height = draw.textsize(watermark_text, font=font)
         
@@ -247,14 +208,22 @@ def add_watermark(image_path: str | Path, watermark_text: str, output_path: str 
          logger.error(f"Failed to add watermark to {image_path}", exc_info=True)
          return None
 
-def resize_image(image_path: str | Path, size: tuple[int, int], output_path: str | Path=None) -> str | None:
-    """Resizes an image to specified dimensions."""
-    image_path = Path(image_path)
 
-    if output_path is None:
-        output_path = image_path
-    else:
-        output_path = Path(output_path)
+def resize_image(image_path: str | Path, size: tuple[int, int], output_path: str | Path = None) -> str | None:
+    """
+    Resizes an image to the specified dimensions.
+
+    Args:
+        image_path (str | Path): Path to the image file.
+        size (tuple[int, int]): A tuple containing the desired width and height of the image.
+        output_path (str | Path, optional): Path to save the resized image.
+             Defaults to overwriting the original image.
+
+    Returns:
+        str | None: Path to the resized image, or None on failure.
+    """
+    image_path = Path(image_path)
+    output_path = image_path if output_path is None else Path(output_path)
 
     try:
         img = Image.open(image_path)
@@ -266,14 +235,21 @@ def resize_image(image_path: str | Path, size: tuple[int, int], output_path: str
         logger.error(f"Failed to resize image {image_path}", exc_info=True)
         return None
 
-def convert_image(image_path: str | Path, format: str, output_path: str | Path=None) -> str | None:
-    """Converts an image to the specified format."""
-    image_path = Path(image_path)
 
-    if output_path is None:
-        output_path = image_path
-    else:
-        output_path = Path(output_path)
+def convert_image(image_path: str | Path, format: str, output_path: str | Path = None) -> str | None:
+    """
+    Converts an image to the specified format.
+
+    Args:
+        image_path (str | Path): Path to the image file.
+        format (str): Format to convert image to (e.g., "JPEG", "PNG").
+        output_path (str | Path, optional): Path to save the converted image.
+            Defaults to overwriting the original image.
+    Returns:
+        str | None: Path to the converted image or None on failure.
+    """
+    image_path = Path(image_path)
+    output_path = image_path if output_path is None else Path(output_path)
 
     try:
         img = Image.open(image_path)

@@ -225,7 +225,7 @@ class GoogleGenerativeAI:
         
 
     async def describe_image(
-        self, image: Path | bytes, mime_type: Optional[str] = 'image/jpeg', prompt: Optional[str] = '', additional_text: Optional[str] = ''
+        self, image: Path | bytes, mime_type: Optional[str] = 'image/jpeg', prompt: Optional[str] = ''
     ) -> Optional[str]:
         """
         Отправляет изображение в Gemini Pro Vision и возвращает его текстовое описание.
@@ -242,12 +242,11 @@ class GoogleGenerativeAI:
             if isinstance(image, Path):
                 image =  get_image_bytes(image)
 
-            contents =  \
+            content =  \
             [
                 {
                 "role": "user",
                 "parts": {
-                    "text": additional_text,
                     "inlineData": [
                             {
                                 "mimeType": mime_type,  # Измени на mime-тип твоего  изображения ('image/jpeg','image/png')
@@ -258,10 +257,17 @@ class GoogleGenerativeAI:
                 }
             ]
 
-
+                             
             # Отправка запроса и получение ответа
-            #response = await self.model.generate_content_async(contents)
-            response = await self.model.generate_content_async(image)
+            #response = self.model.generate_content(content)
+            #response = self.model.generate_content(image)
+            response = await self.model.generate_content_async(
+                str(
+                    {
+                        'text':prompt,
+                        'data':image
+                    }
+                    ))
             #response = response.resolve()
 
             if response.text:
@@ -272,6 +278,7 @@ class GoogleGenerativeAI:
 
         except Exception as ex:
             print(f"Произошла ошибка: ",ex)
+            ...
             return None
 
     async def upload_file(

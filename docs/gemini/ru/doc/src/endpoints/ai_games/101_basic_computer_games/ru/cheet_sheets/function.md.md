@@ -243,4 +243,4 @@ print(деление(10, 2))  # 5.0
 print(деление(10, 0))  # Ошибка: деление на ноль
 ```
 
-[К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets#readme)
+[К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheat_sheets#readme)

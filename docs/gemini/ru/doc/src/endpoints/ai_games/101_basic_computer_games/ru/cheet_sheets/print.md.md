@@ -10,7 +10,7 @@
 2. [Параметры](#параметры)
 3. [Примеры использования](#примеры-использования)
 4. [Полезные советы для начинающих](#полезные-советы-для-начинающих)
-5. [Ссылка на оглавление проекта](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets#readme)
+5. [Ссылка на оглавление проекта](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheat_sheets#readme)
 
 ## Синтаксис
 
@@ -124,4 +124,4 @@ print(f'{name=}, {age=}')
     В больших проектах для управления выводом лучше использовать модуль `logging`, но на начальном этапе `print()` помогает быстро выводить данные.
 
 ## Ссылка на оглавление проекта
-[К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheet_sheets#readme)
+[К оглавлению](https://github.com/hypo69/101_python_computer_games_ru/blob/master/cheat_sheets#readme)

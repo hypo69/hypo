@@ -45,7 +45,7 @@ from src.endpoints.advertisement.facebook.scenarios.post_message import (
 # Утилиты
 from src.utils.file import read_text_file, save_text_file, get_filenames
 from src.utils.jjson import j_loads_ns, j_dumps
-from src.utils.image import get_image_bytes, get_image_data
+from src.utils.image import get_image_bytes, get_raw_image_data
 
 # Логирование
 from src.logger.logger import logger
@@ -83,8 +83,7 @@ class EmilDesign:
         system_instruction: str = Path( self.base_path  / 'instructions' / f'hand_made_furniture_{lang}.md' ).read_text(encoding='UTF-8')
         furniture_categories: str = Path( self.base_path  / 'categories' / 'main_categories_furniture.json' ).read_text(encoding='UTF-8').replace(r'\n','').replace(r'\t','')
         system_instruction += furniture_categories
-        examples:str =  Path( self.base_path / 'instructions' / f'examples_{lang}.md' ).read_text(encoding='UTF-8')
-
+        
         output_file: Path = ( self.data_path /  f"images_descritions_{lang}.json" )
 
         # 2. Initialize the AI model with the system instructions
@@ -96,7 +95,7 @@ class EmilDesign:
         if use_gemini:
             self.gemini = GoogleGenerativeAI(
                     api_key= gs.credentials.gemini.emil ,
-                    model_name = 'gemini-1.5-flash-8b',
+                    model_name = 'gemini-2.0-flash-exp',
                     system_instruction=system_instruction,
                     generation_config={'response_mime_type': 'application/json'}
                 )
@@ -113,30 +112,27 @@ class EmilDesign:
 
         data: list = [] # <- список всех обработанных данных
         for img in images_files_list:
-            prompt = Path(self.base_path / 'instructions' / f'describe_image_command_{lang}.md').read_text(encoding='UTF-8')
-            img_bytes = get_image_bytes(images_dir / img)
-            img_data = get_image_data(images_dir / img)
+           
+            img_bytes = get_image_bytes (images_dir / img)
+            raw_img_data = get_raw_image_data (images_dir / img)
             ...
-            response = await self.gemini.describe_image(img_data)  
+            response = await self.gemini.describe_image(image = raw_img_data, mime_type = 'image/jpeg', prompt = system_instruction)  
 
             if not response:
-
                 ...
                 continue
-            logger.info(response)
-            ...
+
             # Process the response into a structured format
-            res_ns: SimpleNamespace = j_loads_ns(response)
-            
+            res_ns: SimpleNamespace | list[SimpleNamespace] = j_loads_ns(response)
+            res_ns: SimpleNamespace = res_ns[0] if isinstance(res_ns, list) else res_ns 
+
             setattr(res_ns, 'local_saved_image', str( Path(images_dir / img) ) )
+
+            # append structured data to list of products
             data.append(res_ns)
-            j_dumps(data, output_json)
-            #updated_images_list.append(image_path)
-            #save_text_file(updated_images_list, updated_images_path)
-            
-            # logger.debug("going sleep", None, False)
-            # time.sleep(20)
-            ...
+
+        j_dumps(data, output_json)
+
 
     async def promote_to_facebook(self):
         """ Promote images and their descriptions to Facebook.
