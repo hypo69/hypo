@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для определения параметров запроса к API AliExpress.
 ===========================================================
@@ -80,7 +80,7 @@ class LinkType:
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для определения параметров запроса к API AliExpress.
 ===========================================================

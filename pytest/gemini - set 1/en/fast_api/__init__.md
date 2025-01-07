@@ -56,4 +56,4 @@ pytest test_fast_api.py
 This improved test suite is more robust and comprehensive, ensuring that the `MODE` variable behaves as expected.  It's important to add tests for other file/variable contents as the codebase grows.
 
 
-**Important Note:**  The `#! venv/Scripts/python.exe` and similar lines at the top of the input file are shebangs and are related to how the file is executed, but they don't affect the Python *code* that you are testing.  The tests only focus on the Python variables and functions within the `hypotez/src/fast_api/__init__.py` file.
+**Important Note:**  The `` and similar lines at the top of the input file are shebangs and are related to how the file is executed, but they don't affect the Python *code* that you are testing.  The tests only focus on the Python variables and functions within the `hypotez/src/fast_api/__init__.py` file.

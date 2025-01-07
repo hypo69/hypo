@@ -21,7 +21,7 @@
     print(response)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from src.suppliers.aliexpress.api.base import RestApi # Импортируем базовый класс RestApi
 from src.logger.logger import logger # Импортируем логгер для обработки ошибок
@@ -96,7 +96,7 @@ class AliexpressAffiliateProductdetailGetRequest(RestApi):
     print(response)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from src.suppliers.aliexpress.api.base import RestApi # Импортируем базовый класс RestApi
 from src.logger.logger import logger # Импортируем логгер для обработки ошибок

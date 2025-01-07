@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gemini_traigner.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -48,7 +48,7 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 # Объявление режима работы. По умолчанию установлен режим разработки.
 
@@ -70,6 +70,6 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 # Объявление режима работы. По умолчанию установлен режим разработки.

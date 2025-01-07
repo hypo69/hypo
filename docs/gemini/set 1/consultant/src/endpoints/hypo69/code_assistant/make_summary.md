@@ -3,7 +3,7 @@
 ```python
 ## \file /src/endpoints/hypo69/code_assistant/make_summary.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
 ```python
 ## \file /src/endpoints/hypo69/code_assistant/make_summary.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -166,7 +166,7 @@ def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
 ```python
 ## \file /src/endpoints/hypo69/code_assistant/make_summary.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

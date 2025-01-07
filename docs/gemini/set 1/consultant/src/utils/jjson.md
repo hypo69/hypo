@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -161,7 +161,7 @@ def j_dumps(
 +Поддерживает загрузку, сохранение и слияние данных JSON и CSV.
 +"""
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
 -
 -"""
@@ -262,7 +262,7 @@ def j_dumps(
 Поддерживает загрузку, сохранение и слияние данных JSON и CSV.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import copy
 from math import log

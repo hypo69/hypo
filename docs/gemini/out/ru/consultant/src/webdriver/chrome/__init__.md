@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/chrome/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -21,7 +21,7 @@ from .chrome import Chrome
 ```python
 ## \file hypotez/src/webdriver/chrome/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -49,7 +49,7 @@ from src.logger import logger # Импорт функции логировани
 ```python
 ## \file hypotez/src/webdriver/chrome/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

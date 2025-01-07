@@ -45,7 +45,7 @@
    logger.info(output)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # https://huggingface.co/lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF?library=llama-cpp-python

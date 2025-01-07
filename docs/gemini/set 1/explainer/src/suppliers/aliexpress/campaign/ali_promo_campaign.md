@@ -4,7 +4,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/ali_promo_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 # ... (оставшаяся часть кода)
 ```
 

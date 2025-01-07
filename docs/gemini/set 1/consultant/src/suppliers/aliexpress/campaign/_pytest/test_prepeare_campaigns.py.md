@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -241,7 +241,7 @@ async def test_main(mock_get_directory_names):
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

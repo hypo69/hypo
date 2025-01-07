@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/base64.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -79,7 +79,7 @@ def base64encode(image_path):
 ```python
 ## \file hypotez/src/utils/convertors/base64.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -176,7 +176,7 @@ def base64encode(image_path: str) -> str:
 ```python
 ## \file hypotez/src/utils/convertors/base64.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

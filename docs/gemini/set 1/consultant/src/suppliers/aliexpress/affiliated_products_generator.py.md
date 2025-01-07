@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для генерации аффилированных продуктов AliExpress.
@@ -189,7 +189,7 @@ class AliAffiliatedProducts(AliApi):
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для генерации аффилированных продуктов AliExpress.

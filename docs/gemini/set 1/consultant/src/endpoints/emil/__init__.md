@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/emil/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .emil_design import EmilDesign
 ```python
 ## \file hypotez/src/endpoints/emil/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -59,7 +59,7 @@ from .emil_design import EmilDesign
 ```python
 ## \file hypotez/src/endpoints/emil/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

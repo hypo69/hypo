@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -51,7 +51,7 @@ sys.path.append (__root__)
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -128,7 +128,7 @@ except Exception as e:
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

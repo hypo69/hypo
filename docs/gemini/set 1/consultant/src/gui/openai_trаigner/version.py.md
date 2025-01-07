@@ -34,7 +34,7 @@
    print(__copyright__)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 
@@ -97,7 +97,7 @@ __cofee__: str = "Treat the developer to a cup of coffee for boosting enthusiasm
    print(__copyright__)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.helpers """
 from .requests import api_request
@@ -17,7 +17,7 @@ from .categories import filter_parent_categories, filter_child_categories
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль для работы с API AliExpress.  
     Содержит функции для отправки запросов, обработки аргументов,
@@ -71,7 +71,7 @@ def api_request(url: str, params: dict = None, **kwargs) -> dict:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль для работы с API AliExpress.  
     Содержит функции для отправки запросов, обработки аргументов,

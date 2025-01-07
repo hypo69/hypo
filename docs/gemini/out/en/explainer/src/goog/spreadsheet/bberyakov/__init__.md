@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -71,7 +71,7 @@ There are no functions defined.
 ### Potential Errors/Improvements
 
 - **Missing Documentation**: While the code includes docstrings, more detailed explanations within the imported classes (`GSpreadsheet`, `GWorksheet`, `GSRenderr`) would be beneficial.
-- **Dependency Management**: The `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12` lines are shebangs specifying Python interpreter locations.  If the `venv` directory isn't present in the `PATH`, or the Python version conflicts with required libraries, these lines can cause errors.
+- **Dependency Management**: The `` and `#! venv/bin/python/python3.12` lines are shebangs specifying Python interpreter locations.  If the `venv` directory isn't present in the `PATH`, or the Python version conflicts with required libraries, these lines can cause errors.
 
 
 ### Relationship to other parts of the project

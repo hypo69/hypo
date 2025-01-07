@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -48,7 +48,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ def example_function():
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

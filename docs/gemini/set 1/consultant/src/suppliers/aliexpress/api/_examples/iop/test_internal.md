@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
 """   [File's Description]
@@ -69,7 +69,7 @@ from src.utils.jjson import j_loads
 
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для тестирования взаимодействия с API IOP. """
 """ Этот модуль содержит пример запроса к API IOP для получения информации об элементе. """
@@ -148,7 +148,7 @@ from src.utils.jjson import j_loads
 
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для тестирования взаимодействия с API IOP. """
 """ Этот модуль содержит пример запроса к API IOP для получения информации об элементе. """

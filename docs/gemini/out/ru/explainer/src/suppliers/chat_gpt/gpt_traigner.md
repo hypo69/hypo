@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gpt_traigner.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

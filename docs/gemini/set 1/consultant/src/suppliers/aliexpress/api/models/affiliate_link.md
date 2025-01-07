@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/affiliate_link.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.models """
 class AffiliateLink:
@@ -21,7 +21,7 @@ from src.logger import logger
 
 ## \file hypotez/src/suppliers/aliexpress/api/models/affiliate_link.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль для работы с данными о ссылках на партнерские программы AliExpress.
     
@@ -70,7 +70,7 @@ from src.logger import logger
 
 ## \file hypotez/src/suppliers/aliexpress/api/models/affiliate_link.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль для работы с данными о ссылках на партнерские программы AliExpress.
     

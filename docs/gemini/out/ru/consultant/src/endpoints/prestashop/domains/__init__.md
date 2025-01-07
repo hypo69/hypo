@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -47,7 +47,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -111,7 +111,7 @@ from src.logger import logger  # Импорт модуля логировани�
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

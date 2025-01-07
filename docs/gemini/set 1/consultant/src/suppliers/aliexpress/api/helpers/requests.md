@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 from types import SimpleNamespace
@@ -52,7 +52,7 @@ def api_request(request, response_name, attemps:int = 1):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для обработки запросов к API AliExpress. """
 from types import SimpleNamespace
@@ -130,7 +130,7 @@ def api_request(request, response_name, attempts: int = 1) -> object | None:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для обработки запросов к API AliExpress. """
 from types import SimpleNamespace

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -147,7 +147,7 @@ class PriceListRequester(PrestaShop):
 ```python
 ## \file hypotez/src/endpoints/prestashop/pricelist.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
  
  """

@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -58,7 +58,7 @@ from translate import Translator
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -108,7 +108,7 @@ from translate import Translator
 ```
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 # -*- coding: utf-8 -*-
 # file: hypotez/src/suppliers/aliexpress/api/helpers/categories.py
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для фильтрации категорий и подкатегорий API Aliexpress.
 =================================================================
@@ -111,7 +111,7 @@ def filter_child_categories(categories: List[Union[models.Category, models.Child
 ```python
 # -*- coding: utf-8 -*-
 # file: hypotez/src/suppliers/aliexpress/api/helpers/categories.py
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для фильтрации категорий и подкатегорий API Aliexpress.
 =================================================================

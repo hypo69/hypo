@@ -5,7 +5,7 @@
 
 ```python
 # -*- coding: utf-8 -*-\n
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\n
 """ module: src.suppliers.aliexpress.api._examples.iop """
 # ... (много импортов) ...

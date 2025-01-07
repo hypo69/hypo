@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/chrome/extentions/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -63,7 +63,7 @@ __author__='hypotez '
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe  # Комментарий удалён, не нужен для формирования кода
+#   # Комментарий удалён, не нужен для формирования кода
 # #! venv/bin/python/python3.12 # Комментарий удалён, не нужен для формирования кода
 
 """
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe  # Комментарий удалён, не нужен для формирования кода
+#   # Комментарий удалён, не нужен для формирования кода
 # #! venv/bin/python/python3.12 # Комментарий удалён, не нужен для формирования кода
 
 """

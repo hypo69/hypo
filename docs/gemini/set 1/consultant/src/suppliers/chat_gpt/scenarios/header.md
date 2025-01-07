@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/scenarios/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -55,7 +55,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/scenarios/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -151,7 +151,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/scenarios/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

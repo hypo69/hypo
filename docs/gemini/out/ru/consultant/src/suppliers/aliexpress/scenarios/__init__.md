@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .login import login
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -84,7 +84,7 @@ def main():
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -1,6 +1,6 @@
 ## \file /src/_experiments/test_file_operations.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

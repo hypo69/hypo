@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/main.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.gui.context_menu.tkinter 
 	:platform: Windows, Unix
 	:synopsis:
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/main.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.gui.context_menu.tkinter
     :platform: Windows, Unix
     :synopsis: Модуль для управления контекстным меню в Windows Explorer.
@@ -222,7 +222,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/gui/context_menu/tkinter/main.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.gui.context_menu.tkinter
     :platform: Windows, Unix
     :synopsis: Модуль для управления контекстным меню в Windows Explorer.

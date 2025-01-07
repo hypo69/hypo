@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -60,7 +60,7 @@ from src.utils.csv import read_csv_as_dict, read_csv_as_ns, save_csv_file, read_
 ```python
 ## \file hypotez/src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -153,7 +153,7 @@ def csv_to_json(
 ```python
 ## \file hypotez/src/utils/convertors/csv.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

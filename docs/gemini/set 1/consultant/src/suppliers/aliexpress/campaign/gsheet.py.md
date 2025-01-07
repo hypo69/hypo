@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/gsheet.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -461,7 +461,7 @@ class AliCampaignGoogleSheet(SpreadSheet):
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для работы с Google Sheets в рамках кампаний AliExpress.

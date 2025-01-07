@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для преобразования Base64 контента во временный файл.
@@ -100,7 +100,7 @@ def base64encode(image_path: str) -> str:
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для преобразования Base64 контента во временный файл.

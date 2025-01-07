@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -24,7 +24,7 @@ from .promoter import FacebookPromoter, get_event_url
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ def get_data(file_path: str) -> dict:
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

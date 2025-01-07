@@ -2,14 +2,14 @@
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.gui.context_menu.qt6 \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src.gui.context_menu.qt6 """\n\n\n\n\nimport sys,os\nfrom pathlib import Path\n__root__ : Path = os.getcwd() [:os.getcwd().rfind(r\'hypotez\')+7]\nsys.path.append (__root__)
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.gui.context_menu.qt6 \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src.gui.context_menu.qt6 """\n\n\n\n\nimport sys,os\nfrom pathlib import Path\n__root__ : Path = os.getcwd() [:os.getcwd().rfind(r\'hypotez\')+7]\nsys.path.append (__root__)
 ```
 
 # Improved Code
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 Модуль для работы с контекстным меню в Qt6.
 =========================================================================================
 
@@ -70,7 +70,7 @@ __root__: Path = Path(os.getcwd()).resolve().parents[0] # Получение к�
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 Модуль для работы с контекстным меню в Qt6.
 =========================================================================================
 

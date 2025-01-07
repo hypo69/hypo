@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/date_time.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.utils 
 	:platform: Windows, Unix
 	:synopsis: function to check if the current time is within a specified interval with an optional timeout
@@ -98,7 +98,7 @@ class TimeoutCheck:
 
 ```python
 ## \file hypotez/src/utils/date_time.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для работы с датами и временем.
 =========================================================================================
@@ -211,7 +211,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/utils/date_time.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для работы с датами и временем.
 =========================================================================================

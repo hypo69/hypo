@@ -13,7 +13,7 @@ Execution steps
 2. It defines a constant `MODE` with the value `'dev'`.
 3. The code utilizes docstrings (`"""..."""`) to document its purpose and intended platforms. These docstrings are commented out and appear to be placeholders.
 4. It includes multiple blank docstring comments, indicating that this file is likely a template for a larger supplier module.
-5. The code sets up interpreter parameters via `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12`.  This tells the operating system which Python interpreter to use when executing the file.
+5. The code sets up interpreter parameters via `` and `#! venv/bin/python/python3.12`.  This tells the operating system which Python interpreter to use when executing the file.
 
 
 Usage example

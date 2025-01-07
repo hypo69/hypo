@@ -3,7 +3,7 @@
 ```python
 # # file hypotez/src/utils/csv.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -170,7 +170,7 @@ def read_csv_as_ns(file_path: Union[str, Path]) -> List[dict]:
 ```python
 # # file hypotez/src/utils/csv.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

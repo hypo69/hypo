@@ -67,7 +67,7 @@
     bot.run(gs.credentials.discord.bot_token)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 MODE = 'dev' # Режим работы (разработка/продакшн)

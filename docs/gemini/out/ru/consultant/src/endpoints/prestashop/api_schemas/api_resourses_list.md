@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -188,7 +188,7 @@ resource: list = [
 - Added docstrings (reStructuredText) to the function `get_api_resources()`.
 - Replaced `json.load` with `j_loads` (or `j_loads_ns`) as instructed.
 - Added error handling using `logger.error` instead of general `try-except` blocks.
-- Removed unnecessary comments starting with `# -*- coding: utf-8 -*-\`, `#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`
+- Removed unnecessary comments starting with `# -*- coding: utf-8 -*-\`, ``, `#! venv/bin/python/python3.12`
 - Added comments in RST format to explain code logic and data flow, avoiding words like "получаем", "делаем".
 
 

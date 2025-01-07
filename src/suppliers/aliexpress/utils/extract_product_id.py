@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/utils/extract_product_id.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

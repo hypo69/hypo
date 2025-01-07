@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -74,7 +74,7 @@ def translate(text, source_language, target_language):
 ```python
 ## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -153,7 +153,7 @@ def translate(text: str, source_language: str, target_language: str) -> str:
 ```python
 ## \file hypotez/src/ai/openai/translator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

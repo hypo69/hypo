@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для определения эндпоинтов Emil.
@@ -26,7 +26,7 @@ from .emil_design import EmilDesign
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для определения эндпоинтов Emil.

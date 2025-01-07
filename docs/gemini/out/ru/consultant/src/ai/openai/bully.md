@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/openai/bully.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -70,7 +70,7 @@ def bully(user_message="Hello!", messages=[{"system": "user", "content": system_
 ```python
 ## \file hypotez/src/ai/openai/bully.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -140,7 +140,7 @@ def bully(user_message: str = "Hello!") -> str:
 ```python
 ## \file hypotez/src/ai/openai/bully.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -29,7 +29,7 @@
 используемых доменами PrestaShop.
 
 """
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ warnings.filterwarnings("ignore", category=UserWarning) # отключает п�
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

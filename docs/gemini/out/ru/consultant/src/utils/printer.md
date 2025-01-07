@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/printer.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -168,7 +168,7 @@ def pprint(print_data: Any = None, text_color: str = "white", bg_color: str = ""
 ```python
 ## \file hypotez/src/utils/printer.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/convertors/png.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.utils.convertors.png 
 	:platform: Windows, Unix
 	:synopsis: png convertors 
@@ -82,7 +82,7 @@ class TextToImageGenerator:
 
 ```python
 ## \file hypotez/src/utils/convertors/png.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.utils.convertors.png
    :platform: Windows, Unix
    :synopsis: PNG image converter
@@ -206,7 +206,7 @@ class TextToImageGenerator:
 
 ```python
 ## \file hypotez/src/utils/convertors/png.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.utils.convertors.png
    :platform: Windows, Unix
    :synopsis: PNG image converter

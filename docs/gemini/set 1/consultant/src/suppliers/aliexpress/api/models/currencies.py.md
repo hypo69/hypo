@@ -2,7 +2,7 @@
 ```python
 ## file hypotez/src/suppliers/aliexpress/api/models/currencies.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class Currency:
@@ -28,7 +28,7 @@ class Currency:
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """
 Модуль для определения валют.
@@ -110,7 +110,7 @@ class Currency:
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """
 Модуль для определения валют.

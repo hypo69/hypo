@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -82,7 +82,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 ```python
 ## \file hypotez/src/webdriver/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -176,7 +176,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 ```python
 ## \file hypotez/src/webdriver/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/text_to_speech/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -76,7 +76,7 @@ graph TD
 
 **Imports:**
 
-*   `header`: This import is crucial but its specific role isn't explained in the provided code snippet. It's likely used for importing necessary configurations, dependencies or functions that are not in the `text_to_speech` module, but still crucial to its operation.  The `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12` shebang lines are typically used to specify the Python interpreter to use for the script.
+*   `header`: This import is crucial but its specific role isn't explained in the provided code snippet. It's likely used for importing necessary configurations, dependencies or functions that are not in the `text_to_speech` module, but still crucial to its operation.  The `` and `#! venv/bin/python/python3.12` shebang lines are typically used to specify the Python interpreter to use for the script.
 
 *   `attr`, `attrs`: These imports are from the `attr` library.  These usually enhance the structure and interaction of the class. However, in this minimal example, there is not enough code to confirm their functionality.
 

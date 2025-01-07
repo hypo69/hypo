@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/playwright/pw_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -20,7 +20,7 @@
 ```python
 ## \file hypotez/src/webdriver/playwright/pw_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -89,7 +89,7 @@ def example_function():
 ```python
 ## \file hypotez/src/webdriver/playwright/pw_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -99,7 +99,7 @@ class Aliexpress(Supplier, AliRequests, AliApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -166,7 +166,7 @@ class Aliexpress(Supplier, AliRequests, AliApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/aliexpress.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

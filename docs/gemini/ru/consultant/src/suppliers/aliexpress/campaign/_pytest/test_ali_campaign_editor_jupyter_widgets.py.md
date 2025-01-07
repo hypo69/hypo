@@ -38,7 +38,7 @@
     pytest.main([__file__])
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

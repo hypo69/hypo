@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/gui/openai_trаigner/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -108,7 +108,7 @@ class AssistantMainWindow(QMainWindow):
 -## \file hypotez/src/gui/openai_trаigner/main.py
 +"""Модуль для создания графического интерфейса приложения для обучения моделей OpenAI."""
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
  """
@@ -236,7 +236,7 @@ class AssistantMainWindow(QMainWindow):
 ```python
 ## \file hypotez/src/gui/openai_trаigner/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """Модуль для создания графического интерфейса приложения для обучения моделей OpenAI."""
 

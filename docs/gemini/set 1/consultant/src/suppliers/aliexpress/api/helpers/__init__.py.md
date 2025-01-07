@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль, содержащий вспомогательные функции для работы с API AliExpress.
 ======================================================================
@@ -29,7 +29,7 @@ from src.suppliers.aliexpress.api.helpers.categories import filter_parent_catego
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль, содержащий вспомогательные функции для работы с API AliExpress.
 ======================================================================

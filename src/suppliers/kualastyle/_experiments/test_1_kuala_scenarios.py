@@ -1,6 +1,6 @@
 ## \file /src/suppliers/kualastyle/_experiments/test_1_kuala_scenarios.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

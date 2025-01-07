@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/languages.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class Language:
@@ -35,7 +35,7 @@ class Language:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/languages.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~
 """ Модуль, содержащий константы языков для API AliExpress. """
 from src.logger import logger
@@ -80,7 +80,7 @@ class Language:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/languages.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~
 """ Модуль, содержащий константы языков для API AliExpress. """
 from src.logger import logger

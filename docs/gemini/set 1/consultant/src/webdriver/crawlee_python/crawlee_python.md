@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/crawlee_python.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/crawlee_python.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -188,7 +188,7 @@ class CrawleePython:
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/crawlee_python.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

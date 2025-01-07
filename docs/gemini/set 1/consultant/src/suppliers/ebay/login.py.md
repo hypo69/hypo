@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/ebay/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -47,7 +47,7 @@
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -114,7 +114,7 @@ from src.logger.logger import logger # импортируем logger для об
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

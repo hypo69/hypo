@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с Aliexpress Affiliate API.
 =========================================================================================
@@ -110,7 +110,7 @@ class AliexpressAffiliateProductSmartmatchRequest(RestApi):
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с Aliexpress Affiliate API.
 =========================================================================================

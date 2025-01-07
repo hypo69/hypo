@@ -1,6 +1,6 @@
 ## \file /src/utils/date_time.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

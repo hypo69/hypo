@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -68,7 +68,7 @@ The diagram shows a simple dependency. `init.py` imports the `Firefox` class fro
 
     - **Unclear Purpose of `MODE`:** While `MODE` is used, the documentation for its potential uses is minimal. Clarifying the exact use of `MODE` in other modules within the project would improve the readability.
 
-    - **Dependency Management:**  The use of `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12` suggests a virtual environment (`venv`).  While these are not errors, properly specifying the interpreter in a `requirements.txt` would be more robust in other project environments and improve maintainability.
+    - **Dependency Management:**  The use of `` and `#! venv/bin/python/python3.12` suggests a virtual environment (`venv`).  While these are not errors, properly specifying the interpreter in a `requirements.txt` would be more robust in other project environments and improve maintainability.
 
 
 

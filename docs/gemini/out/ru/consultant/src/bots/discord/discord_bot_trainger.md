@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/bots/discord/discord_bot_trainger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -103,7 +103,7 @@ async def hi(ctx):
 @@ -1,14 +1,11 @@
 -## \file hypotez/src/bots/discord/discord_bot_trainger.py
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
  """
@@ -247,7 +247,7 @@ async def hi(ctx):
 ```python
 ## \file hypotez/src/bots/discord/discord_bot_trainger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import json
 import discord

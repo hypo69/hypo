@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/campaign/_experiments/prepare_all_campaigns.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

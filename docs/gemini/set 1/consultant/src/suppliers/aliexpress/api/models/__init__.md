@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.models """
 from .languages import Language
@@ -20,7 +20,7 @@ from .category import Category, ChildCategory
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль моделей API для AliExpress.
     Содержит классы для представления данных, полученных с API AliExpress.
@@ -45,7 +45,7 @@ from .category import Category, ChildCategory  # Импорт классов Cat
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль моделей API для AliExpress.
     Содержит классы для представления данных, полученных с API AliExpress.

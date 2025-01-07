@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -75,7 +75,7 @@ def login(d: Driver) -> bool:
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -166,7 +166,7 @@ def login(driver: Driver) -> bool:
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

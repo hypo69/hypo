@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -65,7 +65,7 @@ def login(s) -> bool:
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -117,7 +117,7 @@ def login(s) -> bool:
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

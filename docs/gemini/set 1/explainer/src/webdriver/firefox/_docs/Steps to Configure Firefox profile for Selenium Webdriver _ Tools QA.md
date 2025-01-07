@@ -3,7 +3,7 @@
 ```markdown
 ## Файл hypotez/src/webdriver/firefox/_docs/Steps to Configure Firefox profile for Selenium Webdriver _ Tools QA.html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 
 """ module: src.webdriver.firefox._docs """
 MODE = 'debug'

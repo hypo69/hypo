@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -81,7 +81,7 @@ There are no functions.
 **Potential Errors/Improvements**:
 
 *   **Redundant Documentation**:  The docstrings (`"""..."""`) are excessively repeated and largely unhelpful as they don't explain the purpose of the code, or how `MODE` is used. This is a style issue that could be improved by focusing the documentation in one relevant place.
-*   **Unnecessary Comments**:  The `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12` shebang lines are outdated and likely unnecessary in a modern project. These specify the Python interpreter, but in the modern context that is usually handled by the project's build process. 
+*   **Unnecessary Comments**:  The `` and `#! venv/bin/python/python3.12` shebang lines are outdated and likely unnecessary in a modern project. These specify the Python interpreter, but in the modern context that is usually handled by the project's build process. 
 *   **Multiple `MODE` Definitions**: The multiple lines declaring `MODE` are a clear error and should be consolidated.
 
 **Relationship to Other Parts of the Project**:

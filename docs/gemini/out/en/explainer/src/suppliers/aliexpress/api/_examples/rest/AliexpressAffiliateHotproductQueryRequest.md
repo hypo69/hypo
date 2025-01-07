@@ -4,7 +4,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductQueryRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """
 '\'\'\nCreated by auto_sdk on 2021.05.20\n\'\'\'\nfrom ..base import RestApi
 class AliexpressAffiliateHotproductQueryRequest(RestApi):

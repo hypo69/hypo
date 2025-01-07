@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/ebay/shop.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -49,7 +49,7 @@ Author(s):
 ```python
 ## \file hypotez/src/suppliers/ebay/shop.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -110,7 +110,7 @@ def get_product_data(url: str) -> dict:
 ```python
 ## \file hypotez/src/suppliers/ebay/shop.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

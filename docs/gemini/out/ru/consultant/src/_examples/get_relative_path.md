@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/_examples/get_relative_path.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -30,7 +30,7 @@ print(relative_path)
 ```python
 ## \file hypotez/src/utils/_examples/get_relative_path.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -105,7 +105,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/utils/_examples/get_relative_path.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

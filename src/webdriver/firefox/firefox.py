@@ -1,6 +1,6 @@
 ## \file /src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -40,7 +40,7 @@ WebDriver Firefox
 """
 
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import os

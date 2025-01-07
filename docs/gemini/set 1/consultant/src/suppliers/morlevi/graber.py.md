@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для сбора данных о товарах с сайта morlevi.co.il.
@@ -147,7 +147,7 @@ class Graber(Grbr):
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для сбора данных о товарах с сайта morlevi.co.il.

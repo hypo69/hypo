@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateCategoryGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 
@@ -25,7 +25,7 @@ class AliexpressAffiliateCategoryGetRequest(RestApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateCategoryGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для запроса категорий на AliExpress Affiliate API. """
 
@@ -73,7 +73,7 @@ class AliexpressAffiliateCategoryGetRequest(RestApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateCategoryGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для запроса категорий на AliExpress Affiliate API. """
 

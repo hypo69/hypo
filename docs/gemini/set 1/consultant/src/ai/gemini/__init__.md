@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .generative_ai import GoogleGenerativeAI
 ```python
 ## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -73,7 +73,7 @@ def get_ai_model() -> GoogleGenerativeAI:
 ```python
 ## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -29,7 +29,7 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -95,7 +95,7 @@ def set_fixed_size(widget: QtWidgets.QWidget, width: int, height: int):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/styles.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

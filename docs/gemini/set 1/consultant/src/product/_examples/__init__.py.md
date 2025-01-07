@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/product/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -57,7 +57,7 @@ from .version import __version__, __doc__, __details__
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # from src.logger.logger import logger #  не используется, импорт закомментирован
@@ -93,7 +93,7 @@ from .version import __version__, __doc__, __details__ # импорт перем
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # from src.logger.logger import logger #  не используется, импорт закомментирован

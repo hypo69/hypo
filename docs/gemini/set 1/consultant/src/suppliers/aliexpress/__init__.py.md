@@ -2,7 +2,7 @@
 ```python
 ## file hypotez/src/suppliers/aliexpress/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -54,7 +54,7 @@ from .campaign.html_generators import ProductHTMLGenerator, CategoryHTMLGenerato
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

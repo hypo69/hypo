@@ -3,7 +3,7 @@
 ```html
 ## \file hypotez/src/fast_api/html/openai/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.fast_api.html.openai """
 MODE = 'debug'
@@ -101,7 +101,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/fast_api/html/openai/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ HTML page for interacting with the OpenAI model. """
 # This file provides a web interface for sending messages and system instructions to the OpenAI model.
@@ -217,7 +217,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/fast_api/html/openai/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ HTML page for interacting with the OpenAI model. """
 # This file provides a web interface for sending messages and system instructions to the OpenAI model.

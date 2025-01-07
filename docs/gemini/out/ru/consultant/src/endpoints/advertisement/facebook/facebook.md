@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -181,7 +181,7 @@ class Facebook():
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module: src.endpoints.advertisement.facebook 

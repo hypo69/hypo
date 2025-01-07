@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/product/product_fields/product_fields_translator.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.product.product_fields 
 	:platform: Windows, Unix
@@ -97,7 +97,7 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
 
 ```python
 ## \file hypotez/src/product/product_fields/product_fields_translator.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.product.product_fields
 	:platform: Windows, Unix
@@ -187,7 +187,7 @@ def translate_presta_fields_dict (presta_fields_dict: dict,
 
 ```python
 ## \file hypotez/src/product/product_fields/product_fields_translator.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.product.product_fields
 	:platform: Windows, Unix

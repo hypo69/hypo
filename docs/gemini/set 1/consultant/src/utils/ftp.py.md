@@ -47,7 +47,7 @@
     - `delete`: Удаляет файл с FTP-сервера.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import ftplib
 from pathlib import Path

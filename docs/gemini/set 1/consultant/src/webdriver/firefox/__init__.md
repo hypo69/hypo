@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .firefox import Firefox
 ```python
 ## \file hypotez/src/webdriver/firefox/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -64,7 +64,7 @@ logger = logging.getLogger(__name__)
 ```python
 ## \file hypotez/src/webdriver/firefox/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -98,4 +98,4 @@ logger = logging.getLogger(__name__)
 +
  ## \file hypotez/src/webdriver/firefox/__init__.py
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 

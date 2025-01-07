@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -78,7 +78,7 @@ __author__='hypotez '
 :vartype __author__: str
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # Устанавливаем режим работы приложения.
@@ -126,7 +126,7 @@ __author__ = 'hypotez '
 :vartype __author__: str
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # Устанавливаем режим работы приложения.

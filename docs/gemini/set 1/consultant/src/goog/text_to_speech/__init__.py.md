@@ -11,7 +11,7 @@
    библиотек gTTS и pyttsx3.
 """
 # файл hypotez/src/goog/text_to_speech/__init__.py
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 
@@ -79,7 +79,7 @@ _tts = TTS()
    библиотек gTTS и pyttsx3.
 """
 # файл hypotez/src/goog/text_to_speech/__init__.py
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

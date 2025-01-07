@@ -3,7 +3,7 @@
 ```python
 ## \file /src/endpoints/hypo69/code_assistant/onela_bot.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -104,7 +104,7 @@ if __name__ == '__main__':
 ```python
 ## \file /src/endpoints/hypo69/code_assistant/onela_bot.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -202,7 +202,7 @@ if __name__ == '__main__':
 ```python
 ## \file /src/endpoints/hypo69/code_assistant/onela_bot.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

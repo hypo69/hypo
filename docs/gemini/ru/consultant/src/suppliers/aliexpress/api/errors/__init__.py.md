@@ -40,7 +40,7 @@
         ...
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 
 # Импортирует все исключения из модуля exceptions

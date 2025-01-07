@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/product/header.py
 # -*- coding: utf-8 -*-\n
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module: src.product 

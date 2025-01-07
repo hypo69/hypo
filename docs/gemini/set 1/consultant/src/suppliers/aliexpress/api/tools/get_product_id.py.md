@@ -1,7 +1,7 @@
 # Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 # ~~~~~~~~~~~~~
 """
 Модуль для извлечения идентификатора продукта AliExpress.
@@ -70,7 +70,7 @@ def get_product_id(raw_product_id: str) -> str:
 # Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 # ~~~~~~~~~~~~~
 """
 Модуль для извлечения идентификатора продукта AliExpress.

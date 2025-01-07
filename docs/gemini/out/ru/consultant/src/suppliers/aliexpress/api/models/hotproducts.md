@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.models """
 from .product import Product
@@ -22,7 +22,7 @@ class HotProductsResponse:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль для работы с ответами о горячих товарах с AliExpress. """
 from src.utils.jjson import j_loads, j_loads_ns
@@ -71,7 +71,7 @@ class HotProductsResponse:
 *   Добавлены обработка ошибок с использованием `logger.error` вместо стандартных блоков `try-except`.
 *   Изменены названия переменных в соответствии со стилем кода.
 *   Изменён способ инициализации `products` - теперь используется генератор списков.
-*   Удалена ненужная строка `#! venv/Scripts/python.exe # <- venv win`
+*   Удалена ненужная строка ` # <- venv win`
 *   Добавлена проверка на корректность данных в методе `__init__`.
 
 # FULL Code
@@ -79,7 +79,7 @@ class HotProductsResponse:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ Модуль для работы с ответами о горячих товарах с AliExpress. """
 from src.utils.jjson import j_loads, j_loads_ns

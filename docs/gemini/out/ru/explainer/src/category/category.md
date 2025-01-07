@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/category/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Module for working with categories, primarily for PrestaShop.

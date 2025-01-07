@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 '''
@@ -25,7 +25,7 @@ class AliexpressAffiliateFeaturedpromoGetRequest(RestApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для получения данных о рекомендуемых продуктах с AliExpress. """
 from ..base import RestApi
@@ -79,7 +79,7 @@ class AliexpressAffiliateFeaturedpromoGetRequest(RestApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для получения данных о рекомендуемых продуктах с AliExpress. """
 from ..base import RestApi

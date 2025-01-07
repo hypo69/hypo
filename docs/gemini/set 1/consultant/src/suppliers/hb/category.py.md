@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/hb/category.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -114,7 +114,7 @@ def get_list_categories_from_site(s):
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для сбора товаров со страниц категорий поставщика hb.co.il.
@@ -234,7 +234,7 @@ def get_list_categories_from_site(s: Supplier) -> None:
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для сбора товаров со страниц категорий поставщика hb.co.il.

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/spreadsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -182,7 +182,7 @@ class SpreadSheet:
 ```python
 ## \file hypotez/src/goog/spreadsheet/spreadsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
  
  """

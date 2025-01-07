@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -148,7 +148,7 @@ def normalize_string(input_data: str | list) -> str:
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 #
 """

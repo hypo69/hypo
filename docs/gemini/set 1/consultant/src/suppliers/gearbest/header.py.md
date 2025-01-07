@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для настройки и получения основных параметров проекта Gearbest.
@@ -151,7 +151,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для настройки и получения основных параметров проекта Gearbest.

@@ -19,7 +19,7 @@
     response = ali_requests.make_get_request(url='https://example.com')
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import pickle
@@ -223,7 +223,7 @@ class AliRequests:
     response = ali_requests.make_get_request(url='https://example.com')
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import pickle

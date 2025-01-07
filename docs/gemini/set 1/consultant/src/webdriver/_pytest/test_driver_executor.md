@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_driver_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.webdriver._pytest 
 	:platform: Windows, Unix
 	:synopsis:
@@ -117,7 +117,7 @@ def test_get_webelement_by_locator_no_element(execute_locator, driver):
 +Этот модуль предоставляет набор тестов для проверки функциональности
 +класса `ExecuteLocator` и взаимодействия с WebDriver.
 +"""
- # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+ # -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
  
 -"""
 -.. module: src.webdriver._pytest 
@@ -183,7 +183,7 @@ def test_get_webelement_by_locator_no_element(execute_locator, driver):
 Этот модуль предоставляет набор тестов для проверки функциональности
 класса `ExecuteLocator` и взаимодействия с WebDriver.
 """
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service

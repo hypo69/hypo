@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/hb/graber.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

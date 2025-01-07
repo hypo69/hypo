@@ -18,7 +18,7 @@
 2.  Использовать `logger.error` для обработки исключений, вместо стандартного `try-except`.
 3.  Добавить описание модуля в формате reStructuredText.
 4.  Добавить документацию для всех переменных в формате reStructuredText.
-5.  Удалить `# -*- coding: utf-8 -*-` и `#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12` так как они не нужны
+5.  Удалить `# -*- coding: utf-8 -*-` и ``, `#! venv/bin/python/python3.12` так как они не нужны
 6.  Добавить импорт `logger` из `src.logger.logger`.
 
 **Оптимизированный код**
@@ -47,7 +47,7 @@
     print(f"Документация: {__doc__}")
 """
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 # #! venv/bin/python/python3.12
 
 

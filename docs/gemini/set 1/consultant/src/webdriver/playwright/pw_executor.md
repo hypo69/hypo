@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/playwright/pw_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -20,7 +20,7 @@
 ```python
 ## \file hypotez/src/webdriver/playwright/pw_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ def execute_action(action_data: dict) -> bool:
 ```python
 ## \file hypotez/src/webdriver/playwright/pw_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

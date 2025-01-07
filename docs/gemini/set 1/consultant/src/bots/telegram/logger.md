@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/bots/telegram/logger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -20,7 +20,7 @@
 ```python
 ## \file hypotez/src/bots/telegram/logger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -76,7 +76,7 @@ def setup_logger(log_file_path: str = "telegram_bot.log") -> logging.Logger:
 ```python
 ## \file hypotez/src/bots/telegram/logger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

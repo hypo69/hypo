@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

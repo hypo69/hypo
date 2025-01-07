@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/product/product.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -61,7 +61,7 @@ class Product(ProductFields, PrestaShop):
 ```python
 ## \file hypotez/src/product/product.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -143,7 +143,7 @@ class Product(ProductFields, PrestaShop):
 ```python
 ## \file hypotez/src/product/product.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

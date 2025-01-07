@@ -1,6 +1,6 @@
 ## \file /src/utils/_examples/get_relative_path.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .category import Category
 ```python
 ## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -59,7 +59,7 @@ from .category import Category  # Импорт класса Category
 ```python
 ## \file hypotez/src/category/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

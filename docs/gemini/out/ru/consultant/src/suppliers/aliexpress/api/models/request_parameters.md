@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class ProductType:
@@ -27,7 +27,7 @@ class LinkType:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для определения параметров запроса к API AliExpress.
     Этот модуль содержит перечисления (enum) для типов продуктов,
@@ -69,7 +69,7 @@ class LinkType:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для определения параметров запроса к API AliExpress.
     Этот модуль содержит перечисления (enum) для типов продуктов,

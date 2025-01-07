@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -78,7 +78,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 ```python
 ## \file hypotez/src/ai/gemini/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -168,7 +168,7 @@ __copyright__ = config.get("copyright", "") if config else ""
 ```python
 ## \file hypotez/src/ai/gemini/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

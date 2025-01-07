@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

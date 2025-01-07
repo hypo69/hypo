@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .crawlee_python import CrawleePython
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -59,7 +59,7 @@ from .crawlee_python import CrawleePython
 ```python
 ## \file hypotez/src/webdriver/crawlee_python/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

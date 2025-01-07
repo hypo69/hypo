@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/extract_product_id.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -105,7 +105,7 @@ def extract_prod_ids(urls: str | list[str]) -> str | list[str] | None:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/extract_product_id.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/edge/edge.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -105,7 +105,7 @@ class Edge(WebDriver):
 ```python
 ## \file hypotez/src/webdriver/edge/edge.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -226,7 +226,7 @@ class Edge(WebDriver):
 ```python
 ## \file hypotez/src/webdriver/edge/edge.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

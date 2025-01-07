@@ -1,7 +1,7 @@
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для работы с заголовками в GUI AliExpress.
@@ -103,7 +103,7 @@ except Exception as ex:
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для работы с заголовками в GUI AliExpress.

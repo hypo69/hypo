@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -69,7 +69,7 @@ The mermaid diagram shows a simple dependency between `etzmaleh/__init__.py` and
 
 - **Potential Errors/Improvements:**
     - **Missing Documentation:** The docstrings are very basic and could be expanded upon.  Adding a description of the purpose of the `MODE` variable and how it's used would be beneficial.
-    - **`#!` shebangs:**  The shebang lines (`#! venv/Scripts/python.exe`) are uncommon in modern Python projects. The `venv` approach suggests virtual environments, and using standard Python interpreter calls (`#! /usr/bin/env python3`) or the absolute path to the interpreter is generally preferable for portability.   These lines can be safely removed.
+    - **`#!` shebangs:**  The shebang lines (``) are uncommon in modern Python projects. The `venv` approach suggests virtual environments, and using standard Python interpreter calls (`#! /usr/bin/env python3`) or the absolute path to the interpreter is generally preferable for portability.   These lines can be safely removed.
     - **Relative Imports:**  Using relative imports like `.graber` is good practice when dealing with modular projects and ensures it works even if the module is moved within the same folder structure.
 
 - **Relationships with Other Parts:** The `etzmaleh` module likely interacts with other parts of the `hypotez` project, such as data processing pipelines, storage, or configuration settings. Understanding those interactions depends on code beyond this `__init__.py` file.

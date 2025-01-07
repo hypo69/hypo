@@ -24,7 +24,7 @@
 5.  Заменить `...` на корректную логику или удалить.
 6.  Добавить недостающие docstring для функций.
 7.  Добавить описание модуля в формате RST.
-8.  Удалить не используемые директивы  `# -*- coding: utf-8 -*-`, `#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`
+8.  Удалить не используемые директивы  `# -*- coding: utf-8 -*-`, ``, `#! venv/bin/python/python3.12`
 9.   Перенести переменную `__doc__` в описание модуля
 
 **Оптимизированный код**
@@ -50,7 +50,7 @@
    print(categories)
 """
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 # #! venv/bin/python/python3.12
 from packaging.version import Version
 # from .version import __version__, __doc__, __details__ # исправлено:  переносим __doc__ в docstring модуля

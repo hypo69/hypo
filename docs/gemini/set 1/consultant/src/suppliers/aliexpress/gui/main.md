@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -38,7 +38,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -151,7 +151,7 @@ class MainApp(QtWidgets.QMainWindow):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

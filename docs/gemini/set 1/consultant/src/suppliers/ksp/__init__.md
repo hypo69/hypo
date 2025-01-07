@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/ksp/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .graber import Graber
 ```python
 ## \file hypotez/src/suppliers/ksp/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -54,7 +54,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций j
 ```python
 ## \file hypotez/src/suppliers/ksp/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

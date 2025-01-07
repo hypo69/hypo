@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -27,7 +27,7 @@ process_all_campaigns()
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

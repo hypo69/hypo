@@ -50,7 +50,7 @@
     print(__version__)
 
 """
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import sys

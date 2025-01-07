@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_upload.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
 # # -*- coding: utf-8 -*-\
@@ -58,7 +58,7 @@ from src.logger import logger
 
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_upload.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для тестирования загрузки файла через API Iop. """
 
@@ -133,7 +133,7 @@ from src.logger import logger
 
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_upload.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для тестирования загрузки файла через API Iop. """
 

@@ -32,7 +32,7 @@
 
 ```html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 
 """
 Модуль: src.ai.gemini.html_chat.templates

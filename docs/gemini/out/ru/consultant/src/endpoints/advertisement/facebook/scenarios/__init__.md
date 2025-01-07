@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -40,7 +40,7 @@ from .post_ad import post_ad
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -96,7 +96,7 @@ logger = logging.getLogger(__name__)
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

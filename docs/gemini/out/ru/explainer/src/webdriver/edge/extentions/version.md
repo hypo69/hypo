@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/edge/extentions/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 """
 .. module: src.webdriver.edge.extentions 

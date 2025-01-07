@@ -23,7 +23,7 @@
     print(header.__doc__)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import sys
 import json
@@ -152,7 +152,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
     print(header.__doc__)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import sys
 import json

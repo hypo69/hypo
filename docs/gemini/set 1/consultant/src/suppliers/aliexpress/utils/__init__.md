@@ -2,7 +2,7 @@ Received Code
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

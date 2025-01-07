@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .graber import Graber
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -60,7 +60,7 @@ logger = logging.getLogger(__name__)
 ```python
 ## \file hypotez/src/suppliers/etzmaleh/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

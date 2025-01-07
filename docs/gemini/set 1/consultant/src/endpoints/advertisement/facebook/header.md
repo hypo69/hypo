@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -84,7 +84,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -168,7 +168,7 @@ __coffee__ = settings.get("coffee", "Treat the developer to a cup of coffee for 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

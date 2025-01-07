@@ -2,7 +2,7 @@
 ```python
 ## \\file hypotez/src/endpoints/prestashop/customer.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -71,7 +71,7 @@ class PrestaCustomer(PrestaShop):
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -173,7 +173,7 @@ class PrestaCustomer(PrestaShop):
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

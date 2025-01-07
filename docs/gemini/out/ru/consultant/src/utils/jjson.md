@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -148,7 +148,7 @@ def j_dumps(
 ```python
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -267,7 +267,7 @@ def j_dumps(
 ```python
 ## \file hypotez/src/utils/jjson.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

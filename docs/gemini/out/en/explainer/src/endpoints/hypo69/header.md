@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/endpoints/hypo69/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

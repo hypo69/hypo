@@ -37,7 +37,7 @@
    print(f"Текущий режим: {MODE}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from src.logger.logger import logger #  Импортируем logger для логирования ошибок.

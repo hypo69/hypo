@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/gworksheets.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -148,7 +148,7 @@ class GWorksheet (Worksheet):
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -331,7 +331,7 @@ class GWorksheet(Worksheet):
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

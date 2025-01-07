@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/utils/autodoc.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -103,7 +103,7 @@ print(example_function.__doc__)  # Вывод обновленного docstring
 ```python
 ## \file hypotez/src/utils/autodoc.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -194,7 +194,7 @@ print(example_function.__doc__)
 ```python
 ## \file hypotez/src/utils/autodoc.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

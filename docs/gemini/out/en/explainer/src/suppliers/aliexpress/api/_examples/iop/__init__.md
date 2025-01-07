@@ -4,7 +4,7 @@
 
 ```python
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api._examples.iop """
 from .base import 
@@ -49,7 +49,7 @@ No variables are defined.
 
 **Potential Errors or Areas for Improvement:**
 
-The code is extremely rudimentary and incomplete.  Without the content of `.base`, any further analysis or error detection is impossible. It's a missing import statement.  The `# -*- coding: utf-8 -*-\` comment is standard but not essential in a Python file.  The `#! venv/Scripts/python.exe` shebang is Windows-specific and should be avoided for portability in a library.
+The code is extremely rudimentary and incomplete.  Without the content of `.base`, any further analysis or error detection is impossible. It's a missing import statement.  The `# -*- coding: utf-8 -*-\` comment is standard but not essential in a Python file.  The `` shebang is Windows-specific and should be avoided for portability in a library.
 
 
 **Relationships with other parts of the project:**

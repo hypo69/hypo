@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -177,7 +177,7 @@ gs: ProgramSettings = ProgramSettings()
 ```python
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

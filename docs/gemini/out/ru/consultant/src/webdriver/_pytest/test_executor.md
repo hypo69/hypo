@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ def test_get_webelement_by_locator_single_element(execute_locator, driver_mock):
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -157,7 +157,7 @@ def test_get_webelement_by_locator_single_element(execute_locator, driver_mock):
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -51,7 +51,7 @@
     # Дальнейшая работа с request
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~
 from ..base import RestApi
 from src.logger.logger import logger # Импорт logger

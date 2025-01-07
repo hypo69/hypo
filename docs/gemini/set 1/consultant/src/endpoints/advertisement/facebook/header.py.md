@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -75,7 +75,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль header.
@@ -234,7 +234,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль header.

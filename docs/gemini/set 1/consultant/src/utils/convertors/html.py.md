@@ -99,7 +99,7 @@
     print(f"HTML as SimpleNamespace: {html_ns.p}, {html_ns.a}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import re
@@ -329,7 +329,7 @@ def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
     print(f"HTML as SimpleNamespace: {html_ns.p}, {html_ns.a}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import re

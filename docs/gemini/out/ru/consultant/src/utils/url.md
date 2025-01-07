@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/string/url.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.utils.string 
 	:platform: Windows, Unix
@@ -69,7 +69,7 @@ from urllib.parse import urlparse, parse_qs
 from src.logger import logger  # Импортируем logger для логирования
 
 ## \file hypotez/src/utils/string/url.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.utils.string.url
    :platform: Windows, Unix
@@ -163,7 +163,7 @@ from urllib.parse import urlparse, parse_qs
 from src.logger import logger  # Импортируем logger для логирования
 
 ## \file hypotez/src/utils/string/url.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.utils.string.url
    :platform: Windows, Unix

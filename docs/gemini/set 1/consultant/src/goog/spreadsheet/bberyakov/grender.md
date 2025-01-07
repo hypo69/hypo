@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/grender.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -235,7 +235,7 @@ class GSRender():
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/grender.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.goog.spreadsheet.bberyakov

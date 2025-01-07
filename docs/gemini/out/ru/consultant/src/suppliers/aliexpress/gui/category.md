@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -34,7 +34,7 @@ from src.suppliers.aliexpress.campaign import AliCampaignEditor
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -201,7 +201,7 @@ class CategoryEditor(QtWidgets.QWidget):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/edge/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -53,7 +53,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/webdriver/edge/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -110,7 +110,7 @@ from src.logger import logger # Импорт для логирования
 ```python
 ## \file hypotez/src/webdriver/edge/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

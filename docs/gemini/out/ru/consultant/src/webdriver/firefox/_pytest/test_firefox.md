@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/_pytest/test_firefox.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -46,7 +46,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/_pytest/test_firefox.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -95,7 +95,7 @@ def test_firefox_something():
 ```python
 ## \file hypotez/src/webdriver/firefox/_pytest/test_firefox.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

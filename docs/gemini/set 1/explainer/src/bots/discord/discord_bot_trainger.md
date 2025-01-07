@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/bots/discord/discord_bot_trainger.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

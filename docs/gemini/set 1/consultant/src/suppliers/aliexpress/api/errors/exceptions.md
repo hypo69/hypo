@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.errors """
 """Custom exceptions module"""
@@ -53,7 +53,7 @@ class InvalidTrackingIdException(AliexpressException):
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe # <- venv win
+#  # <- venv win
 from src.logger import logger
 # import ...  # Importir необходимый модуль
 # from ... import ... # Импортировать нужные классы
@@ -142,7 +142,7 @@ class InvalidTrackingIdException(AliexpressException):
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe # <- venv win
+#  # <- venv win
 from src.logger import logger
 # import ...  # Importir необходимый модуль
 # from ... import ... # Импортировать нужные классы

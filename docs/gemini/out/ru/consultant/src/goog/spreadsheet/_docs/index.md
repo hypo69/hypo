@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/_docs/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.goog.spreadsheet._docs """
 MODE = 'debug'
@@ -38,7 +38,7 @@ MODE = 'debug'
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 
 """Модуль для работы с Google Таблицами.
 Содержит класс Spreadsheet для взаимодействия с API Google Таблиц.
@@ -143,7 +143,7 @@ class Spreadsheet:
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 
 """Модуль для работы с Google Таблицами.
 Содержит класс Spreadsheet для взаимодействия с API Google Таблиц.

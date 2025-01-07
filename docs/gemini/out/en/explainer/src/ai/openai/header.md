@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/logger/header.py
 # -*- coding: utf-8 -*-\n
-#! venv/Scripts/python.exe\n
+\n
 #! venv/bin/python/python3.12\n
 
 """

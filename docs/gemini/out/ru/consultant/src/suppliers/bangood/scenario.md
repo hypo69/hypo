@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/bangood/scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -116,7 +116,7 @@ def get_list_categories_from_site(s):
 ```python
 ## \file hypotez/src/suppliers/bangood/scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -232,7 +232,7 @@ def get_list_categories_from_site(s):
 ```python
 ## \file hypotez/src/suppliers/bangood/scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

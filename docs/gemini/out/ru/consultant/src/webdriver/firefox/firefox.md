@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -66,7 +66,7 @@ import header
 ```python
 ## \file hypotez/src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -162,7 +162,7 @@ class Firefox(WebDriver):
 ```python
 ## \file hypotez/src/webdriver/firefox/firefox.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

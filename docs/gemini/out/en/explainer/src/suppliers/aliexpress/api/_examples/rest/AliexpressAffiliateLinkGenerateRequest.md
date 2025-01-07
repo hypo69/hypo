@@ -4,7 +4,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """
 '\'\'\nCreated by auto_sdk on 2020.03.09\n\'\'\'\nfrom ..base import RestApi
 class AliexpressAffiliateLinkGenerateRequest(RestApi):

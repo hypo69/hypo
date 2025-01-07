@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/product/product_fields/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """
@@ -109,7 +109,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/product/product_fields/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """
@@ -199,7 +199,7 @@ __cofee__ = SETTINGS.get("cofee", "Treat the developer to a cup of coffee for bo
 
 ```python
 ## \file hypotez/src/product/product_fields/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

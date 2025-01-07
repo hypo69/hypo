@@ -27,7 +27,7 @@ products, categories, attachments, addresses, carriers, cart_rules, carts, count
 ```
 ```python
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

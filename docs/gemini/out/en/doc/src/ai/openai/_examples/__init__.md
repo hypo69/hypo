@@ -44,4 +44,4 @@ This documentation does not show the content of the multiline docstrings because
 
 ## Note
 
-The presence of `#! venv/Scripts/python.exe` and similar lines at the top of the file suggest this might be a script or module intended for execution, and likely part of a larger project structure.  The imports and comments are common practice for software development.
+The presence of `` and similar lines at the top of the file suggest this might be a script or module intended for execution, and likely part of a larger project structure.  The imports and comments are common practice for software development.

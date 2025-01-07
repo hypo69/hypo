@@ -1,6 +1,6 @@
 ## \file /src/endpoints/prestashop/api/_experiments/ping.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

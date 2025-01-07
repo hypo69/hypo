@@ -4,7 +4,7 @@
 
 ```python
 ## \file hypotez/src/utils/file.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

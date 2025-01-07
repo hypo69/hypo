@@ -1,6 +1,6 @@
 ## \file /src/webdriver/edge/extentions/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
 @@ -1,11 +1,14 @@
 -## \\file hypotez/src/utils/convertors/dict.py
 -# -*- coding: utf-8 -*-\
--#! venv/Scripts/python.exe
+-
 -#! venv/bin/python/python3.12
 -
  """
@@ -218,7 +218,7 @@ def dict2ns(data: Dict[str, Any] | List[Any]) -> Any:
 ```python
 ## \file hypotez/src/utils/convertors/dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.utils.convertors.dict

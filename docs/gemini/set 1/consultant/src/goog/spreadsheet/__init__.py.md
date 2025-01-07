@@ -1,7 +1,7 @@
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.goog.spreadsheet
@@ -30,7 +30,7 @@ from .reach_spreadsheet import ReachSpreadsheet
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.goog.spreadsheet

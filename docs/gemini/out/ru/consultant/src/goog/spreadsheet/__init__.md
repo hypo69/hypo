@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -24,7 +24,7 @@ from .reach_spreadsheet import ReachSpreadsheet
 ```python
 ## \file hypotez/src/goog/spreadsheet/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -54,7 +54,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/goog/spreadsheet/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

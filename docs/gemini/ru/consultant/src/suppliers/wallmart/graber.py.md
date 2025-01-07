@@ -63,7 +63,7 @@
    # graber.some_method()
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from typing import Any, Callable

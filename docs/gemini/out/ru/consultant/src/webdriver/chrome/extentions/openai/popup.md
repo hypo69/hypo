@@ -3,7 +3,7 @@
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/openai/popup.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.webdriver.chrome.extentions.openai """
 MODE = 'debug'
@@ -67,7 +67,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/openai/popup.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ html-шаблон для взаимодействия с OpenAI моделью. """
 
@@ -140,7 +140,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/openai/popup.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ html-шаблон для взаимодействия с OpenAI моделью. """
 

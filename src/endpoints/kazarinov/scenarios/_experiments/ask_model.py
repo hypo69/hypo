@@ -1,6 +1,6 @@
 ## \file /src/endpoints/kazarinov/scenarios/_experiments/ask_model.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

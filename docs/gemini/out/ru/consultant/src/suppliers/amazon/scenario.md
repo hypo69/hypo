@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/amazon/scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -112,7 +112,7 @@ def get_list_products_in_category(s) -> List[str]:
 ```python
 ## \file hypotez/src/suppliers/amazon/scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -232,7 +232,7 @@ def get_list_products_in_category(s: Supplier) -> List[str] or None:
 ```python
 ## \file hypotez/src/suppliers/amazon/scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

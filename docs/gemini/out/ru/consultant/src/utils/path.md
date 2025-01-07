@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/path.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -46,7 +46,7 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
 ```python
 ## \file hypotez/src/utils/path.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -113,7 +113,7 @@ def get_relative_path(full_path: str, relative_from: str) -> Optional[str]:
 ```python
 ## \file hypotez/src/utils/path.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

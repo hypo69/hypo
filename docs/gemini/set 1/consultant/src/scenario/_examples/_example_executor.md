@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/scenario/_examples/_example_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -167,7 +167,7 @@ def example_run_scenario_files():
 ```python
 ## \file hypotez/src/scenario/_examples/_example_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 # ... (выше добавленные части)
 from src.logger import logger  # Импорт для логирования

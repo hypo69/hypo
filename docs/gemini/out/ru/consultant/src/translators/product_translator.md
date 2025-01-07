@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/translators/product_translator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 @@ -1,6 +1,7 @@
  ## \file hypotez/src/translators/product_translator.py
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
 +
  #! venv/bin/python/python3.12
  
@@ -276,7 +276,7 @@ def translate_record(record: dict, from_locale: str, to_locale: str) -> dict:
 ```python
 ## \file hypotez/src/translators/product_translator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #
 #! venv/bin/python/python3.12
 

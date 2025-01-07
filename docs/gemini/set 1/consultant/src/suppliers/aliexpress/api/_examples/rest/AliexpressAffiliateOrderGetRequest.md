@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderGetRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 '''
@@ -24,7 +24,7 @@ class AliexpressAffiliateOrderGetRequest(RestApi):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderGetRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~~
 """ Модуль для получения данных о заказах на Aliexpress через API. """
 '''
@@ -79,7 +79,7 @@ class AliexpressAffiliateOrderGetRequest(RestApi):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderGetRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~~
 """ Модуль для получения данных о заказах на Aliexpress через API. """
 '''

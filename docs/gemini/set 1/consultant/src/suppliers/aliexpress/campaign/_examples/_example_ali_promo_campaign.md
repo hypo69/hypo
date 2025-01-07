@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ a = AliPromoCampaign(campaign_name,category_name, 'EN','USD'))
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -197,7 +197,7 @@ except Exception as e:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_ali_promo_campaign.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

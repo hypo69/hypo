@@ -1,6 +1,6 @@
 ## \file /src/db/manager_coupons_and_sales/product_group_reduction_cache_manager.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

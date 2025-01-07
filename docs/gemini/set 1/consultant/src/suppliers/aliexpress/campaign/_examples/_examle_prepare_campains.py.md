@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -58,7 +58,7 @@ languages = {'EN': 'USD', 'HE': 'ILS', 'RU': 'ILS'}
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль содержит примеры использования функций для подготовки кампаний AliExpress.
@@ -136,7 +136,7 @@ languages = {'EN': 'USD', 'HE': 'ILS', 'RU': 'ILS'}
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль содержит примеры использования функций для подготовки кампаний AliExpress.

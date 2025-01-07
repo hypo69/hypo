@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/translators/ttranslator/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -50,7 +50,7 @@ from translate import Translatorr
 ```python
 ## \file hypotez/src/translators/ttranslator/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -116,7 +116,7 @@ def translate_text(text: str, target_language: str) -> str:
 ```python
 ## \file hypotez/src/translators/ttranslator/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

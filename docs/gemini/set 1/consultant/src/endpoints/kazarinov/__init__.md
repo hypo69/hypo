@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .kazarinov_bot import KazarinovTelegramBot
 ```python
 ## \file hypotez/src/endpoints/kazarinov/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ def load_data_from_file(file_path):
 ```python
 ## \file hypotez/src/endpoints/kazarinov/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

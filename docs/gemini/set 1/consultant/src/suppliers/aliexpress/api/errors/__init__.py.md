@@ -19,7 +19,7 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 # Импортирование всех исключений из модуля exceptions
 from .exceptions import *
@@ -53,7 +53,7 @@ from .exceptions import *
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 # Импортирование всех исключений из модуля exceptions
 from .exceptions import *

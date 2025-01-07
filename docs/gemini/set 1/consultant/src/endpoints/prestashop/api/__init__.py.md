@@ -135,7 +135,7 @@
 ```python
 ## \\file hypotez/src/endpoints/prestashop/api/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -151,7 +151,7 @@ from .api import PrestaShop
 ### Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для инициализации API Prestashop.
@@ -178,7 +178,7 @@ from .api import PrestaShop
 ### FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для инициализации API Prestashop.

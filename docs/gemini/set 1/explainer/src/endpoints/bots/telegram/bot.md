@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/bots/telegram/bot.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

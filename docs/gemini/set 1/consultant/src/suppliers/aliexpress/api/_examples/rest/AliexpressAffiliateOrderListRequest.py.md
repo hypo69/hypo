@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderListRequest.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 '''
@@ -35,7 +35,7 @@ class AliexpressAffiliateOrderListRequest(RestApi):
 используется для формирования запроса к API AliExpress для получения списка заказов.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: не используется, но может потребоваться в будущем
 from ..base import RestApi
@@ -103,7 +103,7 @@ class AliexpressAffiliateOrderListRequest(RestApi):
 используется для формирования запроса к API AliExpress для получения списка заказов.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 # from src.utils.jjson import j_loads, j_loads_ns # TODO: не используется, но может потребоваться в будущем
 from ..base import RestApi
 # from src.logger.logger import logger # TODO: не используется, но может потребоваться в будущем

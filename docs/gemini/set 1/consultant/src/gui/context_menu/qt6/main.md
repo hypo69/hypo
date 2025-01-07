@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 @@ -1,16 +1,10 @@
 -## \file hypotez/src/gui/context_menu/qt6/main.py
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
  """
@@ -316,7 +316,7 @@ if __name__ == "__main__":
 
 ```python
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

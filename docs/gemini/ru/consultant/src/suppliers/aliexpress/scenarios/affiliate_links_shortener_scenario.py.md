@@ -48,7 +48,7 @@
     print(short_url)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path

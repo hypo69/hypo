@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -39,7 +39,7 @@ from src.db.manager_coupons_and_sales import ProductCampaignsManager
 ```python
 ## \file hypotez/src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ class AliApi(AliexpressApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/aliapi.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -1,7 +1,7 @@
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """
 Модуль, содержащий модели данных для API AliExpress.
@@ -33,7 +33,7 @@ from .category import Category, ChildCategory
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """
 Модуль, содержащий модели данных для API AliExpress.

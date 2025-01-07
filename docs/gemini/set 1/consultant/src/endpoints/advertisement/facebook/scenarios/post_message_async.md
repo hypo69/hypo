@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_async.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -222,7 +222,7 @@ async def upload_media(d: Driver, products: List[SimpleNamespace], no_video: boo
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_async.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 #
 """

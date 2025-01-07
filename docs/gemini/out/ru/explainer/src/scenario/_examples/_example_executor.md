@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/scenario/_examples/_example_executor.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

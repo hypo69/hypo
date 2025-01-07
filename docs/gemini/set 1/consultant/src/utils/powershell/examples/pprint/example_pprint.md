@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.utils.powershell.examples.pprint 
 	:platform: Windows, Unix
 	:synopsis:
@@ -50,7 +50,7 @@ pprint("Hello, world!")
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.utils.powershell.examples.pprint
     :platform: Windows, Unix
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/example_pprint.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12
 """
 .. module:: src.utils.powershell.examples.pprint
     :platform: Windows, Unix

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/kualastyle/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ def close_pop_up(s) -> bool:
 ```python
 ## \file hypotez/src/suppliers/kualastyle/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -155,7 +155,7 @@ def close_pop_up(supplier: object) -> bool:
 ```python
 ## \file hypotez/src/suppliers/kualastyle/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

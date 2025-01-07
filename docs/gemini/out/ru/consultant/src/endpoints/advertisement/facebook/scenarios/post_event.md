@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -143,7 +143,7 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

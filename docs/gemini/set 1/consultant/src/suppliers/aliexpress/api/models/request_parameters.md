@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class ProductType:
@@ -27,7 +27,7 @@ class LinkType:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для определения типов параметров запроса к API AliExpress. """
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON
@@ -63,7 +63,7 @@ class LinkType:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/request_parameters.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для определения типов параметров запроса к API AliExpress. """
 from src.utils.jjson import j_loads, j_loads_ns  # Импорт необходимых функций для работы с JSON

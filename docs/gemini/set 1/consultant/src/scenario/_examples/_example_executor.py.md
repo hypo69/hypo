@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/scenario/_examples/_example_executor.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -177,7 +177,7 @@ if __name__ == "__main__":
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль содержит примеры использования executor из `src.scenario.executor`.
@@ -431,7 +431,7 @@ if __name__ == "__main__":
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль содержит примеры использования executor из `src.scenario.executor`.

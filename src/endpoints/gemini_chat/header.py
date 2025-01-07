@@ -1,6 +1,6 @@
 ## \file vercel_simple_gemini_chatbot/app/src/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -64,7 +64,7 @@ except KeyboardInterrupt:
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/start_posting.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

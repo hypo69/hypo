@@ -12,7 +12,7 @@
     - `rearrange_language_keys`: Обновляет идентификаторы языков в словаре полей товара.
     - `translate_presta_fields_dict`: Переводит мультиязычные поля товара.
 """
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 
@@ -174,7 +174,7 @@ def translate_presta_fields_dict(presta_fields_dict: Dict,
     - `rearrange_language_keys`: Обновляет идентификаторы языков в словаре полей товара.
     - `translate_presta_fields_dict`: Переводит мультиязычные поля товара.
 """
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

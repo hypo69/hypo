@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 def parse_product(product):
@@ -73,7 +73,7 @@ graph LR
 ## <explanation>
 
 **Импорты:**
-Нет импортов в данном коде. Комментарии `# -*- coding: utf-8 -*-` и `#! venv/Scripts/python.exe`  связаны с кодировкой и исполняемым файлом Python.
+Нет импортов в данном коде. Комментарии `# -*- coding: utf-8 -*-` и ``  связаны с кодировкой и исполняемым файлом Python.
 
 **Классы:**
 Нет классов.  Код использует функции, работающие с объектами, представленными в списке. Предполагается, что эти объекты имеют атрибут `product_small_image_urls` и метод `.string`.

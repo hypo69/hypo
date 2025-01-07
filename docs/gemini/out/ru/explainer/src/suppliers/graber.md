@@ -5,7 +5,7 @@
 ```python
 from __future__ import annotations
 ## \file hypotez/src/suppliers/graber.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

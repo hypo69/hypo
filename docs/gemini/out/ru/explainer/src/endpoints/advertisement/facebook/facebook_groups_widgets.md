@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -29,7 +29,7 @@
 ```python
 ## \file hypotez/src/webdriver/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -70,7 +70,7 @@ logging.basicConfig(level=logging.INFO)
 ```python
 ## \file hypotez/src/webdriver/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

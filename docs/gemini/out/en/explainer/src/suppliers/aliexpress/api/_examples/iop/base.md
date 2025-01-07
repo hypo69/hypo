@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/base.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api._examples.iop """
 'Created on 2018-03-21

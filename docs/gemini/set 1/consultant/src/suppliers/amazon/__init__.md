@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/amazon/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -26,7 +26,7 @@ from .scenario import get_list_products_in_category
 ```python
 ## \file hypotez/src/suppliers/amazon/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -97,7 +97,7 @@ def get_list_products_in_category(category_url):
 ```python
 ## \file hypotez/src/suppliers/amazon/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

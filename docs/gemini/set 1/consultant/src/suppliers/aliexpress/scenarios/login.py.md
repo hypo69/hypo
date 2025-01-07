@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -56,7 +56,7 @@ def login(s)->bool:
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для выполнения сценария входа на AliExpress.
@@ -136,7 +136,7 @@ def login(s) -> bool:
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для выполнения сценария входа на AliExpress.

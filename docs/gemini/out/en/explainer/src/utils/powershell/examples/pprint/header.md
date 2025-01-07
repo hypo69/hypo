@@ -5,7 +5,7 @@
 
 ```python
 ## \file hypotez/src/utils/powershell/examples/pprint/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.utils.powershell.examples.pprint \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""\n  \n""" module: src.utils.powershell.examples.pprint """\n\n\n\n""" Absolute path to modules  """\n\nimport sys,os\nfrom pathlib import Path\n__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]\nsys.path.append (__root__)
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.utils.powershell.examples.pprint \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""\n  \n""" module: src.utils.powershell.examples.pprint """\n\n\n\n""" Absolute path to modules  """\n\nimport sys,os\nfrom pathlib import Path\n__root__ : Path = os.getcwd() [:os.getcwd().rfind(r'hypotez')+7]\nsys.path.append (__root__)
 ```
 
 ## <algorithm>

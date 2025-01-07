@@ -2,7 +2,7 @@
 ```python
 ## file hypotez/src/goog/spreadsheet/reach_spreadsheet.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -414,7 +414,7 @@ if __name__ == "__main__":
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для взаимодействия с Google Sheets API.

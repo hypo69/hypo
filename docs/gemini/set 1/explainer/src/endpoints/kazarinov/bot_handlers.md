@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/bot_handlers_parser.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.endpoints.kazarinov.bot_handlers 

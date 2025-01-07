@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/scenarios/_experiments/promote_deal.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -90,7 +90,7 @@ resource:list = [
 ```python
 ## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -187,7 +187,7 @@ resource: list = [
 ```python
 ## \file hypotez/src/endpoints/prestashop/api_schemas/api_resourses_list.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

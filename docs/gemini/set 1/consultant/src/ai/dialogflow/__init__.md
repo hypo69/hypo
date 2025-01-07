@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/ai/dialogflow/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -50,7 +50,7 @@ https://habr.com/ru/articles/346606/
 ```python
 ## \file hypotez/src/ai/dialogflow/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -108,7 +108,7 @@ def load_config(file_path: str) -> dict:
 ```python
 ## \file hypotez/src/ai/dialogflow/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/chat_gpt.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -51,7 +51,7 @@ class ChatGpt:
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/chat_gpt.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -119,7 +119,7 @@ class ChatGpt:
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/chat_gpt.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

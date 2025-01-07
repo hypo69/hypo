@@ -25,7 +25,7 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path
@@ -108,7 +108,7 @@ locales: Optional[List[Dict[str, str]]] = get_locales(gs.path.src / 'suppliers' 
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path

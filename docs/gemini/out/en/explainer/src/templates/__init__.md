@@ -5,7 +5,7 @@
 
 ```python
 ## \file hypotez/src/templates/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.templates 
 	:platform: Windows, Unix
 	:synopsis:
@@ -109,7 +109,7 @@ graph LR
 * **Potential Errors/Improvements:**
     * **Missing Documentation:** The module docstrings (the strings enclosed in triple quotes) are incomplete and contain examples of placeholder documentation. They should describe the module's purpose, operation, and dependencies.
     * **Unclear `...` Import:** The `...` suggests that other imports are missing. These imports should be clearly identified. It's crucial to fully define all imports for maintaining code clarity.
-    * **`#!` Lines:** The shebang lines (`#! venv/Scripts/python.exe` etc.) are uncommon in modern Python code.  If used, these indicate the interpreter to be used, and the interpreter should be determined automatically by the OS if the script is placed within a suitable package.
+    * **`#!` Lines:** The shebang lines (`` etc.) are uncommon in modern Python code.  If used, these indicate the interpreter to be used, and the interpreter should be determined automatically by the OS if the script is placed within a suitable package.
 
 * **Relationships to Other Parts of the Project:**
     * The `header` module is a dependency, and the `src.templates.version` module will likely contain version information used by packaging tools like `setuptools`.  `packaging.version` is an external dependency used for version management.

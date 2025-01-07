@@ -19,7 +19,7 @@
     print(response)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from src.logger.logger import logger
 from ..base import RestApi
@@ -119,7 +119,7 @@ class AliexpressAffiliateHotproductQueryRequest(RestApi):
     print(response)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from src.logger.logger import logger
 from ..base import RestApi

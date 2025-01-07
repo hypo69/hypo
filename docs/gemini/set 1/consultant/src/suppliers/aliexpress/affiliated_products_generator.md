@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/affiliated_products_generator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -153,7 +153,7 @@ class AliAffiliatedProducts(AliApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/affiliated_products_generator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -293,7 +293,7 @@ class AliAffiliatedProducts(AliApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/affiliated_products_generator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

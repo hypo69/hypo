@@ -1,6 +1,6 @@
 ## \file /src/db/manager_translations/product_translations.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

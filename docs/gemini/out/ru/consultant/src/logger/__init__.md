@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -29,7 +29,7 @@ from .exceptions import ( ExecuteLocatorException,
 ```python
 ## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -65,7 +65,7 @@ from .exceptions import (
 ```python
 ## \file hypotez/src/logger/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

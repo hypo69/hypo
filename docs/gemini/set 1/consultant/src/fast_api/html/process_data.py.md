@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/fast_api/html/process_data.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -46,7 +46,7 @@ from main import process_dataa
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для обработки данных в HTML.
@@ -102,7 +102,7 @@ from main import process_dataa # Импорт функции process_dataa из 
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для обработки данных в HTML.

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_async.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -220,7 +220,7 @@ async def promote_post(d: Driver, category: SimpleNamespace, products: List[Simp
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_async.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

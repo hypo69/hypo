@@ -26,7 +26,7 @@ from .exceptions import (
 # Changes Made
 
 *   Добавлен RST-документация для модуля.
-*   Убран ненужный комментарий `# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12`.
+*   Убран ненужный комментарий `# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12`.
 
 
 # Full Code

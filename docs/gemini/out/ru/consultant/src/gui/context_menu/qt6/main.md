@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/main.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.gui.context_menu.qt6 
 	:platform: Windows, Unix
 	:synopsis:
@@ -145,7 +145,7 @@ def remove_context_menu_item():
 
 ```python
 ## \file hypotez/src/gui/context_menu/qt6/main.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.gui.context_menu.qt6 
 	:platform: Windows, Unix
 	:synopsis:

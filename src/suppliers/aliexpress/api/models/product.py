@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/api/models/product.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 from typing import List

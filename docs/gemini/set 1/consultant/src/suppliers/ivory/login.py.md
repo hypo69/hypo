@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/ivory/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -64,7 +64,7 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
   #: Указывает режим работы поставщика (dev - разработка, prod - рабочий)
@@ -104,7 +104,7 @@
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
   #: Указывает режим работы поставщика (dev - разработка, prod - рабочий)

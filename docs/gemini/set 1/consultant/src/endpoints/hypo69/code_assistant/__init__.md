@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .code_assistant import CodeAssistant
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -49,7 +49,7 @@ from .code_assistant import CodeAssistant
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

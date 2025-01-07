@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/language.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -31,7 +31,7 @@ from typing import Optional
 ```python
 ## \file hypotez/src/endpoints/prestashop/language.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -114,7 +114,7 @@ class PrestaLanguage(PrestaShop):
 ```python
 ## \file hypotez/src/endpoints/prestashop/language.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

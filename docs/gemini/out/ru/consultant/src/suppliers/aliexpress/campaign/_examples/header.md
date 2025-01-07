@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -53,7 +53,7 @@ sys.path.append (str (dir_root) ) # Добавляю рабочую директ
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -146,7 +146,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

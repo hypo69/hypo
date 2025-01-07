@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -119,7 +119,7 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 ```python
 ## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -242,7 +242,7 @@ def receive(imap_server: str, user: str, password: str, folder: str = 'inbox') -
 ```python
 ## \file hypotez/src/utils/smtp.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

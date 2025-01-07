@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/product/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -81,7 +81,7 @@ from src.logger.logger import logger
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 
@@ -158,7 +158,7 @@ from src.logger.logger import logger #, StringNormalizer, ProductFieldsValidator
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

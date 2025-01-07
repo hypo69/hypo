@@ -4,7 +4,7 @@
 ```html
 ## \file hypotez/src/ai/gemini/html_chat/templates/chat.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.ai.gemini.html_chat.templates """
 MODE = 'debug'

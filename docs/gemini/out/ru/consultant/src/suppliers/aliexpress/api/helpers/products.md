@@ -2,7 +2,7 @@ Received Code
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 def parse_product(product):
@@ -21,7 +21,7 @@ def parse_products(products):
 Improved Code
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe # <- venv win
+#  # <- venv win
 # # ~~~~~~~~~~~~~~~
 """
 Модуль для обработки данных о продуктах с AliExpress.
@@ -94,7 +94,7 @@ Changes Made
 FULL Code
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe # <- venv win
+#  # <- venv win
 # # ~~~~~~~~~~~~~~~
 """
 Модуль для обработки данных о продуктах с AliExpress.

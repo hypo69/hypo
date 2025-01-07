@@ -1,14 +1,14 @@
 ## Received Code
 
 ```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.webdriver.chrome \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\nfrom .chrome import Chrome
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.webdriver.chrome \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\nfrom .chrome import Chrome
 ```
 
 ## Improved Code
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -33,7 +33,7 @@ from .chrome import Chrome
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

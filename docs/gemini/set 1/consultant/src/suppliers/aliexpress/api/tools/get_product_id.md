@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.tools """
 """Some useful tools."""
@@ -30,7 +30,7 @@ def get_product_id(raw_product_id: str) -> str:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для извлечения идентификатора продукта с AliExpress. """
 """Содержит функцию для извлечения ID продукта из строки. """
@@ -80,7 +80,7 @@ def get_product_id(raw_product_id: str) -> str:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для извлечения идентификатора продукта с AliExpress. """
 """Содержит функцию для извлечения ID продукта из строки. """

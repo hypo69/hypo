@@ -5,7 +5,7 @@
 ```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.webdriver.firefox.extentions.test_extention.html """
 MODE = 'debug'
@@ -65,7 +65,7 @@ This file is an HTML document, not Python code.  It defines the structure and co
 
 * **Functions:**  No functions are defined. This is an HTML file, not a Python function definition.
 
-* **Variables:** The only variable is `MODE = 'debug'`.  This is a Python-style variable declaration, but it's within a multi-line comment (`""" module: ... """`).  It's not used by the HTML file directly.  It's likely intended for use with some Python code that generates/processes the HTML, outside the scope of the HTML itself.  The `#! venv/Scripts/python.exe` line at the top suggests this.  It's a shebang used by some systems to specify which interpreter should run a script. This is likely used to specify that Python should be used to run this.
+* **Variables:** The only variable is `MODE = 'debug'`.  This is a Python-style variable declaration, but it's within a multi-line comment (`""" module: ... """`).  It's not used by the HTML file directly.  It's likely intended for use with some Python code that generates/processes the HTML, outside the scope of the HTML itself.  The `` line at the top suggests this.  It's a shebang used by some systems to specify which interpreter should run a script. This is likely used to specify that Python should be used to run this.
 
 * **Potential Errors/Improvements:**
 

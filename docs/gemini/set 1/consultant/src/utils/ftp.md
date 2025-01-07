@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/ftp.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -108,7 +108,7 @@ def read(source_file_path: str, dest_dir: str, dest_file_name: str) -> Union[str
 ```python
 ## \file hypotez/src/utils/ftp.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -271,7 +271,7 @@ def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
 ```python
 ## \file hypotez/src/utils/ftp.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

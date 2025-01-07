@@ -2,7 +2,7 @@
 ```python
 ## \\file hypotez/src/suppliers/aliexpress/utils/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -21,7 +21,7 @@ from .locales import locales
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -60,7 +60,7 @@ from .locales import locales
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

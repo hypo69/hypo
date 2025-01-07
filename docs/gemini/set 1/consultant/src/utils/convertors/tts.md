@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/tts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -122,7 +122,7 @@ async def text2speech(text: str, lang: str = 'ru') -> str:
 ```python
 ## \file hypotez/src/utils/convertors/tts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -241,7 +241,7 @@ async def text2speech(text: str, lang: str = 'ru') -> str:
 ```python
 ## \file hypotez/src/utils/convertors/tts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

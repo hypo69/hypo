@@ -1,7 +1,7 @@
 # Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для преобразования URL-адресов в HTTPS формат.
@@ -106,7 +106,7 @@ def ensure_https(prod_ids: str | list[str]) -> str | list[str]:
 # Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для преобразования URL-адресов в HTTPS формат.

@@ -2,7 +2,7 @@
 ```python
 ## file hypotez/src/suppliers/aliexpress/campaign/prepare_all_camapaigns.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -24,7 +24,7 @@ process_all_campaigns()
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -84,7 +84,7 @@ if __name__ == '__main__':
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

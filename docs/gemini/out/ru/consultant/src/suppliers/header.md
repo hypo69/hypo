@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.suppliers.header \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.suppliers.header \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""
 
 
 import sys

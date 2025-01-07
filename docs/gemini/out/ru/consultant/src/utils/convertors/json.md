@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/json.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -143,7 +143,7 @@ def json2xls(json_data: str | list | dict | Path, xls_file_path: str | Path) -> 
 --- a/hypotez/src/utils/convertors/json.py
 +++ b/hypotez/src/utils/convertors/json.py
 @@ -3,7 +3,7 @@
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
 -"""
@@ -217,7 +217,7 @@ def json2xls(json_data: str | list | dict | Path, xls_file_path: str | Path) -> 
 ```python
 ## \file hypotez/src/utils/convertors/json.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
  
  """Модуль для преобразования данных JSON в различные форматы.

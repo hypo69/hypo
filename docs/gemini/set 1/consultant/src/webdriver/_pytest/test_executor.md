@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.webdriver._pytest 
 	:platform: Windows, Unix
 	:synopsis:
@@ -163,7 +163,7 @@ def test_send_message_typing_speed(execute_locator, driver_mock):
 
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для тестирования класса ExecuteLocator.
 =========================================================================================
@@ -328,7 +328,7 @@ def test_send_message_typing_speed(execute_locator, driver_mock):
 
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для тестирования класса ExecuteLocator.
 =========================================================================================

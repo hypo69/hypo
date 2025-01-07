@@ -2,7 +2,7 @@
 ```python
 ## file hypotez/src/suppliers/etzmaleh/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -76,7 +76,7 @@ class Graber(Grbr):
 ```python
 ## file hypotez/src/suppliers/etzmaleh/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.suppliers.etzmaleh
@@ -167,7 +167,7 @@ class Graber(Grbr):
 ```python
 ## file hypotez/src/suppliers/etzmaleh/graber.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.suppliers.etzmaleh

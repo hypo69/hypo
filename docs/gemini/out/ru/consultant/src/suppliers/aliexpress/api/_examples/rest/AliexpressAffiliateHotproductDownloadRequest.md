@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 
@@ -35,7 +35,7 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ Модуль для запроса данных о популярных продуктах на AliExpress. """
 
@@ -97,7 +97,7 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateHotproductDownloadRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ Модуль для запроса данных о популярных продуктах на AliExpress. """
 

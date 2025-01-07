@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/string/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -109,4 +109,4 @@ graph LR
 **Дополнительная информация:**
 
 - Важно изучить `hypotez/src/utils/string/validator.py` и `hypotez/src/utils/string/normalizer.py` для детального понимания работы класса `ProductFieldsValidator` и функций нормализации.
-- `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`:  Это магические строки, указывающие интерпретатор Python для запуска скрипта (вероятно, используется виртуальное окружение).
+- `` и `#! venv/bin/python/python3.12`:  Это магические строки, указывающие интерпретатор Python для запуска скрипта (вероятно, используется виртуальное окружение).

@@ -18,7 +18,7 @@
 3. Заменить print на логирование с использованием `logger`.
 4. Переписать комментарии в формате reStructuredText (RST).
 5.  Удалить излишние комментарии `# -*- coding: utf-8 -*-`.
-6.  Удалить комментарий `#! venv/Scripts/python.exe # <- venv win`.
+6.  Удалить комментарий ` # <- venv win`.
 
 **Оптимизированный код**
 
@@ -49,7 +49,7 @@
 """
 # # -*- coding: utf-8 -*-  # удалено
 
-# #! venv/Scripts/python.exe # <- venv win # удалено
+#  # <- venv win # удалено
 
 from src.logger.logger import logger  # импорт модуля логирования
 # from src.utils.jjson import j_loads, j_loads_ns # не используется в данном примере, но добавляется для будущей совместимости.

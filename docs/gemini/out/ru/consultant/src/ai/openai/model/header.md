@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/logger/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 module: src.logger 
 	:platform: Windows, Unix
@@ -72,7 +72,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/logger/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для определения корневого каталога проекта.
 ====================================================
@@ -164,7 +164,7 @@ __cofee__ = settings.get("cofee", "Treat the developer to a cup of coffee for bo
 
 ```python
 ## \file hypotez/src/logger/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для определения корневого каталога проекта.
 ====================================================

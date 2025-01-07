@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/product/_examples/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.product._examples 
 	:platform: Windows, Unix
 	:synopsis:
@@ -85,7 +85,7 @@ __annotations__ = {}
 
 - Добавлена строка `from src.utils.jjson import j_loads, j_loads_ns`.
 - Добавлена импортированная библиотека `logging`.
-- Изменён путь запуска скрипта `#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12` на более стандартный `#!/usr/bin/env python3`.
+- Изменён путь запуска скрипта ``, `#! venv/bin/python/python3.12` на более стандартный `#!/usr/bin/env python3`.
 - Изменён стиль docstring, добавлен заголовок модуля.
 - Добавлены строки кодировки `# -*- coding: utf-8 -*-`.
 - Добавлено логирование с использованием `logger`.

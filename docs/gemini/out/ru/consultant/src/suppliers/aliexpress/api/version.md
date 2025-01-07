@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api """
 
 """
@@ -26,7 +26,7 @@ __author__='hypotez '
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api """
 
 """
@@ -84,7 +84,7 @@ def get_version():
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api """
 
 """

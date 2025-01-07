@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api """
 """ Aliexpress API wrapper"""
@@ -22,7 +22,7 @@ from . import models
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api """
 """ Aliexpress API wrapper """
@@ -56,7 +56,7 @@ from . import models
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api """
 """ Aliexpress API wrapper """

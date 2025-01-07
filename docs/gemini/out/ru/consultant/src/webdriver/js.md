@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -124,7 +124,7 @@ class JavaScript:
 ```python
 ## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -238,7 +238,7 @@ class JavaScript:
 ```python
 ## \file hypotez/src/webdriver/js.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

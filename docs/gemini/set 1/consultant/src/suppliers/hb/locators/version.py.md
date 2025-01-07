@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/hb/locators/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -58,7 +58,7 @@ __author__='hypotez '
 # Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -136,7 +136,7 @@ __author__='hypotez '
 # FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

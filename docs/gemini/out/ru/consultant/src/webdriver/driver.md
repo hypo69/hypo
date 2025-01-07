@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -146,7 +146,7 @@ class Driver:
 ```python
 ## \file hypotez/src/webdriver/driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.webdriver.driver

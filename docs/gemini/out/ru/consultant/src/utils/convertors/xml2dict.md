@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/xml2dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -131,7 +131,7 @@ def ET2dict(element_tree: ET.Element) -> dict:
 ```python
 ## \file hypotez/src/utils/convertors/xml2dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -269,7 +269,7 @@ def ET2dict(element_tree: ET.Element) -> dict:
 ```python
 ## \file hypotez/src/utils/convertors/xml2dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

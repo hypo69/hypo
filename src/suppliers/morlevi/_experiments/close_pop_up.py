@@ -1,6 +1,6 @@
 ## \file /src/suppliers/morlevi/_experiments/close_pop_up.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

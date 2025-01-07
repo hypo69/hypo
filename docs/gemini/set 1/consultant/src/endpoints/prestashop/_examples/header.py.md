@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/_examples/header.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -90,7 +90,7 @@ from src.logger.logger import logger
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import sys # импорт модуля sys
 import os # импорт модуля os
@@ -163,7 +163,7 @@ print(dir_root) # вывод корневой директории в консо
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 import sys # импорт модуля sys
 import os # импорт модуля os

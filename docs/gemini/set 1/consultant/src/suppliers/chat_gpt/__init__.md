@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .gsheet import GptGs
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -57,7 +57,7 @@ from .gsheet import GptGs
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

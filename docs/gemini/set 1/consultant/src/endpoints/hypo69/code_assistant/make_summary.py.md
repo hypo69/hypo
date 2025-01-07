@@ -1,7 +1,7 @@
 # Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для создания файла `SUMMARY.md` для `mdbook`.
@@ -113,7 +113,7 @@ def prepare_summary_path(src_dir: Path, file_name: str = 'SUMMARY.md') -> Path:
 # FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для создания файла `SUMMARY.md` для `mdbook`.

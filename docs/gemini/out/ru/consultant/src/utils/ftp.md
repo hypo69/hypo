@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/ftp.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.utils 
 	:platform: Windows, Unix
 	:synopsis: interface for interacting with FTP servers
@@ -173,7 +173,7 @@ def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
 @@ -1,13 +1,13 @@
 -## \file hypotez/src/utils/ftp.py
 +"""Модуль для работы с FTP-серверами.
- # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+ # -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 -.. module: src.utils 
 +"""Модуль для работы с FTP-серверами.
  	:platform: Windows, Unix
@@ -249,7 +249,7 @@ def delete(source_file_path: str, dest_dir: str, dest_file_name: str) -> bool:
 
 ```python
 """Модуль для работы с FTP-серверами.
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 """Модуль для работы с FTP-серверами.
 	:platform: Windows, Unix
 	:synopsis: interface for interacting with FTP servers

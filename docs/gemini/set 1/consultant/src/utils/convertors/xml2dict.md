@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/convertors/xml2dict.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.utils.convertors 
 	:platform: Windows, Unix
@@ -144,7 +144,7 @@ def xml2dict(xml: str) -> dict:
 *   Corrected a potential regular expression bug, fixing the usage of `re.compile()`.
 *   Using `j_loads` for parsing data
 *   Import changed from ET to ElementTree.
-*   Updated `# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12` to `import ...` where appropriate
+*   Updated `# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12` to `import ...` where appropriate
 * Added error handling for XML parsing and use of `logger`
 
 # FULL Code
@@ -156,7 +156,7 @@ from src.utils.jjson import j_loads, j_loads_ns
 from src.logger import logger
 
 ## \file hypotez/src/utils/convertors/xml2dict.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.utils.convertors 
 	:platform: Windows, Unix

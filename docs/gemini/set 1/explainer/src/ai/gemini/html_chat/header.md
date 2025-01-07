@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

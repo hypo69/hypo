@@ -5,7 +5,7 @@
 
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.ai.openai._examples 
 	:platform: Windows, Unix
 	:synopsis:

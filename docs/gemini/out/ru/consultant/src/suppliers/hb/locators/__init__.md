@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/hb/locators/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -55,7 +55,7 @@ from .locator import
 ```python
 ## \file hypotez/src/suppliers/hb/locators/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -127,7 +127,7 @@ from src.logger import logger # Импорт функции logger
 ```python
 ## \file hypotez/src/suppliers/hb/locators/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 
@@ -56,7 +56,7 @@ def filter_child_categories(categories: List[models.Category | models.ChildCateg
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 
@@ -136,7 +136,7 @@ def filter_child_categories(categories: List[models.Category | models.ChildCateg
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/categories.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 

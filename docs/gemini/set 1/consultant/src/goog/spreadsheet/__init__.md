@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -27,7 +27,7 @@ from .reach_spreadsheet import ReachSpreadsheet
 Этот модуль предоставляет классы для взаимодействия с Google Таблицами.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import json
@@ -69,7 +69,7 @@ from .reach_spreadsheet import ReachSpreadsheet
 Этот модуль предоставляет классы для взаимодействия с Google Таблицами.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import json

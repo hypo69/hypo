@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -59,7 +59,7 @@ languages = {'EN': 'USD', 'HE': 'ILS', 'RU': 'ILS'}
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -171,7 +171,7 @@ languages = {'EN': 'USD', 'HE': 'ILS', 'RU': 'ILS'}
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_examle_prepare_campains.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

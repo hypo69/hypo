@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/fast_api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -20,7 +20,7 @@
 ```python
 ## \file hypotez/src/fast_api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -51,7 +51,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импортируем нео
 ```python
 ## \file hypotez/src/fast_api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

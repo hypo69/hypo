@@ -29,7 +29,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для определения корневого пути проекта и загрузки основных настроек.

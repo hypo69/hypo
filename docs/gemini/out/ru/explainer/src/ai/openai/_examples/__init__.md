@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/ai/openai/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module: src.ai.openai._examples 

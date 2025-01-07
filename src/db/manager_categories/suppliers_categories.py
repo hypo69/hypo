@@ -1,6 +1,6 @@
 ## \file /src/db/manager_categories/suppliers_categories.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

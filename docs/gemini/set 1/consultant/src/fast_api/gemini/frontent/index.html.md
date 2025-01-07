@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 """
 Модуль: src.fast_api.gemini.frontent
 ====================================
@@ -44,7 +44,7 @@ MODE = 'debug'
 ## Оптимизированный код
 ```html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 """
 Модуль: src.fast_api.gemini.frontent
 ====================================

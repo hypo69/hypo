@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_ali_campaign_editor_jupyter_widgets.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.aliexpress.campaign._pytest 
 	:platform: Windows, Unix
 	:synopsis:

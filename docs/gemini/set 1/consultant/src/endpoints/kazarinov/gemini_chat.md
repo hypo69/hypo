@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -135,7 +135,7 @@ class KazarinovAI:
 ```python
 ## \file hypotez/src/endpoints/kazarinov/gemini_chat.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

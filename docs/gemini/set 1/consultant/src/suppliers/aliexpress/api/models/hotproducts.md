@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 from .product import Product
@@ -22,7 +22,7 @@ class HotProductsResponse:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для работы с ответом API AliExpress о горячих товарах.
 
@@ -90,7 +90,7 @@ class HotProductsResponse:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/hotproducts.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для работы с ответом API AliExpress о горячих товарах.
 

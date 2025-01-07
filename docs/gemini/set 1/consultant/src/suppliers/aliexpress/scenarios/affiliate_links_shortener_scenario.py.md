@@ -9,7 +9,7 @@
    с использованием веб-браузера. Он использует локаторы из JSON-файла для взаимодействия с веб-элементами.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path
@@ -107,7 +107,7 @@ def get_short_affiliate_link(d: Driver, url: str) -> str:
    с использованием веб-браузера. Он использует локаторы из JSON-файла для взаимодействия с веб-элементами.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path

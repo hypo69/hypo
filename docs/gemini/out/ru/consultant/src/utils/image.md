@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/image.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -162,7 +162,7 @@ def get_image_data(file_name: str | Path) -> bytes | None:
 ```python
 ## \file hypotez/src/utils/image.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -273,7 +273,7 @@ def get_image_data(file_name: str | Path) -> bytes | None:
 ```python
 ## \file hypotez/src/utils/image.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -50,7 +50,7 @@ import os
 
 ## \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -113,7 +113,7 @@ import os
 
 ## \file hypotez/src/gui/openai_trаigner/payload.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

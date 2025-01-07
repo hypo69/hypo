@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.aliexpress.campaign._pytest 
 	:platform: Windows, Unix
 	:synopsis:
@@ -65,7 +65,7 @@ from src.logger import logger # импортируем логгер
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.suppliers.aliexpress.campaign._pytest
     :platform: Windows, Unix
     :synopsis: Тесты для модуля AliPromoCampaign.
@@ -132,7 +132,7 @@ def test_initialize_campaign(mocker, campaign):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_alipromo_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.suppliers.aliexpress.campaign._pytest
     :platform: Windows, Unix
     :synopsis: Тесты для модуля AliPromoCampaign.

@@ -1,7 +1,7 @@
 from __future__ import annotations
 ## \file /src/suppliers/get_graber_by_supplier.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

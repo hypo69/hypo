@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/logger/exceptions.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.logger.exceptions
     :platform: Windows, Unix
     :synopsis: This module defines custom exceptions used in the application.

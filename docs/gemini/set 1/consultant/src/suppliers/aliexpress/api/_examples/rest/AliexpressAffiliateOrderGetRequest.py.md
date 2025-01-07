@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с запросом на получение заказов аффилиата Aliexpress.
 ======================================================================
@@ -66,13 +66,13 @@ class AliexpressAffiliateOrderGetRequest(RestApi):
 2.  Добавлен импорт `from src.logger.logger import logger`.
 3.  Добавлены docstring для класса `AliexpressAffiliateOrderGetRequest` и его методов `__init__` и `getapiname` в формате RST.
 4.  Добавлены комментарии для переменных экземпляра класса в формате RST.
-5.  Удалены избыточные комментарии `# -*- coding: utf-8 -*-`, `#! venv/Scripts/python.exe # <- venv win` и `## ~~~~~~~~~~~~~~`.
+5.  Удалены избыточные комментарии `# -*- coding: utf-8 -*-`, ` # <- venv win` и `## ~~~~~~~~~~~~~~`.
 6.  Удален старый комментарий `'\'\'\'Created by auto_sdk on 2021.03.05\'\'\''`.
 
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с запросом на получение заказов аффилиата Aliexpress.
 ======================================================================

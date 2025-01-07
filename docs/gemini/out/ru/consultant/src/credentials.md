@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -238,7 +238,7 @@ class ProgramSettings(BaseModel):
 ```python
 ## \file hypotez/src/credentials.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -5,7 +5,7 @@
 ```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.webdriver.firefox.extentions.test_extention.html """
 MODE = 'debug'
@@ -53,7 +53,7 @@ graph LR
 
 **Импорты:**
 
-В этом файле нет импортов, поскольку это чисто HTML-код.  Код `# -*- coding: utf-8 -*-\` и `#! venv/Scripts/python.exe` вероятно, добавлены для работы в системе с интерпретатором Python, но не являются частью HTML.  Они не относятся к Python-зависимостям этого проекта.
+В этом файле нет импортов, поскольку это чисто HTML-код.  Код `# -*- coding: utf-8 -*-\` и `` вероятно, добавлены для работы в системе с интерпретатором Python, но не являются частью HTML.  Они не относятся к Python-зависимостям этого проекта.
 
 **Классы:**
 

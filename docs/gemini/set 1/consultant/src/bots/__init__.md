@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/bots/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .telegram import TelegramBot
 ```python
 ## \file hypotez/src/bots/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -62,7 +62,7 @@ from .telegram import TelegramBot  # Импортируем класс TelegramB
 ```python
 ## \file hypotez/src/bots/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

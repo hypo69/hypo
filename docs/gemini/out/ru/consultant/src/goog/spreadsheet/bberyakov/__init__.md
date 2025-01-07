@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .grender import GSRenderr
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -56,7 +56,7 @@ from src.logger import logger
 * Добавлен import `from src.logger import logger` для использования логирования.
 * Добавлены комментарии для объяснения отдельных строк кода.
 * Убран устаревший комментарий `# -*- coding: utf-8 -*-` и добавлены две строки, указывающие на интерпретаторы Python.
-* Удален лишний комментарий `#! venv/Scripts/python.exe`.
+* Удален лишний комментарий ``.
 * Удалены пустые строки.
 * Улучшены стилистические соглашения, которые делают код более читаемым.
 
@@ -94,7 +94,7 @@ from src.logger import logger
 +++ b/hypotez/src/goog/spreadsheet/bberyakov/__init__.py
 @@ -1,6 +1,5 @@
  # -*- coding: utf-8 -*-\
--#! venv/Scripts/python.exe
+-
 -#! venv/bin/python/python3.12
 +#! venv/bin/python/python3.12
  

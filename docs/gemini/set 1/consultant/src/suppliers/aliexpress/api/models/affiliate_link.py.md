@@ -16,7 +16,7 @@
     print(affiliate_link.promotion_link)
     print(affiliate_link.source_value)
 """
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from dataclasses import dataclass
 
@@ -57,7 +57,7 @@ class AffiliateLink:
     print(affiliate_link.promotion_link)
     print(affiliate_link.source_value)
 """
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from dataclasses import dataclass
 

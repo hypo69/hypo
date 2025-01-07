@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/visualdg/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .graber import Graber
 ```python
 ## \file hypotez/src/suppliers/visualdg/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ def get_data_from_visualdg(file_path):
 ```python
 ## \file hypotez/src/suppliers/visualdg/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

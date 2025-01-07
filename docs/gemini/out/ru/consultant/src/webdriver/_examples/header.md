@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -55,7 +55,7 @@ sys.path.append (str (dir_root) ) # Добавляю рабочую директ
 ```python
 ## \file hypotez/src/webdriver/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -114,7 +114,7 @@ configure_sys_path(project_root)
 ```python
 ## \file hypotez/src/webdriver/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/logger/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -136,7 +136,7 @@ class PrestaShopAuthenticationError(PrestaShopException):
 ```python
 ## \file hypotez/src/logger/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -216,7 +216,7 @@ class CustomException(Exception):
 ```python
 ## \file hypotez/src/logger/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

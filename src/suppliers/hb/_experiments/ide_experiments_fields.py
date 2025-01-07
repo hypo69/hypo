@@ -1,6 +1,6 @@
 ## \file /src/suppliers/hb/_experiments/ide_experiments_fields.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -70,7 +70,7 @@ Example usage
     api.create_binary('images/products/22', 'img.jpeg', 'image')
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import os

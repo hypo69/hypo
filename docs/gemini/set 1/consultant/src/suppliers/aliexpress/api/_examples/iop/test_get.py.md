@@ -37,7 +37,7 @@
     print(response.body)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 import iop
 from src.logger.logger import logger # Импортируем логгер
@@ -137,7 +137,7 @@ print(response.body)
     print(response.body)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 import iop
 from src.logger.logger import logger # Импортируем логгер

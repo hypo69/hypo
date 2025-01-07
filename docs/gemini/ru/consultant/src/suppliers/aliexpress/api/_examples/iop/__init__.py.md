@@ -23,7 +23,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для примера работы с API Aliexpress
 =========================================

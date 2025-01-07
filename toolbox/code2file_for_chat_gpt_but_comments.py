@@ -1,6 +1,6 @@
 ## \file /dev_utils/code2file_for_chat_gpt_but_comments.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

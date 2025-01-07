@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/react/pricelist_generator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -207,7 +207,7 @@ class ReportGenerator:
 ```python
 ## \file hypotez/src/endpoints/kazarinov/react/pricelist_generator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

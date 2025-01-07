@@ -23,7 +23,7 @@
 **Оптимизированный код**
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -39,7 +39,7 @@
 .. note::
    **Shebang**
    
-   Строки  `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12`
+   Строки  `` и `#! venv/bin/python/python3.12`
    указывают путь к интерпретатору Python и используются для запуска скрипта
    напрямую из командной строки в средах Windows и Unix соответственно.
 

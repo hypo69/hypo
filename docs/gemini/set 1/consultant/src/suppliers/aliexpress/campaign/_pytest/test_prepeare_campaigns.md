@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.aliexpress.campaign._pytest 
 	:platform: Windows, Unix
 	:synopsis:
@@ -164,7 +164,7 @@ async def test_main(mock_get_directory_names, mock_logger):  # Добавлен�
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для тестирования функций подготовки кампаний AliExpress.
 ====================================================================
@@ -264,7 +264,7 @@ async def test_process_campaign_category_success(mock_ali_promo_campaign, mock_l
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_pytest/test_prepeare_campaigns.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для тестирования функций подготовки кампаний AliExpress.
 ====================================================================

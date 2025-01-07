@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/_examples/quick_start.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src._examples 
 	:platform: Windows, Unix
 	:synopsis:
@@ -49,7 +49,7 @@ import json
 from src.utils.jjson import j_loads
 
 ## \file hypotez/src/_examples/quick_start.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 # Файл содержит пример быстрого запуска модуля hypotez
 
 """
@@ -121,7 +121,7 @@ from src.utils.jjson import j_loads
 from src.logger import logger
 
 ## \file hypotez/src/_examples/quick_start.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 # Файл содержит пример быстрого запуска модуля hypotez
 
 """

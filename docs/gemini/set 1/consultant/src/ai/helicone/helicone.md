@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/helicone/helicone.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.ai.helicone 
     :platform: Windows, Unix
     :synopsis:
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/ai/helicone/helicone.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.ai.helicone 
     :platform: Windows, Unix
     :synopsis:

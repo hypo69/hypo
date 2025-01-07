@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль содержит примеры запросов к API Aliexpress.
 =================================================
@@ -63,7 +63,7 @@ from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGener
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль содержит примеры запросов к API Aliexpress.
 =================================================

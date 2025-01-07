@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -54,7 +54,7 @@ sys.path.append (__root__)
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -122,7 +122,7 @@ configure_sys_path()
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

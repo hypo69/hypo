@@ -5,7 +5,7 @@
 
 ```html
 ## \file hypotez/src/fast_api/gemini/frontent/index.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n\n""" module: src.fast_api.gemini.frontent """\nMODE = \'debug\'\n<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Chat with Generative AI</title>\n    <link rel="stylesheet" href="/static/bootstrap.min.css">\n    <style>\n        body {\n            padding: 2rem;\n        }\n    </style>\n</head>\n<body>\n    <div class="container">\n        <h1>AI Chat Interface</h1>\n        <div id="chat-app"></div>\n    </div>\n\n    <script type="text/babel" src="/static/app.js"></script>\n</body>\n</html>
+# -*- coding: utf-8 -*-\n\n\n""" module: src.fast_api.gemini.frontent """\nMODE = \'debug\'\n<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Chat with Generative AI</title>\n    <link rel="stylesheet" href="/static/bootstrap.min.css">\n    <style>\n        body {\n            padding: 2rem;\n        }\n    </style>\n</head>\n<body>\n    <div class="container">\n        <h1>AI Chat Interface</h1>\n        <div id="chat-app"></div>\n    </div>\n\n    <script type="text/babel" src="/static/app.js"></script>\n</body>\n</html>
 ```
 
 ## <algorithm>

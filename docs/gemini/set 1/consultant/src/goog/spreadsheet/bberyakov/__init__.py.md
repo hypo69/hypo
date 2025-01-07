@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -31,7 +31,7 @@ from .grender import GSRenderr
    :synopsis: Модуль для работы с Google Sheets.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 from src.logger.logger import logger # добавление импорта для логирования
 
@@ -65,7 +65,7 @@ from .grender import GSRenderr
    :synopsis: Модуль для работы с Google Sheets.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 from src.logger.logger import logger # добавление импорта для логирования
 

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/cdata/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -28,7 +28,7 @@ from .graber import Graber
 Этот модуль предоставляет инструменты для взаимодействия с поставщиком данных cdata.
 """
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import json
@@ -94,7 +94,7 @@ def get_data(file_path: str) -> Dict[str, Any]:
 Этот модуль предоставляет инструменты для взаимодействия с поставщиком данных cdata.
 """
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import json

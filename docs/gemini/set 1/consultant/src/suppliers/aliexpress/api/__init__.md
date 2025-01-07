@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api """
 """ Aliexpress API wrapper"""
@@ -20,7 +20,7 @@ from . import models
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api """
 """ Aliexpress API wrapper. This module provides a wrapper for interacting with the Aliexpress API. """
@@ -51,7 +51,7 @@ It includes a class for interacting with the API.
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api """
 """ Aliexpress API wrapper. This module provides a wrapper for interacting with the Aliexpress API. """

@@ -3,7 +3,7 @@
 ```html
 ## \file hypotez/src/fast_api/gemini/frontent/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.fast_api.gemini.frontent """
 MODE = 'debug'
@@ -36,7 +36,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/fast_api/gemini/frontent/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """
 Модуль для отображения интерфейса чата с генеративным ИИ.
@@ -81,7 +81,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/fast_api/gemini/frontent/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """
 Модуль для отображения интерфейса чата с генеративным ИИ.

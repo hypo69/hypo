@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 def parse_product(product):
@@ -24,7 +24,7 @@ def parse_products(products):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для работы с продуктами на AliExpress. """
 
@@ -88,7 +88,7 @@ def parse_products(products):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/products.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для работы с продуктами на AliExpress. """
 

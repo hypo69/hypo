@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

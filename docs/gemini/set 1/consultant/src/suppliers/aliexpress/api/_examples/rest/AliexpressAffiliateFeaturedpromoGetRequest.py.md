@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateFeaturedpromoGetRequest.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 '''
@@ -22,7 +22,7 @@ class AliexpressAffiliateFeaturedpromoGetRequest(RestApi):
 # Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """
 Модуль для работы с запросом `aliexpress.affiliate.featuredpromo.get`.
@@ -86,7 +86,7 @@ class AliexpressAffiliateFeaturedpromoGetRequest(RestApi):
 # FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """
 Модуль для работы с запросом `aliexpress.affiliate.featuredpromo.get`.

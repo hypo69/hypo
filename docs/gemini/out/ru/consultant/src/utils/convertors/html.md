@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/html.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
 +
 +"""
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
 -"""
@@ -227,7 +227,7 @@ def html2pdf(html_str: str, pdf_file: str | Path) -> bool | None:
 """Модуль для преобразования HTML в различные форматы.
 """
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """Преобразование HTML в escape-последовательности, обратно, в словари и объекты SimpleNamespace.

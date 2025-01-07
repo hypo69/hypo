@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -67,7 +67,7 @@ The `kazarinov_bot` module is imported. This indicates a dependency on that modu
 
 - **Missing documentation:** While the docstrings within the module provide some context, a more comprehensive docstring explaining the purpose of the `MODE` variable and its impact on the system would greatly enhance maintainability.  Also, more in-depth documentation on the `KazarinovTelegramBot` class should be included in `kazarinov_bot.py`.
 
-- **Hardcoded paths:** The shebang lines (`#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12`) should be avoided. Use the `sys.executable` in the main application entry point.  This enhances portability and maintainability.
+- **Hardcoded paths:** The shebang lines (`` and `#! venv/bin/python/python3.12`) should be avoided. Use the `sys.executable` in the main application entry point.  This enhances portability and maintainability.
 
 **Relationships:**
 

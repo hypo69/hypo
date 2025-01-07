@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -98,7 +98,7 @@ class ExecuteLocator:
 ```python
 ## \file hypotez/src/webdriver/executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -193,7 +193,7 @@ class ExecuteLocator:
 ```python
 ## \file hypotez/src/webdriver/executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -152,7 +152,7 @@ class GptGs(SpreadSheet):
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

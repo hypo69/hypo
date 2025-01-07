@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -24,7 +24,7 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для управления рекламными кампаниями Aliexpress.
@@ -59,7 +59,7 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для управления рекламными кампаниями Aliexpress.

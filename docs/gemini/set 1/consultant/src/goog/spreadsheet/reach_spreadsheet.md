@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/reach_spreadsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -147,7 +147,7 @@ class ReachSpreadsheet:
 ```python
 ## \file hypotez/src/goog/spreadsheet/reach_spreadsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/bangood/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -25,7 +25,7 @@ from .scenario import get_list_categories_from_site, get_list_products_in_catego
 ```python
 ## \file hypotez/src/suppliers/bangood/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -70,7 +70,7 @@ from src.utils.jjson import j_loads # Импорт функции для раб�
 ```python
 ## \file hypotez/src/suppliers/bangood/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

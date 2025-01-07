@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/xls.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -31,7 +31,7 @@ def xls2dict(xls_file: str | Path) -> dict | None:
 ```python
 ## \file hypotez/src/utils/convertors/xls.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -103,7 +103,7 @@ def xls2dict(xls_file: str | Path) -> dict | None:
 ```python
 ## \file hypotez/src/utils/convertors/xls.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

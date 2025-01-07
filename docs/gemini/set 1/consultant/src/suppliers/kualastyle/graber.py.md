@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для сбора данных о товарах с сайта kualastyle.co.il.
@@ -133,7 +133,7 @@ class Graber(Grbr):
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для сбора данных о товарах с сайта kualastyle.co.il.

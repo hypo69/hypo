@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api._examples.rest """
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
@@ -92,7 +92,7 @@ from src.logger import logger  # Импорт функции для логиро
 @@ -1,6 +1,7 @@
 -## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe # <- venv win
+  # <- venv win
 +
 +
  ## ~~~~~~~~~~~~~\

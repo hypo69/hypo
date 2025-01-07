@@ -2,7 +2,7 @@
 
 ```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #""" module: src.webdriver.firefox.extentions.test_extention.html """
 MODE = 'debug'
 <!DOCTYPE html>

@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/warehouse.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -30,7 +30,7 @@ class PrestaWarehouse(PrestaShop):
 # Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -85,7 +85,7 @@ class PrestaWarehouse(PrestaShop):
 # FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

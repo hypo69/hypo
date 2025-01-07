@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/product/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -50,7 +50,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/product/_examples/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -99,7 +99,7 @@ from .version import __version__, __doc__, __details__
 *   Удалена переменная `MODE`, так как она не используется в коде.
 *   Комментарии переписаны в формате RST.
 *   Добавлены docstrings для модуля и функций.
-*   Заменены комментарии  `# -*- coding: utf-8 -*-\` и `#! venv/Scripts/python.exe` на более стандартизированные варианты.
+*   Заменены комментарии  `# -*- coding: utf-8 -*-\` и `` на более стандартизированные варианты.
 *   Добавлен импорт `sys`.
 *   Удалены пустые комментарии.
 *   Добавлена строка документации `:synopsis:` для модуля, описывающая его назначение.
@@ -112,7 +112,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/product/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

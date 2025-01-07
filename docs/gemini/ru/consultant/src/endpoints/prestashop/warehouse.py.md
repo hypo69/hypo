@@ -44,7 +44,7 @@
     warehouse = PrestaWarehouse(api_url='https://your-prestashop.com/api', api_key='your_api_key')
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import os, sys

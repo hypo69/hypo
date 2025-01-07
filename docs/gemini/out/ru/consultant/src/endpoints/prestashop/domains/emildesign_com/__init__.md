@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/emildesign_com/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -50,7 +50,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/emildesign_com/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -111,7 +111,7 @@ def load_config(path: str) -> dict:
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/emildesign_com/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

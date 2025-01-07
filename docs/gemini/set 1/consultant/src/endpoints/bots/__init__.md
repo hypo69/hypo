@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/bots/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .telegram import TelegramBot
 ```python
 ## \file hypotez/src/endpoints/bots/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -76,7 +76,7 @@ def start_bot(bot_type: str = 'telegram') -> None:
 ```python
 ## \file hypotez/src/endpoints/bots/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -1,6 +1,6 @@
 ## \file /src/utils/powershell/examples/pprint/example_pprint.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

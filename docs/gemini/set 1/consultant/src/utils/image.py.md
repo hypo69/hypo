@@ -97,7 +97,7 @@ Functions:
         'path/to/images/subfolder/random_image.png'
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import aiohttp

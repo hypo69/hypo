@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -112,7 +112,7 @@ class Playwrid(PlaywrightCrawler):
 ```python
 ## \file hypotez/src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -245,7 +245,7 @@ class Playwrid(PlaywrightCrawler):
 ```python
 ## \file hypotez/src/webdriver/playwright/playwrid.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

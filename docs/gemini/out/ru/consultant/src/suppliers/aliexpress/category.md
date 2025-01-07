@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -106,7 +106,7 @@ def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
 -## \file hypotez/src/suppliers/aliexpress/category.py
 +"""Модуль для управления категориями на AliExpress."""
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
  """
@@ -189,7 +189,7 @@ def update_categories_in_scenario_file(s, scenario_filename: str) -> bool:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
  
  """Модуль для управления категориями на AliExpress."""

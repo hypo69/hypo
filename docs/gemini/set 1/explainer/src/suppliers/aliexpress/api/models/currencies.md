@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/models/currencies.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.models """
 class Currency:
@@ -66,7 +66,7 @@ classDiagram
 
 **Импорты:**
 
-Файл `currencies.py` не содержит импортов. Это обычный модуль Python, который не зависит от других модулей для своего выполнения. Строки `# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win` относятся к настройкам кодировки и интерпретатора Python.
+Файл `currencies.py` не содержит импортов. Это обычный модуль Python, который не зависит от других модулей для своего выполнения. Строки `# -*- coding: utf-8 -*-\n # <- venv win` относятся к настройкам кодировки и интерпретатора Python.
 
 **Классы:**
 

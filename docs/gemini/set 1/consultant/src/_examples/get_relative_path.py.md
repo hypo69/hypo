@@ -41,7 +41,7 @@
     logger.info(f"Относительный путь: {relative_path}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -20,7 +20,7 @@
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -78,7 +78,7 @@ def load_json_file(file_path):
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

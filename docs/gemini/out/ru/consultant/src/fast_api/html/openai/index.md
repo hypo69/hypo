@@ -3,7 +3,7 @@
 ```html
 ## \file hypotez/src/fast_api/html/openai/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.fast_api.html.openai """
 MODE = 'debug'
@@ -101,7 +101,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/fast_api/html/openai/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ Модуль для взаимодействия с моделью OpenAI через интерфейс. """
 MODE = 'debug'
@@ -216,7 +216,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/fast_api/html/openai/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ Модуль для взаимодействия с моделью OpenAI через интерфейс. """
 MODE = 'debug'

@@ -46,7 +46,7 @@
 
 """
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 # #! venv/bin/python/python3.12
 # #  Удаляем неиспользуемые shebang
 from src.logger.logger import logger  # Добавлен импорт logger

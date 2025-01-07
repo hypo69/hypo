@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/_experiments/test_aliexpress_scenario.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

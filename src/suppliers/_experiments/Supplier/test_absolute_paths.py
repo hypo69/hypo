@@ -1,6 +1,6 @@
 ## \file /src/suppliers/_experiments/Supplier/test_absolute_paths.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

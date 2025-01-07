@@ -4,7 +4,7 @@
 ## <input code>
 
 ```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.bots.telegram \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\nfrom pathlib import Path\nimport tempfile\nimport asyncio\nfrom telegram import Update\nfrom telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext\n\nimport header\nfrom  src import gs\nfrom src.utils.jjson import j_loads, j_loads_ns, j_dumps\nfrom src.logger import logger\nimport requests  # For downloading files\nfrom src.utils.convertors.tts import speech_recognizer, text2speech\nfrom src.utils.file import read_text_file\n\n# ... (rest of the code)
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.bots.telegram \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\nfrom pathlib import Path\nimport tempfile\nimport asyncio\nfrom telegram import Update\nfrom telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext\n\nimport header\nfrom  src import gs\nfrom src.utils.jjson import j_loads, j_loads_ns, j_dumps\nfrom src.logger import logger\nimport requests  # For downloading files\nfrom src.utils.convertors.tts import speech_recognizer, text2speech\nfrom src.utils.file import read_text_file\n\n# ... (rest of the code)
 ```
 
 ## <algorithm>

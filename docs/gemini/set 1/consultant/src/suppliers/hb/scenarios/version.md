@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -64,7 +64,7 @@ __author__='hypotez '
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -142,7 +142,7 @@ __author__ = 'hypotez'
 ```python
 ## \file hypotez/src/suppliers/hb/scenarios/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

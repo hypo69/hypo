@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/category/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Module for working with categories, primarily for PrestaShop.
@@ -211,7 +211,7 @@ def compare_and_print_missing_keys(current_dict, file_path):
 ```python
 ## \file hypotez/src/category/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Module for working with categories, primarily for PrestaShop.

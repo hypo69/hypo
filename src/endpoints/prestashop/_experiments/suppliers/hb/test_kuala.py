@@ -1,6 +1,6 @@
 ## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_kuala.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/generative_ai.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

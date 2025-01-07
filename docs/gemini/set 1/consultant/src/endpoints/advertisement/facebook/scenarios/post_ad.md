@@ -3,7 +3,7 @@
 ```python
 ## file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -78,7 +78,7 @@ def post_ad(d: Driver, message: SimpleNamespace) -> bool:
 ```python
 ## file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -163,7 +163,7 @@ def post_ad(d: Driver, message: SimpleNamespace) -> bool:
 ```python
 ## file hypotez/src/endpoints/advertisement/facebook/scenarios/post_ad.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

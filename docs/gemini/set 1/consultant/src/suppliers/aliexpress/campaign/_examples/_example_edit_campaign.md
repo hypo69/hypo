@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.aliexpress.campaign._examples 
 	:platform: Windows, Unix
 	:synopsis:
@@ -71,7 +71,7 @@ class AliCampaignEditor(AliPromoCampaign):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.suppliers.aliexpress.campaign._examples
    :platform: Windows, Unix
@@ -128,7 +128,7 @@ class AliCampaignEditor(AliPromoCampaign):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/_examples/_example_edit_campaign.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.suppliers.aliexpress.campaign._examples
    :platform: Windows, Unix

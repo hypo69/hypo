@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/edge/extentions/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -63,7 +63,7 @@ __author__='hypotez '
 ```python
 ## \file hypotez/src/webdriver/edge/extentions/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -113,7 +113,7 @@ __annotations__ = {} # Добавление пустого словаря
 ```python
 ## \file hypotez/src/webdriver/edge/extentions/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

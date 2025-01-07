@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -36,7 +36,7 @@ from .extract_product_id import extract_prod_ids
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -122,7 +122,7 @@ def _ensure_https_single(prod_id: str) -> str:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/ensure_https.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

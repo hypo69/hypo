@@ -42,7 +42,7 @@
    print(version.__version__)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from src.utils.jjson import j_loads_ns # импортируем j_loads_ns для загрузки json

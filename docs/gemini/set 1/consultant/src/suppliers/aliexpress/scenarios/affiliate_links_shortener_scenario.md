@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -71,7 +71,7 @@ def get_short_affiliate_link(d:Driver, url: str) -> str:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -169,7 +169,7 @@ def get_short_affiliate_link(driver: Driver, url: str) -> Optional[str]:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/scenarios/affiliate_links_shortener_scenario.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

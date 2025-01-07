@@ -26,7 +26,7 @@ from __future__ import annotations
     facebook_instance = Facebook(driver=driver_instance, promoter='test_user', group_file_paths=[])
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 
@@ -147,7 +147,7 @@ from __future__ import annotations
     facebook_instance = Facebook(driver=driver_instance, promoter='test_user', group_file_paths=[])
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

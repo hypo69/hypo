@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/_docs/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.goog.spreadsheet._docs """
 MODE = 'debug'

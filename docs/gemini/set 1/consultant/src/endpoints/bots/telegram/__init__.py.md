@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/bots/telegram/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -38,7 +38,7 @@ from .bot import TelegramBot
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # Определение режима работы бота. По умолчанию установлен режим разработки.
@@ -76,7 +76,7 @@ from .bot import TelegramBot
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 # Определение режима работы бота. По умолчанию установлен режим разработки.

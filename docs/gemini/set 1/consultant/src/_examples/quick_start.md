@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/_examples/quick_start.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module:: src._examples \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src._examples """\n\n\n""" Quick start to `hypotez`\n\n"""\n\n\n```
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module:: src._examples \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src._examples """\n\n\n""" Quick start to `hypotez`\n\n"""\n\n\n```
 
 # Improved Code
 
@@ -13,7 +13,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
 ## \file hypotez/src/_examples/quick_start.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\nМодуль для быстрой работы с hypotez.\n\nЭтот модуль предоставляет примеры использования функций для работы с данными в формате JSON.\n\n:platform: Windows, Unix\n:synopsis:\n    Пример быстрого запуска модуля hypotez.\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\nМодуль для быстрой работы с hypotez.\n\nЭтот модуль предоставляет примеры использования функций для работы с данными в формате JSON.\n\n:platform: Windows, Unix\n:synopsis:\n    Пример быстрого запуска модуля hypotez.\n"""
 
 
 def load_data_from_json(file_path):
@@ -64,7 +64,7 @@ from src.utils.jjson import j_loads
 from src.logger.logger import logger
 
 ## \file hypotez/src/_examples/quick_start.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\nМодуль для быстрой работы с hypotez.\n\nЭтот модуль предоставляет примеры использования функций для работы с данными в формате JSON.\n\n:platform: Windows, Unix\n:synopsis:\n    Пример быстрого запуска модуля hypotez.\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\nМодуль для быстрой работы с hypotez.\n\nЭтот модуль предоставляет примеры использования функций для работы с данными в формате JSON.\n\n:platform: Windows, Unix\n:synopsis:\n    Пример быстрого запуска модуля hypotez.\n"""
 
 
 def load_data_from_json(file_path):

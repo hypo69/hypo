@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -19,7 +19,7 @@ from .code_assistant import CodeAssistant
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль инициализации для ассистента кода
@@ -51,7 +51,7 @@ from .code_assistant import CodeAssistant
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль инициализации для ассистента кода

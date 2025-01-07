@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/webdriver/chrome/_examples/driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """
 '''
 Created by auto_sdk on 2020.03.09
@@ -25,7 +25,7 @@ class AliexpressAffiliateLinkGenerateRequest(RestApi):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" Модуль для генерации ссылок на товары Алиэкспресс """
 """
 Создан автоматически 2020.03.09
@@ -80,7 +80,7 @@ class AliexpressAffiliateLinkGenerateRequest(RestApi):
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateLinkGenerateRequest.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win
+# -*- coding: utf-8 -*-\n # <- venv win
 ## ~~~~~~~~~~~~~\n""" Модуль для генерации ссылок на товары Алиэкспресс """
 """
 Создан автоматически 2020.03.09

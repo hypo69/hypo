@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_executor_2.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

@@ -4,7 +4,7 @@
 
 ```html
 ## \file hypotez/src/webdriver/edge/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n\n""" module: src.webdriver.edge.extentions.test_extention.html """\nMODE = 'debug'\n<!-- popup.html -->\n\n<!DOCTYPE html>\n<html>\n<head>\n    <title>hypotez</title>\n    <style>\n        body {\n            width: 200px;\n            padding: 10px;\n        }\n    </style>\n</head>\n<body>\n    <h1>hypotez</h1>\n    <p>Click the extension icon to collect data from the current webpage.</p>\n</body>\n</html>
+# -*- coding: utf-8 -*-\n\n\n""" module: src.webdriver.edge.extentions.test_extention.html """\nMODE = 'debug'\n<!-- popup.html -->\n\n<!DOCTYPE html>\n<html>\n<head>\n    <title>hypotez</title>\n    <style>\n        body {\n            width: 200px;\n            padding: 10px;\n        }\n    </style>\n</head>\n<body>\n    <h1>hypotez</h1>\n    <p>Click the extension icon to collect data from the current webpage.</p>\n</body>\n</html>
 ```
 
 ## <algorithm>

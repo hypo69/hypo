@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/gui/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.gui 
 	:platform: Windows, Unix
@@ -90,7 +90,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/gui/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для работы с заголовком приложения.
 Определяет корневой путь проекта и загружает настройки.
@@ -176,7 +176,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/gui/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для работы с заголовком приложения.
 Определяет корневой путь проекта и загружает настройки.

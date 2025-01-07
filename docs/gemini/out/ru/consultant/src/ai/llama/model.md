@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/llama/model.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -45,7 +45,7 @@
 ```python
 ## \file hypotez/src/ai/llama/model.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -109,7 +109,7 @@ def another_function(input_data):
 ```python
 ## \file hypotez/src/ai/llama/model.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

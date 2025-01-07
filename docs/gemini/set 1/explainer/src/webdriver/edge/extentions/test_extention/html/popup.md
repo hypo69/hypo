@@ -6,7 +6,7 @@
 ```html
 ## \file hypotez/src/webdriver/edge/extentions/test_extention/html/popup.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.webdriver.edge.extentions.test_extention.html """
 MODE = 'debug'

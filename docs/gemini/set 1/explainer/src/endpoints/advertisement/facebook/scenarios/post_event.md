@@ -18,7 +18,7 @@ graph TD
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_event.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

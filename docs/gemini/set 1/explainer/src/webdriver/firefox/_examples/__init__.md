@@ -2,7 +2,7 @@
 1. <input code>
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

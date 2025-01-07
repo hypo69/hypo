@@ -3,7 +3,7 @@
 ```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/html/popup.html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 
 """ module: src.webdriver.firefox.extentions.test_extention - Copy.html """
 MODE = 'debug'
@@ -26,7 +26,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/html/popup.html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 
 """
 Модуль для отображения веб-страницы расширения.
@@ -61,7 +61,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/webdriver/firefox/extentions/test_extention - Copy/html/popup.html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 
 """
 Модуль для отображения веб-страницы расширения.

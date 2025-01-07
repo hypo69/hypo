@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/wallmart/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .graber import Graber
 ```python
 ## \file hypotez/src/suppliers/wallmart/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ def get_data(file_path):
 ```python
 ## \file hypotez/src/suppliers/wallmart/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

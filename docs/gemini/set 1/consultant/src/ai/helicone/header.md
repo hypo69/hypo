@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/helicone/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.ai.helicone 
 	:platform: Windows, Unix
@@ -95,7 +95,7 @@ __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boos
 +Модуль для работы с интерфейсом модели generativeai.
 +
 +"""
- # -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+ # -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 -"""
 -.. module: src.ai.helicone 
 -	:platform: Windows, Unix
@@ -186,7 +186,7 @@ __cofee__ = config.get("cofee", "Treat the developer to a cup of coffee for boos
 
 ```python
 ## \file hypotez/src/ai/helicone/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 Модуль для работы с интерфейсом модели generativeai.
 

@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/requests.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.helpers """
 from types import SimpleNamespace

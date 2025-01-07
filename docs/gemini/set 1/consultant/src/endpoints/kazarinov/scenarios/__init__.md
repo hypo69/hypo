@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -19,7 +19,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -43,7 +43,7 @@ from src.utils.jjson import j_loads
 ```python
 ## \file hypotez/src/endpoints/kazarinov/scenarios/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

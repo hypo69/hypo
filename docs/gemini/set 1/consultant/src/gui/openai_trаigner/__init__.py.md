@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/gui/openai_trаigner/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -63,7 +63,7 @@ from .main_window import AssistantMainWindow
    :synopsis: Инициализация графического интерфейса пользователя для тренера OpenAI.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 # Установка режима разработки.
 
@@ -109,7 +109,7 @@ from .main_window import AssistantMainWindow
    :synopsis: Инициализация графического интерфейса пользователя для тренера OpenAI.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 # Установка режима разработки.
 

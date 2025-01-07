@@ -54,7 +54,7 @@
     print(api_name)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 from ..base import RestApi
 from src.logger.logger import logger # Импортируем logger

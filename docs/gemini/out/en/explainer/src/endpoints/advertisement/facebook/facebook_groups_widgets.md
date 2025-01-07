@@ -5,7 +5,7 @@
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/facebook_groups_widgets.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.endpoints.advertisement.facebook \
 	:platform: Windows, Unix
 	:synopsis: Раскрывающеся меню выбора групп для подачи объявления\n

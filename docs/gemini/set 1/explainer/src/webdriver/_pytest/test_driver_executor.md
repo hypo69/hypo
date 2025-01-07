@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_driver_executor.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```html
 ## \file hypotez/src/ai/gemini/html_chat/templates/chat.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 """ module: src.ai.gemini.html_chat.templates """
 MODE = 'debug'
 <!DOCTYPE html>
@@ -66,7 +66,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/ai/gemini/html_chat/templates/chat.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 """Шаблон HTML для чата с Gemini."""
 MODE = 'debug'
 <!DOCTYPE html>
@@ -144,7 +144,7 @@ MODE = 'debug'
 ```html
 ## \file hypotez/src/ai/gemini/html_chat/templates/chat.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 """Шаблон HTML для чата с Gemini."""
 MODE = 'debug'
 <!DOCTYPE html>

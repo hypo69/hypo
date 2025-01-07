@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/openai/model/event_handler.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -30,7 +30,7 @@ from src.logger import logger  # Импортируем logger
 ```python
 ## \file hypotez/src/ai/openai/model/event_handler.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -122,7 +122,7 @@ class EventHandler(AssistantEventHandler):
 ```python
 ## \file hypotez/src/ai/openai/model/event_handler.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

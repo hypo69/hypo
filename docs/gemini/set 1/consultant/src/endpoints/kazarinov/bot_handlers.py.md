@@ -1,7 +1,7 @@
 # Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для обработки событий телеграм-бота.
@@ -208,7 +208,7 @@ class BotHandler:
 # Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для обработки событий телеграм-бота.

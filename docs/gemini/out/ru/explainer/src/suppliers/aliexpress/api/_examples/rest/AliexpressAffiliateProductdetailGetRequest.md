@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateProductdetailGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api._examples.rest """
 
@@ -105,7 +105,7 @@ from ..base import RestApi
 *   Отсутствует логика обработки ошибок (например, при неправильном `domain` или `port`).
 *   Отсутствует обработка результатов запроса.
 *   Нет примеров использования, которые показывают как установить параметры запроса и использовать результат.
-*   В коде присутствует магическая строка `#! venv/Scripts/python.exe`, скорее всего, это необходимо для запуска файла в Windows через интерпретатор Python, установленный в виртуальном окружении.
+*   В коде присутствует магическая строка ``, скорее всего, это необходимо для запуска файла в Windows через интерпретатор Python, установленный в виртуальном окружении.
 
 
 **Цепочка взаимосвязей:**

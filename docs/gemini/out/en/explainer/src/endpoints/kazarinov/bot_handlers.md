@@ -3,7 +3,7 @@
 ## <input code>
 
 ```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n"""\n.. module: src.endpoints.kazarinov.bot_handlers \n\t:platform: Windows, Unix\n\t:synopsis: Обработка событий телеграм бота\n\nМодуль для работы с событиями телеграм-бота\n=========================================================================================\n\nЭтот модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab\nи выполнение связанных сценариев.\n\nПример использования\n--------------------\n\nПример использования класса `BotHandler`:\n\n.. code-block:: python\n\n    handler = BotHandler(webdriver_name=\'firefox\')\n    handler.handle_url(update, context)\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n"""\n.. module: src.endpoints.kazarinov.bot_handlers \n\t:platform: Windows, Unix\n\t:synopsis: Обработка событий телеграм бота\n\nМодуль для работы с событиями телеграм-бота\n=========================================================================================\n\nЭтот модуль обрабатывает команды, переданные телеграм-боту, такие как работа с ссылками OneTab\nи выполнение связанных сценариев.\n\nПример использования\n--------------------\n\nПример использования класса `BotHandler`:\n\n.. code-block:: python\n\n    handler = BotHandler(webdriver_name=\'firefox\')\n    handler.handle_url(update, context)\n"""
 # ... (rest of the code)
 ```
 

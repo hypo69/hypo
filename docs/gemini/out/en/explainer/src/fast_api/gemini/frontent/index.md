@@ -5,7 +5,7 @@
 ```html
 ## \file hypotez/src/fast_api/gemini/frontent/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.fast_api.gemini.frontent """
 MODE = 'debug'
@@ -65,7 +65,7 @@ graph LR
     *   `MODE = 'debug'`:  A global variable within this HTML file and likely sets the mode for the application, probably useful for debugging purposes (e.g. logging).
 *   **Potential Errors or Improvements:**
     *   **Missing JavaScript Logic:** The script tag loading `/static/app.js` is crucial; without it, the client-side logic won't work.
-    *   **Server-Side Rendering:**  The `/static` directory is needed on the server, and it suggests a possible server-side rendering (SSR) environment with routing.  The `#! venv/Scripts/python.exe` comment in the file header suggests a Python/Flask (or similar) backend.
+    *   **Server-Side Rendering:**  The `/static` directory is needed on the server, and it suggests a possible server-side rendering (SSR) environment with routing.  The `` comment in the file header suggests a Python/Flask (or similar) backend.
     *   **Dynamic Content:**  The `<div id="chat-app"></div>` element is meant to be dynamically populated with data by the JavaScript file `app.js`. This will likely perform AJAX or similar requests to the backend (`src.fast_api.gemini.backent`) for dynamic updates to the chat interface.
 
 **Relationships with Other Project Components:**

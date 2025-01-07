@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/webdriver/chrome/chrome.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

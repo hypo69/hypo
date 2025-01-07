@@ -5,7 +5,7 @@
 
 ```python
 ## \file hypotez/src/fast_api/main.first_version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.fast_api 
 	:platform: Windows, Unix
 	:synopsis:

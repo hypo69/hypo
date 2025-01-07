@@ -29,7 +29,7 @@ def test_header_src_path():
         f.write(
             """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.errors """
 """Custom exceptions module"""
@@ -54,7 +54,7 @@ class InvalidTrackingIdException(AliexpressException):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для обработки исключений API AliExpress. """
 """ Определяет пользовательские исключения для обработки ошибок API AliExpress."""
@@ -151,7 +151,7 @@ class InvalidTrackingIdException(AliexpressException):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/exceptions.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для обработки исключений API AliExpress. """
 """ Определяет пользовательские исключения для обработки ошибок API AliExpress."""

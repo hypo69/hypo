@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/gspreadsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -317,7 +317,7 @@ class GSpreadsheet(Spreadsheet):
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/gspreadsheet.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

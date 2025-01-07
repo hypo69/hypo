@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/category/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -73,7 +73,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/category/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -158,7 +158,7 @@ print(dir_root)
 ```python
 ## \file hypotez/src/category/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

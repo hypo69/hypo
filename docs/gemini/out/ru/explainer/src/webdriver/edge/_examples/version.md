@@ -5,7 +5,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/edge/_examples/version.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.webdriver.edge._examples 
 	:platform: Windows, Unix

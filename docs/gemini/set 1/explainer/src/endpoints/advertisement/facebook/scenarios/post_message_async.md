@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message_async.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 #! venv/bin/python/python3.12
 
 """

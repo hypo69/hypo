@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.errors """
 from .exceptions import *
@@ -14,7 +14,7 @@ from .exceptions import *
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для обработки ошибок API AliExpress. """
 from .exceptions import *
@@ -36,7 +36,7 @@ from src.logger import logger  # Импортируем logger для логир
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/errors/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для обработки ошибок API AliExpress. """
 from .exceptions import *

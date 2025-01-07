@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.rest """
 from .AliexpressAffiliateProductSmartmatchRequest import AliexpressAffiliateProductSmartmatchRequest
@@ -26,7 +26,7 @@ from .AliexpressAffiliateLinkGenerateRequest import AliexpressAffiliateLinkGener
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для работы с API AliExpress.  
     Содержит импорты запросов для разных функциональных возможностей.
@@ -66,7 +66,7 @@ from src.utils.jjson import j_loads, j_loads_ns  # Импорт функций �
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~
 """ Модуль для работы с API AliExpress.  
     Содержит импорты запросов для разных функциональных возможностей.

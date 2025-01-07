@@ -50,7 +50,7 @@
 """
 import time
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 # ~~~~~~~~~~~~~~
 from src.logger.logger import logger #  импортируем logger для логирования ошибок
 import iop # импортируем библиотеку iop

@@ -2,14 +2,14 @@
 
 ```python
 ## \file hypotez/src/fast_api/html/process_data.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.fast_api.html \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src.fast_api.html """\n\n\n""" @namespace src.fast_api.html """\nfrom .. import main\nfrom main import process_dataa
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""\n.. module: src.fast_api.html \n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\nMODE = \'dev\'\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n\t:platform: Windows, Unix\n\t:synopsis:\n\n"""\n\n"""\n  :platform: Windows, Unix\n\n"""\n"""\n  :platform: Windows, Unix\n  :platform: Windows, Unix\n  :synopsis:\n"""MODE = \'dev\'\n  \n""" module: src.fast_api.html """\n\n\n""" @namespace src.fast_api.html """\nfrom .. import main\nfrom main import process_dataa
 ```
 
 # Improved Code
 
 ```python
 ## \file hypotez/src/fast_api/html/process_data.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.fast_api.html
     :platform: Windows, Unix
     :synopsis: Модуль для обработки данных для HTML-страниц.
@@ -70,7 +70,7 @@ from src.logger import logger
 
 ```python
 ## \file hypotez/src/fast_api/html/process_data.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.fast_api.html
     :platform: Windows, Unix
     :synopsis: Модуль для обработки данных для HTML-страниц.

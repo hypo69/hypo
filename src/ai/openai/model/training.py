@@ -2,7 +2,7 @@ from __future__ import annotations
 
 ## \file /src/ai/openai/model/training.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

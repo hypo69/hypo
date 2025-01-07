@@ -6,7 +6,7 @@
 ```python
 ## \file hypotez/src/webdriver/edge/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -82,7 +82,7 @@ No functions are defined in this `__init__.py`.
 
 - **Missing documentation:** The docstrings (the `"""..."""` blocks) are not very descriptive. They don't explain the specific purpose of the `MODE` variable or the `Edge` class.  Adding more detailed documentation would improve maintainability and understanding.
 - **Error handling:** The code lacks error handling.  Adding `try...except` blocks around the import could prevent the script from crashing if the `edge.py` module isn't found or if an error occurs during class initialization.
-- **Import path:**  The use of `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12` at the top of the file is unusual.  These are likely shebang lines for specifying the interpreter, but typically it's enough to have just the `#!/usr/bin/env python3` line for modern setups, and these specific references might be platform-specific, or due to a specific project setup (a virtual environment).
+- **Import path:**  The use of `` and `#! venv/bin/python/python3.12` at the top of the file is unusual.  These are likely shebang lines for specifying the interpreter, but typically it's enough to have just the `#!/usr/bin/env python3` line for modern setups, and these specific references might be platform-specific, or due to a specific project setup (a virtual environment).
 
 
 ### Relationships to Other Parts of the Project:

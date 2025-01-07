@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/app.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -111,7 +111,7 @@ if __name__ == "__main__":
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -249,7 +249,7 @@ if __name__ == "__main__":
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

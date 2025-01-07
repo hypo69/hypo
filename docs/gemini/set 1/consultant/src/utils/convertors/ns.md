@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/ns.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -209,7 +209,7 @@ def ns2xls(data: SimpleNamespace, xls_file_path: str | Path) -> bool:
 ```python
 ## \file hypotez/src/utils/convertors/ns.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 #
 """

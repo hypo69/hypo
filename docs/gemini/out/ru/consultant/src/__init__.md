@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -34,7 +34,7 @@ from .credentials import gs
 ```python
 ## \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -74,7 +74,7 @@ from src.utils.jjson import j_loads
 ```python
 ## \file hypotez/src/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

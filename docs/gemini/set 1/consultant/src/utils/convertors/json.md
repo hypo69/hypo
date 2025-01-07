@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/utils/convertors/json.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module: src.utils.convertors.json 
 	:platform: Windows, Unix
@@ -133,7 +133,7 @@ def json2xls(json_data: str | list | dict | Path, xls_file_path: str | Path) -> 
 
 ```python
 ## \file hypotez/src/utils/convertors/json.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.utils.convertors.json
    :platform: Windows, Unix
@@ -235,7 +235,7 @@ def json2ns(json_data: str | dict | Path) -> SimpleNamespace:
 
 ```python
 ## \file hypotez/src/utils/convertors/json.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.utils.convertors.json
    :platform: Windows, Unix

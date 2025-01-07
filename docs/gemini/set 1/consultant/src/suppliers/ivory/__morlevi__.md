@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/ivory/__morlevi__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -210,7 +210,7 @@ def grab_product_page(s):
 ```python
 ## \file hypotez/src/suppliers/ivory/__morlevi__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

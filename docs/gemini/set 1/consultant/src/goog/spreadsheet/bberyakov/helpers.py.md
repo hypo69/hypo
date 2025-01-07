@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -126,7 +126,7 @@ def hex_to_rgb (hex: str) -> tuple:
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль :mod:`src.goog.spreadsheet.bberyakov.helpers`
@@ -236,7 +236,7 @@ def hex_to_rgb(hex: str) -> tuple:
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль :mod:`src.goog.spreadsheet.bberyakov.helpers`

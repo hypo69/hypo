@@ -1,13 +1,13 @@
 ## Received Code
 
 ```python
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe # <- venv win\n## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """\n\'\'\'\nCreated by auto_sdk on 2021.05.20\n\'\'\'\nfrom ..base import RestApi\nclass AliexpressAffiliateHotproductQueryRequest(RestApi):\n\tdef __init__(self, domain="api-sg.aliexpress.com", port=80):\n\t\tRestApi.__init__(self,domain, port)\n\t\tself.app_signature = None\n\t\tself.category_ids = None\n\t\tself.delivery_days = None\n\t\tself.fields = None\n\t\tself.keywords = None\n\t\tself.max_sale_price = None\n\t\tself.min_sale_price = None\n\t\tself.page_no = None\n\t\tself.page_size = None\n\t\tself.platform_product_type = None\n\t\tself.ship_to_country = None\n\t\tself.sort = None\n\t\tself.target_currency = None\n\t\tself.target_language = None\n\t\tself.tracking_id = None\n\n\tdef getapiname(self):\n\t\treturn \'aliexpress.affiliate.hotproduct.query\'\n\n```
+# -*- coding: utf-8 -*-\n # <- venv win\n## ~~~~~~~~~~~~~\n""" module: src.suppliers.aliexpress.api._examples.rest """\n\'\'\'\nCreated by auto_sdk on 2021.05.20\n\'\'\'\nfrom ..base import RestApi\nclass AliexpressAffiliateHotproductQueryRequest(RestApi):\n\tdef __init__(self, domain="api-sg.aliexpress.com", port=80):\n\t\tRestApi.__init__(self,domain, port)\n\t\tself.app_signature = None\n\t\tself.category_ids = None\n\t\tself.delivery_days = None\n\t\tself.fields = None\n\t\tself.keywords = None\n\t\tself.max_sale_price = None\n\t\tself.min_sale_price = None\n\t\tself.page_no = None\n\t\tself.page_size = None\n\t\tself.platform_product_type = None\n\t\tself.ship_to_country = None\n\t\tself.sort = None\n\t\tself.target_currency = None\n\t\tself.target_language = None\n\t\tself.tracking_id = None\n\n\tdef getapiname(self):\n\t\treturn \'aliexpress.affiliate.hotproduct.query\'\n\n```
 
 ## Improved Code
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~~~
 """ Модуль для запроса горячих продуктов на AliExpress. """
 """
@@ -71,7 +71,7 @@ class AliexpressAffiliateHotproductQueryRequest(RestApi):
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~~~~~
 """ Модуль для запроса горячих продуктов на AliExpress. """
 """

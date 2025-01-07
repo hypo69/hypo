@@ -1,6 +1,6 @@
 ## \file /src/webdriver/_examples/_example_executor_2.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

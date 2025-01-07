@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/scenario/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.scenario
 	:platform: Windows, Unix
 	:synopsis: Module with scenario execution functions: `run_scenario_files`, `run_scenarios`  
@@ -95,7 +95,7 @@ from .executor import (
 
 ```python
 ## \file hypotez/src/scenario/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 # Импортируем модуль для логирования из src.logger.logger
 from src.logger.logger import logger
 """
@@ -185,7 +185,7 @@ def run_scenarios(supplier, scenarios):
 
 ```python
 ## \file hypotez/src/scenario/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 # Импортируем модуль для логирования из src.logger.logger
 from src.logger.logger import logger
 """

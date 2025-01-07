@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/category/_examples/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -98,7 +98,7 @@ graph LR
 * **Variables:**
     * `MODE`: A string variable set to 'dev', likely used for configuration purposes in the project.  Its use in the project remains to be seen.
 * **Potential Errors/Improvements:**
-    * The `#!` lines (`#! venv/Scripts/python.exe`, `#! venv/bin/python/python3.12`) are likely interpreter directives, useful for running the file from a terminal, but are not actually part of Python's standard syntax and should not be included in a source code file unless there's a specific need for them (typically in very specific scripts that need to be run from a shell).
+    * The `#!` lines (``, `#! venv/bin/python/python3.12`) are likely interpreter directives, useful for running the file from a terminal, but are not actually part of Python's standard syntax and should not be included in a source code file unless there's a specific need for them (typically in very specific scripts that need to be run from a shell).
 
 * **Relationships:** This `__init__.py` file acts as an entry point for the `_examples` submodule within the `category` module.  It likely imports components needed for the examples within that submodule. The `version.py` file, imported here, is likely part of a larger system for managing version information.
 

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.tools """
 from .get_product_id import get_product_id
@@ -14,7 +14,7 @@ from .get_product_id import get_product_id
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """
 Модуль инструментов для работы с API AliExpress.
@@ -41,7 +41,7 @@ from src.logger import logger # Импортируем logger
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """
 Модуль инструментов для работы с API AliExpress.

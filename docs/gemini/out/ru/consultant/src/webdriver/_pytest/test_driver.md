@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -71,7 +71,7 @@ from pathlib import Path  # Импортируем необходимый мод
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -184,7 +184,7 @@ class TestDriverBase:
 ```python
 ## \file hypotez/src/webdriver/_pytest/test_driver.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

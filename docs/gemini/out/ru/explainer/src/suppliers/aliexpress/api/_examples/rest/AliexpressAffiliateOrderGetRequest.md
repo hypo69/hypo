@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/rest/AliexpressAffiliateOrderGetRequest.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api._examples.rest """
 
@@ -81,7 +81,7 @@ graph TD
 * Нет проверки валидности входных данных `domain` и `port`.
 * Отсутствует реализация для фактического выполнения запроса к API.  Класс `RestApi` должен содержать методы для запроса и обработки ответа.
 * Отсутствуют проверки типов данных для атрибутов.
-* В коде используется `#! venv/Scripts/python.exe`, что предполагает выполнение в ОС Windows.  Этот код, вероятно, не будет работать в других системах без изменения.
+* В коде используется ``, что предполагает выполнение в ОС Windows.  Этот код, вероятно, не будет работать в других системах без изменения.
 
 
 **Связь с другими частями проекта:**

@@ -1,6 +1,6 @@
 ## \file /dev_utils/png_from_dot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

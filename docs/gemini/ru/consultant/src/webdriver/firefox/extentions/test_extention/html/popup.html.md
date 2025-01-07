@@ -18,7 +18,7 @@
 
 **Рекомендации по улучшению**
 
-1.  Удалить строки `## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html` и  `# -*- coding: utf-8 -*-`  и `#! venv/Scripts/python.exe`, не относящиеся к HTML-файлу.
+1.  Удалить строки `## \file hypotez/src/webdriver/firefox/extentions/test_extention/html/popup.html` и  `# -*- coding: utf-8 -*-`  и ``, не относящиеся к HTML-файлу.
 2.  Удалить константу `MODE = \'debug\'`, так как она не является частью HTML и должна быть объявлена в python файле.
 3.  Добавить базовую структуру HTML5 (например, теги `html`, `head`, `body`).
 4.  Сделать заголовок и текст более информативными и специфичными для расширения.

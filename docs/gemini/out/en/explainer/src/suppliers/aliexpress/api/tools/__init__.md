@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/tools/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.tools """
 from .get_product_id import get_product_id
@@ -61,7 +61,7 @@ The mermaid diagram shows a single dependency: `get_product_id` from the `aliexp
 
 * **Potential Errors/Improvements:**
 
-   - The `#! venv/Scripts/python.exe` line is a shebang, often used to specify an interpreter when the script is run from a shell. It appears to be a Windows-specific shebang.  It's generally good practice to verify that this shebang points to the correct python executable in the virtual environment.
+   - The `` line is a shebang, often used to specify an interpreter when the script is run from a shell. It appears to be a Windows-specific shebang.  It's generally good practice to verify that this shebang points to the correct python executable in the virtual environment.
 
    -  While this code is functionally correct, a brief docstring would enhance clarity by explaining why this module imports that function (`get_product_id`), and what it is designed to provide (ex: to be a utility for providing product ids).
 

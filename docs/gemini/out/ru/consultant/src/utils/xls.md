@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -134,7 +134,7 @@ def save_xls_file(data: Dict[str, List[Dict]], file_path: str) -> bool:
 ```python
 ## \file hypotez/src/utils/xls.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

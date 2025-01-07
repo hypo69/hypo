@@ -24,7 +24,7 @@
     print(api_name)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 from src.suppliers.aliexpress.api.base import RestApi # Импорт базового класса RestApi
 from src.logger.logger import logger #  импорт модуля для логирования
@@ -98,7 +98,7 @@ class AliexpressAffiliateLinkGenerateRequest(RestApi):
     print(api_name)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 #  импорт модуля для логирования
 from src.logger.logger import logger

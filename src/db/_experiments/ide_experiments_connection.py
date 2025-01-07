@@ -1,6 +1,6 @@
 ## \file /src/db/_experiments/ide_experiments_connection.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

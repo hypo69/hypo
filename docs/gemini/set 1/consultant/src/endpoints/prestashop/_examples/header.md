@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -72,7 +72,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/endpoints/prestashop/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -175,7 +175,7 @@ from src.utils.product_fields_validator import ProductFieldsValidator  # Исп�
 ```python
 ## \file hypotez/src/endpoints/prestashop/_examples/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

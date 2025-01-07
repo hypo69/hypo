@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль :mod:`src.suppliers.aliexpress.api.helpers.requests`
 =========================================================
@@ -85,7 +85,7 @@ def api_request(request, response_name, attemps: int = 1):
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль :mod:`src.suppliers.aliexpress.api.helpers.requests`
 =========================================================

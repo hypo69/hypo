@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для конвертации CSV в JSON и SimpleNamespace объекты
@@ -140,7 +140,7 @@ def csv_to_json(
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для конвертации CSV в JSON и SimpleNamespace объекты

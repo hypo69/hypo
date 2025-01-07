@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/ebay/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -48,7 +48,7 @@
 ```python
 ## \file hypotez/src/suppliers/ebay/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -104,7 +104,7 @@ def login(driver, login_data_path):
 ```python
 ## \file hypotez/src/suppliers/ebay/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

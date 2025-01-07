@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/kualastyle/via_webdriver.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.kualastyle 
 	:platform: Windows, Unix
 	:synopsis:
@@ -78,7 +78,7 @@ def get_list_products_in_category(s) -> list[str,str,None]:
 
 ```python
 ## \file hypotez/src/suppliers/kualastyle/via_webdriver.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.suppliers.kualastyle
     :platform: Windows, Unix
     :synopsis: Модуль для парсинга данных с сайта kualastyle через webdriver.
@@ -147,7 +147,7 @@ def get_list_products_in_category(supplier: object) -> typing.List[str]:
 
 ```python
 ## \file hypotez/src/suppliers/kualastyle/via_webdriver.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.suppliers.kualastyle
     :platform: Windows, Unix
     :synopsis: Модуль для парсинга данных с сайта kualastyle через webdriver.

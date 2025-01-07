@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -45,7 +45,7 @@ def check_latest_release(owner: str, repo: str):
 ```python
 ## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -111,7 +111,7 @@ def check_latest_release(owner: str, repo: str) -> str | None:
 ```python
 ## \file hypotez/src/check_release.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file /src/logger/logger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -220,7 +220,7 @@ class Logger(metaclass=SingletonMeta):
 ```python
 ## \file /src/logger/logger.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

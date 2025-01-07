@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/endpoints/hypo69/small_talk_bot/bot.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.endpoints.hypo69.small_talk_bot 
 	:platform: Windows, Unix
 	:synopsis:
@@ -156,7 +156,7 @@ class PsychologistTelgrambot(TelegramBot):
 
 ```python
 ## \file hypotez/src/endpoints/hypo69/small_talk_bot/bot.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.endpoints.hypo69.small_talk_bot 
 	:platform: Windows, Unix
 	:synopsis:

@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -62,7 +62,7 @@ except (FileNotFoundError, json.JSONDecodeError):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ except Exception as e:
 ```python
 ## \file hypotez/src/suppliers/aliexpress/gui/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

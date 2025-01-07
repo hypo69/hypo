@@ -25,7 +25,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с горячими товарами AliExpress.
 ==================================================

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -50,7 +50,7 @@ sys.path.append (__root__)
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -122,7 +122,7 @@ sys.path.append(str(__root__)) # Добавляем в путь поиска м�
 ```python
 ## \file hypotez/src/ai/gemini/html_chat/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

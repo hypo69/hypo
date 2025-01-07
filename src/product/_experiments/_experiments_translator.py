@@ -1,6 +1,6 @@
 ## \file /src/product/_experiments/_experiments_translator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

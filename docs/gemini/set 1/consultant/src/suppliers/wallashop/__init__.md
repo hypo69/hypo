@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/wallashop/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -24,7 +24,7 @@ from .graber import Graber
 ```python
 ## \file hypotez/src/suppliers/wallashop/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -84,7 +84,7 @@ def get_data(filepath: str) -> dict:
 ```python
 ## \file hypotez/src/suppliers/wallashop/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

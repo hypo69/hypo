@@ -9,7 +9,7 @@
 Использует библиотеку Graphviz для рендеринга графов.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import sys
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 Использует библиотеку Graphviz для рендеринга графов.
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import sys

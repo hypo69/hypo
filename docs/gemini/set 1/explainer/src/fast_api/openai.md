@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/fast_api/openai.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

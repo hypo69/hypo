@@ -5,7 +5,7 @@ from __future__ import annotations
 
 ## \file hypotez/src/endpoints/kazarinov/scenarios/scenario_pricelist.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/kualastyle/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -89,7 +89,7 @@ cofee = settings.get("cofee", "Treat the developer to a cup of coffee for boosti
 ```python
 ## \file hypotez/src/suppliers/kualastyle/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -184,7 +184,7 @@ cofee = settings.get("cofee", "Treat the developer to a cup of coffee for boosti
 ```python
 ## \file hypotez/src/suppliers/kualastyle/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

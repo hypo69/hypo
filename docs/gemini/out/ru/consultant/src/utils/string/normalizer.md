@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/string/normalizer.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -126,7 +126,7 @@ def normalize_int(input_data: Union[str, int, float, Decimal]) -> int:
 @@ -1,6 +1,6 @@
  ## \file hypotez/src/utils/string/normalizer.py
  # -*- coding: utf-8 -*-\
--#! venv/Scripts/python.exe
+-
 +
  #! venv/bin/python/python3.12
  

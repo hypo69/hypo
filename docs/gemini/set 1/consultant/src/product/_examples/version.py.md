@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/product/_examples/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -82,7 +82,7 @@ __author__='hypotez '
     print(f"Автор: {version.__author__}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 from typing import Any
 from src.logger.logger import logger # Добавлен импорт logger
@@ -132,7 +132,7 @@ __author__: str = 'hypotez ' # Определяем тип переменной 
     print(f"Автор: {version.__author__}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 from typing import Any
 from src.logger.logger import logger # Добавлен импорт logger

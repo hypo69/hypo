@@ -1,6 +1,6 @@
 ## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_5_lxml_get_unique_links_DFS_algoryphm_hb.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

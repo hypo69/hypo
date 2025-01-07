@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/logger/beeper.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.logger \n\t:platform: Windows, Unix\n\t:synopsis: Бииип\n\n"""
 
 

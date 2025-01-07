@@ -80,7 +80,7 @@
     print(product_fields.id_product)
 
 """
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

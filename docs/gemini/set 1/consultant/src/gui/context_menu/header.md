@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/gui/context_menu/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -83,7 +83,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 ```python
 ## \file hypotez/src/gui/context_menu/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -173,7 +173,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 ```python
 ## \file hypotez/src/gui/context_menu/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

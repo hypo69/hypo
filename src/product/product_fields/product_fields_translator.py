@@ -1,6 +1,6 @@
 ## \file /src/product/product_fields/product_fields_translator.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

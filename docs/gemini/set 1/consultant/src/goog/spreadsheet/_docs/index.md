@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/_docs/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ module: src.goog.spreadsheet._docs """
 MODE = 'debug'
@@ -38,7 +38,7 @@ MODE = 'debug'
 ```python
 ## \file hypotez/src/goog/spreadsheet/_docs/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ Модуль для работы с Google Таблицами. """
 
@@ -77,7 +77,7 @@ from src.logger import logger  # Импорт функции для логиро
 ```python
 ## \file hypotez/src/goog/spreadsheet/_docs/index.html
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 
 """ Модуль для работы с Google Таблицами. """
 

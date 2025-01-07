@@ -5,7 +5,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/helpers/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~\
 """ module: src.suppliers.aliexpress.api.helpers """
 from .requests import api_request
@@ -73,7 +73,7 @@ No variables are declared in the code.
 
 * **Error Handling:** The code lacks error handling.  The absence of `try...except` blocks means that exceptions raised by the imported functions would propagate without being caught, potentially leading to crashes.  Robust error handling is crucial in production-level code.
 * **Missing Docstrings:**  No docstrings are present in the code.  Adding docstrings to clarify the purpose, arguments, and return values of the functions would significantly improve code readability and maintainability.
-* **Venv Specificity:** The `#! venv/Scripts/python.exe # <- venv win` line is highly platform-specific (Windows). It's generally better practice to make code as platform-agnostic as possible.
+* **Venv Specificity:** The ` # <- venv win` line is highly platform-specific (Windows). It's generally better practice to make code as platform-agnostic as possible.
 
 
 ### Relationships with Other Parts of the Project:

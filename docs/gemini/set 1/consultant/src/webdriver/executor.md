@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.webdriver 
 	:platform: Windows, Unix
 	:synopsis: The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 
@@ -168,7 +168,7 @@ class ExecuteLocator:
 
 ```python
 ## \file hypotez/src/webdriver/executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.webdriver 
 	:platform: Windows, Unix
 	:synopsis: The purpose of the `executor` module is to perform actions on web elements based on provided configurations, 

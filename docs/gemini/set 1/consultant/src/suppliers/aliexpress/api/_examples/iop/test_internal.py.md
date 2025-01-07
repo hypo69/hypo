@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/api/_examples/iop/test_internal.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api._examples.iop """
 """   [File's Description]
@@ -81,7 +81,7 @@ print(str(round(time.time())) + '000')
     response = client.execute(request)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 # module: src.suppliers.aliexpress.api._examples.iop
 #   [File's Description]
@@ -179,7 +179,7 @@ print(str(round(time.time())) + '000')
     response = client.execute(request)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 # module: src.suppliers.aliexpress.api._examples.iop
 #   [File's Description]

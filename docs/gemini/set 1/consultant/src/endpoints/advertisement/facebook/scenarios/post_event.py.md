@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для публикации календарного события в группах Facebook.
@@ -205,7 +205,7 @@ def post_event(d: Driver, event: SimpleNamespace) -> bool:
 # FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для публикации календарного события в группах Facebook.

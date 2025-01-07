@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/api/tools/get_product_id.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """ module: src.suppliers.aliexpress.api.tools """
 """Some useful tools."""

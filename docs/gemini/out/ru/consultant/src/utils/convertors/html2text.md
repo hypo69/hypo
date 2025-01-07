@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -54,7 +54,7 @@ from src.logger import logger # Import logger
 ```python
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -125,7 +125,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -24,7 +24,7 @@
 ```python
 ## \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -68,7 +68,7 @@ logger = logging.getLogger(__name__)
 ```python
 ## \file hypotez/src/endpoints/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

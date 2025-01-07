@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/category/_examples/version.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -59,7 +59,7 @@ __author__='hypotez '
 ## Improved Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль содержит информацию о версии и общие сведения.
@@ -99,7 +99,7 @@ __author__ = 'hypotez '
 ## FULL Code
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль содержит информацию о версии и общие сведения.

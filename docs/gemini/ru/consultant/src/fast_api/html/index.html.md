@@ -26,7 +26,7 @@
 ```html
 ## \file hypotez/src/fast_api/html/index.html
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 
 """
 HTML-страница с формой для отправки данных.

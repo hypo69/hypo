@@ -66,7 +66,7 @@
     if success:
         print("Успешно сохранено в output.xlsx")
 """
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 import pandas as pd

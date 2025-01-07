@@ -51,7 +51,7 @@
         print(result)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 from types import SimpleNamespace
 from time import sleep
 from src.logger.logger import logger

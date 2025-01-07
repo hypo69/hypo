@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.webdriver._examples 
 	:platform: Windows, Unix
 	:synopsis:
@@ -96,7 +96,7 @@ def main():
 
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.webdriver._examples
     :platform: Windows, Unix
     :synopsis: Модуль содержит примеры использования класса ExecuteLocator для взаимодействия с веб-драйвером.
@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_executor.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.webdriver._examples
     :platform: Windows, Unix
     :synopsis: Модуль содержит примеры использования класса ExecuteLocator для взаимодействия с веб-драйвером.

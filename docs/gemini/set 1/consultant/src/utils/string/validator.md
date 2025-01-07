@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/string/validator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -168,7 +168,7 @@ class ProductFieldsValidator:
 ```python
 ## \file hypotez/src/utils/string/validator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -220,7 +220,7 @@ class ProductFieldsValidator:
 ```python
 ## \file hypotez/src/utils/string/validator.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

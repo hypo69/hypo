@@ -10,7 +10,7 @@
     - Отсутствует описание модуля в формате reStructuredText (RST) в начале файла.
     - Не хватает комментариев, объясняющих назначение отдельных блоков HTML.
     - Отсутствует описание назначения HTML-элементов.
-    -  В начале файла присутствуют лишние строки `## \\file hypotez/src/webdriver/firefox/extentions/try_path_1.3.5/pages/show_all_results.html` `#! venv/Scripts/python.exe`, которые не относятся к HTML коду.
+    -  В начале файла присутствуют лишние строки `## \\file hypotez/src/webdriver/firefox/extentions/try_path_1.3.5/pages/show_all_results.html` ``, которые не относятся к HTML коду.
 
 **Рекомендации по улучшению**
 

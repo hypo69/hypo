@@ -1,6 +1,6 @@
 ## \file /src/suppliers/aliexpress/_experiments/web_login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

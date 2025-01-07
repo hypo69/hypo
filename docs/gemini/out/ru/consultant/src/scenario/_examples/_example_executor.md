@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/scenario/_examples/_example_executor.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -166,7 +166,7 @@ def example_run_scenario():
 +- Добавление купона через API PrestaShop.
 +"""
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
  #! venv/bin/python/python3.12
  
 -"""
@@ -352,7 +352,7 @@ def example_run_scenario():
 - Добавление купона через API PrestaShop.
 """
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

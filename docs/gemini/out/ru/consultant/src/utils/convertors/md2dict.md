@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/md2dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -95,7 +95,7 @@ def extract_json_from_string(text: str) -> dict | None:
 ```python
 ## \file hypotez/src/utils/convertors/md2dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -194,7 +194,7 @@ def extract_json_from_string(text: str) -> dict | None:
 ```python
 ## \file hypotez/src/utils/convertors/md2dict.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

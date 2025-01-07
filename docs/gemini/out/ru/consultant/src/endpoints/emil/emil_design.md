@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -223,7 +223,7 @@ class EmilDesign:
 ```python
 ## \file hypotez/src/endpoints/emil/emil_design.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

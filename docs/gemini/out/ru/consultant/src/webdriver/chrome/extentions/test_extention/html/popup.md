@@ -2,7 +2,7 @@
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 """ module: src.webdriver.chrome.extentions.test_extention.html """
 MODE = 'debug'
 <!-- popup.html -->
@@ -29,7 +29,7 @@ MODE = 'debug'
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 """
 Модуль popup.html для расширения hypotez.
 =========================================
@@ -67,7 +67,7 @@ MODE = 'debug'
 
 ```html
 ## \file hypotez/src/webdriver/chrome/extentions/test_extention/html/popup.html
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe
+# -*- coding: utf-8 -*-\n
 """
 Модуль popup.html для расширения hypotez.
 =========================================

@@ -1,7 +1,7 @@
 # Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """
 Модуль для работы с запросом горячих товаров через AliExpress API.
@@ -83,7 +83,7 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 5.  Добавлены комментарии к полям класса.
 6.  Изменены имена импортированных модулей в соответствии с принятыми стандартами.
 7.  Добавлен комментарий к magic comment  `# -*- coding: utf-8 -*-`
-8.  Добавлен комментарий к shebang `#! venv/Scripts/python.exe # <- venv win`
+8.  Добавлен комментарий к shebang ` # <- venv win`
 9.  Изменения в комментариях:
     *   Удалены комментарии `#` перед `RestApi.__init__`, так как они не несут дополнительной информации.
     *   Комментарии `#` сохранены для важных частей кода, таких как shebang.
@@ -92,7 +92,7 @@ class AliexpressAffiliateHotproductDownloadRequest(RestApi):
 # Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 """
 Модуль для работы с запросом горячих товаров через AliExpress API.

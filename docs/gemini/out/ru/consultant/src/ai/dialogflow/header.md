@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.ai.dialogflow 
 	:platform: Windows, Unix
 	:synopsis:
@@ -80,7 +80,7 @@ __cofee__: str = settings.get("cofee", "Treat the developer to a cup of coffee f
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.ai.dialogflow
     :platform: Windows, Unix
@@ -190,7 +190,7 @@ __cofee__ = __settings.get("cofee", "Treat the developer to a cup of coffee...")
 
 ```python
 ## \file hypotez/src/ai/dialogflow/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n
 """
 .. module:: src.ai.dialogflow
     :platform: Windows, Unix

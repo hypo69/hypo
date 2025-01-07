@@ -24,7 +24,7 @@
 ```python
 # -*- coding: utf-8 -*-
 #  file hypotez/src/webdriver/firefox/_examples/__init__.py
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

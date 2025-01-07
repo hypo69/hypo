@@ -1,6 +1,6 @@
 ## \file /src/suppliers/kualastyle/via_webdriver.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

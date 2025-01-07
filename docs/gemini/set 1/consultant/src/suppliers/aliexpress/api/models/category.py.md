@@ -44,7 +44,7 @@ class ChildCategory(Category):
 1.  Добавлены docstring для модуля и классов в формате reStructuredText (RST).
 2.  Добавлен импорт `dataclass` из модуля `dataclasses`.
 3.  Добавлены аннотации типов для переменных.
-4.  Удалены лишние комментарии `# -*- coding: utf-8 -*-` и `#! venv/Scripts/python.exe # <- venv win`
+4.  Удалены лишние комментарии `# -*- coding: utf-8 -*-` и ` # <- venv win`
 5.  Удален избыточный комментарий `## ~~~~~~~~~~~~~~`.
 6.  Описаны все классы и их переменные с использованием `reStructuredText`.
 

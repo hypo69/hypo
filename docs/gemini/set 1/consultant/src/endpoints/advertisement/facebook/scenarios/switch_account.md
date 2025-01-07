@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -35,7 +35,7 @@ def switch_account(driver: Driver):
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ def switch_account(driver: Driver):
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

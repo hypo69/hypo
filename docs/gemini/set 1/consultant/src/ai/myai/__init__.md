@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -20,7 +20,7 @@
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -49,7 +49,7 @@ from src.utils.jjson import j_loads  # Импорт функции j_loads дл�
 
 *   Добавлены необходимые импорты: `json`, `j_loads` из `src.utils.jjson`.  Это необходимо для корректной работы с JSON данными.
 *   Добавлен комментарий в формате RST для файла. Теперь файл содержит описание модуля, платформы и краткое описание.
-*   Комментарии `# -*- coding: utf-8 -*-\` и `#! venv/Scripts/python.exe` и `#! venv/bin/python/python3.12` могут быть избыточными.
+*   Комментарии `# -*- coding: utf-8 -*-\` и `` и `#! venv/bin/python/python3.12` могут быть избыточными.
 *   Добавлена строка импорта `from src.utils.jjson import j_loads`.
 *   Константа `MODE` теперь имеет docstring, описывающий ее назначение.
 *   Комментарии к коду написаны в формате reStructuredText.
@@ -60,7 +60,7 @@ from src.utils.jjson import j_loads  # Импорт функции j_loads дл�
 ```python
 ## \file hypotez/src/ai/myai/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

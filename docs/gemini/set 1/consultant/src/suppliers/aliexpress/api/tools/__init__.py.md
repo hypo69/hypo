@@ -21,7 +21,7 @@
     print(product_id)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 from src.suppliers.aliexpress.api.tools.get_product_id import get_product_id
 
@@ -53,7 +53,7 @@ from src.suppliers.aliexpress.api.tools.get_product_id import get_product_id
     print(product_id)
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~~
 # Импорт функции get_product_id из соответствующего модуля
 from src.suppliers.aliexpress.api.tools.get_product_id import get_product_id

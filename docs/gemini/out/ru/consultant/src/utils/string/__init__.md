@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/string/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -31,7 +31,7 @@ from .normalizer import (
 ```python
 ## \file hypotez/src/utils/string/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -101,7 +101,7 @@ def example_with_logging():
 ```python
 ## \file hypotez/src/utils/string/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/kualastyle/graber.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ class Graber(Grbr):
 @@ -1,8 +1,6 @@
  ## \file hypotez/src/suppliers/kualastyle/graber.py
  # -*- coding: utf-8 -*-\
- #! venv/Scripts/python.exe
+ 
 -#! venv/bin/python/python3.12
 -
  

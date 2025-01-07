@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с ответом горячих товаров от AliExpress.
 ========================================================
@@ -42,7 +42,7 @@ class HotProductsResponse:
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с ответом горячих товаров от AliExpress.
 ========================================================

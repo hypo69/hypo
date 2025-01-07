@@ -1,6 +1,6 @@
 ## \file /src/endpoints/emil/bot_handlers.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 .. module:: src.endpoints.emil.bot_handlers 

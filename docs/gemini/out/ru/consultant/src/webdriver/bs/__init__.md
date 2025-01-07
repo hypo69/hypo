@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/bs/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ from .bs import BS
 ```python
 ## \file hypotez/src/webdriver/bs/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -57,7 +57,7 @@ from src.logger import logger # Добавлен импорт для логир�
 ```python
 ## \file hypotez/src/webdriver/bs/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

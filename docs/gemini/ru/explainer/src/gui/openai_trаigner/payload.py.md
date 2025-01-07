@@ -13,7 +13,7 @@
 ```mermaid
 flowchart TD
     Start --> Header[Начало обработки файла payload.py]
-    Header --> Shebang[Shebang строки: <br> #! venv/Scripts/python.exe <br> #! venv/bin/python/python3.12]
+    Header --> Shebang[Shebang строки: <br>  <br> #! venv/bin/python/python3.12]
     Shebang --> Encoding[Кодировка: <br> #-*- coding: utf-8 -*-]
     Encoding --> Docstrings[Строки документации: <br>Описание модуля и платформенная совместимость]
     Docstrings --> End[Конец обработки файла]

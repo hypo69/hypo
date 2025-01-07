@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/product/product_fields/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -23,7 +23,7 @@ from .product_fields_translator import translate_presta_fields_dict
 ```python
 ## \file hypotez/src/product/product_fields/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -85,7 +85,7 @@ def load_product_fields(file_path):
 ```python
 ## \file hypotez/src/product/product_fields/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/bots/discord/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -47,7 +47,7 @@
 ```python
 ## \file hypotez/src/bots/discord/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -87,7 +87,7 @@ def some_function():
 ```python
 ## \file hypotez/src/bots/discord/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

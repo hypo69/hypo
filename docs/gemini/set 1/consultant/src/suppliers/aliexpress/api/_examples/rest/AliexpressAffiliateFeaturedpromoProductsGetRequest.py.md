@@ -1,7 +1,7 @@
 ## Улучшенный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с API Aliexpress для получения информации о продвигаемых продуктах.
 ================================================================================
@@ -93,7 +93,7 @@ class AliexpressAffiliateFeaturedpromoProductsGetRequest(RestApi):
 ## Оптимизированный код
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 """
 Модуль для работы с API Aliexpress для получения информации о продвигаемых продуктах.
 ================================================================================

@@ -1,6 +1,6 @@
 ## \file /src/endpoints/kazarinov/_experiments/get_images.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Список картинок, сгенерированный ИИ

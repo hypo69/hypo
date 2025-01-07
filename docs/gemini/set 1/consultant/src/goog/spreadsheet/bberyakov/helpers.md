@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -120,7 +120,7 @@ def hex_to_rgb (hex_color: str) -> tuple:
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -234,7 +234,7 @@ def hex_to_rgb(hex_color: str) -> tuple:
 ```python
 ## \file hypotez/src/goog/spreadsheet/bberyakov/helpers.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

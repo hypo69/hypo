@@ -3,7 +3,7 @@
 ```python
 ## \file /src/utils/ai/parse_data_types.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -22,7 +22,7 @@ import header
 ```python
 ## \file /src/utils/ai/parse_data_types.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -79,7 +79,7 @@ def parse_data(data: str, data_type: str) -> object:
 ```python
 ## \file /src/utils/ai/parse_data_types.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

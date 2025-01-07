@@ -23,7 +23,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 ## ~~~~~~~~~~~~
 """
 Модуль для работы с запросами к API Aliexpress для получения списка популярных промоакций.

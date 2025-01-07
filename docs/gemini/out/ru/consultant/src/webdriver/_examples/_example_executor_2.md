@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_executor_2.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -171,7 +171,7 @@ result = execute_locator_with_error_handling(simple_locator)
 ```python
 ## \file hypotez/src/webdriver/_examples/_example_executor_2.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

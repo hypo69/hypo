@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/utils/locales.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -72,7 +72,7 @@ locales: list[dict[str, str]] | None = get_locales(gs.path.src / 'suppliers' / '
 @@ -1,6 +1,6 @@
  ## \file hypotez/src/suppliers/aliexpress/utils/locales.py
  # -*- coding: utf-8 -*-\
--#! venv/Scripts/python.exe
+-
 +
  #! venv/bin/python/python3.12
  

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/ai/gemini/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -66,7 +66,7 @@ The diagram shows a direct dependency of `__init__.py` on `generative_ai.py` wit
 
 * **Potential Errors/Improvements:**
     * The docstrings are in Russian. Consider using English docstrings for broader accessibility.
-    * The use of `#! venv/Scripts/python.exe` and `#! venv/bin/python/python3.12` as shebang lines is unusual. This likely part of a custom setup or a virtual environment issue (using `#!python3`). Consider using standard Python shebangs.
+    * The use of `` and `#! venv/bin/python/python3.12` as shebang lines is unusual. This likely part of a custom setup or a virtual environment issue (using `#!python3`). Consider using standard Python shebangs.
 
 
 **Relationships with Other Parts of the Project:**

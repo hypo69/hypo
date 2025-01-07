@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -167,7 +167,7 @@ class PrestaCategory(PrestaShop):
 ```python
 ## \file hypotez/src/endpoints/prestashop/category.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

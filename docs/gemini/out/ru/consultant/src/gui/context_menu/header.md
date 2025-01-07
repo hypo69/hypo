@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.gui.context_menu 
 	:platform: Windows, Unix
 	:synopsis:
@@ -83,7 +83,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 ```python
 ## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.gui.context_menu
     :platform: Windows, Unix
     :synopsis: Модуль для работы с контекстным меню.
@@ -164,7 +164,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 ```python
 ## \file hypotez/src/gui/context_menu/header.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.gui.context_menu
     :platform: Windows, Unix
     :synopsis: Модуль для работы с контекстным меню.

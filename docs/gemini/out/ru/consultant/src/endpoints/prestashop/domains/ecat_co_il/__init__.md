@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/endpoints/prestashop/domains/ecat_co_il/__init__.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.endpoints.prestashop.domains.ecat_co_il 
 	:platform: Windows, Unix
 	:synopsis:
@@ -49,7 +49,7 @@ Author(s):
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 # #! venv/bin/python/python3.12
 
 """
@@ -129,7 +129,7 @@ def get_product_data(url):
 
 ```python
 # -*- coding: utf-8 -*-
-# #! venv/Scripts/python.exe
+# 
 # #! venv/bin/python/python3.12
 
 """

@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/suppliers/ivory/__morlevi__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -317,7 +317,7 @@ def get_list_categories_from_site(s,scenario_file,brand=''):
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path
@@ -670,7 +670,7 @@ def get_list_categories_from_site(s, scenario_file, brand=''):
 
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 from pathlib import Path

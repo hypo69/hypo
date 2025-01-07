@@ -1,6 +1,6 @@
 ## \file /src/endpoints/advertisement/facebook/scenarios/switch_account.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

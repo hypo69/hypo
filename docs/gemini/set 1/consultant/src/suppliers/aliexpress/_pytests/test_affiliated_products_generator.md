@@ -2,7 +2,7 @@
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module: src.suppliers.aliexpress._pytests 
 	:platform: Windows, Unix
 	:synopsis:
@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.suppliers.aliexpress._pytests
     :platform: Windows, Unix
     :synopsis: Модуль для тестирования генератора связанных продуктов AliExpress.
@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
 ```python
 ## \file hypotez/src/suppliers/aliexpress/_pytests/test_affiliated_products_generator.py
-# -*- coding: utf-8 -*-\n#! venv/Scripts/python.exe\n#! venv/bin/python/python3.12\n\n"""
+# -*- coding: utf-8 -*-\n\n#! venv/bin/python/python3.12\n\n"""
 .. module:: src.suppliers.aliexpress._pytests
     :platform: Windows, Unix
     :synopsis: Модуль для тестирования генератора связанных продуктов AliExpress.

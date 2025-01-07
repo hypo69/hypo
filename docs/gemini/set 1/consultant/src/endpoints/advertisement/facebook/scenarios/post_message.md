@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -80,7 +80,7 @@ def post_title(d: Driver, message: SimpleNamespace | str) -> bool:
 -## \file hypotez/src/endpoints/advertisement/facebook/scenarios/post_message.py
 +"""Модуль для публикации сообщений на Facebook."""
  # -*- coding: utf-8 -*-\
--#! venv/Scripts/python.exe
+-
 +
  #! venv/bin/python/python3.12
  

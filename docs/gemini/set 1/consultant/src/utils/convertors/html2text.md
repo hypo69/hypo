@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -138,7 +138,7 @@ def unescape(s):
 ```python
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -220,7 +220,7 @@ class _html2text(HTMLParser.HTMLParser):
 ```python
 ## \file hypotez/src/utils/convertors/html2text.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

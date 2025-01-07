@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -27,7 +27,7 @@ from .html_generators import CategoryHTMLGenerator, ProductHTMLGenerator
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -91,7 +91,7 @@ def process_campaign_data(campaign_data_path: str):
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

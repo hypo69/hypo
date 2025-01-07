@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -81,7 +81,7 @@ cofee_link = settings.get("cofee", "Treat the developer to a cup of coffee for b
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -170,7 +170,7 @@ cofee_link = settings.get("cofee", "Treat the developer to a cup of coffee for b
 ```python
 ## \file hypotez/src/suppliers/aliexpress/campaign/header.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 # ~~~~~~~~~~~~~
 """
 Модуль для определения версии API AliExpress.
@@ -44,7 +44,7 @@ __author__ = 'hypotez '
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe # <- venv win
+ # <- venv win
 # ~~~~~~~~~~~~~
 """
 Модуль для определения версии API AliExpress.

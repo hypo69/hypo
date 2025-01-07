@@ -1,6 +1,6 @@
 ## \file /src/fast_api/gemini.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -1,6 +1,6 @@
 ## \file /src/scenario/_experiments/test_scenario.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -64,7 +64,7 @@ __author__='hypotez '
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -155,7 +155,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/webdriver/firefox/_examples/version.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

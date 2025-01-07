@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/hypo69/small_talk_bot/bot.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -120,7 +120,7 @@ class PsychologistTelgrambot(TelegramBot):
 ```python
 ## \file hypotez/src/endpoints/hypo69/small_talk_bot/bot.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

@@ -1,6 +1,6 @@
 ## \file /src/endpoints/prestashop/_experiments/suppliers/hb/test_2_hb_get_site_structure.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

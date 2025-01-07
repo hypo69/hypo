@@ -1,6 +1,6 @@
 ## \file /src/scenario/_experiments/amazon_murano_glass.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

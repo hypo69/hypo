@@ -2,7 +2,7 @@
 ```python
 ## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Telegram-бот для проекта Kazarinov
@@ -110,7 +110,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для реализации Telegram-бота Kazarinov.
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 ```python
 ## \file hypotez/src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для реализации Telegram-бота Kazarinov.

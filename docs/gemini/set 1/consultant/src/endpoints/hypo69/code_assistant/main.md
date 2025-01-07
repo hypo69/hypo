@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -175,7 +175,7 @@ from src.logger import logger
 ```python
 ## \file hypotez/src/endpoints/hypo69/code_assistant/main.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

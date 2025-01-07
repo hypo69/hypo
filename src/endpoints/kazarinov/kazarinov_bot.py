@@ -1,7 +1,7 @@
 
 ## \file /src/endpoints/kazarinov/kazarinov_bot.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Telegram-бот для проекта Kazarinov

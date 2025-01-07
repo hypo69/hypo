@@ -69,7 +69,7 @@
         logger.error(f"Ошибка при создании кампании {campaign_name}: {e}")
 """
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 

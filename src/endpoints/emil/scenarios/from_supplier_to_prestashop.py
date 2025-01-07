@@ -3,7 +3,7 @@ from __future__ import annotations
 from src.suppliers import aliexpress
 ## \file /src/endpoints/emil/scenarios/from_supplier_to_prestashop.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

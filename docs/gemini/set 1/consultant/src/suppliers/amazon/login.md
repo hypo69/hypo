@@ -4,7 +4,7 @@
 ```python
 ## \file hypotez/src/suppliers/amazon/login.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -105,7 +105,7 @@ def login(s) -> bool:
 ```python
 ## \file hypotez/src/suppliers/amazon/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -190,7 +190,7 @@ def login(supplier: object) -> bool:
 ```python
 ## \file hypotez/src/suppliers/amazon/login.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

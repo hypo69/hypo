@@ -9,7 +9,7 @@ from io import StringIO
 
 # The provided code
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 # ... (The Logger class code)
 

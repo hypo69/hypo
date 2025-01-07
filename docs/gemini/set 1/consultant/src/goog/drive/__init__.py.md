@@ -2,7 +2,7 @@
 
 ```python
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 """
 Модуль для работы с Google Drive.
@@ -37,7 +37,7 @@ from .drive import GoogleDrive
 - Добавлен пример использования модуля в docstring.
 - Изменен формат комментария для модуля.
 -  Добавлен импорт `GoogleDrive` для того чтобы код был полным.
--  Удалены неиспользуемые комментарии `# -*- coding: utf-8 -*-` и `#! venv/Scripts/python.exe, #! venv/bin/python/python3.12`
+-  Удалены неиспользуемые комментарии `# -*- coding: utf-8 -*-` и `, #! venv/bin/python/python3.12`
 -  Добавлено описание модуля `Модуль для работы с Google Drive`
 
 ## Оптимизированный код

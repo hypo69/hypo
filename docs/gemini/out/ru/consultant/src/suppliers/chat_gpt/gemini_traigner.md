@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gemini_traigner.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -43,7 +43,7 @@
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gemini_traigner.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -109,7 +109,7 @@ def train_gemini(data_file: str) -> None:
 ```python
 ## \file hypotez/src/suppliers/chat_gpt/gemini_traigner.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

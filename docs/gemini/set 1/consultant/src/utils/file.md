@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -100,7 +100,7 @@ def read_text_file(
 ```python
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -205,7 +205,7 @@ def read_text_file(
 ```python
 ## \file hypotez/src/utils/file.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """

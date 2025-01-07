@@ -3,7 +3,7 @@
 ```python
 ## \file hypotez/src/webdriver/chrome/extentions/__init__.py
 # -*- coding: utf-8 -*-\
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -53,7 +53,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/webdriver/chrome/extentions/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
@@ -128,7 +128,7 @@ from .version import __version__, __doc__, __details__
 ```python
 ## \file hypotez/src/webdriver/chrome/extentions/__init__.py
 # -*- coding: utf-8 -*-
-#! venv/Scripts/python.exe
+
 #! venv/bin/python/python3.12
 
 """
