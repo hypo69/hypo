@@ -52,3 +52,5 @@ class PrestaProduct(PrestaShop):
             raise ValueError('Необходимы оба параметра: api_domain и api_key.')
         
         super().__init__(api_domain, api_key, *args, **kwards)
+
+

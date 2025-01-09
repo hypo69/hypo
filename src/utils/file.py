@@ -21,10 +21,10 @@ from src.logger.logger import logger
 
 
 def save_text_file(
+    file_path: str | Path,
     data: str | list[str] | dict,
-    file_path: Union[str, Path],
-    mode: str = "w",
-    exc_info: bool = True,
+    mode: str = "w"
+
 ) -> bool:
     """
     Save data to a text file.
@@ -84,11 +84,11 @@ def read_text_file(
             contents = [read_text_file(p, as_list) for p in files]
             return [item for sublist in contents if sublist for item in sublist] if as_list else "\n".join(filter(None, contents))
         else:
-            logger.warning(f"Path '{file_path}' is invalid.")
-            return None
+            logger.error(f"Path '{file_path}' is invalid.")
+            return 
     except Exception as ex:
         logger.error(f"Failed to read file {file_path}.", ex, exc_info=exc_info)
-        return None
+        return 
 
 def get_filenames(
     directory: Union[str, Path], extensions: Union[str, list[str]] = "*", exc_info: bool = True

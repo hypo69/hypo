@@ -12,3 +12,4 @@
 
 
 from .api import PrestaShop
+from .api_async import PrestaShopAsync

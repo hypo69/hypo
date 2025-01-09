@@ -98,13 +98,13 @@ class ProgramSettings:
                 user=None,
                 password=None,
             ),
-            client=[SimpleNamespace(
+            client=SimpleNamespace(
                 server=None,
                 port=None,
                 database=None,
                 user=None,
                 password=None,
-            )]
+            )
         ),
         openai=SimpleNamespace(
             api_key=None, 
@@ -214,8 +214,8 @@ class ProgramSettings:
         if not self._load_telegram_credentials(kp):
             print('Failed to load Telegram credentials')
 
-        if not self._load_PrestaShop_credentials(kp):
-            print('Failed to load PrestaShop credentials')
+        if not self._load_prestashop_credentials(kp):
+            print('Failed to load prestashop credentials')
 
         if not self._load_smtp_credentials(kp):
             print('Failed to load SMTP credentials')
@@ -356,37 +356,38 @@ class ProgramSettings:
             ...
             return False
 
-    def _load_PrestaShop_credentials(self, kp: PyKeePass) -> bool:
-         """ Load PrestaShop credentials from KeePass
+    def _load_prestashop_credentials(self, kp: PyKeePass) -> bool:
+         """ Load prestashop credentials from KeePass
          Args:
             kp (PyKeePass): The KeePass database instance.
          Returns:
             bool: True if loading was successful, False otherwise.
          """
-         try:
-            entries = kp.find_groups(path=['prestashop']).entries
-            for entry in entries:
-                setattr(self.credentials.telegram, entry.title, entry.custom_properties.get('token', None))
-            return True
-         except Exception as ex:
-            print(f"Failed to extract Telegram credentials from KeePass {ex}")
-            ...
-            return False
-         try:
-            for entry in kp.find_groups(path=['prestashop', 'clients']).entries:
-                self.credentials.presta.client.append(SimpleNamespace(
-                    api_key=entry.custom_properties.get('api_key', None),
-                    api_domain=entry.custom_properties.get('api_domain', None),
-                    db_server=entry.custom_properties.get('db_server', None),
-                    db_user=entry.custom_properties.get('db_user', None),
-                    db_password=entry.custom_properties.get('db_password', None),
-                ))
-            return True
-         except Exception as ex:
-             print(f"Failed to extract PrestaShop credentials from KeePass {ex}")
-             ...
-             return False
+
+         for entry in kp.find_groups(path=['prestashop', 'clients']).entries:
+            try:
+                # Создаем новый SimpleNamespace для клиента
+                client_ns = SimpleNamespace()
         
+                # Устанавливаем атрибут в self.credentials.presta.client с именем entry.title
+                setattr(self.credentials.presta.client, entry.title, client_ns)
+        
+                # Получаем ссылку на созданный объект через entry.title
+                current_client = getattr(self.credentials.presta.client, entry.title)
+
+                setattr(current_client, 'api_key', entry.custom_properties.get('api_key', None))
+                setattr(current_client, 'api_domain', entry.custom_properties.get('api_domain', None))
+                setattr(current_client, 'db_server', entry.custom_properties.get('db_server', None))
+                setattr(current_client, 'db_user', entry.custom_properties.get('db_user', None))
+                setattr(current_client, 'db_password', entry.custom_properties.get('db_password', None))
+
+            except Exception as ex:
+                print(f"Failed to extract prestashop credentials from KeePass {ex}")
+                ...
+                return False
+
+         return True
+
     def _load_presta_translations_credentials(self, kp: PyKeePass) -> bool:
         """ Load Translations credentials from KeePass
         Args:

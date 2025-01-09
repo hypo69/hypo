@@ -11,7 +11,7 @@
 """
 
 
-from .api import PrestaShop
+from .api import PrestaShop, PrestaShopAsync
 from .product import PrestaProduct
 from .supplier import PrestaSupplier
 from .category import PrestaCategory
